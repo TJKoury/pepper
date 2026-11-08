@@ -7606,8 +7606,11 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: no watchers; the pool's state counter is checked
-!        instead (see below).
+!        PEPPER: the pool's state counter is checked instead of watchers
+!        (see below). The legacy interface still registers the watchers,
+!        as SPICELIB does (for callers that check them).
+         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
+                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
 
          if ( ctx%failed() ) return
 
@@ -7983,8 +7986,11 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: no watchers; the pool's state counter is checked
-!        instead (see below).
+!        PEPPER: the pool's state counter is checked instead of watchers
+!        (see below). The legacy interface still registers the watchers,
+!        as SPICELIB does (for callers that check them).
+         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
+                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
 
          if ( ctx%failed() ) return
 
@@ -8432,8 +8438,11 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: no watchers; the pool's state counter is checked
-!        instead (see below).
+!        PEPPER: the pool's state counter is checked instead of watchers
+!        (see below). The legacy interface still registers the watchers,
+!        as SPICELIB does (for callers that check them).
+         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
+                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
 
          if ( ctx%failed() ) return
 
@@ -8778,8 +8787,11 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: no watchers; the pool's state counter is checked
-!        instead (see below).
+!        PEPPER: the pool's state counter is checked instead of watchers
+!        (see below). The legacy interface still registers the watchers,
+!        as SPICELIB does (for callers that check them).
+         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
+                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
 
          if ( ctx%failed() ) return
 
@@ -8981,8 +8993,11 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: no watchers; the pool's state counter is checked
-!        instead (see below).
+!        PEPPER: the pool's state counter is checked instead of watchers
+!        (see below). The legacy interface still registers the watchers,
+!        as SPICELIB does (for callers that check them).
+         if ( ctx%is_legacy() ) call swpool ( ctx, 'ZZBODTRN', 2, &
+                 [ character(32) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ] )
 
          if ( ctx%failed() ) return
 

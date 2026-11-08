@@ -4275,6 +4275,8 @@ contains
                                                  prenul, &
                                                  ftpstr, &
                                                  pstnul
+      flush ( lun )
+      call files_written ( ctx )
 !
 !     Check IOSTAT for errors.
 !
@@ -7377,6 +7379,8 @@ contains
             end if
 
             write ( lun, rec=i, iostat=iostat ) crec
+            flush ( lun )
+            call files_written ( ctx )
 
             if ( iostat /= 0 ) then
 
@@ -7395,6 +7399,8 @@ contains
       end if
 
       write ( lun, rec=fward, iostat=iostat ) drec
+      flush ( lun )
+      call files_written ( ctx )
 
       if ( iostat /= 0 ) then
 
@@ -7409,6 +7415,8 @@ contains
       end if
 
       write ( lun, rec=fward+1, iostat=iostat ) crec
+      flush ( lun )
+      call files_written ( ctx )
 
       if ( iostat /= 0 ) then
 
@@ -7920,6 +7928,8 @@ contains
          do i = 2, resv + 1
 
             write ( lun, rec=i, iostat=iostat ) crec
+            flush ( lun )
+            call files_written ( ctx )
 
             if ( iostat /= 0 ) then
 
@@ -7939,6 +7949,8 @@ contains
       end if
 
       write ( lun, rec=fward, iostat=iostat ) drec
+      flush ( lun )
+      call files_written ( ctx )
 
       if ( iostat /= 0 ) then
 
@@ -7954,6 +7966,8 @@ contains
       end if
 
       write ( lun, rec=fward+1, iostat=iostat ) crec
+      flush ( lun )
+      call files_written ( ctx )
 
       if ( iostat /= 0 ) then
 
@@ -11587,6 +11601,7 @@ contains
       integer(ip)           ni
       logical               locfnd
       logical               native
+      call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
          call init_dafrwd_state ( ctx%dafrwd )
@@ -11873,6 +11888,7 @@ contains
       integer(ip)           ni
       logical               locfnd
       logical               native
+      call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
          call init_dafrwd_state ( ctx%dafrwd )
@@ -12263,6 +12279,7 @@ contains
       integer(ip)           ni
       logical               locfnd
       logical               native
+      call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
          call init_dafrwd_state ( ctx%dafrwd )
@@ -12548,6 +12565,7 @@ contains
       integer(ip)           ni
       logical               locfnd
       logical               native
+      call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
          call init_dafrwd_state ( ctx%dafrwd )
@@ -12595,6 +12613,8 @@ contains
       write (unit, &
              rec=recno, &
              iostat=iostat) drec
+      flush ( unit )
+      call files_written ( ctx )
 
 !
 !     If the record was buffered, replace it---with the input
@@ -12767,6 +12787,7 @@ contains
       integer(ip)           ni
       logical               locfnd
       logical               native
+      call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
          call init_dafrwd_state ( ctx%dafrwd )
@@ -14990,6 +15011,8 @@ contains
                             free, &
                             format, &
                             tail
+      flush ( unit )
+      call files_written ( ctx )
 
       if ( iostat /= 0 ) then
 
@@ -16068,6 +16091,8 @@ contains
          write (unit, &
                 rec=recno, &
                 iostat=iostat) crec
+         flush ( unit )
+         call files_written ( ctx )
 
          if ( iostat /= 0 ) then
             call ctx%setmsg ( 'Character record write failed. Value of '  // &
@@ -17487,6 +17512,8 @@ contains
             if ( curpos > mxcrec ) then
 
                write ( daflun, rec=recno, iostat=iostat ) crecrd
+               flush ( daflun )
+               call files_written ( ctx )
 
                if ( iostat /= 0 ) then
 
@@ -17522,6 +17549,8 @@ contains
          if ( curpos > mxcrec ) then
 
                write ( daflun, rec=recno, iostat=iostat ) crecrd
+               flush ( daflun )
+               call files_written ( ctx )
 
                if ( iostat /= 0 ) then
 
@@ -17564,6 +17593,8 @@ contains
 !        the next record.
 !
          write ( daflun, rec=recno, iostat=iostat ) crecrd
+         flush ( daflun )
+         call files_written ( ctx )
 
          if ( iostat /= 0 ) then
 
@@ -17590,6 +17621,8 @@ contains
       crecrd(curpos:curpos) = eocmrk
 
       write ( daflun, rec=recno, iostat=iostat ) crecrd
+      flush ( daflun )
+      call files_written ( ctx )
 
       if ( iostat /= 0 ) then
 
@@ -20121,6 +20154,8 @@ contains
 !           that is still open.  DAFHOF will tell us which handles
 !           point to open DAFs.
 !
+            !     PEPPER: OPNSET is a local variable (SPICELIB saved it): size it.
+            call ssizei ( ctx, ftsize, opnset )
             call dafhof ( ctx, opnset )
 
             p     =  sthead
@@ -22713,6 +22748,8 @@ contains
 !           that is still open. DAFHOF will tell us which handles
 !           point to open DAFs.
 !
+            !     PEPPER: OPNSET is a local variable (SPICELIB saved it): size it.
+            call ssizei ( ctx, ftsize, opnset )
             call dafhof ( ctx, opnset )
 
             p     =  sthead
@@ -23674,6 +23711,8 @@ contains
 !           that is still open. DAFHOF will tell us which handles
 !           point to open DAFs.
 !
+            !     PEPPER: OPNSET is a local variable (SPICELIB saved it): size it.
+            call ssizei ( ctx, ftsize, opnset )
             call dafhof ( ctx, opnset )
 
             p     =  sthead

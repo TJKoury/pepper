@@ -138,6 +138,18 @@ CONTEXT_MODULES = {
         zzxlated dafrda dafrfr dafwfr dafwda dafarr dafrcr dafwcr dafra dafrrr dafac
         dafdc dafec dafana daffa dafbt dafa2b dafb2a dafb2t daft2b daftb
         """.split(),
+    "pepper_das": """
+        rdencc
+        wrencc
+        writln
+        writla
+        readln
+        readla
+        zzdasgrd zzdasgri zzdasnfr zzdasrfr dasfm dasrwr dasioc dasiod dasioi
+        dasa2l dascud dasacr dasrcr dassdr dasadc dasadd dasadi dasrdc dasrdd
+        dasrdi dasudc dasudd dasudi dascls dasrfr daswfr dasac dasacu
+        dasdc dasec dasecu dasbt dastb daslla
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -217,6 +229,22 @@ UMBRELLAS = {
     # type-bound procedure)
     **{n: {"state": "saved", "component": n + "_state", "where": "context", "entries": [n]} for n in
        "dafec dafwda zzdafgdr zzdafgsr zzdafgfr zzdafnfr zzxlated hx2dp".split()},
+    # DAS: the file table belongs to the instance; record buffers, the
+    # address cache, comment reading and first-call tables to the context.
+    "dasfm": {"state": "fthan ftacc ftlnk ftsum pool fthead fhlist pass1".split(),
+              "component": "dasfm",
+              "docs": {"fthan": "handle of each DAS", "ftacc": "access method of each DAS",
+                       "ftlnk": "number of links (opens) of each DAS",
+                       "ftsum": "file summary of each DAS (free records and addresses, last "
+                                "records and words of each data type)",
+                       "pool": "linked-list pool of the file table",
+                       "fthead": "head of the list of the file table's entries",
+                       "fhlist": "set of the handles of the open DASs",
+                       "pass1": "the file table has not been initialized yet"}},
+    "dasrwr": {"state": "all", "component": "dasrwr", "where": "context"},
+    "dasa2l": {"state": "all", "component": "dasa2l_state", "where": "context"},
+    **{n: {"state": "saved", "component": n + "_state", "where": "context", "entries": [n]} for n in
+       "dasadc dasadd dasadi dascls dasec zzdasgrd zzdasgri zzdasnfr zzdasrfr wrencc".split()},
     "zzhsc": {"state": [], "component": None, "entries": ['zzhscini', 'zzhscadd', 'zzhscchk', 'zzhscavl', 'zzhscinf']},
     "zzhsi": {"state": [], "component": None, "entries": ['zzhsiini', 'zzhsiadd', 'zzhsichk', 'zzhsiavl', 'zzhsiinf']},
     # Built-in body names and codes (tables built on the first call).

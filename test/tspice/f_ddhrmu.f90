@@ -294,7 +294,10 @@
 !
 !     Check the value of RESRVD.
 !
-      CALL CHCKSL ( 'RESRVD', RESRVD, .TRUE., OK )
+!     PEPPER: units come from NEWUNIT= when the file is opened, so a new
+!     row of the unit table has no unit yet (-1), and the handle manager
+!     does not reserve or free units (RESLUN/FRELUN).
+      CALL CHCKSL ( 'RESRVD', RESRVD, .FALSE., OK )
 
 !
 !     Free up the logical unit.

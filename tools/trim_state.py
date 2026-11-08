@@ -208,7 +208,11 @@ def trim(name: str, dry_run: bool) -> list:
             for n in comps:
                 if f"{n} => {path_expr}%{n}" in body:
                     bodies[n].append(body)
-    temps = [n for n in comps if bodies[n] and is_temporary(n, bodies[n])]
+    # A SPICE cell (lower bound LBCELL) is never a temporary here: its size
+    # in the control area is set once (SSIZE*) and is an input of the calls
+    # that "return" the cell.
+    cells = {n for n, c in comps.items() if re.search(r"\(\s*lbcell\s*:", c[2], re.I)}
+    temps = [n for n in comps if bodies[n] and n not in cells and is_temporary(n, bodies[n])]
     alltext = "\n".join(texts.values())
     unused = [n for n in comps if not bodies[n] and f"{path_expr}%{n}" not in alltext]
     if dry_run:

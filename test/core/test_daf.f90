@@ -28,6 +28,7 @@ program test_daf
    call test_read_data()
    call a%dafcls(handle)
    call check(.not. a%failed(), 'dafcls')
+   call test_rewrite_seen()
    call delete_file()
 
    if (failures > 0) then
@@ -147,5 +148,28 @@ contains
       call check(.not. b%failed() .and. all(data == [(300.0_wp + i, i = 1, 5)]), &
                  'b reads the third array')
    end subroutine test_read_data
+
+   !> A record rewritten through one context is seen by another context that
+   !> had it in its record buffer.
+   subroutine test_rewrite_seen()
+      integer(ip) :: h, recno, i
+      real(wp) :: rec(128), back(128)
+      logical :: found
+      call a%dafopw(file, h)
+      call check(.not. a%failed(), 'dafopw')
+      ! The first data record is the record after the first summary and
+      ! name records; any record works here: use record 4 (data).
+      recno = 4
+      call b%dafgdr(h, recno, 1_ip, 128_ip, back, found)      ! now in b's buffer
+      call check(found .and. .not. b%failed(), 'b reads the record')
+      rec = [(real(-i, wp), i = 1, 128)]
+      call a%dafwdr(h, recno, rec)
+      call check(.not. a%failed(), 'a rewrites the record')
+      call b%dafgdr(h, recno, 1_ip, 128_ip, back, found)
+      call check(found .and. all(back == rec), 'b sees the rewritten record')
+      call a%dafgdr(h, recno, 1_ip, 128_ip, back, found)
+      call check(found .and. all(back == rec), 'a sees its own write')
+      call a%dafcls(h)
+   end subroutine test_rewrite_seen
 
 end program test_daf

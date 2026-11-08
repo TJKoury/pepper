@@ -148,7 +148,10 @@
 
       CALL CHCKSL ( 'UTLCK(1)', UTLCK(1), .FALSE.,    OK )
 
-      CALL CHCKSI ( 'UTLUN(1)', UTLUN(1), '>=', 0, 0, OK )
+!     PEPPER: units come from NEWUNIT= when the file is opened, so a new
+!     row of the unit table has no unit yet (-1), and the handle manager
+!     does not reserve or free units (RESLUN/FRELUN).
+      CALL CHCKSI ( 'UTLUN(1)', UTLUN(1), '=', -1, 0, OK )
       CALL CHCKSI ( 'NUT',      NUT,      '=',  1, 0, OK )
 
       CALL CHCKSI ( 'UINDEX',   UINDEX,   '=',  1, 0, OK )
@@ -221,7 +224,10 @@
 !
 !     Check the value of RESRVD.
 !
-      CALL CHCKSL ( 'RESRVD', RESRVD, .FALSE., OK )
+!     PEPPER: units come from NEWUNIT= when the file is opened, so a new
+!     row of the unit table has no unit yet (-1), and the handle manager
+!     does not reserve or free units (RESLUN/FRELUN).
+      CALL CHCKSL ( 'RESRVD', RESRVD, .TRUE., OK )
 
 !
 !     Just to be safe, free LUN.
@@ -277,7 +283,10 @@
 
       CALL CHCKSL ( 'UTLCK(UINDEX)', UTLCK(UINDEX), .FALSE.,    OK )
 
-      CALL CHCKSI ( 'UTLUN(UINDEX)', UTLUN(UINDEX), '>=', 0, 0, OK )
+!     PEPPER: units come from NEWUNIT= when the file is opened, so a new
+!     row of the unit table has no unit yet (-1), and the handle manager
+!     does not reserve or free units (RESLUN/FRELUN).
+      CALL CHCKSI ( 'UTLUN(UINDEX)', UTLUN(UINDEX), '=', -1, 0, OK )
 
       CALL CHCKSI ( 'NUT',      NUT,      '=',  11, 0, OK )
 

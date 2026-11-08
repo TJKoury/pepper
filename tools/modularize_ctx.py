@@ -87,6 +87,10 @@ DOCS = {
     "pepper_daf": "DAF (Double precision Array File) files: opening and closing, "
                   "reading and writing records, arrays and summaries, searching the "
                   "arrays, comments, and the transfer format.",
+    "pepper_das": "DAS (Direct Access Segregated) files: opening and closing, the file "
+                  "summary, reading, writing and updating character, double precision "
+                  "and integer data through record buffers, comments, and the transfer "
+                  "format.",
 }
 
 
@@ -267,7 +271,12 @@ def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> lis
             n = entity_name(e)
             a = f", {attrs}" if attrs else ""
             if n in r.args:
-                intent = f", intent({with_intent[n]})" if with_intent else ""
+                it = with_intent.get(n) if with_intent else None
+                # A cell's control area (its size) is an input even if the
+                # cell is an output: intent(inout), not intent(out).
+                if it == "out" and re.search(r"\(\s*lbcell\s*:", e, re.I):
+                    it = "inout"
+                intent = f", intent({it})" if it else ""
                 doc = f"  !! {docs[n]}" if docs.get(n) else ""
                 out.append(f"{indent}{spec}{a}{intent} :: {e}{doc}")
             elif n in params:

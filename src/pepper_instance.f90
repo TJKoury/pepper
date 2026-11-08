@@ -70,6 +70,21 @@ module pepper_instance
    use pepper_state_dafana, only: dafana_state, init_dafana_state
    use pepper_state_daffa, only: daffa_state, init_daffa_state
    ! --- end pepper_daf
+   ! --- pepper_das
+   use pepper_state_wrencc, only: wrencc_state, init_wrencc_state
+   use pepper_state_zzdasgrd, only: zzdasgrd_state, init_zzdasgrd_state
+   use pepper_state_zzdasgri, only: zzdasgri_state, init_zzdasgri_state
+   use pepper_state_zzdasnfr, only: zzdasnfr_state, init_zzdasnfr_state
+   use pepper_state_zzdasrfr, only: zzdasrfr_state, init_zzdasrfr_state
+   use pepper_state_dasfm, only: dasfm_state, init_dasfm_state
+   use pepper_state_dasrwr, only: dasrwr_state, init_dasrwr_state
+   use pepper_state_dasa2l, only: dasa2l_state, init_dasa2l_state
+   use pepper_state_dasadc, only: dasadc_state, init_dasadc_state
+   use pepper_state_dasadd, only: dasadd_state, init_dasadd_state
+   use pepper_state_dasadi, only: dasadi_state, init_dasadi_state
+   use pepper_state_dascls, only: dascls_state, init_dascls_state
+   use pepper_state_dasec, only: dasec_state, init_dasec_state
+   ! --- end pepper_das
    ! <<< generated state modules
 
    implicit none
@@ -100,6 +115,14 @@ module pepper_instance
       integer(ip), allocatable :: boddef_codes(:)  !! their codes
       integer(ip) :: boddef_count = 0  !! number of definitions recorded
       integer(ip) :: boddef_epoch = 0  !! changed by every definition and by a reset
+      !> Incremented by every write of a record to a DAF or DAS file; contexts
+      !> whose record buffers are older empty them (see files_check).
+      integer(ip) :: file_generation = 0
+      !> Incremented when a file is closed; contexts then close their units for
+      !> handles that no longer exist (see units_check).
+      integer(ip) :: close_generation = 0
+      character(255), allocatable :: closed_files(:)  !! names of the files closed so far
+      integer(ip) :: nclosed = 0  !! number of names in closed_files
       ! The state of the subsystems (allocated when first used).
       ! >>> generated state components (tools/modularize_ctx.py)
       ! --- pepper_pool
@@ -115,6 +138,9 @@ module pepper_instance
       ! --- pepper_daf
       type(dafah_state), allocatable :: dafah  !! state of DAFAH
       ! --- end pepper_daf
+      ! --- pepper_das
+      type(dasfm_state), allocatable :: dasfm  !! state of DASFM
+      ! --- end pepper_das
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -131,6 +157,7 @@ module pepper_instance
       integer :: action = action_return  !! error action (index in action_names)
       character(short_message_length) :: short = ' '  !! short error message
       character(long_message_length) :: long = ' '  !! long error message
+      integer(ip) :: files_seen = 0  !! the file_generation this context's record caches reflect
       ! Per-context state of the subsystems (allocated when first used).
       ! >>> generated context state components (tools/modularize_ctx.py)
       ! --- pepper_pool
@@ -165,6 +192,20 @@ module pepper_instance
       type(dafana_state), allocatable :: dafana  !! state of DAFANA
       type(daffa_state), allocatable :: daffa  !! state of DAFFA
       ! --- end pepper_daf
+      ! --- pepper_das
+      type(wrencc_state), allocatable :: wrencc_state  !! state of WRENCC
+      type(zzdasgrd_state), allocatable :: zzdasgrd_state  !! state of ZZDASGRD
+      type(zzdasgri_state), allocatable :: zzdasgri_state  !! state of ZZDASGRI
+      type(zzdasnfr_state), allocatable :: zzdasnfr_state  !! state of ZZDASNFR
+      type(zzdasrfr_state), allocatable :: zzdasrfr_state  !! state of ZZDASRFR
+      type(dasrwr_state), allocatable :: dasrwr  !! state of DASRWR
+      type(dasa2l_state), allocatable :: dasa2l_state  !! state of DASA2L
+      type(dasadc_state), allocatable :: dasadc_state  !! state of DASADC
+      type(dasadd_state), allocatable :: dasadd_state  !! state of DASADD
+      type(dasadi_state), allocatable :: dasadi_state  !! state of DASADI
+      type(dascls_state), allocatable :: dascls_state  !! state of DASCLS
+      type(dasec_state), allocatable :: dasec_state  !! state of DASEC
+      ! --- end pepper_das
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -460,6 +501,67 @@ module pepper_instance
       procedure, non_overridable :: daft2b
       procedure, non_overridable :: daftb
       ! --- end pepper_daf
+      ! --- pepper_das
+      procedure, non_overridable :: rdencc
+      procedure, non_overridable :: wrencc
+      procedure, non_overridable :: writln
+      procedure, non_overridable :: writla
+      procedure, non_overridable :: readln
+      procedure, non_overridable :: readla
+      procedure, non_overridable :: dasopr
+      procedure, non_overridable :: dasopw
+      procedure, non_overridable :: dasonw
+      procedure, non_overridable :: dasopn
+      procedure, non_overridable :: dasops
+      procedure, non_overridable :: dasllc
+      procedure, non_overridable :: dashfs
+      procedure, non_overridable :: dasufs
+      procedure, non_overridable :: dashlu
+      procedure, non_overridable :: dasluh
+      procedure, non_overridable :: dashfn
+      procedure, non_overridable :: dasfnh
+      procedure, non_overridable :: dashof
+      procedure, non_overridable :: dassih
+      procedure, non_overridable :: dasham
+      procedure, non_overridable :: dasrrd
+      procedure, non_overridable :: dasrri
+      procedure, non_overridable :: dasrrc
+      procedure, non_overridable :: daswrd
+      procedure, non_overridable :: daswri
+      procedure, non_overridable :: daswrc
+      procedure, non_overridable :: dasurd
+      procedure, non_overridable :: dasuri
+      procedure, non_overridable :: dasurc
+      procedure, non_overridable :: daswbr
+      procedure, non_overridable :: dasioc
+      procedure, non_overridable :: dasiod
+      procedure, non_overridable :: dasioi
+      procedure, non_overridable :: dasa2l
+      procedure, non_overridable :: dascud
+      procedure, non_overridable :: dasacr
+      procedure, non_overridable :: dasrcr
+      procedure, non_overridable :: dassdr
+      procedure, non_overridable :: dasadc
+      procedure, non_overridable :: dasadd
+      procedure, non_overridable :: dasadi
+      procedure, non_overridable :: dasrdc
+      procedure, non_overridable :: dasrdd
+      procedure, non_overridable :: dasrdi
+      procedure, non_overridable :: dasudc
+      procedure, non_overridable :: dasudd
+      procedure, non_overridable :: dasudi
+      procedure, non_overridable :: dascls
+      procedure, non_overridable :: dasrfr
+      procedure, non_overridable :: daswfr
+      procedure, non_overridable :: dasac
+      procedure, non_overridable :: dasacu
+      procedure, non_overridable :: dasdc
+      procedure, non_overridable :: dasec
+      procedure, non_overridable :: dasecu
+      procedure, non_overridable :: dasbt
+      procedure, non_overridable :: dastb
+      procedure, non_overridable :: daslla
+      ! --- end pepper_das
       ! <<< generated bindings
    end type pepper_context
 
@@ -582,7 +684,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
-         character(*), intent(out) :: cell   ( lbcell:* )  !! The cell.
+         character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine scardc
 
       !> Set the cardinality of a double precision cell.
@@ -591,7 +693,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
-         real(wp), intent(out) :: cell   ( lbcell:* )  !! The cell.
+         real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine scardd
 
       !> Set the cardinality of an integer cell.
@@ -600,7 +702,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
-         integer(ip), intent(out) :: cell   ( lbcell:* )  !! The cell.
+         integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine scardi
 
       !> Set the size (maximum cardinality) of a character cell.
@@ -609,7 +711,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
-         character(*), intent(out) :: cell   ( lbcell:* )  !! The cell.
+         character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine ssizec
 
       !> Set the size (maximum cardinality) of a double precision cell.
@@ -618,7 +720,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
-         real(wp), intent(out) :: cell   ( lbcell:* )  !! The cell.
+         real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine ssized
 
       !> Set the size (maximum cardinality) of an integer cell.
@@ -627,7 +729,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
-         integer(ip), intent(out) :: cell   ( lbcell:* )  !! The cell.
+         integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine ssizei
 
       !> Create a valid set from a character set array.
@@ -695,7 +797,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
-         character(*), intent(out) :: copy     ( lbcell:* )  !! New cell.
+         character(*), intent(inout) :: copy     ( lbcell:* )  !! New cell.
       end subroutine copyc
 
       !> Copy the contents of a double precision cell to another cell.
@@ -704,7 +806,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
-         real(wp), intent(out) :: copy     ( lbcell:* )  !! New cell.
+         real(wp), intent(inout) :: copy     ( lbcell:* )  !! New cell.
       end subroutine copyd
 
       !> Copy the contents of an integer cell to another cell.
@@ -713,7 +815,7 @@ module pepper_instance
          integer(ip) lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
-         integer(ip), intent(out) :: copy     ( lbcell:* )  !! New cell.
+         integer(ip), intent(inout) :: copy     ( lbcell:* )  !! New cell.
       end subroutine copyi
 
       !> Insert an item into a character set.
@@ -884,7 +986,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         character(*), intent(out) :: c      ( lbcell:* )  !! Union of A and B.
+         character(*), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
       end subroutine unionc
 
       !> Compute the union of two double precision sets to form a third
@@ -895,7 +997,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         real(wp), intent(out) :: c      ( lbcell:* )  !! Union of A and B.
+         real(wp), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
       end subroutine uniond
 
       !> Compute the union of two integer sets to form a third set.
@@ -905,7 +1007,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         integer(ip), intent(out) :: c      ( lbcell:* )  !! Union of A and B.
+         integer(ip), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
       end subroutine unioni
 
       !> Intersect two character sets to form a third set.
@@ -915,7 +1017,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         character(*), intent(out) :: c      ( lbcell:* )  !! Intersection of A and B.
+         character(*), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
       end subroutine interc
 
       !> Intersect two double precision sets to form a third set.
@@ -925,7 +1027,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         real(wp), intent(out) :: c      ( lbcell:* )  !! Intersection of A and B.
+         real(wp), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
       end subroutine interd
 
       !> Intersect two integer sets to form a third set.
@@ -935,7 +1037,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         integer(ip), intent(out) :: c      ( lbcell:* )  !! Intersection of A and B.
+         integer(ip), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
       end subroutine interi
 
       !> Take the difference of two character sets to form a third set.
@@ -945,7 +1047,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         character(*), intent(out) :: c      ( lbcell:* )  !! Difference of A and B.
+         character(*), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
       end subroutine diffc
 
       !> Take the difference of two double precision sets to form
@@ -956,7 +1058,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         real(wp), intent(out) :: c      ( lbcell:* )  !! Difference of A and B.
+         real(wp), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
       end subroutine diffd
 
       !> Take the difference of two integer sets to form a third set.
@@ -966,7 +1068,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         integer(ip), intent(out) :: c      ( lbcell:* )  !! Difference of A and B.
+         integer(ip), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
       end subroutine diffi
 
       !> Take the symmetric difference of two character sets to form
@@ -977,7 +1079,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         character(*), intent(out) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
+         character(*), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
       end subroutine sdiffc
 
       !> Take the symmetric difference of two double precision sets
@@ -988,7 +1090,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         real(wp), intent(out) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
+         real(wp), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
       end subroutine sdiffd
 
       !> Take the symmetric difference of two integer sets to form
@@ -999,7 +1101,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
-         integer(ip), intent(out) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
+         integer(ip), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
       end subroutine sdiffi
 
       !> Insert an interval into a double precision window.
@@ -1034,7 +1136,7 @@ module pepper_instance
          real(wp), intent(in) :: left  !! Left, right endpoints of complement interval.
          real(wp), intent(in) :: right  !! Left, right endpoints of complement interval.
          real(wp), intent(in) :: window   ( lbcell:* )  !! Input window.
-         real(wp), intent(out) :: result   ( lbcell:* )  !! Complement of WINDOW with respect to
+         real(wp), intent(inout) :: result   ( lbcell:* )  !! Complement of WINDOW with respect to
                                                          !! [LEFT,RIGHT].
       end subroutine wncomd
 
@@ -1056,7 +1158,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
          real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
-         real(wp), intent(out) :: c        ( lbcell:* )  !! Difference of A and B.
+         real(wp), intent(inout) :: c        ( lbcell:* )  !! Difference of A and B.
       end subroutine wndifd
 
       !> Determine whether a point is an element of a double precision
@@ -1152,7 +1254,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
          real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
-         real(wp), intent(out) :: c        ( lbcell:* )  !! Intersection of A and B.
+         real(wp), intent(inout) :: c        ( lbcell:* )  !! Intersection of A and B.
       end subroutine wnintd
 
       !> Compare two double precision windows.
@@ -1188,7 +1290,7 @@ module pepper_instance
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
          real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
-         real(wp), intent(out) :: c        ( lbcell:* )  !! Union of A and B.
+         real(wp), intent(inout) :: c        ( lbcell:* )  !! Union of A and B.
       end subroutine wnunid
 
       !> Form a valid double precision window from the contents
@@ -2607,16 +2709,16 @@ module pepper_instance
          integer(ip), intent(out) :: datlst (              maxvar )  !! Heads of data values lists
          integer(ip), intent(in) :: maxagt  !! Maximum number of agents that can be supported
          integer(ip), intent(in) :: mxnote  !! Maximum number of agents that can be notified
-         character(*), intent(out) :: wtvars ( lbcell : maxvar )  !! Name array (watched variables)
+         character(*), intent(inout) :: wtvars ( lbcell : maxvar )  !! Name array (watched variables)
                                                                   !! of the watcher symbol table
          integer(ip), intent(out) :: wtptrs ( maxvar )  !! Pointer array of the watcher symbol table
          integer(ip), intent(out) :: wtpool ( 2, lbpool:mxnote )  !! Linked list pool of the watcher
                                                                   !! symbol table
          character(*), intent(out) :: wtagnt ( mxnote )  !! Values array (agents) of the watcher
                                                          !! symbol table
-         character(*), intent(out) :: agents ( lbcell : * )  !! Set of agents
-         character(*), intent(out) :: active ( lbcell : * )  !! Watchers that are active.
-         character(*), intent(out) :: notify ( lbcell : * )  !! Agents to notify
+         character(*), intent(inout) :: agents ( lbcell : * )  !! Set of agents
+         character(*), intent(inout) :: active ( lbcell : * )  !! Watchers that are active.
+         character(*), intent(inout) :: notify ( lbcell : * )  !! Agents to notify
          integer(ip), intent(out) :: subctr ( ctrsiz )  !! POOL state counter.
       end subroutine zzpini
 
@@ -2690,7 +2792,7 @@ module pepper_instance
          integer(ip), intent(in) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent
                                                               !! names.
          character(*), intent(in) :: wtagnt ( * )  !! Array of agent names.
-         character(*), intent(out) :: agtset ( lbcell : * )  !! Set of agents for VARNAM.
+         character(*), intent(inout) :: agtset ( lbcell : * )  !! Set of agents for VARNAM.
       end subroutine zzgapool
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2944,7 +3046,7 @@ module pepper_instance
          include              'zzctr.inc'
          integer(ip) :: lbcell
          parameter ( lbcell = -5 )
-         character(*), intent(out) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
+         character(*), intent(inout) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
          integer(ip), intent(out) :: uwptrs    ( * )  !! Pointers from variables into the watch
                                                       !! pool.
          integer(ip), intent(out) :: uwpool    ( 2, lbcell : * )  !! Watch pool used for managing
@@ -4007,7 +4109,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          include              'zzddhman.inc'
          integer(ip), parameter :: lbcell = -5
-         integer(ip), intent(out) :: fhset ( lbcell : * )  !! A set containing handles of currently
+         integer(ip), intent(inout) :: fhset ( lbcell : * )  !! A set containing handles of currently
                                                            !! open DAFS.
       end subroutine dafhof
 
@@ -4419,6 +4521,687 @@ module pepper_instance
 
    end interface
    ! --- end pepper_daf
+   ! --- pepper_das
+   public :: zzdasgrd, zzdasgri, zzdasnfr, zzdasrfr
+
+   interface
+
+      !> Read and decode encoded characters from a text file.
+      module subroutine rdencc ( ctx, unit, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+         integer(ip), intent(in) :: n  !! Number of characters to be read and decoded.
+         character(*), intent(out) :: data(*)  !! List of decoded characters to be returned.
+      end subroutine rdencc
+
+      !> Encode and write characters to a text file.
+      module subroutine wrencc ( ctx, unit, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+         integer(ip), intent(in) :: n  !! Number of characters to encode and write.
+         character(*), intent(in) :: data ( * )  !! List of characters to encode and write.
+      end subroutine wrencc
+
+      !> Write a single line of text to the Fortran logical unit UNIT.
+      module subroutine writln ( ctx, line, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: line  !! The line which is to be written to UNIT.
+         integer(ip), intent(in) :: unit  !! The Fortran unit number to use for output.
+      end subroutine writln
+
+      !> Write an array of text lines to a Fortran logical unit.
+      module subroutine writla ( ctx, numlin, array, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: numlin  !! Number of lines to be written to the file.
+         character(*), intent(in) :: array(*)  !! Array containing the lines to be written.
+         integer(ip), intent(in) :: unit  !! Fortran unit number to use for output.
+      end subroutine writla
+
+      !> Read a single line of text from the Fortran logical unit UNIT,
+      !> reporting the end of file if it occurs.
+      module subroutine readln ( ctx, unit, line, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! The Fortran unit number to use for input.
+         character(*), intent(out) :: line  !! The line read from the file.
+         logical, intent(out) :: eof  !! A logical flag indicating the end of file.
+      end subroutine readln
+
+      !> Read lines from a Fortran logical unit and place them in a
+      !> character string array.
+      module subroutine readla ( ctx, unit, maxlin, numlin, array, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number to use for input.
+         integer(ip), intent(in) :: maxlin  !! Maximum number of lines ARRAY can hold.
+         integer(ip), intent(out) :: numlin  !! Number of lines read from the file.
+         character(*), intent(out) :: array(*)  !! Array containing the lines read from the file.
+         logical, intent(out) :: eof  !! Logical flag indicating the end of file.
+      end subroutine readla
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> NWD        P   Number of DP numbers in a single DAS DP record.
+      module subroutine zzdasgrd ( ctx, handle, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         real(wp), intent(out) :: record ( nwd )  !! Double precision data read from record.
+      end subroutine zzdasgrd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> NWI        P   Number of integers in a single DAS integer record.
+      module subroutine zzdasgri ( ctx, handle, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(out) :: record ( nwi )  !! Integer data read from record.
+      end subroutine zzdasgri
+
+      !> Write the file record to a new DAS file.
+      module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzftprms.inc'
+         integer(ip), intent(in) :: lun  !! Logical unit number of an open DAS file.
+         character(*), intent(in) :: idword  !! DAS File ID word.
+         character(*), intent(in) :: ifname  !! DAS internal file name.
+         integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+         integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+         integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+         integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
+         character(*), intent(in) :: format  !! File binary format identifier string.
+      end subroutine zzdasnfr
+
+      !> Return the contents of the file record of a specified DAS file.
+      module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         character(*), intent(out) :: idword  !! ID word.
+         character(*), intent(out) :: ifname  !! DAS internal file name.
+         integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+         integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+         integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+         integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
+      end subroutine zzdasrfr
+
+      !> Open a DAS file for reading.
+      module subroutine dasopr ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+         integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
+      end subroutine dasopr
+
+      !> Open a DAS file for writing.
+      module subroutine dasopw ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+         integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
+      end subroutine dasopw
+
+      !> Open a new DAS file and set the file type.
+      module subroutine dasonw ( ctx, fname, ftype, ifname, ncomr, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+         character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAS file.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
+         integer(ip), intent(in) :: ncomr  !! Number of comment records to allocate.
+      end subroutine dasonw
+
+      !> Obsolete: This routine has been superseded by DASONW, and it is
+      !> supported for purposes of backward compatibility only.
+      module subroutine dasopn ( ctx, fname, ifname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
+      end subroutine dasopn
+
+      !> Open a scratch DAS file for writing.
+      module subroutine dasops ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(out) :: handle  !! Handle assigned to a scratch DAS file.
+      end subroutine dasops
+
+      !> Close the DAS file associated with a given handle, without
+      !> flushing buffered data or segregating the file.
+      module subroutine dasllc ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(in) :: handle  !! Handle of a DAS file to be closed.
+      end subroutine dasllc
+
+      !> Return a file summary for a specified DAS file.
+      module subroutine dashfs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+         integer(ip), intent(out) :: free  !! Number of first free record.
+         integer(ip), intent(out) :: lastla ( 3 )  !! Array of last logical addresses for each data
+                                                   !! type.
+         integer(ip), intent(out) :: lastrc ( 3 )  !! Record number of last descriptor of each data
+                                                   !! type.
+         integer(ip), intent(out) :: lastwd ( 3 )  !! Word number of last descriptor of each data
+                                                   !! type.
+         integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+         integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+         integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+         integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
+      end subroutine dashfs
+
+      !> Update the file summary in a specified DAS file.
+      module subroutine dasufs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
+         integer(ip), intent(in) :: free  !! Number of first free record.
+         integer(ip), intent(in) :: lastla ( 3 )  !! Array of last logical addresses for each data
+                                                  !! type.
+         integer(ip), intent(in) :: lastrc ( 3 )  !! Record number of last descriptor of each data
+                                                  !! type.
+         integer(ip), intent(in) :: lastwd ( 3 )  !! Word number of last descriptor of each data
+                                                  !! type.
+         integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+         integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+         integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+         integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
+      end subroutine dasufs
+
+      !> Return the logical unit associated with a handle. The unit
+      !> is "locked" to the handle by the DAF/DAS handle manager
+      !> subsystem.
+      module subroutine dashlu ( ctx, handle, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+         integer(ip), intent(out) :: unit  !! Corresponding logical unit.
+      end subroutine dashlu
+
+      !> Return the handle associated with a logical unit.
+      module subroutine dasluh ( ctx, unit, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(out) :: handle  !! Corresponding handle.
+         integer(ip), intent(in) :: unit  !! Logical unit connected to a DAS file.
+      end subroutine dasluh
+
+      !> Return the name of the DAS file associated with a handle.
+      module subroutine dashfn ( ctx, handle, fname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         character(*), intent(out) :: fname  !! Corresponding file name.
+         integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+      end subroutine dashfn
+
+      !> Return handle associated with a file name.
+      module subroutine dasfnh ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         character(*), intent(in) :: fname  !! Name of a DAS file.
+         integer(ip), intent(out) :: handle  !! Corresponding handle.
+      end subroutine dasfnh
+
+      !> Return a SPICE set containing the handles of all currently
+      !> open DAS files.
+      module subroutine dashof ( ctx, fhset )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(inout) :: fhset  ( lbcell : * )  !! A set containing handles of currently
+                                                            !! open DAS files.
+      end subroutine dashof
+
+      !> Signal an error if a DAS file file handle does not designate a
+      !> DAS file that is open for a specified type of access.
+      module subroutine dassih ( ctx, handle, access )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(in) :: handle  !! HANDLE to be validated.
+         character(*), intent(in) :: access  !! String indicating access type.
+      end subroutine dassih
+
+      !> Return the allowed access method for a specified DAS file.
+      module subroutine dasham ( ctx, handle, access )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         include 'errhnd.inc'
+         integer(ip), intent(in) :: handle  !! HANDLE of a DAS file.
+         character(*), intent(out) :: access  !! String indicating allowed access method.
+      end subroutine dasham
+
+      !> Read DAS double precision physical records.
+      !>
+      !> BUFSZD     P   Number of records in the DP record buffer.
+      !> NWD        P   Number of DP in a single DAS DP record.
+      module subroutine dasrrd ( ctx, handle, recno, first, last, datad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: first  !! First and last indices of range within record.
+         integer(ip), intent(in) :: last  !! First and last indices of range within record.
+         real(wp), intent(out) :: datad   ( * )  !! Double precision data read from record.
+      end subroutine dasrrd
+
+      !> Read DAS integer physical records.
+      !>
+      !> BUFSZI     P   Number of records in the integer record buffer.
+      !> NWI        P   Number of integers in a single DAS integer record.
+      module subroutine dasrri ( ctx, handle, recno, first, last, datai )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: first  !! First and last indices of range within record.
+         integer(ip), intent(in) :: last  !! First and last indices of range within record.
+         integer(ip), intent(out) :: datai   ( * )  !! Integer data read from record.
+      end subroutine dasrri
+
+      !> Read DAS character physical records.
+      !>
+      !> BUFSZC     P   Number of records in the character record buffer.
+      !> NWC        P   Number of characters in a single DAS char. record.
+      module subroutine dasrrc ( ctx, handle, recno, first, last, datac )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: first  !! First and last indices of range within record.
+         integer(ip), intent(in) :: last  !! First and last indices of range within record.
+         character(*), intent(out) :: datac  !! Character data read from record.
+      end subroutine dasrrc
+
+      !> Write DAS double precision physical records.
+      !>
+      !> BUFSZD     P   Number of records in the DP record buffer.
+      !> NWD        P   Number of DP in a single DAS DP record.
+      module subroutine daswrd ( ctx, handle, recno, recd )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: nwd = 128
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         real(wp), intent(in) :: recd    ( nwd )  !! Double precision data to be written to record.
+      end subroutine daswrd
+
+      !> Write DAS integer physical records.
+      !>
+      !> BUFSZI     P   Number of records in the integer record buffer.
+      !> NWI        P   Number of integers in a single DAS integer record.
+      module subroutine daswri ( ctx, handle, recno, reci )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: nwi = 256
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: reci    ( nwi )  !! Integer data to be written to record.
+      end subroutine daswri
+
+      !> Write DAS character physical records.
+      !>
+      !> BUFSZC     P   Number of records in the character record buffer.
+      !> NWC        P   Number of characters in a single DAS char. record.
+      module subroutine daswrc ( ctx, handle, recno, recc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         character(*), intent(in) :: recc  !! Character data to be written to record.
+      end subroutine daswrc
+
+      !> Update DAS double precision physical records.
+      !>
+      !> BUFSZD     P   Number of records in the DP record buffer.
+      !> NWD        P   Number of DPs in a single DAS DP record.
+      module subroutine dasurd ( ctx, handle, recno, first, last, datad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: first  !! First and last indices of range within record.
+         integer(ip), intent(in) :: last  !! First and last indices of range within record.
+         real(wp), intent(in) :: datad   ( * )  !! Double precision data to write to record.
+      end subroutine dasurd
+
+      !> Update DAS integer physical records.
+      !>
+      !> BUFSZI     P   Number of records in the integer record buffer.
+      !> NWI        P   Number of integers in a single DAS integer record.
+      module subroutine dasuri ( ctx, handle, recno, first, last, datai )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: first  !! First and last indices of range within record.
+         integer(ip), intent(in) :: last  !! First and last indices of range within record.
+         integer(ip), intent(in) :: datai   ( * )  !! Integer data to write to record.
+      end subroutine dasuri
+
+      !> Update DAS character physical records.
+      !>
+      !> BUFSZC     P   Number of records in the character record buffer.
+      !> NWC        P   Number of characters in a single DAS char. record.
+      module subroutine dasurc ( ctx, handle, recno, first, last, datac )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: first  !! First and last indices of range within record.
+         integer(ip), intent(in) :: last  !! First and last indices of range within record.
+         character(*), intent(in) :: datac  !! Character data to write to record.
+      end subroutine dasurc
+
+      !> Write out all buffered records of a specified DAS file.
+      module subroutine daswbr ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      end subroutine daswbr
+
+      !> Perform Fortran reads and writes of DAS character records.
+      module subroutine dasioc ( ctx, action, unit, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: nwc = 1024
+         character(*), intent(in) :: action  !! Action to take (read or write).
+         integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+         integer(ip), intent(in) :: recno  !! Number of record to read or write.
+         character(nwc), intent(inout) :: record  !! DAS character record.
+      end subroutine dasioc
+
+      !> Perform Fortran reads and writes of DAS double precision records.
+      !> This routine operates on DAS files having native binary format.
+      module subroutine dasiod ( ctx, action, unit, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: nwd = 128
+         character(*), intent(in) :: action  !! Action to take (read or write).
+         integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+         integer(ip), intent(in) :: recno  !! Number of record to read or write.
+         real(wp), intent(inout) :: record ( nwd )  !! DAS double precision record.
+      end subroutine dasiod
+
+      !> Perform Fortran reads and writes of DAS integer records.
+      !> This routine operates on DAS files having native binary
+      !> format.
+      module subroutine dasioi ( ctx, action, unit, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: nwi = 256
+         character(*), intent(in) :: action  !! Action to take (read or write).
+         integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+         integer(ip), intent(in) :: recno  !! Number of record to read or write.
+         integer(ip), intent(inout) :: record ( nwi )  !! DAS integer record.
+      end subroutine dasioi
+
+      !> Map a DAS address to a physical location in a specified DAS file.
+      !>
+      !> CHAR       P   Parameter indicating character data type.
+      !> INT        P   Parameter indicating integer data type.
+      module subroutine dasa2l ( ctx, handle, type, addrss, clbase, clsize, recno, wordno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: type  !! Data type specifier.
+         integer(ip), intent(in) :: addrss  !! DAS address of a word of data type TYPE.
+         integer(ip), intent(out) :: clbase  !! Cluster base record number and size.
+         integer(ip), intent(out) :: clsize  !! Cluster base record number and size.
+         integer(ip), intent(out) :: recno  !! Record/word pair corresponding to ADDRSS.
+         integer(ip), intent(out) :: wordno  !! Record/word pair corresponding to ADDRSS.
+      end subroutine dasa2l
+
+      !> Create or update directories in a DAS file to reflect addition
+      !> of a specified number of words of a specified data type.
+      !>
+      !> CHAR       P   Parameter indicating character data type.
+      !> DP         P   Parameter indicating double precision data type.
+      !> INT        P   Parameter indicating integer data type.
+      module subroutine dascud ( ctx, handle, type, nwords )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: type  !! Data type specifier.
+         integer(ip), intent(in) :: nwords  !! Number of words of data being added.
+      end subroutine dascud
+
+      !> Increase the size of the comment area in a DAS file to accommodate
+      !> a specified number of additional comment records.
+      module subroutine dasacr ( ctx, handle, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! A DAS file handle.
+         integer(ip), intent(in) :: n  !! Number of comment records to append to the comment area of
+                                       !! the specified file.
+      end subroutine dasacr
+
+      !> Decrease the size of the comment area in a DAS file to reclaim
+      !> space freed by the removal of a specified number of comment
+      !> records.
+      module subroutine dasrcr ( ctx, handle, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! A DAS file handle.
+         integer(ip), intent(in) :: n  !! Number of comment records to remove.
+      end subroutine dasrcr
+
+      !> Segregate the data records in a DAS file into clusters, using
+      !> one cluster per data type present in the file.
+      module subroutine dassdr ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+      end subroutine dassdr
+
+      !> Add character data to a DAS file.
+      module subroutine dasadc ( ctx, handle, n, bpos, epos, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: n  !! Number of characters to add to file.
+         integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+         integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+         character(*), intent(in) :: data   ( * )  !! Array providing the set of substrings to be
+                                                   !! added to the character data in the DAS file.
+      end subroutine dasadc
+
+      !> Add an array of double precision numbers to a DAS file.
+      module subroutine dasadd ( ctx, handle, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: n  !! Number of d.p. numbers to add to DAS file.
+         real(wp), intent(in) :: data   ( * )  !! Array of d.p. numbers to add.
+      end subroutine dasadd
+
+      !> Add an array of integers to a DAS file.
+      module subroutine dasadi ( ctx, handle, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: n  !! Number of integers to add to DAS file.
+         integer(ip), intent(in) :: data   ( * )  !! Array of integers to add.
+      end subroutine dasadi
+
+      !> Read character data from a range of DAS logical addresses.
+      module subroutine dasrdc ( ctx, handle, first, last, bpos, epos, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: first  !! Range of DAS character logical addresses.
+         integer(ip), intent(in) :: last  !! Range of DAS character logical addresses.
+         integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+         integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+         character(*), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
+      end subroutine dasrdc
+
+      !> Read double precision data from a range of DAS logical addresses.
+      module subroutine dasrdd ( ctx, handle, first, last, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: first  !! Bounds of range of DAS double precision logical
+                                           !! addresses.
+         integer(ip), intent(in) :: last  !! Bounds of range of DAS double precision logical
+                                          !! addresses.
+         real(wp), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
+      end subroutine dasrdd
+
+      !> Read integer data from a range of DAS logical addresses.
+      module subroutine dasrdi ( ctx, handle, first, last, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: first  !! Bounds of range of DAS integer logical addresses.
+         integer(ip), intent(in) :: last  !! Bounds of range of DAS integer logical addresses.
+         integer(ip), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
+      end subroutine dasrdi
+
+      !> Update character data in a specified range of DAS logical
+      !> addresses with substrings of a character array.
+      module subroutine dasudc ( ctx, handle, first, last, bpos, epos, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: first  !! Range of DAS character logical addresses.
+         integer(ip), intent(in) :: last  !! Range of DAS character logical addresses.
+         integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+         integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+         character(*), intent(in) :: data   ( * )  !! Data having addresses FIRST through LAST.
+      end subroutine dasudc
+
+      !> Update data in a specified range of double precision addresses
+      !> in a DAS file.
+      module subroutine dasudd ( ctx, handle, first, last, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: first  !! Range of d.p. addresses to write to.
+         integer(ip), intent(in) :: last  !! Range of d.p. addresses to write to.
+         real(wp), intent(in) :: data   ( * )  !! An array of d.p. numbers.
+      end subroutine dasudd
+
+      !> Update data in a specified range of integer addresses in a DAS
+      !> file.
+      module subroutine dasudi ( ctx, handle, first, last, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(in) :: first  !! Range of integer addresses to write to.
+         integer(ip), intent(in) :: last  !! Range of integer addresses to write to.
+         integer(ip), intent(in) :: data   ( * )  !! An array of integers.
+      end subroutine dasudi
+
+      !> Close a DAS file.
+      !>
+      !> FTSIZE     P   Maximum number of simultaneously open DAS files.
+      module subroutine dascls ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
+      end subroutine dascls
+
+      !> Return the contents of the file record of a specified DAS
+      !> file.
+      module subroutine dasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         character(*), intent(out) :: idword  !! ID word.
+         character(*), intent(out) :: ifname  !! DAS internal file name.
+         integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+         integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+         integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+         integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
+      end subroutine dasrfr
+
+      !> Update the contents of the file record of a specified DAS file.
+      module subroutine daswfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         character(*), intent(in) :: idword  !! ID word.
+         character(*), intent(in) :: ifname  !! DAS internal file name.
+         integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+         integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+         integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+         integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
+      end subroutine daswfr
+
+      !> Add comments from a buffer of character strings to the comment
+      !> area of a binary DAS file, appending them to any comments which
+      !> are already present in the file's comment area.
+      module subroutine dasac ( ctx, handle, n, buffer )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS handle of a file opened with write access.
+         integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
+         character(*), intent(in) :: buffer(*)  !! Buffer of lines to be put into the comment area.
+      end subroutine dasac
+
+      !> Add comments to a previously opened binary DAS file from a
+      !> previously opened text file attached to a Fortran logical unit.
+      !>
+      !> LNSIZE    P   Maximum length of comment line.
+      module subroutine dasacu ( ctx, comlun, begmrk, endmrk, insbln, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: comlun  !! Logical unit of the open comment text file.
+         character(*), intent(in) :: begmrk  !! The begin comments marker in the comment text file.
+         character(*), intent(in) :: endmrk  !! The end comments marker in the comment text file.
+         logical, intent(in) :: insbln  !! A flag indicating whether to insert a blank line.
+         integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with write access.
+      end subroutine dasacu
+
+      !> Delete the entire comment area of a previously opened binary
+      !> DAS file.
+      module subroutine dasdc ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of a binary DAS file opened for writing.
+      end subroutine dasdc
+
+      !> Extract comments from the comment area of a binary DAS file.
+      module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'das.inc'
+         integer(ip), intent(in) :: handle  !! Handle of binary DAS file open with read access.
+         integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
+         integer(ip), intent(out) :: n  !! Number of comments extracted from the DAS file.
+         character(*), intent(out) :: buffer(*)  !! Buffer in which extracted comments are placed.
+         logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
+      end subroutine dasec
+
+      !> Extract comments from a previously opened binary DAS file to a
+      !> previously opened text file attached to a Fortran logical unit.
+      module subroutine dasecu ( ctx, handle, comlun, comnts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with read access.
+         integer(ip), intent(in) :: comlun  !! Logical unit of an opened text file.
+         logical, intent(out) :: comnts  !! Logical flag, indicating comments were found.
+      end subroutine dasecu
+
+      !> Convert the contents of a binary DAS file to an equivalent DAS
+      !> transfer file.
+      module subroutine dasbt ( ctx, binfil, xfrlun )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: binfil  !! Name of the binary DAS file to be converted.
+         integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
+      end subroutine dasbt
+
+      !> Convert the contents of a DAS transfer file into an equivalent
+      !> binary DAS file.
+      module subroutine dastb ( ctx, xfrlun, binfil )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: xfrlun  !! Logical unit of an open DAS transfer file.
+         character(*), intent(in) :: binfil  !! Name of the binary DAS file to be created.
+      end subroutine dastb
+
+      !> Return last DAS logical addresses of character, double precision
+      !> and integer type that are currently in use in a specified DAS
+      !> file.
+      module subroutine daslla ( ctx, handle, lastc, lastd, lasti )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+         integer(ip), intent(out) :: lastc  !! Last character address in use.
+         integer(ip), intent(out) :: lastd  !! Last double precision address in use.
+         integer(ip), intent(out) :: lasti  !! Last integer address in use.
+      end subroutine daslla
+
+   end interface
+   ! --- end pepper_das
    ! <<< generated interfaces
 
 contains
@@ -4629,6 +5412,120 @@ contains
       end if
       call replace_marker(this, marker, trim(name))
    end subroutine ctx_errhan
+
+   !> Note that this context wrote a record to a DAF or DAS file: the
+   !> instance's file_generation changes, so that other contexts empty their
+   !> record caches. This context's caches are consistent with its own
+   !> writes, so they stay current if they were.
+   subroutine files_written(ctx)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      if (ctx%files_seen == ctx%spice%file_generation) ctx%files_seen = ctx%files_seen + 1
+      ctx%spice%file_generation = ctx%spice%file_generation + 1
+   end subroutine files_written
+
+   !> Before using its DAF/DAS record caches: if another context wrote to a
+   !> file since this context filled them, empty them (the DAF record buffer,
+   !> the unmodified records of the DAS buffers, and the DAS address cache).
+   subroutine files_check(ctx)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      if (ctx%files_seen == ctx%spice%file_generation) return
+      if (allocated(ctx%dafrwd)) then
+         ctx%dafrwd%rbhan = 0
+         ctx%dafrwd%rbrec = 0
+         ctx%dafrwd%rbreq = 0
+      end if
+      if (allocated(ctx%dasrwr)) then
+         where (.not. ctx%dasrwr%upbufc) ctx%dasrwr%hnbufc = 0
+         where (.not. ctx%dasrwr%upbufd) ctx%dasrwr%hnbufd = 0
+         where (.not. ctx%dasrwr%upbufi) ctx%dasrwr%hnbufi = 0
+      end if
+      if (allocated(ctx%dasa2l_state)) then
+         ctx%dasa2l_state%tbhan = 0
+         ctx%dasa2l_state%nfiles = 0
+         ctx%dasa2l_state%prvhan = 0
+         ctx%dasa2l_state%fidx = 0
+         ctx%dasa2l_state%prvok = .false.
+      end if
+      ! This context's units are closed too (the handle manager reopens them
+      ! when needed), so that no I/O buffer of the runtime library holds old
+      ! data: all except locked units and scratch files (which would be
+      ! deleted). (A context that wrote is current, so its units stay open.)
+      if (allocated(ctx%zzddhman_units) .and. allocated(ctx%spice%zzddhman)) then
+         block
+            integer(ip) :: k, f
+            integer :: ios
+            associate (u => ctx%zzddhman_units, ft => ctx%spice%zzddhman)
+               do k = 1, u%nut
+                  if (u%uthan(k) == 0 .or. u%utlck(k)) cycle
+                  f = findloc(ft%fthan(1:ft%nft), u%uthan(k), dim=1)
+                  if (f == 0) cycle
+                  if (ft%ftamh(f) == 3) cycle      ! SCRATCH access
+                  close (unit=u%utlun(k), iostat=ios)
+                  u%uthan(k) = 0
+                  u%utcst(k) = 0
+                  u%utlun(k) = -1
+               end do
+            end associate
+         end block
+      end if
+      ctx%files_seen = ctx%spice%file_generation
+   end subroutine files_check
+
+   !> Note that a file was closed: other contexts close their units for its
+   !> handle when they next use their unit tables, and a later open of the
+   !> file is not refused because such a unit is still connected to it.
+   subroutine file_closed(spice, name)
+      type(pepper_spice), intent(inout) :: spice  !! the instance
+      character(*), intent(in) :: name  !! name of the file
+      character(255), allocatable :: names(:)
+      if (.not. was_closed(spice, name)) then
+         if (.not. allocated(spice%closed_files)) allocate (spice%closed_files(16))
+         if (spice%nclosed == size(spice%closed_files)) then
+            allocate (names(2*spice%nclosed))
+            names(1:spice%nclosed) = spice%closed_files
+            call move_alloc(names, spice%closed_files)
+         end if
+         spice%nclosed = spice%nclosed + 1
+         spice%closed_files(spice%nclosed) = name
+      end if
+      spice%close_generation = spice%close_generation + 1
+   end subroutine file_closed
+
+   !> True if a file of this name was closed through this instance before.
+   logical function was_closed(spice, name)
+      type(pepper_spice), intent(in) :: spice  !! the instance
+      character(*), intent(in) :: name  !! name of the file
+      was_closed = .false.
+      if (allocated(spice%closed_files)) &
+         was_closed = any(spice%closed_files(1:spice%nclosed) == name)
+   end function was_closed
+
+   !> If files were closed (through any context) since this context last
+   !> looked, close this context's units for the handles that are not in the
+   !> file table any more, and mark their rows of the unit table free. Only
+   !> the context that opened a unit closes it, so a unit number that NEWUNIT=
+   !> gave to another file is never closed by mistake.
+   subroutine units_check(ctx)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip) :: k
+      integer :: ios
+      if (.not. allocated(ctx%zzddhman_units)) return
+      if (ctx%zzddhman_units%closegen == ctx%spice%close_generation) return
+      associate (u => ctx%zzddhman_units)
+         do k = 1, u%nut
+            if (u%uthan(k) == 0) cycle
+            if (allocated(ctx%spice%zzddhman)) then
+               if (any(ctx%spice%zzddhman%fthan(1:ctx%spice%zzddhman%nft) == u%uthan(k))) cycle
+            end if
+            close (unit=u%utlun(k), iostat=ios)
+            u%uthan(k) = 0
+            u%utcst(k) = 0
+            u%utlck(k) = .false.
+            u%utlun(k) = -1
+         end do
+         u%closegen = ctx%spice%close_generation
+      end associate
+   end subroutine units_check
 
    !> Clear the error status and the messages.
    subroutine ctx_reset(this)

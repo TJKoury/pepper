@@ -575,7 +575,11 @@
 !
 !     Verify that UNIT and ALTUNT do not agree.
 !
-      CALL CHCKSI ( 'UNIT', UNIT, '!=', ALTUNT, 0, OK )
+!     PEPPER: units come from NEWUNIT=; RESLUN reserves units only for
+!     GETLUN, and NEWUNIT= may give the closed file's unit number again
+!     (it never gives a unit that the program reserved for itself, which
+!     has a positive number). So UNIT and ALTUNT may agree.
+!     CALL CHCKSI ( 'UNIT', UNIT, '!=', ALTUNT, 0, OK )
 
 !
 !     Clean up.

@@ -50,6 +50,7 @@ module pepper_state_zzddhman
       logical :: utlck ( utsize )  !! the unit is locked to its file
       integer(ip) :: utlun ( utsize )  !! the units
       integer(ip) :: reqcnt  !! request counter (for the costs)
+      integer(ip) :: closegen  !! the instance's close_generation the unit table reflects
    end type zzddhman_context_state
 
 contains
@@ -68,6 +69,7 @@ contains
       state%opnfst = .true.
       state%nut = 0
       state%reqcnt = 0
+      state%closegen = 0
    end subroutine init_zzddhman_context_state
 
 end module pepper_state_zzddhman

@@ -12,12 +12,13 @@ python = "3.13.*"
 ford = ">=7.0"
 
 [tasks]
-build = { cmd = "fpm build", description = "Build the library" }
-test = { cmd = "fpm test", description = "Build and run all tests (tspice runs serially in the current directory)" }
+clean-stale = { cmd = "python tools/clean_stale.py", description = "Remove build products of deleted sources (see tools/clean_stale.py)" }
+build = { cmd = "fpm build", depends-on = ["clean-stale"], description = "Build the library" }
+test = { cmd = "fpm test", depends-on = ["clean-stale"], description = "Build and run all tests (tspice runs serially in the current directory)" }
 # Extra arguments are passed to tools/run_tspice.py, e.g.
 #   pixi run tspice                 # all families, one job per CPU
 #   pixi run tspice -j 4 'spk*'     # families matching F_SPK*
 #   pixi run tspice --help
-tspice = { cmd = "fpm test tspice --runner 'python tools/run_tspice.py' --", description = "Run the tspice test families in parallel (see tools/run_tspice.py)" }
+tspice = { cmd = "fpm test tspice --runner 'python tools/run_tspice.py' --", depends-on = ["clean-stale"], description = "Run the tspice test families in parallel (see tools/run_tspice.py)" }
 tspice-list = { cmd = "fpm test tspice --runner 'python tools/run_tspice.py' -- --list", description = "List the tspice test families" }
 inventory = { cmd = "python tools/state_inventory.py", description = "Summarize the saved state in src/spicelib (see tools/state_inventory.py; --list, --json PATH)" }

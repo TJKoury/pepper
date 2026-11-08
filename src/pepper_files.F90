@@ -5109,7 +5109,7 @@ contains
 !
 !        Close the unit and remove it from the unit table.
 !
-         close ( unit = utlun(uindex) )
+         if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
          call zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
 
@@ -5185,7 +5185,7 @@ contains
 !
 !           Close the unit and clean up the unit table.
 !
-            close ( unit = utlun(uindex) )
+            if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
             call zzddhrmu ( ctx, uindex, nft,   utcst, uthan, &
                             utlck,  utlun, nut           )
@@ -5229,7 +5229,7 @@ contains
 !
 !     Close the unit and clean up the unit table.
 !
-      close ( unit=utlun(uindex) )
+      if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
       call zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck,  utlun, nut )
 
@@ -5637,7 +5637,7 @@ contains
 !
 !     At this point we need to close the unit from the row of interest.
 !
-      close ( unit = utlun(uindex) )
+      if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
       return
       end procedure zzddhgtu
@@ -6568,6 +6568,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftamh => ctx%spice%zzddhman%ftamh, &
@@ -6798,7 +6799,13 @@ contains
 !        Now if the file was not found in the file table, and it is
 !        attached to a unit, this presents a problem.
 !
-         if ( ( .not. locfnd ) .and. ( inqopn ) ) then
+!
+!        PEPPER: a unit of another context may still be connected to a
+!        file that was closed (it closes it when it next uses its unit
+!        table); that is not an error.
+!
+         if ( ( .not. locfnd ) .and. ( inqopn ) .and. &
+              ( .not. was_closed ( ctx%spice, locfnm(1:rtrim(locfnm)) ) ) ) then
 
 !
 !           Get the unit to include in the error message.
@@ -7261,9 +7268,9 @@ contains
 !        if it was a 'new' one.
 !
          if ( accmet == new ) then
-            close ( unit = utlun(uindex), status = 'DELETE' )
+            if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex), status = 'DELETE' )
          else
-            close ( unit = utlun(uindex) )
+            if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
          end if
 
 !
@@ -7505,6 +7512,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftamh => ctx%spice%zzddhman%ftamh, &
@@ -7610,6 +7618,10 @@ contains
 !     when deciding which close to perform.
 !
       accmet = ftamh (findex)
+!
+!     PEPPER: note the close (other contexts' units for this handle).
+!
+      call file_closed ( ctx%spice, ftnam(findex)(1:ftrtm(findex)) )
 
 !
 !     If we reach here, we need to remove the row FINDEX from
@@ -7641,9 +7653,9 @@ contains
 !        Close the unit.
 !
          if ( ( kill ) .and. ( accmet /= scrtch ) ) then
-            close ( unit = utlun(uindex), status = 'DELETE' )
+            if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex), status = 'DELETE' )
          else
-            close ( unit = utlun(uindex) )
+            if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
          end if
 
 !
@@ -7868,6 +7880,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftamh => ctx%spice%zzddhman%ftamh, &
@@ -8246,6 +8259,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftamh => ctx%spice%zzddhman%ftamh, &
@@ -8531,6 +8545,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftamh => ctx%spice%zzddhman%ftamh, &
@@ -8733,6 +8748,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftbff => ctx%spice%zzddhman%ftbff, &
@@ -8913,6 +8929,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( nft => ctx%spice%zzddhman%nft, &
                   ftabs => ctx%spice%zzddhman%ftabs, &
                   ftamh => ctx%spice%zzddhman%ftamh, &
@@ -9106,6 +9123,7 @@ contains
          allocate ( ctx%zzddhman_units )
          call init_zzddhman_context_state ( ctx%zzddhman_units )
       end if
+      call units_check ( ctx )
       associate ( first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &

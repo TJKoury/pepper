@@ -93,8 +93,8 @@ def convert(path: Path, force=()) -> list:
         elif re.match(r"\s*save\s+\w", s.text, re.I):
             for n in split_top(s.text.split(None, 1)[1]):
                 saves[n.lower()] = s
-        elif re.match(r"\s*data\b", s.text, re.I):
-            datas.append(s)
+        elif re.match(r"\s*data\b", s.text, re.I) and not re.match(r"\s*data\s*\(.*\)\s*(\(.*\))?\s*=", s.text, re.I):
+            datas.append(s)       # (not an assignment to an array named DATA)
     edits = {}
     for s in datas:
         groups = data_groups(s.text)

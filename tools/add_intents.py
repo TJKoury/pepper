@@ -112,7 +112,12 @@ def add_intents(lines: list, first: int, last: int, errors: list) -> list:
             new.append(indent + a + ", ".join(others))
         groups = {}
         for e in dummies:
-            groups.setdefault(intents[entity_name(e)], []).append(e)
+            it = intents[entity_name(e)]
+            # A cell's control area (its size) is an input even if the cell
+            # is an output: intent(inout), not intent(out).
+            if it == "out" and re.search(r"\(\s*lbcell\s*:", e, re.I):
+                it = "inout"
+            groups.setdefault(it, []).append(e)
             declared.add(entity_name(e))
         for intent in ("in", "inout", "out"):
             if intent in groups:
