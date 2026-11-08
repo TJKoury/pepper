@@ -50,7 +50,8 @@ TYPESPEC = re.compile(
     r"character\s*(?:\*\s*\([^()]*\)|\*\s*\d+|\([^()]*\))?)", re.I)
 HEADER = re.compile(r"^\s*(?:(?P<prefix>[\w*()\s,]*?)\s+)?(?P<kind>subroutine|function)"
                     r"\s+(?P<name>\w+)\s*(?:\((?P<args>[^()]*)\))?", re.I)
-SPEC_START = re.compile(r"\s*(use|implicit|include|parameter|external|intrinsic)\b", re.I)
+SPEC_START = re.compile(r"\s*(use|implicit|include|parameter|external|intrinsic|equivalence)\b",
+                        re.I)
 
 
 # ---------------------------------------------------------------------------
@@ -60,8 +61,15 @@ def code_lines(text: str) -> list:
     """Per line: the code with character literals kept and comments and
     preprocessor directives removed (literal-aware across continuations)."""
     out = []
-    for line in map_code(text, lambda s: "\x01" + s + "\x02").split("\n"):
-        if line.startswith("#"):
+    raw = text.split("\n")
+    directive, cont = set(), False
+    for i, line in enumerate(raw):
+        if cont or line.startswith("#"):
+            directive.add(i)
+            cont = line.endswith("\\")
+    for i, line in enumerate(map_code(text, lambda s: "\x01" + s + "\x02").split("\n")):
+        if i in directive:
+            # A preprocessor directive, or a continuation line of one.
             out.append("")
             continue
         cut = line.find("\x02!")
@@ -179,7 +187,7 @@ class Routine:
         for s in self.stmts[1:]:
             if SPEC_START.match(s.text) or parse_decl(s.text):
                 self.spec.append(s)
-            elif re.match(r"\s*(save|data|dimension|equivalence|common|entry)\b", s.text, re.I):
+            elif re.match(r"\s*(save|data|dimension|common|entry)\b", s.text, re.I):
                 raise SystemExit(f"modularize: {self.path.name}: unsupported statement: {s.text}")
             else:
                 break

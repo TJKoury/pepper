@@ -790,9 +790,9 @@
 !
       if ( .not. opened ) then
 
-         call getlun ( number )
+!     PEPPER: the unit comes from NEWUNIT= in the OPEN below.
 
-         open ( unit               = number, &
+         open ( newunit               = number, &
                 file               = file, &
                 access             = 'DIRECT', &
                 recl               = recl, &

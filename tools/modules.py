@@ -114,6 +114,25 @@ CONTEXT_MODULES = {
         bodn2c bodc2n bods2c bodc2s boddef bodfnd zzbods2c zzbodvcd bodvar
         bodvcd bodvrd
         """.split(),
+    "pepper_files": """
+        zzplatfm zzpltchk zzftpstr zzftpchk zzrbrkst zzddhini zzgetbff
+        zzddhgsd zzddhmnm zzddhppf idw2at zzxlatei zzddhivf zzddhf2h zzddhrcm
+        zzddhgtu zzddhrmu zzddhclu zzddhnfc zzddhman
+        """.split(),
+    "pepper_daf": """
+        rdenci
+        hx2dp
+        rdencd
+        txtopn
+        txtopr
+        wrenci
+        int2hx
+        dp2hx
+        wrencd
+        zzdafgfr zzdafnfr zzdafgdr zzdafgsr dafah dafrwa dafps dafrwd dafgda
+        zzxlated dafrda dafrfr dafwfr dafwda dafarr dafrcr dafwcr dafra dafrrr dafac
+        dafdc dafec dafana daffa dafbt dafa2b dafb2a dafb2t daft2b daftb
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -137,6 +156,62 @@ HANDWRITTEN = {
 UMBRELLAS = {
     # Saved caches of the last name/code translated: per context.
     "bodvrd": {"state": "saved", "component": "bodvrd_cache", "where": "context", "entries": ['bodvrd']},
+    # The handle manager: the file table belongs to the instance; the units
+    # (and the tables of format names built on the first call) to the context,
+    # so that each thread opens and recycles its own units.
+    "zzddhman": {"state": "nft ftabs ftamh ftarc ftbff fthan ftnam ftrtm ftmnm next".split(),
+                 "component": "zzddhman",
+                 "context_state": """first opnfst stramh strarc strbff natbff supbff
+                                     numsup nut utcst uthan utlck utlun reqcnt""".split(),
+                 "context_component": "zzddhman_units",
+                 "docs": {"nft": "number of files in the file table",
+                          "ftabs": "absolute value of each file's handle",
+                          "ftamh": "access method of each file",
+                          "ftarc": "architecture (DAF, DAS) of each file",
+                          "ftbff": "binary file format of each file",
+                          "fthan": "handle of each file",
+                          "ftnam": "name of each file",
+                          "ftrtm": "length of each file name",
+                          "ftmnm": "unique number (from the file's attributes) of each file",
+                          "next": "the next handle number (handles are never reused)",
+                          "first": "the tables of names have not been built yet",
+                          "opnfst": "no file has been opened yet (platform check)",
+                          "stramh": "names of the access methods",
+                          "strarc": "names of the architectures",
+                          "strbff": "names of the binary file formats",
+                          "natbff": "the native binary file format",
+                          "supbff": "the supported binary file formats",
+                          "numsup": "number of supported binary file formats",
+                          "nut": "number of entries in the unit table",
+                          "utcst": "cost (time of the last request) of each unit",
+                          "uthan": "handle of the file connected to each unit",
+                          "utlck": "the unit is locked to its file",
+                          "utlun": "the units",
+                          "reqcnt": "request counter (for the costs)"},
+                 "entries": ['zzddhopn', 'zzddhcls', 'zzddhhlu', 'zzddhunl', 'zzddhnfo', 'zzddhisn', 'zzddhfnh', 'zzddhluh']},
+    # First-call tables of format and platform information: per context.
+    **{n: {"state": "saved", "component": n, "where": "context", "entries": [n]} for n in
+       "zzplatfm zzftpstr zzftpchk zzgetbff zzddhgsd zzddhmnm zzddhppf zzxlatei zzddhnfc".split()},
+    # DAF: the file table belongs to the instance; searches and arrays being
+    # written, record buffers and first-call tables to the context.
+    "dafah": {"state": "nft fthan ftlnk ftnd ftni fhlist first".split(), "component": "dafah",
+              "docs": {"nft": "number of DAFs in the file table",
+                       "fthan": "handle of each DAF",
+                       "ftlnk": "number of links (opens) of each DAF",
+                       "ftnd": "number of double precision components of the summaries",
+                       "ftni": "number of integer components of the summaries",
+                       "fhlist": "set of the handles of the open DAFs",
+                       "first": "the handle set has not been initialized yet"},
+              "entries": ['dafopr', 'dafopw', 'dafonw', 'dafopn', 'dafcls', 'dafhsf', 'dafhlu', 'dafluh', 'dafhfn', 'daffnh', 'dafhof', 'dafsih']},
+    "daffa": {"state": "all", "component": "daffa", "where": "context", "entries": ['dafbfs', 'daffna', 'dafbbs', 'daffpa', 'dafgs', 'dafgn', 'dafgh', 'dafrs', 'dafrn', 'dafws', 'dafcs']},
+    "dafana": {"state": "all", "component": "dafana", "where": "context", "entries": ['dafbna', 'dafada', 'dafena', 'dafcad']},
+    "dafrwd": {"state": "saved", "component": "dafrwd", "where": "context", "entries": ['dafgdr', 'dafgsr', 'dafrdr', 'dafwdr', 'dafnrr']},
+    "dafps": {"state": [], "component": None, "entries": ['dafps', 'dafus']},
+    "dafrwa": {"state": [], "component": None, "entries": ['dafrwa', 'dafarw']},
+    # (component <name>_state: a component may not have the name of a
+    # type-bound procedure)
+    **{n: {"state": "saved", "component": n + "_state", "where": "context", "entries": [n]} for n in
+       "dafec dafwda zzdafgdr zzdafgsr zzdafgfr zzdafnfr zzxlated hx2dp".split()},
     "zzhsc": {"state": [], "component": None, "entries": ['zzhscini', 'zzhscadd', 'zzhscchk', 'zzhscavl', 'zzhscinf']},
     "zzhsi": {"state": [], "component": None, "entries": ['zzhsiini', 'zzhsiadd', 'zzhsichk', 'zzhsiavl', 'zzhsiinf']},
     # Built-in body names and codes (tables built on the first call).

@@ -29,11 +29,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from modularize import raw_statements, parse_decl, split_top, entity_name  # noqa: E402
 
 
+class SymbolicRepeat(str):
+    """A DATA value repeated a number of times given by a named constant
+    (``n*value``): the value, marked."""
+
+
 def values_of(text: str) -> list:
     out = []
     for v in split_top(text):
         m = re.match(r"^(\d+)\s*\*\s*(.+)$", v)
-        out.extend([m.group(2).strip()] * int(m.group(1)) if m else [v.strip()])
+        s = re.match(r"^([a-z_]\w*)\s*\*\s*(.+)$", v, re.I)
+        if m:
+            out.extend([m.group(2).strip()] * int(m.group(1)))
+        elif s:
+            out.append(SymbolicRepeat(s.group(2).strip()))
+        else:
+            out.append(v.strip())
     return out
 
 
@@ -89,6 +100,9 @@ def convert(path: Path, force=()) -> list:
         groups = data_groups(s.text)
         ok = True
         for names, vals in groups:
+            if any(isinstance(v, SymbolicRepeat) for v in vals):
+                ok = False         # the array length is not known here
+                break
             if len(names) != 1 or not re.match(r"^\w+$", names[0]):
                 ok = False
                 break

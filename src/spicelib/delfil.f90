@@ -189,9 +189,9 @@
 !
 !     Get an available logical unit and attempt to open the file.
 !
-      call getlun ( lunit )
+!     PEPPER: the unit comes from NEWUNIT= in the OPEN below.
 
-      open ( unit=lunit, file=filnam, status='OLD', iostat=iostat )
+      open ( newunit=lunit, file=filnam, status='OLD', iostat=iostat )
 !
 !     If we had trouble opening the file, signal an appropriate error
 !     and return.

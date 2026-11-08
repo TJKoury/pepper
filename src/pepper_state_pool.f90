@@ -1,3 +1,5 @@
+!> Maintain a pool of variables read from SPICE ASCII kernel files.
+!>
 !> The state of SPICELIB's POOL routines (entry points clpool, ldpool, rtpool, expool, wrpool,
 !> swpool, cvpool, gcpool, gdpool, gipool, dtpool, pcpool, pdpool, pipool, lmpool, szpool, dvpool,
 !> gnpool, dwpool, zzvupool, zzpctrck),

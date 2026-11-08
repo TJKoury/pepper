@@ -45,6 +45,31 @@ module pepper_instance
    use pepper_state_zzbodtrn, only: zzbodtrn_state, init_zzbodtrn_state
    use pepper_state_bodvrd, only: bodvrd_state, init_bodvrd_state
    ! --- end pepper_bodies
+   ! --- pepper_files
+   use pepper_state_zzplatfm, only: zzplatfm_state, init_zzplatfm_state
+   use pepper_state_zzftpstr, only: zzftpstr_state, init_zzftpstr_state
+   use pepper_state_zzftpchk, only: zzftpchk_state, init_zzftpchk_state
+   use pepper_state_zzddhgsd, only: zzddhgsd_state, init_zzddhgsd_state
+   use pepper_state_zzddhmnm, only: zzddhmnm_state, init_zzddhmnm_state
+   use pepper_state_zzddhppf, only: zzddhppf_state, init_zzddhppf_state
+   use pepper_state_zzxlatei, only: zzxlatei_state, init_zzxlatei_state
+   use pepper_state_zzddhnfc, only: zzddhnfc_state, init_zzddhnfc_state
+   use pepper_state_zzddhman, only: zzddhman_state, init_zzddhman_state, zzddhman_context_state, init_zzddhman_context_state
+   ! --- end pepper_files
+   ! --- pepper_daf
+   use pepper_state_hx2dp, only: hx2dp_state, init_hx2dp_state
+   use pepper_state_zzdafgfr, only: zzdafgfr_state, init_zzdafgfr_state
+   use pepper_state_zzdafnfr, only: zzdafnfr_state, init_zzdafnfr_state
+   use pepper_state_zzdafgdr, only: zzdafgdr_state, init_zzdafgdr_state
+   use pepper_state_zzdafgsr, only: zzdafgsr_state, init_zzdafgsr_state
+   use pepper_state_dafah, only: dafah_state, init_dafah_state
+   use pepper_state_dafrwd, only: dafrwd_state, init_dafrwd_state
+   use pepper_state_zzxlated, only: zzxlated_state, init_zzxlated_state
+   use pepper_state_dafwda, only: dafwda_state, init_dafwda_state
+   use pepper_state_dafec, only: dafec_state, init_dafec_state
+   use pepper_state_dafana, only: dafana_state, init_dafana_state
+   use pepper_state_daffa, only: daffa_state, init_daffa_state
+   ! --- end pepper_daf
    ! <<< generated state modules
 
    implicit none
@@ -84,6 +109,12 @@ module pepper_instance
       type(texpyr_state), allocatable :: texpyr  !! state of TEXPYR
       type(pool_state), allocatable :: pool  !! state of POOL
       ! --- end pepper_pool
+      ! --- pepper_files
+      type(zzddhman_state), allocatable :: zzddhman  !! state of ZZDDHMAN
+      ! --- end pepper_files
+      ! --- pepper_daf
+      type(dafah_state), allocatable :: dafah  !! state of DAFAH
+      ! --- end pepper_daf
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -110,6 +141,30 @@ module pepper_instance
       type(zzbodtrn_state), allocatable :: zzbodtrn  !! state of ZZBODTRN
       type(bodvrd_state), allocatable :: bodvrd_cache  !! state of BODVRD
       ! --- end pepper_bodies
+      ! --- pepper_files
+      type(zzplatfm_state), allocatable :: zzplatfm  !! state of ZZPLATFM
+      type(zzftpstr_state), allocatable :: zzftpstr  !! state of ZZFTPSTR
+      type(zzftpchk_state), allocatable :: zzftpchk  !! state of ZZFTPCHK
+      type(zzddhgsd_state), allocatable :: zzddhgsd  !! state of ZZDDHGSD
+      type(zzddhmnm_state), allocatable :: zzddhmnm  !! state of ZZDDHMNM
+      type(zzddhppf_state), allocatable :: zzddhppf  !! state of ZZDDHPPF
+      type(zzxlatei_state), allocatable :: zzxlatei  !! state of ZZXLATEI
+      type(zzddhnfc_state), allocatable :: zzddhnfc  !! state of ZZDDHNFC
+      type(zzddhman_context_state), allocatable :: zzddhman_units  !! per-context state of ZZDDHMAN
+      ! --- end pepper_files
+      ! --- pepper_daf
+      type(hx2dp_state), allocatable :: hx2dp_state  !! state of HX2DP
+      type(zzdafgfr_state), allocatable :: zzdafgfr_state  !! state of ZZDAFGFR
+      type(zzdafnfr_state), allocatable :: zzdafnfr_state  !! state of ZZDAFNFR
+      type(zzdafgdr_state), allocatable :: zzdafgdr_state  !! state of ZZDAFGDR
+      type(zzdafgsr_state), allocatable :: zzdafgsr_state  !! state of ZZDAFGSR
+      type(dafrwd_state), allocatable :: dafrwd  !! state of DAFRWD
+      type(zzxlated_state), allocatable :: zzxlated_state  !! state of ZZXLATED
+      type(dafwda_state), allocatable :: dafwda_state  !! state of DAFWDA
+      type(dafec_state), allocatable :: dafec_state  !! state of DAFEC
+      type(dafana_state), allocatable :: dafana  !! state of DAFANA
+      type(daffa_state), allocatable :: daffa  !! state of DAFFA
+      ! --- end pepper_daf
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -121,6 +176,7 @@ module pepper_instance
       procedure, non_overridable :: errdp => ctx_errdp
       procedure, non_overridable :: errint => ctx_errint
       procedure, non_overridable :: errfnm => ctx_errfnm
+      procedure, non_overridable :: errhan => ctx_errhan
       procedure, non_overridable :: reset => ctx_reset
       procedure, non_overridable :: getmsg => ctx_getmsg
       procedure, non_overridable :: erract => ctx_erract
@@ -335,6 +391,75 @@ module pepper_instance
       procedure, non_overridable :: bodvcd
       procedure, non_overridable :: bodvrd
       ! --- end pepper_bodies
+      ! --- pepper_files
+      procedure, non_overridable :: idw2at
+      ! --- end pepper_files
+      ! --- pepper_daf
+      procedure, non_overridable :: rdenci
+      procedure, non_overridable :: hx2dp
+      procedure, non_overridable :: rdencd
+      procedure, non_overridable :: txtopn
+      procedure, non_overridable :: txtopr
+      procedure, non_overridable :: wrenci
+      procedure, non_overridable :: int2hx
+      procedure, non_overridable :: dp2hx
+      procedure, non_overridable :: wrencd
+      procedure, non_overridable :: dafopr
+      procedure, non_overridable :: dafopw
+      procedure, non_overridable :: dafonw
+      procedure, non_overridable :: dafopn
+      procedure, non_overridable :: dafcls
+      procedure, non_overridable :: dafhsf
+      procedure, non_overridable :: dafhlu
+      procedure, non_overridable :: dafluh
+      procedure, non_overridable :: dafhfn
+      procedure, non_overridable :: daffnh
+      procedure, non_overridable :: dafhof
+      procedure, non_overridable :: dafsih
+      procedure, non_overridable :: dafrwa
+      procedure, non_overridable :: dafarw
+      procedure, non_overridable :: dafps
+      procedure, non_overridable :: dafus
+      procedure, non_overridable :: dafgdr
+      procedure, non_overridable :: dafgsr
+      procedure, non_overridable :: dafrdr
+      procedure, non_overridable :: dafwdr
+      procedure, non_overridable :: dafnrr
+      procedure, non_overridable :: dafgda
+      procedure, non_overridable :: dafrda
+      procedure, non_overridable :: dafrfr
+      procedure, non_overridable :: dafwfr
+      procedure, non_overridable :: dafwda
+      procedure, non_overridable :: dafarr
+      procedure, non_overridable :: dafrcr
+      procedure, non_overridable :: dafwcr
+      procedure, non_overridable :: dafra
+      procedure, non_overridable :: dafrrr
+      procedure, non_overridable :: dafac
+      procedure, non_overridable :: dafdc
+      procedure, non_overridable :: dafec
+      procedure, non_overridable :: dafbna
+      procedure, non_overridable :: dafada
+      procedure, non_overridable :: dafena
+      procedure, non_overridable :: dafcad
+      procedure, non_overridable :: dafbfs
+      procedure, non_overridable :: daffna
+      procedure, non_overridable :: dafbbs
+      procedure, non_overridable :: daffpa
+      procedure, non_overridable :: dafgs
+      procedure, non_overridable :: dafgn
+      procedure, non_overridable :: dafgh
+      procedure, non_overridable :: dafrs
+      procedure, non_overridable :: dafrn
+      procedure, non_overridable :: dafws
+      procedure, non_overridable :: dafcs
+      procedure, non_overridable :: dafbt
+      procedure, non_overridable :: dafa2b
+      procedure, non_overridable :: dafb2a
+      procedure, non_overridable :: dafb2t
+      procedure, non_overridable :: daft2b
+      procedure, non_overridable :: daftb
+      ! --- end pepper_daf
       ! <<< generated bindings
    end type pepper_context
 
@@ -3314,6 +3439,986 @@ module pepper_instance
 
    end interface
    ! --- end pepper_bodies
+   ! --- pepper_files
+   public :: zzplatfm, zzpltchk, zzftpstr, zzftpchk, zzrbrkst, zzddhini, zzgetbff,&
+      zzddhgsd, zzddhmnm, zzddhppf, zzxlatei, zzddhivf, zzddhf2h, zzddhrcm,&
+      zzddhgtu, zzddhrmu, zzddhclu, zzddhnfc, zzddhopn, zzddhcls, zzddhhlu,&
+      zzddhunl, zzddhnfo, zzddhisn, zzddhfnh, zzddhluh
+
+   interface
+
+      !> Return platform ID and various attributes of the intended
+      !> environment
+      module subroutine zzplatfm ( ctx, key, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: key  !! String indicating what information to return.
+         character(*), intent(out) :: value  !! String containing the requested information.
+      end subroutine zzplatfm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzpltchk ( ctx, ok )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         logical, intent(out) :: ok  !! Logical indicating the runtime environment is ok.
+      end subroutine zzpltchk
+
+      !> Retrieve the components of the FTP validation string.
+      module subroutine zzftpstr ( ctx, tstcom, lend, rend, delim )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzftprms.inc'
+         character(*), intent(out) :: tstcom  !! The FTP test component string.
+         character(*), intent(out) :: lend  !! String that brackets TSTCOM on the left in a file.
+         character(*), intent(out) :: rend  !! String that brackets TSTCOM on the right in a file.
+         character(*), intent(out) :: delim  !! Delimiter that separates the pieces of TSTCOM.
+      end subroutine zzftpstr
+
+      !> Check a character string that may contain the FTP validation
+      !> string for FTP based errors.
+      module subroutine zzftpchk ( ctx, string, ftperr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzftprms.inc'
+         character(*), intent(in) :: string  !! String that may contain the FTP validation string.
+         logical, intent(out) :: ftperr  !! Logical indicating if FTP corruption occurred.
+      end subroutine zzftpchk
+
+      !> Extract from a string the last instance of a substring bracketed
+      !> by specified left and right strings .
+      module subroutine zzrbrkst ( ctx, string, lftend, rgtend, substr, length, bkpres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! A string from which to extract SUBSTR.
+         character(*), intent(in) :: lftend  !! A string that brackets SUBSTR on the left.
+         character(*), intent(in) :: rgtend  !! A string that brackets SUBSTR on the right.
+         character(*), intent(out) :: substr  !! The extracted substring.
+         integer(ip), intent(out) :: length  !! The length of the extracted substring.
+         logical, intent(out) :: bkpres  !! Logical indicating if either bracket is present.
+      end subroutine zzrbrkst
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhini ( ctx, natbff, supbff, numsup, stramh, strarc, strbff )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(out) :: natbff  !! Native binary file format.
+         integer(ip), intent(out) :: supbff ( * )  !! List of supported binary file formats for
+                                                   !! reading.
+         integer(ip), intent(out) :: numsup  !! Number of entries returned in SUPBFF.
+         character(*), intent(out) :: stramh ( * )  !! List of labels for METHOD ID codes
+         character(*), intent(out) :: strarc ( * )  !! List of labels for ARCH ID codes
+         character(*), intent(out) :: strbff ( * )  !! List of labels for BFF ID codes
+      end subroutine zzddhini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgetbff ( ctx, bffid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(out) :: bffid  !! Binary file format code for this system.
+      end subroutine zzgetbff
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhgsd ( ctx, class, id, label )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: class  !! String indicating the class of label requested.
+         integer(ip), intent(in) :: id  !! Integer ID desired for the decoding.
+         character(*), intent(out) :: label  !! Corresponding label for the CLASS/ID pair.
+      end subroutine zzddhgsd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns a unique enough DP number computed
+      !> using the contents of the file attached to the UNIT.
+      module real(wp) function zzddhmnm ( ctx, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: unit  !! Logical unit attached to a file.
+      end function zzddhmnm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhppf ( ctx, unit, arch, bff )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         include              'zzftprms.inc'
+         integer(ip), intent(in) :: unit  !! Logical unit attached to the binary file.
+         integer(ip), intent(in) :: arch  !! Integer code indicating the file architecture.
+         integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
+      end subroutine zzddhppf
+
+      !> Extract the architecture and type of a SPICE binary kernel file
+      !> from a file ID word.
+      module subroutine idw2at ( ctx, idword, arch, type )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: idword  !! The IDWORD to be examined.
+         character(*), intent(out) :: arch  !! The file architecture DAS or DAF.
+         character(*), intent(out) :: type  !! The type of the file.
+      end subroutine idw2at
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzxlatei ( ctx, inbff, input, space, output )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: inbff  !! Binary file format code for integers in INPUT.
+         character(*), intent(in) :: input  !! String containing integers read as characters.
+         integer(ip), intent(in) :: space  !! Number of integers that can be placed in OUTPUT.
+         integer(ip), intent(out) :: output ( * )  !! Translated integer values.
+      end subroutine zzxlatei
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhivf ( ctx, nsum, bff, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: nsum  !! String storing the 8 bytes of the FDREC NSUM DP.
+         integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
+         logical, intent(out) :: found  !! Logical indicating that BFF was determined.
+      end subroutine zzddhivf
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhf2h ( ctx, fname, ftabs, ftamh, ftarc, ftbff, fthan, ftnam, ftrtm, ftmnm, nft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
+         integer(ip), intent(in) :: ftabs ( * )  !! File table.
+         integer(ip), intent(in) :: ftamh ( * )  !! File table.
+         integer(ip), intent(in) :: ftarc ( * )  !! File table.
+         integer(ip), intent(in) :: ftbff ( * )  !! File table.
+         integer(ip), intent(in) :: fthan ( * )  !! File table.
+         character(*), intent(in) :: ftnam ( * )  !! File table.
+         integer(ip), intent(in) :: ftrtm ( * )  !! File table.
+         real(wp), intent(in) :: ftmnm ( * )  !! File table.
+         integer(ip), intent(in) :: nft  !! Number of entries in the file table.
+         integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
+         integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
+         logical, intent(inout) :: utlck ( * )  !! Unit table.
+         integer(ip), intent(inout) :: utlun ( * )  !! Unit table.
+         integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+         logical, intent(out) :: exists  !! Logical indicating if FNAME exists.
+         logical, intent(out) :: opened  !! Logical indicating if FNAME is opened.
+         integer(ip), intent(out) :: handle  !! Handle associated with FNAME.
+         logical, intent(out) :: found  !! Logical indicating if FNAME's HANDLE was found.
+         real(wp), intent(out) :: mnm  !! Unique DP (Magic NuMber) associated with FNAME.
+      end subroutine zzddhf2h
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhrcm ( ctx, nut, utcst, reqcnt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
+         integer(ip), intent(inout) :: utcst  ( * )  !! Cost column of the unit table.
+         integer(ip), intent(inout) :: reqcnt  !! Value of the HLU request counter.
+      end subroutine zzddhrcm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(inout) :: utcst  ( * )  !! Unit table.
+         integer(ip), intent(inout) :: uthan  ( * )  !! Unit table.
+         logical, intent(inout) :: utlck  ( * )  !! Unit table.
+         integer(ip), intent(inout) :: utlun  ( * )  !! Unit table.
+         integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+         integer(ip), intent(out) :: uindex  !! Row in the unit table that can be replaced.
+      end subroutine zzddhgtu
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzddhman.inc'
+         integer(ip), intent(in) :: uindex  !! Row index to remove from the unit table.
+         integer(ip), intent(in) :: nft  !! Number of entries in the file table.
+         integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
+         integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
+         logical, intent(inout) :: utlck ( * )  !! Unit table.
+         integer(ip), intent(inout) :: utlun ( * )  !! Unit table.
+         integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+      end subroutine zzddhrmu
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> This function return the number of locked units in the unit table.
+      module integer(ip) function zzddhclu ( ctx, utlck, nut )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: utlck ( * )  !! Lock column of the unit table.
+         integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
+      end function zzddhclu
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhnfc ( ctx, natbff )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzddhman.inc'
+         integer(ip), intent(out) :: natbff  !! Native binary file format code.
+      end subroutine zzddhnfc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhopn ( ctx, fname, method, arch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: arch  !! Expected architecture of the file to load.
+         character(*), intent(in) :: fname  !! Name of file to be loaded.
+         character(*), intent(in) :: method  !! Access method used to load the file.
+         integer(ip), intent(out) :: handle  !! Handle assigned to file.
+      end subroutine zzddhopn
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhcls ( ctx, handle, arch, kill )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: arch  !! Expected architecture of the handle to close.
+         integer(ip), intent(in) :: handle  !! File handle associated with the file to close.
+         logical, intent(in) :: kill  !! Logical indicating whether to delete the file.
+      end subroutine zzddhcls
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhhlu ( ctx, handle, arch, lock, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         logical, intent(in) :: lock  !! Logical indicating to lock UNIT to HANDLE.
+         character(*), intent(in) :: arch  !! Expected file architecture.
+         integer(ip), intent(in) :: handle  !! Handle associated with the file of interest.
+         integer(ip), intent(out) :: unit  !! Corresponding logical unit.
+      end subroutine zzddhhlu
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhunl ( ctx, handle, arch )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: arch  !! Expected architecture of the handle to unlock.
+         integer(ip), intent(in) :: handle  !! File handle assigned to the file to unlock.
+      end subroutine zzddhunl
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhnfo ( ctx, handle, fname, intarc, intbff, intamh, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(out) :: fname  !! Name of the file associated with HANDLE.
+         integer(ip), intent(in) :: handle  !! File handle assigned to file of interest.
+         integer(ip), intent(out) :: intamh  !! Integer code for FNAME's access method.
+         integer(ip), intent(out) :: intarc  !! Integer code for FNAME's file architecture.
+         integer(ip), intent(out) :: intbff  !! Integer code for FNAME's binary file format.
+         logical, intent(out) :: found  !! Logical that indicates if HANDLE was found.
+      end subroutine zzddhnfo
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhisn ( ctx, handle, native, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! File handle assigned to file to determine format.
+         logical, intent(out) :: native  !! Indicates if the file format is native.
+         logical, intent(out) :: found  !! Indicates if HANDLE is currently attached to file.
+      end subroutine zzddhisn
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhfnh ( ctx, fname, handle, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of a file previously loaded with ZZDDHOPN.
+         integer(ip), intent(out) :: handle  !! Corresponding file handle.
+         logical, intent(out) :: found  !! Logical indicating whether HANDLE was located.
+      end subroutine zzddhfnh
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzddhluh ( ctx, unit, handle, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(out) :: handle  !! Corresponding handle.
+         integer(ip), intent(in) :: unit  !! Logical unit connected to a file.
+         logical, intent(out) :: found  !! Logical indicating the handle was located.
+      end subroutine zzddhluh
+
+   end interface
+   ! --- end pepper_files
+   ! --- pepper_daf
+   public :: zzdafgfr, zzdafnfr, zzdafgdr, zzdafgsr, zzxlated
+
+   interface
+
+      !> Read N encoded integers from a text file, decoding them into
+      !> their equivalent integers.
+      module subroutine rdenci ( ctx, unit, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+         integer(ip), intent(in) :: n  !! Number of integers to read and decode.
+         integer(ip), intent(out) :: data(*)  !! List of decoded integers.
+      end subroutine rdenci
+
+      !> Convert a string representing a double precision number in a
+      !> base 16 "scientific notation" into its equivalent double
+      !> precision number.
+      !>
+      !> MAXMAN     P   Maximum number of digits in a hex mantissa.
+      module subroutine hx2dp ( ctx, string, number, error, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! Hex form string to convert to double precision.
+         real(wp), intent(out) :: number  !! Double precision value to be returned.
+         logical, intent(out) :: error  !! A logical flag which is .TRUE. on error.
+         character(*), intent(out) :: errmsg  !! A descriptive error message.
+      end subroutine hx2dp
+
+      !> Read N encoded d.p. numbers from a text file, decoding them
+      !> into their equivalent d.p. numbers.
+      module subroutine rdencd ( ctx, unit, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+         integer(ip), intent(in) :: n  !! Number of d.p. numbers to read and decode.
+         real(wp), intent(out) :: data(*)  !! List of decoded d.p. numbers.
+      end subroutine rdencd
+
+      !> Open a new text file for subsequent write access.
+      module subroutine txtopn ( ctx, fname, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of file.
+         integer(ip), intent(out) :: unit  !! Logical unit.
+      end subroutine txtopn
+
+      !> Open a text file for read access.
+      module subroutine txtopr ( ctx, fname, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of file.
+         integer(ip), intent(out) :: unit  !! Logical unit.
+      end subroutine txtopr
+
+      !> Encode and write integers to a text file.
+      module subroutine wrenci ( ctx, unit, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+         integer(ip), intent(in) :: n  !! Number of integers to encode and write.
+         integer(ip), intent(in) :: data(*)  !! List of integers to be encoded and written.
+      end subroutine wrenci
+
+      !> Convert an integer to an equivalent signed hexadecimal string.
+      module subroutine int2hx ( ctx, number, string, length )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: number  !! Integer to be converted.
+         character(*), intent(out) :: string  !! Equivalent hexadecimal string, left justified.
+         integer(ip), intent(out) :: length  !! The length of the hexadecimal string produced.
+      end subroutine int2hx
+
+      !> Convert a double precision number to an equivalent character
+      !> string using a base 16 "scientific notation."
+      !>
+      !> STRLEN     P   Max number of characters allowed in output string.
+      module subroutine dp2hx ( ctx, number, hxstr, hxssiz )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: number  !! D.p. number to be converted.
+         character(*), intent(out) :: hxstr  !! Equivalent character string, left justified.
+         integer(ip), intent(out) :: hxssiz  !! Length of the character string produced.
+      end subroutine dp2hx
+
+      !> Encode and write d.p. numbers to a text file.
+      module subroutine wrencd ( ctx, unit, n, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+         integer(ip), intent(in) :: n  !! Number of d.p. numbers to encode and write.
+         real(wp), intent(in) :: data(*)  !! List of d.p. numbers to encode and write.
+      end subroutine wrencd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of the DAF.
+         character(*), intent(out) :: idword  !! DAF ID Word that indicates file type.
+         integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+         integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+         character(*), intent(out) :: ifname  !! Internal file name.
+         integer(ip), intent(out) :: fward  !! Forward list pointer.
+         integer(ip), intent(out) :: bward  !! Backward list pointer.
+         integer(ip), intent(out) :: free  !! Free address pointer.
+         logical, intent(out) :: found  !! Logical indicating whether the record was found.
+      end subroutine zzdafgfr
+
+      !> Write the file record to a new DAF file.
+      module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzftprms.inc'
+         integer(ip), intent(in) :: lun  !! Logical unit number of an open DAF file.
+         character(*), intent(in) :: idword  !! DAF ID word.
+         integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
+         integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
+         character(*), intent(in) :: ifname  !! Internal filename.
+         integer(ip), intent(in) :: fward  !! First descriptor record.
+         integer(ip), intent(in) :: bward  !! Last descriptor record.
+         integer(ip), intent(in) :: free  !! First free address.
+         character(*), intent(in) :: format  !! File binary format identifier string.
+      end subroutine zzdafnfr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdafgdr ( ctx, handle, recno, dprec, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of the DAF.
+         integer(ip), intent(in) :: recno  !! Record number.
+         real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
+         logical, intent(out) :: found  !! Logical indicating whether the record was found.
+      end subroutine zzdafgdr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of the DAF.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
+         integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
+         real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
+         logical, intent(out) :: found  !! Logical indicating whether the record was found.
+      end subroutine zzdafgsr
+
+      !> Open a DAF for subsequent read requests.
+      module subroutine dafopr ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of DAF to be opened.
+         integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
+      end subroutine dafopr
+
+      !> Open a DAF for subsequent write requests.
+      module subroutine dafopw ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of DAF to be opened.
+         integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
+      end subroutine dafopw
+
+      !> Open a new DAF for subsequent write requests.
+      module subroutine dafonw ( ctx, fname, ftype, nd, ni, ifname, resv, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of DAF to be opened.
+         character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAF file.
+         integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+         integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(in) :: resv  !! Number of records to reserve.
+         integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
+      end subroutine dafonw
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine DAFONW. NAIF supports this routine only to provide
+      !> backward compatibility.
+      module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of DAF to be opened.
+         integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+         integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(in) :: resv  !! Number of records to reserve.
+         integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
+      end subroutine dafopn
+
+      !> Close the DAF associated with a given handle.
+      module subroutine dafcls ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAF to be closed.
+      end subroutine dafcls
+
+      !> Return the summary format associated with a handle.
+      module subroutine dafhsf ( ctx, handle, nd, ni )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+         integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file.
+      end subroutine dafhsf
+
+      !> Return the logical unit associated with a handle.
+      module subroutine dafhlu ( ctx, handle, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file.
+         integer(ip), intent(out) :: unit  !! Corresponding logical unit.
+      end subroutine dafhlu
+
+      !> Return the handle associated with a logical unit.
+      module subroutine dafluh ( ctx, unit, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
+         integer(ip), intent(in) :: unit  !! Logical unit connected to a DAF.
+      end subroutine dafluh
+
+      !> Return the name of the file associated with a handle.
+      module subroutine dafhfn ( ctx, handle, fname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(out) :: fname  !! Corresponding file name.
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file.
+      end subroutine dafhfn
+
+      !> Return handle associated with a file name.
+      module subroutine daffnh ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: fname  !! Name of a DAF file.
+         integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
+      end subroutine daffnh
+
+      !> Return a SPICE set containing the handles of all currently
+      !> open DAFS.
+      module subroutine dafhof ( ctx, fhset )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(out) :: fhset ( lbcell : * )  !! A set containing handles of currently
+                                                           !! open DAFS.
+      end subroutine dafhof
+
+      !> Signal an error if a DAF file handle does not designate a DAF
+      !> that is open for a specified type of access.
+      module subroutine dafsih ( ctx, handle, access )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! HANDLE to be validated.
+         character(*), intent(in) :: access  !! String indicating access type.
+      end subroutine dafsih
+
+      !> Convert a record/word pair to its equivalent address within
+      !> a DAF.
+      module subroutine dafrwa ( ctx, recno, wordno, addr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: recno  !! Record, word numbers of a location within DAF.
+         integer(ip), intent(in) :: wordno  !! Record, word numbers of a location within DAF.
+         integer(ip), intent(out) :: addr  !! Corresponding address.
+      end subroutine dafrwa
+
+      !> Convert an address within a DAF to its equivalent
+      !> record/word representation.
+      module subroutine dafarw ( ctx, addr, recno, wordno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: recno  !! Corresponding record, word numbers.
+         integer(ip), intent(out) :: wordno  !! Corresponding record, word numbers.
+         integer(ip), intent(in) :: addr  !! Address within DAF.
+      end subroutine dafarw
+
+      !> Pack (assemble) an array summary from its double precision and
+      !> integer components.
+      module subroutine dafps ( ctx, nd, ni, dc, ic, sum )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nd  !! Number of double precision components.
+         integer(ip), intent(in) :: ni  !! Number of integer components.
+         real(wp), intent(in) :: dc       ( * )  !! Double precision components.
+         integer(ip), intent(in) :: ic       ( * )  !! Integer components.
+         real(wp), intent(out) :: sum      ( * )  !! Array summary.
+      end subroutine dafps
+
+      !> Unpack an array summary into its double precision and integer
+      !> components.
+      module subroutine dafus ( ctx, sum, nd, ni, dc, ic )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nd  !! Number of double precision components.
+         integer(ip), intent(in) :: ni  !! Number of integer components.
+         real(wp), intent(out) :: dc       ( * )  !! Double precision components.
+         integer(ip), intent(out) :: ic       ( * )  !! Integer components.
+         real(wp), intent(in) :: sum      ( * )  !! Array summary.
+      end subroutine dafus
+
+      !> Read a portion of the contents of a double precision record in a
+      !> DAF file.
+      module subroutine dafgdr ( ctx, handle, recno, begin, end, data, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: begin  !! First word to read from record.
+         integer(ip), intent(in) :: end  !! Last word to read from record.
+         real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+         logical, intent(out) :: found  !! .TRUE. if record is found.
+      end subroutine dafgdr
+
+      !> Read a portion of the contents of a summary record in a DAF file.
+      module subroutine dafgsr ( ctx, handle, recno, begin, end, data, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: begin  !! First word to read from record.
+         integer(ip), intent(in) :: end  !! Last word to read from record.
+         real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+         logical, intent(out) :: found  !! .TRUE. if record is found.
+      end subroutine dafgsr
+
+      !> Read a portion of the contents of a double precision record in a
+      !> DAF file.
+      !> Obsolete: This routine has been superseded by DAFGDR, and it is
+      !> supported for purposes of backwards compatibility only.
+      module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(in) :: begin  !! First word to read from record.
+         integer(ip), intent(in) :: end  !! Last word to read from record.
+         real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+         logical, intent(out) :: found  !! .TRUE. if record is found.
+      end subroutine dafrdr
+
+      !> Write or rewrite the contents of a double precision record in
+      !> a DAF.
+      module subroutine dafwdr ( ctx, handle, recno, drec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(in) :: recno  !! Record number.
+         real(wp), intent(in) :: drec     ( 128 )  !! Contents of record.
+      end subroutine dafwdr
+
+      !> Return the number of reads and requests fielded by DAFRDR.
+      module subroutine dafnrr ( ctx, reads, reqs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: reads  !! Reads, requests in this execution.
+         integer(ip), intent(out) :: reqs  !! Reads, requests in this execution.
+      end subroutine dafnrr
+
+      !> Read the double precision data bounded by two addresses within
+      !> a DAF.
+      module subroutine dafgda ( ctx, handle, baddr, eaddr, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF.
+         integer(ip), intent(in) :: baddr  !! Initial, final address within file.
+         integer(ip), intent(in) :: eaddr  !! Initial, final address within file.
+         real(wp), intent(out) :: data     ( * )  !! Data contained between BADDR and EADDR.
+      end subroutine dafgda
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzxlated ( ctx, inbff, input, space, output )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: inbff  !! Binary file format of d.p. values in INPUT.
+         character(*), intent(in) :: input  !! String containing d.p. values read as characters.
+         integer(ip), intent(in) :: space  !! Number of d.p. values that can be placed in OUTPUT.
+         real(wp), intent(out) :: output ( * )  !! Translated d.p. values.
+      end subroutine zzxlated
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routines DAFGDA and DAFGSR. This routine is supported for purposes
+      !> of backward compatibility only.
+      module subroutine dafrda ( ctx, handle, begin, end, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF.
+         integer(ip), intent(in) :: begin  !! Initial, final address within file.
+         integer(ip), intent(in) :: end  !! Initial, final address within file.
+         real(wp), intent(out) :: data     ( * )  !! Data contained between BEGIN and END.
+      end subroutine dafrda
+
+      !> Read the contents of the file record of a DAF.
+      module subroutine dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an open DAF file.
+         integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+         integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+         character(*), intent(out) :: ifname  !! Internal file name.
+         integer(ip), intent(out) :: fward  !! Forward list pointer.
+         integer(ip), intent(out) :: bward  !! Backward list pointer.
+         integer(ip), intent(out) :: free  !! Free address pointer.
+      end subroutine dafrfr
+
+      !> Write or rewrite the contents of the file record of a DAF.
+      module subroutine dafwfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an open DAF file.
+         integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+         integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+         character(*), intent(in) :: ifname  !! Internal filename.
+         integer(ip), intent(in) :: fward  !! Forward list pointer.
+         integer(ip), intent(in) :: bward  !! Backward list pointer.
+         integer(ip), intent(in) :: free  !! Free address pointer.
+      end subroutine dafwfr
+
+      !> Write or rewrite the double precision data bounded by two
+      !> addresses within a DAF.
+      module subroutine dafwda ( ctx, handle, begin, end, data )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF.
+         integer(ip), intent(in) :: begin  !! Initial, final address within file.
+         integer(ip), intent(in) :: end  !! Initial, final address within file.
+         real(wp), intent(in) :: data     ( * )  !! Data to be stored between BEGIN and END.
+      end subroutine dafwda
+
+      !> Add a specified number of reserved records to a Double Precision
+      !> Array File (DAF).
+      module subroutine dafarr ( ctx, handle, resv )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF file opened for writing.
+         integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      end subroutine dafarr
+
+      !> Read the contents of a character record from a DAF.
+      module subroutine dafrcr ( ctx, handle, recno, crec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(in) :: recno  !! Record number of character record.
+         character(*), intent(out) :: crec  !! Character record.
+      end subroutine dafrcr
+
+      !> Write or rewrite the contents of a character record to
+      !> a DAF.
+      module subroutine dafwcr ( ctx, handle, recno, crec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(in) :: recno  !! Record number of character record.
+         character(*), intent(in) :: crec  !! Character record.
+      end subroutine dafwcr
+
+      !> Reorder the arrays in a DAF according to a given order vector.
+      module subroutine dafra ( ctx, handle, iorder, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         integer(ip), intent(inout) :: iorder ( * )  !! Order vector.
+         integer(ip), intent(in) :: n  !! Dimension of IORDER.
+      end subroutine dafra
+
+      !> Remove a specified number of reserved records from a Double
+      !> Precision Array File (DAF).
+      module subroutine dafrrr ( ctx, handle, resv )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DAF, opened for writing.
+         integer(ip), intent(in) :: resv  !! Number of records to remove.
+      end subroutine dafrrr
+
+      !> Add comments from a buffer of character strings to the comment
+      !> area of a binary DAF file, appending them to any comments which
+      !> are already present in the file's comment area.
+      module subroutine dafac ( ctx, handle, n, buffer )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF opened with write access.
+         integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
+         character(*), intent(in) :: buffer(*)  !! Buffer of comments to put into the comment area.
+      end subroutine dafac
+
+      !> Delete the entire comment area of a previously opened binary
+      !> DAF attached to HANDLE.
+      module subroutine dafdc ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of a binary DAF opened for writing.
+      end subroutine dafdc
+
+      !> Extract comments from the comment area of a binary DAF.
+      module subroutine dafec ( ctx, handle, bufsiz, n, buffer, done )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of binary DAF opened with read access.
+         integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
+         integer(ip), intent(out) :: n  !! Number of extracted comment lines.
+         character(*), intent(out) :: buffer(*)  !! Buffer where extracted comment lines are placed.
+         logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
+      end subroutine dafec
+
+      !> Begin a new array in a DAF.
+      module subroutine dafbna ( ctx, handle, sum, name )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAF.
+         real(wp), intent(in) :: sum      ( * )  !! Summary of new array.
+         character(*), intent(in) :: name  !! Name of new array.
+      end subroutine dafbna
+
+      !> Add one or more double precision words of data to the newest
+      !> array in the current DAF.
+      module subroutine dafada ( ctx, data, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         real(wp), intent(in) :: data     ( * )  !! Elements of the new array.
+         integer(ip), intent(in) :: n  !! Number of elements in DATA.
+      end subroutine dafada
+
+      !> End the addition of data to the newest array in the current DAF.
+      !>
+      !> None.
+      module subroutine dafena ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+      end subroutine dafena
+
+      !> Select a DAF that already has a new array in progress as the
+      !> one to continue adding data to.
+      module subroutine dafcad ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAF to continue adding data to.
+      end subroutine dafcad
+
+      !> Begin a forward search for arrays in a DAF.
+      module subroutine dafbfs ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of file to be searched.
+      end subroutine dafbfs
+
+      !> Find the next (forward) array in the current DAF.
+      module subroutine daffna ( ctx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         logical, intent(out) :: found  !! .TRUE. if an array was found.
+      end subroutine daffna
+
+      !> Begin a backward search for arrays in a DAF.
+      module subroutine dafbbs ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAF to be searched.
+      end subroutine dafbbs
+
+      !> Find the previous (backward) array in the current DAF.
+      module subroutine daffpa ( ctx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         logical, intent(out) :: found  !! .TRUE. if an array was found.
+      end subroutine daffpa
+
+      !> Return (get) the summary for the current array in the current
+      !> DAF.
+      module subroutine dafgs ( ctx, sum )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         real(wp), intent(out) :: sum    ( * )  !! Summary for current array.
+      end subroutine dafgs
+
+      !> Return (get) the name for the current array in the current DAF.
+      module subroutine dafgn ( ctx, name )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(out) :: name  !! Name of current array.
+      end subroutine dafgn
+
+      !> Return (get) the handle of the DAF currently being searched.
+      module subroutine dafgh ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(out) :: handle  !! Handle for current DAF.
+      end subroutine dafgh
+
+      !> Change the summary for the current array in the current DAF.
+      module subroutine dafrs ( ctx, sum )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         real(wp), intent(in) :: sum    ( * )  !! New summary for current array.
+      end subroutine dafrs
+
+      !> Replace the name for the current array in the current DAF.
+      module subroutine dafrn ( ctx, name )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         character(*), intent(in) :: name  !! New name for current array.
+      end subroutine dafrn
+
+      !> Write a new summary for the current array in the current DAF.
+      module subroutine dafws ( ctx, sum )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         real(wp), intent(in) :: sum    ( * )  !! New summary for current array in the current DAF.
+      end subroutine dafws
+
+      !> Select a DAF that already has a search in progress as the
+      !> one to continue searching.
+      module subroutine dafcs ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzddhman.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DAF to continue searching.
+      end subroutine dafcs
+
+      !> Convert the contents of a binary DAF file to an equivalent DAF
+      !> transfer file.
+      module subroutine dafbt ( ctx, binfil, xfrlun )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: binfil  !! The name of a binary DAF file to be converted.
+         integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
+      end subroutine dafbt
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine DAFTB. NAIF supports this routine only to provide backward
+      !> compatibility.
+      module subroutine dafa2b ( ctx, ascii, binary, resv )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: ascii  !! Name of an existing ASCII (text) DAF.
+         character(*), intent(in) :: binary  !! Name of a binary DAF to be created.
+         integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      end subroutine dafa2b
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine DAFBT. NAIF supports this routine only to provide backward
+      !> compatibility.
+      module subroutine dafb2a ( ctx, binary, ascii )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: binary  !! Name of an existing binary DAF.
+         character(*), intent(in) :: ascii  !! Name of an ASCII (text) DAF to be created.
+      end subroutine dafb2a
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine DAFBT. NAIF supports this routine only to provide backward
+      !> compatibility.
+      module subroutine dafb2t ( ctx, binary, text )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: binary  !! Name of an existing binary DAF.
+         integer(ip), intent(in) :: text  !! Logical unit connected to text file.
+      end subroutine dafb2t
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine DAFTB. NAIF supports this routine only to provide backward
+      !> compatibility.
+      !>
+      !> BSIZE      P   Buffer size.
+      module subroutine daft2b ( ctx, text, binary, resv )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: text  !! Logical unit connected to text file.
+         character(*), intent(in) :: binary  !! Name of a binary DAF to be created.
+         integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      end subroutine daft2b
+
+      !> Convert the contents of an DAF transfer file into an equivalent
+      !> binary DAF file.
+      module subroutine daftb ( ctx, xfrlun, binfil )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: xfrlun  !! Logical unit of an open DAF transfer file.
+         character(*), intent(in) :: binfil  !! Name of a binary DAF file to be created.
+      end subroutine daftb
+
+   end interface
+   ! --- end pepper_daf
    ! <<< generated interfaces
 
 contains
@@ -3493,6 +4598,37 @@ contains
          call replace_marker(this, marker, trim(name))
       end if
    end subroutine ctx_errfnm
+
+   !> Replace the first occurrence of marker in the long message with the
+   !> name of the file with a DAF or DAS handle (blank if the handle is not
+   !> known).
+   subroutine ctx_errhan(this, marker, handle)
+      class(pepper_context), intent(inout) :: this  !! the context
+      character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
+      integer(ip), intent(in) :: handle  !! handle of a DAF or DAS file
+      character(1024) :: name
+      integer(ip) :: arc, bff, amh
+      logical :: found, failed_before
+      interface
+         subroutine errhan(marker, handle)   ! SPICELIB
+            import :: ip
+            character(*), intent(in) :: marker
+            integer(ip), intent(in) :: handle
+         end subroutine errhan
+      end interface
+      if (this%legacy) then
+         call errhan(marker, handle)
+         return
+      end if
+      ! Look up the name without disturbing an error that is being built.
+      failed_before = this%failure
+      name = ' '
+      if (.not. failed_before) then
+         call zzddhnfo(this, handle, name, arc, bff, amh, found)
+         if (.not. found) name = ' '
+      end if
+      call replace_marker(this, marker, trim(name))
+   end subroutine ctx_errhan
 
    !> Clear the error status and the messages.
    subroutine ctx_reset(this)

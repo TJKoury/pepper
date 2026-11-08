@@ -454,13 +454,12 @@
 !
 !     Get an available logical unit for the comment scratch file.
 !
-      call getlun ( scrlun )
 
       if ( failed() ) return
 !
 !     Attempt to open the comment scratch file.
 !
-      open ( unit=scrlun, status='SCRATCH', iostat=iostat )
+      open ( newunit=scrlun, status='SCRATCH', iostat=iostat )
 
       if ( iostat /= 0 ) then
 

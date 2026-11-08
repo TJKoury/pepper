@@ -291,9 +291,9 @@
 !     but it's not okay to rewind the file connected to UNIT --
 !     we don't know the initial location of the file pointer.
 !
-      call getlun ( scrtch )
+!     PEPPER: the unit comes from NEWUNIT= in the OPEN below.
 
-      open ( unit            =  scrtch, &
+      open ( newunit            =  scrtch, &
              form            = 'FORMATTED', &
              access          = 'SEQUENTIAL', &
              status          = 'SCRATCH', &

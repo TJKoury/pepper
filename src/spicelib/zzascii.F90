@@ -337,12 +337,12 @@
 !
 !     Find a free logical unit for file access.
 !
-      call getlun ( number )
+!     PEPPER: the unit comes from NEWUNIT= in the OPEN below.
 
 !
 !     Open the file for DIRECT access.
 !
-      open ( unit               = number  , &
+      open ( newunit               = number  , &
              file               = file( :rtrim(file) ), &
              access             = 'DIRECT', &
              status             = 'OLD'   , &

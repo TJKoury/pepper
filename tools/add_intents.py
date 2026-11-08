@@ -21,7 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from modularize import HEADER, parse_decl, raw_statements, entity_name, SPEC_START  # noqa: E402
 
-ROW = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s+(I/O|I-O|I,O|I|O)(\s|$)")
+ROW = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s*,?\s+(I/O|I-O|I,O|I|O)(\s|$)")
 PENDING = re.compile(r"^!\s{2,}([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)\s*,\s*$")
 INTENT = {"I": "in", "O": "out", "I/O": "inout", "I-O": "inout", "I,O": "inout"}
 

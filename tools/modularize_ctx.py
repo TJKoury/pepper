@@ -57,8 +57,8 @@ from add_intents import table as io_table  # noqa: E402
 from document_procedures import abstract, descriptions, leftover_text  # noqa: E402
 
 INSTANCE = SRC / "pepper_instance.f90"
-ERROR_CALLS = ["sigerr", "setmsg", "errch", "errdp", "errint", "errfnm", "reset", "getmsg",
-               "erract"]
+ERROR_CALLS = ["sigerr", "setmsg", "errch", "errdp", "errint", "errfnm", "errhan", "reset",
+               "getmsg", "erract"]
 ERROR_FUNCS = ["failed", "return"]
 ORDER = list(CONTEXT_MODULES)
 
@@ -81,6 +81,12 @@ DOCS = {
     "pepper_bodies": "Body names and NAIF ID codes (built-in, and defined in the kernel "
                      "pool or by boddef), and body constants from the pool (bodvrd, "
                      "bodvcd); hash sets of names and integers.",
+    "pepper_files": "The handle manager of binary kernel files (DAF, DAS): the file "
+                    "table of the instance, the units of each context, file formats, "
+                    "platform attributes and the FTP corruption check.",
+    "pepper_daf": "DAF (Double precision Array File) files: opening and closing, "
+                  "reading and writing records, arrays and summaries, searching the "
+                  "arrays, comments, and the transfer format.",
 }
 
 
@@ -101,7 +107,7 @@ def make_umbrella(name: str):
     functions = set(module_of()) | set(CONSTANTS) | set(ERROR_FUNCS) | set(ERROR_CALLS)
     functions |= {r for rs in CONTEXT_MODULES.values() for r in rs}
     return Umbrella(name, cfg["state"], cfg["component"], cfg.get("where", "instance"), functions,
-                    cfg.get("docs"))
+                    cfg.get("docs"), cfg.get("context_state", ()), cfg.get("context_component"))
 
 
 def where_ctx() -> dict:
@@ -408,18 +414,27 @@ def generate(mod: str, dry_run: bool) -> list:
         ifaces = "   public :: " + "&\n      ".join(_wrap(", ".join(publics), 70)) + "\n\n" + ifaces
     text = replace_region(text, "bindings", mod, binds)
     text = replace_region(text, "interfaces", mod, ifaces)
-    with_state = [u for u in umbrellas if u.state]
+    with_state = [u for u in umbrellas if u.state or u.cstate]
     if with_state:
-        text = replace_region(text, "state modules", mod, "\n".join(
-            f"   use pepper_state_{u.name}, only: {u.name}_state, init_{u.name}_state"
-            for u in with_state))
+        uses = []
+        for u in with_state:
+            names = [f"{u.name}_state", f"init_{u.name}_state"]
+            if u.cstate:
+                names += [f"{u.name}_context_state", f"init_{u.name}_context_state"]
+            uses.append(f"   use pepper_state_{u.name}, only: {', '.join(names)}")
+        text = replace_region(text, "state modules", mod, "\n".join(uses))
+        comps = {"instance": [], "context": []}
+        for u in with_state:
+            if u.state:
+                comps[u.where].append(f"      type({u.name}_state), allocatable :: {u.component}  !! "
+                                      f"state of {u.name.upper()}")
+            if u.cstate:
+                comps["context"].append(f"      type({u.name}_context_state), allocatable :: "
+                                        f"{u.ccomponent}  !! per-context state of {u.name.upper()}")
         for where, region in (("instance", "state components"),
                               ("context", "context state components")):
-            us = [u for u in with_state if u.where == where]
-            if us:
-                text = replace_region(text, region, mod, "\n".join(
-                    f"      type({u.name}_state), allocatable :: {u.component}  !! "
-                    f"state of {u.name.upper()}" for u in us))
+            if comps[where]:
+                text = replace_region(text, region, mod, "\n".join(comps[where]))
     legacy = SRC / "legacy" / legacy_name(mod)
     wrappers = LEGACY_HEADER.format(mod=mod, src=f"src/{sub.name}") + "\n" + \
         "\n\n".join(wrapper(r) for r in routines) + "\n"

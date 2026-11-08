@@ -490,7 +490,8 @@
       integer(ip)           i
       integer(ip)           iostat
       integer(ip)           last
-      integer(ip)           resnum  ( nresv )
+      integer(ip), parameter :: resnum  ( nresv ) = &
+         [ 5, 6, 7 ]
 
       logical               first
       logical               opened
@@ -513,7 +514,6 @@
 !     VAX, SUN, PC, HP, SGI, DEC Alpha-OSF/1, and PC/Lunix
 !     reserved units.
 !
-      data             resnum    / 5, 6, 7 /
 
 
 !
