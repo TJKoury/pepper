@@ -25,11 +25,11 @@
       implicit none
 
       real(wp)              tvec   ( * )
-      character*(*)         type
+      character(*)          type
       logical               mods
-      character*(*)         modify ( * )
+      character(*)          modify ( * )
       logical               ok
-      character*(*)         error
+      character(*)          error
 
 ! $ Brief_I/O
 !
@@ -296,10 +296,10 @@
       integer(ip)           lnsize
       parameter           ( lnsize = 200 )
 
-      character*(lnsize)    messge
+      character(lnsize)     messge
 
-      character*(10)        mnames ( 12 )
-      character*(7)         cname  (  4 )
+      character(10)         mnames ( 12 )
+      character(7)          cname  (  4 )
 
       real(wp)              dinmon ( 12 )
 
@@ -366,7 +366,7 @@
 
       modtru = .false.
       if ( mods ) then
-         modtru = (modify(era) .eq. 'B.C.')
+         modtru = (modify(era) == 'B.C.')
       end if
 
       if ( modtru ) then
@@ -390,7 +390,7 @@
 !
       modtru = .false.
       if ( mods ) then
-         modtru = (modify(ampm) .ne. ' ')
+         modtru = (modify(ampm) /= ' ')
       end if
 
       if ( modtru ) then
@@ -415,7 +415,7 @@
 !     We only check YD and YMD anything else is out of the
 !     province of this routine.
 !
-      if ( type .ne. 'YD' .and. type .ne. 'YMD' ) then
+      if ( type /= 'YD' .and. type /= 'YMD' ) then
 
          ok    = .false.
          error = 'The type of the time vector specified was #, ' &
@@ -429,7 +429,7 @@
 !
 !     First check.  The year must be an integer.
 !
-      if ( tvec(1) .ne. real(year, wp) ) then
+      if ( tvec(1) /= real(year, wp) ) then
          ok    = .false.
          error = 'The year value was #.  This must be an ' &
          //      'integral value. '
@@ -439,7 +439,7 @@
       end if
 
 
-      if      ( type .eq. 'YD' ) then
+      if      ( type == 'YD' ) then
 
          day    = 2
          hour   = 3
@@ -447,8 +447,8 @@
          second = 5
          doy    = tvec(2)
 
-         if (      tvec(2) .ge. dinyr + 1.0_wp &
-             .or.  tvec(2) .lt. 1.0_wp       ) then
+         if (      tvec(2) >= dinyr + 1.0_wp &
+             .or.  tvec(2) < 1.0_wp       ) then
 
             ok    = .false.
             error = 'Day # has been specified for the year #. ' &
@@ -463,7 +463,7 @@
          end if
 
 
-      else if ( type .eq. 'YMD' ) then
+      else if ( type == 'YMD' ) then
 
          month  = nint( tvec(2) )
          day    = 3
@@ -472,7 +472,7 @@
          second = 6
          doy    = 0.0_wp
 
-         if ( tvec(2) .ne. real(month, wp) ) then
+         if ( tvec(2) /= real(month, wp) ) then
 
             ok    = .false.
             error = 'The month specified, #, was not an integer. ' &
@@ -481,8 +481,8 @@
             call repmd ( error,  '#', tvec(2), 3, error )
             return
 
-         else if (      tvec(2) .lt.   1.0_wp &
-                   .or. tvec(2) .gt.  12.0_wp ) then
+         else if (      tvec(2) <   1.0_wp &
+                   .or. tvec(2) >  12.0_wp ) then
 
             ok    = .false.
             error = 'The month specified was #.  The month must ' &
@@ -491,8 +491,8 @@
             call repmi ( error, '#', month, error )
             return
 
-         else if (      tvec(3) .lt. 1.0_wp &
-                   .or. tvec(3) .ge. dinmon(month) + 1.0_wp ) then
+         else if (      tvec(3) < 1.0_wp &
+                   .or. tvec(3) >= dinmon(month) + 1.0_wp ) then
 
             ok    = .false.
             error = 'The day of the month specified for the ' &
@@ -519,16 +519,16 @@
 !
 !     Make sure the hours, minutes and seconds are all in range.
 !
-      if (     tvec(hour) .ge. hubnd &
-          .or. tvec(hour) .lt. hlbnd ) then
+      if (     tvec(hour) >= hubnd &
+          .or. tvec(hour) < hlbnd ) then
 
          ok    = .false.
          error = messge
          call repmd ( error,  '#', tvec(hour), 2, error )
          return
 
-      else if (     tvec(minute) .ge. 60.0_wp &
-               .or. tvec(minute) .lt.  0.0_wp ) then
+      else if (     tvec(minute) >= 60.0_wp &
+               .or. tvec(minute) <  0.0_wp ) then
 
          ok    = .false.
          error = 'The minutes component of the time specified ' &
@@ -539,30 +539,30 @@
 
       end if
 
-      if (     tvec(second) .ge. 60.0_wp &
-          .or. tvec(second) .lt.  0.0_wp ) then
+      if (     tvec(second) >= 60.0_wp &
+          .or. tvec(second) <  0.0_wp ) then
 !
 !        We allow for the possibility that we might have a leapsecond.
 !
          modtru = .false.
          if ( mods ) then
-            modtru = ( modify(ampm) .eq. 'P.M.')
+            modtru = ( modify(ampm) == 'P.M.')
          end if
 
-         if (        tvec(second) .lt. 61.0_wp &
-              .and.  tvec(second) .gt.  0.0_wp &
-              .and.  tvec(minute) .eq. 59.0_wp &
-              .and.  tvec(hour)   .eq. 23.0_wp &
-              .and.( doy .eq. dinyr .or. doy .eq. jun30 ) ) then
+         if (        tvec(second) < 61.0_wp &
+              .and.  tvec(second) >  0.0_wp &
+              .and.  tvec(minute) == 59.0_wp &
+              .and.  tvec(hour)   == 23.0_wp &
+              .and.( doy == dinyr .or. doy == jun30 ) ) then
 !
 !           Don't do anything.
 !
-         else if (        tvec(second) .lt. 61.0_wp &
-              .and.  tvec(second) .gt.  0.0_wp &
-              .and.  tvec(minute) .eq. 59.0_wp &
-              .and.  tvec(hour)   .eq. 11.0_wp &
+         else if (        tvec(second) < 61.0_wp &
+              .and.  tvec(second) >  0.0_wp &
+              .and.  tvec(minute) == 59.0_wp &
+              .and.  tvec(hour)   == 11.0_wp &
               .and.  modtru &
-              .and.( doy .eq. dinyr .or. doy .eq. jun30 ) ) then
+              .and.( doy == dinyr .or. doy == jun30 ) ) then
 !
 !           Don't do anything.
 !
@@ -591,13 +591,13 @@
          comp = comp + 1
          k    = comp
 
-         if ( tvec(i) .ne. nint(tvec(i)) ) then
+         if ( tvec(i) /= nint(tvec(i)) ) then
 
             do j = i+1, second
 
                k = k+1
 
-               if ( tvec(j) .ne. 0.0_wp ) then
+               if ( tvec(j) /= 0.0_wp ) then
                   ok    = .false.
                   error = 'The ''#'' component of the date has a ' &
                   //      'fractional component.  This is ' &

@@ -42,17 +42,17 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         vecdef
-      character*(*)         method
-      character*(*)         target
-      character*(*)         ref
-      character*(*)         abcorr
-      character*(*)         obsrvr
-      character*(*)         dref
+      character(*)          vecdef
+      character(*)          method
+      character(*)          target
+      character(*)          ref
+      character(*)          abcorr
+      character(*)          obsrvr
+      character(*)          dref
       real(wp)              dvec   ( 3 )
-      character*(*)         crdsys
-      character*(*)         crdnam
-      character*(*)         relate
+      character(*)          crdsys
+      character(*)          crdnam
+      character(*)          relate
       real(wp)              refval
       real(wp)              tol
       real(wp)              adjust
@@ -975,19 +975,19 @@
 !
 !     Local variables
 !
-      character*(crdlen)    nrmcrd
-      character*(syslen)    nrmsys
-      character*(oplen)     ops    ( nc )
-      character*(crdlen)    prxcrd
-      character*(funlen)    prxfun
-      character*(syslen)    prxsys
-      character*(bdnmln)    rctrnm
-      character*(rptlen)    rptpre ( 2 )
-      character*(rptlen)    rptsuf ( 2 )
-      character*(rptlen)    tmplat
-      character*(namlen)    rlist  ( nwlong )
-      character*(oplen)     uop
-      character*(oplen)     prxrel
+      character(crdlen)     nrmcrd
+      character(syslen)     nrmsys
+      character(oplen)      ops    ( nc )
+      character(crdlen)     prxcrd
+      character(funlen)     prxfun
+      character(syslen)     prxsys
+      character(bdnmln)     rctrnm
+      character(rptlen)     rptpre ( 2 )
+      character(rptlen)     rptsuf ( 2 )
+      character(rptlen)     tmplat
+      character(namlen)     rlist  ( nwlong )
+      character(oplen)      uop
+      character(oplen)      prxrel
 
       real(wp)              alt
       real(wp)              cmpval
@@ -1247,7 +1247,7 @@
 !
 !     Check the workspace window count.
 !
-      if ( nw .lt. nwmax ) then
+      if ( nw < nwmax ) then
 
          call setmsg ( 'Workspace window count was # but must be ' &
          //            'at least #.'                              )
@@ -1291,7 +1291,7 @@
 !
       i = isrchc( uop, nc, ops )
 
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 
         call setmsg ('The comparison operator, # is not '            // &
                      'recognized.  Supported quantities are: '       // &
@@ -1312,7 +1312,7 @@
 !
 !     Make sure TOL is positive.
 !
-      if ( tol .le. 0.0_wp ) then
+      if ( tol <= 0.0_wp ) then
 
          call setmsg ( 'TOL was #; must be positive.' )
          call errdp  ( '#',  tol                      )
@@ -1332,7 +1332,7 @@
 !
 !     Make sure ADJUST is non-negative.
 !
-      if ( adjust .lt. 0.0_wp ) then
+      if ( adjust < 0.0_wp ) then
 
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
@@ -1346,9 +1346,9 @@
 !    Confirm ADJUST equals zero unless UOP (RELATE) has value
 !    "ABSMAX" or "ABSMIN."
 !
-      if(  (uop .ne. 'ABSMIN')  .and. (uop .ne. 'ABSMAX' ) ) then
+      if(  (uop /= 'ABSMIN')  .and. (uop /= 'ABSMAX' ) ) then
 
-         if ( adjust .ne. 0.0_wp ) then
+         if ( adjust /= 0.0_wp ) then
 
             call setmsg ( 'ADJUST should have value zero for all '  // &
                           'comparison operators except ABSMAX and ' // &
@@ -1393,7 +1393,7 @@
 !     We've done the basic error checking. Empty the result window and
 !     return now if the confinement window is empty.
 !
-      if ( wncard(cnfine) .eq. 0 ) then
+      if ( wncard(cnfine) == 0 ) then
 
          call scardd ( 0, result )
 
@@ -1411,15 +1411,15 @@
 !     To eliminate special cases, we'll check for inequality
 !     constraints that are always met or can't be met.
 !
-      if (      ( nrmsys .eq. cylsys ) &
-           .or. ( nrmsys .eq. pgrsys ) &
-           .or. ( nrmsys .eq. radsys )  ) then
+      if (      ( nrmsys == cylsys ) &
+           .or. ( nrmsys == pgrsys ) &
+           .or. ( nrmsys == radsys )  ) then
 
-         if ( cos(refval) .eq. 1.0_wp ) then
+         if ( cos(refval) == 1.0_wp ) then
 !
 !           The reference value lies on the branch cut at 0.
 !
-            if ( uop .eq. '<' ) then
+            if ( uop == '<' ) then
 !
 !              These coordinates can never be less than zero.
 !
@@ -1428,7 +1428,7 @@
                call chkout ( 'ZZGFLONG' )
                return
 
-            else if ( uop .eq. '>' ) then
+            else if ( uop == '>' ) then
 !
 !              The solution is the whole confinement window. This
 !              is because the inequality operators really act like
@@ -1446,15 +1446,15 @@
          end if
 
 
-      else if (      ( nrmsys .eq. geosys ) &
-                .or. ( nrmsys .eq. latsys ) &
-                .or. ( nrmsys .eq. sphsys )  ) then
+      else if (      ( nrmsys == geosys ) &
+                .or. ( nrmsys == latsys ) &
+                .or. ( nrmsys == sphsys )  ) then
 
-         if ( cos(refval) .eq. -1.0_wp ) then
+         if ( cos(refval) == -1.0_wp ) then
 !
 !           The reference value lies on the branch cut at pi.
 !
-            if ( uop .eq. '<' ) then
+            if ( uop == '<' ) then
 !
 !              The solution is the whole confinement window.
 !
@@ -1463,7 +1463,7 @@
                call chkout ( 'ZZGFLONG' )
                return
 
-            else if ( uop .eq. '>' ) then
+            else if ( uop == '>' ) then
 !
 !              These coordinates can never be greater
 !              than pi.
@@ -1516,18 +1516,18 @@
       xrfval = refval
 
 
-      if ( nrmsys .eq. sphsys ) then
+      if ( nrmsys == sphsys ) then
 
          nrmsys = latsys
          xrfval = refval
 
-      else if ( nrmsys .eq. cylsys ) then
+      else if ( nrmsys == cylsys ) then
 
          nrmsys = radsys
          nrmcrd = racrd
          xrfval = refval
 
-      else if ( nrmsys .eq. pgrsys ) then
+      else if ( nrmsys == pgrsys ) then
 
          nrmsys = radsys
          nrmcrd = racrd
@@ -1579,7 +1579,7 @@
 !        longitudes corresponding to positive Y values are
 !        in the range pi to 2*pi.
 !
-         if (  lon .gt. pi() ) then
+         if (  lon > pi() ) then
 !
 !           Planetographic longitude for the frame center is positive
 !           West.
@@ -1587,32 +1587,32 @@
 !           Note that no action is required to modify non-zero
 !           extremum adjustment values.
 !
-            if ( uop .eq. 'ABSMAX' ) then
+            if ( uop == 'ABSMAX' ) then
 
                uop = 'ABSMIN'
 
-            else if ( uop .eq. 'ABSMIN' ) then
+            else if ( uop == 'ABSMIN' ) then
 
                uop = 'ABSMAX'
 
-            else if ( uop .eq. 'LOCMAX' ) then
+            else if ( uop == 'LOCMAX' ) then
 
                uop = 'LOCMIN'
 
-            else if ( uop .eq. 'LOCMIN' ) then
+            else if ( uop == 'LOCMIN' ) then
 
                uop = 'LOCMAX'
 
-            else if ( uop .eq. '=' ) then
+            else if ( uop == '=' ) then
 
                xrfval = twopi() - refval
 
-            else if ( uop .eq. '<' ) then
+            else if ( uop == '<' ) then
 
                uop    = '>'
                xrfval = twopi() - refval
 
-            else if ( uop .eq. '>' ) then
+            else if ( uop == '>' ) then
 
                uop    = '<'
                xrfval = twopi() - refval
@@ -1671,7 +1671,7 @@
 !
 !     Case:  '='
 !
-      if ( uop .eq. '=' ) then
+      if ( uop == '=' ) then
 !
 !        Equality constraints are the simplest to handle, so we'll get
 !        them out of the way now. Our approach is to use sine or cosine
@@ -1696,7 +1696,7 @@
 !
 !        Decide which proxy function to use.
 !
-         if ( abs(sv) .ge. r2ovr2 ) then
+         if ( abs(sv) >= r2ovr2 ) then
 !
 !           The reference value lies in the top or bottom quarter of
 !           the unit circle. The "comparison value" CMPVAL will be
@@ -1740,7 +1740,7 @@
 !        Now we're ready to compute the window in which our proxy
 !        function satisfies the proxy constraint.
 !
-         if ( prxfun .eq. 'SIN' ) then
+         if ( prxfun == 'SIN' ) then
 !
 !           Find the window where the sine of the coordinate satisfies
 !           the proxy constraint.
@@ -1796,7 +1796,7 @@
 
             start = work(i,f1)
 
-            if ( prxfun .eq. 'SIN' ) then
+            if ( prxfun == 'SIN' ) then
 !
 !              Get the cosine of the coordinate at the interval start
 !              time. If this cosine has the same sign as the cosine of
@@ -1835,8 +1835,8 @@
 !
 !     Case: local minimum or local maximum
 !
-      if (      ( uop .eq. 'LOCMAX' ) &
-           .or. ( uop .eq. 'LOCMIN' )  ) then
+      if (      ( uop == 'LOCMAX' ) &
+           .or. ( uop == 'LOCMIN' )  ) then
 !
 !        This algorithm uses 4 ZZGFREL calls, 2 of which perform
 !        2 passes and 2 of which perform 1 pass.
@@ -1943,7 +1943,7 @@
 !
          do i = 1, 2
 
-            if ( i .eq. 1 ) then
+            if ( i == 1 ) then
 !
 !              The sector we're searching is indexed by LEFT.
 !              We'll use RA as a proxy function, since RA has no
@@ -2043,9 +2043,9 @@
 !
 !     The ZZGFREL call below involves two passes.
 !
-      if (  ( uop .eq. 'ABSMAX' ) .or. ( uop .eq. 'ABSMIN' ) ) then
+      if (  ( uop == 'ABSMAX' ) .or. ( uop == 'ABSMIN' ) ) then
 
-         if ( adjust .eq. 0 ) then
+         if ( adjust == 0 ) then
             tmplat = 'Coordinate pass # of 7'
          else
             tmplat = 'Coordinate pass # of 7-9'
@@ -2203,15 +2203,15 @@
 !
 !     Now find the absolute extremum, if this was requested.
 !
-      if (      ( uop .eq. 'ABSMAX' ) &
-           .or. ( uop .eq. 'ABSMIN' )  ) then
+      if (      ( uop == 'ABSMAX' ) &
+           .or. ( uop == 'ABSMIN' )  ) then
 !
 !        If we're looking for an absolute extremum and the
 !        adjustment value is 0, each ZZGFREL call executes
 !        on search pass; otherwise these calls execute two
 !        search passes.
 !
-         if ( nrmcrd .eq. loncrd ) then
+         if ( nrmcrd == loncrd ) then
 !
 !           We need windows when the coordinate is in quadrants 2 and
 !           3. We can derive these from the windows TOP and RIGHT
@@ -2234,7 +2234,7 @@
             call wndifd( work(lb,top), work(lb,right), work(lb,q2)  )
             call wndifd( work(lb,bot), work(lb,right), work(lb,q3 ) )
 
-            if ( uop .eq. 'ABSMAX' ) then
+            if ( uop == 'ABSMAX' ) then
 
                region(1) = q2
                region(2) = right
@@ -2246,7 +2246,7 @@
             end if
 
 
-         else if ( nrmcrd .eq. racrd ) then
+         else if ( nrmcrd == racrd ) then
 !
 !           We need windows when the coordinate is in quadrants 1 and
 !           4, and the window when the coordinate is in the left half
@@ -2276,7 +2276,7 @@
             call wnintd( work(lb,right), work(lb,bot),   work(lb,q4)   )
             call wndifd( cnfine,         work(lb,right), work(lb,left) )
 
-            if ( uop .eq. 'ABSMAX' ) then
+            if ( uop == 'ABSMAX' ) then
 
                region(1) = q4
                region(2) = left
@@ -2307,7 +2307,7 @@
          found = .false.
          i     = 1
 
-         do while (  ( i .le. 3 ) .and. ( .not. found )  )
+         do while (  ( i <= 3 ) .and. ( .not. found )  )
 !
 !           Search region I. Set the reference and adjustment
 !           values to 0 for this search.
@@ -2324,9 +2324,9 @@
 !           Perform our searches with functions that have no branch
 !           cuts near the region boundaries.
 !
-            if (      ( region(i) .eq. q1    ) &
-                 .or. ( region(i) .eq. q4    ) &
-                 .or. ( region(i) .eq. right )  ) then
+            if (      ( region(i) == q1    ) &
+                 .or. ( region(i) == q4    ) &
+                 .or. ( region(i) == right )  ) then
 
                prxsys = latsys
                prxcrd = loncrd
@@ -2352,7 +2352,7 @@
 !           ZZGFREL will have performed a pass only if the confinement
 !           window was non-empty.
 !
-            if (  cardd( work(lb, region(i)) )  .gt. 0  ) then
+            if (  cardd( work(lb, region(i)) )  > 0  ) then
 !
 !              Another pass has been completed.
 !
@@ -2368,7 +2368,7 @@
             end if
 
 
-            if ( wncard(result) .gt. 0 ) then
+            if ( wncard(result) > 0 ) then
 !
 !              We found an extremum. We don't have to search further.
 !
@@ -2380,7 +2380,7 @@
          end do
 
 
-         if ( adjust .eq. 0.0_wp ) then
+         if ( adjust == 0.0_wp ) then
 !
 !           The result we have is the final result.
 !
@@ -2408,9 +2408,9 @@
 !        Re-set the operator and reference value to enable
 !        us to conduct an inequality search.
 !
-         if ( uop .eq. 'ABSMAX' ) then
+         if ( uop == 'ABSMAX' ) then
 
-            if ( nrmcrd .eq. loncrd ) then
+            if ( nrmcrd == loncrd ) then
 
                xrfval = max( extval - adjust,  -pi() )
             else
@@ -2421,7 +2421,7 @@
 
          else
 
-            if ( nrmcrd .eq. loncrd ) then
+            if ( nrmcrd == loncrd ) then
 
                xrfval = min( extval + adjust,   pi()    )
             else
@@ -2440,7 +2440,7 @@
 !     Searches for absolute extrema with non-zero adjustment values
 !     also use this code block.
 !
-      if (  ( uop .eq. '<' )  .or.  ( uop .eq. '>' )  ) then
+      if (  ( uop == '<' )  .or.  ( uop == '>' )  ) then
 !
 !        We'll find the window when the coordinate is less than
 !        the reference value. If the relation is '>', we'll
@@ -2448,7 +2448,7 @@
 !        we need to take the complement of our result at the
 !        end of the search.
 !
-         if ( uop .eq. '>' ) then
+         if ( uop == '>' ) then
 
             uop  = '<'
             flip = .true.
@@ -2467,11 +2467,11 @@
 !
          locref = datan2( sv, cv )
 
-         if ( locref .lt. -pi()/2 ) then
+         if ( locref < -pi()/2 ) then
             quad = 3
-         else if ( locref .lt. 0.0_wp ) then
+         else if ( locref < 0.0_wp ) then
             quad = 4
-         else if ( locref .lt. pi()/2 ) then
+         else if ( locref < pi()/2 ) then
             quad = 1
          else
             quad = 2
@@ -2482,7 +2482,7 @@
 !        of list items is significant: the regions will
 !        be computed in the order in which they're listed.
 !
-         if ( nrmcrd .eq. loncrd ) then
+         if ( nrmcrd == loncrd ) then
 
             nl       = 2
             rlist(1) = 'Q2'
@@ -2505,7 +2505,7 @@
 !
          do i = 1, nl
 
-            if ( ( rlist(i) .eq. 'LEFT' ) .and. ( left .eq. 0 ) ) then
+            if ( ( rlist(i) == 'LEFT' ) .and. ( left == 0 ) ) then
 
                call lnkan  ( wwpool, node )
                call lnkila ( head,   node,   wwpool )
@@ -2513,9 +2513,9 @@
 
                call wndifd ( cnfine, work(lb,right), work(lb,left) )
 
-            else if ( ( rlist(i) .eq. 'Q1' ) .and. ( q1 .eq. 0 ) ) then
+            else if ( ( rlist(i) == 'Q1' ) .and. ( q1 == 0 ) ) then
 
-               if ( q1 .eq. 0 ) then
+               if ( q1 == 0 ) then
 
                   call lnkan  ( wwpool, node )
                   call lnkila ( head,   node,   wwpool )
@@ -2526,7 +2526,7 @@
                call wnintd ( work(lb,right), work(lb,top), work(lb,q1) )
 
 
-            else if ( ( rlist(i) .eq. 'Q2' ) .and. ( q2 .eq. 0 ) ) then
+            else if ( ( rlist(i) == 'Q2' ) .and. ( q2 == 0 ) ) then
 
                call lnkan  ( wwpool, node )
                call lnkila ( head,   node,   wwpool )
@@ -2535,7 +2535,7 @@
                call wndifd ( work(lb,top), work(lb,right), work(lb,q2) )
 
 
-            else if ( ( rlist(i) .eq. 'Q3' ) .and. ( q3 .eq. 0 ) ) then
+            else if ( ( rlist(i) == 'Q3' ) .and. ( q3 == 0 ) ) then
 !
 !              Note: we need the bottom window in order to compute Q3!
 !
@@ -2546,7 +2546,7 @@
                call wndifd ( work(lb,bot), work(lb,right), work(lb,q3) )
 
 
-            else if ( ( rlist(i) .eq. 'Q4' ) .and. ( q4 .eq. 0 ) ) then
+            else if ( ( rlist(i) == 'Q4' ) .and. ( q4 == 0 ) ) then
 !
 !              NOTE: We need the bottom window in order to compute Q4!
 !
@@ -2570,19 +2570,19 @@
 !        Now decide the sector and proxy function we'll use to
 !        search for the time when the reference value is hit.
 !
-         if ( nrmcrd .eq. loncrd ) then
+         if ( nrmcrd == loncrd ) then
 
-            if ( quad .eq. 1 ) then
+            if ( quad == 1 ) then
 
                s      = right
                prxfun = loncrd
 
-            else if ( quad .eq. 2 ) then
+            else if ( quad == 2 ) then
 
                s      = q2
                prxfun = racrd
 
-            else if ( quad .eq. 3 ) then
+            else if ( quad == 3 ) then
 
                s      = q3
                prxfun = racrd
@@ -2596,17 +2596,17 @@
 
          else
 
-            if ( quad .eq. 1 ) then
+            if ( quad == 1 ) then
 
                s      = q1
                prxfun = loncrd
 
-            else if ( quad .eq. 2 ) then
+            else if ( quad == 2 ) then
 
                s      = left
                prxfun = racrd
 
-            else if ( quad .eq. 3 ) then
+            else if ( quad == 3 ) then
 
                s      = left
                prxfun = racrd
@@ -2625,7 +2625,7 @@
 !        Set the proxy reference value based on the input
 !        reference value and the choice of proxy function.
 !
-         if ( prxfun .eq. loncrd ) then
+         if ( prxfun == loncrd ) then
 
             prxval = datan2 ( sv, cv )
 
@@ -2633,7 +2633,7 @@
 
             prxval = datan2 ( sv, cv )
 
-            if ( prxval .lt. 0.0_wp ) then
+            if ( prxval < 0.0_wp ) then
                prxval = prxval + twopi()
             end if
 
@@ -2649,7 +2649,7 @@
          call ssizei ( nwlong, needwn )
 
 
-         if ( nrmcrd .eq. loncrd ) then
+         if ( nrmcrd == loncrd ) then
 
             call insrti ( q2,    needwn )
             call insrti ( q3,    needwn )
@@ -2665,7 +2665,7 @@
 !
          node = head
 
-         do while ( node .gt. 0 )
+         do while ( node > 0 )
 !
 !           Find the next node in the list.
 !
@@ -2677,7 +2677,7 @@
 !
                call lnkfsl ( node, node, wwpool )
 
-               if ( head .eq. node ) then
+               if ( head == node ) then
                   head = next
                end if
 
@@ -2691,7 +2691,7 @@
 
 
 
-         if ( nrmcrd .eq. loncrd ) then
+         if ( nrmcrd == loncrd ) then
 !
 !           This is a longitude search.
 !
@@ -2700,11 +2700,11 @@
 !           in workspace window F1. If this window is empty, set F1 to
 !           0.
 !
-            if ( quad .eq. 1 ) then
+            if ( quad == 1 ) then
 
                f1 = q3
 
-            else if ( quad .eq. 2 ) then
+            else if ( quad == 2 ) then
 
                call lnkan  ( wwpool, node )
                call lnkila ( head,   node,   wwpool )
@@ -2712,7 +2712,7 @@
 
                call wnunid ( work(lb,q3), work(lb,right), work(lb,f1) )
 
-            else if ( quad .eq. 3 ) then
+            else if ( quad == 3 ) then
 
                f1 = 0
 
@@ -2729,15 +2729,15 @@
 !
 !           We're working with RA.
 !
-            if ( quad .eq. 1 ) then
+            if ( quad == 1 ) then
 
                f1 = 0
 
-            else if ( quad .eq. 2 ) then
+            else if ( quad == 2 ) then
 
                f1 = q1
 
-            else if ( quad .eq. 3 ) then
+            else if ( quad == 3 ) then
 
                f1 = q1
 
@@ -2781,7 +2781,7 @@
 
          call scardd ( 0, work(lb,f2) )
 
-         if ( prxfun .eq. loncrd ) then
+         if ( prxfun == loncrd ) then
 
 !
 !           Initialize the proxy search in sector S, then perform the
@@ -2835,7 +2835,7 @@
 !        Combine the contents of windows F1 and F2 to obtain
 !        the result.
 !
-         if ( f1 .ne. 0 ) then
+         if ( f1 /= 0 ) then
 
             call wnunid ( work(lb,f1), work(lb,f2), result )
 
@@ -2859,7 +2859,7 @@
             call lnkan ( wwpool, node )
             wh = wix(node)
 
-            if ( nrmcrd .eq. loncrd ) then
+            if ( nrmcrd == loncrd ) then
 
                call wnunid ( work(lb,q2), work(lb,right), work(lb,f2) )
                call wnunid ( work(lb,q3), work(lb,f2),    work(lb,wh) )

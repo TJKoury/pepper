@@ -25,16 +25,16 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       real(wp)              tvec   ( * )
       integer(ip)           ntvec
-      character*(*)         type
-      character*(*)         modify ( * )
+      character(*)          type
+      character(*)          modify ( * )
       logical               mods
       logical               yabbrv
       logical               succes
-      character*(*)         pictur
-      character*(*)         error
+      character(*)          pictur
+      character(*)          error
 
 ! $ Brief_I/O
 !
@@ -636,9 +636,9 @@
       parameter           ( room = 300 )
 
       integer(ip)           nknown
-      character*(wdsize)    known ( room )
-      character*(wdsize)    meanng( room )
-      character*(wdsize)    rep
+      character(wdsize)     known ( room )
+      character(wdsize)     meanng( room )
+      character(wdsize)     rep
 
 
 !
@@ -653,9 +653,9 @@
       integer(ip)           nzones
       parameter           ( nzones = 8 )
 
-      character*(zsize)     zones ( nzones )
-      character*(osize)     offset( nzones )
-      character*(1)         delim ( 3 )
+      character(zsize)      zones ( nzones )
+      character(osize)      offset( nzones )
+      character(1)          delim ( 3 )
 
 
 
@@ -971,11 +971,11 @@
          succes = zzunpck ( string, yabbrv, &
                             tvec,   ntvec, type, pictur, error )
 
-         if ( index( pictur, 'JULIAND.' ) .gt. 0 ) then
+         if ( index( pictur, 'JULIAND.' ) > 0 ) then
             call suffix ( '::RND', 1, pictur )
          end if
 
-         if ( modify(system) .ne. ' ' ) then
+         if ( modify(system) /= ' ' ) then
             call suffix ( '::',           1, pictur  )
             call suffix ( modify(system), 0, pictur  )
          end if
@@ -1007,7 +1007,7 @@
          resolv = zzgrep ( rep )
          use    = bsrchc ( rep, nknown, known )
 
-         if ( use .ne. 0 ) then
+         if ( use /= 0 ) then
 
             resolv = zzrept  ( known(use), meanng(use), l2r )
 
@@ -1022,16 +1022,16 @@
 !            MODIFY(ERA) = 'A.D.'
 !
 
-            if ( index ( pictur, '.#' ) .ne.0 ) then
+            if ( index ( pictur, '.#' ) /=0 ) then
                call suffix ( '::RND', 1, pictur )
             end if
 
-            if ( modify(zone) .ne. ' ' ) then
+            if ( modify(zone) /= ' ' ) then
                call suffix ( '::',         1, pictur )
                call suffix ( modify(zone), 0, pictur )
             end if
 
-            if ( modify(system) .ne. ' ' ) then
+            if ( modify(system) /= ' ' ) then
                call suffix ( '::',           1, pictur )
                call suffix ( modify(system), 0, pictur )
             end if
@@ -1100,13 +1100,13 @@
       if ( mods ) then
 
          do i = 1, nmods
-            if ( begs(i) .ne. 0 ) then
+            if ( begs(i) /= 0 ) then
                call ucase( string(begs(i):ends(i)),modify(i))
             end if
          end do
 
          if ( havera ) then
-            if ( modify(era)(1:1) .eq. 'A' ) then
+            if ( modify(era)(1:1) == 'A' ) then
                modify(era) = 'A.D.'
             else
                modify(era) = 'B.C.'
@@ -1114,7 +1114,7 @@
          end if
 
          if ( havapm ) then
-            if ( modify(ampm)(1:1) .eq. 'A' ) then
+            if ( modify(ampm)(1:1) == 'A' ) then
                modify(ampm) = 'A.M.'
             else
                modify(ampm) = 'P.M.'
@@ -1127,7 +1127,7 @@
 
             mapto = isrchc ( modify(zone), nzones, zones )
 
-            if ( mapto .ne. 0 ) then
+            if ( mapto /= 0 ) then
                modify(zone) = offset(mapto)
             end if
 
@@ -1141,22 +1141,22 @@
       resolv = zzgrep ( rep )
       use    = bsrchc ( rep, nknown, known )
 
-      if ( use .gt. 0 ) then
+      if ( use > 0 ) then
 
          resolv = zzrept  ( known(use),   meanng(use), l2r   )
          succes = zzunpck ( string, yabbrv, &
                             tvec,   ntvec, type, pictur, error )
 
-         if ( index ( pictur, '.#' ) .ne.0 ) then
+         if ( index ( pictur, '.#' ) /=0 ) then
             call suffix ( '::RND', 1, pictur )
          end if
 
-         if ( modify(zone) .ne. ' ' ) then
+         if ( modify(zone) /= ' ' ) then
             call suffix ( '::',         1, pictur )
             call suffix ( modify(zone), 0, pictur )
          end if
 
-         if ( modify(system) .ne. ' ' ) then
+         if ( modify(system) /= ' ' ) then
             call suffix ( '::',           1, pictur )
             call suffix ( modify(system), 0, pictur )
          end if
@@ -1196,12 +1196,12 @@
       resolv = zzgrep ( rep )
       r      = rtrim  ( rep )
 
-      if ( index( ',/-:.', rep(1:1) ) .gt. 0 ) then
+      if ( index( ',/-:.', rep(1:1) ) > 0 ) then
 
          resolv = zzsubt ( rep(1:1), 'Q', l2r )
          resolv = .false.
 
-      else if ( index( ',/-:.', rep(r:r) ) .gt. 0 ) then
+      else if ( index( ',/-:.', rep(r:r) ) > 0 ) then
 
          resolv = zzsubt ( rep(r:r), 'Q', l2r )
          resolv = .false.
@@ -1239,22 +1239,22 @@
          resolv = zzgrep ( rep )
          use    = bsrchc ( rep, nknown, known )
 
-         if ( use .gt. 0 ) then
+         if ( use > 0 ) then
 
             resolv = zzrept  ( known(use),   meanng(use), l2r   )
             succes = zzunpck ( string, yabbrv, &
                                tvec,   ntvec, type, pictur, error )
 
-            if ( index ( pictur, '.#' ) .ne.0 ) then
+            if ( index ( pictur, '.#' ) /=0 ) then
                call suffix ( '::RND', 1, pictur )
             end if
 
-            if ( modify(zone) .ne. ' ' ) then
+            if ( modify(zone) /= ' ' ) then
                call suffix ( '::',         1, pictur )
                call suffix ( modify(zone), 0, pictur )
             end if
 
-            if ( modify(system) .ne. ' ' ) then
+            if ( modify(system) /= ' ' ) then
                call suffix ( '::',           1, pictur )
                call suffix ( modify(system), 0, pictur )
             end if
@@ -1281,7 +1281,7 @@
 !     If B is non-zero the item in question is a duplicate
 !     modifier.
 !
-      if ( b .gt. 0 ) then
+      if ( b > 0 ) then
          succes = .false.
          ntvec  =  0
          type   = ' '
@@ -1307,7 +1307,7 @@
       else if ( zznote ( 'z', b, e ) ) then
       end if
 
-      if ( b .gt. 0 ) then
+      if ( b > 0 ) then
 
          succes = .false.
          ntvec  =  0
@@ -1400,18 +1400,18 @@
       succes = zzunpck ( string, yabbrv, &
                          tvec,   ntvec, type, pictur, error )
 
-      if ( pictur .ne. ' ' ) then
+      if ( pictur /= ' ' ) then
 
-         if ( index ( pictur, '.#' ) .ne.0 ) then
+         if ( index ( pictur, '.#' ) /=0 ) then
             call suffix ( '::RND', 1, pictur )
          end if
 
-         if ( modify(zone) .ne. ' ' ) then
+         if ( modify(zone) /= ' ' ) then
             call suffix ( '::',         1, pictur )
             call suffix ( modify(zone), 0, pictur )
          end if
 
-         if ( modify(system) .ne. ' ' ) then
+         if ( modify(system) /= ' ' ) then
             call suffix ( '::',           1, pictur )
             call suffix ( modify(system), 0, pictur )
          end if

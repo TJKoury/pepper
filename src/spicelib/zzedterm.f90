@@ -27,7 +27,7 @@
 
       implicit none
 
-      character*(*)         type
+      character(*)          type
       real(wp)              a
       real(wp)              b
       real(wp)              c
@@ -244,7 +244,7 @@
 !
 !     Local variables
 !
-      character*(typlen)    loctyp
+      character(typlen)     loctyp
 
       real(wp)              angerr
       real(wp)              angle
@@ -296,11 +296,11 @@
       call ljust ( type,   loctyp )
       call ucase ( loctyp, loctyp )
 
-      if (  loctyp .eq. 'UMBRAL' ) then
+      if (  loctyp == 'UMBRAL' ) then
 
          umbral = .true.
 
-      else if ( loctyp .eq. 'PENUMBRAL' ) then
+      else if ( loctyp == 'PENUMBRAL' ) then
 
          umbral = .false.
 
@@ -318,7 +318,7 @@
 !
 !     Check the terminator set dimension.
 !
-      if ( npts .lt. 1 ) then
+      if ( npts < 1 ) then
 
          call setmsg ( 'Set must contain at least one point; NPTS ' &
          //            ' = #.'                                        )
@@ -332,9 +332,9 @@
 !
 !     The ellipsoid semi-axes must have positive length.
 !
-      if (       ( a .le. 0.0_wp ) &
-           .or.  ( b .le. 0.0_wp ) &
-           .or.  ( c .le. 0.0_wp )   )   then
+      if (       ( a <= 0.0_wp ) &
+           .or.  ( b <= 0.0_wp ) &
+           .or.  ( c <= 0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                      )
@@ -349,7 +349,7 @@
 !
 !     Check the input light source radius.
 !
-      if ( srcrad .le. 0.0_wp ) then
+      if ( srcrad <= 0.0_wp ) then
 
          call setmsg ( 'Light source must have positive radius; ' &
          //            'actual radius was #.'                    )
@@ -369,7 +369,7 @@
       rmax =  max ( a, b, c )
       rmin =  min ( a, b, c )
 
-      if (  ( srcrad + rmax )  .ge.  d  ) then
+      if (  ( srcrad + rmax )  >=  d  ) then
 !
 !        The light source is too close.
 !
@@ -477,8 +477,8 @@
          prvang = angle + halfpi()
          nitr   = 0
 
-         do while (       ( nitr                        .le. maxitr ) &
-                    .and. ( touchd( abs(angle-prvang) ) .lt. prvdif )  )
+         do while (       ( nitr                        <= maxitr ) &
+                    .and. ( touchd( abs(angle-prvang) ) < prvdif )  )
 
             nitr    =   nitr  + 1
             prvdif  =   touchd ( abs(angle-prvang) )

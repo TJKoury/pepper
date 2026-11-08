@@ -206,14 +206,14 @@
 !
 !     Use discovery check-in for speed.
 !
-      if ( nrot .eq. 0 ) then
+      if ( nrot == 0 ) then
          return
       end if
 
 
       root  =  tree
 
-      if ( ( left .eq. root ) .or. ( right .eq. root )  ) then
+      if ( ( left == root ) .or. ( right == root )  ) then
 
          call chkin  ( 'ZZEKTRRK'                                  )
          call setmsg ( 'Input node is root; only children are '   // &
@@ -239,7 +239,7 @@
 !     whether the parent is the root.  Do the same for the pointer
 !     bases.
 !
-      if ( parent .eq. tree ) then
+      if ( parent == tree ) then
          keybas = trkeyr
          datbas = trdatr
          kidbas = trkidr
@@ -256,7 +256,7 @@
       lsib  =  ppage ( kidbas+pkidx   )
       rsib  =  ppage ( kidbas+pkidx+1 )
 
-      if (  ( lsib .ne. left ) .or. ( rsib .ne. right )  ) then
+      if (  ( lsib /= left ) .or. ( rsib /= right )  ) then
 
          call chkin  ( 'ZZEKTRRK'                               )
          call setmsg ( 'LEFT, RIGHT, PARENT, and PKIDX are '   // &
@@ -286,10 +286,10 @@
 !     underflow of more than one key in the source node, nor an
 !     overflow of more than one key in the destination node.
 !
-      if ( nrot .gt. 0 ) then
+      if ( nrot > 0 ) then
 
-         if (      ( ( lnkeys - nrot ) .lt. ( mnkeyc - 1 ) ) &
-             .or.  ( ( rnkeys + nrot ) .gt. ( mxkeyc + 1 ) ) ) then
+         if (      ( ( lnkeys - nrot ) < ( mnkeyc - 1 ) ) &
+             .or.  ( ( rnkeys + nrot ) > ( mxkeyc + 1 ) ) ) then
 
             call chkin  ( 'ZZEKTRRK'                                   )
             call setmsg ( 'Node # and right sibling # contain # and ' // &
@@ -310,10 +310,10 @@
          end if
 
 
-      else if ( nrot .lt. 0 ) then
+      else if ( nrot < 0 ) then
 
-         if (      ( ( lnkeys - nrot ) .gt. ( mxkeyc + 1 ) ) &
-             .or.  ( ( rnkeys + nrot ) .lt. ( mnkeyc - 1 ) ) ) then
+         if (      ( ( lnkeys - nrot ) > ( mxkeyc + 1 ) ) &
+             .or.  ( ( rnkeys + nrot ) < ( mnkeyc - 1 ) ) ) then
 
             call chkin  ( 'ZZEKTRRK'                                   )
             call setmsg ( 'Node # and right sibling # contain # and ' // &
@@ -340,7 +340,7 @@
 !     need this later.  The size of this tree is one less than the
 !     difference of the parent key and its predecessor, if any.
 !
-      if ( pkidx .eq. 1 ) then
+      if ( pkidx == 1 ) then
          lnsize  =  ppage ( keybas + 1 ) -  1
       else
          lnsize  =  ppage(keybas+pkidx)  -  ppage(keybas+pkidx-1)  -  1
@@ -350,7 +350,7 @@
 !     Now, the actions we take depend on whether we must schlep keys
 !     to the right or left.
 !
-      if ( nrot .gt. 0 ) then
+      if ( nrot > 0 ) then
 !
 !        We'll rotate keys to the right.  There are a bunch of numbers
 !        to compute first:

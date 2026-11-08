@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)         fname
-      character*(*)         ifname
+      character(*)          fname
+      character(*)          ifname
       integer(ip)           ncomch
       integer(ip)           handle
 
@@ -266,7 +266,7 @@
 !
 !     Local parameters
 !
-      character*(*)         type
+      character(*)          type
       parameter           ( type = 'SPK'    )
 
 !
@@ -304,7 +304,7 @@
 !     marks in the comment area.
 !
 !
-      if ( ncomch .gt. 0 ) then
+      if ( ncomch > 0 ) then
          ncomr = ( ncomch - 1 )/mxcrec  +  1
       else
          ncomr = 0

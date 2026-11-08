@@ -158,7 +158,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           class
       integer(ip)           dtype
@@ -177,7 +177,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( dtype .ne. int ) then
+      if ( dtype /= int ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -206,7 +206,7 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 1 ) then
+      if ( class == 1 ) then
 !
 !        Class 1 columns contain scalar, integer entries.
 !
@@ -215,7 +215,7 @@
          found  =  .true.
 
 
-      else if ( class .eq. 4 ) then
+      else if ( class == 4 ) then
 !
 !        Class 4 columns contain integer array entries.
 !
@@ -223,7 +223,7 @@
                          eltidx,  eltidx,  ival,    isnull,  found )
 
 
-      else if ( class .eq. 7 ) then
+      else if ( class == 7 ) then
 !
 !        Class 7 columns are fixed-count columns that contain scalar,
 !        integer entries.

@@ -654,7 +654,7 @@
       ecc  = exact ( elts(2), 0.0_wp, small )
 
 
-      if ( ecc .ne. 0.0_wp ) then
+      if ( ecc /= 0.0_wp ) then
 !                                 _   _
 !        C1 is the coefficient of r/||r|| in (1) above:
 !
@@ -745,7 +745,7 @@
 !        mu/LIMIT < r
 !
 !
-      if ( elts(2) .eq. 1.0_wp ) then
+      if ( elts(2) == 1.0_wp ) then
 !
 !        This is the parabolic case.
 !
@@ -755,7 +755,7 @@
       end if
 
 
-      if ( rmag .le. ( mu/limit ) ) then
+      if ( rmag <= ( mu/limit ) ) then
 !
 !        We need RMAG > MU/LIMIT to make E computable.
 !
@@ -772,7 +772,7 @@
       e = ( 0.5_wp * vmag**2 ) - ( mu / rmag )
 
 
-      if (  abs(e)  .lt.  ( abs(mu)/limit )  ) then
+      if (  abs(e)  <  ( abs(mu)/limit )  ) then
 !
 !        We can't safely compute A. The case of E equal to 0
 !        gets the code to this point.
@@ -793,7 +793,7 @@
 !
       ecc = elts(2)
 
-      if ( ecc .lt. 1.0_wp ) then
+      if ( ecc < 1.0_wp ) then
 !
 !        The period is given by the formula
 !
@@ -825,11 +825,11 @@
          mucubr = mu ** (1.0_wp/3.0_wp )
 
 
-         if ( mu .ge. 1.0_wp ) then
+         if ( mu >= 1.0_wp ) then
 
-            cmptau =  (  a / mucubr  )  .lt.    b
+            cmptau =  (  a / mucubr  )  <    b
          else
-            cmptau =     a              .lt.  ( b * mucubr )
+            cmptau =     a              <  ( b * mucubr )
          end if
 
          if ( cmptau ) then

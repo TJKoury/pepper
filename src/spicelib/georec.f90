@@ -438,7 +438,7 @@
 !
 !     The equatorial radius must be greater than zero.
 !
-      if ( re .le. 0.0_wp ) then
+      if ( re <= 0.0_wp ) then
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
@@ -452,7 +452,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1 ) then
+      if ( f >= 1 ) then
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )

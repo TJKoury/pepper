@@ -24,9 +24,9 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           value
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       integer(ip)           tabval     ( lbcell:* )
 
@@ -227,7 +227,7 @@
 !     Where does this symbol belong? Is it already in the table?
 !
       locsym = lstlec ( name, nsym, tabsym(1) )
-      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
+      oldsym = ( locsym /= 0  .and.  tabsym(locsym) == name )
 
 !
 !     If it's already in the table, there's no chance of overflow.
@@ -240,7 +240,7 @@
          locval = sumai  ( tabptr(1), locsym-1 ) + 1
          dimval = tabptr(locsym)
 
-         if ( dimval .gt. 1 ) then
+         if ( dimval > 1 ) then
             call remlai ( dimval-1, locval, tabval(1), nval )
             call scardi ( nval, tabval )
          end if
@@ -252,7 +252,7 @@
 !     Otherwise, we can't proceed unless we know that we have enough
 !     room for one extra addition in all three tables.
 !
-      else if ( nsym .ge. sizec ( tabsym ) ) then
+      else if ( nsym >= sizec ( tabsym ) ) then
 
             call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the name table.' )
@@ -260,7 +260,7 @@
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-      else if ( nptr .ge. sizei ( tabptr ) ) then
+      else if ( nptr >= sizei ( tabptr ) ) then
 
             call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the pointer table.' )
@@ -268,7 +268,7 @@
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-      else if ( nval .ge. sizei ( tabval ) ) then
+      else if ( nval >= sizei ( tabval ) ) then
 
             call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the value table.' )

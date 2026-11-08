@@ -29,7 +29,7 @@
 
       include              'zzctr.inc'
 
-      character*(*)         agent
+      character(*)          agent
       integer(ip)           usrctr    ( ctrsiz )
       logical               update
 

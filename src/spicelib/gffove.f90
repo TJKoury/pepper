@@ -43,13 +43,13 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         inst
-      character*(*)         tshape
+      character(*)          inst
+      character(*)          tshape
       real(wp)              raydir ( 3 )
-      character*(*)         target
-      character*(*)         tframe
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          target
+      character(*)          tframe
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              tol
       external              udstep
       external              udrefn
@@ -1509,7 +1509,7 @@
 !
 !     Check the result window's size.
 !
-      if ( sized(result) .lt. 2 ) then
+      if ( sized(result) < 2 ) then
 
          call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
@@ -1528,7 +1528,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.0_wp ) then
+      if ( tol <= 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )

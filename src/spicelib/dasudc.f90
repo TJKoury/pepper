@@ -27,7 +27,7 @@
       integer(ip)           last
       integer(ip)           bpos
       integer(ip)           epos
-      character*(*)         data   ( * )
+      character(*)          data   ( * )
 
 ! $ Brief_I/O
 !
@@ -454,10 +454,10 @@
 !
 !     Validate the input addresses.
 !
-      if (      ( first .lt. 1     ) &
-           .or. ( first .gt. lastc ) &
-           .or. ( last  .lt. 1     ) &
-           .or. ( last  .gt. lastc )  ) then
+      if (      ( first < 1     ) &
+           .or. ( first > lastc ) &
+           .or. ( last  < 1     ) &
+           .or. ( last  > lastc )  ) then
 
          call setmsg ( 'FIRST was #. LAST was #. Valid range is [1,#].')
          call errint ( '#',   first                                    )
@@ -473,7 +473,7 @@
 !     Make sure BPOS and EPOS are valid and compatible with the string
 !     length of the input array.
 !
-      if (  ( bpos .lt. 1 ) .or. ( bpos .gt. len( data(1) ) )  ) then
+      if (  ( bpos < 1 ) .or. ( bpos > len( data(1) ) )  ) then
 
          call setmsg ( 'String begin index must be ' &
          //            'in the range #:# but was #.' )
@@ -486,7 +486,7 @@
 
       end if
 
-      if (  ( epos .lt. 1 ) .or. ( epos .gt. len( data(1) ) )  ) then
+      if (  ( epos < 1 ) .or. ( epos > len( data(1) ) )  ) then
 
          call setmsg ( 'String end index must be in ' &
          //            'the range #:# but was #.'    )
@@ -499,7 +499,7 @@
 
       end if
 
-      if ( bpos .gt. epos ) then
+      if ( bpos > epos ) then
 
          call setmsg ( 'String begin index # must be less ' &
          //            'than or equal to the end index #.' )
@@ -545,9 +545,9 @@
       rcpos   =  wordno
 
 
-      do while (  ( nmoved .lt. numchr ) .and. ( .not. failed() )  )
+      do while (  ( nmoved < numchr ) .and. ( .not. failed() )  )
 
-         if ( chr .gt. epos ) then
+         if ( chr > epos ) then
             elt = elt + 1
             chr = bpos
          end if
@@ -580,14 +580,14 @@
 !     Update as many additional records as necessary.
 !
 
-      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
+      do while (  ( nwritn < n ) .and. ( .not. failed() )  )
 
 !
 !        At this point, RECNO is the correct number of the record to
 !        write to next.  CLBASE is the number of the first record of
 !        the cluster we're about to write to.
 !
-         if (  recno  .lt.  ( clbase + clsize )  ) then
+         if (  recno  <  ( clbase + clsize )  ) then
 
 !
 !           We can continue writing the current cluster.  Find
@@ -598,9 +598,9 @@
             nmoved  =  0
             rcpos   =  1
 
-            do while ( ( nmoved .lt. numchr ) .and. ( .not. failed() ) )
+            do while ( ( nmoved < numchr ) .and. ( .not. failed() ) )
 
-               if ( chr .gt. l ) then
+               if ( chr > l ) then
                   elt = elt + 1
                   chr = bpos
                end if

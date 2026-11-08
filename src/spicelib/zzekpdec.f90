@@ -24,7 +24,7 @@
       include 'ekcoldsc.inc'
       include 'ektype.inc'
 
-      character*(*)         decl
+      character(*)          decl
       integer(ip)           pardsc ( * )
 
 ! $ Brief_I/O
@@ -322,9 +322,9 @@
 !
 !     Local variables
 !
-      character*(toklen)    attkey ( nattr )
-      character*(msglen)    msg
-      character*(toklen)    tokens ( maxtok )
+      character(toklen)     attkey ( nattr )
+      character(msglen)     msg
+      character(toklen)     tokens ( maxtok )
 
       integer(ip)           attloc ( cdscsz )
       integer(ip)           i
@@ -442,9 +442,9 @@
          j     = 1
          found = .false.
 
-         do while (  ( j .le. nattr ) .and. ( .not. found )  )
+         do while (  ( j <= nattr ) .and. ( .not. found )  )
 
-            if ( tokens(i) .eq. attkey(j) ) then
+            if ( tokens(i) == attkey(j) ) then
                found     = .true.
                attfnd(j) = .true.
                attloc(j) =  i
@@ -495,7 +495,7 @@
 !
       tokloc = attloc(typpos) + 1
 
-      if ( n .lt. tokloc ) then
+      if ( n < tokloc ) then
          call setmsg (  'Column data type specification did not '     // &
                         'follow "DATATYPE" keyword in declaration #.'  )
          call errch  ( '#', decl                                       )
@@ -504,7 +504,7 @@
          return
       end if
 
-      if ( tokens(tokloc) .eq. 'INTEGER' ) then
+      if ( tokens(tokloc) == 'INTEGER' ) then
 
          pardsc(typidx)  =  int
          pardsc(lenidx)  =  1
@@ -519,7 +519,7 @@
          pardsc(typidx)  =  time
          pardsc(lenidx)  =  1
 
-      else if (  tokens(tokloc)(1:9) .eq. 'CHARACTER'  ) then
+      else if (  tokens(tokloc)(1:9) == 'CHARACTER'  ) then
 
          pardsc(typidx)  =  chr
 !
@@ -539,7 +539,7 @@
          call cmprss ( ')', 0, tokens(tokloc), tokens(tokloc) )
 
 
-         if ( tokens(tokloc)(10:10) .ne. '*' ) then
+         if ( tokens(tokloc)(10:10) /= '*' ) then
 
             call setmsg ( 'Required asterisk missing from character ' // &
                           'column declaration:  #  in declaration:  ' // &
@@ -553,7 +553,7 @@
          end if
 
 
-         if ( tokens(tokloc)(11:11)  .eq.  '*'  ) then
+         if ( tokens(tokloc)(11:11)  ==  '*'  ) then
 !
 !           The string length is variable.
 !
@@ -567,7 +567,7 @@
             msg = ' '
             call nparsi (tokens(tokloc)(11:), pardsc(lenidx), msg, ptr )
 
-            if ( msg .ne. ' ' ) then
+            if ( msg /= ' ' ) then
 
                call setmsg ( 'String length specification # didn''t ' // &
                              'parse as an integer in declaration   #'  )
@@ -604,7 +604,7 @@
 
          tokloc  =  attloc(sizpos) + 1
 
-         if ( n .lt. tokloc ) then
+         if ( n < tokloc ) then
 
             call setmsg (  'Column size specification did not follow '// &
                            '"SIZE" keyword in declaration #.'          )
@@ -616,14 +616,14 @@
          end if
 
 
-         if ( tokens(tokloc) .eq. 'VARIABLE' ) then
+         if ( tokens(tokloc) == 'VARIABLE' ) then
 !
 !           Variable size entries are not allowed for CHARACTER*(*)
 !           columns.
 !
-            if ( pardsc(typidx) .eq. chr ) then
+            if ( pardsc(typidx) == chr ) then
 
-               if ( pardsc(lenidx) .eq. ifalse ) then
+               if ( pardsc(lenidx) == ifalse ) then
 
                   call setmsg (  'Column size specification was ' // &
                                  'VARIABLE for a CHARACTER*(*) '  // &
@@ -644,7 +644,7 @@
 
             call nparsi ( tokens(tokloc), pardsc(sizidx), msg,  ptr )
 
-            if ( msg .ne. ' ' ) then
+            if ( msg /= ' ' ) then
 
                call setmsg ( 'Column element size  specification # '  // &
                              'didn''t parse as an integer in '        // &
@@ -670,35 +670,35 @@
 !
 !     The data type and entry size determine the column's class.
 !
-      if ( pardsc(typidx) .eq. chr ) then
+      if ( pardsc(typidx) == chr ) then
 !
 !        The character classes are 3 for scalars, 6 for arrays.
 !
-         if ( pardsc(sizidx) .eq. 1 ) then
+         if ( pardsc(sizidx) == 1 ) then
             pardsc(clsidx) =  3
          else
             pardsc(clsidx) =  6
          end if
 
 
-      else if ( pardsc(typidx) .eq. int ) then
+      else if ( pardsc(typidx) == int ) then
 !
 !        The integer classes are 1 for scalars, 4 for arrays.
 !
-         if ( pardsc(sizidx) .eq. 1 ) then
+         if ( pardsc(sizidx) == 1 ) then
             pardsc(clsidx) =  1
          else
             pardsc(clsidx) =  4
          end if
 
 
-      else if (      ( pardsc(typidx) .eq. dp   ) &
-                .or. ( pardsc(typidx) .eq. time )  ) then
+      else if (      ( pardsc(typidx) == dp   ) &
+                .or. ( pardsc(typidx) == time )  ) then
 !
 !        The d.p. classes are 2 for scalars, 6 for arrays.  TIME
 !        values are represented using d.p. classes as well.
 !
-         if ( pardsc(sizidx) .eq. 1 ) then
+         if ( pardsc(sizidx) == 1 ) then
             pardsc(clsidx) =  2
          else
             pardsc(clsidx) =  5
@@ -713,7 +713,7 @@
 
          tokloc = attloc(nflpos) + 1
 
-         if ( n .lt. tokloc ) then
+         if ( n < tokloc ) then
 
             call setmsg (  'Boolean value did not follow '            // &
                            '"NULLS_OK" keyword in declaration #.'      )
@@ -724,11 +724,11 @@
 
          end if
 
-         if ( tokens(tokloc) .eq. 'TRUE' ) then
+         if ( tokens(tokloc) == 'TRUE' ) then
 
             pardsc(nflidx)  =  itrue
 
-         else if ( tokens(tokloc) .eq. 'FALSE' ) then
+         else if ( tokens(tokloc) == 'FALSE' ) then
 
             pardsc(nflidx)  =  ifalse
 
@@ -763,7 +763,7 @@
 
          tokloc = attloc(idxpos) + 1
 
-         if ( n .lt. tokloc ) then
+         if ( n < tokloc ) then
 
             call setmsg (  'Boolean value did not follow '            // &
                            '"INDEXED" keyword in declaration #.'       )
@@ -775,13 +775,13 @@
          end if
 
 
-         if ( tokens(tokloc) .eq. 'TRUE' ) then
+         if ( tokens(tokloc) == 'TRUE' ) then
 !
 !           If we have a fixed-size column whose size is 1, then it's
 !           possible to index that column.  Otherwise, we should not
 !           have an `INDEXED' clause.
 !
-            if ( pardsc(sizidx) .ne. 1 ) then
+            if ( pardsc(sizidx) /= 1 ) then
 
                call setmsg ( 'Non-scalar columns cannot be indexed. ' // &
                              'Declaration was #.'                      )
@@ -794,7 +794,7 @@
 
             pardsc(ixtidx)  =  itrue
 
-         else if ( tokens(tokloc) .eq. 'FALSE' ) then
+         else if ( tokens(tokloc) == 'FALSE' ) then
 
             pardsc(ixtidx)  =  ifalse
 
@@ -829,7 +829,7 @@
 
          tokloc = attloc(fxcpos) + 1
 
-         if ( n .lt. tokloc ) then
+         if ( n < tokloc ) then
 
             call setmsg (  'Boolean value did not follow '            // &
                            '"FIXED_COUNT" keyword in declaration #.'   )
@@ -840,25 +840,25 @@
 
          end if
 
-         if ( tokens(tokloc) .eq. 'TRUE' ) then
+         if ( tokens(tokloc) == 'TRUE' ) then
 !
 !           The column is a fixed-count column.  Only scalar columns
 !           are permitted to have fixed count.  We adjust the column
 !           class to indicate fixed-count columns.
 !
-            if ( pardsc(clsidx) .eq. 1 ) then
+            if ( pardsc(clsidx) == 1 ) then
 !
 !              Map scalar integers.
 !
                pardsc(clsidx) =  7
 
-            else if ( pardsc(clsidx) .eq. 2 ) then
+            else if ( pardsc(clsidx) == 2 ) then
 !
 !              Map scalar d.p. numbers.
 !
                pardsc(clsidx) =  8
 
-            else if ( pardsc(clsidx) .eq. 3 ) then
+            else if ( pardsc(clsidx) == 3 ) then
 !
 !              Map scalar strings.
 !
@@ -876,7 +876,7 @@
             end if
 
 
-         else if ( tokens(tokloc) .ne. 'FALSE' ) then
+         else if ( tokens(tokloc) /= 'FALSE' ) then
 !
 !           No action is required if the FIXED_COUNT keyword is set
 !           to FALSE, but no value other than FALSE or TRUE may appear

@@ -457,9 +457,9 @@
 !
 !     We don't want to worry about flat ellipsoids:
 !
-      if (         ( a .le. 0.0_wp ) &
-            .or.   ( b .le. 0.0_wp ) &
-            .or.   ( c .le. 0.0_wp )   )   then
+      if (         ( a <= 0.0_wp ) &
+            .or.   ( b <= 0.0_wp ) &
+            .or.   ( c <= 0.0_wp )   )   then
 
          found = .false.
 
@@ -526,7 +526,7 @@
 
       maxrad = max ( dabs(a), dabs(b), dabs(c) )
 
-      if ( vnorm (point) .gt. maxrad ) then
+      if ( vnorm (point) > maxrad ) then
 
          found = .false.
          call chkout ( 'INEDPL' )
@@ -599,7 +599,7 @@
 
       dist = vnorm ( center )
 
-      if ( dist .gt. 1.0_wp ) then
+      if ( dist > 1.0_wp ) then
 
          found = .false.
          call chkout ( 'INEDPL' )

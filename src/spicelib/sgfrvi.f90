@@ -268,7 +268,7 @@
 !     allowed index type, MNIDXT, and the maximum allowed index type,
 !     MXIDXT, as specified in the file 'sgparam.inc'.
 !
-      if ( ( myrdrt .lt. mnidxt) .or. ( myrdrt .gt. mxidxt ) ) then
+      if ( ( myrdrt < mnidxt) .or. ( myrdrt > mxidxt ) ) then
 
          call setmsg ( 'The generic DAF segment you attempted to' &
          //            ' read has an unsupported reference directory' &
@@ -328,7 +328,7 @@
 !        For explicitly indexed packets we simply search the reference
 !        directory for an appropriate reference value.
 !
-      if ( ( myrdrt .ne. imple ) .and. ( myrdrt .ne. impcls ) ) then
+      if ( ( myrdrt /= imple ) .and. ( myrdrt /= impcls ) ) then
 !
 !        In addition to the meta data items we already have, we also
 !        need these.
@@ -366,7 +366,7 @@
 !        Search the reference directory values to select the appropriate
 !        block of reference values to read.
 !
-         do while ( ( .not. done ) .and. ( remain .gt. 0 ) )
+         do while ( ( .not. done ) .and. ( remain > 0 ) )
 !
 !           Read a buffer of reference directory items.
 !
@@ -385,7 +385,7 @@
 !
             rdridx = lstled ( x, nfetch, buffer )
 
-            if ( rdridx .eq. 0 ) then
+            if ( rdridx == 0 ) then
 !
 !              If not, then X < BUFFER(1) and we're done. This indicates
 !              that the desired reference value is before, or in, the
@@ -393,12 +393,12 @@
 !
                done = .true.
 
-            else if ( rdridx .eq. nfetch ) then
+            else if ( rdridx == nfetch ) then
 !
 !              If we get the last value of the buffer, then either we
 !              are done, X = BUFFER(NFETCH), or X > BUFFER(NFETCH).
 !
-               if ( x .eq. buffer(nfetch) ) then
+               if ( x == buffer(nfetch) ) then
 !
 !                 If X = BUFFER(NFETCH) we are done, we have a directory
 !                 value, and it might be a value we want to return.
@@ -414,7 +414,7 @@
 !
                   remain = remain - nfetch
 
-                  if ( remain .gt. 0 ) then
+                  if ( remain > 0 ) then
 !
 !                    We don't want to increment FULLRD for a partial
 !                    buffer read. The arithmetic for the index
@@ -436,7 +436,7 @@
 !
                done = .true.
 
-               if ( x .eq. buffer(rdridx) ) then
+               if ( x == buffer(rdridx) ) then
 
                   isdirv = .true.
 
@@ -457,7 +457,7 @@
 !
          if ( .not. isdirv ) then
 
-            if ( ( rdridx .gt. 0 ) .and. ( rdridx .lt. mynrdr ) ) then
+            if ( ( rdridx > 0 ) .and. ( rdridx < mynrdr ) ) then
 !
 !              If we were able to bracket X before reaching the end of
 !              the reference directory, then we KNOW that we have a
@@ -482,7 +482,7 @@
                bfindx = lstled ( x, nfetch, buffer )
                myindx = dirsiz * rdridx + bfindx - 1
 
-            else if ( rdridx .eq. 0 ) then
+            else if ( rdridx == 0 ) then
 !
 !              The reference value may be one of the reference values
 !              less than the first reference directory item. So we
@@ -504,7 +504,7 @@
                bfindx = lstled ( x, nfetch, buffer )
                myindx = bfindx
 
-            else if ( rdridx .eq. mynrdr ) then
+            else if ( rdridx == mynrdr ) then
 !
 !              If we were not able to bracket X before reaching the end
 !              of the reference directory, then we might have a
@@ -548,7 +548,7 @@
 !        Now, if we have a candidate for a reference value, lets make
 !        sure, based on the type of index we have.
 !
-         if ( myrdrt .eq. explt ) then
+         if ( myrdrt == explt ) then
 !
 !           We have a reference value only if X > some reference
 !           value.
@@ -561,8 +561,8 @@
 !                 Case 1: 0 < MYINDX <= MYNREF
 !                 Case 2: MYINDX = 0
 !
-               if (       ( myindx .gt. 0      ) &
-                    .and. ( myindx .le. mynref ) ) then
+               if (       ( myindx > 0      ) &
+                    .and. ( myindx <= mynref ) ) then
 !
 !                 We found a reference value. The reference value we
 !                 want is either the value indicated by MYINDX or
@@ -570,13 +570,13 @@
 !                 if there is such a value. To deal with this we
 !                 split the test up into two cases.
 !
-                  if ( myindx .gt. 1 ) then
+                  if ( myindx > 1 ) then
 !
 !                    If X > BUFFER(BFINDX) then we are done, so set the
 !                    value. If not, then we want the reference value
 !                    that is immediately before the current one.
 !
-                     if ( x .gt. buffer(bfindx) ) then
+                     if ( x > buffer(bfindx) ) then
 
                         myfnd  = .true.
                         myvalu = buffer(bfindx)
@@ -596,7 +596,7 @@
 !                    we are done. Otherwise there is no reference
 !                    value to be associated with X.
 !
-                     if ( x .gt. buffer(myindx) ) then
+                     if ( x > buffer(myindx) ) then
 
                         myfnd  = .true.
                         myvalu = buffer(myindx)
@@ -613,7 +613,7 @@
 
                   end if
 
-               else if ( myindx .eq. 0 ) then
+               else if ( myindx == 0 ) then
 !
 !                 We did not find a reference value. X was < the
 !                 first reference value for the generic segment.
@@ -645,7 +645,7 @@
 
             end if
 
-         else if ( myrdrt .eq. exple ) then
+         else if ( myrdrt == exple ) then
 !
 !           We have a reference value only if X >= some reference
 !           value. At this point, either we have the value and index
@@ -661,13 +661,13 @@
 !              reference value in the generic segment, or MYINDX > 0,
 !              implying that we have found a reference value.
 !
-               if (       ( myindx .gt. 0      ) &
-                    .and. ( myindx .le. mynref ) ) then
+               if (       ( myindx > 0      ) &
+                    .and. ( myindx <= mynref ) ) then
 
                   myfnd  = .true.
                   myvalu = buffer(bfindx)
 
-               else if ( myindx .eq. 0 ) then
+               else if ( myindx == 0 ) then
 !
 !                 We did not find a reference value. X was < the
 !                 first reference value for the generic segment.
@@ -686,7 +686,7 @@
 
             end if
 
-         else if ( myrdrt .eq. expcls ) then
+         else if ( myrdrt == expcls ) then
 !
 !           We have a reference value for every value of X. If X <
 !           the first reference value of the generic segment, the
@@ -707,15 +707,15 @@
 !              MYINDX = MYNPKT implying that X is greater than or
 !              equal to the last reference value.
 !
-               if (       ( myindx .gt. 0      ) &
-                    .and. ( myindx .lt. mynref ) ) then
+               if (       ( myindx > 0      ) &
+                    .and. ( myindx < mynref ) ) then
 
                   i = bfindx
 !
 !                 Find the closest value to X, choosing the larger in
 !                 the event of a tie.
 !
-                  if ( (buffer(i+1) - x) .le. (x - buffer(i)) ) then
+                  if ( (buffer(i+1) - x) <= (x - buffer(i)) ) then
 
                      i      = i + 1
                      myindx = myindx + 1
@@ -725,7 +725,7 @@
                   myfnd  = .true.
                   myvalu = buffer(i)
 
-               else if ( myindx .eq. 0 ) then
+               else if ( myindx == 0 ) then
 !
 !                 X is before the first reference value for the
 !                 generic segment, so the closest reference value is
@@ -735,7 +735,7 @@
                   myindx = 1
                   myvalu = buffer(1)
 
-               else if ( myindx .eq. mynref ) then
+               else if ( myindx == mynref ) then
 !
 !                 X is at of after the last reference value for the
 !                 generic segment, so the closest reference value is
@@ -759,7 +759,7 @@
 
          end if
 
-      else if ( myrdrt .eq. imple ) then
+      else if ( myrdrt == imple ) then
 !
 !        Get the begin and end addresses from which to read the
 !        reference values and get the reference values.
@@ -778,14 +778,14 @@
 !
 !        Compute the index if we can.
 !
-         if ( x .lt. buffer(1) ) then
+         if ( x < buffer(1) ) then
 !
 !           If X is less than BUFFER(1), we do not have a reference
 !           value.
 !
             myfnd = .false.
 
-         else if ( x .gt. endref ) then
+         else if ( x > endref ) then
 !
 !           If X is greater than ENDREF, then we have a reference
 !           value, ENDREF.
@@ -799,7 +799,7 @@
 !           r_1 < X < r_N, i.e., we found a value. Compute the index
 !           and the reference value.
 !
-            if ( mynpkt .gt. 1 ) then
+            if ( mynpkt > 1 ) then
 
                myfnd = .true.
 !
@@ -810,7 +810,7 @@
 !              Test to see if we can safely convert the index to an
 !              integer.
 !
-               if ( dptemp .gt. dpimax ) then
+               if ( dptemp > dpimax ) then
 
                   call setmsg ( 'The computed index is too large' &
                   //            ' to be represented as an integer.' &
@@ -842,7 +842,7 @@
 
          end if
 
-      else if ( myrdrt .eq. impcls ) then
+      else if ( myrdrt == impcls ) then
 !
 !        Get the begin and end addresses from which to read the
 !        reference values and get the reference values.
@@ -861,7 +861,7 @@
 !
 !        Compute the index if we can.
 !
-         if ( x .lt. buffer(1) ) then
+         if ( x < buffer(1) ) then
 !
 !           If X < BUFFER(1), then we found a value, the index
 !           returned will be 1 and the reference value returned will
@@ -871,7 +871,7 @@
             myindx = 1
             myvalu = buffer(1)
 
-         else if (  x .gt. endref ) then
+         else if (  x > endref ) then
 !
 !           If X > ENDREF, then we found a value, the index returned
 !           will be MYNPKT and the reference value returned will be
@@ -889,7 +889,7 @@
 !           closer to r_(I+1), the index returned will be I+1 with a
 !           reference value of r_(I+1).
 !
-            if ( mynpkt .gt. 1 ) then
+            if ( mynpkt > 1 ) then
 
                myfnd = .true.
 !
@@ -897,7 +897,7 @@
 !
                dptemp = 1.5_wp + (x - buffer(1)) / buffer(2)
 
-               if ( dptemp .gt. dpimax + 0.5_wp ) then
+               if ( dptemp > dpimax + 0.5_wp ) then
 
                   call setmsg ( 'The computed index is too large' &
                   //            ' to be represented as an integer.' &

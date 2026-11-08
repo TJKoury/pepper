@@ -24,11 +24,11 @@
 ! $ Declarations
 
       implicit none
-      character*(*)         string
-      character*(*)         transl
-      character*(1)         letter
-      character*(*)         error
-      character*(*)         pic
+      character(*)          string
+      character(*)          transl
+      character(1)          letter
+      character(*)          error
+      character(*)          pic
       real(wp)              tvec  ( * )
       integer(ip)           b
       integer(ip)           e
@@ -314,7 +314,7 @@
 !
 !     Representation Variables.
 !
-      character*(maxtkn)    rep
+      character(maxtkn)     rep
       integer(ip)           size
 
       integer(ip)           begs ( maxtkn )
@@ -322,23 +322,23 @@
       integer(ip)           pbegs( maxtkn )
       integer(ip)           pends( maxtkn )
 
-      character*(piclen)    pictur
+      character(piclen)     pictur
 
 
       integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      character*(wdsize)    names( 32 : 126 )
+      character(wdsize)     names( 32 : 126 )
 
-      character*(wdsize)    myerr
+      character(wdsize)     myerr
 
-      character*(piclen)    messge
-      character*(piclen)    picerr
-      character*(piclen)    tknerr
+      character(piclen)     messge
+      character(piclen)     picerr
+      character(piclen)     tknerr
 
 
-      character*(3)         month
-      character*(3)         months ( 12 )
+      character(3)          month
+      character(3)          months ( 12 )
 
       real(wp)              hms    ( 3  )
 
@@ -394,14 +394,14 @@
       parameter           ( smwdsz = 12 )
 
       integer(ip)           width ( nrecog )
-      character*(smwdsz)    recog ( nrecog )
-      character*(smwdsz)    spcial
+      character(smwdsz)     recog ( nrecog )
+      character(smwdsz)     spcial
 
-      character*(smwdsz)    mnmrk ( mixed, short )
-      character*(smwdsz)    wkday ( mixed, short )
+      character(smwdsz)     mnmrk ( mixed, short )
+      character(smwdsz)     wkday ( mixed, short )
 
-      character*(1)         class ( nrecog )
-      character*(1)         this
+      character(1)          class ( nrecog )
+      character(1)          this
 
       integer(ip)           f ( 32 : 126 )
       integer(ip)           l ( 32 : 126 )
@@ -560,7 +560,7 @@
 
       to = from + len(string) - 1
 
-      if ( from .gt. 0 ) then
+      if ( from > 0 ) then
 
          did         = yes
          ends(from)  = ends(to)
@@ -812,11 +812,11 @@
       did  = no
       from = cpos ( rep, string, 1 )
 
-      do while ( from .gt. 0 )
+      do while ( from > 0 )
 
-         if ( from .lt. size ) then
+         if ( from < size ) then
             to   = from + 1
-            did  = index( string, rep(to:to) ) .gt. 0
+            did  = index( string, rep(to:to) ) > 0
          else
             b       = 0
             e       = 0
@@ -945,7 +945,7 @@
 !
 !-&
 
-      zzist = index ( rep(1:size), letter ) .gt. 0
+      zzist = index ( rep(1:size), letter ) > 0
       return
 
 
@@ -1069,7 +1069,7 @@
 
       put = index ( rep, letter )
 
-      if ( put .gt. 0 ) then
+      if ( put > 0 ) then
          b = begs(put)
          e = ends(put)
 
@@ -1208,7 +1208,7 @@
 
       do i = 1, size
 
-         if ( ichar(rep(i:i) ) .ne. ichar(letter) ) then
+         if ( ichar(rep(i:i) ) /= ichar(letter) ) then
             put            = put + 1
             rep  (put:put) = rep  (i:i)
             begs (put)     = begs (i)
@@ -1223,9 +1223,9 @@
 
       size = put
 
-      if ( put .eq. 0 ) then
+      if ( put == 0 ) then
          rep = ' '
-      else if ( put .lt. len(rep) ) then
+      else if ( put < len(rep) ) then
          rep(put+1:) = ' '
       end if
 
@@ -1377,12 +1377,12 @@
 !
 !     We have two special cases to deal with.
 !
-      if ( ichar(string(1:1)) .eq. ichar('<') .and. k .gt. 1 ) then
+      if ( ichar(string(1:1)) == ichar('<') .and. k > 1 ) then
 
          to   = min( k-1, size )
          from = 1
 
-         if ( string(2:k) .eq. rep(from:to) ) then
+         if ( string(2:k) == rep(from:to) ) then
             rep(from:to) = transl
             zzsubt       = yes
          else
@@ -1391,12 +1391,12 @@
 
          return
 
-      else if ( ichar(string(k:k)) .eq. ichar('>') .and. k .gt. 1 ) then
+      else if ( ichar(string(k:k)) == ichar('>') .and. k > 1 ) then
 
          from = max(1,size - k + 2)
          to   = size
 
-         if ( string(1:k-1) .eq. rep(from:to) ) then
+         if ( string(1:k-1) == rep(from:to) ) then
             rep(from:to) =  transl
             zzsubt       = yes
          else
@@ -1420,7 +1420,7 @@
 
       to   = from + len(transl) - 1
 
-      if ( from .gt. 0 ) then
+      if ( from > 0 ) then
          did          = yes
          rep(from:to) = transl
       end if
@@ -2159,7 +2159,7 @@
 !
 !     If the input string is blank, return with an error message.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
          error = 'The input time string is blank.'
          zztokns = no
          return
@@ -2180,7 +2180,7 @@
       ampm   = .false.
       last   = rtrim ( string )
 
-      do while ( next .le. last )
+      do while ( next <= last )
 !
 !        FROM and NEXT point to parts of the string, PFROM and PNEXT
 !        point to parts of the picture we will construct.
@@ -2193,7 +2193,7 @@
 !
          call lx4uns ( string(1:last), from, to, nchar )
 
-         if ( nchar .gt. 0 ) then
+         if ( nchar > 0 ) then
 !
 !           We found an unsigned integer, add a letter to the
 !           internal representation, note the begin and end
@@ -2202,7 +2202,7 @@
 !
             put               =  put + 1
 
-            if ( put .gt. maxtkn ) then
+            if ( put > maxtkn ) then
                call zztknerr ( tknerr, string, string(from:to), &
                                error, zztokns )
                return
@@ -2214,7 +2214,7 @@
             next              =  to    + 1
             pto               =  pfrom + nchar - 1
 
-            if ( pto .gt. piclen ) then
+            if ( pto > piclen ) then
                call zztknerr ( picerr, string, string(from:to), &
                                error, zztokns )
                return
@@ -2225,14 +2225,14 @@
             pbegs(put)        =  pfrom
             pends(put)        =  pto
 
-         else if ( item .eq. blank  ) then
+         else if ( item == blank  ) then
 !
 !           We have a blank. We lump all consecutive
 !           blanks together as one big fat blank.
 !
             put           =  put + 1
 
-            if ( put .gt. maxtkn ) then
+            if ( put > maxtkn ) then
                call zztknerr ( tknerr, string, ' ', error, zztokns )
                return
             end if
@@ -2241,10 +2241,10 @@
             begs(put)     =  from
             rep (put:put) = 'b'
 
-            do while ( item .eq. blank .and. to .le. last )
+            do while ( item == blank .and. to <= last )
 
                to   = to + 1
-               if ( to .le. last ) then
+               if ( to <= last ) then
                   item = ichar( string(to:to) )
                end if
 
@@ -2256,7 +2256,7 @@
 
             pto               = pfrom + to - from
 
-            if ( pto .gt. piclen ) then
+            if ( pto > piclen ) then
                call zztknerr ( picerr, string, ' ', error, zztokns )
                return
             end if
@@ -2266,14 +2266,14 @@
             pbegs (put)       = pfrom
             pends (put)       = pto
 
-         else if ( item .eq. 9 ) then
+         else if ( item == 9 ) then
 !
 !           We've got a tab character, we treat tabs as
 !           blanks.
 !
             put               = put + 1
 
-            if ( put .gt. maxtkn ) then
+            if ( put > maxtkn ) then
                call zztknerr ( tknerr, string, '<TAB>', &
                                error, zztokns )
                return
@@ -2286,7 +2286,7 @@
 
             pto               = pfrom
 
-            if ( pto .gt. piclen ) then
+            if ( pto > piclen ) then
                call zztknerr ( picerr, string, '<TAB>', &
                                error, zztokns )
                return
@@ -2297,8 +2297,8 @@
             pbegs (put)       = pfrom
             pends (put)       = pfrom
 
-         else if (      item .lt. 32 &
-                   .or. item .gt. 126 ) then
+         else if (      item < 32 &
+                   .or. item > 126 ) then
 !
 !           This is a non-printing character. This is
 !           regarded as an error.
@@ -2311,7 +2311,7 @@
 !           Overwrite the non-printing character with a
 !           closing angle bracket.
 !
-            if ( next .lt. len(error) ) then
+            if ( next < len(error) ) then
                error( next+1 : next+1 ) = '>'
             end if
 
@@ -2341,7 +2341,7 @@
             check =  yes
             i     =  f(item)
 
-            do while ( check .and. (i .le. l(item)) )
+            do while ( check .and. (i <= l(item)) )
 
                w    = width(i)
                to   = from + w - 1
@@ -2354,8 +2354,8 @@
 !                 or day of the week, we keep looking for the
 !                 end of the match.
 !
-                  if (      class(i) .eq. 'm' &
-                       .or. class(i) .eq. 'w' ) then
+                  if (      class(i) == 'm' &
+                       .or. class(i) == 'w' ) then
 
 
                      spcial = recog(i)
@@ -2370,26 +2370,26 @@
 
                      to        = to - 1
 
-                     if ( w .gt. r ) then
+                     if ( w > r ) then
                         kind = full
                      else
                         kind = short
                      end if
 
-                     if ( this .ne. string(next:next) ) then
+                     if ( this /= string(next:next) ) then
                         case = lower
-                     else if (string(next:next+2) .eq. spcial(1:3)) &
+                     else if (string(next:next+2) == spcial(1:3)) &
                      then
                         case = upper
                      else
                         case = mixed
                      end if
 
-                     if ( class(i) .eq. 'm' ) then
+                     if ( class(i) == 'm' ) then
 
                         pto               = pfrom + mnsize(kind) - 1
 
-                        if ( pto .gt. piclen ) then
+                        if ( pto > piclen ) then
                            call zztknerr ( picerr, string, &
                                     string(from:to), error, zztokns )
                            return
@@ -2402,7 +2402,7 @@
 
                         pto               = pfrom + wksize(kind) - 1
 
-                        if ( pto .gt. piclen ) then
+                        if ( pto > piclen ) then
                            call zztknerr ( picerr, string, &
                                     string(from:to), error, zztokns )
                            return
@@ -2413,11 +2413,11 @@
 
                      end if
 
-                  else if ( class(i) .eq. 'e' ) then
+                  else if ( class(i) == 'e' ) then
 
                      pto               =  pfrom + 2
 
-                     if ( pto .gt. piclen ) then
+                     if ( pto > piclen ) then
                         call zztknerr ( picerr, string, string(from:to), &
                                                         error, zztokns )
                         return
@@ -2425,24 +2425,24 @@
 
                      pnext             =  pto   + 1
 
-                     if ( string(from:from) .eq. this ) then
+                     if ( string(from:from) == this ) then
                         pictur(pfrom:pto) = 'ERA'
                      else
                         pictur(pfrom:pto) = 'era'
                      end if
 
-                  else if ( class(i) .eq. 'N' ) then
+                  else if ( class(i) == 'N' ) then
 
                      pto               =  pfrom + 3
 
-                     if ( pto .gt. piclen ) then
+                     if ( pto > piclen ) then
                         call zztknerr ( picerr, string, string(from:to), &
                                                         error, zztokns )
                         return
                      end if
 
                      pnext             =  pto   + 1
-                     if ( string(from:from) .eq. this ) then
+                     if ( string(from:from) == this ) then
                         pictur(pfrom:pto) = 'AMPM'
                      else
                         pictur(pfrom:pto) = 'ampm'
@@ -2450,7 +2450,7 @@
 
                      ampm = .true.
 
-                  else if ( class(i) .eq. 'x' ) then
+                  else if ( class(i) == 'x' ) then
 
 !
 !                    Recognized token, but ignored.
@@ -2460,7 +2460,7 @@
 
                      pto               =  pfrom + to - from
 
-                     if ( pto .gt. piclen ) then
+                     if ( pto > piclen ) then
                         call zztknerr ( picerr, string, string(from:to), &
                                                         error, zztokns )
                         return
@@ -2473,7 +2473,7 @@
 
                   put           = put + 1
 
-                  if ( put .gt. maxtkn ) then
+                  if ( put > maxtkn ) then
                      call zztknerr ( tknerr, string, string(from:to), &
                                      error, zztokns )
                      return
@@ -2707,8 +2707,8 @@
 !
 !        Confirm ITEM range [32,126].
 !
-         if (      item .lt. 32 &
-              .or. item .gt. 126 ) then
+         if (      item < 32 &
+              .or. item > 126 ) then
 
 !
 !           A non-printing character found in REP. This is
@@ -2730,7 +2730,7 @@
          j    = begs(i)
          k    = ends(i)
 
-         if      ( item .eq. ichar('Y') ) then
+         if      ( item == ichar('Y') ) then
 
             nyear = nyear + 1
             e     = e     + 1
@@ -2744,7 +2744,7 @@
                               'YYYY', pictur )
             end if
 
-         else if ( item .eq. ichar('m') ) then
+         else if ( item == ichar('m') ) then
 
             nmon  = nmon  + 1
             e     = e     + 1
@@ -2752,7 +2752,7 @@
             call ucase ( string(j:k), month )
             value = isrchc ( month, 12, months )
 
-            if ( value .eq. 0 ) then
+            if ( value == 0 ) then
                call nparsd  ( string(j:k), tvec(2), error, ptr )
                call zzrepsub( pictur, pbegs(i), pends(i), 'MM', pictur )
             else
@@ -2760,7 +2760,7 @@
             end if
 
 
-         else if ( item .eq. ichar('D') ) then
+         else if ( item == ichar('D') ) then
 
             nday  = nday  + 1
             e     = e     + 1
@@ -2770,7 +2770,7 @@
             call zzmkpc ( pictur, pbegs(i), pends(i), 'DD', &
                           string(j:k) )
 
-         else if ( item .eq. ichar('y') ) then
+         else if ( item == ichar('y') ) then
 
             ndoy  = ndoy  + 1
             e     = e     + 1
@@ -2780,7 +2780,7 @@
             call zzmkpc ( pictur, pbegs(i), pends(i), 'DOY', &
                           string(j:k) )
 
-         else if ( item .eq. ichar('H') ) then
+         else if ( item == ichar('H') ) then
 
             nhour = nhour + 1
             e     = e     + 1
@@ -2803,7 +2803,7 @@
 
             end if
 
-         else if ( item .eq. ichar('M') ) then
+         else if ( item == ichar('M') ) then
 
             nmin  = nmin  + 1
             e     = e     + 1
@@ -2813,7 +2813,7 @@
             call zzmkpc ( pictur, pbegs(i), pends(i), 'MN', &
                           string(j:k) )
 
-         else if ( item .eq. ichar('S') ) then
+         else if ( item == ichar('S') ) then
 
             nsec  = nsec  + 1
             e     = e     + 1
@@ -2823,7 +2823,7 @@
             call zzmkpc ( pictur, pbegs(i), pends(i), 'SC', &
                           string(j:k) )
 
-         else if ( item .eq. ichar('J') ) then
+         else if ( item == ichar('J') ) then
 
             njd   = njd   + 1
             e     = e     + 1
@@ -2833,7 +2833,7 @@
             call zzmkpc ( pictur, pbegs(i), pends(i), 'JULIAND', &
                           string(j:k) )
 
-         else if ( item .eq. ichar('i') ) then
+         else if ( item == ichar('i') ) then
 
             error = string
 
@@ -2851,7 +2851,7 @@
             zzunpck = no
             return
 
-         else if ( item .eq. ichar('n') ) then
+         else if ( item == ichar('n') ) then
 
             error = string
 
@@ -2899,14 +2899,14 @@
 !
       pic = pictur
 
-      if (       nyear .eq. 1 &
-           .and. nmon  .eq. 1 &
-           .and. nday  .eq. 1 &
-           .and. ndoy  .eq. 0 &
-           .and. njd   .eq. 0 &
-           .and. nhour .le. 1 &
-           .and. nmin  .le. nhour &
-           .and. nsec  .le. nmin ) then
+      if (       nyear == 1 &
+           .and. nmon  == 1 &
+           .and. nday  == 1 &
+           .and. ndoy  == 0 &
+           .and. njd   == 0 &
+           .and. nhour <= 1 &
+           .and. nmin  <= nhour &
+           .and. nsec  <= nmin ) then
 
           tvec(4) = hms(1)
           tvec(5) = hms(2)
@@ -2916,14 +2916,14 @@
           zzunpck =  yes
           return
 
-      else if (      nyear .eq. 1 &
-               .and. nmon  .eq. 0 &
-               .and. nday  .eq. 0 &
-               .and. njd   .eq. 0 &
-               .and. ndoy  .eq. 1 &
-               .and. nhour .le. 1 &
-               .and. nmin  .le. nhour &
-               .and. nsec  .le. nmin  ) then
+      else if (      nyear == 1 &
+               .and. nmon  == 0 &
+               .and. nday  == 0 &
+               .and. njd   == 0 &
+               .and. ndoy  == 1 &
+               .and. nhour <= 1 &
+               .and. nmin  <= nhour &
+               .and. nsec  <= nmin  ) then
 
           tvec(3) = hms(1)
           tvec(4) = hms(2)
@@ -2933,14 +2933,14 @@
           zzunpck =  yes
           return
 
-      else if (      nyear .eq. 0 &
-               .and. nmon  .eq. 0 &
-               .and. nday  .eq. 0 &
-               .and. njd   .eq. 1 &
-               .and. ndoy  .eq. 0 &
-               .and. nhour .le. 0 &
-               .and. nmin  .le. 0 &
-               .and. nsec  .le. 0  ) then
+      else if (      nyear == 0 &
+               .and. nmon  == 0 &
+               .and. nday  == 0 &
+               .and. njd   == 1 &
+               .and. ndoy  == 0 &
+               .and. nhour <= 0 &
+               .and. nmin  <= 0 &
+               .and. nsec  <= 0  ) then
 
           transl  = 'JD'
           zzunpck =  yes
@@ -2954,38 +2954,38 @@
 !
       e = 0
 
-      if (           nyear .eq. 0 &
-               .and. nday  .eq. 0 &
-               .and. njd   .eq. 0 &
-               .and. ndoy  .eq. 0 &
-               .and. nhour .eq. 0 &
-               .and. nmin  .eq. 0 &
-               .and. nsec  .eq. 0  ) then
+      if (           nyear == 0 &
+               .and. nday  == 0 &
+               .and. njd   == 0 &
+               .and. ndoy  == 0 &
+               .and. nhour == 0 &
+               .and. nmin  == 0 &
+               .and. nsec  == 0  ) then
 
 
          error = 'No numeric components were supplied in the ' &
          //      'time string. '
 
 
-      else if ( njd .eq. 1 ) then
+      else if ( njd == 1 ) then
 
          error = 'The string possesses calendar components in ' &
          //      'addition to Julian Date specifier. '
 
-      else if ( njd .gt. 1 ) then
+      else if ( njd > 1 ) then
 
          error = 'There is more than one Julian Date specified ' &
          //      'in the epoch string. '
 
 
-      else if      ( nyear .eq. 0 ) then
+      else if      ( nyear == 0 ) then
 
          error = 'The year associated with the calendar string ' &
          //      '"#" could not be identified. '
 
          call repmc ( error, '#', string, error )
 
-      else if ( nyear .gt. 1 ) then
+      else if ( nyear > 1 ) then
 
          error  =  string
          messge = 'Two substrings indicating a calendar year ' &
@@ -3013,7 +3013,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( nmon .gt. 0 .and. ndoy .gt. 0 ) then
+      else if ( nmon > 0 .and. ndoy > 0 ) then
 
          error  =  string
          messge = 'Both a day of year and month were identified ' &
@@ -3041,7 +3041,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( nmon .gt. 1 ) then
+      else if ( nmon > 1 ) then
 
          error  =  string
          messge = 'Two substrings indicating a calendar month ' &
@@ -3069,7 +3069,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( ndoy .gt. 1 ) then
+      else if ( ndoy > 1 ) then
 
          error  =  string
          messge = 'Two substrings indicating a day of year ' &
@@ -3097,7 +3097,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( nday .gt. 1 ) then
+      else if ( nday > 1 ) then
 
          error  =  string
          messge = 'Two substrings indicating a day of month ' &
@@ -3125,7 +3125,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( nhour .gt. 1 ) then
+      else if ( nhour > 1 ) then
 
          error  =  string
          messge = 'Two substrings representing an hour of the day ' &
@@ -3153,7 +3153,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( nmin  .gt. 1 ) then
+      else if ( nmin  > 1 ) then
 
          error  =  string
          messge = 'Two substrings representing minutes of the hour ' &
@@ -3181,7 +3181,7 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( nsec  .gt. 1 ) then
+      else if ( nsec  > 1 ) then
 
          error  =  string
          messge = 'Two substrings representing seconds ' &
@@ -3209,21 +3209,21 @@
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
 
-      else if ( ndoy .eq. 0 .and. nmon .eq. 0 ) then
+      else if ( ndoy == 0 .and. nmon == 0 ) then
 
          error = 'Neither a month nor day of year could be ' &
          //      'identified in the input time string: "#" '
 
          call repmc ( error, '#', string, error )
 
-      else if ( nmon .eq. 1 .and. nday .eq. 0 ) then
+      else if ( nmon == 1 .and. nday == 0 ) then
 
          error = 'A month was identified in the time string "#", ' &
          //      'but a day of month could not be identified. '
 
          call repmc ( error, '#', string, error )
 
-      else if ( nmon .eq. 0 .and. nday .eq. 1 ) then
+      else if ( nmon == 0 .and. nday == 1 ) then
 
          error = 'A day of month was identified in the time ' &
          //      'string "#", but the month it belongs to could ' &
@@ -3231,7 +3231,7 @@
 
          call repmc ( error, '#', string, error )
 
-      else if ( nmin  .gt. nhour ) then
+      else if ( nmin  > nhour ) then
 
          error = 'A minutes components of the time  was ' &
          //      'identified in the time string "#", but the ' &
@@ -3239,7 +3239,7 @@
 
          call repmc ( error, '#', string, error )
 
-      else if ( nsec  .gt. nmin  ) then
+      else if ( nsec  > nmin  ) then
 
          error = 'A seconds components of the time was ' &
          //      'identified in the time string "#", but the ' &
@@ -3381,7 +3381,7 @@
 
          item = ichar( rep(i:i) )
 
-         if ( item .eq. ichar('i') ) then
+         if ( item == ichar('i') ) then
 !
 !           We've got an integer. Parse it to see if it
 !           is in the specified range.
@@ -3391,9 +3391,9 @@
 
             call nparsi ( string(j:k), value, myerr, ptr )
 
-            if (      ptr   .eq. 0 &
-                .and. value .ge. b &
-                .and. value .le. e ) then
+            if (      ptr   == 0 &
+                .and. value >= b &
+                .and. value <= e ) then
 
                rep(i:i) = letter
                did      = yes

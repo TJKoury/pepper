@@ -152,7 +152,7 @@
 
       call chkin ( 'ZZINILNK' )
 
-      if ( maxp .lt. 1 ) then
+      if ( maxp < 1 ) then
 
          call setmsg ( 'Pointer array size MAXP = #; size must ' &
          //            'be positive.'                           )
@@ -163,7 +163,7 @@
 
       end if
 
-      if ( maxc .lt. maxp ) then
+      if ( maxc < maxp ) then
 
          call setmsg ( 'Cell array size MAXC = #; size must ' &
          //            'be at least as large as pointer array ' &

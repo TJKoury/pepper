@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         binary
+      character(*)          binary
       integer(ip)           unit
 
 ! $ Brief_I/O
@@ -185,10 +185,10 @@
 !
 !     IFNLEN is the length of a DAF internal file name.
 !
-      character*(*)         bmark
+      character(*)          bmark
       parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
 
-      character*(*)         emark
+      character(*)          emark
       parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
 !
@@ -217,7 +217,7 @@
 !
       write ( unit, *, iostat=iostat ) bmark
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Error writing the begin comments marker '     // &
                        'to the text file named FNM.  IOSTAT = #.'     )
          call errfnm ( 'FNM', unit                                    )
@@ -243,7 +243,7 @@
 !
       write ( unit, *, iostat=iostat ) emark
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Error writing the end comments marker '       // &
                        'to the text file named FNM.  IOSTAT = #.'     )
          call errfnm ( 'FNM', unit                                    )

@@ -23,7 +23,7 @@
       implicit none
 
       integer(ip)      number
-      character*(*)    struct
+      character(*)     struct
 
 ! $ Brief_I/O
 !
@@ -164,7 +164,7 @@
 !
       integer(ip)           longln
       parameter           ( longln = 320 )
-      character*(longln)    error
+      character(longln)     error
 !
 !     Set up the error processing.
 !
@@ -173,7 +173,7 @@
 !
 !     If there is no excess, don't report one.
 !
-      if ( number .gt. 0 ) then
+      if ( number > 0 ) then
 
 !
 !        Begin with the number. We will build the rest of the
@@ -189,7 +189,7 @@
 !
 !        Singular or plural?
 !
-         if ( number .eq. 1 ) then
+         if ( number == 1 ) then
             call suffix ( 'element', 1, error )
          else
             call suffix ( 'elements', 1, error )

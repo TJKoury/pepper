@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       integer(ip)           first
       integer(ip)           last
       integer(ip)           nchar
@@ -159,7 +159,7 @@
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      if ( first .lt. 1 .or. first .gt. l ) then
+      if ( first < 1 .or. first > l ) then
          nchar = 0
          return
       end if
@@ -169,7 +169,7 @@
 !
       i = ichar( string(first:first) )
 
-      if ( i .eq. ichar('+' ) .or. i .eq. ichar('-') ) then
+      if ( i == ichar('+' ) .or. i == ichar('-') ) then
 !
 !        Case 1. The string begins with a + or -.  There must
 !        be an unsigned integer following.
@@ -178,7 +178,7 @@
 
          call lx4uns ( string, f, last, nchar )
 
-         if ( nchar .eq. 0 ) then
+         if ( nchar == 0 ) then
             last  = first - 1
          else
             nchar = nchar + 1

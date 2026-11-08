@@ -151,10 +151,10 @@
 !
 !     Local Variables
 !
-      character*(cbfsiz)    chrbuf
-      character*(filen)     fname
-      character*(strsiz)    strbff ( numbff )
-      character*(strsiz)    tmpstr
+      character(cbfsiz)     chrbuf
+      character(filen)      fname
+      character(strsiz)     strbff ( numbff )
+      character(strsiz)     tmpstr
 
       real(wp)              dpbuf  ( 128 )
 
@@ -224,7 +224,7 @@
 
          natbff = isrchc ( tmpstr, numbff, strbff )
 
-         if ( natbff .eq. 0 ) then
+         if ( natbff == 0 ) then
 
             call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
@@ -285,7 +285,7 @@
 !     or not.  Only supported formats can be opened by ZZDDHOPN,
 !     so no check of IBFF is required.
 !
-      if ( ibff .eq. natbff ) then
+      if ( ibff == natbff ) then
 
 !
 !        In the native case, just read the array of double precision
@@ -300,7 +300,7 @@
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call chkout ( 'ZZDAFGSR' )
             return
          end if
@@ -321,7 +321,7 @@
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call chkout ( 'ZZDAFGSR' )
             return
          end if
@@ -380,7 +380,7 @@
 !           numbers to translate.  If so, translate, and then
 !           increment DINDEX and CINDEX accordingly.
 !
-            if ( nd .gt. 0 ) then
+            if ( nd > 0 ) then
 
 !
 !              DPBUF has room for 128 double precision numbers
@@ -414,7 +414,7 @@
 !           Use DINDEX to compute the index into INBUF, the
 !           equivalenced integer buffer and translate.
 !
-            if ( ni .gt. 0 ) then
+            if ( ni > 0 ) then
 
 !
 !              INBUF has room for 256 integers total.  Compute
@@ -444,7 +444,7 @@
 !              summary.  This is necessary to purge any garbage
 !              present in memory.
 !
-               if ( mod(ni,2) .eq. 1 ) then
+               if ( mod(ni,2) == 1 ) then
                   inbuf(2*dindex-1+ni) = 0
                end if
 

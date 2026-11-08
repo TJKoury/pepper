@@ -20,10 +20,10 @@
 
       implicit none
 
-      character*(*)         str1
+      character(*)          str1
       integer(ip)           b1
       integer(ip)           e1
-      character*(*)         str2
+      character(*)          str2
       integer(ip)           b2
       integer(ip)           e2
 
@@ -198,13 +198,13 @@
 
 
 
-      if (      ( e1      .lt. b1           ) &
-           .or. ( e2      .lt. b2           ) &
-           .or. ( b1      .lt. 1            ) &
-           .or. ( b2      .lt. 1            ) &
-           .or. ( e1      .gt. len(str1)    ) &
-           .or. ( e2      .gt. len(str2)    ) &
-           .or. ( e1 - b1 .ne. e2 - b2      )  ) then
+      if (      ( e1      < b1           ) &
+           .or. ( e2      < b2           ) &
+           .or. ( b1      < 1            ) &
+           .or. ( b2      < 1            ) &
+           .or. ( e1      > len(str1)    ) &
+           .or. ( e2      > len(str2)    ) &
+           .or. ( e1 - b1 /= e2 - b2      )  ) then
 
          samsbi = .false.
          return

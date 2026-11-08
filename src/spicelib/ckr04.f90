@@ -424,7 +424,7 @@
 !
 !     Check if the segment is type 4. Signal an error if it's not.
 !
-      if ( icd( 3 ) .ne. ck4dtp ) then
+      if ( icd( 3 ) /= ck4dtp ) then
 
          call setmsg ( 'The segment is not a type 4 segment.  '   // &
                        'Type is #'                                 )
@@ -441,7 +441,7 @@
 !        Signal an error if angular velocities are required but
 !        they are not present in the segment.
 !
-         if ( icd( 4 ) .ne. 1 ) then
+         if ( icd( 4 ) /= 1 ) then
 
             call setmsg ( 'Segment does not contain angular '     // &
                           'velocity data.'                        )
@@ -493,7 +493,7 @@
 !
          lbnd1 = midpt1 - rad1 - tol
 
-         if ( sclkdp .ge. lbnd1  ) then
+         if ( sclkdp >= lbnd1  ) then
 
             found = .true.
             clkout = midpt1 - rad1
@@ -505,7 +505,7 @@
 !
 !        We found reference value.
 !
-         if ( indx .ge. nrec ) then
+         if ( indx >= nrec ) then
 
 !
 !           The SCLKDP is greater than the left bound of the last
@@ -529,7 +529,7 @@
 !
             rbnd1 = midpt1 + rad1 + tol
 
-            if ( sclkdp .le. rbnd1 ) then
+            if ( sclkdp <= rbnd1 ) then
 
                found = .true.
 
@@ -539,7 +539,7 @@
 !
                rbnd1 = midpt1 + rad1
 
-               if ( sclkdp .ge. rbnd1 ) then
+               if ( sclkdp >= rbnd1 ) then
 
                   clkout = midpt1 + rad1
 
@@ -554,7 +554,7 @@
 
             end if
 
-         else if ( ( indx .ge. 1 ) .and. ( indx .lt. nrec ) ) then
+         else if ( ( indx >= 1 ) .and. ( indx < nrec ) ) then
 
 !
 !           The SCLKDP lies between left bound of the first interval
@@ -576,7 +576,7 @@
 !
             rbnd1 = midpt1 + rad1
 
-            if ( sclkdp .le. rbnd1 ) then
+            if ( sclkdp <= rbnd1 ) then
 
                found = .true.
                clkout = sclkdp
@@ -604,7 +604,7 @@
                rbnd1 = midpt1 + rad1
                lbnd2 = midpt2 - rad2
 
-               if ( ( sclkdp - rbnd1 ) .le. ( lbnd2 - sclkdp ) ) then
+               if ( ( sclkdp - rbnd1 ) <= ( lbnd2 - sclkdp ) ) then
 
 !
 !                 SCLKDP is closer to the right bound of current
@@ -612,7 +612,7 @@
 !
                   rbnd1 = midpt1 + rad1 + tol
 
-                  if ( sclkdp .le. rbnd1 ) then
+                  if ( sclkdp <= rbnd1 ) then
 
                      found = .true.
                      clkout = midpt1 + rad1
@@ -637,7 +637,7 @@
 !
                   lbnd2 = midpt2 - rad2 - tol
 
-                  if ( sclkdp .ge. lbnd2 ) then
+                  if ( sclkdp >= lbnd2 ) then
 
                      found = .true.
                      indx = indx + 1

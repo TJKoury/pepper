@@ -31,7 +31,7 @@
       integer(ip)           handle
       integer(ip)           segdsc ( sdscsz )
       integer(ip)           coldsc ( cdscsz )
-      character*(*)         ckey
+      character(*)          ckey
       integer(ip)           recptr
       logical               null
       integer(ip)           prvidx
@@ -170,7 +170,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           dtype
       integer(ip)           itype
@@ -187,7 +187,7 @@
 !
 !     If the column's not indexed, we have no business being here.
 !
-      indexd  =  coldsc(ixtidx) .ne. ifalse
+      indexd  =  coldsc(ixtidx) /= ifalse
 
       if ( .not. indexd ) then
 
@@ -207,7 +207,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( dtype .ne. chr ) then
+      if ( dtype /= chr ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -227,7 +227,7 @@
 !
       itype  =  coldsc(ixtidx)
 
-      if ( itype .eq. 1 ) then
+      if ( itype == 1 ) then
 
          call zzekerc1 (  handle,  segdsc,  coldsc,  ckey, &
                           recptr,  null,    prvidx,  prvptr  )

@@ -30,12 +30,12 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         ckfnm
+      character(*)          ckfnm
       integer(ip)           idcode
       logical               needav
-      character*(*)         level
+      character(*)          level
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              cover ( lbcell : * )
 
 ! $ Brief_I/O
@@ -715,10 +715,10 @@
 !
 !     Local parameters
 !
-      character*(*)         kwintv
+      character(*)          kwintv
       parameter           ( kwintv = 'INTERVAL' )
 
-      character*(*)         kwseg
+      character(*)          kwseg
       parameter           ( kwseg  = 'SEGMENT' )
 
 
@@ -734,8 +734,8 @@
 !
 !     Local variables
 !
-      character*(lnsize)    arch
-      character*(lnsize)    kertyp
+      character(lnsize)     arch
+      character(lnsize)     kertyp
 
       real(wp)              dc     ( nd )
       real(wp)              dctol  ( nd )
@@ -767,7 +767,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -811,7 +811,7 @@
       end if
 
 
-      if ( arch .eq. 'XFR' ) then
+      if ( arch == 'XFR' ) then
 
          call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary CK file to be readable ' &
@@ -824,7 +824,7 @@
          call chkout ( 'CKCOV'                                     )
          return
 
-      else if ( arch .ne. 'DAF' ) then
+      else if ( arch /= 'DAF' ) then
 
          call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary CK file to be readable ' &
@@ -841,7 +841,7 @@
          call chkout ( 'CKCOV'                                     )
          return
 
-      else if ( kertyp .ne. 'CK' ) then
+      else if ( kertyp /= 'CK' ) then
 
          call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary CK file to be readable ' &
@@ -944,10 +944,10 @@
 !        Let AVOK indicate whether the segment satisfies the
 !        angular velocity restriction.
 !
-         avok = ( ic(4) .eq. 1 ) .or. ( .not. needav )
+         avok = ( ic(4) == 1 ) .or. ( .not. needav )
 
 
-         if (  ( ic(1) .eq. idcode )  .and.  avok  ) then
+         if (  ( ic(1) == idcode )  .and.  avok  ) then
 !
 !           This segment is for the body of interest.  If angular
 !           velocity is needed, this segment has it.
@@ -977,7 +977,7 @@
 
                end if
 
-               if ( dctol(1) .le. dctol(2) ) then
+               if ( dctol(1) <= dctol(2) ) then
                   call wninsd (  dctol(1),  dctol(2),  cover )
                end if
 
@@ -993,32 +993,32 @@
                segbeg = ic(5)
                segend = ic(6)
 
-               if ( dtype .eq. 1 ) then
+               if ( dtype == 1 ) then
 
                   call zzckcv01 ( handle, segbeg, segend, &
                                   clkid,  tol,    timsys, cover )
 
-               else if ( dtype .eq. 2 ) then
+               else if ( dtype == 2 ) then
 
                   call zzckcv02 ( handle, segbeg, segend, &
                                   clkid,  tol,    timsys, cover )
 
-               else if ( dtype .eq. 3 ) then
+               else if ( dtype == 3 ) then
 
                   call zzckcv03 ( handle, segbeg, segend, &
                                   clkid,  tol,    timsys, cover )
 
-               else if ( dtype .eq. 4 ) then
+               else if ( dtype == 4 ) then
 
                   call zzckcv04 ( handle, segbeg, segend, &
                                   clkid,  tol,    timsys, cover )
 
-               else if ( dtype .eq. 5 ) then
+               else if ( dtype == 5 ) then
 
                   call zzckcv05 ( handle, segbeg, segend, clkid, &
                                   dc,     tol,    timsys, cover )
 
-               else if ( dtype .eq. 6 ) then
+               else if ( dtype == 6 ) then
 
                   call zzckcv06 ( handle, segbeg, segend, clkid, &
                                   dc,     tol,    timsys, cover )

@@ -323,7 +323,7 @@
 !
       bwd = dladsc( bwdidx )
 
-      if ( bwd .eq. nulptr ) then
+      if ( bwd == nulptr ) then
 !
 !        There is no segment preceding the input segment.
 !

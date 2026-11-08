@@ -24,11 +24,11 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         copy
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          copy
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
-      character*(*)         tabval     ( lbcell:* )
+      character(*)          tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -216,11 +216,11 @@
       locsym(1) = lstlec ( name, nsym, tabsym(1) )
       locsym(2) = lstlec ( copy, nsym, tabsym(1) )
 
-      oldsym(1) = (       locsym(1)         .ne. 0 &
-                    .and. tabsym(locsym(1)) .eq. name )
+      oldsym(1) = (       locsym(1)         /= 0 &
+                    .and. tabsym(locsym(1)) == name )
 
-      oldsym(2) = (       locsym(2)         .ne. 0 &
-                    .and. tabsym(locsym(2)) .eq. copy )
+      oldsym(2) = (       locsym(2)         /= 0 &
+                    .and. tabsym(locsym(2)) == copy )
 
 !
 !     If the original symbol is not in the table, we can't make a copy.
@@ -259,7 +259,7 @@
 !
 !        Can we make a copy without overflow?
 !
-         if ( nsym+newsym .gt. sizec ( tabsym ) ) then
+         if ( nsym+newsym > sizec ( tabsym ) ) then
 
             call setmsg ( 'SYDUPC: Duplication of the symbol # '    // &
                           'causes an overflow in the name table.' )
@@ -267,7 +267,7 @@
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-         else if ( nptr+newsym .gt. sizei ( tabptr ) ) then
+         else if ( nptr+newsym > sizei ( tabptr ) ) then
 
             call setmsg ( 'SYDUPC: Duplication of the symbol # '    // &
                           'causes an overflow in the pointer table.' )
@@ -275,7 +275,7 @@
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-         else if ( nval+newval .gt. sizec ( tabval ) ) then
+         else if ( nval+newval > sizec ( tabval ) ) then
 
             call setmsg ( 'SYDUPC: Duplication of the symbol # '    // &
                           'causes an overflow in the value table.' )
@@ -292,13 +292,13 @@
 !           change the dimension. Otherwise add the new name and
 !           dimension to the name and pointer tables.
 !
-            if ( dimval(2) .gt. 0 ) then
+            if ( dimval(2) > 0 ) then
               call remlac ( dimval(2), locval(2), tabval(1), nval )
               call scardc ( nval, tabval )
 
               tabptr(locsym(2)) = dimval(1)
 
-              if ( locval(1) .gt. locval(2) ) then
+              if ( locval(1) > locval(2) ) then
                  locval(1) = locval(1) - dimval(2)
               end if
 
@@ -319,7 +319,7 @@
               tabval(i+dimval(1)) = tabval(i)
             end do
 
-            if ( locval(1) .gt. locval(2) ) then
+            if ( locval(1) > locval(2) ) then
                locval(1) = locval(1) + dimval(1)
             end if
 

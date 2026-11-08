@@ -23,10 +23,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       real(wp)              epoch
       real(wp)              eqel  ( 9 )
       real(wp)              rapol
@@ -499,7 +499,7 @@
 !     segment into an SPK file and diagnose it later.
 !
 
-      if ( a .le. 0 ) then
+      if ( a <= 0 ) then
 
          call setmsg ( 'The semimajor axis supplied to the ' &
          //            'SPK type 17 evaluator was non-positive.  This ' &
@@ -510,7 +510,7 @@
          call chkout ( 'SPKW17'                )
          return
 
-      else if ( ecc .gt. 0.9_wp ) then
+      else if ( ecc > 0.9_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 17 ' &
          //            'segment is greater than 0.9.  It must be ' &
@@ -527,7 +527,7 @@
 !
 !     Make sure the segment identifier is not too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
@@ -543,7 +543,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains ' &
             //            'the nonprintable character having ascii ' &

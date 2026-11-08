@@ -200,9 +200,9 @@
          return
       end if
 
-      if (      ( a .le. 0.0_wp ) &
-           .or. ( b .le. 0.0_wp ) &
-           .or. ( c .le. 0.0_wp ) ) then
+      if (      ( a <= 0.0_wp ) &
+           .or. ( b <= 0.0_wp ) &
+           .or. ( c <= 0.0_wp ) ) then
 
          call chkin  ( 'EDPNT'                            )
          call setmsg ( 'Ellipsoid radii must be strictly ' &
@@ -237,7 +237,7 @@
 !
       level = touchd( ( p(1)/a )**2 + ( p(2)/b )**2 + ( p(3)/c )**2  )
 
-      if ( level .le. 0.0_wp ) then
+      if ( level <= 0.0_wp ) then
 !
 !        We expect that LEVEL will be non-negative, but it could
 !        be zero. We check for negative values as a precaution.

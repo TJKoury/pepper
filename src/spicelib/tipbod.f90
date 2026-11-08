@@ -26,7 +26,7 @@
 
       implicit none
 
-      character*(*)         ref
+      character(*)          ref
       integer(ip)           body
       real(wp)              et
       real(wp)              tipm   ( 3, 3 )

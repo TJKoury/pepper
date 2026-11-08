@@ -235,7 +235,7 @@
 !
       ncof = ( int( record( 1 ) ) - 2 ) / 6
 
-      if ( ncof .lt. 1 ) then
+      if ( ncof < 1 ) then
 
          call chkin  ( 'SPKE03'                                     )
          call setmsg ( 'The input record''s coefficient count NCOF ' &
@@ -250,7 +250,7 @@
 !
 !     Check the radius of the domain interval.
 !
-      if ( record(3) .le. 0.0_wp )  then
+      if ( record(3) <= 0.0_wp )  then
 
          call chkin  ( 'SPKE03'                            )
          call setmsg ( 'Interval radius must be positive ' &

@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           sc
-      character*(*)         clkstr
+      character(*)          clkstr
       real(wp)              ticks
 
 ! $ Brief_I/O
@@ -320,7 +320,7 @@
 
       type = sctype ( sc )
 
-      if ( type .eq. 1 )  then
+      if ( type == 1 )  then
          call sctk01 ( sc, clkstr, ticks )
       else
          call setmsg ( 'Clock type # is not supported.' )

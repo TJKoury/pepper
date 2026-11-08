@@ -34,11 +34,11 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
       integer(ip)           errptr
 
 ! $ Brief_I/O
@@ -189,12 +189,12 @@
 !     Local variables
 !
 
-      character*(tnamsz)    alias
-      character*(cnamsz)    colnam
-      character*(tnamsz)    lhstab
-      character*(tnamsz)    ordtab
-      character*(tnamsz)    rhstab
-      character*(short)     typstr ( 4 )
+      character(tnamsz)     alias
+      character(cnamsz)     colnam
+      character(tnamsz)     lhstab
+      character(tnamsz)     ordtab
+      character(tnamsz)     rhstab
+      character(short)      typstr ( 4 )
 
       integer(ip)           attdsc ( adscsz )
       integer(ip)           base
@@ -245,7 +245,7 @@
          return
       end if
 
-      if ( irsolv .eq. ifalse ) then
+      if ( irsolv == ifalse ) then
 
          call chkin  ( 'ZZEKSEMC'                                   )
          call setmsg ( 'Encoded query has not had names resolved.'  )
@@ -262,7 +262,7 @@
          return
       end if
 
-      if ( trsolv .eq. ifalse ) then
+      if ( trsolv == ifalse ) then
 
          call chkin  ( 'ZZEKSEMC'                                   )
          call setmsg ( 'Encoded query has not had time values '     // &
@@ -316,7 +316,7 @@
          lhstyp  =  attdsc(atttyp)
          lhssiz  =  attdsc(attsiz)
 
-         if ( lhssiz .ne. 1 ) then
+         if ( lhssiz /= 1 ) then
 
             error  =  .true.
             errmsg =  'Non-scalar column <#> having size # found '  // &
@@ -338,17 +338,17 @@
 !        Decide whether the constraint is an `IS NULL' or `IS NOT NULL'
 !        test.
 !
-         nulval  =  ( opcode .eq. isnull ) .or. ( opcode .eq. notnul )
+         nulval  =  ( opcode == isnull ) .or. ( opcode == notnul )
 
 !
 !        Check for use of the LIKE or NOT LIKE operators.  These
 !        operators may be used only if the LHS column has character
 !        type.
 !
-         likeop  =  ( opcode .eq. like ) .or. ( opcode .eq. unlike )
+         likeop  =  ( opcode == like ) .or. ( opcode == unlike )
 
 
-         if (  likeop  .and.  ( lhstyp .ne. chr )  ) then
+         if (  likeop  .and.  ( lhstyp /= chr )  ) then
 
             error  =  .true.
             errmsg = 'LIKE and NOT LIKE operators may be used only ' // &
@@ -368,7 +368,7 @@
 !        If the constraint compares two columns, get the same
 !        information for the RHS column.
 !
-         if ( cnstyp .eq. eqcol ) then
+         if ( cnstyp == eqcol ) then
 
             tabidx  =  eqryi ( base + eqrtab - 1 + eqtord )
             colidx  =  eqryi ( base + eqrcol - 1 + eqcidx )
@@ -386,7 +386,7 @@
             rhstyp  =  attdsc(2)
             rhssiz  =  attdsc(4)
 
-            if ( rhssiz .ne. 1 ) then
+            if ( rhssiz /= 1 ) then
 
                error  =  .true.
                errmsg =  'Non-scalar column <#> having size # found '// &
@@ -402,15 +402,15 @@
 !
 !           Check for data type mismatch.
 !
-            if ( rhstyp .ne. lhstyp ) then
+            if ( rhstyp /= lhstyp ) then
 !
 !              The only allowed mismatch is between integers and
 !              d.p. numbers.
 !
-               if (      ( lhstyp .eq. time ) &
-                    .or. ( lhstyp .eq. chr  ) &
-                    .or. ( rhstyp .eq. time ) &
-                    .or. ( rhstyp .eq. chr  )  ) then
+               if (      ( lhstyp == time ) &
+                    .or. ( lhstyp == chr  ) &
+                    .or. ( rhstyp == time ) &
+                    .or. ( rhstyp == chr  )  ) then
 
                   error  =  .true.
                   errmsg = 'Data type mismatch: column <#> has data ' // &
@@ -446,15 +446,15 @@
             lxb(2)  =  eqryi ( base + eqbval - 1 + eqblex )
             lxe(2)  =  eqryi ( base + eqbval - 1 + eqelex )
 
-            if ( rhstyp .ne. lhstyp ) then
+            if ( rhstyp /= lhstyp ) then
 !
 !              The only allowed mismatch is between integers and
 !              d.p. numbers.
 !
-               if (       ( lhstyp .eq. time ) &
-                     .or. ( lhstyp .eq. chr  ) &
-                     .or. ( rhstyp .eq. time ) &
-                     .or. ( rhstyp .eq. chr  )  ) then
+               if (       ( lhstyp == time ) &
+                     .or. ( lhstyp == chr  ) &
+                     .or. ( rhstyp == time ) &
+                     .or. ( rhstyp == chr  )  ) then
 
                   error  =  .true.
                   errmsg = 'Data type mismatch: column <#> has data ' // &
@@ -508,7 +508,7 @@
          call ekcii ( ordtab, colidx, colnam, attdsc )
 
 
-         if ( attdsc(4) .ne. 1 ) then
+         if ( attdsc(4) /= 1 ) then
 
             error  =  .true.
             errmsg =  'Non-scalar column <#> having size # found '  // &

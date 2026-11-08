@@ -23,7 +23,7 @@
       integer(ip)           unit
       integer(ip)           bline
       integer(ip)           eline
-      character*(*)         line
+      character(*)          line
 
 ! $ Brief_I/O
 !
@@ -190,7 +190,7 @@
 !
 !     First, see if the line numbers make sense.
 !
-      if ( ( bline .gt. eline ) .or. ( bline .le. 0 ) ) then
+      if ( ( bline > eline ) .or. ( bline <= 0 ) ) then
 
          call setmsg ( 'The line numbers do not make sense:  '        // &
                        'BLINE = # and  ELINE = #.'                    )
@@ -221,7 +221,7 @@
 !        for IOSTAT. Any other non-zero value indicates some other
 !        error.  If IOSTAT is zero, the read was successful.
 !
-         if ( iostat .gt. 0 ) then
+         if ( iostat > 0 ) then
 
             call setmsg ( 'Error reading text file named FILENAME.'   // &
                           'The value of IOSTAT is #.'                 )
@@ -231,7 +231,7 @@
             call chkout ( 'COUNTC'                                    )
             return
 
-         else if ( iostat .lt. 0 ) then
+         else if ( iostat < 0 ) then
 
             call setmsg ( 'Reached end of file unexpectedly at line ' // &
                           '# in file FILE.  BLINE = # and ELINE = #.' )
@@ -252,7 +252,7 @@
 !
             linect = linect + 1
 
-            if (( linect .ge. bline ) .and. ( linect .le. eline )) then
+            if (( linect >= bline ) .and. ( linect <= eline )) then
 
 !
 !              Add the number of characters in this line to the count.
@@ -267,7 +267,7 @@
 !
                call astrip ( line, char( 32), char(126), line )
 
-               if ( line .ne. ' ' ) then
+               if ( line /= ' ' ) then
 
                   call setmsg ( 'Non-printing ASCII characters were ' // &
                                 'found when counting characters on '  // &
@@ -282,7 +282,7 @@
 
             end if
 
-            if ( linect .eq. eline ) done = .true.
+            if ( linect == eline ) done = .true.
 
          end if
 

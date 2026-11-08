@@ -217,7 +217,7 @@
          return
       end if
 
-      if (  ( a .le. 0.0_wp ) .or. ( b .le. 0.0_wp )  ) then
+      if (  ( a <= 0.0_wp ) .or. ( b <= 0.0_wp )  ) then
 
          call chkin  ( 'ZZELNAXX'                             )
          call setmsg ( 'Semi-axis lengths were A = #; B = #. ' &

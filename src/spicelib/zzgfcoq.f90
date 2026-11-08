@@ -35,20 +35,20 @@
       include               'gf.inc'
       include               'zzgf.inc'
 
-      character*(*)         vecdef
-      character*(*)         method
+      character(*)          vecdef
+      character(*)          method
       integer(ip)           trgid
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       integer(ip)           obsid
-      character*(*)         dref
+      character(*)          dref
       real(wp)              dvec   ( 3 )
-      character*(*)         crdsys
+      character(*)          crdsys
       integer(ip)           ctrid
       real(wp)              re
       real(wp)              f
-      character*(*)         crdnam
+      character(*)          crdnam
       real(wp)              value
       logical               found
 
@@ -428,12 +428,12 @@
 !
 !     Local variables
 !
-      character*(crdlen)    crdnms ( 3, nsys )
-      character*(bdnmln)    ctrnam
-      character*(bdnmln)    obsnam
-      character*(crdlen)    sysnms (    nsys )
-      character*(crdlen)    sysnam
-      character*(bdnmln)    trgnam
+      character(crdlen)     crdnms ( 3, nsys )
+      character(bdnmln)     ctrnam
+      character(bdnmln)     obsnam
+      character(crdlen)     sysnms (    nsys )
+      character(crdlen)     sysnam
+      character(bdnmln)     trgnam
 
       real(wp)              coords ( 3 )
       real(wp)              lt
@@ -521,7 +521,7 @@
 !
       sysidx = isrchc ( crdsys, nsys, sysnms )
 
-      if ( sysidx .eq. 0 ) then
+      if ( sysidx == 0 ) then
 !
 !        We don't recognize this system name.
 !
@@ -541,7 +541,7 @@
 !
       crdidx = isrchc ( crdnam, 3, crdnms(1,sysidx) )
 
-      if ( crdidx .eq. 0 ) then
+      if ( crdidx == 0 ) then
 !
 !        We don't recognize this coordinate name.
 !
@@ -561,11 +561,11 @@
 !     The RECPGR interface requires the frame center ID code
 !     as well.
 !
-      if (      ( vecdef .eq. sobdef ) &
-           .or. ( vecdef .eq. sindef ) &
-           .or. ( sysnam .eq. pgrsys )  ) then
+      if (      ( vecdef == sobdef ) &
+           .or. ( vecdef == sindef ) &
+           .or. ( sysnam == pgrsys )  ) then
 
-         if (  first  .or. ( trgid .ne. prvtrg )  ) then
+         if (  first  .or. ( trgid /= prvtrg )  ) then
 
             call bodc2s ( trgid, trgnam )
 
@@ -574,7 +574,7 @@
          end if
 
 
-         if (  first  .or. ( obsid .ne. prvobs )  ) then
+         if (  first  .or. ( obsid /= prvobs )  ) then
 
             call bodc2s ( obsid, obsnam )
 
@@ -582,7 +582,7 @@
 
          end if
 
-         if (  first  .or. ( ctrid .ne. prvctr )  ) then
+         if (  first  .or. ( ctrid /= prvctr )  ) then
 
             call bodc2s ( ctrid, ctrnam )
 
@@ -594,14 +594,14 @@
 
       end if
 
-      if ( vecdef .eq. posdef  ) then
+      if ( vecdef == posdef  ) then
 !
 !        Find the observer-target position vector.
 !
          call spkezp ( trgid, et, ref, abcorr, obsid, pos, lt )
 
 
-      else if ( vecdef .eq. sobdef ) then
+      else if ( vecdef == sobdef ) then
 !
 !        The caller has requested a sub-observer point coordinate
 !        computation.
@@ -610,7 +610,7 @@
                        abcorr, obsnam, pos, trgepc, srfvec )
 
 
-      else if ( vecdef .eq. sindef ) then
+      else if ( vecdef == sindef ) then
 !
 !        The caller has requested a surface intercept point coordinate
 !        computation.
@@ -651,39 +651,39 @@
 !     to be computed resides in POS. Convert POS to the
 !     specified coordinate system.
 !
-      if ( sysnam .eq. recsys ) then
+      if ( sysnam == recsys ) then
 !
 !        No conversion needed for rectangular coordinates.
 !
          call moved ( pos, 3, coords )
 
 
-      else if ( sysnam .eq. latsys ) then
+      else if ( sysnam == latsys ) then
 
          call reclat ( pos, coords(1), coords(2), coords(3) )
 
 
-      else if ( sysnam .eq. radsys ) then
+      else if ( sysnam == radsys ) then
 
          call recrad ( pos, coords(1), coords(2), coords(3) )
 
 
-      else if ( sysnam .eq. sphsys ) then
+      else if ( sysnam == sphsys ) then
 
          call recsph ( pos, coords(1), coords(2), coords(3) )
 
 
-      else if ( sysnam .eq. cylsys ) then
+      else if ( sysnam == cylsys ) then
 
          call reccyl ( pos, coords(1), coords(2), coords(3) )
 
 
-      else if ( sysnam .eq. geosys ) then
+      else if ( sysnam == geosys ) then
 
          call recgeo ( pos, re, f, coords(1), coords(2), coords(3) )
 
 
-      else if ( sysnam .eq. pgrsys ) then
+      else if ( sysnam == pgrsys ) then
 
          call recpgr ( ctrnam,    pos,       re,       f, &
                        coords(1), coords(2), coords(3)    )

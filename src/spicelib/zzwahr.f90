@@ -570,7 +570,7 @@
          argrt = zero
 
          do j = 1,5
-            if ( matrix(j,i) .ne. 0 ) then
+            if ( matrix(j,i) /= 0 ) then
                arg   = arg   + matrix(j,i)*angle(j)
                argrt = argrt + matrix(j,i)*angrt(j)
                arg   = mod(arg, dtwopi)
@@ -579,13 +579,13 @@
 
          cl = matrix(6,i)
 
-         if ( matrix(7,i) .ne. 0 ) then
+         if ( matrix(7,i) /= 0 ) then
             cl = cl + matrix(7,i)*t
          end if
 
          ce = matrix(8,i)
 
-         if ( matrix(9,i) .ne. 0 ) then
+         if ( matrix(9,i) /= 0 ) then
             ce = ce + matrix(9,i)*t
          end if
 

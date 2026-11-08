@@ -132,7 +132,7 @@
 !
 !     Local variables
 !
-      character*(pgsizc)    page
+      character(pgsizc)     page
 
       integer(ip)           from
       integer(ip)           npage
@@ -179,7 +179,7 @@
          to  =  to + 1
 
 
-         if (  ( to .gt. cpsize ) .or. ( from .eq. nvals )  ) then
+         if (  ( to > cpsize ) .or. ( from == nvals )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the

@@ -33,7 +33,7 @@
       integer(ip)           coldsc ( * )
       integer(ip)           recptr
       integer(ip)           nvals
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       logical               isnull
 
 ! $ Brief_I/O
@@ -185,7 +185,7 @@
 !
 !     Local variables
 !
-      character*(maxpad)    padbuf
+      character(maxpad)     padbuf
 
       integer(ip)           colidx
       integer(ip)           cvlen
@@ -248,7 +248,7 @@
 !
       ncols  =  segdsc ( ncidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKAD06'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -264,7 +264,7 @@
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
+      if (  isnull  .and.  ( coldsc(nflidx) /= itrue )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -286,7 +286,7 @@
 !     match the declared entry size.  In all cases, NVALS must be
 !     positive.
 !
-      if ( nvals .lt. 1 ) then
+      if ( nvals < 1 ) then
 
          call chkin  ( 'ZZEKAD06'                                  )
          call setmsg ( 'COLIDX = #;  segment = #; NVALS = #;  '  // &
@@ -301,9 +301,9 @@
       end if
 
 
-      if ( coldsc(sizidx) .ne. ifalse ) then
+      if ( coldsc(sizidx) /= ifalse ) then
 
-         if ( nvals .ne. coldsc(sizidx) ) then
+         if ( nvals /= coldsc(sizidx) ) then
 
             call chkin  ( 'ZZEKAD06'                                   )
             call setmsg ( 'COLIDX = #;  segment = #; NVALS = #; '     // &
@@ -342,7 +342,7 @@
 !
          strlen  =  coldsc ( lenidx   )
          cvlen   =  len    ( cvals(1) )
-         pad     =  cvlen  .lt.  strlen
+         pad     =  cvlen  <  strlen
 
          if ( pad ) then
             padlen  =  strlen - cvlen
@@ -357,7 +357,7 @@
 !        If the current page is full, these functions will be performed
 !        below in the code section in which a new page is allocated.
 !
-         if ( lastw .lt. cpsize ) then
+         if ( lastw < cpsize ) then
 
             p       =  segdsc(lcpidx)
 
@@ -370,7 +370,7 @@
 
          eltidx  =  1
 
-         do while (  ( eltidx .le. nvals ) .and. ( .not. failed() )  )
+         do while (  ( eltidx <= nvals ) .and. ( .not. failed() )  )
 !
 !           Write out the element having index ELTIDX.
 !
@@ -378,7 +378,7 @@
             remain  =  strlen
 
 
-            do while ( remain .gt. 0 )
+            do while ( remain > 0 )
 !
 !              Decide where to write the data values.  In order to write
 !              a new entry, we require enough room for the count
@@ -391,7 +391,7 @@
                end if
 
 
-               if ( room  .ge.  mnroom ) then
+               if ( room  >=  mnroom ) then
 !
 !                 There's room in the current page.  If this is the
 !                 first page this entry is written on, set the data
@@ -421,9 +421,9 @@
                   nwrite  =  min ( remain, room )
                   n       =  nwrite
 
-                  do while ( n .gt. 0 )
+                  do while ( n > 0 )
 
-                     if ( pos .lt. cvlen )   then
+                     if ( pos < cvlen )   then
 !
 !                       Take data from the input string CVALS(ELTIDX).
 !
@@ -449,7 +449,7 @@
                         npad  =  min ( n, padlen )
                         np    =  npad
 
-                        do while ( np .gt. 0 )
+                        do while ( np > 0 )
 
                            wpad  =  min ( np, maxpad )
 

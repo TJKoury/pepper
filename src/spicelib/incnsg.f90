@@ -378,7 +378,7 @@
 !
       call unorm ( axis, uaxis, axmag )
 
-      if ( axmag .eq. 0.0_wp ) then
+      if ( axmag == 0.0_wp ) then
 
          call chkin  ( 'INCNSG'                                       )
          call setmsg ( 'The cone''s axis vector must be non-zero ' &
@@ -392,7 +392,7 @@
 !
 !     The cone's angular radius must be non-negative.
 !
-      if ( angle .lt. 0.0_wp ) then
+      if ( angle < 0.0_wp ) then
 
          call chkin  ( 'INCNSG'                             )
          call setmsg ( 'The cone''s angular radius must be ' &
@@ -412,7 +412,7 @@
 
       call unorm ( dir, udir, dmag )
 
-      if ( dmag .eq. 0.0_wp ) then
+      if ( dmag == 0.0_wp ) then
 
          call chkin  ( 'INCNSG'                              )
          call setmsg ( 'The distance between the segment''s ' &
@@ -438,7 +438,7 @@
 !     We'll work with a local axis that has angular separation of
 !     no more than pi/2 from the nappe.
 !
-      if ( cosang .lt. 0.0_wp ) then
+      if ( cosang < 0.0_wp ) then
 
          cosang   = - cosang
          locang   =   pi() - angle
@@ -471,15 +471,15 @@
 !     There's no intersection if both endpoints are in the interior of
 !     the nappe of the cone (since the nappe is convex).
 !
-      in1  = dp1 .ge. cosang
-      in2  = dp2 .ge. cosang
+      in1  = dp1 >= cosang
+      in2  = dp2 >= cosang
 !
 !     If the line segment lies on the far side of the plane that
 !     contains the apex and is orthogonal to the axis, there's no
 !     intersection.
 !
-      neg1 = dp1 .lt. 0.0_wp
-      neg2 = dp2 .lt. 0.0_wp
+      neg1 = dp1 < 0.0_wp
+      neg2 = dp2 < 0.0_wp
 
       if (      ( in1  .and. in2  ) &
            .or. ( neg1 .and. neg2 ) ) then
@@ -496,7 +496,7 @@
 !
 !     Here's where we handle the half-space case.
 !
-      if ( abs(cosang) .lt. hsptol ) then
+      if ( abs(cosang) < hsptol ) then
 !
 !        See whether the ray emanating from the first endpoint and
 !        having direction UDIR hits the plane normal to the axis and
@@ -512,12 +512,12 @@
 !        If the ray doesn't hit the plane, we're done. Otherwise,
 !        check the intercept.
 !
-         if ( nplnx .eq. 1 ) then
+         if ( nplnx == 1 ) then
 !
 !           The ray does hit the plane. If the intersection is on the
 !           line segment, we have a solution.
 !
-            if ( vdist(plnx, endpt1) .le. dmag ) then
+            if ( vdist(plnx, endpt1) <= dmag ) then
 !
 !              The intercept is not further along the ray than the
 !              second endpoint. It's a valid solution.
@@ -646,13 +646,13 @@
 !     Compute the possible intersection points and test them
 !     to make sure they really are solutions.
 !
-      if ( n .gt. 0 ) then
+      if ( n > 0 ) then
 !
 !        Start with the solution closest to the ray's vertex.
 !        Compute XPT1 and make sure it's on the correct nappe
 !        of the cone.
 !
-         if ( s1 .ge. 0.0_wp ) then
+         if ( s1 >= 0.0_wp ) then
 
             xpt1(1) = endpt1(1) + s1*udir(1)
             xpt1(2) = endpt1(2) + s1*udir(2)
@@ -665,15 +665,15 @@
 !
             call unorm ( v1, uv1, v1mag )
 
-            if ( v1mag .gt. 0.0_wp ) then
+            if ( v1mag > 0.0_wp ) then
 
                coserr = abs( vdot(uv1,uaxis) - cosang )
             else
                coserr = 0.0_wp
             end if
 
-            if (      ( v1mag  .eq. 0.0_wp   ) &
-                 .or. ( coserr .lt. costol ) ) then
+            if (      ( v1mag  == 0.0_wp   ) &
+                 .or. ( coserr < costol ) ) then
 !
 !              The root is on the cone (on the apex if V1MAG is zero).
 !
@@ -687,11 +687,11 @@
 
          end if
 
-         if ( n .eq. 2 ) then
+         if ( n == 2 ) then
 !
 !           Check the second root.
 !
-            if ( s2 .ge. 0.0_wp ) then
+            if ( s2 >= 0.0_wp ) then
 
                xpt2(1) = endpt1(1) + s2*udir(1)
                xpt2(2) = endpt1(2) + s2*udir(2)
@@ -704,15 +704,15 @@
 !
                call unorm ( v2, uv2, v2mag )
 
-               if ( v2mag .gt. 0.0_wp ) then
+               if ( v2mag > 0.0_wp ) then
 
                   coserr = abs( vdot(uv2,uaxis) - cosang )
                else
                   coserr = 0.0_wp
                end if
 
-               if (      ( v2mag  .eq. 0.0_wp   ) &
-                    .or. ( coserr .lt. costol ) ) then
+               if (      ( v2mag  == 0.0_wp   ) &
+                    .or. ( coserr < costol ) ) then
 !
 !                 The root is on the cone (on the apex if V2MAG is
 !                 zero).
@@ -721,7 +721,7 @@
 !
                   nxpts = nxpts + 1
 
-                  if ( nxpts .eq. 1 ) then
+                  if ( nxpts == 1 ) then
 !
 !                    This is the only valid root; overwrite XPT1.
 !
@@ -744,7 +744,7 @@
 !     If we have two roots, we're in good shape. Otherwise we must
 !     determine how many roots should be found.
 !
-      if ( nxpts .lt. 2 ) then
+      if ( nxpts < 2 ) then
 !
 !        We must determine the expected number of roots, and if
 !        we didn't come up with them, we must find the roots
@@ -765,7 +765,7 @@
 !           There's supposed to be one root. If we found none, find one
 !           now.
 !
-            if ( nxpts .eq. 0 ) then
+            if ( nxpts == 0 ) then
 !
 !              ZZCXBRUT signals an error if the axis is the zero
 !              vector, but not otherwise. We've already ruled out this
@@ -832,7 +832,7 @@
             colat = halfpi() - maxlat
 
 
-            if ( colat .lt. locang ) then
+            if ( colat < locang ) then
 !
 !              MAXP is inside the cone. There should be an intersection
 !              on the segment between XOFF1 and MAXP and another
@@ -866,7 +866,7 @@
                   call mtxv ( xform,  vtemp, vtemp2 )
                   call vadd ( vtemp2, apex,  xpt2   )
 
-                  if ( nxpts .eq. 1 ) then
+                  if ( nxpts == 1 ) then
 !
 !                    Both roots are valid.
 !
@@ -886,7 +886,7 @@
                end if
 
 
-            else if ( colat .eq. locang ) then
+            else if ( colat == locang ) then
 !
 !              The root corresponds to a point of tangency of
 !              the segment and cone. This occurs at the point

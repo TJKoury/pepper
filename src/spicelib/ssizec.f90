@@ -23,7 +23,7 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)        size
-      character*(*)      cell   ( lbcell:* )
+      character(*)       cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -188,7 +188,7 @@
 !
 !     The size must be non-negative.  Other values will be snubbed.
 !
-      if (  size .lt. 0  )  then
+      if (  size < 0  )  then
          call setmsg ( 'Attempt to set size of cell to invalid '      // &
                        'value.  The value was #.'  )
          call errint ( '#', size )

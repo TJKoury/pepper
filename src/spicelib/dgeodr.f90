@@ -420,7 +420,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1.0_wp ) then
+      if ( f >= 1.0_wp ) then
 
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
@@ -430,7 +430,7 @@
 
       end if
 
-      if ( re .le. 0.0_wp ) then
+      if ( re <= 0.0_wp ) then
 
           call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
           call errdp  ( '*', re                              )
@@ -443,7 +443,7 @@
 !
 !     There is a singularity of the Jacobian for points on the z-axis.
 !
-      if ( ( x .eq. 0 ) .and. ( y .eq. 0 ) ) then
+      if ( ( x == 0 ) .and. ( y == 0 ) ) then
 
          call setmsg ( 'The Jacobian of the transformation from '     // &
                        'rectangular to geodetic coordinates '         // &

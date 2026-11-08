@@ -213,7 +213,7 @@
 !
       totkey  =  rpage ( trnkey )
 
-      if (  ( key .lt. 1 ) .or. ( key .gt. totkey+1 )  ) then
+      if (  ( key < 1 ) .or. ( key > totkey+1 )  ) then
 
          call chkin  ( 'ZZEKTRUI'                                )
          call setmsg ( 'Key = #. Valid range is 1:#.  File = #.' )
@@ -236,7 +236,7 @@
 !     Find the point at which the insertion is to occur.  When the
 !     tree contains only one node, no search is necessary.
 !
-      if ( nnode .eq. 1 ) then
+      if ( nnode == 1 ) then
 !
 !        This is the simplest case; all we need do is set up the
 !        key in the root node.
@@ -286,7 +286,7 @@
 !
 !        Overflow occurs when the root started out full.
 !
-         overfl  =  nkeys .eq. mxkeyr+1
+         overfl  =  nkeys == mxkeyr+1
 
 !
 !        Write the page back out, and we're all set.
@@ -295,7 +295,7 @@
 
 
 
-      else if ( key .eq. totkey+1 ) then
+      else if ( key == totkey+1 ) then
 !
 !        The new key will be the last key in the tree.  This case
 !        is simple:  the key goes in the last node of the tree.
@@ -341,7 +341,7 @@
 !
 !        Overflow occurs when the node started out full.
 !
-         overfl  =  nkeys .eq. mxkeyc
+         overfl  =  nkeys == mxkeyc
 
 !
 !        Write the affected pages back out.
@@ -359,7 +359,7 @@
                          target,  toffst,  level,  datptr  )
 
 
-         if ( level .eq. depth ) then
+         if ( level == depth ) then
 !
 !           The node containing KEY is a leaf node, which is what we
 !           want.  Insertions always take place at leaf nodes.
@@ -389,7 +389,7 @@
 !           Each node is allowed to overflow by 1 element.  If there's
 !           no more room, OK, that's it.
 !
-            if ( tnkeys .gt. mxkeyc ) then
+            if ( tnkeys > mxkeyc ) then
 
                call chkin  ( 'ZZEKTRUI'                            )
                call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
@@ -469,7 +469,7 @@
             tnkeys = tpage ( trnkc )
 
 
-            if ( tnkeys .gt. mxkeyc + 1 ) then
+            if ( tnkeys > mxkeyc + 1 ) then
 
                call chkin  ( 'ZZEKTRUI'                            )
                call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
@@ -504,7 +504,7 @@
 !
 !        Overflow occurs when the node started out full.
 !
-         overfl  =  tnkeys .eq. mxkeyc
+         overfl  =  tnkeys == mxkeyc
 
 !
 !        Write the target page back out.
@@ -516,7 +516,7 @@
 !        We've already looked up information for the parent of
 !        TARGET.  See the note at the prior call to ZZEKTRPI.
 !
-         do while ( parent .ne. root )
+         do while ( parent /= root )
 !
 !           Before going to work on the parent, get *its* parent's info.
 !           This is the last chance to do so.
@@ -535,7 +535,7 @@
             tnkeys  =  tpage ( trnkc  )
 
 
-            if ( rpidx .gt. 0 ) then
+            if ( rpidx > 0 ) then
 
                do i = rpidx, tnkeys
                   tpage(trkeyc + i)  =  tpage(trkeyc + i) + 1
@@ -561,7 +561,7 @@
          tnkeys  =  rpage ( trnkr )
 
 
-         if ( rpidx .gt. 0 ) then
+         if ( rpidx > 0 ) then
 
             do i = rpidx, tnkeys
                rpage(trkeyr + i)  =  rpage(trkeyr + i) + 1

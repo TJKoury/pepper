@@ -243,7 +243,7 @@
 !
 !     Check the number of sides of the polygon.
 !
-      if ( n .lt. 3 ) then
+      if ( n < 3 ) then
 
          call setmsg ( 'Polygon must have at least 3 sides; N = #.' )
          call errint ( '#',  n                                      )
@@ -262,7 +262,7 @@
 
       do i = 2, n+1
 
-         if ( i .le. n ) then
+         if ( i <= n ) then
             j = i
          else
             j = 1
@@ -286,7 +286,7 @@
          rperp(2) =  rvec(1)
 
 
-         if (  vdotg( rnext, rperp, 2 )  .ge.  0.0_wp  ) then
+         if (  vdotg( rnext, rperp, 2 )  >=  0.0_wp  ) then
 !
 !           RNEXT is reached by counterclockwise rotation from
 !           RVEC.  Note that in the case of zero rotation, the

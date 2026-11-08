@@ -26,12 +26,12 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
-      character*(*)         tabval     ( lbcell:* )
+      character(*)          tabval     ( lbcell:* )
       integer(ip)           n
-      character*(*)         values     (        * )
+      character(*)          values     (        * )
       logical               found
 
 ! $ Brief_I/O
@@ -223,7 +223,7 @@
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      if ( locsym .eq. 0 ) then
+      if ( locsym == 0 ) then
 
          found = .false.
 

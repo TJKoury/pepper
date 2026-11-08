@@ -184,20 +184,20 @@
 !     lying in the plane is considered a non-intersection case,
 !     by the way.)
 !
-      if ( ( vtxcon .gt. const ) .and. ( dircon .gt. 0.0_wp ) ) then
+      if ( ( vtxcon > const ) .and. ( dircon > 0.0_wp ) ) then
          return
       end if
 
-      if ( ( vtxcon .lt. const ) .and. ( dircon .lt. 0.0_wp ) ) then
+      if ( ( vtxcon < const ) .and. ( dircon < 0.0_wp ) ) then
          return
       end if
 
 
-      if ( vtxcon .eq. const ) then
+      if ( vtxcon == const ) then
 !
 !        The ray's vertex lies in the plane.
 !
-         if ( dircon .ne. 0.0_wp ) then
+         if ( dircon /= 0.0_wp ) then
 !
 !           The ray does not lie in the plane. The
 !           intercept is the ray's vertex.
@@ -232,14 +232,14 @@
 !
 !        H  <=  MAXD * LPAR
 !
-      if ( h .gt. (maxd * lpar) ) then
+      if ( h > (maxd * lpar) ) then
          return
       end if
 
 !
 !     For safety, return if we could have a divide-by-zero error.
 !
-      if ( lpar .eq. 0.0_wp ) then
+      if ( lpar == 0.0_wp ) then
          return
       end if
 

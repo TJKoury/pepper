@@ -167,8 +167,8 @@
       integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      character*(1)         type
-      character*(wdsize)    item
+      character(1)          type
+      character(wdsize)     item
 
       real(wp)              rate
 
@@ -180,7 +180,7 @@
 !
 !     The earth is a special case so we just handle it here.
 !
-      if ( bodid .eq. 399 ) then
+      if ( bodid == 399 ) then
 
          plnsns = 1
          return
@@ -200,8 +200,8 @@
       call dtpool ( item, found, n, type )
 
       if (     .not. found &
-            .or. type .ne. 'N' &
-            .or. n    .lt.  2 ) then
+            .or. type /= 'N' &
+            .or. n    <  2 ) then
          value = 0
       else
 
@@ -212,7 +212,7 @@
 !        the planetocentric and planetographic longitude are the
 !        same...
 !
-         if ( rate .lt. 0.0_wp ) then
+         if ( rate < 0.0_wp ) then
 
             value = 1
 

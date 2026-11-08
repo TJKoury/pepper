@@ -215,7 +215,7 @@
 !
 !     Reject negative margins.
 !
-      if ( margin .lt. 0.0_wp ) then
+      if ( margin < 0.0_wp ) then
 
          call chkin  ( 'ZZINREC'                                )
          call setmsg ( 'Margin must be non-negative but was #.' )
@@ -229,7 +229,7 @@
 !
 !     Check the exclusion index.
 !
-      if ( ( exclud .lt. none ) .or. ( exclud .gt. 3 ) ) then
+      if ( ( exclud < none ) .or. ( exclud > 3 ) ) then
 
          call chkin  ( 'ZZINREC'                             )
          call setmsg ( 'EXCLUD was #; allowed range is 0:3.' )
@@ -249,7 +249,7 @@
          maxcor(i) = bounds( upper, i)
          l     (i) = maxcor(i) - mincor(i)
 
-         if ( l(i) .lt. 0.0_wp ) then
+         if ( l(i) < 0.0_wp ) then
 
             call chkin  ( 'ZZINREC'                              )
             call setmsg ( 'Bounds are out of order for index #; ' &
@@ -270,7 +270,7 @@
 !
       do i = 1, 3
 
-         if ( exclud .ne. i ) then
+         if ( exclud /= i ) then
 !
 !           Create adjusted bounds for the Ith coordinate.
 !
@@ -279,8 +279,8 @@
             amncor(i) = mincor(i) - delta(i)
             amxcor(i) = maxcor(i) + delta(i)
 
-            if (      ( p(i) .lt. amncor(i) ) &
-                 .or. ( p(i) .gt. amxcor(i) ) ) then
+            if (      ( p(i) < amncor(i) ) &
+                 .or. ( p(i) > amxcor(i) ) ) then
 
                 return
 

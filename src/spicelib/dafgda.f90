@@ -279,7 +279,7 @@
 !
 !     Bad addresses?
 !
-      if ( baddr .le. 0 ) then
+      if ( baddr <= 0 ) then
          call chkin  ( 'DAFGDA' )
          call setmsg ( 'Negative value for BADDR address: #' )
          call errint ( '#', baddr )
@@ -287,7 +287,7 @@
          call chkout ( 'DAFGDA' )
          return
 
-      else if ( baddr .gt. eaddr ) then
+      else if ( baddr > eaddr ) then
          call chkin  ( 'DAFGDA' )
          call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#).' )
@@ -314,15 +314,15 @@
 
       do recno = begr, endr
 
-         if ( begr .eq. endr ) then
+         if ( begr == endr ) then
             first = begw
             last  = endw
 
-         else if ( recno .eq. begr ) then
+         else if ( recno == begr ) then
             first = begw
             last  = bsize
 
-         else if ( recno .eq. endr ) then
+         else if ( recno == endr ) then
             first = 1
             last  = endw
 

@@ -31,13 +31,13 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       integer(ip)           n
       integer(ip)           lxbeg
       integer(ip)           lxend
-      character*(*)         table
+      character(*)          table
       integer(ip)           tabidx
-      character*(*)         column
+      character(*)          column
       integer(ip)           colidx
 
 ! $ Brief_I/O
@@ -181,7 +181,7 @@
          return
       end if
 
-      if ( iparse .eq. ifalse ) then
+      if ( iparse == ifalse ) then
 
          call chkin  ( 'ZZEKQSEL'                                )
          call setmsg ( 'Encoded query has not yet been parsed.'  )
@@ -194,7 +194,7 @@
 
       call zzekreqi ( eqryi,  'NUM_SELECT_COLS',   nsel   )
 
-      if (  ( n .lt. 1 ) .or. ( n .gt. nsel )  ) then
+      if (  ( n < 1 ) .or. ( n > nsel )  ) then
 
          call chkin  ( 'ZZEKQSEL'                                  )
          call setmsg ( 'Column index # is out of valid range 1:#.' )
@@ -243,11 +243,11 @@
       cb     =  eqryi ( base + eqvdsz + eqbstr )
       ce     =  eqryi ( base + eqvdsz + eqestr )
 
-      if (       ( cb .gt. 0      ) &
-           .and. ( ce .gt. 0      ) &
-           .and. ( cb .le. buflen ) &
-           .and. ( ce .le. buflen ) &
-           .and. ( cb .le. ce     )  ) then
+      if (       ( cb > 0      ) &
+           .and. ( ce > 0      ) &
+           .and. ( cb <= buflen ) &
+           .and. ( ce <= buflen ) &
+           .and. ( cb <= ce     )  ) then
 
          column = eqryc(cb:ce)
 
@@ -280,12 +280,12 @@
       tb     =  eqryi ( base + eqbstr )
       te     =  eqryi ( base + eqestr )
 
-      if ( tb .gt. 0 ) then
+      if ( tb > 0 ) then
 
-         if (       ( te .gt. 0      ) &
-              .and. ( tb .le. buflen ) &
-              .and. ( te .le. buflen ) &
-              .and. ( tb .le. te     )  ) then
+         if (       ( te > 0      ) &
+              .and. ( tb <= buflen ) &
+              .and. ( te <= buflen ) &
+              .and. ( tb <= te     )  ) then
 
             table  = eqryc(tb:te)
 
@@ -334,7 +334,7 @@
 !
       call zzekreqi ( eqryi,  'NAMES_RESOLVED',   resolv )
 
-      if ( resolv .eq. itrue ) then
+      if ( resolv == itrue ) then
 !
 !        The qualifying table's index in the FROM clause is available.
 !        So is the index of the column within the table.

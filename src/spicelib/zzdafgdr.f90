@@ -129,10 +129,10 @@
 !
 !     Local Variables
 !
-      character*(cbfsiz)    chrbuf
-      character*(filen)     fname
-      character*(strsiz)    strbff ( numbff )
-      character*(strsiz)    tmpstr
+      character(cbfsiz)     chrbuf
+      character(filen)      fname
+      character(strsiz)     strbff ( numbff )
+      character(strsiz)     tmpstr
 
       real(wp)              dpbuf  ( 128 )
 
@@ -191,7 +191,7 @@
 
          natbff = isrchc ( tmpstr, numbff, strbff )
 
-         if ( natbff .eq. 0 ) then
+         if ( natbff == 0 ) then
 
             call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
@@ -251,7 +251,7 @@
 !     or not.  Only supported formats can be opened by ZZDDHOPN,
 !     so no check of IBFF is required.
 !
-      if ( ibff .eq. natbff ) then
+      if ( ibff == natbff ) then
 
 !
 !        In the native case, just read the double precision
@@ -265,7 +265,7 @@
 !        Since this routine does not signal any IOSTAT based
 !        errors, return if a non-zero value is assigned to IOSTAT.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call chkout ( 'ZZDAFGDR' )
             return
          end if
@@ -286,7 +286,7 @@
 !        Again, since this routine does not signal any IOSTAT
 !        based errors, return if one occurs.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call chkout ( 'ZZDAFGDR' )
             return
          end if

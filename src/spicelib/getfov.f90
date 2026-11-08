@@ -32,8 +32,8 @@
 
       integer(ip)           instid
       integer(ip)           room
-      character*(*)         shape
-      character*(*)         frame
+      character(*)          shape
+      character(*)          frame
       real(wp)              bsight ( 3    )
       integer(ip)           n
       real(wp)              bounds ( 3, * )
@@ -719,21 +719,21 @@
 !
 !     Local variables
 !
-      character*(kwdnln)    angshp ( numasp )
-      character*(vallen)    angunt
-      character*(kwdnln)    kwaunt
-      character*(kwdnln)    kwbore
-      character*(kwdnln)    kwboun
-      character*(kwdnln)    kwcang
-      character*(kwdnln)    kwfram
-      character*(kwdnln)    kword
-      character*(kwdnln)    kwrang
-      character*(kwdnln)    kwrvec
-      character*(kwdnln)    kwshap
-      character*(kwdnln)    kwspec
-      character*(kwdnln)    shapid ( nshaps )
-      character*(vallen)    spec
-      character*(1)         type
+      character(kwdnln)     angshp ( numasp )
+      character(vallen)     angunt
+      character(kwdnln)     kwaunt
+      character(kwdnln)     kwbore
+      character(kwdnln)     kwboun
+      character(kwdnln)     kwcang
+      character(kwdnln)     kwfram
+      character(kwdnln)     kword
+      character(kwdnln)     kwrang
+      character(kwdnln)     kwrvec
+      character(kwdnln)     kwshap
+      character(kwdnln)     kwspec
+      character(kwdnln)     shapid ( nshaps )
+      character(vallen)     spec
+      character(1)          type
 
       real(wp)              b      ( 3 )
       real(wp)              b1     ( 3 )
@@ -862,7 +862,7 @@
 !     Check whether shape identified that we got is one from the list
 !     of supported, complain if not.
 !
-      if ( bsrchc( shape(1:rtrim(shape)), nshaps, shapid ) .eq. 0) then
+      if ( bsrchc( shape(1:rtrim(shape)), nshaps, shapid ) == 0) then
 
          call setmsg ( 'The FOV shape, ''#'', specified in the ' &
          //            'keyword, ''#'', for the instrument # ' &
@@ -905,7 +905,7 @@
 !     Check whether boresight specified by three coordinates;
 !     complain if not.
 !
-      if ( i .ne. 3 ) then
+      if ( i /= 3 ) then
 
          call setmsg ( 'The number of the boresight vector ' &
          //            'components specified in the ''#'' ' &
@@ -918,7 +918,7 @@
          call chkout ( 'GETFOV'                                      )
          return
 
-      else if ( type .ne. 'N' ) then
+      else if ( type /= 'N' ) then
 
          call setmsg ( 'The boresight vector, stored in the ''#'' ' &
          //            'variable, has not been stored as a vector ' &
@@ -992,7 +992,7 @@
 !        Check whether we have enough room to get all boundary vectors,
 !        complain if not.
 !
-         if ( n .gt. mxcmp ) then
+         if ( n > mxcmp ) then
 
             call setmsg ( 'The number of boundary vector components ' &
             //            'specified in the ''#'' pool variable is ' &
@@ -1010,7 +1010,7 @@
 !        Check whether number of boundary components can be divided by 3
 !        without reminder.
 !
-         if ( mod( n, 3 ) .ne. 0 ) then
+         if ( mod( n, 3 ) /= 0 ) then
 
             call setmsg ( 'The boundary vector components ' &
             //            'specified in the ''#'' pool variable do  ' &
@@ -1032,7 +1032,7 @@
 
          n = n/3
 
-         if      ( shape .eq. 'CIRCLE'      .and. n .ne. 1 ) then
+         if      ( shape == 'CIRCLE'      .and. n /= 1 ) then
 
             call setmsg ( 'The boundary is specified to be ' &
             //            'circular, and as such, the values ' &
@@ -1045,7 +1045,7 @@
             call chkout ( 'GETFOV'                              )
             return
 
-         else if ( shape .eq. 'ELLIPSE'     .and. n .ne. 2 ) then
+         else if ( shape == 'ELLIPSE'     .and. n /= 2 ) then
 
             call setmsg ( 'The boundary is specified to be ' &
             //            'elliptical, and as such, the values ' &
@@ -1058,7 +1058,7 @@
             call chkout ( 'GETFOV'                               )
             return
 
-         else if ( shape .eq. 'RECTANGLE' .and. n .ne. 4 ) then
+         else if ( shape == 'RECTANGLE' .and. n /= 4 ) then
 
             call setmsg ( 'The boundary is specified to be ' &
             //            'rectangular, and as such, the values ' &
@@ -1071,7 +1071,7 @@
             call chkout ( 'GETFOV'                                )
             return
 
-         else if ( shape .eq. 'POLYGON' .and. n .lt. 3 ) then
+         else if ( shape == 'POLYGON' .and. n < 3 ) then
 
             call setmsg ( 'The boundary is specified to be ' &
             //            'polygonal, and as such, the values ' &
@@ -1097,7 +1097,7 @@
 !        of supported shapes for the ANGLE specification; complain
 !        if not.
 !
-         if (bsrchc(shape(1:rtrim(shape)), numasp, angshp) .eq. 0) then
+         if (bsrchc(shape(1:rtrim(shape)), numasp, angshp) == 0) then
 
             call setmsg ( 'The FOV shape, ''#'', specified in the ' &
             //            'keyword, ''#'', for the instrument # ' &
@@ -1140,7 +1140,7 @@
 !        Now check whether reference vector is specified by three
 !        coordinates; complain if not.
 !
-         if ( i .ne. 3 ) then
+         if ( i /= 3 ) then
 
             call setmsg ( 'The number of the reference vector ' &
             //            'components specified in the ''#'' ' &
@@ -1153,7 +1153,7 @@
             call chkout ( 'GETFOV'                                )
             return
 
-         else if ( type .ne. 'N' ) then
+         else if ( type /= 'N' ) then
 
             call setmsg ( 'The reference vector, stored in ''#'', ' &
             //            'has not been stored as a vector of ' &
@@ -1175,7 +1175,7 @@
 !
          call vcrss ( bsight, refvec, normal(1,1) )
 
-         if ( vnorm ( normal(1,1) ) .eq. 0.0_wp ) then
+         if ( vnorm ( normal(1,1) ) == 0.0_wp ) then
 
             call setmsg ( 'The reference vector, stored in ''#'', ' &
             //            'is parallel to the instrument boresight ' &
@@ -1251,14 +1251,14 @@
 !
 !        Branch to shape specific code.
 !
-         if ( shape .eq. 'CIRCLE' ) then
+         if ( shape == 'CIRCLE' ) then
 
 !
 !           First check to see that the caller left enough room
 !           to store the required number of boundary corner
 !           vectors.
 !
-            if ( room .lt. 1 ) then
+            if ( room < 1 ) then
                call setmsg ( 'The FOV shape for instrument # ' &
                //            'is specified to be circular.  ' &
                //            'There should be room for at ' &
@@ -1290,7 +1290,7 @@
 !
             n = 1
 
-         else if ( shape .eq. 'ELLIPSE' ) then
+         else if ( shape == 'ELLIPSE' ) then
 
 !
 !           The elliptical case requires the additional cross angle
@@ -1333,7 +1333,7 @@
 !           to store the required number of boundary corner
 !           vectors.
 !
-            if ( room .lt. 2 ) then
+            if ( room < 2 ) then
                call setmsg ( 'The FOV shape for instrument # ' &
                //            'is specified to be elliptical.  ' &
                //            'There should be room for at ' &
@@ -1380,7 +1380,7 @@
 !
             n = 2
 
-         else if ( shape .eq. 'RECTANGLE' ) then
+         else if ( shape == 'RECTANGLE' ) then
 
 !
 !           The rectangular case requires the additional cross angle
@@ -1423,7 +1423,7 @@
 !           to store the required number of boundary corner
 !           vectors.
 !
-            if ( room .lt. 4 ) then
+            if ( room < 4 ) then
                call setmsg ( 'The FOV shape for instrument # ' &
                //            'is specified to be rectangular.  ' &
                //            'There should be room for at ' &
@@ -1500,8 +1500,8 @@
             cosran = dcos ( refang )
             coscan = dcos ( crsang )
 
-            if ( ( cosran .lt. mincos ) .or. &
-                 ( coscan .lt. mincos )      ) then
+            if ( ( cosran < mincos ) .or. &
+                 ( coscan < mincos )      ) then
 
                call setmsg ( 'The angular extents specified ' &
                //            'in the FOV definition for ' &

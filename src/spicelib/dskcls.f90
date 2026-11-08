@@ -156,7 +156,7 @@
 !
 !     Local variables
 !
-      character*(methln)    method
+      character(methln)     method
 
 
       if ( return() ) then
@@ -189,7 +189,7 @@
             return
          end if
 
-         if ( method .eq. 'WRITE ' ) then
+         if ( method == 'WRITE ' ) then
 !
 !           Write out any buffered records belonging to the
 !           indicated file.

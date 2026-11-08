@@ -32,7 +32,7 @@
       integer(ip)           isize
       integer(ip)           dsize
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd ( * )
 
 ! $ Brief_I/O
@@ -170,7 +170,7 @@
 !
 !     Check sizes:
 !
-      if ( isize .lt. mnisiz ) then
+      if ( isize < mnisiz ) then
 
          call setmsg ( 'Size of integer component of encoded query ' // &
                        'is #; at least # elements are required.'      )
@@ -183,7 +183,7 @@
       end if
 
 
-      if ( dsize .lt. maxqnm ) then
+      if ( dsize < maxqnm ) then
 
          call setmsg ( 'Size of d.p. component of encoded query ' // &
                        'is #; at least # elements are required.'      )
@@ -196,7 +196,7 @@
       end if
 
 
-      if ( len(eqryc) .lt. maxcln ) then
+      if ( len(eqryc) < maxcln ) then
 
          call setmsg ( 'Size of character component of encoded query '// &
                        'is #; a length of at least # characters is '  // &

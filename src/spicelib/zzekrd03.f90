@@ -35,7 +35,7 @@
       integer(ip)           coldsc ( cdscsz )
       integer(ip)           recptr
       integer(ip)           cvlen
-      character*(*)         cval
+      character(*)          cval
       logical               isnull
 
 ! $ Brief_I/O
@@ -202,7 +202,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           avail
       integer(ip)           b
@@ -228,7 +228,7 @@
       ncols   =  segdsc ( ncidx  )
       colidx  =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -255,7 +255,7 @@
       call dasrdi  ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        Read the value.  This is slightly more complicated than
 !        the numeric cases, because the value may be spread across
@@ -294,7 +294,7 @@
          n      =  n - l
 
 
-         do while ( n .gt. 0 )
+         do while ( n > 0 )
 !
 !           Read the forward page pointer from the current page; find
 !           the base address of the referenced page.
@@ -318,7 +318,7 @@
 !
 !        Blank-pad CVAL if required.
 !
-         if ( len(cval) .gt. epos ) then
+         if ( len(cval) > epos ) then
             cval( epos+1 : )  =  ' '
          end if
 
@@ -326,7 +326,7 @@
          isnull  =  .false.
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        The value is null.
 !
@@ -334,8 +334,8 @@
          cvlen  =   1
 
 
-      else if (       ( datptr .eq. uninit ) &
-                 .or. ( datptr .eq. noback )  )  then
+      else if (       ( datptr == uninit ) &
+                 .or. ( datptr == noback )  )  then
 !
 !        The data value is absent.  This is an error.
 !

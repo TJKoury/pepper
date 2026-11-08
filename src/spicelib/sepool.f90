@@ -21,10 +21,10 @@
 
       implicit none
 
-      character*(*)         item
+      character(*)          item
       integer(ip)           fidx
-      character*(*)         contin
-      character*(*)         string
+      character(*)          contin
+      character(*)          string
       integer(ip)           size
       integer(ip)           lidx
       logical               found
@@ -332,7 +332,7 @@
       integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      character*(lnsize)    part
+      character(lnsize)     part
 
 
       integer(ip)           cfirst
@@ -356,7 +356,7 @@
 !
 !     Return empty output if the input index is bad.
 !
-      if ( fidx .lt. 1 ) then
+      if ( fidx < 1 ) then
          found  = .false.
          string = ' '
          size   = 0
@@ -374,7 +374,7 @@
 !
       call gcpool ( item, fidx, 1, n, part, gotit )
 
-      gotit = gotit .and. n .gt. 0
+      gotit = gotit .and. n > 0
 
       if ( .not. gotit ) then
          found  = .false.
@@ -401,7 +401,7 @@
 
          call gcpool ( item, comp, 1, n, part, more )
 
-         more = more .and. n .gt. 0
+         more = more .and. n > 0
 
          if ( more ) then
 
@@ -410,26 +410,26 @@
             clast  = rtrim(part)
             cfirst = clast - csize + 1
 
-            if ( cfirst .lt. 0 ) then
+            if ( cfirst < 0 ) then
 
-               if ( putat .le. room ) then
+               if ( putat <= room ) then
                   string(putat:) = part(1:clast)
                end if
 
                putat          = putat + clast
                more           = .false.
 
-            else if ( part(cfirst:clast) .ne. contin ) then
+            else if ( part(cfirst:clast) /= contin ) then
 
-               if ( putat .le. room ) then
+               if ( putat <= room ) then
                   string(putat:) = part(1:clast)
                end if
                putat          = putat + clast
                more           = .false.
 
-            else if ( cfirst .gt. 1 ) then
+            else if ( cfirst > 1 ) then
 
-               if ( putat .le. room ) then
+               if ( putat <= room ) then
                   string(putat:) = part(1:cfirst-1)
                end if
                putat          = putat + cfirst - 1

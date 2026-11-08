@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)         item
-      character*(*)         verstr
+      character(*)          item
+      character(*)          verstr
 
 ! $ Brief_I/O
 !

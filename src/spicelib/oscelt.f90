@@ -644,7 +644,7 @@
       end if
 
 
-      if ( mu .le. 0.0_wp ) then
+      if ( mu <= 0.0_wp ) then
 
          call setmsg ( 'MU = #; non-positive gravitational parameter' )
          call errdp  ( '#',  mu                                       )
@@ -766,11 +766,11 @@
 
       inc = vsep ( h, zvec )
 
-      if ( abs ( inc - 0.0_wp ) .lt. close ) then
+      if ( abs ( inc - 0.0_wp ) < close ) then
          inc = 0.0_wp
          call vpack ( 1.0_wp, 0.0_wp, 0.0_wp, n )
 
-      else if ( abs ( inc - pi() ) .lt. close ) then
+      else if ( abs ( inc - pi() ) < close ) then
          inc = pi()
          call vpack ( 1.0_wp, 0.0_wp, 0.0_wp, n )
       end if
@@ -783,7 +783,7 @@
 !
       lnode = atan2 ( n(2), n(1) )
 
-      if ( lnode .lt. 0.0_wp ) then
+      if ( lnode < 0.0_wp ) then
          lnode = lnode + twopi()
       end if
 
@@ -794,7 +794,7 @@
 !     circular orbits.
 !
 !
-      if ( ecc .eq. 0.0_wp ) then
+      if ( ecc == 0.0_wp ) then
 
          argp = 0.0_wp
 
@@ -806,22 +806,22 @@
          argp = vsep ( n, e )
 
 
-         if ( argp .ne. 0.0_wp ) then
+         if ( argp /= 0.0_wp ) then
 
-            if (  ( inc .eq. 0.0_wp ) .or. ( inc .eq. pi() )  ) then
+            if (  ( inc == 0.0_wp ) .or. ( inc == pi() )  ) then
 !
 !              The quadrant of ARGP is determined by the component of E
 !              in the direction H x N.
 !
                call ucrss ( h, n, xprod )
 
-               if (  vdot( e, xprod ) .lt. 0.0_wp ) then
+               if (  vdot( e, xprod ) < 0.0_wp ) then
 
                   argp = twopi() - argp
 
                end if
 
-            else if ( e(3) .lt. 0.0_wp ) then
+            else if ( e(3) < 0.0_wp ) then
 !
 !              The periapsis is below the reference plane;  the argument
 !              of periapsis must be greater than 180 degrees.
@@ -845,7 +845,7 @@
 !     We express the position in the perifocal frame in order to
 !     extract nu.
 !
-      if ( ecc .eq. 0.0_wp ) then
+      if ( ecc == 0.0_wp ) then
 !
 !        In this case, the argument of periapse is set to zero,
 !        so the nu is measured from N.
@@ -889,7 +889,7 @@
 !     For elliptic orbits, the mean anomaly should be in [0,2*pi].
 !
 
-      if ( ecc .lt. 1.0_wp ) then
+      if ( ecc < 1.0_wp ) then
 !
 !        For improved numerical performance, we compute both the
 !        sine and cosine of the eccentric anomaly, then let ATAN2
@@ -914,14 +914,14 @@
 
          m0     =  sign ( ea - ecc*sin(ea),  nu )
 
-         if ( m0 .lt. 0.0_wp ) then
+         if ( m0 < 0.0_wp ) then
 
             m0 = m0 + twopi()
 
          end if
 
 
-      else if ( ecc .gt. 1.0_wp ) then
+      else if ( ecc > 1.0_wp ) then
 
          coshf = (ecc + cos(nu)) / (1.0_wp + ecc*cos(nu))
 

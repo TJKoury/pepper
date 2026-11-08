@@ -187,7 +187,7 @@
       call zzeksrd ( 1, 1, stkhan )
       call zzeksrd ( 2, 2, stkseg )
 
-      if (  ( stkhan .ne. handle ) .or. ( stkseg .ne. segno )  ) then
+      if (  ( stkhan /= handle ) .or. ( stkseg /= segno )  ) then
 
          call setmsg ( 'Attempt to finish fast load of wrong segment.'// &
                        '  Input segment number is #; stacked segment '// &

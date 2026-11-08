@@ -24,7 +24,7 @@
 
       implicit none
 
-      character*(*)         binary
+      character(*)          binary
       integer(ip)           text
 
 ! $ Brief_I/O
@@ -287,15 +287,15 @@
       integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
-      character*(*)         quote
+      character(*)          quote
       parameter           ( quote = '''' )
 
 !
 !     Local variables
 !
-      character*(idwlen)    idword
-      character*(60)        ifname
-      character*(1000)      name
+      character(idwlen)     idword
+      character(60)         ifname
+      character(1000)       name
 
       real(wp)              buffer   ( bsize )
       real(wp)              dc       ( 125 )
@@ -363,7 +363,7 @@
 
       read ( daflun, rec=1, iostat=iostat ) idword
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Could not read ID word from file ''#''.' // &
                        ' IOSTAT = #.'                             )
@@ -390,7 +390,7 @@
 
       write (text,*,iostat=iostat) quote // idword // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                )
          call setmsg ( 'The attempt to write to file ''#''' // &
@@ -405,7 +405,7 @@
 
       write (text,*,iostat=iostat) nd
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                )
          call setmsg ( 'The attempt to write to file ''#''' // &
@@ -420,7 +420,7 @@
 
       write (text,*,iostat=iostat) ni
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                )
          call setmsg ( 'The attempt to write to file ''#''' // &
@@ -435,7 +435,7 @@
 
       write (text,*,iostat=iostat) quote //  ifname    // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                )
          call setmsg ( 'The attempt to write to file ''#''' // &
@@ -485,7 +485,7 @@
 
          write (text,*,iostat=iostat) '1'
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                )
             call setmsg ( 'The attempt to write to file ''#''' // &
@@ -500,7 +500,7 @@
 
          write (text,*,iostat=iostat) quote // name( :isize) // quote
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                )
             call setmsg ( 'The attempt to write to file ''#''' // &
@@ -515,7 +515,7 @@
 
          write (text,*,iostat=iostat) ( dc(i), i = 1, nd     )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                )
             call setmsg ( 'The attempt to write to file ''#''' // &
@@ -530,7 +530,7 @@
 
          write (text,*,iostat=iostat) ( ic(i), i = 1, ni - 2 )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                )
             call setmsg ( 'The attempt to write to file ''#''' // &
@@ -546,7 +546,7 @@
          begin = ic(ni-1)
          end   = ic(ni  )
 
-         do while ( begin .le. end )
+         do while ( begin <= end )
 
             chunk = min ( begin + bsize - 1, end )
             csize =       chunk - begin + 1
@@ -562,7 +562,7 @@
 
             write (text,*,iostat=iostat) csize
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call dafcls ( handle                                )
                call setmsg ( 'The attempt to write to file ''#''' // &
@@ -577,7 +577,7 @@
 
             write (text,*,iostat=iostat) ( buffer(i), i = 1, csize )
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call dafcls ( handle                                )
                call setmsg ( 'The attempt to write to file ''#''' // &
@@ -596,7 +596,7 @@
 
          write (text,*,iostat=iostat) '0'
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                )
             call setmsg ( 'The attempt to write to file ''#''' // &
@@ -611,7 +611,7 @@
 
          write (text,*,iostat=iostat) quote // name( :isize) // quote
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                )
             call setmsg ( 'The attempt to write to file ''#''' // &
@@ -641,7 +641,7 @@
 !
       write (text,*,iostat=iostat) '0'
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                )
          call setmsg ( 'The attempt to write to file ''#''' // &
@@ -656,7 +656,7 @@
 
       write (text,*,iostat=iostat) quote // ifname // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                )
          call setmsg ( 'The attempt to write to file ''#''' // &

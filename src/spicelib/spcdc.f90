@@ -177,7 +177,7 @@
 !
 !     Local variables
 !
-      character*(ifnlen)    ifname
+      character(ifnlen)     ifname
 
       integer(ip)           bward
       integer(ip)           free

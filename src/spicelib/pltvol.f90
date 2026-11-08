@@ -305,7 +305,7 @@
 !
 !     Check the vertex and plate counts.
 !
-      if ( nv .lt. 4 ) then
+      if ( nv < 4 ) then
 
          call chkin  ( 'PLTVOL'                                      )
          call setmsg ( 'At least 4 vertices are needed, but NV = #.' )
@@ -316,7 +316,7 @@
 
       end if
 
-      if ( np .lt. 4 ) then
+      if ( np < 4 ) then
 
          call chkin  ( 'PLTVOL'                                    )
          call setmsg ( 'At least 4 plates are needed, but NP = #.' )
@@ -334,8 +334,8 @@
 
          do j = 1, 3
 
-            if (      ( plates(j,i) .lt. 1  ) &
-                 .or. ( plates(j,i) .gt. nv )  ) then
+            if (      ( plates(j,i) < 1  ) &
+                 .or. ( plates(j,i) > nv )  ) then
 
                call chkin  ( 'PLTVOL'                                  )
                call setmsg ( 'Vertex indices must be in the range ' &

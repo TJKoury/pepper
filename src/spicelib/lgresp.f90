@@ -315,7 +315,7 @@
 !
 !     No data, no interpolation.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          lgresp = 0.0_wp
 
@@ -332,7 +332,7 @@
 !
 !     The step size must be non-zero.
 !
-      if ( step .eq. 0.0_wp ) then
+      if ( step == 0.0_wp ) then
 
          lgresp = 0.0_wp
 

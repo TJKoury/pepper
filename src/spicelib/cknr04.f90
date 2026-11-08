@@ -250,7 +250,7 @@
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 
-      if ( icd( 3 ) .ne. ck4dtp ) then
+      if ( icd( 3 ) /= ck4dtp ) then
          call setmsg ( 'Data type of the segment should be 4: '      // &
                        'Passed descriptor shows type = #.'           )
          call errint ( '#', icd ( 3 )                                )

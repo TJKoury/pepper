@@ -323,7 +323,7 @@
 !
 !     Local variables
 !
-      character*(frnmln)    frname ( nframe )
+      character(frnmln)     frname ( nframe )
 
       integer(ip)           ctrord ( nframe )
       integer(ip)           center ( nframe )
@@ -348,7 +348,7 @@
 
       integer(ip)           bnmlst  (          maxbfr )
       integer(ip)           bnmpol  ( lbpool : maxbfr )
-      character*(frnmln)    bnmnms  (          maxbfr )
+      character(frnmln)     bnmnms  (          maxbfr )
       integer(ip)           bnmidx  (          maxbfr )
 
       integer(ip)           bidlst  (          maxbfr )
@@ -406,9 +406,9 @@
 !
 !     This block of code must be kept in sync with frmtyp.inc.
 !
-      if  (      ( frmcls .gt. swtch ) &
-            .or. ( frmcls .eq. 0   ) &
-            .or. ( frmcls .lt. all )  ) then
+      if  (      ( frmcls > swtch ) &
+            .or. ( frmcls == 0   ) &
+            .or. ( frmcls < all )  ) then
 
          call setmsg ( 'Frame class specifier FRMCLS was #; this ' &
          //            'value is not supported.'                  )
@@ -423,7 +423,7 @@
 !     Make sure the set is large enough to hold all of
 !     the IDs of the built-in frames.
 !
-      if ( sizei(idset) .lt. nframe ) then
+      if ( sizei(idset) < nframe ) then
 
          call setmsg ( 'Frame ID set argument IDSET has size #; ' &
          //            'required size is at least #.'           )
@@ -451,8 +451,8 @@
 !
          j = corder(i)
 
-         if (      ( fclass(j) .eq. frmcls ) &
-              .or. ( frmcls    .eq. all    )  ) then
+         if (      ( fclass(j) == frmcls ) &
+              .or. ( frmcls    == all    )  ) then
 !
 !           The frame at index J belongs to the
 !           requested class. Append the frame's ID

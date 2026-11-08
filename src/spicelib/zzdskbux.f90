@@ -378,7 +378,7 @@
 !
 !     Check the incoming segment count.
 !
-      if ( nseg .le. 0 ) then
+      if ( nseg <= 0 ) then
 
          call setmsg ( 'Input segment list was empty. This may ' &
          //            'be due to no DSKs containing data for ' &
@@ -442,7 +442,7 @@
 !     expansion factor is used. Using an intercept on the outer
 !     bounding sphere greatly ameliorates this problem.
 !
-      if ( vnorm(segvtx) .gt. maxrad ) then
+      if ( vnorm(segvtx) > maxrad ) then
 !
 !        Find the intercept of the ray with the outer bounding
 !        sphere. We'll use this intercept as the vertex for
@@ -485,7 +485,7 @@
          surfok = .false.
          timeok = .false.
 
-         bodyok = bodyid .eq. nint( dskbuf(ctridx,i) )
+         bodyok = bodyid == nint( dskbuf(ctridx,i) )
 
          if ( bodyok ) then
 !
@@ -496,20 +496,20 @@
 !
             j = 0
 
-            if ( nsurf .gt. 0 ) then
+            if ( nsurf > 0 ) then
 
                surfce = nint( dskbuf(srfidx,i) )
                j      = isrchi( surfce, nsurf, srflst )
 
             end if
 
-            surfok = ( nsurf .eq. 0 ) .or. ( j .gt. 0 )
+            surfok = ( nsurf == 0 ) .or. ( j > 0 )
 
 !
 !           See whether the segment covers the input epoch.
 !
-            timeok =        ( et .ge. dskbuf(btmidx,i) ) &
-                      .and. ( et .le. dskbuf(etmidx,i) )
+            timeok =        ( et >= dskbuf(btmidx,i) ) &
+                      .and. ( et <= dskbuf(etmidx,i) )
 
          end if
 
@@ -527,14 +527,14 @@
             segfid = nint( dskbuf(frmidx,i) )
 
 
-            if ( segfid .ne. fixfid ) then
+            if ( segfid /= fixfid ) then
 !
 !              We have a segment that uses a different frame
 !              from that specified by FIXFID.
 !
                multfr = .true.
 
-               if ( segfid .ne. prvfrm ) then
+               if ( segfid /= prvfrm ) then
 !
 !                 The frame of the current segment doesn't match
 !                 that of the previous segment, so we'll need
@@ -589,7 +589,7 @@
             call nplnpt ( segvtx, segdir, ctrbuf(1,i), pnear, dist )
 
 
-            if ( dist .le. radbuf(i) ) then
+            if ( dist <= radbuf(i) ) then
 !
 !              The line containing the ray intersects the bounding
 !              surface. We'll check the boundary of the segment for an
@@ -603,14 +603,14 @@
                   return
                end if
 
-               if ( nxpts .gt. 0 ) then
+               if ( nxpts > 0 ) then
 !
 !                 The ray hits the boundary of this segment. Save the
 !                 index of the segment in the "hit list." Record the
 !                 distance from the ray's vertex to the intercept in
 !                 the parallel array SGDIST.
 
-                  if ( nhit .eq. maxhit ) then
+                  if ( nhit == maxhit ) then
 
                      call setmsg ( 'Too many segments were hit by the ' &
                      //            'input ray. Buffer size is #.'      )
@@ -648,7 +648,7 @@
 !
 !     Leave now if no segments were hit.
 !
-      if ( nhit .eq. 0 ) then
+      if ( nhit == 0 ) then
          call chkout ( 'ZZDSKBUX' )
          return
       end if
@@ -686,9 +686,9 @@
 
          segfid = nint( dskbuf(frmidx,k) )
 
-         if ( segfid .ne. fixfid ) then
+         if ( segfid /= fixfid ) then
 
-            if ( segfid .ne. prvfrm ) then
+            if ( segfid /= prvfrm ) then
 !
 !              Transform and shift the input ray.
 !
@@ -756,7 +756,7 @@
 !
                dist = vdist( srfx, segvtx )
 
-               if ( dist .lt. dmin ) then
+               if ( dist < dmin ) then
 !
 !                 This intercept is closer to the ray's vertex than
 !                 any we've seen yet. We have a new winner.
@@ -779,7 +779,7 @@
 !
          if ( found ) then
 
-            if ( i .lt. nhit ) then
+            if ( i < nhit ) then
 !
 !              There are more segments in the hit list. Compare the
 !              minimum vertex-intercept distance of the segments we've
@@ -788,7 +788,7 @@
 !
                j = iorder(i+1)
 
-               if ( dmin .le. sgdist(j) ) then
+               if ( dmin <= sgdist(j) ) then
 !
 !                 The best intercept we've found is closer to the
 !                 vertex than any intercept that may exist in the
@@ -805,7 +805,7 @@
 
          if ( .not. done ) then
 
-            if ( i .eq. nhit ) then
+            if ( i == nhit ) then
 !
 !              We've looked at all of the segments.
 !
@@ -839,7 +839,7 @@
 
          segfid = nint( dskbuf(frmidx,k) )
 
-         if ( segfid .ne. fixfid ) then
+         if ( segfid /= fixfid ) then
 !
 !           The segment frame and input frame differ. The intercept
 !           must be converted back to the input frame. It also may

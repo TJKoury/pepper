@@ -822,14 +822,14 @@
 !     has been a change from the last time they were
 !     supplied.
 !
-      if (       ( lstgeo( kae ) .ne. geophs( kae ) ) &
-           .or.  ( lstgeo( ker ) .ne. geophs( ker ) ) &
-           .or.  ( lstgeo( kj2 ) .ne. geophs( kj2 ) ) &
-           .or.  ( lstgeo( kj3 ) .ne. geophs( kj3 ) ) &
-           .or.  ( lstgeo( kj4 ) .ne. geophs( kj4 ) ) &
-           .or.  ( lstgeo( kke ) .ne. geophs( kke ) ) &
-           .or.  ( lstgeo( kqo ) .ne. geophs( kqo ) ) &
-           .or.  ( lstgeo( kso ) .ne. geophs( kso ) ) ) then
+      if (       ( lstgeo( kae ) /= geophs( kae ) ) &
+           .or.  ( lstgeo( ker ) /= geophs( ker ) ) &
+           .or.  ( lstgeo( kj2 ) /= geophs( kj2 ) ) &
+           .or.  ( lstgeo( kj3 ) /= geophs( kj3 ) ) &
+           .or.  ( lstgeo( kj4 ) /= geophs( kj4 ) ) &
+           .or.  ( lstgeo( kke ) /= geophs( kke ) ) &
+           .or.  ( lstgeo( kqo ) /= geophs( kqo ) ) &
+           .or.  ( lstgeo( kso ) /= geophs( kso ) ) ) then
 
          do i = 1, ngeocn
             lstgeo(i) = geophs(i)
@@ -894,7 +894,7 @@
       unrec = .true.
       n     =  head
 
-      do while (  n .ne. nil .and. unrec )
+      do while (  n /= nil .and. unrec )
 
 !
 !        The actual order of the elements is such that we can
@@ -907,8 +907,8 @@
          recog = .true.
          i     =  nelems
 
-         do while  ( recog .and. i           .gt. 0      )
-            recog  = recog .and. elemnt(i,n) .eq. elems(i)
+         do while  ( recog .and. i           > 0      )
+            recog  = recog .and. elemnt(i,n) == elems(i)
             i      = i - 1
          end do
 
@@ -921,7 +921,7 @@
 
       end do
 
-      if ( n .eq. nil ) then
+      if ( n == nil ) then
          n = last
       end if
 !
@@ -931,7 +931,7 @@
 !     list.  (If it is already the head of the list we don't
 !     have to bother with anything.)
 !
-      if ( n .ne. head ) then
+      if ( n /= head ) then
 
 !
 !        Find the items that come before and after N and
@@ -942,7 +942,7 @@
 
          list ( next, before ) = after
 
-         if ( after .ne. nil ) then
+         if ( after /= nil ) then
             list ( prev, after  ) = before
          end if
 !
@@ -1045,10 +1045,10 @@
 !        For perigee below 156 km, the values of S and QOMS2T are
 !        altered.
 !
-         if ( perige .lt. 156.0_wp ) then
+         if ( perige < 156.0_wp ) then
             s4 = perige - 78.0_wp
 
-            if ( perige .le. 98.0_wp ) then
+            if ( perige <= 98.0_wp ) then
                s4 = 20.0_wp
             end if
 
@@ -1143,7 +1143,7 @@
 !        term, the Delta OMEGA term, and the Delta M term are
 !        dropped.  (Note: Normally we would just use
 !
-         if ( perige .ge. 220.0_wp ) then
+         if ( perige >= 220.0_wp ) then
 
             c1sq  = c1*c1
             d2    = 4.0_wp * tsi   * c1sq   * aodp
@@ -1231,7 +1231,7 @@
       templ  = t2cof   *  tsq
 
 
-      if(perige .gt. 220.0_wp ) then
+      if(perige > 220.0_wp ) then
 
          tcube  = tsq    * tsince
          tfour  = tcube  * tsince
@@ -1496,7 +1496,7 @@
 
       fmod2p = dmod(xlt-xnode,pix2)
 
-      if ( fmod2p .lt. 0 ) then
+      if ( fmod2p < 0 ) then
          fmod2p = fmod2p + pix2
       end if
 
@@ -1506,11 +1506,11 @@
 
       count = 0
 
-      do while ( est .gt. 0.125_wp )
+      do while ( est > 0.125_wp )
 
          count = count + 1
 
-         if ( count .gt. mxloop ) then
+         if ( count > mxloop ) then
             call setmsg ( 'EST iteration count of #1 exceeded at ' &
             //            'time ET #2. This error may indicate a ' &
             //            'bad TLE set.'                       )
@@ -1533,7 +1533,7 @@
 !
       epsiln = est
 
-      if ( epsiln + epw .ne. epw ) then
+      if ( epsiln + epw /= epw ) then
 
 !
 !        Now we switch over to Newton's method.  Note that
@@ -1557,7 +1557,7 @@
 !
             epw    = epwnxt
 
-            if ( epw + est .ne. epw ) then
+            if ( epw + est /= epw ) then
                epsiln = est
                est    = mov1m * est * est
             end if
@@ -1586,19 +1586,19 @@
       f      =  epw - capu - axn * sinepw + ayn * cosepw
       epsiln =  max ( dabs(f), epsiln )
 
-      if ( f .eq. 0 ) then
+      if ( f == 0 ) then
 
          lower = epw
          upper = epw
 
-      else if ( f .gt. 0 ) then
+      else if ( f > 0 ) then
 
          fu    = f
          upper = epw
          lower = epw - epsiln
          epw   = lower
 
-         do while ( f .gt. 0 .and. lower .ne. upper )
+         do while ( f > 0 .and. lower /= upper )
             epw    = epw - epsiln
             f      = epw - capu - axn * sin(epw) + ayn * cos(epw)
             epsiln = epsiln * 2.0_wp
@@ -1607,19 +1607,19 @@
          lower = epw
          fl    = f
 
-         if ( f .eq. 0 ) then
+         if ( f == 0 ) then
             upper = lower
          end if
 
 
-      else if ( f .lt. 0 ) then
+      else if ( f < 0 ) then
 
          fl    = f
          lower = epw
          upper = epw + epsiln
          epw   = upper
 
-         do while ( f .lt. 0 .and. lower .ne. upper )
+         do while ( f < 0 .and. lower /= upper )
             epw    = epw + epsiln
             f      = epw - capu - axn * sin(epw) + ayn * cos(epw)
             epsiln = epsiln * 2.0_wp
@@ -1628,7 +1628,7 @@
          upper = epw
          fu    = f
 
-         if ( f .eq. 0 ) then
+         if ( f == 0 ) then
             lower = epw
          end if
 
@@ -1639,7 +1639,7 @@
 !
       count = 0
 
-      do while ( upper .gt. lower .and. count .lt. mxloop )
+      do while ( upper > lower .and. count < mxloop )
          count = count + 1
          epw   = brcktd( 0.5_wp * ( upper + lower ), lower, upper )
 !
@@ -1647,10 +1647,10 @@
 !        two bracketing values.  If this is the time, we need
 !        to decide on a value for EPW.  That's done below.
 !
-         if   (      ( epw .eq. upper ) &
-                .or. ( epw .eq. lower ) ) then
+         if   (      ( epw == upper ) &
+                .or. ( epw == lower ) ) then
 
-            if ( -fl .lt. fu ) then
+            if ( -fl < fu ) then
                epw   = lower
                upper = lower
             else
@@ -1662,10 +1662,10 @@
 
             f   = epw - capu - axn * sin(epw) + ayn * cos(epw)
 
-            if ( f .gt. 0 ) then
+            if ( f > 0 ) then
                upper = epw
                fu    = f
-            else if ( f .lt. 0 ) then
+            else if ( f < 0 ) then
                lower = epw
                fl    = f
             else
@@ -1710,12 +1710,12 @@
 !
 !     Compute the angle from the x-axis of the point ( COSU, SINU )
 !
-      if (      sinu .ne. 0.0_wp &
-           .or. cosu .ne. 0.0_wp ) then
+      if (      sinu /= 0.0_wp &
+           .or. cosu /= 0.0_wp ) then
 
          u     = datan2 (sinu,cosu)
 
-         if ( u .lt. 0 ) then
+         if ( u < 0 ) then
             u = u + pix2
          end if
 

@@ -398,7 +398,7 @@
       logical               l1
       logical               l2
 
-      character*(256)      contxt
+      character(256)       contxt
 
       integer(ip)          nloop
 
@@ -427,7 +427,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.0_wp ) then
+      if ( tol <= 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
@@ -441,7 +441,7 @@
 !     Make sure that START is not greater than FINISH. Signal an
 !     error for START > FINISH.
 !
-      if ( start .gt. finish) then
+      if ( start > finish) then
 
          call setmsg ( 'Bad time interval result, '      // &
                        'START > FINISH.' )
@@ -528,7 +528,7 @@
 !
 !     While time remains in the search interval.
 !
-      do while ( svdtim .lt. finish )
+      do while ( svdtim < finish )
 
 !
 !        Using the current window and internally stored
@@ -570,7 +570,7 @@
 
          do while ( ( savst .eqv. curste ) &
                     .and. &
-                    ( svdtim .lt. finish ) )
+                    ( svdtim < finish ) )
 
 !
 !           First check for an interrupt signal if checking is enabled.
@@ -668,7 +668,7 @@
 !           error for T1 > T2.
 !
 
-            if ( t1 .gt. t2) then
+            if ( t1 > t2) then
                call setmsg ( 'Bad time interval result, T1 > T2.' )
                call sigerr ( 'SPICE(BADTIMECASE)' )
                call chkout ( 'ZZGFSOLV'           )
@@ -692,8 +692,8 @@
             diff   = touchd( abs(t2 - t1) )
             nloop  = 0
 
-            do while (       ( diff .gt. tol    ) &
-                       .and. ( diff .lt. prvdif )  )
+            do while (       ( diff > tol    ) &
+                       .and. ( diff < prvdif )  )
 
 
                nloop = nloop + 1
@@ -706,7 +706,7 @@
 !              compared to bisection. If not, the user should
 !              probably use bisection.
 !
-               if ( nloop .ge. mxloop ) then
+               if ( nloop >= mxloop ) then
                   call setmsg ( 'Loop run exceeds maximum loop count. ' &
                //               'Unable to converge to TOL value #1 ' &
                //               'within MXLOOP value #2 iterations.')
@@ -749,11 +749,11 @@
 
                t = brcktd ( t, t1, t2 )
 
-               if ( t .eq. t1 ) then
+               if ( t == t1 ) then
 
                   t2 = t
 
-               else if ( t .eq. t2 ) then
+               else if ( t == t2 ) then
 
                   t1 = t
 

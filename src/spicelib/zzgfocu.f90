@@ -39,15 +39,15 @@
       include 'zzdsk.inc'
       include 'zzocced.inc'
 
-      character*(*)         occtyp
-      character*(*)         front
-      character*(*)         fshape
-      character*(*)         fframe
-      character*(*)         back
-      character*(*)         bshape
-      character*(*)         bframe
-      character*(*)         obsrvr
-      character*(*)         abcorr
+      character(*)          occtyp
+      character(*)          front
+      character(*)          fshape
+      character(*)          fframe
+      character(*)          back
+      character(*)          bshape
+      character(*)          bframe
+      character(*)          obsrvr
+      character(*)          abcorr
       real(wp)              time
       logical               ocstat
 
@@ -295,25 +295,25 @@
 !
 !     Local variables
 !
-      character*(frnmln)    fixfrm
-      character*(cvtlen)    pntdef
-      character*(poslen)    posnam
-      character*(shplen)    shape
-      character*(shplen)    shpstr
-      character*(sublen)    subtyp
-      character*(frnmln)    svbfrm
-      character*(mthlen)    svbmth
-      character*(bdnmln)    svbnam
-      character*(shplen)    svbshp
-      character*(corlen)    svcorr
-      character*(frnmln)    svffrm
-      character*(mthlen)    svfmth
-      character*(bdnmln)    svfnam
-      character*(shplen)    svfshp
-      character*(bdnmln)    svonam
-      character*(oclln)     svtype
-      character*(oclln)     svtyps ( noctyp )
-      character*(tmtlen)    trmtyp
+      character(frnmln)     fixfrm
+      character(cvtlen)     pntdef
+      character(poslen)     posnam
+      character(shplen)     shape
+      character(shplen)     shpstr
+      character(sublen)     subtyp
+      character(frnmln)     svbfrm
+      character(mthlen)     svbmth
+      character(bdnmln)     svbnam
+      character(shplen)     svbshp
+      character(corlen)     svcorr
+      character(frnmln)     svffrm
+      character(mthlen)     svfmth
+      character(bdnmln)     svfnam
+      character(shplen)     svfshp
+      character(bdnmln)     svonam
+      character(oclln)      svtype
+      character(oclln)      svtyps ( noctyp )
+      character(tmtlen)     trmtyp
 
 
       real(wp)              bckfrt ( 3 )
@@ -882,9 +882,9 @@
 !
 !     Make sure the observer and both targets are distinct.
 !
-      if (      ( idfrnt .eq. idback ) &
-           .or. ( idfrnt .eq. idobs  ) &
-           .or. ( idback .eq. idobs  ) ) then
+      if (      ( idfrnt == idback ) &
+           .or. ( idfrnt == idobs  ) &
+           .or. ( idback == idobs  ) ) then
 
          call setmsg ( 'The observer and both targets must be ' &
          //            'distinct objects, but are not: ' &
@@ -1013,8 +1013,8 @@
 !
 !     Check for invalid shape combinations.
 !
-      if (       ( svfshp .eq. ptshap ) &
-           .and. ( svbshp .eq. ptshap ) ) then
+      if (       ( svfshp == ptshap ) &
+           .and. ( svbshp == ptshap ) ) then
 
          call setmsg ( 'Both front and back objects have ' &
          //            'POINT shape specifications; only ' &
@@ -1025,10 +1025,10 @@
          call chkout ( 'ZZGFOCIN'                         )
          return
 
-      else if (      (        ( svfshp .eq. dsshap ) &
-                        .and. ( svbshp .ne. ptshap ) ) &
-                .or. (        ( svbshp .eq. dsshap ) &
-                        .and. ( svfshp .ne. ptshap ) )  ) then
+      else if (      (        ( svfshp == dsshap ) &
+                        .and. ( svbshp /= ptshap ) ) &
+                .or. (        ( svbshp == dsshap ) &
+                        .and. ( svfshp /= ptshap ) )  ) then
 
          call setmsg ( 'Front target shape from FSHAPE ' &
          //            'string was <#>; back target shape ' &
@@ -1054,7 +1054,7 @@
 !
       occnum = isrchc ( svtype, noctyp, svtyps )
 
-      if ( occnum .eq. 0 ) then
+      if ( occnum == 0 ) then
 
          call setmsg ( 'The occultation type # is not ' &
          //            'recognized.  Supported types are: ' &
@@ -1075,9 +1075,9 @@
 !     If we have a point target, the occultation type must
 !     be 'ANY'.
 !
-      if (  ( svfshp .eq. ptshap ) .or. ( svbshp .eq. ptshap )  ) then
+      if (  ( svfshp == ptshap ) .or. ( svbshp == ptshap )  ) then
 
-         if ( svtype .ne. any ) then
+         if ( svtype /= any ) then
 
             call setmsg ( 'Occultation type # is not allowed when ' &
             //            'either target body is modeled as a ' &
@@ -1136,7 +1136,7 @@
 !
       do i = 1, 2
 
-         if ( i .eq. 1 ) then
+         if ( i == 1 ) then
 
             posnam = 'front'
             fixfrm = fframe
@@ -1152,7 +1152,7 @@
 
          end if
 
-         if ( shape .eq. edshap ) then
+         if ( shape == edshap ) then
 !
 !           Fetch and check the radii.
 !
@@ -1166,7 +1166,7 @@
 !
 !           Checks of radii have been completed.
 !
-            if ( i .eq. 1 ) then
+            if ( i == 1 ) then
 
                call moved ( radii,  3,  svfrad )
 !
@@ -1199,13 +1199,13 @@
 !
 !        Check body-fixed frame for extended targets.
 !
-         if (  ( shape .eq. edshap ) .or. ( shape .eq. dsshap )  ) then
+         if (  ( shape == edshap ) .or. ( shape == dsshap )  ) then
 !
 !           The target is ellipsoidal or is modeled using DSK data;
 !           there must be a target body-fixed frame associated with
 !           this body.
 !
-            if ( fixfrm .eq. ' ' ) then
+            if ( fixfrm == ' ' ) then
 
                call setmsg ( 'The # target shape is represented ' &
                //            'by an ellipsoid or by DSK data, ' &
@@ -1227,7 +1227,7 @@
                   return
                end if
 
-               if ( ffrmid .eq. 0 ) then
+               if ( ffrmid == 0 ) then
 
                   call setmsg ( 'The # target''s body-fixed frame ' &
                   //            'name # is not recognized.'        )
@@ -1267,7 +1267,7 @@
 
                end if
 
-               if ( center .ne. trgid ) then
+               if ( center /= trgid ) then
 !
 !                 The body-fixed frame for the current target
 !                 isn't actually centered on the body.
@@ -1295,7 +1295,7 @@
 !        Obtain radii of inner and outer bounding spheres for
 !        DSK targets.
 !
-         if ( shape .eq. dsshap ) then
+         if ( shape == dsshap ) then
 !
 !           Note that TRGID and FFRMID refer to the current
 !           target (out of two); "FFRMID" means "fixed frame ID."
@@ -1307,7 +1307,7 @@
                return
             end if
 
-            if ( i .eq. 1 ) then
+            if ( i == 1 ) then
 
                call zzminrad ( svmnfr )
                call zzmaxrad ( svmxfr )
@@ -1322,12 +1322,12 @@
 !        Initialize bounding radii and body-fixed frame
 !        names for point targets.
 !
-         if ( shape .eq. ptshap ) then
+         if ( shape == ptshap ) then
 !
 !           Zero out radius values for this target; set the
 !           frame to blank.
 !
-            if ( i .eq. 1 ) then
+            if ( i == 1 ) then
 
                call cleard ( 3, svfrad )
 
@@ -1527,8 +1527,8 @@
 !     Handle the cases of one and two extended targets
 !     separately.
 !
-      if (       ( svbshp .eq. edshap ) &
-           .and. ( svfshp .eq. edshap )  ) then
+      if (       ( svbshp == edshap ) &
+           .and. ( svfshp == edshap )  ) then
 !
 !        The caller has selected a test for a partial, annular or full
 !        occultation using ellipsoidal shape models.
@@ -1580,15 +1580,15 @@
          end if
 
 
-         if ( occode .eq. noocc ) then
+         if ( occode == noocc ) then
 !
 !           Neither body occults the other.
 !
             ocstat = .false.
 
 
-         else if (       ( svtype .eq. any ) &
-                   .and. ( occode .lt. 0   ) ) then
+         else if (       ( svtype == any ) &
+                   .and. ( occode < 0   ) ) then
 !
 !           The "of" body (target 1) is at least partially occulted by
 !           the BY object.
@@ -1596,8 +1596,8 @@
             ocstat = .true.
 
 
-         else if (       ( svtype .eq.  full   ) &
-                   .and. ( occode .eq.  total1 ) ) then
+         else if (       ( svtype ==  full   ) &
+                   .and. ( occode ==  total1 ) ) then
 !
 !           The BACK body is in total occultation.
 !
@@ -1605,16 +1605,16 @@
             ocstat = .true.
 
 
-         else if (       ( svtype .eq. annulr ) &
-                   .and. ( occode .eq. annlr1 ) ) then
+         else if (       ( svtype == annulr ) &
+                   .and. ( occode == annlr1 ) ) then
 !
 !           The  BACK body is in annular occultation.
 !
             ocstat = .true.
 
 
-         else if (       ( svtype .eq. partl  ) &
-                   .and. ( occode .eq. partl1 ) ) then
+         else if (       ( svtype == partl  ) &
+                   .and. ( occode == partl1 ) ) then
 !
 !           The BACK body is partially occulted.
 !
@@ -1633,14 +1633,14 @@
          return
 
 
-      else if (     (       ( svfshp .eq. edshap ) &
-                      .and. ( svbshp .eq. ptshap ) ) &
-               .or. (       ( svfshp .eq. dsshap ) &
-                      .and. ( svbshp .eq. ptshap ) ) &
-               .or. (       ( svfshp .eq. ptshap ) &
-                      .and. ( svbshp .eq. edshap ) ) &
-               .or. (       ( svfshp .eq. ptshap ) &
-                      .and. ( svbshp .eq. dsshap ) )  ) then
+      else if (     (       ( svfshp == edshap ) &
+                      .and. ( svbshp == ptshap ) ) &
+               .or. (       ( svfshp == dsshap ) &
+                      .and. ( svbshp == ptshap ) ) &
+               .or. (       ( svfshp == ptshap ) &
+                      .and. ( svbshp == edshap ) ) &
+               .or. (       ( svfshp == ptshap ) &
+                      .and. ( svbshp == dsshap ) )  ) then
 !
 !        One of the targets is modeled as a point; the other is
 !        modeled as an ellipsoid or a DSK shape.
@@ -1651,7 +1651,7 @@
 !        We'll set the logical flag PNTOCC to .TRUE. to indicate a
 !        point occultation.
 !
-         pntocc = svbshp .eq. ptshap
+         pntocc = svbshp == ptshap
 
 !
 !        We're going to start out by doing some error checking.
@@ -1676,7 +1676,7 @@
 !
 !           The front target is an extended shape.
 !
-            if ( fdist .le. svmnfr ) then
+            if ( fdist <= svmnfr ) then
 !
 !              The observer is INSIDE the front target. We
 !              treat this as an error.
@@ -1686,14 +1686,14 @@
                call chkout ( 'ZZGFOCST'                              )
                return
 
-            else if ( bdist .eq. 0.0_wp ) then
+            else if ( bdist == 0.0_wp ) then
 
                call setmsg ( 'Back target coincides with observer.'  )
                call sigerr ( 'SPICE(NOTDISJOINT)'                    )
                call chkout ( 'ZZGFOCST'                              )
                return
 
-            else if ( vnorm(bckfrt) .le. svmnfr ) then
+            else if ( vnorm(bckfrt) <= svmnfr ) then
 
                call setmsg ( 'BACK target is inside FRONT target.' )
                call sigerr ( 'SPICE(NOTDISJOINT)'                  )
@@ -1706,7 +1706,7 @@
 !
 !           The back target is an extended shape.
 !
-            if ( bdist .le. svmnbr ) then
+            if ( bdist <= svmnbr ) then
 !
 !              The observer is INSIDE the back target. We
 !              treat this as an error.
@@ -1716,14 +1716,14 @@
                call chkout ( 'ZZGFOCST'                             )
                return
 
-            else if ( fdist .eq. 0.0_wp ) then
+            else if ( fdist == 0.0_wp ) then
 
                call setmsg ( 'Front target coincides with observer.'  )
                call sigerr ( 'SPICE(NOTDISJOINT)'                     )
                call chkout ( 'ZZGFOCST'                               )
                return
 
-            else if ( vnorm(bckfrt) .le. svmnbr ) then
+            else if ( vnorm(bckfrt) <= svmnbr ) then
 
                call setmsg ( 'FRONT target is inside BACK target.' )
                call sigerr ( 'SPICE(NOTDISJOINT)'                  )
@@ -1773,7 +1773,7 @@
             tdist = bdist
          end if
 
-         if ( srad .lt. tdist ) then
+         if ( srad < tdist ) then
 
             maxang = dasine ( srad / tdist,  atol )
 
@@ -1782,7 +1782,7 @@
                return
             end if
 
-            if ( trgsep .gt. maxang ) then
+            if ( trgsep > maxang ) then
 !
 !              No occultation is possible.
 !
@@ -1819,7 +1819,7 @@
          end if
 
 
-         if ( trgsep .lt. minang ) then
+         if ( trgsep < minang ) then
 !
 !           The targets must overlap as seen from the observer.
 !
@@ -1836,7 +1836,7 @@
 
                t2sep = vsep ( frtobs, frtbck )
 
-               if (  t2sep  .gt.  ( halfpi() - minang )  ) then
+               if (  t2sep  >  ( halfpi() - minang )  ) then
 !
 !                 There must be an occultation.
 !
@@ -1857,7 +1857,7 @@
 !
                t2sep = vsep ( bckobs, bckfrt )
 
-               if (  t2sep  .lt.  ( halfpi() - minang )  ) then
+               if (  t2sep  <  ( halfpi() - minang )  ) then
 !
 !                 There must be a transit.
 !
@@ -1912,7 +1912,7 @@
 !              occulted; otherwise there's a point transit, which is
 !              not considered an occultation in this case.
 !
-               ocstat  =  vnorm(srfvec) .lt. bdist
+               ocstat  =  vnorm(srfvec) < bdist
 
             else
 !
@@ -1944,7 +1944,7 @@
 !              point occultation, which is not considered a transit in
 !              this case.
 !
-               ocstat  =  vnorm(srfvec) .gt. fdist
+               ocstat  =  vnorm(srfvec) > fdist
 
             else
 !

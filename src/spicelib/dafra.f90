@@ -190,8 +190,8 @@
 !
 !     Local variables
 !
-      character*(namlen)    holdn
-      character*(namlen)    tempn
+      character(namlen)     holdn
+      character(namlen)     tempn
 
       real(wp)              holds    ( sumlen )
       real(wp)              temps    ( sumlen )
@@ -218,7 +218,7 @@
 !
 !     If the order vector has fewer than two elements, don't bother.
 !
-      if ( n .lt. 2 ) then
+      if ( n < 2 ) then
         call chkout ( 'DAFRA' )
         return
       end if
@@ -251,7 +251,7 @@
          call chkout ( 'DAFRA' )
          return
 
-      else if ( total .lt. n ) then
+      else if ( total < n ) then
          call setmsg ( 'N (#) exceeds number of arrays (#).' )
          call errint ( '#', n )
          call errint ( '#', total )
@@ -280,7 +280,7 @@
 !
       start = 1
 
-      do while ( ( start .lt. n )  .and.  ( .not. failed() ) )
+      do while ( ( start < n )  .and.  ( .not. failed() ) )
 
 !
 !        Start the cycle. One guy (pair of summary and name record)
@@ -307,7 +307,7 @@
 !        Keep going until HOLD points to the first guy moved during
 !        the current cycle. This ends the cycle.
 !
-         do while ( hold .ne. start )
+         do while ( hold /= start )
 
 !
 !           Get the guy in position HOLD.
@@ -363,7 +363,7 @@
 !        vector with a positive sign. (That is, the next one
 !        that hasn't been moved.)
 !
-         do while ( iorder(start) .lt. 0  .and.  start .lt. n )
+         do while ( iorder(start) < 0  .and.  start < n )
             start = start + 1
          end do
 

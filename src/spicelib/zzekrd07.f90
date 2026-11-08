@@ -131,7 +131,7 @@
 !
 !     Local variables
 !
-      character*(1)         cflag
+      character(1)          cflag
 
       integer(ip)           addrss
       integer(ip)           colidx
@@ -156,10 +156,10 @@
       ncols   =  segdsc ( ncidx  )
       colidx  =  coldsc ( ordidx )
       metloc  =  coldsc ( metidx )
-      nullok  =  coldsc ( nflidx ) .eq. itrue
+      nullok  =  coldsc ( nflidx ) == itrue
 
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -206,7 +206,7 @@
 
          call dasrdc ( handle, addrss, addrss, 1, 1, cflag )
 
-         isnull  =  cflag .eq. ctrue
+         isnull  =  cflag == ctrue
 
          if ( isnull ) then
             return

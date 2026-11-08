@@ -25,7 +25,7 @@
       implicit none
 
       integer(ip)           text
-      character*(*)         binary
+      character(*)          binary
       integer(ip)           resv
 
       integer(ip)           bsize
@@ -312,11 +312,11 @@
 !
 !     Local variables
 !
-      character*(1000)      name     ( 2 )
-      character*(idwlen)    idword
-      character*(60)        ifname   ( 2 )
-      character*(idwlen)    tarch
-      character*(idwlen)    ttype
+      character(1000)       name     ( 2 )
+      character(idwlen)     idword
+      character(60)         ifname   ( 2 )
+      character(idwlen)     tarch
+      character(idwlen)     ttype
 
       real(wp)              buffer   ( bsize )
       real(wp)              dc       ( 125 )
@@ -351,7 +351,7 @@
 !
       read (text,*,iostat=iostat) idword
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'The attempt to read from file ''#''' // &
                        ' failed. IOSTAT = #.'                 )
@@ -369,7 +369,7 @@
 !
       call idw2at ( idword, tarch, ttype )
 
-      if ( tarch .ne. 'DAF' ) then
+      if ( tarch /= 'DAF' ) then
 
          call setmsg ( 'File architecture is not ''DAF'' for' // &
                        ' file ''#'''                           )
@@ -382,7 +382,7 @@
 
       read (text,*,iostat=iostat) nd, ni, ifname(1)
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'The attempt to read from file ''#''' // &
                        ' failed. IOSTAT = #.'                 )
@@ -422,7 +422,7 @@
 
       read (text,*,iostat=iostat) more
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                 )
          call setmsg ( 'The attempt to read from file ''#''' // &
@@ -435,11 +435,11 @@
 
       end if
 
-      do while ( more .gt. 0 )
+      do while ( more > 0 )
 
          read (text,*,iostat=iostat) name(1)( :isize)
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                 )
             call setmsg ( 'The attempt to read from file ''#''' // &
@@ -454,7 +454,7 @@
 
          read (text,*,iostat=iostat) ( dc(i), i = 1, nd     )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                 )
             call setmsg ( 'The attempt to read from file ''#''' // &
@@ -469,7 +469,7 @@
 
          read (text,*,iostat=iostat) ( ic(i), i = 1, ni - 2 )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                 )
             call setmsg ( 'The attempt to read from file ''#''' // &
@@ -494,7 +494,7 @@
 
          read (text,*,iostat=iostat) chunk
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                 )
             call setmsg ( 'The attempt to read from file ''#''' // &
@@ -507,9 +507,9 @@
 
          end if
 
-         do while ( chunk .gt. 0 )
+         do while ( chunk > 0 )
 
-            if ( chunk .gt. bsize ) then
+            if ( chunk > bsize ) then
 
                call dafcls ( handle                                 )
                call setmsg ( 'Buffer size exceeded. Increase to #.' )
@@ -522,7 +522,7 @@
 
                read (text,*,iostat=iostat) ( buffer(i), i = 1, chunk )
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                   call dafcls ( handle                                 )
                   call setmsg ( 'The attempt to read from file ''#''' // &
@@ -548,7 +548,7 @@
 
             read (text,*,iostat=iostat) chunk
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call dafcls ( handle                                 )
                call setmsg ( 'The attempt to read from file ''#''' // &
@@ -565,7 +565,7 @@
 
          read (text,*,iostat=iostat) name(2)( :isize)
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                 )
             call setmsg ( 'The attempt to read from file ''#''' // &
@@ -578,7 +578,7 @@
 
          end if
 
-         if ( name(1)( :isize) .ne. name(2)( :isize) ) then
+         if ( name(1)( :isize) /= name(2)( :isize) ) then
 
             call dafcls ( handle                          )
             call setmsg ( 'Array name mismatch: # and #.' )
@@ -603,7 +603,7 @@
 
          read (text,*,iostat=iostat) more
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call dafcls ( handle                                 )
             call setmsg ( 'The attempt to read from file ''#''' // &
@@ -625,7 +625,7 @@
 !
       read (text,*,iostat=iostat) ifname(2)
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call dafcls ( handle                                 )
          call setmsg ( 'The attempt to read from file ''#''' // &
@@ -638,7 +638,7 @@
 
       end if
 
-      if ( ifname(1) .ne. ifname(2) ) then
+      if ( ifname(1) /= ifname(2) ) then
 
          call dafcls ( handle                                 )
          call setmsg ( 'Internal file name mismatch: # and #' )

@@ -572,7 +572,7 @@
 !     Note that if you simply add CC4 + S114 + S224 + S334
 !     you get four. Thus at least one of the 4 terms is greater than 1.
 !
-      if ( 1.0_wp .le. cc4 ) then
+      if ( 1.0_wp <= cc4 ) then
          c      =  dsqrt  ( cc4 * 0.25_wp )
          factor =  1.0_wp /( c   * 4.0_wp  )
 
@@ -580,7 +580,7 @@
          s(2)   = ( r(1,3) - r(3,1) )*factor
          s(3)   = ( r(2,1) - r(1,2) )*factor
 
-      else if ( 1.0_wp .le. s114 ) then
+      else if ( 1.0_wp <= s114 ) then
 
          s(1)   = dsqrt  ( s114 * 0.25_wp )
          factor = 1.0_wp /( s(1) * 4.0_wp  )
@@ -590,7 +590,7 @@
          s(3)   = ( r(1,3) + r(3,1) ) * factor
 
 
-      else if ( 1.0_wp .le. s224 ) then
+      else if ( 1.0_wp <= s224 ) then
 
          s(2)   = dsqrt  ( s224 * 0.25_wp )
          factor = 1.0_wp /( s(2) * 4.0_wp  )
@@ -615,7 +615,7 @@
 !
       l2 = c*c + s(1)*s(1) + s(2)*s(2) + s(3)*s(3)
 
-      if ( l2 .ne. 1.0_wp ) then
+      if ( l2 /= 1.0_wp ) then
          polish = 1.0_wp/dsqrt(l2)
          c      =    c*polish
          s(1)   = s(1)*polish
@@ -623,7 +623,7 @@
          s(3)   = s(3)*polish
       end if
 
-      if ( c .gt. 0.0_wp ) then
+      if ( c > 0.0_wp ) then
          q(0) = c
          q(1) = s(1)
          q(2) = s(2)

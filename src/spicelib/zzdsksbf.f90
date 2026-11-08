@@ -507,7 +507,7 @@
       bix = isrchi( bodyid, btnbod, btbody )
 
 
-      if ( bix .eq. 0 ) then
+      if ( bix == 0 ) then
 !
 !        We don't have buffered information for this body. Update
 !        the body and segment tables to store data for it.
@@ -780,7 +780,7 @@
       bix = isrchi( bodyid, btnbod, btbody )
 
 
-      if ( bix .eq. 0 ) then
+      if ( bix == 0 ) then
 !
 !        We don't have buffered information for this body. Update
 !        the body and segment tables to store data for it.
@@ -1038,7 +1038,7 @@
 !
       bix = isrchi( bodyid, btnbod, btbody )
 
-      if ( bix .eq. 0 ) then
+      if ( bix == 0 ) then
 !
 !        We don't have buffered information for this body. Update
 !        the body and segment tables to store data for it.

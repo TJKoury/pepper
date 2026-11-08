@@ -32,10 +32,10 @@
       include 'ektype.inc'
 
       integer(ip)           handle
-      character*(*)         tabnam
+      character(*)          tabnam
       integer(ip)           ncols
-      character*(*)         cnames ( * )
-      character*(*)         decls  ( * )
+      character(*)          cnames ( * )
+      character(*)          decls  ( * )
       integer(ip)           segno
 
 ! $ Brief_I/O
@@ -545,7 +545,7 @@
 !
       call lxidnt ( idspec, tabnam, 1, idend, nchars )
 
-      if ( ( nchars .eq. 0 ) .or. ( nchars .lt. lastnb(tabnam))  ) then
+      if ( ( nchars == 0 ) .or. ( nchars < lastnb(tabnam))  ) then
 
          call setmsg ( 'Table name <#> violates syntax rules.' )
          call errch  ( '#', tabnam                             )
@@ -558,7 +558,7 @@
 !
 !     Check out NCOLS.
 !
-      if (  ( ncols .lt. 1 ) .or. ( ncols .gt. mxclsg )  ) then
+      if (  ( ncols < 1 ) .or. ( ncols > mxclsg )  ) then
 
          call setmsg ( 'Number of columns must be in range 1:#, was #.')
          call errint ( '#',  mxclsg                                    )
@@ -587,8 +587,8 @@
 !
          call lxidnt ( idspec, cnames(i), 1, idend, nchars )
 
-         if (       ( nchars .eq. 0                    ) &
-               .or. ( nchars .lt. lastnb( cnames(i) )  )   ) then
+         if (       ( nchars == 0                    ) &
+               .or. ( nchars < lastnb( cnames(i) )  )   ) then
 
             call setmsg ( 'Column name <#> violates syntax rules.' )
             call errch  ( '#', cnames(i)                           )
@@ -626,11 +626,11 @@
 !
 !     Create the segment metadata according to the segment's type.
 !
-      if ( stype .eq. 1 ) then
+      if ( stype == 1 ) then
 
          call zzekbs01 ( handle, tabnam, ncols, cnames, cdscrs, segno )
 
-      else if ( stype .eq. 2 ) then
+      else if ( stype == 2 ) then
 
          call zzekbs02 ( handle, tabnam, ncols, cnames, cdscrs, segno )
 

@@ -31,12 +31,12 @@
 
       implicit none
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              trgepc
       real(wp)              srfvec ( 3 )

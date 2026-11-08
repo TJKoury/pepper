@@ -297,7 +297,7 @@
 !     worry about the first time through, since LSTHAN and LSTBEG are
 !     set to values that are bogus for actual DAF files.
 !
-      if ( handle .eq. lsthan ) then
+      if ( handle == lsthan ) then
 
 !
 !        Get the begin and end values from the descriptor. They are
@@ -317,7 +317,7 @@
 !        Check the segment start address. This will tell us whether we
 !        are looking at the same segment.
 !
-         if ( lstbeg .eq. begin ) then
+         if ( lstbeg == begin ) then
 
 !
 !        The only acceptable integer mnemonics at this point are 1
@@ -325,9 +325,9 @@
 !        should signal the SPICE(UNKNOWNMETAITEM) error, since the
 !        current segment has no knowledge of these values.
 !
-            if (   ( mnemon .le. 0      )       .or. &
-                 ( ( mnemon .gt. metasz ) .and. &
-                   ( mnemon .ne. nmeta  ) )           ) then
+            if (   ( mnemon <= 0      )       .or. &
+                 ( ( mnemon > metasz ) .and. &
+                   ( mnemon /= nmeta  ) )           ) then
 
                call chkin ( 'SGMETA' )
                value = -1
@@ -361,7 +361,7 @@
 
       call chkin ( 'SGMETA' )
 
-      if ( handle .ne. lsthan ) then
+      if ( handle /= lsthan ) then
 
          call dafhsf ( handle, nd,  ni )
 
@@ -372,7 +372,7 @@
 
          niovr2 = ni / 2
 
-         nieven = ( 2 * niovr2 ) .eq. ni
+         nieven = ( 2 * niovr2 ) == ni
 
          ioffst = nd + niovr2
          lsthan = handle
@@ -422,7 +422,7 @@
 !
 !     Check to see if METASZ is an unacceptable value.
 !
-      if ( metasz .lt. mnmeta ) then
+      if ( metasz < mnmeta ) then
 
          value = -1
          call setmsg ( 'This segment reports that it has # meta ' &
@@ -443,7 +443,7 @@
 !     meta data size by 1. The number of meta data items is always
 !     after all of the meta data items, so we can do this.
 !
-      else if ( metasz .eq. 15 ) then
+      else if ( metasz == 15 ) then
 
          metasz = metasz + 1
          ametas = metasz
@@ -454,7 +454,7 @@
 !     some newer version of the toolkit.  Load what meta data we
 !     currently know about as laid out in sgparam.inc.
 !
-      else if ( metasz .gt. mxmeta ) then
+      else if ( metasz > mxmeta ) then
 
 !
 !        Leave AMETAS alone, since we need to know how far back
@@ -516,9 +516,9 @@
 !     the SPICE(UNKNOWNMETAITEM) error, since the current segment has
 !     no knowledge of these values.
 !
-      if (   ( mnemon .le. 0      )       .or. &
-           ( ( mnemon .gt. metasz ) .and. &
-             ( mnemon .ne. nmeta  ) )           ) then
+      if (   ( mnemon <= 0      )       .or. &
+           ( ( mnemon > metasz ) .and. &
+             ( mnemon /= nmeta  ) )           ) then
 
          value = -1
          call setmsg ( 'The item requested, #, is not one of the' &

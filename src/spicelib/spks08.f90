@@ -212,9 +212,9 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (      (  end   .lt.   begin                    ) &
-           .or. (  end   .lt.   start                    ) &
-           .or. (  begin .gt. ( start + (nrec-1)*step )  )   ) then
+      if (      (  end   <   begin                    ) &
+           .or. (  end   <   start                    ) &
+           .or. (  begin > ( start + (nrec-1)*step )  )   ) then
 
          call chkout ( 'SPKS08' )
          return
@@ -253,7 +253,7 @@
       ratio  =  ( end - start ) / step
 
 
-      if ( ratio .eq. aint(ratio) ) then
+      if ( ratio == aint(ratio) ) then
          rec(2)  =   1   +   min(  int(ratio),      nrec-1  )
       else
          rec(2)  =   1   +   min(  int(ratio) + 1,  nrec-1  )

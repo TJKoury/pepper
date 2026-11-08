@@ -31,7 +31,7 @@
       integer(ip)           segdsc ( * )
       integer(ip)           coldsc ( * )
       integer(ip)           recptr
-      character*(*)         cval
+      character(*)          cval
       logical               isnull
 
 ! $ Brief_I/O
@@ -187,7 +187,7 @@
       ncols   =  segdsc ( ncidx  )
       colidx  =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKAD03'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -203,7 +203,7 @@
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
+      if (  isnull  .and.  ( coldsc(nflidx) /= itrue )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -227,7 +227,7 @@
 !     string length is the minimum of the non-blank length and the
 !     column's declared string length.  We don't store trailing blanks.
 !
-      fixlen  =  coldsc(lenidx) .ne. ifalse
+      fixlen  =  coldsc(lenidx) /= ifalse
       lnb     =  rtrim ( cval )
 
       if ( fixlen ) then
@@ -263,12 +263,12 @@
          pcount  =  0
 
 
-         do while ( n .gt. 0 )
+         do while ( n > 0 )
 !
 !           Write as much data as possible into the current page.
 !
 
-            if ( lastw .lt. cpsize-encsiz ) then
+            if ( lastw < cpsize-encsiz ) then
 !
 !              There's room in the current page.  We never split an
 !              encoded character count across pages, and we always
@@ -285,7 +285,7 @@
 !              into the record pointer and the character count into
 !              the data page.
 !
-               if ( pcount .eq. 1 ) then
+               if ( pcount == 1 ) then
 
                   call zzekpgbs ( chr, p, pbase )
 
@@ -347,7 +347,7 @@
 !
                call zzekaps ( handle, segdsc, chr, .false., p2, pbase )
 
-               if ( pcount .gt. 0 ) then
+               if ( pcount > 0 ) then
                   call zzeksfwd ( handle, chr, p, p2 )
                end if
 
@@ -383,11 +383,11 @@
 !
       itype  =  coldsc(ixtidx)
 
-      if ( itype .ne. ifalse ) then
+      if ( itype /= ifalse ) then
 !
 !        The column is indexed.
 !
-         if ( itype .eq. 1 ) then
+         if ( itype == 1 ) then
 !
 !           The column has a type 1 index.  Insert the record number
 !           of the current element at the appropriate location.

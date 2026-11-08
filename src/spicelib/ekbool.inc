@@ -22,13 +22,13 @@
 !
 !     Character code indicating `true':
 !
-      character*(*)         ctrue
+      character(*)          ctrue
       parameter           ( ctrue  = 'T' )
 
 !
 !     Character code indicating `false':
 !
-      character*(*)         cfalse
+      character(*)          cfalse
       parameter           ( cfalse = 'F' )
 
 !

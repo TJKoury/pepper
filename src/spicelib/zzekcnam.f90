@@ -24,7 +24,7 @@
 
       integer(ip)           handle
       integer(ip)           coldsc ( cdscsz )
-      character*(*)         column
+      character(*)          column
 
 ! $ Brief_I/O
 !

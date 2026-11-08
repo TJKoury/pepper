@@ -167,7 +167,7 @@
 
       ecc2   = h*h + k*k
 
-      if ( ecc2 .ge. 1.0_wp ) then
+      if ( ecc2 >= 1.0_wp ) then
 
          call chkin  ( 'KPSOLV' )
          call setmsg ( 'The magnitude of the vector EVEC = ( #, ' &
@@ -207,12 +207,12 @@
       xm  =  0.0_wp
       ecc =  dsqrt(ecc2)
 
-      if      ( y0 .gt. 0.0_wp ) then
+      if      ( y0 > 0.0_wp ) then
 
          xu  =  0.0_wp
          xl  = -ecc
 
-      else if ( y0 .lt. 0.0_wp ) then
+      else if ( y0 < 0.0_wp ) then
 
          xu =  ecc
          xl =  0.0_wp
@@ -246,7 +246,7 @@
 !
 !        Determine the new upper and lower bounds.
 !
-         if ( yxm .gt. 0.0_wp ) then
+         if ( yxm > 0.0_wp ) then
             xu = xm
          else
             xl = xm

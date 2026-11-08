@@ -186,7 +186,7 @@
 !
 !     Perform checks on the inputs for reasonableness.
 !
-      if ( ( first .lt. 1 ) .or. ( last .gt. mynref) ) then
+      if ( ( first < 1 ) .or. ( last > mynref) ) then
 
          call setmsg ( 'The range of reference items requested' &
          //            ' extends beyond the available range of' &
@@ -203,7 +203,7 @@
 
       end if
 
-      if ( last .lt. first ) then
+      if ( last < first ) then
 
          call setmsg ( 'The last reference item requested, #, is' &
          //            ' before the first reference item' &
@@ -219,7 +219,7 @@
 !     Ok.  We are ready to go. If the reference type is recognized
 !     fetch the requested data.
 !
-      if ( myreft .eq. imple ) then
+      if ( myreft == imple ) then
 !
 !        The reference values are implied in this case. Read the
 !        reference base value and step. If we fail, check out and
@@ -245,7 +245,7 @@
 
          end do
 
-      else if ( myreft .eq. impcls ) then
+      else if ( myreft == impcls ) then
 !
 !        The reference values are implied in this case. Read the
 !        reference base value and step. If we fail, check out and
@@ -271,9 +271,9 @@
 
          end do
 
-      else if (      myreft .eq. exple &
-                .or. myreft .eq. explt &
-                .or. myreft .eq. expcls ) then
+      else if (      myreft == exple &
+                .or. myreft == explt &
+                .or. myreft == expcls ) then
 !
 !        In this case the reference values are actually stored
 !        in the file.  This is even easier than the last case.

@@ -258,17 +258,17 @@
       state = lcheck
 
 
-      do while ( state .ne. term )
+      do while ( state /= term )
 
 
-         if ( state .eq. lcheck ) then
+         if ( state == lcheck ) then
 !
 !           Look up the node containing LKEY.
 !
             call zzektrlk (  handle,  tree,    lkey,   idx, &
                              node,    noffst,  level,  lval  )
 
-            if ( node .eq. root ) then
+            if ( node == root ) then
 
                state  =  splt13
 
@@ -282,11 +282,11 @@
                                pkey,   poffst, lpidx,  lpkey, &
                                left,   rpidx,  rpkey,  right  )
 
-               if ( left .gt. 0 ) then
+               if ( left > 0 ) then
 
                   nkeys = zzektrnk ( handle, tree, left )
 
-                  if ( nkeys .lt. mxkeyc ) then
+                  if ( nkeys < mxkeyc ) then
                      lnode  =  left
                      rnode  =  node
                      pkidx  =  lpidx
@@ -303,17 +303,17 @@
             end if
 
 
-         else if ( state .eq. rcheck ) then
+         else if ( state == rcheck ) then
 !
 !           See whether there's room in the right sibling, if there
 !           is a right sibling.  The left sibling has already been
 !           checked and found wanting.
 !
-            if ( right .gt. 0 ) then
+            if ( right > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, right )
 
-               if ( nkeys .lt. mxkeyc ) then
+               if ( nkeys < mxkeyc ) then
 
                   lnode  =  node
                   rnode  =  right
@@ -342,7 +342,7 @@
             end if
 
 
-         else if ( state .eq. balnce ) then
+         else if ( state == balnce ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
 !           there's enough room to accommodate the overflow.  After
@@ -353,7 +353,7 @@
             state  =  term
 
 
-         else if ( state .eq. splt23 ) then
+         else if ( state == splt23 ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
 !           there's an overflow of one key.  Split these two nodes
@@ -372,7 +372,7 @@
 !           the 2-3 split.  If NODE got mapped to RNODE, then
 !           the last key in NODE will be unchanged.
 !
-            if ( node .eq. lnode ) then
+            if ( node == lnode ) then
 !
 !              Save the first key from NODE.
 !
@@ -395,7 +395,7 @@
 
             if ( overfl ) then
 
-               if ( parent .eq. root ) then
+               if ( parent == root ) then
 
                   state   =  splt13
 
@@ -420,7 +420,7 @@
             end if
 
 
-         else if ( state .eq. splt13 ) then
+         else if ( state == splt13 ) then
 !
 !           We've got an overflow in the root.  Split the root,
 !           creating two new children.  The root contains a single

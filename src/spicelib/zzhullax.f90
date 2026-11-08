@@ -33,7 +33,7 @@
       real(wp)              margin
       parameter           ( margin = 1.0e-12_wp )
 
-      character*(*)         inst
+      character(*)          inst
       integer(ip)           n
       real(wp)              bounds ( 3, n )
       real(wp)              axis   ( 3 )
@@ -345,7 +345,7 @@
 !
 !     We must have at least 3 boundary vectors.
 !
-      if ( n .lt. 3 ) then
+      if ( n < 3 ) then
 
          call setmsg ( 'Polygonal FOV requires at least 3 ' &
          //            'boundary vectors but number ' &
@@ -367,12 +367,12 @@
 !
       i = 1
 
-      do while ( ( i .le. n ) .and. ( .not. found ) )
+      do while ( ( i <= n ) .and. ( .not. found ) )
 !
 !        Set the index of the next ray. When we get to the
 !        last boundary vector, the next ray is the first.
 !
-         if ( i .eq. n ) then
+         if ( i == n ) then
             next = 1
          else
             next = i + 1
@@ -415,12 +415,12 @@
          ok    = .true.
          m     =  1
 
-         do while (  ( m .le. n ) .and. ok  )
+         do while (  ( m <= n ) .and. ok  )
 !
 !           Find the angular separation of CP and the Mth vector if the
 !           latter is not an edge of the current face.
 !
-            if (  ( m .ne. i ) .and. ( m .ne. next )  ) then
+            if (  ( m /= i ) .and. ( m /= next )  ) then
 
                sep = vsep(  cp,  bounds(1,m)  )
 
@@ -429,7 +429,7 @@
 !                 Adjust CP if necessary so that it points
 !                 toward the interior of the pyramid.
 !
-                  if ( sep .gt. halfpi() ) then
+                  if ( sep > halfpi() ) then
 !
 !                    Invert the cross product vector and adjust SEP
 !                    accordingly. Within this "M" loop, all other
@@ -446,7 +446,7 @@
 
                end if
 
-               ok  = sep .lt. ( halfpi() - margin )
+               ok  = sep < ( halfpi() - margin )
 
             end if
 
@@ -493,13 +493,13 @@
 
          i = 1
 
-         do while ( ( i .le. n ) .and. ( .not. found ) )
+         do while ( ( i <= n ) .and. ( .not. found ) )
 !
 !           Consider all ray pairs (I,NEXT) where NEXT > I.
 !
             next = i + 1
 
-            do while (  ( next .le. n ) .and. ( .not. found )  )
+            do while (  ( next <= n ) .and. ( .not. found )  )
 !
 !              Find the cross product of the first ray with the second.
 !              If the current face is exterior, CP could be an inward
@@ -528,13 +528,13 @@
                   ok    = .true.
                   m     =  1
 
-                  do while (  ( m .le. n ) .and. ok  )
+                  do while (  ( m <= n ) .and. ok  )
 !
 !                    Find the angular separation of CP and the Mth
 !                    vector if the latter is not an edge of the current
 !                    face.
 !
-                     if (  ( m .ne. i ) .and. ( m .ne. next )  ) then
+                     if (  ( m /= i ) .and. ( m /= next )  ) then
 
                         sep = vsep(  cp,  bounds(1,m)  )
 
@@ -543,7 +543,7 @@
 !                          Adjust CP if necessary so that it points
 !                          toward the interior of the pyramid.
 !
-                           if ( sep .gt. halfpi() ) then
+                           if ( sep > halfpi() ) then
 !
 !                             Invert the cross product vector and
 !                             adjust SEP accordingly. Within this "M"
@@ -561,7 +561,7 @@
 
                         end if
 
-                        ok  = sep .lt. ( halfpi() - margin )
+                        ok  = sep < ( halfpi() - margin )
 
                      end if
 
@@ -691,7 +691,7 @@
 
       do i = 1, n
 
-         if ( ( i .ne. xidx ) .and. ( i .ne. next )  ) then
+         if ( ( i /= xidx ) .and. ( i /= next )  ) then
 !
 !           The current vector is not a boundary of our edge,
 !           so find its longitude.
@@ -702,12 +702,12 @@
 !
 !           Update the longitude bounds.
 !
-            if ( lon .lt. minlon ) then
+            if ( lon < minlon ) then
                minix  = i
                minlon = lon
             end if
 
-            if ( lon .gt. maxlon ) then
+            if ( lon > maxlon ) then
                maxix  = i
                maxlon = lon
             end if
@@ -720,7 +720,7 @@
 !     If the longitude bounds are not as expected, don't try
 !     to continue.
 !
-      if (  minlon  .lt.  2*margin  ) then
+      if (  minlon  <  2*margin  ) then
 
          call setmsg ( 'Minimum boundary vector longitude in ' &
          //            'exterior face frame is # radians. ' &
@@ -734,7 +734,7 @@
          call chkout ( 'ZZHULLAX'                                   )
          return
 
-      else if ( maxlon  .gt.  pi()-2*margin  ) then
+      else if ( maxlon  >  pi()-2*margin  ) then
 
          call setmsg ( 'Maximum boundary vector longitude in ' &
          //            'exterior face frame is # radians. ' &
@@ -772,7 +772,7 @@
 
          sep = vsep( bounds(1,i), axis )
 
-         if (  sep  .gt. ( halfpi() - margin )  ) then
+         if (  sep  > ( halfpi() - margin )  ) then
 
             call setmsg ( 'Boundary vector at index # has ' &
             //            'angular separation of # radians ' &

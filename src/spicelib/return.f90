@@ -264,7 +264,7 @@
 !
       call getact ( action )
 
-      return  =  action .eq. iretrn
+      return  =  action == iretrn
 
       return
       end

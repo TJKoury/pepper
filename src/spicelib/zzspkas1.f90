@@ -33,8 +33,8 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       real(wp)              stobs  ( 6 )
       real(wp)              accobs ( 3 )
       real(wp)              starg  ( 6 )
@@ -577,13 +577,13 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'ZZSPKAS1' )
 
 !
 !     Local variables
 !
-      character*(corlen)    prvcor
+      character(corlen)     prvcor
 
       real(wp)              corpos ( 3 )
       real(wp)              corvel ( 3 )
@@ -623,7 +623,7 @@
       call chkin ( rname )
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
@@ -690,7 +690,7 @@
 !
       call irfnum ( ref, refid )
 
-      if ( refid .eq. 0 ) then
+      if ( refid == 0 ) then
 
          call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )

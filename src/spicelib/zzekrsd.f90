@@ -160,7 +160,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           class
       integer(ip)           dtype
@@ -181,7 +181,7 @@
       dtype  =  coldsc(typidx)
 
 
-      if ( ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
+      if ( ( dtype /= dp ) .and. ( dtype /= time )  ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -210,14 +210,14 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 2 ) then
+      if ( class == 2 ) then
 
          call zzekrd02 ( handle, segdsc, coldsc, recptr, dval, isnull  )
 
          found  =  .true.
 
 
-      else if ( class .eq. 5 ) then
+      else if ( class == 5 ) then
 !
 !        Class 5 columns contain d.p. array entries.
 !
@@ -225,7 +225,7 @@
                          eltidx,  eltidx,  dval,    isnull,  found )
 
 
-      else if ( class .eq. 8 ) then
+      else if ( class == 8 ) then
 
          call zzekrd08 ( handle, segdsc, coldsc, recptr, dval, isnull  )
 

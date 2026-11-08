@@ -37,7 +37,7 @@
       integer(ip)           recptr
       integer(ip)           beg
       integer(ip)           end
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       logical               isnull
       logical               found
 
@@ -202,7 +202,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           avail
       integer(ip)           base
@@ -238,7 +238,7 @@
       ncols  =  segdsc ( ncidx  )
       colidx =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKRD06'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -257,7 +257,7 @@
       cvlen   =  len    ( cvals(1) )
       strlen  =  coldsc ( lenidx   )
 
-      if ( strlen .gt. cvlen ) then
+      if ( strlen > cvlen ) then
 !
 !        We have a string truncation error.  Look up the column
 !        name, record number, and file name before signaling an
@@ -292,7 +292,7 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        The entry is non-null.
 !
@@ -304,17 +304,17 @@
 !
          call zzekgei ( handle, datptr, nelt )
 
-         if (  ( beg .lt. 1 ) .or. ( beg .gt. nelt )  )  then
+         if (  ( beg < 1 ) .or. ( beg > nelt )  )  then
 
             found  =  .false.
             return
 
-         else if (  ( end .lt. 1 ) .or. ( end .gt. nelt )  )  then
+         else if (  ( end < 1 ) .or. ( end > nelt )  )  then
 
             found  =  .false.
             return
 
-         else if ( end .lt. beg ) then
+         else if ( end < beg ) then
 
             found  =  .false.
             return
@@ -337,7 +337,7 @@
          ptroff  =  datptr  -  base
          offset  =  ptroff  +  encsiz   +   strlen * ( beg - 1 )
 
-         if ( offset .le. cpsize ) then
+         if ( offset <= cpsize ) then
 
             pagnum   =    1
             eltoff   =    offset
@@ -357,7 +357,7 @@
 !
          pg  =  1
 
-         do while ( pg .lt. pagnum )
+         do while ( pg < pagnum )
 !
 !           Get the link to the next page, then look up the base
 !           address of that page.
@@ -383,7 +383,7 @@
          eltidx   =  1
          maxelt   =  end - beg + 1
 
-         do while (  ( eltidx .le. maxelt ) .and. ( .not. failed() )  )
+         do while (  ( eltidx <= maxelt ) .and. ( .not. failed() )  )
 !
 !           Read the current string.  The string may be continued over
 !           multiple pages.  Read only as many characters as will fit
@@ -392,12 +392,12 @@
             remain  =  min ( cvlen, strlen )
             start   =  1
 
-            do while (  ( remain .gt. 0 ) .and. ( .not. failed() )  )
+            do while (  ( remain > 0 ) .and. ( .not. failed() )  )
 
                avail  =  base + cpsize - datptr + 1
                nread  =  min  ( remain,  avail )
 
-               if ( nread .gt. 0 ) then
+               if ( nread > 0 ) then
 
                   call dasrdc ( handle, &
                                 datptr, &
@@ -433,16 +433,16 @@
 !
             delta  =  strlen - cvlen
 
-            if ( delta .gt. 0 ) then
+            if ( delta > 0 ) then
 
                d  =  delta
 
-               do while ( d .gt. 0 )
+               do while ( d > 0 )
 
                   avail  =  base + cpsize - datptr + 1
                   nskip  =  min  ( d,  avail )
 
-                  if ( nskip .gt. 0 ) then
+                  if ( nskip > 0 ) then
 
                      d      =  d      - nskip
                      datptr =  datptr + nskip
@@ -466,7 +466,7 @@
 !
 !           Blank-pad the output string if necessary.
 !
-            if ( cvlen .gt. strlen ) then
+            if ( cvlen > strlen ) then
                cvals ( eltidx ) ( strlen+1: ) = ' '
             end if
 
@@ -479,7 +479,7 @@
          found =  .not. failed()
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        The value is null.
 !
@@ -487,7 +487,7 @@
          found  =  .true.
 
 
-      else if ( datptr .eq. uninit ) then
+      else if ( datptr == uninit ) then
 !
 !        The data value is absent.  This is an error.
 !

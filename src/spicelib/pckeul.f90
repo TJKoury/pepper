@@ -31,7 +31,7 @@
       integer(ip)          body
       real(wp)             et
       logical              found
-      character*(*)        ref
+      character(*)         ref
       real(wp)             eulang   ( 6 )
 
 ! $ Brief_I/O
@@ -193,7 +193,7 @@
 !  Local Variables
 !
 
-      character*(40)  ident
+      character(40)   ident
 
       real(wp)              dcd     ( nd )
       real(wp)              descr   ( ns )
@@ -228,7 +228,7 @@
          iref   = icd( nr )
          call irfnam ( iref, ref )
 
-         if ( type .eq. 2 ) then
+         if ( type == 2 ) then
 
 !
 !           Read in Chebyshev coefficients from segment.

@@ -26,8 +26,8 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       integer(ip)           obs
       real(wp)              starg    ( 6 )
       real(wp)              lt
@@ -502,7 +502,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname = 'SPKACS' )
 
       real(wp)              delta
@@ -514,7 +514,7 @@
 !
 !     Local variables
 !
-      character*(corlen)    prvcor
+      character(corlen)     prvcor
 
       real(wp)              acc    ( 3 )
       real(wp)              ltssb
@@ -555,7 +555,7 @@
       end if
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
@@ -593,7 +593,7 @@
 !
       call irfnum ( ref, refid )
 
-      if ( refid .eq. 0 ) then
+      if ( refid == 0 ) then
 
          call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )

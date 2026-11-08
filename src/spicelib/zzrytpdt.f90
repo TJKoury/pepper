@@ -323,7 +323,7 @@
       call chkin ( 'ZZRYTPDT' )
 
 
-      if ( margin .lt. 0.0_wp ) then
+      if ( margin < 0.0_wp ) then
 
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
@@ -405,7 +405,7 @@
 !     Generate semi-axis lengths of inner and outer bounding
 !     ellipsoids.
 !
-      if ( re .ge. rp ) then
+      if ( re >= rp ) then
 !
 !        The reference spheroid is oblate.
 !
@@ -492,7 +492,7 @@
                    +  ( vertex(2)/emax )**2 &
                    +  ( vertex(3)/pmax )**2
 
-         if ( vtxlvl .gt. 1.0_wp ) then
+         if ( vtxlvl > 1.0_wp ) then
 !
 !           The vertex is outside this ellipsoid, and the DSK segment
 !           lies within the ellipsoid.
@@ -531,7 +531,7 @@
 !     Now try the upper latitude bound. We can skip this test
 !     if the upper bound is pi/2 radians.
 !
-      if ( maxlat .lt. halfpi() ) then
+      if ( maxlat < halfpi() ) then
 !
 !        Let ANGLE be the angular separation of the surface of latitude
 !        MAXLAT and the +Z axis. Note that the surface might be the
@@ -597,14 +597,14 @@
 !
 !        Check all intercepts.
 !
-         if ( nx .gt. 0 ) then
+         if ( nx > 0 ) then
 !
 !           Check the first intercept.
 !
             xval1 =  zzpdpltc( re, f, srfx, maxlat )
             xval2 =  .false.
 
-            if ( nx .eq. 2 ) then
+            if ( nx == 2 ) then
 !
 !              Check the second intercept.
 !
@@ -638,7 +638,7 @@
 
 
 
-         if ( nx .ge. 1 ) then
+         if ( nx >= 1 ) then
 !
 !           The ray intercept SRFX lies on the upper latitude boundary.
 !
@@ -659,17 +659,17 @@
 !
                dist = vdist( vertex, srfx )
 
-               if ( dist .lt. mndist ) then
+               if ( dist < mndist ) then
 
                   call vequ ( srfx, xpt )
 
                   nxpts  = 1
 
 
-                  if ( vtxang .lt. angle ) then
+                  if ( vtxang < angle ) then
 
-                     if (      ( maxlat    .lt. 0.0_wp ) &
-                          .or. ( vertex(3) .gt. 0.0_wp )  ) then
+                     if (      ( maxlat    < 0.0_wp ) &
+                          .or. ( vertex(3) > 0.0_wp )  ) then
 !
 !                       If MAXLAT is negative, the vertex offset
 !                       being outside the cone is enough to
@@ -705,7 +705,7 @@
 
             end if
 
-            if ( nx .eq. 2 ) then
+            if ( nx == 2 ) then
 !
 !              Check the second solution as well.
 !
@@ -723,7 +723,7 @@
 !
                   dist = vdist( vertex, xpt2 )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 
                      call vequ ( xpt2, xpt )
 
@@ -752,7 +752,7 @@
 !     Try the lower latitude bound. We can skip this test if the lower
 !     bound is -pi/2 radians.
 !
-      if (  minlat .gt. -halfpi() ) then
+      if (  minlat > -halfpi() ) then
 !
 !        Let ANGLE be the angular separation of the surface
 !        of latitude MINLAT and the +Z axis. Note that the
@@ -799,14 +799,14 @@
 !        Check whether the latitude of the intercept can be
 !        considered to match that of the cone.
 !
-         if ( nx .gt. 0 ) then
+         if ( nx > 0 ) then
 !
 !           Check the first intercept.
 !
             xval1 =  zzpdpltc( re, f, srfx, minlat )
             xval2 =  .false.
 
-            if ( nx .eq. 2 ) then
+            if ( nx == 2 ) then
 !
 !              Check the second intercept.
 !
@@ -838,7 +838,7 @@
          end if
 
 
-         if ( nx .ge. 1 ) then
+         if ( nx >= 1 ) then
 !
 !           The ray intercept SRFX lies on the lower latitude boundary.
 !
@@ -858,16 +858,16 @@
 !
                dist = vdist( vertex, srfx )
 
-               if ( dist .lt. mndist ) then
+               if ( dist < mndist ) then
 
                   call vequ ( srfx, xpt )
 
                   nxpts  = 1
 
-                  if ( vtxang .gt. angle ) then
+                  if ( vtxang > angle ) then
 
-                     if (      ( minlat    .gt. 0.0_wp ) &
-                          .or. ( vertex(3) .lt. 0.0_wp )  ) then
+                     if (      ( minlat    > 0.0_wp ) &
+                          .or. ( vertex(3) < 0.0_wp )  ) then
 !
 !                       If MINLAT is positive, the vertex offset
 !                       being outside the cone is enough to
@@ -903,7 +903,7 @@
 
             end if
 
-            if ( nx .eq. 2 ) then
+            if ( nx == 2 ) then
 !
 !              Check the second solution as well.
 !
@@ -922,7 +922,7 @@
 !
                   dist = vdist( vertex, xpt2 )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 
                      call vequ ( xpt2, xpt )
 
@@ -955,7 +955,7 @@
 !
       loncov = maxlon - minlon
 
-      if ( cos(loncov) .lt. 1.0_wp ) then
+      if ( cos(loncov) < 1.0_wp ) then
 !
 !        We have distinct longitude boundaries. Go to work.
 !
@@ -971,7 +971,7 @@
 
          call zzinrypl ( vertex, udir, westb, 0.0_wp, s, nx, srfx )
 
-         if ( nx .eq. 1 ) then
+         if ( nx == 1 ) then
 !
 !           We have one point of intersection. Determine whether it's a
 !           candidate solution.  Don't use longitude in the following
@@ -993,7 +993,7 @@
 !
                call ucrss ( westb, z, wback )
 
-               if (  vdot(srfx, wback) .lt. (margin*maxr)  ) then
+               if (  vdot(srfx, wback) < (margin*maxr)  ) then
 !
 !                 The intercept is either on the same side of the Z
 !                 axis as the west face of the segment, or is very
@@ -1001,7 +1001,7 @@
 !
                   dist = vdist( vertex, srfx )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 !
 !                    Record the intercept, distance, and surface index.
 !
@@ -1027,7 +1027,7 @@
 
          call zzinrypl ( vertex, udir, eastb, 0.0_wp, s, nx, srfx )
 
-         if ( nx .eq. 1 ) then
+         if ( nx == 1 ) then
 !
 !           We have one point of intersection. Determine whether it's a
 !           candidate solution.
@@ -1047,7 +1047,7 @@
 !
                call ucrss ( z, eastb, eback )
 
-               if (  vdot(srfx, eback) .lt. (margin*maxr)  ) then
+               if (  vdot(srfx, eback) < (margin*maxr)  ) then
 !
 !                 The intercept is either on the same side of the Z
 !                 axis as the east face of the segment, or is very
@@ -1055,7 +1055,7 @@
 !
                   dist = vdist( vertex, srfx )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 !
 !                    Record the intercept, distance, and surface index.
 !
@@ -1105,7 +1105,7 @@
 
             dist = vdist( vertex, srfx )
 
-            if ( dist .lt. mndist ) then
+            if ( dist < mndist ) then
 !
 !              Record the intercept, distance, and surface index.
 !
@@ -1150,7 +1150,7 @@
 
             dist = vdist( vertex, srfx )
 
-            if ( dist .lt. mndist ) then
+            if ( dist < mndist ) then
 !
 !              Record the intercept, distance, and surface index.
 !

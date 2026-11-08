@@ -22,11 +22,11 @@
       implicit none
 
       integer(ip)           frstyr
-      character*(*)         lines ( 2 )
+      character(*)          lines ( 2 )
       real(wp)              epoch
       real(wp)              elems ( * )
       logical               ok
-      character*(*)         error
+      character(*)          error
 
 ! $ Brief_I/O
 !
@@ -415,22 +415,22 @@
 !
 !     Local variables
 !
-      character*(lnsize)    errprs ( 13 )
-      character*(lnsize)    term  ( 13 )
+      character(lnsize)     errprs ( 13 )
+      character(lnsize)     term  ( 13 )
 
-      character*(wdsize)    cyear
-      character*(wdsize)    cday
-      character*(wdsize)    cndt20
-      character*(wdsize)    cndd60
-      character*(wdsize)    ciexp
-      character*(wdsize)    cbstar
-      character*(wdsize)    cibexp
-      character*(wdsize)    cincl
-      character*(wdsize)    cnode0
-      character*(wdsize)    cecc
-      character*(wdsize)    comega
-      character*(wdsize)    cmo
-      character*(wdsize)    cno
+      character(wdsize)     cyear
+      character(wdsize)     cday
+      character(wdsize)     cndt20
+      character(wdsize)     cndd60
+      character(wdsize)     ciexp
+      character(wdsize)     cbstar
+      character(wdsize)     cibexp
+      character(wdsize)     cincl
+      character(wdsize)     cnode0
+      character(wdsize)     cecc
+      character(wdsize)     comega
+      character(wdsize)     cmo
+      character(wdsize)     cno
 
       real(wp)              bstar
       real(wp)              day
@@ -556,7 +556,7 @@
 !
 !     Ensure the vehicle IDs match in each line.
 !
-      if ( lines(1)(2:7) .ne. lines(2)(2:7) ) then
+      if ( lines(1)(2:7) /= lines(2)(2:7) ) then
 
 !
 !        Vehicle IDs do not match. Flag an error.
@@ -577,8 +577,8 @@
 !
       do k = 1, 2
 
-         if ( lastnb( lines(k) ) .ne. 68 .and. &
-              lastnb( lines(k) ) .ne. 69 ) then
+         if ( lastnb( lines(k) ) /= 68 .and. &
+              lastnb( lines(k) ) /= 69 ) then
 
 !
 !          The TLE data line was not 68 or 69 characters long (ignoring
@@ -665,7 +665,7 @@
 !
       do i = 1, 13
 
-         if ( errprs(i) .ne. ' ' ) then
+         if ( errprs(i) /= ' ' ) then
 
 !
 !           Something could not parse. Set the error message then
@@ -689,7 +689,7 @@
 !     Check for reasonable exponets; a single digit. These should
 !     probably be LE 0.
 !
-      if ( abs(nexp) .gt. 9 ) then
+      if ( abs(nexp) > 9 ) then
 
             error = 'NEXP (exponent) not a single digit. ' &
                     //'Actual value #1'
@@ -702,7 +702,7 @@
 
          end if
 
-      if ( abs(bexp) .gt. 9 ) then
+      if ( abs(bexp) > 9 ) then
 
             error = 'BEXP (exponent) not a single digit. ' &
                     //'Actual value #1'
@@ -720,7 +720,7 @@
 !
 !     NODE0 - right ascension of the ascending node, [0,360)
 !
-      if ( node0 .lt. 0.0_wp .or. node0 .ge. 360.0_wp ) then
+      if ( node0 < 0.0_wp .or. node0 >= 360.0_wp ) then
 
             error = 'NODE0 (RA acend node) expected bounds [0,360). ' &
                     //'Actual value #1'
@@ -736,7 +736,7 @@
 !
 !     OMEAGA - argument of the periapsis, [0,360)
 !
-      if ( omega .lt. 0.0_wp .or. omega .ge. 360.0_wp ) then
+      if ( omega < 0.0_wp .or. omega >= 360.0_wp ) then
 
             error = 'OMEGA (arg periap) expected bounds [0,360). ' &
                     //'Actual value #1'
@@ -751,7 +751,7 @@
 !
 !     MO - mean anomoly, [0,360)
 !
-      if ( mo .lt. 0.0_wp .or. mo .ge. 360.0_wp ) then
+      if ( mo < 0.0_wp .or. mo >= 360.0_wp ) then
 
             error = 'MO (mean anomoly) expected bounds [0,360). ' &
                     //'Actual value #1'
@@ -766,7 +766,7 @@
 !
 !     INCL - inclination, [0,180]
 !
-      if ( incl .lt. 0.0_wp .or. incl .gt. 180.0_wp ) then
+      if ( incl < 0.0_wp .or. incl > 180.0_wp ) then
 
             error = 'INCL (inclination) expected bounds [0,180). ' &
                     //'Actual value #1'
@@ -782,7 +782,7 @@
 !
 !     NO - mean motion (0,20) (Earth orbiter).
 !
-      if ( no .gt. 20.0_wp .or. no .lt. 0.0_wp ) then
+      if ( no > 20.0_wp .or. no < 0.0_wp ) then
 
             error = 'NO (mean motion) expected bounds (0,20). ' &
                     //'Actual value #1'
@@ -827,7 +827,7 @@
       begyr = (frstyr/100)*100
       year  = begyr + yr
 
-      if ( year .lt. frstyr ) then
+      if ( year < frstyr ) then
          year = year + 100
       end if
 

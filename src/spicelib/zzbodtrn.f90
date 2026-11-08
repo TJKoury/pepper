@@ -28,7 +28,7 @@
       include               'zzbodtrn.inc'
       include               'zzctr.inc'
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           code
       logical               found
       integer(ip)           usrctr    ( ctrsiz )
@@ -682,8 +682,8 @@
 !     code lists storing built-in/BODDEF name-code mappings. DEFSIZ is
 !     the current size of the lists
 !
-      character*(maxl)      defnam  ( maxe )
-      character*(maxl)      defnor  ( maxe )
+      character(maxl)       defnam  ( maxe )
+      character(maxl)       defnor  ( maxe )
       integer(ip)           defcod  ( maxe )
       integer(ip)           defsiz
 
@@ -695,7 +695,7 @@
 !
       integer(ip)           dnmlst  (          maxe )
       integer(ip)           dnmpol  ( lbpool : maxe )
-      character*(maxl)      dnmnms  (          maxe )
+      character(maxl)       dnmnms  (          maxe )
       integer(ip)           dnmidx  (          maxe )
 
 !
@@ -714,8 +714,8 @@
 !     code lists storing kernel POOL name-code mappings. KERSIZ is the
 !     current size of the lists
 !
-      character*(maxl)      kernam  ( nroom )
-      character*(maxl)      kernor  ( nroom )
+      character(maxl)       kernam  ( nroom )
+      character(maxl)       kernor  ( nroom )
       integer(ip)           kercod  ( nroom )
       integer(ip)           kersiz
 
@@ -727,7 +727,7 @@
 !
       integer(ip)           knmlst  (          nroom )
       integer(ip)           knmpol  ( lbpool : nroom )
-      character*(maxl)      knmnms  (          nroom )
+      character(maxl)       knmnms  (          nroom )
       integer(ip)           knmidx  (          nroom )
 
 !
@@ -768,8 +768,8 @@
 !
 !     Other variables.
 !
-      character*(maxl)      tmpnam
-      character*(wdsize)    wnames  ( 2 )
+      character(maxl)       tmpnam
+      character(wdsize)     wnames  ( 2 )
 
       integer(ip)           codidx
       integer(ip)           i
@@ -1143,7 +1143,7 @@
 !
          call zzhscchk ( knmlst, knmpol, knmnms, tmpnam, i )
 
-         if ( i .ne. 0 ) then
+         if ( i /= 0 ) then
             code  = kercod( knmidx( i ) )
             found = .true.
             call chkout ( 'ZZBODN2C' )
@@ -1158,7 +1158,7 @@
 !
       call zzhscchk ( dnmlst, dnmpol, dnmnms, tmpnam, i )
 
-      if ( i .ne. 0 ) then
+      if ( i /= 0 ) then
 
          code  = defcod( dnmidx( i ) )
          found = .true.
@@ -1496,7 +1496,7 @@
 !
          call zzhsichk ( kidlst, kidpol, kidids, code, i )
 
-         if ( i .ne. 0 ) then
+         if ( i /= 0 ) then
             name  = kernam(kididx(i))
             found = .true.
             call chkout ( 'ZZBODC2N' )
@@ -1515,7 +1515,7 @@
 !     If we find a match, verify that it is not masked by a kernel pool
 !     entry before returning.
 !
-      if ( i .ne. 0 ) then
+      if ( i /= 0 ) then
 
          if ( extker ) then
 
@@ -1526,7 +1526,7 @@
             call zzhscchk ( knmlst, knmpol, knmnms, &
                                             defnor(dididx(i)), j )
 
-            if ( j .ne. 0 ) then
+            if ( j /= 0 ) then
 
 !
 !              This name is defined in the kernel pool mappings. Set
@@ -1892,7 +1892,7 @@
 !     Begin by verifying that the user is not attempting to assign a
 !     blank string a code.
 !
-      if ( name .eq. ' ' ) then
+      if ( name == ' ' ) then
 
          call setmsg ( 'An attempt to assign the code, #, to ' &
          //            'a blank string was made.  Check loaded ' &
@@ -1922,7 +1922,7 @@
 !
       call zzhscchk ( dnmlst, dnmpol, dnmnms, tmpnam, i )
 
-      if ( i .ne. 0 ) then
+      if ( i /= 0 ) then
 
          index = dnmidx( i )
 
@@ -1946,7 +1946,7 @@
 !
          call zzhsichk ( didlst, didpol, didids, code, i )
 
-         if ( i .ne. 0 ) then
+         if ( i /= 0 ) then
             codidx = dididx( i )
          else
             codidx = 0
@@ -1956,7 +1956,7 @@
 !        If CODIDX matches INDEX, then we simply have to replace the
 !        entry in DEFNAM and return.
 !
-         if ( codidx .eq. index ) then
+         if ( codidx == index ) then
 
 !
 !           We altered the built-in body list. Set BODCHG to .TRUE.
@@ -1990,7 +1990,7 @@
 !        We need to add this entry to the list.  See if there
 !        is room; signal an error and return if there is not.
 !
-         if ( defsiz .ge. maxe ) then
+         if ( defsiz >= maxe ) then
 
             call setmsg ( 'There is no room available for adding ' &
             //            '''#''  to the list of name/code pairs. ' &

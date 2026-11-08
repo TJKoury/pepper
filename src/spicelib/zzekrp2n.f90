@@ -138,11 +138,11 @@
 
       stype = segdsc ( ektidx )
 
-      if ( stype .eq. 1 ) then
+      if ( stype == 1 ) then
 
          zzekrp2n  =  zzektrls ( handle, segdsc(rtidx), recptr )
 
-         if ( zzekrp2n .eq. 0 ) then
+         if ( zzekrp2n == 0 ) then
 
             call chkin  ( 'ZZEKRP2N'                              )
             call setmsg ( 'Record having pointer # not found in ' // &
@@ -156,7 +156,7 @@
          end if
 
 
-      else if ( stype .eq. 2 ) then
+      else if ( stype == 2 ) then
 
          zzekrp2n = recptr
 

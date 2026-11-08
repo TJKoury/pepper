@@ -30,13 +30,13 @@
 
       include               'zzctr.inc'
 
-      character*(*)         trmtyp
-      character*(*)         source
-      character*(*)         target
+      character(*)          trmtyp
+      character(*)          source
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       integer(ip)           npts
       real(wp)              trgepc
       real(wp)              obspos ( 3 )
@@ -816,17 +816,17 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtgid
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svscre
+      character(maxl)       svscre
       integer(ip)           svsrci
       logical               svfnd2
 
       integer(ip)           svctr3 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsi
       logical               svfnd3
 
@@ -836,7 +836,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr4 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svfrcd
 
 
@@ -905,7 +905,7 @@
 !
       call zznamfrm ( svctr4, svfref, svfrcd, fixref, frcode )
 
-      if ( frcode .eq. 0 ) then
+      if ( frcode == 0 ) then
 
          call setmsg ( 'Input frame # has no associated frame ' &
          //            'ID code.'                               )
@@ -979,7 +979,7 @@
 !
 !     If the frame is not centered on the target, reject it.
 !
-      if ( center .ne. trgid ) then
+      if ( center /= trgid ) then
 
          call setmsg ( 'Input frame # is not centered on target ' &
          //            'body #. This frame must be a body-fixed ' &

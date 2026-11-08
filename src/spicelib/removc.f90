@@ -23,8 +23,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         item
-      character*(*)         a       ( lbcell:* )
+      character(*)          item
+      character(*)          a       ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -256,7 +256,7 @@
 !
 !     Is the item in the set? If so, it needs to be removed.
 !
-      in = ( loc .gt. 0 )
+      in = ( loc > 0 )
 
       if ( in ) then
 

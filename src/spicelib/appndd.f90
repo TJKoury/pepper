@@ -256,7 +256,7 @@
 
       nwcard = cardd (cell) + 1
 
-      if (  ( nwcard )  .le.  ( sized (cell) )  ) then
+      if (  ( nwcard )  <=  ( sized (cell) )  ) then
 
          cell (nwcard) = item
          call scardd ( nwcard, cell )

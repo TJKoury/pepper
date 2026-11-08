@@ -174,14 +174,14 @@
 !-&
 
 
-      if (  ( body .ge. 100 ) .and. ( body .le. 999 )  ) then
+      if (  ( body >= 100 ) .and. ( body <= 999 )  ) then
 !
 !        BODY is a "traditional" NAIF planet or natural satellite
 !        ID code.
 !
          zzbodbry = body / 100
 
-      else if (  ( body .ge. 10000 ) .and. ( body .le. 99999 )  ) then
+      else if (  ( body >= 10000 ) .and. ( body <= 99999 )  ) then
 !
 !        BODY is an "extended" NAIF natural satellite ID code.
 !

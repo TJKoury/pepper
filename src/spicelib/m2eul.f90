@@ -717,9 +717,9 @@
 !     Make sure the axis numbers are all right:  They must belong to
 !     the set {1, 2, 3}...
 !
-      if (      (  ( axis3 .lt. 1 ) .or. ( axis3 .gt. 3 )  ) &
-           .or. (  ( axis2 .lt. 1 ) .or. ( axis2 .gt. 3 )  ) &
-           .or. (  ( axis1 .lt. 1 ) .or. ( axis1 .gt. 3 )  )   ) then
+      if (      (  ( axis3 < 1 ) .or. ( axis3 > 3 )  ) &
+           .or. (  ( axis2 < 1 ) .or. ( axis2 > 3 )  ) &
+           .or. (  ( axis1 < 1 ) .or. ( axis1 > 3 )  )   ) then
 
          call setmsg ( 'Axis numbers are #,  #,  #. ' )
          call errint ( '#',  axis3                    )
@@ -732,7 +732,7 @@
 !
 !     ...and the second axis number must differ from its neighbors.
 !
-      else if ( ( axis3 .eq. axis2 ) .or. ( axis1 .eq. axis2 ) ) then
+      else if ( ( axis3 == axis2 ) .or. ( axis1 == axis2 ) ) then
 
          call setmsg ( 'Middle axis matches neighbor: # # #.' )
          call errint ( '#',  axis3                            )
@@ -813,7 +813,7 @@
 !
 
 
-      if ( axis3 .eq. axis1 ) then
+      if ( axis3 == axis1 ) then
 
 !
 !        The axis order is a-b-a.  We're going to find a matrix CHANGE
@@ -840,7 +840,7 @@
 !        is just a little mapping that takes 1 to 2, 2 to 3, and 3 to
 !        1.
 !
-         if ( axis2 .eq. next(axis3) ) then
+         if ( axis2 == next(axis3) ) then
             sign =  1.0_wp
          else
             sign = -1.0_wp
@@ -914,11 +914,11 @@
 !        simultaneously because of round-off:
 !
 !
-         degen =      (        (       tmprot(1,3)    .eq. 0.0_wp  ) &
-                         .and. (       tmprot(2,3)    .eq. 0.0_wp  )  ) &
-                 .or. (        (       tmprot(3,1)    .eq. 0.0_wp  ) &
-                         .and. (       tmprot(3,2)    .eq. 0.0_wp  )  ) &
-                 .or. (           abs( tmprot(3,3) )  .eq. 1.0_wp     )
+         degen =      (        (       tmprot(1,3)    == 0.0_wp  ) &
+                         .and. (       tmprot(2,3)    == 0.0_wp  )  ) &
+                 .or. (        (       tmprot(3,1)    == 0.0_wp  ) &
+                         .and. (       tmprot(3,2)    == 0.0_wp  )  ) &
+                 .or. (           abs( tmprot(3,3) )  == 1.0_wp     )
 
 
 !
@@ -975,7 +975,7 @@
 !        straightened out right now.  The variable NEXT is just a
 !        little mapping that takes 1 to 2, 2 to 3, and 3 to 1.
 !
-         if ( axis2 .eq. next(axis3) ) then
+         if ( axis2 == next(axis3) ) then
             sign =  1.0_wp
          else
             sign = -1.0_wp
@@ -1046,11 +1046,11 @@
 !        simultaneously because of round-off:
 !
 !
-         degen =      (        (       tmprot(1,1)    .eq. 0.0_wp  ) &
-                         .and. (       tmprot(1,2)    .eq. 0.0_wp  )  ) &
-                 .or. (        (       tmprot(2,3)    .eq. 0.0_wp  ) &
-                         .and. (       tmprot(3,3)    .eq. 0.0_wp  )  ) &
-                 .or. (           abs( tmprot(1,3) )  .eq. 1.0_wp     )
+         degen =      (        (       tmprot(1,1)    == 0.0_wp  ) &
+                         .and. (       tmprot(1,2)    == 0.0_wp  )  ) &
+                 .or. (        (       tmprot(2,3)    == 0.0_wp  ) &
+                         .and. (       tmprot(3,3)    == 0.0_wp  )  ) &
+                 .or. (           abs( tmprot(1,3) )  == 1.0_wp     )
 
 
 !

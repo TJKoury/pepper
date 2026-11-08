@@ -25,10 +25,10 @@
 !
 ! $ Declarations
 
-      character*(*)         templt
-      character*(*)         string
-      character*(*)         token
-      character*(*)         error
+      character(*)          templt
+      character(*)          string
+      character(*)          token
+      character(*)          error
       logical               status
 
 ! $ Brief_I/O

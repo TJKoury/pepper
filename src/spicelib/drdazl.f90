@@ -500,7 +500,7 @@
 !     The input range must be non-negative. If not, signal an error
 !     and check out.
 !
-      if ( range .lt. 0.0_wp ) then
+      if ( range < 0.0_wp ) then
 
          call setmsg ( 'Input range was #. Negative ' &
          //            'values are not allowed.'  )

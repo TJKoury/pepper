@@ -158,7 +158,7 @@
 !
 !     Local Variables
 !
-      character*(6)         versn
+      character(6)          versn
 
       integer(ip)           center
       integer(ip)           i
@@ -232,7 +232,7 @@
 !     FOUND was set to true by the FRINFO call. Compute transformation
 !     based on the frame class.
 !
-      if ( type .eq. inertl ) then
+      if ( type == inertl ) then
 
          call irfrot ( infrm, 1, rotate )
 
@@ -252,7 +252,7 @@
          end if
 
 
-      else if ( type .eq. pck ) then
+      else if ( type == pck ) then
 
          call tisbod ( 'J2000', typeid, et, tsipm  )
 
@@ -265,12 +265,12 @@
          end if
 
 
-      else if ( type .eq. ck ) then
+      else if ( type == ck ) then
 
          call ckfxfm ( typeid, et, xform, outfrm, found )
 
 
-      else if ( type .eq. tk ) then
+      else if ( type == tk ) then
 
          call tkfram  ( typeid, rotate, outfrm, found )
 
@@ -288,7 +288,7 @@
          end if
 
 
-      else if ( type .eq. dyn ) then
+      else if ( type == dyn ) then
 !
 !        Unlike the other frame classes, the dynamic frame evaluation
 !        routine ZZDYNFRM requires the input frame ID rather than the
@@ -302,7 +302,7 @@
 !        it here. If ZZDYNFRM signaled an error, FOUND will be set
 !        to .FALSE. at end of this routine.
 !
-      else if ( type .eq. swtch ) then
+      else if ( type == swtch ) then
 
          call zzswfxfm ( infrm, et, 6, xform, outfrm, found )
 

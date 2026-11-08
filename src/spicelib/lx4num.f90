@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       integer(ip)           first
       integer(ip)           last
       integer(ip)           nchar
@@ -163,7 +163,7 @@
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      if ( first .lt. 1 .or. first .gt. l ) then
+      if ( first < 1 .or. first > l ) then
          nchar = 0
          return
       end if
@@ -173,17 +173,17 @@
 !
       call lx4dec ( string, first, last, nchar )
 
-      if ( nchar .gt. 0 .and. last .lt. l ) then
+      if ( nchar > 0 .and. last < l ) then
 
          f = last + 1
          i = ichar ( string(f:f) )
 !
 !        See if we have an exponent.
 !
-         if (      i .eq. ichar('e') &
-              .or. i .eq. ichar('E') &
-              .or. i .eq. ichar('D') &
-              .or. i .eq. ichar('d') ) then
+         if (      i == ichar('e') &
+              .or. i == ichar('E') &
+              .or. i == ichar('D') &
+              .or. i == ichar('d') ) then
 !
 !           Starting after the exponent character see
 !           if we have a signed integer.
@@ -197,7 +197,7 @@
 !           the number.  Otherwise we just fall through and leave
 !           LAST and NCHAR alone.
 !
-            if ( n .gt. 0 ) then
+            if ( n > 0 ) then
 
                last  = temp
                nchar = last + 1 - first

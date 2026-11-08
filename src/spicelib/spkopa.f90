@@ -19,7 +19,7 @@
 
       implicit none
 
-      character*(*)         file
+      character(*)          file
       integer(ip)           handle
 
 ! $ Brief_I/O
@@ -303,8 +303,8 @@
 !
 !     Local variables
 !
-      character*(smwdsz)    arch
-      character*(smwdsz)    type
+      character(smwdsz)     arch
+      character(smwdsz)     type
 
 !
 !     Standard SPICE error handling.
@@ -344,7 +344,7 @@
          return
       end if
 
-      if ( arch .ne. 'DAF' .or. type .ne. 'SPK' ) then
+      if ( arch /= 'DAF' .or. type /= 'SPK' ) then
 
          call setmsg ( 'The file ''#'' was not an SPK file.  The ' &
          //            'architecture and type of the file were ' &

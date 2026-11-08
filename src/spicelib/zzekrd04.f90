@@ -213,7 +213,7 @@
       ncols  =  segdsc ( ncidx  )
       colidx =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKRD04'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -233,7 +233,7 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        The entry is non-null.
 !
@@ -245,17 +245,17 @@
 !
          call dasrdi ( handle, datptr, datptr, nelt )
 
-         if (  ( beg .lt. 1 ) .or. ( beg .gt. nelt )  )  then
+         if (  ( beg < 1 ) .or. ( beg > nelt )  )  then
 
             found  =  .false.
             return
 
-         else if (  ( end .lt. 1 ) .or. ( end .gt. nelt )  )  then
+         else if (  ( end < 1 ) .or. ( end > nelt )  )  then
 
             found  =  .false.
             return
 
-         else if ( end .lt. beg ) then
+         else if ( end < beg ) then
 
             found  =  .false.
             return
@@ -273,7 +273,7 @@
          datptr  =  datptr + beg
 
 
-         do while ( maxidx .lt. beg )
+         do while ( maxidx < beg )
 !
 !           Locate the page on which the element is continued.
 !
@@ -315,7 +315,7 @@
          remain  =  remain  -  nread
 
 
-         do while (  ( remain .gt. 0 ) .and.  ( .not. failed() )  )
+         do while (  ( remain > 0 ) .and.  ( .not. failed() )  )
 !
 !           Locate the page on which the element is continued.
 !
@@ -338,7 +338,7 @@
          found =  .not. failed()
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        The value is null.
 !
@@ -346,7 +346,7 @@
          found  =  .true.
 
 
-      else if ( datptr .eq. uninit ) then
+      else if ( datptr == uninit ) then
 !
 !        The data value is absent.  This is an error.
 !

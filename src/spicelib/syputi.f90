@@ -24,10 +24,10 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           values     (        * )
       integer(ip)           n
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       integer(ip)           tabval     ( lbcell:* )
 
@@ -241,7 +241,7 @@
 !
 !     Check to see if the number of values is a valid quantity.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
          call setmsg ( 'SYPUTI: The dimension of the values array is' // &
                        'less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
@@ -261,7 +261,7 @@
 !     Where does this symbol belong? is it already in the table?
 !
       locsym = lstlec ( name, nsym, tabsym(1) )
-      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
+      oldsym = ( locsym /= 0  .and.  tabsym(locsym) == name )
 
 !
 !     If the new symbol already exists, we need to know its dimension
@@ -283,7 +283,7 @@
 !     Can we do this without overflow?
 !
 
-      if ( nsym+newsym .gt. sizec ( tabsym ) ) then
+      if ( nsym+newsym > sizec ( tabsym ) ) then
 
          call setmsg ( 'SYPUTI: Addition of the new symbol # causes ' // &
                        'an overflow in the name table.' )
@@ -291,7 +291,7 @@
          call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-      else if ( nptr+newsym .gt. sizei ( tabptr ) ) then
+      else if ( nptr+newsym > sizei ( tabptr ) ) then
 
          call setmsg ( 'SYPUTI: Addition of the new symbol # causes ' // &
                        'an overflow in the pointer table.' )
@@ -299,7 +299,7 @@
          call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-      else if ( nval+newval .gt. sizei ( tabval ) ) then
+      else if ( nval+newval > sizei ( tabval ) ) then
 
          call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the value table.' )
@@ -317,7 +317,7 @@
 !        change the dimension. Otherwise add the new name and
 !        dimension to the name and pointer tables.
 !
-         if ( dimval .gt. 0 ) then
+         if ( dimval > 0 ) then
             call remlai ( dimval, locval, tabval(1), nval )
             call scardi ( nval, tabval )
 

@@ -244,7 +244,7 @@
       call chkin  ( 'ZZVRTPLT' )
 
 
-      if ( nv .lt. 1 ) then
+      if ( nv < 1 ) then
 
          call setmsg ( 'Vertex count NV = #; count must be positive.' &
          //            'be positive.'                                )
@@ -255,7 +255,7 @@
 
       end if
 
-      if ( np .lt. 1 ) then
+      if ( np < 1 ) then
 
          call setmsg ( 'Plate count NP = #; count must be positive.' &
          //            'be positive.'                                )
@@ -266,7 +266,7 @@
 
       end if
 
-      if ( cellsz .lt. 3*np ) then
+      if ( cellsz < 3*np ) then
 
          call setmsg ( 'Cell array size CELLSZ = #; size must be ' &
          //            '>= 3*NP. NP is the plate count #.'         )
@@ -278,7 +278,7 @@
 
       end if
 
-      if ( maxlst .lt. (nv+3*np) ) then
+      if ( maxlst < (nv+3*np) ) then
 
          call setmsg ( 'Plate list array size MAXPLT = #; size ' &
          //            'must be >= 3*NP + NV, which is #. (NV = ' &

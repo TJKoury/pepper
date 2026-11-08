@@ -29,7 +29,7 @@
       integer(ip)           handle
       integer(ip)           segno
       integer(ip)           recno
-      character*(*)         column
+      character(*)          column
       integer(ip)           nvals
       integer(ip)           ivals  ( * )
       logical               isnull
@@ -229,7 +229,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( dtype .ne. int ) then
+      if ( dtype /= int ) then
 
          call chkin  ( 'EKRCEI'                                        )
          call setmsg ( 'Column # is of type #; EKRCEI only works '    // &
@@ -253,7 +253,7 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 1 ) then
+      if ( class == 1 ) then
 !
 !        Look up the record pointer for the target record.
 !
@@ -263,7 +263,7 @@
          nvals  =  1
 
 
-      else if ( class .eq. 4 ) then
+      else if ( class == 4 ) then
 
          call zzektrdp ( handle, segdsc(rtidx),  recno,  recptr )
 
@@ -273,7 +273,7 @@
                           1,       nvals,   ivals,   isnull,  found  )
 
 
-      else if ( class .eq. 7 ) then
+      else if ( class == 7 ) then
 !
 !        Records in class 7 columns are identified by a record number
 !        rather than a pointer.

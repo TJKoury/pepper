@@ -400,18 +400,18 @@
 !
 !     Local Variables
 !
-      character*(1)         carg
-      character*(numchr)    chrrec
-      character*(bffsiz)    bffidw
-      character*(idwlen)    filarc
-      character*(idwlen)    filtyp
-      character*(sizdlm)    ftpdlm
-      character*(sizend)    ftplft
-      character*(sizstr)    ftpmem
-      character*(sizend)    ftprgt
-      character*(1)         null
-      character*(strsiz)    strarc ( numarc )
-      character*(strsiz)    strbff ( nullid )
+      character(1)          carg
+      character(numchr)     chrrec
+      character(bffsiz)     bffidw
+      character(idwlen)     filarc
+      character(idwlen)     filtyp
+      character(sizdlm)     ftpdlm
+      character(sizend)     ftplft
+      character(sizstr)     ftpmem
+      character(sizend)     ftprgt
+      character(1)          null
+      character(strsiz)     strarc ( numarc )
+      character(strsiz)     strbff ( nullid )
 
       integer(ip)           fdrec
       integer(ip)           ftppos
@@ -522,7 +522,7 @@
 !     Get the simple consistency checks out of the way first.  Is
 !     the input ARCH value valid?
 !
-      if ( ( arch .le. 0 ) .or. ( arch .gt. numarc ) ) then
+      if ( ( arch <= 0 ) .or. ( arch > numarc ) ) then
 
          bff = 0
 
@@ -544,7 +544,7 @@
 !
 !     Check for read failure.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          bff = 0
 
@@ -571,7 +571,7 @@
 !
 !     If FILARC was not found, signal an appropriate error.
 !
-      if ( tstarc .eq. 0 ) then
+      if ( tstarc == 0 ) then
 
          bff = 0
 
@@ -588,7 +588,7 @@
 !     Otherwise we have an architecture mismatch error, if
 !     FILARC does not agree with ARCH.
 !
-      else if ( tstarc .ne. arch ) then
+      else if ( tstarc /= arch ) then
 
          bff = 0
 
@@ -639,14 +639,14 @@
 !     Check to see if we found FTPLFT.  If so extract the binary
 !     file format ID word from the file record.
 !
-      if ( ftppos .ne. 0 ) then
+      if ( ftppos /= 0 ) then
 
 !
 !        Extract BFFIDW from CHRREC.
 !
-         if ( arch .eq. daf ) then
+         if ( arch == daf ) then
             bffidw = chrrec ( dafbff : (dafbff+bffsiz-1) )
-         else if ( arch .eq. das ) then
+         else if ( arch == das ) then
             bffidw = chrrec ( dasbff : (dasbff+bffsiz-1) )
          end if
 
@@ -659,7 +659,7 @@
 !        Check to see if BFF is 0, if it is, signal an error since
 !        this indicates an unrecognized BFF.
 !
-         if ( bff .eq. 0 ) then
+         if ( bff == 0 ) then
 
             call setmsg ( 'The file ''#'' utilizes the binary file ' &
             //            'format ''#''.  This format is currently ' &
@@ -677,7 +677,7 @@
 !        See if we have a NULLID situation, if not check out and
 !        return as swe have identified the BFF.
 !
-         if ( bff .ne. nullid ) then
+         if ( bff /= nullid ) then
             call chkout ( 'ZZDDHPPF' )
             return
          end if
@@ -688,14 +688,14 @@
 !     There is no FTP string, if the file is a DAS, we have to
 !     assume it is of the native architecture.
 !
-      if ( arch .eq. das ) then
+      if ( arch == das ) then
 
          call zzplatfm ( 'FILE_FORMAT', bffidw )
          call ucase    ( bffidw,        bffidw )
 
          bff = isrchc ( bffidw, numbff, strbff )
 
-         if ( bff .eq. 0 ) then
+         if ( bff == 0 ) then
 
             call setmsg ( 'The native architecture for this ' &
             //            'platform is unknown to this version of ' &
@@ -747,17 +747,17 @@
 !
 !     where VAL is some non-zero value.
 !
-      if ( ( chrrec(     nipos:nipos     ) .eq. null ) .and. &
-           ( chrrec( (nipos+1):(nipos+1) ) .eq. null ) .and. &
-           ( chrrec( (nipos+2):(nipos+2) ) .eq. null ) .and. &
-           ( chrrec( (nipos+3):(nipos+3) ) .ne. null )       ) then
+      if ( ( chrrec(     nipos:nipos     ) == null ) .and. &
+           ( chrrec( (nipos+1):(nipos+1) ) == null ) .and. &
+           ( chrrec( (nipos+2):(nipos+2) ) == null ) .and. &
+           ( chrrec( (nipos+3):(nipos+3) ) /= null )       ) then
 
          bff = bigi3e
 
-      else if ( ( chrrec(     nipos:nipos     ) .ne. null ) .and. &
-                ( chrrec( (nipos+1):(nipos+1) ) .eq. null ) .and. &
-                ( chrrec( (nipos+2):(nipos+2) ) .eq. null ) .and. &
-                ( chrrec( (nipos+3):(nipos+3) ) .eq. null )       ) then
+      else if ( ( chrrec(     nipos:nipos     ) /= null ) .and. &
+                ( chrrec( (nipos+1):(nipos+1) ) == null ) .and. &
+                ( chrrec( (nipos+2):(nipos+2) ) == null ) .and. &
+                ( chrrec( (nipos+3):(nipos+3) ) == null )       ) then
 
 !
 !        At this point we know we are dealing with a little endian
@@ -776,7 +776,7 @@
 !
 !        Check for read failure.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             bff = 0
 
@@ -794,14 +794,14 @@
 !        Now examine the NSUM DP in this record to determine the
 !        architecture.
 !
-         if ( ( chrrec(     nsmpos:nsmpos )     .eq. null ) .and. &
-              ( chrrec( (nsmpos+1):(nsmpos+1) ) .eq. null ) .and. &
-              ( chrrec( (nsmpos+2):(nsmpos+2) ) .eq. null ) .and. &
-              ( chrrec( (nsmpos+3):(nsmpos+3) ) .eq. null ) .and. &
-              ( chrrec( (nsmpos+4):(nsmpos+4) ) .eq. null ) .and. &
-              ( chrrec( (nsmpos+5):(nsmpos+5) ) .eq. null ) .and. &
-              ( chrrec( (nsmpos+6):(nsmpos+6) ) .eq. null ) .and. &
-              ( chrrec( (nsmpos+7):(nsmpos+7) ) .eq. null )       ) then
+         if ( ( chrrec(     nsmpos:nsmpos )     == null ) .and. &
+              ( chrrec( (nsmpos+1):(nsmpos+1) ) == null ) .and. &
+              ( chrrec( (nsmpos+2):(nsmpos+2) ) == null ) .and. &
+              ( chrrec( (nsmpos+3):(nsmpos+3) ) == null ) .and. &
+              ( chrrec( (nsmpos+4):(nsmpos+4) ) == null ) .and. &
+              ( chrrec( (nsmpos+5):(nsmpos+5) ) == null ) .and. &
+              ( chrrec( (nsmpos+6):(nsmpos+6) ) == null ) .and. &
+              ( chrrec( (nsmpos+7):(nsmpos+7) ) == null )       ) then
 
 !
 !           In this case we have an empty DAF, and can not distinguish
@@ -818,10 +818,10 @@
             call chkout ( 'ZZDDHPPF'                                )
             return
 
-         else if ( ( chrrec(     nsmpos:nsmpos     ) .eq. null ) .and. &
-                   ( chrrec( (nsmpos+1):(nsmpos+1) ) .eq. null ) .and. &
-                   ( chrrec( (nsmpos+2):(nsmpos+2) ) .eq. null ) .and. &
-                   ( chrrec( (nsmpos+3):(nsmpos+3) ) .eq. null )  ) then
+         else if ( ( chrrec(     nsmpos:nsmpos     ) == null ) .and. &
+                   ( chrrec( (nsmpos+1):(nsmpos+1) ) == null ) .and. &
+                   ( chrrec( (nsmpos+2):(nsmpos+2) ) == null ) .and. &
+                   ( chrrec( (nsmpos+3):(nsmpos+3) ) == null )  ) then
 
 !
 !           In this case the file is little endian IEEE.  Set BFF.

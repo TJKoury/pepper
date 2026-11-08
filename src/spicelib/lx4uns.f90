@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       integer(ip)           first
       integer(ip)           last
       integer(ip)           nchar
@@ -213,7 +213,7 @@
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      if ( first .lt. 1 .or. first .gt. l ) then
+      if ( first < 1 .or. first > l ) then
          nchar = 0
          return
       end if

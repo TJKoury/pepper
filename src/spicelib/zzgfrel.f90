@@ -53,7 +53,7 @@
       external              udcond
       external              udfunc
       external              udqref
-      character*(*)         relate
+      character(*)          relate
       real(wp)              refval
       real(wp)              tol
       real(wp)              adjust
@@ -65,8 +65,8 @@
       external              udrepi
       external              udrepu
       external              udrepf
-      character*(*)         rptpre ( * )
-      character*(*)         rptsuf ( * )
+      character(*)          rptpre ( * )
+      character(*)          rptsuf ( * )
       logical               udbail
       logical               bail
       external              udbail
@@ -564,9 +564,9 @@
 !     Local variables
 !
 
-      character*(maxcln)    cnames ( nc )
-      character*(ctxlen)    contxt
-      character*(maxcln)    locrel
+      character(maxcln)     cnames ( nc )
+      character(ctxlen)     contxt
+      character(maxcln)     locrel
 
       real(wp)              addl
       real(wp)              addr
@@ -627,7 +627,7 @@
 !
 !     Make sure we have enough workspace windows.
 !
-      if ( nw .lt. nwreq ) then
+      if ( nw < nwreq ) then
 
          call setmsg ( 'The number of workspace windows (#) is less ' &
          //            'than the minimum #.'                         )
@@ -642,7 +642,7 @@
 !
 !     Make sure the workspace windows can contain at least one interval.
 !
-      if ( mw .lt. 2 ) then
+      if ( mw < 2 ) then
 
          call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2.'                               )
@@ -656,7 +656,7 @@
 !
 !     Check the result window size.
 !
-      if ( sized(result) .lt. 2 ) then
+      if ( sized(result) < 2 ) then
 
          call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2.'                             )
@@ -675,7 +675,7 @@
 
       qcnum = isrchc ( locrel, nc, cnames )
 
-      if ( qcnum .eq. 0 ) then
+      if ( qcnum == 0 ) then
 
         call setmsg ('The comparison operator, # is not '            // &
                      'recognized.  Supported quantities are: '       // &
@@ -696,7 +696,7 @@
 !
 !     Confirm ADJUST is non-negative.
 !
-      if ( adjust .lt. 0.0_wp ) then
+      if ( adjust < 0.0_wp ) then
 
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
@@ -710,9 +710,9 @@
 !    Confirm ADJUST equals zero unless LOCREL (RELATE) has value
 !    "ABSMAX" or "ABSMIN."
 !
-      if(  (locrel .ne. 'ABSMIN')  .and. (locrel .ne. 'ABSMAX' ) ) then
+      if(  (locrel /= 'ABSMIN')  .and. (locrel /= 'ABSMAX' ) ) then
 
-         if ( adjust .ne. 0.0_wp ) then
+         if ( adjust /= 0.0_wp ) then
 
             call setmsg ( 'ADJUST should have value zero for all '  // &
                           'comparison operators except ABSMAX and ' // &
@@ -729,7 +729,7 @@
 !     If the confinement window is empty, the result window must
 !     be empty as well.  In this case, there's not much to do.
 !
-      if ( cardd(cnfine) .eq. 0 ) then
+      if ( cardd(cnfine) == 0 ) then
 
          call scardd ( 0, result )
          call chkout ('ZZGFREL' )
@@ -763,7 +763,7 @@
 !     window. The expansion amount is ADDWIN. For other cases the
 !     expansion amount is set to zero.
 !
-      if ( relate .eq.  '=' ) then
+      if ( relate ==  '=' ) then
 
          addl = addwin
          addr = addwin
@@ -873,7 +873,7 @@
 !     quantity, there is at most one time within each of the intervals
 !     that the desired value is achieved.
 !
-      if ( locrel .eq. 'LOCMIN' ) then
+      if ( locrel == 'LOCMIN' ) then
 !
 !        We are interested in only interior minima of the quantity.
 !        These occur at right endpoints of the intervals in TEMPW
@@ -889,7 +889,7 @@
          return
 
 
-      else if ( locrel .eq. 'LOCMAX' ) then
+      else if ( locrel == 'LOCMAX' ) then
 !
 !        We are interested in only interior maxima of the quantity.
 !        These occur at right endpoints of the intervals in TEMPW
@@ -908,7 +908,7 @@
 !     We will need the intervals when the quantity of interest is
 !     increasing in value.
 !
-      if ( ( locrel .eq. 'ABSMIN') .or. ( locrel .eq. 'ABSMAX') ) then
+      if ( ( locrel == 'ABSMIN') .or. ( locrel == 'ABSMAX') ) then
 !
 !        We need an absolute max or min over the schedule CNFINE.
 !        But we have decreasing values in WORK(B,DECRES).
@@ -948,11 +948,11 @@
 !
          do case = 1, 2
 
-            if ( locrel .eq. 'ABSMIN' ) then
+            if ( locrel == 'ABSMIN' ) then
 
                want  = minat
 
-            else if ( locrel .eq. 'ABSMAX' ) then
+            else if ( locrel == 'ABSMAX' ) then
 
                want  = maxat
 
@@ -989,10 +989,10 @@
 !              Check to see if current VALUE is more extreme than
 !              EXTREM.
 !
-               if ( locrel .eq. 'ABSMIN' ) then
+               if ( locrel == 'ABSMIN' ) then
 
-                  if (       ( adjust .eq. 0.0_wp  ) &
-                       .and. ( value  .le. extrem )  ) then
+                  if (       ( adjust == 0.0_wp  ) &
+                       .and. ( value  <= extrem )  ) then
 !
 !                    Let's save the epoch in case it's that of the
 !                    absolute min. Add this endpoint as a singleton
@@ -1013,8 +1013,8 @@
 
                else
 
-                  if (       ( adjust .eq. 0.0_wp  ) &
-                       .and. ( value  .ge. extrem )  ) then
+                  if (       ( adjust == 0.0_wp  ) &
+                       .and. ( value  >= extrem )  ) then
 !
 !                    Let's save the epoch in case it's that of the
 !                    absolute max. Add this endpoint as a singleton
@@ -1052,7 +1052,7 @@
 !
 !        If the adjustment is zero, we're done.
 !
-         if ( adjust .eq. 0.0_wp ) then
+         if ( adjust == 0.0_wp ) then
 
             call chkout (  'ZZGFREL' )
             return
@@ -1064,7 +1064,7 @@
 !        we need to find the epochs when the extreme value is achieved,
 !        allowing for adjustment.
 !
-         if ( locrel  .eq. 'ABSMIN' ) then
+         if ( locrel  == 'ABSMIN' ) then
 
             refer2 = extrem + adjust
 
@@ -1181,7 +1181,7 @@
 !     over which the function of interest is less than the reference
 !     value. We can use this window to get whatever was requested.
 !
-      if ( ( locrel .eq. '<' ) .or. ( locrel .eq. 'ABSMIN' ) ) then
+      if ( ( locrel == '<' ) .or. ( locrel == 'ABSMIN' ) ) then
 !
 !        We simply need to restrict our result to the original
 !        confinement schedule. Note that the ABSMIN search with
@@ -1192,7 +1192,7 @@
          call copyd  ( work(b,tempw),           result        )
 
 
-      else if ( ( locrel .eq. '>' ) .or. ( locrel .eq. 'ABSMAX' ) ) then
+      else if ( ( locrel == '>' ) .or. ( locrel == 'ABSMAX' ) ) then
 !
 !        Subtract from the confinement window the window where the
 !        quantity is less than the reference value: the remainder is

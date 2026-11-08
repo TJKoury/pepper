@@ -28,16 +28,16 @@
       include 'ektnamsz.inc'
       include 'ektype.inc'
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           n
       integer(ip)           xbegs  ( * )
       integer(ip)           xends  ( * )
-      character*(*)         xtypes ( * )
-      character*(*)         xclass ( * )
-      character*(*)         tabs   ( * )
-      character*(*)         cols   ( * )
+      character(*)          xtypes ( * )
+      character(*)          xclass ( * )
+      character(*)          tabs   ( * )
+      character(*)          cols   ( * )
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -580,11 +580,11 @@
 !
 !     Local variables
 !
-      character*(tnamsz)    aka
-      character*(short)     chrtyp ( ntypes )
-      character*(cnamsz)    column
-      character*(maxcln)    eqryc
-      character*(tnamsz)    qtab
+      character(tnamsz)     aka
+      character(short)      chrtyp ( ntypes )
+      character(cnamsz)     column
+      character(maxcln)     eqryc
+      character(tnamsz)     qtab
 
       real(wp)              eqryd  ( maxqnm )
 

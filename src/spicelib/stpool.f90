@@ -21,10 +21,10 @@
 
       implicit none
 
-      character*(*)         item
+      character(*)          item
       integer(ip)           nth
-      character*(*)         contin
-      character*(*)         nthstr
+      character(*)          contin
+      character(*)          nthstr
       integer(ip)           size
       logical               found
 
@@ -329,7 +329,7 @@
       integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      character*(lnsize)    part
+      character(lnsize)     part
 
 
       integer(ip)           cfirst
@@ -351,7 +351,7 @@
          return
       end if
 
-      if ( nth .lt. 1 ) then
+      if ( nth < 1 ) then
          found  = .false.
          nthstr = ' '
          size   = 0
@@ -373,11 +373,11 @@
       comp  = 1
       found = .false.
 
-      do while ( strno .lt. nth )
+      do while ( strno < nth )
 
          call gcpool ( item, comp, 1, n, part, gotit )
 
-         gotit = n .gt. 0
+         gotit = n > 0
 
          if ( .not. gotit ) then
             nthstr = ' '
@@ -390,9 +390,9 @@
          clast  = rtrim(part)
          cfirst = clast - csize + 1
 
-         if ( cfirst .lt. 0 ) then
+         if ( cfirst < 0 ) then
             strno = strno + 1
-         else if ( part(cfirst:clast) .ne. contin ) then
+         else if ( part(cfirst:clast) /= contin ) then
             strno = strno + 1
          end if
 
@@ -414,7 +414,7 @@
 
          call gcpool ( item, comp, 1, n, part, more )
 
-         more = more .and. n .gt. 0
+         more = more .and. n > 0
 
          if ( more ) then
 
@@ -423,26 +423,26 @@
             clast  = rtrim(part)
             cfirst = clast - csize + 1
 
-            if ( cfirst .lt. 0 ) then
+            if ( cfirst < 0 ) then
 
-               if ( putat .le. room ) then
+               if ( putat <= room ) then
                   nthstr(putat:) = part(1:clast)
                end if
 
                putat          = putat + clast
                more           = .false.
 
-            else if ( part(cfirst:clast) .ne. contin ) then
+            else if ( part(cfirst:clast) /= contin ) then
 
-               if ( putat .le. room ) then
+               if ( putat <= room ) then
                   nthstr(putat:) = part(1:clast)
                end if
                putat          = putat + clast
                more           = .false.
 
-            else if ( cfirst .gt. 1 ) then
+            else if ( cfirst > 1 ) then
 
-               if ( putat .le. room ) then
+               if ( putat <= room ) then
                   nthstr(putat:) = part(1:cfirst-1)
                end if
                putat          = putat + cfirst - 1

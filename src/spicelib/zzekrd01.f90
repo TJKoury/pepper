@@ -149,7 +149,7 @@
       ncols  =  segdsc ( ncidx  )
       colidx =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -175,7 +175,7 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        Just read the value.
 !
@@ -183,15 +183,15 @@
          isnull  =  .false.
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        The value is null.
 !
          isnull =  .true.
 
 
-      else if (       ( datptr .eq. uninit ) &
-                 .or. ( datptr .eq. noback )  )  then
+      else if (       ( datptr == uninit ) &
+                 .or. ( datptr == noback )  )  then
 !
 !        The data value is absent.  This is an error.
 !

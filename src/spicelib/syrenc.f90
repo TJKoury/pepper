@@ -22,11 +22,11 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         old
-      character*(*)         new
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          old
+      character(*)          new
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
-      character*(*)         tabval     ( lbcell:* )
+      character(*)          tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -232,7 +232,7 @@
 !     An overflow is simply not possible here. The only thing that can
 !     go wrong is that the old symbol does not exist.
 !
-      if ( oldloc .eq. 0 ) then
+      if ( oldloc == 0 ) then
 
          call setmsg ( 'SYRENC: The symbol # is not in the symbol ' // &
                        'table.' )
@@ -242,7 +242,7 @@
 !
 !     Are these the same symbol?
 !
-      else if ( new .ne. old ) then
+      else if ( new /= old ) then
 
 !
 !        If the new symbol already exists, delete it.
@@ -271,7 +271,7 @@
          call swapac ( 1, oldloc, 0, newloc, tabsym(1) )
          call swapai ( 1, oldloc, 0, newloc, tabptr(1) )
 
-         if ( oldloc .lt. newloc ) then
+         if ( oldloc < newloc ) then
             newloc = newloc - 1
          end if
 

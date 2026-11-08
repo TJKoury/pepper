@@ -231,7 +231,7 @@
 !
       totkey  =  page ( trnkey )
 
-      if (  ( lkey .lt. 1 )  .or.  ( lkey .gt. totkey )  ) then
+      if (  ( lkey < 1 )  .or.  ( lkey > totkey )  ) then
 
          call chkin  ( 'ZZEKTRPI'                                      )
          call setmsg ( 'Key = #; valid range = 1:#. Tree = #, file = #')
@@ -251,7 +251,7 @@
 !
       prev   =  lstlei (  lkey,  page(trnkr),  page(trkeyr+1)  )
 
-      if ( prev .gt. 0 ) then
+      if ( prev > 0 ) then
          prvkey =  page(trkeyr+prev)
       else
          prvkey =  0
@@ -261,7 +261,7 @@
 !     If we were lucky enough to get an exact match, we can quit now.
 !     The root has no parent so the output values remain set to zero.
 !
-      if ( prvkey .eq. lkey ) then
+      if ( prvkey == lkey ) then
          return
       end if
 
@@ -274,7 +274,7 @@
       pkey    =  page ( trkeyr + 1 )
       maxkey  =  page ( trnkr      )
 
-      if ( prev .gt. 0 ) then
+      if ( prev > 0 ) then
          lpidx  =  prev
          lpkey  =  page ( trkeyr + lpidx )
          lsib   =  page ( trkidr + lpidx )
@@ -284,7 +284,7 @@
          lsib   =  0
       end if
 
-      if ( prev .lt. maxkey ) then
+      if ( prev < maxkey ) then
          rpidx  =  prev + 1
          rpkey  =  page ( trkeyr + rpidx     )
          rsib   =  page ( trkidr + rpidx + 1 )
@@ -298,7 +298,7 @@
       child  =  page ( trkidr + prev + 1 )
       found  =  .false.
 
-      do while (  ( child .gt. 0 ) .and. ( .not. found )  )
+      do while (  ( child > 0 ) .and. ( .not. found )  )
 !
 !        Read in the child page.
 !
@@ -314,7 +314,7 @@
          newkey  =  lkey - offset
          prev    =  lstlei (  newkey,  page(trnkc),  page(trkeyc+1)  )
 
-         if ( prev .gt. 0 ) then
+         if ( prev > 0 ) then
             prvkey =  page(trkeyc+prev)
          else
             prvkey =  0
@@ -324,7 +324,7 @@
 !        If we were lucky enough to get an exact match, we can quit.
 !        The outputs are set.
 !
-         if ( prvkey .eq. newkey ) then
+         if ( prvkey == newkey ) then
 
             found  =  .true.
 
@@ -338,7 +338,7 @@
             pkey    =  page ( trkeyc + 1 )  +  offset
             maxkey  =  page ( trnkc      )
 
-            if ( prev .gt. 0 ) then
+            if ( prev > 0 ) then
                lpidx  =  prev
                lpkey  =  page ( trkeyc + lpidx )
                lsib   =  page ( trkidc + lpidx )
@@ -348,7 +348,7 @@
                lsib   =  0
             end if
 
-            if ( prev .lt. maxkey ) then
+            if ( prev < maxkey ) then
                rpidx  =  prev + 1
                rpkey  =  page ( trkeyc + rpidx     )
                rsib   =  page ( trkidc + rpidx + 1 )

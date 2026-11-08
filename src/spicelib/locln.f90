@@ -21,9 +21,9 @@
       implicit none
 
       integer(ip)           unit
-      character*(*)         bmark
-      character*(*)         emark
-      character*(*)         line
+      character(*)          bmark
+      character(*)          emark
+      character(*)          line
       integer(ip)           bline
       integer(ip)           eline
       logical               found
@@ -464,7 +464,7 @@
 !        for IOSTAT. Any other non-zero value indicates some other
 !        error.
 !
-         if ( iostat .gt. 0 ) then
+         if ( iostat > 0 ) then
 
             call setmsg ( 'While searching for BMARK = #, an attempt '// &
                           'to read the file named FILENAME failed.  ' // &
@@ -476,7 +476,7 @@
             call chkout ( 'LOCLN'                                     )
             return
 
-         else if ( iostat .lt. 0 ) then
+         else if ( iostat < 0 ) then
 
             eof = .true.
 
@@ -495,11 +495,11 @@
 !           compare it to the line just read, ignoring leading
 !           and trailing blanks.
 !
-            if ( bmark .eq. ' ' ) then
+            if ( bmark == ' ' ) then
                bfound = .true.
 
             else
-               if (  bmark ( ltrim(bmark): ) .eq. line  ) then
+               if (  bmark ( ltrim(bmark): ) == line  ) then
                   bfound = .true.
                end if
 
@@ -525,7 +525,7 @@
 !        for IOSTAT. Any other non-zero value indicates some other
 !        error.
 !
-         if ( iostat .gt. 0 ) then
+         if ( iostat > 0 ) then
 
             call setmsg ( 'While searching for EMARK = #, an attempt '// &
                           'to read the file named FILENAME failed.  ' // &
@@ -537,14 +537,14 @@
             call chkout ( 'LOCLN'                                     )
             return
 
-         else if ( iostat .lt. 0 ) then
+         else if ( iostat < 0 ) then
 
             eof = .true.
 !
 !           By convention, if EMARK is blank, it matches the
 !           last line in the file.
 !
-            if ( emark .eq. ' ' ) then
+            if ( emark == ' ' ) then
                efound = .true.
             end if
 
@@ -557,8 +557,8 @@
 
             call ljust ( line, line )
 
-            if ( emark .ne. ' ' ) then
-               if ( emark ( ltrim(emark): ) .eq. line  ) then
+            if ( emark /= ' ' ) then
+               if ( emark ( ltrim(emark): ) == line  ) then
                   efound = .true.
                end if
             end if

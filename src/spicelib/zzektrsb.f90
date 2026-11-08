@@ -165,7 +165,7 @@
 !     Set the base addresses for the child pointers and keys,
 !     based on whether the parent is the root.
 !
-      if ( parent .eq. tree ) then
+      if ( parent == tree ) then
          keybas = trkeyr
          kidbas = trkidr
          nkbas  = trnkr
@@ -181,7 +181,7 @@
 !     That offset is the value of the parent key preceding each node,
 !     plus the parent's offset.
 !
-      if ( lpidx .gt. 1 ) then
+      if ( lpidx > 1 ) then
 !
 !        The left parent key has a predecessor.  This predecessor is
 !        the immediate predecessor of the left sibling node.
@@ -206,7 +206,7 @@
          lkey    =  lkey + loffst
 
 
-      else if ( lpidx .eq. 1 ) then
+      else if ( lpidx == 1 ) then
 !
 !        The left parent key is the first key.  The left sibling has
 !        no predecessor.
@@ -235,7 +235,7 @@
 !     LKEY is set.  It's time to produce an absolute key for the
 !     right sibling.
 !
-      if ( rpidx .gt. 0 ) then
+      if ( rpidx > 0 ) then
 !
 !        The right parent key exists.  This key is the
 !        immediate predecessor of the right sibling node.

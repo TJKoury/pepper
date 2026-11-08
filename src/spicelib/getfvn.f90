@@ -29,10 +29,10 @@
 
       include              'zzctr.inc'
 
-      character*(*)         inst
+      character(*)          inst
       integer(ip)           room
-      character*(*)         shape
-      character*(*)         frame
+      character(*)          shape
+      character(*)          frame
       real(wp)              bsight ( 3    )
       integer(ip)           n
       real(wp)              bounds ( 3, * )
@@ -679,7 +679,7 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svinst
+      character(maxl)       svinst
       integer(ip)           svinid
       logical               svfnd1
 

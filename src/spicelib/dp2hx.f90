@@ -26,7 +26,7 @@
 
 
       real(wp)              number
-      character*(*)         hxstr
+      character(*)          hxstr
       integer(ip)           hxssiz
 
 ! $ Brief_I/O
@@ -315,7 +315,7 @@
 !
 !     Local Parameters
 !
-      character*(1)         expchr
+      character(1)          expchr
       parameter           ( expchr = '^')
 
       real(wp)              base
@@ -351,9 +351,9 @@
 !
 !     Local variables
 !
-      character*(1)         digits(0:maxdig-1)
-      character*(strlen)    expstr
-      character*(strlen)    tmpstr
+      character(1)          digits(0:maxdig-1)
+      character(strlen)     expstr
+      character(strlen)     tmpstr
 
       real(wp)              remndr
       real(wp)              tmpnum
@@ -395,11 +395,11 @@
 !
 !     Set the appropriate logical flag for the sign of the input number.
 !
-      if ( tmpnum .lt. 0.0_wp ) then
+      if ( tmpnum < 0.0_wp ) then
 
          negtiv = .true.
 
-      else if ( tmpnum .gt. 0.0_wp ) then
+      else if ( tmpnum > 0.0_wp ) then
 
          postiv = .true.
 
@@ -421,11 +421,11 @@
       intexp = 0
       if ( negtiv ) then
 
-         if ( tmpnum .gt. -1.0_wp ) then
+         if ( tmpnum > -1.0_wp ) then
 !
 !           ABS(TMPNUM) .LT. 1.0
 !
-            do while ( factr1 * tmpnum .gt. -1.0_wp )
+            do while ( factr1 * tmpnum > -1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -434,7 +434,7 @@
 
             end do
 
-            do while ( factr2 * tmpnum .gt. -1.0_wp )
+            do while ( factr2 * tmpnum > -1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -443,7 +443,7 @@
 
             end do
 
-            do while ( ( base * tmpnum ) .gt. -1.0_wp )
+            do while ( ( base * tmpnum ) > -1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -458,7 +458,7 @@
 !
 !           ABS(TMPNUM) .GE. 1.0
 !
-            do while ( invfc1 * tmpnum .le. -1.0_wp )
+            do while ( invfc1 * tmpnum <= -1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -467,7 +467,7 @@
 
             end do
 
-            do while ( invfc2 * tmpnum .le. -1.0_wp )
+            do while ( invfc2 * tmpnum <= -1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -476,7 +476,7 @@
 
             end do
 
-            do while ( tmpnum .le. -1.0_wp )
+            do while ( tmpnum <= -1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -491,11 +491,11 @@
 
       else if ( postiv ) then
 
-         if ( tmpnum .lt. 1.0_wp ) then
+         if ( tmpnum < 1.0_wp ) then
 !
 !           ABS(TMPNUM) .LT. 1.0
 !
-            do while ( factr1 * tmpnum .lt. 1.0_wp )
+            do while ( factr1 * tmpnum < 1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -504,7 +504,7 @@
 
             end do
 
-            do while ( factr2 * tmpnum .lt. 1.0_wp )
+            do while ( factr2 * tmpnum < 1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -513,7 +513,7 @@
 
             end do
 
-            do while ( ( base * tmpnum ) .lt. 1.0_wp )
+            do while ( ( base * tmpnum ) < 1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -528,7 +528,7 @@
 !
 !           ABS(TMPNUM) .GE. 1.0
 !
-            do while ( invfc1 * tmpnum .ge. 1.0_wp )
+            do while ( invfc1 * tmpnum >= 1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -537,7 +537,7 @@
 
             end do
 
-            do while ( invfc2 * tmpnum .ge. 1.0_wp )
+            do while ( invfc2 * tmpnum >= 1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -546,7 +546,7 @@
 
             end do
 
-            do while ( tmpnum .ge. 1.0_wp )
+            do while ( tmpnum >= 1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -584,7 +584,7 @@
 !        This stopping test works because the base is a power of
 !        2 and the mantissa is composed of a sum of powers of 2.
 !
-         do while ( remndr .ne. 0.0_wp )
+         do while ( remndr /= 0.0_wp )
 !
 !           -1 < REMNDR <= -1/BASE
 !
@@ -619,7 +619,7 @@
 !        This stopping test works because the base is a power of
 !        2 and the mantissa is composed of a sum of powers of 2.
 !
-         do while ( remndr .ne. 0.0_wp )
+         do while ( remndr /= 0.0_wp )
 !
 !           1/BASE <= REMNDR < 1
 !

@@ -294,15 +294,15 @@
 !     By the time we have more than 100 data types, we should be
 !     allowed to use longer variable names.
 !
-      if ( type .eq. 01 ) then
+      if ( type == 01 ) then
          call spkr01 ( handle, descr, et, record         )
          call spke01 (                et, record, state  )
 
-      else if ( type .eq. 02 ) then
+      else if ( type == 02 ) then
          call spkr02 ( handle, descr, et, record         )
          call spke02 (                et, record, state  )
 
-      else if ( type .eq. 03 ) then
+      else if ( type == 03 ) then
          call spkr03 ( handle, descr, et, record         )
          call spke03 (                et, record, state  )
 
@@ -314,31 +314,31 @@
 !         CALL SPKR04 ( HANDLE, DESCR, ET, RECORD         )
 !         CALL SPKE04 (                ET, RECORD, STATE  )
 
-      else if ( type .eq. 05 ) then
+      else if ( type == 05 ) then
          call spkr05 ( handle, descr, et, record         )
          call spke05 (                et, record, state  )
 
-      else if ( type .eq. 08 ) then
+      else if ( type == 08 ) then
          call spkr08 ( handle, descr, et, record         )
          call spke08 (                et, record, state  )
 
-      else if ( type .eq. 09 ) then
+      else if ( type == 09 ) then
          call spkr09 ( handle, descr, et, record         )
          call spke09 (                et, record, state  )
 
-      else if ( type .eq. 10 ) then
+      else if ( type == 10 ) then
          call spkr10 ( handle, descr, et, record         )
          call spke10 (                et, record, state  )
 
-      else if ( type .eq. 12 ) then
+      else if ( type == 12 ) then
          call spkr12 ( handle, descr, et, record         )
          call spke12 (                et, record, state  )
 
-      else if ( type .eq. 13 ) then
+      else if ( type == 13 ) then
          call spkr13 ( handle, descr, et, record         )
          call spke13 (                et, record, state  )
 
-      else if ( type .eq. 14 ) then
+      else if ( type == 14 ) then
 !
 !        Fetch the number of Chebyshev coefficients, compute the record
 !        size needed, and signal an error if there is not enough storage
@@ -354,7 +354,7 @@
 
          recsiz = nstate * int(record(1)) + 3
 
-         if ( recsiz .gt. maxrec ) then
+         if ( recsiz > maxrec ) then
 
             call setmsg ( 'Storage for # double precision numbers' &
             //            ' is needed for an SPK data record and' &
@@ -373,27 +373,27 @@
          call spkr14 ( handle, descr, et, record         )
          call spke14 (                et, record, state  )
 
-      else if ( type .eq. 15 ) then
+      else if ( type == 15 ) then
          call spkr15 ( handle, descr, et, record         )
          call spke15 (                et, record, state  )
 
-      else if ( type .eq. 17 ) then
+      else if ( type == 17 ) then
          call spkr17 ( handle, descr, et, record         )
          call spke17 (                et, record, state  )
 
-      else if ( type .eq. 18 ) then
+      else if ( type == 18 ) then
          call spkr18 ( handle, descr, et, record         )
          call spke18 (                et, record, state  )
 
-      else if ( type .eq. 19) then
+      else if ( type == 19) then
          call spkr19 ( handle, descr, et, record         )
          call spke19 (                et, record, state  )
 
-      else if ( type .eq. 20) then
+      else if ( type == 20) then
          call spkr20 ( handle, descr, et, record         )
          call spke20 (                et, record, state  )
 
-      else if ( type .eq. 21) then
+      else if ( type == 21) then
          call spkr21 ( handle, descr, et, record         )
          call spke21 (                et, record, state  )
 

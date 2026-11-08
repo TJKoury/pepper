@@ -157,7 +157,7 @@
 !     First check to see if NUT is 0.  If so, just return, as there
 !     are no rows to remove.
 !
-      if ( nut .eq. 0 ) then
+      if ( nut == 0 ) then
          return
       end if
 
@@ -165,7 +165,7 @@
 !     Check to see if we found the UINDEX in the unit table.
 !     If not, use discovery check-in, signal an error and return.
 !
-      if ( ( uindex .gt. nut ) .or. ( uindex .lt. 1 ) ) then
+      if ( ( uindex > nut ) .or. ( uindex < 1 ) ) then
 
          call chkin  ( 'ZZDDHRMU'                                     )
          call setmsg ( 'Attempt to remove row # from the unit table ' &
@@ -185,7 +185,7 @@
 !     mark it as zero cost and reserve the unit.  We know this
 !     is the case when NFT is greater than or equal to NUT.
 !
-      if ( nft .ge. nut ) then
+      if ( nft >= nut ) then
 
 !
 !        Zero the cost, clear the handle, and unlock the unit.

@@ -22,7 +22,7 @@
       integer(ip)           handle
       integer(ip)           nd
       integer(ip)           ni
-      character*(*)         ifname
+      character(*)          ifname
       integer(ip)           fward
       integer(ip)           bward
       integer(ip)           free
@@ -223,7 +223,7 @@
 !
 !     Local variables
 !
-      character*(idwlen)    idword
+      character(idwlen)     idword
 
       logical               found
 

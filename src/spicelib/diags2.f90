@@ -357,7 +357,7 @@
 !     eigenvector determination is simplified by ruling out this
 !     case.
 
-      if  ( symmat(1,2) .eq. 0.0_wp ) then
+      if  ( symmat(1,2) == 0.0_wp ) then
 
          call moved  ( ident,  4, rotate )
          call moved  ( symmat, 4, diag   )
@@ -460,7 +460,7 @@
 !        of x = '1'.
 !
 
-      if (  dabs( diag(1,1) - a ) .ge. dabs( diag(1,1) - c )  ) then
+      if (  dabs( diag(1,1) - a ) >= dabs( diag(1,1) - c )  ) then
 !
 !        In this case, the second eigenvector component EIGVEC(2)
 !        should be larger than |B|; we explain why in detail below.

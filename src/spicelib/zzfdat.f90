@@ -37,7 +37,7 @@
 
       integer(ip)           ncount
       integer(ip)           maxbfr
-      character*(*)         name   (          * )
+      character(*)          name   (          * )
       integer(ip)           idcode (          * )
       integer(ip)           center (          * )
       integer(ip)           type   (          * )
@@ -45,7 +45,7 @@
       integer(ip)           centrd (          * )
       integer(ip)           bnmlst (          * )
       integer(ip)           bnmpol ( lbpool : * )
-      character*(*)         bnmnms (          * )
+      character(*)          bnmnms (          * )
       integer(ip)           bnmidx (          * )
       integer(ip)           bidlst (          * )
       integer(ip)           bidpol ( lbpool : * )
@@ -409,7 +409,7 @@
 !
 !     Perform the consistency checks first.
 !
-      if ( ncount .ne. nnames ) then
+      if ( ncount /= nnames ) then
          call chkin ( 'ZZFDAT' )
          call setmsg( 'There is an inconsistency between the ' &
          //           'version of the routine calling ZZFDAT and ' &
@@ -422,7 +422,7 @@
          return
       end if
 
-      if ( maxbfr .lt. nnames ) then
+      if ( maxbfr < nnames ) then
          call chkin ( 'ZZFDAT' )
          call setmsg( 'There is an inconsistency between the ' &
          //           'version of the routine calling ZZFDAT and ' &

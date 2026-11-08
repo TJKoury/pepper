@@ -231,7 +231,7 @@
 !
 !     Make sure that this really is a type 17 data segment.
 !
-      if (type .ne. 17) then
+      if (type /= 17) then
 
          call setmsg ('You are attempting to locate type 17 ' // &
                       'data in a type # data segment.')
@@ -246,7 +246,7 @@
 !     Since it doesn't cost much we make sure that the segment has
 !     the correct amount of data.
 !
-      if ( end - begin .ne. diff ) then
+      if ( end - begin /= diff ) then
 
          call setmsg ( 'A type 17 segment should contain exactly ' &
          //            '# double precision values.  The segment ' &

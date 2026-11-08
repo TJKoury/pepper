@@ -272,8 +272,8 @@
 !
 !     Local variables
 !
-      character*(maxc)      crec
-      character*(ifnlen)    ifname
+      character(maxc)       crec
+      character(ifnlen)     ifname
 
       real(wp)              dc      ( maxd )
       real(wp)              drec    ( wpr  )
@@ -308,7 +308,7 @@
 !     Check to see if the number of records to be reserved is less than
 !     one. If so, just return without changing anything.
 !
-      if ( resv .lt. 1 ) then
+      if ( resv < 1 ) then
          call chkout ( 'DAFARR' )
          return
       end if
@@ -388,7 +388,7 @@
       begblk = bward
       call dafarw ( free, endblk, word )
 
-      do while ( ( begblk .gt. 0 )  .and.  ( .not. failed() ) )
+      do while ( ( begblk > 0 )  .and.  ( .not. failed() ) )
 
 !
 !        Move the data records first.
@@ -421,11 +421,11 @@
 
          next = int ( drec(2) )
 
-         if ( int ( drec(1) ) .gt. 0 ) then
+         if ( int ( drec(1) ) > 0 ) then
             drec(1) = drec(1) + real( resv, wp )
          end if
 
-         if ( int ( drec(2) ) .gt. 0 ) then
+         if ( int ( drec(2) ) > 0 ) then
             drec(2) = drec(2) + real( resv, wp )
          end if
 

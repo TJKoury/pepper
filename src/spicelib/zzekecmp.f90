@@ -158,7 +158,7 @@
 !
 !     Local variables
 !
-      character*(maxstr)    cval   ( 2 )
+      character(maxstr)     cval   ( 2 )
 
       real(wp)              dval   ( 2 )
 
@@ -186,7 +186,7 @@
       rhstyp    =  cldscs( typidx, 2 )
 
 
-      if (  lhstyp .eq. int ) then
+      if (  lhstyp == int ) then
 !
 !        The entities we're comparing are supposed to be
 !        scalar.  The left hand side has integer type.  Either
@@ -213,7 +213,7 @@
          end if
 
 
-         if ( rhstyp .eq. int ) then
+         if ( rhstyp == int ) then
 
 
             call zzekrsi ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
@@ -247,16 +247,16 @@
 
             else
 
-               if ( ival(1) .lt. ival(2) ) then
+               if ( ival(1) < ival(2) ) then
                   zzekecmp = lt
-               else if ( ival(1) .gt. ival(2) ) then
+               else if ( ival(1) > ival(2) ) then
                   zzekecmp = gt
                end if
 
             end if
 
 
-         else if ( rhstyp .eq. dp ) then
+         else if ( rhstyp == dp ) then
 
             call zzekrsd ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
                            elts(1), dval(2),     null(2),     found   )
@@ -287,9 +287,9 @@
 
             else
 
-               if ( ival(1) .lt. dval(2) ) then
+               if ( ival(1) < dval(2) ) then
                   zzekecmp = lt
-               else if ( ival(1) .gt. dval(2) ) then
+               else if ( ival(1) > dval(2) ) then
                   zzekecmp = gt
                end if
 
@@ -313,7 +313,7 @@
 
 
 
-      else if ( lhstyp .eq. dp ) then
+      else if ( lhstyp == dp ) then
 !
 !        This is a mirror image of the INT case.
 !
@@ -337,7 +337,7 @@
          end if
 
 
-         if ( rhstyp .eq. int ) then
+         if ( rhstyp == int ) then
 
             call zzekrsi ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
                            elts(1), ival(2),     null(2),     found   )
@@ -370,16 +370,16 @@
 
             else
 
-               if ( dval(1) .lt. ival(2) ) then
+               if ( dval(1) < ival(2) ) then
                   zzekecmp = lt
-               else if ( dval(1) .gt. ival(2) ) then
+               else if ( dval(1) > ival(2) ) then
                   zzekecmp = gt
                end if
 
             end if
 
 
-         else if ( rhstyp .eq. dp ) then
+         else if ( rhstyp == dp ) then
 
 
             call zzekrsd ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
@@ -411,9 +411,9 @@
 
             else
 
-               if ( dval(1) .lt. dval(2) ) then
+               if ( dval(1) < dval(2) ) then
                   zzekecmp = lt
-               else if ( dval(1) .gt. dval(2) ) then
+               else if ( dval(1) > dval(2) ) then
                   zzekecmp = gt
                end if
 
@@ -437,11 +437,11 @@
 
 
 
-      else if ( lhstyp .eq. time ) then
+      else if ( lhstyp == time ) then
 !
 !        The entities we're comparing are supposed to be time values.
 !
-         if ( rhstyp .ne. time ) then
+         if ( rhstyp /= time ) then
 !
 !           This is a big-time semantic error.  We should
 !           never arrive here.
@@ -491,20 +491,20 @@
 
          else
 
-            if ( dval(1) .lt. dval(2) ) then
+            if ( dval(1) < dval(2) ) then
                zzekecmp = lt
-            else if ( dval(1) .gt. dval(2) ) then
+            else if ( dval(1) > dval(2) ) then
                zzekecmp = gt
             end if
 
          end if
 
 
-      else if ( lhstyp .eq. chr ) then
+      else if ( lhstyp == chr ) then
 !
 !        The entities we're comparing are supposed to be scalar.
 !
-         if ( rhstyp .ne. chr ) then
+         if ( rhstyp /= chr ) then
 !
 !           You know what kind of semantic error this is.
 !

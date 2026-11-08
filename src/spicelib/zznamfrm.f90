@@ -30,9 +30,9 @@
       include              'zzctr.inc'
 
       integer(ip)           usrctr    ( ctrsiz )
-      character*(*)         savnam
+      character(*)          savnam
       integer(ip)           savcde
-      character*(*)         frname
+      character(*)          frname
       integer(ip)           frcode
 
 ! $ Brief_I/O
@@ -240,8 +240,8 @@
 !     Check update flag, saved ID, and saved name against the input.
 !
       if ( .not. update       .and. &
-           savcde .ne. 0      .and. &
-           savnam .eq. frname       ) then
+           savcde /= 0      .and. &
+           savnam == frname       ) then
 
 !
 !        No change in the POOL state, the saved name was successfully

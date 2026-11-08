@@ -21,11 +21,11 @@
 
       implicit none
 
-      character*(*)         in
+      character(*)          in
       integer(ip)           left
       integer(ip)           right
-      character*(*)         string
-      character*(*)         out
+      character(*)          string
+      character(*)          out
 
 ! $ Brief_I/O
 !
@@ -215,7 +215,7 @@
 !
 !     Reject bad inputs.
 !
-      if ( left .lt. 1 ) then
+      if ( left < 1 ) then
          call setmsg ( 'REPSUB error: LEFT (#) must not be less '     // &
                        'than 1.' )
 
@@ -224,7 +224,7 @@
          call chkout ( 'REPSUB' )
          return
 
-      else if ( right .gt. inlen ) then
+      else if ( right > inlen ) then
          call setmsg ( 'REPSUB error: RIGHT (#) must not exceed '     // &
                        'length of IN (#).' )
          call errint ( '#', right )
@@ -233,7 +233,7 @@
          call chkout ( 'REPSUB' )
          return
 
-      else if ( right .lt. left-1 ) then
+      else if ( right < left-1 ) then
          call setmsg ( 'REPSUB error: LEFT (#) must not exceed '      // &
                        'RIGHT+1 (# + 1). ' )
          call errint ( '#', left  )
@@ -274,7 +274,7 @@
 !
       end = sumai ( use, 3 )
 
-      if ( left + strlen .gt. right ) then
+      if ( left + strlen > right ) then
 
          next = end
 
@@ -313,7 +313,7 @@
 !
 !     Pad with blanks, if the output string was not filled.
 !
-      if ( end .lt. outlen ) then
+      if ( end < outlen ) then
          out(end+1: ) = ' '
       end if
 

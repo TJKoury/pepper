@@ -314,7 +314,7 @@
 !
       call dasrdi ( handle, llbidx, llbidx, this )
 
-      if (  failed()  .or.  ( this .eq. nulptr )  ) then
+      if (  failed()  .or.  ( this == nulptr )  ) then
 !
 !        If the pointer THIS is null, there are no segments in the
 !        file.

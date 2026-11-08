@@ -209,7 +209,7 @@
 !
 !     There must be exactly 1 key in the root.
 !
-      if ( nrkeys .ne. 1 ) then
+      if ( nrkeys /= 1 ) then
 
          call chkin  ( 'ZZEKTR31'                                 )
          call setmsg ( 'Number of keys in root = #; should be 1.' )
@@ -237,7 +237,7 @@
 !     The sum of the number of keys in the two input nodes must
 !     sum exactly to value representing an underflow level of 1 key.
 !
-      if (  sum  .ne.  ( 2*mnkeyc - 1 )  ) then
+      if (  sum  /=  ( 2*mnkeyc - 1 )  ) then
 
          call chkin  ( 'ZZEKTR31'                                      )
          call setmsg ( 'Number of keys in nodes LEFT = #; in RIGHT ' // &

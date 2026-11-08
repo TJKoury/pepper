@@ -24,7 +24,7 @@
       real(wp)              srcdsc(*)
       integer(ip)           dsthan
       real(wp)              dstdsc(*)
-      character*(*)         dstsid
+      character(*)          dstsid
 
 ! $ Brief_I/O
 !
@@ -149,7 +149,7 @@
 !
 !     Local Variables
 !
-      character*(frmsiz)    myfram
+      character(frmsiz)     myfram
 
       real(wp)              begtim
       real(wp)              dtemp  ( nd     )
@@ -219,7 +219,7 @@
 !
       recsiz = (chbdeg + 1) * nstate + 2
 
-      if ( recsiz .gt. maxrec ) then
+      if ( recsiz > maxrec ) then
          call setmsg ( 'Storage for # double precision numbers' &
          //            ' is needed for an SPK data record and' &
          //            ' only # locations were available. Update' &

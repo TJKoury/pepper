@@ -120,7 +120,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           class
       integer(ip)           recno
@@ -140,47 +140,47 @@
 !
       class  =  coldsc ( clsidx )
 
-      if ( class .eq. 1 ) then
+      if ( class == 1 ) then
 
          zzekesiz  =  1
 
 
-      else if ( class .eq. 2 ) then
+      else if ( class == 2 ) then
 
          zzekesiz  =  1
 
 
-      else if ( class .eq. 3 ) then
+      else if ( class == 3 ) then
 
          zzekesiz  =  1
 
 
-      else if ( class .eq. 4 ) then
+      else if ( class == 4 ) then
 
          zzekesiz  =  zzeksz04 ( handle, segdsc, coldsc, recptr )
 
 
-      else if ( class .eq. 5 ) then
+      else if ( class == 5 ) then
 
          zzekesiz  =  zzeksz05 ( handle, segdsc, coldsc, recptr )
 
 
-      else if ( class .eq. 6 ) then
+      else if ( class == 6 ) then
 
          zzekesiz  =  zzeksz06 ( handle, segdsc, coldsc, recptr )
 
 
-      else if ( class .eq. 7 ) then
+      else if ( class == 7 ) then
 
          zzekesiz  =  1
 
 
-      else if ( class .eq. 8 ) then
+      else if ( class == 8 ) then
 
          zzekesiz  =  1
 
 
-      else if ( class .eq. 9 ) then
+      else if ( class == 9 ) then
 
          zzekesiz  =  1
 

@@ -28,15 +28,15 @@
 
       implicit none
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         abcorr
+      character(*)          abcorr
       logical               azccw
       logical               elplsz
       real(wp)              obspos ( 3 )
-      character*(*)         obsctr
-      character*(*)         obsref
+      character(*)          obsctr
+      character(*)          obsref
       real(wp)              azlsta ( 6 )
       real(wp)              lt
 
@@ -802,7 +802,7 @@
 !
 !     Local parameters
 !
-      character*(*)         refloc
+      character(*)          refloc
       parameter           ( refloc = 'OBSERVER' )
 
 !
@@ -897,7 +897,7 @@
 !     Make sure that OBSREF is centered at the observer's center of
 !     motion.
 !
-      if ( center .ne. obscde ) then
+      if ( center /= obscde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'observer''s center of motion #. The ID ' &
@@ -940,12 +940,12 @@
 !
 !           - the +Y axis completes the right-handed frame.
 !
-         if (       ( obspos(1) .eq. 0.0_wp ) &
-              .and. ( obspos(2) .eq. 0.0_wp ) ) then
+         if (       ( obspos(1) == 0.0_wp ) &
+              .and. ( obspos(2) == 0.0_wp ) ) then
 
             call ident ( xftopo )
 
-            if ( obspos(3) .lt. 0.0_wp ) then
+            if ( obspos(3) < 0.0_wp ) then
 
                call rotmat ( xftopo, pi(), 1, tmpmat )
                call moved  ( tmpmat, 9,       xftopo )

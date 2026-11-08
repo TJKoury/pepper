@@ -23,7 +23,7 @@
 
       integer(ip)           unit
       integer(ip)           n
-      character*(*)         data(*)
+      character(*)          data(*)
 
 ! $ Brief_I/O
 !
@@ -280,7 +280,7 @@
 !
 !     Local parameters
 !
-      character*(1)         escchr
+      character(1)          escchr
       parameter           ( escchr = '@')
 
       integer(ip)           mxescd
@@ -294,10 +294,10 @@
 !
 !     Local variables
 !
-      character*(1)         ch
-      character*(maxenc)    encchr
-      character*(errlen)    errmsg
-      character*(mxescd)    hexnum
+      character(1)          ch
+      character(maxenc)     encchr
+      character(errlen)     errmsg
+      character(mxescd)     hexnum
 
 
       integer(ip)           dtalen
@@ -325,7 +325,7 @@
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call setmsg ( 'The number of data items to be read was' // &
                        ' not positive: #.'                        )
@@ -374,17 +374,17 @@
 !     decoding loop.
 !
       nchars = 0
-      do while ( nchars .lt. n )
+      do while ( nchars < n )
 !
 !        If the last character we processed was the last one in the
 !        encoded character string, then we need to read in the next
 !        encoded character string from the file. This also accomplishes
 !        the task of reading in the first encoded character string.
 !
-         if ( encpos .gt. maxenc ) then
+         if ( encpos > maxenc ) then
 
             read(unit,*,iostat=iostat) encchr
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error reading from logical unit #,' // &
                              ' IOSTAT = #.'                        )
@@ -412,7 +412,7 @@
 
             nescd = nescd + 1
 
-            if ( nescd .eq. mxescd ) then
+            if ( nescd == mxescd ) then
 !
 !              If we have all of the digits in the encoded character,
 !              then decode it.
@@ -444,8 +444,8 @@
                escape = .false.
                nescd  = 0
 
-            else if ( ( nescd .lt. mxescd ) .and. &
-                      ( nescd .gt. 0      ) ) then
+            else if ( ( nescd < mxescd ) .and. &
+                      ( nescd > 0      ) ) then
 !
 !              Otherwise we are still collecting the digits of the
 !              encoded character, so store the current character and
@@ -462,7 +462,7 @@
 !           to .TRUE. so that we correctly process the encoded
 !           digits.
 !
-            if ( ch .eq. escchr ) then
+            if ( ch == escchr ) then
 
                escape = .true.
 
@@ -492,7 +492,7 @@
 !           the current data line (DTALIN) and reset the current data
 !           line buffer position (DTAPOS).
 !
-            if ( dtapos .gt. dtalen ) then
+            if ( dtapos > dtalen ) then
 
                dtalin = dtalin + 1
                dtapos = 1

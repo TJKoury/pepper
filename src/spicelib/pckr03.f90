@@ -196,7 +196,7 @@
 !     time for the segment and the stop time for the segment,
 !     respectively.
 !
-      if ( ( et .lt. descr(1) )  .or.  ( et .gt. descr(2) ) )  then
+      if ( ( et < descr(1) )  .or.  ( et > descr(2) ) )  then
 
          call setmsg( 'Request time # is outside of descriptor'    // &
                       ' bounds # : #.'                              )

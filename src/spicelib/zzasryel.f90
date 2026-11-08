@@ -28,7 +28,7 @@
       integer(ip)           ubpl
       parameter           ( ubpl   = 4 )
 
-      character*(*)         extrem
+      character(*)          extrem
       real(wp)              ellips ( ubel )
       real(wp)              vertex ( 3 )
       real(wp)              dir    ( 3 )
@@ -457,7 +457,7 @@
 !
 !     Local variables
 !
-      character*(extlen)    exttyp
+      character(extlen)     exttyp
 
       real(wp)              a
       real(wp)              acomp
@@ -512,11 +512,11 @@
       call cmprss ( ' ', 0, extrem, exttyp )
       call ljust  (         exttyp, exttyp )
 
-      if ( exttyp .eq. 'MIN' ) then
+      if ( exttyp == 'MIN' ) then
 
          domin = .true.
 
-      else if ( exttyp .eq. 'MAX' ) then
+      else if ( exttyp == 'MAX' ) then
 
          domin = .false.
 
@@ -581,7 +581,7 @@
 !
       call vprjp ( vertex, eplane, vprj )
 
-      if ( vdist(vertex, vprj) .eq. 0.0_wp  )  then
+      if ( vdist(vertex, vprj) == 0.0_wp  )  then
 
          call setmsg ( 'Viewing point is in the plane of the ellipse.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
@@ -599,7 +599,7 @@
 !
       call inrypl ( vertex, dir, eplane, nxpts, xpt )
 
-      if ( nxpts .eq. inf )  then
+      if ( nxpts == inf )  then
 !
 !        We don't expect to hit this case since we've already tested
 !        for the vertex lying in the ellipse plane.  However,
@@ -618,7 +618,7 @@
 !
       npt = bignpt
 
-      if ( nxpts .eq. 0 ) then
+      if ( nxpts == 0 ) then
 !
 !        The ray does not intersect the plane.
 !
@@ -644,7 +644,7 @@
 !
          level =  acomp**2 / a**2   +   bcomp**2 / b**2
 
-         if ( level .le. 1.0_wp ) then
+         if ( level <= 1.0_wp ) then
 !
 !           The ray-plane intersection is on the ellipse or inside the
 !           plane region bounded by the ellipse.
@@ -732,7 +732,7 @@
 
          if ( domin ) then
 
-            if ( proxy .lt. extprx ) then
+            if ( proxy < extprx ) then
 
                extidx  =  i
                extprx  =  proxy
@@ -741,7 +741,7 @@
 
          else
 
-            if ( proxy .gt. extprx ) then
+            if ( proxy > extprx ) then
 
                extidx  =  i
                extprx  =  proxy
@@ -819,8 +819,8 @@
       nitr    = 0
       proxy   = 3.0_wp
 
-      do while (        (  nitr                .le. maxitr ) &
-                 .and.  (  touchd(upper-lower) .gt. tol    )  )
+      do while (        (  nitr                <= maxitr ) &
+                 .and.  (  touchd(upper-lower) > tol    )  )
 !
 !        At this point, the following order relations hold:
 !
@@ -835,7 +835,7 @@
 !        [ LOWER, BTWEEN ] and [ BTWEEN, UPPER ].
 !
 !
-         if (  ( btween - lower )  .gt. ( upper - btween )  ) then
+         if (  ( btween - lower )  > ( upper - btween )  ) then
 
             newpt = lower   +  gr * ( btween - lower  )
          else
@@ -864,7 +864,7 @@
 !           NEWPT  <  BTWEEN.
 !                  _
 !
-         if ( newpt .gt. btween ) then
+         if ( newpt > btween ) then
 
             call swapd ( btween, newpt )
             call swapd ( btwprx, proxy )
@@ -874,7 +874,7 @@
 
          if ( domin ) then
 
-            if ( proxy .gt. btwprx ) then
+            if ( proxy > btwprx ) then
 
                lower  = newpt
             else
@@ -885,7 +885,7 @@
 
          else
 
-            if ( proxy .lt. btwprx ) then
+            if ( proxy < btwprx ) then
 
                lower  = newpt
             else

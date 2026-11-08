@@ -28,14 +28,14 @@
 
       include              'zzddhman.inc'
 
-      character*(*)         fname
+      character(*)          fname
 
       integer(ip)           ftabs ( * )
       integer(ip)           ftamh ( * )
       integer(ip)           ftarc ( * )
       integer(ip)           ftbff ( * )
       integer(ip)           fthan ( * )
-      character*(*)         ftnam ( * )
+      character(*)          ftnam ( * )
       integer(ip)           ftrtm ( * )
       real(wp)              ftmnm ( * )
       integer(ip)           nft
@@ -295,7 +295,7 @@
 !     and return.  ZZDDHOPN prevents any blank filenames from being
 !     loaded into the file table.
 !
-      if ( fname .eq. ' ' ) then
+      if ( fname == ' ' ) then
 
          found  = .false.
          handle = 0
@@ -323,7 +323,7 @@
 !
 !     Check IOSTAT for failure.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          found  = .false.
          handle = 0
          call setmsg ( 'INQUIRE failed. Value of IOSTAT was #.' )
@@ -373,7 +373,7 @@
 !        the DAF/DAS handle manager.  Set FOUND to FALSE, HANDLE
 !        to 0, and return to the caller.
 !
-         if ( uindex .eq. 0 ) then
+         if ( uindex == 0 ) then
             handle = 0
             found  = .false.
             call chkout ( 'ZZDDHF2H' )
@@ -386,7 +386,7 @@
 !        non-zero.
 !
          handle = uthan(uindex)
-         found  = handle .ne. 0
+         found  = handle /= 0
          call chkout ( 'ZZDDHF2H' )
          return
 
@@ -423,7 +423,7 @@
 !
 !     Check IOSTAT.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
 !
 !        Since an error has occurred, set FOUND to false and HANDLE
@@ -465,7 +465,7 @@
       i     = 1
       found = .false.
 
-      do while ( ( i .le. nft ) .and. ( .not. found ) )
+      do while ( ( i <= nft ) .and. ( .not. found ) )
 
 !
 !        If this file's magic number is non-zero and is different from
@@ -474,8 +474,8 @@
 !        and will skip INQUIRE. In all other cases we will do INQUIRE
 !        and check UNITs.
 !
-         if (   mnm .ne. 0.0_wp                               .and. &
-              ( mnm .ne. ftmnm(i) .and. ftamh(i) .eq. read )     ) then
+         if (   mnm /= 0.0_wp                               .and. &
+              ( mnm /= ftmnm(i) .and. ftamh(i) == read )     ) then
 
 !
 !           These files are not the same file. Clear IOSTAT and set
@@ -500,7 +500,7 @@
 !
 !        Check IOSTAT.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
 !
 !           Since we have an error condition, set FOUND to FALSE
@@ -534,7 +534,7 @@
 !        its UNIT matches UTLUN(UINDEX).
 !
          if (       ( locexs .and. locopn ) &
-              .and. (   unit .eq.  utlun(uindex) ) ) then
+              .and. (   unit ==  utlun(uindex) ) ) then
 
                handle = fthan(i)
                found  = .true.

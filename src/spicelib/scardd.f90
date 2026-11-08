@@ -182,7 +182,7 @@
 !     The cardinality may range from 0 to the size of the cell,
 !     inclusive.  Other values will be snubbed.
 !
-      if (  ( card .lt. 0 ) .or. ( card .gt. int( cell(-1) ) )  )  then
+      if (  ( card < 0 ) .or. ( card > int( cell(-1) ) )  )  then
          call setmsg ( 'Attempt to set cardinality of cell '          // &
                        'to invalid value.  The value was #.'  )
          call errint ( '#', card )

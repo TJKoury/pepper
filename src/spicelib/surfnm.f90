@@ -174,7 +174,7 @@
       real(wp)              b1
       real(wp)              c1
 
-      character*32          mssg ( 7 )
+      character(32)         mssg ( 7 )
       integer(ip)           bad
       save
 
@@ -205,17 +205,17 @@
 !
       bad = 0
 
-      if ( a .le. 0 ) &
+      if ( a <= 0 ) &
          bad = bad + 1
 
-      if ( b .le. 0 ) &
+      if ( b <= 0 ) &
          bad = bad + 2
 
-      if ( c .le. 0 ) &
+      if ( c <= 0 ) &
          bad = bad + 4
 
 
-      if ( bad .gt. 0 ) then
+      if ( bad > 0 ) then
          call setmsg ( mssg (bad)                                     // &
                        ' ? '                                           )
          call errch  ( ' ? ', 'The A,B, and C axes were '             // &

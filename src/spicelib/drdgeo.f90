@@ -462,7 +462,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1.0_wp ) then
+      if ( f >= 1.0_wp ) then
 
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
@@ -472,7 +472,7 @@
 
       end if
 
-      if ( re .le. 0.0_wp ) then
+      if ( re <= 0.0_wp ) then
 
           call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
           call errdp  ( '*', re                              )

@@ -314,7 +314,7 @@
 !
       fwd = dladsc( fwdidx )
 
-      if ( fwd .eq. nulptr ) then
+      if ( fwd == nulptr ) then
 !
 !        There is no segment following the input segment.
 !

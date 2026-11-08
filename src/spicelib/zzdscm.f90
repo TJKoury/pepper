@@ -574,7 +574,7 @@
 !
 !        DO LUNAR TERMS
 !
-         if (lsflg.eq.1) then
+         if (lsflg==1) then
             ss1   = s1
             ss2   = s2
             ss3   = s3

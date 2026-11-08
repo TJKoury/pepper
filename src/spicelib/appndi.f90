@@ -250,7 +250,7 @@
 
       nwcard = cardi (cell) + 1
 
-      if (  ( nwcard )  .le.  ( sizei (cell) )  ) then
+      if (  ( nwcard )  <=  ( sizei (cell) )  ) then
 
          cell (nwcard) = item
          call scardi ( nwcard, cell )

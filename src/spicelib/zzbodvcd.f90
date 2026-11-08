@@ -30,7 +30,7 @@
       include 'zzctr.inc'
 
       integer(ip)           bodyid
-      character*(*)         item
+      character(*)          item
       integer(ip)           maxn
       integer(ip)           varctr ( ctrsiz )
       integer(ip)           n

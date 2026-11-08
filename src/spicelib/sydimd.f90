@@ -24,8 +24,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
 
@@ -194,7 +194,7 @@
 !     If it's not in the table, return zero. Otherwise, look up
 !     the dimension directly.
 !
-      if ( locsym .eq. 0 ) then
+      if ( locsym == 0 ) then
          sydimd = 0
 
       else

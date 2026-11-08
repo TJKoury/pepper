@@ -216,7 +216,7 @@
 !
 !     If the node is non-positive, we regard it as the nil node.
 !
-      if ( node .lt. 1 ) then
+      if ( node < 1 ) then
 
          lnkhl = 0
          return
@@ -224,7 +224,7 @@
 !
 !     If the node is out of range, something's very wrong.
 !
-      else if  ( node .gt. pool( sizrow, sizcol ) ) then
+      else if  ( node > pool( sizrow, sizcol ) ) then
 
          lnkhl = 0
 
@@ -239,7 +239,7 @@
 !
 !     We don't do free nodes.
 !
-      else if (  pool( bckwrd, node )  .eq.  free  ) then
+      else if (  pool( bckwrd, node )  ==  free  ) then
 
          lnkhl = 0
 
@@ -263,7 +263,7 @@
       lnkhl = node
       prev  = pool ( bckwrd, node )
 
-      do while ( prev .gt. 0 )
+      do while ( prev > 0 )
 
          lnkhl = prev
          prev  = pool ( bckwrd, lnkhl )

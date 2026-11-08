@@ -29,10 +29,10 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       integer(ip)           n
-      character*(*)         table
-      character*(*)         alias
+      character(*)          table
+      character(*)          alias
 
 ! $ Brief_I/O
 !
@@ -146,7 +146,7 @@
          return
       end if
 
-      if ( iparse .eq. ifalse ) then
+      if ( iparse == ifalse ) then
 
          call chkin  ( 'ZZEKQTAB'                                )
          call setmsg ( 'Encoded query has not yet been parsed.'  )
@@ -160,7 +160,7 @@
       call zzekreqi ( eqryi, 'NUM_TABLES',   ntab   )
 
 
-      if (  ( n .lt. 1 ) .or. ( n .gt. ntab )  ) then
+      if (  ( n < 1 ) .or. ( n > ntab )  ) then
 
          call chkin  ( 'ZZEKQTAB'                                  )
          call setmsg ( 'Table index # is out of valid range 1:#.'  )
@@ -183,11 +183,11 @@
       tb     =  eqryi ( base + eqbstr )
       te     =  eqryi ( base + eqestr )
 
-      if (       ( tb .gt. 0      ) &
-           .and. ( te .gt. 0      ) &
-           .and. ( tb .le. buflen ) &
-           .and. ( te .le. buflen ) &
-           .and. ( tb .le. te     )  ) then
+      if (       ( tb > 0      ) &
+           .and. ( te > 0      ) &
+           .and. ( tb <= buflen ) &
+           .and. ( te <= buflen ) &
+           .and. ( tb <= te     )  ) then
 
          table = eqryc(tb:te)
 
@@ -214,12 +214,12 @@
       ab     =  eqryi ( base + eqvdsz + eqbstr )
       ae     =  eqryi ( base + eqvdsz + eqestr )
 
-      if ( ab .gt. 0 ) then
+      if ( ab > 0 ) then
 
-         if (       ( ae .gt. 0      ) &
-              .and. ( ab .le. buflen ) &
-              .and. ( ae .le. buflen ) &
-              .and. ( ab .le. ae     )  ) then
+         if (       ( ae > 0      ) &
+              .and. ( ab <= buflen ) &
+              .and. ( ae <= buflen ) &
+              .and. ( ab <= ae     )  ) then
 
             alias  = eqryc(ab:ae)
 

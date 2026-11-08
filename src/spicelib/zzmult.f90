@@ -321,7 +321,7 @@
 !
 !     If either A or B equals zero the multiplication is zero.
 !
-      if ( (a .eq. 0.0_wp) .or. (b .eq. 0.0_wp) ) then
+      if ( (a == 0.0_wp) .or. (b == 0.0_wp) ) then
 
          zzmult = 0.0_wp
          call chkout ( 'ZZMULT' )
@@ -344,7 +344,7 @@
 !
 !     Local possible overflow check.
 !
-      if ( (loga + logb) .gt. expnt ) then
+      if ( (loga + logb) > expnt ) then
 
          zzmult = 0.0_wp
          call setmsg ( 'Numerical overflow event. ' &
@@ -362,7 +362,7 @@
 !     Local possible underflow check. Accept this may occur,
 !     return a zero.
 !
-      if ( (loga + logb) .lt. -(expnt-1.0_wp) ) then
+      if ( (loga + logb) < -(expnt-1.0_wp) ) then
 
          zzmult = 0.0_wp
          call chkout ( 'ZZMULT' )

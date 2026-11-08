@@ -25,10 +25,10 @@
 
       include 'ektype.inc'
 
-      character*(*)         timstr
+      character(*)          timstr
       real(wp)              et
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -180,11 +180,11 @@
 !
 !     Local variables
 !
-      character*(lnsize)    locstr
-      character*(short)     modify ( maxmod )
-      character*(lnsize)    pictur
-      character*(msglen)    sclmsg
-      character*(short)     type
+      character(lnsize)     locstr
+      character(short)      modify ( maxmod )
+      character(lnsize)     pictur
+      character(msglen)     sclmsg
+      character(short)      type
 
       real(wp)              sclkdp
       real(wp)              tvec   ( ncomp )
@@ -224,7 +224,7 @@
 
       loc  =  posr ( locstr, 'SCLK', rtrim(locstr) )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 !
 !        It's a SCLK string.  Find the ID code, if we can.
 !
@@ -237,7 +237,7 @@
 !
             error  = .true.
 
-            if ( loc .gt. 1 ) then
+            if ( loc > 1 ) then
 
                errmsg = 'Time conversion failed; SCLK type '// &
                         '<#> was not recognized.'

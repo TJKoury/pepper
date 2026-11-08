@@ -249,7 +249,7 @@
       call chkin ( 'ZZINVELT' )
 
 
-      if ( margin .lt. 0.0_wp ) then
+      if ( margin < 0.0_wp ) then
 
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
@@ -263,17 +263,17 @@
 !     Delegate the job to one of the coordinate system-specific
 !     routines.
 !
-      if ( corsys .eq. latsys ) then
+      if ( corsys == latsys ) then
 
          call zzinlat ( p, bounds, margin, exclud, inside )
 
 
-      else if ( corsys .eq. pdtsys ) then
+      else if ( corsys == pdtsys ) then
 
          call zzinpdt ( p, bounds, corpar, margin, exclud, inside )
 
 
-      else if ( corsys .eq. recsys ) then
+      else if ( corsys == recsys ) then
 
          call zzinrec ( p, bounds, margin, exclud, inside )
 

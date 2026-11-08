@@ -25,7 +25,7 @@
       include 'ektokn.inc'
       include 'ekqlimit.inc'
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           maxntk
       integer(ip)           maxnum
       integer(ip)           ntoken
@@ -34,11 +34,11 @@
       integer(ip)           lxends ( * )
       integer(ip)           values ( * )
       real(wp)              numvls ( * )
-      character*(*)         chrbuf
+      character(*)          chrbuf
       integer(ip)           chbegs ( * )
       integer(ip)           chends ( * )
       logical               scnerr
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -301,10 +301,10 @@
 !
 !     Local parameters
 !
-      character*(*)         dquote
+      character(*)          dquote
       parameter           ( dquote  = '"' )
 
-      character*(*)         squote
+      character(*)          squote
       parameter           ( squote  = '''' )
 
       integer(ip)           lnsize
@@ -355,12 +355,12 @@
 !
 !     Local variables
 !
-      character*(1)         chr
-      character*(spclen)    spcstr ( nspec )
-      character*(lnsize)    hdchrs
-      character*(kwlen)     keywds ( nkeywd )
-      character*(lnsize)    tlchrs
-      character*(maxqry)    tquery
+      character(1)          chr
+      character(spclen)     spcstr ( nspec )
+      character(lnsize)     hdchrs
+      character(kwlen)      keywds ( nkeywd )
+      character(lnsize)     tlchrs
+      character(maxqry)     tquery
 
       integer(ip)           chcard
       integer(ip)           cptr
@@ -468,27 +468,27 @@
 !
 !     Statement Function Definitions
 !
-      isalph ( chr )  =       (      ( ichar(chr) .ge. ichar('A') ) &
-                               .and. ( ichar(chr) .le. ichar('Z') ) ) &
-                        .or.  (      ( ichar(chr) .ge. ichar('a') ) &
-                               .and. ( ichar(chr) .le. ichar('z') ) )
+      isalph ( chr )  =       (      ( ichar(chr) >= ichar('A') ) &
+                               .and. ( ichar(chr) <= ichar('Z') ) ) &
+                        .or.  (      ( ichar(chr) >= ichar('a') ) &
+                               .and. ( ichar(chr) <= ichar('z') ) )
 
 
-      isdigt ( chr )  =       (      ( ichar(chr) .ge. ichar('0') ) &
-                               .and. ( ichar(chr) .le. ichar('9') ) )
+      isdigt ( chr )  =       (      ( ichar(chr) >= ichar('0') ) &
+                               .and. ( ichar(chr) <= ichar('9') ) )
 
 
-      isdot  ( chr )  =     ( chr .eq. '.' )
+      isdot  ( chr )  =     ( chr == '.' )
 
 
-      issign ( chr )  =     ( chr .eq. '+' )    .or. ( chr .eq. '-' )
+      issign ( chr )  =     ( chr == '+' )    .or. ( chr == '-' )
 
 
       isnum  ( chr )  =       isdigt( chr )     .or.   issign ( chr ) &
-                                                .or.  ( chr .eq. '.' )
+                                                .or.  ( chr == '.' )
 
 
-      isquot ( chr )  =     ( chr .eq. squote ) .or. ( chr .eq. dquote )
+      isquot ( chr )  =     ( chr == squote ) .or. ( chr == dquote )
 
 
 !
@@ -545,10 +545,10 @@
 !
       state  =  nxttok
 
-      do while ( state .ne. term )
+      do while ( state /= term )
 
 
-         if ( state .eq. nxttok ) then
+         if ( state == nxttok ) then
 !
 !           In our initial state, we're looking for a new token.
 !           We stop when we have enough characters to determine
@@ -558,26 +558,26 @@
 !           Set our character pointer to the beginning of the next
 !           token.
 !
-            if ( ntoken .gt. 0 ) then
+            if ( ntoken > 0 ) then
               cptr =  lxends(ntoken) + 1
             end if
 
 
-            if ( cptr .gt. l ) then
+            if ( cptr > l ) then
 
                state  =  term
 
             else
 
 
-               do while (       ( tquery(cptr:cptr) .eq. ' ' ) &
-                          .and. ( cptr              .lt. l   )  )
+               do while (       ( tquery(cptr:cptr) == ' ' ) &
+                          .and. ( cptr              < l   )  )
 
                   cptr  =  cptr + 1
                end do
 
 
-               if ( tquery(cptr:cptr) .eq. ' ' ) then
+               if ( tquery(cptr:cptr) == ' ' ) then
 !
 !                 We're out of non-blank characters to look at.
 !
@@ -597,7 +597,7 @@
 !
 
 
-         else if ( state .eq. newtok ) then
+         else if ( state == newtok ) then
 !
 !           If we got this far, we have the initial character of
 !           something that could be a valid token.  We test for
@@ -610,7 +610,7 @@
 !           in that order.  Of course, we must have room in our output
 !           arrays for the token.
 !
-            if ( ntoken .eq. maxntk ) then
+            if ( ntoken == maxntk ) then
 
                errmsg  =  'Maximum allowed number of tokens is #; at '// &
                           'least # tokens are present in QUERY.'
@@ -654,14 +654,14 @@
 !
 
 
-         else if ( state .eq. qstr ) then
+         else if ( state == qstr ) then
 !
 !           Look for a quoted string starting at location CPTR.
 !           Use the current character as the quote character.
 !
             call lxqstr ( tquery, chr, cptr, last, nchars )
 
-            if ( nchars .eq. 0 ) then
+            if ( nchars == 0 ) then
 
                errmsg = 'Invalid quoted string at location #.'
                call repmi ( errmsg, '#', cptr, errmsg )
@@ -679,7 +679,7 @@
 !
             room  =  len(chrbuf)-chcard
 
-            if ( nchars .gt. room )  then
+            if ( nchars > room )  then
 
                errmsg  =  'Insufficient space to store quoted '    // &
                           'string at location #; # chars needed; ' // &
@@ -744,7 +744,7 @@
 !
 
 
-         else if ( state .eq. dot ) then
+         else if ( state == dot ) then
 !
 !           The token begins with a period.  We could be looking at
 !           a floating point number, or we could be looking at a
@@ -754,7 +754,7 @@
 !
             call lx4num ( tquery, cptr, last, nchars )
 
-            if ( nchars .gt. 0 ) then
+            if ( nchars > 0 ) then
                state  =  number
             else
                state  =  spcial
@@ -765,14 +765,14 @@
 !           remain unchanged.
 !
 
-         else if ( state .eq. number ) then
+         else if ( state == number ) then
 !
 !           Look for a number starting at location CPTR.
 !
             call lx4num ( tquery, cptr, last, nchars )
 
 
-            if ( nchars .eq. 0 ) then
+            if ( nchars == 0 ) then
 
                errmsg = 'Invalid numeric token at location #.'
                call repmi ( errmsg, '#', cptr, errmsg )
@@ -789,7 +789,7 @@
 !
             room  =  maxnum - nnums
 
-            if ( room .lt. 1 ) then
+            if ( room < 1 ) then
 
                errmsg  =  'Insufficient space to store value of ' // &
                           'number at location #; # elements are ' // &
@@ -813,7 +813,7 @@
                           ptr                 )
 
 
-            if ( errmsg .ne. ' ' ) then
+            if ( errmsg /= ' ' ) then
 !
 !              This check is done for safety; by construction, we
 !              should always have a valid number if LX4NUM
@@ -865,14 +865,14 @@
 !
 
 
-         else if ( state .eq. ident ) then
+         else if ( state == ident ) then
 !
 !           Look for an identifier starting at location CPTR.
 !
             call lxidnt ( idspec, tquery, cptr, last, nchars )
 
 
-            if ( nchars .eq. 0 ) then
+            if ( nchars == 0 ) then
 !
 !              This check is done for safety; by construction, we
 !              should always have a valid identifier of at least one
@@ -894,7 +894,7 @@
 !
             room  =  len(chrbuf)-chcard
 
-            if ( nchars .gt. room )  then
+            if ( nchars > room )  then
 
                errmsg  =  'Insufficient space to store identifier '// &
                           'string at location #; # chars needed; ' // &
@@ -924,7 +924,7 @@
                                keywds                            )
 
 
-            if ( i .gt. 0 ) then
+            if ( i > 0 ) then
 !
 !              It's a keyword.
 !
@@ -963,7 +963,7 @@
 !
 
 
-         else if ( state .eq. spcial ) then
+         else if ( state == spcial ) then
 !
 !           Look for a valid token starting with a special character at
 !           location CPTR. We attempt to match the longest possible
@@ -972,19 +972,19 @@
             i  =  min ( spclen,   l - cptr + 1 )
             j  =  0
 
-            do while (  ( i .ge. 1 ) .and. ( j .eq. 0 ) )
+            do while (  ( i >= 1 ) .and. ( j == 0 ) )
 
                last =  cptr + i - 1
                j    =  isrchc ( tquery(cptr:last), nspec, spcstr )
 
-               if ( j .eq. 0 ) then
+               if ( j == 0 ) then
                   i  =  i - 1
                end if
 
             end do
 
 
-            if ( j .gt. 0 ) then
+            if ( j > 0 ) then
 !
 !              We've identified a valid token.
 !
@@ -1006,7 +1006,7 @@
 !              in the error message.  Otherwise, include the integer
 !              code for the character.
 !
-               if ( frstpc(chr) .gt. 0 ) then
+               if ( frstpc(chr) > 0 ) then
 
                   call suffix ( '<character> = ''#''',   2, errmsg )
                   call repmc  ( errmsg, '#', chr,           errmsg )

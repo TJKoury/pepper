@@ -387,7 +387,7 @@
 !
 !     Check the voxel grid dimensions.
 !
-      if ( min( grdext(1), grdext(2), grdext(3) ) .lt. 1 ) then
+      if ( min( grdext(1), grdext(2), grdext(3) ) < 1 ) then
 
          call chkin  ( 'XDDA'                                    )
          call setmsg ( 'Voxel grid dimensions must be strictly ' &
@@ -406,8 +406,8 @@
 !
       do i = 1, 3
 
-         if (     ( vertex(i) .lt.     -grdtol  * grdext(i) ) &
-             .or. ( vertex(i) .gt. (1 + grdtol) * grdext(i) )  ) then
+         if (     ( vertex(i) <     -grdtol  * grdext(i) ) &
+             .or. ( vertex(i) > (1 + grdtol) * grdext(i) )  ) then
 
             call chkin  ( 'XDDA'                                  )
             call setmsg ( 'Vertex # # # is outside of voxel grid ' &
@@ -429,7 +429,7 @@
 !
 !     The maximum output voxel array size must be positive.
 !
-      if ( maxnvx .lt. 1 ) then
+      if ( maxnvx < 1 ) then
 
          call chkin  ( 'XDDA'                     )
          call setmsg ( 'Maximum voxel list size must be positive ' &
@@ -449,7 +449,7 @@
 
       do i = 2, 3
 
-         if ( abs( raydir(i) ) .gt. maxcmp  ) then
+         if ( abs( raydir(i) ) > maxcmp  ) then
             iaxis(1) = i
             maxcmp   = abs( raydir(i) )
          end if
@@ -534,7 +534,7 @@
 !     Compute the initial relative distance measurement AX2ERR
 !     for the non-primary axis IAXIS(2).
 !
-      if (   abs(  raydir( iaxis(2) )  ) .gt.  limit  ) then
+      if (   abs(  raydir( iaxis(2) )  ) >  limit  ) then
 !
 !        For any line segment along the ray, S12 is the ratio of the
 !        magnitudes of the projections of the segment in the primary
@@ -543,7 +543,7 @@
          s12 = abs (  raydir( iaxis(1) ) / raydir( iaxis(2) )  )
 
 
-         if ( raydir(iaxis(1)) .gt. 0.0_wp ) then
+         if ( raydir(iaxis(1)) > 0.0_wp ) then
 !
 !           The primary component of the ray's direction is positive.
 !           The distance to the next boundary plane in the primary
@@ -551,7 +551,7 @@
 !
 !              1.D0 - VTXOFF( IAXIS(1) )
 !
-            if( raydir(iaxis(2)) .gt. 0.0_wp ) then
+            if( raydir(iaxis(2)) > 0.0_wp ) then
 !
 !              The IAXIS(2) component of the ray's direction is
 !              positive. The distance to the next boundary plane for
@@ -597,7 +597,7 @@
 !
 !              VTXOFF( IAXIS(1) )
 
-            if( raydir(iaxis(2)) .gt. 0.0_wp ) then
+            if( raydir(iaxis(2)) > 0.0_wp ) then
 !
 !              The IAXIS(2) component of the ray's direction is
 !              positive. The distance to the next boundary plane for
@@ -644,7 +644,7 @@
 !     Computations of AX3ERR are analogous to those of AX2ERR.
 !     See the comments above.
 !
-      if (  abs(  raydir( iaxis(3) )  )  .gt.  limit  ) then
+      if (  abs(  raydir( iaxis(3) )  )  >  limit  ) then
 !
 !        For any line segment along the ray, S13 is the ratio of the
 !        magnitudes of the projections of the segment in the primary
@@ -652,9 +652,9 @@
 !
          s13 = abs(  raydir( iaxis(1) ) / raydir( iaxis(3) )  )
 
-         if ( raydir( iaxis(1) ) .gt. 0.0_wp ) then
+         if ( raydir( iaxis(1) ) > 0.0_wp ) then
 
-            if( raydir( iaxis(3) ) .gt. 0.0_wp ) then
+            if( raydir( iaxis(3) ) > 0.0_wp ) then
                ax3err = s13*(1.0_wp - vtxoff(3) ) + vtxoff(1) - 1.0_wp
             else
                ax3err = s13*vtxoff(3) + vtxoff(1) - 1.0_wp
@@ -662,7 +662,7 @@
 
          else
 
-            if(  raydir( iaxis(3) ) .gt. 0.0_wp  ) then
+            if(  raydir( iaxis(3) ) > 0.0_wp  ) then
                ax3err = s13*(1.0_wp - vtxoff(3)) - vtxoff(1)
             else
                ax3err = s13*vtxoff(3) - vtxoff(1)
@@ -685,13 +685,13 @@
 !
       do i = 1, 3
 
-         if ( raydir( iaxis(i) ) .gt. limit ) then
+         if ( raydir( iaxis(i) ) > limit ) then
 !
 !           Positive component direction, positive step.
 !
             step(i) =  1
 
-         else if ( raydir( iaxis(i) ) .lt. -limit ) then
+         else if ( raydir( iaxis(i) ) < -limit ) then
 !
 !           Negative component direction, negative step.
 !
@@ -712,12 +712,12 @@
 !
       do while ( zzingrd( grdext, voxlst(1,nvx) ) )
 
-         if ( (ax2err .lt. 0.0_wp) .or. (ax3err .lt. 0.0_wp) ) then
+         if ( (ax2err < 0.0_wp) .or. (ax3err < 0.0_wp) ) then
 !
 !           Ray has crossed over into the next voxel in IAXIS(2) or
 !           IAXIS(3)
 !
-            if ( ax2err .lt. ax3err ) then
+            if ( ax2err < ax3err ) then
 !
 !              The boundary plane orthogonal to axis IAXIS(2) was hit.
 !
@@ -742,11 +742,11 @@
             icoord(1) = icoord(1) + step(1)
             nvx       = nvx       + 1
 
-            if ( step(2) .ne. 0 ) then
+            if ( step(2) /= 0 ) then
                ax2err = ax2err - 1.0_wp
             end if
 
-            if ( step(3) .ne. 0 ) then
+            if ( step(3) /= 0 ) then
                ax3err = ax3err - 1.0_wp
             end if
 
@@ -755,7 +755,7 @@
 !
 !        Check we have room in VOXLST.
 !
-         if( nvx .gt. maxnvx ) then
+         if( nvx > maxnvx ) then
 
             call chkin  ( 'XDDA' )
             call setmsg ( 'Index larger than array. ' &

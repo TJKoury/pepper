@@ -24,7 +24,7 @@
       include               'sclk.inc'
 
       integer(ip)           sc
-      character*(*)         sclkch
+      character(*)          sclkch
       real(wp)              sclkdp
 
 ! $ Brief_I/O
@@ -508,7 +508,7 @@
       real(wp)              pstop    ( mxpart )
       real(wp)              ptotls   ( mxpart )
 
-      character*(25)        error
+      character(25)         error
 
 !
 !     Saved variables
@@ -538,7 +538,7 @@
          return
       end if
 
-      if ( nparts .gt. mxpart ) then
+      if ( nparts > mxpart ) then
 !
 !        This code should be unreachable. It is included for safety.
 !
@@ -558,7 +558,7 @@
 !
       pos = cpos ( sclkch, '/', 1 )
 
-      if ( pos .eq. 1 ) then
+      if ( pos == 1 ) then
 
          call setmsg ( 'Unable to parse the partition number '   // &
                        'from SCLK string #.'  )
@@ -569,7 +569,7 @@
 
       end if
 
-      if ( pos .eq. len(sclkch) ) then
+      if ( pos == len(sclkch) ) then
 
          call setmsg ( 'No SCLK components follow ' &
          //            'slash in SCLK string #.'  )
@@ -632,13 +632,13 @@
 !              of the partitions.
 !
 !
-      if ( pos .gt. 1 ) then
+      if ( pos > 1 ) then
 
          part = 0
 
          call nparsi ( sclkch( :pos-1 ), part, error, pnter )
 
-         if ( error .ne. ' ' ) then
+         if ( error /= ' ' ) then
 
             call setmsg ( 'Unable to parse the partition number '   // &
                           'from SCLK string #.'  )
@@ -647,7 +647,7 @@
             call chkout ( 'SCENCD'               )
             return
 
-         else if ( part .le. 0 .or. part .gt. nparts ) then
+         else if ( part <= 0 .or. part > nparts ) then
 
             call setmsg ( 'Partition number # taken from SCLK string '// &
                           '# is not in acceptable range 1 to #.'     )
@@ -658,8 +658,8 @@
             call chkout ( 'SCENCD'               )
             return
 
-         else if ( ticks .lt. pstart( part )   .or. &
-                   ticks .gt. pstop ( part ) )  then
+         else if ( ticks < pstart( part )   .or. &
+                   ticks > pstop ( part ) )  then
 
             call setmsg ( 'SCLK count # does not fall in the '        // &
                           'boundaries of partition number #.'  )
@@ -675,15 +675,15 @@
 
          part = 1
 
-         do while (   part  .le. nparts             .and. &
-                    ( ticks .lt. pstart( part )     .or. &
-                      ticks .gt. pstop ( part ) )        )
+         do while (   part  <= nparts             .and. &
+                    ( ticks < pstart( part )     .or. &
+                      ticks > pstop ( part ) )        )
 
             part = part + 1
 
          end do
 
-         if ( part .gt. nparts ) then
+         if ( part > nparts ) then
 
             call setmsg ( 'SCLK count # does not fall in the '        // &
                           'boundaries of any of the partitions for '  // &
@@ -704,7 +704,7 @@
 !     mission, add in the total number of ticks in preceding partitions
 !     and subtract off the starting ticks value for this partition.
 !
-      if ( part .gt. 1 ) then
+      if ( part > 1 ) then
          sclkdp = ticks - pstart( part ) + ptotls( part - 1 )
       else
          sclkdp = ticks - pstart( part )

@@ -150,8 +150,8 @@
 !
 !     Local variables
 !
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
+      character(idwlen)     idword
+      character(ifnlen)     ifname
 
       integer(ip)           ncomc
       integer(ip)           ncomr
@@ -200,7 +200,7 @@
 !     Now we will attempt to remove the comment records, if there are
 !     any, otherwise we do nothing.
 !
-      if ( ncomr .gt. 0 ) then
+      if ( ncomr > 0 ) then
 
          call dasrcr ( handle, ncomr )
 

@@ -828,7 +828,7 @@
 !
 !     THGR should have a domain between 0 and 2 Pi.
 !
-      if ( thgr .lt. zero ) then
+      if ( thgr < zero ) then
          thgr = thgr + pix2
       end if
 
@@ -851,7 +851,7 @@
       day = ds50 + 18261.5_wp
 
 
-      if ( day .ne. preep ) then
+      if ( day /= preep ) then
 
          preep  = day
          xnodce = 4.5236020_wp  -  9.2422029e-04_wp * day
@@ -865,7 +865,7 @@
          gam    = 5.8351514_wp + 0.0019443680_wp * day
          zmol   = dmod( (c - gam), pix2 )
 
-         if ( zmol .lt. zero ) then
+         if ( zmol < zero ) then
             zmol = zmol + pix2
          end if
 
@@ -875,12 +875,12 @@
 !
 !        Compute the angle from the x-axis of the point
 !
-         if (      zx .ne. zero &
-              .or. zy .ne. zero ) then
+         if (      zx /= zero &
+              .or. zy /= zero ) then
 
             zx = datan2 ( zx, zy)
 
-            if ( zx .lt. zero ) then
+            if ( zx < zero ) then
                zx = zx + pix2
             end if
 
@@ -896,7 +896,7 @@
          zmos   = 6.2565837_wp + 0.017201977_wp * day
          zmos   = dmod( zmos, pix2 )
 
-         if ( zmos .lt. zero ) then
+         if ( zmos < zero ) then
             zmos = zmos + pix2
          end if
 
@@ -988,15 +988,15 @@
 !
 !        Check for, and adjust SH, at inclinations near 0 and 180 degs.
 !
-         if ( (xqncl .lt. 5.2359877e-2_wp)        .or. &
-              (xqncl .gt. pi()-5.2359877e-2_wp) ) then
+         if ( (xqncl < 5.2359877e-2_wp)        .or. &
+              (xqncl > pi()-5.2359877e-2_wp) ) then
             sh = zero
          end if
 
 !
 !        Secondary check, J.I.C.
 !
-         if ( siniq .eq. 0.0_wp ) then
+         if ( siniq == 0.0_wp ) then
             sh = zero
          end if
 
@@ -1013,7 +1013,7 @@
          xh2  = -2.0_wp * s2 * z22
          xh3  = -2.0_wp * s2 *(z23-z21)
 
-         if ( i .eq. lunar ) then
+         if ( i == lunar ) then
 
 !
 !           Do lunar terms after solar terms, but only once.
@@ -1023,8 +1023,8 @@
 !
 !            Prevent evaluation of 1/SINIQ for SH = 0.
 !
-            if ( sh .eq. 0.0_wp ) ssx(3) = 0.0_wp
-            if ( sh .ne. 0.0_wp ) ssx(3) = sh/siniq
+            if ( sh == 0.0_wp ) ssx(3) = 0.0_wp
+            if ( sh /= 0.0_wp ) ssx(3) = sh/siniq
 
             ssx(2)   = sgh  -  cosiq * ssx(3)
             ssx(4)   = se
@@ -1066,11 +1066,11 @@
 !
 !      Prevent evaluation of 1/SINIQ for SH = 0.
 !
-      if ( sh .eq. 0.0_wp ) ssx(2) = ssx(2) + sgh
-      if ( sh .ne. 0.0_wp ) ssx(2) = ssx(2) + sgh - cosiq/siniq * sh
+      if ( sh == 0.0_wp ) ssx(2) = ssx(2) + sgh
+      if ( sh /= 0.0_wp ) ssx(2) = ssx(2) + sgh - cosiq/siniq * sh
 
-      if ( sh .eq. 0.0_wp ) ssx(3) = ssx(3)
-      if ( sh .ne. 0.0_wp ) ssx(3) = ssx(3) + sh/siniq
+      if ( sh == 0.0_wp ) ssx(3) = ssx(3)
+      if ( sh /= 0.0_wp ) ssx(3) = ssx(3) + sh/siniq
 
       ssx(4) = ssx(4) + se
       ssx(5) = ssx(5) + si
@@ -1082,8 +1082,8 @@
       iresfl = 0
       isynfl = 0
 
-      if( xnq .lt. (0.0052359877_wp) .and. &
-          xnq .gt. (0.0034906585_wp)       ) then
+      if( xnq < (0.0052359877_wp) .and. &
+          xnq > (0.0034906585_wp)       ) then
 
 !
 !        Synchronous resonance terms initialization
@@ -1108,9 +1108,9 @@
 
       else
 
-         if ( xnq .lt.(8.26e-3_wp) .or. &
-              xnq .gt.(9.24e-3_wp) .or. &
-              eq  .lt. 0.5_wp        ) then
+         if ( xnq <(8.26e-3_wp) .or. &
+              xnq >(9.24e-3_wp) .or. &
+              eq  < 0.5_wp        ) then
 
             return
 
@@ -1125,7 +1125,7 @@
 !     Looks icky doesn't it?
 !
 
-         if( eq.gt. (0.65_wp) ) then
+         if( eq> (0.65_wp) ) then
 
             g211 =-72.099_wp  + 331.819_wp * eq - 508.738_wp * eqsq + &
                    266.724_wp * eoc
@@ -1141,7 +1141,7 @@
 !
 !           Decide on the G520 coefficient.
 !
-            if ( eq .gt. (0.715_wp) ) then
+            if ( eq > (0.715_wp) ) then
 
                g520 = -5149.66_wp + 29936.92_wp * eq - &
                       54087.36_wp * eqsq + 31324.56_wp * eoc
@@ -1169,7 +1169,7 @@
          end if
 
 
-         if( eq .ge.(0.7_wp) ) then
+         if( eq >=(0.7_wp) ) then
 
             g533  = -37995.78_wp + 161616.52_wp*eq - &
                     229838.2_wp*eqsq + 109377.94_wp*eoc
@@ -1441,7 +1441,7 @@
 !
 !     Check for the state of the resonance flag.
 !
-      if( iresfl .eq. 0) then
+      if( iresfl == 0) then
          return
       end if
 
@@ -1454,14 +1454,14 @@
 
       do while( cont )
 
-         if ( ( atime .eq. zero )                   .or. &
-              ( t .ge. zero .and. atime .lt. zero ) .or. &
-              ( t .lt. zero .and. atime .ge. zero )     ) then
+         if ( ( atime == zero )                   .or. &
+              ( t >= zero .and. atime < zero ) .or. &
+              ( t < zero .and. atime >= zero )     ) then
 
 !
 !           Epoch restart
 !
-            if ( t .ge. zero )  then
+            if ( t >= zero )  then
                delt = stepp
             else
                delt = stepn
@@ -1475,11 +1475,11 @@
             cont = .false.
 
 
-         else if ( dabs( t ).ge. dabs(atime) ) then
+         else if ( dabs( t )>= dabs(atime) ) then
 
             delt = stepn
 
-            if ( t .gt. zero ) then
+            if ( t > zero ) then
                delt = stepp
             end if
 
@@ -1490,7 +1490,7 @@
 
             delt = stepp
 
-            if ( t .ge. zero ) then
+            if ( t >= zero ) then
                delt = stepn
             end if
 
@@ -1514,7 +1514,7 @@
 !     Do this loop while the time interval is greater than STEPP
 !
 
-      do while ( dabs( t - atime ).ge. stepp )
+      do while ( dabs( t - atime )>= stepp )
 
          call zzsecprt ( isynfl, dg   , del   , xni, &
                          omegao, atime, omgdot, xli, &
@@ -1544,7 +1544,7 @@
       xll   = xl     - omgasm     + temp
 
 
-      if ( isynfl .eq. 0) then
+      if ( isynfl == 0) then
          xll = xl + temp + temp
       end if
 
@@ -1770,7 +1770,7 @@
       cosis = dcos( xinc )
 
 
-      if ( xqncl.gt. (0.2_wp) ) then
+      if ( xqncl> (0.2_wp) ) then
 
          ph     = ph/siniq
          pgh    = pgh    - cosiq * ph
@@ -1793,7 +1793,7 @@
 !
 !        Force a 0 - 2Pi domain on XNODES.
 !
-         if ( xnodes .lt. zero ) then
+         if ( xnodes < zero ) then
             xnodes = xnodes + pix2
          end if
 
@@ -1804,8 +1804,8 @@
 !
 !        Compute the angle from the x-axis of the point
 !
-         if (      alfdp .ne. zero &
-              .or. betdp .ne. zero ) then
+         if (      alfdp /= zero &
+              .or. betdp /= zero ) then
 
 !
 !           Save the old value of XNODES, then compute the current value
@@ -1817,7 +1817,7 @@
 !
 !           Force a 0 - 2Pi domain on XNODES
 !
-            if ( xnodes .lt. zero ) then
+            if ( xnodes < zero ) then
                xnodes = xnodes + pix2
             end if
 
@@ -1829,9 +1829,9 @@
 !           calculate this term correctly if XNODES passes over the
 !           branch cut at 2*Pi.
 !
-            if ( dabs( xnodes - oxnode ).gt. pix1 ) then
+            if ( dabs( xnodes - oxnode )> pix1 ) then
 
-               if ( xnodes.gt. oxnode ) then
+               if ( xnodes> oxnode ) then
                   xnodes = xnodes - pix2
                else
                   xnodes = xnodes + pix2

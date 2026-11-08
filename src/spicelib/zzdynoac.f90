@@ -33,12 +33,12 @@
 
       include 'zzdyn.inc'
 
-      character*(*)         frname
+      character(*)          frname
       integer(ip)           frcode
-      character*(*)         item
+      character(*)          item
       integer(ip)           maxn
       integer(ip)           n
-      character*(*)         values  ( * )
+      character(*)          values  ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -205,7 +205,7 @@
 !
 !     Local Parameters
 !
-      character*(*)         templt
+      character(*)          templt
       parameter           ( templt = 'FRAME_#_#' )
 
 !
@@ -218,9 +218,9 @@
 !
 !     Local Variables
 !
-      character*(kvnmln)    cdestr
-      character*(1)         dtype
-      character*(kvnmln)    kvname
+      character(kvnmln)     cdestr
+      character(1)          dtype
+      character(kvnmln)     kvname
 
       integer(ip)           codeln
       integer(ip)           itemln
@@ -268,7 +268,7 @@
 
       reqnum = codeln + itemln + templn
 
-      if ( reqnum .le. kvnmln ) then
+      if ( reqnum <= kvnmln ) then
 !
 !        First try looking for a kernel variable including the frame ID
 !        code.
@@ -299,8 +299,8 @@
 !
          reqnam = nameln + itemln + templn
 
-         if (       ( reqnam .gt. kvnmln ) &
-              .and. ( reqnum .gt. kvnmln ) ) then
+         if (       ( reqnam > kvnmln ) &
+              .and. ( reqnum > kvnmln ) ) then
 !
 !           Both forms of the name are too long.
 !
@@ -322,7 +322,7 @@
             return
 
 
-         else if  ( reqnam .gt. kvnmln ) then
+         else if  ( reqnam > kvnmln ) then
 !
 !           We couldn't find the variable having the ID-based name,
 !           and the frame name-based variable name is too long to
@@ -361,7 +361,7 @@
 !     of the kernel variable in-line so we can create a more detailed
 !     error message if need be.
 !
-      if ( dtype .eq. 'N' ) then
+      if ( dtype == 'N' ) then
 
          call setmsg ( 'The kernel variable # has used to define '  // &
                        'frame # was expected to have character '    // &
@@ -378,7 +378,7 @@
       end if
 
 
-      if ( n .gt. maxn ) then
+      if ( n > maxn ) then
 
          call setmsg ( 'The kernel variable # has used to define '  // &
                        'frame # was expected to have size not '     // &

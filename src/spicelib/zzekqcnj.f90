@@ -138,7 +138,7 @@
          return
       end if
 
-      if ( iparse .eq. ifalse ) then
+      if ( iparse == ifalse ) then
 
          call chkin  ( 'ZZEKQCNJ'                                )
          call setmsg ( 'Encoded query has not yet been parsed.'  )
@@ -153,7 +153,7 @@
       call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',    ncns   )
 
 
-      if (  ( n .lt. 1 ) .or. ( n .gt. ncnj )  ) then
+      if (  ( n < 1 ) .or. ( n > ncnj )  ) then
 
          call chkin  ( 'ZZEKQCNJ'                                  )
          call setmsg ( 'Table index # is out of valid range 1:#.'  )

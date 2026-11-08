@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       integer(ip)           intval
 
 ! $ Brief_I/O
@@ -212,7 +212,7 @@
 !
 !     Local variables
 !
-      character*(msglen)    errmsg
+      character(msglen)     errmsg
       integer(ip)           ptr
 
 !
@@ -220,7 +220,7 @@
 !
       call nparsi ( string, intval, errmsg, ptr )
 
-      if ( errmsg .ne. ' ' ) then
+      if ( errmsg /= ' ' ) then
 
          call chkin  ( 'PRSINT'               )
          call setmsg ( errmsg                 )

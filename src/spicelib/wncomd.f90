@@ -210,7 +210,7 @@
 !     Check to see if the input interval is valid. If it is not, signal
 !     an error and return.
 !
-      if ( left .gt. right ) then
+      if ( left > right ) then
          call setmsg ( 'WNCOMD: Left endpoint may not exceed right' // &
                        ' endpoint.' )
          call sigerr ( 'SPICE(BADENDPOINTS)' )
@@ -225,9 +225,9 @@
 !     intersect the input interval. In either case, the complement is
 !     the entire interval.
 !
-      if (       card         .eq. 0 &
-           .or.  window(1)    .ge. right &
-           .or.  window(card) .le. left  ) then
+      if (       card         == 0 &
+           .or.  window(1)    >= right &
+           .or.  window(card) <= left  ) then
 
          call wninsd ( left, right, result )
 
@@ -260,7 +260,7 @@
 !
       i = 2
 
-      do while ( i .le. card  .and.  window(i) .lt. left )
+      do while ( i <= card  .and.  window(i) < left )
          i = i + 2
       end do
 
@@ -268,7 +268,7 @@
 !     If the beginning of the input interval doesn't split an interval
 !     in the input window, the complement begins with LEFT.
 !
-      if ( i .le. card  .and.  window(i-1) .gt. left ) then
+      if ( i <= card  .and.  window(i-1) > left ) then
          call wninsd ( left, window(i-1), result )
       end if
 
@@ -278,8 +278,8 @@
 !     endpoints exceeds the end of the input interval.
 !
       do while (        ( .not. failed () ) &
-                 .and.  i           .lt. card &
-                 .and.  window(i+1) .lt. right )
+                 .and.  i           < card &
+                 .and.  window(i+1) < right )
 
          call wninsd ( window(i), window(i+1), result )
          i = i + 2
@@ -290,7 +290,7 @@
 !     If the end of the input interval doesn't split an interval
 !     in the input window, the complement ends with RIGHT.
 !
-      if ( i .le. card  .and.  window(i) .lt. right ) then
+      if ( i <= card  .and.  window(i) < right ) then
          call wninsd ( window(i), right, result )
       end if
 

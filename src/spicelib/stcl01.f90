@@ -20,8 +20,8 @@
 
       implicit none
 
-      character*(*)         catfnm
-      character*(*)         tabnam
+      character(*)          catfnm
+      character(*)          tabnam
       integer(ip)           handle
 
 ! $ Brief_I/O
@@ -180,7 +180,7 @@
 !     Local variables
 !
       logical               istyp1
-      character*(256)       errmsg
+      character(256)        errmsg
 
 !
 !     Standard SPICE error handling.

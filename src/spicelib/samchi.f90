@@ -20,9 +20,9 @@
 
       implicit none
 
-      character*(*)         str1
+      character(*)          str1
       integer(ip)           l1
-      character*(*)         str2
+      character(*)          str2
       integer(ip)           l2
 
 ! $ Brief_I/O
@@ -169,10 +169,10 @@
       logical               eqchr
 
 
-      if (      l1 .lt. 1 &
-           .or. l2 .lt. 1 &
-           .or. l1 .gt. len(str1) &
-           .or. l2 .gt. len(str2)  ) then
+      if (      l1 < 1 &
+           .or. l2 < 1 &
+           .or. l1 > len(str1) &
+           .or. l2 > len(str2)  ) then
 
          samchi = .false.
          return

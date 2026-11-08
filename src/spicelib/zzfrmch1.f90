@@ -285,7 +285,7 @@
 !
 !     Local Variables
 !
-      character*(lmsgln)    errmsg
+      character(lmsgln)     errmsg
 
       real(wp)              tempxf( 6, 6 )
 !
@@ -347,7 +347,7 @@
 !     Do the obvious thing first.  If FRAME1 and FRAME2 are the
 !     same then we simply return the identity matrix.
 !
-      if ( frame1 .eq. frame2 ) then
+      if ( frame1 == frame2 ) then
 
          do i = 1, 6
 
@@ -414,9 +414,9 @@
 !     Follow the chain of transformations until we run into
 !     one that transforms to J2000 (frame id = 1) or we hit FRAME2.
 !
-      do while (       frame(node) .ne. rootf &
-                 .and. node        .lt. maxnod &
-                 .and. frame(node) .ne. frame2 &
+      do while (       frame(node) /= rootf &
+                 .and. node        < maxnod &
+                 .and. frame(node) /= frame2 &
                  .and. found   )
 !
 !        Find out what transformation is available for this
@@ -443,8 +443,8 @@
 
       end do
 
-      done =      frame(node) .eq. rootf &
-             .or. frame(node) .eq. frame2 &
+      done =      frame(node) == rootf &
+             .or. frame(node) == frame2 &
              .or. .not. found
 
 
@@ -487,8 +487,8 @@
 !        or if the last frame is FRAME2 or if we simply couldn't get
 !        another transformation.
 !
-         done =        frame(node) .eq. rootf &
-                  .or. frame(node) .eq. frame2 &
+         done =        frame(node) == rootf &
+                  .or. frame(node) == frame2 &
                   .or. .not. found
 
       end do
@@ -525,7 +525,7 @@
 !     We now have to do essentially the same thing for FRAME2.
 !
 
-      if ( frame(node) .eq. frame2 ) then
+      if ( frame(node) == frame2 ) then
 !
 !        We can handle this one immediately with the private routine
 !        ZZMSXF which multiplies a series of state transformation
@@ -550,7 +550,7 @@
 !
 !     First see if there is any chain to follow.
 !
-      done   =  this .eq. rootf
+      done   =  this == rootf
 
 !
 !     Set up the matrices TRANS2(,,1) and TRANS(,,2)  and set up
@@ -586,7 +586,7 @@
 !        Find out what transformation is available for this
 !        frame.
 !
-         if ( this  .eq. frame2 ) then
+         if ( this  == frame2 ) then
 !
 !           This is the first pass, just put the transformation
 !           directly into TRANS2(,,PUT).
@@ -604,7 +604,7 @@
                put    = put + inc
                inc    =     - inc
                cmnode = isrchi ( this, node, frame )
-               gotone = cmnode .gt. 0
+               gotone = cmnode > 0
             end if
 
          else
@@ -668,7 +668,7 @@
                this   = relto
 
                cmnode = isrchi ( this, node, frame )
-               gotone = cmnode .gt. 0
+               gotone = cmnode > 0
 
             end if
 
@@ -678,7 +678,7 @@
 !        See if we have a common node and determine whether or not
 !        we are done with this loop.
 !
-         done   =       this  .eq. rootf &
+         done   =       this  == rootf &
                   .or.  gotone &
                   .or. .not. found
 

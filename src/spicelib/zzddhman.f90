@@ -31,9 +31,9 @@
       include              'zzddhman.inc'
 
       logical               lock
-      character*(*)         arch
-      character*(*)         fname
-      character*(*)         method
+      character(*)          arch
+      character(*)          fname
+      character(*)          method
       integer(ip)           handle
       integer(ip)           unit
       integer(ip)           intamh
@@ -200,8 +200,8 @@
 !
 !     Local Variables
 !
-      character*(filen)     locfnm
-      character*(strsiz)    tmpstr
+      character(filen)      locfnm
+      character(strsiz)     tmpstr
 
       real(wp)              mnm
 
@@ -232,9 +232,9 @@
 !     These strings store the labels for the parameters defined
 !     in the include file and retrieved by ZZDDHINI.
 !
-      character*(strsiz)    stramh ( numamh )
-      character*(strsiz)    strarc ( numarc )
-      character*(strsiz)    strbff ( numbff )
+      character(strsiz)     stramh ( numamh )
+      character(strsiz)     strarc ( numarc )
+      character(strsiz)     strbff ( numbff )
 
 !
 !     The file table consists of a set of arrays which serve as
@@ -271,7 +271,7 @@
       integer(ip)           ftarc  ( ftsize )
       integer(ip)           ftbff  ( ftsize )
       integer(ip)           fthan  ( ftsize )
-      character*(filen)     ftnam  ( ftsize )
+      character(filen)      ftnam  ( ftsize )
       integer(ip)           ftrtm  ( ftsize )
       real(wp)              ftmnm  ( ftsize )
 
@@ -660,7 +660,7 @@
 !
 !     Check if the code was located.
 !
-      if ( accmet .eq. 0 ) then
+      if ( accmet == 0 ) then
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
@@ -688,7 +688,7 @@
 !
 !     Check if the code was located.
 !
-      if ( filarc .eq. 0 ) then
+      if ( filarc == 0 ) then
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
@@ -710,7 +710,7 @@
 !     fetching a logical unit from the unit table.  This requires
 !     branching based on ACCMET's value.
 !
-      if ( accmet .eq. scrtch ) then
+      if ( accmet == scrtch ) then
 
 !
 !        Check to see if there are enough units available for locking
@@ -719,7 +719,7 @@
 !
          locked = zzddhclu ( utlck, nut )
 
-         if ( locked .ge. (utsize - rsvunt) ) then
+         if ( locked >= (utsize - rsvunt) ) then
 
 !
 !           Recall HANDLE was initialized to 0, and this invalid
@@ -738,14 +738,14 @@
 !     The NEW, READ, and WRITE access methods perform the same
 !     checks on LOCFNM.
 !
-      else if ( ( accmet .eq. new   ) .or. &
-                ( accmet .eq. read  ) .or. &
-                ( accmet .eq. write )      ) then
+      else if ( ( accmet == new   ) .or. &
+                ( accmet == read  ) .or. &
+                ( accmet == write )      ) then
 
 !
 !        Check for a non-blank file name.
 !
-         if ( locfnm .eq. ' ' ) then
+         if ( locfnm == ' ' ) then
 
 !
 !           Recall HANDLE was initialized to 0, and this invalid
@@ -767,8 +767,8 @@
 !     In the READ or WRITE cases verify that LOCFNM is not already
 !     in the file table.
 !
-      if ( ( accmet .eq. read  ) .or. &
-           ( accmet .eq. write )      ) then
+      if ( ( accmet == read  ) .or. &
+           ( accmet == write )      ) then
 
 !
 !        Check to see if the file associated with LOCFNM is already in
@@ -825,7 +825,7 @@
 !           Since we performed a very similar INQUIRE statement in
 !           ZZDDHF2H, a non-zero IOSTAT value indicates a severe error.
 !
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
@@ -864,7 +864,7 @@
 !           Check to see if the requested architecture does not match
 !           that of the entry in the file table.
 !
-            if ( filarc .ne. ftarc(findex) ) then
+            if ( filarc /= ftarc(findex) ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
@@ -887,7 +887,7 @@
 !           than READ.  If so, signal the appropriate error.
 !           Note: this is only for READ.
 !
-            if ( accmet .ne. read ) then
+            if ( accmet /= read ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
@@ -907,7 +907,7 @@
 !           for READ access.  Check to make certain it is not
 !           already loaded with another method.
 !
-            if ( accmet .ne. ftamh(findex) ) then
+            if ( accmet /= ftamh(findex) ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
@@ -943,7 +943,7 @@
 !     Now check to see if there is room in the file table for this
 !     new file.
 !
-      if ( nft .eq. ftsize ) then
+      if ( nft == ftsize ) then
 
 !
 !        Recall HANDLE was initialized to 0, and this invalid
@@ -984,7 +984,7 @@
 !
 !     Trim up the filename.
 !
-      if ( accmet .ne. scrtch ) then
+      if ( accmet /= scrtch ) then
          lchar = rtrim ( locfnm )
       end if
 
@@ -998,7 +998,7 @@
 !     Determine the sign of the new handle based on the requested
 !     METHOD.
 !
-      if ( accmet .eq. read ) then
+      if ( accmet == read ) then
          uthan ( uindex ) = next
       else
          uthan ( uindex ) = -next
@@ -1051,7 +1051,7 @@
 !
 !     Perform the OPEN.  Branch on the appropriate access method.
 !
-      if ( accmet .eq. scrtch ) then
+      if ( accmet == scrtch ) then
 
          open ( unit   = utlun(uindex), &
                 access = 'DIRECT', &
@@ -1061,7 +1061,7 @@
 
          bff = natbff
 
-      else if ( accmet .eq. new ) then
+      else if ( accmet == new ) then
 
          open ( unit   = utlun(uindex), &
                 file   = locfnm(1:lchar), &
@@ -1072,7 +1072,7 @@
 
          bff = natbff
 
-      else if ( accmet .eq. read ) then
+      else if ( accmet == read ) then
 
          open ( unit   = utlun(uindex), &
                 file   = locfnm(1:lchar), &
@@ -1081,7 +1081,7 @@
                 status = 'OLD', &
                 iostat = iostat           )
 
-      else if ( accmet .eq. write ) then
+      else if ( accmet == write ) then
 
          open ( unit   = utlun(uindex), &
                 file   = locfnm(1:lchar), &
@@ -1095,7 +1095,7 @@
 !
 !     Verify that IOSTAT is non-zero.
 !
-      error = ( iostat .ne. 0 )
+      error = ( iostat /= 0 )
 
 !
 !     Partially process the error.
@@ -1106,10 +1106,10 @@
 !        Now signal the error, but delay cleaning up and checking
 !        out until leaving this IF block.
 !
-         if ( accmet .eq. scrtch ) then
+         if ( accmet == scrtch ) then
             call setmsg ( 'Attempt to open scratch file failed. ' &
             //            'IOSTAT was #.'                         )
-         else if ( accmet .eq. new ) then
+         else if ( accmet == new ) then
             call setmsg ( 'Attempt to create new file, ''$'' ' &
             //            'failed. IOSTAT was #.'                 )
          else
@@ -1127,7 +1127,7 @@
 !     statement, then perform any remaining checks or I/O operations
 !     that are necessary to support loading the file.
 !
-      else if ( accmet .eq. scrtch ) then
+      else if ( accmet == scrtch ) then
 
 !
 !        Inquire on the logical unit to produce the file name for
@@ -1145,7 +1145,7 @@
 !        In the event that this INQUIRE failed, replace the value
 !        stored in LOCFNM with the initial value.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             locfnm = '# SCRATCH FILE'
             call repmc ( locfnm, '#', strarc(filarc), locfnm )
@@ -1157,8 +1157,8 @@
 !
          lchar = rtrim ( locfnm )
 
-      else if ( ( accmet .eq. read  ) .or. &
-                ( accmet .eq. write )      ) then
+      else if ( ( accmet == read  ) .or. &
+                ( accmet == write )      ) then
 
 !
 !        Check for FTP errors, verify that FILARC is appropriate,
@@ -1183,18 +1183,18 @@
 !           This platform supports reading from files whose
 !           format codes are listed in SUPBFF.
 !
-            if ( accmet .eq. read ) then
+            if ( accmet == read ) then
 
                supidx = isrchi ( bff, numsup, supbff )
 
-               if ( supidx .eq. 0 ) then
+               if ( supidx == 0 ) then
 
 !
 !                 Delay clean up and check out.
 !
                   error = .true.
 
-                  if ( bff .eq. 0 ) then
+                  if ( bff == 0 ) then
 
                      call setmsg ( 'Attempt to open file, ''#'', for ' &
                      //            'read access has failed.  This ' &
@@ -1234,7 +1234,7 @@
 !
 !              Delay clean up and check out.
 !
-               if ( bff .eq. 0 ) then
+               if ( bff == 0 ) then
 
                   error = .true.
 
@@ -1248,7 +1248,7 @@
                   call errch  ( '#', locfnm                          )
                   call sigerr ( 'SPICE(UNSUPPORTEDBFF)'              )
 
-               else if ( bff .ne. natbff ) then
+               else if ( bff /= natbff ) then
 
                   error = .true.
 
@@ -1284,7 +1284,7 @@
 !        Close the unit we were using.  Remember to delete the file
 !        if it was a 'new' one.
 !
-         if ( accmet .eq. new ) then
+         if ( accmet == new ) then
             close ( unit = utlun(uindex), status = 'DELETE' )
          else
             close ( unit = utlun(uindex) )
@@ -1321,7 +1321,7 @@
 !     Only scratch files get the units locked to handles, this is
 !     because they only exist as long as they have a unit.
 !
-      utlck ( uindex ) = accmet .eq. scrtch
+      utlck ( uindex ) = accmet == scrtch
 
 !
 !     Now fill out the file table.
@@ -1548,10 +1548,10 @@
 !
 !     Check to see whether we found the handle or not.
 !
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
          call chkout ( 'ZZDDHCLS' )
          return
-      else if ( fthan(findex) .ne. handle ) then
+      else if ( fthan(findex) /= handle ) then
          call chkout ( 'ZZDDHCLS' )
          return
       end if
@@ -1570,7 +1570,7 @@
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      if ( filarc .ne. ftarc(findex) ) then
+      if ( filarc /= ftarc(findex) ) then
 
          call setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be closed by routines in ' &
@@ -1588,7 +1588,7 @@
 !     Now check that if KILL is set, the file is accessible for
 !     WRITE.
 !
-      if ( ( kill ) .and. ( ftamh(findex) .eq. read ) ) then
+      if ( ( kill ) .and. ( ftamh(findex) == read ) ) then
 
          call setmsg ( '# file $ is open for READ access.  Attempt ' &
          //            'to close and delete file has failed. '       )
@@ -1630,12 +1630,12 @@
 !
       uindex = isrchi ( handle, nut, uthan )
 
-      if ( uindex .ne. 0 ) then
+      if ( uindex /= 0 ) then
 
 !
 !        Close the unit.
 !
-         if ( ( kill ) .and. ( accmet .ne. scrtch ) ) then
+         if ( ( kill ) .and. ( accmet /= scrtch ) ) then
             close ( unit = utlun(uindex), status = 'DELETE' )
          else
             close ( unit = utlun(uindex) )
@@ -1652,7 +1652,7 @@
 !        First, check to see if KILL is set, if it is signal an error
 !        since we are unable to delete the file.
 !
-         if ( ( kill ) .and. ( accmet .ne. scrtch ) ) then
+         if ( ( kill ) .and. ( accmet /= scrtch ) ) then
 
             call setmsg ( 'File successfully closed.  Unable to ' &
             //            'delete file as requested.  File not ' &
@@ -1667,7 +1667,7 @@
 !        If we were unable to find the HANDLE in the unit table,
 !        check to see if we have to clean up the UNIT table.
 !
-         if ( nft .lt. nut ) then
+         if ( nft < nut ) then
 
             uindex = isrchi ( 0, nut, uthan )
 
@@ -1677,7 +1677,7 @@
 !           since we have more LUNs listed in the unit table than
 !           files in the file table.
 !
-            if ( uindex .eq. 0 ) then
+            if ( uindex == 0 ) then
                call setmsg ( 'There are less files in the file table ' &
                //            'than units in the unit table, and no ' &
                //            'row with a zero-valued handle can be ' &
@@ -1881,9 +1881,9 @@
 !
       findex = bsrchi ( abs(handle), nft, ftabs )
 
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
          error = .true.
-      else if ( fthan(findex) .ne. handle ) then
+      else if ( fthan(findex) /= handle ) then
          error = .true.
       else
          error = .false.
@@ -1914,7 +1914,7 @@
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      if ( filarc .ne. ftarc(findex) ) then
+      if ( filarc /= ftarc(findex) ) then
 
          unit = 0
 
@@ -1947,7 +1947,7 @@
 !     If we didn't, open the file associated with HANDLE again,
 !     and get it into the unit table.
 !
-      if ( uindex .eq. 0 ) then
+      if ( uindex == 0 ) then
 
 !
 !        We need a unit from the unit table, get one.
@@ -1969,8 +1969,8 @@
 !        Re-attach the file to a logical unit.  Branch based on the
 !        access method stored in the file table.
 !
-         if ( ( ftamh(findex) .eq. new   ) .or. &
-              ( ftamh(findex) .eq. write )      ) then
+         if ( ( ftamh(findex) == new   ) .or. &
+              ( ftamh(findex) == write )      ) then
 
             open ( unit   = utlun(uindex), &
                    file   = ftnam(findex)(1:ftrtm(findex)), &
@@ -1979,7 +1979,7 @@
                    status = 'OLD', &
                    iostat = iostat           )
 
-         else if ( ftamh(findex) .eq. read ) then
+         else if ( ftamh(findex) == read ) then
 
             open ( unit   = utlun(uindex), &
                    file   = ftnam(findex)(1:ftrtm(findex)), &
@@ -2002,7 +2002,7 @@
 !
 !        Check IOSTAT for troubles.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
 !
 !           The re-open was unsuccessful, leave the entry in the file
@@ -2054,7 +2054,7 @@
 !
          locked = zzddhclu ( utlck, nut )
 
-         if ( locked .ge. ( utsize - rsvunt - scrunt ) ) then
+         if ( locked >= ( utsize - rsvunt - scrunt ) ) then
 
             unit = 0
 
@@ -2226,7 +2226,7 @@
 !     empty and awaiting connections.  The state of the UTLCK is
 !     not significant.
 !
-      if ( handle .eq. 0 ) then
+      if ( handle == 0 ) then
          return
       end if
 
@@ -2240,7 +2240,7 @@
 !     in the unit table or the unit was not locked, just return as
 !     there is nothing to do.
 !
-      if ( uindex .eq. 0 ) then
+      if ( uindex == 0 ) then
          return
       else if ( .not. utlck(uindex) ) then
          return
@@ -2257,7 +2257,7 @@
 !     to be since it is in the unit table if we make it this far.
 !     These checks are just for safety's sake.
 !
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
 
          call chkin  ( 'ZZDDHUNL'                                  )
          call setmsg ( 'HANDLE # was not found in the file table ' &
@@ -2268,7 +2268,7 @@
          call chkout ( 'ZZDDHUNL'                                  )
          return
 
-      else if ( fthan(findex) .ne. handle ) then
+      else if ( fthan(findex) /= handle ) then
 
          call chkin  ( 'ZZDDHUNL'                                  )
          call setmsg ( 'HANDLE # was not found in the file table ' &
@@ -2295,7 +2295,7 @@
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      if ( filarc .ne. ftarc(findex) ) then
+      if ( filarc /= ftarc(findex) ) then
 
          call chkin  ( 'ZZDDHUNL'                                 )
          call setmsg ( 'Logical unit associated with # file $, ' &
@@ -2315,7 +2315,7 @@
 !     scratch access.  If it is, just return, since scratch files
 !     can not have their units unlocked.
 !
-      if ( ftamh(findex) .eq. scrtch ) then
+      if ( ftamh(findex) == scrtch ) then
          return
       end if
 
@@ -2491,14 +2491,14 @@
 !     we are indexing the table using the absolute value of handle.
 !     So include a check to see that HANDLE is FTHAN(FINDEX).
 !
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
          fname  = ' '
          intarc = 0
          intbff = 0
          intamh = 0
          found  = .false.
          return
-      else if ( fthan(findex) .ne. handle ) then
+      else if ( fthan(findex) /= handle ) then
          fname  = ' '
          intarc = 0
          intbff = 0
@@ -2659,10 +2659,10 @@
 !     that we are indexing the table using the absolute value of
 !     handle.  So include a check to see that HANDLE is FTHAN(FINDEX).
 !
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
          found = .false.
          return
-      else if ( fthan(findex) .ne. handle ) then
+      else if ( fthan(findex) /= handle ) then
          found = .false.
          return
       end if
@@ -2671,7 +2671,7 @@
 !     If we make it this far, then we have found HANDLE in the file
 !     table.  Set NATIVE appropriately and FOUND to TRUE.
 !
-      native = natbff .eq. ftbff(findex)
+      native = natbff == ftbff(findex)
       found  = .true.
 
       return
@@ -2967,11 +2967,11 @@
 !
       uindex = isrchi ( unit, nut, utlun )
 
-      if ( uindex .eq. 0 ) then
+      if ( uindex == 0 ) then
          handle = 0
          found  = .false.
          return
-      else if ( uthan(uindex) .eq. 0 ) then
+      else if ( uthan(uindex) == 0 ) then
          handle = 0
          found  = .false.
          return

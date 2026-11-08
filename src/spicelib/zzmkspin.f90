@@ -403,7 +403,7 @@
 !
 !     Check NP.
 !
-      if (  ( np .lt. 1 ) .or. ( np .gt. maxplt )  ) then
+      if (  ( np < 1 ) .or. ( np > maxplt )  ) then
 
          call setmsg ( 'Plate count NP = #; count must ' &
          //            'be in the range 1:#.'            )
@@ -421,7 +421,7 @@
 !     require computations that can't be done if the coarse
 !     scale is zero.
 !
-      if ( cgscal .lt. 1 ) then
+      if ( cgscal < 1 ) then
 
          call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be positive.'                       )
@@ -585,7 +585,7 @@
 !
 !     Make sure the number of voxels NVXTOT is within range.
 !
-      if ( nvxtot .gt. maxvox ) then
+      if ( nvxtot > maxvox ) then
 
          call setmsg ( 'Fine voxel count NVXTOT = #; count must ' &
          //            'be in the range 1:#.'                    )
@@ -602,8 +602,8 @@
 !     Check the coarse voxel scale. It must be at least 1, and its
 !     cube must not exceed the fine voxel count.
 !
-      if (      ( cgscal .lt. 1                ) &
-           .or. ( cgscal .gt. nvxtot**(1.0_wp/3) )  ) then
+      if (      ( cgscal < 1                ) &
+           .or. ( cgscal > nvxtot**(1.0_wp/3) )  ) then
 
          call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be in the range 1:NVXTOT**3, where ' &
@@ -625,7 +625,7 @@
       q = nvxtot /   (cgscal**3)
       r = nvxtot - q*(cgscal**3)
 
-      if ( r .ne. 0 ) then
+      if ( r /= 0 ) then
 
          call setmsg ( 'Coarse voxel scale = #; the cube of ' &
          //            'the scale must divide NVXTOT evenly, ' &
@@ -646,7 +646,7 @@
 
       ncgflg = nvxtot / npcg
 
-      if ( ncgflg .gt. maxcgr ) then
+      if ( ncgflg > maxcgr ) then
 
          call setmsg ( 'Number of coarse voxels # exceeds ' &
          //            'limit #. Increase coarse voxel scale, ' &
@@ -819,7 +819,7 @@
 
                     cvid = zzvox2id ( cgxyz, cgrdim )
 
-                    if ( cgrptr(cvid) .eq. 0 ) then
+                    if ( cgrptr(cvid) == 0 ) then
 !
 !                      The coarse voxel at index CVID is empty so far.
 !                      Allocate CGSCAL pointers for it in the VXPTR

@@ -20,7 +20,7 @@
       implicit none
 
       integer(ip)           numlin
-      character*(*)         array(*)
+      character(*)          array(*)
       integer(ip)           unit
 
 ! $ Brief_I/O
@@ -183,7 +183,7 @@
 !
 !     Check to see if the maximum number of lines is positive.
 !
-      if ( numlin .le. 0 ) then
+      if ( numlin <= 0 ) then
 
          call setmsg ( 'The number of lines to be written was not'  // &
                        ' positive. It was #.'                        )

@@ -456,9 +456,9 @@
 !
 !     The semi-axes must have positive length.
 !
-      if (       ( a .le. 0.0_wp ) &
-           .or.  ( b .le. 0.0_wp ) &
-           .or.  ( c .le. 0.0_wp )   )   then
+      if (       ( a <= 0.0_wp ) &
+           .or.  ( b <= 0.0_wp ) &
+           .or.  ( c <= 0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                      )
@@ -486,9 +486,9 @@
       sclb2  =  sclb**2
       sclc2  =  sclc**2
 
-      if (       ( scla2  .eq.  0.0_wp ) &
-           .or.  ( sclb2  .eq.  0.0_wp ) &
-           .or.  ( sclc2  .eq.  0.0_wp )   )   then
+      if (       ( scla2  ==  0.0_wp ) &
+           .or.  ( sclb2  ==  0.0_wp ) &
+           .or.  ( sclc2  ==  0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                        )
@@ -511,7 +511,7 @@
                  +  ( v(2)**2 / sclb2 ) &
                  +  ( v(3)**2 / sclc2 )
 
-      if ( level .lt. 1.0_wp ) then
+      if ( level < 1.0_wp ) then
 
          call setmsg ( 'Viewing point is inside the ellipsoid.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                  )

@@ -32,7 +32,7 @@
       integer(ip)           collst  ( lbpool : * )
       integer(ip)           items   (          * )
       integer(ip)           item
-      character*(*)         param
+      character(*)          param
       integer(ip)           itemat
       logical               new
       integer(ip)           avail
@@ -545,7 +545,7 @@
 !
       call chkin  ( 'ZZHSIINI' )
 
-      if ( hashsz .gt. 0 ) then
+      if ( hashsz > 0 ) then
 !
 !        Wipe out head node pointer list.
 !
@@ -703,12 +703,12 @@
 !
 !     Set flag indicating whether the hash is full.
 !
-      full   = collst ( freidx ) .gt. collst ( sizidx )
+      full   = collst ( freidx ) > collst ( sizidx )
 
 !
 !     Use simple division hash function to get index of the head node.
 !
-      if ( collst ( sizidx ) .lt. 1 ) then
+      if ( collst ( sizidx ) < 1 ) then
 
          call chkin  ( 'ZZHSIADD'                        )
          call setmsg ( 'Uninitialized hash. Size was #.' )
@@ -732,16 +732,16 @@
 !     See if this item (or one colliding with it in the hash scheme)
 !     has already been stored in the item list.
 !
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 
 !
 !        Start at the head node and check each item saved for this hash
 !        value until we find a item that matches or run out of items in
 !        this conflict resolution list.
 !
-         do while ( node .gt. 0 .and. .not. lfound )
+         do while ( node > 0 .and. .not. lfound )
 
-            lfound = items ( node ) .eq. item
+            lfound = items ( node ) == item
             itemat = node
             node   = collst ( node )
 
@@ -974,7 +974,7 @@
 !
 !     Use simple division hash function to get index of the head node.
 !
-      if ( collst ( sizidx ) .lt. 1 ) then
+      if ( collst ( sizidx ) < 1 ) then
 
          call chkin  ( 'ZZHSICHK'                        )
          call setmsg ( 'Uninitialized hash. Size was #.' )
@@ -997,16 +997,16 @@
 !     See if this item (or one colliding with it in the hash scheme) is
 !     in the item list.
 !
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 
 !
 !        Start at the head node and check each item saved for this hash
 !        value until we find a item that matches or run out of items in
 !        this conflict resolution list.
 !
-         do while ( node .gt. 0 .and. .not. lfound )
+         do while ( node > 0 .and. .not. lfound )
 
-            lfound = items ( node ) .eq. item
+            lfound = items ( node ) == item
             itemat = node
             node   = collst ( node )
 
@@ -1236,18 +1236,18 @@
 !
 !     Get the hash size.
 !
-      if      ( param .eq. 'HASH SIZE' ) then
+      if      ( param == 'HASH SIZE' ) then
 
          avail = collst ( sizidx )
 
 !
 !     Get the count of used nodes in the head list.
 !
-      else if ( param .eq. 'USED HEADNODE COUNT' ) then
+      else if ( param == 'USED HEADNODE COUNT' ) then
 
          avail = 0
          do i = 1, collst ( sizidx )
-            if ( hedlst ( i ) .ne. 0 ) then
+            if ( hedlst ( i ) /= 0 ) then
                avail = avail + 1
             end if
          end do
@@ -1255,11 +1255,11 @@
 !
 !     Get the count of unused nodes in the head list.
 !
-      else if ( param .eq. 'UNUSED HEADNODE COUNT' ) then
+      else if ( param == 'UNUSED HEADNODE COUNT' ) then
 
          avail = 0
          do i = 1, collst ( sizidx )
-            if ( hedlst ( i ) .eq. 0 ) then
+            if ( hedlst ( i ) == 0 ) then
                avail = avail + 1
             end if
          end do
@@ -1267,27 +1267,27 @@
 !
 !     Get the count of used slots in the item list.
 !
-      else if ( param .eq. 'USED ITEM COUNT' ) then
+      else if ( param == 'USED ITEM COUNT' ) then
 
          avail = collst ( freidx ) - 1
 
 !
 !     Get the count of unused slots in the item list.
 !
-      else if ( param .eq. 'UNUSED ITEM COUNT' ) then
+      else if ( param == 'UNUSED ITEM COUNT' ) then
 
          avail = collst ( sizidx ) - collst ( freidx ) + 1
 
 !
 !     Get the size of the longest item list for any hash value.
 !
-      else if ( param .eq. 'LONGEST LIST SIZE' ) then
+      else if ( param == 'LONGEST LIST SIZE' ) then
 
          avail = 0
          do i = 1, collst ( sizidx )
             node = hedlst ( i )
             lookat = 0
-            do while ( node .gt. 0 )
+            do while ( node > 0 )
                lookat = lookat + 1
                node   = collst ( node )
             end do

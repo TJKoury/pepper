@@ -22,7 +22,7 @@
 
       integer(ip)           sc
       real(wp)              ticks
-      character*(*)         clkstr
+      character(*)          clkstr
 
 ! $ Brief_I/O
 !
@@ -394,7 +394,7 @@
 !
       type  =  sctype( sc )
 
-      if  ( type .eq. 1 )  then
+      if  ( type == 1 )  then
          call scfm01( sc, ticks, clkstr )
       else
          call setmsg ( 'Clock type # is not supported. ' )

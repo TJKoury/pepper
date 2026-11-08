@@ -3,7 +3,7 @@
 !> The procedures keep SPICELIB's names, arguments and documentation. They
 !> have no saved state and do not signal SPICE errors. Moved here from
 !> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in pepper_legacy_arrays.f90.
+!> original interface are in src/legacy/pepper_legacy_arrays.f90.
 module pepper_arrays
 
    implicit none
@@ -187,9 +187,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: value
+      character(*), intent(in) :: value
       integer(ip), intent(in) :: ndim
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
       integer(ip), intent(in) :: order ( * )
 
 ! $ Brief_I/O
@@ -408,7 +408,7 @@ contains
       left  = 1
       right = ndim
 
-      do while ( left .le. right )
+      do while ( left <= right )
 
 !
 !        Check the middle element.
@@ -418,7 +418,7 @@ contains
 !
 !        If the middle element matches, return its location.
 !
-         if ( value .eq. array(order(i)) ) then
+         if ( value == array(order(i)) ) then
             bschoc = order(i)
             return
 
@@ -601,7 +601,7 @@ contains
       left  = 1
       right = ndim
 
-      do while ( left .le. right )
+      do while ( left <= right )
 
 !
 !        Check the middle element.
@@ -611,14 +611,14 @@ contains
 !
 !        If the middle element matches, return its location.
 !
-         if ( value .eq. array(order(i)) ) then
+         if ( value == array(order(i)) ) then
             bschoi = order(i)
             return
 
 !
 !        Otherwise narrow the search area.
 !
-         else if ( value .lt. array(order(i)) ) then
+         else if ( value < array(order(i)) ) then
             right = i-1
          else
             left  = i+1
@@ -658,9 +658,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: value
+      character(*), intent(in) :: value
       integer(ip), intent(in) :: ndim
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -798,7 +798,7 @@ contains
       left  = 1
       right = ndim
 
-      do while ( left .le. right )
+      do while ( left <= right )
 
 !
 !        Check the middle element.
@@ -808,7 +808,7 @@ contains
 !
 !        If the middle element matches, return its location.
 !
-         if ( value .eq. array(i) ) then
+         if ( value == array(i) ) then
             bsrchc = i
             return
 
@@ -986,7 +986,7 @@ contains
       left  = 1
       right = ndim
 
-      do while ( left .le. right )
+      do while ( left <= right )
 
 !
 !        Check the middle element.
@@ -996,14 +996,14 @@ contains
 !
 !        If the middle element matches, return its location.
 !
-         if ( value .eq. array(i) ) then
+         if ( value == array(i) ) then
             bsrchd = i
             return
 
 !
 !        Otherwise narrow the search area.
 !
-         else if ( value .lt. array(i) ) then
+         else if ( value < array(i) ) then
             right = i-1
          else
             left  = i+1
@@ -1172,7 +1172,7 @@ contains
       left  = 1
       right = ndim
 
-      do while ( left .le. right )
+      do while ( left <= right )
 
 !
 !        Check the middle element.
@@ -1182,14 +1182,14 @@ contains
 !
 !        If the middle element matches, return its location.
 !
-         if ( value .eq. array(i) ) then
+         if ( value == array(i) ) then
             bsrchi = i
             return
 
 !
 !        Otherwise narrow the search area.
 !
-         else if ( value .lt. array(i) ) then
+         else if ( value < array(i) ) then
             right = i-1
          else
             left  = i+1
@@ -1228,7 +1228,7 @@ contains
       implicit none
 
       integer(ip), intent(in) :: ndim
-      character*(*), intent(out) :: array ( * )
+      character(*), intent(out) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -1773,9 +1773,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: value
+      character(*), intent(in) :: value
       integer(ip), intent(in) :: ndim
-      character*(*), intent(out) :: array ( * )
+      character(*), intent(out) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -2404,11 +2404,11 @@ contains
 !
 !     Let's take care of the goofy case first.
 !
-      if      ( n .lt. 1 ) then
+      if      ( n < 1 ) then
          isordv = .false.
          return
-      else if ( n .eq. 1 ) then
-         isordv = array(1) .eq. 1
+      else if ( n == 1 ) then
+         isordv = array(1) == 1
          return
       end if
 
@@ -2419,8 +2419,8 @@ contains
 !
       do i = 1, n
 
-         if (      ( array(i) .lt. 1 ) &
-              .or. ( array(i) .gt. n )  ) then
+         if (      ( array(i) < 1 ) &
+              .or. ( array(i) > n )  ) then
             isordv = .false.
             return
          end if
@@ -2512,7 +2512,7 @@ contains
       isordv = .true.
 
       do i = 1, n
-         isordv   =  isordv .and. ( array(i) .lt. 0 )
+         isordv   =  isordv .and. ( array(i) < 0 )
          array(i) =          abs  ( array(i)        )
       end do
 
@@ -2544,9 +2544,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: value
+      character(*), intent(in) :: value
       integer(ip), intent(in) :: ndim
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -2656,7 +2656,7 @@ contains
 
       do i = 1, ndim
 
-         if ( array(i) .eq. value ) then
+         if ( array(i) == value ) then
             isrchc = i
             return
          end if
@@ -2801,7 +2801,7 @@ contains
 
       do i = 1, ndim
 
-         if ( array(i) .eq. value ) then
+         if ( array(i) == value ) then
             isrchd = i
             return
          end if
@@ -2941,7 +2941,7 @@ contains
 
       do i = 1, ndim
 
-         if ( array(i) .eq. value ) then
+         if ( array(i) == value ) then
             isrchi = i
             return
          end if
@@ -3138,7 +3138,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0 ) then
+      if      ( n <= 0 ) then
 
 !
 !        There is nothing in the array to compare against. Zero is the
@@ -3147,7 +3147,7 @@ contains
          lstcld = 0
          return
 
-      else if ( x .le. array( begin ) ) then
+      else if ( x <= array( begin ) ) then
 
 !
 !        All elements of the array are at least as big as X. So the
@@ -3155,7 +3155,7 @@ contains
 !
          lstcld = 1
 
-      else if ( array( end ) .le. x ) then
+      else if ( array( end ) <= x ) then
 
 !
 !        X is at least as big as all elements of the array.  So the last
@@ -3168,12 +3168,12 @@ contains
 !
 !        X lies between some pair of elements of the array.
 !
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
 
-            if ( array( middle ) .lt. x ) then
+            if ( array( middle ) < x ) then
                begin  = middle
             else
                end    = middle
@@ -3186,7 +3186,7 @@ contains
 !
 !        Which of the two is closest?
 !
-         if ( x - array( begin ) .lt. array( end ) - x ) then
+         if ( x - array( begin ) < array( end ) - x ) then
             lstcld = begin
          else
             lstcld = end
@@ -3198,8 +3198,8 @@ contains
 !     March down the array to find the last element equal to the
 !     closet value.
 !
-      do while (       lstcld   .lt. n                   .and. &
-                array( lstcld ) .eq. array( lstcld + 1 ))
+      do while (       lstcld   < n                   .and. &
+                array( lstcld ) == array( lstcld + 1 ))
 
          lstcld = lstcld + 1
 
@@ -3379,7 +3379,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0 ) then
+      if      ( n <= 0 ) then
 
 !
 !        There is nothing in the array to compare against. Zero is the
@@ -3388,7 +3388,7 @@ contains
          lstcli = 0
          return
 
-      else if ( x .le. array( begin ) ) then
+      else if ( x <= array( begin ) ) then
 
 !
 !        All elements of the array are at least as big as X. So the
@@ -3396,7 +3396,7 @@ contains
 !
          lstcli = 1
 
-      else if ( array( end ) .le. x ) then
+      else if ( array( end ) <= x ) then
 
 !
 !        X is at least as big as all elements of the array.  So the last
@@ -3409,12 +3409,12 @@ contains
 !
 !        X lies between some pair of elements of the array.
 !
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
 
-            if ( array( middle ) .le. x ) then
+            if ( array( middle ) <= x ) then
                begin  = middle
             else
                end    = middle
@@ -3427,7 +3427,7 @@ contains
 !
 !        Which of the two is closest?
 !
-         if ( x - array( begin ) .lt. array( end ) - x ) then
+         if ( x - array( begin ) < array( end ) - x ) then
             lstcli = begin
          else
             lstcli = end
@@ -3439,8 +3439,8 @@ contains
 !     March down the array to find the last element equal to the
 !     closet value.
 !
-      do while (         lstcli .lt. n                     .and. &
-                array( lstcli ) .eq. array( lstcli + 1 ))
+      do while (         lstcli < n                     .and. &
+                array( lstcli ) == array( lstcli + 1 ))
 
          lstcli = lstcli + 1
 
@@ -3473,9 +3473,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
       integer(ip), intent(in) :: n
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -3666,7 +3666,7 @@ contains
 
 
 
-      if      ( n .le. 0            ) then
+      if      ( n <= 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
@@ -3696,7 +3696,7 @@ contains
 !        STRING lies between some pair of elements of the array
 !
 
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
@@ -3903,7 +3903,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0            ) then
+      if      ( n <= 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
@@ -3911,14 +3911,14 @@ contains
 !
          lstled = 0
 
-      else if ( x .lt. array(begin) ) then
+      else if ( x < array(begin) ) then
 
 !
 !        None of the array elements are less than or equal to X
 !
          lstled = 0
 
-      else if ( x .ge. array(end)   ) then
+      else if ( x >= array(end)   ) then
 
 !
 !        X is greater than or equal to all elements of the array.  Thus
@@ -3933,12 +3933,12 @@ contains
 !        X lies between some pair of elements of the array
 !
 
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
 
-            if ( array(middle) .le. x ) then
+            if ( array(middle) <= x ) then
                begin = middle
             else
                end   = middle
@@ -4214,7 +4214,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0            ) then
+      if      ( n <= 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
@@ -4222,14 +4222,14 @@ contains
 !
          lstlei = 0
 
-      else if ( x .lt. array(begin) ) then
+      else if ( x < array(begin) ) then
 
 !
 !        None of the array elements are less than or equal to X
 !
          lstlei = 0
 
-      else if ( x .ge. array(end)   ) then
+      else if ( x >= array(end)   ) then
 
 !
 !        X is greater than or equal to all elements of the array.  Thus
@@ -4244,12 +4244,12 @@ contains
 !        X lies between some pair of elements of the array
 !
 
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
 
-            if ( array(middle) .le. x ) then
+            if ( array(middle) <= x ) then
                begin = middle
             else
                end   = middle
@@ -4288,9 +4288,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
       integer(ip), intent(in) :: n
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -4478,7 +4478,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0            ) then
+      if      ( n <= 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
@@ -4507,7 +4507,7 @@ contains
 !        STRING lies between some pair of elements of the array
 !
 
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
@@ -4719,7 +4719,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0            ) then
+      if      ( n <= 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
@@ -4727,14 +4727,14 @@ contains
 !
          lstltd = 0
 
-      else if ( x .le. array(begin) ) then
+      else if ( x <= array(begin) ) then
 
 !
 !        None of the array elements are less than X
 !
          lstltd = 0
 
-      else if ( array(end) .lt. x ) then
+      else if ( array(end) < x ) then
 
 !
 !        X is greater than all elements of the array.  Thus the last
@@ -4748,12 +4748,12 @@ contains
 !        X lies between some pair of elements of the array
 !
 
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
 
-            if ( array(middle) .lt. x ) then
+            if ( array(middle) < x ) then
                begin = middle
             else
                end   = middle
@@ -5030,7 +5030,7 @@ contains
       begin = 1
       end   = n
 
-      if      ( n .le. 0            ) then
+      if      ( n <= 0            ) then
 
 !
 !        There's nobody home---that is there is nothing in the array
@@ -5038,14 +5038,14 @@ contains
 !
          lstlti = 0
 
-      else if ( x .le. array(begin) ) then
+      else if ( x <= array(begin) ) then
 
 !
 !        None of the array elements are less than X
 !
          lstlti = 0
 
-      else if ( array(end) .lt. x ) then
+      else if ( array(end) < x ) then
 
 !
 !        X is greater than all elements of the array.  Thus the last
@@ -5059,12 +5059,12 @@ contains
 !        X lies between some pair of elements of the array
 !
 
-         do while ( items .gt. 2 )
+         do while ( items > 2 )
 
             j        = items/2
             middle   = begin + j
 
-            if ( array(middle) .lt. x ) then
+            if ( array(middle) < x ) then
                begin = middle
             else
                end   = middle
@@ -5103,9 +5103,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
       integer(ip), intent(in) :: ndim
-      character*(*), intent(out) :: maxval
+      character(*), intent(out) :: maxval
       integer(ip), intent(out) :: loc
 
 ! $ Brief_I/O
@@ -5222,7 +5222,7 @@ contains
       integer(ip) i
 
 
-      if (ndim .le. 0) then
+      if (ndim <= 0) then
          loc = 0
          return
       end if
@@ -5380,7 +5380,7 @@ contains
       integer(ip) i
 
 
-      if (ndim .le. 0) then
+      if (ndim <= 0) then
          loc = 0
          return
       end if
@@ -5389,7 +5389,7 @@ contains
       loc = 1
 
       do i = 2, ndim
-         if (array(i) .gt. maxval) then
+         if (array(i) > maxval) then
             maxval = array(i)
             loc = i
          end if
@@ -5535,7 +5535,7 @@ contains
 !
       integer(ip) i
 
-      if (ndim .le. 0) then
+      if (ndim <= 0) then
          loc = 0
          return
       end if
@@ -5544,7 +5544,7 @@ contains
       loc = 1
 
       do i = 2, ndim
-         if (array(i) .gt. maxval) then
+         if (array(i) > maxval) then
             maxval = array(i)
             loc = i
          end if
@@ -5575,9 +5575,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
       integer(ip), intent(in) :: ndim
-      character*(*), intent(out) :: minval
+      character(*), intent(out) :: minval
       integer(ip), intent(out) :: loc
 
 ! $ Brief_I/O
@@ -5694,7 +5694,7 @@ contains
       integer(ip) i
 
 
-      if (ndim .le. 0) then
+      if (ndim <= 0) then
          loc = 0
          return
       end if
@@ -5846,7 +5846,7 @@ contains
       integer(ip) i
 
 
-      if (ndim .le. 0) then
+      if (ndim <= 0) then
          loc = 0
          return
       end if
@@ -5855,7 +5855,7 @@ contains
       loc = 1
 
       do i = 2, ndim
-         if (array(i) .lt. minval) then
+         if (array(i) < minval) then
             minval = array(i)
             loc = i
          end if
@@ -5998,7 +5998,7 @@ contains
       integer(ip) i
 
 
-      if (ndim .le. 0) then
+      if (ndim <= 0) then
          loc = 0
          return
       end if
@@ -6007,7 +6007,7 @@ contains
       loc = 1
 
       do i = 2, ndim
-         if (array(i) .lt. minval) then
+         if (array(i) < minval) then
             minval = array(i)
             loc = i
          end if
@@ -6038,9 +6038,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: arrfrm ( * )
+      character(*), intent(in) :: arrfrm ( * )
       integer(ip), intent(in) :: ndim
-      character*(*), intent(out) :: arrto  ( * )
+      character(*), intent(out) :: arrto  ( * )
 
 ! $ Brief_I/O
 !
@@ -6414,7 +6414,7 @@ contains
 !     PEPPER: copy directly. SPICELIB called MOVEI with 2*NDIM integers,
 !     which needs an implicit interface (type mismatch).
 !
-      if ( ndim .gt. 0 ) then
+      if ( ndim > 0 ) then
          arrto(1:ndim) = arrfrm(1:ndim)
       end if
 
@@ -6737,7 +6737,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: array  ( * )
+      character(*), intent(in) :: array  ( * )
       integer(ip), intent(in) :: ndim
       integer(ip), intent(out) :: iorder ( * )
 
@@ -6953,12 +6953,12 @@ contains
 !
       gap = ndim / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, ndim
 
             j = i - gap
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
                jg = j + gap
 
                if ( lle ( array(iorder(j)), array(iorder(jg)) ) ) then
@@ -7136,15 +7136,15 @@ contains
 !
       gap = ndim / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, ndim
 
             j = i - gap
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
                jg = j + gap
 
-               if ( array(iorder(j)) .le. array(iorder(jg)) ) then
+               if ( array(iorder(j)) <= array(iorder(jg)) ) then
                   j = 0
                else
                   call swapi ( iorder(j), iorder(jg) )
@@ -7319,15 +7319,15 @@ contains
 !
       gap = ndim / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, ndim
 
             j = i - gap
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
                jg = j + gap
 
-               if ( array(iorder(j)) .le. array(iorder(jg)) ) then
+               if ( array(iorder(j)) <= array(iorder(jg)) ) then
                   j = 0
                else
                   call swapi ( iorder(j), iorder(jg) )
@@ -7677,7 +7677,7 @@ contains
 
       integer(ip), intent(inout) :: iorder ( * )
       integer(ip), intent(in) :: ndim
-      character*(*), intent(inout) :: array  ( * )
+      character(*), intent(inout) :: array  ( * )
 
 ! $ Brief_I/O
 !
@@ -7891,13 +7891,13 @@ contains
       integer(ip)      hold
 
       integer(ip)      c
-      character*1      temp
+      character(1)     temp
 
 
 !
 !     If the array doesn't have at least two elements, don't bother.
 !
-      if ( ndim .lt. 2 ) then
+      if ( ndim < 2 ) then
            return
       end if
 
@@ -7921,7 +7921,7 @@ contains
 !
          start = 1
 
-         do while ( start .lt. ndim )
+         do while ( start < ndim )
 
 !
 !           Begin with the element of input vector specified by
@@ -7946,7 +7946,7 @@ contains
 !           Keep going until HOLD points to the first array element
 !           moved during the current cycle. This ends the cycle.
 !
-            do while ( hold .ne. start )
+            do while ( hold /= start )
                array(index)(c:c)  =  array(hold)(c:c)
                index              =  hold
                hold               =  iorder(hold)
@@ -7964,7 +7964,7 @@ contains
 !           vector with a positive sign. (That is, the next one
 !           that hasn't been moved.)
 !
-            do while ( iorder(start) .lt. 0  .and.  start .lt. ndim )
+            do while ( iorder(start) < 0  .and.  start < ndim )
                start = start + 1
             end do
 
@@ -8227,7 +8227,7 @@ contains
 !
 !     If the array doesn't have at least two elements, don't bother.
 !
-      if ( ndim .lt. 2 ) then
+      if ( ndim < 2 ) then
            return
       end if
 
@@ -8238,7 +8238,7 @@ contains
 !
       start = 1
 
-      do while ( start .lt. ndim )
+      do while ( start < ndim )
 
 !
 !        Begin with the element of input vector specified by
@@ -8263,7 +8263,7 @@ contains
 !        Keep going until HOLD points to the first array element
 !        moved during the current cycle. This ends the cycle.
 !
-         do while ( hold .ne. start )
+         do while ( hold /= start )
             array(index)  =  array(hold)
             index         =  hold
             hold          =  iorder(hold)
@@ -8281,7 +8281,7 @@ contains
 !        vector with a positive sign. (That is, the next one
 !        that hasn't been moved.)
 !
-         do while ( iorder(start) .lt. 0  .and.  start .lt. ndim )
+         do while ( iorder(start) < 0  .and.  start < ndim )
             start = start + 1
          end do
 
@@ -8542,7 +8542,7 @@ contains
 !
 !     If the array doesn't have at least two elements, don't bother.
 !
-      if ( ndim .lt. 2 ) then
+      if ( ndim < 2 ) then
            return
       end if
 
@@ -8553,7 +8553,7 @@ contains
 !
       start = 1
 
-      do while ( start .lt. ndim )
+      do while ( start < ndim )
 
 !
 !        Begin with the element of input vector specified by
@@ -8578,7 +8578,7 @@ contains
 !        Keep going until HOLD points to the first array element
 !        moved during the current cycle. This ends the cycle.
 !
-         do while ( hold .ne. start )
+         do while ( hold /= start )
             array(index)  =  array(hold)
             index         =  hold
             hold          =  iorder(hold)
@@ -8596,7 +8596,7 @@ contains
 !        vector with a positive sign. (That is, the next one
 !        that hasn't been moved.)
 !
-         do while ( iorder(start) .lt. 0  .and.  start .lt. ndim )
+         do while ( iorder(start) < 0  .and.  start < ndim )
             start = start + 1
          end do
 
@@ -8852,7 +8852,7 @@ contains
 !
 !     If the array doesn't have at least two elements, don't bother.
 !
-      if ( ndim .lt. 2 ) then
+      if ( ndim < 2 ) then
            return
       end if
 
@@ -8863,7 +8863,7 @@ contains
 !
       start = 1
 
-      do while ( start .lt. ndim )
+      do while ( start < ndim )
 
 !
 !        Begin with the element of input vector specified by
@@ -8888,7 +8888,7 @@ contains
 !        Keep going until HOLD points to the first array element
 !        moved during the current cycle. This ends the cycle.
 !
-         do while ( hold .ne. start )
+         do while ( hold /= start )
             array(index)  =  array(hold)
             index         =  hold
             hold          =  iorder(hold)
@@ -8906,7 +8906,7 @@ contains
 !        vector with a positive sign. (That is, the next one
 !        that hasn't been moved.)
 !
-         do while ( iorder(start) .lt. 0  .and.  start .lt. ndim )
+         do while ( iorder(start) < 0  .and.  start < ndim )
             start = start + 1
          end do
 
@@ -8945,7 +8945,7 @@ contains
       implicit none
 
       integer(ip), intent(inout) :: nelt
-      character*(*), intent(inout) :: array   (*)
+      character(*), intent(inout) :: array   (*)
 
 ! $ Brief_I/O
 !
@@ -9065,7 +9065,7 @@ contains
 !
 !     Proceed only if the array actually contains more than one element.
 !
-      if ( nelt .gt. 1 ) then
+      if ( nelt > 1 ) then
 
 !
 !        Sort the array in place.
@@ -9081,7 +9081,7 @@ contains
 
          do i = 2, nelt
 
-            if ( array(i) .ne. array(i-1) ) then
+            if ( array(i) /= array(i-1) ) then
                j        = j + 1
                array(j) = array(i)
             end if
@@ -9237,7 +9237,7 @@ contains
 !
 !     Proceed only if the array actually contains more than one element.
 !
-      if ( nelt .gt. 1 ) then
+      if ( nelt > 1 ) then
 
 !
 !        Sort the array in place.
@@ -9253,7 +9253,7 @@ contains
 
          do i = 2, nelt
 
-            if ( array(i) .ne. array(i-1) ) then
+            if ( array(i) /= array(i-1) ) then
                j        = j + 1
                array(j) = array(i)
             end if
@@ -9409,7 +9409,7 @@ contains
 !
 !     Proceed only if the array actually contains more than one element.
 !
-      if ( nelt .gt. 1 ) then
+      if ( nelt > 1 ) then
 
 !
 !        Sort the array in place.
@@ -9425,7 +9425,7 @@ contains
 
          do i = 2, nelt
 
-            if ( array(i) .ne. array(i-1) ) then
+            if ( array(i) /= array(i-1) ) then
                j        = j + 1
                array(j) = array(i)
             end if
@@ -9568,7 +9568,7 @@ contains
 
       do i = 1, ndim
 
-         if (  a1(i)  .ne.  a2(i)  ) then
+         if (  a1(i)  /=  a2(i)  ) then
             sameai = .false.
             return
          end if
@@ -9602,7 +9602,7 @@ contains
       implicit none
 
       integer(ip), intent(in) :: ndim
-      character*(*), intent(inout) :: array ( * )
+      character(*), intent(inout) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -9786,12 +9786,12 @@ contains
 !
       gap = ndim / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, ndim
 
             j = i - gap
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
                jg = j + gap
 
                if ( lle (array(j), array(jg)) ) then
@@ -9952,15 +9952,15 @@ contains
 !
       gap = ndim / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, ndim
 
             j = i - gap
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
                jg = j + gap
 
-               if ( array(j) .le. array(jg) ) then
+               if ( array(j) <= array(jg) ) then
                   j = 0
                else
                   call swapd ( array(j), array(jg) )
@@ -10118,15 +10118,15 @@ contains
 !
       gap = ndim / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, ndim
 
             j = i - gap
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
                jg = j + gap
 
-               if ( array(j) .le. array(jg) ) then
+               if ( array(j) <= array(jg) ) then
                   j = 0
                else
                   call swapi ( array(j), array(jg) )
@@ -10761,8 +10761,8 @@ contains
 
       implicit none
 
-      character*(*), intent(inout) :: a
-      character*(*), intent(inout) :: b
+      character(*), intent(inout) :: a
+      character(*), intent(inout) :: b
 
 ! $ Brief_I/O
 !
@@ -10864,7 +10864,7 @@ contains
       integer(ip)      blen
       integer(ip)      short
 
-      character*1      temp
+      character(1)     temp
       integer(ip)      i
 
 
@@ -10890,10 +10890,10 @@ contains
 !     If either string is longer than the shortest one, pad it
 !     with blanks.
 !
-      if ( alen .gt. short ) then
+      if ( alen > short ) then
          a(short+1: ) = ' '
 
-      else if ( blen .gt. short ) then
+      else if ( blen > short ) then
          b(short+1: ) = ' '
       end if
 

@@ -22,9 +22,9 @@
 
       implicit none
 
-      character*(*)    string
+      character(*)     string
       real(wp) x
-      character*(*)    error
+      character(*)     error
       integer(ip)      ptr
 
 ! $ Brief_I/O
@@ -276,12 +276,12 @@
       integer(ip)           errsiz
       parameter           ( errsiz = 160 )
 
-      character*(errsiz)    blnkst
-      character*(errsiz)    toobig
-      character*(errsiz)    unrcst
-      character*(errsiz)    unxpch
-      character*(errsiz)    unxppt
-      character*(errsiz)    unxpsn
+      character(errsiz)     blnkst
+      character(errsiz)     toobig
+      character(errsiz)     unrcst
+      character(errsiz)     unxpch
+      character(errsiz)     unxppt
+      character(errsiz)     unxpsn
 
       real(wp)              decval
       real(wp)              divisr
@@ -442,7 +442,7 @@
          intbnd = base
          next   = intbnd + 1.0_wp
 
-         do while ( intbnd .ne. next )
+         do while ( intbnd /= next )
 
             intbnd = intbnd *  base
             next   = intbnd +  1.0_wp
@@ -513,7 +513,7 @@
 !     Before doing anything else we determine whether or not
 !     the input string is empty.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
 
          error = blnkst
          ptr   = 1
@@ -545,7 +545,7 @@
 !
       m     =  l / 2
 
-      do while ( l-b .gt. test )
+      do while ( l-b > test )
 !
 !        What is true right now?  The string from L+1 on out
 !        is blank.  L > B; L-1 = NL >= B;  M = (B + NL) / 2;
@@ -553,11 +553,11 @@
 !        there must be a non-blank character between B and the
 !        end of the string.
 !
-         if ( ichar(string(l:l)) .ne. blank ) then
+         if ( ichar(string(l:l)) /= blank ) then
 
             b = l
 
-         else if ( string(m:nl) .eq. ' ' ) then
+         else if ( string(m:nl) == ' ' ) then
 
 !
 !           If you got here, the STRING(L:L) is a blank.
@@ -614,7 +614,7 @@
 !     of the input string.  We simply search backward from L to
 !     locate this last non-blank.
 !
-      do while ( ichar(string(l:l)) .eq. blank )
+      do while ( ichar(string(l:l)) == blank )
          l = l - 1
       end do
 
@@ -629,7 +629,7 @@
 
          id    = ichar(string(i:i))
 
-         if ( id .gt. nknown .or. id .lt. 0 ) then
+         if ( id > nknown .or. id < 0 ) then
 
 !
 !           This is definitely not expected.  Set the error message
@@ -648,7 +648,7 @@
 !
 !        The action taken depends upon the class of the token.
 !
-         else if ( class(id) .eq. digit ) then
+         else if ( class(id) == digit ) then
 !
 !           Once a digit has been encountered, we can no longer
 !           allow the string 'PI' or a sign until an exponent
@@ -668,7 +668,7 @@
 !              Check the current value of the integer part to
 !              make sure we don't overflow.
 !
-               if ( intval .lt. intbnd ) then
+               if ( intval < intbnd ) then
 
                   intval = intval * base + values(id)
 
@@ -688,7 +688,7 @@
 
                      roundi = .false.
 
-                     if ( values(id) .gt. 0.5_wp*base ) then
+                     if ( values(id) > 0.5_wp*base ) then
                         intval = intval + 1.0_wp
                      end if
 
@@ -715,7 +715,7 @@
 !                 anything.  The remaining digits cannot contribute
 !                 to the value of the decimal part.
 !
-                  if  ( decval .lt. intbnd ) then
+                  if  ( decval < intbnd ) then
 
                      decval = decval * base + values(id)
                      ecount = ecount - 1
@@ -724,7 +724,7 @@
 
                      roundd = .false.
 
-                     if ( values(id) .ge. 0.5_wp*base ) then
+                     if ( values(id) >= 0.5_wp*base ) then
                         decval =  decval + 1.0_wp
                      end if
 
@@ -742,7 +742,7 @@
 !                 the extra digits can't make any contribution to
 !                 the double precision value given to the string.
 !
-                  if ( divisr .lt. intbnd ) then
+                  if ( divisr < intbnd ) then
 
                      decval = decval * base + values(id)
                      divisr = divisr * base
@@ -755,7 +755,7 @@
 !
             else if ( doexp  ) then
 
-               if ( expval + ecount .gt. maxexp ) then
+               if ( expval + ecount > maxexp ) then
 !
 !                 This number is too big to put into a double
 !                 precision number. The marginal case where
@@ -768,7 +768,7 @@
                   ptr   = i
                   return
 
-               else if ( expval + ecount .lt. minexp ) then
+               else if ( expval + ecount < minexp ) then
 !
 !                 This number is going to underflow, we can
 !                 just stop accumulating exponent. But we don't
@@ -807,7 +807,7 @@
 
             end if
 
-         else if ( class(id) .eq. dpoint ) then
+         else if ( class(id) == dpoint ) then
 
             if ( pntok ) then
 
@@ -818,7 +818,7 @@
                dodec  = .true.
                doint  = .false.
                doexp  = .false.
-               zeroi  = intval .eq. 0.0_wp
+               zeroi  = intval == 0.0_wp
 
             else
 
@@ -834,7 +834,7 @@
 
             end if
 
-         else if ( class(id) .eq. expont ) then
+         else if ( class(id) == expont ) then
 
             sigchr = .true.
 
@@ -864,7 +864,7 @@
 
             end if
 
-         else if ( class(id) .eq. sign ) then
+         else if ( class(id) == sign ) then
 
             if ( signok ) then
 
@@ -885,7 +885,7 @@
 
             end if
 
-         else if ( class(id) .eq. bpistr ) then
+         else if ( class(id) == bpistr ) then
 
             sigchr = .true.
 
@@ -914,7 +914,7 @@
 
             end if
 
-         else if ( class(id) .eq. epistr ) then
+         else if ( class(id) == epistr ) then
 
             if ( epiok ) then
 
@@ -944,7 +944,7 @@
 
             end if
 
-         else if ( class(id) .eq. ignore ) then
+         else if ( class(id) == ignore ) then
 
 !
 !           We don't do anything.
@@ -1039,9 +1039,9 @@
 !
 !     If the exponent is negative ...
 !
-      if ( expval .lt. 0 ) then
+      if ( expval < 0 ) then
 
-         do while ( expval .lt. -base )
+         do while ( expval < -base )
 
             value  = value  / lookup(ibase)
             expval = expval + base
@@ -1052,14 +1052,14 @@
 !
 !     If the exponent is positive ...
 !
-      else if ( expval .gt. 0 ) then
+      else if ( expval > 0 ) then
 
-         do while ( expval .gt. base )
+         do while ( expval > base )
 !
 !           Make sure that a multiply isn't going to create
 !           a number that overflows.
 !
-            if ( value .ge. smlbnd ) then
+            if ( value >= smlbnd ) then
 
                error = toobig
                ptr   = len(string)+1
@@ -1081,7 +1081,7 @@
 !        Again, make sure that a floating point overflow isn't
 !        going to happen.
 !
-         if ( value .lt. dpmax()/lookup(exp) ) then
+         if ( value < dpmax()/lookup(exp) ) then
 
             value = value * lookup(exp)
 

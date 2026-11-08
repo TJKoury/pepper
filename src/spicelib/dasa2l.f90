@@ -432,7 +432,7 @@
 !
 !     Local variables
 !
-      character*(acclen)    access
+      character(acclen)     access
 
       integer(ip)           baserc
       integer(ip)           curtyp
@@ -697,7 +697,7 @@
 !
 !     Make sure the data type is valid.
 !
-      if (  ( type .lt. char ) .or. ( type .gt. int )  ) then
+      if (  ( type < char ) .or. ( type > int )  ) then
 
          call chkin    ( 'DASA2L'                         )
          call setmsg ( 'Invalid data type: #. File was #' )
@@ -714,7 +714,7 @@
 !     last call. We can use data from the previous call only if that
 !     call succeeded.
 !
-      samfil =  ( handle .eq. prvhan )  .and.  prvok
+      samfil =  ( handle == prvhan )  .and.  prvok
 !
 !     PRVOK defaults to .FALSE. and will be reset if this call
 !     succeeds.
@@ -737,7 +737,7 @@
          else
 
             fidx  =  isrchi ( handle, nfiles, tbhan )
-            known =  fidx .gt. 0
+            known =  fidx > 0
 
          end if
 
@@ -809,7 +809,7 @@
 !
 !           TBRDON(FIDX) indicates whether the file is read-only.
 !
-            tbrdon(fidx) =  access .eq. 'READ'
+            tbrdon(fidx) =  access == 'READ'
 
          end if
 
@@ -875,7 +875,7 @@
 
             nxtrec = dirrec( fwdloc )
 
-            if ( nxtrec .le. 0 ) then
+            if ( nxtrec <= 0 ) then
 !
 !              If this file is segregated, there are at most three
 !              cluster descriptors, and each one points to a cluster
@@ -888,7 +888,7 @@
 
                do i = 1, 3
 
-                  if ( tbmxad(i,fidx) .gt. 0 ) then
+                  if ( tbmxad(i,fidx) > 0 ) then
                      ntypes = ntypes + 1
                   end if
 
@@ -903,12 +903,12 @@
                dscloc  =  begdsc + 1
                segok   = .true.
 
-               do while (       ( dscloc .le. (begdsc+ntypes) ) &
+               do while (       ( dscloc <= (begdsc+ntypes) ) &
                           .and.   segok                        )
 !
 !                 Find the type of the current descriptor.
 !
-                  if ( dirrec(dscloc) .gt. 0 ) then
+                  if ( dirrec(dscloc) > 0 ) then
                      curtyp  =  next( prvtyp )
                   else
                      curtyp  =  prev( prvtyp )
@@ -921,7 +921,7 @@
                                            + tbsize (curtyp, fidx )
 
                   segok   =       tbmxad( curtyp, fidx ) &
-                            .le.  tbsize( curtyp, fidx ) * nw(curtyp)
+                            <=  tbsize( curtyp, fidx ) * nw(curtyp)
 
                   dscloc  =  dscloc + 1
 !
@@ -958,7 +958,7 @@
 !
       mxaddr = tbmxad( type, fidx )
 
-      if (  ( addrss .lt. 1 ) .or. ( addrss .gt. mxaddr )  ) then
+      if (  ( addrss < 1 ) .or. ( addrss > mxaddr )  ) then
 !
 !        Make sure the current table entry won't be found on a
 !        subsequent search.
@@ -1017,7 +1017,7 @@
                        range )
 
 
-         do while ( range(high) .lt. addrss )
+         do while ( range(high) < addrss )
 !
 !           The record number of the next directory is the forward
 !           pointer in the current directory record. Update NREC with
@@ -1107,9 +1107,9 @@
          prvtyp  =  prev ( dirrec(begdsc) )
          dscloc  =  begdsc + 1
 
-         do while ( hiaddr .lt. addrss )
+         do while ( hiaddr < addrss )
 
-            if ( dscloc .gt. nwi ) then
+            if ( dscloc > nwi ) then
 !
 !              This situation shouldn't occur, but it might if the
 !              DAS file is corrupted.
@@ -1144,7 +1144,7 @@
 !
 !           Find the type of the current descriptor.
 !
-            if ( dirrec(dscloc) .gt. 0 ) then
+            if ( dirrec(dscloc) > 0 ) then
                curtyp  =   next( prvtyp )
             else
                curtyp  =   prev( prvtyp )
@@ -1159,7 +1159,7 @@
 !           If the current descriptor is of the type we're interested
 !           in, update the highest address count.
 !
-            if ( curtyp .eq. type ) then
+            if ( curtyp == type ) then
                hiaddr = hiaddr + ( nw(type) * abs( dirrec(dscloc) ) )
             end if
 

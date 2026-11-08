@@ -731,7 +731,7 @@
 !
          do i = 1, numgeo
 
-           if( lstphs( i ) .ne. geophs( i ) ) then
+           if( lstphs( i ) /= geophs( i ) ) then
               doinit = .true.
            end if
 
@@ -740,7 +740,7 @@
 
          do i = 1, numelm
 
-           if( lstelm( i ) .ne. elems( i ) ) then
+           if( lstelm( i ) /= elems( i ) ) then
               doinit = .true.
            end if
 
@@ -842,11 +842,11 @@
          perige = ( aodp * ( one - eo ) - ae ) * xkmper
 
 
-         if ( perige .lt. 156.0_wp ) then
+         if ( perige < 156.0_wp ) then
 
             s4 = perige - 78.0_wp
 
-            if ( perige .gt. 98.0_wp) then
+            if ( perige > 98.0_wp) then
 
                qoms24 = ( (120.0_wp - s4) * ae/xkmper )**4
                s4     = s4/xkmper + ae
@@ -994,7 +994,7 @@
 !
       capu = dmod( (xlt - xnode), pix2 )
 
-      if ( capu .lt. zero ) then
+      if ( capu < zero ) then
          capu = capu + pix2
       end if
 
@@ -1021,7 +1021,7 @@
 !        Test for convergence against the defined tolerance
 !
 
-         if ( dabs( epw - temp2 ) .le. tol ) then
+         if ( dabs( epw - temp2 ) <= tol ) then
             cont = .false.
          end if
 
@@ -1051,12 +1051,12 @@
 !
 !     Compute the angle from the x-axis of the point ( COSU, SINU )
 !
-      if (      sinu .ne. zero &
-           .or. cosu .ne. zero ) then
+      if (      sinu /= zero &
+           .or. cosu /= zero ) then
 
          uang = datan2 (sinu,cosu)
 
-         if ( uang .lt. zero ) then
+         if ( uang < zero ) then
             uang = uang + pix2
          end if
 

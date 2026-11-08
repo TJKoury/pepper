@@ -141,7 +141,7 @@
 !
       ncols  =  segdsc ( ncidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKSZ05'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -157,7 +157,7 @@
 !     If the column has fixed-size entries, just return the declared
 !     size.
 !
-      if ( coldsc(sizidx) .ne. ifalse ) then
+      if ( coldsc(sizidx) /= ifalse ) then
 
          zzeksz05  =  coldsc(sizidx)
          return
@@ -172,7 +172,7 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .lt. 1 ) then
+      if ( datptr < 1 ) then
 !
 !        The value is null.  Null entries are always considered to have
 !        size 1.

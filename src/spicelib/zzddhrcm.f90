@@ -128,7 +128,7 @@
 !     Check to see if REQCNT is INTMAX, otherwise just increment
 !     REQCNT.
 !
-      if ( reqcnt .eq. intmax() ) then
+      if ( reqcnt == intmax() ) then
 
          reqcnt = intmax()/2 + 1
 

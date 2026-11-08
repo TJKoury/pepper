@@ -22,7 +22,7 @@
       implicit none
 
       real(wp)              et
-      character*(*)         calstr
+      character(*)          calstr
 
 ! $ Brief_I/O
 !
@@ -384,25 +384,25 @@
 !     The variables below hold the components of the output string
 !     before they are put together.
 !
-      character*(strsiz)    era
-      character*(strsiz)    ystr
-      character*(strsiz)    dstr
-      character*(strsiz)    hstr
-      character*(strsiz)    mstr
-      character*(strsiz)    sstr
-      character*(strsiz)    messge
+      character(strsiz)     era
+      character(strsiz)     ystr
+      character(strsiz)     dstr
+      character(strsiz)     hstr
+      character(strsiz)     mstr
+      character(strsiz)     sstr
+      character(strsiz)     messge
 
 !
 !     We will construct our string using the local variable DATE
 !     and transfer the results to the output CALSTR when we are
 !     done.
 !
-      character*(lngsiz)    date
+      character(lngsiz)     date
 
 !
 !     MONTHS contains 3-letter abbreviations for the months of the year
 !
-      character*(3)         months ( 12 )
+      character(3)          months ( 12 )
 
       real(wp)              dmnint
       real(wp)              dmxint
@@ -553,7 +553,7 @@
       q    = dint ( mynum / mydnom )
       remd = mynum -    q * mydnom
 
-      if ( remd .lt. 0.0_wp ) then
+      if ( remd < 0.0_wp ) then
          q    = q   - 1.0_wp
          remd = remd + mydnom
       end if
@@ -565,13 +565,13 @@
 !     Do something about the problem when ET is vastly
 !     out of range.  (Day number outside MAX and MIN integer).
 !
-      if      ( dp2000 + dn2000 .lt. dmnint + 1) then
+      if      ( dp2000 + dn2000 < dmnint + 1) then
 
          dp2000 = dmnint - dn2000 + 1
          messge = 'Epoch before '
          secs   = 0.0_wp
 
-      else if ( dp2000 + dn2000 .gt. dmxint - 1 ) then
+      else if ( dp2000 + dn2000 > dmxint - 1 ) then
 
          dp2000 = dmxint - dn2000 - 1
          messge = 'Epoch after '
@@ -597,7 +597,7 @@
 !     be positive and then we subtract off the appropriate multiple
 !     of 400 years later.
 !
-      if ( daynum .lt. 0 ) then
+      if ( daynum < 0 ) then
 
 !
 !        Since we can't make the call below and remain
@@ -608,7 +608,7 @@
          iq   = daynum / dp400y
          rem  = daynum - dp400y*iq
 
-         if ( rem .lt. 0 ) then
+         if ( rem < 0 ) then
             iq   = iq   - 1
             rem  = rem  + dp400y
          end if
@@ -653,7 +653,7 @@
 !     Get the month, and day of month (depending upon whether
 !     we have a leap year or not).
 !
-      if ( ldays(year) .eq. 0 ) then
+      if ( ldays(year) == 0 ) then
          month  = lstlti ( dofyr, 12, dpjan0 )
          day    = dofyr - dpjan0(month)
       else
@@ -676,7 +676,7 @@
 !        out.  We need to add the era.  If we don't do this
 !        the dates look very confusing.
 !
-         if ( year .lt. 1000 ) then
+         if ( year < 1000 ) then
             era   = ' A.D. '
          else
             era   = ' '
@@ -705,7 +705,7 @@
 !     We round seconds if we can do so without getting seconds to be
 !     bigger than 60.
 !
-      if ( secs + 0.0005_wp .lt. 60.0_wp ) then
+      if ( secs + 0.0005_wp < 60.0_wp ) then
          secs = secs + 0.0005_wp
       end if
 
@@ -713,7 +713,7 @@
 !     Finally, get the components of our date string.
 !
       call intstr ( year,   ystr )
-      if ( day .ge. 10 ) then
+      if ( day >= 10 ) then
          call intstr ( day, dstr )
       else
          dstr = '0'
@@ -723,13 +723,13 @@
 !
 !     We want to zero pad the hours minutes and seconds.
 !
-      if ( hours .lt. 10 ) then
+      if ( hours < 10 ) then
          bh = 2
       else
          bh = 1
       end if
 
-      if ( mins .lt. 10 ) then
+      if ( mins < 10 ) then
          bm = 2
       else
          bm = 1
@@ -755,7 +755,7 @@
 !     third slot, then SSTR is of the form ' x.xxxxx'  and we need
 !     to insert a leading zero.
 !
-      if ( sstr(3:3) .eq. '.' ) then
+      if ( sstr(3:3) == '.' ) then
          sstr(1:1) = '0'
       end if
 !

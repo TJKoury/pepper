@@ -31,7 +31,7 @@
       integer(ip)           refa
       integer(ip)           refb
       real(wp)              rotab    ( 3,3 )
-      character*(*)         name
+      character(*)          name
       integer(ip)           index
 
 ! $ Brief_I/O
@@ -228,11 +228,11 @@
 !
 !     Local variables
 !
-      character*16          bases  (   maxf )
-      character*80          defs   (   maxf )
-      character*25          error
-      character*16          frames (   maxf )
-      character*25          word
+      character(16)         bases  (   maxf )
+      character(80)         defs   (   maxf )
+      character(25)         error
+      character(16)         frames (   maxf )
+      character(25)         word
 
       real(wp)              angle
       real(wp)              radang
@@ -926,7 +926,7 @@
 !
 !     should work, but why risk roundoff problems?
 !
-      if ( refa .lt. 1  .or.  refa .gt. maxf ) then
+      if ( refa < 1  .or.  refa > maxf ) then
 
          call chkin  ( 'IRFROT' )
          call setmsg ( 'A request has been made to obtain the ' &
@@ -940,7 +940,7 @@
          call sigerr ( 'SPICE(IRFNOTREC)' )
          call chkout ( 'IRFROT' )
 
-      else if ( refb .lt. 1  .or.  refb .gt. maxf ) then
+      else if ( refb < 1  .or.  refb > maxf ) then
 
          call chkin  ( 'IRFROT' )
          call setmsg ( 'A request has been made to obtain the ' &
@@ -955,7 +955,7 @@
          call chkout ( 'IRFROT' )
 
 
-      else if ( refa .eq. refb ) then
+      else if ( refa == refb ) then
          call rotate ( 0.0_wp, 1, rotab )
 
       else
@@ -1170,7 +1170,7 @@
          return
       end if
 
-      if ( name .eq. 'J2000' .or. name .eq. 'j2000' ) then
+      if ( name == 'J2000' .or. name == 'j2000' ) then
          index = 1
          return
       end if
@@ -1382,7 +1382,7 @@
          call chkin ( 'IRFNAM' )
       end if
 
-      if ( index .lt. 1  .or.  index .gt. maxf ) then
+      if ( index < 1  .or.  index > maxf ) then
          name = ' '
 
       else
@@ -1602,7 +1602,7 @@
 !
 !     There's not much to do, except save the value for later use.
 !
-      if ( index .lt. 1  .or.  index .gt. maxf ) then
+      if ( index < 1  .or.  index > maxf ) then
 
          call setmsg ( 'The reference frame with id-code # is ' &
          //            'not a recognized inertial reference ' &

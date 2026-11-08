@@ -1126,7 +1126,7 @@
 !
       a = (no*tumin)**(-2.0_wp/3.0_wp)
 
-      if (dabs(ecco-1.0_wp) .gt. 0.000001_wp) then
+      if (dabs(ecco-1.0_wp) > 0.000001_wp) then
          altp= (a*(1.0_wp-ecco))-1.0_wp
          alta= (a*(1.0_wp+ecco))-1.0_wp
       else
@@ -1163,7 +1163,7 @@
 !       Check RP for a reasonable value. The propagator may not
 !       calculate correct state values for RP < 1.
 !
-        if (rp .lt. 1.0_wp) then
+        if (rp < 1.0_wp) then
 
            call setmsg ( 'TLE elements suborbital.'     )
            call sigerr ( 'SPICE(SUBORBITAL)'            )
@@ -1175,11 +1175,11 @@
 !
 !       If nodeo and No are gtr 0
 !
-        if( (omeosq .ge. 0.0_wp) .or. (no .ge. 0.0_wp) ) then
+        if( (omeosq >= 0.0_wp) .or. (no >= 0.0_wp) ) then
 
             dosimp = .false.
 
-            if (rp .lt. (220.0_wp/er+1.0_wp)) then
+            if (rp < (220.0_wp/er+1.0_wp)) then
                 dosimp = .true.
             end if
 
@@ -1190,10 +1190,10 @@
 !
 !           For perigees below 156 km, S and Qoms2t are altered.
 !
-            if(perige .lt. 156.0_wp) then
+            if(perige < 156.0_wp) then
                 sfour = perige-78.0_wp
 
-                if(perige .le. 98.0_wp) then
+                if(perige <= 98.0_wp) then
                     sfour = 20.0_wp
                 end if
 
@@ -1217,7 +1217,7 @@
             cc1    = bstar*cc2
             cc3    = 0.0_wp
 
-            if(ecco .gt. 1.0e-4_wp) then
+            if(ecco > 1.0e-4_wp) then
                 cc3 = -2.0_wp*coef*tsi*j3oj2*no*sinio/ecco
             end if
 
@@ -1245,7 +1245,7 @@
             omgcof = bstar*cc3*dcos(argpo)
             xmcof  = 0.0_wp
 
-            if(ecco .gt. 1.0e-4_wp) then
+            if(ecco > 1.0e-4_wp) then
                 xmcof = -x2o3*coef*bstar/eeta
             end if
 
@@ -1255,7 +1255,7 @@
 !
 !           sgp4fix for divide by zero with xinco = 180 deg.
 !
-            if (dabs(cosio+1.0_wp).gt. 1.5e-12_wp) then
+            if (dabs(cosio+1.0_wp)> 1.5e-12_wp) then
                 xlcof  = -0.25_wp*j3oj2*sinio* &
                          (3.0_wp+5.0_wp*cosio)/(1.0_wp+cosio)
             else
@@ -1271,7 +1271,7 @@
 !
 !           Deep Space Initialization
 !
-            if ((twopi()/no) .ge. 225.0_wp) then
+            if ((twopi()/no) >= 225.0_wp) then
 
                 dodeep = .true.
                 dosimp = .true.
@@ -1608,7 +1608,7 @@
 !
 !     Mean motion less than 0.0.
 !
-      if(xn .le. 0.0_wp) then
+      if(xn <= 0.0_wp) then
 
          call setmsg ( 'Mean motion less-than zero. ' &
           //           'This error may indicate a bad TLE set.'     )
@@ -1627,7 +1627,7 @@
 !     a lower limit of -0.001. This value apparently prevents
 !     an error signal due to roundoff error.
 !
-      if (eccm .ge. 1.0_wp .or. eccm .lt. -0.001_wp) then
+      if (eccm >= 1.0_wp .or. eccm < -0.001_wp) then
 
          call setmsg ( 'Mean eccentricity value, #, beyond ' &
           //           'allowed bounds [-0.001,1.0). This ' &
@@ -1639,7 +1639,7 @@
 
       end if
 
-      if ( am .lt. 0.95_wp ) then
+      if ( am < 0.95_wp ) then
 
          call setmsg ( 'Mean semi-major axis value, #, below allowed ' &
           //           'minimum of 0.95. This error may indicate ' &
@@ -1655,7 +1655,7 @@
 !
 !     sgp4fix change test condition for eccentricity
 !
-      if (eccm .lt. 1.0e-6_wp) eccm = 1.0e-6_wp
+      if (eccm < 1.0e-6_wp) eccm = 1.0e-6_wp
 
       mm     = mm+no*templ
       xlm    = mm+argpm+nodem
@@ -1697,14 +1697,14 @@
                        zmol, zmos,  inclo, .false., &
                        eccp, xincp, nodep, argpp, mp )
 
-         if(xincp .lt. 0.0_wp) then
+         if(xincp < 0.0_wp) then
             xincp  = -xincp
             nodep  = nodep + pi()
             argpp  = argpp - pi()
          end if
 
-         if ( (eccp .lt. 0.0_wp) .or. &
-              (eccp .gt. 1.0_wp) ) then
+         if ( (eccp < 0.0_wp) .or. &
+              (eccp > 1.0_wp) ) then
 
             call setmsg ( 'Perturbed eccentricity value, #, beyond ' &
              //           'allowed bounds [0,1]. This error may ' &
@@ -1732,7 +1732,7 @@
 !         sgp4fix for divide by zero with xincp = 180 deg
 !
 
-          if (dabs(cosip+1.0_wp).gt. 1.5e-12_wp) then
+          if (dabs(cosip+1.0_wp)> 1.5e-12_wp) then
              xlcof  = -0.25_wp*j3oj2*sinip* &
                        (3.0_wp+5.0_wp*cosip)/(1.0_wp+cosip)
           else
@@ -1761,7 +1761,7 @@
 
       temp = 9999.9_wp
 
-      do while ((temp.ge.1.0e-12_wp).and.(iter.lt.10))
+      do while ((temp>=1.0e-12_wp).and.(iter<10))
 
          iter  = iter+1
          sineo1= dsin(eo1)
@@ -1773,7 +1773,7 @@
 !
 !        Stop excessive correction.
 !
-         if(temp.gt.1.0_wp) tem5=tem5/temp
+         if(temp>1.0_wp) tem5=tem5/temp
 
          eo1   = eo1+tem5
 
@@ -1790,7 +1790,7 @@
 !
 !     Error check for semi-latus rectum < 0.0
 !
-      if ( pl .lt. 0.0_wp ) then
+      if ( pl < 0.0_wp ) then
 
          call setmsg ( 'Semi-latus rectum less-than zero.'          )
          call sigerr ( 'SPICE(BADSEMILATUS)'                        )
@@ -1867,7 +1867,7 @@
 !     Place this test here to ensure evaluation of STATE.
 !     The result may be physically invalid.
 !
-      if (mr .lt. 1.0_wp) then
+      if (mr < 1.0_wp) then
 
          call setmsg ( 'Satellite has decayed.' )
          call sigerr ( 'SPICE(ORBITDECAY)'      )

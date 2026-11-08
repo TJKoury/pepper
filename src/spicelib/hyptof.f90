@@ -204,7 +204,7 @@
          maxlog = log ( dpmax() )
       end if
 
-      if ( ecc .lt. 1.0_wp ) then
+      if ( ecc < 1.0_wp ) then
          call sigerr ( 'SPICE(WRONGCONIC)' )
          call chkout ( 'HYPTOF'            )
          return
@@ -221,7 +221,7 @@
 !     the solution to MA = e sinh(F) - F by negating F if MA is
 !     less than 0.
 !
-      if ( ma .eq. 0.0_wp ) then
+      if ( ma == 0.0_wp ) then
          f = 0.0_wp
          call chkout ( 'HYPTOF' )
          return
@@ -342,16 +342,16 @@
 !
       mcount = 100
       count  = 0
-      do while ( diff .gt. 0.0_wp .and. count .lt. mcount )
+      do while ( diff > 0.0_wp .and. count < mcount )
 
 !
 !        Move one of the endpoints to the middle.
 !
-         if ( midval .gt. 0.0_wp ) then
+         if ( midval > 0.0_wp ) then
 
             upper = middle
 
-         else if ( midval .lt. 0.0_wp ) then
+         else if ( midval < 0.0_wp ) then
 
             lower = middle
 
@@ -372,8 +372,8 @@
 !
 !        If we are on an endpoint, we are ready to call it quits.
 !
-         if (      ( middle .eq. lower ) &
-              .or. ( middle .eq. upper ) ) then
+         if (      ( middle == lower ) &
+              .or. ( middle == upper ) ) then
 
             diff   = 0.0_wp
 
@@ -390,7 +390,7 @@
 !
 !     Restore the proper sign, if necessary.
 !
-      if ( ma .lt. 0 ) then
+      if ( ma < 0 ) then
          f = - middle
       else
          f =   middle

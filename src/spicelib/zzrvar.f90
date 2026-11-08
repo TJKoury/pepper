@@ -32,14 +32,14 @@
 
       integer(ip)           namlst     (           * )
       integer(ip)           nmpool     ( 2, lbpool:* )
-      character*(*)         names      (           * )
+      character(*)          names      (           * )
       integer(ip)           datlst     (           * )
       integer(ip)           dppool     ( 2, lbpool:* )
       real(wp)              dpvals     (           * )
       integer(ip)           chpool     ( 2, lbpool:* )
-      character*(*)         chvals     (           * )
+      character(*)          chvals     (           * )
 
-      character*(*)         varnam
+      character(*)          varnam
       logical               eof
 
       integer(ip)           linlen
@@ -322,11 +322,11 @@
       integer(ip)           itmark
 
 
-      character*(linlen)    line
-      character*(linlen)    name
-      character*(filsiz)    file
+      character(linlen)     line
+      character(linlen)     name
+      character(filsiz)     file
 
-      character*(255)       error
+      character(255)        error
 
       real(wp)              dvalue
 
@@ -402,23 +402,23 @@
 !     intended to make the code a bit easier to write and read.
 !
 
-      issep ( code ) =      code .eq. iblank &
-                       .or. code .eq. icomma &
-                       .or. code .eq. ilparn &
-                       .or. code .eq. irparn &
-                       .or. code .eq. iequal &
-                       .or. code .eq. itab
+      issep ( code ) =      code == iblank &
+                       .or. code == icomma &
+                       .or. code == ilparn &
+                       .or. code == irparn &
+                       .or. code == iequal &
+                       .or. code == itab
 
-      isquot( code ) =      code .eq. iquote
-      isequ ( code ) =      code .eq. iequal
-      isrpar( code ) =      code .eq. irparn
-      islpar( code ) =      code .eq. ilparn
-      isplus( code ) =      code .eq. iplus
-      istime( code ) =      code .eq. itmark
+      isquot( code ) =      code == iquote
+      isequ ( code ) =      code == iequal
+      isrpar( code ) =      code == irparn
+      islpar( code ) =      code == ilparn
+      isplus( code ) =      code == iplus
+      istime( code ) =      code == itmark
 
 
-      isbad ( dirctv ) =       dirctv .ne. eq &
-                         .and. dirctv .ne. eqp
+      isbad ( dirctv ) =       dirctv /= eq &
+                         .and. dirctv /= eqp
 
 !
 !     Standard SPICE error handling.
@@ -462,7 +462,7 @@
 !
       status = begin
 
-      do while ( ( status .ne. done ) .and. ( .not. failed() ) )
+      do while ( ( status /= done ) .and. ( .not. failed() ) )
 
          call rdkdat ( line, eof )
 
@@ -500,7 +500,7 @@
          count  =  0
          i      =  0
 
-         do while ( i .lt. len(line) )
+         do while ( i < len(line) )
 !
 !           The current character is either a separator, quote or
 !           some other character.
@@ -536,7 +536,7 @@
                      type(count) = eq
                      ends(count) = i
 
-                     if ( i .gt. 1 ) then
+                     if ( i > 1 ) then
 !
 !                       Look back at the previous character.
 !                       See if it is a plus character.
@@ -554,7 +554,7 @@
                            begs(count) = i-1
 
                            if (      begs(count-1) &
-                                .eq. ends(count-1) ) then
+                                == ends(count-1) ) then
 
                               count       = count - 1
                               begs(count) = i - 1
@@ -651,11 +651,11 @@
 !        The first word on the first line should be the name of a
 !        variable. The second word should be a directive: = or +=.
 !
-         if ( status .eq. begin ) then
+         if ( status == begin ) then
 !
 !           There must be at least 3 contributing tokens on this line.
 !
-            if ( count .lt. 3 ) then
+            if ( count < 3 ) then
 
                call rdklin ( file, number   )
                call setmsg ( 'A kernel variable was not properly ' &
@@ -680,7 +680,7 @@
 !
             badat = lastpc(line(begs(1):ends(1)))
 
-            if ( badat .le. ends(1) - begs(1) ) then
+            if ( badat <= ends(1) - begs(1) ) then
 !
 !              There is a non-printing character in the variable
 !              name.  This isn't allowed.
@@ -714,7 +714,7 @@
 !
             varlen = len( line( begs(1): ends(1) ) )
 
-            if ( varlen .gt. maxlen ) then
+            if ( varlen > maxlen ) then
 
                call setmsg ( 'A kernel pool variable name read from a ' &
                //            'kernel file exceeds the maximum allowed ' &
@@ -775,20 +775,20 @@
 !
             lookat =  zzhash ( varnam )
             node   =  namlst ( lookat )
-            full   =  lnknfn ( nmpool ) .le. 0
+            full   =  lnknfn ( nmpool ) <= 0
             found  = .false.
 !
 !           See if this name (or one colliding with it in the
 !           hash scheme) has already been stored in the name list.
 !
-            if ( node .gt. 0 ) then
+            if ( node > 0 ) then
 
                head =  node
                tail = -nmpool(prev,head)
 
-               do while ( node .gt. 0 .and. .not. found )
+               do while ( node > 0 .and. .not. found )
 
-                  found  =  names (node) .eq. varnam
+                  found  =  names (node) == varnam
                   nameat =  node
                   node   =  nmpool(next,node)
 
@@ -848,7 +848,7 @@
 !           to remove data and allocate a new list or simply append
 !           data to the existing list.
 !
-            if ( dirctv .eq. eq ) then
+            if ( dirctv == eq ) then
 !
 !              We are going to dump whatever is associated with
 !              this name and then we will need to allocate a new
@@ -864,7 +864,7 @@
                   datahd         = datlst( nameat )
                   datlst(nameat) = 0
 
-                  if ( datahd .lt. 0 ) then
+                  if ( datahd < 0 ) then
 !
 !                    This variable was character type we need to
 !                    free a linked list from the character data
@@ -890,15 +890,15 @@
                end if
 
 
-            else if ( dirctv .eq. eqp ) then
+            else if ( dirctv == eqp ) then
 !
 !              We need to append to the current variable.
 !
                if ( found ) then
 
-                  if ( datlst(nameat) .gt. 0 ) then
+                  if ( datlst(nameat) > 0 ) then
                      vartyp = numtyp
-                  else if ( datlst(nameat) .lt. 0 ) then
+                  else if ( datlst(nameat) < 0 ) then
                      vartyp = strtyp
                   else
                      vartyp = unknwn
@@ -922,7 +922,7 @@
 !           terminate after one iteration.
 !
 
-            if ( type(3) .eq. bv ) then
+            if ( type(3) == bv ) then
                nxttok        = 4
             else
                nxttok      = 3
@@ -948,24 +948,24 @@
 !
 !        Dates begin with @; anything else is presumed to be a number.
 !
-         do while ( type(nxttok) .ne. ev .and. nxttok .le. count )
+         do while ( type(nxttok) /= ev .and. nxttok <= count )
 !
 !           Get the begin and end of this token.
 !
             b = begs(nxttok)
             e = ends(nxttok)
 
-            if ( vartyp .eq. unknwn ) then
+            if ( vartyp == unknwn ) then
 !
 !              We need to determine which category of variable we
 !              have by looking at this token and deducing the
 !              type.
 !
-               if      ( type(nxttok) .eq. q  ) then
+               if      ( type(nxttok) == q  ) then
 
                   vartyp = strtyp
 
-               else if ( type(nxttok) .eq. nq ) then
+               else if ( type(nxttok) == nq ) then
 
                   vartyp = numtyp
 
@@ -1002,11 +1002,11 @@
             end if
 
 
-            if ( vartyp .eq. strtyp ) then
+            if ( vartyp == strtyp ) then
 !
 !              First make sure that this token represents a string.
 !
-               if ( type(nxttok) .ne. q ) then
+               if ( type(nxttok) /= q ) then
 !
 !                 First perform the clean up function.
 !
@@ -1037,7 +1037,7 @@
 !              Still going? Make sure there is something between
 !              the quotes.
 !
-               if ( b+1 .ge. e ) then
+               if ( b+1 >= e ) then
 !
 !                 First perform the clean up function.
 !
@@ -1065,7 +1065,7 @@
 !
                free = lnknfn ( chpool )
 
-               if ( free .le. 0 ) then
+               if ( free <= 0 ) then
 
                   call rdklin ( file,  number )
                   r1 = rtrim  ( file          )
@@ -1091,7 +1091,7 @@
 !
                call lnkan ( chpool, chnode )
 
-               if ( datlst(nameat) .eq. 0 ) then
+               if ( datlst(nameat) == 0 ) then
 !
 !                 There was no data for this name yet.  We make
 !                 CHNODE be the head of the data list for this name.
@@ -1130,14 +1130,14 @@
                i = 1
                j = b+1
 
-               do while ( j .lt. e )
+               do while ( j < e )
                   code = ichar(line(j:j))
 
                   if ( isquot(code) ) then
                      j = j+1
                   end if
 
-                  if ( i .le. len(chvals(chnode)) ) then
+                  if ( i <= len(chvals(chnode)) ) then
                      chvals(chnode)(i:i) = line(j:j)
                      i = i + 1
                      j = j + 1
@@ -1152,7 +1152,7 @@
 !
             else
 
-               if ( type(nxttok) .ne. nq ) then
+               if ( type(nxttok) /= nq ) then
 !
 !                 First perform the clean up function.
 !
@@ -1189,7 +1189,7 @@
 !
 !                 We need to have more than a single character.
 !
-                  if ( e .eq. b ) then
+                  if ( e == b ) then
 !
 !                    First perform the clean up function.
 !
@@ -1223,7 +1223,7 @@
 
                   call tparse ( line(b+1:e), dvalue, error )
 
-                  if ( error .ne. ' ' ) then
+                  if ( error /= ' ' ) then
 !
 !                    First perform the clean up function.
 !
@@ -1254,7 +1254,7 @@
 
                   call nparsd ( line(b:e), dvalue, error, i )
 
-                  if ( error .ne. ' ' ) then
+                  if ( error /= ' ' ) then
 
                      call zzcln (lookat, nameat, &
                                  namlst, datlst, nmpool, chpool, dppool)
@@ -1284,7 +1284,7 @@
 !
                free = lnknfn ( dppool )
 
-               if ( free .le. 0 ) then
+               if ( free <= 0 ) then
 
                   call rdklin ( file,  number )
                   r1 = rtrim  ( file          )
@@ -1311,7 +1311,7 @@
 !
                call lnkan ( dppool, dpnode )
 
-               if ( datlst(nameat) .eq. 0 ) then
+               if ( datlst(nameat) == 0 ) then
 !
 !                 There was no data for this name yet.  We make
 !                 DPNODE be the head of the data list for this name.
@@ -1349,7 +1349,7 @@
 !           an end of vector marker.
 !        2) We hit an end of vector marker.
 !
-         if ( nxttok .gt. count ) then
+         if ( nxttok > count ) then
             status = invar
          else
             status = done
@@ -1362,7 +1362,7 @@
 !     assigning a value to the kernel pool variable.  This can
 !     happen if there is a vector input of the form NAME = ( )
 !
-      if ( ncomp .lt. 1 ) then
+      if ( ncomp < 1 ) then
 
          call zzcln ( lookat, nameat, &
                       namlst, datlst, nmpool, chpool, dppool )

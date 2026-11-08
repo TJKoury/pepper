@@ -396,7 +396,7 @@
       end if
 
 
-      if (  ( exclud .lt. 0 ) .or. ( exclud .gt. 3 )  ) then
+      if (  ( exclud < 0 ) .or. ( exclud > 3 )  ) then
 
          call setmsg ( 'EXCLUD must be in the range 0:3 but was #.' )
          call errint ( '#', exclud                                  )
@@ -416,7 +416,7 @@
 !     RECLAT is error free, so we don't call FAILED() here.
 !
 
-      if ( margin .eq. 0.0_wp ) then
+      if ( margin == 0.0_wp ) then
 !
 !        ZZINPDT0 contains the logic required to determine whether
 !        the input point is contained in the element.
@@ -427,7 +427,7 @@
          call chkout ( 'ZZINPDT' )
          return
 
-      else if ( margin .lt. 0.0_wp ) then
+      else if ( margin < 0.0_wp ) then
 
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
@@ -467,7 +467,7 @@
 !
 !     Compare coordinates to adjusted latitude boundaries.
 !
-      if ( exclud .ne. latidx ) then
+      if ( exclud /= latidx ) then
 !
 !        Create adjusted latitude bounds.
 !
@@ -486,7 +486,7 @@
          end if
 
 
-         if ( ( relmin .eq. lt ) .or. ( relmax .eq. gt ) ) then
+         if ( ( relmin == lt ) .or. ( relmax == gt ) ) then
 !
 !           The latitude of P is strictly outside of the element's
 !           latitude bounds.
@@ -501,7 +501,7 @@
 !     Test the point for inclusion in the region between the bounding
 !     ellipsoids that act as proxies for altitude boundaries.
 !
-      if ( exclud .ne. altidx ) then
+      if ( exclud /= altidx ) then
 !
 !        Extract altitude bounds from the segment descriptor.
 !
@@ -540,7 +540,7 @@
 !     Perform longitude tests, unless they're excluded by the
 !     caller.
 !
-      if ( exclud .ne. lonidx ) then
+      if ( exclud /= lonidx ) then
 !
 !        Start out by normalizing the element's longitude bounds.
 !
@@ -576,8 +576,8 @@
             return
          end if
 
-         if (       ( relmax .ne. gt ) &
-              .and. ( relmin .ne. lt )  ) then
+         if (       ( relmax /= gt ) &
+              .and. ( relmin /= lt )  ) then
 !
 !           This is the usual case: the latitude of the input point is
 !           bounded away from the poles.
@@ -606,9 +606,9 @@
 !           necessary, so we can make a valid comparison against
 !           the longitude bounds.
 !
-            if ( lon .lt. amnlon ) then
+            if ( lon < amnlon ) then
 
-               if (  lon  .lt. ( amnlon - lonali )  ) then
+               if (  lon  < ( amnlon - lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
@@ -622,9 +622,9 @@
 
                end if
 
-            else if ( lon .gt. amxlon ) then
+            else if ( lon > amxlon ) then
 
-               if (  lon  .gt. ( amxlon + lonali )  ) then
+               if (  lon  > ( amxlon + lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
@@ -641,7 +641,7 @@
             end if
 
 
-            if ( ( lon .lt. amnlon ) .or. ( lon .gt. amxlon ) ) then
+            if ( ( lon < amnlon ) .or. ( lon > amxlon ) ) then
 
                call chkout ( 'ZZINPDT' )
                return

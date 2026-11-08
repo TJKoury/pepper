@@ -26,8 +26,8 @@
       integer(ip)           mxcomp
       parameter           ( mxcomp = 10 )
 
-      character*(*)         from
-      character*(*)         to
+      character(*)          from
+      character(*)          to
       real(wp)              tvec ( mxcomp )
 
 ! $ Brief_I/O
@@ -750,18 +750,18 @@
       integer(ip)           typlen
       parameter           ( typlen =  8 )
 
-      character*(typlen)    unifrm (lbcell : nrec )
+      character(typlen)     unifrm (lbcell : nrec )
 
-      character*(typlen)    recog   ( nrec )
+      character(typlen)     recog   ( nrec )
       integer(ip)           parsed  ( nrec )
       logical               needy   ( nrec )
       logical               forml   ( nrec )
       integer(ip)           ordvec  ( nrec )
 
-      character*(32)        rest
-      character*(32)        myfrom
-      character*(32)        myto
-      character*(32)        vars   ( maxvar )
+      character(32)         rest
+      character(32)         myfrom
+      character(32)         myto
+      character(32)         vars   ( maxvar )
 
       real(wp)              daydp
       real(wp)              daylen
@@ -1212,7 +1212,7 @@
 
             nodata = .true.
 
-            if ( taitab(i-1) .ge. taitab(i) ) then
+            if ( taitab(i-1) >= taitab(i) ) then
                call setmsg ( 'Either the leapsecond epochs taken '    // &
                              'from the kernel pool are not properly ' // &
                              'ordered or the UTC - TAI offsets '      // &
@@ -1296,7 +1296,7 @@
 !     For now we are NOT going to deal with SCLK so if something
 !     isn't recognized, we can just signal an error and quit.
 !
-      if ( pfrom .eq. 0 ) then
+      if ( pfrom == 0 ) then
 
          call setmsg ( 'The FROM time representation ''#'' is ' &
          //            'not recognized. ' )
@@ -1305,7 +1305,7 @@
          call chkout ( 'TTRANS'                    )
          return
 
-      else if ( pto .eq. 0 ) then
+      else if ( pto == 0 ) then
 
          call setmsg ( 'The TO time representation ''#'' is ' &
          //            'not recognized. ' )
@@ -1325,7 +1325,7 @@
 !     past the beginning of the day.  None of the cases below
 !     are particularly tricky.  There's just a lot of cases.
 !
-      if ( (pfrom .eq. ymd) .or. (pfrom .eq. ymdf) ) then
+      if ( (pfrom == ymd) .or. (pfrom == ymdf) ) then
 
          year   = int( tvec(1) )
          month  = int( tvec(2) )
@@ -1337,12 +1337,12 @@
          month  = month + 1
          doffst = 0
 
-         if ( year .le. 0 ) then
+         if ( year <= 0 ) then
 
             call rmaini ( year, 400, yr400, tempi )
             year = tempi
 
-            if ( year .eq. 0 ) then
+            if ( year == 0 ) then
                year  = year + 400
                yr400 = yr400 - 1
             end if
@@ -1359,7 +1359,7 @@
 !
          secs   = hmssec( tvec(4), tvec(5), tvec(6) )
 
-      else if ( pfrom .eq. yd  .or. pfrom .eq. ydf ) then
+      else if ( pfrom == yd  .or. pfrom == ydf ) then
 
          year   = int( tvec(1) )
          day    = int( tvec(2) )
@@ -1367,12 +1367,12 @@
 
          doffst = 0
 
-         if ( year .le. 0 ) then
+         if ( year <= 0 ) then
 
             call rmaini ( year, 400, yr400, tempi )
             year = tempi
 
-            if ( year .eq. 0 ) then
+            if ( year == 0 ) then
                year  = year + 400
                yr400 = yr400 - 1
             end if
@@ -1389,7 +1389,7 @@
 !
          secs   = hmssec ( tvec(3), tvec(4), tvec(5) )
 
-      else if ( pfrom .eq. ydd .or. pfrom .eq. yddf   ) then
+      else if ( pfrom == ydd .or. pfrom == yddf   ) then
 
          year   = int(tvec(1))
          day    = int(tvec(2))
@@ -1397,12 +1397,12 @@
 
          doffst = 0
 
-         if ( year .le. 0 ) then
+         if ( year <= 0 ) then
 
             call rmaini ( year, 400, yr400, tempi )
             year = tempi
 
-            if ( year .eq. 0 ) then
+            if ( year == 0 ) then
                year  = year + 400
                yr400 = yr400 - 1
             end if
@@ -1420,7 +1420,7 @@
 !        might be a leapsecond day.  We will set DAYLEN to SECSPD and
 !        change it if it turns out this is a day with a leapsecond.
 !
-         if ( pfrom .eq. yddf ) then
+         if ( pfrom == yddf ) then
             secs = frac * secspd
          else
             daylen = secspd
@@ -1434,7 +1434,7 @@
          end if
 
 
-      else if ( pfrom .eq. frml ) then
+      else if ( pfrom == frml ) then
 
 !
 !        First lets get the number of days since 1-Jan-2000 00:00:00
@@ -1445,7 +1445,7 @@
 
 
 
-      else if ( pfrom .eq. jdutc  ) then
+      else if ( pfrom == jdutc  ) then
 
 !
 !        JD1101 is the julian date UTC of Jan 1, 1 AD.
@@ -1458,21 +1458,21 @@
 
 
 
-      else if ( pfrom .eq. daysec ) then
+      else if ( pfrom == daysec ) then
 
          daynum = int(tvec(1))
          secs   = tvec(2)
 
 
 
-      else if ( pfrom .eq. dayp2 ) then
+      else if ( pfrom == dayp2 ) then
 
          daynum = int(tvec(1)) + dn2000
          secs   = tvec(2)
 
 
 
-      else if ( (pfrom .eq. ywd) .or. (pfrom .eq. ywdf) ) then
+      else if ( (pfrom == ywd) .or. (pfrom == ywdf) ) then
 
          year   = int( tvec(1) )
          week   = int( tvec(2) ) - 1
@@ -1486,12 +1486,12 @@
 
          doffst = 0
 
-         if ( year .le. 0 ) then
+         if ( year <= 0 ) then
 
             call rmaini ( year, 400, yr400, tempi )
             year = tempi
 
-            if ( year .eq. 0 ) then
+            if ( year == 0 ) then
                year  = year + 400
                yr400 = yr400 - 1
             end if
@@ -1516,7 +1516,7 @@
 !
          secs   = hmssec ( tvec(4), tvec(5), tvec(6) )
 
-      else if ( pfrom .eq. ymwd .or. pfrom .eq. ymwdf ) then
+      else if ( pfrom == ymwd .or. pfrom == ymwdf ) then
 
          year   = int( tvec(1) )
          month  = int( tvec(2) )
@@ -1525,12 +1525,12 @@
 
          doffst = 0
 
-         if ( year .le. 0 ) then
+         if ( year <= 0 ) then
 
             call rmaini ( year, 400, yr400, tempi )
             year = tempi
 
-            if ( year .eq. 0 ) then
+            if ( year == 0 ) then
                year  = year + 400
                yr400 = yr400 - 1
             end if
@@ -1642,8 +1642,8 @@
 !
       else
 
-         if (      (secs .gt. (secspd - 1.0_wp)) &
-              .or. (secs .lt. 0.0_wp)          ) then
+         if (      (secs > (secspd - 1.0_wp)) &
+              .or. (secs < 0.0_wp)          ) then
 
 !
 !           First convert to TAI...
@@ -1692,7 +1692,7 @@
 !     increment the day number by one and set SECS to zero.
 !
 
-      if ( forml(pto) .and. secs .gt. secspd ) then
+      if ( forml(pto) .and. secs > secspd ) then
          daynum = daynum + 1
          secs   = 0
       end if
@@ -1712,7 +1712,7 @@
 !        We want to be able to deal with years prior to  1 Jan 1
 !        So we make sure the remainder is positive.
 !
-         if ( rem .lt. 0 ) then
+         if ( rem < 0 ) then
             yr400 = yr400 - 1
             rem   = rem + dp400y
          end if
@@ -1730,7 +1730,7 @@
 
          year   = yr400*400 + yr100*100 + yr4*4 + yr1 + 1
 
-         if ( ldays(year) .eq. 0 ) then
+         if ( ldays(year) == 0 ) then
             month  = lstlti ( dofyr, 12, dpjan0 )
             day    = dofyr - dpjan0(month)
          else
@@ -1758,7 +1758,7 @@
 !
 !     Finally, we convert to the requested output.
 !
-      if      ( pto .eq. ymd .or. pto .eq. ymdf ) then
+      if      ( pto == ymd .or. pto == ymdf ) then
 
          tvec(1) = real( year, wp  )
          tvec(2) = real( month, wp )
@@ -1767,7 +1767,7 @@
          tvec(5) = mins
          tvec(6) = tsecs
 
-      else if ( pto .eq. yd .or. pto .eq. ydf  ) then
+      else if ( pto == yd .or. pto == ydf  ) then
 
          tvec(1) = real( year, wp  )
          tvec(2) = real( dofyr, wp )
@@ -1775,11 +1775,11 @@
          tvec(4) = mins
          tvec(5) = tsecs
 
-      else if ( pto .eq. ydd .or. pto .eq. yddf   ) then
+      else if ( pto == ydd .or. pto == yddf   ) then
 
          tvec(1) = real( year, wp  )
 
-         if ( pto .eq. ydd ) then
+         if ( pto == ydd ) then
             dayptr  = lstlei ( daynum, nref, daytab )
             daylen  = secspd
 
@@ -1793,27 +1793,27 @@
          end if
 
 
-      else if ( pto .eq. frml ) then
+      else if ( pto == frml ) then
 
          tvec(1) = real( daynum - dn2000, wp ) * secspd &
                  - halfd &
                  + secs
 
-      else if ( pto .eq. jdutc  ) then
+      else if ( pto == jdutc  ) then
 
          tvec(1) = jd1101 + real( daynum, wp ) + secs/secspd
 
-      else if ( pto .eq. daysec ) then
+      else if ( pto == daysec ) then
 
          tvec(1) = real(daynum, wp)
          tvec(2) = secs
 
-      else if ( pto .eq. dayp2 ) then
+      else if ( pto == dayp2 ) then
 
          tvec(1) = real(daynum - dn2000, wp)
          tvec(2) = secs
 
-      else if ( pto  .eq. ywd .or. pto .eq. ywdf ) then
+      else if ( pto  == ywd .or. pto == ywdf ) then
 !
 !        First compute the day of the week, and the week number
 !
@@ -1830,7 +1830,7 @@
          tvec(5) = mins
          tvec(6) = tsecs
 
-      else if ( pto .eq. ymwd .or. pto .eq. ymwdf ) then
+      else if ( pto == ymwd .or. pto == ymwdf ) then
 
 !
 !        First compute how many weeks into the month DAYNUM is,
@@ -1839,12 +1839,12 @@
          tvec(1) = real(year, wp)
          doffst  = 0
 
-         if ( year .le. 0 ) then
+         if ( year <= 0 ) then
 
             call rmaini ( year, 400, yr400, tempi )
             year = tempi
 
-            if ( year .eq. 0 ) then
+            if ( year == 0 ) then
                year  = year + 400
                yr400 = yr400 - 1
             end if

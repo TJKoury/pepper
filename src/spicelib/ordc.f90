@@ -24,8 +24,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
 
-      character*(*)         item
-      character*(*)         set ( lbcell:* )
+      character(*)          item
+      character(*)          set ( lbcell:* )
 
 ! $ Brief_I/O
 !

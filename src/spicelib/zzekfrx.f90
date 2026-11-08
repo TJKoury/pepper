@@ -134,7 +134,7 @@
 !
 !     Local variables
 !
-      character*(maxstr)    cval
+      character(maxstr)     cval
 
       real(wp)              dval
 
@@ -163,7 +163,7 @@
 !
       dtype  =  coldsc ( typidx )
 
-      if ( dtype .eq. chr ) then
+      if ( dtype == chr ) then
 
          call zzekrsc (  handle,  segdsc,  coldsc,  recptr, &
                          1,       cvlen,   cval,    isnull,  found  )
@@ -177,13 +177,13 @@
          end if
 
 
-      else if (  ( dtype .eq. dp ) .or. ( dtype .eq. time )  ) then
+      else if (  ( dtype == dp ) .or. ( dtype == time )  ) then
 
          call zzekrsd (  handle,  segdsc,  coldsc,  recptr, &
                          1,       dval,    isnull,  found  )
 
 
-      else if ( dtype .eq. int ) then
+      else if ( dtype == int ) then
 
          call zzekrsi (  handle,  segdsc,  coldsc,  recptr, &
                          1,       ival,    isnull,  found  )
@@ -230,13 +230,13 @@
 !     are not.  Therefore, the ordinal position POS will actually be
 !     the ordinal position of our record.
 !
-      if ( dtype .eq. chr ) then
+      if ( dtype == chr ) then
 
          call zzeklerc ( handle,  segdsc,  coldsc,  cval(:cmplen), &
                          recptr,  isnull,  pos,     prvptr         )
 
 
-      else if (  ( dtype .eq. dp ) .or. ( dtype .eq. time )  ) then
+      else if (  ( dtype == dp ) .or. ( dtype == time )  ) then
 
          call zzeklerd ( handle,  segdsc,  coldsc,  dval, &
                          recptr,  isnull,  pos,     prvptr  )
@@ -254,7 +254,7 @@
       end if
 
 
-      if ( prvptr .ne. recptr ) then
+      if ( prvptr /= recptr ) then
 !
 !        Big problem.  This should never happen.
 !

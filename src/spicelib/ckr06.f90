@@ -456,7 +456,7 @@
 !
       if ( pass1 ) then
 
-         if ( ckmrsz .lt. maxrsz ) then
+         if ( ckmrsz < maxrsz ) then
 
             call setmsg ( 'CK type 6 record size may be as ' &
             //            'large as #, but CKPFS record size ' &
@@ -505,7 +505,7 @@
       call dafus ( descr, 2, 6, dc, ic )
 
       type   = ic( 3 )
-      avflag = ic( 4 ) .eq. 1
+      avflag = ic( 4 ) == 1
       baddr  = ic( 5 )
       eaddr  = ic( 6 )
 
@@ -527,7 +527,7 @@
 !
 !     Check the tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg( 'Tolerance must be non-negative but ' &
          //           'was actually *.'                      )
@@ -542,8 +542,8 @@
 !     Check the request time and tolerance against the bounds in
 !     the segment descriptor.
 !
-      if (       ( (sclkdp + tol) .lt. dc(1) ) &
-           .or.  ( (sclkdp - tol) .gt. dc(2) )  )  then
+      if (       ( (sclkdp + tol) < dc(1) ) &
+           .or.  ( (sclkdp - tol) > dc(2) )  )  then
 !
 !        The request time is too far outside the segment's coverage
 !        interval for any pointing to satisfy the request.
@@ -654,8 +654,8 @@
 !     data were set on a successful call. Note that PRVFND can not
 !     be true on the first pass.
 !
-      samseg  =       ( handle .eq.  svhan ) &
-                .and. ( baddr  .eq.  svbeg ) &
+      samseg  =       ( handle ==  svhan ) &
+                .and. ( baddr  ==  svbeg ) &
                 .and.   prvfnd
 
 !
@@ -682,14 +682,14 @@
 !           interval data, even though it would be possible to
 !           add code to do so.
 !
-            if ( svmiix .lt. svn ) then
+            if ( svmiix < svn ) then
 
-               samivl =       ( t .ge. svbtim ) &
-                        .and. ( t .lt. svetim )
+               samivl =       ( t >= svbtim ) &
+                        .and. ( t < svetim )
             else
 
-               samivl =         t .ge. svbtim &
-                        .and. ( t .le. svetim )
+               samivl =         t >= svbtim &
+                        .and. ( t <= svetim )
             end if
 
          else
@@ -698,15 +698,15 @@
 !           but the first, T must be greater than the interval start
 !           time. For the first interval, T may equal the start time.
 !
-            if ( svmiix .gt. 1 ) then
+            if ( svmiix > 1 ) then
 
-               samivl =       ( t  .gt. svbtim ) &
-                        .and. ( t  .le. svetim )
+               samivl =       ( t  > svbtim ) &
+                        .and. ( t  <= svetim )
 
             else
 
-               samivl =       ( t  .ge. svbtim ) &
-                        .and. ( t  .le. svetim )
+               samivl =       ( t  >= svbtim ) &
+                        .and. ( t  <= svetim )
             end if
 
          end if
@@ -769,7 +769,7 @@
 !
 !        Make sure that this really is a type 06 data segment.
 !
-         if ( type .ne. 6 ) then
+         if ( type /= 6 ) then
 
             call setmsg( 'You are attempting to locate type * ' &
             //           'data in a type 6 data segment.'       )
@@ -801,7 +801,7 @@
          isel   = nint ( contrl(1) )
          n      = nint ( contrl(2) )
 
-         ivlsel = isel .eq. itrue
+         ivlsel = isel == itrue
 
 !
 !        Determine the number of interval directory entries in the
@@ -864,7 +864,7 @@
 !           If there is an interval directory, search it to determine
 !           the group of interval times to search next.
 !
-            if ( ndir .eq. 0 ) then
+            if ( ndir == 0 ) then
 !
 !              There's no question about which group of epochs to
 !              search.
@@ -899,8 +899,8 @@
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
 !
-               do while (       ( remain        .gt. 0 ) &
-                          .and. ( buffer(nread) .le. t )  )
+               do while (       ( remain        > 0 ) &
+                          .and. ( buffer(nread) <= t )  )
 
                   bufbas = bufbas + nread
                   nread  = min ( remain, bufsiz )
@@ -979,7 +979,7 @@
 !
 !           Backstop test:
 !
-            if ( iveix .lt. 2 ) then
+            if ( iveix < 2 ) then
 
                call setmsg ( 'IVEIX = #.' )
                call errint ( '#', iveix   )
@@ -1016,7 +1016,7 @@
 !           If there is an interval directory, search it to determine
 !           the group of interval times to search next.
 !
-            if ( ndir .eq. 0 ) then
+            if ( ndir == 0 ) then
 !
 !              There's no question about which group of epochs to
 !              search.
@@ -1045,8 +1045,8 @@
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
 !
-               do while (      ( remain        .gt. 0 ) &
-                         .and. ( buffer(nread) .lt. t )  )
+               do while (      ( remain        > 0 ) &
+                         .and. ( buffer(nread) < t )  )
 
                   bufbas = bufbas + nread
                   nread  = min ( remain, bufsiz )
@@ -1124,7 +1124,7 @@
 !
 !           Backstop test:
 !
-            if ( ivbix .gt. n ) then
+            if ( ivbix > n ) then
 
                call setmsg ( 'IVBIX = #.' )
                call errint ( '#', ivbix   )
@@ -1211,13 +1211,13 @@
 !
 !        Determine whether the request time is in a gap.
 !
-         if ( t .gt. lstepc ) then
+         if ( t > lstepc ) then
 !
 !           Yep, T lies in a gap. But we may still be able to
 !           find data for this request, if the lookup tolerance
 !           is positive.
 !
-            if ( tol .eq. 0.0_wp ) then
+            if ( tol == 0.0_wp ) then
 !
 !              We're out of luck. We can't find pointing for this
 !              request. FOUND is already .FALSE., so just return.
@@ -1244,8 +1244,8 @@
 !              See whether T is close enough to a stored epoch for
 !              us to find pointing. If not, return now.
 !
-               if (      (  ( t         - lstepc )  .gt.  tol  ) &
-                   .and. (  ( mintim(2) - t      )  .gt.  tol  )  ) then
+               if (      (  ( t         - lstepc )  >  tol  ) &
+                   .and. (  ( mintim(2) - t      )  >  tol  )  ) then
 !
 !                 We can't find pointing for T. FOUND is already
 !                 .FALSE., so just return.
@@ -1258,13 +1258,13 @@
 !
 !              Continue to look for pointing usable for time T.
 !
-               if ( miniix .eq. n ) then
+               if ( miniix == n ) then
 !
 !                 We're looking at the final mini-segment. If
 !                 T is close enough to LSTEPC, we can find
 !                 pointing.
 !
-                  if (  ( t - lstepc )  .le.  tol  ) then
+                  if (  ( t - lstepc )  <=  tol  ) then
 !
 !                    We're going to carry on using the current
 !                    mini-segment. We'll update T to be the last epoch
@@ -1292,7 +1292,7 @@
 !
                   gap  =  mintim(2) - lstepc
 
-                  if (  ( t - lstepc )  .le.  ( gap/2 )  ) then
+                  if (  ( t - lstepc )  <=  ( gap/2 )  ) then
 !
 !                    T is closer to LSTEPC than the start time of the
 !                    next interval. We're going to carry on using the
@@ -1428,7 +1428,7 @@
 !        Also set the maximum window size. First check the subtype,
 !        which will be used as an array index.
 !
-         if (  ( subtyp .lt. 0 ) .or. ( subtyp .ge. c06nst ) ) then
+         if (  ( subtyp < 0 ) .or. ( subtyp >= c06nst ) ) then
 
             call setmsg ( 'Unexpected CK type 6 subtype # found in ' &
             //            'type 06 segment within mini-segment #.'     )
@@ -1446,7 +1446,7 @@
 !
 !        Check the window size.
 !
-         if ( ( wndsiz .lt. 2 ) .or. ( wndsiz .gt. maxwnd ) ) then
+         if ( ( wndsiz < 2 ) .or. ( wndsiz > maxwnd ) ) then
 
             call setmsg ( 'Window size in type 6 segment was #; must ' &
             //            'be in the range 2:# for subtype #. ' &
@@ -1561,7 +1561,7 @@
 !     use the variable GROUP to indicate the set of epochs to search
 !     within, once we've found the right directory entry.
 !
-      if ( npkdir .eq. 0 ) then
+      if ( npkdir == 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
@@ -1587,8 +1587,8 @@
             return
          end if
 
-         do while (       ( buffer(nread) .lt. t ) &
-                    .and. ( remain        .gt. 0 )  )
+         do while (       ( buffer(nread) < t ) &
+                    .and. ( remain        > 0 )  )
 
             bufbas  =  bufbas + nread
             nread   =  min ( remain, dirsiz )
@@ -1626,7 +1626,7 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      if ( group .eq. 1 ) then
+      if ( group == 1 ) then
 
          begidx  =  1
          endidx  =  min ( npkt, dirsiz )
@@ -1664,7 +1664,7 @@
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
          low  =  1
       else
          low  =  begidx + i - 1

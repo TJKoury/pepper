@@ -39,17 +39,17 @@
       include               'zzgf.inc'
       include               'zzabcorr.inc'
 
-      character*(*)         vecdef
-      character*(*)         method
-      character*(*)         target
+      character(*)          vecdef
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
-      character*(*)         obsrvr
-      character*(*)         dref
+      character(*)          ref
+      character(*)          abcorr
+      character(*)          obsrvr
+      character(*)          dref
       real(wp)              dvec   ( 3 )
-      character*(*)         crdsys
-      character*(*)         crdnam
+      character(*)          crdsys
+      character(*)          crdnam
       logical               decres
       real(wp)              crdval
       logical               crdfnd
@@ -315,17 +315,17 @@
 !
 !     Local Variables
 !
-      character*(crdlen)    crdnms ( 3, nsys )
-      character*(abclen)    svcorr
-      character*(crdlen)    svcrd
-      character*(syslen)    svcsys
-      character*(frnmln)    svdref
-      character*(metlen)    svmeth
-      character*(bdnmln)    svrcnm
-      character*(frnmln)    svref
-      character*(vdflen)    svvdef
-      character*(syslen)    sysnms ( nsys )
-      character*(timlen)    timstr
+      character(crdlen)     crdnms ( 3, nsys )
+      character(abclen)     svcorr
+      character(crdlen)     svcrd
+      character(syslen)     svcsys
+      character(frnmln)     svdref
+      character(metlen)     svmeth
+      character(bdnmln)     svrcnm
+      character(frnmln)     svref
+      character(vdflen)     svvdef
+      character(syslen)     sysnms ( nsys )
+      character(timlen)     timstr
 
       real(wp)              alt
       real(wp)              coords ( 3 )
@@ -871,7 +871,7 @@
 !
 !     Make sure the observer and target are distinct.
 !
-      if ( svtarg .eq. svobs ) then
+      if ( svtarg == svobs ) then
 
          call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
@@ -912,9 +912,9 @@
 !
 !     Check SVVDEF.
 !
-      if (       ( svvdef .ne. posdef ) &
-           .and. ( svvdef .ne. sobdef ) &
-           .and. ( svvdef .ne. sindef ) ) then
+      if (       ( svvdef /= posdef ) &
+           .and. ( svvdef /= sobdef ) &
+           .and. ( svvdef /= sindef ) ) then
 
 !
 !        We don't recognize this vector definition.
@@ -936,7 +936,7 @@
 
       sysidx = isrchc ( svcsys, nsys, sysnms )
 
-      if ( sysidx .eq. 0 ) then
+      if ( sysidx == 0 ) then
 !
 !        We don't recognize this system name.
 !
@@ -961,7 +961,7 @@
 !
       svcidx = isrchc ( svcrd, 3, crdnms(1,sysidx) )
 
-      if ( svcidx .eq. 0 ) then
+      if ( svcidx == 0 ) then
 !
 !        We don't recognize this coordinate name.
 !
@@ -985,10 +985,10 @@
 !     The remaining work is a function of the vector definition
 !     and the coordinate system.
 !
-      if (      ( svvdef .eq. sobdef ) &
-           .or. ( svvdef .eq. sindef ) &
-           .or. ( svcsys .eq. geosys ) &
-           .or. ( svcsys .eq. pgrsys )  ) then
+      if (      ( svvdef == sobdef ) &
+           .or. ( svvdef == sindef ) &
+           .or. ( svcsys == geosys ) &
+           .or. ( svcsys == pgrsys )  ) then
 
 !
 !        The coordinate is defined using a sub-observer point or
@@ -1019,10 +1019,10 @@
 !        definitions, make sure the input frame's center is
 !        the target body.
 !
-         if (      ( vecdef .eq. sobdef ) &
-              .or. ( vecdef .eq. sindef )  ) then
+         if (      ( vecdef == sobdef ) &
+              .or. ( vecdef == sindef )  ) then
 
-            if ( svrctr .ne. svtarg ) then
+            if ( svrctr /= svtarg ) then
 
                call setmsg ( 'Vector definition method is #, ' &
                //            'but input reference frame # ' &
@@ -1054,7 +1054,7 @@
 !
          if ( .not. bodfnd( svrctr, 'RADII' ) ) then
 
-            if ( ( svcsys .eq. geosys ) .or. ( svcsys .eq. pgrsys ) ) &
+            if ( ( svcsys == geosys ) .or. ( svcsys == pgrsys ) ) &
             then
 
                call setmsg ( 'No RADII data in kernel pool for frame ' &
@@ -1107,9 +1107,9 @@
 !        which are not allowed with geodetic or planetographic
 !        coordinates.
 !
-         if ( ( svcsys .eq. geosys ) .or. ( svcsys .eq. pgrsys ) ) then
+         if ( ( svcsys == geosys ) .or. ( svcsys == pgrsys ) ) then
 
-            if ( svradi(1) .ne. svradi(2) ) then
+            if ( svradi(1) /= svradi(2) ) then
 
                call setmsg ( 'Central body # of reference frame # ' &
                //            'has radii # # #. Unequal equatorial ' &
@@ -1148,8 +1148,8 @@
 !
 !        Save the computation method, if required.
 !
-         if (      ( vecdef .eq. sobdef ) &
-              .or. ( vecdef .eq. sindef )  ) then
+         if (      ( vecdef == sobdef ) &
+              .or. ( vecdef == sindef )  ) then
 !
 !           The coordinate is defined using a sub-observer point or
 !           a surface intercept point.
@@ -1173,7 +1173,7 @@
 !        coordinates are associated is the center of REF. Find the
 !        longitude of the +Y axis.
 !
-         if ( svcsys .eq. pgrsys ) then
+         if ( svcsys == pgrsys ) then
 
             call bodc2s ( svrctr, svrcnm )
 
@@ -1184,7 +1184,7 @@
 !           longitudes corresponding to positive Y values are
 !           in the range pi to 2*pi.
 !
-            if ( lon .gt. pi() ) then
+            if ( lon > pi() ) then
                svsens =  -1
             else
                svsens =   1
@@ -1203,7 +1203,7 @@
 !     need to check and store the variables associated with the
 !     ray.
 !
-      if ( svvdef .eq. sindef ) then
+      if ( svvdef == sindef ) then
 
          if ( vzero(dvec) ) then
 
@@ -1577,7 +1577,7 @@
 !     The quantity is decreasing if and only if the derivative
 !     is negative. This is indicated by a "sign" of -1.
 !
-      decres  =  cdsign(svcidx) .eq. -1
+      decres  =  cdsign(svcidx) == -1
 
       call chkout  ( 'ZZGFCODC' )
       return
@@ -2189,40 +2189,40 @@
 !     computed resides in STATE. Convert the position portion of STATE
 !     to the specified coordinate system.
 !
-      if ( svcsys .eq. recsys ) then
+      if ( svcsys == recsys ) then
 !
 !        No conversion needed for rectangular coordinates.
 !
          call moved ( state, 3, coords )
 
 
-      else if ( svcsys .eq. latsys ) then
+      else if ( svcsys == latsys ) then
 
          call reclat ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. radsys ) then
+      else if ( svcsys == radsys ) then
 
          call recrad ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. sphsys ) then
+      else if ( svcsys == sphsys ) then
 
          call recsph ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. cylsys ) then
+      else if ( svcsys == cylsys ) then
 
          call reccyl ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. geosys ) then
+      else if ( svcsys == geosys ) then
 
          call recgeo ( state,     svre,      svf, &
                        coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. pgrsys ) then
+      else if ( svcsys == pgrsys ) then
 
          call recpgr ( svrcnm,    state,     svre,     svf, &
                        coords(1), coords(2), coords(3)     )
@@ -2254,7 +2254,7 @@
 !
 !     The derivative of the coordinate is negative if the "sign" is -1.
 !
-      decres  =  ( - sin(value) * cdsign(svcidx) )  .lt.  0.0_wp
+      decres  =  ( - sin(value) * cdsign(svcidx) )  <  0.0_wp
 
 
       call chkout  ( 'ZZGFCOCD' )
@@ -2444,40 +2444,40 @@
 !     computed resides in STATE. Convert the position portion of STATE
 !     to the specified coordinate system.
 !
-      if ( svcsys .eq. recsys ) then
+      if ( svcsys == recsys ) then
 !
 !        No conversion needed for rectangular coordinates.
 !
          call moved ( state, 3, coords )
 
 
-      else if ( svcsys .eq. latsys ) then
+      else if ( svcsys == latsys ) then
 
          call reclat ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. radsys ) then
+      else if ( svcsys == radsys ) then
 
          call recrad ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. sphsys ) then
+      else if ( svcsys == sphsys ) then
 
          call recsph ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. cylsys ) then
+      else if ( svcsys == cylsys ) then
 
          call reccyl ( state, coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. geosys ) then
+      else if ( svcsys == geosys ) then
 
          call recgeo ( state,     svre,      svf, &
                        coords(1), coords(2), coords(3) )
 
 
-      else if ( svcsys .eq. pgrsys ) then
+      else if ( svcsys == pgrsys ) then
 
          call recpgr ( svrcnm,    state,     svre,     svf, &
                        coords(1), coords(2), coords(3)     )
@@ -2509,7 +2509,7 @@
 !
 !     The derivative of the coordinate is negative if the "sign" is -1.
 !
-      decres  =  ( cos(value) * cdsign(svcidx) )  .lt.  0.0_wp
+      decres  =  ( cos(value) * cdsign(svcidx) )  <  0.0_wp
 
       call chkout  ( 'ZZGFCOSD' )
       return

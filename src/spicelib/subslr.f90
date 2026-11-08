@@ -39,12 +39,12 @@
       include               'zzctr.inc'
       include               'zzdsk.inc'
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              trgepc
       real(wp)              srfvec ( 3 )
@@ -1167,7 +1167,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  =  'SUBSLR' )
 
 !
@@ -1200,12 +1200,12 @@
 !
 !     Local variables
 !
-      character*(cvtlen)    pntdef
-      character*(corlen)    prvcor
-      character*(mthlen)    prvmth
-      character*(shplen)    shpstr
-      character*(sublen)    subtyp
-      character*(tmtlen)    trmstr
+      character(cvtlen)     pntdef
+      character(corlen)     prvcor
+      character(mthlen)     prvmth
+      character(shplen)     shpstr
+      character(sublen)     subtyp
+      character(tmtlen)     trmstr
 
       real(wp)              altsun
       real(wp)              dvec   ( 3 )
@@ -1256,12 +1256,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -1269,7 +1269,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr3 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svrefc
 
 !
@@ -1351,7 +1351,7 @@
       end if
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
@@ -1451,7 +1451,7 @@
 !
 !     The target body may not be the sun.
 !
-      if ( trgcde .eq. sun ) then
+      if ( trgcde == sun ) then
 
          call setmsg ( 'The target body is the sun; the sub-solar ' &
          //            'point is undefined for this case.'          )
@@ -1489,7 +1489,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( fixctr .ne. trgcde ) then
+      if ( fixctr /= trgcde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -1514,7 +1514,7 @@
 !     valid values. PRVMTH records the last valid value of
 !     METHOD; NEAR and SHAPE are the corresponding variables.
 !
-      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
+      if ( first  .or.  surfup  .or.  ( method /= prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -1540,7 +1540,7 @@
          end if
 
 
-         if ( subtyp .eq. ' ' ) then
+         if ( subtyp == ' ' ) then
 
             call setmsg ( 'Sub-solar point type is required ' &
             //            'but was not found in the method string #.' )
@@ -1574,7 +1574,7 @@
          end if
 
 
-         if ( shape .eq. ellshp ) then
+         if ( shape == ellshp ) then
 !
 !           Allow both "near point" and "nadir" expressions
 !           the ellipsoid case, since these are equivalent.
@@ -1620,7 +1620,7 @@
       first = .false.
 
 
-      if ( shape .eq. dskshp ) then
+      if ( shape == dskshp ) then
 !
 !        This is the DSK case.
 !
@@ -1630,7 +1630,7 @@
          call zzsudski ( trgcde, nsurf, srflst, fixfid )
 
 
-      else if ( shape .ne. ellshp ) then
+      else if ( shape /= ellshp ) then
 
          call setmsg ( 'Computation method argument was <#>; this ' &
          //            'string must specify a supported shape ' &
@@ -1754,7 +1754,7 @@
 !        closest ray-DSK surface intercept to the sun is the initial
 !        estimate of the sub-solar point.
 !
-         if ( shape .eq. dskshp ) then
+         if ( shape == dskshp ) then
 !
 !           Generate the ray direction; find the DSK intercept.
 !
@@ -1797,7 +1797,7 @@
 !
          call vminus ( spos, dvec )
 
-         if ( shape .eq. ellshp ) then
+         if ( shape == ellshp ) then
 !
 !           Locate the surface intercept of the ray from the
 !           sun to the target center.
@@ -1932,9 +1932,9 @@
       prevlt = lt
       prevet = trgepc
 
-      do while (       ( i      .lt.   nitr                ) &
-                 .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
-                 .and. ( etdiff .gt.   0.0_wp                )  )
+      do while (       ( i      <   nitr                ) &
+                 .and. ( ltdiff > ( cnvlim * abs(lt) )  ) &
+                 .and. ( etdiff >   0.0_wp                )  )
 !
 !        Get the J2000-relative state of the target relative to
 !        the solar system barycenter at the target epoch.
@@ -2014,7 +2014,7 @@
 !           ellipsoid. The closest ray-DSK surface intercept to the sun
 !           is the initial estimate of the sub-solar point.
 !
-            if ( shape .eq. dskshp ) then
+            if ( shape == dskshp ) then
 !
 !              Locate the surface intercept of the ray from the
 !              Sun to the target center.
@@ -2059,7 +2059,7 @@
             call vminus ( spos, dvec )
 
 
-            if ( shape .eq. ellshp ) then
+            if ( shape == ellshp ) then
 !
 !              Locate the surface intercept of the ray from the
 !              sun to the target center.

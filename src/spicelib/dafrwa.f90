@@ -127,7 +127,7 @@
       if ( return () ) then
          return
 
-      else if ( recno .le. 0  .or.  wordno .le. 0 ) then
+      else if ( recno <= 0  .or.  wordno <= 0 ) then
          call chkin  ( 'DAFRWA'                           )
          call setmsg ( 'No address for record #, word #.' )
          call errint ( '#', recno                         )
@@ -268,7 +268,7 @@
       if ( return () ) then
          return
 
-      else if ( addr .le. 0 ) then
+      else if ( addr <= 0 ) then
          call chkin  ( 'DAFARW'                         )
          call setmsg ( 'No record, word for address #.' )
          call errint ( '#', addr                        )

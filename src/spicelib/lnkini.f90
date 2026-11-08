@@ -212,7 +212,7 @@
 !
 !     The requested number of nodes must be valid.
 !
-      if ( size .lt. 1 ) then
+      if ( size < 1 ) then
 
          call chkin  ( 'LNKINI'                             )
          call setmsg ( 'A linked list cannot have # nodes.' )

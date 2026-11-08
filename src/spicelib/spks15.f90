@@ -170,7 +170,7 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  .gt.  end  ) then
+      if (  begin  >  end  ) then
          call chkout ( 'SPKS15' )
          return
       end if

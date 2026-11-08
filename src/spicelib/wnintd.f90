@@ -160,7 +160,7 @@
       integer(ip)           ap
       integer(ip)           bp
       integer(ip)           cp
-      character*1           use
+      character(1)          use
       integer(ip)           over
 
 
@@ -199,16 +199,16 @@
 !
 !     When the end of either input window is reached, we're done.
 !
-      do while ( ap .lt. acard  .and.  bp .lt. bcard )
+      do while ( ap < acard  .and.  bp < bcard )
 
 !
 !        Let's see what we can do with the earlier of the next
 !        intervals from A and B.
 !
-         if ( a(ap+1) .lt. b(bp+1) ) then
+         if ( a(ap+1) < b(bp+1) ) then
             use = 'A'
 
-         else if ( b(bp+1) .le. a(ap+1) ) then
+         else if ( b(bp+1) <= a(ap+1) ) then
             use = 'B'
          end if
 
@@ -222,11 +222,11 @@
 !        the next interval of B, save the area of overlap. (Similarly
 !        for B.)
 !
-         if ( use .eq. 'A' ) then
+         if ( use == 'A' ) then
 
-            if ( a(ap+1) .ge. b(bp) ) then
+            if ( a(ap+1) >= b(bp) ) then
 
-               if ( cp .lt. csize ) then
+               if ( cp < csize ) then
                   cp      = cp + 2
                   c(cp-1) = max ( b(bp), a(ap) )
                   c(cp  ) = a(ap+1)
@@ -241,11 +241,11 @@
 !
 !        This is the same as the last clause, with B replacing A.
 !
-         else if ( use .eq. 'B' ) then
+         else if ( use == 'B' ) then
 
-            if ( b(bp+1) .ge. a(ap) ) then
+            if ( b(bp+1) >= a(ap) ) then
 
-               if ( cp .lt. csize ) then
+               if ( cp < csize ) then
                   cp      = cp + 2
                   c(cp-1) = max ( a(ap), b(bp) )
                   c(cp  ) = b(bp+1)
@@ -270,7 +270,7 @@
 !     If there are any excess elements, signal an error and check out
 !     as usual.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
          call excess ( over, 'window' )
          call sigerr ( 'SPICE(WINDOWEXCESS)' )
       end if

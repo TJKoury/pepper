@@ -317,7 +317,7 @@
 !
 !     Validate constraint count.
 !
-      if (  ( njcnst .lt. 0 ) .or. ( njcnst .gt. mxjcon )  ) then
+      if (  ( njcnst < 0 ) .or. ( njcnst > mxjcon )  ) then
 
          call chkin  ( 'ZZEKJOIN'                                  )
          call setmsg ( 'Number of join constraints was #; valid ' // &
@@ -346,7 +346,7 @@
       nt3  =  nt1  +  nt2
       nsv3 =  nsv1 *  nsv2
 
-      if (  ( nt1 .lt. 1 ) .or. ( nt2 .gt. mxjoin-1 )  ) then
+      if (  ( nt1 < 1 ) .or. ( nt2 > mxjoin-1 )  ) then
 
          call chkin  ( 'ZZEKJOIN'                                      )
          call setmsg ( 'Number tables in first join row set was #; '  // &
@@ -357,7 +357,7 @@
          call chkout ( 'ZZEKJOIN'                                      )
          return
 
-      else if (  ( nt2 .lt. 1 ) .or. ( nt2 .gt. mxjoin-1 )  ) then
+      else if (  ( nt2 < 1 ) .or. ( nt2 > mxjoin-1 )  ) then
 
          call chkin  ( 'ZZEKJOIN'                                      )
          call setmsg ( 'Number tables in second join row set was #; ' // &
@@ -368,7 +368,7 @@
          call chkout ( 'ZZEKJOIN'                                      )
          return
 
-      else if ( nt3 .gt. mxjoin ) then
+      else if ( nt3 > mxjoin ) then
 
          call chkin  ( 'ZZEKJOIN'                                  )
          call setmsg ( 'Number of crossed tables was #; valid '  // &
@@ -390,8 +390,8 @@
 
          if ( active(i) ) then
 
-            if (       ( cpidx1(i) .lt. 1   ) &
-                  .or. ( cpidx1(i) .gt. nt3 )  ) then
+            if (       ( cpidx1(i) < 1   ) &
+                  .or. ( cpidx1(i) > nt3 )  ) then
 
                call chkin  ( 'ZZEKJOIN'                             )
                call setmsg ( 'Cross product table index for left ' // &
@@ -405,8 +405,8 @@
                return
 
 
-            else if (      ( cpidx2(i) .lt. 1   ) &
-                      .or. ( cpidx2(i) .gt. nt3 )  ) then
+            else if (      ( cpidx2(i) < 1   ) &
+                      .or. ( cpidx2(i) > nt3 )  ) then
 
                call chkin  ( 'ZZEKJOIN'                              )
                call setmsg ( 'Cross product table index for right ' // &

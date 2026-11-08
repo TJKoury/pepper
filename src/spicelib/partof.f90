@@ -159,7 +159,7 @@
 !     that it's positive (by symmetry).
 !
 
-      if ( ma .eq. 0.0_wp ) then
+      if ( ma == 0.0_wp ) then
          d = 0.0_wp
          call chkout ( 'PARTOF' )
          return
@@ -196,7 +196,7 @@
 
       change = 1.0_wp
 
-      do while ( abs ( change ) .gt. tol )
+      do while ( abs ( change ) > tol )
 
          fn     = d    + d**3/3.0_wp - m
          deriv  = 1.0_wp + d**2
@@ -207,7 +207,7 @@
 
       end do
 
-      if ( ma .lt. 0.0_wp ) then
+      if ( ma < 0.0_wp ) then
          d = -d
       end if
 

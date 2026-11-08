@@ -356,7 +356,7 @@
          end if
 
 
-         if ( voxsiz .eq. 0.0_wp ) then
+         if ( voxsiz == 0.0_wp ) then
 
             call setmsg ( 'Voxel edge length is zero; length ' &
             //            'must be positive.'                  )
@@ -366,7 +366,7 @@
 
          end if
 
-         if ( cgrscl .eq. 0 ) then
+         if ( cgrscl == 0 ) then
 
             call setmsg ( 'Coarse voxel scale is zero; scale ' &
             //            'must be positive.'                  )
@@ -484,7 +484,7 @@
          return
       end if
 
-      if ( cgrptr .lt. 1 ) then
+      if ( cgrptr < 1 ) then
 !
 !        There are no non-empty fine voxels, hence no plates, in the
 !        coarse voxel we're looking at.
@@ -501,14 +501,14 @@
 
       call dski02 ( handle, dladsc, kwvxpt, ptrloc, 1, n, pltptr )
 
-      if (  failed()  .or.  ( pltptr .lt. 1 )  ) then
+      if (  failed()  .or.  ( pltptr < 1 )  ) then
          call chkout ( 'ZZPTPL02' )
          return
       end if
 
       call dski02 ( handle, dladsc, kwvxpl, pltptr, 1, n, nplate )
 
-      if (  failed()  .or.  ( nplate .lt. 1 )  ) then
+      if (  failed()  .or.  ( nplate < 1 )  ) then
          call chkout ( 'ZZPTPL02' )
          return
       end if
@@ -522,7 +522,7 @@
       nread  = min ( remain, bufsiz )
       i      = 1
 
-      do while ( remain .gt. 0 )
+      do while ( remain > 0 )
 !
 !        Look up the current set of plate IDs.
 !
@@ -577,7 +577,7 @@
 
             call vsub ( point, xverts(1,1), pntoff )
 
-            if ( abs( vdot(pntoff,normal) ) .le. limit ) then
+            if ( abs( vdot(pntoff,normal) ) <= limit ) then
 !
 !              The input point lies in a narrow region of space
 !              bounded by two planes, both of which are parallel
@@ -600,13 +600,13 @@
                dist = dpmax()
             end if
 
-            if ( dist .le. limit ) then
+            if ( dist <= limit ) then
 !
 !              We have a reasonable candidate for the closest plate.
 !
                found = .true.
 
-               if ( dist .lt. dmin ) then
+               if ( dist < dmin ) then
 
                   dmin  = dist
                   plid  = pidtmp

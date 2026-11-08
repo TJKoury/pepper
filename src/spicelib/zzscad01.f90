@@ -282,10 +282,10 @@
 !
 !     Local variables
 !
-      character*(1)         kvtype ( nkitem )
-      character*(namlen)    kvname ( nkitem )
-      character*(namlen)    namlst ( nkitem )
-      character*(smsgln)    shrtms
+      character(1)          kvtype ( nkitem )
+      character(namlen)     kvname ( nkitem )
+      character(namlen)     namlst ( nkitem )
+      character(smsgln)     shrtms
 
       integer(ip)           dpbase
       integer(ip)           dproom
@@ -357,7 +357,7 @@
 !
       call zzhsiavl ( scpool, nscavl )
 
-      if ( nscavl .eq. 0 ) then
+      if ( nscavl == 0 ) then
 
          call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
@@ -383,7 +383,7 @@
 !
       iroom = ibufsz + 1 - ifree
 
-      if (  ( iroom .lt. nivals ) .or. ( iroom .gt. ibufsz )  ) then
+      if (  ( iroom < nivals ) .or. ( iroom > ibufsz )  ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
@@ -409,7 +409,7 @@
 !
       dproom = dbufsz + 1 - dpfree
 
-      if (  ( dproom .lt. 0 ) .or. ( dproom .gt. dbufsz )  ) then
+      if (  ( dproom < 0 ) .or. ( dproom > dbufsz )  ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
@@ -460,7 +460,7 @@
 !     The time system code need not be provided in the kernel pool.
 !     Set it to the default value if it's not present.
 !
-      if ( nsys .eq. 0 ) then
+      if ( nsys == 0 ) then
          intbuf(ibase+ixtsys) = tdb
       end if
 
@@ -517,7 +517,7 @@
 !        Check the number of values associated with the kernel
 !        variable.
 !
-         if ( kvsize(i) .gt. kvmaxn(i) ) then
+         if ( kvsize(i) > kvmaxn(i) ) then
 
             call zzscin01 ( hdsclk, scpool, clklst, &
                             dpfree, ifree,  prvsc  )
@@ -532,12 +532,12 @@
 !
 !           Customize the short error message a bit.
 !
-            if ( i .eq. cofidx ) then
+            if ( i == cofidx ) then
 
                shrtms = 'SPICE(TOOMANYCOEFFS)'
 
-            else if (     ( i .eq. prsidx ) &
-                     .or. ( i .eq. preidx ) ) then
+            else if (     ( i == prsidx ) &
+                     .or. ( i == preidx ) ) then
 
                shrtms = 'SPICE(TOOMANYPARTITIONS)'
             else
@@ -571,7 +571,7 @@
 !     Check whether sizes of partition start and end kernel variables
 !     match.
 !
-      if ( npartb .ne. nparte  ) then
+      if ( npartb /= nparte  ) then
 
          call zzscin01 ( hdsclk, scpool, clklst, dpfree, ifree, prvsc )
 
@@ -589,7 +589,7 @@
          npart = npartb
       end if
 
-      if ( ndpval .gt. dbufsz ) then
+      if ( ndpval > dbufsz ) then
 !
 !        We couldn't make enough room even if we dumped all buffered
 !        data.
@@ -610,7 +610,7 @@
          call chkout ( 'ZZSCAD01'                       )
          return
 
-      else if ( ndpval .gt. dproom ) then
+      else if ( ndpval > dproom ) then
 !
 !        We don't have room for this clock, but we will if we dump
 !        the existing buffered data.

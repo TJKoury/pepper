@@ -28,10 +28,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       real(wp)              intlen
       integer(ip)           n
       integer(ip)           polydg
@@ -476,8 +476,8 @@
 !
 !     Local variables
 !
-      character*(sidlen)    etstr
-      character*(sidlen)    netstr
+      character(sidlen)     etstr
+      character(sidlen)     netstr
 
       real(wp)              dcd   ( nd )
       real(wp)              descr ( ns )
@@ -506,7 +506,7 @@
 !
 !     The number of sets of coefficients must be positive.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
 
          call setmsg ( 'The number of sets of coordinate' &
          //            'coefficients is not positive. N = #.' )
@@ -521,7 +521,7 @@
 !     Make sure that the degree of the interpolating polynomials is
 !     in range.
 !
-      if (  ( polydg .lt. 0 ) .or. ( polydg .gt. maxdeg )  )  then
+      if (  ( polydg < 0 ) .or. ( polydg > maxdeg )  )  then
 
          call setmsg ( 'The interpolating polynomials have degree #; ' &
          //            'the valid degree range is [0, #].'             )
@@ -536,7 +536,7 @@
 !
 !    The interval length must be positive.
 !
-      if ( intlen .le. 0 ) then
+      if ( intlen <= 0 ) then
 
          call setmsg ( 'The interval length is not positive.' &
          //            'N = #'                                )
@@ -552,7 +552,7 @@
 !
       call namfrm ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -565,7 +565,7 @@
 !
 !     The segment stop time must be greater than the begin time.
 !
-      if ( first .gt. last ) then
+      if ( first > last ) then
 
          call setmsg ( 'The segment descriptor start time: # is ' // &
                        'greater than the segment end time: #'      )
@@ -584,7 +584,7 @@
 !
       tol = tolscl * max( abs(first), abs(last) )
 
-      if ( first .lt. btime - tol ) then
+      if ( first < btime - tol ) then
 
          call setmsg ( 'The segment descriptor start time # is too ' &
          //            'much less than the beginning time of the  ' &
@@ -610,7 +610,7 @@
 !
       ltime = btime  +  ( n * intlen )
 
-      if ( last .gt. ltime + tol ) then
+      if ( last > ltime + tol ) then
 
          call setmsg ( 'The segment descriptor end time # is too ' &
          //            'much greater than the end time of the segment ' &

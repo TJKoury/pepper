@@ -460,7 +460,7 @@
 !
 !     Local Variables
 !
-      character*(msglen)    mssg   ( 7 )
+      character(msglen)     mssg   ( 7 )
 
       real(wp)              axis   ( 3 )
       real(wp)              axisqr ( 3 )
@@ -568,20 +568,20 @@
 !
       bad = 0
 
-      if ( a .le. 0.0_wp ) then
+      if ( a <= 0.0_wp ) then
          bad = bad + 1
       end if
 
-      if ( b .le. 0.0_wp ) then
+      if ( b <= 0.0_wp ) then
          bad = bad + 2
       end if
 
-      if ( c .le. 0.0_wp ) then
+      if ( c <= 0.0_wp ) then
          bad = bad + 4
       end if
 
 
-      if ( bad .gt. 0 ) then
+      if ( bad > 0 ) then
 
          call setmsg ( mssg (bad)                       )
          call errch  ( '?', 'The A,B, and C axes were ' // &
@@ -897,7 +897,7 @@
 !
       do i = 2, 3
 
-         if ( axis(i) .gt. toobig ) then
+         if ( axis(i) > toobig ) then
 
             call setmsg ( 'Ratio of length of axis #* to length of ' // &
                           'axis #* is *; this value may cause '      // &
@@ -925,7 +925,7 @@
 
          prodct = sqrt( axis(i) ) * sqrt ( abs(point(i)) )
 
-         if ( prodct .gt. toobig ) then
+         if ( prodct > toobig ) then
 
             call setmsg ( 'Product of length of scaled axis #* and ' // &
                           'size of corresponding scaled component '  // &
@@ -988,8 +988,8 @@
 
          do i = 1, 3
 
-            if (      ( (0.5_wp*point(i) + axis(i)) .eq.  axis(i) ) &
-                 .or. ( (0.5_wp*point(i) - axis(i)) .eq. -axis(i) ) ) &
+            if (      ( (0.5_wp*point(i) + axis(i)) ==  axis(i) ) &
+                 .or. ( (0.5_wp*point(i) - axis(i)) == -axis(i) ) ) &
             then
                point(i) = 0.0_wp
             end if
@@ -1033,9 +1033,9 @@
 !        On the first solution pass, we will determine the sign of
 !        the altitude of the input POSITN
 !
-         if ( solutn .eq. 1 ) then
+         if ( solutn == 1 ) then
 
-            if       ( q .ge. 0 ) then
+            if       ( q >= 0 ) then
                sign =  1.0_wp
             else
                sign = -1.0_wp
@@ -1071,7 +1071,7 @@
 !        strictly inside the interior of the ellipsoid.  Points on the
 !        surface are not considered to be inside.
 !
-         if ( q .eq. 0.0_wp ) then
+         if ( q == 0.0_wp ) then
 !
 !           In this case the point is already on the ellipsoid
 !           (pretty lucky eh?)  We simply set our bracketing values,
@@ -1087,7 +1087,7 @@
             inside = .false.
 
 
-         else if ( q .gt. 0.0_wp ) then
+         else if ( q > 0.0_wp ) then
 !
 !           The input point is outside the ellipsoid (we expect that
 !           this is the usual case).  We want to choose our lower
@@ -1150,7 +1150,7 @@
 
             do i = 3, 1, -1
 
-               if ( point(i) .ne. 0 ) then
+               if ( point(i) /= 0 ) then
                   snglpt = i
                end if
 
@@ -1160,11 +1160,11 @@
 !           If there is a singular point, compute LAMBDA so that the
 !           largest term of Q is equal to 4.
 !
-            if ( snglpt .le. 3 ) then
+            if ( snglpt <= 3 ) then
 
                do i = 1, 3
 
-                  if ( point(i) .eq. 0 ) then
+                  if ( point(i) == 0 ) then
                      tlambd(i) = -axisqr(3)
                   else
                      tlambd(i) = axis(i) * (   0.5_wp*dabs(point(i)) &
@@ -1195,7 +1195,7 @@
 !              to zero so that we won't have to deal with any
 !              special cases later on.
 !
-               if ( copy(1) .lt. 0 ) then
+               if ( copy(1) < 0 ) then
                   point(1) = -axis(1)
                   copy(1)  = -axis(1)
                else
@@ -1224,7 +1224,7 @@
 !
          do i = 1, 3
 
-            if ( point(i) .eq. 0 ) then
+            if ( point(i) == 0 ) then
 
                term(i) = 0.0_wp
 
@@ -1242,7 +1242,7 @@
 
                denom = axis(i) + lambda/axis(i)
 
-               trim  = 0.5_wp * dabs( point(i) )   .gt.   denom
+               trim  = 0.5_wp * dabs( point(i) )   >   denom
 
                if ( inside .and. trim ) then
 
@@ -1253,7 +1253,7 @@
 !                 We don't expect DENOM to be zero here, but we'll
 !                 check anyway.
 !
-                  if ( denom .eq. 0.0_wp ) then
+                  if ( denom == 0.0_wp ) then
 
                      call setmsg ( 'AXIS(#) + LAMBDA/AXIS(#) is zero.' )
                      call errint ( '#',  i                             )
@@ -1305,11 +1305,11 @@
 !        that may be caused by extended precision register usage by
 !        some compilers.
 !
-         do while ( touchd(upper-lower) .gt. 0.0_wp )
+         do while ( touchd(upper-lower) > 0.0_wp )
 
             itr = itr + 1
 
-            if ( itr .gt. maxitr ) then
+            if ( itr > maxitr ) then
 
                call setmsg ('Iteration limit # exceeded in NEARPT. ' // &
                             'A, B, C = # # #; POSITN = ( #, #, # ). '// &
@@ -1344,7 +1344,7 @@
 !           bracketing endpoints we adjust the endpoints
 !           of the bracketing interval
 !
-            if ( q .eq. 0 ) then
+            if ( q == 0 ) then
 !
 !              We've found the root.
 !
@@ -1353,7 +1353,7 @@
 
             else
 
-               if ( q .lt. 0.0_wp ) then
+               if ( q < 0.0_wp ) then
 
                   upper  = lambda
                   qupper = q
@@ -1404,7 +1404,7 @@
 !              the boundaries, by selecting that endpoint
 !              at which Q is closest to zero.
 
-               if ( dabs(qlower) .lt. dabs(qupper) ) then
+               if ( dabs(qlower) < dabs(qupper) ) then
                   upper = lower
                else
                   lower = upper
@@ -1418,11 +1418,11 @@
 !           If LOWER and UPPER aren't the same, we compute the
 !           value of Q at our new guess for LAMBDA.
 !
-            if ( touchd(upper-lower) .gt. 0 ) then
+            if ( touchd(upper-lower) > 0 ) then
 
                do i = 1, 3
 
-                  if ( point(i) .eq. 0 ) then
+                  if ( point(i) == 0 ) then
 
                      term(i) = 0.0_wp
 
@@ -1430,7 +1430,7 @@
 
                      denom =  axis(i) + lambda/axis(i)
 
-                     trim  =  0.5_wp * dabs( point(i) )   .gt.   denom
+                     trim  =  0.5_wp * dabs( point(i) )   >   denom
 
                      if ( inside .and. trim ) then
 
@@ -1441,7 +1441,7 @@
 !                       We don't expect DENOM to be zero here, but we'll
 !                       check anyway.
 !
-                        if ( denom .eq. 0.0_wp ) then
+                        if ( denom == 0.0_wp ) then
 
                            call setmsg ( 'AXIS(#) + LAMBDA/AXIS(#) ' // &
                                          'is zero.'                  )
@@ -1483,7 +1483,7 @@
 
         do i = 1, 3
 
-           if ( point(i) .eq. 0.0_wp ) then
+           if ( point(i) == 0.0_wp ) then
 
               spoint(i) = 0.0_wp
 
@@ -1494,7 +1494,7 @@
 !             We don't expect that DENOM will be non-positive, but we
 !             check for this case anyway.
 !
-              if ( denom .le. 0.0_wp ) then
+              if ( denom <= 0.0_wp ) then
 
                  call setmsg ( 'Denominator in expression for ' // &
                                'SPOINT(#) is #.'                )
@@ -1522,8 +1522,8 @@
 !       likelihood) that the nearest point on the ellipsoid is NOT in
 !       the Y-Z plane. we must consider this possibility next.
 !
-        if ( inside  .and. (      (snglpt .eq. 2) &
-                             .or. (snglpt .eq. 3) ) ) then
+        if ( inside  .and. (      (snglpt == 2) &
+                             .or. (snglpt == 3) ) ) then
 !
 !          There are two ways to get here. SNGLPT = 2 or SNGLPT = 3.
 !          Fortunately these two cases can be handled simultaneously by
@@ -1660,22 +1660,22 @@
 !               | POINT(3) | <= c - a*(a/c)
 !
 
-           if (     (     axis (1)  .ne. axis(snglpt)                ) &
-               .and.(dabs(point(2)) .le. axis(2) - axisqr(1)/axis(2) ) &
-               .and.(dabs(point(3)) .le. axis(3) - axisqr(1)/axis(3) )) &
+           if (     (     axis (1)  /= axis(snglpt)                ) &
+               .and.(dabs(point(2)) <= axis(2) - axisqr(1)/axis(2) ) &
+               .and.(dabs(point(3)) <= axis(3) - axisqr(1)/axis(3) )) &
            then
 !
 !             What happens next depends on whether the ellipsoid is
 !             prolate or triaxial.
 !
-              if ( axis(1) .eq. axis(2) ) then
+              if ( axis(1) == axis(2) ) then
 !
 !                This is the prolate case; we need to compute the
 !                z component of the solution.
 !
                  denom3 = 1.0_wp - axisqr(1)/axisqr(3)
 
-                 if ( denom3 .gt. 0.0_wp ) then
+                 if ( denom3 > 0.0_wp ) then
 
                     epoint(2) = 0.0_wp
 !
@@ -1703,7 +1703,7 @@
                     temp      = 1.0_wp  - ( epoint(2) / axis(2) )**2 &
                                        - ( epoint(3) / axis(3) )**2
 
-                    if ( temp .gt. 0 ) then
+                    if ( temp > 0 ) then
 !
 !                      ...and compute the x component of the point.
 !
@@ -1729,8 +1729,8 @@
 !                Nonetheless, we check to make sure this is the case.
 !                If not, we don't compute the extra point.
 !
-                 if (       ( denom2 .gt. 0.0_wp ) &
-                      .and. ( denom3 .gt. 0.0_wp ) ) then
+                 if (       ( denom2 > 0.0_wp ) &
+                      .and. ( denom3 > 0.0_wp ) ) then
 
 !
 !                   Concerning the safety of the following divisions:
@@ -1757,7 +1757,7 @@
                     temp      = 1.0_wp  - ( epoint(2) / axis(2) )**2 &
                                        - ( epoint(3) / axis(3) )**2
 
-                    if ( temp .gt. 0 ) then
+                    if ( temp > 0 ) then
 !
 !                      ...and compute the x component of the point.
 !
@@ -1779,7 +1779,7 @@
            if ( extra ) then
 
               if (      vdist(epoint, point) &
-                   .lt. vdist(spoint, point) ) then
+                   < vdist(spoint, point) ) then
 
                  call vequ ( epoint, spoint )
 
@@ -1797,7 +1797,7 @@
 !       ================================================================
 !       ----------------------------------------------------------------
 !
-        if ( solutn .eq. 1 ) then
+        if ( solutn == 1 ) then
 
 !
 !           The first solution for the nearest point may not be
@@ -1814,7 +1814,7 @@
             bestht = vdist ( bestpt, orignl )
 
 
-         else if ( solutn .eq. 2 ) then
+         else if ( solutn == 2 ) then
 
 !
 !           The current solution point will be very close to lying
@@ -1887,12 +1887,12 @@
 !           The sign of the original point's altitude tells
 !           us whether the point is outside the ellipsoid.
 !
-            if ( sign .ge. 0.0_wp ) then
+            if ( sign >= 0.0_wp ) then
 !
 !              Scale the transverse component down to the local radius
 !              of the surface point.
 !
-               if ( pnorm .eq. 0.0_wp ) then
+               if ( pnorm == 0.0_wp ) then
 !
 !                 Since the point is outside of the scaled ellipsoid,
 !                 we don't expect to arrive here. This is a backstop
@@ -1917,9 +1917,9 @@
 
             call vadd ( spoint, errp, point )
 
-            if (  (spoint(1) .eq. point(1)) .and. &
-                  (spoint(2) .eq. point(2)) .and. &
-                  (spoint(3) .eq. point(3))       ) then
+            if (  (spoint(1) == point(1)) .and. &
+                  (spoint(2) == point(2)) .and. &
+                  (spoint(3) == point(3))       ) then
                solvng = .false.
             end if
 
@@ -1935,7 +1935,7 @@
             call vequ ( spoint, bestpt )
 
 
-         else if ( solutn .gt. 2 ) then
+         else if ( solutn > 2 ) then
 
 !
 !           This branch exists for the purpose of testing our
@@ -1997,7 +1997,7 @@
 !
 !           If the sharpened estimate yields a smaller error ...
 !
-            if ( newerr .lt. olderr ) then
+            if ( newerr < olderr ) then
 !
 !              ...our current value of SPOINT becomes our new
 !              best point and the current altitude becomes our
@@ -2013,7 +2013,7 @@
 !              iterations allowed we prepare the initial point for our
 !              "sharpening" estimate.
 !
-               if ( solutn .le. maxsol ) then
+               if ( solutn <= maxsol ) then
 
 
 !                 Find the component of the error vector that is
@@ -2035,12 +2035,12 @@
 !                 The sign of the original point's altitude tells
 !                 us whether the point is outside the ellipsoid.
 !
-                  if ( sign .ge. 0.0_wp ) then
+                  if ( sign >= 0.0_wp ) then
 !
 !                    Scale the transverse component down to the local
 !                    radius of the surface point.
 !
-                     if ( pnorm .eq. 0.0_wp ) then
+                     if ( pnorm == 0.0_wp ) then
 !
 !                       Since the point is outside of the scaled
 !                       ellipsoid, we don't expect to arrive here.
@@ -2065,9 +2065,9 @@
 
                   call vadd  ( spoint, errp, point )
 
-                  if (  (spoint(1) .eq. point(1)) .and. &
-                        (spoint(2) .eq. point(2)) .and. &
-                        (spoint(3) .eq. point(3))       ) then
+                  if (  (spoint(1) == point(1)) .and. &
+                        (spoint(2) == point(2)) .and. &
+                        (spoint(3) == point(3))       ) then
                      solvng = .false.
                   end if
 
@@ -2091,7 +2091,7 @@
 !
          solutn = solutn + 1
 
-         solvng = solvng .and. ( solutn .le. maxsol )
+         solvng = solvng .and. ( solutn <= maxsol )
 
       end do
 

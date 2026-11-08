@@ -125,14 +125,14 @@
       end if
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 !
 !        Get the encoded pointer.
 !
          call zzekgei ( handle, base+cfpidx, fward )
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 !
 !        Convert the d.p. pointer to integer type.
 !

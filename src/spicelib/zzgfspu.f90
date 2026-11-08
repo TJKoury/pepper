@@ -31,19 +31,19 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         of    (2)
-      character*(*)         from
-      character*(*)         shape (2)
-      character*(*)         frame (2)
+      character(*)          of    (2)
+      character(*)          from
+      character(*)          shape (2)
+      character(*)          frame (2)
       real(wp)              et
       external              udfunc
-      character*(*)         abcorr
+      character(*)          abcorr
       logical               decres
       real(wp)              sep
-      character*(*)         xabcr
+      character(*)          xabcr
       integer(ip)           xbod  (2)
-      character*(*)         yref
-      character*(*)         xref  (2)
+      character(*)          yref
+      character(*)          xref  (2)
       integer(ip)           xobs
       real(wp)              xrad  (2)
       integer(ip)           xshp  (2)
@@ -296,7 +296,7 @@
 !
 !     Saved Variables
 !
-      character*(32)        svabcr
+      character(32)         svabcr
       save                  svabcr
 
       integer(ip)           svbod1
@@ -305,13 +305,13 @@
       integer(ip)           svbod2
       save                  svbod2
 
-      character*(32)        svref
+      character(32)         svref
       save                  svref
 
-      character*(32)        svref1
+      character(32)         svref1
       save                  svref1
 
-      character*(32)        svref2
+      character(32)         svref2
       save                  svref2
 
       integer(ip)           svobs
@@ -329,7 +329,7 @@
       integer(ip)           svshp2
       save                  svshp2
 
-      character*(5)         ref
+      character(5)          ref
       save                  ref
 
 !
@@ -338,7 +338,7 @@
       integer(ip)           spshpn
       parameter           ( spshpn = 2 )
 
-      character*(32)        svshap ( spshpn )
+      character(32)         svshap ( spshpn )
 
 !
 !     Define integer ID parameters for the shape names in
@@ -653,9 +653,9 @@
 !
 !     Confirm the three bodies have unique IDs.
 !
-      if      (       ( svobs  .eq. svbod1 ) &
-                 .or. ( svobs  .eq. svbod2 ) &
-                 .or. ( svbod1 .eq. svbod2) ) then
+      if      (       ( svobs  == svbod1 ) &
+                 .or. ( svobs  == svbod2 ) &
+                 .or. ( svbod1 == svbod2) ) then
 
          call setmsg( 'All three objects associated ' &
             //           'with an ANGULAR SEPARATION search must be ' &
@@ -704,7 +704,7 @@
 !
       svshp1 = isrchc( shape(1), spshpn, svshap)
 
-      if ( svshp1 .eq. 0 ) then
+      if ( svshp1 == 0 ) then
 
          call setmsg ( 'The body shape, # is not recognized.  ' &
             //         'Supported quantities are: ' &
@@ -714,11 +714,11 @@
          call chkout ( 'ZZGFSPIN'                              )
          return
 
-      else if ( svshp1 .eq. point ) then
+      else if ( svshp1 == point ) then
 
          svrad1 = 0.0_wp
 
-      else if ( svshp1 .eq. sphere ) then
+      else if ( svshp1 == sphere ) then
 
          call zzgftreb( svbod1, axes1 )
 
@@ -753,7 +753,7 @@
 !
       svshp2 = isrchc( shape(2), spshpn, svshap)
 
-      if ( svshp2 .eq. 0 ) then
+      if ( svshp2 == 0 ) then
 
          call setmsg ( 'The body shape, # is not '                 // &
                        'recognized.  Supported quantities are: '   // &
@@ -763,11 +763,11 @@
          call chkout( 'ZZGFSPIN'                                    )
          return
 
-      else if ( svshp2 .eq. point ) then
+      else if ( svshp2 == point ) then
 
          svrad2 = 0.0_wp
 
-      else if ( svshp2 .eq. sphere ) then
+      else if ( svshp2 == sphere ) then
 
          call zzgftreb( svbod2, axes2)
 
@@ -805,7 +805,7 @@
 !     This check does not apply to POINT or SPHERE shapes.
 !
 
-      if ( (svshp1 .ne. point)  .and. (svshp1 .ne. sphere) ) then
+      if ( (svshp1 /= point)  .and. (svshp1 /= sphere) ) then
 
          call namfrm ( svref1, fcode1 )
 
@@ -821,7 +821,7 @@
 
          end if
 
-         if ( svbod1 .ne. ctr1 ) then
+         if ( svbod1 /= ctr1 ) then
 
             call setmsg ( 'The reference frame #1 associated with ' // &
                       'target body #2 is not centered on #2. The '  // &
@@ -838,7 +838,7 @@
       end if
 
 
-      if ( (svshp2 .ne. point)  .and. (svshp2 .ne. sphere) ) then
+      if ( (svshp2 /= point)  .and. (svshp2 /= sphere) ) then
 
          call namfrm ( svref2, fcode2 )
 
@@ -854,7 +854,7 @@
 
          end if
 
-         if ( svbod2 .ne. ctr2 ) then
+         if ( svbod2 /= ctr2 ) then
 
             call setmsg ( 'The reference frame #1 associated with ' // &
                       'target body #2 is not centered on #2. The '  // &
@@ -1053,7 +1053,7 @@
 
       dtheta = dtheta - dhfa(pv1, svrad1) - dhfa(pv2, svrad2)
 
-      if ( dtheta .lt. 0 ) then
+      if ( dtheta < 0 ) then
          decres = .true.
       else
          decres = .false.

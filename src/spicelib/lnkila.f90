@@ -264,7 +264,7 @@
 !
 !     If PREV is non-positive, return now.
 !
-      if ( prev .le. 0 ) then
+      if ( prev <= 0 ) then
          return
       end if
 
@@ -272,9 +272,9 @@
 !     At this point, PREV and LIST must be a valid node numbers, and
 !     both PREV and LIST must be allocated as well.
 !
-      if (      ( prev .gt. pool(sizrow,sizcol) ) &
-           .or. ( list .lt. 1                   ) &
-           .or. ( list .gt. pool(sizrow,sizcol) )  )  then
+      if (      ( prev > pool(sizrow,sizcol) ) &
+           .or. ( list < 1                   ) &
+           .or. ( list > pool(sizrow,sizcol) )  )  then
 
          call chkin  ( 'LNKILA'                                        )
          call setmsg ( 'PREV was #.  LIST was #. '                    // &
@@ -287,8 +287,8 @@
          return
 
 
-      else if (       ( pool(bckwrd,prev)  .eq.  free ) &
-                .or.  ( pool(bckwrd,list)  .eq.  free )  ) then
+      else if (       ( pool(bckwrd,prev)  ==  free ) &
+                .or.  ( pool(bckwrd,list)  ==  free )  ) then
 
          call chkin  ( 'LNKILA'                                        )
          call setmsg ( 'Node PREV: node number = #; '                 // &
@@ -316,7 +316,7 @@
 !
       head = list
 
-      do while ( pool(bckwrd,head) .gt. 0 )
+      do while ( pool(bckwrd,head) > 0 )
          head = pool(bckwrd,head)
       end do
 
@@ -340,7 +340,7 @@
       pool( forwrd, prev )  =  head
       pool( bckwrd, head )  =  prev
 
-      if ( next .gt. 0 ) then
+      if ( next > 0 ) then
          pool( bckwrd,  next )  =   tail
       else
          pool( bckwrd, -next )  =  -tail

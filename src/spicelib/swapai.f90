@@ -250,7 +250,7 @@
       integer(ip)           direct
       integer(ip)           extra
 
-      character*1           dir
+      character(1)          dir
       integer(ip)           begsub
       integer(ip)           nsub
 
@@ -365,7 +365,7 @@
 !
 !     Check to see if the inputs are valid.
 !
-      if ( n .lt. 0 ) then
+      if ( n < 0 ) then
 
          call setmsg ( 'Number of elements in the first group is *.' )
          call errint ( '*', n                   )
@@ -373,7 +373,7 @@
          call chkout ( 'SWAPAI' )
          return
 
-      else if ( m .lt. 0 ) then
+      else if ( m < 0 ) then
 
          call setmsg ( 'Number of elements in the second group is *.' )
          call errint ( '*', m                   )
@@ -381,7 +381,7 @@
          call chkout ( 'SWAPAI' )
          return
 
-      else if ( locn .lt. 1 ) then
+      else if ( locn < 1 ) then
 
          call setmsg ( 'Location of the first group is *.' )
          call errint ( '*', locn             )
@@ -389,7 +389,7 @@
          call chkout ( 'SWAPAI' )
          return
 
-      else if ( locm .lt. 1 ) then
+      else if ( locm < 1 ) then
 
          call setmsg ( 'Location of the second group is *.' )
          call errint ( '*', locm             )
@@ -403,7 +403,7 @@
 !
 !     Make sure we have the groups in the right order.
 !
-      if ( locn .lt. locm ) then
+      if ( locn < locm ) then
          ln = locn
          lm = locm
          nn = n
@@ -418,7 +418,7 @@
 !
 !     The elements must be distinct.
 !
-      if ( lm .lt. ln + nn ) then
+      if ( lm < ln + nn ) then
          call setmsg ( 'Elements to be swapped are not distinct.' )
          call sigerr ( 'SPICE(NOTDISTINCT)' )
          call chkout ( 'SWAPAI' )
@@ -439,9 +439,9 @@
 !
       extra = abs ( nn - nm )
 
-      if ( extra .gt. 0 ) then
+      if ( extra > 0 ) then
 
-         if ( nn .lt. nm ) then
+         if ( nn < nm ) then
             dir = 'F'
          else
             dir = 'B'

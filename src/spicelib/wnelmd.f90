@@ -177,7 +177,7 @@
 !
       do i = 1, card, 2
 
-         if ( point .ge. window(i)  .and. point .le. window(i+1) ) then
+         if ( point >= window(i)  .and. point <= window(i+1) ) then
             wnelmd = .true.
             call chkout ( 'WNELMD' )
             return

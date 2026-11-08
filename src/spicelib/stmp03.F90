@@ -595,7 +595,7 @@
 !     range that we are confident we can use to compute the Stumpff
 !     functions.
 !
-      if ( x .le. lbound ) then
+      if ( x <= lbound ) then
 
          call chkin ( 'STMP03'                                     )
          call setmsg( 'The input value of X must be greater than ' &
@@ -673,7 +673,7 @@
 !                                                  8
 !
 !
-       if ( x .lt. -1.0_wp ) then
+       if ( x < -1.0_wp ) then
 
          z  = sqrt(-x)
          c0 = cosh(z)
@@ -684,7 +684,7 @@
 
       end if
 
-      if ( x .gt. 1.0_wp ) then
+      if ( x > 1.0_wp ) then
 
          z  = sqrt(x)
          c0 = cos(z)

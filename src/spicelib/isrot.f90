@@ -232,7 +232,7 @@
 !
 !     Tolerances must be non-negative.
 !
-      if ( ntol .lt. 0.0_wp ) then
+      if ( ntol < 0.0_wp ) then
 
          isrot = .false.
 
@@ -242,7 +242,7 @@
          call chkout ( 'ISROT'                                 )
          return
 
-      else if ( dtol .lt. 0.0_wp ) then
+      else if ( dtol < 0.0_wp ) then
 
          isrot = .false.
 
@@ -270,11 +270,11 @@
       d      =  det ( unit )
 
 
-      normok =       ( n1 .eq. brcktd ( n1, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
-               .and. ( n2 .eq. brcktd ( n2, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
-               .and. ( n3 .eq. brcktd ( n3, 1.0_wp - ntol, 1.0_wp + ntol ) )
+      normok =       ( n1 == brcktd ( n1, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
+               .and. ( n2 == brcktd ( n2, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
+               .and. ( n3 == brcktd ( n3, 1.0_wp - ntol, 1.0_wp + ntol ) )
 
-      detok  =         d  .eq. brcktd ( d,  1.0_wp - dtol, 1.0_wp + dtol )
+      detok  =         d  == brcktd ( d,  1.0_wp - dtol, 1.0_wp + dtol )
 
 
       if ( normok .and. detok ) then

@@ -20,9 +20,9 @@
 
       implicit none
 
-      character*(*)         action
-      character*(*)         item
-      character*(*)         value
+      character(*)          action
+      character(*)          item
+      character(*)          value
 
 ! $ Brief_I/O
 !
@@ -278,16 +278,16 @@
       integer(ip)           nzones
       parameter           ( nzones = 8 )
 
-      character*(wdsize)    defzon
-      character*(wdsize)    defsys
-      character*(wdsize)    defcal
+      character(wdsize)     defzon
+      character(wdsize)     defsys
+      character(wdsize)     defcal
 
-      character*(wdsize)    zones  ( nzones )
-      character*(wdsize)    trnslt ( nzones )
+      character(wdsize)     zones  ( nzones )
+      character(wdsize)     trnslt ( nzones )
 
-      character*(wdsize)    myactn
-      character*(wdsize)    myitem
-      character*(wdsize)    myval
+      character(wdsize)     myactn
+      character(wdsize)     myitem
+      character(wdsize)     myval
 
       integer(ip)           last
       integer(ip)           zone
@@ -336,21 +336,21 @@
 !     to mind at the moment and allows us to give quite specific
 !     diagnostic messages easily.
 !
-      if ( myactn .eq. 'SET' ) then
+      if ( myactn == 'SET' ) then
 
          call ljust ( value,  myval  )
          call ucase ( myval,  myval  )
 
-         if      ( myitem .eq. 'SYSTEM' ) then
+         if      ( myitem == 'SYSTEM' ) then
 
 !
 !           Recognize only the know time systems. Note, 'UTC' not
 !           actually a time system, more a time representation.
 !
-            if (       (myval .eq. 'TDB') &
-                  .or. (myval .eq. 'TDT') &
-                  .or. (myval .eq. 'TT') &
-                  .or. (myval .eq. 'UTC') ) then
+            if (       (myval == 'TDB') &
+                  .or. (myval == 'TDT') &
+                  .or. (myval == 'TT') &
+                  .or. (myval == 'UTC') ) then
 
                defzon = ' '
                defsys = myval
@@ -368,7 +368,7 @@
             end if
 
 
-         else if ( myitem .eq. 'ZONE' ) then
+         else if ( myitem == 'ZONE' ) then
 
             zone = isrchc ( myval, nzones, zones )
 
@@ -376,7 +376,7 @@
 !           If MYVAL was one of the recognized time zones, we
 !           translate it to the UTC offset form.
 !
-            if ( zone .gt. 0 ) then
+            if ( zone > 0 ) then
                myval = trnslt ( zone )
             end if
 
@@ -405,11 +405,11 @@
             defzon = myval(3:)
             defsys = ' '
 
-         else if ( myitem .eq. 'CALENDAR' )  then
+         else if ( myitem == 'CALENDAR' )  then
 
-            if (       myval .eq. 'JULIAN' &
-                  .or. myval .eq. 'GREGORIAN' &
-                  .or. myval .eq. 'MIXED'   ) then
+            if (       myval == 'JULIAN' &
+                  .or. myval == 'GREGORIAN' &
+                  .or. myval == 'MIXED'   ) then
 
                defcal = myval
 
@@ -448,13 +448,13 @@
          call chkout ( 'TIMDEF' )
          return
 
-      else if ( myactn .eq. 'GET' ) then
+      else if ( myactn == 'GET' ) then
 
-         if      ( myitem .eq. 'CALENDAR' ) then
+         if      ( myitem == 'CALENDAR' ) then
             value = defcal
-         else if ( myitem .eq. 'SYSTEM'   ) then
+         else if ( myitem == 'SYSTEM'   ) then
             value = defsys
-         else if ( myitem .eq. 'ZONE'     ) then
+         else if ( myitem == 'ZONE'     ) then
             value = defzon
          else
 

@@ -23,7 +23,7 @@
 
       integer(ip)      ne
       integer(ip)      loc
-      character*(*)    array ( * )
+      character(*)     array ( * )
       integer(ip)      na
 
 ! $ Brief_I/O
@@ -205,7 +205,7 @@
 !     value of LOC is invalid, and an error is signaled.
 !
 
-      if ( ( loc .lt. 1 ) .or. ( loc .gt. na ) ) then
+      if ( ( loc < 1 ) .or. ( loc > na ) ) then
 
          call setmsg ( 'Location was *.'     )
          call errint ( '*', loc              )
@@ -217,7 +217,7 @@
 !     Don't try to remove non-existent elements.
 !
 
-      else if ( ne .gt. na-loc+1 ) then
+      else if ( ne > na-loc+1 ) then
 
          call setmsg ( 'Trying to remove non-existent elements.' )
          call sigerr ( 'SPICE(NONEXISTELEMENTS)' )
@@ -230,7 +230,7 @@
 !     do not modify the array.
 !
 
-      else if ( ne .gt. 0 ) then
+      else if ( ne > 0 ) then
 
 !
 !        Move the elements forward.

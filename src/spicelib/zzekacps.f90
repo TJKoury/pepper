@@ -180,11 +180,11 @@
 !     Update the segment's metadata.  Insert the number of each new
 !     page into the page tree of the appropriate data type.
 !
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 
          tree  =  segdsc ( cptidx )
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 
          tree  =  segdsc ( dptidx )
 

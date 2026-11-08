@@ -24,7 +24,7 @@
 
       implicit none
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           code
       logical               found
 
@@ -262,7 +262,7 @@
 !
 !     Local variables
 !
-      character*(msglen)    errmsg
+      character(msglen)     errmsg
       integer(ip)           ptr
 
 !
@@ -300,7 +300,7 @@
 !
 !           We have an ID code if and only if PTR is zero.
 !
-            found = ptr .eq. 0
+            found = ptr == 0
 
          end if
 

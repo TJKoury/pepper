@@ -362,7 +362,7 @@
 
       do i = 1, 3
 
-         if ( dterm(i) .ne. 0.0_wp ) then
+         if ( dterm(i) /= 0.0_wp ) then
             m(i,i) = 1.0_wp / dterm(i)
          else
             found = .false.
@@ -374,7 +374,7 @@
 
       denom = vtmv ( grad, m, grad )
 
-      if ( denom .eq. 0.0_wp ) then
+      if ( denom == 0.0_wp ) then
          found = .false.
          call chkout ( 'ZZDNPT' )
          return

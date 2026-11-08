@@ -24,10 +24,10 @@
       integer(ip)           nwc
       parameter           ( nwc = 1024 )
 
-      character*(*)         action
+      character(*)          action
       integer(ip)           unit
       integer(ip)           recno
-      character*(nwc)       record
+      character(nwc)        record
 
 ! $ Brief_I/O
 !
@@ -217,7 +217,7 @@
                  rec     =    recno, &
                  iostat  =    iostat  )    record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call chkin  ( 'DASIOC'                                     )
             call setmsg ( 'Could not read DAS character record.  '    // &
@@ -241,7 +241,7 @@
                   rec     =    recno, &
                   iostat  =    iostat  )    record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call chkin  ( 'DASIOC'                                     )
             call setmsg ( 'Could not write DAS character record.  '   // &

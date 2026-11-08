@@ -310,7 +310,7 @@
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 
-      if ( icd( 3 ) .ne. ck4dtp ) then
+      if ( icd( 3 ) /= ck4dtp ) then
          call setmsg ( 'Data type of the segment should be 4: '      // &
                        'Passed  descriptor shows type = #.'          )
          call errint ( '#', icd( 3 )                                 )
@@ -325,7 +325,7 @@
 !
       call cknr04 ( handle, descr, nrec )
 
-      if ( ( recno .lt. 1 ) .or. ( recno .gt. nrec ) ) then
+      if ( ( recno < 1 ) .or. ( recno > nrec ) ) then
          call setmsg ( 'Requested record number (#) does not '       // &
                        'exist. There are # records in the segment.'  )
          call errint ( '#', recno                                    )

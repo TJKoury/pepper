@@ -30,21 +30,21 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           ntoken
       integer(ip)           lxbegs ( * )
       integer(ip)           lxends ( * )
       integer(ip)           tokens ( * )
       integer(ip)           values ( * )
       real(wp)              numvls ( * )
-      character*(*)         chrbuf
+      character(*)          chrbuf
       integer(ip)           chbegs ( * )
       integer(ip)           chends ( * )
       integer(ip)           eqryi  ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd  ( * )
       logical               error
-      character*(*)         prserr
+      character(*)          prserr
 
 ! $ Brief_I/O
 !
@@ -671,7 +671,7 @@
       error  = .false.
       prserr = ' '
 
-      if ( ntoken .gt. maxtok ) then
+      if ( ntoken > maxtok ) then
          error  = .true.
          prserr = 'Too many tokens in query; max allowed is #.'
          call repmi  ( prserr, '#', maxtok, prserr )
@@ -710,8 +710,8 @@
 
          if ( fnd ) then
 
-            if (       ( endloc .lt. whrend ) &
-                 .and. ( endloc .gt. whrbeg )  ) then
+            if (       ( endloc < whrend ) &
+                 .and. ( endloc > whrbeg )  ) then
 
                whrend  =  endloc-1
             end if
@@ -723,7 +723,7 @@
 
       whrsiz  =  whrend  -  whrbeg  +  1
 
-      if ( whrsiz .eq. 0 ) then
+      if ( whrsiz == 0 ) then
          error   =  .true.
          prserr  =  'Empty WHERE clause.'
          call chkout ( 'ZZEKNRML' )
@@ -748,7 +748,7 @@
 
       i      =  whrbeg
 
-      do while ( i .le. whrend )
+      do while ( i <= whrend )
 !
 !        Allocate a node and link it in at the tail of the meta-token
 !        list.
@@ -764,18 +764,18 @@
          mtexpr(node) = i
 
 
-         if ( tokens(i) .eq. tklpar  ) then
+         if ( tokens(i) == tklpar  ) then
 
             mtcode(node) = lgroup
 
 
-         else if ( tokens(i) .eq. tkrpar ) then
+         else if ( tokens(i) == tkrpar ) then
 
             mtcode(node) = rgroup
 
 
-         else if (       ( tokens(i) .eq. tkint  ) &
-                   .or.  ( tokens(i) .eq. tkdp   )  ) then
+         else if (       ( tokens(i) == tkint  ) &
+                   .or.  ( tokens(i) == tkdp   )  ) then
 !
 !           Numeric values must be added to the encoded query.  We
 !           allocate a descriptor from the descriptor pool for
@@ -788,7 +788,7 @@
 
             call lnkan ( dspool, mtexpr(node) )
 
-            if ( tokens(i) .eq. tkint ) then
+            if ( tokens(i) == tkint ) then
                type = int
             else
                type = dp
@@ -808,7 +808,7 @@
             dscbuf( dscsiz, mtexpr(node) )  =  value
 
 
-         else if ( tokens(i) .eq. tkqstr ) then
+         else if ( tokens(i) == tkqstr ) then
 !
 !           The treatment of strings is analogous to that of numbers.
 !
@@ -833,7 +833,7 @@
             dscbuf( dscsiz, mtexpr(node) )  =  value
 
 
-         else if ( tokens(i) .eq. tkid ) then
+         else if ( tokens(i) == tkid ) then
 !
 !           Identifiers must be added to the encoded query.  We
 !           allocate a descriptor from the descriptor pool for
@@ -862,12 +862,12 @@
             dscbuf( dscsiz, mtexpr(node) )  =  ident
 
 
-         else if ( tokens(i) .eq. tkdot ) then
+         else if ( tokens(i) == tkdot ) then
 
             mtcode(node) = period
 
 
-         else if ( tokens(i) .eq. tkkey  ) then
+         else if ( tokens(i) == tkkey  ) then
 !
 !           We have a keyword.  Identify it and locate the corresponding
 !           code.
@@ -876,21 +876,21 @@
             k  =  isrchi ( values(i), nrelop-1, cmpops )
 
 
-            if ( j .gt. 0 ) then
+            if ( j > 0 ) then
 !
 !              We have a logical operator, unless we have the NOT LIKE
 !               or NOT BETWEEN sequence.
 !
-               if ( logcde(j) .ne. not ) then
+               if ( logcde(j) /= not ) then
 
                   mtcode(node) = logcde(j)
 
                else
 
-                  if ( i .le. whrend ) then
+                  if ( i <= whrend ) then
 
-                     if (       ( tokens(i+1) .eq. tkkey  ) &
-                          .and. ( values(i+1) .eq. kwlike )  ) then
+                     if (       ( tokens(i+1) == tkkey  ) &
+                          .and. ( values(i+1) == kwlike )  ) then
 !
 !                       Replace the NOT LIKE sequence with the
 !                       UNLIKE operator.  Skip over the LIKE token.
@@ -898,8 +898,8 @@
                         mtcode(node)  =  unlike
                         i             =  i + 1
 
-                     else if (       ( tokens(i+1) .eq. tkkey  ) &
-                               .and. ( values(i+1) .eq. kwbetw )  ) then
+                     else if (       ( tokens(i+1) == tkkey  ) &
+                               .and. ( values(i+1) == kwbetw )  ) then
 !
 !                       Replace the NOT BETWEEN sequence with the
 !                       NOTBTW operator.  Skip over the BETWEEN token.
@@ -918,23 +918,23 @@
                end if
 
 
-            else if ( k .gt. 0 ) then
+            else if ( k > 0 ) then
                mtcode(node) = cmpcde(k)
 
 
-            else if ( values(i) .eq. kwbetw ) then
+            else if ( values(i) == kwbetw ) then
                mtcode(node) = btween
 
 
-            else if ( values(i) .eq. kwis ) then
+            else if ( values(i) == kwis ) then
 !
 !              The token IS translates to EQ; the token sequence
 !              IS NOT translates to NE.
 !
-               if ( i .lt. whrend ) then
+               if ( i < whrend ) then
 
-                  if (       ( tokens(i+1) .eq. tkkey ) &
-                       .and. ( values(i+1) .eq. kwnot )  ) then
+                  if (       ( tokens(i+1) == tkkey ) &
+                       .and. ( values(i+1) == kwnot )  ) then
 !
 !                    We have an IS NOT sequence.  Skip over the NOT
 !                    token; indicate the sequence with a single NE
@@ -951,7 +951,7 @@
                end if
 
 
-            else if ( values(i) .eq. kwnull ) then
+            else if ( values(i) == kwnull ) then
 !
 !              The expression pointer for null values is NIL.
 !
@@ -1007,10 +1007,10 @@
 !
       node = metahd
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (      ( mtcode(node) .eq. name  ) &
-              .or. ( mtcode(node) .eq. value )  )  then
+         if (      ( mtcode(node) == name  ) &
+              .or. ( mtcode(node) == value )  )  then
 !
 !           If the current metatoken is bracketed by parentheses,
 !           remove them and update the metatoken count accordingly.
@@ -1018,10 +1018,10 @@
             prev  =  lnkprv( node, mtpool )
             next  =  lnknxt( node, mtpool )
 
-            if (  ( prev .gt. 0 ) .and. ( next .gt. 0 )  ) then
+            if (  ( prev > 0 ) .and. ( next > 0 )  ) then
 
-               if (       ( mtcode( prev ) .eq. lgroup ) &
-                    .and. ( mtcode( next ) .eq. rgroup )   ) then
+               if (       ( mtcode( prev ) == lgroup ) &
+                    .and. ( mtcode( next ) == rgroup )   ) then
 
                   call lnkfsl ( prev, prev, mtpool )
                   call lnkfsl ( next, next, mtpool )
@@ -1088,7 +1088,7 @@
 !     array.
 !
 
-      if ( whrsiz .lt. 3 ) then
+      if ( whrsiz < 3 ) then
 
          error  = .true.
          prserr = 'Too few tokens in WHERE clause.'
@@ -1106,10 +1106,10 @@
 
 
 
-      do while ( state .ne. term )
+      do while ( state /= term )
 
 
-         if ( state .eq. parse ) then
+         if ( state == parse ) then
 !
 !           If the input query is valid, we're looking at the leftmost
 !           meta-token of an expression that matches the right-hand
@@ -1134,19 +1134,19 @@
 !
             first   =  mstart ( level )
 
-            if ( first .gt. 0 ) then
+            if ( first > 0 ) then
                second  =  lnknxt ( first,  mtpool )
             else
                second  =  nil
             end if
 
-            if ( second .gt. 0 ) then
+            if ( second > 0 ) then
                third   =  lnknxt ( second, mtpool )
             else
                third   =  nil
             end if
 
-            if ( third .gt. 0 ) then
+            if ( third > 0 ) then
                fourth  =  lnknxt ( third,  mtpool )
             else
                fourth  =  nil
@@ -1154,7 +1154,7 @@
 
 
 
-            if ( first .le. 0 ) then
+            if ( first <= 0 ) then
 !
 !              This never happens to good commands.
 !
@@ -1172,7 +1172,7 @@
 !           take different actions depending on its type.
 !
 
-            if ( mtcode(first) .eq. ident ) then
+            if ( mtcode(first) == ident ) then
 !
 !              This is a simple case to deal with:  in valid queries,
 !              we have either the sequence
@@ -1193,12 +1193,12 @@
 !              the list of descriptors via the MTEXPR pointer.
 !
 !
-               if ( third .gt. 0 ) then
+               if ( third > 0 ) then
 !
 !                 We can look at the following two tokens.
 !
-                  if (       ( mtcode(second) .eq. period ) &
-                       .and. ( mtcode(third)  .eq. ident  )  ) then
+                  if (       ( mtcode(second) == period ) &
+                       .and. ( mtcode(third)  == ident  )  ) then
 
                      qual  =  .true.
                   else
@@ -1267,7 +1267,7 @@
 
 
 
-            else if ( mtcode(first) .eq. value ) then
+            else if ( mtcode(first) == value ) then
 !
 !              If the query is valid, the sequence of meta-tokens
 !              should be one of
@@ -1278,7 +1278,7 @@
 !              Both of these reduce to the symbol <BETWEEN expr>.
 !
 !
-               if (  third .le. 0 ) then
+               if (  third <= 0 ) then
 
                   error  = .true.
                   prserr = 'Tokens were missing from comparison '   // &
@@ -1291,8 +1291,8 @@
 !
 !              Null values are not allowed in BETWEEN expressions.
 !
-               if (      ( mtexpr(first) .eq. nil ) &
-                    .or. ( mtexpr(third) .eq. nil )  )  then
+               if (      ( mtexpr(first) == nil ) &
+                    .or. ( mtexpr(third) == nil )  )  then
 
                   error  = .true.
                   prserr = 'NULL values are not allowed in BETWEEN ' // &
@@ -1303,7 +1303,7 @@
                end if
 
 
-               if ( mtcode(third)  .eq. ident ) then
+               if ( mtcode(third)  == ident ) then
 !
 !                 We'll need to reduce the IDENT before proceeding.
 !
@@ -1312,9 +1312,9 @@
                   state   =  push
 
 
-               else if (      (       mtcode(second) .eq. and      ) &
-                        .and. (     ( mtcode(third)  .eq. name  ) &
-                               .or. ( mtcode(third)  .eq. value )  )   ) &
+               else if (      (       mtcode(second) == and      ) &
+                        .and. (     ( mtcode(third)  == name  ) &
+                               .or. ( mtcode(third)  == value )  )   ) &
                then
 !
 !                 This sequence of tokens, when seen in the PARSE
@@ -1349,7 +1349,7 @@
                   state  =  reducd
 
 
-               else if ( mtcode(second) .gt. 0 ) then
+               else if ( mtcode(second) > 0 ) then
 !
 !                 The third meta-token is in the wrong place at the
 !                 wrong time.
@@ -1379,7 +1379,7 @@
 
 
 
-            else if ( mtcode(first) .eq. name ) then
+            else if ( mtcode(first) == name ) then
 !
 !              If the query is valid, the sequence of meta-tokens
 !              should be any of
@@ -1411,7 +1411,7 @@
 !              There must be at least three meta-tokens here.
 !
 !
-               if (  third .le. 0 ) then
+               if (  third <= 0 ) then
 
                   error  = .true.
                   prserr = 'Tokens were missing from comparison '   // &
@@ -1422,7 +1422,7 @@
                end if
 
 
-               if ( mtcode(third)  .eq. ident ) then
+               if ( mtcode(third)  == ident ) then
 !
 !                 We'll need to reduce the IDENT before proceeding.
 !
@@ -1431,9 +1431,9 @@
                   state   =  push
 
 
-               else if (      (       mtcode(second) .eq. and      ) &
-                        .and. (     ( mtcode(third)  .eq. name  ) &
-                               .or. ( mtcode(third)  .eq. value )  )   ) &
+               else if (      (       mtcode(second) == and      ) &
+                        .and. (     ( mtcode(third)  == name  ) &
+                               .or. ( mtcode(third)  == value )  )   ) &
                then
 !
 !                 This sequence of tokens, when seen in the PARSE
@@ -1454,8 +1454,8 @@
 !
 !                 Null values are not allowed in BETWEEN expressions.
 !
-                  if (      ( mtexpr(first) .eq. nil ) &
-                       .or. ( mtexpr(third) .eq. nil )  )  then
+                  if (      ( mtexpr(first) == nil ) &
+                       .or. ( mtexpr(third) == nil )  )  then
 
                      error  = .true.
                      prserr = 'NULL values are not allowed in ' // &
@@ -1483,9 +1483,9 @@
 
 
 
-               else if (      (        mtcode(second) .gt. 0       ) &
-                        .and. (      ( mtcode(third)  .eq. name  ) &
-                                .or. ( mtcode(third)  .eq. value ) )   ) &
+               else if (      (        mtcode(second) > 0       ) &
+                        .and. (      ( mtcode(third)  == name  ) &
+                                .or. ( mtcode(third)  == value ) )   ) &
                then
 !
 !                 Positive meta-token codes denote comparison
@@ -1497,7 +1497,7 @@
 !                 is store the expression in the relation table,
 !                 and free the second and third meta-tokens.
 !
-                  if ( lnknfn(rlpool) .lt. 1 ) then
+                  if ( lnknfn(rlpool) < 1 ) then
                      error  = .true.
                      prserr = 'Relation table is full.'
                      call chkout ( 'ZZEKNRML' )
@@ -1519,7 +1519,7 @@
 !                 and make this entry point to the relation table
 !                 entry.
 !
-                  if ( lnknfn(cjpool) .lt. 1 ) then
+                  if ( lnknfn(cjpool) < 1 ) then
                      error  = .true.
                      prserr = 'Conjunction table is full.'
                      call chkout ( 'ZZEKNRML' )
@@ -1536,7 +1536,7 @@
 !                 and make this entry point to the conjunction pool
 !                 entry.
 !
-                  if ( lnknfn(djpool) .lt. 1 ) then
+                  if ( lnknfn(djpool) < 1 ) then
                      error  = .true.
                      prserr = 'Disjunction table is full.'
                      call chkout ( 'ZZEKNRML' )
@@ -1561,8 +1561,8 @@
                   state  =  reducd
 
 
-               else if (      ( mtcode(second) .eq. btween ) &
-                         .or. ( mtcode(second) .eq. notbtw )  ) then
+               else if (      ( mtcode(second) == btween ) &
+                         .or. ( mtcode(second) == notbtw )  ) then
 !
 !                 If the command is syntactically correct, the
 !                 meta-token sequence should be one of:
@@ -1575,8 +1575,8 @@
 !                    <name>  <NOT BETWEEN>  <name>
 !
 !
-                  if (       ( mtcode(second) .eq. btween ) &
-                       .and. ( mtcode(third)  .eq. btwexp )  ) then
+                  if (       ( mtcode(second) == btween ) &
+                       .and. ( mtcode(third)  == btwexp )  ) then
 !
 !                    It's a BETWEEN comparison.  We treat this as a
 !                    disjunction of conjunctions of comparison
@@ -1593,7 +1593,7 @@
 !
                      do i = 1, 4
 
-                        if (  ( i .eq. 1 ) .or. ( i .eq. 3 )  ) then
+                        if (  ( i == 1 ) .or. ( i == 3 )  ) then
 
                            k  =  mtexpr(third)
 
@@ -1607,7 +1607,7 @@
 !
                            k  =  mtexpr(third)
 
-                           if ( dscbuf(dscsiz,k) .eq. ident ) then
+                           if ( dscbuf(dscsiz,k) == ident ) then
                               skip = 1
                            else
                               skip = 0
@@ -1620,7 +1620,7 @@
                         end if
 
 
-                        if ( lnknfn(rlpool) .lt. 1 ) then
+                        if ( lnknfn(rlpool) < 1 ) then
                            error  = .true.
                            prserr = 'Relation table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -1632,7 +1632,7 @@
 
                         rels( 1, rel(i) ) = mtexpr(first)
 
-                        if ( ( i .eq. 1 ) .or. ( i .eq. 4 )  ) then
+                        if ( ( i == 1 ) .or. ( i == 4 )  ) then
                            rels( 2, rel(i) ) = ge
                         else
                            rels( 2, rel(i) ) = le
@@ -1641,7 +1641,7 @@
                         rels( 3, rel(i) ) = k
 
 
-                        if ( lnknfn(cjpool) .lt. 1 ) then
+                        if ( lnknfn(cjpool) < 1 ) then
                            error  = .true.
                            prserr = 'Conjunction table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -1667,7 +1667,7 @@
 !
                      do i = 1, 2
 
-                        if ( lnknfn(djpool) .lt. 1 ) then
+                        if ( lnknfn(djpool) < 1 ) then
                            error  = .true.
                            prserr = 'Disjunction table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -1698,8 +1698,8 @@
                      state  =  reducd
 
 
-                  else if (       ( mtcode(second) .eq. notbtw ) &
-                            .and. ( mtcode(third)  .eq. btwexp )  ) then
+                  else if (       ( mtcode(second) == notbtw ) &
+                            .and. ( mtcode(third)  == btwexp )  ) then
 !
 !                    It's a NOT BETWEEN comparison.  We treat
 !                    this as a disjunction of conjunctions of comparison
@@ -1720,7 +1720,7 @@
 !
                      do i = 1, 4
 
-                        if (  ( i .eq. 1 ) .or. ( i .eq. 3 )  ) then
+                        if (  ( i == 1 ) .or. ( i == 3 )  ) then
 
                            k  =  mtexpr(third)
 
@@ -1734,7 +1734,7 @@
 !
                            k  =  mtexpr(third)
 
-                           if ( dscbuf(dscsiz,k) .eq. ident ) then
+                           if ( dscbuf(dscsiz,k) == ident ) then
                               skip = 1
                            else
                               skip = 0
@@ -1747,7 +1747,7 @@
                         end if
 
 
-                        if ( lnknfn(rlpool) .lt. 1 ) then
+                        if ( lnknfn(rlpool) < 1 ) then
                            error  = .true.
                            prserr = 'Relation table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -1759,7 +1759,7 @@
 
                         rels( 1, rel(i) ) = mtexpr(first)
 
-                        if ( i .le. 2 ) then
+                        if ( i <= 2 ) then
                            rels( 2, rel(i) ) = lt
                         else
                            rels( 2, rel(i) ) = gt
@@ -1768,7 +1768,7 @@
                         rels( 3, rel(i) ) = k
 
 
-                        if ( lnknfn(cjpool) .lt. 1 ) then
+                        if ( lnknfn(cjpool) < 1 ) then
                            error  = .true.
                            prserr = 'Conjunction table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -1794,7 +1794,7 @@
 !
                      do i = 1, 2
 
-                        if ( lnknfn(djpool) .lt. 1 ) then
+                        if ( lnknfn(djpool) < 1 ) then
                            error  = .true.
                            prserr = 'Disjunction table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -1824,8 +1824,8 @@
                      state  =  reducd
 
 
-                  else if (      ( mtcode(third) .eq. name  ) &
-                            .or. ( mtcode(third) .eq. value )  )  then
+                  else if (      ( mtcode(third) == name  ) &
+                            .or. ( mtcode(third) == value )  )  then
 !
 !                    If the third meta-token is anything other than
 !                    <BETWEEN expr>, we'll have to parse the portion of
@@ -1847,7 +1847,7 @@
                   end if
 
 
-               else if ( mtcode(second) .gt. 0 ) then
+               else if ( mtcode(second) > 0 ) then
 !
 !                 The third meta-token is in the wrong place at the
 !                 wrong time.
@@ -1876,7 +1876,7 @@
 
 
 
-            else if ( mtcode(first) .eq. expr ) then
+            else if ( mtcode(first) == expr ) then
 !
 !              If the query is valid, the sequence of meta-tokens
 !              should be one of
@@ -1894,13 +1894,13 @@
 !                 <expression>   AND  NOT
 !                 <expression>   AND  (
 !
-               if ( second .le. 0 ) then
+               if ( second <= 0 ) then
 !
 !                 This is the last state we pass through
 !                 before exiting the loop.  However, some syntax errors
 !                 can get us here as well.
 !
-                  if (  ( level .gt. 1 ) .or. ( nmeta .gt. 1 )  ) then
+                  if (  ( level > 1 ) .or. ( nmeta > 1 )  ) then
 
                      error  = .true.
                      prserr = 'More tokens expected.'
@@ -1912,13 +1912,13 @@
                   state = term
 
 
-               else if ( mtcode(second) .eq. rgroup ) then
+               else if ( mtcode(second) == rgroup ) then
 !
 !                 We've reached the end of a `parenthesized'
 !                 expression.
 !
-                  if (       ( level         .gt. 1      ) &
-                       .and. ( popcnd(level) .eq. endgrp )  ) then
+                  if (       ( level         > 1      ) &
+                       .and. ( popcnd(level) == endgrp )  ) then
 !
 !                    Time to pop the state.
 !
@@ -1941,7 +1941,7 @@
 !              In all other cases, there must be at least three
 !              meta-tokens here.  Make sure there are.
 !
-               else if ( third .le. 0 ) then
+               else if ( third <= 0 ) then
 
                   error  =  .true.
                   prserr =  'More tokens expected.'
@@ -1952,16 +1952,16 @@
 !              Take care of the cases that will require reducing a sub-
 !              expression before reducing the current expression.
 !
-               else if (      ( mtcode(third) .eq. ident  ) &
-                         .or. ( mtcode(third) .eq. name   ) &
-                         .or. ( mtcode(third) .eq. not    )  ) then
+               else if (      ( mtcode(third) == ident  ) &
+                         .or. ( mtcode(third) == name   ) &
+                         .or. ( mtcode(third) == not    )  ) then
 
                   start   =  third
                   retcnd  =  reduce
                   state   =  push
 
 
-               else if ( mtcode(third) .eq. lgroup ) then
+               else if ( mtcode(third) == lgroup ) then
 !
 !                 We'll have to push our state before continuing.
 !
@@ -1972,9 +1972,9 @@
 !
 !              Now continue with the interesting cases.
 !
-               else if (       ( mtcode(first)  .eq. expr ) &
-                         .and. ( mtcode(second) .eq. or   ) &
-                         .and. ( mtcode(third)  .eq. expr )  )  then
+               else if (       ( mtcode(first)  == expr ) &
+                         .and. ( mtcode(second) == or   ) &
+                         .and. ( mtcode(third)  == expr )  )  then
 !
 !                 We have a disjunction of two normalized
 !                 expressions.  We're not ready to perform a
@@ -1984,9 +1984,9 @@
 !
                   donow = .true.
 
-                  if ( fourth .gt. 0 ) then
+                  if ( fourth > 0 ) then
 
-                     if ( mtcode(fourth) .eq. and ) then
+                     if ( mtcode(fourth) == and ) then
 !
 !                       The third token is already spoken for:
 !                       the expression involving the operator
@@ -2047,9 +2047,9 @@
 !                 state has been set to PUSH.
 !
 
-               else if (       ( mtcode(first)  .eq. expr ) &
-                         .and. ( mtcode(second) .eq. and  ) &
-                         .and. ( mtcode(third)  .eq. expr )  )  then
+               else if (       ( mtcode(first)  == expr ) &
+                         .and. ( mtcode(second) == and  ) &
+                         .and. ( mtcode(third)  == expr )  )  then
 !
 !                 We have the conjunction of two normalized
 !                 expressions.  This case requires application of
@@ -2099,18 +2099,18 @@
                   dj(1)    = mtexpr(first)
                   djtail = nil
 
-                  do while ( dj(1) .gt. 0 )
+                  do while ( dj(1) > 0 )
 
                      dj(2) = mtexpr(third)
 
-                     do while ( dj(2) .gt. 0 )
+                     do while ( dj(2) > 0 )
 !
 !                       Allocate a new disjunction table entry,
 !                       and create a new conjunction that represents
 !                       the conjunction of the conjunction lists
 !                       pointed to by DJ(1) and DJ(2).
 !
-                        if ( lnknfn(djpool) .lt. 1 ) then
+                        if ( lnknfn(djpool) < 1 ) then
                            error  = .true.
                            prserr = 'Disjunction table is full.'
                            call chkout ( 'ZZEKNRML' )
@@ -2126,9 +2126,9 @@
                         cj(1) = djptrs(dj(1))
                         tail  = nil
 
-                        do while ( cj(1) .gt. 0 )
+                        do while ( cj(1) > 0 )
 
-                           if ( lnknfn(cjpool) .lt. 1 ) then
+                           if ( lnknfn(cjpool) < 1 ) then
                               error  = .true.
                               prserr = 'Conjunction table is full.'
                               call chkout ( 'ZZEKNRML' )
@@ -2150,9 +2150,9 @@
                         cj(2) = djptrs(dj(2))
                         tail  = nil
 
-                        do while ( cj(2) .gt. 0 )
+                        do while ( cj(2) > 0 )
 
-                           if ( lnknfn(cjpool) .lt. 1 ) then
+                           if ( lnknfn(cjpool) < 1 ) then
                               error  = .true.
                               prserr = 'Conjunction table is full.'
                               call chkout ( 'ZZEKNRML' )
@@ -2207,7 +2207,7 @@
 
                   djnode = mtexpr(first)
 
-                  do while ( djnode .gt. 0 )
+                  do while ( djnode > 0 )
 !
 !                    Free the conjunction list pointed to by DJNODE.
 !
@@ -2261,7 +2261,7 @@
 
 
 
-            else if ( mtcode(first) .eq. not ) then
+            else if ( mtcode(first) == not ) then
 !
 !              There are four valid token sequences that we could
 !              see here:
@@ -2272,7 +2272,7 @@
 !                 NOT  NOT
 !                 NOT  (
 !
-               if ( second .le. 0 ) then
+               if ( second <= 0 ) then
 
                   error  = .true.
                   prserr = 'Tokens were missing from logical '        // &
@@ -2280,7 +2280,7 @@
                   call chkout ( 'ZZEKNRML' )
                   return
 
-               else if ( mtcode(second) .eq. lgroup ) then
+               else if ( mtcode(second) == lgroup ) then
 !
 !                 We'll have to push our state before continuing.
 !
@@ -2289,16 +2289,16 @@
                   state   =  push
 
 
-               else if (      ( mtcode(second) .eq. not   ) &
-                         .or. ( mtcode(second) .eq. ident ) &
-                         .or. ( mtcode(second) .eq. name  )  )  then
+               else if (      ( mtcode(second) == not   ) &
+                         .or. ( mtcode(second) == ident ) &
+                         .or. ( mtcode(second) == name  )  )  then
 
                   start   =  second
                   retcnd  =  reduce
                   state   =  push
 
 
-               else if ( mtcode(second) .eq. expr ) then
+               else if ( mtcode(second) == expr ) then
 !
 !                 We have the negation of a normalized expression. Since
 !                 the NOT operator has higher precedence than any other,
@@ -2349,13 +2349,13 @@
                   cjnode = djptrs(djnode)
                   tail   = nil
 
-                  do while ( cjnode .gt. 0 )
+                  do while ( cjnode > 0 )
 !
 !                    Create a new singleton disjunction list
 !                    that points to the relation pointed to by
 !                    CJNODE.
 !
-                     if ( lnknfn(djpool) .lt. 1 ) then
+                     if ( lnknfn(djpool) < 1 ) then
                         error  = .true.
                         prserr = 'Disjunction table is full.'
                         call chkout ( 'ZZEKNRML' )
@@ -2364,7 +2364,7 @@
 
                      call lnkan ( djpool, newdj )
 
-                     if ( lnknfn(cjpool) .lt. 1  ) then
+                     if ( lnknfn(cjpool) < 1  ) then
                         error  = .true.
                         prserr = 'Conjunction table is full.'
                         call chkout ( 'ZZEKNRML' )
@@ -2405,7 +2405,7 @@
 !
                   djnode = lnknxt ( djnode, djpool )
 
-                  do while ( djnode .gt. 0 )
+                  do while ( djnode > 0 )
 !
 !                    Loop through our existing cumulative
 !                    expression and the latest conjunction, forming
@@ -2414,11 +2414,11 @@
                      dj(1)    = exprhd
                      djtail = nil
 
-                     do while ( dj(1) .gt. 0 )
+                     do while ( dj(1) > 0 )
 
                         cj(2) = djptrs(djnode)
 
-                        do while ( cj(2) .gt. 0 )
+                        do while ( cj(2) > 0 )
 !
 !                          Make a copy of the conjunction list pointed
 !                          to by DJPTRS(DJ(1)).
@@ -2426,9 +2426,9 @@
                            cjnode = djptrs(dj(1))
                            tail   = nil
 
-                           do while ( cjnode .gt. 0 )
+                           do while ( cjnode > 0 )
 
-                              if ( lnknfn(cjpool) .lt. 1 ) then
+                              if ( lnknfn(cjpool) < 1 ) then
                                  error  = .true.
                                  prserr = 'Conjunction table is full.'
                                  call chkout ( 'ZZEKNRML' )
@@ -2453,7 +2453,7 @@
 !                          new disjunction table entry to point to this
 !                          new conjunction.
 !
-                           if ( lnknfn(cjpool) .lt. 1 ) then
+                           if ( lnknfn(cjpool) < 1 ) then
                               error  = .true.
                               prserr = 'Conjunction table is full.'
                               call chkout ( 'ZZEKNRML' )
@@ -2463,7 +2463,7 @@
                            call lnkan ( cjpool, newcj )
                            cjptrs(newcj)  =  cjptrs(cj(2))
 
-                           if ( lnknfn(djpool) .lt. 1  ) then
+                           if ( lnknfn(djpool) < 1  ) then
                               error  = .true.
                               prserr = 'Disjunction table is full.'
                               call chkout ( 'ZZEKNRML' )
@@ -2497,7 +2497,7 @@
 !
                      dj(1) = exprhd
 
-                     do while ( dj(1) .gt. 0 )
+                     do while ( dj(1) > 0 )
 
                         cj(1) = djptrs(dj(1))
                         cj(2) = lnktl ( cj(1), cjpool )
@@ -2537,11 +2537,11 @@
                   djnode = mtexpr(second)
 
 
-                  do while ( djnode .gt. 0 )
+                  do while ( djnode > 0 )
 
                      cjnode = djptrs(djnode)
 
-                     do while ( cjnode .gt. 0 )
+                     do while ( cjnode > 0 )
 
                         relptr = cjptrs(cjnode)
                         call insrti ( relptr, relset )
@@ -2598,7 +2598,7 @@
 !
 
 
-            else if ( mtcode(first) .eq. lgroup ) then
+            else if ( mtcode(first) == lgroup ) then
 !
 !              We're looking at the start of a `parenthesized'
 !              sub-expression.
@@ -2628,13 +2628,13 @@
 !           determined the next parsing state at this point.
 !
 
-         else if ( state .eq. reducd ) then
+         else if ( state == reducd ) then
 !
 !           A reduction has been done.  Decide the next state.
 !
             state  =  reducd
 
-            if ( popcnd(level) .eq. reduce ) then
+            if ( popcnd(level) == reduce ) then
                state         = pop
             else
                mstart(level) = first
@@ -2643,14 +2643,14 @@
 
 
 
-         else if ( state .eq. push ) then
+         else if ( state == push ) then
 !
 !           Increment the stack level, and save the current
 !           starting point and pop condition.
 !
             level  =  level + 1
 
-            if ( level .gt. maxstk ) then
+            if ( level > maxstk ) then
                error          = .true.
                prserr         = 'Stack is full'
                state          =  term
@@ -2661,13 +2661,13 @@
             end if
 
 
-         else if ( state .eq. pop ) then
+         else if ( state == pop ) then
 !
 !           If we can, pop the state.
 !
-            if ( level .gt. 1 ) then
+            if ( level > 1 ) then
 
-               if ( popcnd(level) .eq. endgrp ) then
+               if ( popcnd(level) == endgrp ) then
 !
 !                 If we're popping the state because we encountered a
 !                 right grouper, we have a meta-token sequence that
@@ -2684,11 +2684,11 @@
 !
                   prev   =  lnkprv ( first, mtpool )
 
-                  if ( mstart(level-1) .eq. prev ) then
+                  if ( mstart(level-1) == prev ) then
                      mstart(level-1) = first
                   end if
 
-                  if ( metahd .eq. prev ) then
+                  if ( metahd == prev ) then
                      metahd = first
                   end if
 
@@ -2731,13 +2731,13 @@
       nconj  = 0
       nrels  = 0
 
-      do while ( djnode .gt. 0 )
+      do while ( djnode > 0 )
 
          nconj         =  nconj + 1
          sizes(nconj)  =  0
          cjnode        =  djptrs(djnode)
 
-         do while ( cjnode .gt. 0 )
+         do while ( cjnode > 0 )
 
             nrels          =  nrels        + 1
             sizes (nconj)  =  sizes(nconj) + 1
@@ -2778,15 +2778,15 @@
 !           value on the right hand side.  This is indicated by the
 !           relation's value pointer being NIL.
 !
-            if ( rhsptr .eq. nil ) then
+            if ( rhsptr == nil ) then
 !
 !              For constraints involving null values, we change the
 !              operator to ISNULL or NOTNUL as appropriate.
 !
-               if ( op .eq. eq ) then
+               if ( op == eq ) then
                   op  =  isnull
 
-               else if ( op .eq. ne ) then
+               else if ( op == ne ) then
                   op  =  notnul
 
                else
@@ -2828,7 +2828,7 @@
 !
                call appndi ( op, eqryi )
 
-               if (  dscbuf( dscsiz, rhsptr ) .eq. value ) then
+               if (  dscbuf( dscsiz, rhsptr ) == value ) then
 !
 !                 The RHS contains a value.  Append the descriptor
 !                 for the value, then pad the constraint descriptor.

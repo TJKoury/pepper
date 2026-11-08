@@ -31,7 +31,7 @@
       integer(ip)           segdsc ( sdscsz )
       integer(ip)           coldsc ( cdscsz )
       integer(ip)           recptr
-      character*(*)         cval
+      character(*)          cval
       logical               isnull
 
 ! $ Brief_I/O

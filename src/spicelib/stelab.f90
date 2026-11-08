@@ -382,7 +382,7 @@
 !
       lensqr = vdot ( vbyc, vbyc )
 
-      if ( lensqr .ge. 1.0_wp ) then
+      if ( lensqr >= 1.0_wp ) then
 
          call setmsg ( 'Velocity components of observer were:  '      // &
                        'dx/dt = *, dy/dt = *, dz/dt = *.'              )
@@ -409,7 +409,7 @@
 !
       sinphi  = vnorm ( h )
 
-      if ( sinphi .ne. 0.0_wp ) then
+      if ( sinphi /= 0.0_wp ) then
 
          phi = dasin ( sinphi )
          call  vrotv ( pobj, h, phi, appobj )

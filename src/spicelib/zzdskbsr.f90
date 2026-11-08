@@ -33,7 +33,7 @@
       include 'dskdsc.inc'
       include 'zzctr.inc'
 
-      character*(*)         fname
+      character(*)          fname
       integer(ip)           bodyid
       integer(ip)           handle
       logical               cmpfun
@@ -384,10 +384,10 @@
 !
 !     Other local variables
 !
-      character*(slen)      doing
-      character*(slen)      stack    ( 2 )
-      character*(slen)      status
-      character*(slen)      urgent
+      character(slen)       doing
+      character(slen)       stack    ( 2 )
+      character(slen)       status
+      character(slen)       urgent
 
       real(wp)              dsklds ( dskdsz )
 
@@ -642,7 +642,7 @@
 !     this is as good a place as any to initialize the free list
 !     whenever the body table is empty.
 !
-      if ( nbt .eq. 0 ) then
+      if ( nbt == 0 ) then
          call lnkini ( stsize, stpool )
       end if
 
@@ -661,7 +661,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .gt. 0 ) then
+      if ( findex > 0 ) then
 !
 !        The last call we made to DASOPR added another DAS link to
 !        the DSK file.  Remove this link.
@@ -683,17 +683,17 @@
 !
          i = 1
 
-         do while ( i .le. nbt )
+         do while ( i <= nbt )
 
             p = btbeg( i )
 
-            do while ( p .gt. 0 )
+            do while ( p > 0 )
 !
 !              Find the successor of P, if any.
 !
                nxtseg = lnknxt ( p, stpool )
 
-               if ( sthan( p ) .eq. handle ) then
+               if ( sthan( p ) == handle ) then
 !
 !                 The segment corresponding to node P came from
 !                 the file we're unloading.  Delete the node for
@@ -703,7 +703,7 @@
 !
                   call lnkfsl ( p, p, stpool )
 
-                  if ( p .eq. btbeg(i) ) then
+                  if ( p == btbeg(i) ) then
                      btbeg( i ) = nxtseg
                   end if
 
@@ -721,7 +721,7 @@
 !           body in the table into the space occupied by the
 !           one we've deleted.
 !
-            if ( btbeg( i ) .le. 0 ) then
+            if ( btbeg( i ) <= 0 ) then
 
                btbod( i ) = btbod( nbt )
                btexp( i ) = btexp( nbt )
@@ -744,7 +744,7 @@
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         if ( nft .eq. ftsize ) then
+         if ( nft == ftsize ) then
 
             call dascls ( handle )
 
@@ -769,7 +769,7 @@
 !     It should be tested by temporarily setting the comparison
 !     value to a smaller number, for example 2*FTSIZE.
 !
-      if ( next .lt. intmax()-1 ) then
+      if ( next < intmax()-1 ) then
 
          next = next + 1
 
@@ -810,7 +810,7 @@
 !
             j = isrchi ( btlfs(i), nft, ftnum )
 
-            if ( j .gt. 0 ) then
+            if ( j > 0 ) then
 !
 !              The lowest file searched for body I is the Jth file
 !              in the file table.
@@ -1011,7 +1011,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
          call chkout ( 'ZZDSKUSF' )
          return
       end if
@@ -1037,17 +1037,17 @@
 !
       i = 1
 
-      do while ( i .le. nbt )
+      do while ( i <= nbt )
 
          p = btbeg( i )
 
-         do while ( p .gt. 0 )
+         do while ( p > 0 )
 
             nxtseg = lnknxt ( p, stpool )
 
-            if ( sthan(p) .eq. handle ) then
+            if ( sthan(p) == handle ) then
 
-               if ( p .eq. btbeg(i) ) then
+               if ( p == btbeg(i) ) then
                   btbeg( i ) = nxtseg
                end if
 !
@@ -1067,9 +1067,9 @@
 !        body in the table into the space occupied by the
 !        one we've deleted.
 !
-         if ( btbeg(i) .le. 0 ) then
+         if ( btbeg(i) <= 0 ) then
 
-            if ( i .ne. nbt ) then
+            if ( i /= nbt ) then
 
                btbod (i) = btbod (nbt)
                btexp (i) = btexp (nbt)
@@ -1246,7 +1246,7 @@
 !
 !     There must be at least one file loaded.
 !
-      if ( nft .eq. 0 ) then
+      if ( nft == 0 ) then
 
          call setmsg ( 'At least one DSK file must have been loaded ' &
          //            'by ZZDSKLSF before a search can be started.' )
@@ -1268,7 +1268,7 @@
       bindex = isrchi ( svbody, nbt, btbod )
 
 
-      if ( bindex .eq. 0 ) then
+      if ( bindex == 0 ) then
 
          status = 'NEW BODY'
 
@@ -1653,7 +1653,7 @@
 !        error will be signaled.
 !
 
-      if ( status .eq. 'BOGUS ENTRY' )  then
+      if ( status == 'BOGUS ENTRY' )  then
 
          call setmsg ( 'Must begin a search by calling ZZDSKBSS ' &
          //            'first.'                                   )
@@ -1664,12 +1664,12 @@
       end if
 
 
-      do while ( status .ne. 'HOPELESS' )
+      do while ( status /= 'HOPELESS' )
 !
 !        If new files have been added, they have to be searched.
 !        Otherwise, go right to the list of stored segments.
 !
-         if ( status .eq. '?' ) then
+         if ( status == '?' ) then
 !
 !           There are two ways to get to this point.
 !
@@ -1680,7 +1680,7 @@
 !               a new file.
 !
 
-            if ( bthfs( bindex ) .lt. ftnum( nft ) ) then
+            if ( bthfs( bindex ) < ftnum( nft ) ) then
 
                status = 'NEW FILES'
 
@@ -1689,7 +1689,7 @@
 !              If the segment list for this body is empty, make
 !              sure the expense is set to 0.
 !
-               if ( btbeg(bindex) .le. 0 ) then
+               if ( btbeg(bindex) <= 0 ) then
                   btexp(bindex) = 0
                end if
 
@@ -1703,7 +1703,7 @@
             end if
 
 
-         else if ( status .eq. 'NEW BODY' ) then
+         else if ( status == 'NEW BODY' ) then
 !
 !           New bodies are added to the end of the body
 !           table. If the table is full, one of the current occupants
@@ -1725,7 +1725,7 @@
 !           However, trying to handle this special case there was
 !           just more trouble than it was worth.
 !
-            if ( nbt .lt. btsize ) then
+            if ( nbt < btsize ) then
 !
 !              If the body table isn't full, the cheapest place is
 !              just the next unused row of the table.
@@ -1743,7 +1743,7 @@
 
                do i = 2, nbt
 
-                  if ( btexp(i) .lt. minexp ) then
+                  if ( btexp(i) < minexp ) then
                      cheap  = i
                      minexp = btexp(i)
                   end if
@@ -1757,7 +1757,7 @@
 !
                head = btbeg(cheap)
 
-               if ( head .gt. 0 ) then
+               if ( head > 0 ) then
 
                   tail =  - lnkprv ( head, stpool )
                   call lnkfsl ( head, tail, stpool )
@@ -1783,7 +1783,7 @@
             status = 'OLD FILES'
 
 
-         else if ( status .eq. 'NEW FILES' ) then
+         else if ( status == 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
 !           order, beginning with the oldest new file not yet searched.
@@ -1803,7 +1803,7 @@
 
             findex = 1
 
-            do while ( bthfs(bindex) .ge. ftnum(findex) )
+            do while ( bthfs(bindex) >= ftnum(findex) )
 
                findex = findex + 1
 
@@ -1831,7 +1831,7 @@
             cost   = 0
 
 
-         else if ( status .eq. 'NEW SEGMENTS' ) then
+         else if ( status == 'NEW SEGMENTS' ) then
 !
 !           New files are searched in forward order. Segments, when
 !           found, are inserted at the front of the list.
@@ -1888,7 +1888,7 @@
 !
                call dskgd( fthan(findex), dlalds, dsklds )
 
-               if (  nint( dsklds(ctridx) ) .eq. svbody ) then
+               if (  nint( dsklds(ctridx) ) == svbody ) then
 !
 !                 The segment is for the body of interest. Add this
 !                 segment to the front of the list.
@@ -1907,7 +1907,7 @@
 !           'NEW SEGMENTS' pass.
 !
 
-         else if ( status .eq. 'OLD FILES' ) then
+         else if ( status == 'OLD FILES' ) then
 !
 !           When old files must be searched (because the segments in
 !           the list are inadequate), they should be searched in
@@ -1930,7 +1930,7 @@
 
             findex = nft
 
-            do while ( btlfs( bindex ) .le. ftnum( findex ) )
+            do while ( btlfs( bindex ) <= ftnum( findex ) )
                findex = findex - 1
             end do
 
@@ -1959,7 +1959,7 @@
 !        Each segment examined, whether applicable or not, adds to
 !        the expense of the list.
 !
-         else if ( status .eq. 'OLD SEGMENTS' ) then
+         else if ( status == 'OLD SEGMENTS' ) then
 !
 !           There is only one way to get here---from the
 !           block 'OLD FILES'.  Note we do not add to the
@@ -2016,7 +2016,7 @@
                   return
                end if
 
-               if (  nint( dsklds(ctridx) )  .eq.  svbody  ) then
+               if (  nint( dsklds(ctridx) )  ==  svbody  ) then
 !
 !                 This is a segment for the body of interest.
 !
@@ -2030,7 +2030,7 @@
 
             end if
 
-         else if ( status .eq. 'CHECK LIST' ) then
+         else if ( status == 'CHECK LIST' ) then
 !
 !           Okay, all the new files (and maybe an old file or two)
 !           have been searched. Time to look at the list of segments
@@ -2053,7 +2053,7 @@
 !           the segment doesn't have it.
 !
 !
-            do while ( p .gt. 0 )
+            do while ( p > 0 )
 
                if ( cmpfun( sthan(p), stdlad(1,p), stdskd(1,p) )  ) then
 
@@ -2091,14 +2091,14 @@
 !           If there are more files, search them.
 !           Otherwise, things are hopeless, set the status that way.
 !
-            if ( btlfs( bindex ) .gt. ftnum( 1 ) ) then
+            if ( btlfs( bindex ) > ftnum( 1 ) ) then
                status = 'OLD FILES'
             else
                status = 'HOPELESS'
             end if
 
 
-         else if ( status .eq. 'MAKE ROOM' ) then
+         else if ( status == 'MAKE ROOM' ) then
 !
 !           When adding a new segment to a full table, one of the
 !           current bodies must be dropped.  The ideal
@@ -2139,10 +2139,10 @@
 
             do i = 1, nbt
 
-               if ( i .ne. bindex ) then
+               if ( i /= bindex ) then
 
-                  if (      ( btexp(i) .lt. minexp   ) &
-                       .or. ( cheap    .eq. 0        )  )then
+                  if (      ( btexp(i) < minexp   ) &
+                       .or. ( cheap    == 0        )  )then
 !
 !                    This list is the cheapest seen so far,
 !                    possibly because it's the first one
@@ -2159,13 +2159,13 @@
             end do
 
 
-            if ( cheap .eq. 0 ) then
+            if ( cheap == 0 ) then
 !
 !              If there are no deletable segments, the Thing To
 !              Do depends on the task that was suspended before
 !              entering MAKE ROOM.
 !
-               if ( stack(top) .eq. 'ADD TO END' ) then
+               if ( stack(top) == 'ADD TO END' ) then
 !
 !                 The segment meta-data from the current file cannot
 !                 be buffered.
@@ -2190,14 +2190,14 @@
 
                   node =   tail
 
-                  do while ( node .gt. 0 )
+                  do while ( node > 0 )
 !
 !                    Let PRVNOD be the predecessor of NODE. PRVNOD may
 !                    be negative (actually, a pointer to the list tail).
 !
                      prvnod = lnkprv( node, stpool )
 
-                     if ( sthan(node) .eq. fthan(findex) ) then
+                     if ( sthan(node) == fthan(findex) ) then
 !
 !                       This segment is from the file we were
 !                       searching when we ran out of room. Free
@@ -2205,7 +2205,7 @@
 
                         call lnkfsl ( node, node, stpool )
 
-                        if ( node .eq. head ) then
+                        if ( node == head ) then
 !
 !                          We just deleted the last remaining node in
 !                          the list for the current body. We can delete
@@ -2297,7 +2297,7 @@
 !
                head = btbeg( cheap )
 
-               if ( head .gt. 0 ) then
+               if ( head > 0 ) then
 
                   tail = - lnkprv ( head, stpool )
 
@@ -2309,7 +2309,7 @@
 !              Fill the deleted body's space in the table with
 !              the final entry in the table.
 !
-               if ( cheap .ne. nbt ) then
+               if ( cheap /= nbt ) then
 
                   btbod (cheap) = btbod (nbt)
                   btexp (cheap) = btexp (nbt)
@@ -2319,7 +2319,7 @@
 
                end if
 
-               if ( bindex .eq. nbt ) then
+               if ( bindex == nbt ) then
                   bindex = cheap
                end if
 
@@ -2339,7 +2339,7 @@
 !
 
 
-         else if ( status .eq. 'ADD TO FRONT' ) then
+         else if ( status == 'ADD TO FRONT' ) then
 !
 !           The current segment information should be linked in at
 !           the head of the segment list for the current body,
@@ -2349,7 +2349,7 @@
 !           The only way to get here is from the block NEW SEGMENTS
 !           after suspending that task.
 
-            if ( lnknfn(stpool) .eq. 0 ) then
+            if ( lnknfn(stpool) == 0 ) then
 
                doing  = 'ADD TO FRONT'
                urgent = 'MAKE ROOM'
@@ -2387,7 +2387,7 @@
             end if
 
 
-         else if ( status .eq. 'ADD TO END' ) then
+         else if ( status == 'ADD TO END' ) then
 !
 !           The current segment information should be linked in at
 !           the tail of the segment list for the current body.
@@ -2395,7 +2395,7 @@
 !           The only way to get to this task is from the OLD SEGMENTS
 !           block after suspending that task.
 !
-            if ( lnknfn(stpool) .eq. 0 ) then
+            if ( lnknfn(stpool) == 0 ) then
 
                doing  = 'ADD TO END'
                urgent = 'MAKE ROOM'
@@ -2421,7 +2421,7 @@
                   return
                end if
 
-               if ( btbeg(bindex) .le. 0 ) then
+               if ( btbeg(bindex) <= 0 ) then
 !
 !                 This is the first node in the list for this
 !                 body.
@@ -2442,7 +2442,7 @@
             end if
 
 
-         else if ( status .eq. 'SUSPEND' ) then
+         else if ( status == 'SUSPEND' ) then
 !
 !           When a task is suspended, the current activity is placed on
 !           a stack, to be restored later. Two levels are provided,
@@ -2452,7 +2452,7 @@
             stack( top ) = doing
             status       = urgent
 
-         else if ( status .eq. 'RESUME' ) then
+         else if ( status == 'RESUME' ) then
 
             status = stack( top )
             top    = top - 1

@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)                 msg
+      character(*)                  msg
 
 ! $ Brief_I/O
 !
@@ -348,8 +348,8 @@
 !
 !     Local Variables:
 !
-      character*(deflen)    defmsg
-      character*(deflen)    errmsg
+      character(deflen)     defmsg
+      character(deflen)     errmsg
 
       integer(ip)           action
 
@@ -381,9 +381,9 @@
 
       call getact ( action )
 
-      if ( action .ne. iignor ) then
+      if ( action /= iignor ) then
 
-         if ( ( action .ne. iretrn ) .or. ( .not. failed() ) ) then
+         if ( ( action /= iretrn ) .or. ( .not. failed() ) ) then
 !
 !           This one's for real.  Indicate an error condition, and
 !           store the short error message.
@@ -416,7 +416,7 @@
 !           if the error action is DEFAULT.  In that case, the
 !           default message selection applies.
 !
-            if (  action .ne. ideflt ) then
+            if (  action /= ideflt ) then
 
                call outmsg ( errmsg )
 
@@ -426,7 +426,7 @@
 
             end if
 
-            if (  action .eq. iretrn )  then
+            if (  action == iretrn )  then
 !
 !              Don't accept new long error messages or updates
 !              to current long error message:
@@ -451,7 +451,7 @@
 !     We could be in ABORT or DEFAULT mode.
 !
 
-      if ( ( action .eq. ideflt ) .or. ( action .eq. iabrt ) ) then
+      if ( ( action == ideflt ) .or. ( action == iabrt ) ) then
 
          call byebye ( 'FAILURE' )
 

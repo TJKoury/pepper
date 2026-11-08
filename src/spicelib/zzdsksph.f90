@@ -220,8 +220,8 @@
 !
 !     Local variables
 !
-      character*(lmsgln)    errmsg
-      character*(frnmln)    frname
+      character(lmsgln)     errmsg
+      character(frnmln)     frname
 
       real(wp)              boxctr ( 3 )
       real(wp)              boxrad
@@ -305,7 +305,7 @@
 !
 !     Check NSURF.
 !
-      if ( nsurf .lt. 0 ) then
+      if ( nsurf < 0 ) then
 
          call setmsg ( 'NSURF must be non-negative but was #.' )
          call errint ( '#', nsurf                              )
@@ -324,16 +324,16 @@
 
       if ( .not. first ) then
 
-         if ( bodyid .eq. prvbod ) then
+         if ( bodyid == prvbod ) then
 
-            if ( nsurf .eq. prvnls ) then
+            if ( nsurf == prvnls ) then
 
                same = .true.
                i    = 1
 
-               do while ( ( i .le. nsurf ) .and.  same  )
+               do while ( ( i <= nsurf ) .and.  same  )
 
-                  same = srflst(i) .eq. prvlst(i)
+                  same = srflst(i) == prvlst(i)
                   i    = i + 1
                end do
 !
@@ -413,7 +413,7 @@
 
          do while ( segfnd )
 
-            if ( nsurf .gt. 0 ) then
+            if ( nsurf > 0 ) then
 
                surfid = nint( dskdsc(srfidx) )
 
@@ -422,7 +422,7 @@
                i      = 1
             end if
 
-            if ( i .gt. 0 ) then
+            if ( i > 0 ) then
 !
 !              If we're checking surface IDs, this segment qualifies.
 !              Otherwise, we're not checking surface IDs, so the segment
@@ -433,7 +433,7 @@
 !
                framid = nint( dskdsc(frmidx) )
 
-               if ( framid .ne. prvfid ) then
+               if ( framid /= prvfid ) then
 !
 !                 Get the frame center for the current segment.
 !
@@ -450,7 +450,7 @@
 
                   end if
 
-                  if ( frcent .eq. bodyid ) then
+                  if ( frcent == bodyid ) then
 !
 !                    The frame is centered at the target, so
 !                    the frame center offset magnitude is zero.
@@ -466,7 +466,7 @@
                         return
                      end if
 
-                     if ( frname .eq. ' ' ) then
+                     if ( frname == ' ' ) then
 
                         call setmsg ( 'No frame name was found ' &
                         //            'for frame ID #.'          )
@@ -505,13 +505,13 @@
 !              for the offset of the origin from the segment's central
 !              body as a subsequent step.
 !
-               if ( corsys .eq. latsys ) then
+               if ( corsys == latsys ) then
 
                   sgminr = dskdsc(mn3idx)
                   sgmaxr = dskdsc(mx3idx)
 
 
-               else if ( corsys .eq. pdtsys ) then
+               else if ( corsys == pdtsys ) then
 !
 !                 Use the reference spheroid and altitude bounds to
 !                 generate initial bounding radii.
@@ -520,7 +520,7 @@
                   f  = dskdsc(paridx+1)
                   rp = re *  (1.0_wp - f)
 
-                  if ( f .ge. 0.0_wp ) then
+                  if ( f >= 0.0_wp ) then
 !
 !                    The spheroid is oblate. The maximum altitude over
 !                    the equator is an upper bound for the distance of
@@ -546,7 +546,7 @@
 
 
 
-               else if ( corsys .eq. recsys ) then
+               else if ( corsys == recsys ) then
 
                   call zzrecbox ( dskdsc(mn1idx), boxctr, lx, &
                                   ly,             lz,     boxrad )
@@ -577,14 +577,14 @@
 !              and the body center, and given bounds on the distance of
 !              the surface from the frame's center.
 !
-               if ( offmag .le. sgminr ) then
+               if ( offmag <= sgminr ) then
 !
 !                 The segment's central body is inside the inner
 !                 bounding sphere of the segment.
 !
                   ctrmnr = sgminr - offmag
 
-               else if ( offmag .ge. sgmaxr ) then
+               else if ( offmag >= sgmaxr ) then
 !
 !                 The segment's central body is outside the outer
 !                 bounding sphere of the segment.
@@ -627,7 +627,7 @@
 
          end do
 
-         if (  ( maxr .gt. 0.0_wp ) .and. (.not. failed() )  ) then
+         if (  ( maxr > 0.0_wp ) .and. (.not. failed() )  ) then
 !
 !           Update the saved bounds.
 !
@@ -639,14 +639,14 @@
       end if
 
 
-      if ( maxr .lt. 0.0_wp ) then
+      if ( maxr < 0.0_wp ) then
 !
 !        We tried to update the radius bounds but didn't find any
 !        segments for the specified body.
 !
 !        We have no radius data for the specified surface list.
 !
-         if ( nsurf .eq. 0 ) then
+         if ( nsurf == 0 ) then
 
             errmsg = 'No segments were found matching the body ID #.'
 

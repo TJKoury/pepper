@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           number
-      character*(*)         string
+      character(*)          string
 
 ! $ Brief_I/O
 !
@@ -159,9 +159,9 @@
 !
 !     Local variables
 !
-      character*(strlen)    tmpstr
+      character(strlen)     tmpstr
 
-      character*(1)         digits(0:9)
+      character(1)          digits(0:9)
 
       integer(ip)           tmpnum
       integer(ip)           result
@@ -211,11 +211,11 @@
 !     You should be able to see the repercussions of this.
 !
       i = len( tmpstr ) + 1
-      if ( tmpnum .lt. 0 ) then
+      if ( tmpnum < 0 ) then
 !
 !        Collect all of the digits in the string.
 !
-         do while ( tmpnum .ne. 0 )
+         do while ( tmpnum /= 0 )
 
             i      = i - 1
             result = tmpnum / base
@@ -231,11 +231,11 @@
          i           = i - 1
          tmpstr(i:i) = '-'
 
-      else if ( tmpnum .gt. 0 ) then
+      else if ( tmpnum > 0 ) then
 !
 !        Collect all of the digits in the string.
 !
-         do while ( tmpnum .ne. 0 )
+         do while ( tmpnum /= 0 )
 
             i      = i - 1
             result = tmpnum / base

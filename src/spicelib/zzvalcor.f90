@@ -28,7 +28,7 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         abcorr
+      character(*)          abcorr
       logical               attblk ( * )
 
 ! $ Brief_I/O

@@ -23,7 +23,7 @@
 
       integer(ip)           handle
       real(wp)              sum      ( * )
-      character*(*)         name
+      character(*)          name
       real(wp)              data     ( * )
       integer(ip)           n
 
@@ -856,14 +856,14 @@
 !
 !
       integer(ip)           stfh   (         tbsize )
-      character*(ifnlen)    stifnm (         tbsize )
+      character(ifnlen)     stifnm (         tbsize )
       logical               staddg (         tbsize )
       integer(ip)           stfrst (         tbsize )
       integer(ip)           stlast (         tbsize )
       integer(ip)           stfree (         tbsize )
       integer(ip)           stbegn (         tbsize )
       real(wp)              stlsum ( maxsum, tbsize )
-      character*(crlen)     stname (         tbsize )
+      character(crlen)      stname (         tbsize )
 
 !
 !     The table of state variables is indexed by a singly linked list
@@ -909,9 +909,9 @@
 !
 !     Other local variables
 !
-      character*(crlen)     namrec
-      character*(filen)     dafnam
-      character*(ifnlen)    ifname
+      character(crlen)      namrec
+      character(filen)      dafnam
+      character(ifnlen)     ifname
 
       real(wp)              dc     ( maxndc )
       real(wp)              sumrec ( dprsiz )
@@ -1185,9 +1185,9 @@
       prev   =   nil
       found  =  .false.
 
-      do while (  ( p .ne. nil )  .and.  ( .not. found )  )
+      do while (  ( p /= nil )  .and.  ( .not. found )  )
 
-         if ( stfh(p) .eq. handle ) then
+         if ( stfh(p) == handle ) then
             found  =  .true.
          else
             prev   =  p
@@ -1224,7 +1224,7 @@
 !           - Make P the active list head node.
 !
 !
-         if ( p .ne. sthead ) then
+         if ( p /= sthead ) then
 !
 !           P is in the active list, but is not at the head.  So,
 !           the predecessor of P is not NIL.
@@ -1243,7 +1243,7 @@
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         if ( stfptr .eq. nil ) then
+         if ( stfptr == nil ) then
 !
 !           Oops, we're out of space.  Time for garbage collection.
 !           Test each file handle to see whether it designates a DAF
@@ -1261,7 +1261,7 @@
 !           file handle as we go.
 !
 
-            do while ( p .ne. nil )
+            do while ( p /= nil )
 
                if (  elemi ( stfh(p), opnset )   )  then
 !
@@ -1294,7 +1294,7 @@
 !
                   nextp  =  stpool( p )
 
-                  if ( p .eq. sthead ) then
+                  if ( p == sthead ) then
 !
 !                    Re-assign STHEAD so that we don't lose the head
 !                    of the active list.  P has no predecessor in this
@@ -1330,13 +1330,13 @@
 !           set to FALSE.  We know then that this file is not
 !           currently involved in an array addition.
 !
-            if ( stfptr .eq. nil ) then
+            if ( stfptr == nil ) then
 
                found = .false.
                p     = sthead
                prev  = nil
 
-               do while ( ( p .ne. nil ) .and. ( .not. found ) )
+               do while ( ( p /= nil ) .and. ( .not. found ) )
 
 !
 !                 If STADDG(P) is TRUE, then we must continue
@@ -1374,7 +1374,7 @@
 !
                      nextp  =  stpool( p )
 
-                     if ( p .eq. sthead ) then
+                     if ( p == sthead ) then
 !
 !                       Re-assign STHEAD so that we don't lose the head
 !                       of the active list.  P has no predecessor in
@@ -1408,7 +1408,7 @@
 !           Now, check to see if there is now room to add the dossier
 !           for the new DAF to the state table.  If not signal an error.
 !
-            if ( stfptr .eq. nil ) then
+            if ( stfptr == nil ) then
 
                call setmsg ( 'Attempt to initiate create a new ' &
                //            'array in DAF ''#'' has failed. ' &
@@ -1645,7 +1645,7 @@
 !     where we are concerned about speed.  The low-level writer routine
 !     DAFWDR will handle the check.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being written.' )
          call sigerr ( 'SPICE(DAFNOWRITE)'                  )
@@ -1678,7 +1678,7 @@
 !     Start adding data at the first free address, then update that
 !     address to get ready for the next addition.
 !
-      else if ( n .ge. 1 ) then
+      else if ( n >= 1 ) then
 
          call dafwda ( stfh(p), stfree(p), stfree(p)+n-1, data )
          stfree(p) = stfree(p) + n
@@ -1859,7 +1859,7 @@
 !
       p = sthead
 
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being written.' )
          call sigerr ( 'SPICE(DAFNOWRITE)'                  )
@@ -1937,7 +1937,7 @@
 !     Usually, adding an array does not fill the final summary
 !     record, and it can simply be replaced.
 !
-      if ( narray .lt. maxsum / sumsiz ) then
+      if ( narray < maxsum / sumsiz ) then
          call dafwdr ( stfh(p), stlast(p),   sumrec )
          call dafwcr ( stfh(p), stlast(p)+1, namrec )
 
@@ -2207,9 +2207,9 @@
       prev   =   nil
       found  =  .false.
 
-      do while (  ( p .ne. nil )  .and.  ( .not. found )  )
+      do while (  ( p /= nil )  .and.  ( .not. found )  )
 
-         if ( stfh(p) .eq. handle ) then
+         if ( stfh(p) == handle ) then
             found  =  .true.
          else
             prev   =  p
@@ -2261,7 +2261,7 @@
 !
 !
 
-      if ( p .ne. sthead ) then
+      if ( p /= sthead ) then
 !
 !        P is in the active list, but is not at the head.  So,
 !        the predecessor of P is not NIL.

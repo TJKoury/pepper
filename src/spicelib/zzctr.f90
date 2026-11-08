@@ -606,7 +606,7 @@
 !     Signal an error if both input counter array elements have high
 !     values.
 !
-      if ( oldctr(1) .eq. ctrhgh .and. oldctr(2) .eq. ctrhgh ) then
+      if ( oldctr(1) == ctrhgh .and. oldctr(2) == ctrhgh ) then
 
          call chkin  ( 'ZZCTRINC' )
 
@@ -629,7 +629,7 @@
 !
 !     Increment counters.
 !
-      if ( oldctr(1) .eq. ctrhgh ) then
+      if ( oldctr(1) == ctrhgh ) then
 
          oldctr(1) = ctrlow
          oldctr(2) = oldctr(2) + 1
@@ -748,7 +748,7 @@
 !
 !     Do counters differ?
 !
-      update = newctr(1) .ne. oldctr(1) .or. newctr(2) .ne. oldctr(2)
+      update = newctr(1) /= oldctr(1) .or. newctr(2) /= oldctr(2)
 
 !
 !     If they do, set old counter to new value.

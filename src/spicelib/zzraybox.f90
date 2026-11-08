@@ -196,7 +196,7 @@
 !
 !     Check the box extents.
 !
-      if (  min( extent(1), extent(2), extent(3) ) .le. 0.0_wp ) then
+      if (  min( extent(1), extent(2), extent(3) ) <= 0.0_wp ) then
 
          call chkin  ( 'ZZRAYBOX'                                    )
          call setmsg ( 'All box extents should be strictly positive ' &
@@ -224,9 +224,9 @@
 !     If the ray's vertex is inside the box, we consider the
 !     vertex to be the intercept.
 !
-      if (       ( abs( offset(1) ) .le. extent(1)/2 ) &
-           .and. ( abs( offset(2) ) .le. extent(2)/2 ) &
-           .and. ( abs( offset(3) ) .le. extent(3)/2 )  ) then
+      if (       ( abs( offset(1) ) <= extent(1)/2 ) &
+           .and. ( abs( offset(2) ) <= extent(2)/2 ) &
+           .and. ( abs( offset(3) ) <= extent(3)/2 )  ) then
 
          call vequ ( vertex, xpt )
          found = .true.
@@ -240,7 +240,7 @@
 !
       r = 0.5_wp * (1.0_wp + 1.0e-3_wp) * vnorm( extent )
 
-      if ( vnorm(offset) .lt. r ) then
+      if ( vnorm(offset) < r ) then
 !
 !        The vertex is already inside the bounding sphere.
 !
@@ -278,12 +278,12 @@
 !
       do i = 1, 3
 
-         if ( sphvtx(i) .lt. 0.0_wp ) then
+         if ( sphvtx(i) < 0.0_wp ) then
 
             sector(i) = left
             near(i)   = 0.0_wp
 
-         else if ( sphvtx(i) .gt. extent(i) ) then
+         else if ( sphvtx(i) > extent(i) ) then
 
             sector(i) = right
             near(i)   = extent(i)
@@ -324,7 +324,7 @@
 
          t(i) = -1.0_wp
 
-         if ( sector(i) .ne. middle ) then
+         if ( sector(i) /= middle ) then
 
             plndst(i) = near(i) - sphvtx(i)
 
@@ -333,7 +333,7 @@
 !
             limit = 2 * r * abs( udir(i) )
 
-            if ( abs( plndst(i) ) .gt. limit ) then
+            if ( abs( plndst(i) ) > limit ) then
 !
 !              The ray can't get to the nearest bounding plane
 !              before exiting the bounding sphere. No intersection
@@ -347,7 +347,7 @@
 !
             t(i) = plndst(i) / udir(i)
 
-            if ( t(i) .lt. 0.0_wp ) then
+            if ( t(i) < 0.0_wp ) then
 !
 !              This component of the ray is going in the wrong
 !              direction. No intersection is possible.
@@ -356,7 +356,7 @@
 
             end if
 
-            if ( t(i) .gt. maxt ) then
+            if ( t(i) > maxt ) then
 
                maxidx = i
                maxt   = t(i)
@@ -371,7 +371,7 @@
 !     We should have a positive value of T for at least one
 !     coordinate. However, if we don't, there's no intersection.
 !
-      if ( maxt .lt. 0.0_wp ) then
+      if ( maxt < 0.0_wp ) then
          return
       end if
 
@@ -387,7 +387,7 @@
 !
       do i = 1, 3
 
-         if ( i .eq. maxidx ) then
+         if ( i == maxidx ) then
 !
 !           XPT is supposed to lie exactly on the bounding plane
 !           orthogonal to the Ith axis and nearest to SPHVTX.
@@ -396,15 +396,15 @@
 
          else
 
-            if ( sector(i) .eq. middle ) then
+            if ( sector(i) == middle ) then
 !
 !              The Ith component of the vertex is between the
 !              bounding planes for the Ith coordinate. If the
 !              Ith component of XPT is outside these bounds,
 !              the ray misses the box.
 !
-               if (      ( xpt(i) .lt. 0.0_wp      ) &
-                    .or. ( xpt(i) .gt. extent(i) ) ) then
+               if (      ( xpt(i) < 0.0_wp      ) &
+                    .or. ( xpt(i) > extent(i) ) ) then
 
                   return
 
@@ -420,13 +420,13 @@
 !              plane farthest from SPHVTX(I), no intersection can
 !              exist.
 !
-               if ( sector(i) .eq. left ) then
+               if ( sector(i) == left ) then
 !
 !                 Sharpen the Ith component of XPT.
 !
                   xpt(i) = max( xpt(i), 0.0_wp )
 
-                  if ( xpt(i) .gt. extent(i) ) then
+                  if ( xpt(i) > extent(i) ) then
 !
 !                    The ray hits the MAXIDX face too far away from
 !                    SPHVTX(I). There's no intersection with the box.
@@ -444,7 +444,7 @@
 !
                   xpt(i) = min( xpt(i), extent(i) )
 
-                  if ( xpt(i) .lt. 0.0_wp ) then
+                  if ( xpt(i) < 0.0_wp ) then
 !
 !                    The ray hits the MAXIDX face too far away from
 !                    SPHVTX(I). There's no intersection with the box.

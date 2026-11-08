@@ -22,7 +22,7 @@
       implicit none
 
       integer(ip)           xfrlun
-      character*(*)         binfil
+      character(*)          binfil
 
 ! $ Brief_I/O
 !
@@ -241,13 +241,13 @@
 !
 !     Local Parameters
 !
-      character*(*)         begarr
+      character(*)          begarr
       parameter           ( begarr = 'BEGIN_ARRAY' )
 
-      character*(*)         endarr
+      character(*)          endarr
       parameter           ( endarr = 'END_ARRAY' )
 
-      character*(*)         totarr
+      character(*)          totarr
       parameter           ( totarr = 'TOTAL_ARRAYS' )
 
       integer(ip)           bufsiz
@@ -273,15 +273,15 @@
 !
 !     Local variables
 !
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
-      character*(errlen)    errmsg
-      character*(linlen)    line
-      character*(crecl)     name
-      character*(linlen)    rest
-      character*(idwlen)    tarch
-      character*(idwlen)    ttype
-      character*(linlen)    word
+      character(idwlen)     idword
+      character(ifnlen)     ifname
+      character(errlen)     errmsg
+      character(linlen)     line
+      character(crecl)      name
+      character(linlen)     rest
+      character(idwlen)     tarch
+      character(idwlen)     ttype
+      character(linlen)     word
 
       real(wp)              buffer( bufsiz )
       real(wp)              dsumry( 125    )
@@ -438,7 +438,7 @@
 !
       read (xfrlun,*,iostat=iostat) idword
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error reading the file ID word from the'  // &
                        ' DAF transfer file ''#''. IOSTAT = #.'     )
@@ -456,7 +456,7 @@
 !
       call idw2at ( idword, tarch, ttype )
 
-      if ( tarch .ne. 'DAF' ) then
+      if ( tarch /= 'DAF' ) then
 
          call setmsg ( 'File architecture is not ''DAF'' for' // &
                        ' file ''#'''                           )
@@ -489,7 +489,7 @@
 !
       read (xfrlun,*,iostat=iostat) ifname
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error reading the internal filename from'  // &
                        ' the DAF transfer file ''#''. IOSTAT = #.'  )
@@ -504,7 +504,7 @@
 !     Open a new binary DAF file. Call the proper open routine,
 !     depending on whether it's a new file or an old file.
 !
-      if ( ttype .ne. '?' ) then
+      if ( ttype /= '?' ) then
          call dafonw ( binfil, ttype, nd, ni, ifname, resrec, binhdl )
       else
          call dafopn ( binfil, nd, ni, ifname, resrec, binhdl )
@@ -541,7 +541,7 @@
 
          read (xfrlun,fmt='(A)',iostat=iostat) line
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Error reading from the DAF transfer'  // &
                           ' file ''#''. IOSTAT = #.'              )
@@ -559,14 +559,14 @@
 !
          call nextwd( line, word, rest )
 
-         if ( word .eq. begarr ) then
+         if ( word == begarr ) then
 !
 !           Get the array number.
 !
             call nextwd( rest, word, rest           )
             call nparsi( word, barr, errmsg, errptr )
 
-            if ( errmsg .ne. ' ' ) then
+            if ( errmsg /= ' ' ) then
 
                call setmsg ( 'Begin array error, could not parse'  // &
                              ' array number. Error: # File: #'      )
@@ -583,7 +583,7 @@
             call nextwd( rest, word, rest           )
             call nparsi( word, bcnt, errmsg, errptr )
 
-            if ( errmsg .ne. ' ' ) then
+            if ( errmsg /= ' ' ) then
 
                call setmsg ( 'Begin array error, could not parse' // &
                              ' the data count for array: #.'      // &
@@ -604,14 +604,14 @@
             inarr  = .true.
             arrcnt = arrcnt + 1
 
-         else if ( word .eq. endarr ) then
+         else if ( word == endarr ) then
 !
 !           Get the array number.
 !
             call nextwd( rest, word, rest           )
             call nparsi( word, earr, errmsg, errptr )
 
-            if ( errmsg .ne. ' ' ) then
+            if ( errmsg /= ' ' ) then
 
                call setmsg ( 'End array error, could not parse'  // &
                              ' array number. Error: # File: #'    )
@@ -628,7 +628,7 @@
             call nextwd( rest, word, rest           )
             call nparsi( word, ecnt, errmsg, errptr )
 
-            if ( errmsg .ne. ' ' ) then
+            if ( errmsg /= ' ' ) then
 
                call setmsg ( 'End array error, could not parse' // &
                              ' the data count for array: #.'    // &
@@ -645,7 +645,7 @@
 !           Check to see if the beginning and ending array numbers
 !           match. If not, signal an appropriate error.
 !
-            if ( earr .ne. barr ) then
+            if ( earr /= barr ) then
 
                call setmsg ( 'Data array number mismatch:'         // &
                              ' Beginning number: #; Ending'        // &
@@ -662,7 +662,7 @@
 !           Check to see if the beginning and ending array data counts
 !           match. If not, signal an appropriate error.
 !
-            if ( ecnt .ne. bcnt ) then
+            if ( ecnt /= bcnt ) then
 
                call setmsg ( 'Data array count mismatch:'      // &
                              ' Beginning count: #;'            // &
@@ -682,7 +682,7 @@
 !
             inarr = .false.
 
-         else if ( word .eq. totarr ) then
+         else if ( word == totarr ) then
 !
 !           We have the total arrays keyword to parse, so get
 !           the total number of arrays processed.
@@ -690,7 +690,7 @@
             call nextwd( rest, word, rest             )
             call nparsi( word, numarr, errmsg, errptr )
 
-            if ( errmsg .ne. ' ' ) then
+            if ( errmsg /= ' ' ) then
 
                call setmsg ( 'Array count error, could not parse' // &
                              ' the total number of arrays: #.'    // &
@@ -703,7 +703,7 @@
 
             end if
 
-            if ( arrcnt .ne. numarr ) then
+            if ( arrcnt /= numarr ) then
 
                   call setmsg ( 'The number of data arrays'          // &
                                 ' processed (#) was not equal to'    // &
@@ -747,7 +747,7 @@
 
             read (xfrlun,*,iostat=iostat) name( :snmlen)
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error reading the array name from the' // &
                              ' DAF transfer file #. IOSTAT = #.'      )
@@ -806,14 +806,14 @@
 !
             numlft = bcnt
 
-            do while ( numlft .gt. 0 )
+            do while ( numlft > 0 )
 !
 !              First, read in the count of encoded numbers in the
 !              current data block.
 !
                read (xfrlun,*,iostat=iostat) numdta
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                   call setmsg ( 'Error reading array data from the' // &
                                 ' DAF transfer file #. IOSTAT = #.'  )
@@ -831,9 +831,9 @@
 !
                lftovr = numdta
 
-               do while ( lftovr .gt. 0 )
+               do while ( lftovr > 0 )
 
-                  if ( lftovr .ge. bufsiz ) then
+                  if ( lftovr >= bufsiz ) then
 
                      numdta = bufsiz
 

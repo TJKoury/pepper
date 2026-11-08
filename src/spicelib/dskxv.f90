@@ -34,11 +34,11 @@
       include 'zzctr.inc'
 
       logical               pri
-      character*(*)         target
+      character(*)          target
       integer(ip)           nsurf
       integer(ip)           srflst ( * )
       real(wp)              et
-      character*(*)         fixref
+      character(*)          fixref
       integer(ip)           nrays
       real(wp)              vtxarr ( 3, * )
       real(wp)              dirarr ( 3, * )
@@ -826,8 +826,8 @@
 !
 !     Local variables
 !
-      character*(frnmln)    prvfrm
-      character*(bdnmln)    svtnam
+      character(frnmln)     prvfrm
+      character(bdnmln)     svtnam
 
       integer(ip)           fixfid
       integer(ip)           frmctr ( ctrsiz )
@@ -908,7 +908,7 @@
 !
 !     Reject NRAYS if not set properly.
 !
-      if ( nrays .lt. 1 ) then
+      if ( nrays < 1 ) then
 
          call setmsg ( 'The ray count NRAYS must be at least 1 but ' &
          //            'was #.'                                     )
@@ -922,7 +922,7 @@
 !
 !     Reject NSURF if not set properly. Zero is a valid value.
 !
-      if ( nsurf .lt. 0 ) then
+      if ( nsurf < 0 ) then
 
          call setmsg ( 'The surface count NSURF must be non-negative ' &
          //            'but was #.'                                   )
@@ -961,8 +961,8 @@
       end if
 
 
-      newfrm = ( fixref .ne. prvfrm ) .or. first
-      newtrg = ( trgcde .ne. prvtcd ) .or. first
+      newfrm = ( fixref /= prvfrm ) .or. first
+      newtrg = ( trgcde /= prvtcd ) .or. first
 
 !
 !     Get the frame ID if the pool state has changed. The
@@ -979,7 +979,7 @@
             return
          end if
 
-         if ( fixfid .eq. 0 ) then
+         if ( fixfid == 0 ) then
 
             call setmsg ( 'Reference frame # is not recognized by ' &
             //            'the SPICE frame subsystem. Possibly ' &
@@ -1018,7 +1018,7 @@
 !
 !        Make sure that FIXREF is centered at the target body's center.
 !
-         if ( fxcent .ne. trgcde ) then
+         if ( fxcent /= trgcde ) then
 
             call setmsg ( 'Reference frame # is not centered at the ' &
             //            'target body #. The ID code of the frame ' &

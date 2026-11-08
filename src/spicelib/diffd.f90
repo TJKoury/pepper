@@ -217,32 +217,32 @@
 !
 !     When the end of the first input set is reached, we're done.
 !
-      do while ( apoint .le. acard )
+      do while ( apoint <= acard )
 
 !
 !        If there is still space in the output set, fill it
 !        as necessary.
 !
-         if ( ccard .lt. csize ) then
+         if ( ccard < csize ) then
 
-            if ( bpoint .gt. bcard) then
+            if ( bpoint > bcard) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
                apoint   = apoint + 1
 
-            else if ( a(apoint) .eq. b(bpoint)) then
+            else if ( a(apoint) == b(bpoint)) then
 
                apoint = apoint + 1
                bpoint = bpoint + 1
 
-            else if ( a(apoint) .lt. b(bpoint) ) then
+            else if ( a(apoint) < b(bpoint) ) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
                apoint   = apoint + 1
 
-            else if ( b(bpoint) .lt. a(apoint) ) then
+            else if ( b(bpoint) < a(apoint) ) then
 
                bpoint = bpoint + 1
 
@@ -255,22 +255,22 @@
 !
          else
 
-            if ( bpoint .gt. bcard ) then
+            if ( bpoint > bcard ) then
 
                over   = over   + 1
                apoint = apoint + 1
 
-            else if ( a(apoint) .eq. b(bpoint) ) then
+            else if ( a(apoint) == b(bpoint) ) then
 
                apoint = apoint + 1
                bpoint = bpoint + 1
 
-            else if ( a(apoint) .lt. b(bpoint) ) then
+            else if ( a(apoint) < b(bpoint) ) then
 
                over   = over   + 1
                apoint   = apoint + 1
 
-            else if ( b(bpoint) .lt. a(apoint) ) then
+            else if ( b(bpoint) < a(apoint) ) then
 
                bpoint = bpoint + 1
 
@@ -288,7 +288,7 @@
 !
 !     Report any excess.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
          call excess ( over, 'set' )
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if

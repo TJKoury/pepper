@@ -21,9 +21,9 @@
 
       implicit none
 
-      character*(*)      string
+      character(*)       string
       real(wp)           sp2000
-      character*(*)      errmsg
+      character(*)       errmsg
 
 ! $ Brief_I/O
 !
@@ -571,10 +571,10 @@
 !
 !     Local variables
 !
-      character*(5)         type
-      character*(8)         modify   ( 5 )
+      character(5)          type
+      character(8)          modify   ( 5 )
 
-      character*(lnsize)    pictur
+      character(lnsize)     pictur
 
       real(wp)              tvec     ( 10 )
 
@@ -613,7 +613,7 @@
 !
       if ( mods ) then
 
-         if ( modify(system) .ne. ' ' ) then
+         if ( modify(system) /= ' ' ) then
 
             errmsg = 'TPARSE does not support the specification ' &
             //      'of a time system in a string.  The time ' &
@@ -621,7 +621,7 @@
             call repmc ( errmsg, '#', modify(system), errmsg )
             return
 
-         else if ( modify(zone) .ne. ' ' ) then
+         else if ( modify(zone) /= ' ' ) then
 
             errmsg = 'TPARSE does not support the specification ' &
             //      'of a time zone in a time string.  The time ' &
@@ -629,7 +629,7 @@
             call repmc ( errmsg, '#', modify(zone), errmsg )
             return
 
-         else if ( modify(ampm) .ne. ' ' ) then
+         else if ( modify(ampm) /= ' ' ) then
 
             errmsg = 'TPARSE does not support the AM/PM ' &
             //      'conventions for time strings. '
@@ -641,14 +641,14 @@
 
 
 
-      if ( type .eq. 'JD' ) then
+      if ( type == 'JD' ) then
 !
 !        Nothing to do but convert TVEC(1).
 !
 
          sp2000 = (tvec(1)-j2000()) * spd()
 
-      else if ( type .eq. 'YMD' .or. type .eq. 'YD' ) then
+      else if ( type == 'YMD' .or. type == 'YD' ) then
 
 
          call tcheck ( tvec, type, mods, modify, ok, errmsg )
@@ -660,7 +660,7 @@
 !        If we have day of year format, we move it into the
 !        month-day of month format.
 !
-         if ( type .eq. 'YD' ) then
+         if ( type == 'YD' ) then
             tvec(6) = tvec(5)
             tvec(5) = tvec(4)
             tvec(4) = tvec(3)
@@ -676,15 +676,15 @@
 !
 !        Fix up the year as needed.
 !
-         if ( modify(era) .eq. 'B.C.' ) then
+         if ( modify(era) == 'B.C.' ) then
 
             year = 1 - year
 
-         else if ( modify(era) .eq. 'A.D.' ) then
+         else if ( modify(era) == 'A.D.' ) then
 !
 !           Do nothing.
 !
-         else if ( year .lt. 100 ) then
+         else if ( year < 100 ) then
 
             call texpyr ( year )
 
@@ -694,7 +694,7 @@
 !        Apply the Muller-Wimberly formula and then tack on
 !        the seconds.
 !
-         if ( year .lt. 1 ) then
+         if ( year < 1 ) then
 !
 !           The Muller-Wimberly formula doesn't work for years
 !           less than 0.  So we boost the year by an appropriate

@@ -23,8 +23,8 @@
 
       implicit none
 
-      character*(*)         binary
-      character*(*)         ascii
+      character(*)          binary
+      character(*)          ascii
 
 ! $ Brief_I/O
 !

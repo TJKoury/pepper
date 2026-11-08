@@ -23,7 +23,7 @@
       include              'zzbodtrn.inc'
 
       integer(ip)          bltcod(nperm)
-      character*(maxl)     bltnam(nperm)
+      character(maxl)      bltnam(nperm)
 
 ! $ Brief_I/O
 !

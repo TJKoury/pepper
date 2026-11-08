@@ -405,7 +405,7 @@
 !     data in the file.  Otherwise, RECNO becomes the first record
 !     available for integer data.
 !
-      if ( lasti .ge. 1 ) then
+      if ( lasti >= 1 ) then
 
          call dasa2l ( handle,  int,     lasti, &
                        clbase,  clsize,  recno,  wordno )
@@ -426,7 +426,7 @@
 !
       nwritn  =  0
 
-      do while  (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
+      do while  (  ( nwritn < n ) .and. ( .not. failed() )  )
 !
 !        Write as much data as we can (or need to) into the current
 !        record.  We assume that RECNO, WORDNO, and NWRITN have been
@@ -437,13 +437,13 @@
 !
          numint  =  min (  n - nwritn,   nwi - wordno )
 
-         if ( numint .gt. 0 ) then
+         if ( numint > 0 ) then
 !
 !           Write NUMINT words into the current record.  If the record
 !           is new, write the entire record.  Otherwise, just update
 !           the part we're interested in.
 !
-            if ( wordno .eq. 0 ) then
+            if ( wordno == 0 ) then
 
                call movei  (  data(nwritn+1),  numint,  record  )
                call daswri (  handle,          recno,   record  )
@@ -475,7 +475,7 @@
 !           We intentionally leave FREE at the value it had before
 !           we starting adding data to the file.
 !
-            if ( recno .ge. free ) then
+            if ( recno >= free ) then
                recno  =  recno + 1
             else
                recno  =  free

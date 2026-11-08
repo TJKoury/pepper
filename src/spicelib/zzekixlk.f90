@@ -122,7 +122,7 @@
       itype  =  coldsc ( ixtidx )
 
 
-      if ( itype .eq. 1 ) then
+      if ( itype == 1 ) then
 !
 !        For type 1 indexes, the index pointer is the root node of
 !        a B*-tree.  Just use the tree look up routine.
@@ -132,7 +132,7 @@
          call zzektrdp ( handle, tree, key, recptr )
 
 
-      else if ( itype .eq. 2 ) then
+      else if ( itype == 2 ) then
 !
 !        For type 2 indexes, the index pointer is the base address
 !        of the index.  We must compute the offset from this base to

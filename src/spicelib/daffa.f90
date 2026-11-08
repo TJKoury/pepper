@@ -26,7 +26,7 @@
 
       integer(ip)           handle
       real(wp)              sum    ( * )
-      character*(*)         name
+      character(*)          name
       logical               found
 
 ! $ Brief_I/O
@@ -1162,7 +1162,7 @@
       integer(ip)           stnext (         tbsize )
       integer(ip)           stnseg (         tbsize )
       integer(ip)           stcurr (         tbsize )
-      character*(crlen)     stnr   (         tbsize )
+      character(crlen)      stnr   (         tbsize )
       logical               sthvnr (         tbsize )
       real(wp)              stsr   ( dprsiz, tbsize )
 
@@ -1211,8 +1211,8 @@
 !
 !     Other local variables
 !
-      character*(filen)     dafnam
-      character*(ifnlen)    ifname
+      character(filen)      dafnam
+      character(ifnlen)     ifname
 
       real(wp)              exdc   ( maxndc )
       real(wp)              exsum  ( maxndc )
@@ -1590,9 +1590,9 @@
       prev   =   nil
       fnd    =  .false.
 
-      do while (  ( p .ne. nil )  .and.  ( .not. fnd )  )
+      do while (  ( p /= nil )  .and.  ( .not. fnd )  )
 
-         if ( stfh(p) .eq. handle ) then
+         if ( stfh(p) == handle ) then
             fnd   =  .true.
          else
             prev  =  p
@@ -1629,7 +1629,7 @@
 !           - Make P the active list head node.
 !
 !
-         if ( p .ne. sthead ) then
+         if ( p /= sthead ) then
 !
 !           P is in the active list, but is not at the head. So,
 !           the predecessor of P is not NIL.
@@ -1648,7 +1648,7 @@
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         if ( stfptr .eq. nil ) then
+         if ( stfptr == nil ) then
 !
 !           Oops, we're out of space. Time for garbage collection.
 !           Test each file handle to see whether it designates a DAF
@@ -1665,7 +1665,7 @@
 !           now closed. We traverse the active list, examining each
 !           file handle as we go.
 !
-            do while ( p .ne. nil )
+            do while ( p /= nil )
 
                if (  elemi ( stfh(p), opnset )   )  then
 !
@@ -1699,7 +1699,7 @@
                   nextp  =  stpool( p )
 
 
-                  if ( p .eq. sthead ) then
+                  if ( p == sthead ) then
 !
 !                    Re-assign STHEAD so that we don't lose the head
 !                    of the active list. P has no predecessor in this
@@ -2112,7 +2112,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -2152,9 +2152,9 @@
 
       stcurr(p) = stcurr(p) + 1
 
-      if ( stcurr(p) .gt. stnseg(p) ) then
+      if ( stcurr(p) > stnseg(p) ) then
 
-         if ( stnext(p) .eq. 0 ) then
+         if ( stnext(p) == 0 ) then
 !
 !           There are no more arrays in the list.
 !
@@ -2211,7 +2211,7 @@
             stnseg( p )  =  int ( stsr(3,p) )
             stcurr( p )  =  1
 
-            found        = ( stnseg(p) .gt. 0 )
+            found        = ( stnseg(p) > 0 )
 
          end if
 
@@ -2544,9 +2544,9 @@
       prev  =   nil
       fnd   =  .false.
 
-      do while (  ( p .ne. nil )  .and.  ( .not. fnd )  )
+      do while (  ( p /= nil )  .and.  ( .not. fnd )  )
 
-         if ( stfh(p) .eq. handle ) then
+         if ( stfh(p) == handle ) then
             fnd   =  .true.
          else
             prev  =  p
@@ -2583,7 +2583,7 @@
 !           - Make P the active list head node.
 !
 !
-         if ( p .ne. sthead ) then
+         if ( p /= sthead ) then
 !
 !           P is in the active list, but is not at the head. So,
 !           the predecessor of P is not NIL.
@@ -2602,7 +2602,7 @@
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         if ( stfptr .eq. nil ) then
+         if ( stfptr == nil ) then
 !
 !           Oops, we're out of space. Time for garbage collection.
 !           Test each file handle to see whether it designates a DAF
@@ -2619,7 +2619,7 @@
 !           now closed. We traverse the active list, examining each
 !           file handle as we go.
 !
-            do while ( p .ne. nil )
+            do while ( p /= nil )
 
                if (  elemi ( stfh(p), opnset )   )  then
 !
@@ -2653,7 +2653,7 @@
                   nextp  =  stpool( p )
 
 
-                  if ( p .eq. sthead ) then
+                  if ( p == sthead ) then
 !
 !                    Re-assign STHEAD so that we don't lose the head
 !                    of the active list. P has no predecessor in this
@@ -3076,7 +3076,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -3113,9 +3113,9 @@
 !
       stcurr( p )  =  stcurr( p ) - 1
 
-      if ( stcurr(p) .le. 0 ) then
+      if ( stcurr(p) <= 0 ) then
 
-         if ( stprev(p) .eq. 0 ) then
+         if ( stprev(p) == 0 ) then
 !
 !           There is no predecessor of the current array in the list.
 !
@@ -3172,7 +3172,7 @@
             stnseg( p )  =  int ( stsr(3,p) )
             stcurr( p )  =  stnseg( p )
 
-            found        =  ( stnseg(p) .gt. 0 )
+            found        =  ( stnseg(p) > 0 )
 
          end if
 
@@ -3486,7 +3486,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -3514,7 +3514,7 @@
 !     current array was the last, or if DAFFPA was called when the
 !     current array was the first.
 !
-      if ( stcurr(p) .eq. 0 ) then
+      if ( stcurr(p) == 0 ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -3525,7 +3525,7 @@
          call chkout ( 'DAFGS'                                         )
          return
 
-      else if ( stcurr(p) .gt. stnseg(p) ) then
+      else if ( stcurr(p) > stnseg(p) ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -3727,7 +3727,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -3755,7 +3755,7 @@
 !     called when the current array was the last, or if DAFFPA was
 !     called when the current array was the first.
 !
-      if ( stcurr(p) .eq. 0 ) then
+      if ( stcurr(p) == 0 ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -3766,7 +3766,7 @@
          call chkout ( 'DAFGN'                                         )
          return
 
-      else if ( stcurr(p) .gt. stnseg(p) ) then
+      else if ( stcurr(p) > stnseg(p) ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4024,7 +4024,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -4232,7 +4232,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -4261,7 +4261,7 @@
 !     when the current array was the last, or if DAFFPA was called when
 !     the current array was the first.
 !
-      if ( stcurr(p) .eq. 0 ) then
+      if ( stcurr(p) == 0 ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4272,7 +4272,7 @@
          call chkout ( 'DAFRS'                                         )
          return
 
-      else if ( stcurr(p) .gt. stnseg(p) ) then
+      else if ( stcurr(p) > stnseg(p) ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4493,7 +4493,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -4522,7 +4522,7 @@
 !     called when the current array was the last, or if DAFFPA was
 !     called when the current array was the first.
 !
-      if ( stcurr(p) .eq. 0 ) then
+      if ( stcurr(p) == 0 ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4533,7 +4533,7 @@
          call chkout ( 'DAFRN'                                         )
          return
 
-      else if ( stcurr(p) .gt. stnseg(p) ) then
+      else if ( stcurr(p) > stnseg(p) ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4759,7 +4759,7 @@
 !
 !     Make sure that a search has been started in this DAF.
 !
-      if ( p .eq. nil ) then
+      if ( p == nil ) then
 
          call setmsg ( 'No DAF is currently being searched.' )
          call sigerr ( 'SPICE(DAFNOSEARCH)'                  )
@@ -4788,7 +4788,7 @@
 !     when the current array was the last, or if DAFFPA was called
 !     when the current array was the first.
 !
-      if ( stcurr(p) .eq. 0 ) then
+      if ( stcurr(p) == 0 ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4799,7 +4799,7 @@
          call chkout ( 'DAFWS'                                         )
          return
 
-      else if ( stcurr(p) .gt. stnseg(p) ) then
+      else if ( stcurr(p) > stnseg(p) ) then
 
          call dafhfn ( stfh(p), dafnam )
 
@@ -4992,9 +4992,9 @@
       prev  =   nil
       fnd   =  .false.
 
-      do while (  ( p .ne. nil )  .and.  ( .not. fnd )  )
+      do while (  ( p /= nil )  .and.  ( .not. fnd )  )
 
-         if ( stfh(p) .eq. handle ) then
+         if ( stfh(p) == handle ) then
             fnd   =  .true.
          else
             prev  =  p
@@ -5033,7 +5033,7 @@
 !        - Make P the active list head node.
 !
 
-      if ( p .ne. sthead ) then
+      if ( p /= sthead ) then
 !
 !        P is in the active list, but is not at the head. So,
 !        the predecessor of P is not NIL.

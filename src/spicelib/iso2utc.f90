@@ -26,9 +26,9 @@
 
       implicit none
 
-      character*(*)         tstrng
-      character*(*)         utcstr
-      character*(*)         error
+      character(*)          tstrng
+      character(*)          utcstr
+      character(*)          error
 
 ! $ Brief_I/O
 !
@@ -204,13 +204,13 @@
 !
 !     Local Variables
 !
-      character*(100)       ascii
-      character*(128)       mystr
+      character(100)        ascii
+      character(128)        mystr
 
-      character*(3)         months ( 0 : nmnths )
+      character(3)          months ( 0 : nmnths )
       save                  months
 
-      character*(2)         imonth (     nmnths )
+      character(2)          imonth (     nmnths )
       save                  imonth
 
       integer(ip)           i
@@ -237,12 +237,12 @@
 !
 !     In-line Function Definitions
 !
-      digit(i)  =      ichar(ascii(i:i)) .ge. ichar('0') &
-                 .and. ichar(ascii(i:i)) .le. ichar('9')
+      digit(i)  =      ichar(ascii(i:i)) >= ichar('0') &
+                 .and. ichar(ascii(i:i)) <= ichar('9')
 
-      hyphen(i) = ascii(i:i) .eq. '-'
-      colon(i)  = ascii(i:i) .eq. ':'
-      t(i)      = ascii(i:i) .eq. 'T' .or. ascii(i:i) .eq. 't'
+      hyphen(i) = ascii(i:i) == '-'
+      colon(i)  = ascii(i:i) == ':'
+      t(i)      = ascii(i:i) == 'T' .or. ascii(i:i) == 't'
 
 
 !
@@ -266,7 +266,7 @@
 !
 !     Next check for one of the ISO allowed formats.
 !
-      if      ( l .eq. 8 ) then
+      if      ( l == 8 ) then
 
 !
 !        The possible format is: yyyy-ddd.  If we get a
@@ -287,7 +287,7 @@
 
          end if
 
-      else if ( l .eq. 10 ) then
+      else if ( l == 10 ) then
 
 !
 !        The possible format is: yyyy-mm-dd. If we get a match
@@ -310,7 +310,7 @@
 
          end if
 
-      else if ( l .ge. 17 ) then
+      else if ( l >= 17 ) then
 
 !
 !        There are two possible formats yyyy-dddThh:mm:ss.ssssss

@@ -24,7 +24,7 @@
 
       real(wp) x
       integer(ip)      sigdig
-      character*(*)    string
+      character(*)     string
 
 ! $ Brief_I/O
 !
@@ -274,13 +274,13 @@
       real(wp)              power (0:maxpow)
       real(wp)              ipower(0:maxpow)
 
-      character*(1)         digits(0:9)
+      character(1)          digits(0:9)
       real(wp)              values(0:9)
 
       integer(ip)           maxexp
       parameter           ( maxexp = 40 )
 
-      character*(2)         vaxexp(0:40)
+      character(2)          vaxexp(0:40)
 
 
 
@@ -295,11 +295,11 @@
       integer(ip)           k
       integer(ip)           last
 
-      character*(20)        expc
-      character*(28)        zero
+      character(20)         expc
+      character(28)         zero
 
 
-      character*(32)        numstr
+      character(32)         numstr
 
       save                  power
       save                  ipower
@@ -361,14 +361,14 @@
 !     This determines whether we need a minus sign and where the
 !     decimal point needs to go in the output string.
 !
-      if      ( copy .lt. 0 ) then
+      if      ( copy < 0 ) then
 
          numstr(1:1) = '-'
          copy        =  - copy
          postn       =  2
          numstr(3:3) = '.'
 
-      else if ( copy .gt. 0 ) then
+      else if ( copy > 0 ) then
 
          numstr(1:1) = ' '
          postn       =  2
@@ -394,7 +394,7 @@
 !
 !     Scale our copy of the input into the range 1 to 10.
 !
-      if ( exp10 .lt. 0 ) then
+      if ( exp10 < 0 ) then
 
 !
 !        In this case the exponent will be negative.  We want the
@@ -405,12 +405,12 @@
          expont =  int(exp10) - 1
          k      = -expont
 
-         do while ( k .gt. 16 )
+         do while ( k > 16 )
             copy = copy * 1.0e16_wp
             k    = k - 16
          end do
 
-         if ( k .ne. 0 ) then
+         if ( k /= 0 ) then
             copy = copy * power(k)
          end if
 
@@ -420,12 +420,12 @@
          expont = int ( exp10 )
          k      = expont
 
-         do while ( k .gt. 16 )
+         do while ( k > 16 )
             copy = copy * 1.0e-16_wp
             k    = k - 16
          end do
 
-         if ( k .ne. 0 ) then
+         if ( k /= 0 ) then
             copy = copy * ipower(k)
          end if
 
@@ -445,7 +445,7 @@
 !     round off process.  If we did we need to divide by 10 and add 1
 !     to the exponent value.  (COPY must always remain between 0 and 10)
 !
-      if ( copy .ge. 10.0_wp ) then
+      if ( copy >= 10.0_wp ) then
          copy   = copy * 1.0e-1_wp
          expont = expont + 1
       end if
@@ -468,7 +468,7 @@
 !     Fetch digits until we fill in the last available slot for
 !     significant digits.
 !
-      do while ( postn  .lt. last )
+      do while ( postn  < last )
 
          i                   = int ( copy )
          numstr(postn:postn) = digits(i)
@@ -484,7 +484,7 @@
 !
 !     First get the exponent symbol and sign of the exponent.
 !
-      if   ( expont .ge. 0  ) then
+      if   ( expont >= 0  ) then
 
          numstr(postn:) = 'E+'
 
@@ -500,7 +500,7 @@
 !
 !     Now get the numeric representation.
 !
-      if ( expont .le. 40 ) then
+      if ( expont <= 40 ) then
          expc  = vaxexp ( expont )
       else
          call intstr ( expont, expc )

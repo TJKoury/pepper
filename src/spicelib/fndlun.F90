@@ -547,7 +547,7 @@
          else
             inquire ( unit=i, opened=opened, iostat=iostat )
 
-            if ( iostat .gt. 0 ) then
+            if ( iostat > 0 ) then
                unit = -iostat
                return
             end if
@@ -574,7 +574,7 @@
          else
             inquire ( unit=i, opened=opened, iostat=iostat )
 
-            if ( iostat .gt. 0 ) then
+            if ( iostat > 0 ) then
                unit = -iostat
                return
             end if
@@ -815,7 +815,7 @@
 !     If UNIT is in the proper range, set the corresponding flag
 !     to TRUE.
 !
-      if ( unit .ge. minlun .and. unit .le. maxlun ) then
+      if ( unit >= minlun .and. unit <= maxlun ) then
          resvd(unit) = .true.
       end if
 
@@ -1044,10 +1044,10 @@
 !     If UNIT is in the proper range and it has not been reserved by
 !     default, set the corresponding flag to FALSE.
 !
-      if ( unit .ge. minlun .and. unit .le. maxlun ) then
+      if ( unit >= minlun .and. unit <= maxlun ) then
 
          do i = 1, nresv
-            if ( unit .eq. resnum(i) ) then
+            if ( unit == resnum(i) ) then
                return
             end if
          end do

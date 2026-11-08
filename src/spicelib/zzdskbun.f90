@@ -302,7 +302,7 @@
 !
 !     Check the incoming segment count.
 !
-      if ( nseg .le. 0 ) then
+      if ( nseg <= 0 ) then
 
          call setmsg ( 'Input segment list was empty. This may ' &
          //            'be due to no DSKs containing data for ' &
@@ -351,7 +351,7 @@
          surfok = .false.
          timeok = .false.
 
-         bodyok = bodyid .eq. nint( dskbuf(ctridx,i) )
+         bodyok = bodyid == nint( dskbuf(ctridx,i) )
 
 
          if ( bodyok ) then
@@ -363,20 +363,20 @@
 !
             j = 0
 
-            if ( nsurf .gt. 0 ) then
+            if ( nsurf > 0 ) then
 
                surfce = nint( dskbuf(srfidx,i) )
                j      = isrchi( surfce, nsurf, srflst )
 
             end if
 
-            surfok = ( nsurf .eq. 0 ) .or. ( j .gt. 0 )
+            surfok = ( nsurf == 0 ) .or. ( j > 0 )
 
 !
 !           See whether the segment covers the input epoch.
 !
-            timeok =        ( et .ge. dskbuf(btmidx,i) ) &
-                      .and. ( et .le. dskbuf(etmidx,i) )
+            timeok =        ( et >= dskbuf(btmidx,i) ) &
+                      .and. ( et <= dskbuf(etmidx,i) )
 
          end if
 
@@ -395,14 +395,14 @@
             segfid = nint( dskbuf(frmidx,i) )
 
 
-            if ( segfid .ne. fixfid ) then
+            if ( segfid /= fixfid ) then
 !
 !              We have a segment that uses a different frame
 !              from that specified by FIXFID.
 !
                multfr = .true.
 
-               if ( segfid .ne. prvfrm ) then
+               if ( segfid /= prvfrm ) then
 !
 !                 The frame of the current segment doesn't match
 !                 that of the previous segment, so we'll need
@@ -455,24 +455,24 @@
             dist = vdist ( ctrbuf(1,i), segpt )
 
 
-            if ( dist .le. radbuf(i) ) then
+            if ( dist <= radbuf(i) ) then
 !
 !              The point is inside or on the bounding surface. We'll
 !              check the boundary of the segment for an intersection.
 !
                corsys = nint( dskbuf(sysidx,i) )
 
-               if ( corsys .eq. latsys ) then
+               if ( corsys == latsys ) then
 
                   call zzinlat ( segpt,  dskbuf(mn1idx,i), &
                                  sgmarg, 0,                inside )
 
-               else if ( corsys .eq. recsys ) then
+               else if ( corsys == recsys ) then
 
                   call zzinrec ( segpt,  dskbuf(mn1idx,i), &
                                  sgmarg, 0,                inside )
 
-               else if ( corsys .eq. pdtsys ) then
+               else if ( corsys == pdtsys ) then
 
                   call zzinpdt ( segpt,             dskbuf(mn1idx,i), &
                                  dskbuf(paridx, i), sgmarg, &
@@ -499,7 +499,7 @@
 !                 boundary of this segment. Save the index of the
 !                 segment in the "hit list."
 !
-                  if ( nhit .eq. maxhit ) then
+                  if ( nhit == maxhit ) then
 
                      call setmsg ( 'Too many segments contain the ' &
                      //            'input point. Buffer size is #.'  )
@@ -537,7 +537,7 @@
 !     We have an error if no segments were hit. None of that
 !     "not found" nonsense here.
 !
-      if ( nhit .eq. 0 ) then
+      if ( nhit == 0 ) then
 
          call setmsg ( 'Input point (# # #) in frame # does not ' &
          //            'lie inside any segment for the ' &
@@ -575,9 +575,9 @@
 
          segfid = nint( dskbuf(frmidx,j) )
 
-         if ( segfid .ne. fixfid ) then
+         if ( segfid /= fixfid ) then
 
-            if ( segfid .ne. prvfrm ) then
+            if ( segfid /= prvfrm ) then
 !
 !              Transform and shift the input point.
 !
@@ -607,7 +607,7 @@
          dtype = nint( dskbuf(typidx,j) )
          xfnd  = .false.
 
-         if ( dtype .eq. 2 ) then
+         if ( dtype == 2 ) then
 !
 !           Find the plate on which the point lies, if any.
 !
@@ -663,7 +663,7 @@
 
          if ( .not. done ) then
 
-            if ( i .eq. nhit ) then
+            if ( i == nhit ) then
 !
 !              We've looked at all of the segments.
 !
@@ -694,7 +694,7 @@
 
          segfid = nint( dskbuf(frmidx,j) )
 
-         if ( segfid .ne. fixfid ) then
+         if ( segfid /= fixfid ) then
 !
 !           The segment frame and input frame differ. The normal
 !           vector must be converted back to the input frame.

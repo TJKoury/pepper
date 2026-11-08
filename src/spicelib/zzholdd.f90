@@ -273,7 +273,7 @@
 !
 !     Confirm a proper ID value.
 !
-      if ( brckti(id, 1, nid) .ne. id ) then
+      if ( brckti(id, 1, nid) /= id ) then
 
          value = 0.0_wp
          ok    = .false.
@@ -309,7 +309,7 @@
 !
 !     Perform the operation as described by OP.
 !
-      if ( op .eq. zzget ) then
+      if ( op == zzget ) then
 
 !
 !        Attempt to retrieve a stored double precision value for ID.
@@ -337,7 +337,7 @@
          end if
 
 
-      else if ( op .eq. zzput ) then
+      else if ( op == zzput ) then
 
 !
 !        Store a value for later use. Set FIRST to false
@@ -351,7 +351,7 @@
 
          svalue( id ) = value
 
-      else if ( op .eq. zzreset ) then
+      else if ( op == zzreset ) then
 
 !
 !        Reset FIRST( ID ) forcing a put before a get.

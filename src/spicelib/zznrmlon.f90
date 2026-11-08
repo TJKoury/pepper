@@ -188,7 +188,7 @@
 !
 !     TOL cannot be negative.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Tolerance must be non-negative but was #.' )
@@ -203,8 +203,8 @@
 !     Reject inputs that lie outside of [-2*pi, 2*pi], accounting
 !     for the tolerance.
 !
-      if (      ( inmin .lt. -pi2-tol ) &
-           .or. ( inmin .gt.  pi2+tol )  ) then
+      if (      ( inmin < -pi2-tol ) &
+           .or. ( inmin >  pi2+tol )  ) then
 
          call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Longitude lower bound INMIN = # (radians), ' &
@@ -223,7 +223,7 @@
 !
 !     The input bounds may not be equal.
 !
-      if ( inmin .eq. inmax ) then
+      if ( inmin == inmax ) then
 
          call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Longitude lower bound INMIN = # (radians), ' &
@@ -245,8 +245,8 @@
 !
 !     Same deal for the upper bound.
 !
-      if (      ( inmax .lt. -pi2-tol ) &
-           .or. ( inmax .gt.  pi2+tol )  ) then
+      if (      ( inmax < -pi2-tol ) &
+           .or. ( inmax >  pi2+tol )  ) then
 
          call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Longitude upper bound INMAX = # (radians), ' &
@@ -272,18 +272,18 @@
 !     less than TOL, the bounds are considered to be "out of
 !     order."
 !
-      if ( outmax .le. touchd(outmin + tol) ) then
+      if ( outmax <= touchd(outmin + tol) ) then
 !
 !        Shift one of the bounds by 2*pi, while keeping
 !        the bounds in the range [-2pi, 2pi].
 !
-         if ( outmax .le. 0.0_wp ) then
+         if ( outmax <= 0.0_wp ) then
 !
 !           OUTMAX is non-positive. Shift it to the right.
 !
             outmax = min ( touchd(outmax + pi2),  pi2 )
 
-            if ( outmax .lt. outmin ) then
+            if ( outmax < outmin ) then
 !
 !              If the bounds are still out of order, shift the lower
 !              bound left.
@@ -308,7 +308,7 @@
 !
       delta = touchd( outmax - outmin )
 
-      if (  delta  .gt.  touchd( pi2 + tol )  ) then
+      if (  delta  >  touchd( pi2 + tol )  ) then
 !
 !        Shift the upper bound lower by 2*pi.
 !
@@ -323,7 +323,7 @@
 !     the input minimum and the bounds differ by an integer
 !     multiple of 2*pi.
 !
-      if ( outmin .eq. outmax ) then
+      if ( outmin == outmax ) then
 
          call chkin  ( 'ZZNRMLON'                                     )
          call setmsg ( 'After adjustment, input longitude lower ' &

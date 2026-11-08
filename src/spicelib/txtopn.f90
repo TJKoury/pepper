@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         fname
+      character(*)          fname
       integer(ip)           unit
 
 ! $ Brief_I/O
@@ -327,7 +327,7 @@
          call chkin ( 'TXTOPN' )
       end if
 
-      if ( fname .eq. ' ' ) then
+      if ( fname == ' ' ) then
          call setmsg ( 'A blank string is unacceptable as a file name' )
          call sigerr ( 'SPICE(BLANKFILENAME)'                          )
          call chkout ( 'TXTOPN'                                        )
@@ -343,7 +343,7 @@
              status          = 'NEW', &
              iostat          =  iostat      )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Could not open file #. IOSTAT was #. ' )
          call errch  ( '#', fname                              )
          call errint ( '#', iostat                             )

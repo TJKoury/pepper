@@ -42,14 +42,14 @@
       include               'zzabcorr.inc'
       include               'zzctr.inc'
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         corloc
-      character*(*)         obsrvr
-      character*(*)         dref
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          corloc
+      character(*)          obsrvr
+      character(*)          dref
       real(wp)              dvec   ( 3 )
       real(wp)              tanpt  ( 3 )
       real(wp)              alt
@@ -2010,9 +2010,9 @@
 !
 !     Local variables
 !
-      character*(loclen)    locstr
-      character*(corlen)    prvcor
-      character*(loclen)    prvloc
+      character(loclen)     locstr
+      character(corlen)     prvcor
+      character(loclen)     prvloc
 
       real(wp)              ctrpos ( 3 )
       real(wp)              dist
@@ -2076,12 +2076,12 @@
 !
       integer(ip)           prvtcd
       integer(ip)           svctr1 ( ctrsiz )
-      character*(bdnmln)    svtarg
+      character(bdnmln)     svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(bdnmln)    svobsr
+      character(bdnmln)     svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -2089,11 +2089,11 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr3 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svfxfc
 
       integer(ip)           svctr4 ( ctrsiz )
-      character*(frnmln)    svdref
+      character(frnmln)     svdref
       integer(ip)           svdfrc
 
 !
@@ -2204,7 +2204,7 @@
 !
 !     Parse the aberration correction specifier, if it's new.
 !
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        PRVCOR is updated only when a valid correction has been
 !        recognized. PRVCOR is blank on the first pass; afterward
@@ -2293,18 +2293,18 @@
 !     POINT'. TANLOC is set to .TRUE. if and only if the locus is the
 !     tangent point.
 !
-      if (  first  .or.  ( corloc .ne. prvloc )  ) then
+      if (  first  .or.  ( corloc /= prvloc )  ) then
 !
 !        Left justify the input locus string, convert to upper case,
 !        and compress all embedded blanks for comparison.
 !
          call ljucrs ( 0, corloc, locstr )
 
-         if ( locstr .eq. 'TANGENTPOINT' ) then
+         if ( locstr == 'TANGENTPOINT' ) then
 
             tanloc = .true.
 
-         else if ( locstr .eq. 'SURFACEPOINT' ) then
+         else if ( locstr == 'SURFACEPOINT' ) then
 
             tanloc = .false.
 
@@ -2397,7 +2397,7 @@
 !     Check the input body codes. If they are equal, signal
 !     an error.
 !
-      if ( obscde .eq. trgcde ) then
+      if ( obscde == trgcde ) then
 
          call setmsg ( 'The observing body and target body are the ' &
          //            'same. Both are #.'                          )
@@ -2411,7 +2411,7 @@
 !
 !     Get the target body's ellipsoid radii.
 !
-      if (  first  .or.  ( trgcde .ne. prvtcd )  ) then
+      if (  first  .or.  ( trgcde /= prvtcd )  ) then
 !
 !        This the first pass, or else the target body has changed. We
 !        need to get radii for the new target body.
@@ -2432,7 +2432,7 @@
          return
       end if
 
-      if ( svnrad .ne. 3 ) then
+      if ( svnrad /= 3 ) then
 
          call setmsg ( 'Number of radii associated with target ' &
          //            'body # is #; number must be 3.'         )
@@ -2477,7 +2477,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( fxcent .ne. trgcde ) then
+      if ( fxcent /= trgcde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -2559,7 +2559,7 @@
          return
       end if
 
-      if ( vnorm(p) .ge. vnorm(fixobs) ) then
+      if ( vnorm(p) >= vnorm(fixobs) ) then
 
          call setmsg ( 'Observer # is inside ellipsoid representing ' &
          //            'target body # shape.'   )
@@ -2596,8 +2596,8 @@
 !
 !     Let REFEPC be the epoch of participation of the observer.
 !
-      if (      ( dclass .eq.  inertl ) &
-           .or. ( dcentr .eq.  obscde ) &
+      if (      ( dclass ==  inertl ) &
+           .or. ( dcentr ==  obscde ) &
            .or. (        .not. uselt  )  ) then
 
          refepc = et
@@ -2627,7 +2627,7 @@
 !
 !     Compute the ray direction in the J2000 frame.
 !
-      if ( dfrcde .eq. j2code ) then
+      if ( dfrcde == j2code ) then
 
          call vequ ( dvec, j2dir )
 
@@ -2718,7 +2718,7 @@
 !
          call vsub ( tanpt, fixobs, tanoff )
 
-         if ( vdot( tanoff, fixdir ) .le. 0.0_wp ) then
+         if ( vdot( tanoff, fixdir ) <= 0.0_wp ) then
 !
 !           TANPT is on or behind the ray's vertex.
 !
@@ -2741,7 +2741,7 @@
 !
 !           The tangent point lies ahead of the observer.
 !
-            if ( alt .eq. 0.0_wp ) then
+            if ( alt == 0.0_wp ) then
 !
 !              This is the geometric intercept case. ALT, SRFPT, TANPT,
 !              and SRFVEC are already set. To eliminate any error in
@@ -2868,7 +2868,7 @@
 !          becomes less than CNVLIM
 !
 !
-      do while (             ( i     .lt.  nitr   ) &
+      do while (             ( i     <  nitr   ) &
                  .and. .not. ( ltcnv .and. stlcnv ) )
 
          if ( usestl ) then
@@ -3013,7 +3013,7 @@
 !        We retain the altitude found by NPEDLN, since the following
 !        call can introduce round-off error in the intercept case.
 !
-         if ( alt .ne. 0.0_wp ) then
+         if ( alt /= 0.0_wp ) then
             call nplnpt ( stlobs, fixdir, srfpt, tanpt, dval )
          else
             call vequ ( srfpt, tanpt )
@@ -3031,7 +3031,7 @@
 !
          call vsub ( tanpt, stlobs, tanoff )
 
-         if ( vdot( tanoff, fixdir ) .le. 0.0_wp ) then
+         if ( vdot( tanoff, fixdir ) <= 0.0_wp ) then
 !
 !           TANPT is on or behind the ray's vertex. Reset TANPT to be
 !           the vertex.
@@ -3115,13 +3115,13 @@
          prvepc  =   trgepc
          i       =   i + 1
 
-         ltcnv  =        (  ltdiff .lt. ( cnvlim * abs(lt) )  ) &
-                   .or.  (  epcdif .eq.   0.0_wp                )
+         ltcnv  =        (  ltdiff < ( cnvlim * abs(lt) )  ) &
+                   .or.  (  epcdif ==   0.0_wp                )
 
          if ( usestl ) then
 
-            stlcnv =       ( vrel( tanpt, prvtan ) .lt. cnvlim ) &
-                     .and. ( vrel( srfpt, prvsrf ) .lt. cnvlim )
+            stlcnv =       ( vrel( tanpt, prvtan ) < cnvlim ) &
+                     .and. ( vrel( srfpt, prvsrf ) < cnvlim )
          end if
 
       end do

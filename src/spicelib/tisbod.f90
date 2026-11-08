@@ -30,7 +30,7 @@
       include               'frmtyp.inc'
       include               'zzctr.inc'
 
-      character*(*)         ref
+      character(*)          ref
       integer(ip)           body
       real(wp)              et
       real(wp)              tsipm   ( 6,6 )
@@ -868,12 +868,12 @@
 !
 !     Local variables
 !
-      character*(1)         dtype
-      character*(lmsgln)    errmsg
-      character*(frnmln)    fixfrm
-      character*(namlen)    item
-      character*(namlen)    item2
-      character*(timlen)    timstr
+      character(1)          dtype
+      character(lmsgln)     errmsg
+      character(frnmln)     fixfrm
+      character(namlen)     item
+      character(namlen)     item2
+      character(timlen)     timstr
 
       real(wp)              ac     (    maxang )
       real(wp)              costh  (    maxang )
@@ -1066,7 +1066,7 @@
 !
          call zzhsichk ( bidlst, bidpol, bidids, body, at )
 
-         if ( at .ne. 0 ) then
+         if ( at /= 0 ) then
 !
 !           Set PCREF as it is used after the text PCK "IF".
 !
@@ -1311,7 +1311,7 @@
 
                   deg = nint( dpval )
 
-                  if ( ( deg .lt. 1 ) .or. ( deg .gt. mxphas-1 ) ) then
+                  if ( ( deg < 1 ) .or. ( deg > mxphas-1 ) ) then
 
                      call setmsg ( 'Maximum phase angle degree for ' &
                      //            'body # must be in the range 1:# ' &
@@ -1417,7 +1417,7 @@
 !           bigger than the number of angles we are going to compute.
 !           If it is we simply signal an error and bag it, for sure.
 !
-            if ( max( na, nd, nw ) .gt. nphase ) then
+            if ( max( na, nd, nw ) > nphase ) then
                call setmsg ( 'Insufficient number of nutation/' &
                //            'precession angles for body * at time #. ' &
                //            'Number of angles is #; number required ' &
@@ -1437,7 +1437,7 @@
 !           buffers to make room.
 !
             call zzhsiavl( bidpol, avail )
-            if ( avail .le. 0 ) then
+            if ( avail <= 0 ) then
                call zzhsiini ( maxbod, bidlst, bidpol )
             end if
 
@@ -1494,7 +1494,7 @@
 !
          do i = 1, bnphas(at)
 
-            if ( bnphco(at) .eq. 2 ) then
+            if ( bnphco(at) == 2 ) then
 !
 !              This case is so common that we'll deal with it
 !              separately. We'll avoid unnecessary arithmetic
@@ -1627,7 +1627,7 @@
 !     PCK data, adjust the transformation matrix TSIPM to map from the
 !     requested frame to the body-fixed frame.
 !
-      if ( reqref .ne. pcref ) then
+      if ( reqref /= pcref ) then
 !
 !        Next get the position transformation from the user specified
 !        inertial frame to the native PCK inertial frame.

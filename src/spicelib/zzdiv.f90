@@ -344,7 +344,7 @@
 !     This is equivalent to a signaling NaN (not-a-number) for
 !     the 0/0 case.
 !
-      if ( denom .eq. 0.0_wp ) then
+      if ( denom == 0.0_wp ) then
 
          zzdiv = 0.0_wp
          call setmsg ( 'Numerical divide by zero event. ' &
@@ -361,7 +361,7 @@
 !     If the numerator is zero, the division is zero. DENOM
 !     is known non-zero.
 !
-      if ( numr .eq. 0.0_wp ) then
+      if ( numr == 0.0_wp ) then
 
          zzdiv = 0.0_wp
          call chkout ( 'ZZDIV' )
@@ -386,7 +386,7 @@
 !
 !     Local possible overflow check.
 !
-      if ( (lognum - logden) .gt. expnt ) then
+      if ( (lognum - logden) > expnt ) then
 
          zzdiv = 0.0_wp
          call setmsg ( 'Numerical overflow event. ' &
@@ -403,7 +403,7 @@
 !     Local possible underflow check. Accept this may occur,
 !     return a zero.
 !
-      if ( (lognum - logden) .lt. -(expnt-1.0_wp) ) then
+      if ( (lognum - logden) < -(expnt-1.0_wp) ) then
 
          zzdiv = 0.0_wp
          call chkout ( 'ZZDIV' )

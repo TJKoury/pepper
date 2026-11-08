@@ -180,11 +180,11 @@
       minlon = bounds(1,1)
       maxlon = bounds(2,1)
 
-      if ( maxlon .le. minlon ) then
+      if ( maxlon <= minlon ) then
          maxlon = maxlon + twopi()
       end if
 
-      if ( maxlon .le. minlon) then
+      if ( maxlon <= minlon) then
 
          call chkin  ( 'ZZLATBOX'                               )
          call setmsg ( 'Longitude bounds are #:#. Minimum ' &
@@ -204,7 +204,7 @@
       minr   = bounds(1,3)
       maxr   = bounds(2,3)
 
-      if ( minlat .gt. maxlat ) then
+      if ( minlat > maxlat ) then
 
          call chkin  ( 'ZZLATBOX'                              )
          call setmsg ( 'Latitude bounds #:# are out of order.' )
@@ -216,7 +216,7 @@
 
       end if
 
-      if ( minlat .lt. ( -halfpi() - margin )  ) then
+      if ( minlat < ( -halfpi() - margin )  ) then
 
          call chkin  ( 'ZZLATBOX'                               )
          call setmsg ( 'Minimum latitude # is less than -pi/2.' )
@@ -227,7 +227,7 @@
 
       end if
 
-      if ( maxlat .gt. ( halfpi() + margin )  ) then
+      if ( maxlat > ( halfpi() + margin )  ) then
 
          call chkin  ( 'ZZLATBOX'                               )
          call setmsg ( 'Maximum latitude # is more than -pi/2.' )
@@ -259,12 +259,12 @@
 !     latitude circle on the inner bounding sphere for which the
 !     absolute value of the latitude is maximum.
 !
-      if ( minlat .ge. 0.0_wp ) then
+      if ( minlat >= 0.0_wp ) then
 
          outrad = cos( minlat ) * maxr
          inrad  = cos( maxlat ) * minr
 
-      else if ( maxlat .le. 0.0_wp ) then
+      else if ( maxlat <= 0.0_wp ) then
 
          outrad = cos( maxlat ) * maxr
          inrad  = cos( minlat ) * minr
@@ -288,7 +288,7 @@
 !     LR is the length of the bounding box in the radial direction,
 !     where "radius" is defined as the distance from the Z axis.
 !
-      if ( hdlon .le. halfpi() ) then
+      if ( hdlon <= halfpi() ) then
 
          lr = outrad - ( inrad * cos(hdlon) )
 
@@ -303,7 +303,7 @@
 !     extent. For any extent larger than Pi radians, the width
 !     is just that of the outer radius.
 !
-      if ( hdlon .gt. halfpi() ) then
+      if ( hdlon > halfpi() ) then
 
          lt = 2.0_wp * outrad
       else
@@ -314,12 +314,12 @@
 !     The height bounds are derived from the lowest and highest points
 !     on the element.
 !
-      if ( minlat .ge. 0.0_wp ) then
+      if ( minlat >= 0.0_wp ) then
 
          maxz = maxr * sin(maxlat)
          minz = minr * sin(minlat)
 
-      else if ( maxlat .le. 0.0_wp ) then
+      else if ( maxlat <= 0.0_wp ) then
 
          maxz = minr * sin(maxlat)
          minz = maxr * sin(minlat)

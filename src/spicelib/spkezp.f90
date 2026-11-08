@@ -30,8 +30,8 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       integer(ip)           obs
       real(wp)              ptarg    ( 3 )
       real(wp)              lt
@@ -825,7 +825,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  =  'SPKEZP' )
 
 !
@@ -859,7 +859,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svref
+      character(frnmln)     svref
       integer(ip)           svreqf
 
 !
@@ -923,7 +923,7 @@
 !
          call zznamfrm ( svctr1, svref, svreqf, ref, reqfrm )
 
-         if ( reqfrm .eq. 0 ) then
+         if ( reqfrm == 0 ) then
             call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
@@ -964,7 +964,7 @@
 !        If we are dealing with an inertial frame, we can simply
 !        call SPKSSB, SPKAPO and return.
 !
-         if ( type .eq. inertl ) then
+         if ( type == inertl ) then
 
             call spkssb ( obs,  et, ref, sobs )
             call spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
@@ -991,9 +991,9 @@
             return
          end if
 
-         if ( center .eq. obs ) then
+         if ( center == obs ) then
             ltcent = 0.0_wp
-         else if ( center .eq. targ ) then
+         else if ( center == targ ) then
             ltcent = lt
          else
             call spkapo ( center, et, 'J2000', sobs, abcorr, temp, &

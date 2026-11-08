@@ -225,7 +225,7 @@
 !     Make a local version of the cone's axis and angle. The
 !     angle will be less than or equal to pi/2 radians.
 !
-      if ( angle .gt. halfpi() ) then
+      if ( angle > halfpi() ) then
 
          locang = pi() - angle
          call vminus ( axis, locaxi )
@@ -259,8 +259,8 @@
 !     The "state" variables at the endpoints are .TRUE. if
 !     the endpoints are on or inside the cone.
 !
-      state1 = dp1 .ge. cosang
-      state2 = dp2 .ge. cosang
+      state1 = dp1 >= cosang
+      state2 = dp2 >= cosang
 
 !
 !     The intersection is supposed to be bracketed. Return
@@ -283,9 +283,9 @@
       prvdlt = 2.0_wp
       nitr   = 0
 
-      do while (       ( delta .gt. cnvlim ) &
-                 .and. ( delta .lt. prvdlt ) &
-                 .and. ( nitr  .lt. maxitr )  )
+      do while (       ( delta > cnvlim ) &
+                 .and. ( delta < prvdlt ) &
+                 .and. ( nitr  < maxitr )  )
 
          midpt = ( low + high ) / 2
 
@@ -295,7 +295,7 @@
 
          dp    = vdot ( ux, locaxi )
 
-         state = dp .ge. cosang
+         state = dp >= cosang
 
          if ( state .eqv. state1 ) then
 !

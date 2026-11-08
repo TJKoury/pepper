@@ -225,7 +225,7 @@
 !
       do i = 1, nout
 
-         if ( pack (i) .lt. 1 ) then
+         if ( pack (i) < 1 ) then
             call setmsg ( 'Element number * contains index *.' )
             call errint ( '*', i                )
             call errint ( '*', pack(i)          )

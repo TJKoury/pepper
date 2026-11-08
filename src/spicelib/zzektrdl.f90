@@ -317,10 +317,10 @@
       state = lcheck
 
 
-      do while ( state .ne. term )
+      do while ( state /= term )
 
 
-         if ( state .eq. lcheck ) then
+         if ( state == lcheck ) then
 !
 !           Look up the node containing the target key TRGKEY.  This
 !           is where the underflow occurred; note that this node may
@@ -338,11 +338,11 @@
                              lsib,    lkey,  rsib,    rkey  )
 
 
-            if ( lsib .gt. 0 ) then
+            if ( lsib > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, lsib )
 
-               if ( nkeys .gt. mnkeyc ) then
+               if ( nkeys > mnkeyc ) then
 !
 !                 The left sibling can contribute a key.
 !
@@ -353,7 +353,7 @@
                   state  =  balnce
 
 
-               else if ( rsib .gt. 0 ) then
+               else if ( rsib > 0 ) then
 !
 !                 The left sibling cannot help with balancing, but
 !                 the right sibling may be able to.
@@ -382,7 +382,7 @@
             end if
 
 
-         else if ( state .eq. rcheck ) then
+         else if ( state == rcheck ) then
 !
 !           See whether there's a node surplus in the right sibling
 !           The left sibling has already been checked and found wanting,
@@ -390,7 +390,7 @@
 !
             nkeys = zzektrnk ( handle, tree, rsib )
 
-            if ( nkeys .gt. mnkeyc ) then
+            if ( nkeys > mnkeyc ) then
 !
 !              The right sibling can contribute a key.
 !
@@ -401,7 +401,7 @@
                state  =  balnce
 
 
-            else if ( lsib .gt. 0 ) then
+            else if ( lsib > 0 ) then
 !
 !              NODE has siblings on both sides, and each one contains
 !              the minimum number of keys.  Execute a 3-2 merge.
@@ -422,7 +422,7 @@
             end if
 
 
-         else if ( state .eq. llchck ) then
+         else if ( state == llchck ) then
 !
 !           See whether the left sibling has its own left sibling.
 !
@@ -430,12 +430,12 @@
                              llsib,   llkey,  lrsib,  lrkey  )
 
 
-            if ( llsib .gt. 0 ) then
+            if ( llsib > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, llsib )
 
 
-               if ( nkeys .gt. mnkeyc ) then
+               if ( nkeys > mnkeyc ) then
 !
 !                 The left**2 sibling can contribute a key.  Rotate
 !                 this key into the left sibling.  We'll need the
@@ -492,7 +492,7 @@
 
 
 
-         else if ( state .eq. rrchck ) then
+         else if ( state == rrchck ) then
 !
 !           See whether the right sibling has its own right sibling.
 !
@@ -500,12 +500,12 @@
                              rlsib,   rlkey,  rrsib,  rrkey  )
 
 
-            if ( rrsib .gt. 0 ) then
+            if ( rrsib > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, rrsib )
 
 
-               if ( nkeys .gt. mnkeyc ) then
+               if ( nkeys > mnkeyc ) then
 !
 !                 The right**2 sibling can contribute a key.  Rotate
 !                 this key into the right sibling.  We'll need the
@@ -561,7 +561,7 @@
             end if
 
 
-         else if ( state .eq. balnce ) then
+         else if ( state == balnce ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
 !           there are enough keys to accommodate the underflow.  After
@@ -581,7 +581,7 @@
             state  =  term
 
 
-         else if ( state .eq. merg32 ) then
+         else if ( state == merg32 ) then
 !
 !           LNODE, MNODE, and RNODE are siblings, and between the three
 !           nodes, there's an underflow of one key.  Merge these three
@@ -633,7 +633,7 @@
             end if
 
 
-         else if ( state .eq. merg31 ) then
+         else if ( state == merg31 ) then
 !
 !           We've got an underflow in the two children of the root.
 !           Move all of the keys from these children into the root.

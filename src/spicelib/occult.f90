@@ -35,14 +35,14 @@
       include 'dsk.inc'
       include 'zzdsk.inc'
 
-      character*(*)         targ1
-      character*(*)         shape1
-      character*(*)         frame1
-      character*(*)         targ2
-      character*(*)         shape2
-      character*(*)         frame2
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          targ1
+      character(*)          shape1
+      character(*)          frame1
+      character(*)          targ2
+      character(*)          shape2
+      character(*)          frame2
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              et
       integer(ip)           ocltid
 
@@ -809,24 +809,24 @@
 !
 !     Local variables
 !
-      character*(bdnmln)    back
-      character*(bdnmln)    bname
-      character*(frnmln)    bframe
-      character*(mthlen)    bmethd
-      character*(mthlen)    bshape
-      character*(mthlen)    fmethd
-      character*(bdnmln)    fname
-      character*(bdnmln)    front
-      character*(frnmln)    fframe
-      character*(mthlen)    fshape
-      character*(shplen)    occtyp ( 3 )
-      character*(cvtlen)    pntdef
-      character*(shplen)    prshp1
-      character*(shplen)    prshp2
-      character*(mthlen)    shap1
-      character*(mthlen)    shap2
-      character*(sublen)    subtyp
-      character*(tmtlen)    trmtyp
+      character(bdnmln)     back
+      character(bdnmln)     bname
+      character(frnmln)     bframe
+      character(mthlen)     bmethd
+      character(mthlen)     bshape
+      character(mthlen)     fmethd
+      character(bdnmln)     fname
+      character(bdnmln)     front
+      character(frnmln)     fframe
+      character(mthlen)     fshape
+      character(shplen)     occtyp ( 3 )
+      character(cvtlen)     pntdef
+      character(shplen)     prshp1
+      character(shplen)     prshp2
+      character(mthlen)     shap1
+      character(mthlen)     shap2
+      character(sublen)     subtyp
+      character(tmtlen)     trmtyp
 
       integer(ip)           i
       integer(ip)           id1
@@ -911,14 +911,14 @@
 !     The variable ELLPS2 is a flag that indicates whether both targets
 !     are represented as ellipsoids.
 !
-      ellps2 =   ( shap1 .eq. edshap )  .and. &
-                 ( shap2 .eq. edshap )
+      ellps2 =   ( shap1 == edshap )  .and. &
+                 ( shap2 == edshap )
 
 !
 !     Parse the input shapes. We need the target ID codes
 !     for this.
 !
-      if ( shap1 .eq. 'POINT' ) then
+      if ( shap1 == 'POINT' ) then
 
          prshp1 = shap1(:shplen)
 
@@ -947,7 +947,7 @@
 
       end if
 
-      if ( shap2 .eq. 'POINT' ) then
+      if ( shap2 == 'POINT' ) then
 
          prshp2 = shap2(:shplen)
 
@@ -993,7 +993,7 @@
 !        For details on the variable MLTFAC, please see the detailed
 !        explanation of the OCCTYP variable near the start of the code.
 !
-         if ( i .eq. 1 ) then
+         if ( i == 1 ) then
 
             front  = fname
             fmethd = shap1
@@ -1082,8 +1082,8 @@
                end do
 
 
-            else if (      ( fshape .eq. edshap ) &
-                      .or. ( fshape .eq. dsshap )  ) then
+            else if (      ( fshape == edshap ) &
+                      .or. ( fshape == dsshap )  ) then
 !
 !              The front target is an ellipsoid or DSK shape: this
 !              is a total occultation. (Other target is a point).
@@ -1094,8 +1094,8 @@
                return
 
 
-            else if (      ( bshape .eq. edshap ) &
-                      .or. ( bshape .eq. dsshap )  ) then
+            else if (      ( bshape == edshap ) &
+                      .or. ( bshape == dsshap )  ) then
 !
 !              The back target is an ellipsoid or DSK shape: this is an
 !              annular occultation. (Other target is a point).
@@ -1121,7 +1121,7 @@
 !     the occultation code indicates an occultation was found, an error
 !     has occurred.
 !
-      if ( ocltid .ne. noocc ) then
+      if ( ocltid /= noocc ) then
 
          call setmsg ( 'This error should never be reached; ' &
               //       'the occultation code result # is invalid.')

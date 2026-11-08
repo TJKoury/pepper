@@ -28,7 +28,7 @@
 
       implicit none
 
-      character*(*)         method
+      character(*)          method
       integer(ip)           maxn
       integer(ip)           n
       integer(ip)           begs   ( * )
@@ -187,10 +187,10 @@
 !     Note the leading blank in DELIM below; this
 !     indicates that the blank character is a delimiter.
 !
-      character*(*)         delim
+      character(*)          delim
       parameter           ( delim  = ' /,=:' )
 
-      character*(*)         dquote
+      character(*)          dquote
       parameter           ( dquote  = '"' )
 
 !
@@ -214,7 +214,7 @@
       call chkin ( 'ZZLEXMET' )
 
 
-      if ( method .eq. ' ' ) then
+      if ( method == ' ' ) then
 !
 !        No tokens here.
 !
@@ -231,7 +231,7 @@
       r    = rtrim( method )
       i    = 1
 
-      do while ( i .le. r )
+      do while ( i <= r )
 !
 !        Look ahead in the input string for the start of a
 !        quoted string.
@@ -239,7 +239,7 @@
          qpos = cpos ( method(i:), dquote, 1 )
          b    = i
 
-         if ( qpos .eq. 0 ) then
+         if ( qpos == 0 ) then
 !
 !           There are no quoted string tokens in the input string
 !           from index I onward.
@@ -250,26 +250,26 @@
          end if
 
 
-         if ( b .le. e ) then
+         if ( b <= e ) then
 !
 !           Locate any tokens between indices B and E.
 !
             i = b
 
-            do while ( i .le. e )
+            do while ( i <= e )
 !
 !              Find the next delimiter in the substring
 !              from indices I : E.
 !
                loc = cpos( method(i:e), delim, 1 )
 
-               if ( loc .eq. 1 ) then
+               if ( loc == 1 ) then
 !
 !                 There is a delimiter character at index I in METHOD.
 !
                   tke  = i - 1 + loc
 
-               else if ( loc .gt. 1 ) then
+               else if ( loc > 1 ) then
 !
 !                 There is a delimiter character at index
 !
@@ -277,7 +277,7 @@
 !
 !                 in METHOD.
 !
-                  if ( method(i:i+loc-2) .ne. ' ' ) then
+                  if ( method(i:i+loc-2) /= ' ' ) then
 !
 !                    There's a token preceding the delimiter.
 !
@@ -305,9 +305,9 @@
 !              indices I and TKE. We don't return blank tokens
 !              in the output array.
 !
-               if ( method( i : tke ) .ne. ' ' ) then
+               if ( method( i : tke ) /= ' ' ) then
 
-                  if ( room .gt. 0 ) then
+                  if ( room > 0 ) then
 
                      n       = n    + 1
                      room    = room - 1
@@ -338,7 +338,7 @@
          end if
 
 
-         if ( e .lt. r ) then
+         if ( e < r ) then
 !
 !           We expect to find at least one quoted string starting
 !           at index E + 1.
@@ -347,9 +347,9 @@
 
             call lxqstr ( method(i:), dquote, 1, eq, nchar )
 
-            if ( nchar .gt. 0 ) then
+            if ( nchar > 0 ) then
 
-               if ( room .gt. 0 ) then
+               if ( room > 0 ) then
 
                   n       = n    + 1
                   room    = room - 1

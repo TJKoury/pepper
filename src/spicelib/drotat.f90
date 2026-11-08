@@ -184,8 +184,8 @@
 !
 !     First make sure the input axis is reasonable.
 !
-      if (      ( iaxis .gt. 3 ) &
-           .or. ( iaxis .lt. 1 ) ) then
+      if (      ( iaxis > 3 ) &
+           .or. ( iaxis < 1 ) ) then
 
          call chkin  ( 'DROTAT' )
          call setmsg ( 'The input axis is out of range.  Its value '  // &

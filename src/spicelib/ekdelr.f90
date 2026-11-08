@@ -183,7 +183,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           base
       integer(ip)           class
@@ -257,7 +257,7 @@
 !
       nrec  =  segdsc ( nridx )
 
-      if (  ( recno .lt. 1 ) .or. ( recno .gt. nrec )  ) then
+      if (  ( recno < 1 ) .or. ( recno > nrec )  ) then
 
          call setmsg ( 'Record number = #; valid range is 1:#.' )
          call errint ( '#',  recno                              )
@@ -288,32 +288,32 @@
 !
 !        Delete the entry in the current column.
 !
-         if ( class .eq. 1 ) then
+         if ( class == 1 ) then
 
             call zzekde01 ( handle, segdsc, coldsc, recptr )
 
 
-         else if ( class .eq. 2 ) then
+         else if ( class == 2 ) then
 
             call zzekde02 ( handle, segdsc, coldsc, recptr )
 
 
-         else if ( class .eq. 3 ) then
+         else if ( class == 3 ) then
 
             call zzekde03 ( handle, segdsc, coldsc, recptr )
 
 
-         else if ( class .eq. 4 ) then
+         else if ( class == 4 ) then
 
             call zzekde04 ( handle, segdsc, coldsc, recptr )
 
 
-         else if ( class .eq. 5 ) then
+         else if ( class == 5 ) then
 
             call zzekde05 ( handle, segdsc, coldsc, recptr )
 
 
-         else if ( class .eq. 6 ) then
+         else if ( class == 6 ) then
 
             call zzekde06 ( handle, segdsc, coldsc, recptr )
 
@@ -357,7 +357,7 @@
 !
       call zzekglnk ( handle, int, p, nlinks )
 
-      if ( nlinks .gt. 1 ) then
+      if ( nlinks > 1 ) then
 
          call zzekslnk ( handle, int, p, nlinks-1 )
 

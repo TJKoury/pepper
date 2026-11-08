@@ -354,7 +354,7 @@
 !     most work. We may be able to exit before performing the
 !     altitude tests.
 !
-      if ( exclud .ne. latidx ) then
+      if ( exclud /= latidx ) then
 !
 !        Compare the point's latitude to the segment's latitude bounds.
 !
@@ -370,8 +370,8 @@
          end if
 
 
-         if (      ( minrel .eq. lt ) &
-              .or. ( maxrel .eq. gt )  ) then
+         if (      ( minrel == lt ) &
+              .or. ( maxrel == gt )  ) then
 !
 !           The point's latitude is outside of the segment's range.
 !
@@ -389,7 +389,7 @@
 !
 !     if necessary and if possible.
 !
-      if ( exclud .ne. lonidx ) then
+      if ( exclud /= lonidx ) then
 !
 !        Put the local longitude bounds in order, if necessary.
 !
@@ -401,7 +401,7 @@
 !
          loclon = lon
 
-         if ( lon .lt. ( minlon - lonali ) ) then
+         if ( lon < ( minlon - lonali ) ) then
 !
 !           If the point's longitude is less than the segment's
 !           longitude by more than a small margin, shift the longitude
@@ -409,7 +409,7 @@
 
             loclon = lon + pi2
 
-         else if ( lon .gt. ( maxlon + lonali ) ) then
+         else if ( lon > ( maxlon + lonali ) ) then
 !
 !           If the point's longitude is greater than the segment's
 !           longitude by more than a small margin, shift the longitude
@@ -420,8 +420,8 @@
          end if
 
 
-         if (        ( loclon .lt. (minlon-angmrg) ) &
-                .or. ( loclon .gt. (maxlon+angmrg) )  ) then
+         if (        ( loclon < (minlon-angmrg) ) &
+                .or. ( loclon > (maxlon+angmrg) )  ) then
 !
 !           The point's longitude, adjusted if necessary for
 !           comparison, is outside of the segment's range.
@@ -434,7 +434,7 @@
 
       end if
 
-      if ( exclud .ne. altidx ) then
+      if ( exclud /= altidx ) then
 !
 !        Extract altitude bounds from the segment descriptor.
 !
@@ -443,7 +443,7 @@
 !
 !        Find the semi-axes of the bounding spheroids.
 !
-         if ( f .ge. 0.0_wp ) then
+         if ( f >= 0.0_wp ) then
 !
 !           This is the oblate case. Get the semi-axis lengths
 !           for the inner and outer bounding spheroids.
@@ -474,7 +474,7 @@
 !
          level = ( p(1)/emax )**2 + ( p(2)/emax )**2 + ( p(3)/pmax )**2
 
-         if ( level .gt. 1.0_wp ) then
+         if ( level > 1.0_wp ) then
 !
 !           The point is outside of the outer bounding ellipsoid.
 !
@@ -486,7 +486,7 @@
 
          level = ( p(1)/emin )**2 + ( p(2)/emin )**2 + ( p(3)/pmin )**2
 
-         if ( level .lt. 1.0_wp ) then
+         if ( level < 1.0_wp ) then
 !
 !           The point is inside the inner bounding ellipsoid, which
 !           implies it is outside of the segment's boundaries.

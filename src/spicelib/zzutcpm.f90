@@ -22,7 +22,7 @@
 ! $ Declarations
 
       implicit none
-      character*(*)         string
+      character(*)          string
       integer(ip)           start
       real(wp)              hoff
       real(wp)              moff
@@ -123,7 +123,7 @@
       integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      character*(lnsize)    error
+      character(lnsize)     error
 
       integer(ip)           need
       integer(ip)           length
@@ -156,13 +156,13 @@
       signat = start + 5
       unsat  = need
 
-      if ( length .lt. need ) then
+      if ( length < need ) then
          return
       end if
 
-      if       ( ichar(string(signat:signat)) .eq. ichar('+') ) then
+      if       ( ichar(string(signat:signat)) == ichar('+') ) then
          sign =  1.0_wp
-      else if  ( ichar(string(signat:signat)) .eq. ichar('-') ) then
+      else if  ( ichar(string(signat:signat)) == ichar('-') ) then
          sign = -1.0_wp
       else
          return
@@ -173,10 +173,10 @@
 !
       call lx4uns ( string, unsat, unsto, nchar )
 
-      if ( nchar .gt. 0 .and. nchar .lt. 3 ) then
+      if ( nchar > 0 .and. nchar < 3 ) then
          call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         if ( x .ge. 13.0_wp ) then
+         if ( x >= 13.0_wp ) then
             return
          end if
 
@@ -201,10 +201,10 @@
 
       call lx4uns ( string, unsat, unsto, nchar )
 
-      if ( nchar .gt. 0 .and. nchar .lt. 3 ) then
+      if ( nchar > 0 .and. nchar < 3 ) then
          call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         if ( x .gt. 59.0_wp ) then
+         if ( x > 59.0_wp ) then
             return
          end if
 

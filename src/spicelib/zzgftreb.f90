@@ -166,7 +166,7 @@
          return
       end if
 
-      if ( n .ne. 3 ) then
+      if ( n /= 3 ) then
 
          call setmsg ( 'Only # axes were found  ' &
               //       'for ID #. Three axes expected.'    )
@@ -180,7 +180,7 @@
 
          do i = 1, 3
 
-           if ( axes(i) .le. 0.0_wp ) then
+           if ( axes(i) <= 0.0_wp ) then
 
                call setmsg ('Degenerate case. The # axis of body # ' &
                //           'is negative or zero.  Please check ' &

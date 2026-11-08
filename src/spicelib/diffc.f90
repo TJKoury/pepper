@@ -23,9 +23,9 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)     a      ( lbcell:* )
-      character*(*)     b      ( lbcell:* )
-      character*(*)     c      ( lbcell:* )
+      character(*)      a      ( lbcell:* )
+      character(*)      b      ( lbcell:* )
+      character(*)      c      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -202,7 +202,7 @@
 !
 !     Make sure output set elements are long enough.
 !
-      if (   len( c(lbcell) )  .lt.   len( a(lbcell) )  ) then
+      if (   len( c(lbcell) )  <   len( a(lbcell) )  ) then
 
          call setmsg ( 'Length of output cell is #.  Length required' // &
                        ' to contain result is #.'  )
@@ -241,21 +241,21 @@
 !
 !     When the end of the first input set is reached, we're done.
 !
-      do while ( apoint .le. acard )
+      do while ( apoint <= acard )
 
 !
 !        If there is still space in the output set, fill it
 !        as necessary.
 !
-         if ( ccard .lt. csize ) then
+         if ( ccard < csize ) then
 
-            if ( bpoint .gt. bcard) then
+            if ( bpoint > bcard) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
                apoint   = apoint + 1
 
-            else if ( a(apoint) .eq. b(bpoint)) then
+            else if ( a(apoint) == b(bpoint)) then
 
                apoint = apoint + 1
                bpoint = bpoint + 1
@@ -278,12 +278,12 @@
 !
          else
 
-            if ( bpoint .gt. bcard ) then
+            if ( bpoint > bcard ) then
 
                over   = over   + 1
                apoint = apoint + 1
 
-            else if ( a(apoint) .eq. b(bpoint) ) then
+            else if ( a(apoint) == b(bpoint) ) then
 
                apoint = apoint + 1
                bpoint = bpoint + 1
@@ -311,7 +311,7 @@
 !
 !     Report any excess.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
 
          call excess ( over, 'set' )
          call sigerr ( 'SPICE(SETEXCESS)' )

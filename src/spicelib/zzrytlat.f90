@@ -387,7 +387,7 @@
          call vequ ( srfx, xpt )
          nxpts  = 1
 
-         if ( vr .gt. maxr ) then
+         if ( vr > maxr ) then
 !
 !           The vertex is outside this sphere, and the segment
 !           lies within the sphere.
@@ -423,7 +423,7 @@
 !     Now try the upper latitude bound. We can skip this test
 !     if the upper bound is pi/2 radians.
 !
-      if ( maxlat .lt. halfpi() ) then
+      if ( maxlat < halfpi() ) then
 !
 !        Let ANGLE be the angular separation of the surface of latitude
 !        MAXLAT and the +Z axis. Note that the surface might be the
@@ -438,7 +438,7 @@
             return
          end if
 
-         if ( nx .ge. 1 ) then
+         if ( nx >= 1 ) then
 !
 !           See whether SRFX is in the element.
 !
@@ -454,13 +454,13 @@
 !
                dist = vdist( vertex, srfx )
 
-               if ( dist .lt. mndist ) then
+               if ( dist < mndist ) then
 
                   call vequ ( srfx, xpt )
 
                   nxpts  = 1
 
-                  if ( vlat .gt. maxlat ) then
+                  if ( vlat > maxlat ) then
 !
 !                    Since the latitude of the vertex is greater than
 !                    MAXLAT, this is the best solution, since the
@@ -479,7 +479,7 @@
 
             end if
 
-            if ( nx .eq. 2 ) then
+            if ( nx == 2 ) then
 !
 !              Check the second solution as well.
 !
@@ -496,7 +496,7 @@
 !
                   dist = vdist( vertex, xpt2 )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 
                      call vequ ( xpt2, xpt )
 
@@ -525,7 +525,7 @@
 !     Try the lower latitude bound. We can skip this test if the lower
 !     bound is -pi/2 radians.
 !
-      if (  minlat .gt. -halfpi() ) then
+      if (  minlat > -halfpi() ) then
 !
 !        Let ANGLE be the angular separation of the surface
 !        of latitude MINLAT and the +Z axis. Note that the
@@ -541,7 +541,7 @@
          end if
 
 
-         if ( nx .ge. 1 ) then
+         if ( nx >= 1 ) then
 !
 !           See whether SRFX is in the element.
 !
@@ -557,13 +557,13 @@
 !
                dist = vdist( vertex, srfx )
 
-               if ( dist .lt. mndist ) then
+               if ( dist < mndist ) then
 
                   call vequ ( srfx, xpt )
 
                   nxpts  = 1
 
-                  if ( vlat .lt. minlat ) then
+                  if ( vlat < minlat ) then
 !
 !                    Since the latitude of the vertex is less than
 !                    MINLAT, this is the best solution, since the
@@ -582,7 +582,7 @@
 
             end if
 
-            if ( nx .eq. 2 ) then
+            if ( nx == 2 ) then
 !
 !              Check the second solution as well.
 !
@@ -598,7 +598,7 @@
 !
                   dist = vdist( vertex, xpt2 )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 
                      call vequ ( xpt2, xpt )
 
@@ -629,7 +629,7 @@
 !
       loncov = maxlon - minlon
 
-      if ( cos(loncov) .lt. 1.0_wp ) then
+      if ( cos(loncov) < 1.0_wp ) then
 !
 !        We have distinct longitude boundaries. Go to work.
 !
@@ -648,7 +648,7 @@
 
          call zzinrypl ( vertex, udir, westb, 0.0_wp, s, nx, srfx )
 
-         if ( nx .eq. 1 ) then
+         if ( nx == 1 ) then
 !
 !           We have one point of intersection. Determine whether it's a
 !           candidate solution.  Don't use longitude in the following
@@ -669,7 +669,7 @@
 !
                call ucrss ( westb, z, wback )
 
-               if (  vdot(srfx, wback) .lt. (margin*maxr)  ) then
+               if (  vdot(srfx, wback) < (margin*maxr)  ) then
 !
 !                 The intercept is either on the same side of the Z
 !                 axis as the west face of the segment, or is very
@@ -677,7 +677,7 @@
 !
                   dist = vdist( vertex, srfx )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 !
 !                    Record the intercept, distance, and surface index.
 !
@@ -706,7 +706,7 @@
 
          call zzinrypl ( vertex, udir, eastb, 0.0_wp, s, nx, srfx )
 
-         if ( nx .eq. 1 ) then
+         if ( nx == 1 ) then
 !
 !           We have one point of intersection. Determine whether it's a
 !           candidate solution.
@@ -724,7 +724,7 @@
 !
                call ucrss ( z, eastb, eback )
 
-               if (  vdot(srfx, eback) .lt. (margin*maxr)  ) then
+               if (  vdot(srfx, eback) < (margin*maxr)  ) then
 !
 !                 The intercept is either on the same side of the Z
 !                 axis as the east face of the segment, or is very
@@ -732,7 +732,7 @@
 !
                   dist = vdist( vertex, srfx )
 
-                  if ( dist .lt. mndist ) then
+                  if ( dist < mndist ) then
 !
 !                    Record the intercept, distance, and surface index.
 !
@@ -758,7 +758,7 @@
 !     Find the intersection of the ray and inner bounding
 !     sphere, if possible.
 !
-      if ( minr .gt. 0.0_wp ) then
+      if ( minr > 0.0_wp ) then
 
          call zzryxsph ( vertex, udir, minr, srfx, found )
 
@@ -776,7 +776,7 @@
 
                dist = vdist( vertex, srfx )
 
-               if ( dist .lt. mndist ) then
+               if ( dist < mndist ) then
 !
 !                 Record the intercept, distance, and surface index.
 !
@@ -813,7 +813,7 @@
 
                dist = vdist( vertex, srfx )
 
-               if ( dist .lt. mndist ) then
+               if ( dist < mndist ) then
 !
 !                 Record the intercept, distance, and surface index.
 !

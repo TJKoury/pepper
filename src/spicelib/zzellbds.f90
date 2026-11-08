@@ -340,7 +340,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( b .le. 0.0_wp ) then
+      if ( b <= 0.0_wp ) then
 
          call chkin  ( 'ZZELLBDS'                                )
          call setmsg ( 'This routine requires B > 0, but B = #.' )
@@ -351,7 +351,7 @@
 
       end if
 
-      if ( b .gt. a ) then
+      if ( b > a ) then
 
          call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires A >= B, but A = #; ' &
@@ -364,7 +364,7 @@
 
       end if
 
-      if ( ( b + hmin ) .le. 0.0_wp ) then
+      if ( ( b + hmin ) <= 0.0_wp ) then
 
          call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires B + HMIN > 0, but ' &
@@ -378,9 +378,9 @@
 
       end if
 
-      if ( hmin .lt. 0.0_wp ) then
+      if ( hmin < 0.0_wp ) then
 
-         if (  ( b + (a/b)*hmin ) .le. 0.0_wp ) then
+         if (  ( b + (a/b)*hmin ) <= 0.0_wp ) then
 
             call chkin  ( 'ZZELLBDS'                                 )
             call setmsg ( 'For oblate spheroids and HMIN < 0, ' &
@@ -400,7 +400,7 @@
       end if
 
 
-      if ( hmin .gt. hmax ) then
+      if ( hmin > hmax ) then
 
          call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires HMAX >= HMIN, but ' &
@@ -420,7 +420,7 @@
 !
 !     Generate radii of the outer bounding ellipsoid.
 !
-      if ( hmax .ge. 0.0_wp ) then
+      if ( hmax >= 0.0_wp ) then
 !
 !        Pick radii of E' so that E' matches
 !
@@ -473,7 +473,7 @@
 !
 !     Find radii of the inner bounding ellipsoid.
 !
-      if ( hmin .le. 0 ) then
+      if ( hmin <= 0 ) then
 !
 !        This case is similar to that of the outer bounding
 !        ellipsoid for HMAX >= 0. We can create an ellipse

@@ -221,7 +221,7 @@
 !
 !     Local variables
 !
-      character*(nwc)       recc
+      character(nwc)        recc
 
       real(wp)              recd   ( nwd )
 
@@ -310,7 +310,7 @@
 !
 !     It's a mistake to use a negative value of N.
 !
-      if ( n .lt. 0 ) then
+      if ( n < 0 ) then
 
          call setmsg ( 'Number of comment records to add must be '    // &
                        'non-negative.  Actual number requested was #.' )
@@ -355,8 +355,8 @@
 
       do i = 1, 3
 
-         if (       ( lastrc(i) .eq. lrec  ) &
-              .and. ( lastwd(i) .gt. lword )  ) then
+         if (       ( lastrc(i) == lrec  ) &
+              .and. ( lastwd(i) > lword )  ) then
 
             lword = lastwd(i)
 
@@ -372,7 +372,7 @@
 !     and this should remain true after the addition of the comment
 !     records.
 !
-      if ( lrec .eq. 0 ) then
+      if ( lrec == 0 ) then
 !
 !        Just write the zero-filled record to record number
 !
@@ -391,7 +391,7 @@
 !
          nrec  =  lrec
 
-         do while ( nrec .gt. 0 )
+         do while ( nrec > 0 )
 !
 !           For each descriptor in the current directory, move the
 !           cluster of data records it refers to.
@@ -409,7 +409,7 @@
             type  =  dirrec( begdsc )
             base  =  nrec + 1
 
-            if ( nrec .eq. lrec ) then
+            if ( nrec == lrec ) then
                lindex = lword
             else
                lindex = nwi
@@ -417,7 +417,7 @@
 
             do i = begdsc+2, lindex
 
-               if ( dirrec(i) .lt. 0 ) then
+               if ( dirrec(i) < 0 ) then
                   type = prev(type)
                else
                   type = next(type)
@@ -439,9 +439,9 @@
 !
             pos  =  lindex
 
-            do while ( pos .gt. begdsc )
+            do while ( pos > begdsc )
 
-               if ( pos .lt. lindex ) then
+               if ( pos < lindex ) then
 !
 !                 We'll need to determine the type of the current
 !                 cluster.  If the next descriptor contains a positive
@@ -449,7 +449,7 @@
 !                 the successor of the current type, according to our
 !                 ordering of types.
 !
-                  if (  dirrec(pos+1)  .gt.  0  ) then
+                  if (  dirrec(pos+1)  >  0  ) then
 !
 !                    This assignment and the one below in the ELSE
 !                    block are performed from the second loop iteration
@@ -473,12 +473,12 @@
 !
                do i  =  base + abs( dirrec(pos) ) - 1,    base,    -1
 
-                  if ( type .eq. char ) then
+                  if ( type == char ) then
 
                      call dasioc ( 'READ',   unit,  i,    recc )
                      call dasioc ( 'WRITE',  unit,  i+n,  recc )
 
-                  else if ( type .eq. dp ) then
+                  else if ( type == dp ) then
 
                      call dasiod ( 'READ',   unit,  i,    recd )
                      call dasiod ( 'WRITE',  unit,  i+n,  recd )
@@ -510,11 +510,11 @@
 !           Update the backward and forward pointers in the current
 !           directory record.  However, don't modify null pointers.
 !
-            if ( dirrec(fwdloc) .gt. 0 ) then
+            if ( dirrec(fwdloc) > 0 ) then
                dirrec(fwdloc)  =  dirrec(fwdloc) + n
             end if
 
-            if ( dirrec(bwdloc) .gt. 0 ) then
+            if ( dirrec(bwdloc) > 0 ) then
                dirrec(bwdloc)  =  dirrec(bwdloc) + n
             end if
 
@@ -546,7 +546,7 @@
 
       do i = 1, 3
 
-         if ( lastrc(i) .ne. 0 ) then
+         if ( lastrc(i) /= 0 ) then
             lastrc(i)  =  lastrc(i) + n
          end if
 

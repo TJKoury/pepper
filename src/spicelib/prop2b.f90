@@ -440,18 +440,18 @@
       i   =  0
       new = .true.
 
-      do while ( ( i .lt. nsaved ) .and. new )
+      do while ( ( i < nsaved ) .and. new )
 
          i   = i + 1
          k   = newest(i)
 
-         new =     ( pvinit(1) .ne. savepv(1,k) ) &
-              .or. ( pvinit(2) .ne. savepv(2,k) ) &
-              .or. ( pvinit(3) .ne. savepv(3,k) ) &
-              .or. ( pvinit(4) .ne. savepv(4,k) ) &
-              .or. ( pvinit(5) .ne. savepv(5,k) ) &
-              .or. ( pvinit(6) .ne. savepv(6,k) ) &
-              .or. ( gm        .ne. savegm(  k) )
+         new =     ( pvinit(1) /= savepv(1,k) ) &
+              .or. ( pvinit(2) /= savepv(2,k) ) &
+              .or. ( pvinit(3) /= savepv(3,k) ) &
+              .or. ( pvinit(4) /= savepv(4,k) ) &
+              .or. ( pvinit(5) /= savepv(5,k) ) &
+              .or. ( pvinit(6) /= savepv(6,k) ) &
+              .or. ( gm        /= savegm(  k) )
 
       end do
 
@@ -489,7 +489,7 @@
 !        only states, GMs and intermediate values that are "good.")
 !        First check for nonpositive mass.
 !
-         if ( gm .le. 0.0_wp ) then
+         if ( gm <= 0.0_wp ) then
             call sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
             call chkout ( 'PROP2B'                   )
             return
@@ -548,7 +548,7 @@
 !        Let's make sure we are not in the pathological case of
 !        rectilinear motion.
 !
-         if ( h2 .eq. 0 ) then
+         if ( h2 == 0 ) then
             call sigerr ( 'SPICE(NONCONICMOTION)'   )
             call chkout ( 'PROP2B'                  )
             return
@@ -856,7 +856,7 @@
                                  dabs(bq), &
                                  dabs(qovr0/bq) )
 
-         if ( f .lt. 0 ) then
+         if ( f < 0 ) then
 
             logmxc = log   ( maxc            )
             logdpm = log   ( dpmax() / 2.0_wp )
@@ -1027,12 +1027,12 @@
 
       kfun =   x*(br0*c1 + x*( b2rv*c2 + x*(bq*c3) ) )
 
-      if ( dt .lt. 0 ) then
+      if ( dt < 0 ) then
 
          upper = 0
          lower = x
 
-         do while ( kfun .gt. dt )
+         do while ( kfun > dt )
 
             upper = lower
             lower = lower * 2.0_wp
@@ -1046,7 +1046,7 @@
 !           there's nothing further we can do.  We'll have to call it
 !           quits and tell the user what happened.)
 !
-            if ( x .eq. oldx ) then
+            if ( x == oldx ) then
 
                fx2 = f*bound*bound
 
@@ -1078,12 +1078,12 @@
          end do
 
 
-      else if ( dt .gt. 0 ) then
+      else if ( dt > 0 ) then
 
          lower = 0
          upper = x
 
-         do while ( kfun .lt. dt )
+         do while ( kfun < dt )
 
             lower = upper
             upper = upper * 2.0_wp
@@ -1092,7 +1092,7 @@
 !
 !           Make sure we are making progress.
 !
-            if ( x .eq. oldx ) then
+            if ( x == oldx ) then
 
                fx2 = f*bound*bound
 
@@ -1152,15 +1152,15 @@
       lcount = 0
       mostc  = 1000
 
-      do while (         x      .gt. lower &
-                 .and.   x      .lt. upper &
-                 .and.   lcount .lt. mostc )
+      do while (         x      > lower &
+                 .and.   x      < upper &
+                 .and.   lcount < mostc )
 
          kfun = x*(br0*c1 + x*( b2rv*c2 + x*bq*c3 ) )
 
-         if ( kfun .gt. dt ) then
+         if ( kfun > dt ) then
             upper = x
-         else if ( kfun .lt. dt ) then
+         else if ( kfun < dt ) then
             lower = x
          else
             upper = x
@@ -1170,9 +1170,9 @@
 !        As soon as the bracketing values move away from
 !        zero we can modify the count limit.
 !
-         if ( mostc .gt. maxbit ) then
+         if ( mostc > maxbit ) then
 
-            if ( upper .ne. 0.0_wp .and. lower .ne. 0.0_wp ) then
+            if ( upper /= 0.0_wp .and. lower /= 0.0_wp ) then
                mostc   = maxbit
                lcount = 0
             end if

@@ -37,16 +37,16 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         qcol
+      character(*)          qcol
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
-      character*(*)         table
-      character*(*)         alias
+      character(*)          eqryc
+      character(*)          table
+      character(*)          alias
       integer(ip)           tabidx
-      character*(*)         column
+      character(*)          column
       integer(ip)           colidx
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -207,11 +207,11 @@
 !
 !     Local variables
 !
-      character*(tnamsz)    alslst ( maxtab )
-      character*(long)      chrbuf
-      character*(tnamsz)    tablst ( maxtab )
-      character*(cnamsz)    tmpcol
-      character*(tnamsz)    tmptab
+      character(tnamsz)     alslst ( maxtab )
+      character(long)       chrbuf
+      character(tnamsz)     tablst ( maxtab )
+      character(cnamsz)     tmpcol
+      character(tnamsz)     tmptab
 
       real(wp)              numvls ( 3 )
 
@@ -250,7 +250,7 @@
 !
 !     Make sure the encoded query is in order before proceeding.
 !
-      if ( icheck .eq. ifalse ) then
+      if ( icheck == ifalse ) then
 
          call chkin  ( 'ZZEKPCOL'                                     )
          call setmsg ( 'Encoded query has not yet been semantically '// &
@@ -280,9 +280,9 @@
       end if
 
 
-      if ( ntoken .eq. 1 ) then
+      if ( ntoken == 1 ) then
 
-         if ( tokens(1) .ne. tkid ) then
+         if ( tokens(1) /= tkid ) then
 
             error  = .true.
             errmsg = 'Invalid column name; name should consist of ' // &
@@ -295,23 +295,23 @@
          qual   =  .false.
 
 
-      else if ( ntoken .eq. 3 ) then
+      else if ( ntoken == 3 ) then
 
-         if ( tokens(1) .ne. tkid  ) then
+         if ( tokens(1) /= tkid  ) then
 
             error  = .true.
             errmsg = 'Invalid table name; name should consist of ' // &
                      'an identifier.'
             return
 
-         else if ( tokens(2) .ne. tkdot ) then
+         else if ( tokens(2) /= tkdot ) then
 
             error  = .true.
             errmsg = 'Invalid qualified column name; table name ' // &
                      'should be followed by a period.'
             return
 
-         else if ( tokens(3) .ne. tkid ) then
+         else if ( tokens(3) /= tkid ) then
 
             error  = .true.
             errmsg = 'Invalid column name; name should consist of ' // &
@@ -359,7 +359,7 @@
 
          tabidx  =  isrchc ( tmptab, ntab, tablst )
 
-         if ( tabidx .eq. 0 ) then
+         if ( tabidx == 0 ) then
             tabidx = isrchc ( tmptab, ntab, alslst )
          end if
 
@@ -367,7 +367,7 @@
 !        If we didn't find the table name in either list, it's just
 !        plain wrong.
 !
-         if ( tabidx .eq. 0 ) then
+         if ( tabidx == 0 ) then
             error  =  .true.
             errmsg =  'Table name <#> does not match table or alias '// &
                       'from query.'
@@ -389,11 +389,11 @@
          fnd   =  .false.
          j     =   1
 
-         do while (  ( j .le. cc ) .and. ( .not. fnd )  )
+         do while (  ( j <= cc ) .and. ( .not. fnd )  )
 
             call ekcii ( tablst(tabidx), j, tmpcol, attdsc )
 
-            if ( tmpcol .eq. column ) then
+            if ( tmpcol == column ) then
                colidx  =  j
                fnd     =  .true.
             else
@@ -439,7 +439,7 @@
 
                call ekcii ( tablst(i), j, tmpcol, attdsc )
 
-               if (  tmpcol .eq. column ) then
+               if (  tmpcol == column ) then
                   nmatch = nmatch + 1
                   column = tmpcol
                   colidx = j
@@ -453,7 +453,7 @@
 !        Check to see whether we have the unique identification we're
 !        hoping for.
 !
-         if ( nmatch .eq. 0 ) then
+         if ( nmatch == 0 ) then
 
             error  =  .true.
             errmsg =  'Column name <#> does not appear in any table '// &
@@ -461,7 +461,7 @@
             call repmc ( errmsg, '#', column, errmsg )
             return
 
-         else if ( nmatch .gt. 1 ) then
+         else if ( nmatch > 1 ) then
 
             error  =  .true.
             errmsg =  'Column name <#> is ambiguous without '// &

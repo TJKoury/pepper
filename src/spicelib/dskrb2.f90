@@ -558,7 +558,7 @@
       call chkin ( 'DSKRB2' )
 
 
-      if ( corsys .eq. latsys ) then
+      if ( corsys == latsys ) then
 !
 !        The coordinate system is latitudinal.
 !
@@ -590,7 +590,7 @@
          end do
 
 
-      else if ( corsys .eq. recsys ) then
+      else if ( corsys == recsys ) then
 !
 !        The coordinate system is rectangular. Compute the range
 !        of Z-coordinates of the plates.
@@ -606,7 +606,7 @@
          end do
 
 
-      else if ( corsys .eq. pdtsys ) then
+      else if ( corsys == pdtsys ) then
 !
 !        The coordinate system is planetodetic. Compute the range
 !        of altitudes of the plates.

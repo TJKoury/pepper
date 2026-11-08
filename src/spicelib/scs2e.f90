@@ -25,7 +25,7 @@
       implicit none
 
       integer(ip)           sc
-      character*(*)         sclkch
+      character(*)          sclkch
       real(wp)              et
 
 ! $ Brief_I/O

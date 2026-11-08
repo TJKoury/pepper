@@ -274,7 +274,7 @@
       jx  = 0
       ks1 = ks - 1
 
-      do while ( ks .ge. 2 )
+      do while ( ks >= 2 )
 
          jx  = jx+1
 

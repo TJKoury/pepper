@@ -23,8 +23,8 @@
 
       include 'errhnd.inc'
 
-      character*(*)         marker
-      character*(*)         string
+      character(*)          marker
+      character(*)          string
 
 ! $ Brief_I/O
 !
@@ -241,8 +241,8 @@
 !
 !     Local Variables:
 !
-      character*(lmsgln)    lngmsg
-      character*(lmsgln)    tmpmsg
+      character(lmsgln)     lngmsg
+      character(lmsgln)     tmpmsg
 
       integer(ip)           mrkpos
 
@@ -258,7 +258,7 @@
 !
 !     MARKER must have some non-blank characters, or we do nothing.
 !
-      if (  lastnb (marker) .eq. 0  ) then
+      if (  lastnb (marker) == 0  ) then
          return
       end if
 
@@ -274,7 +274,7 @@
       mrkpos = index (  lngmsg, &
                         marker ( frstnb(marker):lastnb(marker) )    )
 
-      if  ( mrkpos .eq. 0 ) then
+      if  ( mrkpos == 0 ) then
 !
 !        MARKER does not occur in the long error message, so there's
 !        no substitution to perform.
@@ -286,15 +286,15 @@
 !        We put together TMPMSG, a copy of LNGMSG with MARKER
 !        replaced by STRING.
 !
-         if ( mrkpos .gt. 1 ) then
+         if ( mrkpos > 1 ) then
 !
 !           MARKER is not at the beginning of the long error message.
 !
-            if (  mrkpos + nblen(marker)  .le.  lastnb(lngmsg)  ) then
+            if (  mrkpos + nblen(marker)  <=  lastnb(lngmsg)  ) then
 !
 !              There's more of the long message after the marker.
 !
-               if ( string .ne. ' ' ) then
+               if ( string /= ' ' ) then
 
                   tmpmsg = lngmsg ( :mrkpos - 1 )                     // &
                            string ( frstnb(string) : lastnb(string) ) // &
@@ -312,7 +312,7 @@
 !
 !              The long error message ends with MARKER.
 !
-               if ( string .ne. ' ' ) then
+               if ( string /= ' ' ) then
 
                   tmpmsg = lngmsg ( :mrkpos - 1 )                     // &
                            string ( frstnb(string) : lastnb(string) )
@@ -330,11 +330,11 @@
 !
 !           The long error message starts with MARKER (MRKPOS is 1).
 !
-            if ( nblen(marker) .lt. lastnb(lngmsg) ) then
+            if ( nblen(marker) < lastnb(lngmsg) ) then
 !
 !              There's more of the long message after the marker...
 !
-               if ( string .ne. ' ' ) then
+               if ( string /= ' ' ) then
 
                   tmpmsg = string ( frstnb(string) : lastnb(string) ) // &
                            lngmsg ( 1 + nblen(marker) : )
@@ -348,7 +348,7 @@
 !
 !              The marker's the whole string:
 !
-               if ( string .ne. ' ' ) then
+               if ( string /= ' ' ) then
 
                   tmpmsg = string ( frstnb(string) : lastnb(string) )
 

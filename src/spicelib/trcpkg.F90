@@ -21,9 +21,9 @@
 
       integer(ip)           depth
       integer(ip)           index
-      character*(*)         module
-      character*(*)         trace
-      character*(*)         name
+      character(*)          module
+      character(*)          trace
+      character(*)          name
 
       integer(ip)           filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -422,9 +422,9 @@
 !
 !     Local Variables:
 !
-      character*(filen)     device
-      character*(11)        string
-      character*(tmplen)    tmpnam
+      character(filen)      device
+      character(11)         string
+      character(tmplen)     tmpnam
 
       integer(ip)           action
       integer(ip)           first
@@ -434,8 +434,8 @@
 !
 !     Saved variables:
 !
-      character*(namlen)    stack (maxmod)
-      character*(namlen)    frozen(maxmod)
+      character(namlen)     stack (maxmod)
+      character(namlen)     frozen(maxmod)
 
       integer(ip)           frzcnt
       integer(ip)           frzovr
@@ -746,7 +746,7 @@
 !     Get the position of the first and last non-blank characters in
 !     input module name, and set the length of the module name.
 !
-      if ( module(1:1) .ne. ' ' ) then
+      if ( module(1:1) /= ' ' ) then
          first  =  1
       else
          first  =  frstnb ( module )
@@ -755,13 +755,13 @@
 !
 !     Check to see if the module name is blank.
 !
-      if ( first .gt. 0  ) then
+      if ( first > 0  ) then
 !
 !        If there is room for the name, place it at the top of the
 !        stack. If not, increment the overflow counter and signal an
 !        error.
 !
-         if ( modcnt .lt. maxmod ) then
+         if ( modcnt < maxmod ) then
 
             modcnt        = modcnt + 1
             stack(modcnt) = module ( first: )
@@ -781,7 +781,7 @@
 !
 !        Keep track of the maximum depth encountered.
 !
-         if ( ( modcnt + ovrflw ) .gt. maxdep ) then
+         if ( ( modcnt + ovrflw ) > maxdep ) then
             maxdep = modcnt + ovrflw
          end if
 
@@ -1090,7 +1090,7 @@
 !     Check to be sure we can remove a module name from the stack,
 !     i.e., that we have not overflowed.
 !
-      if ( ovrflw .eq. 0 ) then
+      if ( ovrflw == 0 ) then
 !
 !        We are not in overflow mode, compare the module name on
 !        the top of the stack with the module name passed to us. If
@@ -1098,12 +1098,12 @@
 !        module count.
 !
 
-         if ( modcnt .gt. 0 ) then
+         if ( modcnt > 0 ) then
 !
 !           Make the comparison using at most NAMLEN characters of the
 !           initial non-blank sub-string of MODULE.
 !
-            if ( module(1:1) .ne. ' ' ) then
+            if ( module(1:1) /= ' ' ) then
                first  =  1
             else
                first  =  frstnb ( module )
@@ -1111,7 +1111,7 @@
 
             l      =  min ( len(module), first+namlen-1 )
 
-            if (  stack(modcnt)  .ne.  module( first : l )  ) then
+            if (  stack(modcnt)  /=  module( first : l )  ) then
 
                tmpnam = module( first: )
                call getdev ( device )
@@ -1380,7 +1380,7 @@
 !     use the frozen version of the traceback.  Otherwise, we want to
 !     get the use the current module stack depth.
 !
-      if  (   ( action .eq. iretrn )  .and.   failed()   )   then
+      if  (   ( action == iretrn )  .and.   failed()   )   then
 
          depth = frzcnt + frzovr
 
@@ -1827,12 +1827,12 @@
 !     use the frozen version of the traceback.  Otherwise, we want to
 !     get the module name from the current traceback.
 !
-      if ( ( action .eq. iretrn ) .and. failed() ) then
+      if ( ( action == iretrn ) .and. failed() ) then
 !
 !        Check the input index. It must be positive and less than the
 !        current stack depth.
 !
-         if ( ( index .le. 0 ) .or. ( index .gt. frzcnt+frzovr ) ) then
+         if ( ( index <= 0 ) .or. ( index > frzcnt+frzovr ) ) then
 !
 !           Invalid index...we output the error messages directly
 !           in this case:
@@ -1849,7 +1849,7 @@
 !
 !        We're OK, so get the name or not available.
 !
-         if ( index .le. maxmod )  then
+         if ( index <= maxmod )  then
             name = frozen(index)
          else
             name = '<Overflow No Name Available>'
@@ -1862,7 +1862,7 @@
 !        Check the input index. It must be positive and less than the
 !        current stack depth.
 !
-         if ( ( index .le. 0 ) .or. ( index .gt. modcnt+ovrflw ) ) then
+         if ( ( index <= 0 ) .or. ( index > modcnt+ovrflw ) ) then
 !
 !           Invalid index...we output the error messages directly
 !           in this case:
@@ -1879,7 +1879,7 @@
 !
 !        We're OK, so get the name or name not available.
 !
-         if ( index .le. maxmod )  then
+         if ( index <= maxmod )  then
             name = stack(index)
          else
             name = '<Overflow No Name Available>'
@@ -2156,11 +2156,11 @@
 !     use the frozen version of the traceback.  Otherwise, we want to
 !     use the current traceback.
 !
-      if  (  ( action .eq. iretrn )  .and.  failed()  ) then
+      if  (  ( action == iretrn )  .and.  failed()  ) then
 
          do i = 1, frzcnt
 
-            if ( i .gt. 1 ) then
+            if ( i > 1 ) then
                call suffix ( '-->',  1, trace )
                call suffix ( frozen(i), 1, trace )
             else
@@ -2169,10 +2169,10 @@
 
          end do
 
-         if ( frzovr .gt. 0 ) then
+         if ( frzovr > 0 ) then
 
             call suffix ( '-->',   1, trace )
-            if ( frzovr .gt. 1 ) then
+            if ( frzovr > 1 ) then
                call intstr ( frzovr, string )
                call suffix ( '<', 1, trace )
                call suffix ( string,  0, trace )
@@ -2187,7 +2187,7 @@
 
          do i = 1, modcnt
 
-            if ( i .gt. 1 ) then
+            if ( i > 1 ) then
                call suffix ( '-->',  1, trace )
                call suffix ( stack(i), 1, trace )
             else
@@ -2196,10 +2196,10 @@
 
          end do
 
-         if ( ovrflw .gt. 0 ) then
+         if ( ovrflw > 0 ) then
 
             call suffix ( '-->',  1, trace )
-            if ( ovrflw .gt. 1 ) then
+            if ( ovrflw > 1 ) then
                call intstr ( ovrflw, string )
                call suffix ( '<', 1, trace )
                call suffix ( string,  0, trace )

@@ -25,7 +25,7 @@
       real(wp)              srcdsc(*)
       integer(ip)           dsthan
       real(wp)              dstdsc(*)
-      character*(*)         dstsid
+      character(*)          dstsid
 
 ! $ Brief_I/O
 !
@@ -153,7 +153,7 @@
 !
 !     Local Variables
 !
-      character*(wdsize)    time
+      character(wdsize)     time
 
       real(wp)              begtim
       real(wp)              consts ( nconst )
@@ -225,7 +225,7 @@
 
       end if
 
-      if ( myref .gt. begtim ) then
+      if ( myref > begtim ) then
          begidx = max ( 1, begidx - 1 )
       end if
 
@@ -252,7 +252,7 @@
 !
       call sgmeta ( srchan, srcdsc, nref, nepoch )
 
-      if ( myref .lt. endtim ) then
+      if ( myref < endtim ) then
          endidx = min ( nepoch, endidx + 1 )
       end if
 

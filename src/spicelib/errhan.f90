@@ -26,7 +26,7 @@
 
       include 'zzddhman.inc'
 
-      character*(*)         marker
+      character(*)          marker
       integer(ip)           handle
 
 ! $ Brief_I/O
@@ -148,8 +148,8 @@
 !
 !     Local variables
 !
-      character*(filen)     fname
-      character*(maxnum)    numstr
+      character(filen)      fname
+      character(maxnum)     numstr
 
       integer(ip)           intarc
       integer(ip)           intbff

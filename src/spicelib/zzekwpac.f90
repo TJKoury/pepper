@@ -27,7 +27,7 @@
       integer(ip)           segdsc ( * )
       integer(ip)           nvals
       integer(ip)           l
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       integer(ip)           p
       integer(ip)           base
 
@@ -155,7 +155,7 @@
 !
 !     Local variables
 !
-      character*(pgsizc)    page
+      character(pgsizc)     page
 
       integer(ip)           from
       integer(ip)           npage
@@ -174,9 +174,9 @@
 !
 !     Check the input string length.
 !
-      if (      ( l .lt. 0             ) &
-           .or. ( l .gt. len(cvals(1)) ) &
-           .or. ( l .gt. cpsize        )  ) then
+      if (      ( l < 0             ) &
+           .or. ( l > len(cvals(1)) ) &
+           .or. ( l > cpsize        )  ) then
 
          call setmsg ( 'String length # is just plain wrong.' )
          call errint ( '#',  l                                )
@@ -216,8 +216,8 @@
          to                  =  to + l
 
 
-         if (      ( to   .gt. cpsize-l+1 ) &
-              .or. ( from .eq. nvals      )  ) then
+         if (      ( to   > cpsize-l+1 ) &
+              .or. ( from == nvals      )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the

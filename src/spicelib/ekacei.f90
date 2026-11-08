@@ -29,7 +29,7 @@
       integer(ip)           handle
       integer(ip)           segno
       integer(ip)           recno
-      character*(*)         column
+      character(*)          column
       integer(ip)           nvals
       integer(ip)           ivals  ( * )
       logical               isnull
@@ -742,7 +742,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( dtype .ne. int ) then
+      if ( dtype /= int ) then
 
          call chkin  ( 'EKACEI'                                     )
          call setmsg ( 'Column # is of type #; EKACEI only works ' &
@@ -770,14 +770,14 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 1 ) then
+      if ( class == 1 ) then
 !
 !        Class 1 columns contain scalar integer data.
 !
          call zzekad01 ( handle, segdsc, coldsc, recptr, ivals, isnull )
 
 
-      else if ( class .eq. 4 ) then
+      else if ( class == 4 ) then
 !
 !        Class 4 columns contain array-valued integer data.
 !

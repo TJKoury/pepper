@@ -331,7 +331,7 @@
 !     symmetric and zero at both t1 and t2.
 !
 
-      if ( t1 .ne. t2 ) then
+      if ( t1 /= t2 ) then
 
 !
 !        Initialize then propagate.

@@ -40,13 +40,13 @@
       include               'zzctr.inc'
       include               'zzdsk.inc'
 
-      character*(*)         method
-      character*(*)         target
-      character*(*)         ilusrc
+      character(*)          method
+      character(*)          target
+      character(*)          ilusrc
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              trgepc
       real(wp)              srfvec ( 3 )
@@ -1165,7 +1165,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  =  'ILLUMG' )
 
       integer(ip)           lnsize
@@ -1186,12 +1186,12 @@
 !
 !     Local variables
 !
-      character*(cvtlen)    pntdef
-      character*(lnsize)    prvmth
-      character*(corlen)    prvcor
-      character*(shplen)    shpstr
-      character*(sublen)    subtyp
-      character*(tmtlen)    trmstr
+      character(cvtlen)     pntdef
+      character(lnsize)     prvmth
+      character(corlen)     prvcor
+      character(shplen)     shpstr
+      character(sublen)     subtyp
+      character(tmtlen)     trmstr
 
       real(wp)              lt
       real(wp)              lti
@@ -1224,12 +1224,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -1237,7 +1237,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr3 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svrefc
 
 !
@@ -1328,7 +1328,7 @@
 !
 !     If necessary, parse the aberration correction flag.
 !
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
@@ -1401,7 +1401,7 @@
 !     valid values. PRVMTH records the last valid value of
 !     METHOD; ELIPSD is the corresponding shape flag.
 !
-      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
+      if ( first  .or.  surfup  .or.  ( method /= prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -1453,7 +1453,7 @@
 !        There should be no subtype specification in the method
 !        string.
 !
-         if ( subtyp .ne. ' ' ) then
+         if ( subtyp /= ' ' ) then
 
             call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
@@ -1503,7 +1503,7 @@
 !     Check the observer and target body codes. If they are equal,
 !     signal an error.
 !
-      if ( obscde .eq. trgcde ) then
+      if ( obscde == trgcde ) then
 
          call setmsg ( 'In computing illumination angles, ' &
          //            'the observing body and target body are the ' &
@@ -1543,7 +1543,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( center .ne. trgcde ) then
+      if ( center /= trgcde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -1620,7 +1620,7 @@
 !     Find the surface normal at SPOINT. This computation depends
 !     on target body shape model.
 !
-      if ( shape .eq. ellshp ) then
+      if ( shape == ellshp ) then
 !
 !        We'll need the radii of the target body.
 !
@@ -1630,7 +1630,7 @@
 !
 !        We check FAILED at the end of the IF block.
 !
-      else if ( shape .eq. dskshp ) then
+      else if ( shape == dskshp ) then
 !
 !        Compute the outward unit normal at SPOINT on the surface
 !        defined by the designated DSK data.

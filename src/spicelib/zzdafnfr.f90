@@ -31,14 +31,14 @@
       include              'zzftprms.inc'
 
       integer(ip)           lun
-      character*(*)         idword
+      character(*)          idword
       integer(ip)           nd
       integer(ip)           ni
-      character*(*)         ifname
+      character(*)          ifname
       integer(ip)           fward
       integer(ip)           bward
       integer(ip)           free
-      character*(*)         format
+      character(*)          format
 
 
 ! $ Brief_I/O
@@ -192,17 +192,17 @@
 !
 !     Local Variables
 !
-      character*(1)         nullch
-      character*(fmtlen)    locfmt
-      character*(idwlen)    locidw
-      character*(ifnlen)    locifn
-      character*(preftp)    prenul
-      character*(pstftp)    pstnul
-      character*(sizdlm)    delim
-      character*(sizend)    lftbkt
-      character*(sizend)    rgtbkt
-      character*(sizftp)    ftpstr
-      character*(sizstr)    tststr
+      character(1)          nullch
+      character(fmtlen)     locfmt
+      character(idwlen)     locidw
+      character(ifnlen)     locifn
+      character(preftp)     prenul
+      character(pstftp)     pstnul
+      character(sizdlm)     delim
+      character(sizend)     lftbkt
+      character(sizend)     rgtbkt
+      character(sizftp)     ftpstr
+      character(sizstr)     tststr
 
       integer(ip)           i
       integer(ip)           iostat
@@ -316,7 +316,7 @@
 !
 !     Check IOSTAT for errors.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
 !
 !        Since we are unable to write to the file record, make

@@ -425,7 +425,7 @@
 !     If this segment is not of data type 2, then signal an error.
 !
 
-      if ( icd( 3 ) .ne. dtype ) then
+      if ( icd( 3 ) /= dtype ) then
          call setmsg ( 'Data type of the segment should be 2: Passed '// &
                        'descriptor shows type = #.'                   )
          call errint ( '#', icd ( 3 )                                 )

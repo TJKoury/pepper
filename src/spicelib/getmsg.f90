@@ -20,8 +20,8 @@
 
       implicit none
 
-      character*(*)          option
-      character*(*)          msg
+      character(*)           option
+      character(*)           msg
 
 ! $ Brief_I/O
 !
@@ -203,7 +203,7 @@
       integer(ip)           shrtln
       parameter           ( shrtln = 25 )
 
-      character*(shrtln)    shrtms
+      character(shrtln)     shrtms
 
 !
 !     Upper case version of the option:
@@ -212,8 +212,8 @@
       integer(ip)           optlen
       parameter           ( optlen = 10 )
 
-      character*(optlen)    upopt
-      character*(optlen)    locopt
+      character(optlen)     upopt
+      character(optlen)     locopt
 
 !
 !     Heeeeeeeeeeeeeeeeeeeeer's the code!
@@ -229,7 +229,7 @@
       call ljust ( option, upopt )
       call ucase ( upopt,  upopt )
 
-      if ( upopt .eq. 'SHORT' ) then
+      if ( upopt == 'SHORT' ) then
 
 !
 !        Retrieve short message:
@@ -237,7 +237,7 @@
          call getsms ( msg )
 
 
-      else if ( upopt .eq. 'EXPLAIN' ) then
+      else if ( upopt == 'EXPLAIN' ) then
 
 !
 !        Get current short message; then get explanation
@@ -248,7 +248,7 @@
          call expln   ( shrtms, msg )
 
 
-      else if ( upopt .eq. 'LONG' ) then
+      else if ( upopt == 'LONG' ) then
 
 !
 !        Grab long error message:

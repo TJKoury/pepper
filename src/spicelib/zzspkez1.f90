@@ -30,8 +30,8 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       integer(ip)           obs
       real(wp)              starg    ( 6 )
       real(wp)              lt
@@ -1014,7 +1014,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  =  'ZZSPKEZ1' )
 
 !
@@ -1026,7 +1026,7 @@
 !
 !     Local variables
 !
-      character*(corlen)    prvcor
+      character(corlen)     prvcor
 
       real(wp)              dlt
       real(wp)              dltctr
@@ -1053,7 +1053,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svref
+      character(frnmln)     svref
       integer(ip)           svreqf
 
       logical               first
@@ -1093,7 +1093,7 @@
       end if
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
@@ -1158,7 +1158,7 @@
 !
          call zznamfrm ( svctr1, svref, svreqf, ref, reqfrm )
 
-         if ( reqfrm .eq. 0 ) then
+         if ( reqfrm == 0 ) then
             call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
@@ -1200,7 +1200,7 @@
 !        If we are dealing with an inertial frame, we can simply
 !        call SPKACS and return.
 !
-         if ( type .eq. inertl ) then
+         if ( type == inertl ) then
 
             call zzspkac1 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
             call chkout   ( rname )
@@ -1228,12 +1228,12 @@
             return
          end if
 
-         if ( center .eq. obs ) then
+         if ( center == obs ) then
 
             ltcent = 0.0_wp
             dltctr = 0.0_wp
 
-         else if ( center .eq. targ ) then
+         else if ( center == targ ) then
 
             ltcent = lt
             dltctr = dlt

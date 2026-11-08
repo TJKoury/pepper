@@ -30,8 +30,8 @@
       real(wp)              r1
       real(wp)              r2
       integer(ip)           obs
-      character*(*)         abcorr
-      character*(*)         ref
+      character(*)          abcorr
+      character(*)          ref
 
 ! $ Brief_I/O
 !
@@ -260,7 +260,7 @@
 !
 !     First check for bad inputs.
 !
-      if ( (r1 .lt. 0.0_wp) .or. (r2 .lt. 0.0_wp) ) then
+      if ( (r1 < 0.0_wp) .or. (r2 < 0.0_wp) ) then
 
          call setmsg  ('A negative radius for a body was ' &
          //            'encountered. The radius for body #1 was given ' &
@@ -303,7 +303,7 @@
 !
 !     Compute the apparent angular radii as seen from OBS.
 !
-      if ( range1 .gt. r1 ) then
+      if ( range1 > r1 ) then
 
          ang1 = dasine( r1/range1, atol )
 
@@ -328,7 +328,7 @@
 
       end if
 
-      if ( range2 .gt. r2 ) then
+      if ( range2 > r2 ) then
 
          ang2 = dasine ( r2/range2, atol )
 

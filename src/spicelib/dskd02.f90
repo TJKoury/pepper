@@ -498,7 +498,7 @@
       end if
 
 
-      if ( room .le. 0 ) then
+      if ( room <= 0 ) then
 
          call chkin  ( 'DSKD02' )
          call setmsg ( 'ROOM was #; must be positive.' )
@@ -526,8 +526,8 @@
 !     but they can't share an integer base address with a type 2
 !     segment.
 !
-      if (      ( handle .ne. prvhan ) &
-           .or. ( ibase  .ne. prvbas )  ) then
+      if (      ( handle /= prvhan ) &
+           .or. ( ibase  /= prvbas )  ) then
 !
 !        Treat the input file and segment as new.
 !
@@ -556,7 +556,7 @@
 !     Note that we haven't checked the validity of START; we'll do this
 !     after the IF block.
 !
-      if ( item .eq. kwvert ) then
+      if ( item == kwvert ) then
 !
 !        Return vertices.  There are 3*NV values in all.
 !        First locate the data.
@@ -565,7 +565,7 @@
          b    = ( dbase + ixvert ) + start - 1
 
 
-      else if ( item .eq. kwdsc ) then
+      else if ( item == kwdsc ) then
 !
 !        Return DSK descriptor.
 !
@@ -573,7 +573,7 @@
          b    = ( dbase + ixdscr ) + start - 1
 
 
-      else if ( item .eq. kwvtbd ) then
+      else if ( item == kwvtbd ) then
 !
 !        Return vertex bounds.  There are 6 elements.
 !
@@ -581,7 +581,7 @@
          b    = ( dbase + ixvtbd ) + start - 1
 
 
-      else if ( item .eq. kwvxor ) then
+      else if ( item == kwvxor ) then
 !
 !        Return voxel grid origin.  There are 3 elements.
 !
@@ -589,7 +589,7 @@
          b    = ( dbase + ixvxor ) + start - 1
 
 
-      else if ( item .eq. kwvxsz ) then
+      else if ( item == kwvxsz ) then
 !
 !        Return voxel size.  This is a scalar.
 !
@@ -610,7 +610,7 @@
 !
 !     The valid range for START is 1:SIZE.
 !
-      if (  ( start .lt. 1 ) .or. ( start .gt. size )  ) then
+      if (  ( start < 1 ) .or. ( start > size )  ) then
 
          call chkin  ( 'DSKD02' )
          call setmsg ( 'START must be in the range defined ' // &

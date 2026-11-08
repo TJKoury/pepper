@@ -206,15 +206,15 @@
 !
 !     When the end of either input set is reached, we're done.
 !
-      do while ( apoint .le. acard .and. bpoint .le. bcard )
+      do while ( apoint <= acard .and. bpoint <= bcard )
 
 !
 !        If there is still space in the output set, fill it
 !        as necessary.
 !
-         if ( ccard .lt. csize ) then
+         if ( ccard < csize ) then
 
-            if ( a(apoint) .eq. b(bpoint) ) then
+            if ( a(apoint) == b(bpoint) ) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
@@ -222,11 +222,11 @@
                apoint   = apoint + 1
                bpoint   = bpoint + 1
 
-            else if ( a(apoint) .lt. b(bpoint) ) then
+            else if ( a(apoint) < b(bpoint) ) then
 
                apoint = apoint + 1
 
-            else if ( b(bpoint) .lt. a(apoint) ) then
+            else if ( b(bpoint) < a(apoint) ) then
 
                bpoint = bpoint + 1
 
@@ -239,17 +239,17 @@
 !
          else
 
-            if (a(apoint) .eq. b(bpoint)) then
+            if (a(apoint) == b(bpoint)) then
 
                over   = over   + 1
                apoint = apoint + 1
                bpoint = bpoint + 1
 
-            else if (a(apoint) .lt. b(bpoint)) then
+            else if (a(apoint) < b(bpoint)) then
 
                apoint = apoint + 1
 
-            else if (b(bpoint) .lt. a(apoint)) then
+            else if (b(bpoint) < a(apoint)) then
 
                bpoint = bpoint + 1
 
@@ -267,7 +267,7 @@
 !
 !     Report any excess.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
          call excess ( over, 'set' )
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if

@@ -363,7 +363,7 @@
 !
 !     There is a singularity of the Jacobian for points on the z-axis.
 !
-      if ( ( x .eq. 0.0_wp ) .and. ( y .eq. 0.0_wp ) ) then
+      if ( ( x == 0.0_wp ) .and. ( y == 0.0_wp ) ) then
 
          call setmsg ( 'The Jacobian of the transformation from '     // &
                        'rectangular to cylindrical coordinates '      // &

@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           number
-      character*(*)         string
+      character(*)          string
       integer(ip)           length
 
 ! $ Brief_I/O
@@ -214,8 +214,8 @@
 !
 !     Local variables
 !
-      character*(1)         digits(0:maxdig-1)
-      character*(strlen)    tmpstr
+      character(1)          digits(0:maxdig-1)
+      character(strlen)     tmpstr
 
       integer(ip)           begin
       integer(ip)           itemp
@@ -270,13 +270,13 @@
 !
       begin = strlen + 1
 
-      if ( itemp .lt. 0 ) then
+      if ( itemp < 0 ) then
 !
 !        Collect all of the digits in the string. We know we're done
 !        when the value of ITEMP is equal to zero, thanks to the fact
 !        that integer arithmetic operations are exact.
 !
-         do while ( itemp .ne. 0 )
+         do while ( itemp /= 0 )
 
             begin               = begin - 1
             result              = itemp / base
@@ -291,13 +291,13 @@
          begin               = begin - 1
          tmpstr(begin:begin) = '-'
 
-      else if ( itemp .gt. 0 ) then
+      else if ( itemp > 0 ) then
 !
 !        Collect all of the digits in the string. We know we're done
 !        when the value of ITEMP is equal to zero, thanks to the fact
 !        that integer arithmetic operations are exact.
 !
-         do while ( itemp .ne. 0 )
+         do while ( itemp /= 0 )
 
             begin               = begin - 1
             result              = itemp / base

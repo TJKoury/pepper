@@ -189,14 +189,14 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        The column entry is non-null.  Determine whether the column is
 !        indexed.
 !
          idxtyp  =  coldsc(ixtidx)
 
-         if ( idxtyp .eq. 1 ) then
+         if ( idxtyp == 1 ) then
 !
 !           The column has a type 1 index.  Delete the index entry
 !           for this column.  Create an index entry for the new value.
@@ -206,7 +206,7 @@
             call zzekiii1 ( handle,  segdsc,  coldsc,  ival, &
                             recptr,  isnull                   )
 
-         else if ( idxtyp .ne. ifalse ) then
+         else if ( idxtyp /= ifalse ) then
 
             call setmsg ( 'Column having index # in segment # has '   // &
                           'index type #.'                             )
@@ -245,7 +245,7 @@
 
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        If the new entry is null too, there's nothing to do.
 !        We don't have to adjust link counts or indexes.
@@ -258,7 +258,7 @@
 
             idxtyp  =  coldsc(ixtidx)
 
-            if ( idxtyp .eq. 1 ) then
+            if ( idxtyp == 1 ) then
 !
 !              The column has a type 1 index.  Delete the index entry
 !              for this column.
@@ -266,7 +266,7 @@
                call zzekixdl ( handle, segdsc, coldsc, recptr )
 
 
-            else if ( idxtyp .ne. ifalse ) then
+            else if ( idxtyp /= ifalse ) then
 
                call setmsg ( 'Column having index # in segment # has '// &
                              'index type #.'                          )
@@ -293,8 +293,8 @@
          end if
 
 
-      else if (      ( datptr .eq. uninit ) &
-                .or. ( datptr .eq. noback )  ) then
+      else if (      ( datptr == uninit ) &
+                .or. ( datptr == noback )  ) then
 !
 !        There is no current column entry.  Just add a new entry.
 !

@@ -318,7 +318,7 @@
 !     Handle all of the exceptions first.
 !
 
-      if ( ecc .lt. 0 ) then
+      if ( ecc < 0 ) then
          call setmsg ( 'The eccentricity supplied was negative. Only '// &
                        'positive values are meaningful.  The value '  // &
                        'was #'                  )
@@ -328,7 +328,7 @@
          return
       end if
 
-      if ( rp .le. 0 ) then
+      if ( rp <= 0 ) then
          call setmsg ( 'The value of periapse range supplied was '    // &
                        'non-positive.  Only positive values are '     // &
                        'allowed.  The value supplied was #. '         )
@@ -339,7 +339,7 @@
       end if
 
 
-      if ( mu .le. 0 ) then
+      if ( mu <= 0 ) then
          call setmsg ( 'The value of GM supplied was '                // &
                        'non-positive.  Only positive values are '     // &
                        'allowed.  The value supplied was #. '         )
@@ -397,7 +397,7 @@
 !     Finally compute DT the elapsed time since the epoch of periapse.
 !     Ellipses first, since they are the most common.
 !
-      if ( ecc .lt. 1.0_wp ) then
+      if ( ecc < 1.0_wp ) then
 
 !
 !        Recall that:
@@ -429,7 +429,7 @@
 !
 !     Hyperbolas next.
 !
-      else if ( ecc .gt. 1 ) then
+      else if ( ecc > 1 ) then
 
 
 !

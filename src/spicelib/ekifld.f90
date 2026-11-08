@@ -24,11 +24,11 @@
       include 'ektype.inc'
 
       integer(ip)           handle
-      character*(*)         tabnam
+      character(*)          tabnam
       integer(ip)           ncols
       integer(ip)           nrows
-      character*(*)         cnames ( * )
-      character*(*)         decls  ( * )
+      character(*)          cnames ( * )
+      character(*)          decls  ( * )
       integer(ip)           segno
       integer(ip)           rcptrs ( * )
 
@@ -581,7 +581,7 @@
 !
 !     Check out NROWS.
 !
-      if ( nrows .lt. 1 ) then
+      if ( nrows < 1 ) then
 
          call setmsg ( 'Number of rows must be > 0, was #. ' )
          call errint ( '#',  nrows                           )
@@ -618,12 +618,12 @@
 !     Complete the fast write preparations appropriate to the segment's
 !     type.
 !
-      if ( stype .eq. 1 ) then
+      if ( stype == 1 ) then
 
          call zzekif01 ( handle, segno, rcptrs )
 
 
-      else if ( stype .eq. 2 ) then
+      else if ( stype == 2 ) then
 
          call zzekif02 ( handle, segno )
 

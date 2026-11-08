@@ -326,13 +326,13 @@
 !     derivative. A negative value indicates an error
 !     the caller should diagnose.
 !
-      if ( bodyr .eq. 0 ) then
+      if ( bodyr == 0 ) then
 
          dhfa = 0.0_wp
          call chkout( 'DHFA' )
          return
 
-      else if ( bodyr .lt. 0 ) then
+      else if ( bodyr < 0 ) then
 
          dhfa = 0.0_wp
          call setmsg( 'Non physical case. The input body radius ' &
@@ -370,7 +370,7 @@
 !
       base = r**2 - bodyr**2
 
-      if ( base .le. 0 ) then
+      if ( base <= 0 ) then
 
          dhfa = 0.0_wp
          call setmsg( 'Invalid case. The body radius, #1, equals ' &

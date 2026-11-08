@@ -23,7 +23,7 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*1           side
+      character(1)          side
       real(wp)              window  ( lbcell:* )
 
 ! $ Brief_I/O
@@ -187,13 +187,13 @@
 !     For the sake of efficiency, we have separate loops for the two
 !     possible values of SIDE.
 !
-      if ( side .eq. 'L'  .or.  side .eq. 'l' ) then
+      if ( side == 'L'  .or.  side == 'l' ) then
 
          do i = 1, card, 2
             window(i+1) = window(i)
          end do
 
-      else if ( side .eq. 'R'  .or.  side .eq. 'r' ) then
+      else if ( side == 'R'  .or.  side == 'r' ) then
 
          do i = 1, card, 2
             window(i) = window(i+1)

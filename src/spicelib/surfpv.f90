@@ -567,7 +567,7 @@
 !
       level =  ( v(1)/a )**2  +  ( v(2)/b )**2  +  ( v(3)/c )**2
 
-      if ( level .eq. 1.0_wp ) then
+      if ( level == 1.0_wp ) then
 
          call setmsg ( 'Ray''s vertex (# # #) has ' &
          //            'level surface parameter #. Vertex ' &
@@ -592,7 +592,7 @@
 !
       udn = vdot( u, n )
 
-      if ( udn .eq. 0.0_wp ) then
+      if ( udn == 0.0_wp ) then
 !
 !        The intercept point is on the limb, so its velocity
 !        is not defined. This means we can't "find" the state
@@ -642,7 +642,7 @@
 !     unit vectors, so the dot product of U and N is less than or equal
 !     to one.
 !
-      if (  m  .gt.  ( dpmax() / margin ) * udn**2  ) then
+      if (  m  >  ( dpmax() / margin ) * udn**2  ) then
 
          call chkout ( 'SURFPV' )
          return

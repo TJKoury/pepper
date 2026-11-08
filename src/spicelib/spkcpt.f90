@@ -29,13 +29,13 @@
       include               'zzabcorr.inc'
 
       real(wp)              trgpos ( 3 )
-      character*(*)         trgctr
-      character*(*)         trgref
+      character(*)          trgctr
+      character(*)          trgref
       real(wp)              et
-      character*(*)         outref
-      character*(*)         refloc
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          outref
+      character(*)          refloc
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              state  ( 6 )
       real(wp)              lt
 

@@ -33,9 +33,9 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         target
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          target
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              et
       logical               decres
       real(wp)              dist
@@ -174,7 +174,7 @@
 !
 !     Local Variables
 !
-      character*(corlen)    svcorr
+      character(corlen)     svcorr
 
       real(wp)              lt
       real(wp)              state  ( 6 )
@@ -387,7 +387,7 @@
 !
 !     Make sure the observer and target are distinct.
 !
-      if ( svtarg .eq. svobs ) then
+      if ( svtarg == svobs ) then
 
          call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
@@ -570,7 +570,7 @@
 !     if the dot product of the velocity and position is
 !     negative.
 !
-      decres  =  vdot( state, state(4) )  .lt.  0.0_wp
+      decres  =  vdot( state, state(4) )  <  0.0_wp
 
       call chkout  ( 'ZZGFDIDC' )
       return

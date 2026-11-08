@@ -20,10 +20,10 @@
 
       implicit none
 
-      character*(*)      instr
-      character*1        dir
+      character(*)       instr
+      character(1)       dir
       integer(ip)        ncycle
-      character*(*)      outstr
+      character(*)       outstr
 
 ! $ Brief_I/O
 !
@@ -159,8 +159,8 @@
 !
 !     Local variables
 !
-      character*1      last
-      character*1      temp
+      character(1)     last
+      character(1)     temp
 
       integer(ip)      g
       integer(ip)      i
@@ -188,13 +188,13 @@
 !     K + m*N for any integer m.  Thus we compute the value of the
 !     minimum positive right cycle that is equivalent to the inputs.
 !
-      if (      (dir .eq. 'L') &
-           .or. (dir .eq. 'l') ) then
+      if (      (dir == 'L') &
+           .or. (dir == 'l') ) then
 
          k = mod ( - ncycle, n )
 
-      else if (      ( dir .eq. 'R') &
-                .or. ( dir .eq. 'r') ) then
+      else if (      ( dir == 'R') &
+                .or. ( dir == 'r') ) then
 
          k = mod (   ncycle, n )
 
@@ -211,9 +211,9 @@
 
       end if
 
-      if      ( k .lt. 0 ) then
+      if      ( k < 0 ) then
          k = k + n
-      else if ( k .eq. 0 ) then
+      else if ( k == 0 ) then
          call chkout ( 'CYCLEC' )
          return
       end if
@@ -312,7 +312,7 @@
 !
 !           Compute L mod N.
 !
-            if ( l .gt. n ) then
+            if ( l > n ) then
                l = l - n
             end if
 
@@ -322,7 +322,7 @@
 !           Make sure there is someplace to put the letter picked up
 !           in the previous pass through the loop.
 !
-            if ( l .le. limit ) then
+            if ( l <= limit ) then
                outstr(l:l) = last
             end if
 

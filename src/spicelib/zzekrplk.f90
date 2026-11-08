@@ -116,7 +116,7 @@
       stype  =  segdsc ( ektidx )
 
 
-      if ( stype .eq. 1 ) then
+      if ( stype == 1 ) then
 !
 !        For type 1 segments, the record pointer is obtained from
 !        the record tree.
@@ -126,7 +126,7 @@
          call zzektrdp ( handle, tree, n, recptr )
 
 
-      else if ( stype .eq. 2 ) then
+      else if ( stype == 2 ) then
 !
 !        For type 2 segments, the record pointer *is* the ordinal
 !        position of the record.

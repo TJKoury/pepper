@@ -25,7 +25,7 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
+      character(*)          ref
       integer(ip)           obs
       real(wp)              pos ( 3 )
       real(wp)              lt
@@ -321,7 +321,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  =  'SPKGPS' )
 
 !
@@ -345,10 +345,10 @@
 !
 !     Local variables
 !
-      character*(40)        ident
-      character*(40)        tname
-      character*(40)        oname
-      character*(80)        tstring
+      character(40)         ident
+      character(40)         tname
+      character(40)         oname
+      character(80)         tstring
 
       real(wp)              descr  ( 5        )
       real(wp)              sobs   ( 6        )
@@ -379,7 +379,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svref
+      character(frnmln)     svref
       integer(ip)           svrefi
 
       logical               first
@@ -402,10 +402,10 @@
 !
 !     In-line Function Definitions
 !
-      isinrt ( tmpfrm, cframe ) =       cframe .gt. 0 &
-                                  .and. cframe .le. ninert &
-                                  .and. tmpfrm .gt. 0 &
-                                  .and. tmpfrm .le. ninert
+      isinrt ( tmpfrm, cframe ) =       cframe > 0 &
+                                  .and. cframe <= ninert &
+                                  .and. tmpfrm > 0 &
+                                  .and. tmpfrm <= ninert
 
 !
 !     Standard SPICE error handling.
@@ -434,7 +434,7 @@
 !     We take care of the obvious case first.  It TARG and OBS are the
 !     same we can just fill in zero.
 !
-      if ( targ .eq. obs ) then
+      if ( targ == obs ) then
 
          lt = 0.0_wp
 
@@ -512,13 +512,13 @@
 !
       call zznamfrm ( svctr1, svref, svrefi, ref, refid )
 
-      if ( refid .eq. 0 ) then
+      if ( refid == 0 ) then
          call irfnum ( ref, refid )
       end if
 
-      if ( refid .eq. 0 ) then
+      if ( refid == 0 ) then
 
-         if (  frstnp(ref) .gt. 0 ) then
+         if (  frstnp(ref) > 0 ) then
 
             call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame, (''#'') contains ' &
@@ -530,7 +530,7 @@
             call errch  ( '#', ref )
 
 
-         else if ( ref .eq. ' ' ) then
+         else if ( ref == ' ' ) then
 
             call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame is blank.  The most ' &
@@ -586,9 +586,9 @@
       call cleard ( 6, starg(1,i) )
 
       do while (           found &
-                  .and.  ( i        .lt. chlen ) &
-                  .and.  ( ctarg(i) .ne. obs   ) &
-                  .and.  ( ctarg(i) .ne. ssb   )  )
+                  .and.  ( i        < chlen ) &
+                  .and.  ( ctarg(i) /= obs   ) &
+                  .and.  ( ctarg(i) /= ssb   )  )
 
 !
 !        Find a file and segment that has position
@@ -635,11 +635,11 @@
 !     loss of precision, but it's better than other
 !     alternatives.
 !
-      if ( i .eq. chlen ) then
+      if ( i == chlen ) then
 
          do while (      found &
-                   .and. ctarg(chlen) .ne. ssb &
-                   .and. ctarg(chlen) .ne. obs )
+                   .and. ctarg(chlen) /= ssb &
+                   .and. ctarg(chlen) /= obs )
 
 
 !
@@ -669,7 +669,7 @@
 !              relative to the new center.  Overwrite
 !              the last element of STARG.
 !
-               if ( tframe(chlen) .eq. tmpfrm ) then
+               if ( tframe(chlen) == tmpfrm ) then
 
                   call moved ( starg(1,chlen), 3, vtemp )
 
@@ -744,7 +744,7 @@
 !     node in CTARG if one is found.  It will
 !     be zero if COBS is not found in CTARG.
 !
-      if ( ctarg(nct) .eq. cobs ) then
+      if ( ctarg(nct) == cobs ) then
          ctpos  = nct
          cframe = tframe(ctpos)
       else
@@ -769,8 +769,8 @@
       legs   =  0
 
       do while (           found &
-                  .and.  ( cobs  .ne. ssb ) &
-                  .and.  ( ctpos .eq. 0   )  )
+                  .and.  ( cobs  /= ssb ) &
+                  .and.  ( ctpos == 0   )  )
 
 !
 !        Find a file and segment that has position
@@ -784,7 +784,7 @@
 !           The center of motion of COBS becomes the
 !           new COBS.
 !
-            if ( legs .eq. 0 ) then
+            if ( legs == 0 ) then
                call spkpvn ( handle, descr, et, tmpfrm, sobs,  cobs )
             else
                call spkpvn ( handle, descr, et, tmpfrm, stemp, cobs )
@@ -804,7 +804,7 @@
 !           the old COBS to get the position of OBS
 !           relative to the new COBS.
 !
-            if ( cframe .eq. tmpfrm ) then
+            if ( cframe == tmpfrm ) then
 !
 !              On the first leg of the position of the observer, we
 !              don't have to add anything, the position of the
@@ -812,7 +812,7 @@
 !              the number of legs in the observer position is one or
 !              greater.
 !
-               if ( legs .gt. 0 ) then
+               if ( legs > 0 ) then
                   call vadd ( sobs,  stemp, vtemp )
                   call vequ ( vtemp,        sobs  )
                end if
@@ -865,7 +865,7 @@
 !     have not found a common node though we have
 !     searched through all the available data.
 !
-      if ( ctpos .eq. 0 ) then
+      if ( ctpos == 0 ) then
 
          call bodc2n ( targ, tname,   found )
 
@@ -940,13 +940,13 @@
 !
 !     Compute the position of the target relative to CTARG(CTPOS)
 !
-      if ( ctpos .eq. 1 ) then
+      if ( ctpos == 1 ) then
          tframe(1) = cframe
       end if
 
       do i = 2, ctpos-1
 
-         if ( tframe(i) .eq. tframe(i+1) ) then
+         if ( tframe(i) == tframe(i+1) ) then
 
             call vadd  ( starg(1,i), starg(1,i+1),  stemp        )
             call moved ( stemp,      3,             starg(1,i+1) )
@@ -982,11 +982,11 @@
 !     faster to make logical checks than it is to compute
 !     frame transformations.
 !
-      if ( tframe(ctpos) .eq. cframe ) then
+      if ( tframe(ctpos) == cframe ) then
 
          call vsub   ( starg(1,ctpos), sobs,  pos  )
 
-      else if ( tframe(ctpos) .eq. refid ) then
+      else if ( tframe(ctpos) == refid ) then
 
 !
 !        If the last frame associated with the target is already
@@ -1049,7 +1049,7 @@
 !
 !     Finally, rotate as needed into the requested frame.
 !
-      if      ( cframe .eq. refid ) then
+      if      ( cframe == refid ) then
 
 !
 !        We don't have to do anything in this case.

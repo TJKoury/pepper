@@ -137,7 +137,7 @@
 
       idxtyp  =  coldsc ( ixtidx )
 
-      if ( idxtyp .ne. ifalse ) then
+      if ( idxtyp /= ifalse ) then
 !
 !        This column is indexed.
 !
@@ -147,7 +147,7 @@
          call zzekfrx ( handle, segdsc, coldsc, recptr, idx )
 
 
-         if ( idxtyp .eq. 1 ) then
+         if ( idxtyp == 1 ) then
 !
 !           For type 1 indexes, the index pointer is the root node of
 !           a B*-tree.  Just use the tree deletion routine.

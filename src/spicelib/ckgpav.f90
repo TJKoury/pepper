@@ -28,7 +28,7 @@
       integer(ip)           inst
       real(wp)              sclkdp
       real(wp)              tol
-      character*(*)         ref
+      character(*)          ref
       real(wp)              cmat   ( 3, 3 )
       real(wp)              av     ( 3    )
       real(wp)              clkout
@@ -957,7 +957,7 @@
 !
 !     Local variables
 !
-      character*(idlen)     segid
+      character(idlen)      segid
 
       real(wp)              dcd      ( ndc  )
       real(wp)              descr    ( nc   )
@@ -987,7 +987,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svref
+      character(frnmln)     svref
       integer(ip)           svrefr
 
       logical               first
@@ -1040,7 +1040,7 @@
 !
 !     If the tolerance is less than zero, we go no further.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
          call chkout ( 'CKGPAV' )
          return
       end if
@@ -1077,7 +1077,7 @@
 !
             call zznamfrm ( svctr1, svref, svrefr, ref, refreq )
 
-            if ( refreq .ne. refseg ) then
+            if ( refreq /= refseg ) then
 !
 !              We may need to convert the output ticks CLKOUT to ET
 !              so that we can get the needed state transformation
@@ -1087,8 +1087,8 @@
                call frinfo ( refreq, center, type1, typeid, gotit )
                call frinfo ( refseg, center, type2, typeid, gotit )
 
-               if (       type1 .eq. inertl &
-                    .and. type2 .eq. inertl ) then
+               if (       type1 == inertl &
+                    .and. type2 == inertl ) then
 !
 !                 Any old value of ET will do in this case.  We'll
 !                 use zero.

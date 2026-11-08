@@ -271,7 +271,7 @@
 !     sgp4fix Modern approach to finding sidereal time
 !
 
-      if (opmode .eq. imprvd ) then
+      if (opmode == imprvd ) then
 
 !
 !        Radians per day, earth rotation, 6.30038809866574D0.
@@ -284,7 +284,7 @@
                    - 4.50876723431868e-10_wp*tut1*tut1*tut1 &
                    + radday*( temp-0.5_wp-dint(temp-0.5_wp) )
 
-      else if (opmode .eq. afspc ) then
+      else if (opmode == afspc ) then
 
 !
 !        sgp4fix Use old way of finding GST
@@ -320,7 +320,7 @@
 !
       gsto = dmod( gsto,twopi() )
 
-      if ( gsto .lt. 0.0_wp ) then
+      if ( gsto < 0.0_wp ) then
          gsto= gsto + twopi()
       end if
 

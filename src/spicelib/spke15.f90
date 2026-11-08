@@ -363,7 +363,7 @@
 !
 
 
-      if ( p .le. 0 ) then
+      if ( p <= 0 ) then
 
          call setmsg ( 'The semi-latus rectum supplied to the ' &
          //            'SPK type 15 evaluator was non-positive.  This ' &
@@ -374,7 +374,7 @@
          call chkout ( 'SPKE15'                )
          return
 
-      else if ( ecc .lt. 0.0_wp ) then
+      else if ( ecc < 0.0_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 15 ' &
          //            'segment is negative.  It must be non-negative. ' &
@@ -385,7 +385,7 @@
          call chkout ( 'SPKE15'                  )
          return
 
-      else if ( gm  .le. 0.0_wp ) then
+      else if ( gm  <= 0.0_wp ) then
 
          call setmsg ( 'The mass supplied for the central body ' &
          //            'of a type 15 segment was non-positive. ' &
@@ -427,7 +427,7 @@
          return
 
 
-      else if ( rpl .lt. 0.0_wp ) then
+      else if ( rpl < 0.0_wp ) then
 
          call setmsg ( 'The central body radius was negative. ' &
          //            'It must be zero or positive.  The value ' &
@@ -456,7 +456,7 @@
 !
       dot = vdot ( pa, tp )
 
-      if ( abs(dot) .gt. 1.0e-5_wp ) then
+      if ( abs(dot) > 1.0e-5_wp ) then
 
          angle = vsep ( pa, tp ) * dpr()
 
@@ -525,10 +525,10 @@
 !     in terms of the true anomaly.  This means we need the accumulated
 !     true anomaly in order to properly transform the state.
 !
-      if (       ( j2flg .ne. 3     ) &
-           .and. ( oj2   .ne. 0.0_wp ) &
-           .and. ( ecc   .lt. 1.0_wp ) &
-           .and. ( near  .gt. rpl   )  ) then
+      if (       ( j2flg /= 3     ) &
+           .and. ( oj2   /= 0.0_wp ) &
+           .and. ( ecc   < 1.0_wp ) &
+           .and. ( near  > rpl   )  ) then
 
 !
 !        First compute the change in mean anomaly since periapsis.
@@ -543,7 +543,7 @@
 !
          theta  = mod( manom, twopi() )
 
-         if ( abs(theta).gt. pi() ) then
+         if ( abs(theta)> pi() ) then
             theta = theta - sign(twopi(),theta)
          end if
 
@@ -570,7 +570,7 @@
 !        Precess the periapsis by rotating the state vector about the
 !        trajectory pole
 !
-         if ( j2flg .ne. 1 ) then
+         if ( j2flg /= 1 ) then
 
             call vrotv ( state(1), tp, dperi, tmpsta(1) )
             call vrotv ( state(4), tp, dperi, tmpsta(4) )
@@ -582,7 +582,7 @@
 !        Regress the line of nodes by rotating the state
 !        about the pole of the central body.
 !
-         if ( j2flg .ne. 2 ) then
+         if ( j2flg /= 2 ) then
 
             call vrotv ( state,    pv, dnode, tmpsta(1) )
             call vrotv ( state(4), pv, dnode, tmpsta(4) )

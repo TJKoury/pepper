@@ -222,7 +222,7 @@
 !
 !     Make sure that RADIUS is ok; check in only if it isn't.
 !
-      if ( radius .lt. 0 ) then
+      if ( radius < 0 ) then
 
          sphsd = 0.0_wp
 

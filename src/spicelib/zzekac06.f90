@@ -31,7 +31,7 @@
       integer(ip)           handle
       integer(ip)           segdsc ( * )
       integer(ip)           coldsc ( * )
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       integer(ip)           entszs ( * )
       logical               nlflgs ( * )
 
@@ -209,8 +209,8 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
-      character*(pgsizc)    page
+      character(cnamsz)     column
+      character(pgsizc)     page
 
       integer(ip)           adrbuf ( bufsiz )
       integer(ip)           bufptr
@@ -267,13 +267,13 @@
       size   =  coldsc( sizidx )
       strlen =  coldsc( lenidx )
 
-      nullok =  nulptr .ne. ifalse
-      fixsiz =  size   .ne. ifalse
+      nullok =  nulptr /= ifalse
+      fixsiz =  size   /= ifalse
 
 !
 !     This column had better be class 6.
 !
-      if ( class .ne. 6 ) then
+      if ( class /= 6 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -344,7 +344,7 @@
       end if
 
 
-      if ( ndata .gt. 0 ) then
+      if ( ndata > 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
@@ -358,7 +358,7 @@
 !        we'll need.
 !
          cvlen   =  min (  len( cvals(1) ),  strlen  )
-         pad     =  cvlen  .lt.  strlen
+         pad     =  cvlen  <  strlen
 
          if ( pad ) then
             padlen  =  strlen - cvlen
@@ -395,7 +395,7 @@
       newent  =  .true.
 
 
-      do while ( row .le. nrows )
+      do while ( row <= nrows )
 !
 !        NEWREQ is set to TRUE if we discover that the next column
 !        entry must start on a new page.
@@ -467,7 +467,7 @@
             nwrite   =  min ( curchr-nchars, room )
             nw       =  nwrite
 
-            do while ( nw .gt. 0 )
+            do while ( nw > 0 )
 !
 !              At this point, we're guaranteed that
 !
@@ -481,7 +481,7 @@
 !                 a length of STRLEN characters.  The number of blanks
 !                 used to pad the input is PADLEN.
 !
-                  if ( cp .lt. cvlen ) then
+                  if ( cp < cvlen ) then
 !
 !                    Compute the number of `actual' characters of data
 !                    left in the current input string.
@@ -539,7 +539,7 @@
 !              length of the target column's strings STRLEN, it's time
 !              to look at the next input string.
 !
-               if ( cp .gt. strlen ) then
+               if ( cp > strlen ) then
                   from  =  from + 1
                   cp    =  1
                end if
@@ -558,13 +558,13 @@
 !           Decide whether we must continue the current entry on another
 !           data page.
 !
-            cntinu  =  ( nchars .lt. curchr ) .and. ( n .eq. cpsize )
+            cntinu  =  ( nchars < curchr ) .and. ( n == cpsize )
 
 !
 !           If we've finished writing out a column entry, get ready
 !           to write the next one.
 !
-            if ( nchars .eq. curchr ) then
+            if ( nchars == curchr ) then
 !
 !              The current character is the last of the current column
 !              entry.
@@ -574,8 +574,8 @@
 !              we must have enough room for the element count and at
 !              least one character of data.
 !
-               if ( remain .gt. 0 ) then
-                  newreq   =   n  .gt. ( cpsize - encsiz - 1 )
+               if ( remain > 0 ) then
+                  newreq   =   n  > ( cpsize - encsiz - 1 )
                end if
 
                row     =   row   +  1
@@ -592,7 +592,7 @@
 !        the entry, CNTINU is .FALSE.
 !
 
-         if (  ( bufptr .gt. bufsiz ) .or. ( row .gt. nrows )  ) then
+         if (  ( bufptr > bufsiz ) .or. ( row > nrows )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.
@@ -605,7 +605,7 @@
 
          if (         cntinu &
              .or.     newreq &
-             .or. ( ( row .gt. nrows ) .and. ( ndata .gt. 0 ) )  ) then
+             .or. ( ( row > nrows ) .and. ( ndata > 0 ) )  ) then
 !
 !           It's time to write out the current page.  First set the link
 !           count.
@@ -620,7 +620,7 @@
 !
 !           If there's more data to write, allocate another page.
 !
-            if ( remain .gt. 0 ) then
+            if ( remain > 0 ) then
 
                call zzekaps ( handle, segdsc, chr, .false., p2, pbase )
                page   = ' '

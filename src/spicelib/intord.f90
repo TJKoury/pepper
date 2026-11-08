@@ -28,7 +28,7 @@
       parameter           ( maxord = 148 )
 
       integer(ip)           n
-      character*(*)         string
+      character(*)          string
 
 ! $ Brief_I/O
 !
@@ -152,7 +152,7 @@
 !
       integer(ip)           i
       integer(ip)           last
-      character*(maxord)    mystr
+      character(maxord)     mystr
 
 !
 !     First get the English equivalent of the cardinal N.
@@ -167,16 +167,16 @@
 !
 !     Find the beginning of the last number of MYSTR.
 !
-      do while (       ( mystr(i:i) .ne. '-' ) &
-                 .and. ( mystr(i:i) .ne. ' ' ) &
-                 .and. ( i          .gt.  1  )  )
+      do while (       ( mystr(i:i) /= '-' ) &
+                 .and. ( mystr(i:i) /= ' ' ) &
+                 .and. ( i          >  1  )  )
 
          i = i - 1
 
       end do
 
-      if (      ( mystr(i:i) .eq. ' ' ) &
-           .or. ( mystr(i:i) .eq. '-' )  ) then
+      if (      ( mystr(i:i) == ' ' ) &
+           .or. ( mystr(i:i) == '-' )  ) then
 
          i = i + 1
 
@@ -185,35 +185,35 @@
 !
 !     Now convert the last cardinal to an ordinal.
 !
-      if ( mystr(i:last) .eq. 'ONE' ) then
+      if ( mystr(i:last) == 'ONE' ) then
 
          mystr(i:) = 'FIRST'
 
-      else if ( mystr(i:last) .eq. 'TWO' ) then
+      else if ( mystr(i:last) == 'TWO' ) then
 
          mystr(i:) = 'SECOND'
 
-      else if ( mystr(i:last) .eq. 'THREE' ) then
+      else if ( mystr(i:last) == 'THREE' ) then
 
          mystr(i:) = 'THIRD'
 
-      else if ( mystr(i:last) .eq. 'FIVE' ) then
+      else if ( mystr(i:last) == 'FIVE' ) then
 
          mystr(i:) = 'FIFTH'
 
-      else if ( mystr(i:last) .eq. 'EIGHT' ) then
+      else if ( mystr(i:last) == 'EIGHT' ) then
 
          mystr(i:) = 'EIGHTH'
 
-      else if ( mystr(i:last) .eq. 'NINE' ) then
+      else if ( mystr(i:last) == 'NINE' ) then
 
          mystr(i:) = 'NINTH'
 
-      else if ( mystr (i:last) .eq. 'TWELVE' ) then
+      else if ( mystr (i:last) == 'TWELVE' ) then
 
          mystr(i:) = 'TWELFTH'
 
-      else if ( mystr(last:last) .eq. 'Y' ) then
+      else if ( mystr(last:last) == 'Y' ) then
 
          mystr(last:) = 'IETH'
 

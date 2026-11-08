@@ -22,8 +22,8 @@
 
       include               'zzctr.inc'
 
-      character*(*)         from
-      character*(*)         to
+      character(*)          from
+      character(*)          to
       real(wp)              et
       real(wp)              xform  ( 6, 6 )
 
@@ -199,11 +199,11 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svfrom
+      character(frnmln)     svfrom
       integer(ip)           svfcod
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(frnmln)    svto
+      character(frnmln)     svto
       integer(ip)           svtcde
 
       logical               first
@@ -259,11 +259,11 @@
 !     Only non-zero id-codes are legitimate frame id-codes.  Zero
 !     indicates that the frame wasn't recognized.
 !
-      if      ( fcode .ne. 0 .and. tcode .ne. 0 ) then
+      if      ( fcode /= 0 .and. tcode /= 0 ) then
 
          call frmchg ( fcode, tcode, et, xform )
 
-      else if ( fcode .eq. 0 .and. tcode .eq. 0 ) then
+      else if ( fcode == 0 .and. tcode == 0 ) then
 
          call setmsg ( 'Neither of the frames # or # was ' &
          //            'recognized as a known reference frame. ' )
@@ -271,14 +271,14 @@
          call errch  ( '#', to   )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-      else if ( fcode .eq. 0 ) then
+      else if ( fcode == 0 ) then
 
          call setmsg ( 'The frame # was not recognized as a ' &
          //            'known reference frame. ' )
          call errch  ( '#', from )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-      else if ( tcode .eq. 0 ) then
+      else if ( tcode == 0 ) then
 
          call setmsg ( 'The frame # was not recognized as a ' &
          //            'known reference frame. ' )

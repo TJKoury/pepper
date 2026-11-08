@@ -407,7 +407,7 @@
 !     Local variables
 !
       integer(ip)           dtime (8)
-      character*(12)        rclock(3)
+      character(12)         rclock(3)
 
 !
 !     Standard SPICE error handling.

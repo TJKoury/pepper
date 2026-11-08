@@ -34,14 +34,14 @@
 
       integer(ip)           namlst     (           * )
       integer(ip)           nmpool     ( 2, lbpool:* )
-      character*(*)         names      (           * )
+      character(*)          names      (           * )
       integer(ip)           datlst     (           * )
       integer(ip)           dppool     ( 2, lbpool:* )
       real(wp)              dpvals     (           * )
       integer(ip)           chpool     ( 2, lbpool:* )
-      character*(*)         chvals     (           * )
+      character(*)          chvals     (           * )
 
-      character*(*)         varnam
+      character(*)          varnam
       logical               found
       integer(ip)           lookat
       integer(ip)           nameat
@@ -209,21 +209,21 @@
 !
       lookat =  zzhash ( varnam )
       node   =  namlst ( lookat )
-      full   =  lnknfn ( nmpool ) .le. 0
+      full   =  lnknfn ( nmpool ) <= 0
       found  = .false.
 
 !
 !     See if this name (or one colliding with it in the
 !     hash scheme) has already been stored in the name list.
 !
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 
          head =  node
          tail = -nmpool(prev,head)
 
-         do while ( node .gt. 0 .and. .not. found )
+         do while ( node > 0 .and. .not. found )
 
-            found  =  names (node) .eq. varnam
+            found  =  names (node) == varnam
             nameat =  node
             node   =  nmpool(next,node)
 

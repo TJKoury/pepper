@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)       utcstr
+      character(*)        utcstr
       real(wp)            et
 
 ! $ Brief_I/O
@@ -367,14 +367,14 @@
       parameter           ( lnsize = 80 )
 
 
-      character*(lnsize)    pictur
-      character*(longln)    error
+      character(lnsize)     pictur
+      character(longln)     error
 
       integer(ip)           smwdsz
       parameter           ( smwdsz = 8 )
 
-      character*(smwdsz)    type
-      character*(smwdsz)    modify ( 5 )
+      character(smwdsz)     type
+      character(smwdsz)     modify ( 5 )
 
 
       real(wp)              tvec   ( 10 )
@@ -424,8 +424,8 @@
 !
       if ( mods ) then
 
-         if (       modify(system) .ne. ' ' &
-              .and. modify(system) .ne. 'UTC' ) then
+         if (       modify(system) /= ' ' &
+              .and. modify(system) /= 'UTC' ) then
 
             error = 'UTC2ET does not support the specification ' &
             //      'of a time system in a string.  The time ' &
@@ -437,7 +437,7 @@
             call chkout ( 'UTC2ET' )
             return
 
-         else if ( modify(zone) .ne. ' ' ) then
+         else if ( modify(zone) /= ' ' ) then
 
             error = 'UTC2ET does not support the specification ' &
             //      'of a time zone in a time string.  The time ' &
@@ -448,7 +448,7 @@
             call chkout ( 'UTC2ET' )
             return
 
-         else if ( modify(ampm) .ne. ' ' ) then
+         else if ( modify(ampm) /= ' ' ) then
 
             error = 'UTC2ET does not support the AM/PM ' &
             //      'conventions for time strings. Try the ' &
@@ -466,7 +466,7 @@
 !     If parsing the time string went well, we let TTRANS handle
 !     the problem of transforming the time vector to TDB.
 !
-      if ( type .eq. 'YMD' .or. type .eq. 'YD') then
+      if ( type == 'YMD' .or. type == 'YD') then
 !
 !        Check the components of the time vector for reasonableness.
 !
@@ -482,15 +482,15 @@
 !
          year   = nint( tvec(1) )
 
-         if ( modify(era) .eq. 'B.C.' ) then
+         if ( modify(era) == 'B.C.' ) then
 
             year = 1 - year
 
-         else if ( modify(era) .eq. 'A.D.' ) then
+         else if ( modify(era) == 'A.D.' ) then
 !
 !           Do nothing.
 !
-         else if ( year .lt. 100 ) then
+         else if ( year < 100 ) then
 
             call texpyr ( year )
 
@@ -503,7 +503,7 @@
          call ttrans ( type, 'TDB', tvec )
          et = tvec(1)
 
-      else if ( type .eq. 'JD' ) then
+      else if ( type == 'JD' ) then
 
          call ttrans ( 'JDUTC', 'TDB', tvec )
          et = tvec(1)

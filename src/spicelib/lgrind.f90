@@ -262,7 +262,7 @@
 !
 !     No data, no interpolation.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call chkin  ( 'LGRIND'                              )
          call setmsg ( 'Array size must be positive; was #.' )
@@ -384,7 +384,7 @@
 
             denom    =     xvals(i)  -  xvals(i+j)
 
-            if ( denom .eq. 0.0_wp ) then
+            if ( denom == 0.0_wp ) then
 
                call chkin  ( 'LGRIND'                  )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )

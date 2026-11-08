@@ -338,9 +338,9 @@
 !
 !     We need a non-degenerate ellipsoid to start with.
 !
-      if (      ( a .le. 0.0_wp ) &
-           .or. ( b .le. 0.0_wp ) &
-           .or. ( c .le. 0.0_wp )  ) then
+      if (      ( a <= 0.0_wp ) &
+           .or. ( b <= 0.0_wp ) &
+           .or. ( c <= 0.0_wp )  ) then
 
          call chkin  ( 'EDNMPT'                               )
          call setmsg ( 'All ellipsoid semi-axis lengths must ' &
@@ -368,9 +368,9 @@
 !     If any of the scaled-semi axes underflowed to zero,
 !     we can't continue.
 !
-      if (      ( sa .le. 0.0_wp ) &
-           .or. ( sb .le. 0.0_wp ) &
-           .or. ( sc .le. 0.0_wp )  ) then
+      if (      ( sa <= 0.0_wp ) &
+           .or. ( sb <= 0.0_wp ) &
+           .or. ( sc <= 0.0_wp )  ) then
 
          call chkin  ( 'EDNMPT'                                   )
          call setmsg ( 'Scaled semi-axis lengths must be ' &
@@ -436,7 +436,7 @@
       arg = touchd(   ( na2 * normal(1) ) + ( nb2 * normal(2) ) &
                     + ( nc2 * normal(3) )                        )
 
-      if ( arg .le. 0.0_wp ) then
+      if ( arg <= 0.0_wp ) then
 
          call chkin  ( 'EDNMPT'                                   )
          call setmsg ( 'Scale factor LAMBDA must be positive, ' &

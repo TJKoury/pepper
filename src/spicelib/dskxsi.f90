@@ -41,11 +41,11 @@
       include 'zzctr.inc'
 
       logical               pri
-      character*(*)         target
+      character(*)          target
       integer(ip)           nsurf
       integer(ip)           srflst ( * )
       real(wp)              et
-      character*(*)         fixref
+      character(*)          fixref
       real(wp)              vertex ( 3 )
       real(wp)              raydir ( 3 )
       integer(ip)           maxd
@@ -839,8 +839,8 @@
 !
 !     Local variables
 !
-      character*(frnmln)    prvfrm
-      character*(bdnmln)    svtnam
+      character(frnmln)     prvfrm
+      character(bdnmln)     svtnam
 
       integer(ip)           fixfid
       integer(ip)           frmctr ( ctrsiz )
@@ -919,7 +919,7 @@
 !
 !     Reject NSURF if not set properly. Zero is a valid value.
 !
-      if ( nsurf .lt. 0 ) then
+      if ( nsurf < 0 ) then
 
          call setmsg ( 'The surface count NSURF must be non-negative ' &
          //            'but was #.'                                   )
@@ -933,7 +933,7 @@
 !
 !     Check output array sizes.
 !
-      if (  ( maxd .lt. dcsize ) .or. ( maxi .lt. icsize )  ) then
+      if (  ( maxd < dcsize ) .or. ( maxi < icsize )  ) then
 
          call setmsg ( 'Output array size MAXD must be at least #; ' &
          //            'output array size MAXI must be at least #. ' &
@@ -976,8 +976,8 @@
       end if
 
 
-      newfrm = ( fixref .ne. prvfrm ) .or. first
-      newtrg = ( trgcde .ne. prvtcd ) .or. first
+      newfrm = ( fixref /= prvfrm ) .or. first
+      newtrg = ( trgcde /= prvtcd ) .or. first
 
 !
 !     Get the frame ID if the pool state has changed. The
@@ -994,7 +994,7 @@
             return
          end if
 
-         if ( fixfid .eq. 0 ) then
+         if ( fixfid == 0 ) then
 
             call setmsg ( 'Reference frame # is not recognized by ' &
             //            'the SPICE frame subsystem. Possibly ' &
@@ -1033,7 +1033,7 @@
 !
 !        Make sure that FIXREF is centered at the target body's center.
 !
-         if ( fxcent .ne. trgcde ) then
+         if ( fxcent /= trgcde ) then
 
             call setmsg ( 'Reference frame # is not centered at the ' &
             //            'target body #. The ID code of the frame ' &

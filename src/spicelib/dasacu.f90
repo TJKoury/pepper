@@ -21,8 +21,8 @@
       implicit none
 
       integer(ip)           comlun
-      character*(*)         begmrk
-      character*(*)         endmrk
+      character(*)          begmrk
+      character(*)          endmrk
       logical               insbln
       integer(ip)           handle
 
@@ -416,10 +416,10 @@
 !
 !     Local variables
 !
-      character*(linlen)    combuf(bufsiz)
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
-      character*(linlen)    line
+      character(linlen)     combuf(bufsiz)
+      character(idwlen)     idword
+      character(ifnlen)     ifname
+      character(linlen)     line
 
       integer(ip)           i
       integer(ip)           intchr
@@ -487,7 +487,7 @@
 !
       open ( unit=scrlun, status='SCRATCH', iostat=iostat )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Attempt to open a temporary file failed.' // &
                        ' IOSTAT = #.'                              )
@@ -506,7 +506,7 @@
 !
       line = ' '
       eof  = .false.
-      do while ( line .ne. begmrk )
+      do while ( line /= begmrk )
 
          call readln ( comlun, line, eof )
          call ljust  ( line, line        )
@@ -544,7 +544,7 @@
 !     We also scan each line for non printing characters.
 !
       line = ' '
-      if ( endmrk .eq. ' ' ) then
+      if ( endmrk == ' ' ) then
 !
 !        If the end mark is blank, then we want to go until we hit the
 !        end of the comment file.
@@ -565,7 +565,7 @@
 !           If we got some comments, we need to scan them for non
 !           printing characters.
 !
-            if ( numcom .gt. 0 ) then
+            if ( numcom > 0 ) then
 
                do i = 1, numcom
 
@@ -582,8 +582,8 @@
 !                    $ Local Parameters section of the header.
 !
                      intchr = ichar ( combuf(i)(j:j) )
-                     if ( ( intchr .gt. maxpch ) .or. &
-                          ( intchr .lt. minpch )      ) then
+                     if ( ( intchr > maxpch ) .or. &
+                          ( intchr < minpch )      ) then
 
                            close       ( scrlun                      )
                            call setmsg ( 'A nonprinting character'  // &
@@ -639,15 +639,15 @@
 !           Look for ENDMRK in the current buffer if we got some
 !           comments.
 !
-            if ( numcom .gt. 0 ) then
+            if ( numcom > 0 ) then
 
                i = 1
-               do while ( more .and. ( i .le. numcom ) )
+               do while ( more .and. ( i <= numcom ) )
 
                   line = combuf(i)
                   call ljust ( line, line )
 
-                  if ( line .eq. endmrk ) then
+                  if ( line == endmrk ) then
 
                      more   = .false.
                      numcom = i - 1
@@ -665,7 +665,7 @@
 !           If we still have some comments, we need to scan them for
 !           non printing characters.
 !
-            if ( numcom .gt. 0 ) then
+            if ( numcom > 0 ) then
 
                do i = 1, numcom
 
@@ -682,8 +682,8 @@
 !                    $ Local Parameters section of the header.
 !
                      intchr = ichar ( combuf(i)(j:j) )
-                     if ( ( intchr .gt. maxpch ) .or. &
-                          ( intchr .lt. minpch )      ) then
+                     if ( ( intchr > maxpch ) .or. &
+                          ( intchr < minpch )      ) then
 
                            close       ( scrlun                      )
                            call setmsg ( 'A nonprinting character'  // &
@@ -747,7 +747,7 @@
 !     comments already in the comment area, indicated by NCOMC > 0, then
 !     we insert the blank line. Otherwise, just add the comments.
 !
-      if ( insbln .and. ( ncomc .gt. 0 ) ) then
+      if ( insbln .and. ( ncomc > 0 ) ) then
 
          call dasac ( handle, 1, ' ' )
 
@@ -780,7 +780,7 @@
 !
 !        If we got some, add them to the comment area of the DAS file.
 !
-         if ( numcom .gt. 0 ) then
+         if ( numcom > 0 ) then
 
             call dasac  ( handle, numcom, combuf )
 

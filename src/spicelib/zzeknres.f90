@@ -31,11 +31,11 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
       integer(ip)           errptr
 
 ! $ Brief_I/O
@@ -171,9 +171,9 @@
 !
 !     Local variables
 !
-      character*(tnamsz)    alias  ( maxtab )
-      character*(tnamsz)    ltable
-      character*(tnamsz)    table  ( maxtab )
+      character(tnamsz)     alias  ( maxtab )
+      character(tnamsz)     ltable
+      character(tnamsz)     table  ( maxtab )
 
       integer(ip)           base
       integer(ip)           cc     ( maxtab )
@@ -208,7 +208,7 @@
          return
       end if
 
-      if ( iparse .eq. ifalse ) then
+      if ( iparse == ifalse ) then
 
          call chkin  ( 'ZZEKNRES'                            )
          call setmsg ( 'Encoded query has not been parsed.'  )
@@ -242,8 +242,8 @@
 
          do j = i+1, ntab
 
-            if (      (  alias(i) .eq. alias(j)  ) &
-                .and. (  alias(i) .ne. ' '       )  ) then
+            if (      (  alias(i) == alias(j)  ) &
+                .and. (  alias(i) /= ' '       )  ) then
 
                error  =  .true.
                errmsg =  'Non-distinct alias <#> was found.'
@@ -274,9 +274,9 @@
 
          j  =  isrchc ( alias(i), ntab, table )
 
-         if ( j .ne. 0 ) then
+         if ( j /= 0 ) then
 
-            if ( j .ne. i ) then
+            if ( j /= i ) then
 
                error  =  .true.
                errmsg =  'Alias <#> conflicts with table name.'
@@ -309,11 +309,11 @@
          fnd  =  .false.
          j    =   1
 
-         do while (  ( j .le. nload ) .and. ( .not. fnd )  )
+         do while (  ( j <= nload ) .and. ( .not. fnd )  )
 
             call ektnam ( j, ltable )
 
-            if (  table(i) .eq. ltable  ) then
+            if (  table(i) == ltable  ) then
 !
 !              When we find a loaded table, save the column count for
 !              that table.
@@ -392,7 +392,7 @@
          end if
 
 
-         if ( cnstyp .eq. eqcol ) then
+         if ( cnstyp == eqcol ) then
 !
 !           Check the column and table on the RHS of the constraint.
 !

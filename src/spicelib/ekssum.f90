@@ -31,11 +31,11 @@
 
       integer(ip)           handle
       integer(ip)           segno
-      character*(*)         tabnam
+      character(*)          tabnam
       integer(ip)           nrows
       integer(ip)           ncols
-      character*(*)         cnames ( * )
-      character*(*)         dtypes ( * )
+      character(*)          cnames ( * )
+      character(*)          dtypes ( * )
       integer(ip)           sizes  ( * )
       integer(ip)           strlns ( * )
       logical               indexd ( * )
@@ -298,7 +298,7 @@
 !
 !     Local variables
 !
-      character*(short)     typstr ( ntypes )
+      character(short)      typstr ( ntypes )
 
       integer(ip)           cdscrs ( cdscsz, mxclsg )
       integer(ip)           i
@@ -343,14 +343,14 @@
 
          sizes (i)  =  cdscrs(sizidx,i)
 
-         if ( cdscrs(typidx,i) .eq. chr ) then
+         if ( cdscrs(typidx,i) == chr ) then
             strlns(i)  =  cdscrs(lenidx,i)
          else
             strlns(i)  =  0
          end if
 
-         indexd(i)  =  cdscrs(ixtidx,i) .ne. ifalse
-         nullok(i)  =  cdscrs(nflidx,i) .ne. ifalse
+         indexd(i)  =  cdscrs(ixtidx,i) /= ifalse
+         nullok(i)  =  cdscrs(nflidx,i) /= ifalse
 
       end do
 

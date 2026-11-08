@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           handle
-      character*(*)         line
+      character(*)          line
       logical               eoc
 
 ! $ Brief_I/O
@@ -237,11 +237,11 @@
 !
 !     Local variables
 !
-      character*(1)         eot
-      character*(ifnlen)    ifname
-      character*(1)         null
-      character*(maxcpr)    record
-      character*(maxcpr)    temp
+      character(1)          eot
+      character(ifnlen)     ifname
+      character(1)          null
+      character(maxcpr)     record
+      character(maxcpr)     temp
 
       integer(ip)           bol
       integer(ip)           bward
@@ -293,7 +293,7 @@
       call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
       nrr = fward - 2
 
-      if ( nrr .eq. 0 ) then
+      if ( nrr == 0 ) then
          line   = ' '
          eoc    = .true.
          eocsav = eoc
@@ -331,7 +331,7 @@
 
       read ( dafu, rec=rec, iostat=iostat ) record
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Error reading comment area of the binary ' // &
                        'file named FNM at record #.  Value of '    // &
                        'IOSTAT is #.'                              )
@@ -349,7 +349,7 @@
 !
       posnul = pos ( record, null, 1 )
 
-      if ( posnul .eq. 0 ) then
+      if ( posnul == 0 ) then
 !
 !        No NULL is in the record, so LINE is just the whole
 !        record.  (The maximum length of a line written to
@@ -371,7 +371,7 @@
 !     since we have a line to return.  If the first character
 !     was a NULL, the line is blank.
 !
-      if ( eol .eq. 0 ) then
+      if ( eol == 0 ) then
          line = ' '
       else
          line = record ( 1: eol )
@@ -638,7 +638,7 @@
 !
       bol = eol + 2
 
-      if ( bol .gt. maxcpr ) then
+      if ( bol > maxcpr ) then
 
          bol = bol - maxcpr
 
@@ -650,7 +650,7 @@
 !        It is the number of the first record after the reserved
 !        records.
 !
-         if ( rec .ge. fward ) then
+         if ( rec >= fward ) then
             call setmsg ( 'The comment area of the binary file '      // &
                           'named FNM is formatted incorrectly. '      // &
                           'The end of the comments is not marked '    // &
@@ -670,7 +670,7 @@
 !
          read ( dafu, rec=rec, iostat=iostat ) record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error reading comment area of the binary ' // &
                           'file named FNM at record #.  Value of '    // &
                           'IOSTAT is #.'                              )
@@ -690,7 +690,7 @@
 !     exist or may be blank or may be a character string.
 !
 
-      if ( record ( bol: bol ) .eq. eot ) then
+      if ( record ( bol: bol ) == eot ) then
 !
 !        There isn't a next line to get.  We're at the end of
 !        the comments.
@@ -703,7 +703,7 @@
       end if
 
 
-      if ( record ( bol: bol ) .eq. null ) then
+      if ( record ( bol: bol ) == null ) then
 !
 !        Just a NULL means a blank line.
 !
@@ -721,7 +721,7 @@
 !
       posnul = pos ( record, null, bol )
 
-      if ( posnul .ne. 0 ) then
+      if ( posnul /= 0 ) then
 
          eol    = posnul - 1
          line   = record ( bol: eol )
@@ -745,7 +745,7 @@
 !        It is the number of the first record after the reserved
 !        records.
 !
-         if ( rec .ge. fward ) then
+         if ( rec >= fward ) then
             call setmsg ( 'The comment area of the binary file '      // &
                           'named FNM is formatted incorrectly. '      // &
                           'The end of the comments is not marked '    // &
@@ -765,7 +765,7 @@
 !
          read ( dafu, rec=rec, iostat=iostat ) record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error reading comment area of the binary ' // &
                           'file named FNM at record #.  Value of '    // &
                           'IOSTAT is #.'                              )
@@ -785,7 +785,7 @@
 !
          posnul = pos ( record, null, 1 )
 
-         if ( posnul .eq. 0 ) then
+         if ( posnul == 0 ) then
             call setmsg ( 'Cannot find the end of the line.  There '  // &
                           'is something wrong with the format of the' // &
                           'comments.'                                 )
@@ -802,7 +802,7 @@
 !        the line from the two adjacent records.  Then assign the
 !        values of LINE and EOC.
 !
-         if ( eol .ne. 0 ) then
+         if ( eol /= 0 ) then
             temp( tmplen+1: ) = record( 1 : eol )
          end if
 

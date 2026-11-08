@@ -390,7 +390,7 @@
 !
 !     Local variables
 !
-      character*(256)       contxt
+      character(256)        contxt
 
       real(wp)              begin
       real(wp)              curx
@@ -443,7 +443,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.0_wp ) then
+      if ( tol <= 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
@@ -457,7 +457,7 @@
 !     Make sure that START is not greater than FINISH. Signal an
 !     error for START > FINISH.
 !
-      if ( start .gt. finish ) then
+      if ( start > finish ) then
 
          call setmsg ( 'Bad input interval: ' &
          //            'START = # > FINISH = #.' )
@@ -473,9 +473,9 @@
 !     Make sure that TOL is not too small, i.e. that neither
 !     START + TOL nor START - TOL equals START.
 !
-      if (  ( touchd (start - tol) .eq. start ) &
+      if (  ( touchd (start - tol) == start ) &
            .or. &
-            ( touchd (start + tol) .eq. start ) ) then
+            ( touchd (start + tol) == start ) ) then
 
          call setmsg ('TOL has value #1. '                      // &
                       'This value is too small to distinguish ' // &
@@ -494,9 +494,9 @@
 !     Make sure that TOL is not too small, i.e. that neither
 !     FINISH + TOL nor FINISH - TOL equals FINISH.
 !
-      if (  ( touchd (finish - tol) .eq. finish ) &
+      if (  ( touchd (finish - tol) == finish ) &
            .or. &
-            ( touchd (finish + tol) .eq. finish ) ) then
+            ( touchd (finish + tol) == finish ) ) then
 
          call setmsg ('TOL has value #1. '                      // &
                       'This value is too small to distinguish ' // &
@@ -516,7 +516,7 @@
 !
       if ( cstep ) then
 
-         if ( step .le. 0.0_wp ) then
+         if ( step <= 0.0_wp ) then
 
             call setmsg ( 'STEP has value #1. The search step ' &
             //            'must be positive.'                 )
@@ -530,7 +530,7 @@
          maxmag = max( abs(start), abs(finish) )
 
 
-         if ( touchd(maxmag+step) .eq. maxmag ) then
+         if ( touchd(maxmag+step) == maxmag ) then
 
             call setmsg ( 'STEP has value #1. This value ' &
             //            'is too small to guarantee that ' &
@@ -635,7 +635,7 @@
 !
 !     While the last X value precedes the end of the interval:
 !
-      do while ( svdx .lt. finish )
+      do while ( svdx < finish )
 !
 !        Attempt to bracket a state change.
 !
@@ -679,7 +679,7 @@
 !        been completely searched ...
 !
          do while (       ( savsta .eqv. cursta ) &
-                    .and. ( svdx   .lt.  finish )  )
+                    .and. ( svdx   <  finish )  )
 !
 !           Save the current X and state.
 !
@@ -753,7 +753,7 @@
 !           Make sure that X1 is not greater than X2. Signal an
 !           error for X1 > X2.
 !
-            if ( x1 .gt. x2 ) then
+            if ( x1 > x2 ) then
 
                call setmsg ( 'Bad x interval result: X1 = # > X2 = #.' )
                call errdp  ( '#',  x1                                  )
@@ -783,7 +783,7 @@
 !
             nloop = 0
 
-            do while ( touchd (x2 - x1) .gt. tol )
+            do while ( touchd (x2 - x1) > tol )
 
                nloop = nloop + 1
 !
@@ -795,7 +795,7 @@
 !              compared to bisection. If not, the user should
 !              probably use bisection.
 !
-               if ( nloop .ge. mxloop ) then
+               if ( nloop >= mxloop ) then
 
                   call setmsg ( 'Loop run exceeds maximum loop count. ' &
                //               'Unable to converge to TOL value #1 ' &
@@ -832,7 +832,7 @@
 
                t = brcktd ( t, x1, x2 )
 
-               if ( t .eq. x1 ) then
+               if ( t == x1 ) then
 !
 !                 This assignment may break the invariant that
 !                 the state at X2 is STATE2. This is allowed
@@ -840,7 +840,7 @@
 !
                   x2 = t
 
-               else if ( t .eq. x2 ) then
+               else if ( t == x2 ) then
 !
 !                 This assignment may break the invariant that
 !                 the state at X1 is STATE1. This is allowed
@@ -940,7 +940,7 @@
 !           For all state transitions, record the last point found
 !           by the state function.
 !
-            if ( room .gt. 0 ) then
+            if ( room > 0 ) then
 !
 !              Add the last point found during the transition search to
 !              the POINTS array.

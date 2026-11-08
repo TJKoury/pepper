@@ -172,7 +172,7 @@
       ncols   =  segdsc ( ncidx  )
       colidx  =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKAD01'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -188,7 +188,7 @@
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
+      if (  isnull  .and.  ( coldsc(nflidx) /= itrue )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -213,7 +213,7 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if (  ( datptr .ne. uninit ) .and. ( datptr .ne. noback )  ) then
+      if (  ( datptr /= uninit ) .and. ( datptr /= noback )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -248,7 +248,7 @@
          lastw  =  segdsc ( liwidx )
 
 
-         if ( lastw .lt. ipsize ) then
+         if ( lastw < ipsize ) then
 !
 !           There's room in the current page.  Set the data pointer
 !           and count, and write the value out to the first free
@@ -316,11 +316,11 @@
 !
       itype  =  coldsc(ixtidx)
 
-      if ( itype .ne. ifalse ) then
+      if ( itype /= ifalse ) then
 !
 !        The column is indexed.
 !
-         if ( itype .eq. 1 ) then
+         if ( itype == 1 ) then
 !
 !           The column has a type 1 index.  Insert the record pointer
 !           of the current element at the appropriate location.

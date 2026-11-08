@@ -28,8 +28,8 @@
       implicit none
 
       integer(ip)           handle
-      character*(*)         idword
-      character*(*)         ifname
+      character(*)          idword
+      character(*)          ifname
       integer(ip)           nresvr
       integer(ip)           nresvc
       integer(ip)           ncomr
@@ -305,11 +305,11 @@
 !
 !     Local variables
 !
-      character*(fmtlen)    format
-      character*(idwlen)    locidw
-      character*(ifnlen)    locifn
-      character*(ifnlen)    ifn
-      character*(tailen)    tail
+      character(fmtlen)     format
+      character(idwlen)     locidw
+      character(ifnlen)     locifn
+      character(ifnlen)     ifn
+      character(tailen)     tail
 
       integer(ip)           free
       integer(ip)           iostat
@@ -367,7 +367,7 @@
                                          format, &
                                          tail
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Attempt to read the file record failed for'   // &
                        ' file ''#''. IOSTAT = #'                      )
@@ -397,7 +397,7 @@
                                       format, &
                                       tail
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Could not write file record.  File was ' &
          //            '#.  IOSTAT was #.'                       )

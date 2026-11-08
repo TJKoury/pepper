@@ -20,8 +20,8 @@
 
       implicit none
 
-      character*(*)       file
-      character*(*)       line
+      character(*)        file
+      character(*)        line
       logical             eof
 
       integer(ip)         maxlen
@@ -518,7 +518,7 @@
 !
 !     Local variables
 !
-      character*(maxlen)  lstfil
+      character(maxlen)   lstfil
       integer(ip)         units   ( maxopn )
       integer(ip)         lstunt
       integer(ip)         unit
@@ -573,7 +573,7 @@
 !
 !     Are we reading the same file?
 !
-      same = ( lstfil .eq. file )  .and. ( lstfil .ne. ' ' )
+      same = ( lstfil == file )  .and. ( lstfil /= ' ' )
 
       if ( .not. same ) then
 
@@ -597,7 +597,7 @@
                     number  =  number, &
                     iostat  =  iostat  )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 !
 !           This is weird.  How can an INQUIRE statement fail,
 !           if the syntax is correct?  But just in case...
@@ -613,13 +613,13 @@
 
          index = isrchi ( number, n, units )
 
-         if ( index .eq. 0 ) then
+         if ( index == 0 ) then
 !
 !           Well, we will treat it as a new file then.  We will
 !           need a free logical unit. But only if we don't
 !           have too many files open already.
 !
-            if ( n .eq. maxopn ) then
+            if ( n == maxopn ) then
                call setmsg ( 'Too many files open already.' )
                call sigerr ( 'SPICE(TOOMANYFILESOPEN)'      )
                call chkout ( 'RDTEXT' )
@@ -639,7 +639,7 @@
                    status          = 'OLD', &
                    iostat          = iostat )
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
                call setmsg ( 'Could not open #.'     )
                call errch  ( '#', file               )
                call sigerr ( 'SPICE(FILEOPENFAILED)' )
@@ -682,9 +682,9 @@
 !     Repack the UNITS array, so that subsequent calls will not try to
 !     read from the file without reopening it.
 !
-      eof = ( iostat .lt. 0 )
+      eof = ( iostat < 0 )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          close ( units(index) )
 
@@ -920,7 +920,7 @@
                  number  =  number, &
                  iostat  =  iostat   )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
 !        if the syntax is correct?  But just in case...
@@ -936,11 +936,11 @@
 
       index = isrchi ( number, n, units )
 
-      if ( index .gt. 0 ) then
+      if ( index > 0 ) then
 
          close ( units(index) )
 
-         if ( units(index) .eq. lstunt ) then
+         if ( units(index) == lstunt ) then
             lstfil = ' '
          end if
 

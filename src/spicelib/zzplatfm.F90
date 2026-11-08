@@ -27,8 +27,8 @@
 
       implicit none
 
-      character*(*)         key
-      character*(*)         value
+      character(*)          key
+      character(*)          value
 
 ! $ Brief_I/O
 !
@@ -314,16 +314,16 @@
 !
 !     Default Reply in the event of an invalid KEY.
 !
-      character*(wdsize)     defrpy
+      character(wdsize)      defrpy
       parameter            ( defrpy = '<UNAVAILABLE>' )
 
 !
 !     Local Variables
 !
 
-      character*(kysize)    keycpy
-      character*(kysize)    keyval ( nattr )
-      character*(wdsize)    attcpy ( 0 : nattr )
+      character(kysize)     keycpy
+      character(kysize)     keyval ( nattr )
+      character(wdsize)     attcpy ( 0 : nattr )
 
       integer(ip)           index
 

@@ -30,16 +30,16 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         target
-      character*(*)         illmn
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          target
+      character(*)          illmn
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              et
       logical               decres
       real(wp)              rvl
       integer(ip)           xtarg
       integer(ip)           xillmn
-      character*(*)         xabcor
+      character(*)          xabcor
       integer(ip)           xobs
       logical               xablk  ( nabcor )
 
@@ -223,14 +223,14 @@
 !     The phase angle calculation is invariant with respect to
 !     reference frame. Use J2000 for convenience.
 !
-      character*(*)         ref
+      character(*)          ref
       parameter           ( ref    = 'J2000' )
 
 
 !
 !     Local Variables
 !
-      character*(corlen)    svabco
+      character(corlen)     svabco
 
       real(wp)              dsep
       real(wp)              lt
@@ -489,9 +489,9 @@
 !
 !     Make sure the observer, illuminator, and target are distinct.
 !
-      if ( (svtarg .eq. svobs)   .or. &
-           (svtarg .eq. svillm) .or. &
-           (svobs  .eq. svillm)      ) then
+      if ( (svtarg == svobs)   .or. &
+           (svtarg == svillm) .or. &
+           (svobs  == svillm)      ) then
 
          call setmsg ( 'The observer, illuminator, and ' &
          //            'target must be distinct objects, but ' &
@@ -751,7 +751,7 @@
 !
       dsep   = dvsep( s1, s2 )
 
-      decres = -dsep .lt. 0.0_wp
+      decres = -dsep < 0.0_wp
 
       call chkout ( 'ZZGFPADC' )
       return

@@ -24,12 +24,12 @@
       implicit none
 
       integer(ip)           which
-      character*(*)         kind
-      character*(*)         file
+      character(*)          kind
+      character(*)          file
       integer(ip)           count
-      character*(*)         filtyp
+      character(*)          filtyp
       integer(ip)           handle
-      character*(*)         srcfil
+      character(*)          srcfil
       logical               found
 
 
@@ -588,7 +588,7 @@
 !     The name of every file loaded through this interface will
 !     be stored in the array FILES.
 !
-      character*(filsiz)    files ( maxfil )
+      character(filsiz)     files ( maxfil )
       save                  files
 !
 !     The handle of every loaded file will be stored in the array
@@ -613,7 +613,7 @@
       integer(ip)           typlen
       parameter           ( typlen = 8 )
 
-      character*(typlen)    types ( maxfil )
+      character(typlen)     types ( maxfil )
       save                  types
 
 !
@@ -636,19 +636,19 @@
       integer(ip)           msgsiz
       parameter           ( msgsiz = 500 )
 
-      character*(1)         norc
-      character*(filsiz)    fil2ld
+      character(1)          norc
+      character(filsiz)     fil2ld
 
-      character*(filsiz)    pvalue
-      character*(lnsize)    symbol
+      character(filsiz)     pvalue
+      character(lnsize)     symbol
 
-      character*(msgsiz)    nofile
+      character(msgsiz)     nofile
 
 
-      character*(wdsize)    known ( nknown )
+      character(wdsize)     known ( nknown )
       save                  known
 
-      character*(typlen)    thstyp
+      character(typlen)     thstyp
 
       integer(ip)           b
       integer(ip)           cursrc
@@ -1359,7 +1359,7 @@
 !
 !     Reject excessively long file names.
 !
-      if ( rtrim(file) .gt. filsiz ) then
+      if ( rtrim(file) > filsiz ) then
 
          call setmsg ( 'Input file name <#> has length @ characters. ' &
          //            'The limit on the length of file names stored ' &
@@ -1376,7 +1376,7 @@
 !
 !     Make sure we have room to load at least one more file.
 !
-      if ( loaded .eq. maxfil ) then
+      if ( loaded == maxfil ) then
 
          call setmsg ( 'There is no room left in KEEPER to load ' &
          //            'another SPICE kernel.  The current limit ' &
@@ -1440,7 +1440,7 @@
 !
       call dtpool ( 'PATH_SYMBOLS', paths, npaths, norc )
 
-      if (  paths .and. ( norc .eq. 'C' )  ) then
+      if (  paths .and. ( norc == 'C' )  ) then
 !
 !        Make sure that the values are equal in number. We need to
 !        use STPOOL to count the path values, since some of them
@@ -1453,7 +1453,7 @@
 !
 !           Reject excessively long path names.
 !
-            if ( size .gt. filsiz ) then
+            if ( size > filsiz ) then
 
                call setmsg ( 'In meta-kernel <#>, the path at ' &
                //            'index # in the PATH_VALUES list has ' &
@@ -1481,7 +1481,7 @@
 
          npvals = i - 1
 
-         if ( npvals .ne. npaths ) then
+         if ( npvals /= npaths ) then
 
             call setmsg ( 'Number of path symbols is #; number of ' &
             //            'path values is #; counts must match.'  )
@@ -1518,7 +1518,7 @@
 !
 !        Reject excessively long file names.
 !
-         if ( fnmlen .gt. filsiz ) then
+         if ( fnmlen > filsiz ) then
 
             call setmsg ( 'In meta-kernel <#>, the file name at ' &
             //            'index # in the KERNELS_TO_LOAD list has ' &
@@ -1537,7 +1537,7 @@
 !
 !        Make sure we have room to load at least one more file.
 !
-         if ( loaded .eq. maxfil ) then
+         if ( loaded == maxfil ) then
 
             call setmsg ( 'There is no room left in KEEPER to ' &
             //            'load another SPICE kernel. The ' &
@@ -1560,7 +1560,7 @@
             start  = 1
             dollar = pos( fil2ld, '$', start )
 
-            do while ( dollar .gt. 0 )
+            do while ( dollar > 0 )
 !
 !              Determine the longest path symbol that fits into the
 !              current file name.  We fetch path symbols one at a
@@ -1579,7 +1579,7 @@
 
                   r =  rtrim ( symbol )
 
-                  if (       r  .gt. size &
+                  if (       r  > size &
                        .and. samsub( symbol,1,r, fil2ld,d+1,d+r ) ) then
                      use  = i
                      size = r
@@ -1590,7 +1590,7 @@
 !              If we found a matching path symbol, get the corresponding
 !              value and put it into the file name.
 !
-               if ( use .gt. 0 ) then
+               if ( use > 0 ) then
 !
 !                 Get the path value having index USE in the set of
 !                 path values. Note that we've already checked that
@@ -1603,7 +1603,7 @@
 !                 total length of the path and file name must fit in
 !                 the name buffer.
 !
-                  if ( ( fnmlen + n - size - 1 )  .gt.  filsiz ) then
+                  if ( ( fnmlen + n - size - 1 )  >  filsiz ) then
 
                      call setmsg ( 'In meta-kernel <#>, the path at ' &
                      //            'index # in the PATH_SYMBOLS list ' &
@@ -1657,7 +1657,7 @@
             return
          end if
 
-         if ( thstyp .eq. 'TEXT' ) then
+         if ( thstyp == 'TEXT' ) then
 !
 !           See if we stepped on any of the recognized variables.  If
 !           we did, there's no point in trying to continue.
@@ -2012,7 +2012,7 @@
 !-&
 
 
-      if ( loaded .eq. 0 ) then
+      if ( loaded == 0 ) then
          count = 0
          return
       end if
@@ -2033,7 +2033,7 @@
       call fndnwd ( kind, start, b, e )
 
 
-      do while ( b .gt. 0 )
+      do while ( b > 0 )
 
          if ( eqstr( kind(b:e), 'ALL' ) )then
             count = loaded
@@ -2059,13 +2059,13 @@
 
       do i = 1, loaded
 
-         add =      ( types(i) .eq. 'CK'   .and. dock   ) &
-               .or. ( types(i) .eq. 'DSK'  .and. dodsk  ) &
-               .or. ( types(i) .eq. 'EK'   .and. doek   ) &
-               .or. ( types(i) .eq. 'META' .and. dometa ) &
-               .or. ( types(i) .eq. 'PCK'  .and. dopck  ) &
-               .or. ( types(i) .eq. 'SPK'  .and. dospk  ) &
-               .or. ( types(i) .eq. 'TEXT' .and. dotext )
+         add =      ( types(i) == 'CK'   .and. dock   ) &
+               .or. ( types(i) == 'DSK'  .and. dodsk  ) &
+               .or. ( types(i) == 'EK'   .and. doek   ) &
+               .or. ( types(i) == 'META' .and. dometa ) &
+               .or. ( types(i) == 'PCK'  .and. dopck  ) &
+               .or. ( types(i) == 'SPK'  .and. dospk  ) &
+               .or. ( types(i) == 'TEXT' .and. dotext )
 
          if ( add ) then
             count = count + 1
@@ -2424,7 +2424,7 @@
       handle =  0
       found  = .false.
 
-      if ( which .lt. 1 .or. which .gt. loaded ) then
+      if ( which < 1 .or. which > loaded ) then
          return
       end if
 !
@@ -2440,7 +2440,7 @@
       start  = 1
       call fndnwd ( kind, start, b, e )
 
-      do while ( b .gt. 0 )
+      do while ( b > 0 )
 
          if ( eqstr( kind(b:e), 'ALL' ) )then
 !
@@ -2452,7 +2452,7 @@
             filtyp = types (which)
             handle = handls(which)
 
-            if ( srces(which) .ne. 0 ) then
+            if ( srces(which) /= 0 ) then
                srcfil = files( srces(which) )
             end if
             return
@@ -2480,13 +2480,13 @@
 
       do i = 1, loaded
 
-         add =      ( types(i) .eq. 'CK'   .and. dock   ) &
-               .or. ( types(i) .eq. 'DSK'  .and. dodsk  ) &
-               .or. ( types(i) .eq. 'EK'   .and. doek   ) &
-               .or. ( types(i) .eq. 'META' .and. dometa ) &
-               .or. ( types(i) .eq. 'PCK'  .and. dopck  ) &
-               .or. ( types(i) .eq. 'SPK'  .and. dospk  ) &
-               .or. ( types(i) .eq. 'TEXT' .and. dotext )
+         add =      ( types(i) == 'CK'   .and. dock   ) &
+               .or. ( types(i) == 'DSK'  .and. dodsk  ) &
+               .or. ( types(i) == 'EK'   .and. doek   ) &
+               .or. ( types(i) == 'META' .and. dometa ) &
+               .or. ( types(i) == 'PCK'  .and. dopck  ) &
+               .or. ( types(i) == 'SPK'  .and. dospk  ) &
+               .or. ( types(i) == 'TEXT' .and. dotext )
 
          if ( add ) then
 
@@ -2495,14 +2495,14 @@
 !           If we've reached the specified number, fill in the
 !           requested information and return.
 !
-            if ( hits .eq. which ) then
+            if ( hits == which ) then
 
                found  = .true.
                file   = files (i)
                filtyp = types (i)
                handle = handls(i)
 
-               if ( srces(i) .ne. 0 ) then
+               if ( srces(i) /= 0 ) then
                   srcfil = files( srces(i) )
                end if
                return
@@ -2818,13 +2818,13 @@
 
       i = isrchc ( file, loaded, files )
 
-      if ( i .gt. 0 ) then
+      if ( i > 0 ) then
 
          found  = .true.
          filtyp = types (i)
          handle = handls(i)
 
-         if ( srces(i) .ne. 0 ) then
+         if ( srces(i) /= 0 ) then
             srcfil = files( srces(i) )
          end if
 
@@ -3075,23 +3075,23 @@
 !
       do i = 1, loaded
 
-         if (      types(i) .eq. 'SPK' ) then
+         if (      types(i) == 'SPK' ) then
 
             call spkuef ( handls(i) )
 
-         else if ( types(i) .eq. 'CK' ) then
+         else if ( types(i) == 'CK' ) then
 
             call ckupf ( handls(i) )
 
-         else if ( types(i) .eq. 'PCK' ) then
+         else if ( types(i) == 'PCK' ) then
 
             call pckuof ( handls(i) )
 
-         else if ( types(i) .eq. 'EK' ) then
+         else if ( types(i) == 'EK' ) then
 
             call ekuef ( handls(i) )
 
-         else if ( types(i) .eq. 'DSK' ) then
+         else if ( types(i) == 'DSK' ) then
 
             call zzdskusf ( handls(i) )
 
@@ -3652,9 +3652,9 @@
       gotit = .false.
       i     = loaded
 
-      do while ( .not. gotit .and. i .gt. 0 )
+      do while ( .not. gotit .and. i > 0 )
 
-         if ( files(i) .eq. file ) then
+         if ( files(i) == file ) then
             gotit = .true.
          else
             i     = i - 1
@@ -3682,11 +3682,11 @@
 !     across all file types. We don't need to rely on file
 !     names.
 !
-      if (    ( types(i) .eq. 'SPK' ) &
-          .or.( types(i) .eq. 'CK'  ) &
-          .or.( types(i) .eq. 'DSK' ) &
-          .or.( types(i) .eq. 'EK'  ) &
-          .or.( types(i) .eq. 'PCK' ) ) then
+      if (    ( types(i) == 'SPK' ) &
+          .or.( types(i) == 'CK'  ) &
+          .or.( types(i) == 'DSK' ) &
+          .or.( types(i) == 'EK'  ) &
+          .or.( types(i) == 'PCK' ) ) then
 !
 !        Count the occurrences of the file in the database.
 !        Stop if we reach two occurrences.
@@ -3694,16 +3694,16 @@
          nmult = 0
          j     = 1
 
-         do while ( ( j .le. loaded ) .and. ( nmult .lt. 2 ) )
+         do while ( ( j <= loaded ) .and. ( nmult < 2 ) )
 
-            if ( handls(j) .eq. handls(i) ) then
+            if ( handls(j) == handls(i) ) then
 !
 !              To be safe, make sure we're not looking at
 !              a text kernel with a random, matching handle
 !              value.
 !
-               if (      ( types(j) .ne. 'TEXT' ) &
-                   .and. ( types(j) .ne. 'META' ) ) then
+               if (      ( types(j) /= 'TEXT' ) &
+                   .and. ( types(j) /= 'META' ) ) then
 
                   nmult = nmult + 1
 
@@ -3715,12 +3715,12 @@
 
          end do
 
-         single = nmult .eq. 1
+         single = nmult == 1
 
       end if
 
 
-      if (      types(i) .eq. 'SPK' ) then
+      if (      types(i) == 'SPK' ) then
 
          if ( single ) then
             call spkuef ( handls(i) )
@@ -3728,7 +3728,7 @@
 
          didspk = .true.
 
-      else if ( types(i) .eq. 'CK' ) then
+      else if ( types(i) == 'CK' ) then
 
          if ( single ) then
             call ckupf ( handls(i) )
@@ -3736,7 +3736,7 @@
 
          didck = .true.
 
-      else if ( types(i) .eq. 'DSK' ) then
+      else if ( types(i) == 'DSK' ) then
 
          if ( single ) then
             call zzdskusf ( handls(i) )
@@ -3744,7 +3744,7 @@
 
          diddsk = .true.
 
-      else if ( types(i) .eq. 'PCK' ) then
+      else if ( types(i) == 'PCK' ) then
 
          if ( single ) then
             call pckuof ( handls(i) )
@@ -3752,7 +3752,7 @@
 
          didpck = .true.
 
-      else if ( types(i) .eq. 'EK' ) then
+      else if ( types(i) == 'EK' ) then
 
          if ( single ) then
             call ekuef ( handls(i) )
@@ -3760,12 +3760,12 @@
 
          didek = .true.
 
-      else if ( types(i) .eq. 'TEXT' ) then
+      else if ( types(i) == 'TEXT' ) then
 
          call clpool
          didtxt = .true.
 
-      else if ( types(i) .eq. 'META' ) then
+      else if ( types(i) == 'META' ) then
 !
 !        This is a special case, we need to undo the effect of loading
 !        the meta-kernel.  This means we need to unload all kernels
@@ -3777,7 +3777,7 @@
 
          do j = loaded, src+1, -1
 
-            if ( srces(j) .eq. src ) then
+            if ( srces(j) == src ) then
 !
 !              This file was loaded by the meta-kernel of interest.
 !              We only need to unload the binary kernels as we
@@ -3790,11 +3790,11 @@
 !              this test on each loop pass, since the count
 !              may have changed since the last pass.
 !
-               if (     ( types(j) .eq. 'SPK' ) &
-                   .or. ( types(j) .eq. 'CK'  ) &
-                   .or. ( types(j) .eq. 'DSK' ) &
-                   .or. ( types(j) .eq. 'EK'  ) &
-                   .or. ( types(j) .eq. 'PCK' ) ) then
+               if (     ( types(j) == 'SPK' ) &
+                   .or. ( types(j) == 'CK'  ) &
+                   .or. ( types(j) == 'DSK' ) &
+                   .or. ( types(j) == 'EK'  ) &
+                   .or. ( types(j) == 'PCK' ) ) then
 !
 !                 Count the occurrences of the file in the database.
 !                 Stop if we reach two occurrences.
@@ -3802,17 +3802,17 @@
                   nmult = 0
                   k     = 1
 
-                  do while (      ( k     .le. loaded ) &
-                            .and. ( nmult .lt. 2      ) )
+                  do while (      ( k     <= loaded ) &
+                            .and. ( nmult < 2      ) )
 
-                     if ( handls(k) .eq. handls(j) ) then
+                     if ( handls(k) == handls(j) ) then
 !
 !                       To be safe, make sure we're not looking at a
 !                       text kernel with a random, matching handle
 !                       value.
 !
-                        if (     ( types(k) .ne. 'TEXT' ) &
-                           .and. ( types(k) .ne. 'META' ) ) then
+                        if (     ( types(k) /= 'TEXT' ) &
+                           .and. ( types(k) /= 'META' ) ) then
 
                            nmult = nmult + 1
 
@@ -3824,12 +3824,12 @@
 
                   end do
 
-                  single = nmult .eq. 1
+                  single = nmult == 1
 
                end if
 
 
-               if ( types(j) .eq. 'SPK' ) then
+               if ( types(j) == 'SPK' ) then
 
                   if ( single ) then
                      call spkuef ( handls(j) )
@@ -3837,7 +3837,7 @@
 
                   didspk = .true.
 
-               else if ( types(j) .eq. 'CK' ) then
+               else if ( types(j) == 'CK' ) then
 
                   if ( single ) then
                      call ckupf ( handls(j) )
@@ -3845,7 +3845,7 @@
 
                   didck = .true.
 
-               else if ( types(j) .eq. 'DSK' ) then
+               else if ( types(j) == 'DSK' ) then
 
                   if ( single ) then
                      call zzdskusf ( handls(j) )
@@ -3853,7 +3853,7 @@
 
                   diddsk = .true.
 
-               else if ( types(j) .eq. 'PCK' ) then
+               else if ( types(j) == 'PCK' ) then
 
                   if ( single ) then
                      call pckuof ( handls(j) )
@@ -3861,7 +3861,7 @@
 
                   didpck = .true.
 
-               else if ( types(j) .eq. 'EK' ) then
+               else if ( types(j) == 'EK' ) then
 
                   if ( single ) then
                      call ekuef ( handls(j) )
@@ -3891,7 +3891,7 @@
 !
                do k = j, loaded
 
-                  if ( srces(k) .gt. j ) then
+                  if ( srces(k) > j ) then
 !
 !                    This pointer is affected by the deletion of
 !                    the Jth database entry.
@@ -3928,7 +3928,7 @@
 !
       do j = i, loaded
 
-         if ( srces(j) .gt. i ) then
+         if ( srces(j) > i ) then
 !
 !           This pointer is affected by the deletion of the Ith
 !           database entry.
@@ -3947,12 +3947,12 @@
 
          do i = 1, loaded
 
-            if (      types(i) .eq. 'TEXT' &
-                 .or. types(i) .eq. 'META' ) then
+            if (      types(i) == 'TEXT' &
+                 .or. types(i) == 'META' ) then
 
                call ldpool ( files(i) )
 
-               if ( types(i) .eq. 'META' ) then
+               if ( types(i) == 'META' ) then
 !
 !                 Clean up any debris that may have been left lying
 !                 around because we reloaded a meta-text kernel.
@@ -3978,7 +3978,7 @@
       if ( didspk ) then
 
          do i = 1, loaded
-            if ( types(i) .eq. 'SPK' ) then
+            if ( types(i) == 'SPK' ) then
                call spklef ( files(i), handls(i) )
             end if
          end do
@@ -3992,7 +3992,7 @@
       if ( didck ) then
 
          do i = 1, loaded
-            if ( types(i) .eq. 'CK' ) then
+            if ( types(i) == 'CK' ) then
                call cklpf ( files(i), handls(i) )
             end if
          end do
@@ -4007,7 +4007,7 @@
       if ( diddsk ) then
 
          do i = 1, loaded
-            if ( types(i) .eq. 'DSK' ) then
+            if ( types(i) == 'DSK' ) then
                call zzdsklsf ( files(i), handls(i) )
             end if
          end do
@@ -4022,7 +4022,7 @@
       if ( didpck ) then
 
          do i = 1, loaded
-            if ( types(i) .eq. 'PCK' ) then
+            if ( types(i) == 'PCK' ) then
                call pcklof ( files(i), handls(i) )
             end if
          end do
@@ -4036,7 +4036,7 @@
       if ( didek ) then
 
          do i = 1, loaded
-            if ( types(i) .eq. 'EK' ) then
+            if ( types(i) == 'EK' ) then
                call eklef ( files(i), handls(i) )
             end if
          end do

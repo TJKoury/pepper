@@ -38,7 +38,7 @@
       integer(ip)           sclkid
       real(wp)              dc     ( 2 )
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
@@ -256,7 +256,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -408,9 +408,9 @@
 !        intervals *do not get expanded*; this choice is
 !        consistent with the type 6 reading algorithm.
 !
-         if ( begin .le. finish ) then
+         if ( begin <= finish ) then
 
-            if ( tol .gt. 0.0_wp ) then
+            if ( tol > 0.0_wp ) then
 
                begin   =  max( begin  - tol, 0.0_wp )
                finish  =       finish + tol
@@ -440,7 +440,7 @@
 !
 !        Insert the interval into the window.
 !
-         if ( begin .le. finish ) then
+         if ( begin <= finish ) then
 
             call wninsd ( begin, finish, schedl )
 

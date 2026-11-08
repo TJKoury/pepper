@@ -256,7 +256,7 @@
 !
 !     Make sure that this really is a type 9 or type 13 data segment.
 !
-      if (  ( type .ne. 09 ) .and. ( type .ne. 13 )  ) then
+      if (  ( type /= 09 ) .and. ( type /= 13 )  ) then
          call chkin ( 'SPKR09'                                        )
          call setmsg( 'You are attempting to locate type 9 or type ' // &
                       '13 data in a type # data segment.'             )
@@ -270,7 +270,7 @@
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+      if (  ( et < dc(1) )  .or.  ( et > dc(2) )  )  then
          call chkin ( 'SPKR09'                                      )
          call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
@@ -329,7 +329,7 @@
       ndir    =  (n-1) / dirsiz
       dirbas  =  end  -  ndir  -  2
 
-      if ( ndir .eq. 0 ) then
+      if ( ndir == 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
@@ -350,8 +350,8 @@
 
          call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         do while (       ( buffer(nread) .lt. et ) &
-                    .and. ( remain        .gt. 0  )   )
+         do while (       ( buffer(nread) < et ) &
+                    .and. ( remain        > 0  )   )
 
             bufbas  =  bufbas + nread
             nread   =  min ( remain, bufsiz )
@@ -385,7 +385,7 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      if ( group .eq. 1 ) then
+      if ( group == 1 ) then
 
          begidx  =  1
          endidx  =  min ( n, dirsiz )
@@ -418,7 +418,7 @@
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
          low  =  1
       else
          low  =  begidx + i - 1
@@ -437,7 +437,7 @@
 !        never larger than the (ENDIDX-BEGIDX+1)th element of the
 !        buffer.
 !
-         if ( i .eq. 0 ) then
+         if ( i == 0 ) then
 !
 !           This can happen only if the request time matches the
 !           first time tag of the segment.
@@ -445,7 +445,7 @@
             near = low
 
          else if (       dabs(  et  -  buffer(i)    ) &
-                   .lt.  dabs(  et  -  buffer(i+1)  )    )  then
+                   <  dabs(  et  -  buffer(i+1)  )    )  then
 
             near = low
 

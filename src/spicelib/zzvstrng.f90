@@ -23,12 +23,12 @@
 
       implicit none
       real(wp)              x
-      character*(1)         fill
+      character(1)          fill
       integer(ip)           from
       integer(ip)           to
       logical               rnd
       integer(ip)           expont
-      character*(*)         substr
+      character(*)          substr
       logical               did
 
 ! $ Brief_I/O
@@ -204,9 +204,9 @@
 
 
 
-      character*(wdsize)    string
-      character*(1)         myfill
-      character*(1)         letter
+      character(wdsize)     string
+      character(1)          myfill
+      character(1)          letter
 
       integer(ip)           blank
       integer(ip)           code
@@ -352,14 +352,14 @@
       blank = ichar ( ' ' )
 
 
-      minus = ichar( string(esgn:esgn) ).eq. ichar('-')
+      minus = ichar( string(esgn:esgn) )== ichar('-')
       code  = ichar( string(efst:efst) )
       exp   = code - code0
 
       i     = escd
       code  = ichar( string(i:i) )
 
-      do while ( code .ne. blank )
+      do while ( code /= blank )
 
          exp  = exp * 10 + ( code - code0 )
          i    = i + 1
@@ -557,7 +557,7 @@
 !
 !     Blank pad to the right of J (if there's anything to pad).
 !
-      if ( j .lt. lsub ) then
+      if ( j < lsub ) then
          substr(j+1:) = ' '
       end if
 !
@@ -571,13 +571,13 @@
 !        If this points to the decimal point, move one more to the
 !        right.
 !
-         if ( slot .eq. 0 ) then
+         if ( slot == 0 ) then
             slot = slot + 1
          end if
 !
 !        Determine which digit D_i corresponds to SLOT.
 !
-         if ( slot .lt. 0 ) then
+         if ( slot < 0 ) then
             i = exp + slot + 1
          else
             i = exp + slot
@@ -585,11 +585,11 @@
 !
 !        We will need to round in D_i is 5 or more.
 !
-         if ( i .lt. 0 ) then
+         if ( i < 0 ) then
             letter = '0'
-         else if ( i .eq. 0 ) then
+         else if ( i == 0 ) then
             letter = string(2:2)
-         else if ( i .lt. maxsig ) then
+         else if ( i < maxsig ) then
             letter = string(3+i:3+i)
          else
             letter = '0'
@@ -607,7 +607,7 @@
 !
       do slot = to, from, -1
 
-         if ( slot .eq. 0 ) then
+         if ( slot == 0 ) then
 
             letter = '.'
 
@@ -617,7 +617,7 @@
 !           Otherwise we need to first see which digit, d_I, is being
 !           requested.
 !
-            if ( slot .lt. 0 ) then
+            if ( slot < 0 ) then
                i = exp + slot + 1
             else
                i = exp + slot
@@ -627,7 +627,7 @@
 !           Now just look up d_I according to the rule we established
 !           earlier.
 !
-            if ( i .lt. 0 ) then
+            if ( i < 0 ) then
 
 !
 !              If the SLOT is prior to the first significant character
@@ -640,7 +640,7 @@
                   incr   = no
                else
 
-                  if ( slot .lt. -1 ) then
+                  if ( slot < -1 ) then
                      letter = myfill
                   else
                      letter = '0'
@@ -648,7 +648,7 @@
 
                end if
 
-            else if ( i .eq. 0 ) then
+            else if ( i == 0 ) then
 
 
                letter = string(2:2)
@@ -664,7 +664,7 @@
 !                 is less than 10, we are done incrementing set
 !                 INCR to NO.
 !
-                  if ( value .eq. 10 ) then
+                  if ( value == 10 ) then
                      letter = '0'
                   else
                      letter = char ( value + code0 )
@@ -674,7 +674,7 @@
                end if
 
 
-            else if ( i .lt. maxsig ) then
+            else if ( i < maxsig ) then
 !
 !              This case is virtually identical to the previous
 !              case, except that we need to pick off a different
@@ -686,7 +686,7 @@
 
                   value = ichar(letter) - code0 + 1
 
-                  if ( value .eq. 10 ) then
+                  if ( value == 10 ) then
                      letter = '0'
                   else
                      letter = char ( value + code0 )
@@ -703,7 +703,7 @@
 
          end if
 
-         if ( j .le. lsub ) then
+         if ( j <= lsub ) then
             substr(j:j) = letter
          end if
 

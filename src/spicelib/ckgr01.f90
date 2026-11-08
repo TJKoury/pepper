@@ -353,7 +353,7 @@
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 
-      if ( icd( 3 ) .ne. 1 ) then
+      if ( icd( 3 ) /= 1 ) then
          call setmsg ( 'Data type of the segment should be 1: Passed '// &
                        'descriptor shows type = #.'                    )
          call errint ( '#', icd( 3 )                                   )
@@ -367,7 +367,7 @@
       call dafgda ( handle, icd( 6 ), icd( 6 ), n )
       nrec = int( n )
 
-      if ( icd( 4 ) .eq. 1 ) then
+      if ( icd( 4 ) == 1 ) then
          psiz = qavsiz
       else
          psiz = qsiz
@@ -377,7 +377,7 @@
 !     If a request was made for a record which doesn't exist, then
 !     signal an error and leave.
 !
-      if ( recno .lt. 1 .or. recno .gt. nrec ) then
+      if ( recno < 1 .or. recno > nrec ) then
          call setmsg ( 'Requested record number (#) does not exist. ' // &
                        'There are # records in the segment.'           )
          call errint ( '#', recno                                      )

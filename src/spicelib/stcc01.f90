@@ -24,10 +24,10 @@
       include 'ektnamsz.inc'
       include 'ekglimit.inc'
 
-      character*(*)         catfnm
-      character*(*)         tabnam
+      character(*)          catfnm
+      character(*)          tabnam
       logical               istyp1
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -180,12 +180,12 @@
 !     Local variables
 !
 
-      character*(4)         cat1dt ( cat1nc )
-      character*(4)         dtypes ( mxclsg )
-      character*(cnamsz)    cat1nm ( cat1nc )
-      character*(cnamsz)    cnames ( mxclsg )
-      character*(tnamsz)    tmptnm
-      character*(tnamsz)    tnmprv
+      character(4)          cat1dt ( cat1nc )
+      character(4)          dtypes ( mxclsg )
+      character(cnamsz)     cat1nm ( cat1nc )
+      character(cnamsz)     cnames ( mxclsg )
+      character(tnamsz)     tmptnm
+      character(tnamsz)     tnmprv
 
       integer(ip)           i
       integer(ip)           j
@@ -250,7 +250,7 @@
 !
       numseg = eknseg ( tmphnd )
 
-      if ( numseg .le. 0 ) then
+      if ( numseg <= 0 ) then
          errmsg = 'File contains no data.'
          istyp1 = .false.
          call chkout ( 'STCC01' )
@@ -268,9 +268,9 @@
                         ncols,   cnames,  dtypes,  sizes, &
                         strlns,  indexd,  nullok          )
 
-         if ( i .gt. 1 ) then
+         if ( i > 1 ) then
 
-            if ( tmptnm .ne. tnmprv ) then
+            if ( tmptnm /= tnmprv ) then
                errmsg = 'File contains more than one data table.'
                istyp1 = .false.
                call chkout ( 'STCC01' )
@@ -289,7 +289,7 @@
 !     an error message and return to a calling routine.
 !
 
-      if ( ncols .lt. cat1nc ) then
+      if ( ncols < cat1nc ) then
          errmsg = 'File contains too few data columns.'
          istyp1 = .false.
          call chkout ( 'STCC01' )
@@ -307,8 +307,8 @@
 
          j = isrchc ( cat1nm(i), ncols, cnames )
 
-         if ( j .gt. 0  ) then
-            found = cat1dt(i) .eq. dtypes(j) .and. .not. nullok(j)
+         if ( j > 0  ) then
+            found = cat1dt(i) == dtypes(j) .and. .not. nullok(j)
          end if
 
          if ( .not. found ) then

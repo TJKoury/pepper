@@ -21,9 +21,9 @@
       implicit none
 
       integer(ip)           nelt
-      character*1           dir
+      character(1)          dir
       integer(ip)           ncycle
-      character*(*)         array    ( * )
+      character(*)          array    ( * )
 
 ! $ Brief_I/O
 !
@@ -156,8 +156,8 @@
       integer(ip)      outlen
       integer(ip)      widest
 
-      character*1      last
-      character*1      temp
+      character(1)     last
+      character(1)     temp
 
       integer(ip)      c
       integer(ip)      g
@@ -181,7 +181,7 @@
 !
 !     Don't even screw around if there are no elements in the array.
 !
-      if ( nelt .lt. 1 ) then
+      if ( nelt < 1 ) then
          call chkout ( 'CYACIP' )
          return
       end if
@@ -193,13 +193,13 @@
 !     minimum forward right cycle that is equivalent to the inputs.
 !     If the cycling direction is not recognized, signal an error.
 !
-      if (          ( dir .eq. 'B' ) &
-               .or. ( dir .eq. 'b' ) ) then
+      if (          ( dir == 'B' ) &
+               .or. ( dir == 'b' ) ) then
 
          k = mod ( - ncycle, nelt )
 
-      else if (      ( dir .eq. 'F' ) &
-                .or. ( dir .eq. 'f' ) ) then
+      else if (      ( dir == 'F' ) &
+                .or. ( dir == 'f' ) ) then
 
          k = mod (   ncycle, nelt )
 
@@ -215,11 +215,11 @@
 
 
 
-      if ( k .lt. 0 ) then
+      if ( k < 0 ) then
 
          k = k + nelt
 
-      else if ( k .eq. 0 ) then
+      else if ( k == 0 ) then
 
          call chkout ( 'CYACIP' )
          return
@@ -267,7 +267,7 @@
 
                l = l + k
 
-               if ( l .gt. nelt ) then
+               if ( l > nelt ) then
                   l = l - nelt
                end if
 
@@ -284,7 +284,7 @@
 !
 !     If needed, pad the output array with blanks.
 !
-      if ( outlen .gt. widest ) then
+      if ( outlen > widest ) then
 
          do i = 1, nelt
             array(i)(widest+1: ) = ' '

@@ -19,7 +19,7 @@
 
       implicit none
 
-      character*(*)    file
+      character(*)     file
 
 ! $ Brief_I/O
 !
@@ -137,7 +137,7 @@
 !
 !     First we test to see if the filename is blank.
 !
-      if ( file .eq. ' ' ) then
+      if ( file == ' ' ) then
 
          isopen = .false.
          call setmsg ( 'The file name is blank. ' )
@@ -155,7 +155,7 @@
                 opened = myopen, &
                 iostat = iostat  )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          isopen = .false.
          call setmsg ( 'Value of IOSTAT was *.' )

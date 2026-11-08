@@ -35,7 +35,7 @@
       integer(ip)           arrend
       integer(ip)           sclkid
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
@@ -201,7 +201,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -248,7 +248,7 @@
 !
       got = 0
 
-      do while ( got .lt. nrec )
+      do while ( got < nrec )
 
          get = min ( bsize, nrec - got )
 
@@ -271,7 +271,7 @@
             begin  = first(i)
             finish = last(i)
 
-            if ( tol .gt. 0.0_wp ) then
+            if ( tol > 0.0_wp ) then
 
                begin   =  max( begin  - tol, 0.0_wp )
                finish  =       finish + tol

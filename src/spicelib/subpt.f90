@@ -34,11 +34,11 @@
 
       include               'zzctr.inc'
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              alt
 
@@ -496,7 +496,7 @@
 !
 !     Local variables
 !
-      character*(frnmln)    frname
+      character(frnmln)     frname
 
       real(wp)              lt
       real(wp)              origin ( 3 )
@@ -514,12 +514,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -627,7 +627,7 @@
 !     Check the input body codes.  If they are equal, signal
 !     an error.
 !
-      if ( obscde .eq. trgcde ) then
+      if ( obscde == trgcde ) then
 
          call setmsg ( 'In computing the sub-observer point, the '    // &
                        'observing body and target body are the same. '// &

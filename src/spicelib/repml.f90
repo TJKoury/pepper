@@ -21,11 +21,11 @@
 
       implicit none
 
-      character*(*)         in
-      character*(*)         marker
+      character(*)          in
+      character(*)          marker
       logical               value
-      character*1           rtcase
-      character*(*)         out
+      character(1)          rtcase
+      character(*)          out
 
 ! $ Brief_I/O
 !
@@ -262,10 +262,10 @@
 !
 !     Local variables
 !
-      character*(maxllt)    lvalue
-      character*(maxllt)    valstr ( ncase, 2 )
-      character*(1)         tmpcas
-      character*(1)         casstr ( ncase )
+      character(maxllt)     lvalue
+      character(maxllt)     valstr ( ncase, 2 )
+      character(1)          tmpcas
+      character(1)          casstr ( ncase )
 
       integer(ip)           casidx
       integer(ip)           mrknbf
@@ -310,7 +310,7 @@
 
       casidx = isrchc ( tmpcas, ncase, casstr )
 
-      if ( casidx .eq. 0 ) then
+      if ( casidx == 0 ) then
 
          call setmsg ( 'Case (#) must be U, L, or C.' )
          call errch  ( '#', rtcase                    )
@@ -323,7 +323,7 @@
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      if ( marker .eq. ' ' ) then
+      if ( marker == ' ' ) then
 
          out = in
 
@@ -345,7 +345,7 @@
 !
       mrkpsb = index ( in, marker( mrknbf : mrknbl )  )
 
-      if ( mrkpsb .eq. 0 ) then
+      if ( mrkpsb == 0 ) then
 
          out = in
 

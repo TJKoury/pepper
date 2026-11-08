@@ -22,9 +22,9 @@
 
       include              'zzddhman.inc'
 
-      character*(*)         file
-      character*(*)         arch
-      character*(*)         kertyp
+      character(*)          file
+      character(*)          arch
+      character(*)          kertyp
 
 ! $ Brief_I/O
 !
@@ -663,10 +663,10 @@
 !
 !     Local Variables
 !
-      character*(wdsize)    filarc
-      character*(filsiz)    fname
-      character*(idlen)     idword
-      character*(idlen)     tmpwrd
+      character(wdsize)     filarc
+      character(filsiz)     fname
+      character(idlen)      idword
+      character(idlen)      tmpwrd
 
       integer(ip)           handle
       integer(ip)           i
@@ -698,7 +698,7 @@
 !
 !     If the filename we have is blank, signal an error and return.
 !
-      if ( file .eq. ' ' ) then
+      if ( file == ' ' ) then
 
          call setmsg ( 'The file name is blank.' )
          call sigerr ( 'SPICE(BLANKFILENAME)'    )
@@ -746,7 +746,7 @@
 !
 !        Not too likely, but if the INQUIRE statement fails...
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'IOSTAT error in INQUIRE statement. IOSTAT ' &
             //              '= #.'                                    )
             call errint ( '#', iostat                                 )
@@ -817,7 +817,7 @@
 !     If we had trouble opening the file, try opening it as a
 !     sequential file.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             diropn = .false.
 
@@ -831,7 +831,7 @@
 !        If we still have problems opening the file, we don't have a
 !        clue about the file architecture and type.
 !
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                arch   = '?'
                kertyp = '?'
@@ -863,7 +863,7 @@
 !        a fixed record length, then try to open the file as a
 !        sequential file and read from it.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             if ( opened ) then
 
@@ -908,7 +908,7 @@
 !           If we could not open the file, we don't have a clue about
 !           the file architecture and type.
 !
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                arch   = '?'
                kertyp = '?'
@@ -938,7 +938,7 @@
 !
 !     If we had an error while reading, we don't recognize this file.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          arch   = '?'
          kertyp = '?'
@@ -967,8 +967,8 @@
 !     replace any non printing ASCII characters with blanks.
 !
       do i = 1, idlen
-         if (      ( ichar(tmpwrd(i:i)) .lt. minpch ) &
-              .or. ( ichar(tmpwrd(i:i)) .gt. maxpch ) ) then
+         if (      ( ichar(tmpwrd(i:i)) < minpch ) &
+              .or. ( ichar(tmpwrd(i:i)) > maxpch ) ) then
             tmpwrd(i:i) = ' '
          end if
       end do
@@ -980,7 +980,7 @@
       call ucase  ( tmpwrd, tmpwrd         )
       call nextwd ( tmpwrd, idword, tmpwrd )
 
-      if ( idword .eq. 'DAFETF' ) then
+      if ( idword == 'DAFETF' ) then
 
 !
 !        We have a DAF encoded transfer file.
@@ -988,7 +988,7 @@
          arch   = 'XFR'
          kertyp = 'DAF'
 
-      else if ( idword .eq. 'DASETF') then
+      else if ( idword == 'DASETF') then
 
 !
 !        We have a DAS encoded transfer file.
@@ -996,7 +996,7 @@
          arch   = 'XFR'
          kertyp = 'DAS'
 
-      else if ( idword(1:10) .eq. '''NAIF/DAF''' ) then
+      else if ( idword(1:10) == '''NAIF/DAF''' ) then
 
 !
 !        We have an old DAF decimal text file.
@@ -1004,7 +1004,7 @@
          arch   = 'DEC'
          kertyp = 'DAF'
 
-      else if ( idword(1:8) .eq. 'NAIF/DAS' ) then
+      else if ( idword(1:8) == 'NAIF/DAS' ) then
 
 !
 !        We have a pre release DAS binary file.
@@ -1026,7 +1026,7 @@
 !     have either an SPK file, a CK file, or something we don't
 !     understand. Let's check it out.
 !
-      if ( ( arch .eq. 'DAF' ) .and. ( kertyp .eq. '?' ) ) then
+      if ( ( arch == 'DAF' ) .and. ( kertyp == '?' ) ) then
 
 !
 !        We have a DAF file and we do not know what the type is. This

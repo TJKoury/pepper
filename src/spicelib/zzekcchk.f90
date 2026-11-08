@@ -31,15 +31,15 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       integer(ip)           ntab
-      character*(*)         tablst ( * )
-      character*(*)         alslst ( * )
+      character(*)          tablst ( * )
+      character(*)          alslst ( * )
       integer(ip)           base
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
       integer(ip)           errptr
 
 ! $ Brief_I/O
@@ -205,8 +205,8 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
-      character*(1)         ctouch
+      character(cnamsz)     column
+      character(1)          ctouch
 
       integer(ip)           attdsc ( adscsz )
       integer(ip)           cb
@@ -243,7 +243,7 @@
          return
       end if
 
-      if ( iparse .eq. ifalse ) then
+      if ( iparse == ifalse ) then
 
          call chkin  ( 'ZZEKCCHK'                            )
          call setmsg ( 'Encoded query has not been parsed.'  )
@@ -265,7 +265,7 @@
       ce      =  eqryi ( base + eqvdsz + eqestr )
       lxb(2)  =  eqryi ( base + eqvdsz + eqblex )
 
-      if (  ( cb .le. 0 )  .or.  ( ce .le. 0 )  ) then
+      if (  ( cb <= 0 )  .or.  ( ce <= 0 )  ) then
 
          call chkin  ( 'ZZEKCCHK'                                )
          call setmsg ( 'Invalid string bounds #:# for column.  ' // &
@@ -280,7 +280,7 @@
       end if
 
 
-      noname  =  tb .eq. 0
+      noname  =  tb == 0
 
 
       if ( noname ) then
@@ -300,7 +300,7 @@
 
                call ekcii ( tablst(i),  j,  column,  attdsc )
 
-               if (  eqryc(cb:ce) .eq. column ) then
+               if (  eqryc(cb:ce) == column ) then
                   nmatch  =  nmatch + 1
                   colidx  =  j
                   tabidx  =  i
@@ -311,7 +311,7 @@
          end do
 
 
-         if ( nmatch .eq. 0 ) then
+         if ( nmatch == 0 ) then
 
             error  = .true.
             errmsg = 'Column <#> is not present in any table in FROM '// &
@@ -323,7 +323,7 @@
             return
 
 
-         else if ( nmatch .gt. 1 ) then
+         else if ( nmatch > 1 ) then
 
             error  = .true.
             errmsg = 'Column name <#> is ambiguous; a qualifying '// &
@@ -347,14 +347,14 @@
 !
          tabidx  =  isrchc ( eqryc(tb:te), ntab, tablst )
 
-         if ( tabidx .eq. 0 ) then
+         if ( tabidx == 0 ) then
             tabidx  =  isrchc ( eqryc(tb:te), ntab, alslst )
          end if
 
 !
 !        If the table name wasn't in either list, we can't use it.
 !
-         if ( tabidx .eq. 0 ) then
+         if ( tabidx == 0 ) then
 
             error  = .true.
             errmsg = 'Table name <#> is not present in FROM clause.'
@@ -376,11 +376,11 @@
          fnd  =  .false.
          i    =   1
 
-         do while (  ( i .le. cc )  .and. ( .not. fnd )  )
+         do while (  ( i <= cc )  .and. ( .not. fnd )  )
 
             call ekcii ( tablst(tabidx),  i,  column,  attdsc )
 
-            if ( eqryc(cb:ce) .eq. column ) then
+            if ( eqryc(cb:ce) == column ) then
                fnd     =  .true.
                colidx  =  i
             else

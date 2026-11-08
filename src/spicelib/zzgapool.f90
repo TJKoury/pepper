@@ -34,12 +34,12 @@
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      character*(*)         varnam
-      character*(*)         wtvars ( lbcell : * )
+      character(*)          varnam
+      character(*)          wtvars ( lbcell : * )
       integer(ip)           wtptrs ( * )
       integer(ip)           wtpool ( 2, lbpool : * )
-      character*(*)         wtagnt ( * )
-      character*(*)         agtset ( lbcell : * )
+      character(*)          wtagnt ( * )
+      character(*)          agtset ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -172,7 +172,7 @@
 !
       loc = bsrchc ( varnam, cardc(wtvars), wtvars(1) )
 
-      if ( loc .eq. 0 ) then
+      if ( loc == 0 ) then
 !
 !        This variable is not watched. The agent set is
 !        empty.
@@ -190,7 +190,7 @@
       node   = wtptrs(loc)
       nfetch = 0
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
          nfetch         = nfetch + 1
          agtset(nfetch) = wtagnt(node)

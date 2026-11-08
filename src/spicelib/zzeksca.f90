@@ -543,14 +543,14 @@
 !
 !     Go back if there's no data to write.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
          return
       end if
 
 !
 !     Add as much data as possible to our big array.
 !
-      if ( t .lt. memsiz ) then
+      if ( t < memsiz ) then
 
          numadd = min ( n, memsiz-t )
 
@@ -560,14 +560,14 @@
 
          t      = t + numadd
 
-         if ( numadd .eq. n ) then
+         if ( numadd == n ) then
             return
          end if
 
          remain = n - numadd
          start  = 1 + numadd
 
-         if ( remain .eq. 0 ) then
+         if ( remain == 0 ) then
             return
          end if
 
@@ -599,7 +599,7 @@
 !
       rt  =  t - memsiz
 
-      if ( rt .lt. lasti ) then
+      if ( rt < lasti ) then
 !
 !        Some data can be added by updating DAS addresses.  The
 !        available range for updating is B:E, where B and E are
@@ -615,7 +615,7 @@
          remain  =  remain - numadd
          t       =  t      + numadd
 
-         if ( remain .eq. 0 ) then
+         if ( remain == 0 ) then
             return
          end if
 
@@ -767,7 +767,7 @@
 !
 !     You can't pop a negative number of elements.
 !
-      if ( n .lt. 0 ) then
+      if ( n < 0 ) then
 
          call chkin  ( 'ZZEKSPOP'                             )
          call setmsg ( 'Pop count must be non-negative; '    // &
@@ -781,7 +781,7 @@
 !     It's an error to try to pop more data than we have on the
 !     stack.
 !
-      else if ( n .gt. t ) then
+      else if ( n > t ) then
 
          call chkin  ( 'ZZEKSPOP'                                      )
          call setmsg ( 'EK stack pointer = #; call requests popping ' // &
@@ -800,7 +800,7 @@
 !
       base  = t - n
 
-      if ( base .lt. memsiz ) then
+      if ( base < memsiz ) then
 
          numrd = min ( n, memsiz-base )
 
@@ -808,7 +808,7 @@
             idata(i) = scrtch(base+i)
          end do
 
-         if ( numrd .eq. n ) then
+         if ( numrd == n ) then
 
             t  =  t - numrd
             return
@@ -966,7 +966,7 @@
 !
 !     Catch non-positive decrement requests.
 !
-      if ( n .lt. 0 ) then
+      if ( n < 0 ) then
 
          call chkin  ( 'ZZEKSDEC'                               )
          call setmsg ( 'Decrement value must be non-negative; ' // &
@@ -980,7 +980,7 @@
 !     It's an error to try to decrement the pointer by more than
 !     the current stack depth.
 !
-      else if ( n .gt. t ) then
+      else if ( n > t ) then
 
          call chkin  ( 'ZZEKSDEC'                               )
          call setmsg ( 'EK stack pointer = #; call requests  ' // &
@@ -1133,7 +1133,7 @@
 !
 !     Validate the addresses.
 !
-      if (  ( beg .lt. 1 ) .or. ( beg .gt. t )  ) then
+      if (  ( beg < 1 ) .or. ( beg > t )  ) then
 
          call chkin  ( 'ZZEKSUPD'                                    )
          call setmsg ( 'Start address BEG was #; valid range is 1:#' )
@@ -1143,7 +1143,7 @@
          call chkout ( 'ZZEKSUPD'                                    )
          return
 
-      else if (  ( end .lt. 1 ) .or. ( end .gt. t  )  ) then
+      else if (  ( end < 1 ) .or. ( end > t  )  ) then
 
          call chkin  ( 'ZZEKSUPD'                                    )
          call setmsg ( 'End address END was #; valid range is 1:#'   )
@@ -1153,12 +1153,12 @@
          call chkout ( 'ZZEKSUPD'                                    )
          return
 
-      else if ( beg .gt. end ) then
+      else if ( beg > end ) then
          return
       end if
 
 
-      if ( end .le. memsiz ) then
+      if ( end <= memsiz ) then
 !
 !        If the entire range is in memory, fine.  Update the range
 !        now.
@@ -1168,7 +1168,7 @@
          end do
 
 
-      else if ( beg .le. memsiz ) then
+      else if ( beg <= memsiz ) then
 !
 !        Update the portion of the address range that's in memory.
 !
@@ -1328,7 +1328,7 @@
 !
 !     Validate the addresses.
 !
-      if (  ( beg .lt. 1 ) .or. ( beg .gt. t  )  ) then
+      if (  ( beg < 1 ) .or. ( beg > t  )  ) then
 
          call chkin  ( 'ZZEKSRD'                                     )
          call setmsg ( 'Start address BEG was #; valid range is 1:#' )
@@ -1338,7 +1338,7 @@
          call chkout ( 'ZZEKSRD'                                     )
          return
 
-      else if (  ( end .lt. 1 ) .or. ( end .gt. t  )  ) then
+      else if (  ( end < 1 ) .or. ( end > t  )  ) then
 
          call chkin  ( 'ZZEKSRD'                                     )
          call setmsg ( 'End address END was #; valid range is 1:#'   )
@@ -1348,12 +1348,12 @@
          call chkout ( 'ZZEKSRD'                                     )
          return
 
-      else if ( beg .gt. end ) then
+      else if ( beg > end ) then
          return
       end if
 
 
-      if ( end .le. memsiz ) then
+      if ( end <= memsiz ) then
 !
 !        If the entire range is in memory, fine.  Read from the range
 !        now.
@@ -1363,7 +1363,7 @@
          end do
 
 
-      else if ( beg .le. memsiz ) then
+      else if ( beg <= memsiz ) then
 !
 !        Read from the portion of the address range that's in memory.
 !

@@ -513,7 +513,7 @@
 !
 !     If this segment is not of data type 6, then signal an error.
 !
-      if ( ic( 3 ) .ne. dtype ) then
+      if ( ic( 3 ) /= dtype ) then
 
          call setmsg ( 'Data type of the segment should be 6: Passed ' &
          //            'descriptor shows type = #.'                   )

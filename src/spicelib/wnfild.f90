@@ -308,14 +308,14 @@
 !     second interval. Keep this up until the last right endpoint has
 !     been reached. This remains the last right endpoint.
 !
-      if ( card .gt. 0 ) then
+      if ( card > 0 ) then
 
          i = 2
          j = 2
 
-         do while ( j .lt. card )
+         do while ( j < card )
 
-            if ( ( window(j) + smlgap )  .lt. window(j+1) ) then
+            if ( ( window(j) + smlgap )  < window(j+1) ) then
                window(i  ) = window(j  )
                window(i+1) = window(j+1)
                i           = i + 2

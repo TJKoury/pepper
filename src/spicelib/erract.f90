@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)                 op
-      character*(*)                 action
+      character(*)                  op
+      character(*)                  action
 
 ! $ Brief_I/O
 !
@@ -384,9 +384,9 @@
 !
 !     Local Variables
 !
-      character*(oplen)     locop
-      character*(actlen)    actns (numact)
-      character*(actlen)    locact
+      character(oplen)      locop
+      character(actlen)     actns (numact)
+      character(actlen)     locact
 
       integer(ip)           iact
 !
@@ -416,20 +416,20 @@
       call ljust ( op,    locop )
       call ucase ( locop, locop )
 
-      if ( locop .eq. 'GET' ) then
+      if ( locop == 'GET' ) then
 
          call getact ( iact )
 
          action = actns(iact)
 
-      else if ( locop .eq. 'SET' ) then
+      else if ( locop == 'SET' ) then
 
          call ljust ( action, locact )
          call ucase ( locact, locact )
 
          iact = isrchc ( locact, numact, actns )
 
-         if ( iact .gt. 0 ) then
+         if ( iact > 0 ) then
 
             call putact ( iact )
 

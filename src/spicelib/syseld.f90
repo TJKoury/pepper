@@ -28,10 +28,10 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           begin
       integer(ip)           end
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
       real(wp)              values     (        * )
@@ -250,7 +250,7 @@
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      if ( locsym .eq. 0 ) then
+      if ( locsym == 0 ) then
 
          found = .false.
 
@@ -262,11 +262,11 @@
 !
          n = tabptr(locsym)
 
-         if (       begin .ge. 1 &
-              .and. begin .le. n &
-              .and. end   .ge. 1 &
-              .and. end   .le. n &
-              .and. begin .le. end ) then
+         if (       begin >= 1 &
+              .and. begin <= n &
+              .and. end   >= 1 &
+              .and. end   <= n &
+              .and. begin <= end ) then
 
             found  = .true.
             locval = sumai ( tabptr(1), locsym-1 ) + 1

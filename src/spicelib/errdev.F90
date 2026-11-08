@@ -20,8 +20,8 @@
 
       implicit none
 
-      character*(*)          op
-      character*(*)          device
+      character(*)           op
+      character(*)           device
 
       integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -349,14 +349,14 @@
 !     Local Variables:
 !
 
-      character*(filen)     upnam
-      character*(filen)     locnam
+      character(filen)      upnam
+      character(filen)      locnam
 
       integer(ip)           oplen
       parameter           ( oplen = 3 )
 
-      character*(oplen)     upop
-      character*(oplen)     locop
+      character(oplen)      upop
+      character(oplen)      locop
 
 !
 !     Initial Values:
@@ -379,11 +379,11 @@
       call ljust ( op,   upop )
       call ucase ( upop, upop )
 
-      if ( upop  .eq. 'GET' ) then
+      if ( upop  == 'GET' ) then
 
          call getdev ( device )
 
-      else if ( upop  .eq. 'SET' ) then
+      else if ( upop  == 'SET' ) then
 
 
 !
@@ -395,7 +395,7 @@
          call ljust ( device, upnam )
          call ucase ( upnam,  upnam )
 
-         if (   lastnb( upnam )   .gt.   filen    )  then
+         if (   lastnb( upnam )   >   filen    )  then
 
             locnam = device
 
@@ -413,8 +413,8 @@
          end if
 
 
-         if (  ( upnam  .eq. 'SCREEN' ) .or. &
-               ( upnam  .eq. 'NULL'   )        )  then
+         if (  ( upnam  == 'SCREEN' ) .or. &
+               ( upnam  == 'NULL'   )        )  then
 
 !
 !           Store upper case version of DEVICE:

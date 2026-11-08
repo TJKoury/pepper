@@ -150,7 +150,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           begin
       integer(ip)           begptr
@@ -168,7 +168,7 @@
 !
 !     If the column's not indexed, we have no business being here.
 !
-      indexd  =  coldsc(ixtidx) .ne. ifalse
+      indexd  =  coldsc(ixtidx) /= ifalse
 
       if ( .not. indexd ) then
 
@@ -188,7 +188,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( dtype .ne. int ) then
+      if ( dtype /= int ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -207,7 +207,7 @@
 !
       nrows  =  segdsc(nridx)
 
-      if ( nrows .eq. 0 ) then
+      if ( nrows == 0 ) then
 
          prvloc = 0
          prvptr = 0
@@ -261,7 +261,7 @@
 !        The value is greater than the smallest column entry and
 !        less than or equal to the greatest entry.
 !
-         do while ( end .gt. begin+1 )
+         do while ( end > begin+1 )
 !
 !           Find the address of the element whose ordinal position
 !           is halfway between BEGIN and END.

@@ -201,26 +201,26 @@
 !     round-off errors that will lead to false results for
 !     this case.
 !
-      if (  ( p(1) .eq. 0.0_wp ) .and. ( p(2) .eq. 0.0_wp )  ) then
+      if (  ( p(1) == 0.0_wp ) .and. ( p(2) == 0.0_wp )  ) then
 
-         if ( p(3) .gt. 0.0_wp ) then
+         if ( p(3) > 0.0_wp ) then
 
-            if ( lat .eq. halfpi() ) then
+            if ( lat == halfpi() ) then
 
                rel = eq
             else
                rel = gt
             end if
 
-         else if ( p(3) .eq. 0.0_wp ) then
+         else if ( p(3) == 0.0_wp ) then
 !
 !           We consider the latitude of P to be zero.
 !
-            if ( lat .gt. 0.0_wp ) then
+            if ( lat > 0.0_wp ) then
 
                rel = lt
 
-            else if ( lat .eq. 0.0_wp ) then
+            else if ( lat == 0.0_wp ) then
 
                rel = eq
             else
@@ -231,7 +231,7 @@
 !
 !           P(3) < 0.
 !
-            if ( lat .eq. -halfpi() ) then
+            if ( lat == -halfpi() ) then
 
                rel = eq
             else
@@ -265,13 +265,13 @@
 !     Ideally YINCPT is zero if and only if LAT is zero.
 !     We'll group these conditions together.
 !
-      if (  ( lat .eq. 0.0_wp ) .or. ( yincpt .eq. 0.0_wp )  ) then
+      if (  ( lat == 0.0_wp ) .or. ( yincpt == 0.0_wp )  ) then
 
-         if ( p(3) .gt. 0.0_wp ) then
+         if ( p(3) > 0.0_wp ) then
 
             rel = gt
 
-         else if ( p(3) .eq. 0.0_wp ) then
+         else if ( p(3) == 0.0_wp ) then
 
             rel = eq
          else
@@ -299,17 +299,17 @@
       call reclat ( offset, r, lon, offpcl )
 
 
-      if ( lat .gt. 0.0_wp ) then
+      if ( lat > 0.0_wp ) then
 
-         if ( yincpt .gt. 0 ) then
+         if ( yincpt > 0 ) then
 !
 !           This is the prolate case.
 !
-            if ( offpcl .gt. lat ) then
+            if ( offpcl > lat ) then
 
                rel = gt
 
-            else if ( offpcl .eq. lat ) then
+            else if ( offpcl == lat ) then
 
                rel = eq
             else
@@ -326,13 +326,13 @@
 !           the input point is above the X-Y plane in order for the
 !           GT or EQ relations to hold.
 !
-            if ( p(3) .gt. 0.0_wp ) then
+            if ( p(3) > 0.0_wp ) then
 
-               if ( offpcl .gt. lat ) then
+               if ( offpcl > lat ) then
 
                   rel = gt
 
-               else if ( offpcl .eq. lat ) then
+               else if ( offpcl == lat ) then
 
                   rel = eq
                else
@@ -355,15 +355,15 @@
 !
 !        LAT < 0, since the case LAT = 0 has already been handled.
 !
-         if ( yincpt .lt. 0.0_wp ) then
+         if ( yincpt < 0.0_wp ) then
 !
 !           This is the prolate case.
 !
-            if ( offpcl .gt. lat ) then
+            if ( offpcl > lat ) then
 
                rel = gt
 
-            else if ( offpcl .eq. lat ) then
+            else if ( offpcl == lat ) then
 
                rel = eq
             else
@@ -377,13 +377,13 @@
 !
 !           This is the oblate case.
 !
-            if ( p(3) .lt. 0.0_wp ) then
+            if ( p(3) < 0.0_wp ) then
 
-               if ( offpcl .gt. lat ) then
+               if ( offpcl > lat ) then
 
                   rel = gt
 
-               else if ( offpcl .eq. lat ) then
+               else if ( offpcl == lat ) then
 
                   rel = eq
                else

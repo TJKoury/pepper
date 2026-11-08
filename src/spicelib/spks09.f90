@@ -197,7 +197,7 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  .gt.  end  ) then
+      if (  begin  >  end  ) then
          call chkout ( 'SPKS09' )
          return
       end if
@@ -230,7 +230,7 @@
       rec(2) = 1
       call dafgda ( handle, offe+rec(2), offe+rec(2), data )
 
-      do while  ( rec(2) .lt. nrec  .and.  data(1) .lt. end )
+      do while  ( rec(2) < nrec  .and.  data(1) < end )
          rec(2) = rec(2) + 1
          call dafgda ( handle, offe+rec(2), offe+rec(2), data )
       end do
@@ -257,7 +257,7 @@
       rec(1) = nrec
       call dafgda ( handle, offe+rec(1), offe+rec(1), data )
 
-      do while ( rec(1) .gt. 1  .and.  data(1) .gt. begin )
+      do while ( rec(1) > 1  .and.  data(1) > begin )
          rec(1) = rec(1) - 1
          call dafgda ( handle, offe+rec(1), offe+rec(1), data )
       end do

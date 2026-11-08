@@ -120,7 +120,7 @@
 
          call zzektrdp ( handle, tree, i, value )
 
-         if ( ival .eq. value ) then
+         if ( ival == value ) then
             zzektrls = i
             return
          end if

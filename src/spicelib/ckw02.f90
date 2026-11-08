@@ -27,8 +27,8 @@
       real(wp)              begtim
       real(wp)              endtim
       integer(ip)           inst
-      character*(*)         ref
-      character*(*)         segid
+      character(*)          ref
+      character(*)          segid
       integer(ip)           nrec
       real(wp)              start  (      * )
       real(wp)              stop   (      * )
@@ -781,7 +781,7 @@
 !
 !     Make sure that there is a positive number of pointing records.
 !
-      if ( nrec .le. 0 ) then
+      if ( nrec <= 0 ) then
 
          call setmsg ( '# is an invalid number of pointing ' // &
                        'instances for type 2.'                     )
@@ -796,7 +796,7 @@
 !
 !     Check that the SCLK bounds on the segment are reasonable.
 !
-      if ( begtim .gt. start(1) ) then
+      if ( begtim > start(1) ) then
 
          call setmsg ( 'The first d.p. component of the descriptor ' // &
                        'is invalid.  DCD(1) = # and START(1) = # '    )
@@ -808,7 +808,7 @@
 
       end if
 
-      if ( endtim .lt. stop(nrec) ) then
+      if ( endtim < stop(nrec) ) then
 
          call setmsg ( 'The second d.p. component of the descriptor ' // &
                        'is invalid.  DCD(2) = # and STOP(NREC) = # '   )
@@ -830,7 +830,7 @@
 !
       call namfrm ( ref, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', ref                                    )
@@ -862,7 +862,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -877,7 +877,7 @@
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -901,7 +901,7 @@
 !     For the first interval also make sure that the START time is
 !     nonnegative.
 !
-      if ( start(1) .lt. 0.0_wp ) then
+      if ( start(1) < 0.0_wp ) then
 
          call setmsg ( 'The first START time: # is negative.'  )
          call errdp  ( '#', start(1)                           )
@@ -911,7 +911,7 @@
 
       end if
 
-      if ( stop(1) .le. start(1) ) then
+      if ( stop(1) <= start(1) ) then
 
          call setmsg ( 'The STOP time is less than or equal to the '  // &
                        'START time for interval number 1. START time '// &
@@ -927,7 +927,7 @@
 
       do i = 2, nrec
 
-         if ( stop(i) .le. start(i) ) then
+         if ( stop(i) <= start(i) ) then
 
             call setmsg ( 'The STOP time is less than or equal to '  // &
                           'the START time for interval number #. '   // &
@@ -941,7 +941,7 @@
 
          end if
 
-         if ( start(i) .le. start(i-1) )  then
+         if ( start(i) <= start(i-1) )  then
 
             call setmsg ( 'The START times are not strictly '      // &
                           'increasing.  START(#) = # and START(#) '// &
@@ -956,7 +956,7 @@
 
          end if
 
-         if ( stop(i-1) .gt. start(i) )  then
+         if ( stop(i-1) > start(i) )  then
 
             call setmsg ( 'The STOP time for interval # is greater ' // &
                           'than the following START time. STOP(#) = '// &

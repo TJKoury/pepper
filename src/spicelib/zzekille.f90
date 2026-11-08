@@ -36,7 +36,7 @@
       integer(ip)           coldsc ( cdscsz )
       integer(ip)           nrows
       integer(ip)           dtype
-      character*(*)         cval
+      character(*)          cval
       real(wp)              dval
       integer(ip)           ival
 
@@ -178,7 +178,7 @@
 !
 !     Validate the number of rows in the column.
 !
-      if ( nrows .lt. 1 ) then
+      if ( nrows < 1 ) then
 !
 !        There's nobody home---that is, there is nothing in the array
 !        to compare against.  Zero is the only sensible thing to return.
@@ -196,14 +196,14 @@
 !
       coltyp  =  coldsc ( typidx )
 
-      if ( coltyp .eq. chr ) then
+      if ( coltyp == chr ) then
 
          call zzekllec ( handle, segdsc, coldsc, cval, zzekille, rec )
 
 
-      else if ( coltyp .eq. dp ) then
+      else if ( coltyp == dp ) then
 
-         if ( dtype .eq. dp ) then
+         if ( dtype == dp ) then
             dnum = dval
          else
             dnum = ival
@@ -212,14 +212,14 @@
          call zzeklled ( handle, segdsc, coldsc, dnum, zzekille, rec )
 
 
-      else if ( coltyp .eq. time ) then
+      else if ( coltyp == time ) then
 
          call zzeklled ( handle, segdsc, coldsc, dval, zzekille, rec )
 
 
-      else if ( coltyp .eq. int ) then
+      else if ( coltyp == int ) then
 
-         if ( dtype .eq. dp ) then
+         if ( dtype == dp ) then
             inum = nint ( dval )
          else
             inum = ival

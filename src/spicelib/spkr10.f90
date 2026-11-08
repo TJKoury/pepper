@@ -226,7 +226,7 @@
 !     Determine which pair of element sets to choose so that
 !     they will bracket ET.
 !
-      if ( et .le. value ) then
+      if ( et <= value ) then
 
          from = max( indx-1, 1 )
          to   = indx
@@ -248,7 +248,7 @@
 !     two-line element set without nutation information.  We simply
 !     set all of the angles to zero.
 !
-      if ( ends(1) .eq. nelems ) then
+      if ( ends(1) == nelems ) then
 !
 !        First shift the elements to their proper locations in RECORD
 !        so there will be room to fill in the zeros.
@@ -256,7 +256,7 @@
          putelm = enset2
          getelm = enset1 + nelems
 
-         do while ( getelm .gt. enset1 )
+         do while ( getelm > enset1 )
 
             record(putelm) = record(getelm)
             putelm         = putelm - 1
@@ -282,7 +282,7 @@
 !     segment.  We simply copy the one fetched a second time so
 !     that the record is properly constructed.
 !
-      if ( from .eq. to ) then
+      if ( from == to ) then
          call moved ( record(begel1), nelems + nangs, record(begel2) )
       end if
 

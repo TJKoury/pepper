@@ -217,7 +217,7 @@
 
       call chkin  ( 'ZZUNTNGL' )
 
-      if ( nptr .gt. maxcel ) then
+      if ( nptr > maxcel ) then
 
          call setmsg ( 'Input pointer array is larger than ' &
          //            'cell array. Pointer array size = ' &
@@ -253,7 +253,7 @@
 !
 !        Make sure the output pointers below are in range.
 !
-         if ( ptrdex+2 .gt. maxb ) then
+         if ( ptrdex+2 > maxb ) then
 
             call setmsg ( 'Index larger than output array. ' &
             //            'Index = #1. Array size = #2.'     )
@@ -265,7 +265,7 @@
 
          end if
 
-         if ( room .le. 0 ) then
+         if ( room <= 0 ) then
 
             call setmsg ( 'Remaining room in output array is #1. ' &
             //            'Current input pointer index = #2. Output ' &
@@ -296,7 +296,7 @@
 !
          nfound = outlst(ptrdex + 1)
 
-         if ( nfound .gt. 0 ) then
+         if ( nfound > 0 ) then
 !
 !           Store in PNTRS the pointer to the returned list.
 !           This assignment overwrites the input pointer from

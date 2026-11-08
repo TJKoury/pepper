@@ -273,7 +273,7 @@
 !
 !     Check the number of sides of the polygon.
 !
-      if ( n .lt. 3 ) then
+      if ( n < 3 ) then
 
          call setmsg ( 'Polygon must have at least 3 sides; N = #.' )
          call errint ( '#',  n                                      )
@@ -306,7 +306,7 @@
 !     if necessary to make this true.  We don't touch CONS because
 !     it's not used later, but in principle it should be negated.
 !
-      if (  vdot( normal, vertcs(1,1) )  .lt.  0.0_wp  ) then
+      if (  vdot( normal, vertcs(1,1) )  <  0.0_wp  ) then
 
          call vminus ( normal, vtemp  )
          call vequ   ( vtemp,  normal )
@@ -333,7 +333,7 @@
 
       do i = 2, n+1
 
-         if ( i .le. n ) then
+         if ( i <= n ) then
             j = i
          else
             j = 1
@@ -356,7 +356,7 @@
 !
          call ucrss ( normal, rvec, rperp )
 
-         if (  vdot( rnext, rperp )  .ge.  0.0_wp  ) then
+         if (  vdot( rnext, rperp )  >=  0.0_wp  ) then
 !
 !           RNEXT is reached by counterclockwise rotation from
 !           RVEC.  Note that in the case of zero rotation, the

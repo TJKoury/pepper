@@ -44,8 +44,8 @@
       integer(ip)           maxvar
       integer(ip)           maxval
       integer(ip)           maxlin
-      character*(*)         begdat
-      character*(*)         begtxt
+      character(*)          begdat
+      character(*)          begtxt
       integer(ip)           nmpool ( 2,  lbpool : maxvar )
       integer(ip)           dppool ( 2,  lbpool : maxval )
       integer(ip)           chpool ( 2,  lbpool : maxlin )
@@ -53,13 +53,13 @@
       integer(ip)           datlst (              maxvar )
       integer(ip)           maxagt
       integer(ip)           mxnote
-      character*(*)         wtvars ( lbcell : maxvar )
+      character(*)          wtvars ( lbcell : maxvar )
       integer(ip)           wtptrs ( maxvar )
       integer(ip)           wtpool ( 2, lbpool:mxnote )
-      character*(*)         wtagnt ( mxnote )
-      character*(*)         agents ( lbcell : * )
-      character*(*)         active ( lbcell : * )
-      character*(*)         notify ( lbcell : * )
+      character(*)          wtagnt ( mxnote )
+      character(*)          agents ( lbcell : * )
+      character(*)          active ( lbcell : * )
+      character(*)          notify ( lbcell : * )
       integer(ip)           subctr ( ctrsiz )
 
 ! $ Brief_I/O
@@ -259,10 +259,10 @@
       integer(ip)           bslash
       parameter           ( bslash = 92 )
 
-      character*(shrtln)    dat
+      character(shrtln)     dat
       parameter           ( dat = 'begindata' )
 
-      character*(shrtln)    txt
+      character(shrtln)     txt
       parameter           ( txt = 'begintext' )
 
 !

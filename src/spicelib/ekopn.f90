@@ -26,8 +26,8 @@
       include 'ektype.inc'
       include 'ekfilpar.inc'
 
-      character*(*)         fname
-      character*(*)         ifname
+      character(*)          fname
+      character(*)          ifname
       integer(ip)           ncomch
       integer(ip)           handle
 
@@ -351,7 +351,7 @@
 !
 !     Check the comment character count.
 !
-      if ( ncomch .lt. 0 ) then
+      if ( ncomch < 0 ) then
 
          call setmsg ( 'The number of reserved comment characters ' // &
                        'must be non-negative but was #.'            )

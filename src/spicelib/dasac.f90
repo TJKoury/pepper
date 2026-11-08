@@ -24,7 +24,7 @@
 
       integer(ip)           handle
       integer(ip)           n
-      character*(*)         buffer(*)
+      character(*)          buffer(*)
 
 ! $ Brief_I/O
 !
@@ -209,10 +209,10 @@
 !
 !     Local variables
 !
-      character*(mxcrec)    crecrd
-      character*(1)         eolmrk
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
+      character(mxcrec)     crecrd
+      character(1)          eolmrk
+      character(idwlen)     idword
+      character(ifnlen)     ifname
 
       integer(ip)           curpos
       integer(ip)           daslun
@@ -294,7 +294,7 @@
 !
 !     Check for a nonpositive number of lines in the buffer.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
 
          call setmsg ( 'The number of comment lines to be added to'  // &
                        ' the binary DAS file # was not positive: #.'  )
@@ -329,8 +329,8 @@
 !           characters are given by MAXPCH and MINPCH, which are
 !           defined in the $ Local Parameters section of the header.
 !
-            if ( ( ichar ( buffer(i)(j:j) ) .gt. maxpch ) .or. &
-                 ( ichar ( buffer(i)(j:j) ) .lt. minpch )      ) then
+            if ( ( ichar ( buffer(i)(j:j) ) > maxpch ) .or. &
+                 ( ichar ( buffer(i)(j:j) ) < minpch )      ) then
 
                   call setmsg ( 'A nonprinting character was'      // &
                                 ' encountered in the comment'      // &
@@ -381,7 +381,7 @@
 !     a comment record, minus the number of comment characters already
 !     used. Otherwise, the space available is zero.
 !
-      if ( ncomr .gt. 0 ) then
+      if ( ncomr > 0 ) then
 
          space = ncomr * mxcrec - ncomc
 
@@ -394,7 +394,7 @@
 !     Determine the number of new comment records which are necessary
 !     to store all of the comments from the buffer.
 !
-      if ( nchars .gt. space ) then
+      if ( nchars > space ) then
 !
 !        If there are more characters to store than available space
 !        we need at least one new record.
@@ -412,7 +412,7 @@
 !     Now add the necessary number of comment records to the file,
 !     if we need to add any.
 !
-      if ( newrec .gt. 0 ) then
+      if ( newrec > 0 ) then
 
          call dasacr ( handle, newrec )
 
@@ -441,7 +441,7 @@
 !     We begin by reading the last comment record if there is one.
 !     Otherwise we just initialize the appropriate variables.
 !
-      if ( ncomc .eq. 0 ) then
+      if ( ncomc == 0 ) then
 !
 !        If there are no comments in the comment area, then we need to
 !        skip the file record and the reserved records, if any. The
@@ -496,7 +496,7 @@
 !           increment the record number, RECNO, and reset the values
 !           of the current position and the comment record.
 !
-            if ( curpos .gt. mxcrec ) then
+            if ( curpos > mxcrec ) then
 
                call dasioc ( 'WRITE', daslun, recno, crecrd )
 
@@ -523,7 +523,7 @@
 !        number, RECNO, and reset the values of the current position
 !        and the comment record.
 !
-         if ( curpos .gt. mxcrec ) then
+         if ( curpos > mxcrec ) then
 
             call dasioc ( 'WRITE', daslun, recno, crecrd )
 

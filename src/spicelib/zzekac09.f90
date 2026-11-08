@@ -30,7 +30,7 @@
       integer(ip)           handle
       integer(ip)           segdsc ( * )
       integer(ip)           coldsc ( * )
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       logical               nlflgs ( * )
       integer(ip)           wkindx ( * )
 
@@ -159,8 +159,8 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
-      character*(pgsizc)    page
+      character(cnamsz)     column
+      character(pgsizc)     page
 
       integer(ip)           class
       integer(ip)           cmbase
@@ -205,14 +205,14 @@
       colidx =  coldsc ( ordidx )
       l      =  coldsc ( lenidx )
 
-      nullok =  nulptr .ne. ifalse
-      indexd =  idxtyp .ne. ifalse
-      fixlen =  l      .ne. ifalse
+      nullok =  nulptr /= ifalse
+      indexd =  idxtyp /= ifalse
+      fixlen =  l      /= ifalse
 
 !
 !     This column had better be class 9.
 !
-      if ( class .ne. 9 ) then
+      if ( class /= 9 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -245,9 +245,9 @@
 !
 !     Check the input string length.
 !
-      if (      ( l .lt. 0             ) &
-           .or. ( l .gt. len(cvals(1)) ) &
-           .or. ( l .gt. cpsize        )  ) then
+      if (      ( l < 0             ) &
+           .or. ( l > len(cvals(1)) ) &
+           .or. ( l > cpsize        )  ) then
 
          call setmsg ( 'String length # is just plain wrong.' )
          call errint ( '#',  l                                )
@@ -297,8 +297,8 @@
          to  =  to + l
 
 
-         if (      ( to   .gt. cpsize-l+1 ) &
-              .or. ( from .eq. nrows      )  ) then
+         if (      ( to   > cpsize-l+1 ) &
+              .or. ( from == nrows      )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the

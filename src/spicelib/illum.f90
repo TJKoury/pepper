@@ -31,10 +31,10 @@
 
       include               'zzctr.inc'
 
-      character*(*)         target
+      character(*)          target
       real(wp)              et
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              phase
       real(wp)              solar
@@ -658,7 +658,7 @@
 !
 !     Local variables
 !
-      character*(frnmln)    frname
+      character(frnmln)     frname
 
       real(wp)              lt
       real(wp)              lts
@@ -682,12 +682,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -780,7 +780,7 @@
 !
 !     The observer and target must be distinct.
 !
-      if ( trgcde .eq. obscde ) then
+      if ( trgcde == obscde ) then
 
          call setmsg ( 'Target is #; observer is #.' )
          call errch  ( '#', target                   )

@@ -21,10 +21,10 @@
 
       implicit none
 
-      character*(*)         in
-      character*(*)         marker
+      character(*)          in
+      character(*)          marker
       integer(ip)           value
-      character*(*)         out
+      character(*)          out
 
       integer(ip)           maxli
       parameter           ( maxli = 11 )
@@ -253,7 +253,7 @@
 !
 !     Local variables
 !
-      character*(maxli)     substr
+      character(maxli)      substr
 
       integer(ip)           mrknbf
       integer(ip)           mrknbl
@@ -265,7 +265,7 @@
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      if  ( marker .eq. ' ' ) then
+      if  ( marker == ' ' ) then
 
          out = in
          return
@@ -282,7 +282,7 @@
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      if  ( mrkpsb .eq. 0 ) then
+      if  ( mrkpsb == 0 ) then
 
          out = in
          return

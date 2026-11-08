@@ -41,9 +41,9 @@
       integer(ip)           lbcell
       parameter           ( lbcell  =   -5 )
 
-      character*(*)         fname
-      character*(*)         ftype
-      character*(*)         ifname
+      character(*)          fname
+      character(*)          ftype
+      character(*)          ifname
       integer(ip)           handle
       integer(ip)           unit
       integer(ip)           free
@@ -55,7 +55,7 @@
       integer(ip)           ncomr
       integer(ip)           ncomc
       integer(ip)           fhset  ( lbcell : * )
-      character*(*)         access
+      character(*)          access
 
 !
 !     The record length should be big enough to hold the greatest of the
@@ -1010,14 +1010,14 @@
 !
 !     Other local variables
 !
-      character*(acclen)    acc
-      character*(fmtlen)    format
-      character*(idwlen)    idword
-      character*(filen)     locdas
-      character*(ifnlen)    locifn
-      character*(fmtlen)    locfmt
-      character*(tailen)    tail
-      character*(typlen)    ttype
+      character(acclen)     acc
+      character(fmtlen)     format
+      character(idwlen)     idword
+      character(filen)      locdas
+      character(ifnlen)     locifn
+      character(fmtlen)     locfmt
+      character(tailen)     tail
+      character(typlen)     ttype
 
       integer(ip)           curtyp
       integer(ip)           dirrec ( nwi )
@@ -1517,9 +1517,9 @@
       findex = fthead
       found  = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -1546,7 +1546,7 @@
 !     This file has no entry in the file table. We need to
 !     create a new entry. See whether there's room for it.
 !
-      if ( lnknfn(pool) .eq. 0  ) then
+      if ( lnknfn(pool) == 0  ) then
 
          call setmsg ( 'The file table is full, with # entries. ' &
          //            'Could not open ''#''.'                    )
@@ -1623,7 +1623,7 @@
          nxtdir  =  dirrec ( fwdloc              )
 
 
-         do while ( nxtdir .gt. 0 )
+         do while ( nxtdir > 0 )
 !
 !           Read the directory record. If this record contains
 !           descriptors for clusters we're interested in, update the
@@ -1637,7 +1637,7 @@
             end if
 
 
-            if (  dirrec(rngbas + 2*type)  .gt.  0  ) then
+            if (  dirrec(rngbas + 2*type)  >  0  ) then
 
                maxadr  =  dirrec ( rngbas  +  2 * type  )
                nrec    =  nxtdir
@@ -1657,7 +1657,7 @@
 !
          ftsum ( llabas + type,  fthead )  =  maxadr
 
-         if ( maxadr .gt. 0 ) then
+         if ( maxadr > 0 ) then
             ftsum ( lrcbas + type,  fthead )  =  nrec
          else
             ftsum ( lrcbas + type,  fthead )  =  0
@@ -1666,7 +1666,7 @@
 !        We still need to set the word location of the final
 !        descriptor of TYPE, if there are any descriptors of TYPE.
 !
-         if ( maxadr .gt. 0 ) then
+         if ( maxadr > 0 ) then
 !
 !           Re-read the directory record containing the last descriptor
 !           of the current type.
@@ -1694,17 +1694,17 @@
             endrec  =  nrec
             pos     =  begdsc
 
-            do while ( last .lt. maxadr )
+            do while ( last < maxadr )
 
                pos = pos + 1
 
-               if ( dirrec(pos) .gt. 0 ) then
+               if ( dirrec(pos) > 0 ) then
                   curtyp = next(prvtyp)
                else
                   curtyp = prev(prvtyp)
                end if
 
-               if ( curtyp .eq. type ) then
+               if ( curtyp == type ) then
                   last = last  +  nw(type) * abs( dirrec(pos) )
                end if
 
@@ -1747,7 +1747,7 @@
       nxtrec = dirrec(fwdloc)
 
 
-      do while ( nxtrec .ne. 0 )
+      do while ( nxtrec /= 0 )
 
          nrec   = nxtrec
 
@@ -2179,7 +2179,7 @@
       end if
 
 
-      if ( lnknfn(pool) .eq. 0  ) then
+      if ( lnknfn(pool) == 0  ) then
 
          call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
@@ -2278,7 +2278,7 @@
          nxtdir  =  dirrec ( fwdloc              )
 
 
-         do while ( nxtdir .gt. 0 )
+         do while ( nxtdir > 0 )
 !
 !           Read the directory record. If this record contains
 !           descriptors for clusters we're interested in, update the
@@ -2292,7 +2292,7 @@
             end if
 
 
-            if (  dirrec(rngbas + 2*type)  .gt.  0  ) then
+            if (  dirrec(rngbas + 2*type)  >  0  ) then
 
                maxadr  =  dirrec ( rngbas  +  2 * type  )
                nrec    =  nxtdir
@@ -2312,7 +2312,7 @@
 !
          ftsum ( llabas + type,  fthead )  =  maxadr
 
-         if ( maxadr .gt. 0 ) then
+         if ( maxadr > 0 ) then
             ftsum ( lrcbas + type,  fthead )  =  nrec
          else
             ftsum ( lrcbas + type,  fthead )  =  0
@@ -2321,7 +2321,7 @@
 !        We still need to set the word location of the final
 !        descriptor of TYPE, if there are any descriptors of TYPE.
 !
-         if ( maxadr .gt. 0 ) then
+         if ( maxadr > 0 ) then
 !
 !           Re-read the directory record containing the last descriptor
 !           of the current type.
@@ -2349,17 +2349,17 @@
             endrec  =  nrec
             pos     =  begdsc
 
-            do while ( last .lt. maxadr )
+            do while ( last < maxadr )
 
                pos = pos + 1
 
-               if ( dirrec(pos) .gt. 0 ) then
+               if ( dirrec(pos) > 0 ) then
                   curtyp = next(prvtyp)
                else
                   curtyp = prev(prvtyp)
                end if
 
-               if ( curtyp .eq. type ) then
+               if ( curtyp == type ) then
                   last = last  +  nw(type) * abs( dirrec(pos) )
                end if
 
@@ -2402,7 +2402,7 @@
       nxtrec = dirrec(fwdloc)
 
 
-      do while ( nxtrec .ne. 0 )
+      do while ( nxtrec /= 0 )
 
          nrec   = nxtrec
 
@@ -2781,7 +2781,7 @@
 !     Check to see whether the filename is blank. If it is, signal an
 !     error, check out, and return.
 !
-      if ( fname .eq. ' ' ) then
+      if ( fname == ' ' ) then
 
          call setmsg ( 'The file name is blank. ' )
          call sigerr ( 'SPICE(BLANKFILENAME)'     )
@@ -2792,7 +2792,7 @@
 !
 !     Check if the file type is blank.
 !
-      if ( ftype .eq. ' ' ) then
+      if ( ftype == ' ' ) then
 
          call setmsg ( 'The file type is blank. ' )
          call sigerr ( 'SPICE(BLANKFILETYPE)'     )
@@ -2807,8 +2807,8 @@
 
       do i = fnb, rtrim ( ftype )
 
-         if ( ( ichar ( ftype(i:i) ) .gt. maxpc )   .or. &
-              ( ichar ( ftype(i:i) ) .lt. minpc ) ) then
+         if ( ( ichar ( ftype(i:i) ) > maxpc )   .or. &
+              ( ichar ( ftype(i:i) ) < minpc ) ) then
 
             call setmsg ( 'The file type contains nonprinting' // &
                           ' characters. '                       )
@@ -2823,7 +2823,7 @@
 !
 !     Validate the comment record count.
 !
-      if ( ncomr .lt. 0 ) then
+      if ( ncomr < 0 ) then
 
          call setmsg ( 'The number of comment records allocated ' // &
                        'must be non-negative but was #.'           )
@@ -2847,7 +2847,7 @@
 !
 !     The file can be opened only if there is room for another file.
 !
-      if ( lnknfn(pool) .eq. 0  ) then
+      if ( lnknfn(pool) == 0  ) then
 
          call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
@@ -2928,7 +2928,7 @@
               rec    = ncomr + 2, &
               iostat = iostat     ) dirrec
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        We had a write error. Ask the handle manager to
 !        close and delete the new file.
@@ -3314,7 +3314,7 @@
 !     Check to see whether the filename is blank. If it is, signal an
 !     error, check out, and return.
 !
-      if ( fname .eq. ' ' ) then
+      if ( fname == ' ' ) then
 
          call setmsg ( 'The file name is blank. ' )
          call sigerr ( 'SPICE(BLANKFILENAME)'     )
@@ -3326,7 +3326,7 @@
 !
 !     The file can be opened only if there is room for another file.
 !
-      if ( lnknfn(pool) .eq. 0  ) then
+      if ( lnknfn(pool) == 0  ) then
 
          call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
@@ -3786,7 +3786,7 @@
 !
 !     The file can be opened only if there is room for another file.
 !
-      if ( lnknfn(pool) .eq. 0  ) then
+      if ( lnknfn(pool) == 0  ) then
 
          call setmsg ( 'The file table is full, with # entries.'      // &
                        ' Could not open a scratch file. If a call'    // &
@@ -4395,9 +4395,9 @@
       findex  =  fthead
       found   = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -4415,7 +4415,7 @@
 
          ftlnk(findex) = ftlnk(findex) - 1
 
-         if ( ftlnk(findex) .eq. 0 ) then
+         if ( ftlnk(findex) == 0 ) then
 !
 !           Close this file and delete it from the active list.
 !           If this was the head node of the list, the head node
@@ -4429,7 +4429,7 @@
                return
             end if
 
-            if ( findex .eq. fthead ) then
+            if ( findex == fthead ) then
                fthead = lnknxt ( findex, pool )
             end if
 
@@ -4962,9 +4962,9 @@
       findex  =  fthead
       found   = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -5312,9 +5312,9 @@
       findex  =  fthead
       found   = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found  = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -5338,7 +5338,7 @@
 !        no business updating a file summary for files that are
 !        open for read access only.
 !
-         if ( ftacc(findex) .ne. write ) then
+         if ( ftacc(findex) /= write ) then
 
             call setmsg ( 'DAS file not open for writing. Handle = #,' &
             //            ' file = ''#''.'                             )
@@ -5355,10 +5355,10 @@
 !        the comment area were changed, we need to record the new
 !        counts in the file record.  Otherwise, leave the file alone.
 !
-         if (      (  nresvr .ne. ftsum( rrcidx, findex )  ) &
-              .or. (  nresvc .ne. ftsum( rchidx, findex )  ) &
-              .or. (  ncomr  .ne. ftsum( crcidx, findex )  ) &
-              .or. (  ncomc  .ne. ftsum( cchidx, findex )  )   )  then
+         if (      (  nresvr /= ftsum( rrcidx, findex )  ) &
+              .or. (  nresvc /= ftsum( rchidx, findex )  ) &
+              .or. (  ncomr  /= ftsum( crcidx, findex )  ) &
+              .or. (  ncomc  /= ftsum( cchidx, findex )  )   )  then
 
 !
 !           Read the file record.
@@ -5374,7 +5374,7 @@
                                       locfmt, &
                                       tail
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Attempt to read file record failed. ' &
                //            'File was ''#''.  Value of IOSTAT was' &
@@ -5398,7 +5398,7 @@
                                          locfmt, &
                                          tail
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              Try to obtain the DAS file's name.
 !
@@ -5656,9 +5656,9 @@
       findex  =  fthead
       found   = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -6133,9 +6133,9 @@
       findex  =  fthead
       found   = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found  = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -6776,7 +6776,7 @@
 !
 !     Make sure we recognize the access type specified by the caller.
 !
-      if (  ( acc .ne. 'READ' ) .and. ( acc .ne. 'WRITE' )  ) then
+      if (  ( acc /= 'READ' ) .and. ( acc /= 'WRITE' )  ) then
 
          call setmsg ( 'Unrecognized access type.  Type was #. ' )
          call errch  ( '#', access                               )
@@ -6806,9 +6806,9 @@
          findex  =  fthead
          found   = .false.
 
-         do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+         do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-            if ( fthan(findex) .eq. handle ) then
+            if ( fthan(findex) == handle ) then
                found  = .true.
             else
                findex = lnknxt ( findex, pool )
@@ -6820,8 +6820,8 @@
 !        for this file.
 !
 
-         if (       ( acc           .eq. 'WRITE' ) &
-              .and. ( ftacc(findex) .ne.  write  )  ) then
+         if (       ( acc           == 'WRITE' ) &
+              .and. ( ftacc(findex) /=  write  )  ) then
 !
 !           If the access type is 'WRITE', the DAS file must be open
 !           for writing.
@@ -7040,9 +7040,9 @@
       findex  =  fthead
       found   = .false.
 
-      do while (  ( .not. found )  .and.  ( findex .gt. 0 )  )
+      do while (  ( .not. found )  .and.  ( findex > 0 )  )
 
-         if ( fthan(findex) .eq. handle ) then
+         if ( fthan(findex) == handle ) then
             found  = .true.
          else
             findex = lnknxt ( findex, pool )
@@ -7065,7 +7065,7 @@
 !     We know about the file if we got this far.  Set the output
 !     argument accordingly.
 !
-      if (  ftacc(findex) .eq. read ) then
+      if (  ftacc(findex) == read ) then
          access = 'READ'
       else
          access = 'WRITE'

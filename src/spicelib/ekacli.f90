@@ -26,7 +26,7 @@
 
       integer(ip)           handle
       integer(ip)           segno
-      character*(*)         column
+      character(*)          column
       integer(ip)           ivals  ( * )
       integer(ip)           entszs ( * )
       logical               nlflgs ( * )
@@ -500,7 +500,7 @@
       class  =  coldsc ( clsidx )
       dtype  =  coldsc ( typidx )
 
-      if ( dtype .ne. int ) then
+      if ( dtype /= int ) then
 
          call setmsg ( 'Column # is of type #; EKACLI only works '  // &
                        'with integer columns.'                       )
@@ -515,7 +515,7 @@
 !
 !     Hand off the task to the routine of the appropriate class.
 !
-      if ( class .eq. 1 ) then
+      if ( class == 1 ) then
 !
 !        Class 1 columns contain integer scalars.
 !
@@ -523,14 +523,14 @@
                                    nlflgs,  rcptrs,  wkindx )
 
 
-      else if ( class .eq. 4 ) then
+      else if ( class == 4 ) then
 !
 !        Class 4 columns contain integer arrays.
 !
          call zzekac04 ( handle, segdsc, coldsc, ivals, entszs, nlflgs )
 
 
-      else if ( class .eq. 7 ) then
+      else if ( class == 7 ) then
 !
 !        Class 7 columns contain fixed-count integer scalars.
 !

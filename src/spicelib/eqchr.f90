@@ -20,8 +20,8 @@
 
       implicit none
 
-      character*(1)         a
-      character*(1)         b
+      character(1)          a
+      character(1)          b
 
 ! $ Brief_I/O
 !
@@ -223,10 +223,10 @@
       i     = ichar(a)
       j     = ichar(b)
 
-      if ( i .gt. lstchr .or. j .gt. lstchr ) then
-         eqchr = i .eq. j
+      if ( i > lstchr .or. j > lstchr ) then
+         eqchr = i == j
       else
-         eqchr = uvalue(i) .eq. uvalue(j)
+         eqchr = uvalue(i) == uvalue(j)
       end if
 
       return
@@ -421,10 +421,10 @@
       i     = ichar(a)
       j     = ichar(b)
 
-      if ( i .gt. lstchr .or. j .gt. lstchr ) then
-         nechr = i .ne. j
+      if ( i > lstchr .or. j > lstchr ) then
+         nechr = i /= j
       else
-         nechr = uvalue(i) .ne. uvalue(j)
+         nechr = uvalue(i) /= uvalue(j)
       end if
 
       return

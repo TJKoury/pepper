@@ -158,32 +158,32 @@
       mbase  =  segdsc ( imdidx )
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 
          tree  =  segdsc ( cptidx )
 
-         if ( segdsc(lcpidx) .eq. p ) then
+         if ( segdsc(lcpidx) == p ) then
             call dasudi ( handle, mbase+lcwidx, mbase+lcwidx, cpsize )
          end if
 
-         if ( p .eq. segdsc(lcpidx) ) then
+         if ( p == segdsc(lcpidx) ) then
             segdsc(lcwidx) = cpsize
          end if
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 
          tree  =  segdsc ( dptidx )
 
-         if ( segdsc(ldpidx) .eq. p ) then
+         if ( segdsc(ldpidx) == p ) then
             call dasudi ( handle, mbase+ldwidx, mbase+ldwidx, dpsize )
          end if
 
-         if ( p .eq. segdsc(ldpidx) ) then
+         if ( p == segdsc(ldpidx) ) then
             segdsc(ldwidx) = dpsize
          end if
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, one of the allocation routines would have
@@ -191,11 +191,11 @@
 !
          tree  =  segdsc ( iptidx )
 
-         if ( segdsc(lipidx) .eq. p ) then
+         if ( segdsc(lipidx) == p ) then
             call dasudi ( handle, mbase+liwidx, mbase+liwidx, ipsize )
          end if
 
-         if ( p .eq. segdsc(lipidx) ) then
+         if ( p == segdsc(lipidx) ) then
             segdsc(liwidx) = ipsize
          end if
 

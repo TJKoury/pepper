@@ -25,8 +25,8 @@
 
       implicit none
 
-      character*(*)         refa
-      character*(*)         refb
+      character(*)          refa
+      character(*)          refb
       real(wp)              rotab ( 3, 3 )
 
 ! $ Brief_I/O

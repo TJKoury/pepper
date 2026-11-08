@@ -179,7 +179,7 @@
 !     Squeal if something is awry.
 !
 
-      if (  cell(-1) .lt. 0  )  then
+      if (  cell(-1) < 0  )  then
 
          call setmsg ( 'Invalid cell size.  The size was #.')
          call errint ( '#', cell(-1) )
@@ -187,7 +187,7 @@
          call chkout ( 'CARDI' )
          return
 
-      else if ( cell(0) .lt. 0  ) then
+      else if ( cell(0) < 0  ) then
 
          call setmsg ( 'Invalid cell cardinality.  The cardinality '  // &
                        'was #.'      )
@@ -196,7 +196,7 @@
          call chkout ( 'CARDI' )
          return
 
-      else if ( cell(0) .gt. cell(-1)  ) then
+      else if ( cell(0) > cell(-1)  ) then
 
          call setmsg ( 'Invalid cell cardinality; cardinality exceeds'// &
                        ' cell size.  The cardinality was #.  The size'// &

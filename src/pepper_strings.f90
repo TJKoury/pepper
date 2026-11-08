@@ -3,7 +3,7 @@
 !> The procedures keep SPICELIB's names, arguments and documentation. They
 !> have no saved state and do not signal SPICE errors. Moved here from
 !> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in pepper_legacy_strings.f90.
+!> original interface are in src/legacy/pepper_legacy_strings.f90.
 module pepper_strings
 
    implicit none
@@ -43,10 +43,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: instr
-      character*1, intent(in) :: asciib
-      character*1, intent(in) :: asciie
-      character*(*), intent(out) :: outstr
+      character(*), intent(in) :: instr
+      character(1), intent(in) :: asciib
+      character(1), intent(in) :: asciie
+      character(*), intent(out) :: outstr
 
 ! $ Brief_I/O
 !
@@ -226,7 +226,7 @@ contains
 
          k = ichar ( instr(i:i) )
 
-         if ( ( k .lt. lwrbnd ) .or. ( k .gt. uprbnd ) ) then
+         if ( ( k < lwrbnd ) .or. ( k > uprbnd ) ) then
 !
 !           The character is kept.  Note that if the user inputs
 !           ASCIIB and ASCIIE in the wrong order this test will
@@ -236,7 +236,7 @@ contains
             j           = j + 1
             outstr(j:j) = instr(i:i)
 
-            if ( j .eq. outlen ) then
+            if ( j == outlen ) then
                return
             end if
 
@@ -247,7 +247,7 @@ contains
 !
 !     Pad the output string with blanks.
 !
-      if ( j .lt. outlen ) then
+      if ( j < outlen ) then
          outstr(j+1: ) = ' '
       end if
 
@@ -278,7 +278,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -430,7 +430,7 @@ contains
       c = d-1
       e = d+1
 
-      if ( d .eq. 0 ) then
+      if ( d == 0 ) then
 
 !
 !        If there is no decimal point just apply the integer test.
@@ -446,7 +446,7 @@ contains
 !
          l = len(string)
 
-         if ( l .eq. 1 ) then
+         if ( l == 1 ) then
 
 !
 !           The string is one character long and a decimal point.
@@ -454,47 +454,47 @@ contains
 !
             bedec = .false.
 
-         else if ( d .eq. 1 ) then
+         else if ( d == 1 ) then
 
 !
 !           The decimal point occurs as the first character of the
 !           string.  The string following it must begin with
 !           a non-blank character and be an unsigned integer.
 !
-            bedec =       string(e:e) .ne. ' ' &
+            bedec =       string(e:e) /= ' ' &
                      .and. beuns  ( string(e:) )
 
-         else if ( d .eq. l ) then
+         else if ( d == l ) then
 
 !
 !           The decimal point is the last character of the string.
 !           The character that precedes it must be non-blank and
 !           the substring to the left must be an integer.
 !
-            bedec =       string(c:c) .ne. ' ' &
+            bedec =       string(c:c) /= ' ' &
                      .and. beint ( string(1:c) )
 
-         else if ( string(c:c) .eq. ' ' ) then
+         else if ( string(c:c) == ' ' ) then
 
 !
 !           The decimal point occurs somewhere in the middle of the
 !           string and the character preceding it is blank.
 !
-            bedec =        string(e:e) .ne. ' ' &
-                     .and. string(1:c) .eq. ' ' &
+            bedec =        string(e:e) /= ' ' &
+                     .and. string(1:c) == ' ' &
                      .and. beuns  ( string(e:) )
 
-         else if ( string(e:e) .eq. ' ' ) then
+         else if ( string(e:e) == ' ' ) then
 
 !
 !           Again the decimal point occurs somewhere in the middle of
 !           the string and the character following it is blank.
 !
-            bedec =        string(e:l) .eq. ' ' &
-                     .and. string(c:c) .ne. ' ' &
+            bedec =        string(e:l) == ' ' &
+                     .and. string(c:c) /= ' ' &
                      .and. beint ( string(1:c) )
 
-         else if ( string(c:c) .eq. '-' .or. string(c:c) .eq. '+' ) then
+         else if ( string(c:c) == '-' .or. string(c:c) == '+' ) then
 
 !
 !           The decimal point is in the middle of the string and
@@ -503,11 +503,11 @@ contains
 !           should be an unsigned integer. (we already know that the
 !           character following the decimal point is not a blank)
 !
-            if ( c .eq. 1 ) then
+            if ( c == 1 ) then
                bedec = beuns (string(e:l))
             else
                bedec =        beuns ( string(e:l) ) &
-                        .and. string(1:c-1) .eq. ' '
+                        .and. string(1:c-1) == ' '
             end if
 
          else
@@ -554,7 +554,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -686,7 +686,7 @@ contains
       integer(ip)           l
 
 
-      character*(1)         letter
+      character(1)          letter
 
 
 !
@@ -700,7 +700,7 @@ contains
 !     If there isn't a non-blank character, this isn't an
 !     integer.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
          beint  = .false.
          return
       end if
@@ -711,18 +711,18 @@ contains
 !
       letter = string(i:i)
 
-      if      ( i .lt. l ) then
+      if      ( i < l ) then
 
 !
 !        The first character is not the last, so we might start with
 !        a plus or minus.  If so the rest must be an unsigned integer.
 !
-         if (      ( letter .eq. '+' ) &
-              .or. ( letter .eq. '-' ) ) then
+         if (      ( letter == '+' ) &
+              .or. ( letter == '-' ) ) then
 
             i    = i + 1
 
-            if ( string(i:i) .ne. ' ' ) then
+            if ( string(i:i) /= ' ' ) then
                beint = beuns ( string(i:) )
             else
                beint = .false.
@@ -777,7 +777,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -930,7 +930,7 @@ contains
       f = e+1
 
 
-      if ( e .eq. 0 ) then
+      if ( e == 0 ) then
 
 !
 !        There is no exponent character, this is a number if it
@@ -938,13 +938,13 @@ contains
 !
          benum = bedec ( string )
 
-      else if (     ( e .eq. 1 ) &
-               .or. ( e .eq. l )  ) then
+      else if (     ( e == 1 ) &
+               .or. ( e == l )  ) then
 
          benum = .false.
 
-      else if (      ( string(d:d) .eq. ' ' ) &
-                .or. ( string(f:f) .eq. ' ' ) ) then
+      else if (      ( string(d:d) == ' ' ) &
+                .or. ( string(f:f) == ' ' ) ) then
 
          benum = .false.
 
@@ -982,7 +982,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -1131,7 +1131,7 @@ contains
 !     If there isn't a non-blank character, this isn't an
 !     unsigned integer.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
          beuns  = .false.
          return
       end if
@@ -1143,9 +1143,9 @@ contains
 !
       ok = .true.
 
-      do while ( ok .and. ( i .le. l ) )
+      do while ( ok .and. ( i <= l ) )
 
-         if ( index('0123456789', string(i:i) ) .gt. 0  ) then
+         if ( index('0123456789', string(i:i) ) > 0  ) then
             i = i + 1
          else
             ok = .false.
@@ -1164,7 +1164,7 @@ contains
 !
 !     ... otherwise, it's an unsigned integer if the remainder is blank.
 !
-         beuns  = string(i:) .eq. ' '
+         beuns  = string(i:) == ' '
       end if
 
       return
@@ -1195,10 +1195,10 @@ contains
 
       implicit none
 
-      character*1, intent(in) :: delim
+      character(1), intent(in) :: delim
       integer(ip), intent(in) :: n
-      character*(*), intent(in) :: input
-      character*(*), intent(out) :: output
+      character(*), intent(in) :: input
+      character(*), intent(out) :: output
 
 ! $ Brief_I/O
 !
@@ -1334,7 +1334,7 @@ contains
 !
 !        Check each character to see if it is a delimiter or not.
 !
-         if ( input(i:i) .eq. delim ) then
+         if ( input(i:i) == delim ) then
 
             count = count + 1
 
@@ -1343,7 +1343,7 @@ contains
 !           have been accumulated.  When enough consecutive delimiters
 !           have accumulated, we no longer copy them.
 !
-            if ( count .le. n ) then
+            if ( count <= n ) then
                j           = j + 1
                output(j:j) = input(i:i)
             end if
@@ -1360,7 +1360,7 @@ contains
 
          end if
 
-         if ( j .eq. outlen ) then
+         if ( j == outlen ) then
             return
          end if
 
@@ -1369,7 +1369,7 @@ contains
 !
 !     Pad any left over space in the output string with blanks.
 !
-      if ( j .lt. outlen ) then
+      if ( j < outlen ) then
          output(j+1:) = ' '
       end if
 
@@ -1401,8 +1401,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str
-      character*(*), intent(in) :: chars
+      character(*), intent(in) :: str
+      character(*), intent(in) :: chars
       integer(ip), intent(in) :: start
 
 ! $ Brief_I/O
@@ -1575,9 +1575,9 @@ contains
 
       do while ( .not. found )
 
-         if ( b .gt. lenstr ) then
+         if ( b > lenstr ) then
             return
-         else if ( index( chars, str(b:b) ) .ne. 0 ) then
+         else if ( index( chars, str(b:b) ) /= 0 ) then
             cpos = b
             return
          else
@@ -1614,8 +1614,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str
-      character*(*), intent(in) :: chars
+      character(*), intent(in) :: str
+      character(*), intent(in) :: chars
       integer(ip), intent(in) :: start
 
 ! $ Brief_I/O
@@ -1795,9 +1795,9 @@ contains
 
       do while ( .not. found )
 
-         if ( b .le. 0 ) then
+         if ( b <= 0 ) then
             return
-         else if ( index( chars, str(b:b) ) .ne. 0 ) then
+         else if ( index( chars, str(b:b) ) /= 0 ) then
             cposr = b
             return
          else
@@ -1837,8 +1837,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: a
-      character*(*), intent(in) :: b
+      character(*), intent(in) :: a
+      character(*), intent(in) :: b
 
 ! $ Brief_I/O
 !
@@ -2166,7 +2166,7 @@ contains
 !     On the other hand, in many cases the strings will be exactly
 !     equal. If so, why knock ourselves out?
 !
-      if ( a .eq. b ) then
+      if ( a == b ) then
 
          eqstr  = .true.
          return
@@ -2193,10 +2193,10 @@ contains
 !             ( PA .LE. LENA )   and   ( PB .LE. LENB )
 !
 
-            if ( a(pa:pa) .eq. ' ' ) then
+            if ( a(pa:pa) == ' ' ) then
                pa = pa + 1
 
-            else if ( b(pb:pb) .eq. ' ' ) then
+            else if ( b(pb:pb) == ' ' ) then
                pb = pb + 1
 
             else
@@ -2204,15 +2204,15 @@ contains
                ca = ichar ( a(pa:pa) )
                cb = ichar ( b(pb:pb) )
 
-               if ( ca .ge. lbound  .and.  ca .le. ubound ) then
+               if ( ca >= lbound  .and.  ca <= ubound ) then
                   ca = ca + delta
                end if
 
-               if ( cb .ge. lbound  .and.  cb .le. ubound ) then
+               if ( cb >= lbound  .and.  cb <= ubound ) then
                   cb = cb + delta
                end if
 
-               if ( ca .eq. cb ) then
+               if ( ca == cb ) then
 
                   pa = pa + 1
                   pb = pb + 1
@@ -2233,15 +2233,15 @@ contains
             if ( .not. done ) then
 
 
-               if ( pa .gt. lena ) then
+               if ( pa > lena ) then
 !
 !                 Whichever of the following tests passes, we're going
 !                 to have a verdict at the end of the IF block below.
 !
-                  if ( pb .gt. lenb ) then
+                  if ( pb > lenb ) then
                      eqstr  = .true.
 
-                  else if ( b(pb: ) .ne. ' ' ) then
+                  else if ( b(pb: ) /= ' ' ) then
                      eqstr  = .false.
 
                   else
@@ -2255,12 +2255,12 @@ contains
 !                 action.
 !
 
-               else if ( pb .gt. lenb ) then
+               else if ( pb > lenb ) then
 !
 !                 Whichever of the following tests passes, we're going
 !                 to have a verdict at the end of the IF block below.
 !
-                  if ( a(pa: ) .ne. ' ' ) then
+                  if ( a(pa: ) /= ' ' ) then
                      eqstr  = .false.
                   else
                      eqstr  = .true.
@@ -2308,9 +2308,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: value
+      character(*), intent(in) :: value
       integer(ip), intent(in) :: ndim
-      character*(*), intent(in) :: array ( * )
+      character(*), intent(in) :: array ( * )
 
 ! $ Brief_I/O
 !
@@ -2469,7 +2469,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
       integer(ip), intent(in) :: start
       integer(ip), intent(out) :: b
       integer(ip), intent(out) :: e
@@ -2614,7 +2614,7 @@ contains
       blank = ichar(' ')
       size  = len(string)
 
-      if ( start .gt. size ) then
+      if ( start > size ) then
          b = 0
          e = 0
          return
@@ -2623,13 +2623,13 @@ contains
       n = max(1,start)
       l = n - 1
 
-      if ( l .le. 0 ) then
+      if ( l <= 0 ) then
          lastn = .false.
       else
-         lastn = ichar( string(l:l) ) .ne. blank
+         lastn = ichar( string(l:l) ) /= blank
       end if
 
-      thisb = ichar( string(n:n) ) .eq. blank
+      thisb = ichar( string(n:n) ) == blank
 
 !
 !     Search for the beginning of a word (the last character
@@ -2639,14 +2639,14 @@ contains
 
          n = n + 1
 
-         if ( n .gt. size ) then
+         if ( n > size ) then
             b = 0
             e = 0
             return
          end if
 
          lastn = .not.   thisb
-         thisb =  ichar( string(n:n) ) .eq. blank
+         thisb =  ichar( string(n:n) ) == blank
 
       end do
 
@@ -2659,7 +2659,7 @@ contains
 
       do i = n+1, size
 
-         if ( ichar(string(i:i)) .eq. blank ) then
+         if ( ichar(string(i:i)) == blank ) then
             e = i - 1
             return
          end if
@@ -2699,7 +2699,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -2807,13 +2807,13 @@ contains
 !
 !     Just like it says in the header.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
          frstnb = 0
 
       else
          do i = 1, len ( string )
 
-            if ( ichar(string(i:i)) .ne. ispace ) then
+            if ( ichar(string(i:i)) /= ispace ) then
                frstnb = i
                return
             end if
@@ -2849,7 +2849,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -2996,8 +2996,8 @@ contains
 !
       do i = 1, len ( string )
 
-         if (       (ichar ( string(i:i) ) .lt.  32) &
-              .or.  (ichar ( string(i:i) ) .gt. 126) ) then
+         if (       (ichar ( string(i:i) ) <  32) &
+              .or.  (ichar ( string(i:i) ) > 126) ) then
 
             frstnp = i
             return
@@ -3038,7 +3038,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -3164,8 +3164,8 @@ contains
 !
       do i = 1, len ( string )
 
-         if (       (ichar ( string(i:i) ) .ge.  33) &
-              .and. (ichar ( string(i:i) ) .le. 126) ) then
+         if (       (ichar ( string(i:i) ) >=  33) &
+              .and. (ichar ( string(i:i) ) <= 126) ) then
 
             frstpc = i
             return
@@ -3208,12 +3208,12 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: keywd
-      character*(*), intent(in) :: terms(*)
+      character(*), intent(in) :: keywd
+      character(*), intent(in) :: terms(*)
       integer(ip), intent(in) :: nterms
-      character*(*), intent(inout) :: wordsq
+      character(*), intent(inout) :: wordsq
       logical, intent(out) :: found
-      character*(*), intent(out) :: substr
+      character(*), intent(out) :: substr
 
 ! $ Brief_I/O
 !
@@ -3433,7 +3433,7 @@ contains
 !
 !     If the keyword wasn't found, set the outputs and head for home.
 !
-      if ( positn .eq. 0 ) then
+      if ( positn == 0 ) then
          found  = .false.
          substr = ' '
          return
@@ -3458,7 +3458,7 @@ contains
 !     If there is a next word ( E came back non-zero ) see if its a
 !     terminator.
 !
-      if ( e .ne. 0 ) then
+      if ( e /= 0 ) then
          delims = isrchc( wordsq(b:e), nterms, terms )
       end if
 
@@ -3467,8 +3467,8 @@ contains
 !     string, we are done.  Remove the keyword and put a blank in
 !     SUBSTR
 !
-      if (      ( e      .eq. 0 ) &
-           .or. ( delims .ne. 0 ) ) then
+      if (      ( e      == 0 ) &
+           .or. ( delims /= 0 ) ) then
 
          call shiftl ( wordsq(berase:), eerase-berase+1, ' ', &
                        wordsq(berase:)                        )
@@ -3488,7 +3488,7 @@ contains
 !     Now we just examine each word until we run out of string or we
 !     run into a terminator.
 !
-      do while ( (e .ne. 0) .and. (delims .eq. 0) )
+      do while ( (e /= 0) .and. (delims == 0) )
 
          endstr = e
          eerase = e
@@ -3496,7 +3496,7 @@ contains
 
          call fndnwd ( wordsq, start, b, e )
 
-         if ( e .ne. 0 ) then
+         if ( e /= 0 ) then
             delims = isrchc ( wordsq(b:e), nterms, terms )
          end if
 
@@ -3539,7 +3539,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -3651,13 +3651,13 @@ contains
 !
 !     Just like it says in the header.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
          lastnb = 0
 
       else
          do i = len (string), 1, -1
 
-            if ( ichar(string(i:i)) .ne. ispace ) then
+            if ( ichar(string(i:i)) /= ispace ) then
                lastnb = i
                return
             end if
@@ -3693,7 +3693,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -3819,8 +3819,8 @@ contains
 !
       do i = len ( string ), 1, -1
 
-         if (       (ichar ( string(i:i) ) .ge.  33) &
-              .and. (ichar ( string(i:i) ) .le. 126) ) then
+         if (       (ichar ( string(i:i) ) >=  33) &
+              .and. (ichar ( string(i:i) ) <= 126) ) then
 
             lastpc = i
             return
@@ -3859,10 +3859,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: items ( * )
+      character(*), intent(in) :: items ( * )
       integer(ip), intent(in) :: n
-      character*(*), intent(in) :: delim
-      character*(*), intent(out) :: list
+      character(*), intent(in) :: delim
+      character(*), intent(out) :: list
 
 ! $ Brief_I/O
 !
@@ -4024,13 +4024,13 @@ contains
       llen = len ( list  )
       dlen = len ( delim )
 
-      if ( n .gt. 0 ) then
+      if ( n > 0 ) then
 
          do i = 1, n
 
-            if ( lpos .le. llen ) then
+            if ( lpos <= llen ) then
 
-               if ( items(i) .eq. ' ' ) then
+               if ( items(i) == ' ' ) then
                   list(lpos: ) = delim
                   lpos         = lpos + dlen
 
@@ -4053,7 +4053,7 @@ contains
 !     We're at the end of the list. Right now, the list ends in
 !     a delimiter. Drop it.
 !
-         if ( lpos-dlen .le. llen ) then
+         if ( lpos-dlen <= llen ) then
             list(lpos-dlen: ) = ' '
          end if
 
@@ -4084,8 +4084,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
-      character*(*), intent(out) :: out
+      character(*), intent(in) :: in
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -4210,7 +4210,7 @@ contains
 
          ich = ichar( out(i:i) )
 
-         if ( ( ich .ge. uppera ) .and. ( ich .le. upperz ) ) then
+         if ( ( ich >= uppera ) .and. ( ich <= upperz ) ) then
             out(i:i) = char ( ich + shift )
          end if
 
@@ -4243,8 +4243,8 @@ contains
       implicit none
 
       integer(ip), intent(in) :: n
-      character*(*), intent(in) :: input
-      character*(*), intent(out) :: output
+      character(*), intent(in) :: input
+      character(*), intent(out) :: output
 
 ! $ Brief_I/O
 !
@@ -4367,7 +4367,7 @@ contains
 !
 !        Skip leading spaces.
 !
-         if ( j .eq. 0 .and. input(i:i) .eq. ' ' ) then
+         if ( j == 0 .and. input(i:i) == ' ' ) then
 
 !
 !           Another leading space. Skip it.
@@ -4378,7 +4378,7 @@ contains
 !
 !           Check this character to see if it is a space or not.
 !
-            if ( input(i:i) .eq. ' ' ) then
+            if ( input(i:i) == ' ' ) then
 
                count = count + 1
 
@@ -4387,7 +4387,7 @@ contains
 !              have been accumulated. When enough consecutive spaces
 !              have accumulated, we no longer copy them.
 !
-               if ( count .le. n ) then
+               if ( count <= n ) then
                   j           = j + 1
                   output(j:j) = input(i:i)
                end if
@@ -4408,7 +4408,7 @@ contains
 
                ich = ichar( input(i:i) )
 
-               if ( ( ich .ge. lowa ) .and. ( ich .le. lowz ) ) then
+               if ( ( ich >= lowa ) .and. ( ich <= lowz ) ) then
                   output(j:j) = char ( ich + shift )
                else
                   output(j:j) = input(i:i)
@@ -4416,7 +4416,7 @@ contains
 
             end if
 
-            if ( j .eq. outlen ) then
+            if ( j == outlen ) then
                return
             end if
 
@@ -4430,7 +4430,7 @@ contains
 !     point and the case below will set the whole output string to
 !     blank.
 !
-      if ( j .lt. outlen ) then
+      if ( j < outlen ) then
          output(j+1:) = ' '
       end if
 
@@ -4460,8 +4460,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: input
-      character*(*), intent(out) :: output
+      character(*), intent(in) :: input
+      character(*), intent(out) :: output
 
 ! $ Brief_I/O
 !
@@ -4569,7 +4569,7 @@ contains
 !     input string is already left-justified. There is nothing to do
 !     but to assign the input string to the output string.
 !
-      if ( input(1:1) .ne. ' ' ) then
+      if ( input(1:1) /= ' ' ) then
 
          output = input
 
@@ -4589,9 +4589,9 @@ contains
          i   = 0
          pos = 1
 
-         do while ( i .eq. 0 .and. pos .le. li )
+         do while ( i == 0 .and. pos <= li )
 
-            if ( input(pos:pos) .ne. ' ' )  then
+            if ( input(pos:pos) /= ' ' )  then
                i    =  pos
             else
                pos  =  pos + 1
@@ -4603,7 +4603,7 @@ contains
 !        Did we find a non-blank character? If not, the input string is
 !        blank. Set output to blank.
 !
-         if ( i .eq. 0 ) then
+         if ( i == 0 ) then
 
             output = ' '
 
@@ -4613,13 +4613,13 @@ contains
 !           I is now the index of the first non-blank character of
 !           INPUT.
 !
-            do while  ( ( i .le. li ) .and. ( j .le. lo ) )
+            do while  ( ( i <= li ) .and. ( j <= lo ) )
                output(j:j) = input(i:i)
                j           = j + 1
                i           = i + 1
             end do
 
-            if ( j .le. lo ) then
+            if ( j <= lo ) then
                output(j:) = ' '
             end if
 
@@ -4654,11 +4654,11 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: list
-      character*(1), intent(in) :: delim
+      character(*), intent(in) :: list
+      character(1), intent(in) :: delim
       integer(ip), intent(in) :: nmax
       integer(ip), intent(out) :: n
-      character*(*), intent(out) :: items ( * )
+      character(*), intent(out) :: items ( * )
 
 ! $ Brief_I/O
 !
@@ -4967,7 +4967,7 @@ contains
 !
 !     Local parameters
 !
-      character*(1)         blank
+      character(1)          blank
       parameter           ( blank = ' ' )
 
       integer(ip)           ispace
@@ -4976,8 +4976,8 @@ contains
 !
 !     Local variables
 !
-      character*(1)         bchr
-      character*(1)         echr
+      character(1)          bchr
+      character(1)          echr
 
       integer(ip)           b
       integer(ip)           e
@@ -4997,7 +4997,7 @@ contains
 !
 !     Blank list contains a blank item.
 !
-      if ( list .eq. blank ) then
+      if ( list == blank ) then
 
          n        = 1
          items(1) = blank
@@ -5009,7 +5009,7 @@ contains
 !
          eol = len ( list )
 
-         do while ( list(eol:eol) .eq. blank )
+         do while ( list(eol:eol) == blank )
 
             eol = eol - 1
 
@@ -5026,7 +5026,7 @@ contains
 !
          b = 1
 
-         do while ( b .le. eol )
+         do while ( b <= eol )
 !
 !           Skip any blanks before the next item or delimiter.
 !
@@ -5036,12 +5036,12 @@ contains
 !
             bchr = list(b:b)
 
-            do while (       ( b           .le. eol    ) &
-                       .and. ( ichar(bchr) .eq. ispace ) )
+            do while (       ( b           <= eol    ) &
+                       .and. ( ichar(bchr) == ispace ) )
 
                b = b + 1
 
-               if ( b .le. eol ) then
+               if ( b <= eol ) then
                   bchr = list(b:b)
                end if
 
@@ -5057,18 +5057,18 @@ contains
 !
             e = b
 
-            if ( e .le. eol ) then
+            if ( e <= eol ) then
                echr = list(e:e)
             else
                echr = blank
             end if
 
-            do while (       (  e    .le. eol   ) &
-                       .and. (  echr .ne. delim )  )
+            do while (       (  e    <= eol   ) &
+                       .and. (  echr /= delim )  )
 
                e = e + 1
 
-               if ( e .le. eol ) then
+               if ( e <= eol ) then
                   echr = list(e:e)
                end if
 
@@ -5082,7 +5082,7 @@ contains
 !
             n = n + 1
 
-            if ( e .gt. b ) then
+            if ( e > b ) then
                items(n) = list(b:e-1)
             else
                items(n) = blank
@@ -5092,7 +5092,7 @@ contains
 !           If there are more items to be found, continue with
 !           character following E (which is a delimiter).
 !
-            if ( n .lt. nmax ) then
+            if ( n < nmax ) then
                b = e + 1
             else
                return
@@ -5104,7 +5104,7 @@ contains
 !        If the list ended with a (non-blank) delimiter, add a blank
 !        item to the end.
 !
-         if ( ( list(eol:eol) .eq. delim ) .and. ( n .lt. nmax ) ) then
+         if ( ( list(eol:eol) == delim ) .and. ( n < nmax ) ) then
 
             n        = n + 1
             items(n) = blank
@@ -5140,11 +5140,11 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: list
-      character*(*), intent(in) :: delims
+      character(*), intent(in) :: list
+      character(*), intent(in) :: delims
       integer(ip), intent(in) :: nmax
       integer(ip), intent(out) :: n
-      character*(*), intent(out) :: items ( * )
+      character(*), intent(out) :: items ( * )
 
 ! $ Brief_I/O
 !
@@ -5425,7 +5425,7 @@ contains
 !
 !     Local parameters
 !
-      character*(1)         blank
+      character(1)          blank
       parameter           ( blank = ' ' )
 
       integer(ip)           ispace
@@ -5434,8 +5434,8 @@ contains
 !
 !     Local variables
 !
-      character*(1)         bchr
-      character*(1)         echr
+      character(1)          bchr
+      character(1)          echr
 
       integer(ip)           b
       integer(ip)           e
@@ -5457,7 +5457,7 @@ contains
 !
 !     Blank list contains a blank item.
 !
-      if ( list .eq. blank ) then
+      if ( list == blank ) then
 
          n        = 1
          items(1) = blank
@@ -5469,7 +5469,7 @@ contains
 !
          eol = len ( list )
 
-         do while ( ichar(list(eol:eol)) .eq. ispace )
+         do while ( ichar(list(eol:eol)) == ispace )
             eol = eol - 1
          end do
 
@@ -5484,7 +5484,7 @@ contains
 !
          b = 1
 
-         do while ( b .le. eol )
+         do while ( b <= eol )
 !
 !           Skip any blanks before the next item or delimiter.
 !
@@ -5494,12 +5494,12 @@ contains
 !
             bchr = list(b:b)
 
-            do while (       ( b           .le. eol    ) &
-                       .and. ( ichar(bchr) .eq. ispace ) )
+            do while (       ( b           <= eol    ) &
+                       .and. ( ichar(bchr) == ispace ) )
 
                b = b + 1
 
-               if ( b .le. eol ) then
+               if ( b <= eol ) then
                   bchr = list(b:b)
                end if
 
@@ -5515,18 +5515,18 @@ contains
 !
             e = b
 
-            if ( e .le. eol ) then
+            if ( e <= eol ) then
                echr = list(e:e)
             else
                echr = blank
             end if
 
-            do while (       (  e                     .le. eol ) &
-                       .and. (  index( delims, echr ) .eq. 0   )  )
+            do while (       (  e                     <= eol ) &
+                       .and. (  index( delims, echr ) == 0   )  )
 
                e = e + 1
 
-               if ( e .le. eol ) then
+               if ( e <= eol ) then
                   echr = list(e:e)
                end if
 
@@ -5541,25 +5541,25 @@ contains
 !           By definition, consecutive blanks, or a blank and any
 !           other delimiter, do not count as consecutive delimiters.)
 !
-            if (       ( e           .le. eol    ) &
-                 .and. ( ichar(echr) .eq. ispace ) ) then
+            if (       ( e           <= eol    ) &
+                 .and. ( ichar(echr) == ispace ) ) then
 !
 !              Find the next non-blank character.
 !
-               do while (       ( e           .le. eol    ) &
-                          .and. ( ichar(echr) .eq. ispace )  )
+               do while (       ( e           <= eol    ) &
+                          .and. ( ichar(echr) == ispace )  )
 
                   e = e + 1
 
-                  if ( e .le. eol ) then
+                  if ( e <= eol ) then
                      echr = list(e:e)
                   end if
 
                end do
 
-               if ( e .le. eol ) then
+               if ( e <= eol ) then
 
-                  if (  index( delims, echr ) .eq. 0  ) then
+                  if (  index( delims, echr ) == 0  ) then
 !
 !                    We're looking at a non-delimiter character.
 !
@@ -5582,7 +5582,7 @@ contains
 !
             n = n + 1
 
-            if ( e .gt. b ) then
+            if ( e > b ) then
                items(n) = list(b:e-1)
             else
                items(n) = blank
@@ -5592,7 +5592,7 @@ contains
 !           If there are more items to be found, continue with
 !           character following E (which is a delimiter).
 !
-            if ( n .lt. nmax ) then
+            if ( n < nmax ) then
                b = e + 1
             else
                return
@@ -5604,8 +5604,8 @@ contains
 !        If the list ended with a (non-blank) delimiter, add a
 !        blank item to the end.
 !
-         if (       ( index( delims, list(eol:eol) ) .ne. 0    ) &
-              .and. (  n                             .lt. nmax )  ) then
+         if (       ( index( delims, list(eol:eol) ) /= 0    ) &
+              .and. (  n                             < nmax )  ) then
 
             n        = n + 1
             items(n) = blank
@@ -5640,7 +5640,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -5786,8 +5786,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
-      character*(1), intent(in) :: qchar
+      character(*), intent(in) :: string
+      character(1), intent(in) :: qchar
       integer(ip), intent(in) :: first
       integer(ip), intent(out) :: last
       integer(ip), intent(out) :: nchar
@@ -5995,10 +5995,10 @@ contains
 !     Handle the cases in which we can tell right away that
 !     no token can be found.
 !
-      if (       (  first                .lt.  1      ) &
-            .or. (  first                .gt.  l-1    ) &
-            .or. (  qchar                .eq.  ' '    ) &
-            .or. (  string(first:first)  .ne.  qchar  )   ) then
+      if (       (  first                <  1      ) &
+            .or. (  first                >  l-1    ) &
+            .or. (  qchar                ==  ' '    ) &
+            .or. (  string(first:first)  /=  qchar  )   ) then
 
          last  = first - 1
          nchar = 0
@@ -6013,7 +6013,7 @@ contains
 !
       loc = index (  string( first+1: l ),  qchar  )
 
-      if ( loc .eq. 0 ) then
+      if ( loc == 0 ) then
 
          last  = first - 1
          nchar = 0
@@ -6041,9 +6041,9 @@ contains
       pos   =  last  + 1
 
 
-      do while (  pos  .le.  l  )
+      do while (  pos  <=  l  )
 
-         if ( string(pos:pos) .eq. qchar ) then
+         if ( string(pos:pos) == qchar ) then
 !
 !           Each quote character we see toggles the quote parity.
 !
@@ -6121,10 +6121,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
-      character*(*), intent(in) :: templ
-      character*1, intent(in) :: wstr
-      character*1, intent(in) :: wchr
+      character(*), intent(in) :: string
+      character(*), intent(in) :: templ
+      character(1), intent(in) :: wstr
+      character(1), intent(in) :: wchr
 
 ! $ Brief_I/O
 !
@@ -6338,12 +6338,12 @@ contains
 !
 !     A blank template matches a blank string, and nothing else.
 !
-      if ( ( tlast .eq. 0 ) .and. ( slast .eq. 0 ) ) then
+      if ( ( tlast == 0 ) .and. ( slast == 0 ) ) then
 
          matchw = .true.
          return
 
-      else if ( tlast .eq. 0 ) then
+      else if ( tlast == 0 ) then
 
          matchw = .false.
          return
@@ -6356,12 +6356,12 @@ contains
 !     up to the first occurrence of a wild string.
 !
 
-      do while (       ( tcur             .le. tlast ) &
-                 .and. ( scur             .le. slast ) &
+      do while (       ( tcur             <= tlast ) &
+                 .and. ( scur             <= slast ) &
                  .and. ( .not. samch( templ,tcur, wstr,1) ) )
 
-         if (       ( templ(tcur:tcur) .ne. string(scur:scur) ) &
-              .and. ( templ(tcur:tcur) .ne. wchr              ) ) then
+         if (       ( templ(tcur:tcur) /= string(scur:scur) ) &
+              .and. ( templ(tcur:tcur) /= wchr              ) ) then
 
             matchw = .false.
             return
@@ -6382,8 +6382,8 @@ contains
 !     Case 1.  Both the string and template ran out of characters at
 !     the same time without running into a wild string in the template.
 !
-      if (       ( tcur .gt. tlast ) &
-           .and. ( scur .gt. slast ) ) then
+      if (       ( tcur > tlast ) &
+           .and. ( scur > slast ) ) then
 
          matchw = .true.
          return
@@ -6394,8 +6394,8 @@ contains
 !     Case 2. The template ran out of characters while there were still
 !     characters remaining in the in the string.  No match.
 !
-      if (       ( tcur .gt. tlast ) &
-           .and. ( scur .le. slast ) ) then
+      if (       ( tcur > tlast ) &
+           .and. ( scur <= slast ) ) then
 
          matchw = .false.
          return
@@ -6410,13 +6410,13 @@ contains
 !     remain.  If so, we DO NOT have a match.  On the other hand if
 !     only wild string characters remain we DO have a match.
 !
-      if (       ( tcur .le. tlast ) &
-           .and. ( scur .gt. slast ) ) then
+      if (       ( tcur <= tlast ) &
+           .and. ( scur > slast ) ) then
 
          matchw = .true.
 
          do i = tcur, tlast
-            matchw = matchw .and. ( templ(i:i) .eq. wstr )
+            matchw = matchw .and. ( templ(i:i) == wstr )
          end do
 
          return
@@ -6432,14 +6432,14 @@ contains
 !     template. (If there isn't one, we have a match.)
 !
 
-      do while (       ( tcur             .le. tlast ) &
+      do while (       ( tcur             <= tlast ) &
                  .and. ( samch ( templ,tcur, wstr,1 )  ) )
 
          tcur = tcur + 1
 
       end do
 
-      if ( tcur .gt. tlast ) then
+      if ( tcur > tlast ) then
 
          matchw = .true.
          return
@@ -6454,7 +6454,7 @@ contains
 !
       left = tcur
 
-      do while (       ( tcur             .le.   tlast   ) &
+      do while (       ( tcur             <=   tlast   ) &
                  .and. ( .not. samch(templ,tcur, wstr,1) ) )
 
          tcur = tcur + 1
@@ -6464,13 +6464,13 @@ contains
       right = tcur - 1
 
 
-      do while ( left .le. tlast )
+      do while ( left <= tlast )
 
 !
 !        First see if there is enough room left in the string to
 !        match TEMPL(LEFT:RIGHT)
 !
-         if ( slast - scur .lt. right - left ) then
+         if ( slast - scur < right - left ) then
 
             matchw = .false.
             return
@@ -6482,12 +6482,12 @@ contains
 !        string.  In such a case the ends of STRING must match
 !        exactly with the end of TEMPL.
 !
-         if ( right .eq. tlast ) then
+         if ( right == tlast ) then
 
             i = slast
             j = tlast
 
-            do while ( j .ge. left )
+            do while ( j >= left )
 
                if (      samch (templ,j, wchr,  1 ) &
                     .or. samch (templ,j, string,i )  ) then
@@ -6523,7 +6523,7 @@ contains
                i = scur
                j = left
 
-               do while (     ( j           .le. right           ) &
+               do while (     ( j           <= right           ) &
                          .and.(      samch ( string,i, templ,j ) &
                                 .or. samch ( wchr,  1, templ,j ) ) )
 
@@ -6535,7 +6535,7 @@ contains
 !
 !              If J made it past RIGHT, we have a substring match
 !
-               if ( j .gt. right ) then
+               if ( j > right ) then
 
                   scur   = i
                   nosubm = .false.
@@ -6551,7 +6551,7 @@ contains
 !
 !                 Make sure there's room to even attempt a match.
 !
-                  if ( slast - scur .lt. right - left ) then
+                  if ( slast - scur < right - left ) then
 
                      matchw = .false.
                      return
@@ -6569,14 +6569,14 @@ contains
 !        string character.  Hunt for the next substring that doesn't
 !        contain a wild string character.
 !
-         do while (       ( tcur             .le. tlast ) &
+         do while (       ( tcur             <= tlast ) &
                     .and.   samch ( templ,tcur,  wstr,1) )
 
             tcur = tcur + 1
 
          end do
 
-         if ( tcur .gt. tlast ) then
+         if ( tcur > tlast ) then
 
 !
 !           All that was left was wild string characters.  We've
@@ -6595,7 +6595,7 @@ contains
 !
          left = tcur
 
-         do while (       ( tcur             .le. tlast ) &
+         do while (       ( tcur             <= tlast ) &
                     .and. ( .not. samch( templ,tcur, wstr,1 ) ) )
 
             tcur = tcur + 1
@@ -6633,7 +6633,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -6726,7 +6726,7 @@ contains
 !
 !     Blank string is easy.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
          nblen = 0
       else
          nblen = lastnb ( string ) - frstnb ( string ) + 1
@@ -6758,7 +6758,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: array   ( * )
+      character(*), intent(in) :: array   ( * )
       integer(ip), intent(in) :: nelt
 
 ! $ Brief_I/O
@@ -6877,7 +6877,7 @@ contains
 !
 !     Nonsense case: no elements.
 !
-      if ( nelt .lt. 1 ) then
+      if ( nelt < 1 ) then
 
          nbwid = 0
 
@@ -6896,7 +6896,7 @@ contains
 !        Continue until the end of the array is reached, or until
 !        a string with no trailing blanks is found.
 !
-         do while ( i .lt. nelt  .and.  nbwid .lt. strlen )
+         do while ( i < nelt  .and.  nbwid < strlen )
 
 !
 !           Search no further than the current value of NBWID.
@@ -6904,7 +6904,7 @@ contains
             i = i + 1
             j = strlen
 
-            do while ( j .gt. nbwid  .and.  array(i)(j:j) .eq. ' ' )
+            do while ( j > nbwid  .and.  array(i)(j:j) == ' ' )
                j = j - 1
             end do
 
@@ -6946,8 +6946,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str
-      character*(*), intent(in) :: chars
+      character(*), intent(in) :: str
+      character(*), intent(in) :: chars
       integer(ip), intent(in) :: start
 
 ! $ Brief_I/O
@@ -7108,9 +7108,9 @@ contains
 
       do while ( .not. found )
 
-         if ( b .gt. lenstr ) then
+         if ( b > lenstr ) then
             return
-         else if ( index( chars, str(b:b) ) .eq. 0 ) then
+         else if ( index( chars, str(b:b) ) == 0 ) then
             ncpos = b
             return
          else
@@ -7147,8 +7147,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str
-      character*(*), intent(in) :: chars
+      character(*), intent(in) :: str
+      character(*), intent(in) :: chars
       integer(ip), intent(in) :: start
 
 ! $ Brief_I/O
@@ -7308,9 +7308,9 @@ contains
 
       do while ( .not. found )
 
-         if ( b .le. 0 ) then
+         if ( b <= 0 ) then
             return
-         else if ( index( chars, str(b:b) ) .eq. 0 ) then
+         else if ( index( chars, str(b:b) ) == 0 ) then
             ncposr = b
             return
          else
@@ -7346,9 +7346,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
-      character*(*), intent(out) :: next
-      character*(*), intent(out) :: rest
+      character(*), intent(in) :: string
+      character(*), intent(out) :: next
+      character(*), intent(out) :: rest
 
 ! $ Brief_I/O
 !
@@ -7558,7 +7558,7 @@ contains
 !
 !     The trivial case.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
 
          next = ' '
          rest = ' '
@@ -7583,7 +7583,7 @@ contains
 !        get to a word, thus no need to check against END here.
 !
          do while ( .not. inword )
-            if ( ichar( string(begin:begin) ) .eq. ispace ) then
+            if ( ichar( string(begin:begin) ) == ispace ) then
                begin = begin + 1
             else
                inword = .true.
@@ -7600,9 +7600,9 @@ contains
 !
          i = begin
          do while ( inword )
-            if ( ichar ( string(i:i) ) .ne. ispace ) then
+            if ( ichar ( string(i:i) ) /= ispace ) then
                i = i + 1
-               if ( i .gt. end ) then
+               if ( i > end ) then
                   i      = i - 1
                   inword = .false.
                end if
@@ -7621,7 +7621,7 @@ contains
 !
          next = string(begin:i)
 
-         if ( i .lt. end ) then
+         if ( i < end ) then
             call ljust ( string(i+1:), rest )
          else
             rest = ' '
@@ -7657,9 +7657,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
       integer(ip), intent(in) :: nth
-      character*(*), intent(out) :: word
+      character(*), intent(out) :: word
       integer(ip), intent(out) :: loc
 
 ! $ Brief_I/O
@@ -7871,7 +7871,7 @@ contains
 !
 !     Trivial cases first. Blank STRING? Nonpositive NTH?
 !
-      if ( string .eq. ' ' .or. nth .lt. 1 ) then
+      if ( string == ' ' .or. nth < 1 ) then
 
          word = ' '
          loc  =  0
@@ -7884,7 +7884,7 @@ contains
 !
       loc = 1
 
-      do while ( string(loc:loc) .eq. ' ' )
+      do while ( string(loc:loc) == ' ' )
          loc = loc + 1
       end do
 
@@ -7901,30 +7901,30 @@ contains
       i      = loc
       length = len ( string )
 
-      do while ( i .lt. length .and. n .lt. nth )
+      do while ( i < length .and. n < nth )
 
          i = i + 1
 
 !
 !        Blank signals end of the current word.
 !
-         if ( string(i:i) .eq. ' ' ) then
+         if ( string(i:i) == ' ' ) then
 
 !
 !           Skip ahead to the next one.  The logic ensures no
 !           evaluation of STRING(I:I) if I > LEN(STRING).
 !
-            loop = i .le. length
+            loop = i <= length
             if( loop ) then
-               loop = loop .and. string(i:i) .eq. ' '
+               loop = loop .and. string(i:i) == ' '
             end if
 
             do while ( loop )
                i = i + 1
 
-               if( i .gt. length ) then
+               if( i > length ) then
                   loop = .false.
-               else if ( string(i:i) .ne. ' ' ) then
+               else if ( string(i:i) /= ' ' ) then
                   loop = .false.
                else
                   loop = .true.
@@ -7935,7 +7935,7 @@ contains
 !
 !           If not at the end of the string, we have another word.
 !
-            if ( i .le. length ) then
+            if ( i <= length ) then
                n   = n + 1
                loc = i
             end if
@@ -7947,7 +7947,7 @@ contains
 !
 !     Couldn't find enough words? Return blank and zero.
 !
-      if ( n .lt. nth ) then
+      if ( n < nth ) then
          word = ' '
          loc  =  0
 
@@ -7958,7 +7958,7 @@ contains
       else
          i = index ( string(loc: ), ' ' )
 
-         if ( i .eq. 0 ) then
+         if ( i == 0 ) then
             word = string(loc: )
          else
             word = string(loc:loc+i-1)
@@ -7994,12 +7994,12 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
-      character*(1), intent(in) :: qchar
-      character*(*), intent(out) :: value
+      character(*), intent(in) :: string
+      character(1), intent(in) :: qchar
+      character(*), intent(out) :: value
       integer(ip), intent(out) :: length
       logical, intent(out) :: error
-      character*(*), intent(out) :: errmsg
+      character(*), intent(out) :: errmsg
       integer(ip), intent(out) :: ptr
 
 ! $ Brief_I/O
@@ -8213,7 +8213,7 @@ contains
 !
 !     Local variables
 !
-      character*(1)         chr
+      character(1)          chr
 
       integer(ip)           first
       integer(ip)           ipos
@@ -8235,7 +8235,7 @@ contains
 !
 !     Reject invalid quote characters.
 !
-      if ( qchar .eq. ' ' ) then
+      if ( qchar == ' ' ) then
 
          error  = .true.
          errmsg = 'The quote character must be non-blank, but isn''t'
@@ -8256,7 +8256,7 @@ contains
       first  =  frstnb(string)
       last   =  lastnb(string)
 
-      if ( first .eq. 0 ) then
+      if ( first == 0 ) then
 
          error  = .true.
          errmsg = 'Blank input string'
@@ -8269,14 +8269,14 @@ contains
 !
 !     The input token must be bracketed by quote characters.
 !
-      if ( string(first:first) .ne. qchar ) then
+      if ( string(first:first) /= qchar ) then
 
          error  = .true.
          errmsg = 'String token does not start with quote character'
          ptr    =  first
          return
 
-      else if ( string(last:last) .ne. qchar ) then
+      else if ( string(last:last) /= qchar ) then
 
          error  = .true.
          errmsg = 'String token does not end with quote character'
@@ -8289,7 +8289,7 @@ contains
 !
 !     Null strings are not accepted.
 !
-      if ( first .eq. last-1 ) then
+      if ( first == last-1 ) then
 
          error  = .true.
          errmsg = 'Null (zero length) string token'
@@ -8309,7 +8309,7 @@ contains
       opos  =  1
       ipos  =  first + 1
 
-      do while (  ( ipos .le. last-1 ) .and. ( opos .le. outlen )  )
+      do while (  ( ipos <= last-1 ) .and. ( opos <= outlen )  )
 !
 !        At this point, IPOS points to the current input character to
 !        examine; OPOS points to the currently available position to
@@ -8317,7 +8317,7 @@ contains
 !
          chr  =  string(ipos:ipos)
 
-         if ( chr .ne. qchar ) then
+         if ( chr /= qchar ) then
 !
 !           This is the normal, non-quote case.  Transfer the
 !           character to the output string and advance both the input
@@ -8334,7 +8334,7 @@ contains
 !           parity of this quote character must be odd.  The quote must
 !           be followed immediately by a second, interior quote.
 !
-            if ( ipos .eq. last-1 ) then
+            if ( ipos == last-1 ) then
 !
 !              We're already looking at the last interior input
 !              character.
@@ -8345,7 +8345,7 @@ contains
                ptr    = ipos
                return
 
-            else if ( string(ipos+1:ipos+1) .ne. qchar ) then
+            else if ( string(ipos+1:ipos+1) /= qchar ) then
 
                error  =  .true.
                errmsg =  'Interior quote character is not doubled'
@@ -8370,7 +8370,7 @@ contains
       end do
 
 
-      if ( ipos .lt. last-1 ) then
+      if ( ipos < last-1 ) then
 !
 !        We must have stopped transferring characters to VALUE
 !        because we ran out of room.
@@ -8383,7 +8383,7 @@ contains
       end if
 
 
-      if ( opos .lt. outlen ) then
+      if ( opos < outlen ) then
 !
 !        Blank-pad the trailing portion of the output string.
 !
@@ -8417,7 +8417,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: array   ( * )
+      character(*), intent(in) :: array   ( * )
       integer(ip), intent(in) :: nelt
 
 ! $ Brief_I/O
@@ -8541,7 +8541,7 @@ contains
 !
 !     Nonsense case: no elements.
 !
-      if ( nelt .lt. 1 ) then
+      if ( nelt < 1 ) then
 
          pcwid = 0
 
@@ -8560,7 +8560,7 @@ contains
 !        Continue until the end of the array is reached, or until
 !        a string with no trailing non-printing characters is found.
 !
-         do while ( i .lt. nelt  .and.  pcwid .lt. strlen )
+         do while ( i < nelt  .and.  pcwid < strlen )
 
 !
 !           Search no further than the current value of PCWID.
@@ -8568,9 +8568,9 @@ contains
             i = i + 1
             j = strlen
 
-            do while (        j                       .gt. pcwid &
-                       .and.  ichar ( array(i)(j:j) ) .lt.    33 &
-                       .and.  ichar ( array(i)(j:j) ) .gt.   126 )
+            do while (        j                       > pcwid &
+                       .and.  ichar ( array(i)(j:j) ) <    33 &
+                       .and.  ichar ( array(i)(j:j) ) >   126 )
 
                j = j - 1
             end do
@@ -8612,8 +8612,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str
-      character*(*), intent(in) :: substr
+      character(*), intent(in) :: str
+      character(*), intent(in) :: substr
       integer(ip), intent(in) :: start
 
 ! $ Brief_I/O
@@ -8780,9 +8780,9 @@ contains
 
       do while ( .not. found )
 
-         if ( b .gt. lchnce ) then
+         if ( b > lchnce ) then
             return
-         else if ( str(b:b+offset) .eq. substr ) then
+         else if ( str(b:b+offset) == substr ) then
             pos = b
             return
          else
@@ -8818,8 +8818,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str
-      character*(*), intent(in) :: substr
+      character(*), intent(in) :: str
+      character(*), intent(in) :: substr
       integer(ip), intent(in) :: start
 
 ! $ Brief_I/O
@@ -8990,9 +8990,9 @@ contains
 
       do while ( .not. found )
 
-         if ( b .le. 0 ) then
+         if ( b <= 0 ) then
             return
-         else if ( str(b:b+offset) .eq. substr ) then
+         else if ( str(b:b+offset) == substr ) then
             posr = b
             return
          else
@@ -9027,9 +9027,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: pref
+      character(*), intent(in) :: pref
       integer(ip), intent(in) :: spaces
-      character*(*), intent(inout) :: string
+      character(*), intent(inout) :: string
 
 ! $ Brief_I/O
 !
@@ -9191,9 +9191,9 @@ contains
 !     Put the non-blank part of the prefix in the vacated part of
 !     the string. The spaces will fill themselves in.
 !
-      if ( plen .gt. 0 ) then
+      if ( plen > 0 ) then
 
-         if ( shift .lt. slen ) then
+         if ( shift < slen ) then
             string(1:shift) = pref
 
          else
@@ -9228,10 +9228,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
-      character*1, intent(in) :: left
-      character*1, intent(in) :: right
-      character*(*), intent(out) :: out
+      character(*), intent(in) :: in
+      character(1), intent(in) :: left
+      character(1), intent(in) :: right
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -9348,7 +9348,7 @@ contains
 !
 !     Check for blank string first.
 !
-      if ( in .eq. ' ' ) then
+      if ( in == ' ' ) then
          out = left
          call suffix ( right, 1, out )
 
@@ -9384,10 +9384,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: instr
-      character*1, intent(in) :: old
-      character*1, intent(in) :: new
-      character*(*), intent(out) :: outstr
+      character(*), intent(in) :: instr
+      character(1), intent(in) :: old
+      character(1), intent(in) :: new
+      character(*), intent(out) :: outstr
 
 ! $ Brief_I/O
 !
@@ -9509,7 +9509,7 @@ contains
 !
       do i = 1, len ( outstr )
 
-         if ( outstr(i:i) .eq. old ) then
+         if ( outstr(i:i) == old ) then
             outstr(i:i) = new
          end if
 
@@ -9540,10 +9540,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: instr
+      character(*), intent(in) :: instr
       integer(ip), intent(in) :: nth
-      character*(*), intent(in) :: new
-      character*(*), intent(out) :: outstr
+      character(*), intent(in) :: new
+      character(*), intent(out) :: outstr
 
 ! $ Brief_I/O
 !
@@ -9678,7 +9678,7 @@ contains
 !
 !   Local Variables
 !
-      character*2           short
+      character(2)          short
       integer(ip)           begin
       integer(ip)           i
       integer(ip)           j
@@ -9703,7 +9703,7 @@ contains
 !
       call nthwd  ( outstr, nth, short, begin )
 
-      if ( begin .eq. 0 ) then
+      if ( begin == 0 ) then
 
          return
 
@@ -9717,7 +9717,7 @@ contains
 !     Now insert only the non-blank part of the replacement string.
 !     If the replacement string is blank, don't insert anything.
 !
-      if ( new .ne. ' ' ) then
+      if ( new /= ' ' ) then
 
          f = frstnb ( new )
          l = lastnb ( new )
@@ -9738,7 +9738,7 @@ contains
 
       end if
 
-      if      ( shift .gt. 0 ) then
+      if      ( shift > 0 ) then
 
 !
 !        To shift right in place start at the right most character
@@ -9748,7 +9748,7 @@ contains
          k = len(outstr)
          n = k - shift
 
-         do while ( n .gt. j )
+         do while ( n > j )
             outstr(k:k) = outstr(n:n)
             k           = k - 1
             n           = n - 1
@@ -9759,8 +9759,8 @@ contains
 !        of the way, replace the opened space with the new
 !        word.
 !
-         do while (       ( f .le. l           ) &
-                    .and. ( i .le. len(outstr) ) )
+         do while (       ( f <= l           ) &
+                    .and. ( i <= len(outstr) ) )
             outstr(i:i) = new(f:f)
             f           = f + 1
             i           = i + 1
@@ -9772,8 +9772,8 @@ contains
 !        We have a left shift. Fill in the first part of the word
 !        we are replacing with the new one.
 !
-         do while (       ( f .le. l           ) &
-                    .and. ( i .le. len(outstr) ) )
+         do while (       ( f <= l           ) &
+                    .and. ( i <= len(outstr) ) )
 
             outstr(i:i) = new(f:f)
             f           = f + 1
@@ -9785,12 +9785,12 @@ contains
 !        Now starting just past the end of the word we are replacing
 !        shift the remainder of string left one character at a time.
 !
-         if ( shift .lt. 0 ) then
+         if ( shift < 0 ) then
 
             j = j + 1
 
-            do while (       ( i .le. len(outstr)  ) &
-                       .and. ( j .le. len(instr)   ) )
+            do while (       ( i <= len(outstr)  ) &
+                       .and. ( j <= len(instr)   ) )
 
                outstr(i:i) = instr(j:j)
                i           = i + 1
@@ -9800,7 +9800,7 @@ contains
 !
 !           Finally pad the string with blanks.
 !
-            if ( i .le. len(outstr) ) then
+            if ( i <= len(outstr) ) then
                outstr(i:) = ' '
             end if
 
@@ -9834,10 +9834,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
-      character*(*), intent(in) :: marker
-      character*(*), intent(in) :: value
-      character*(*), intent(out) :: out
+      character(*), intent(in) :: in
+      character(*), intent(in) :: marker
+      character(*), intent(in) :: value
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -10073,7 +10073,7 @@ contains
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      if ( marker .eq. ' ' ) then
+      if ( marker == ' ' ) then
 
          out = in
          return
@@ -10090,7 +10090,7 @@ contains
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      if  ( mrkpsb .eq. 0 ) then
+      if  ( mrkpsb == 0 ) then
 
          out = in
          return
@@ -10104,7 +10104,7 @@ contains
 !     blank, substitute a single blank. (This removes the marker.)
 !     Otherwise substitute the non-blank portion.
 !
-      if ( value .eq. ' ' ) then
+      if ( value == ' ' ) then
 
          call zzrepsub ( in, &
                          mrkpsb, &
@@ -10148,8 +10148,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: input
-      character*(*), intent(out) :: output
+      character(*), intent(in) :: input
+      character(*), intent(out) :: output
 
 ! $ Brief_I/O
 !
@@ -10269,7 +10269,7 @@ contains
 !
 !     Blank string? It's all the same.
 !
-      if ( input .eq. ' ' ) then
+      if ( input == ' ' ) then
          output = input
 
 !
@@ -10284,7 +10284,7 @@ contains
 !        If the input string is too long (START < 1), move FIRST
 !        up a little to truncate on the left.
 !
-         if ( start .lt. 1 ) then
+         if ( start < 1 ) then
             first = first + (1-start)
             start = 1
          end if
@@ -10303,7 +10303,7 @@ contains
 !
 !        Clear the first part of OUTPUT, if necessary.
 !
-         if ( start .gt. 1 ) then
+         if ( start > 1 ) then
             output(1:start-1) = ' '
          end if
 
@@ -10335,7 +10335,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -10479,9 +10479,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str1
+      character(*), intent(in) :: str1
       integer(ip), intent(in) :: l1
-      character*(*), intent(in) :: str2
+      character(*), intent(in) :: str2
       integer(ip), intent(in) :: l2
 
 ! $ Brief_I/O
@@ -10621,16 +10621,16 @@ contains
 !-&
 
 
-      if (      l1 .lt. 1 &
-           .or. l2 .lt. 1 &
-           .or. l1 .gt. len(str1) &
-           .or. l2 .gt. len(str2)  ) then
+      if (      l1 < 1 &
+           .or. l2 < 1 &
+           .or. l1 > len(str1) &
+           .or. l2 > len(str2)  ) then
 
          samch = .false.
          return
       end if
 
-      samch = ichar(str1(l1:l1)) .eq. ichar(str2(l2:l2))
+      samch = ichar(str1(l1:l1)) == ichar(str2(l2:l2))
       return
 
       end function samch
@@ -10656,10 +10656,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: str1
+      character(*), intent(in) :: str1
       integer(ip), intent(in) :: b1
       integer(ip), intent(in) :: e1
-      character*(*), intent(in) :: str2
+      character(*), intent(in) :: str2
       integer(ip), intent(in) :: b2
       integer(ip), intent(in) :: e2
 
@@ -10825,20 +10825,20 @@ contains
 !-&
 
 
-      if (      ( e1      .lt. b1           ) &
-           .or. ( e2      .lt. b2           ) &
-           .or. ( b1      .lt. 1            ) &
-           .or. ( b2      .lt. 1            ) &
-           .or. ( e1      .gt. len(str1)    ) &
-           .or. ( e2      .gt. len(str2)    ) &
-           .or. ( e1 - b1 .ne. e2 - b2      )  ) then
+      if (      ( e1      < b1           ) &
+           .or. ( e2      < b2           ) &
+           .or. ( b1      < 1            ) &
+           .or. ( b2      < 1            ) &
+           .or. ( e1      > len(str1)    ) &
+           .or. ( e2      > len(str2)    ) &
+           .or. ( e1 - b1 /= e2 - b2      )  ) then
 
          samsub = .false.
          return
 
       end if
 
-      samsub = str1(b1:e1) .eq. str2(b2:e2)
+      samsub = str1(b1:e1) == str2(b2:e2)
 
       return
       end function samsub
@@ -11021,7 +11021,7 @@ contains
 
       do i = 1, ntokns
 
-         if ( isrchi(ident(i), n, ids) .eq. 0 ) then
+         if ( isrchi(ident(i), n, ids) == 0 ) then
 
             j        = j + 1
             ident(j) = ident(i)
@@ -11061,10 +11061,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
+      character(*), intent(in) :: in
       integer(ip), intent(in) :: nshift
-      character*1, intent(in) :: fillc
-      character*(*), intent(out) :: out
+      character(1), intent(in) :: fillc
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -11255,7 +11255,7 @@ contains
 !     Pad the output string with blanks (to cover any previous
 !     ugliness there).
 !
-      if ( outlen .gt. inlen ) then
+      if ( outlen > inlen ) then
          out(inlen+1: ) = ' '
       end if
 
@@ -11286,10 +11286,10 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
+      character(*), intent(in) :: in
       integer(ip), intent(in) :: nshift
-      character*1, intent(in) :: fillc
-      character*(*), intent(out) :: out
+      character(1), intent(in) :: fillc
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -11479,7 +11479,7 @@ contains
 !     Pad the output string with blanks (to cover any previous
 !     ugliness there).
 !
-      if ( outlen .gt. inlen ) then
+      if ( outlen > inlen ) then
          out(inlen+1: ) = ' '
       end if
 
@@ -11508,8 +11508,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
-      character*(*), intent(out) :: out
+      character(*), intent(in) :: in
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -11643,7 +11643,7 @@ contains
 !
       integer(ip)           begin
       integer(ip)           end
-      character*1           lchar
+      character(1)          lchar
       integer(ip)           zero
       integer(ip)           i
       integer(ip)           j
@@ -11660,22 +11660,22 @@ contains
 !
 !     Trivial case.
 !
-      if ( begin .eq. end ) then
+      if ( begin == end ) then
 
          out(1:1) = in(begin:begin)
 
-         if ( len(out) .gt. 1 ) out(2:) = ' '
+         if ( len(out) > 1 ) out(2:) = ' '
 
 !
 !     If there is no decimal point, all zeros are significant.
 !
-      else if ( index (in, '.') .eq. 0 ) then
+      else if ( index (in, '.') == 0 ) then
 
          l      = 1
          k      = begin
 
-         do while (       ( l .le. len(out) ) &
-                    .and. ( k .le. end      ) )
+         do while (       ( l <= len(out) ) &
+                    .and. ( k <= end      ) )
 
             out(l:l) = in(k:k)
 
@@ -11683,14 +11683,14 @@ contains
 !           Don't increment L if the last item copied was a space
 !           (we don't want to copy extra spaces).
 !
-            if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+            if ( in(k:k) /= ' ' .or. lchar /= ' ' ) &
             l        = l+1
             lchar    = in(k:k)
             k        = k+1
 
          end do
 
-         if ( l .le. len(out) ) out(l:) = ' '
+         if ( l <= len(out) ) out(l:) = ' '
 
       else
 
@@ -11701,40 +11701,40 @@ contains
 !
          zero = index ( in, '0E' )
 
-         if ( zero .eq. 0 )    zero = index ( in, '0D' )
-         if ( zero .eq. 0 )    zero = index ( in, '0e' )
-         if ( zero .eq. 0 )    zero = index ( in, '0d' )
-         if ( zero .eq. 0 )    zero = index ( in, ' E' )
-         if ( zero .eq. 0 )    zero = index ( in, ' D' )
-         if ( zero .eq. 0 )    zero = index ( in, ' e' )
-         if ( zero .eq. 0 )    zero = index ( in, ' d' )
+         if ( zero == 0 )    zero = index ( in, '0D' )
+         if ( zero == 0 )    zero = index ( in, '0e' )
+         if ( zero == 0 )    zero = index ( in, '0d' )
+         if ( zero == 0 )    zero = index ( in, ' E' )
+         if ( zero == 0 )    zero = index ( in, ' D' )
+         if ( zero == 0 )    zero = index ( in, ' e' )
+         if ( zero == 0 )    zero = index ( in, ' d' )
 
 !
 !        Begin there, and move toward the front of the string until
 !        something other than a blank or a zero is encountered. Then
 !        remove the superfluous characters.
 !
-         if ( zero .gt. 0 ) then
+         if ( zero > 0 ) then
 
             j = zero + 1
             i = zero
 
-            do while ( in(i:i) .eq. '0'  .or. in(i:i) .eq. ' ' )
+            do while ( in(i:i) == '0'  .or. in(i:i) == ' ' )
                i = i - 1
             end do
 
             l = 1
             k = begin
 
-            do while (       ( l .le. len(out) ) &
-                       .and. ( k .le. i        ) )
+            do while (       ( l <= len(out) ) &
+                       .and. ( k <= i        ) )
 
                out(l:l) = in(k:k)
 
 !
 !              Don't increment L if the last item copied was a space.
 !
-               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               if ( in(k:k) /= ' ' .or. lchar /= ' ' ) &
                l        = l+1
                lchar    = in(k:k)
                k        = k+1
@@ -11743,8 +11743,8 @@ contains
 
             k = j
 
-            do while (       ( l .le. len(out) ) &
-                       .and. ( k .le. end      ) )
+            do while (       ( l <= len(out) ) &
+                       .and. ( k <= end      ) )
 
                out(l:l) = in(k:k)
 
@@ -11752,34 +11752,34 @@ contains
 !              Increment L only if we don't have two consecutive
 !              spaces.
 !
-               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               if ( in(k:k) /= ' ' .or. lchar /= ' ' ) &
                l        = l+1
                lchar    = in(k:k)
                k        = k+1
 
             end do
 
-            if ( l .le. len(out) ) out(l:) = ' '
+            if ( l <= len(out) ) out(l:) = ' '
 !
 !
 !        Is there is a decimal point and no exponent, and is the last
 !        non-blank character a zero ('...0')? Then truncate the string
 !        after the last character that is neither a blank nor a zero.
 !
-         else if (       in(end:end)            .eq. '0' &
-                   .and. cpos ( in, 'EeDd', 1 ) .eq.  0 ) then
+         else if (       in(end:end)            == '0' &
+                   .and. cpos ( in, 'EeDd', 1 ) ==  0 ) then
 
             i = end
 
-            do while ( in(i:i) .eq. '0' .or. in(i:i) .eq. ' ' )
+            do while ( in(i:i) == '0' .or. in(i:i) == ' ' )
                i = i - 1
             end do
 
             l = 1
             k = begin
 
-            do while (       ( l .le. len(out) ) &
-                       .and. ( k .le. i        ) )
+            do while (       ( l <= len(out) ) &
+                       .and. ( k <= i        ) )
 
                out(l:l) = in(k:k)
 
@@ -11787,36 +11787,36 @@ contains
 !              Increment L only if we don't have two consecutive
 !              spaces.
 !
-               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               if ( in(k:k) /= ' ' .or. lchar /= ' ' ) &
                l        = l+1
                lchar    = in(k:k)
                k        = k+1
 
             end do
 
-            if ( l .le. len(out) ) out(l:) = ' '
+            if ( l <= len(out) ) out(l:) = ' '
 
          else
 
             l = 1
             k = begin
 
-            do while (       ( l .le. len(out) ) &
-                       .and. ( k .le. end      ) )
+            do while (       ( l <= len(out) ) &
+                       .and. ( k <= end      ) )
 
                out(l:l) = in(k:k)
 
 !
 !              Increment L only if we don't have two consecutive spaces.
 !
-               if ( in(k:k) .ne. ' ' .or. lchar .ne. ' ' ) &
+               if ( in(k:k) /= ' ' .or. lchar /= ' ' ) &
                l        = l+1
                lchar    = in(k:k)
                k        = k+1
 
             end do
 
-            if ( l .le. len(out) ) out(l:) = ' '
+            if ( l <= len(out) ) out(l:) = ' '
 
          end if
 
@@ -11826,7 +11826,7 @@ contains
 !     Special case. The string '.0000....' reduces to '.' after the
 !     zeros are removed.
 !
-      if ( out .eq. '.' ) then
+      if ( out == '.' ) then
          out = '0'
       end if
 
@@ -11856,9 +11856,9 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: suff
+      character(*), intent(in) :: suff
       integer(ip), intent(in) :: spaces
-      character*(*), intent(inout) :: string
+      character(*), intent(inout) :: string
 
 ! $ Brief_I/O
 !
@@ -11993,7 +11993,7 @@ contains
 !
       end = l + max ( spaces, 0 )
 
-      if ( end .lt. slen ) then
+      if ( end < slen ) then
          string(end+1: ) = suff
       end if
 
@@ -12022,8 +12022,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: in
-      character*(*), intent(out) :: out
+      character(*), intent(in) :: in
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -12147,7 +12147,7 @@ contains
 
          ich = ichar( out(i:i) )
 
-         if ( ( ich .ge. lowa ) .and. ( ich .le. lowz ) ) then
+         if ( ( ich >= lowa ) .and. ( ich <= lowz ) ) then
             out(i:i) = char ( ich + shift )
          end if
 
@@ -12178,7 +12178,7 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
+      character(*), intent(in) :: string
 
 ! $ Brief_I/O
 !
@@ -12299,7 +12299,7 @@ contains
 !
 !     Trivial case first.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
 
          wdcnt = 0
          return
@@ -12315,7 +12315,7 @@ contains
 !
       loc = 1
 
-      do while ( string(loc:loc) .eq. ' ' )
+      do while ( string(loc:loc) == ' ' )
          loc = loc + 1
       end do
 
@@ -12329,31 +12329,31 @@ contains
 !
       n = 1
 
-      do while ( loc .lt. length )
+      do while ( loc < length )
 
          loc = loc + 1
 
 !
 !        Blank signals end of the current word.
 !
-         if ( string(loc:loc) .eq. ' ' ) then
+         if ( string(loc:loc) == ' ' ) then
 
 !
 !           Skip ahead to the next word. Ensure no
 !           evaluation of STRING(LOC:LOC) when
 !           LOC = LENGTH+1.
 !
-            cont = loc .le. length
+            cont = loc <= length
             if( cont ) then
-               cont = cont .and. string(loc:loc) .eq. ' '
+               cont = cont .and. string(loc:loc) == ' '
             end if
 
             do while ( cont )
                loc = loc + 1
 
-               cont = loc .le. length
+               cont = loc <= length
                if( cont ) then
-                  cont = cont .and. string(loc:loc) .eq. ' '
+                  cont = cont .and. string(loc:loc) == ' '
                end if
 
             end do
@@ -12361,7 +12361,7 @@ contains
 !
 !           If not at the end of the string, we have another word.
 !
-            if ( loc .le. length ) then
+            if ( loc <= length ) then
                n = n + 1
             end if
 
@@ -12401,8 +12401,8 @@ contains
 
       implicit none
 
-      character*(*), intent(in) :: string
-      character*(*), intent(in) :: word
+      character(*), intent(in) :: string
+      character(*), intent(in) :: word
 
 ! $ Brief_I/O
 !
@@ -12546,8 +12546,8 @@ contains
 !
 !     We deal with all of the pathologies first...
 !
-      if (      ( endwd  .lt. 1      ) &
-           .or. ( strlen .lt. wdlen  ) ) then
+      if (      ( endwd  < 1      ) &
+           .or. ( strlen < wdlen  ) ) then
 
 !
 !        ... If we got a blank word or a string that is too short, then
@@ -12556,13 +12556,13 @@ contains
          wdindx =  0
          return
 
-      else if ( strlen .eq. wdlen ) then
+      else if ( strlen == wdlen ) then
 
 !
 !        ... the word and string have the same non-blank length.
 !        Either they match up or they don't.  Find out and return.
 !
-         if ( string(begstr:endstr) .eq. word(begwd:endwd) ) then
+         if ( string(begstr:endstr) == word(begwd:endwd) ) then
             wdindx = begstr
          else
             wdindx = 0
@@ -12579,8 +12579,8 @@ contains
       i      = begstr
       j      = i + bgtond
 
-      if (       ( string(i:j)     .eq. word(begwd:endwd) ) &
-           .and. ( string(j+1:j+1) .eq. ' '               )  ) then
+      if (       ( string(i:j)     == word(begwd:endwd) ) &
+           .and. ( string(j+1:j+1) == ' '               )  ) then
 
          wdindx = i
          return
@@ -12594,11 +12594,11 @@ contains
       i      = begstr + 1
       j      = i      + bgtond
 
-      do while (       ( j                    .lt. endstr            ) &
+      do while (       ( j                    < endstr            ) &
                  .and. &
-                 .not. (     (string(i  :j  ) .eq. word(begwd:endwd) ) &
-                        .and.(string(i-1:i-1) .eq. ' '               ) &
-                        .and.(string(j+1:j+1) .eq. ' '               ) &
+                 .not. (     (string(i  :j  ) == word(begwd:endwd) ) &
+                        .and.(string(i-1:i-1) == ' '               ) &
+                        .and.(string(j+1:j+1) == ' '               ) &
                        ) &
                )
          i   = i + 1
@@ -12609,10 +12609,10 @@ contains
 !     If J equals ENDSTR then no match was found in the interior of the
 !     string.  We make a last check at the end.
 !
-      if ( j .eq. endstr ) then
+      if ( j == endstr ) then
 
-         if (       ( string(i-1:i-1) .eq. ' '               ) &
-              .and. ( string(i  :j  ) .eq. word(begwd:endwd) ) ) then
+         if (       ( string(i-1:i-1) == ' '               ) &
+              .and. ( string(i  :j  ) == word(begwd:endwd) ) ) then
             wdindx = i
          else
             wdindx = 0
@@ -12658,10 +12658,10 @@ contains
 !
 ! $ Declarations
 
-      character*(*), intent(in) :: in
-      character*(*), intent(in) :: sub
+      character(*), intent(in) :: in
+      character(*), intent(in) :: sub
       integer(ip), intent(in) :: loc
-      character*(*), intent(out) :: out
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -12809,7 +12809,7 @@ contains
 !
 !     Local Variables
 !
-      character*(1)         chr
+      character(1)          chr
 
       integer(ip)           from
       integer(ip)           i
@@ -12849,9 +12849,9 @@ contains
 !     is not needed in this case and could cause a run-time error if
 !     OUT and IN refer to the same memory.
 !
-      same  =  out .eq. in
+      same  =  out == in
 
-      if ( myloc .gt. outlen ) then
+      if ( myloc > outlen ) then
 
          if ( .not. same ) then
             out = in
@@ -12877,7 +12877,7 @@ contains
 !     The first part of the input string is copied without change
 !     to the output string, if this first part is non-empty.
 !
-      if ( myloc .gt. 1 ) then
+      if ( myloc > 1 ) then
 !
 !        Again, do the assignment only if it's required.
 !
@@ -12895,8 +12895,8 @@ contains
       subend  =  myloc - 1 + sublen
 
 
-      if (        ( myloc  .le. inlen  ) &
-            .and. ( subend .lt. outlen )  ) then
+      if (        ( myloc  <= inlen  ) &
+            .and. ( subend < outlen )  ) then
 
 
          nmove  =  min (  outlen-subend, inlen-myloc+1  )
@@ -12920,7 +12920,7 @@ contains
 !
 !     Blank-pad the output string if necessary.
 !
-      if ( outlen .gt. inlen+sublen ) then
+      if ( outlen > inlen+sublen ) then
          out( inlen+sublen+1 : ) = ' '
       end if
 
@@ -12954,11 +12954,11 @@ contains
 ! $ Declarations
 
       implicit none
-      character*(*), intent(in) :: in
+      character(*), intent(in) :: in
       integer(ip), intent(in) :: left
       integer(ip), intent(in) :: right
-      character*(*), intent(in) :: string
-      character*(*), intent(out) :: out
+      character(*), intent(in) :: string
+      character(*), intent(out) :: out
 
 ! $ Brief_I/O
 !
@@ -13122,15 +13122,15 @@ contains
 !
 !     Reject bad inputs.
 !
-      if ( myleft .lt. 1 ) then
+      if ( myleft < 1 ) then
 
          myleft = 1
 
-      else if ( myrght .gt. inlen ) then
+      else if ( myrght > inlen ) then
 
          myrght = inlen
 
-      else if ( right .lt. left-1 ) then
+      else if ( right < left-1 ) then
 
          return
 
@@ -13166,7 +13166,7 @@ contains
 !
       end = sumai ( use, 3 )
 
-      if ( myleft + strlen .gt. right ) then
+      if ( myleft + strlen > right ) then
 
          next = end
 
@@ -13205,7 +13205,7 @@ contains
 !
 !     Pad with blanks, if the output string was not filled.
 !
-      if ( end .lt. outlen ) then
+      if ( end < outlen ) then
          out(end+1: ) = ' '
       end if
 

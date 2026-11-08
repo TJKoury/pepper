@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         status
+      character(*)          status
 
 ! $ Brief_I/O
 !
@@ -267,14 +267,14 @@
 #endif
 
 
-      character*(stlen)     chstat
+      character(stlen)      chstat
 
       logical               mystat
 
       call ljust ( status, chstat )
       call ucase ( chstat, chstat )
 
-      if ( chstat .eq. 'SUCCESS' ) then
+      if ( chstat == 'SUCCESS' ) then
          mystat = .true.
       else
          mystat = .false.

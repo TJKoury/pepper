@@ -24,9 +24,9 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       real(wp)              value
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
 
@@ -217,7 +217,7 @@
 !     Where does this symbol belong? Is it already in the table?
 !
       locsym = lstlec ( name, nsym, tabsym(1) )
-      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
+      oldsym = ( locsym /= 0  .and.  tabsym(locsym) == name )
 
 !
 !     If it's not already in the table, use SET to create a brand new
@@ -231,7 +231,7 @@
 !     If it is in the table, we can't proceed unless we know that we
 !     have enough room for one extra addition in the value table.
 !
-      else if (  nval .ge. sized ( tabval ) ) then
+      else if (  nval >= sized ( tabval ) ) then
 
          call setmsg ( 'SYENQD: The addition of the value $ to the '  // &
                        'symbol # causes an overflow in the value '    // &

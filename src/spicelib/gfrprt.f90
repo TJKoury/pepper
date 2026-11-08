@@ -27,8 +27,8 @@
       parameter           ( lbcell = -5 )
 
       real(wp)              window ( lbcell : * )
-      character*(*)         begmss
-      character*(*)         endmss
+      character(*)          begmss
+      character(*)          endmss
       real(wp)              ivbeg
       real(wp)              ivend
       real(wp)              time
@@ -508,10 +508,10 @@
 !     Local variables
 !
 
-      character*(mxbegm)    begin
-      character*(mxbegm)    copyb
-      character*(mxendm)    copye
-      character*(mxendm)    end
+      character(mxbegm)     begin
+      character(mxbegm)     copyb
+      character(mxendm)     copye
+      character(mxendm)     end
 
       real(wp)              ave
       real(wp)              freq
@@ -707,7 +707,7 @@
 !     Check to see if either the message prefix or suffix
 !     is too long.
 !
-      if ( lastnb(begmss) .gt. mxbegm ) then
+      if ( lastnb(begmss) > mxbegm ) then
 
          call setmsg ( 'Progress report prefix message contains ' &
          //            '# characters; limit is #.'                 )
@@ -719,7 +719,7 @@
 
       end if
 
-      if ( lastnb(endmss) .gt. mxendm ) then
+      if ( lastnb(endmss) > mxendm ) then
 
          call setmsg ( 'Progress report suffix message contains ' &
          //            '# characters; limit is #.'                 )
@@ -739,7 +739,7 @@
 
          chrcod = ichar( begmss(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The progress report message prefix ' &
             //            'contains a nonprintable character; ' &
@@ -757,7 +757,7 @@
 
          chrcod = ichar( endmss(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The progress report message suffix ' &
             //            'contains a nonprintable character; ' &
@@ -793,7 +793,7 @@
 !     The remaining amount of work in the current interval is
 !     the measure of the interval.
 !
-      if ( cardd(window) .ge. 2 ) then
+      if ( cardd(window) >= 2 ) then
 
          t0     = window(1)
          remain = window(2) - t0
@@ -973,7 +973,7 @@
 !
 !     We expect the endpoints of the current window to be in order.
 !
-      if ( ivend .lt. ivbeg ) then
+      if ( ivend < ivbeg ) then
 
          call setmsg ( 'Interval endpoints are #:#; endpoints ' &
          //            'must be in increasing order.'             )
@@ -988,7 +988,7 @@
 !     We expect TIME to be in the current interval of the confinement
 !     window.
 !
-      if (  ( time .lt. ivbeg ) .or. ( time .gt. ivend )  ) then
+      if (  ( time < ivbeg ) .or. ( time > ivend )  ) then
 
          call setmsg ( 'TIME should be in interval #:# but ' &
          //            'is #.'                               )
@@ -1005,7 +1005,7 @@
 !     time and the previous time T0, presuming both times are in
 !     the current interval.  Note this work amount may be negative.
 !
-      if (  ( t0 .ge. ivbeg ) .and. ( t0 .le. ivend )  ) then
+      if (  ( t0 >= ivbeg ) .and. ( t0 <= ivend )  ) then
 
          incr = time - t0
 
@@ -1151,7 +1151,7 @@
 
       call stdio ( 'STDOUT', stdout )
 
-      if ( unit .ne. stdout ) then
+      if ( unit /= stdout ) then
 !
 !        We're not currently writing to standard output, so we're
 !        done.

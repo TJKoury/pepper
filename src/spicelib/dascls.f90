@@ -400,7 +400,7 @@
 !
 !     Local variables
 !
-      character*(10)        method
+      character(10)         method
 
       integer(ip)           iostat
       integer(ip)           unit
@@ -474,7 +474,7 @@
          return
       end if
 
-      if ( method .eq. 'WRITE ') then
+      if ( method == 'WRITE ') then
 !
 !        Make sure that all buffered records belonging to the
 !        indicated file are written out.
@@ -496,7 +496,7 @@
                    named  = notscr, &
                    iostat = iostat )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Error occurred while performing an  '// &
                           'INQUIRE on a DAS file about to be '  // &

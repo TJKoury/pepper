@@ -25,7 +25,7 @@
       integer(ip)           nwd
       parameter           ( nwd = 128 )
 
-      character*(*)         action
+      character(*)          action
       integer(ip)           unit
       integer(ip)           recno
       real(wp)              record ( nwd )
@@ -223,7 +223,7 @@
                  rec     =    recno, &
                  iostat  =    iostat  )    record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call chkin  ( 'DASIOD'                                     )
             call setmsg ( 'Could not read DAS double precision '      // &
@@ -248,7 +248,7 @@
                   rec     =    recno, &
                   iostat  =    iostat  )    record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call chkin  ( 'DASIOD'                                     )
             call setmsg ( 'Could not write DAS double precision '     // &

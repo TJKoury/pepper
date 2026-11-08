@@ -22,9 +22,9 @@
 
       implicit none
 
-      character*(*)    string
+      character(*)     string
       integer(ip)      n
-      character*(*)    error
+      character(*)     error
       integer(ip)      pnter
 
 ! $ Brief_I/O
@@ -256,10 +256,10 @@
 !
       call nparsd ( string, x, error, pnter )
 
-      if ( pnter .eq. 0 ) then
+      if ( pnter == 0 ) then
 
-         if (     ( dint(x) .lt. xmnint ) &
-             .or. ( dint(x) .gt. xmxint ) ) then
+         if (     ( dint(x) < xmnint ) &
+             .or. ( dint(x) > xmxint ) ) then
 
             pnter = 1
             error = 'NPARSI: Value entered is beyond the bounds of '// &

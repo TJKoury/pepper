@@ -283,9 +283,9 @@
 !     Special case: if the input point is at the origin, and the
 !     volume element contains the origin, the point is inside.
 !
-      if ( r .eq. 0.0_wp ) then
+      if ( r == 0.0_wp ) then
 
-         if ( bounds(lower, radidx) .eq. 0.0_wp ) then
+         if ( bounds(lower, radidx) == 0.0_wp ) then
 
             inside = .true.
 
@@ -297,14 +297,14 @@
 
 
 
-      if ( exclud .ne. radidx ) then
+      if ( exclud /= radidx ) then
 !
 !        Compare the point's radius to the segment's radius bounds.
 !
          minr = bounds(lower, radidx)
          maxr = bounds(upper, radidx)
 
-         if ( ( r .lt. minr ) .or. ( r .gt. maxr ) ) then
+         if ( ( r < minr ) .or. ( r > maxr ) ) then
 !
 !           The point's radius is outside of the segment's range.
 !
@@ -315,14 +315,14 @@
       end if
 
 
-      if ( exclud .ne. latidx ) then
+      if ( exclud /= latidx ) then
 !
 !        Compare the point's latitude to the segment's latitude bounds.
 !
          minlat = bounds(lower, latidx)
          maxlat = bounds(upper, latidx)
 
-         if ( ( lat .lt. minlat ) .or. ( lat .gt. maxlat ) ) then
+         if ( ( lat < minlat ) .or. ( lat > maxlat ) ) then
 !
 !           The point's latitude is outside of the segment's range.
 !
@@ -339,7 +339,7 @@
 !
 !     if necessary and if possible.
 !
-      if ( exclud .ne. lonidx ) then
+      if ( exclud /= lonidx ) then
 !
 !        Put the local longitude bounds in order, if necessary.
 !
@@ -352,7 +352,7 @@
          loclon = lon
 
 
-         if ( lon .lt. ( minlon - lonali ) ) then
+         if ( lon < ( minlon - lonali ) ) then
 !
 !           If the point's longitude is less than the segment's
 !           longitude by more than a small margin, shift the longitude
@@ -360,7 +360,7 @@
 
             loclon = lon + pi2
 
-         else if ( lon .gt. ( maxlon + lonali ) ) then
+         else if ( lon > ( maxlon + lonali ) ) then
 !
 !           If the point's longitude is greater than the segment's
 !           longitude by more than a small margin, shift the longitude
@@ -371,8 +371,8 @@
          end if
 
 
-         if (        ( loclon .lt. (minlon-angmrg) ) &
-                .or. ( loclon .gt. (maxlon+angmrg) )  ) then
+         if (        ( loclon < (minlon-angmrg) ) &
+                .or. ( loclon > (maxlon+angmrg) )  ) then
 !
 !           The point's longitude, adjusted if necessary for
 !           comparison, is outside of the segment's range.

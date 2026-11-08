@@ -183,7 +183,7 @@
 !
       depth  =  page ( trdpth )
 
-      if ( depth .gt. trmxdp ) then
+      if ( depth > trmxdp ) then
 
          call setmsg ( 'Tree has depth #; max supported depth is #.' // &
                        'EK = #; TREE = #.'                           )
@@ -216,7 +216,7 @@
 !
       nkeys  =  page ( trnkr )
 
-      if ( depth .eq. 1 ) then
+      if ( depth == 1 ) then
          nkids = 0
       else
          nkids = nkeys + 1
@@ -225,7 +225,7 @@
       first  =  1
 
 
-      do while ( remain .gt. 0 )
+      do while ( remain > 0 )
 !
 !        At this point,
 !
@@ -233,14 +233,14 @@
 !           NKIDS is the number of children of NODE.
 !           FIRST is the index of the first child in NODE.
 !
-         if ( nkids .gt. 0 ) then
+         if ( nkids > 0 ) then
 !
 !           This node has children, so push the current node, the
 !           number of children, and the location of the first child on
 !           the stack.  Before incrementing the stack level, determine
 !           the base address of the child pointers.
 !
-            if ( level .eq. 1 ) then
+            if ( level == 1 ) then
                kidbas  =  trkidr
             else
                kidbas  =  trkidc
@@ -265,7 +265,7 @@
 !
             nkeys  =  page ( trnkc )
 
-            if ( level .lt. depth ) then
+            if ( level < depth ) then
                nkids  =  nkeys + 1
             else
                nkids  =  0
@@ -287,7 +287,7 @@
 !
             level   =  level - 1
 
-            if ( level .gt. 0 ) then
+            if ( level > 0 ) then
 
                node    =  stack ( paridx, level )
                first   =  stack ( begidx, level )

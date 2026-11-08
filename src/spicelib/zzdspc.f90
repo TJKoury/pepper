@@ -346,7 +346,7 @@
 !
       ft    = 0.0_wp
 
-      if (irez .ne. 0) then
+      if (irez /= 0) then
 
 !
 !     UPDATE RESONANCES : NUMERICAL (EULER-MACLAURIN) INTEGRATION
@@ -357,9 +357,9 @@
 !
 !        sgp4fix streamline check
 !
-         if ( (    atime .eq. 0.0_wp) .or. &
-              (t * atime .le. 0.0_wp) .or. &
-              (  dabs(t) .lt. dabs(atime))  ) then
+         if ( (    atime == 0.0_wp) .or. &
+              (t * atime <= 0.0_wp) .or. &
+              (  dabs(t) < dabs(atime))  ) then
             atime  = 0.0_wp
             xni    = no
             xli    = xlamo
@@ -368,7 +368,7 @@
 !
 !        sgp4fix move check outside loop
 !
-         if (t .gt. 0.0_wp) then
+         if (t > 0.0_wp) then
             delt = stepp
          else
             delt = stepn
@@ -384,14 +384,14 @@
 !
          iret  =   0
 
-         do while (iretn.eq.381)
+         do while (iretn==381)
 
 !
 !           DOT TERMS CALCULATED
 !
 !           NEAR - SYNCHRONOUS RESONANCE TERMS
 !
-            if (irez .ne. 2) then
+            if (irez /= 2) then
 
                xndt  = del1*dsin(xli-fasx2) + &
                         del2*dsin(2.0_wp*(xli-fasx4)) + &
@@ -442,7 +442,7 @@
 !           sgp4fix move end checks to end of routine
 !
 
-            if (dabs(t-atime).ge.stepp) then
+            if (dabs(t-atime)>=stepp) then
                iret  = 0
                iretn = 381
             else
@@ -450,7 +450,7 @@
                iretn = 0
             end if
 
-            if (iretn.eq.381) then
+            if (iretn==381) then
                xli   = xli + xldot*delt + xndt*step2
                xni   = xni + xndt*delt + xnddt*step2
                atime = atime + delt
@@ -461,7 +461,7 @@
          xn = xni + xndt*ft  + xnddt*ft*ft*0.5_wp
          xl = xli + xldot*ft + xndt*ft*ft*0.5_wp
 
-         if(irez .ne. 1) then
+         if(irez /= 1) then
             mm   = xl-2.0_wp*nodem+2.0_wp*theta
             dndt = xn-no
          else

@@ -586,7 +586,7 @@
 !
 !     If this segment is not of data type 6, then signal an error.
 !
-      if ( ic( 3 ) .ne. dtype ) then
+      if ( ic( 3 ) /= dtype ) then
 
          call setmsg ( 'Data type of the segment should be 6: Passed ' &
          //            'descriptor shows type = #.'                   )
@@ -614,7 +614,7 @@
 
       nintvl = nint ( dpdata(1) )
 
-      if (  ( msno .lt. 1 )  .or.  ( msno .gt. nintvl )  ) then
+      if (  ( msno < 1 )  .or.  ( msno > nintvl )  ) then
 
          call setmsg ( 'Mini-segment index must be in range 1:# but ' &
          //            'was #.'                                       )

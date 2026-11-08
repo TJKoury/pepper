@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         fname
+      character(*)          fname
       integer(ip)           handle
 
 ! $ Brief_I/O

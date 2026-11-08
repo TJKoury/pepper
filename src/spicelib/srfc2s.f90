@@ -29,7 +29,7 @@
 
       integer(ip)           code
       integer(ip)           bodyid
-      character*(*)         srfstr
+      character(*)          srfstr
       logical               isname
 
 ! $ Brief_I/O

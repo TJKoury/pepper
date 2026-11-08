@@ -139,17 +139,17 @@
 
       corsys = nint( dskdsc(sysidx) )
 
-      if ( corsys .eq. latsys ) then
+      if ( corsys == latsys ) then
 
          call zzlatbox ( dskdsc(mn1idx), boxctr, l1, &
                          l2,             l3,     maxr )
 
-      else if ( corsys .eq. recsys ) then
+      else if ( corsys == recsys ) then
 
          call zzrecbox ( dskdsc(mn1idx), boxctr, l1, &
                          l2,             l3,     maxr )
 
-      else if ( corsys .eq. pdtsys ) then
+      else if ( corsys == pdtsys ) then
 
          call zzpdtbox ( dskdsc(mn1idx), dskdsc(paridx), boxctr, &
                          l1,             l2,             l3, &

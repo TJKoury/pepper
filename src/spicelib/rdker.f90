@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)         kernel
-      character*(*)         line
+      character(*)          kernel
+      character(*)          line
       integer(ip)           number
       logical               eof
 
@@ -309,13 +309,13 @@
 !     for the following block of declarations. Admittedly this is
 !     bizarre, but it works.
 !
-      character*(*)         dat
+      character(*)          dat
       parameter           ( dat = 'begindata' )
 
-      character*(*)         txt
+      character(*)          txt
       parameter           ( txt = 'begintext' )
 
-      character*(*)         blank
+      character(*)          blank
       parameter           ( blank = ' ' )
 
 !
@@ -348,10 +348,10 @@
 !
 !     Local variables
 !
-      character*(mrklen)    begdat
-      character*(mrklen)    begtxt
-      character*(filsiz)    file
-      character*(lnsize)    first
+      character(mrklen)     begdat
+      character(mrklen)     begtxt
+      character(filsiz)     file
+      character(lnsize)     first
 
       integer(ip)           i
       integer(ip)           r
@@ -626,7 +626,7 @@
 
       do i = 1, r
 
-         if ( ichar(first(i:i)) .eq. tabcde ) then
+         if ( ichar(first(i:i)) == tabcde ) then
 
             first(i:i) = ' '
 
@@ -647,7 +647,7 @@
          status = endoff
          call cltext ( kernel )
 
-      else if ( first .eq. begdat ) then
+      else if ( first == begdat ) then
          status = indata
 
       else
@@ -869,7 +869,7 @@
 !     If the previous call detected the end of the file,
 !     this one should do the same.
 !
-      if ( status .eq. endoff ) then
+      if ( status == endoff ) then
          eof = .true.
          call chkout ( 'RDKDAT' )
          return
@@ -887,7 +887,7 @@
       line = blank
 
       do while ( ( .not. failed() )          .and. &
-                 ( status .eq. intext  .or.  line .eq. blank ) )
+                 ( status == intext  .or.  line == blank ) )
 
 
          call rdtext ( file, line, eof )
@@ -900,7 +900,7 @@
 
          do i = 1, r
 
-            if (  ichar(line(i:i)) .eq. tabcde ) then
+            if (  ichar(line(i:i)) == tabcde ) then
 
                line(i:i) = ' '
 
@@ -919,10 +919,10 @@
             call chkout ( 'RDKDAT' )
             return
 
-         else if ( line .eq. begtxt ) then
+         else if ( line == begtxt ) then
             status = intext
 
-         else if ( line .eq. begdat ) then
+         else if ( line == begdat ) then
             status = indata
             line   = blank
          end if

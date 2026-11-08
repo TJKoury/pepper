@@ -198,14 +198,14 @@
 !
 !     Bad addresses?
 !
-      if ( begin .le. 0 ) then
+      if ( begin <= 0 ) then
          call setmsg ( 'Negative beginning address: #' )
          call errint ( '#', begin )
          call sigerr ( 'SPICE(DAFNEGADDR)' )
          call chkout ( 'DAFWDA' )
          return
 
-      else if ( begin .gt. end ) then
+      else if ( begin > end ) then
          call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#)' )
          call errint ( '#', begin )
@@ -229,7 +229,7 @@
 
       do recno = begr, endr
 
-         if ( recno .eq. begr  .or.  recno .eq. endr ) then
+         if ( recno == begr  .or.  recno == endr ) then
             call dafrdr ( handle, recno, 1, bsize, buffer, found )
 
             if ( .not. found ) then
@@ -237,15 +237,15 @@
             end if
          end if
 
-         if ( begr .eq. endr ) then
+         if ( begr == endr ) then
             first = begw
             n     = endw - begw + 1
 
-         else if ( recno .eq. begr ) then
+         else if ( recno == begr ) then
             first = begw
             n     = bsize - begw + 1
 
-         else if ( recno .eq. endr ) then
+         else if ( recno == endr ) then
             first = 1
             n     = endw
 

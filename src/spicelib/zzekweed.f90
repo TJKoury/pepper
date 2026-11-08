@@ -184,7 +184,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( ( njrs .lt. 1 ) .or. ( njrs .gt. mxjrs )  ) then
+      if ( ( njrs < 1 ) .or. ( njrs > mxjrs )  ) then
 
          call chkin  ( 'ZZEKWEED'                                      )
          call setmsg ( 'The number of join row sets in the union is #' )
@@ -326,7 +326,7 @@
                         hit   =  .false.
 
 
-                        do while (         ( prv .le.  nprdrv ) &
+                        do while (         ( prv <=  nprdrv ) &
                                     .and.  (     .not. hit    )   )
 
                            base  =  prwbas + (prv-1)*rvsize
@@ -401,7 +401,7 @@
          nrloc = bases(i) + jrcidx
          call zzeksrd  ( nrloc, nrloc, nr )
 
-         if ( nr .eq. 0 ) then
+         if ( nr == 0 ) then
 !
 !           This entire join row set can be deleted from the union.
 !           Consider the next join row set.

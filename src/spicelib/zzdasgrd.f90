@@ -128,8 +128,8 @@
 !
 !     Local variables
 !
-      character*(nwc)       chrrec
-      character*(filsiz)    fname
+      character(nwc)        chrrec
+      character(filsiz)     fname
 
       integer(ip)           intamh
       integer(ip)           intarc
@@ -205,7 +205,7 @@
       end if
 
 
-      if ( intbff .eq. natbff ) then
+      if ( intbff == natbff ) then
 !
 !        The file has native format.
 !
@@ -213,7 +213,7 @@
                  rec     =   recno, &
                  iostat  =   iostat ) record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Could not read DAS d.p. record. ' &
             //            'File = # Record number = #. IOSTAT = #.' )
@@ -236,7 +236,7 @@
                  rec     =    recno, &
                  iostat  =    iostat  ) chrrec
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Could not read non-native DAS d.p. ' &
             //            'record into character array. ' &

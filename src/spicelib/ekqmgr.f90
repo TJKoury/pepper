@@ -55,24 +55,24 @@
 
       integer(ip)           cindex
       integer(ip)           elment
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd  ( * )
       integer(ip)           eqryi  ( lbcell : * )
-      character*(*)         fname
+      character(*)          fname
       integer(ip)           row
       integer(ip)           selidx
-      character*(*)         column
+      character(*)          column
       integer(ip)           handle
       integer(ip)           n
-      character*(*)         table
+      character(*)          table
       integer(ip)           attdsc ( adscsz )
       integer(ip)           ccount
       logical               found
       integer(ip)           nelt
       integer(ip)           nmrows
       logical               semerr
-      character*(*)         errmsg
-      character*(*)         cdata
+      character(*)          errmsg
+      character(*)          cdata
       real(wp)              ddata
       integer(ip)           idata
       logical               null
@@ -763,7 +763,7 @@
       integer(ip)           tbpool ( 2,  lbpool : mxtbld )
       integer(ip)           tbstpt (              mxtbld )
       integer(ip)           tbncol (              mxtbld )
-      character*(tnamsz)    tbnams (              mxtbld )
+      character(tnamsz)     tbnams (              mxtbld )
       integer(ip)           tbctpt (              mxtbld )
       integer(ip)           tbfils ( ftsize,      mxtbld )
       integer(ip)           tbflsz (              mxtbld )
@@ -867,7 +867,7 @@
 !
 !
       integer(ip)           ctpool ( 2,       lbpool : ctsize )
-      character*(cnamsz)    ctnams (                   ctsize )
+      character(cnamsz)     ctnams (                   ctsize )
       integer(ip)           ctclas (                   ctsize )
       integer(ip)           cttyps (                   ctsize )
       integer(ip)           ctlens (                   ctsize )
@@ -881,20 +881,20 @@
 !
 !     Other local variables
 !
-      character*(typlen)    chtype ( ntypes )
-      character*(cnamsz)    cnams  ( mxclld )
-      character*(cnamsz)    cnmset ( lbcell : mxclld )
-      character*(cnamsz)    colnam
-      character*(tnamsz)    frmals ( maxtab )
-      character*(tnamsz)    frmtab ( maxtab )
-      character*(cnamsz)    lcname
-      character*(tnamsz)    ltname
-      character*(short)     problm
-      character*(cnamsz)    rcname
-      character*(tnamsz)    rtname
-      character*(short)     state
-      character*(tnamsz)    tabnam
-      character*(tnamsz)    tabvec ( lbcell : maxtab )
+      character(typlen)     chtype ( ntypes )
+      character(cnamsz)     cnams  ( mxclld )
+      character(cnamsz)     cnmset ( lbcell : mxclld )
+      character(cnamsz)     colnam
+      character(tnamsz)     frmals ( maxtab )
+      character(tnamsz)     frmtab ( maxtab )
+      character(cnamsz)     lcname
+      character(tnamsz)     ltname
+      character(short)      problm
+      character(cnamsz)     rcname
+      character(tnamsz)     rtname
+      character(short)      state
+      character(tnamsz)     tabnam
+      character(tnamsz)     tabvec ( lbcell : maxtab )
 
       real(wp)              dvals  ( maxcon )
 
@@ -1550,9 +1550,9 @@
 !
       i = fthead
 
-      do while ( i .gt. 0 )
+      do while ( i > 0 )
 
-         if ( handle .eq. fthan(i) ) then
+         if ( handle == fthan(i) ) then
 !
 !           The last call we made to EKOPR added another link to
 !           the EK file.  Remove this link.
@@ -1582,7 +1582,7 @@
 !     Make sure there's enough room in the file table.
 !
 
-      if (  lnknfn(ftpool) .eq. 0 ) then
+      if (  lnknfn(ftpool) == 0 ) then
 !
 !        Sorry, there are no free file table entries left.
 !
@@ -1605,7 +1605,7 @@
 !
       nseg = eknseg ( handle )
 
-      if ( nseg .gt. lnknfn(stpool) ) then
+      if ( nseg > lnknfn(stpool) ) then
 !
 !        There are too many segments for the amount of space we've got
 !        left.
@@ -1621,7 +1621,7 @@
          call chkout ( 'EKLEF'                                         )
          return
 
-      else if ( nseg .lt. 1 ) then
+      else if ( nseg < 1 ) then
 
          call setmsg ( 'The EK file # contains no segments.'           )
          call errhan ( '#',  handle                                    )
@@ -1642,10 +1642,10 @@
       seg    =   1
       state  =  'LOAD_FILE_TABLE'
 
-      do while ( state .ne. 'DONE' )
+      do while ( state /= 'DONE' )
 
 
-         if ( state .eq. 'LOAD_FILE_TABLE' ) then
+         if ( state == 'LOAD_FILE_TABLE' ) then
 !
 !           Allocate a file table entry and link the new entry in before
 !           the current head of the list.  Update the list head pointer.
@@ -1661,7 +1661,7 @@
 
 
 
-         else if ( state .eq. 'SUMMARIZE_SEGMENT' ) then
+         else if ( state == 'SUMMARIZE_SEGMENT' ) then
 !
 !           Get the summary information for this segment.
 !
@@ -1678,7 +1678,7 @@
             call movec  ( cnams,  ncols, cnmset(1) )
             call validc ( mxclld, ncols, cnmset    )
 
-            if ( cardc(cnmset) .lt. ncols ) then
+            if ( cardc(cnmset) < ncols ) then
 
                state   =  'ABORT'
                problm  =  'DUPLICATE_COLUMN_NAMES'
@@ -1691,16 +1691,16 @@
 
 
 
-         else if ( state .eq. 'FIND_TABLE' ) then
+         else if ( state == 'FIND_TABLE' ) then
 !
 !           Traverse the table list, checking for a match.
 !
             tbcurr  =  tbhead
             presnt  =  .false.
 
-            do while (  ( tbcurr .gt. 0 ) .and. ( .not. presnt ) )
+            do while (  ( tbcurr > 0 ) .and. ( .not. presnt ) )
 
-               if ( tabnam .eq. tbnams(tbcurr) ) then
+               if ( tabnam == tbnams(tbcurr) ) then
                   presnt =  .true.
                else
                   tbcurr      =  lnknxt ( tbcurr, tbpool )
@@ -1720,7 +1720,7 @@
 !              in the segment matches the number of columns in the
 !              parent table.
 !
-               if ( ncols .ne. tbncol(tbcurr) ) then
+               if ( ncols /= tbncol(tbcurr) ) then
 
                   npcol  =  tbncol(tbcurr)
                   state  = 'ABORT'
@@ -1748,12 +1748,12 @@
 
 
 
-         else if ( state .eq. 'MAKE_TABLE_LIST_ENTRY' ) then
+         else if ( state == 'MAKE_TABLE_LIST_ENTRY' ) then
 !
 !           Allocate a table list entry, if we can.
 !
 
-            if ( lnknfn(tbpool) .eq. 0 ) then
+            if ( lnknfn(tbpool) == 0 ) then
 !
 !              Oops, we're out of room.
 !
@@ -1771,7 +1771,7 @@
 !
                call lnkan  ( tbpool, tbcurr  )
 
-               if ( tbhead .le. 0 ) then
+               if ( tbhead <= 0 ) then
                   tbhead  =  tbcurr
                else
                   call lnkilb ( tbhead, tbcurr, tbpool )
@@ -1805,7 +1805,7 @@
             end if
 
 
-         else if ( state .eq. 'MAKE_SEGMENT_TABLE_ENTRY' ) then
+         else if ( state == 'MAKE_SEGMENT_TABLE_ENTRY' ) then
 !
 !           Add the data for the current segment to the segment
 !           table.
@@ -1820,7 +1820,7 @@
 !           list for the parent table, or, if the tail is NIL, just set
 !           the segment list pointer to the current segment node.
 !
-            if ( tbstpt(tbcurr) .le. 0 ) then
+            if ( tbstpt(tbcurr) <= 0 ) then
 
                tbstpt(tbcurr)  =  stnew
 
@@ -1851,7 +1851,7 @@
 
 
 
-         else if ( state .eq. 'MAKE_COLUMN_TABLE_ENTRIES' ) then
+         else if ( state == 'MAKE_COLUMN_TABLE_ENTRIES' ) then
 
 
             if ( presnt ) then
@@ -1872,14 +1872,14 @@
 !
                j   =   tbctpt ( tbcurr )
 
-               do while (       ( j     .gt.  0       ) &
-                          .and. ( state .ne. 'ABORT'  )   )
+               do while (       ( j     >  0       ) &
+                          .and. ( state /= 'ABORT'  )   )
 
 
                   k  =  isrchc ( ctnams(j), ncols, cnams )
 
 
-                  if ( k .gt. 0 ) then
+                  if ( k > 0 ) then
 !
 !                    We have a name match.  At this point, we must
 !                    check that the column's other attributes---data
@@ -1887,13 +1887,13 @@
 !                    indexed---match as well.  It's an error if they
 !                    don't.
 !
-                     indexd = cdscrs(ixtidx,k) .ne. ifalse
-                     nulsok = cdscrs(nflidx,k) .ne. ifalse
+                     indexd = cdscrs(ixtidx,k) /= ifalse
+                     nulsok = cdscrs(nflidx,k) /= ifalse
                      attmch = &
-                                ( cdscrs(clsidx, k) .eq.  ctclas(j) ) &
-                          .and. ( cdscrs(typidx, k) .eq.  cttyps(j) ) &
-                          .and. ( cdscrs(lenidx, k) .eq.  ctlens(j) ) &
-                          .and. ( cdscrs(sizidx, k) .eq.  ctsizs(j) ) &
+                                ( cdscrs(clsidx, k) ==  ctclas(j) ) &
+                          .and. ( cdscrs(typidx, k) ==  cttyps(j) ) &
+                          .and. ( cdscrs(lenidx, k) ==  ctlens(j) ) &
+                          .and. ( cdscrs(sizidx, k) ==  ctsizs(j) ) &
                           .and. ( indexd            .eqv. ctindx(j) ) &
                           .and. ( nulsok            .eqv. ctnull(j) )
 
@@ -1912,7 +1912,7 @@
 !                       in the descriptor table.  We'll need to
 !                       allocate a descriptor table entry first.
 !
-                        if ( lnknfn( dtpool ) .eq. 0 ) then
+                        if ( lnknfn( dtpool ) == 0 ) then
 !
 !                          No free nodes left in the descriptor table.
 !
@@ -1927,7 +1927,7 @@
 !
                            call lnkan  ( dtpool, dtnew )
 
-                           if ( stdtpt(stnew) .le. 0 ) then
+                           if ( stdtpt(stnew) <= 0 ) then
 
                               stdtpt(stnew) = dtnew
 
@@ -1982,7 +1982,7 @@
 !
 !                 Advance to the next column in the table's column list.
 !
-                  if ( state .ne. 'ABORT' ) then
+                  if ( state /= 'ABORT' ) then
                      j  =  lnknxt ( j, ctpool )
                   end if
 
@@ -2003,14 +2003,14 @@
 !
                k  =  1
 
-               do while (  (k .le. ncols) .and. (state .ne. 'ABORT')  )
+               do while (  (k <= ncols) .and. (state /= 'ABORT')  )
 !
 !                 Allocate a new entry in the column attribute table and
 !                 link it to the tail of the column list for the
 !                 current table.  If the column list is empty, update
 !                 the list head.
 !
-                  if (  lnknfn(ctpool) .eq. 0 ) then
+                  if (  lnknfn(ctpool) == 0 ) then
 !
 !                    There's no more space to store attribute
 !                    descriptors.
@@ -2022,7 +2022,7 @@
 
                      call lnkan  ( ctpool, ctnew )
 
-                     if  ( tbctpt(tbcurr) .le. 0 ) then
+                     if  ( tbctpt(tbcurr) <= 0 ) then
 
                         tbctpt(tbcurr)  =  ctnew
 
@@ -2041,16 +2041,16 @@
                      cttyps(ctnew)  =  cdscrs(typidx,k)
                      ctlens(ctnew)  =  cdscrs(lenidx,k)
                      ctsizs(ctnew)  =  cdscrs(sizidx,k)
-                     ctindx(ctnew)  =  cdscrs(ixtidx,k) .ne. ifalse
-                     ctfixd(ctnew)  =  cdscrs(sizidx,k) .ne. ifalse
-                     ctnull(ctnew)  =  cdscrs(nflidx,k) .ne. ifalse
+                     ctindx(ctnew)  =  cdscrs(ixtidx,k) /= ifalse
+                     ctfixd(ctnew)  =  cdscrs(sizidx,k) /= ifalse
+                     ctnull(ctnew)  =  cdscrs(nflidx,k) /= ifalse
 
 !
 !                    Store the column descriptor for this column
 !                    in the descriptor table.  We'll need to
 !                    allocate a descriptor table entry first.
 !
-                     if ( lnknfn( dtpool ) .eq. 0 ) then
+                     if ( lnknfn( dtpool ) == 0 ) then
 !
 !                       No free nodes left in the descriptor table.
 !
@@ -2065,7 +2065,7 @@
 !
                         call lnkan  ( dtpool, dtnew )
 
-                        if ( stdtpt(stnew) .le. 0 ) then
+                        if ( stdtpt(stnew) <= 0 ) then
 
                            stdtpt(stnew) = dtnew
 
@@ -2089,7 +2089,7 @@
 !                 We created attribute and descriptor entries for the
 !                 current column, or we encountered an error.
 !
-                  if ( state .ne. 'ABORT' ) then
+                  if ( state /= 'ABORT' ) then
 !
 !                    Consider the next column.
 !
@@ -2111,7 +2111,7 @@
 !           else we have an error condition.
 !
 
-            if ( state .ne. 'ABORT' ) then
+            if ( state /= 'ABORT' ) then
 !
 !              We're ready to look at the next segment in the new file.
 !
@@ -2121,10 +2121,10 @@
 
 
 
-         else if ( state .eq. 'NEXT_SEGMENT' ) then
+         else if ( state == 'NEXT_SEGMENT' ) then
 
 
-            if ( seg .lt. nseg ) then
+            if ( seg < nseg ) then
 
                seg    =   seg + 1
                state  =   'SUMMARIZE_SEGMENT'
@@ -2138,7 +2138,7 @@
             end if
 
 
-         else if ( state .eq. 'ABORT' ) then
+         else if ( state == 'ABORT' ) then
 !
 !           We must clean up all the data structure additions we made to
 !           accommodate the new file.
@@ -2154,7 +2154,7 @@
             fthead  =  lnknxt ( new, ftpool )
 
 
-            if ( fthead .lt. 0 ) then
+            if ( fthead < 0 ) then
 !
 !              There are no files left.  Clean up the whole shebang.
 !
@@ -2192,17 +2192,17 @@
 !
                tbcurr = tbhead
 
-               do while ( tbcurr .gt. 0 )
+               do while ( tbcurr > 0 )
 !
 !                 See whether the current table is in the file we're
 !                 unloading.
 !
                   i  =  1
 
-                  do while (       ( i .le.  tbflsz(tbcurr) ) &
+                  do while (       ( i <=  tbflsz(tbcurr) ) &
                              .and. (   .not. fnd            )  )
 
-                     if ( tbfils(i,tbcurr) .eq. handle ) then
+                     if ( tbfils(i,tbcurr) == handle ) then
 !
 !                       This table is affected by unloading the file.
 !
@@ -2242,9 +2242,9 @@
 !
                      delseg  =  tbstpt ( tbcurr )
 
-                     do while ( delseg .gt. 0 )
+                     do while ( delseg > 0 )
 
-                        if ( sthan(delseg) .eq. handle ) then
+                        if ( sthan(delseg) == handle ) then
 !
 !                          This segment is aboard the sinking ship.  Put
 !                          it out of its misery.
@@ -2255,7 +2255,7 @@
 !
                            j  =  stdtpt ( delseg )
 
-                           if ( j .gt. 0 ) then
+                           if ( j > 0 ) then
                               k  =  lnktl  ( j,    dtpool )
                               call lnkfsl  ( j, k, dtpool )
                            end if
@@ -2266,7 +2266,7 @@
 !                          updating the segment list pointer in the
 !                          parent table's table list entry.
 !
-                           if ( delseg .eq. tbstpt(tbcurr) ) then
+                           if ( delseg == tbstpt(tbcurr) ) then
 
                               tbstpt(tbcurr) =  lnknxt( delseg, stpool )
 
@@ -2307,7 +2307,7 @@
 !                    may need to update the head-of-list pointer for the
 !                    table list.
 !
-                     if ( tbstpt(tbcurr) .le. 0 ) then
+                     if ( tbstpt(tbcurr) <= 0 ) then
 !
 !                       There are no loaded segments left for this
 !                       table.
@@ -2322,7 +2322,7 @@
 !
                         j  =  tbctpt ( tbcurr )
 
-                        if ( j .gt. 0 ) then
+                        if ( j > 0 ) then
 
                            k  =  lnktl  ( j,    ctpool )
                            call lnkfsl  ( j, k, ctpool )
@@ -2330,7 +2330,7 @@
                         end if
 
 
-                        if ( tbcurr .eq. tbhead ) then
+                        if ( tbcurr == tbhead ) then
 !
 !                          The entry for this table is at the head of
 !                          the table list.  Update the head of the list.
@@ -2391,7 +2391,7 @@
 !           Now that the mess has been arranged, tell the user what the
 !           problem was.
 !
-            if ( problm .eq. 'TABLE_LIST_FULL' ) then
+            if ( problm == 'TABLE_LIST_FULL' ) then
 
                call setmsg ( 'The EK file # could not be loaded; the '// &
                              'maximum number of distinct tables has ' // &
@@ -2400,7 +2400,7 @@
                call sigerr ( 'SPICE(EKTABLELISTFULL)'                  )
 
 
-            else if ( problm .eq. 'DUPLICATE_COLUMN_NAMES' ) then
+            else if ( problm == 'DUPLICATE_COLUMN_NAMES' ) then
 
                call setmsg ( 'The EK file # could not be loaded; the '// &
                              'segment # contains duplicate column '   // &
@@ -2411,7 +2411,7 @@
                call sigerr ( 'SPICE(EKCOLNUMMISMATCH)'                 )
 
 
-            else if ( problm .eq. 'COLUMN_NUMBER_MISMATCH' ) then
+            else if ( problm == 'COLUMN_NUMBER_MISMATCH' ) then
 
                call setmsg ( 'The EK file # could not be loaded; the '// &
                              'number of columns (#) in segment # '    // &
@@ -2425,7 +2425,7 @@
                call sigerr ( 'SPICE(EKCOLNUMMISMATCH)'                 )
 
 
-            else if ( problm .eq. 'MISMATCHED_COLUMN_ATTRIBUTES' ) then
+            else if ( problm == 'MISMATCHED_COLUMN_ATTRIBUTES' ) then
 
                call setmsg ( 'EK file # contains a column '           // &
                              'whose attributes conflict with a '      // &
@@ -2438,7 +2438,7 @@
                call sigerr ( 'SPICE(BADATTRIBUTES)'                    )
 
 
-            else if ( problm .eq. 'DESCRIPTOR_TABLE_FULL' ) then
+            else if ( problm == 'DESCRIPTOR_TABLE_FULL' ) then
 
                call setmsg ( 'The EK file # could not be loaded; the' // &
                               'maximum allowed number of loaded '     // &
@@ -2447,7 +2447,7 @@
                call sigerr ( 'SPICE(COLDESCTABLEFULL)'                 )
 
 
-            else if ( problm .eq. 'ATTRIBUTE_TABLE_FULL' ) then
+            else if ( problm == 'ATTRIBUTE_TABLE_FULL' ) then
 
                call setmsg ( 'The EK file # could not be loaded; the '// &
                              'maximum number of columns having'       // &
@@ -2457,7 +2457,7 @@
                call sigerr ( 'SPICE(EKCOLATTRTABLEFULL)'               )
 
 
-            else if ( problm .eq. 'MISSING_COLUMN' ) then
+            else if ( problm == 'MISSING_COLUMN' ) then
 
                call setmsg ( 'The EK file # could not be loaded; the '// &
                              'column # in already loaded table # is ' // &
@@ -2788,9 +2788,9 @@
       i    =   fthead
       fnd  =  .false.
 
-      do while (  ( i .gt. 0 ) .and. ( .not. fnd )  )
+      do while (  ( i > 0 ) .and. ( .not. fnd )  )
 
-         if ( handle .eq. fthan(i) ) then
+         if ( handle == fthan(i) ) then
             fnd  =  .true.
          else
             i    =  lnknxt ( i, ftpool )
@@ -2810,14 +2810,14 @@
 !
 !     The file table is first.
 !
-      if ( i .eq. fthead ) then
+      if ( i == fthead ) then
 !
 !        The file is at the head of the list.  If the file has a
 !        successor, that file is now at the head of the list.
 !
          fthead  =  lnknxt ( i, ftpool )
 
-         if ( fthead .lt. 0 ) then
+         if ( fthead < 0 ) then
 !
 !           There are no files left.  Clean up the whole shebang.
 !
@@ -2864,15 +2864,15 @@
 !
       tbcurr = tbhead
 
-      do while ( tbcurr .gt. 0 )
+      do while ( tbcurr > 0 )
 !
 !        See whether the current table is in the file we're unloading.
 !
             i  =  1
 
-            do while (  ( i .le. tbflsz(tbcurr) ) .and. ( .not. fnd )  )
+            do while (  ( i <= tbflsz(tbcurr) ) .and. ( .not. fnd )  )
 
-            if ( tbfils(i,tbcurr) .eq. handle ) then
+            if ( tbfils(i,tbcurr) == handle ) then
 !
 !              This table is affected by unloading the file.
 !
@@ -2912,9 +2912,9 @@
 !
             seg  =  tbstpt ( tbcurr )
 
-            do while ( seg .gt. 0 )
+            do while ( seg > 0 )
 
-               if ( sthan(seg) .eq. handle ) then
+               if ( sthan(seg) == handle ) then
 !
 !                 This segment is aboard the sinking ship.  Put it
 !                 out of its misery.
@@ -2926,7 +2926,7 @@
 !
                   j  =  stdtpt ( seg )
 
-                  if ( j .gt. 0 ) then
+                  if ( j > 0 ) then
                      k  =  lnktl  ( j,    dtpool )
                      call lnkfsl  ( j, k, dtpool )
                   end if
@@ -2936,7 +2936,7 @@
 !                 This deletion may necessitate updating the segment
 !                 list pointer in the parent table's table list entry.
 !
-                  if ( seg .eq. tbstpt(tbcurr) ) then
+                  if ( seg == tbstpt(tbcurr) ) then
 
                      tbstpt(tbcurr)  =  lnknxt( seg, stpool )
 
@@ -2968,7 +2968,7 @@
 !           not unloading the last loaded file.  However, we may need to
 !           update the head-of-list pointer for the table list.
 !
-            if ( tbstpt(tbcurr) .le. 0 ) then
+            if ( tbstpt(tbcurr) <= 0 ) then
 !
 !              There are no loaded segments left for this table.
 !
@@ -2981,13 +2981,13 @@
 !
                j  =  tbctpt ( tbcurr )
 
-               if ( j .gt. 0 ) then
+               if ( j > 0 ) then
                   k  =  lnktl  ( j,    ctpool )
                   call lnkfsl  ( j, k, ctpool )
                end if
 
 
-               if ( tbcurr .eq. tbhead ) then
+               if ( tbcurr == tbhead ) then
 !
 !                 The entry for this table is at the head of the
 !                 table list.  Update the head of the list.
@@ -3512,7 +3512,7 @@
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      if ( fthead .le. 0 ) then
+      if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
          call chkout ( 'EKTNAM'                             )
@@ -3524,11 +3524,11 @@
       fnd     =  .false.
       i       =  0
 
-      do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd )  )
+      do while (  ( tbcurr > 0 ) .and. ( .not. fnd )  )
 
          i   =  i + 1
 
-         if ( i .eq. n ) then
+         if ( i == n ) then
             fnd     =  .true.
             table   =   tbnams(tbcurr)
          else
@@ -3962,7 +3962,7 @@
       tbcurr   =  tbhead
       fnd      =  .false.
 
-      do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd )  )
+      do while (  ( tbcurr > 0 ) .and. ( .not. fnd )  )
 
          if (  eqstr( table, tbnams(tbcurr) )  ) then
             fnd     =  .true.
@@ -3989,7 +3989,7 @@
          ccount  =  0
          col     =  tbctpt ( tbcurr )
 
-         do while ( col .gt. 0 )
+         do while ( col > 0 )
             ccount  =  ccount + 1
             col     =  lnknxt ( col, ctpool )
          end do
@@ -4441,7 +4441,7 @@
       tbcurr   =  tbhead
       fnd      =  .false.
 
-      do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd )  )
+      do while (  ( tbcurr > 0 ) .and. ( .not. fnd )  )
 
          if (  eqstr( table, tbnams(tbcurr) )  ) then
             fnd     =  .true.
@@ -4469,11 +4469,11 @@
       i    =  0
       col  =  tbctpt ( tbcurr )
 
-      do while (  ( col .gt. 0 )  .and. ( i .lt. cindex )  )
+      do while (  ( col > 0 )  .and. ( i < cindex )  )
 
          i  =  i + 1
 
-         if ( i .eq. cindex ) then
+         if ( i == cindex ) then
 !
 !           We've found the column.  Set the output arguments using
 !           its attributes.
@@ -4701,7 +4701,7 @@
 !     There nothing to search if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      if ( fthead .le. 0 ) then
+      if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
          call chkout ( 'EKSRCH'                             )
@@ -4769,9 +4769,9 @@
          tbcurr  =  tbhead
          fnd     = .false.
 
-         do while (  ( tbcurr .gt. 0 ) .and. ( .not. fnd ) )
+         do while (  ( tbcurr > 0 ) .and. ( .not. fnd ) )
 
-            if ( tbnams(tbcurr) .eq. frmtab(i) ) then
+            if ( tbnams(tbcurr) == frmtab(i) ) then
 !
 !              We've found the table list entry for the Ith table.
 !
@@ -4844,7 +4844,7 @@
 !        We'll start out by recording the FROM table indices and column
 !        list indices of columns listed in the constraints.
 !
-         if ( nconj .eq. 0 ) then
+         if ( nconj == 0 ) then
             cjsize  =  0
          else
             cjsize  =  sizes(conj)
@@ -4889,7 +4889,7 @@
             i   = tbstpt(tab)
             nsv = 0
 
-            do while ( i .gt. 0 )
+            do while ( i > 0 )
 
                call zzekspsh ( 1, 0 )
 
@@ -4919,7 +4919,7 @@
             nseg    =  0
             rtotal  =  0
 
-            do while ( seg .gt. 0 )
+            do while ( seg > 0 )
 
                nseg = nseg + 1
 !
@@ -4941,8 +4941,8 @@
 !
 !                 Each constraint is active to start with.
 !
-                  activc(i) = cnstyp(i) .eq. eqcol
-                  activv(i) = cnstyp(i) .eq. eqval
+                  activc(i) = cnstyp(i) == eqcol
+                  activv(i) = cnstyp(i) == eqval
 
 !
 !                 The parent table of the LHS column must be the Tth
@@ -4954,15 +4954,15 @@
 !                 the right belongs to the same FROM table as the
 !                 column on the left.
 !
-                  if ( ltbidx(i) .ne. t ) then
+                  if ( ltbidx(i) /= t ) then
 
                      activc(i) = .false.
                      activv(i) = .false.
 
 
-                  else if ( cnstyp(i) .eq. eqcol ) then
+                  else if ( cnstyp(i) == eqcol ) then
 
-                     if ( ltbidx(i) .ne. rtbidx(i) ) then
+                     if ( ltbidx(i) /= rtbidx(i) ) then
 !
 !                       This is a join constraint; disable it.
 !
@@ -5049,7 +5049,7 @@
                ptroff = jsvbas  +  nsv  +  (nseg - 1) * 2   +   1
 
 
-               if ( endidx .ge. begidx ) then
+               if ( endidx >= begidx ) then
 !
 !                 Initialize the count of matching rows for this
 !                 segment.  The current stack top is the base address
@@ -5106,7 +5106,7 @@
                   end do
 
 
-                  if ( nact .gt. 0 ) then
+                  if ( nact > 0 ) then
 !
 !                    There are still active constraints left, so
 !                    proceed linearly through the remaining rows,
@@ -5289,18 +5289,18 @@
 
                activc(i)  =  .false.
 
-               if ( cnstyp(i) .eq. eqcol ) then
+               if ( cnstyp(i) == eqcol ) then
 
                   l  =  ltbidx(i)
                   r  =  rtbidx(i)
 
-                  if (      ( l .ge. 1           ) &
-                      .and. ( l .le. t           ) &
-                      .and. ( r .ge. 1           ) &
-                      .and. ( r .le. t           ) &
-                      .and. ( l .ne. r           ) &
-                      .and. (      ( r .eq. t ) &
-                              .or. ( l .eq. t )  )  )  then
+                  if (      ( l >= 1           ) &
+                      .and. ( l <= t           ) &
+                      .and. ( r >= 1           ) &
+                      .and. ( r <= t           ) &
+                      .and. ( l /= r           ) &
+                      .and. (      ( r == t ) &
+                              .or. ( l == t )  )  )  then
 
                      activc(i)  =  .true.
 
@@ -5315,7 +5315,7 @@
 !           address of the result of the previous join.  The first time
 !           through, the base of the join row set for table 1 is used.
 !
-            if ( t .eq. 2 ) then
+            if ( t == 2 ) then
                jbase1  =  rbas( 1 )
             else
                jbase1  =  resbas
@@ -5358,7 +5358,7 @@
 !        Initialize the addressing function for the current join row
 !        set union.
 !
-         if ( usize .gt. 0 ) then
+         if ( usize > 0 ) then
             call zzekvset ( usize, ubase )
          end if
 
@@ -5390,11 +5390,11 @@
          col     =  0
          fnd     =  .false.
 
-         do while (  ( j .gt. 0 ) .and. ( .not. fnd )  )
+         do while (  ( j > 0 ) .and. ( .not. fnd )  )
 
             col = col + 1
 
-            if ( ctnams(j) .eq. colnam ) then
+            if ( ctnams(j) == colnam ) then
                fnd  =  .true.
             else
                j    =  lnknxt( j, ctpool )
@@ -5421,7 +5421,7 @@
 !     Enable sorting of the matching row vectors, if necessary.  The
 !     first fetch request will invoke the sort.
 !
-      dosort  =  ( norder .gt. 0 ) .and. ( nmrows .gt. 0 )
+      dosort  =  ( norder > 0 ) .and. ( nmrows > 0 )
       sorted  =  .false.
 
       if ( dosort ) then
@@ -5956,7 +5956,7 @@
 !     The request doesn't make sense if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      if ( fthead .le. 0 ) then
+      if ( fthead <= 0 ) then
          call chkin  ( 'EKNELT'                             )
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
@@ -5967,7 +5967,7 @@
 !
 !     The row number must be valid, or we can't proceed.
 !
-      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
+      if (  ( row < 1 ) .or. ( row > unrows )  ) then
 
          call chkin  ( 'EKNELT'                                        )
          call setmsg ( 'Row indices for query result range from 1 to '// &
@@ -5983,7 +5983,7 @@
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+      if (  ( selidx < 1 ) .or. ( selidx > nsel )  ) then
          call chkin  ( 'EKNELT'                                   )
          call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
@@ -6730,7 +6730,7 @@
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      if ( fthead .le. 0 ) then
+      if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
          call chkout ( 'EKGC'                               )
@@ -6740,7 +6740,7 @@
 !
 !     The row number must be valid, or we can't proceed.
 !
-      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
+      if (  ( row < 1 ) .or. ( row > unrows )  ) then
 
          call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
@@ -6755,7 +6755,7 @@
 !
 !     The element index must be positive.
 !
-      if (  elment .lt. 1 ) then
+      if (  elment < 1 ) then
          call setmsg ( 'ELMENT must be positive but was #.' )
          call errint ( '#',  elment                         )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
@@ -6766,7 +6766,7 @@
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+      if (  ( selidx < 1 ) .or. ( selidx > nsel )  ) then
          call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
          call errint ( '#', selidx                                )
@@ -6788,7 +6788,7 @@
 !
 !     Make sure the column has character type.
 !
-      if (  cttyps(colptr) .ne. chr ) then
+      if (  cttyps(colptr) /= chr ) then
 
          call setmsg ( 'Column # has data type #.'      )
          call errch  ( '#', ctnams( colptr )            )
@@ -7715,7 +7715,7 @@
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      if ( fthead .le. 0 ) then
+      if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
          call chkout ( 'EKGD'                               )
@@ -7725,7 +7725,7 @@
 !
 !     The row number must be valid, or we can't proceed.
 !
-      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
+      if (  ( row < 1 ) .or. ( row > unrows )  ) then
 
          call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
@@ -7740,7 +7740,7 @@
 !
 !     The element index must be positive.
 !
-      if (  elment .lt. 1 ) then
+      if (  elment < 1 ) then
          call setmsg ( 'ELMENT must be positive but was #.' )
          call errint ( '#',  elment                         )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
@@ -7751,7 +7751,7 @@
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+      if (  ( selidx < 1 ) .or. ( selidx > nsel )  ) then
          call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
          call errint ( '#', selidx                                )
@@ -7773,8 +7773,8 @@
 !
 !     Make sure the column has double precision or `time' type.
 !
-      if (       ( cttyps(colptr) .ne. dp   ) &
-           .and. ( cttyps(colptr) .ne. time )  ) then
+      if (       ( cttyps(colptr) /= dp   ) &
+           .and. ( cttyps(colptr) /= time )  ) then
 
          call setmsg ( 'Column # has data type #.'    )
          call errch  ( '#', ctnams( colptr )          )
@@ -8523,7 +8523,7 @@
 !     There nothing to fetch if no files are loaded.  A sure
 !     symptom of this problem is that the file list is empty.
 !
-      if ( fthead .le. 0 ) then
+      if ( fthead <= 0 ) then
          call setmsg ( 'No E-kernels are currently loaded.' )
          call sigerr ( 'SPICE(NOLOADEDFILES)'               )
          call chkout ( 'EKGI'                               )
@@ -8533,7 +8533,7 @@
 !
 !     The row number must be valid, or we can't proceed.
 !
-      if (  ( row .lt. 1 ) .or. ( row .gt. unrows )  ) then
+      if (  ( row < 1 ) .or. ( row > unrows )  ) then
 
          call setmsg ( 'Row indices for query result range from 1 to '// &
                        '#; requested row index was #.'                 )
@@ -8548,7 +8548,7 @@
 !
 !     The element index must be positive.
 !
-      if (  elment .lt. 1 ) then
+      if (  elment < 1 ) then
          call setmsg ( 'ELMENT must be positive but was #.' )
          call errint ( '#',  elment                         )
          call sigerr ( 'SPICE(INVALIDINDEX)'                )
@@ -8559,7 +8559,7 @@
 !
 !     Make sure the SELECT clause column index is valid.
 !
-      if (  ( selidx .lt. 1 ) .or. ( selidx .gt. nsel )  ) then
+      if (  ( selidx < 1 ) .or. ( selidx > nsel )  ) then
          call setmsg ( 'The SELECT column index # is out of the ' // &
                        'valid range 1:#'                          )
          call errint ( '#', selidx                                )
@@ -8581,7 +8581,7 @@
 !
 !     Make sure the column has integer type.
 !
-      if ( cttyps(colptr) .ne. int ) then
+      if ( cttyps(colptr) /= int ) then
 
          call setmsg ( 'Column # has data type #.'    )
          call errch  ( '#', ctnams( colptr )          )

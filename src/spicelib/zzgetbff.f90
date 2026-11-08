@@ -188,8 +188,8 @@
 
       do i = 1, numbff
 
-         if ( ( iequiv(1) .eq. int1st(i) ) .and. &
-              ( iequiv(2) .eq. int2nd(i) )       ) then
+         if ( ( iequiv(1) == int1st(i) ) .and. &
+              ( iequiv(2) == int2nd(i) )       ) then
 
             bffid = i
 

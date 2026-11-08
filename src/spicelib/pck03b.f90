@@ -25,9 +25,9 @@
       include 'sgparam.inc'
 
       integer(ip)           handle
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           body
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
       integer(ip)           chbdeg
@@ -404,7 +404,7 @@
 !     First, check the degree of the polynomial to be sure that it is
 !     not negative.
 !
-      if ( chbdeg .lt. 0 ) then
+      if ( chbdeg < 0 ) then
 
          call setmsg ( 'The degree of the Chebyshev Polynomial'  // &
                        ' was negative, #. The degree of the'     // &

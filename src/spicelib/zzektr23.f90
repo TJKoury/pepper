@@ -303,7 +303,7 @@
 !
       root  =  tree
 
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
          keybas  =  trkeyr
          datbas  =  trdatr
          kidbas  =  trkidr
@@ -320,7 +320,7 @@
       lsib  =  ppage ( kidbas+pkidx   )
       rsib  =  ppage ( kidbas+pkidx+1 )
 
-      if (  ( lsib .ne. left ) .or. ( rsib .ne. right )  ) then
+      if (  ( lsib /= left ) .or. ( rsib /= right )  ) then
 
          call chkin  ( 'ZZEKTR23'                               )
          call setmsg ( 'LEFT, RIGHT, PARENT, and PKIDX are '   // &
@@ -347,7 +347,7 @@
 !     The sum of the number of keys in the two input nodes must
 !     sum exactly to the value representing an overflow level of 1 key.
 !
-      if (  sum  .ne.  ( 2*mxkeyc + 1 )  ) then
+      if (  sum  /=  ( 2*mxkeyc + 1 )  ) then
 
          call chkin  ( 'ZZEKTR23'                                    )
          call setmsg ( 'Number of keys in LEFT = #; number of keys '// &
@@ -396,7 +396,7 @@
 !     need this shortly.  The size of this tree is one less than the
 !     difference of the parent key and its predecessor, if any.
 !
-      if ( pkidx .eq. 1 ) then
+      if ( pkidx == 1 ) then
          ltrsiz  =  ppage ( keybas + 1 ) -  1
       else
          ltrsiz  =  ppage(keybas+pkidx)  -  ppage(keybas+pkidx-1)  -  1
@@ -462,7 +462,7 @@
 !
 !     Get the number of keys in the parent.
 !
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
          npkeys = ppage ( trnkr )
       else
          npkeys = ppage ( trnkc )
@@ -496,7 +496,7 @@
 !     headed by the left child.  That size is one less than
 !     LDELTA, since LDELTA includes the key at location LSIZE+1.
 !
-      if ( pkidx .eq. 1 ) then
+      if ( pkidx == 1 ) then
          ppage ( keybas+pkidx ) =  ldelta
       else
          ppage ( keybas+pkidx ) =  ppage ( keybas+pkidx-1 ) + ldelta
@@ -529,15 +529,15 @@
 !     updating the key count.  At this point, we can set the overflow
 !     flag, depending on the status of the parent.
 !
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
 
          ppage ( trnkr )  =  ppage ( trnkr ) + 1
-         overfl           =  ppage ( trnkr )   .eq.   mxkeyr + 1
+         overfl           =  ppage ( trnkr )   ==   mxkeyr + 1
 
       else
 
          ppage ( trnkc )  =  ppage ( trnkc ) + 1
-         overfl           =  ppage ( trnkc )   .eq.   mxkeyc + 1
+         overfl           =  ppage ( trnkc )   ==   mxkeyc + 1
 
       end if
 
@@ -597,7 +597,7 @@
 !     The last change we must make is to update the node count in
 !     the root.
 !
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
 
          ppage ( trnnod ) =  ppage ( trnnod ) + 1
 

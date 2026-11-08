@@ -29,7 +29,7 @@
 
       real(wp)              wndw1 ( lbcell : * )
       real(wp)              wndw2 ( lbcell : * )
-      character*(*)         inclsn
+      character(*)          inclsn
       real(wp)              wndw3 ( lbcell : * )
 
 ! $ Brief_I/O
@@ -161,7 +161,7 @@
 !
 !     Local Variables
 !
-      character*(inclen)    locinc
+      character(inclen)     locinc
 
       integer(ip)           begp1
       integer(ip)           begp2
@@ -217,10 +217,10 @@
 
       call cmprss ( ' ', 0, inclsn, locinc )
 
-      open   = locinc .eq. '()'
-      left   = locinc .eq. '[)'
-      right  = locinc .eq. '(]'
-      closed = locinc .eq. '[]'
+      open   = locinc == '()'
+      left   = locinc == '[)'
+      right  = locinc == '(]'
+      closed = locinc == '[]'
 
       if ( .not. (     open &
                   .or. left &
@@ -243,13 +243,13 @@
 !
       ovflow    = 0
 
-      do while (       ( begp1 .lt. size1 ) &
-                 .and. ( begp2 .lt. size2 ) )
+      do while (       ( begp1 < size1 ) &
+                 .and. ( begp2 < size2 ) )
 !
 !        Using the current interval endpoints determine the overlap of
 !        the two intervals.
 !
-         if      ( wndw1(endp1) .lt. wndw2(begp2)  ) then
+         if      ( wndw1(endp1) < wndw2(begp2)  ) then
 !
 !           the end of the first interval precedes the beginning of the
 !           second
@@ -257,7 +257,7 @@
             begp1    = begp1    + 2
             endp1    = endp1    + 2
 
-         else if ( wndw2(endp2) .lt. wndw1(begp1) ) then
+         else if ( wndw2(endp2) < wndw1(begp1) ) then
 !
 !           the end of the second interval precedes the beginning of the
 !           first
@@ -272,23 +272,23 @@
 !
             if      ( closed ) then
 
-               keep =       ( wndw1(begp1) .ge. wndw2(begp2) ) &
-                      .and. ( wndw1(endp1) .le. wndw2(endp2) )
+               keep =       ( wndw1(begp1) >= wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) <= wndw2(endp2) )
 
             else if ( open   ) then
 
-               keep =       ( wndw1(begp1) .gt. wndw2(begp2) ) &
-                      .and. ( wndw1(endp1) .lt. wndw2(endp2) )
+               keep =       ( wndw1(begp1) > wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) < wndw2(endp2) )
 
             else if ( left   ) then
 
-               keep =       ( wndw1(begp1) .ge. wndw2(begp2) ) &
-                      .and. ( wndw1(endp1) .lt. wndw2(endp2) )
+               keep =       ( wndw1(begp1) >= wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) < wndw2(endp2) )
 
             else if ( right ) then
 
-               keep =       ( wndw1(begp1) .gt. wndw2(begp2) ) &
-                      .and. ( wndw1(endp1) .le. wndw2(endp2) )
+               keep =       ( wndw1(begp1) > wndw2(begp2) ) &
+                      .and. ( wndw1(endp1) <= wndw2(endp2) )
 
             end if
 
@@ -297,7 +297,7 @@
                begp3 = begp3    + 2
                endp3 = endp3    + 2
 
-               if ( begp3 .lt. maxpts ) then
+               if ( begp3 < maxpts ) then
 
 !
 !                 Adequate room is left in WNDW3 to include this
@@ -317,14 +317,14 @@
 !
 !           Determine which window pointers to increment
 !
-            if      (  wndw1(endp1) .lt. wndw2(endp2)  ) then
+            if      (  wndw1(endp1) < wndw2(endp2)  ) then
 !
 !              The first interval lies before the end of the second
 !
                begp1    = begp1    + 2
                endp1    = endp1    + 2
 
-            else if ( wndw2(endp2) .lt. wndw1(endp1) ) then
+            else if ( wndw2(endp2) < wndw1(endp1) ) then
 !
 !              The second interval lies before the end of the first
 !
@@ -347,7 +347,7 @@
 
       end do
 
-      if ( ovflow .gt. 0 ) then
+      if ( ovflow > 0 ) then
 
          call setmsg ( 'The output window does not have ' &
          //            'sufficient memory to contain the result ' &

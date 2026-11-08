@@ -24,7 +24,7 @@
 
       include 'errhnd.inc'
 
-      character*(*)          msg
+      character(*)           msg
 
 ! $ Brief_I/O
 !
@@ -140,7 +140,7 @@
 !
 !     The current short error message:
 !
-      character*(smsgln)    savmsg
+      character(smsgln)     savmsg
 
       save                  savmsg
 

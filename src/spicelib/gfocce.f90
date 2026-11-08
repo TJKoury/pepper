@@ -40,15 +40,15 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         occtyp
-      character*(*)         front
-      character*(*)         fshape
-      character*(*)         fframe
-      character*(*)         back
-      character*(*)         bshape
-      character*(*)         bframe
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          occtyp
+      character(*)          front
+      character(*)          fshape
+      character(*)          fframe
+      character(*)          back
+      character(*)          bshape
+      character(*)          bframe
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              tol
       external              udstep
       external              udrefn
@@ -1228,8 +1228,8 @@
 !
 !     Local variables
 !
-      character*(mthlen)    lbshap
-      character*(mthlen)    lfshap
+      character(mthlen)     lbshap
+      character(mthlen)     lfshap
 
       real(wp)              finish
       real(wp)              start
@@ -1250,7 +1250,7 @@
 !
 !     Check the result window's size.
 !
-      if ( sized(result) .lt. 2 ) then
+      if ( sized(result) < 2 ) then
 
          call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
@@ -1269,7 +1269,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.0_wp ) then
+      if ( tol <= 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
@@ -1294,8 +1294,8 @@
 !
 
 
-      if (      ( lfshap .eq. ptshap ) &
-          .and. ( lbshap .eq. ptshap )  ) then
+      if (      ( lfshap == ptshap ) &
+          .and. ( lbshap == ptshap )  ) then
 
          call setmsg ( 'The front and back target shape ' &
          //            'specifications are both PTSHAP; ' &

@@ -23,7 +23,7 @@
       integer(ip)           unit
       integer(ip)           maxlin
       integer(ip)           numlin
-      character*(*)         array(*)
+      character(*)          array(*)
       logical               eof
 
 ! $ Brief_I/O
@@ -267,7 +267,7 @@
 !
 !     Check to see if the maximum number of lines is positive.
 !
-      if ( maxlin .le. 0 ) then
+      if ( maxlin <= 0 ) then
 
          call setmsg ( 'The maximum number of lines for the output' // &
                        ' line array was not positive. It was: #.'    )
@@ -286,7 +286,7 @@
       numlin = 0
       i      = 1
 
-      do while ( ( i .le. maxlin ) .and. ( .not. myeof ) )
+      do while ( ( i <= maxlin ) .and. ( .not. myeof ) )
 
          call readln( unit, array(i), myeof )
 

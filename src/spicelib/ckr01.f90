@@ -459,7 +459,7 @@
 !
 !     Check to make sure that the segment is type 1.
 !
-      if ( icd( 3 ) .ne. dtype ) then
+      if ( icd( 3 ) /= dtype ) then
 
          call setmsg ( 'The segment is not a type 1 segment.  ' // &
                        'Type is #'                                 )
@@ -477,7 +477,7 @@
 !     This is a convenient place to check if the need for angular
 !     velocity data matches the availability.
 !
-      if ( icd( 4 ) .eq. 1 ) then
+      if ( icd( 4 ) == 1 ) then
 
          psiz = qavsiz
 
@@ -520,7 +520,7 @@
 !
 !     There is only one group if there are no directory epochs.
 !
-      if ( ndir .eq. 0 ) then
+      if ( ndir == 0 ) then
          group = 1
 
       else
@@ -563,11 +563,11 @@
 !
             i = lstled( sclkdp, n, buffer )
 
-            if ( i .lt. n ) then
+            if ( i < n ) then
                group =  group + i + 1
                fnd   = .true.
 
-            else if ( remain .eq. 0 ) then
+            else if ( remain == 0 ) then
                group =  ndir + 1
                fnd   = .true.
 
@@ -611,7 +611,7 @@
 !
       i = lstcld( sclkdp, n, buffer )
 
-      if ( abs( sclkdp - buffer( i ) ) .gt. tol ) then
+      if ( abs( sclkdp - buffer( i ) ) > tol ) then
 
          call chkout ( 'CKR01' )
          return

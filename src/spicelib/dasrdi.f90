@@ -335,7 +335,7 @@
 !
 !     Read from as many additional records as necessary.
 !
-      do while ( nread .lt. numint )
+      do while ( nread < numint )
 
          if ( failed() ) then
             return
@@ -347,7 +347,7 @@
 !        of the first record of the cluster we're about
 !        to read from.
 !
-         if (  recno  .lt.  ( clbase + clsize )  ) then
+         if (  recno  <  ( clbase + clsize )  ) then
 !
 !           We can continue reading from the current
 !           cluster.

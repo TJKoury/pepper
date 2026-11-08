@@ -358,7 +358,7 @@
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 
-      if ( icd( 3 ) .ne. dtype ) then
+      if ( icd( 3 ) /= dtype ) then
 
          call setmsg ( 'Data type of the segment should be 5: Passed '// &
                        'descriptor shows type = #.'                    )
@@ -388,19 +388,19 @@
 
       subtyp = nint( record(2) )
 
-      if ( subtyp .eq. c05tp0 ) then
+      if ( subtyp == c05tp0 ) then
 
          packsz = c05ps0
 
-      else if ( subtyp .eq. c05tp1 ) then
+      else if ( subtyp == c05tp1 ) then
 
          packsz = c05ps1
 
-      else if ( subtyp .eq. c05tp2 ) then
+      else if ( subtyp == c05tp2 ) then
 
          packsz = c05ps2
 
-      else if ( subtyp .eq. c05tp3 ) then
+      else if ( subtyp == c05tp3 ) then
 
          packsz = c05ps3
 
@@ -429,7 +429,7 @@
 !     If a request was made for a record which doesn't exist, then
 !     signal an error and leave.
 !
-      if ( ( recno .lt. 1 ) .or. ( recno .gt. nrec ) ) then
+      if ( ( recno < 1 ) .or. ( recno > nrec ) ) then
          call setmsg ( 'Requested record number (#) does not exist. ' // &
                        'There are # records in the segment.'           )
          call errint ( '#', recno                                      )

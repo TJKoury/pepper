@@ -27,9 +27,9 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           nth
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       integer(ip)           tabval     ( lbcell:* )
       integer(ip)           value
@@ -210,14 +210,14 @@
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      if ( locsym .eq. 0 ) then
+      if ( locsym == 0 ) then
 
          found = .false.
 
 !
 !     If the value of NTH is out of range, that's a problem too.
 !
-      else if ( nth .lt. 1  .or.  nth .gt. tabptr(locsym) ) then
+      else if ( nth < 1  .or.  nth > tabptr(locsym) ) then
 
          found = .false.
 

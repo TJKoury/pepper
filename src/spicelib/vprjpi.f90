@@ -382,13 +382,13 @@
 !     the computation using NUMER causes underflow to be signaled
 !     on some systems.
 !
-      if ( abs(numer) .lt. 1.0_wp ) then
+      if ( abs(numer) < 1.0_wp ) then
          limit  =           bound / dpmax()
       else
          limit  =  abs (  ( bound / dpmax() ) * numer  )
       end if
 
-      if (  abs (denom) .gt. limit  ) then
+      if (  abs (denom) > limit  ) then
 !
 !        We can find VOUT after all.
 !

@@ -474,9 +474,9 @@
 !
 !     Save the curve type.
 !
-      if (       ( curve .ne. lmbcrv ) &
-          .and.  ( curve .ne. umbral ) &
-          .and.  ( curve .ne. pnmbrl )  ) then
+      if (       ( curve /= lmbcrv ) &
+          .and.  ( curve /= umbral ) &
+          .and.  ( curve /= pnmbrl )  ) then
 
          call setmsg ( 'Curve type code # was not recognized.' )
          call errint ( '#', curve                              )
@@ -491,9 +491,9 @@
 !
 !     Save the illumination source radius.
 !
-      if (  ( curve .eq. umbral ) .or. ( curve .eq. pnmbrl )  ) then
+      if (  ( curve == umbral ) .or. ( curve == pnmbrl )  ) then
 
-         if ( srcrad .le. 0.0_wp ) then
+         if ( srcrad <= 0.0_wp ) then
 
             call setmsg ( 'The source radius was #. The radius ' &
             //            'must be positive for a terminator ' &
@@ -546,13 +546,13 @@
 !     Prepare the DSK SINCPT utilities for a computation with
 !     the input surface set.
 !
-      if ( shape .eq. ellshp ) then
+      if ( shape == ellshp ) then
 !
 !        This is the ellipsoid case.
 !
          call zzsuelin ( trgcde )
 
-      else if ( shape .eq. dskshp ) then
+      else if ( shape == dskshp ) then
 !
 !        This is the DSK case.
 !
@@ -743,7 +743,7 @@
       call chkin ( 'ZZTANSTA' )
 
 
-      if ( svcurv .eq. lmbcrv ) then
+      if ( svcurv == lmbcrv ) then
 !
 !        This is the limb case.
 !
@@ -754,7 +754,7 @@
          call zzraysfx ( svvrtx, raydir, svet, point, ocultd )
 
 
-      else if ( svcurv .eq. umbral ) then
+      else if ( svcurv == umbral ) then
 !
 !        This is the umbral terminator case.
 !
@@ -777,7 +777,7 @@
          call zzraysfx ( apex, raydir, svet, point, ocultd )
 
 
-      else if ( svcurv .eq. pnmbrl ) then
+      else if ( svcurv == pnmbrl ) then
 !
 !        This is the penumbral terminator case.
 !

@@ -98,7 +98,7 @@
 !
 !     Check divisor.
 !
-      if ( m .le. 0 ) then
+      if ( m <= 0 ) then
 
          zzhashi = 0
 

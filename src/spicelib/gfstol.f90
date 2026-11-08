@@ -328,7 +328,7 @@
 !     Check tolerance value.
 !
 
-      if ( value .le. 0.0_wp ) then
+      if ( value <= 0.0_wp ) then
 
          call chkin  ( 'GFSTOL'                              )
          call setmsg ( 'Convergence tolerance must be ' &

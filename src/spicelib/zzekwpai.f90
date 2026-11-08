@@ -169,7 +169,7 @@
          to       =  to + 1
 
 
-         if (  ( to .gt. ipsize ) .or. ( from .eq. nvals )  ) then
+         if (  ( to > ipsize ) .or. ( from == nvals )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the

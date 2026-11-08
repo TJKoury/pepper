@@ -142,7 +142,7 @@
 
       do i = 1, 3
 
-         if ( nvox(i) .lt. 1 ) then
+         if ( nvox(i) < 1 ) then
 
             call chkin  ( 'ZZVOXCVO' )
 
@@ -163,7 +163,7 @@
 
       do i = 1, 3
 
-         if ( ( vixyz(i) .lt. 1 ) .or. ( vixyz(i) .gt. nvox(i) ) ) then
+         if ( ( vixyz(i) < 1 ) .or. ( vixyz(i) > nvox(i) ) ) then
 
             call chkin  ( 'ZZVOXCVO' )
 
@@ -186,7 +186,7 @@
       end do
 
 
-      if ( cgrscl .lt. 1 ) then
+      if ( cgrscl < 1 ) then
 
          call chkin  ( 'ZZVOXCVO' )
 

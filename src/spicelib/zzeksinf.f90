@@ -27,9 +27,9 @@
 
       integer(ip)           handle
       integer(ip)           segno
-      character*(*)         tabnam
+      character(*)          tabnam
       integer(ip)           segdsc ( sdscsz    )
-      character*(*)         cnames (         * )
+      character(*)          cnames (         * )
       integer(ip)           cdscrs ( cdscsz, * )
 
 ! $ Brief_I/O
@@ -286,7 +286,7 @@
 !
       nseg = eknseg ( handle )
 
-      if (  ( segno .lt. 1 ) .or. ( segno .gt. nseg )  ) then
+      if (  ( segno < 1 ) .or. ( segno > nseg )  ) then
 
          call setmsg ( 'Segment index was #; valid range is 1:#' )
          call errint ( '#',  segno                               )
@@ -316,7 +316,7 @@
                     tabnam                   )
 
 
-      if (  len( tabnam )  .gt.  tnamsz  ) then
+      if (  len( tabnam )  >  tnamsz  ) then
          tabnam (tnamsz+1:) = ' '
       end if
 
@@ -346,7 +346,7 @@
                     cnames  )
 
 
-      if (   len( cnames(1) )  .gt.  cnamsz  ) then
+      if (   len( cnames(1) )  >  cnamsz  ) then
 
          do i = 1, ncols
             cnames(i)(cnamsz+1:) = ' '

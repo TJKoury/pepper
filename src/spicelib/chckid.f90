@@ -21,9 +21,9 @@
 
       implicit none
 
-      character*(*)         class
+      character(*)          class
       integer(ip)           maxlen
-      character*(*)         id
+      character(*)          id
 
 ! $ Brief_I/O
 !
@@ -190,7 +190,7 @@
 !
       i  =  frstnp( class )
 
-      if ( i .gt. 0 ) then
+      if ( i > 0 ) then
 
          chrcod = ichar( class(i:i) )
 
@@ -209,7 +209,7 @@
 !
 !     MAXLEN must be a sensible value.
 !
-      if ( maxlen .lt. 1 ) then
+      if ( maxlen < 1 ) then
 
          call setmsg ( 'Non-blank length limit MAXLEN should be '  // &
                        'positive but was #.'                        )
@@ -226,13 +226,13 @@
 !
 !     The ID must not be too long.
 !
-      if ( l .gt. maxlen ) then
+      if ( l > maxlen ) then
 
          call setmsg ( 'The # ''#'' is invalid; the last non-blank '// &
                        'character is located at position #; the '   // &
                        'maximum allowed length is #.'               )
 
-         if ( class .ne. ' ' ) then
+         if ( class /= ' ' ) then
             call errch ( '#', class )
          else
             call errch ( '#', 'ID' )
@@ -252,7 +252,7 @@
 !
       i  = frstnp ( id )
 
-      if ( i .gt. 0 ) then
+      if ( i > 0 ) then
 
          chrcod = ichar( id(i:i) )
 
@@ -260,7 +260,7 @@
                        'contains a non-printing character '   // &
                        '(ICHAR = #) at position #.'            )
 
-         if ( class .ne. ' ' ) then
+         if ( class /= ' ' ) then
             call errch ( '#', class )
          else
             call errch ( '#', 'ID' )

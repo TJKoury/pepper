@@ -213,7 +213,7 @@
       addr   = baddr + ( first - 1 )*recsiz
       move   = min( 50, remain )
 
-      do while ( remain .gt. 0 )
+      do while ( remain > 0 )
 
          call dafgda ( handle, addr, addr + move - 1, data )
          call dafada ( data, move )

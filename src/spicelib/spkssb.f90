@@ -22,7 +22,7 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
+      character(*)          ref
       real(wp)              starg    ( 6 )
 
 ! $ Brief_I/O

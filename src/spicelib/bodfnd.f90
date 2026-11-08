@@ -23,7 +23,7 @@
       implicit none
 
       integer(ip)           body
-      character*(*)         item
+      character(*)          item
 
 ! $ Brief_I/O
 !
@@ -161,9 +161,9 @@
 !
 !     Local variables
 !
-      character*(1)         dtype
-      character*(numlen)    code
-      character*(vnmlen)    varnam
+      character(1)          dtype
+      character(numlen)     code
+      character(vnmlen)     varnam
 
       integer(ip)           n
 

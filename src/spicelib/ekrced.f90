@@ -30,7 +30,7 @@
       integer(ip)           handle
       integer(ip)           segno
       integer(ip)           recno
-      character*(*)         column
+      character(*)          column
       integer(ip)           nvals
       real(wp)              dvals  ( * )
       logical               isnull
@@ -230,7 +230,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
+      if ( ( dtype /= dp ) .and. ( dtype /= time )  ) then
 
          call chkin  ( 'EKRCED'                                        )
          call setmsg ( 'Column # is of type #; EKRCED only works '    // &
@@ -254,7 +254,7 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 2 ) then
+      if ( class == 2 ) then
 !
 !        Look up the record pointer for the target record.
 !
@@ -264,7 +264,7 @@
          nvals  =  1
 
 
-      else if ( class .eq. 5 ) then
+      else if ( class == 5 ) then
 
          call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
 
@@ -274,7 +274,7 @@
                           1,       nvals,   dvals,   isnull,  found  )
 
 
-      else if ( class .eq. 8 ) then
+      else if ( class == 8 ) then
 !
 !        Records in class 8 columns are identified by a record number
 !        rather than a pointer.

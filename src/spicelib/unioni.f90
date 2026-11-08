@@ -205,40 +205,40 @@
 !
 !     When the ends of both input sets are reached, we're done.
 !
-      do while ( apoint .le. acard .or. bpoint .le. bcard )
+      do while ( apoint <= acard .or. bpoint <= bcard )
 
 !
 !        If there is still space in the output set, fill it
 !        as necessary.
 !
-         if ( ccard .lt. csize ) then
+         if ( ccard < csize ) then
 
-            if ( apoint .gt. acard ) then
+            if ( apoint > acard ) then
 
                ccard    = ccard + 1
                c(ccard) = b(bpoint)
                bpoint   = bpoint + 1
 
-            else if ( bpoint .gt. bcard ) then
+            else if ( bpoint > bcard ) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
                apoint   = apoint + 1
 
-            else if ( a(apoint) .eq. b(bpoint) ) then
+            else if ( a(apoint) == b(bpoint) ) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
                apoint   = apoint + 1
                bpoint   = bpoint + 1
 
-            else if ( a(apoint) .lt. b(bpoint) ) then
+            else if ( a(apoint) < b(bpoint) ) then
 
                ccard    = ccard + 1
                c(ccard) = a(apoint)
                apoint   = apoint + 1
 
-            else if ( a(apoint) .gt. b(bpoint) ) then
+            else if ( a(apoint) > b(bpoint) ) then
 
                ccard    = ccard + 1
                c(ccard) = b(bpoint)
@@ -252,28 +252,28 @@
 !
          else
 
-            if ( apoint .gt. acard ) then
+            if ( apoint > acard ) then
 
                over   = over   + 1
                bpoint = bpoint + 1
 
-            else if ( bpoint .gt. bcard ) then
+            else if ( bpoint > bcard ) then
 
                over   = over   + 1
                apoint = apoint + 1
 
-            else if ( a(apoint) .eq. b(bpoint) ) then
+            else if ( a(apoint) == b(bpoint) ) then
 
                over   = over   + 1
                apoint = apoint + 1
                bpoint = bpoint + 1
 
-            else if ( a(apoint) .lt. b(bpoint) ) then
+            else if ( a(apoint) < b(bpoint) ) then
 
                over   = over   + 1
                apoint = apoint + 1
 
-            else if ( a(apoint) .gt. b(bpoint) ) then
+            else if ( a(apoint) > b(bpoint) ) then
 
                over   = over   + 1
                bpoint = bpoint + 1
@@ -292,7 +292,7 @@
 !
 !     Report any excess.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
          call excess ( over, 'set' )
          call sigerr ( 'SPICE(SETEXCESS)' )
       end if

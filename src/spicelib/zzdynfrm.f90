@@ -350,7 +350,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'ZZDYNFRM' )
 
 
@@ -363,44 +363,44 @@
 !
 !     Local variables
 !
-      character*(corlen)    abcorr
-      character*(1)         axes   ( 3 )
-      character*(kvlen)     axname
-      character*(frnmln)    basnam
-      character*(frnmln)    cfrmnm
-      character*(bdnmln)    ctrnam
-      character*(corlen)    cvcorr
-      character*(kvlen)     dynstl
-      character*(kvlen)     dynfam
-      character*(frnmln)    fframs ( mxnfac )
-      character*(frnmln)    inname
-      character*(kvnmln)    itmabc ( 2 )
-      character*(kvnmln)    itmaxe ( 2 )
-      character*(kvnmln)    itmcof ( 3 )
-      character*(kvnmln)    itmdec ( 2 )
-      character*(kvnmln)    itmfrm ( 2 )
-      character*(kvnmln)    itmlat ( 2 )
-      character*(kvnmln)    itmlon ( 2 )
-      character*(kvnmln)    itmobs ( 2 )
-      character*(kvnmln)    itmra  ( 2 )
-      character*(kvnmln)    itmsep
-      character*(kvnmln)    itmspc ( 2 )
-      character*(kvnmln)    itmtrg ( 2 )
-      character*(kvnmln)    itmunt ( 2 )
-      character*(kvnmln)    itmvdf ( 2 )
-      character*(kvnmln)    itmvec ( 2 )
-      character*(kvlen)     nutmod
-      character*(kvlen)     oblmod
-      character*(kvlen)     prcmod
-      character*(kvlen)     rotsta
-      character*(kvlen)     spec
-      character*(frnmln)    tframs ( mxnfac )
-      character*(timlen)    timstr
-      character*(kvlen)     tmpfam
-      character*(kvlen)     units
-      character*(kvlen)     vecdef ( 2 )
-      character*(frnmln)    velfrm
-      character*(vnamln)    vname  ( 2 )
+      character(corlen)     abcorr
+      character(1)          axes   ( 3 )
+      character(kvlen)      axname
+      character(frnmln)     basnam
+      character(frnmln)     cfrmnm
+      character(bdnmln)     ctrnam
+      character(corlen)     cvcorr
+      character(kvlen)      dynstl
+      character(kvlen)      dynfam
+      character(frnmln)     fframs ( mxnfac )
+      character(frnmln)     inname
+      character(kvnmln)     itmabc ( 2 )
+      character(kvnmln)     itmaxe ( 2 )
+      character(kvnmln)     itmcof ( 3 )
+      character(kvnmln)     itmdec ( 2 )
+      character(kvnmln)     itmfrm ( 2 )
+      character(kvnmln)     itmlat ( 2 )
+      character(kvnmln)     itmlon ( 2 )
+      character(kvnmln)     itmobs ( 2 )
+      character(kvnmln)     itmra  ( 2 )
+      character(kvnmln)     itmsep
+      character(kvnmln)     itmspc ( 2 )
+      character(kvnmln)     itmtrg ( 2 )
+      character(kvnmln)     itmunt ( 2 )
+      character(kvnmln)     itmvdf ( 2 )
+      character(kvnmln)     itmvec ( 2 )
+      character(kvlen)      nutmod
+      character(kvlen)      oblmod
+      character(kvlen)      prcmod
+      character(kvlen)      rotsta
+      character(kvlen)      spec
+      character(frnmln)     tframs ( mxnfac )
+      character(timlen)     timstr
+      character(kvlen)      tmpfam
+      character(kvlen)      units
+      character(kvlen)      vecdef ( 2 )
+      character(frnmln)     velfrm
+      character(vnamln)     vname  ( 2 )
 
       real(wp)              acc    ( 3 )
       real(wp)              angles ( 2 )
@@ -673,9 +673,9 @@
 !           TRUEEQ   True equator and equinox of date
 !           MEANEC   Mean ecliptic and equinox of date
 !
-         meaneq  =  dynfam .eq. kvmeqt
-         trueeq  =  dynfam .eq. kvteqt
-         meanec  =  dynfam .eq. kvmecl
+         meaneq  =  dynfam == kvmeqt
+         trueeq  =  dynfam == kvteqt
+         meanec  =  dynfam == kvmecl
 
          ofdate  =  meaneq .or. meanec .or. trueeq
 
@@ -836,7 +836,7 @@
 !
 !              Make sure the center of the input frame is the earth.
 !
-               if ( center .ne. earth ) then
+               if ( center /= earth ) then
 
                   call bodc2n ( center, ctrnam, fnd )
 
@@ -916,7 +916,7 @@
 !
 !                 Make sure the center is the earth.
 !
-                  if ( center .ne. earth ) then
+                  if ( center /= earth ) then
 
                      call bodc2n ( center, ctrnam, fnd )
 
@@ -993,7 +993,7 @@
 !
 !                 Make sure the center is the earth.
 !
-                  if ( center .ne. earth ) then
+                  if ( center /= earth ) then
 
                      call bodc2n ( center, ctrnam, fnd )
 
@@ -1069,7 +1069,7 @@
 !           If the base frame is not J2000, we must find the
 !           transformation from J2000 to the base frame.
 !
-            if ( basfrm .ne. j2000 ) then
+            if ( basfrm /= j2000 ) then
 
                call zzfrmch0 ( j2000,  basfrm, t0,      xf2000 )
                call mxmg     ( xf2000, xftemp, 6, 6, 6, xform  )
@@ -1095,7 +1095,7 @@
 !           zero.
 !
 
-         else if ( dynfam .eq. kv2vec ) then
+         else if ( dynfam == kv2vec ) then
 !
 !           The frame belongs to the TWO-VECTOR family.
 !
@@ -1125,7 +1125,7 @@
 !
 !              Set the sign flag associated with the axis.
 !
-               negate  =  axname(1:1) .eq. '-'
+               negate  =  axname(1:1) == '-'
 
                call cmprss ( '-', 0, axname, axname )
                call cmprss ( '+', 0, axname, axname )
@@ -1133,7 +1133,7 @@
                axis(i) = isrchc ( axname, 3, axes )
 
 
-               if ( axis(i) .eq. 0 ) then
+               if ( axis(i) == 0 ) then
 
                   call setmsg ( 'Definition of frame # associates '   // &
                                 'vector # with axis #.  The only '    // &
@@ -1174,7 +1174,7 @@
                call ucase  ( vecdef(i),            vecdef(i) )
 
 
-               if (  vecdef(i) .eq. kvposv  ) then
+               if (  vecdef(i) == kvposv  ) then
 !
 !                 The vector is the position of a target relative
 !                 to an observer.
@@ -1204,7 +1204,7 @@
 !                 velocity relative to frame J2000.
 !
 
-               else if ( vecdef(i) .eq. kvvelv ) then
+               else if ( vecdef(i) == kvvelv ) then
 !
 !                 The vector is the velocity of a target relative
 !                 to an observer.
@@ -1320,7 +1320,7 @@
 !                    If the velocity frame is non-inertial, we'll need
 !                    to compute the evaluation epoch for this frame.
 !
-                     if ( frcls .ne. inertl ) then
+                     if ( frcls /= inertl ) then
 !
 !                       Obtain light time from the observer to the
 !                       frame's center; find the evaluation epoch VET
@@ -1348,7 +1348,7 @@
 !                 stages, first mapping velocity and acceleration into
 !                 the J2000 frame.
 !
-                  if ( frid .ne. j2000 ) then
+                  if ( frid /= j2000 ) then
 
                      call zzfrmch0 ( frid,    j2000,  vet,   xf2000  )
 
@@ -1367,7 +1367,7 @@
 !                 acceleration relative to frame J2000.
 !
 
-               else if ( vecdef(i) .eq. kvnear ) then
+               else if ( vecdef(i) == kvnear ) then
 !
 !                 The vector points from an observer to the
 !                 sub-observer point (nearest point to the observer) on
@@ -1518,7 +1518,7 @@
 !                 seen by the observer, relative to frame J2000.
 !
 
-               else if ( vecdef(i) .eq. kvcons ) then
+               else if ( vecdef(i) == kvcons ) then
 !
 !                 The vector is constant in a specified frame.
 !
@@ -1633,7 +1633,7 @@
 !                       we'll need to compute the evaluation epoch for
 !                       this frame.
 !
-                        if ( frcls .ne. inertl ) then
+                        if ( frcls /= inertl ) then
 !
 !                          Look up the observer associated with the
 !                          constant vector's frame.  This observer,
@@ -1715,7 +1715,7 @@
                   call ucase  ( spec,         spec )
 
 
-                  if ( spec .eq. kvrecc ) then
+                  if ( spec == kvrecc ) then
 !
 !                    The coordinate system is rectangular.
 !
@@ -1725,8 +1725,8 @@
                                      3,      n,      dirvec    )
 
 
-                  else if (      ( spec .eq. kvlatc ) &
-                            .or. ( spec .eq. kvradc ) ) then
+                  else if (      ( spec == kvlatc ) &
+                            .or. ( spec == kvradc ) ) then
 !
 !                    The coordinate system is latitudinal or RA/DEC.
 !
@@ -1736,7 +1736,7 @@
                                      1,       n,       units     )
 
 
-                     if ( spec .eq. kvlatc ) then
+                     if ( spec == kvlatc ) then
 !
 !                       Look up longitude and latitude.
 !
@@ -1811,7 +1811,7 @@
                   call vequ  ( dirvec, s2(1,i) )
                   call cleard( 3,      s2(4,i) )
 
-                  if ( frid .ne. j2000 ) then
+                  if ( frid /= j2000 ) then
 
                      call zzfrmch0 ( frid, j2000, fet, xipm )
 
@@ -1925,7 +1925,7 @@
 !
             sep = vsep ( s2(1,1), s2(1,2) )
 
-            if ( sin(sep) .lt. sin(minsep) ) then
+            if ( sin(sep) < sin(minsep) ) then
 
                call etcal  ( t0, timstr )
 
@@ -1966,7 +1966,7 @@
 !
             call zztwovxf ( s2(1,1), axis(1), s2(1,2), axis(2), xform )
 
-            if ( basfrm .ne. j2000 ) then
+            if ( basfrm /= j2000 ) then
 
                call moved ( xform, 36, xftemp )
 
@@ -1991,7 +1991,7 @@
 !           zero.
 !
 
-         else if ( dynfam .eq. kveulr ) then
+         else if ( dynfam == kveulr ) then
 !
 !           The frame belongs to the Euler family.
 !
@@ -2077,7 +2077,7 @@
 !           zero.
 !
 
-         else if ( dynfam .eq. kvprod ) then
+         else if ( dynfam == kvprod ) then
 !
 !           The frame belongs to the product family.
 !
@@ -2094,7 +2094,7 @@
                return
             end if
 
-            if ( n .ne. m ) then
+            if ( n /= m ) then
 
                call setmsg ( 'Definition of product ' &
                //            'parameterized dynamic frame # ' &
@@ -2200,7 +2200,7 @@
 !
          call irfnum ( basnam, j )
 
-         if ( j .gt. 0 ) then
+         if ( j > 0 ) then
 !
 !           The base frame is  a recognized inertial frame.  Zero
 !           out the derivative block.

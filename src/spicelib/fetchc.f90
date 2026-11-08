@@ -24,7 +24,7 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           nth
-      character*(*)         set      ( lbcell:* )
+      character(*)          set      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -187,7 +187,7 @@
 !
 !     Check to see if the N'TH element exists.
 !
-      if ( nth .lt. 1  .or.  nth .gt. cardc ( set ) ) then
+      if ( nth < 1  .or.  nth > cardc ( set ) ) then
          fetchc = 0
          call setmsg ( 'NTH element does not exist. NTH was *.' )
          call errint ( '*', nth              )

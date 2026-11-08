@@ -170,8 +170,8 @@
 !
 !     Local variables
 !
-      character*(errlen)    errmsg
-      character*(maxenc)    work(wrksiz)
+      character(errlen)     errmsg
+      character(maxenc)     work(wrksiz)
 
       integer(ip)           i
       integer(ip)           iostat
@@ -193,7 +193,7 @@
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call setmsg ( 'The number of data items to be read was' // &
                        ' not positive: #.'                        )
@@ -223,7 +223,7 @@
 !     in blocks of size NITMS. Each time the number of data items
 !     NITMS is reached, decode the encoded numbers into the data array.
 !
-      do while ( itmbeg .le. n )
+      do while ( itmbeg <= n )
 !
 !        The number of items is either the size of the workspace, or
 !        the number of data items which remain to be processed, which
@@ -240,7 +240,7 @@
 !        then signal an error. EOF is considered to be a read error,
 !        since we know exactly how many data items we expect to read.
 !
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Error reading from logical unit #,' // &
                           ' IOSTAT = #.'                        )

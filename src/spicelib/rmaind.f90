@@ -126,7 +126,7 @@
 !
 !     Take care of the zero-denominator case first
 !
-      if ( denom .eq. 0.0_wp ) then
+      if ( denom == 0.0_wp ) then
          call chkin  ( 'RMAIND'                                       )
          call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )
@@ -141,7 +141,7 @@
       q   = dint ( mynum / mydnom )
       rem = mynum -    q * mydnom
 
-      if ( rem .lt. 0.0_wp ) then
+      if ( rem < 0.0_wp ) then
          q   = q   - 1.0_wp
          rem = rem + mydnom
       end if

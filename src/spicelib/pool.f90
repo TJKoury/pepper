@@ -53,25 +53,25 @@
       parameter           ( lbpool = -5 )
 
 
-      character*(*)         fname
+      character(*)          fname
       integer(ip)           unit
-      character*(*)         name
-      character*(*)         names     ( * )
+      character(*)          name
+      character(*)          names     ( * )
       integer(ip)           nnames
-      character*(*)         agent
+      character(*)          agent
       integer(ip)           n
       real(wp)              values    ( * )
       logical               found
       logical               update
       integer(ip)           start
       integer(ip)           room
-      character*(*)         cvals     ( * )
+      character(*)          cvals     ( * )
       integer(ip)           ivals     ( * )
-      character*(*)         type
-      character*(*)         uwvars    ( lbcell : * )
+      character(*)          type
+      character(*)          uwvars    ( lbcell : * )
       integer(ip)           uwptrs    ( * )
       integer(ip)           uwpool    ( 2, lbcell : * )
-      character*(*)         uwagnt    ( * )
+      character(*)          uwagnt    ( * )
       integer(ip)           usrctr    ( ctrsiz )
 
 ! $ Brief_I/O
@@ -707,7 +707,7 @@
 !
 !     Local Parameters
 !
-      character*(1)         quote
+      character(1)          quote
       parameter           ( quote = '''' )
 
       integer(ip)           lnsize
@@ -740,8 +740,8 @@
 
 
 
-      character*(mrklen)    begdat
-      character*(mrklen)    begtxt
+      character(mrklen)     begdat
+      character(mrklen)     begtxt
 
 
 !
@@ -876,14 +876,14 @@
 !     +------------+         +------------+
 !
 !
-      character*(maxlen)    pnames   (           maxvar )
+      character(maxlen)     pnames   (           maxvar )
       integer(ip)           namlst   (           maxvar )
       integer(ip)           nmpool   ( 2, lbpool:maxvar )
       integer(ip)           datlst   (           maxvar )
 
       integer(ip)           chpool   ( 2, lbpool:maxlin )
       integer(ip)           dppool   ( 2, lbpool:maxval )
-      character*(maxchr)    chvals   (           maxlin )
+      character(maxchr)     chvals   (           maxlin )
       real(wp)              dpvals   (           maxval )
 
 !
@@ -909,9 +909,9 @@
 !     +--------+   +--------+   +---------+   +---------+
 !
 !
-      character*(maxlen)    wtvars   (    lbcell : maxvar )
+      character(maxlen)     wtvars   (    lbcell : maxvar )
       integer(ip)           wtpool   ( 2, lbpool : mxnote )
-      character*(maxlen)    wtagnt   ( mxnote )
+      character(maxlen)     wtagnt   ( mxnote )
       integer(ip)           wtptrs   ( maxvar )
 
 !
@@ -923,9 +923,9 @@
 !     they must be able to hold the largest possible number
 !     of agents that could be associated with a kernel variable.
 !
-      character*(maxlen)    active   ( lbcell:mxnote )
-      character*(maxlen)    agents   ( lbcell:mxnote )
-      character*(maxlen)    notify   ( lbcell:mxnote )
+      character(maxlen)     active   ( lbcell:mxnote )
+      character(maxlen)     agents   ( lbcell:mxnote )
+      character(maxlen)     notify   ( lbcell:mxnote )
 
 !
 !     First is our initialization flag.
@@ -940,10 +940,10 @@
 !
 !     The remaining local variables...
 !
-      character*(2)         finish
-      character*(lnsize)    cvalue
-      character*(lnsize)    line
-      character*(maxlen)    varnam
+      character(2)          finish
+      character(lnsize)     cvalue
+      character(lnsize)     line
+      character(maxlen)     varnam
 
       real(wp)              big
       real(wp)              dvalue
@@ -1005,7 +1005,7 @@
 !
 !     Set up the definition of our in-line functions.
 !
-      isquot(code) = code .eq. iquote
+      isquot(code) = code == iquote
 
 
 !
@@ -1851,7 +1851,7 @@
 !
       do while (  ( .not. eof ) .and. (.not. failed() )   )
 
-         if ( varnam .ne. ' ' ) then
+         if ( varnam /= ' ' ) then
 !
 !           See if this variable is being watched; if it is, add its
 !           associated agents to the list of AGENTS to be notified of a
@@ -2144,7 +2144,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          found = .false.
          call chkout ( 'RTPOOL' )
@@ -2157,13 +2157,13 @@
 !     to this node is the one we are looking for.
 !
       node   = namlst( lookat      )
-      succes = name .eq. pnames(node)
+      succes = name == pnames(node)
 
       do while ( .not. succes )
 
          node = nmpool ( next, node )
 
-         if ( node .lt. 0 ) then
+         if ( node < 0 ) then
 
             found = .false.
             call chkout ( 'RTPOOL' )
@@ -2171,7 +2171,7 @@
 
          end if
 
-         succes = name .eq. pnames(node)
+         succes = name == pnames(node)
 
       end do
 !
@@ -2184,7 +2184,7 @@
 !     is positive.  We use negative values to point to character
 !     values.
 !
-      if ( datlst(node) .le. 0 ) then
+      if ( datlst(node) <= 0 ) then
 
          found = .false.
 
@@ -2194,7 +2194,7 @@
          n     =  0
          node  =  datlst(node)
 
-         do while ( node .gt. 0 )
+         do while ( node > 0 )
             n         = n + 1
             values(n) = dpvals(     node)
             node      = dppool(next,node)
@@ -2560,7 +2560,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          found = .false.
          call chkout ( 'EXPOOL' )
@@ -2573,13 +2573,13 @@
 !     to this node is the one we are looking for.
 !
       node   = namlst ( lookat      )
-      succes = name .eq. pnames(node)
+      succes = name == pnames(node)
 
       do while ( .not. succes )
 
          node = nmpool ( next, node )
 
-         if ( node .lt. 0 ) then
+         if ( node < 0 ) then
 
             found = .false.
             call chkout ( 'EXPOOL' )
@@ -2587,7 +2587,7 @@
 
          end if
 
-         succes = name .eq. pnames(node)
+         succes = name == pnames(node)
 
       end do
 !
@@ -2598,7 +2598,7 @@
 !     However, recall that EXPOOL indicates the existence only of
 !     d.p. values.
 !
-      found = datlst(node) .gt. 0
+      found = datlst(node) > 0
 
       call chkout ( 'EXPOOL' )
       return
@@ -2917,7 +2917,7 @@
       write ( unit, '(1X,A)', iostat=iostat ) begdat
       write ( unit, '(1X,A)', iostat=iostat )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call ioerr ( 'writing a variable to the output ' &
          //           'kernel file ', &
                       ' ', &
@@ -2939,20 +2939,20 @@
 !
          nnode = namlst(k)
 
-         do while ( nnode .gt. 0 )
+         do while ( nnode > 0 )
 
             line   = pnames( nnode )
             datahd = datlst( nnode )
-            dp     = datahd .gt. 0
-            chr    = datahd .lt. 0
+            dp     = datahd > 0
+            chr    = datahd < 0
             dnode  = abs(datahd)
 !
 !           Determine whether or not this is a vector object.
 !
             if ( dp ) then
-               vector = dppool( next, dnode ) .gt. 0
+               vector = dppool( next, dnode ) > 0
             else if ( chr ) then
-               vector = chpool( next, dnode ) .gt. 0
+               vector = chpool( next, dnode ) > 0
             else
                call setmsg ( 'This error is never supposed to ' &
                //            'occur. No data was available for ' &
@@ -2977,7 +2977,7 @@
 !           Now fetch all of the data associated with this variable.
 !           We'll write them out one per line.
 !
-            do while ( dnode .gt. 0 )
+            do while ( dnode > 0 )
 !
 !              Get the next data value and the address of the next node.
 !
@@ -3013,7 +3013,7 @@
 !              We will need to properly finish off this write with
 !              either a comma, a blank or a right parenthesis.
 !
-               if ( dnode .gt. 0 ) then
+               if ( dnode > 0 ) then
                   finish = ', '
                else if ( vector ) then
                   finish = ' )'
@@ -3034,7 +3034,7 @@
 !
 !              Check the IOSTAT code.  After all, that's why it's there.
 !
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
                   call ioerr ( 'writing a variable to the output ' &
                   //           'kernel file ', &
                                 ' ', &
@@ -3071,7 +3071,7 @@
       write ( unit, '(1X,A)', iostat=iostat )
       write ( unit, '(1X,A)', iostat=iostat ) begtxt
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call ioerr ( 'writing a variable to the output ' &
          //           'kernel file ', &
                         ' ', &
@@ -3435,7 +3435,7 @@
       space = sizec(wtvars) - cardc(wtvars)
 
 
-      if ( need .gt. space ) then
+      if ( need > space ) then
 
          call setmsg ( 'The watched kernel variable name ' &
          //            'list WTVARS has room for # more ' &
@@ -3474,7 +3474,7 @@
          nfetch = cardc( active )
 
 
-         noagnt =       ( nfetch .eq.   0               ) &
+         noagnt =       ( nfetch ==   0               ) &
                    .or. ( .not.  elemc( agent, active ) )
 
          if ( noagnt ) then
@@ -3484,7 +3484,7 @@
 !           Check the number of agents already associated with the
 !           current kernel variable.
 !
-            if ( nfetch .eq. maxagt ) then
+            if ( nfetch == maxagt ) then
 
                call setmsg ( 'The list of agents to notify when # '   // &
                              'is updated is too big. The maximum '    // &
@@ -3507,7 +3507,7 @@
 !
       space = lnknfn( wtpool )
 
-      if ( need .gt. space ) then
+      if ( need > space ) then
 
          call setmsg ( 'The watched kernel variable agent ' &
          //            'list WTAGNT has room for # more ' &
@@ -3562,7 +3562,7 @@
 !        We'll just take them one at a time.
 !
 !
-         if ( nfetch .gt. 0 ) then
+         if ( nfetch > 0 ) then
 
             if (  .not.  elemc( agent, active )  ) then
 !
@@ -4295,7 +4295,7 @@
 !
 !     Perform the one obvious error check first.
 !
-      if ( room .lt. 1 ) then
+      if ( room < 1 ) then
 
          call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
@@ -4322,7 +4322,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          found = .false.
          call chkout ( 'GCPOOL' )
@@ -4335,13 +4335,13 @@
 !     to this node is the one we are looking for.
 !
       node   = namlst( lookat      )
-      succes = name .eq. pnames(node)
+      succes = name == pnames(node)
 
       do while ( .not. succes )
 
          node = nmpool ( next, node )
 
-         if ( node .lt. 0 ) then
+         if ( node < 0 ) then
 
             found = .false.
             call chkout ( 'GCPOOL' )
@@ -4349,7 +4349,7 @@
 
          end if
 
-         succes = name .eq. pnames(node)
+         succes = name == pnames(node)
 
       end do
 !
@@ -4359,14 +4359,14 @@
 !
       datahd = datlst(node)
 
-      if ( datahd .gt. 0 ) then
+      if ( datahd > 0 ) then
 
          n     =  0
          found = .false.
          call chkout ( 'GCPOOL' )
          return
 
-      else if ( datahd .eq. 0 ) then
+      else if ( datahd == 0 ) then
 
          call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
@@ -4387,15 +4387,15 @@
       begin =  max( start, 1 )
       node  =  -datahd
 
-      do while ( node .gt. 0  )
+      do while ( node > 0  )
 
          k = k + 1
 
-         if ( k .ge. begin ) then
+         if ( k >= begin ) then
             n        = n+1
             cvals(n) = chvals(     node)
 
-            if ( n .eq. room ) then
+            if ( n == room ) then
                call chkout ( 'GCPOOL' )
                return
             end if
@@ -4678,7 +4678,7 @@
 !
 !     Perform the one obvious error check first.
 !
-      if ( room .lt. 1 ) then
+      if ( room < 1 ) then
 
          call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
@@ -4704,7 +4704,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          found = .false.
          call chkout ( 'GDPOOL' )
@@ -4717,13 +4717,13 @@
 !     to this node is the one we are looking for.
 !
       node   = namlst( lookat      )
-      succes = name .eq. pnames(node)
+      succes = name == pnames(node)
 
       do while ( .not. succes )
 
          node = nmpool ( next, node )
 
-         if ( node .lt. 0 ) then
+         if ( node < 0 ) then
 
             found = .false.
             call chkout ( 'GDPOOL' )
@@ -4731,7 +4731,7 @@
 
          end if
 
-         succes = name .eq. pnames(node)
+         succes = name == pnames(node)
 
       end do
 !
@@ -4741,14 +4741,14 @@
 !
       datahd = datlst(node)
 
-      if ( datahd .lt. 0 ) then
+      if ( datahd < 0 ) then
 
          n     =  0
          found = .false.
          call chkout ( 'GDPOOL' )
          return
 
-      else if ( datahd .eq. 0 ) then
+      else if ( datahd == 0 ) then
 
          call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
@@ -4769,15 +4769,15 @@
       begin =  max( start, 1 )
       node  =  datahd
 
-      do while ( node .gt. 0  )
+      do while ( node > 0  )
 
          k = k + 1
 
-         if ( k .ge. begin ) then
+         if ( k >= begin ) then
             n = n+1
             values(n) = dpvals(     node)
 
-            if ( n .eq. room ) then
+            if ( n == room ) then
                call chkout ( 'GDPOOL' )
                return
             end if
@@ -5061,7 +5061,7 @@
 !
 !     Perform the one obvious error check first.
 !
-      if ( room .lt. 1 ) then
+      if ( room < 1 ) then
 
          call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
@@ -5087,7 +5087,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          found = .false.
          call chkout ( 'GIPOOL' )
@@ -5100,13 +5100,13 @@
 !     to this node is the one we are looking for.
 !
       node   = namlst( lookat      )
-      succes = name .eq. pnames(node)
+      succes = name == pnames(node)
 
       do while ( .not. succes )
 
          node = nmpool ( next, node )
 
-         if ( node .lt. 0 ) then
+         if ( node < 0 ) then
 
             found = .false.
             call chkout ( 'GIPOOL' )
@@ -5114,7 +5114,7 @@
 
          end if
 
-         succes = name .eq. pnames(node)
+         succes = name == pnames(node)
 
       end do
 !
@@ -5124,14 +5124,14 @@
 !
       datahd = datlst(node)
 
-      if ( datahd .lt. 0 ) then
+      if ( datahd < 0 ) then
 
          n     =  0
          found = .false.
          call chkout ( 'GIPOOL' )
          return
 
-      else if ( datahd .eq. 0 ) then
+      else if ( datahd == 0 ) then
 
          call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
@@ -5156,15 +5156,15 @@
       begin =  max( start, 1 )
       node  =  datahd
 
-      do while ( node .gt. 0  )
+      do while ( node > 0  )
 
          k = k + 1
 
-         if ( k .ge. begin ) then
+         if ( k >= begin ) then
             n = n+1
 
-            if (       dpvals(node) .ge. small &
-                 .and. dpvals(node) .le. big   ) then
+            if (       dpvals(node) >= small &
+                 .and. dpvals(node) <= big   ) then
 
                ivals(n) = idnint( dpvals( node) )
 
@@ -5185,7 +5185,7 @@
 
 
             end if
-            if ( n .eq. room ) then
+            if ( n == room ) then
                call chkout ( 'GIPOOL' )
                return
             end if
@@ -5489,7 +5489,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          call chkout ( 'DTPOOL' )
          return
@@ -5501,20 +5501,20 @@
 !     to this node is the one we are looking for.
 !
       node   = namlst( lookat      )
-      succes = name .eq. pnames(node)
+      succes = name == pnames(node)
 
       do while ( .not. succes )
 
          node = nmpool ( next, node )
 
-         if ( node .lt. 0 ) then
+         if ( node < 0 ) then
 
             call chkout ( 'DTPOOL' )
             return
 
          end if
 
-         succes = name .eq. pnames(node)
+         succes = name == pnames(node)
 
       end do
 !
@@ -5525,29 +5525,29 @@
 
       datahd = datlst(node)
 
-      if ( datahd .lt. 0 ) then
+      if ( datahd < 0 ) then
 
          type  = 'C'
          found = .true.
          node  = -datahd
 
-         do while ( node .gt. 0 )
+         do while ( node > 0 )
             n    = n + 1
             node = chpool(next,node)
          end do
 
-      else if ( datahd .gt. 0 ) then
+      else if ( datahd > 0 ) then
 
          type  = 'N'
          found = .true.
          node  =  datahd
 
-         do while ( node .gt. 0 )
+         do while ( node > 0 )
             n    = n + 1
             node = dppool(next,node)
          end do
 
-      else if ( datahd .eq. 0 ) then
+      else if ( datahd == 0 ) then
 
          call setmsg ( 'This is never supposed to happen.  The ' &
          //            'requested name, ''#'', was found in the ' &
@@ -5821,7 +5821,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
          return
       end if
 
@@ -5838,7 +5838,7 @@
 !
       varlen = len( name(1: lastnb(name) )  )
 
-      if ( varlen .gt. maxlen ) then
+      if ( varlen > maxlen ) then
 
          call setmsg ( 'The input kernel pool variable name ' &
          //            'exceeds the maximum allowed ' &
@@ -5905,7 +5905,7 @@
 !
          datahd         = datlst( nameat )
 
-         if ( datahd .gt. 0 ) then
+         if ( datahd > 0 ) then
 !
 !           No extra strings will be freed.  We have whatever
 !           free space is in the CHPOOL right now.
@@ -5918,7 +5918,7 @@
             tofree =   0
             node   = - datahd
 
-            do while ( node .gt. 0 )
+            do while ( node > 0 )
                tofree = tofree + 1
                node   = chpool(next,node)
             end do
@@ -5936,7 +5936,7 @@
 !     If the AVAIL for new data is less than the number of items
 !     to be added, we just bail out here.
 !
-      if ( avail .lt. n ) then
+      if ( avail < n ) then
 
          if ( .not. gotit ) then
 !
@@ -5979,7 +5979,7 @@
          datahd         = datlst( nameat )
          datlst(nameat) = 0
 
-         if ( datahd .gt. 0 ) then
+         if ( datahd > 0 ) then
 
 !
 !           This variable was character type we need to
@@ -6017,7 +6017,7 @@
 !
          free = lnknfn ( chpool )
 
-         if ( free .le. 0 ) then
+         if ( free <= 0 ) then
 
             call setmsg ( 'There is no room available for ' &
             //            'adding another character value ' &
@@ -6033,7 +6033,7 @@
 !
          call lnkan ( chpool, chnode )
 
-         if ( datlst(nameat) .eq. 0 ) then
+         if ( datlst(nameat) == 0 ) then
 
 !
 !           There was no data for this name yet.  We make
@@ -6340,7 +6340,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
          return
       end if
 
@@ -6357,7 +6357,7 @@
 !
       varlen = len( name(1: lastnb(name) )  )
 
-      if ( varlen .gt. maxlen ) then
+      if ( varlen > maxlen ) then
 
          call setmsg ( 'The input kernel pool variable name ' &
          //            'exceeds the maximum allowed ' &
@@ -6424,7 +6424,7 @@
 !
          datahd         = datlst( nameat )
 
-         if ( datahd .lt. 0 ) then
+         if ( datahd < 0 ) then
 !
 !           No extra d.p.s will be freed.  We have whatever
 !           free space is in the DPPOOL right now.
@@ -6437,7 +6437,7 @@
             tofree = 0
             node   =  datahd
 
-            do while ( node .gt. 0 )
+            do while ( node > 0 )
                tofree = tofree + 1
                node   = dppool(next,node)
             end do
@@ -6455,7 +6455,7 @@
 !     If the AVAIL for new data is less than the number of items
 !     to be added, we just bail out here.
 !
-      if ( avail .lt. n ) then
+      if ( avail < n ) then
 
          if ( .not. gotit ) then
 !
@@ -6498,7 +6498,7 @@
          datahd         = datlst( nameat )
          datlst(nameat) = 0
 
-         if ( datahd .lt. 0 ) then
+         if ( datahd < 0 ) then
 
 !
 !           This variable was character type we need to
@@ -6536,7 +6536,7 @@
 !
          free = lnknfn ( dppool )
 
-         if ( free .le. 0 ) then
+         if ( free <= 0 ) then
 !
 !           This branch of the code should never be exercised,
 !           but it doesn't hurt to program in a redundant check.
@@ -6558,7 +6558,7 @@
 !
          call lnkan ( dppool, dpnode )
 
-         if ( datlst(nameat) .eq. 0 ) then
+         if ( datlst(nameat) == 0 ) then
 
 !
 !           There was no data for this name yet.  We make
@@ -6858,7 +6858,7 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
          return
       end if
 
@@ -6875,7 +6875,7 @@
 !
       varlen = len( name(1: lastnb(name) )  )
 
-      if ( varlen .gt. maxlen ) then
+      if ( varlen > maxlen ) then
 
          call setmsg ( 'The input kernel pool variable name ' &
          //            'exceeds the maximum allowed ' &
@@ -6942,7 +6942,7 @@
 !
          datahd         = datlst( nameat )
 
-         if ( datahd .lt. 0 ) then
+         if ( datahd < 0 ) then
 !
 !           No extra d.p.s will be freed.  We have whatever
 !           free space is in the DPPOOL right now.
@@ -6955,7 +6955,7 @@
             tofree = 0
             node   =  datahd
 
-            do while ( node .gt. 0 )
+            do while ( node > 0 )
                tofree = tofree + 1
                node   = dppool(next,node)
             end do
@@ -6973,7 +6973,7 @@
 !     If the AVAIL for new data is less than the number of items
 !     to be added, we just bail out here.
 !
-      if ( avail .lt. n ) then
+      if ( avail < n ) then
 
          if ( .not. gotit ) then
 !
@@ -7015,7 +7015,7 @@
          datahd         = datlst( nameat )
          datlst(nameat) = 0
 
-         if ( datahd .lt. 0 ) then
+         if ( datahd < 0 ) then
 
 !
 !           This variable was character type we need to
@@ -7053,7 +7053,7 @@
 !
          free = lnknfn ( dppool )
 
-         if ( free .le. 0 ) then
+         if ( free <= 0 ) then
 !
 !           This branch of the code should never be exercised,
 !           but it doesn't hurt to program in a redundant check.
@@ -7075,7 +7075,7 @@
 !
          call lnkan ( dppool, dpnode )
 
-         if ( datlst(nameat) .eq. 0 ) then
+         if ( datlst(nameat) == 0 ) then
 
 !
 !           There was no data for this name yet.  We make
@@ -7355,7 +7355,7 @@
 !
       do while ( .not. eof .and. .not. failed() )
 
-         if ( varnam .ne. ' ' ) then
+         if ( varnam /= ' ' ) then
 
             if (  elemc( varnam, wtvars )  ) then
 !
@@ -7793,7 +7793,7 @@
 !     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
 !     of the conflict resolution list; this node is a positive value.
 !
-      if ( namlst(lookat) .eq. 0 ) then
+      if ( namlst(lookat) == 0 ) then
 
          call chkout ( 'DVPOOL' )
          return
@@ -7805,20 +7805,20 @@
 !     to this node is the one we are looking for.
 !
       nameat = namlst( lookat )
-      succes = name .eq. pnames(nameat)
+      succes = name == pnames(nameat)
 
       do while ( .not. succes )
 
          nameat = nmpool ( next, nameat )
 
-         if ( nameat .lt. 0 ) then
+         if ( nameat < 0 ) then
 
             call chkout ( 'DVPOOL' )
             return
 
          end if
 
-         succes = name .eq. pnames(nameat)
+         succes = name == pnames(nameat)
 
       end do
 
@@ -8133,7 +8133,7 @@
 !
 !     Perform the one obvious error check first.
 !
-      if ( room .lt. 1 ) then
+      if ( room < 1 ) then
 
          call setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
@@ -8161,7 +8161,7 @@
 !
          nnode = namlst(k)
 
-         do while (  nnode .gt. 0 )
+         do while (  nnode > 0 )
 !
 !           There is some name list associated with this node. See if
 !           it the current one matches the supplied template.
@@ -8175,9 +8175,9 @@
 !
                hits = hits + 1
 
-               if ( hits .ge. start ) then
+               if ( hits >= start ) then
 
-                  if ( n .lt. room ) then
+                  if ( n < room ) then
                      n        = n + 1
                      cvals(n) = pnames(nnode)
                   end if
@@ -8185,7 +8185,7 @@
 !                 If we've filled up the buffer, we may as well
 !                 quit now.
 !
-                  if ( n .eq. room ) then
+                  if ( n == room ) then
                      found = .true.
                      call chkout ( 'GNPOOL' )
                      return
@@ -8207,7 +8207,7 @@
       end do
 
 
-      found = hits .gt. 0
+      found = hits > 0
 
       call chkout ( 'GNPOOL' )
       return
@@ -8420,7 +8420,7 @@
 !
       i = 1
 
-      do while (  ( i .le. cardc(wtvars) )  .and.  ( .not. failed() )  )
+      do while (  ( i <= cardc(wtvars) )  .and.  ( .not. failed() )  )
 !
 !        Search the list of agents associated with the Ith watched
 !        variable for AGENT. We want the list count as well, so
@@ -8436,13 +8436,13 @@
          nnodes = 0
          agnode = 0
 
-         do while ( node .gt. 0 )
+         do while ( node > 0 )
 
             nnodes = nnodes + 1
 !
 !           Fetch the next agent for the Ith kernel variable.
 !
-            if ( wtagnt(node) .eq. agent ) then
+            if ( wtagnt(node) == agent ) then
 !
 !               Save the current node.
 !
@@ -8456,7 +8456,7 @@
 
          end do
 
-         if ( agnode .gt. 0 ) then
+         if ( agnode > 0 ) then
 !
 !           The input agent is on the agent list for the Ith watched
 !           kernel variable. Delete this agent from the list. Delete
@@ -8472,7 +8472,7 @@
 !           of AGNODE; we'll handle that case after the LNKFSL call
 !           below.
 !
-            if ( wtptrs(i) .eq. agnode ) then
+            if ( wtptrs(i) == agnode ) then
 
                wtptrs(i) = lnknxt( agnode, wtpool )
 
@@ -8484,7 +8484,7 @@
             call lnkfsl ( agnode, agnode, wtpool )
 
 
-            if ( nnodes .eq. 1 ) then
+            if ( nnodes == 1 ) then
 !
 !              In fact AGENT is the *only* agent for the Ith variable.
 !              Deleting AGENT means that nobody's watching this

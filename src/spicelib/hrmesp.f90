@@ -285,7 +285,7 @@
 !
 !     No data, no interpolation.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call chkin  ( 'HRMESP'                              )
          call setmsg ( 'Array size must be positive; was #.' )
@@ -300,7 +300,7 @@
 !
 !     The step size must be non-zero.
 !
-      if ( step .eq. 0.0_wp ) then
+      if ( step == 0.0_wp ) then
 
          call chkin  ( 'HRMESP'                 )
          call setmsg ( 'Step size was zero.'    )

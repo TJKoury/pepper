@@ -52,7 +52,7 @@
       integer(ip)           elts   ( * )
       integer(ip)           ops    ( * )
       integer(ip)           vtypes ( * )
-      character*(*)         chrbuf
+      character(*)          chrbuf
       integer(ip)           cbegs  ( * )
       integer(ip)           cends  ( * )
       real(wp)              dvals  ( * )
@@ -260,7 +260,7 @@
       i        =  1
       zzekrmch = .true.
 
-      do while (  ( i .le. ncnstr ) .and. zzekrmch  )
+      do while (  ( i <= ncnstr ) .and. zzekrmch  )
 
 
          if ( active(i) ) then

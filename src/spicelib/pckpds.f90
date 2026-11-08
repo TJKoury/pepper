@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           body
-      character*(*)         frame
+      character(*)          frame
       integer(ip)           type
       real(wp)              first
       real(wp)              last
@@ -165,8 +165,8 @@
 !
 !     Local Variables
 !
-      character*(calsiz)    calfst
-      character*(calsiz)    callst
+      character(calsiz)     calfst
+      character(calsiz)     callst
 
       real(wp)              dppart ( nd )
 
@@ -184,7 +184,7 @@
 !
 !     We do not support orientation models for barycenters.
 !
-      if ( ( body .ge. 0 ) .and. ( body .le. 9 ) ) then
+      if ( ( body >= 0 ) .and. ( body <= 9 ) ) then
 
          call setmsg ( 'You have attempted to create a segment ' &
          //            ' for for a barycenter, and the PCK system' &
@@ -200,7 +200,7 @@
 !
       call irfnum ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -212,7 +212,7 @@
 !
 !     The segment stop time should be greater then the begin time.
 !
-      if ( first .ge. last ) then
+      if ( first >= last ) then
 !
 !        We've got an error. Get the calendar string for the first
 !        and last epochs.
@@ -236,7 +236,7 @@
 !     The type must be something reasonable.  The interval from
 !     2 to 1000 is what we are calling reasonable these days.
 !
-      if ( ( type .le. 1)  .or. ( type .gt. 1000 ) ) then
+      if ( ( type <= 1)  .or. ( type > 1000 ) ) then
 
          call setmsg ( 'The type specified, #, is not supported ' &
          //            'within the PCK system. '                  )

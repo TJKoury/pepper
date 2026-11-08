@@ -24,7 +24,7 @@
 
       real(wp)              etobs
       integer(ip)           obs
-      character*(2)         dir
+      character(2)          dir
       integer(ip)           targ
       real(wp)              ettarg
       real(wp)              elapsd
@@ -280,7 +280,7 @@
 !
 !     First perform the obvious error check.
 !
-      if ( dir .ne. '->' .and. dir .ne. '<-' ) then
+      if ( dir /= '->' .and. dir /= '<-' ) then
 
          call setmsg ( 'The direction specifier for the signal ' &
          //            'was ''#''  it must be either ''->'' or ' &
@@ -321,7 +321,7 @@
 !     known objects in the solar system.  The ephemeris
 !     is certain to be much worse than this.
 !
-      if ( dir .eq. '->' ) then
+      if ( dir == '->' ) then
 
          ettarg = myet + elapsd
 

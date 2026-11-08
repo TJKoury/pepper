@@ -380,7 +380,7 @@
 !     Rotate the plane definition vector by pi about AXIS if
 !     we're generating penumbral terminator points.
 !
-      if ( curve .eq. pnmbrl ) then
+      if ( curve == pnmbrl ) then
 
          call vrotv ( plnvec, axis, pi(), refvec )
       else
@@ -413,7 +413,7 @@
          return
       end if
 
-      if ( maxrad .le. 0.0_wp ) then
+      if ( maxrad <= 0.0_wp ) then
 
          call setmsg ( 'Target maximum radius # is non-positive.' )
          call errdp  ( '#',  maxrad                               )
@@ -425,7 +425,7 @@
 
 
 
-      if ( curve .eq. lmbcrv ) then
+      if ( curve == lmbcrv ) then
 !
 !        We're looking for limb points.
 !
@@ -441,7 +441,7 @@
          r      = vnorm( axis )
          mindst = maxrad * ( 1.0_wp + margin )
 
-         if ( r .gt. mindst ) then
+         if ( r > mindst ) then
 
             start = pi() -  dasine( maxrad/r, margin )
 
@@ -461,7 +461,7 @@
 !
 !        For the terminator cases, check for an invalid source radius.
 !
-         if ( srcrad .le. 0.0_wp ) then
+         if ( srcrad <= 0.0_wp ) then
 
             call setmsg ( 'Source radius # is non-positive.' )
             call errdp  ( '#',  srcrad                       )
@@ -477,7 +477,7 @@
 !
          r = vnorm( axis )
 
-         if ( (srcrad + maxrad) .gt. r ) then
+         if ( (srcrad + maxrad) > r ) then
 
             call setmsg ( 'Source radius # and target maximum ' &
             //            'radius # sum to #; distance between ' &
@@ -493,7 +493,7 @@
          end if
 
 
-         if ( curve .eq. umbral ) then
+         if ( curve == umbral ) then
 !
 !           We'll search for a point on the umbral terminator.
 !
@@ -529,7 +529,7 @@
             end if
 
 
-         else if ( curve .eq. pnmbrl ) then
+         else if ( curve == pnmbrl ) then
 !
 !           We'll search for a point on the umbral terminator.
 !
@@ -606,9 +606,9 @@
 !     becomes a cell rather than a window. We must delete the
 !     corresponding point from the POINTS array as well.
 !
-      if ( cardd(result) .gt. 0 ) then
+      if ( cardd(result) > 0 ) then
 
-         if ( ( result(1) .eq. start ) .and. ( .not. endflg(1) ) ) then
+         if ( ( result(1) == start ) .and. ( .not. endflg(1) ) ) then
 
             n = cardd( result )
 
@@ -633,9 +633,9 @@
 !
       n = cardd(result)
 
-      if ( n .gt. 0 ) then
+      if ( n > 0 ) then
 
-         if ( ( result(n) .eq. finish ) .and. ( .not. endflg(2) ) ) then
+         if ( ( result(n) == finish ) .and. ( .not. endflg(2) ) ) then
 
             call scardd ( n-1, result )
 

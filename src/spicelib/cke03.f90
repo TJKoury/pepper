@@ -454,7 +454,7 @@
 !     is performed.  Simply convert the quaternion to a C-matrix and
 !     return.
 !
-      if ( t1 .eq. t2 ) then
+      if ( t1 == t2 ) then
 
          call q2m ( q1, cmat )
 

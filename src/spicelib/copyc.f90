@@ -22,8 +22,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)      cell     ( lbcell:* )
-      character*(*)      copy     ( lbcell:* )
+      character(*)       cell     ( lbcell:* )
+      character(*)       copy     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -183,7 +183,7 @@
 !
 !        Test for truncation:
 !
-         if ( copy(i) .ne. cell(i) ) then
+         if ( copy(i) /= cell(i) ) then
             trunc   = .true.
             reqlen  = max ( reqlen, lastpc( cell(i) ) )
          end if
@@ -195,7 +195,7 @@
 !
 !        Test for truncation:
 !
-         if ( copy(i) .ne. cell(i) ) then
+         if ( copy(i) /= cell(i) ) then
             trunc   = .true.
             reqlen  = max ( reqlen, lastpc( cell(i) ) )
          end if
@@ -210,7 +210,7 @@
 !
 !     We've got an error if the output cell was too small.
 !
-      if ( size .lt. card ) then
+      if ( size < card ) then
          call excess (  card - size,  'cell' )
          call sigerr ( 'SPICE(CELLTOOSMALL)' )
          call chkout ( 'COPYC' )

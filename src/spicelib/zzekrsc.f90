@@ -31,7 +31,7 @@
       integer(ip)           recptr
       integer(ip)           eltidx
       integer(ip)           cvlen
-      character*(*)         cval
+      character(*)          cval
       logical               isnull
       logical               found
 
@@ -168,7 +168,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           class
       integer(ip)           dtype
@@ -188,7 +188,7 @@
       dtype  =  coldsc(typidx)
 
 
-      if ( dtype .ne. chr ) then
+      if ( dtype /= chr ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -217,7 +217,7 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 3 ) then
+      if ( class == 3 ) then
 
          call zzekrd03 (  handle,  segdsc,  coldsc, &
                           recptr,  cvlen,   cval,   isnull  )
@@ -225,7 +225,7 @@
          found  =  .true.
 
 
-      else if ( class .eq. 6 ) then
+      else if ( class == 6 ) then
 !
 !        Class 6 columns contain character string array entries.
 !
@@ -233,7 +233,7 @@
                          eltidx,  eltidx,  cval,    isnull,  found )
 
 
-      else if ( class .eq. 9 ) then
+      else if ( class == 9 ) then
 
          call zzekrd09 (  handle,  segdsc,  coldsc, &
                           recptr,  cvlen,   cval,   isnull  )

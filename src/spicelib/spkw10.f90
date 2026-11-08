@@ -28,10 +28,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       real(wp)              consts ( * )
       integer(ip)           n
       real(wp)              elems  ( * )

@@ -26,7 +26,7 @@
       parameter                ( lbcell = -5 )
 
       real(wp)          a      ( lbcell:* )
-      character*(*)     op
+      character(*)      op
       real(wp)          b      ( lbcell:* )
 
 ! $ Brief_I/O
@@ -380,9 +380,9 @@
 !     A cannot be a proper subset of B if the cardinality of A is
 !     greater than or equal to the cardinality of B.
 !
-      if      ( op .eq. '<' ) then
+      if      ( op == '<' ) then
 
-              if ( carda .ge. cardb ) then
+              if ( carda >= cardb ) then
                  setd = .false.
                  call chkout ( 'SETD' )
                  return
@@ -399,9 +399,9 @@
 !
 !     A cannot be a subset of B if A contains more elements than B.
 !
-      else if ( op .eq. '<=' ) then
+      else if ( op == '<=' ) then
 
-              if ( carda .gt. cardb ) then
+              if ( carda > cardb ) then
                  setd = .false.
                  call chkout ( 'SETD' )
                  return
@@ -419,9 +419,9 @@
 !     If the cardinality of the two sets is not equal, there's no way
 !     that the two sets could be equal.
 !
-      else if ( op .eq. '=' ) then
+      else if ( op == '=' ) then
 
-               if ( carda .ne. cardb ) then
+               if ( carda /= cardb ) then
                   setd = .false.
                   call chkout ( 'SETD' )
                   return
@@ -439,9 +439,9 @@
 !     If the cardinality of the two sets is not equal, the sets
 !     are not equal.
 !
-      else if ( op .eq. '<>' ) then
+      else if ( op == '<>' ) then
 
-              if ( carda .ne. cardb ) then
+              if ( carda /= cardb ) then
                  setd = .true.
                  call chkout ( 'SETD' )
                  return
@@ -459,9 +459,9 @@
 !     B cannot be a proper subset of A if the cardinality of A is less
 !     than or equal to the cardinality of B.
 !
-      else if ( op .eq. '>' ) then
+      else if ( op == '>' ) then
 
-              if ( carda .le. cardb ) then
+              if ( carda <= cardb ) then
                  setd = .false.
                  call chkout ( 'SETD' )
                  return
@@ -476,9 +476,9 @@
 !
 !     B cannot be a subset of A if B contains more elements than A.
 !
-      else if ( op .eq. '>=' ) then
+      else if ( op == '>=' ) then
 
-              if ( carda .lt. cardb ) then
+              if ( carda < cardb ) then
                  setd = .false.
                  call chkout ( 'SETD' )
                  return
@@ -494,9 +494,9 @@
 !     If the cardinality of one of the sets is zero, they can't
 !     possibly have any elements in common.
 !
-      else if ( op .eq. '&' ) then
+      else if ( op == '&' ) then
 
-              if ( ( carda .eq. 0 ) .or. ( cardb .eq. 0 ) ) then
+              if ( ( carda == 0 ) .or. ( cardb == 0 ) ) then
                  setd = .false.
                  call chkout ( 'SETD' )
                  return
@@ -512,9 +512,9 @@
 !
 !     If either A or B is the null set, the two sets are disjoint.
 !
-      else if ( op .eq. '~' ) then
+      else if ( op == '~' ) then
 
-              if ( ( carda .eq. 0 ) .or. ( cardb .eq. 0 ) ) then
+              if ( ( carda == 0 ) .or. ( cardb == 0 ) ) then
                  setd = .true.
                  call chkout ( 'SETD' )
                  return
@@ -553,14 +553,14 @@
 !     If we've come this far we need to check the elements of the
 !     sets to determine the function value.
 !
-      do while ( ( indexa .le. carda ) .and. ( indexb .le. cardb ) )
+      do while ( ( indexa <= carda ) .and. ( indexb <= cardb ) )
 
-         if      ( a (indexa) .lt. b (indexb) )  then
+         if      ( a (indexa) < b (indexb) )  then
 
                    cond   = condlt
                    indexa = indexa + 1
 
-         else if ( a (indexa) .eq. b (indexb) )  then
+         else if ( a (indexa) == b (indexb) )  then
 
                    cond   = condeq
                    indexa = indexa + 1
@@ -597,13 +597,13 @@
 !           not equal, the sets are not equal ( COND = 2 ).
 !
 !
-         if      ( cond .eq. 0 ) then
+         if      ( cond == 0 ) then
 
                   setd = .false.
                   call chkout ( 'SETD' )
                   return
 
-         else if ( cond .eq. 2 ) then
+         else if ( cond == 2 ) then
 
                   setd = .true.
                   call chkout ( 'SETD' )
@@ -623,13 +623,13 @@
 !     We've gone through all of set B and there are elements left in
 !     A.
 !
-      if      ( indexa .le. carda ) then
+      if      ( indexa <= carda ) then
                 cond = condoa
 !
 !     We've gone through all of set A and there are elements left in
 !     B.
 !
-      else if ( indexb .le. cardb ) then
+      else if ( indexb <= cardb ) then
                 cond = condob
 !
 !     We've gone through both the sets.
@@ -643,7 +643,7 @@
 !
 !     Determine the value of SETD from the results.
 !
-      setd = ( cond .eq. 1 )
+      setd = ( cond == 1 )
 
 
 

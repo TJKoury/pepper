@@ -23,11 +23,11 @@
 ! $ Declarations
 
       implicit none
-      character*(*)         pictur
+      character(*)          pictur
       integer(ip)           b
       integer(ip)           e
-      character*(*)         mark
-      character*(*)         pattrn
+      character(*)          mark
+      character(*)          pattrn
 
 
 ! $ Brief_I/O
@@ -112,8 +112,8 @@
       integer(ip)           maxsiz
       parameter           ( maxsiz = maxplc + 12 )
 
-      character*(maxplc)    places
-      character*(maxsiz)    mymark
+      character(maxplc)     places
+      character(maxsiz)     mymark
 
       integer(ip)           lpat
       integer(ip)           lmrk
@@ -137,7 +137,7 @@
 !
       point  = index(pattrn, '.')
 
-      if ( point .gt. 0 ) then
+      if ( point > 0 ) then
 !
 !        We've got a decimal point.  We have to at least put this
 !        into the marker.
@@ -149,7 +149,7 @@
 !        will need to add some #'s to the marker (but not more than
 !        MAXPLC of them).
 !
-         if ( point .lt. lpat ) then
+         if ( point < lpat ) then
 
             use             = min ( maxplc, lpat - point )
             mymark(last+1:) = places(1:use)

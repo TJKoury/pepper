@@ -34,8 +34,8 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       external              obssub
       real(wp)              starg    ( 6 )
       real(wp)              lt
@@ -758,13 +758,13 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  =  'ZZSPKFZO' )
 
 !
 !     Local variables
 !
-      character*(corlen)    prvcor
+      character(corlen)     prvcor
 
       real(wp)              corxfm   ( 6, 6 )
       real(wp)              dlt
@@ -816,7 +816,7 @@
       call chkin ( rname )
 
 
-      if (  pass1  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
@@ -898,7 +898,7 @@
 !
          call namfrm ( ref, reqfrm )
 
-         if ( reqfrm .eq. 0 ) then
+         if ( reqfrm == 0 ) then
             call setmsg ( 'The requested output frame ''#'' is ' &
             //            'not recognized by the reference frame ' &
             //            'subsystem. Please check that the ' &
@@ -919,7 +919,7 @@
 !        If we are dealing with an inertial frame, we can simply
 !        call ZZSPKFAO and return.
 !
-         if ( type .eq. inertl ) then
+         if ( type == inertl ) then
 
             call zzspkfao ( targ,   et,    ref, abcorr, &
                             obssub, starg, lt,  dlt    )
@@ -958,7 +958,7 @@
 !        since the observer isn't an ephemeris object, as far as this
 !        routine can determine.
 !
-         if ( center .eq. targ ) then
+         if ( center == targ ) then
 !
 !           We already have the light time and light time rate
 !           for the frame center as seen from the observer.

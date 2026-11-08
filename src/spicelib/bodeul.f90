@@ -440,10 +440,10 @@
 !
 !     Local variables
 !
-      character*(namlen)    bref
-      character*(1)         dtype
-      character*(namlen)    item
-      character*(namlen)    item2
+      character(namlen)     bref
+      character(1)          dtype
+      character(namlen)     item
+      character(namlen)     item2
 
       real(wp)              ac     ( maxang )
       real(wp)              conepc
@@ -737,7 +737,7 @@
 
                deg = nint( dpval )
 
-               if ( ( deg .lt. 1 ) .or. ( deg .gt. mxphas-1 ) ) then
+               if ( ( deg < 1 ) .or. ( deg > mxphas-1 ) ) then
 
                   call setmsg ( 'Maximum phase angle degree for ' &
                   //            'body # must be in the range 1:# ' &
@@ -807,7 +807,7 @@
             return
          end if
 
-         if ( max ( na, nd, nw ) .gt. ntheta ) then
+         if ( max ( na, nd, nw ) > ntheta ) then
             call setmsg ( 'Insufficient number of nutation/'// &
                           'precession angles for body * at time #.' )
             call errint ( '*', body )
@@ -832,7 +832,7 @@
 !
          do i = 1, nphase
 
-            if ( nphsco .eq. 2 ) then
+            if ( nphsco == 2 ) then
 !
 !              This case is so common that we'll deal with it
 !              separately. We'll avoid unnecessary arithmetic
@@ -902,7 +902,7 @@
 !     Convert the angles to the J2000 frame if they are not already
 !     referenced to J2000.
 !
-      if ( ref .ne. j2code ) then
+      if ( ref /= j2code ) then
 !
 !        Find the transformation from the J2000 frame to the frame
 !        designated by REF.  Form the transformation from `REF'
@@ -943,11 +943,11 @@
 !     Make sure that the prime meridian and right ascension are in
 !     the correct range.
 !
-      if ( w .lt. 0 ) then
+      if ( w < 0 ) then
          w = w + twopi()
       end if
 
-      if ( ra .lt. 0 ) then
+      if ( ra < 0 ) then
          ra = ra + twopi()
       end if
 

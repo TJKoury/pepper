@@ -187,7 +187,7 @@
          return
       end if
 
-      isless = udval .lt. refval
+      isless = udval < refval
 
       call chkout ( 'ZZGFUDLT' )
       return

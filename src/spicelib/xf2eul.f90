@@ -878,7 +878,7 @@
       ca       = dcos( eulang(alpha) )
       sa       = dsin( eulang(alpha) )
 
-      if ( axisa .eq. axisc ) then
+      if ( axisa == axisc ) then
          u  =       dcos ( eulang(beta) )
          v  =   d * dsin ( eulang(beta) )
       else
@@ -893,7 +893,7 @@
 !     After all U*U + V*V = 1 if SIN and COS and various arithmetic
 !     operations work perfectly.
 !
-      if ( dabs(u) .eq. 1.0_wp ) then
+      if ( dabs(u) == 1.0_wp ) then
          v = 0.0_wp
       end if
 
@@ -912,7 +912,7 @@
 !        | OMEGA(2) | = |  0   -CA   0  ||dBETA /dt|
 !        [ OMEGA(3) ]   [  0  D*SA   0  ][dGAMMA/dt]
 !
-      if ( v .eq. 0 ) then
+      if ( v == 0 ) then
 
          unique         = .false.
          eulang(dalpha) =  0.0_wp
@@ -922,7 +922,7 @@
 !        We solve for EULANG(DBETA) by selecting the more stable of
 !        the two available equations.
 !
-         if ( dabs(ca) .gt. dabs(sa) ) then
+         if ( dabs(ca) > dabs(sa) ) then
             eulang(dbeta) =   -omega(2)/ca
          else
             eulang(dbeta) =  d*omega(3)/sa
@@ -1348,9 +1348,9 @@
 !     being different from the first and third axes.  We'll adjust
 !     the axes and angles to make this so, if necessary.
 !
-      if (  ( axisb .eq. axisa ) .or. ( axisb .eq. axisc )  ) then
+      if (  ( axisb == axisa ) .or. ( axisb == axisc )  ) then
 
-         if ( axisb .eq. axisa ) then
+         if ( axisb == axisa ) then
 !
 !           The first angle will "absorb" the second, and the
 !           second will be set to zero.  All we do here is select
@@ -1375,7 +1375,7 @@
 !        the rotation angle about the second axis is zero, all that
 !        matters here is picking a distinct axis.
 !
-         if ( axisc .eq. next(axisa) ) then
+         if ( axisc == next(axisa) ) then
 !
 !           The first axis is the predecessor of the third, so we pick
 !           the successor of the third.
@@ -1428,7 +1428,7 @@
       ca       = dcos( locang(alpha) )
       sa       = dsin( locang(alpha) )
 
-      if ( locaxa .eq. locaxc ) then
+      if ( locaxa == locaxc ) then
          u  =       dcos ( locang(beta) )
          v  =   d * dsin ( locang(beta) )
       else

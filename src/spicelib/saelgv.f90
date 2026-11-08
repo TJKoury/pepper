@@ -397,7 +397,7 @@
 !
       scale = max (  vnorm ( tmpvc1 ),   vnorm ( tmpvc2 )  )
 
-      if ( scale .eq. 0.0_wp ) then
+      if ( scale == 0.0_wp ) then
 
          call cleard ( 3, smajor )
          call cleard ( 3, sminor )
@@ -425,7 +425,7 @@
 !
 !     Find the semi-axes.
 !
-      if (   dabs( eigval(1,1) )  .ge.  dabs( eigval(2,2) )   )  then
+      if (   dabs( eigval(1,1) )  >=  dabs( eigval(2,2) )   )  then
 !
 !        The first eigenvector ( first column of C ) corresponds
 !        to the semi-major axis of the ellipse.

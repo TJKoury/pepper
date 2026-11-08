@@ -23,8 +23,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         item
-      character*(*)         a        ( lbcell:* )
+      character(*)          item
+      character(*)          a        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -302,8 +302,8 @@
 !
 !     Is the item already in the set? If not, it needs to be inserted.
 !
-      if ( last .gt. 0 ) then
-         in  =  a(last) .eq. item(:slen)
+      if ( last > 0 ) then
+         in  =  a(last) == item(:slen)
       else
          in  =  .false.
       end if
@@ -314,7 +314,7 @@
 !        the succeeding elements back to make room. And update the
 !        cardinality for future reference.
 !
-         if ( card .lt. size ) then
+         if ( card < size ) then
 
             do i = card, last+1, -1
                a(i+1) = a(i)

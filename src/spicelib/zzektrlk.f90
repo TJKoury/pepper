@@ -166,7 +166,7 @@
 !
 !     Local variables
 !
-      character*(acclen)    access
+      character(acclen)     access
 
       integer(ip)           child
       integer(ip)           datbas
@@ -230,7 +230,7 @@
 !
          call dasham ( handle, access )
 
-         rdonly  =    access .eq. 'READ'
+         rdonly  =    access == 'READ'
          samkey  =    .false.
          samtre  =    .false.
          leaf    =    .false.
@@ -243,18 +243,18 @@
 !        be guaranteed to be the same, it must belong to a file open
 !        for read access only.
 !
-         if ( handle .ne. oldhan ) then
+         if ( handle /= oldhan ) then
 
             call dasham ( handle, access )
 
-            rdonly  =    access .eq. 'READ'
+            rdonly  =    access == 'READ'
             samtre  =    .false.
             samkey  =    .false.
 
          else
 
-            samtre  =  ( tree  .eq.  oldtre )  .and.   rdonly
-            samkey  =  ( key   .eq.  oldkey )  .and.   samtre
+            samtre  =  ( tree  ==  oldtre )  .and.   rdonly
+            samkey  =  ( key   ==  oldkey )  .and.   samtre
 
          end if
 
@@ -289,14 +289,14 @@
          minus  =  oldidx - 1
 
 
-         if (        (  key  .le.  oldkey+plus   ) &
-               .and. (  key  .ge.  oldkey-minus  )  ) then
+         if (        (  key  <=  oldkey+plus   ) &
+               .and. (  key  >=  oldkey-minus  )  ) then
 !
 !           The requested key lies on the same page as the old key.
 !
             level   =  oldlvl
 
-            if ( level .eq. 1 ) then
+            if ( level == 1 ) then
                datbas  =  trdatr
             else
                datbas  =  trdatc
@@ -333,7 +333,7 @@
 !
       totkey  =  page ( trnkey )
 
-      if (  ( key .lt. 1 )  .or.  ( key .gt. totkey )  ) then
+      if (  ( key < 1 )  .or.  ( key > totkey )  ) then
 
          call chkin  ( 'ZZEKTRLK'                                      )
          call setmsg ( 'Key = #; valid range = 1:#. Tree = #, file = #')
@@ -353,7 +353,7 @@
 !
       prev   =  lstlei (  key,  page(trnkr),  page(trkeyr+1)  )
 
-      if ( prev .gt. 0 ) then
+      if ( prev > 0 ) then
          prvkey =  page(trkeyr+prev)
       else
          prvkey =  0
@@ -363,7 +363,7 @@
 !     If we were lucky enough to get an exact match, set our outputs
 !     and return.  The key offset in the root is zero.
 !
-      if ( prvkey .eq. key ) then
+      if ( prvkey == key ) then
 
          noffst  =  0
          idx     =  prev
@@ -380,7 +380,7 @@
          oldval  =  value
          oldmax  =  page ( trnkr )
 
-         leaf    =  level  .eq.  depth
+         leaf    =  level  ==  depth
 
 !
 !        The root has no parent or siblings, so these values
@@ -398,7 +398,7 @@
       noffst  =  prvkey
 
 
-      do while (  ( child .gt. 0 ) .and. ( .not. found )  )
+      do while (  ( child > 0 ) .and. ( .not. found )  )
 !
 !        Look up the child node.
 !
@@ -407,7 +407,7 @@
          level  =  level + 1
 
 
-         if ( level .gt. depth ) then
+         if ( level > depth ) then
 
             call chkin  ( 'ZZEKTRLK'                                   )
             call setmsg ( 'Runaway node pointer chain.  Key = #; '// &
@@ -432,7 +432,7 @@
          newkey  =  key - noffst
          prev    =  lstlei (  newkey,  page(trnkc),  page(trkeyc+1)  )
 
-         if ( prev .gt. 0 ) then
+         if ( prev > 0 ) then
             prvkey =  page(trkeyc+prev)
          else
             prvkey =  0
@@ -443,7 +443,7 @@
 !        and return.  The key offset for the current node is stored
 !        in NOFFST.
 !
-         if ( prvkey .eq. newkey ) then
+         if ( prvkey == newkey ) then
 
             found   =  .true.
             idx     =  prev
@@ -460,7 +460,7 @@
             oldval  =  value
             oldmax  =  page ( trnkc )
 
-            leaf    =  level  .eq.  depth
+            leaf    =  level  ==  depth
 
          else
 

@@ -245,15 +245,15 @@
 !
       subtyp =  nint( record(sbtidx) )
 
-      if ( subtyp .eq. s19tp0 ) then
+      if ( subtyp == s19tp0 ) then
 
          packsz = s19ps0
 
-      else if ( subtyp .eq. s19tp1 ) then
+      else if ( subtyp == s19tp1 ) then
 
          packsz = s19ps1
 
-      else if ( subtyp .eq. s19tp2 ) then
+      else if ( subtyp == s19tp2 ) then
 
          packsz = s19ps2
 
@@ -274,7 +274,7 @@
       n = nint( record(cntidx) )
 
 
-      if ( subtyp .eq. s19tp0 ) then
+      if ( subtyp == s19tp0 ) then
 !
 !        We interpolate each state component in turn.  Position and
 !        velocity are interpolated separately.
@@ -350,7 +350,7 @@
          call vequ ( vbuff, state(4) )
 
 
-      else if ( subtyp .eq. s19tp1 ) then
+      else if ( subtyp == s19tp1 ) then
 !
 !        We perform Lagrange interpolation on each state component.
 !
@@ -377,7 +377,7 @@
          end do
 
 
-      else if ( subtyp .eq. s19tp2 ) then
+      else if ( subtyp == s19tp2 ) then
 !
 !        We perform Hermite interpolation on each position component
 !        and corresponding velocity component.

@@ -574,11 +574,11 @@
       do while ( .not. done )
          bufloc = bufloc + 1
 
-         stored = (       handle .eq. rbhan(bufloc) &
-                    .and. recno  .eq. rbrec(bufloc) )
+         stored = (       handle == rbhan(bufloc) &
+                    .and. recno  == rbrec(bufloc) )
 
          done   = (       stored &
-                    .or.  bufloc .eq. rbnbr )
+                    .or.  bufloc == rbnbr )
       end do
 
 !
@@ -607,14 +607,14 @@
             rbreq(bufloc) = 0
          else
 
-            if ( nread .lt. intmax() ) then
+            if ( nread < intmax() ) then
                nread = nread + 1
             end if
 
             rbhan(bufloc) = handle
             rbrec(bufloc) = recno
 
-            if ( rbnbr .lt. rbsize ) then
+            if ( rbnbr < rbsize ) then
                rbnbr = rbnbr + 1
             end if
 
@@ -847,11 +847,11 @@
       do while ( .not. done )
          bufloc = bufloc + 1
 
-         stored = (       handle .eq. rbhan(bufloc) &
-                    .and. recno  .eq. rbrec(bufloc) )
+         stored = (       handle == rbhan(bufloc) &
+                    .and. recno  == rbrec(bufloc) )
 
          done   = (       stored &
-                    .or.  bufloc .eq. rbnbr )
+                    .or.  bufloc == rbnbr )
       end do
 
 !
@@ -883,14 +883,14 @@
             rbreq(bufloc) = 0
          else
 
-            if ( nread .lt. intmax() ) then
+            if ( nread < intmax() ) then
                nread = nread + 1
             end if
 
             rbhan(bufloc) = handle
             rbrec(bufloc) = recno
 
-            if ( rbnbr .lt. rbsize ) then
+            if ( rbnbr < rbsize ) then
                rbnbr = rbnbr + 1
             end if
 
@@ -1246,11 +1246,11 @@
       do while ( .not. done )
          bufloc = bufloc + 1
 
-         stored = (       handle .eq. rbhan(bufloc) &
-                    .and. recno  .eq. rbrec(bufloc) )
+         stored = (       handle == rbhan(bufloc) &
+                    .and. recno  == rbrec(bufloc) )
 
          done   = (       stored &
-                    .or.  bufloc .eq. rbnbr )
+                    .or.  bufloc == rbnbr )
       end do
 
 !
@@ -1279,14 +1279,14 @@
             rbreq(bufloc) = 0
          else
 
-            if ( nread .lt. intmax() ) then
+            if ( nread < intmax() ) then
                nread = nread + 1
             end if
 
             rbhan(bufloc) = handle
             rbrec(bufloc) = recno
 
-            if ( rbnbr .lt. rbsize ) then
+            if ( rbnbr < rbsize ) then
                rbnbr = rbnbr + 1
             end if
 
@@ -1485,7 +1485,7 @@
 !
 !     No fair writing to a read-only file!
 !
-      if ( handle .ge. 0 ) then
+      if ( handle >= 0 ) then
          call setmsg ( 'Attempt was made to write to a read-only file.')
          call sigerr ( 'SPICE(DAFILLEGWRITE)' )
 
@@ -1505,11 +1505,11 @@
       do while ( .not. done )
          bufloc = bufloc + 1
 
-         stored = (       handle .eq. rbhan(bufloc) &
-                    .and. recno  .eq. rbrec(bufloc) )
+         stored = (       handle == rbhan(bufloc) &
+                    .and. recno  == rbrec(bufloc) )
 
          done   = (       stored &
-                    .or.  bufloc .eq. rbsize )
+                    .or.  bufloc == rbsize )
       end do
 
 !
@@ -1527,7 +1527,7 @@
 !     was not.
 !
       if ( stored ) then
-         if ( iostat .eq. 0 ) then
+         if ( iostat == 0 ) then
             call moved  ( drec, 128, rbdat(1,bufloc) )
          else
             rbhan(bufloc) = 0
@@ -1539,7 +1539,7 @@
 !
 !     Declare an error if the write failed.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Double precision write failed. Value of '     // &
                        'IOSTAT was #' )
          call errint ( '#', iostat )

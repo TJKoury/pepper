@@ -26,7 +26,7 @@
 !
 ! $ Declarations
 
-      character*(*)         abcorr
+      character(*)          abcorr
       real(wp)              et
       real(wp)              lt
       real(wp)              etcorr

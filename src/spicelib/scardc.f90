@@ -23,7 +23,7 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           card
-      character*(*)         cell   ( lbcell:* )
+      character(*)          cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -191,7 +191,7 @@
 
       call dechar ( cell(-1), size )
 
-      if (  ( card .lt. 0 )  .or.  ( card .gt. size )  )  then
+      if (  ( card < 0 )  .or.  ( card > size )  )  then
          call setmsg ( 'Attempt to set cardinality of cell '          // &
                        'to invalid value.  The value was #.'  )
          call errint ( '#', card )

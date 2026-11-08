@@ -451,7 +451,7 @@
 !
       if ( pass1 ) then
 
-         if ( maxrec .lt. maxrsz ) then
+         if ( maxrec < maxrsz ) then
 
             call setmsg ( 'SPK type 19 record size may be as ' &
             //            'large as #, but SPKPVN record size ' &
@@ -484,7 +484,7 @@
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+      if (  ( et < dc(1) )  .or.  ( et > dc(2) )  )  then
 
          call setmsg( 'Request time # is outside of descriptor ' &
          //           'bounds # : #.'                           )
@@ -505,8 +505,8 @@
 !     Re-use of data from a previous call requires that the saved
 !     data were set on a successful call.
 !
-      samseg  =       ( handle .eq.  svhan ) &
-                .and. ( baddr  .eq.  svbeg ) &
+      samseg  =       ( handle ==  svhan ) &
+                .and. ( baddr  ==  svbeg ) &
                 .and.                prvok
 
 !
@@ -526,14 +526,14 @@
 !           all intervals but the last, ET must be
 !           less than the interval end time.
 !
-            if ( svmiix .lt. svn ) then
+            if ( svmiix < svn ) then
 
-               samivl =       ( et .ge. svbtim ) &
-                        .and. ( et .lt. svetim )
+               samivl =       ( et >= svbtim ) &
+                        .and. ( et < svetim )
             else
 
-               samivl =         et .ge. svbtim &
-                        .and. ( et .le. svetim )
+               samivl =         et >= svbtim &
+                        .and. ( et <= svetim )
 
             end if
 
@@ -543,15 +543,15 @@
 !           all intervals but the first, ET must be
 !           greater than the interval start time.
 !
-            if ( svmiix .gt. 1 ) then
+            if ( svmiix > 1 ) then
 
-               samivl =       ( et  .gt. svbtim ) &
-                        .and. ( et  .le. svetim )
+               samivl =       ( et  > svbtim ) &
+                        .and. ( et  <= svetim )
 
             else
 
-               samivl =         et  .ge. svbtim &
-                        .and. ( et  .le. svetim )
+               samivl =         et  >= svbtim &
+                        .and. ( et  <= svetim )
 
             end if
 
@@ -613,7 +613,7 @@
 !
 !        Make sure that this really is a type 19 data segment.
 !
-         if ( type .ne. 19 ) then
+         if ( type /= 19 ) then
 
             call setmsg( 'You are attempting to locate type * ' &
             //           'data in a type 19 data segment.'      )
@@ -642,7 +642,7 @@
          isel   = nint ( contrl(1) )
          n      = nint ( contrl(2) )
 
-         ivlsel = isel .eq. itrue
+         ivlsel = isel == itrue
 
 !
 !        Determine the number of interval directory entries in the
@@ -692,7 +692,7 @@
 !           If there is an interval directory, search it to determine
 !           the group of interval times to search next.
 !
-            if ( ndir .gt. 0 ) then
+            if ( ndir > 0 ) then
 !
 !              Find the last directory entry *less than or equal to*
 !              the request time. The directory entry *after* that one,
@@ -717,8 +717,8 @@
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
 !
-               do while (       ( remain        .gt. 0  ) &
-                          .and. ( buffer(nread) .le. et )  )
+               do while (       ( remain        > 0  ) &
+                          .and. ( buffer(nread) <= et )  )
 
                   bufbas = bufbas + nread
                   nread  = min ( remain, bufsiz )
@@ -802,7 +802,7 @@
 !
 !           Backstop test:
 !
-            if ( iveix .lt. 2 ) then
+            if ( iveix < 2 ) then
 
                call setmsg ( 'IVEIX = #.' )
                call errint ( '#', iveix   )
@@ -828,7 +828,7 @@
 !           If there is an interval directory, search it to determine
 !           the group of interval times to search next.
 !
-            if ( ndir .gt. 0 ) then
+            if ( ndir > 0 ) then
 !
 !              Find the last directory entry *less than* the request
 !              time. The directory entry *after* that one, if such
@@ -852,8 +852,8 @@
 !              The variable NREAD always contains a positive value at
 !              this point, so we can use it as an array index.
 !
-                do while (      ( remain        .gt. 0  ) &
-                          .and. ( buffer(nread) .lt. et )  )
+                do while (      ( remain        > 0  ) &
+                          .and. ( buffer(nread) < et )  )
 
                   bufbas = bufbas + nread
                   nread  = min ( remain, bufsiz )
@@ -935,7 +935,7 @@
 !
 !           Backstop test:
 !
-            if ( ivbix .gt. n ) then
+            if ( ivbix > n ) then
 
                call setmsg ( 'IVBIX = #.' )
                call errint ( '#', ivbix   )
@@ -1010,7 +1010,7 @@
          wndsiz  =  nint ( contrl(2) )
          npkt    =  nint ( contrl(3) )
 
-         if (  ( subtyp .lt. 0 ) .or. ( subtyp .ge. s19nst ) ) then
+         if (  ( subtyp < 0 ) .or. ( subtyp >= s19nst ) ) then
 
             call setmsg ( 'Unexpected SPK type 19 subtype # found in ' &
             //            'type 19 segment within mini-segment #.'     )
@@ -1028,7 +1028,7 @@
 !
 !        Check the window size.
 !
-         if ( ( wndsiz .lt. 2 ) .or. ( wndsiz .gt. maxwnd ) ) then
+         if ( ( wndsiz < 2 ) .or. ( wndsiz > maxwnd ) ) then
 
             call setmsg ( 'Window size in type 19 segment was #; must ' &
             //            'be in the range 2:# for subtype #. ' &
@@ -1145,7 +1145,7 @@
 !     use the variable GROUP to indicate the set of epochs to search
 !     within, once we've found the right directory entry.
 !
-      if ( npkdir .eq. 0 ) then
+      if ( npkdir == 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
@@ -1171,8 +1171,8 @@
             return
          end if
 
-         do while (       ( buffer(nread) .lt. et ) &
-                    .and. ( remain        .gt. 0  )   )
+         do while (       ( buffer(nread) < et ) &
+                    .and. ( remain        > 0  )   )
 
             bufbas  =  bufbas + nread
             nread   =  min ( remain, dirsiz )
@@ -1210,7 +1210,7 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      if ( group .eq. 1 ) then
+      if ( group == 1 ) then
 
          begidx  =  1
          endidx  =  min ( npkt, dirsiz )
@@ -1248,7 +1248,7 @@
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
          low  =  1
       else
          low  =  begidx + i - 1

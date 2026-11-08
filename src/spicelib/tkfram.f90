@@ -403,17 +403,17 @@
 !
 !     Local Variables
 !
-      character*(wdsize)    agent
-      character*(wdsize)    alt    ( nitems )
-      character*(wdsize)    altnat
-      character*(wdsize)    frname
-      character*(wdsize)    idstr
-      character*(wdsize)    item   ( nvars  )
-      character*(wdsize)    oldagt
-      character*(wdsize)    name
-      character*(wdsize)    spec
-      character*(1)         type
-      character*(wdsize)    units
+      character(wdsize)     agent
+      character(wdsize)     alt    ( nitems )
+      character(wdsize)     altnat
+      character(wdsize)     frname
+      character(wdsize)     idstr
+      character(wdsize)     item   ( nvars  )
+      character(wdsize)     oldagt
+      character(wdsize)     name
+      character(wdsize)     spec
+      character(1)          type
+      character(wdsize)     units
 
       real(wp)              angles ( 3 )
       real(wp)              buffd  ( ndps, bufsiz )
@@ -500,7 +500,7 @@
 !
 !     Check the ID to make sure it is non-zero.
 !
-      if (  frcode .eq. 0 ) then
+      if (  frcode == 0 ) then
 
          call lnkini ( bufsiz, pool )
 
@@ -519,7 +519,7 @@
 !     We'll use this information later to decide whether we're
 !     going to have to delete a watcher.
 !
-      full = lnknfn(pool) .eq. 0
+      full = lnknfn(pool) == 0
 
       if ( full ) then
 !
@@ -584,7 +584,7 @@
       call intstr ( frcode, idstr  )
       call frmnam ( frcode, frname )
 
-      if ( frname .eq. ' ' ) then
+      if ( frname == ' ' ) then
 
          call lnkini ( bufsiz, pool )
 
@@ -717,7 +717,7 @@
 !
          call namfrm ( name, frame )
 
-         if ( frame .eq. 0 ) then
+         if ( frame == 0 ) then
 
             call lnkini ( bufsiz, pool )
             call ident  (  rot     )
@@ -740,7 +740,7 @@
 !        frame ID. If they are the same, SPICE will go into an
 !        indefinite loop.
 !
-         if ( frame .eq. frcode ) then
+         if ( frame == frcode ) then
 
             call lnkini ( bufsiz, pool )
             frame =  0
@@ -763,7 +763,7 @@
 !
          call ucase ( spec, spec )
 
-         if ( spec .eq. 'MATRIX' ) then
+         if ( spec == 'MATRIX' ) then
 !
 !           This is the easiest case.  Just grab the matrix
 !           from the kernel pool (and polish it up a bit just
@@ -834,16 +834,16 @@
 !           The matrix might not be right-handed, so correct
 !           the sense of the second and third columns if necessary.
 !
-            if ( vdot( rot(1,2), matrix(1,2) ) .lt. 0.0_wp ) then
+            if ( vdot( rot(1,2), matrix(1,2) ) < 0.0_wp ) then
                call vsclip ( -1.0_wp, rot(1,2) )
             end if
 
-            if ( vdot( rot(1,3), matrix(1,3) ) .lt. 0.0_wp ) then
+            if ( vdot( rot(1,3), matrix(1,3) ) < 0.0_wp ) then
                call vsclip ( -1.0_wp, rot(1,3) )
             end if
 
 
-         else if ( spec .eq. 'ANGLES' ) then
+         else if ( spec == 'ANGLES' ) then
 !
 !           Look up the angles, their units and axes for the
 !           frame specified by ID. (Note that UNITS are optional).
@@ -940,7 +940,7 @@
                return
             end if
 
-         else if ( spec .eq. 'QUATERNION' ) then
+         else if ( spec == 'QUATERNION' ) then
 !
 !           Look up the quaternion and convert it to a rotation
 !           matrix. Again there are two possible variables that

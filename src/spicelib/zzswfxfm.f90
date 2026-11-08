@@ -486,7 +486,7 @@
 !
 !     Check the transformation dimension.
 !
-      if (  ( ndim .ne. d3 ) .and. ( ndim .ne. d6 )  ) then
+      if (  ( ndim /= d3 ) .and. ( ndim /= d6 )  ) then
 
          call setmsg ( 'Transformation dimension must ' &
          //            'be 3 or 6 but was #.'           )
@@ -522,7 +522,7 @@
 !        those, we set PRVFRM to zero so that it won't match any valid
 !        frame ID.
 !
-         samfrm = ( infrm .ne. 0 ) .and. ( infrm .eq. prvfrm )
+         samfrm = ( infrm /= 0 ) .and. ( infrm == prvfrm )
 
       end if
 
@@ -541,7 +541,7 @@
 
       end if
 
-      if ( framat .eq. 0 ) then
+      if ( framat == 0 ) then
 !
 !        This frame is unknown to the switch frame subsystem. Try to
 !        look up the frame's specification from the kernel pool.
@@ -551,7 +551,7 @@
                          free,   bascnt, usetim, binary, clsses, &
                          clsids, baslst, starts, stops,  framat )
 
-         if (  failed()  .or.  ( framat .eq. 0 )  ) then
+         if (  failed()  .or.  ( framat == 0 )  ) then
 !
 !           We were unable to obtain information for the requested
 !           frame. Initialize all information about the previous frame.
@@ -613,13 +613,13 @@
 !        If LSTBEG is zero, then ET is strictly less than all of the
 !        start times, in which case there's no match.
 !
-         if ( lstbeg .gt. 0 ) then
+         if ( lstbeg > 0 ) then
 !
 !           ET could belong to the interval having start time stored at
 !           relative index LSTBEG, which is equivalent to the base
 !           frame array index HEAD+LSTBEG-1.
 !
-            if (  et .le. stops( head+lstbeg-1 )  ) then
+            if (  et <= stops( head+lstbeg-1 )  ) then
 !
 !              This interval contains ET. Prepare to fetch data for
 !              the base frame corresponding to this interval.
@@ -645,12 +645,12 @@
 !
       lb = head
 
-      do while (  ( basidx .ge. lb ) .and. ( .not. found )  )
+      do while (  ( basidx >= lb ) .and. ( .not. found )  )
 
          if (  usetim( framat )  ) then
 
-            timeok =       ( et .ge. starts(basidx) ) &
-                     .and. ( et .le. stops (basidx) )
+            timeok =       ( et >= starts(basidx) ) &
+                     .and. ( et <= stops (basidx) )
          else
             timeok = .false.
          end if
@@ -659,7 +659,7 @@
 !
 !           This base frame is applicable.
 !
-            if ( clsses(basidx) .eq. ck ) then
+            if ( clsses(basidx) == ck ) then
 !
 !              We can't know whether there are CK data for the request
 !              time without looking up the data, so that's what we do.
@@ -667,7 +667,7 @@
 !              frame's base frame and the frame ID of the CK frame's
 !              base frame.
 !
-               if ( ndim .eq. d6 ) then
+               if ( ndim == d6 ) then
 
                   call ckfxfm ( clsids(basidx), et, &
                                 xform, outfrm,  found )
@@ -694,7 +694,7 @@
 !
                if ( binary(framat) .and. ( .not. found ) ) then
 
-                  if ( et .gt. starts(basidx) ) then
+                  if ( et > starts(basidx) ) then
 !
 !                    The next lowest-indexed interval doesn't cover ET,
 !                    so no data can be found to satisfy this request.
@@ -717,7 +717,7 @@
 !              equal to the interval start time.
 !
 
-            else if ( clsses(basidx) .eq. tk ) then
+            else if ( clsses(basidx) == tk ) then
 
                call tkfram ( clsids(basidx), rmat, outfrm, found )
 
@@ -733,7 +733,7 @@
 
                end if
 
-               if ( ndim .eq. d6 ) then
+               if ( ndim == d6 ) then
 
                   do i = 1,3
                      do j = 1,3
@@ -751,9 +751,9 @@
 !              OUTFRM and FOUND have been set by TKFRAM.
 !
 
-            else if ( clsses(basidx) .eq. pck ) then
+            else if ( clsses(basidx) == pck ) then
 
-               if ( ndim .eq. d6 ) then
+               if ( ndim == d6 ) then
 
                   call tisbod ( 'J2000', clsids(basidx), et, tsipm )
                   call invstm ( tsipm, xform )
@@ -778,7 +778,7 @@
                found  = .true.
 
 
-            else if ( clsses(basidx) .eq. inertl ) then
+            else if ( clsses(basidx) == inertl ) then
 
                call irfrot ( baslst(basidx), j2code, rmat )
 
@@ -794,7 +794,7 @@
 
                end if
 
-               if ( ndim .eq. d6 ) then
+               if ( ndim == d6 ) then
 
                   do i = 1,3
                      do j = 1,3
@@ -817,7 +817,7 @@
 !              For other non-CK frames---switch and dynamic---we just
 !              return the base frame and the identity matrix.
 !
-               if ( ndim .eq. d6 ) then
+               if ( ndim == d6 ) then
 
                   call moved ( xident, size66, xform )
                else

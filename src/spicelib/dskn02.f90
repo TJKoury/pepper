@@ -401,7 +401,7 @@
 !
 !     Check START.
 !
-      if (  ( plid .lt. 1 ) .or. ( plid .gt. np )  ) then
+      if (  ( plid < 1 ) .or. ( plid > np )  ) then
 
          call zzddhhlu ( handle, 'DAS', .false., unit )
 

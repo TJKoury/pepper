@@ -21,9 +21,9 @@
 
       implicit none
 
-      character*(*)         idword
-      character*(*)         arch
-      character*(*)         type
+      character(*)          idword
+      character(*)          arch
+      character(*)          type
 
 !
 
@@ -224,8 +224,8 @@
 !
 !     Local Variables
 !
-      character*(idwlen)     part1
-      character*(idwlen)     part2
+      character(idwlen)      part1
+      character(idwlen)      part2
 
       integer(ip)           slash
 !
@@ -241,7 +241,7 @@
 !     set the architecture and type to unknown.
 !
 
-      if ( idword .eq. ' ' ) then
+      if ( idword == ' ' ) then
 
          arch = '?'
          type = '?'
@@ -264,7 +264,7 @@
 !
       slash = pos( idword, '/', 1 )
 
-      if ( slash .eq. 0 ) then
+      if ( slash == 0 ) then
 
          arch = '?'
          type = '?'
@@ -289,67 +289,67 @@
 !
 !    then we look for the things that begin with the word 'NAIF'
 !
-      if ( part1 .eq. 'DAF' ) then
+      if ( part1 == 'DAF' ) then
 !
 !        We have a DAF file, so set the architecture and type.
 !
          arch = 'DAF'
 
-         if ( part2 .ne. ' ' ) then
+         if ( part2 /= ' ' ) then
             type = part2
          else
             type = '?'
          end if
 
-      else if ( part1 .eq. 'DAS' ) then
+      else if ( part1 == 'DAS' ) then
 !
 !        We have a DAS file, so set the architecture and type.
 !
          arch = 'DAS'
 
-         if ( part2 .ne. ' ' ) then
+         if ( part2 /= ' ' ) then
             type = part2
          else
             type = '?'
          end if
 
-      else if ( part1 .eq. 'TXT' ) then
+      else if ( part1 == 'TXT' ) then
 !
 !        We have an ASCII text file, so set the architecture and type.
 !
          arch = 'TXT'
 
-         if ( part2 .ne. ' ' ) then
+         if ( part2 /= ' ' ) then
             type = part2
          else
             type = '?'
          end if
 
-      else if ( part1 .eq. 'ASC' ) then
+      else if ( part1 == 'ASC' ) then
 !
 !        We have an ASCII text file, so set the architecture and type.
 !
          arch = 'TXT'
 
-         if ( part2 .ne. ' ' ) then
+         if ( part2 /= ' ' ) then
             type = part2
          else
             type = '?'
          end if
 
-      else if ( part1 .eq. 'KPL' ) then
+      else if ( part1 == 'KPL' ) then
 !
 !        We have a kernel pool file, so set the architecture and type.
 !
          arch = 'KPL'
 
-         if ( part2 .ne. ' ' ) then
+         if ( part2 /= ' ' ) then
             type = part2
          else
             type = '?'
          end if
 
-      else if (  part1 .eq. 'NAIF' )  then
+      else if (  part1 == 'NAIF' )  then
 !
 !        We have a DAF (or NIP, these are equivalent) or DAS file,
 !        identified by the value of PART2, but we have no idea what the
@@ -361,12 +361,12 @@
 !        DAF or NIP, we give up on the type. As mentioned above, if
 !        PART2 contains DAS, we know a priori the type of the file.
 !
-         if ( ( part2 .eq. 'DAF' ) .or. ( part2 .eq. 'NIP' ) ) then
+         if ( ( part2 == 'DAF' ) .or. ( part2 == 'NIP' ) ) then
 
             arch = 'DAF'
             type = '?'
 
-         else if ( part2 .eq. 'DAS' ) then
+         else if ( part2 == 'DAS' ) then
 
             arch = 'DAS'
             type = 'PRE'

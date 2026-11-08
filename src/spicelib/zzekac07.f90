@@ -160,7 +160,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           class
       integer(ip)           cmbase
@@ -201,13 +201,13 @@
       nulptr =  coldsc( nflidx )
       colidx =  coldsc( ordidx )
 
-      nullok =  nulptr .ne. ifalse
-      indexd =  idxtyp .ne. ifalse
+      nullok =  nulptr /= ifalse
+      indexd =  idxtyp /= ifalse
 
 !
 !     This column had better be class 7.
 !
-      if ( class .ne. 7 ) then
+      if ( class /= 7 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -259,7 +259,7 @@
          to =  to + 1
 
 
-         if (  ( to .gt. ipsize ) .or. ( from .eq. nrows )  ) then
+         if (  ( to > ipsize ) .or. ( from == nrows )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the

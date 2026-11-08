@@ -27,7 +27,7 @@
 
       implicit none
 
-      character*(*)         srfstr
+      character(*)          srfstr
       integer(ip)           bodyid
       integer(ip)           code
       logical               found
@@ -354,7 +354,7 @@
 !
 !     Local variables
 !
-      character*(msglen)    errmsg
+      character(msglen)     errmsg
 
       integer(ip)           ptr
 
@@ -395,7 +395,7 @@
 !        If the string parsed as an integer, PTR is zero; otherwise
 !        it's non-zero.
 !
-         found = ptr .eq. 0
+         found = ptr == 0
 
       end if
 !

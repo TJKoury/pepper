@@ -574,7 +574,7 @@
 !     Not much preparation is required if either input row count is
 !     zero, since the cartesian product will be zero.
 !
-      if (  ( nr1 .eq. 0 )  .or.  ( nr2 .eq. 0 )  ) then
+      if (  ( nr1 == 0 )  .or.  ( nr2 == 0 )  ) then
 
          case = empty
 
@@ -663,9 +663,9 @@
       j     =  1
       fnd   =  .false.
 
-      do while (  ( j .le. njcnst )  .and.  ( .not. fnd )  )
+      do while (  ( j <= njcnst )  .and.  ( .not. fnd )  )
 
-         if (  active(j)  .and.  ( ops(j) .eq. eq )  ) then
+         if (  active(j)  .and.  ( ops(j) == eq )  ) then
 !
 !           Good deal, we've got an equi-join constraint.  Save the
 !           index of this constraint.
@@ -680,19 +680,19 @@
       end do
 
 
-      if ( case .eq. noluck ) then
+      if ( case == noluck ) then
 
          j     =  1
          fnd   =  .false.
 
-         do while (  ( j .le. njcnst )  .and.  ( .not. fnd )  )
+         do while (  ( j <= njcnst )  .and.  ( .not. fnd )  )
 
             if ( active(j) ) then
 
-               if (      ( ops(j) .eq. lt ) &
-                    .or. ( ops(j) .eq. le ) &
-                    .or. ( ops(j) .eq. ge ) &
-                    .or. ( ops(j) .eq. gt ) ) then
+               if (      ( ops(j) == lt ) &
+                    .or. ( ops(j) == le ) &
+                    .or. ( ops(j) == ge ) &
+                    .or. ( ops(j) == gt ) ) then
 !
 !                 We've got a non-equi-join constraint.  Save the
 !                 index of this constraint.
@@ -720,7 +720,7 @@
 !     set of input rows vectors, using the keys defined by the
 !     join constraint.
 !
-      if ( case .ne. noluck ) then
+      if ( case /= noluck ) then
 
 !
 !        Produce an order vector for the column on the left side of
@@ -746,7 +746,7 @@
 !        set, we'll adjust TAB to indicate position relative to the set
 !        of tables defining the second join row set.
 !
-         if ( ltab .le. nt1 ) then
+         if ( ltab <= nt1 ) then
             jbase  =  jbase1
             nt     =  nt1
             nr     =  nr1
@@ -824,7 +824,7 @@
 !        set, we'll adjust TAB to indicate position relative to the set
 !        of tables defining the second join row set.
 !
-         if ( rtab .le. nt1 ) then
+         if ( rtab <= nt1 ) then
             jbase  =  jbase1
             nt     =  nt1
             nr     =  nr1
@@ -920,8 +920,8 @@
 !     requires the left side to be less than, or less than or equal to,
 !     the right side.
 !
-      if ( case .eq. noneq ) then
-         lsmall  =  ( ops(cnstr) .eq. lt ) .or. ( ops(cnstr) .eq. le )
+      if ( case == noneq ) then
+         lsmall  =  ( ops(cnstr) == lt ) .or. ( ops(cnstr) == le )
       end if
 
 !
@@ -1084,11 +1084,11 @@
 !     The action we take depends on the join constraint situation.
 !     Handle the "empty" case first.
 !
-      if ( case .eq. empty ) then
+      if ( case == empty ) then
 
          return
 
-      else if ( case .eq. equi ) then
+      else if ( case == equi ) then
 
 
          do while (  ( .not. done )  .and.  ( .not. found )  )
@@ -1141,7 +1141,7 @@
 !              The `left' key entry is smaller.  Advance the bottom
 !              pointer on the left side.
 !
-               if ( lptr .lt. svnr1 ) then
+               if ( lptr < svnr1 ) then
                   lptr  =  lptr + 1
                   lcur  =  lptr
                else
@@ -1168,7 +1168,7 @@
 !              row vector and test it against the full set of active
 !              constraints.
 !
-               if ( svcp1(cnstr) .le. svnt1 ) then
+               if ( svcp1(cnstr) <= svnt1 ) then
 !
 !                 The parent table of the column on the LHS of our
 !                 equi-join constraint belongs to the first join
@@ -1218,13 +1218,13 @@
 !
 !              Update the pointers.
 !
-               if ( lcur .lt. svnr1 ) then
+               if ( lcur < svnr1 ) then
 
                   lcur  =  lcur + 1
 
 
-               else if (        ( lcur .eq. svnr1 ) &
-                          .and. ( rptr .lt. svnr2 )  ) then
+               else if (        ( lcur == svnr1 ) &
+                          .and. ( rptr < svnr2 )  ) then
 !
 !                 We've compared every left hand entry from RPTR
 !                 upwards to the right hand entry.  Time to work on
@@ -1250,7 +1250,7 @@
 !              on the right.  It's time to look at the next entry
 !              on the right, if possible.
 !
-               if ( rptr .lt. svnr2 ) then
+               if ( rptr < svnr2 ) then
                   rptr  =  rptr + 1
                   lcur  =  lptr
                else
@@ -1267,7 +1267,7 @@
 
 
 
-      else if ( case .eq. noneq ) then
+      else if ( case == noneq ) then
 !
 !        This is the non-equi-join case.
 !
@@ -1319,7 +1319,7 @@
 !              Form a composite row vector and test it against the full
 !              set of active constraints.
 !
-               if ( svcp1(cnstr) .le. svnt1 ) then
+               if ( svcp1(cnstr) <= svnt1 ) then
 !
 !                 The parent table of the column on the LHS of our
 !                 equi-join constraint belongs to the first join
@@ -1375,11 +1375,11 @@
 !                 rows on the right side also satisfy the join
 !                 constraint, combined with the current left hand side.
 !
-                  if ( rptr .lt. svnr2 ) then
+                  if ( rptr < svnr2 ) then
 
                      rptr  =  rptr + 1
 
-                  else if ( lptr .lt. svnr1 ) then
+                  else if ( lptr < svnr1 ) then
 
                      lptr  =  lptr + 1
                      rptr  =  1
@@ -1397,11 +1397,11 @@
 !                 rows on the left side also satisfy the join
 !                 constraint, combined with the current right hand side.
 !
-                  if ( lptr .lt. svnr1 ) then
+                  if ( lptr < svnr1 ) then
 
                      lptr  =  lptr + 1
 
-                  else if ( rptr .lt. svnr2 ) then
+                  else if ( rptr < svnr2 ) then
 
                      rptr  =  rptr + 1
                      lptr  =  1
@@ -1430,7 +1430,7 @@
 !                 If the right side can be incremented, there's a
 !                 chance of a match.
 !
-                  if ( rptr .lt. svnr2 ) then
+                  if ( rptr < svnr2 ) then
                      rptr  =  rptr + 1
                   else
                      done  =  .true.
@@ -1442,7 +1442,7 @@
 !                 If the left side can be incremented, there's a
 !                 chance of a match.
 !
-                  if ( lptr .lt. svnr1 ) then
+                  if ( lptr < svnr1 ) then
                      lptr  =  lptr + 1
                   else
                      done  =  .true.
@@ -1470,10 +1470,10 @@
 !        continuation of our search when we drop back into the loop
 !        on a subsequent call.
 !
-         do while ( lptr .le. svnr1 )
+         do while ( lptr <= svnr1 )
 
 
-            do while ( rptr .le. svnr2 )
+            do while ( rptr <= svnr2 )
 !
 !              Form a composite row vector and test it against the full
 !              set of active constraints.

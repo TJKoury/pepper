@@ -25,8 +25,8 @@
       include               'zzctr.inc'
 
       real(wp)              epoch
-      character*(*)         insys
-      character*(*)         outsys
+      character(*)          insys
+      character(*)          outsys
 
 ! $ Brief_I/O
 !
@@ -275,15 +275,15 @@
 !
 !     Local variables
 !
-      character*(1)         bslash
-      character*(lngvar)    vars   ( needed )
-      character*(mislen)    missed ( needed )
-      character*(typlen)    myin
-      character*(typlen)    myout
-      character*(typlen)    recog  ( lbcell : nrecog    )
-      character*(typlen)    types  ( lbcell : 2         )
-      character*(typlen)    typtdb ( lbcell : ntdb      )
-      character*(typlen)    typtdt ( lbcell : ntdt      )
+      character(1)          bslash
+      character(lngvar)     vars   ( needed )
+      character(mislen)     missed ( needed )
+      character(typlen)     myin
+      character(typlen)     myout
+      character(typlen)     recog  ( lbcell : nrecog    )
+      character(typlen)     types  ( lbcell : 2         )
+      character(typlen)     typtdb ( lbcell : ntdb      )
+      character(typlen)     typtdt ( lbcell : ntdt      )
 
       real(wp)              dta
       real(wp)              eb
@@ -519,7 +519,7 @@
 !     If the input and output types are the same, just copy the input
 !     epoch to the output and call it quits.
 !
-      if ( myin .eq. myout ) then
+      if ( myin == myout ) then
 
          unitim = mytime
 
@@ -545,23 +545,23 @@
 !        ET means TDB; TT means TDT.
 !
 !
-      if      ( myin .eq. 'TAI'   ) then
+      if      ( myin == 'TAI'   ) then
 
          mytime = mytime + dta
 
-      else if ( myin .eq. 'GPS' ) then
+      else if ( myin == 'GPS' ) then
 
          mytime = mytime + (dta + gpstai)
 
-      else if ( myin .eq. 'JDTDT' ) then
+      else if ( myin == 'JDTDT' ) then
 
          mytime = ( mytime - jd2000 ) * secspd
 
-      else if ( myin .eq. 'JED'   ) then
+      else if ( myin == 'JED'   ) then
 
          mytime = ( mytime - jd2000 ) * secspd
 
-      else if ( myin .eq. 'JDTDB' ) then
+      else if ( myin == 'JDTDB' ) then
 
          mytime = ( mytime - jd2000 ) * secspd
 
@@ -723,23 +723,23 @@
 !     Now MYTIME is in the base type of the requested output.
 !     If further conversion is required, we do it here.
 !
-      if      ( myout .eq. 'TAI'   ) then
+      if      ( myout == 'TAI'   ) then
 
          mytime = mytime - dta
 
-       else if ( myout .eq. 'GPS' ) then
+       else if ( myout == 'GPS' ) then
 
          mytime = mytime - (dta + gpstai)
 
-      else if ( myout .eq. 'JDTDT' ) then
+      else if ( myout == 'JDTDT' ) then
 
          mytime = mytime/secspd + jd2000
 
-      else if ( myout .eq. 'JED'   ) then
+      else if ( myout == 'JED'   ) then
 
          mytime = mytime/secspd + jd2000
 
-      else if ( myout .eq. 'JDTDB' ) then
+      else if ( myout == 'JDTDB' ) then
 
          mytime = mytime/secspd + jd2000
 

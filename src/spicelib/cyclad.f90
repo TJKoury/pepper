@@ -22,7 +22,7 @@
 
       real(wp)              array    ( * )
       integer(ip)           nelt
-      character*1           dir
+      character(1)          dir
       integer(ip)           ncycle
       real(wp)              out      ( * )
 
@@ -207,7 +207,7 @@
 !
 !     Don't even screw around if there are no elements in the array.
 !
-      if ( nelt .lt. 1 ) then
+      if ( nelt < 1 ) then
          call chkout ( 'CYCLAD' )
          return
       end if
@@ -218,13 +218,13 @@
 !     K + m*N for any integer m.  Thus we compute the value of the
 !     minimum forward right cycle that is equivalent to the inputs.
 !
-      if (          ( dir .eq. 'B' ) &
-               .or. ( dir .eq. 'b' ) ) then
+      if (          ( dir == 'B' ) &
+               .or. ( dir == 'b' ) ) then
 
          k = mod ( - ncycle, nelt )
 
-      else if (      ( dir .eq. 'F' ) &
-                .or. ( dir .eq. 'F' ) ) then
+      else if (      ( dir == 'F' ) &
+                .or. ( dir == 'F' ) ) then
 
          k = mod (   ncycle, nelt )
 
@@ -240,10 +240,10 @@
 
 
 
-      if ( k .lt. 0 ) then
+      if ( k < 0 ) then
          k = k + nelt
 
-      else if ( k .eq. 0 ) then
+      else if ( k == 0 ) then
 
          call moved  ( array, nelt, out )
          call chkout ( 'CYCLAD' )
@@ -270,7 +270,7 @@
 
             l = l + k
 
-            if ( l .gt. nelt ) then
+            if ( l > nelt ) then
                l = l - nelt
             end if
 

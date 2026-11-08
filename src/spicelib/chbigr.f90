@@ -371,7 +371,7 @@
 !
 !     Check the expansion degree.
 !
-      if ( degp .lt. 0 )  then
+      if ( degp < 0 )  then
 
          call chkin  ( 'CHBIGR'                                )
          call setmsg ( 'Expansion degree must be non-negative ' &
@@ -386,7 +386,7 @@
 !
 !     Check the radius of the domain interval.
 !
-      if ( x2s(2) .le. 0.0_wp )  then
+      if ( x2s(2) <= 0.0_wp )  then
 
          call chkin  ( 'CHBIGR'                            )
          call setmsg ( 'Interval radius must be positive ' &
@@ -604,7 +604,7 @@
 !
 !     above and are set according to equations 5a, 5c, and 5d.
 !
-      if ( nterms .ge. 3 ) then
+      if ( nterms >= 3 ) then
 
          a2 = cp(1) - 0.5_wp*cp(3)
       else
@@ -618,13 +618,13 @@
       adegp1 = 0.0_wp
       adegp2 = 0.0_wp
 
-      if ( degp .ge. 2 ) then
+      if ( degp >= 2 ) then
 
          adegp1 = 0.5_wp * cp(degp) / degp
 
       end if
 
-      if ( degp .ge. 1 ) then
+      if ( degp >= 1 ) then
 
          adegp2 = 0.5_wp * cp(degp+1) / (degp+1)
 
@@ -649,7 +649,7 @@
 !     The initial value of F(1) is the highest-order coefficient of
 !     the integral's expansion.
 !
-      if ( degp .eq. 0 ) then
+      if ( degp == 0 ) then
          f(1) = a2
       else
          f(1) = adegp2
@@ -673,17 +673,17 @@
 !
       i = nterms
 
-      do while ( i .gt. 1 )
+      do while ( i > 1 )
 !
 !        The variable AI represents A(I), which is the Ith coefficient
 !        of the Chebyshev expansion of the indefinite integral. AI is
 !        set according to formulas 5a-c above.
 !
-         if ( i .eq. 2 ) then
+         if ( i == 2 ) then
 
             ai = a2
 
-         else if ( i .lt. nterms ) then
+         else if ( i < nterms ) then
 !
 !           AI is A ; I >= 3; DEGP >= 3.
 !                  I

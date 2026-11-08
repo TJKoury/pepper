@@ -236,11 +236,11 @@
 !
       subtyp =  nint( record(sbtidx) )
 
-      if ( subtyp .eq. s18tp0 ) then
+      if ( subtyp == s18tp0 ) then
 
          packsz = s18ps0
 
-      else if ( subtyp .eq. s18tp1 ) then
+      else if ( subtyp == s18tp1 ) then
 
          packsz = s18ps1
 
@@ -259,7 +259,7 @@
 !
       n = nint( record(cntidx) )
 
-      if ( subtyp .eq. s18tp1 ) then
+      if ( subtyp == s18tp1 ) then
 !
 !        This is the easy case:  we perform Lagrange interpolation
 !        on each state component.

@@ -416,7 +416,7 @@
 !
 !     Check START.
 !
-      if (  ( start .lt. 1 ) .or. ( start .gt. np )  ) then
+      if (  ( start < 1 ) .or. ( start > np )  ) then
 
          call zzddhhlu ( handle, 'DAS', .false., unit )
 

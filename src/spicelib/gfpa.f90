@@ -38,11 +38,11 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         target
-      character*(*)         illmn
-      character*(*)         abcorr
-      character*(*)         obsrvr
-      character*(*)         relate
+      character(*)          target
+      character(*)          illmn
+      character(*)          abcorr
+      character(*)          obsrvr
+      character(*)          relate
       real(wp)              refval
       real(wp)              adjust
       real(wp)              step
@@ -1013,8 +1013,8 @@
 !
 !     Quantity definition parameter arrays:
 !
-      character*(lnsize)    qcpars ( qnpars )
-      character*(lnsize)    qpnams ( qnpars )
+      character(lnsize)     qcpars ( qnpars )
+      character(lnsize)     qpnams ( qnpars )
 
       real(wp)              qdpars ( qnpars )
 
@@ -1037,7 +1037,7 @@
 !
 !     Confirm minimum window sizes.
 !
-      if ( (mw .lt. 2) .or. odd(mw) ) then
+      if ( (mw < 2) .or. odd(mw) ) then
 
          call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
@@ -1049,7 +1049,7 @@
       end if
 
 
-      if ( nw .lt. nwpa ) then
+      if ( nw < nwpa ) then
 
          call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                )
@@ -1065,7 +1065,7 @@
 !
 !     Check the result window size.
 !
-      if ( (sized(result) .lt. 2) .or. odd( sized(result) ) ) then
+      if ( (sized(result) < 2) .or. odd( sized(result) ) ) then
 
          call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )

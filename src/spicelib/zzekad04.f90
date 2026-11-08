@@ -199,7 +199,7 @@
 !
       ncols  =  segdsc ( ncidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKAD04'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' )
@@ -215,7 +215,7 @@
 !     If the value is null, make sure that nulls are permitted
 !     in this column.
 !
-      if (  isnull  .and.  ( coldsc(nflidx) .ne. itrue )  ) then
+      if (  isnull  .and.  ( coldsc(nflidx) /= itrue )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 
@@ -237,7 +237,7 @@
 !     match the declared entry size.  In all cases, NVALS must be
 !     positive.
 !
-      if ( nvals .lt. 1 ) then
+      if ( nvals < 1 ) then
 
          call chkin  ( 'ZZEKAD04'                                  )
          call setmsg ( 'COLIDX = #;  segment = #; NVALS = #;  '  // &
@@ -252,9 +252,9 @@
       end if
 
 
-      if ( coldsc(sizidx) .ne. ifalse ) then
+      if ( coldsc(sizidx) /= ifalse ) then
 
-         if ( nvals .ne. coldsc(sizidx) ) then
+         if ( nvals /= coldsc(sizidx) ) then
 
             call chkin  ( 'ZZEKAD04'                                   )
             call setmsg ( 'COLIDX = #;  segment = #; NVALS = #; '     // &
@@ -294,13 +294,13 @@
          fstpag  =  .true.
 
 
-         do while ( remain .gt. 0 )
+         do while ( remain > 0 )
 !
 !           Decide where to write the data values.  In order to write
 !           to the current page, we require enough room for the count
 !           and at least one column entry element.
 !
-            if ( room .ge. 2 ) then
+            if ( room >= 2 ) then
 !
 !              There's room in the current page.  If this is the first
 !              page this entry is written on, set the data pointer

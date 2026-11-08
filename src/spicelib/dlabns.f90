@@ -484,7 +484,7 @@
 !     If this is not the first segment, the forward pointer of the
 !     previous descriptor must be updated to point to this descriptor.
 !
-      if ( sgptrs(lstidx) .ne. nulptr ) then
+      if ( sgptrs(lstidx) /= nulptr ) then
 
          addr = sgptrs(lstidx) + fwdidx - 1
 
@@ -497,7 +497,7 @@
 !     must be updated only if it's null.  The end pointer will point to
 !     this segment.
 !
-      if ( sgptrs(fstidx) .eq. nulptr ) then
+      if ( sgptrs(fstidx) == nulptr ) then
 
          call dasudi ( handle, llbidx, llbidx, this )
 

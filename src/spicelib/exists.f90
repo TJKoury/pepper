@@ -19,7 +19,7 @@
 
       implicit none
 
-      character*(*)    fname
+      character(*)     fname
 
 ! $ Brief_I/O
 !
@@ -254,7 +254,7 @@
 !
 !     First we test to see if the filename is blank.
 !
-      if ( fname .eq. ' ' ) then
+      if ( fname == ' ' ) then
 
          exists = .false.
          call setmsg ( 'The file name is blank. ' )
@@ -270,7 +270,7 @@
 !
       inquire ( file = fname(1:r), exist = myexst, iostat = iostat )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          exists = .false.
          call setmsg ( 'Value of IOSTAT was *.' )

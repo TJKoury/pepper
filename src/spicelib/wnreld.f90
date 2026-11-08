@@ -23,7 +23,7 @@
       parameter           ( lbcell = -5 )
 
       real(wp)              a        ( lbcell:* )
-      character*(*)         op
+      character(*)          op
       real(wp)              b        ( lbcell:* )
 
 ! $ Brief_I/O
@@ -296,25 +296,25 @@
 !     We need to know this for nearly every relationship, so find out
 !     before going any further.
 !
-         if ( acard .ne. bcard ) then
+         if ( acard /= bcard ) then
             equal = .false.
 
          else
             equal = .true.
 
             do i = 1, acard
-               equal = equal .and. ( a(i) .eq. b(i) )
+               equal = equal .and. ( a(i) == b(i) )
             end do
          end if
 
 !
 !     Simple equality and inequality are trivial at this point.
 !
-      if ( op .eq. '=' ) then
+      if ( op == '=' ) then
 
          wnreld = equal
 
-      else if ( op .eq. '<>' ) then
+      else if ( op == '<>' ) then
 
          wnreld = .not. equal
 
@@ -323,7 +323,7 @@
 !     interval in A is included in B. In addition, A is a proper
 !     subset if A and B are not equal.
 !
-      else if ( op .eq. '<='  .or.  op .eq. '<' ) then
+      else if ( op == '<='  .or.  op == '<' ) then
 
          subset = .true.
 
@@ -331,7 +331,7 @@
             subset = subset .and. ( wnincd ( a(i), a(i+1), b ) )
          end do
 
-         if ( op .eq. '<=' ) then
+         if ( op == '<=' ) then
             wnreld = subset
 
          else
@@ -341,7 +341,7 @@
 !
 !     A and B change places here...
 !
-      else if ( op .eq. '>='  .or.  op .eq. '>' ) then
+      else if ( op == '>='  .or.  op == '>' ) then
 
          subset = .true.
 
@@ -349,7 +349,7 @@
             subset = subset .and. ( wnincd ( b(i), b(i+1), a ) )
          end do
 
-         if ( op .eq. '>=' ) then
+         if ( op == '>=' ) then
             wnreld = subset
 
          else

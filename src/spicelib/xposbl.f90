@@ -281,7 +281,7 @@
 !     Let's first check to make sure that the requested operation
 !     makes sense.  Are all of the integers positive?
 !
-      if (  bsize .lt. 1 ) then
+      if (  bsize < 1 ) then
          call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The block size is not positive. '             // &
                        'The block size is #.'                         )
@@ -291,7 +291,7 @@
          return
       end if
 
-      if (  nrow .lt. 1 ) then
+      if (  nrow < 1 ) then
          call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The number of rows in the matrix is not '     // &
                        'positive. The number of rows is #.'           )
@@ -301,7 +301,7 @@
          return
       end if
 
-      if (  ncol .lt. 1 ) then
+      if (  ncol < 1 ) then
          call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The number of columns in the matrix is not '  // &
                        'positive. The number of columns is #.'        )
@@ -316,8 +316,8 @@
 !
 !     Is there a whole number of blocks in the matrix.
 !
-      if (      ( mod( ncol, bsize ) .ne. 0 ) &
-           .or. ( mod( nrow, bsize ) .ne. 0 ) ) then
+      if (      ( mod( ncol, bsize ) /= 0 ) &
+           .or. ( mod( nrow, bsize ) /= 0 ) ) then
 
          call chkin  ( 'XPOSBL'                                       )
          call setmsg ( 'The block size does not evenly divide both '  // &
@@ -347,7 +347,7 @@
             do i = 1, bsize
                do j = 1, i
 
-                  if ( i .eq. j ) then
+                  if ( i == j ) then
                      btmat ( rb+i, cb+j ) = bmat ( rb+i, cb+j )
                   else
                      temp                 = bmat ( rb+i, cb+j )

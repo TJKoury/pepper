@@ -35,11 +35,11 @@
 
       integer(ip)           handle
       integer(ip)           inst
-      character*(*)         ref
+      character(*)          ref
       logical               avflag
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           nmini
       integer(ip)           npkts  ( * )
       integer(ip)           subtps ( * )
@@ -798,7 +798,7 @@
 !
 !     Start with a parameter compatibility check.
 !
-      if ( ckmrsz .lt. maxrsz ) then
+      if ( ckmrsz < maxrsz ) then
 
          call setmsg ( 'CK type 6 record size is #, but ' &
          //            'CKPFS record size is #.' &
@@ -815,7 +815,7 @@
 !     Make sure the segment descriptor bounds are
 !     correctly ordered.
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
 
          call setmsg ( 'Segment start time is #; stop time is #; ' &
          //            'bounds must be in nondecreasing order.'    )
@@ -832,7 +832,7 @@
 !
       call namfrm ( ref, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.' )
          call errch  ( '#', ref                                  )
@@ -845,7 +845,7 @@
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
@@ -863,7 +863,7 @@
 
          chrcod = ichar( segid(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains ' &
             //            'nonprintable characters'         )
@@ -878,7 +878,7 @@
 !
 !     The mini-segment count must be positive.
 !
-      if ( nmini .lt. 1 ) then
+      if ( nmini < 1 ) then
 
          call setmsg ( 'Mini-segment count was #; ' &
          //            'this count must be positive.' )
@@ -897,7 +897,7 @@
 !
       do i = 1, nmini
 
-         if ( ivlbds(i) .ge. ivlbds(i+1) ) then
+         if ( ivlbds(i) >= ivlbds(i+1) ) then
 
             call setmsg ( 'Mini-segment interval ' &
             //            'bounds at indices # and # ' &
@@ -921,8 +921,8 @@
 !     Make sure the time span of the descriptor doesn't extend
 !     beyond the span of the interval bounds.
 !
-      if (      ( first .lt. ivlbds(1        ) ) &
-           .or. ( last  .gt. ivlbds(nmini+1) ) ) then
+      if (      ( first < ivlbds(1        ) ) &
+           .or. ( last  > ivlbds(nmini+1) ) ) then
 
          call setmsg ( 'First mini-segment interval ' &
          //            'start time is #; segment start time ' &
@@ -967,7 +967,7 @@
 !
 !        Check the number of packets.
 !
-         if ( npkts(i) .lt. 2 ) then
+         if ( npkts(i) < 2 ) then
 
             call setmsg ( 'At least 2 packets are required ' &
             //            'for CK type 6. Number of packets ' &
@@ -987,7 +987,7 @@
 !
          subtyp = subtps(i)
 
-         if (  ( subtyp .lt. 0 ) .or. ( subtyp .gt. c06nst-1 ) ) then
+         if (  ( subtyp < 0 ) .or. ( subtyp > c06nst-1 ) ) then
 
             call setmsg ( 'Unexpected CK type 6 subtype # ' &
             //            'found in mini-segment #.'       )
@@ -1011,7 +1011,7 @@
 !
 !        Make sure the SCLK rates in this mini-segment are positive.
 !
-         if ( rates(i) .le. 0.0_wp ) then
+         if ( rates(i) <= 0.0_wp ) then
 
             call setmsg ( 'SCLK rate at index # was #; rate must ' &
             //            'be positive.'                           )
@@ -1033,8 +1033,8 @@
 !        Make sure that the degree of the interpolating polynomials is
 !        in range.
 !
-         if (      ( degres(i) .lt. 1      ) &
-              .or. ( degres(i) .gt. maxdeg )  )  then
+         if (      ( degres(i) < 1      ) &
+              .or. ( degres(i) > maxdeg )  )  then
 
             call setmsg ( 'The interpolating polynomials of ' &
             //            'mini-segment # have degree #; the ' &
@@ -1087,7 +1087,7 @@
 
             k = bepix + j - 1
 
-            if ( sclkdp(k) .ge. sclkdp(k+1) ) then
+            if ( sclkdp(k) >= sclkdp(k+1) ) then
 
                call setmsg ( 'In mini-segment #, epoch # having ' &
                //            'mini-segment-relative index # and ' &
@@ -1112,7 +1112,7 @@
 !        interval. Note that the stop time need not be covered, since
 !        gaps are allowed at the right ends of mini-segment intervals.
 !
-         if (  sclkdp(bepix) .gt. ivlbds(i) ) then
+         if (  sclkdp(bepix) > ivlbds(i) ) then
 
             call setmsg ( 'Mini-segment interval # start time # ' &
             //            'precedes mini-segment''s first epoch #.' )
@@ -1123,7 +1123,7 @@
             call chkout ( 'CKW06'                                   )
             return
 
-         else if (  sclkdp(eepix) .lt. ivlbds(i) ) then
+         else if (  sclkdp(eepix) < ivlbds(i) ) then
 
             call setmsg ( 'Mini-segment interval # start time # ' &
             //            'follows mini-segment''s last epoch #.'   )
@@ -1168,7 +1168,7 @@
 !           sequence.
 !
 
-            if (  ( j .gt. 1 )  .and.  even(subtyp)  ) then
+            if (  ( j > 1 )  .and.  even(subtyp)  ) then
 !
 !              Compare the distance between the current quaternion
 !              and its predecessor vs the distance between the
@@ -1179,7 +1179,7 @@
                call vminug ( q, 4, qneg )
 
                if (      vdistg(prevq, qneg, 4 ) &
-                    .lt. vdistg(prevq, q,    4 )  ) then
+                    < vdistg(prevq, q,    4 )  ) then
 
                   call setmsg ( 'The quaternion in packet # within ' &
                   //            'mini-segment # is farther than its ' &

@@ -234,7 +234,7 @@
 !
 !     Just a binary search.
 !
-      elemd = ( bsrchd ( item, cardd ( a ), a(1) ) .ne. 0 )
+      elemd = ( bsrchd ( item, cardd ( a ), a(1) ) /= 0 )
 
       call chkout ( 'ELEMD' )
       return

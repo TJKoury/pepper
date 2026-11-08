@@ -35,14 +35,14 @@
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      character*(*)         varnam
-      character*(*)         wtvars ( lbcell : * )
+      character(*)          varnam
+      character(*)          wtvars ( lbcell : * )
       integer(ip)           wtptrs ( * )
       integer(ip)           wtpool ( 2, lbpool : * )
-      character*(*)         wtagnt ( * )
-      character*(*)         agtwrk ( lbcell : * )
-      character*(*)         notify ( lbcell : * )
-      character*(*)         agents ( lbcell : * )
+      character(*)          wtagnt ( * )
+      character(*)          agtwrk ( lbcell : * )
+      character(*)          notify ( lbcell : * )
+      character(*)          agents ( lbcell : * )
 
 
 ! $ Brief_I/O

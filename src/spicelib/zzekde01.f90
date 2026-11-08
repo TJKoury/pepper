@@ -181,14 +181,14 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        Determine whether the column is indexed.
 !
          idxtyp  =  coldsc(ixtidx)
 
 
-         if ( idxtyp .ne. ifalse ) then
+         if ( idxtyp /= ifalse ) then
 !
 !           This column is indexed.  Delete the index entry
 !           for this column.
@@ -210,7 +210,7 @@
 !
          call zzekglnk ( handle, int, p, nlinks )
 
-         if ( nlinks .gt. 1 ) then
+         if ( nlinks > 1 ) then
 
             call zzekslnk ( handle, int, p, nlinks-1 )
 
@@ -230,13 +230,13 @@
          call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        Determine whether the column is indexed.
 !
          idxtyp  =  coldsc(ixtidx)
 
-         if ( idxtyp .ne. ifalse ) then
+         if ( idxtyp /= ifalse ) then
 !
 !           This column is indexed.  Delete the index entry
 !           for this column.
@@ -251,7 +251,7 @@
          call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 
-      else if ( datptr .ne. uninit ) then
+      else if ( datptr /= uninit ) then
 !
 !        UNINIT was the last valid possibility.  The data pointer is
 !        corrupted.

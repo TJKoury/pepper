@@ -50,14 +50,14 @@
       include               'zzctr.inc'
       include               'zzdsk.inc'
 
-      character*(*)         method
-      character*(*)         ilusrc
-      character*(*)         target
+      character(*)          method
+      character(*)          ilusrc
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         corloc
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          corloc
+      character(*)          obsrvr
       real(wp)              refvec ( 3 )
       real(wp)              rolstp
       integer(ip)           ncuts
@@ -1923,10 +1923,10 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'TERMPT' )
 
-      character*(*)         iref
+      character(*)          iref
       parameter           ( iref   = 'J2000' )
 
 !
@@ -1969,14 +1969,14 @@
 !
 !     Local variables
 !
-      character*(cvtlen)    pntdef
-      character*(acllen)    nrmloc
-      character*(corlen)    prvcor
-      character*(acllen)    prvloc
-      character*(mthlen)    prvmth
-      character*(shplen)    shpstr
-      character*(sublen)    subtyp
-      character*(tmtlen)    trmstr
+      character(cvtlen)     pntdef
+      character(acllen)     nrmloc
+      character(corlen)     prvcor
+      character(acllen)     prvloc
+      character(mthlen)     prvmth
+      character(shplen)     shpstr
+      character(sublen)     subtyp
+      character(tmtlen)     trmstr
 
       real(wp)              axis   ( 3 )
       real(wp)              cp     ( 3 )
@@ -2045,17 +2045,17 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
       integer(ip)           svctr3 ( ctrsiz )
-      character*(maxl)      svilum
+      character(maxl)       svilum
       integer(ip)           svicde
       logical               svfnd3
 
@@ -2063,7 +2063,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr4 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svfxfc
 
 
@@ -2186,7 +2186,7 @@
       end if
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
@@ -2309,7 +2309,7 @@
 !     signal an error. The illumination source must be distinct
 !     from the target as well.
 !
-      if ( obscde .eq. trgcde ) then
+      if ( obscde == trgcde ) then
 
          call setmsg ( 'In computing the terminator, ' &
          //            'the observing body and target body are the ' &
@@ -2321,7 +2321,7 @@
 
       end if
 
-      if ( ilucde .eq. trgcde ) then
+      if ( ilucde == trgcde ) then
 
          call setmsg ( 'In computing the terminator, the ' &
          //            'observing body and illumination source ' &
@@ -2361,7 +2361,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( fxcent .ne. trgcde ) then
+      if ( fxcent /= trgcde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -2385,7 +2385,7 @@
 !     The choice of initialization routine depends on the target
 !     surface type.
 !
-      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
+      if ( first  .or.  surfup  .or.  ( method /= prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -2485,7 +2485,7 @@
 !        There should be no subtype specification in the method
 !        string.
 !
-         if ( subtyp .ne. ' ' ) then
+         if ( subtyp /= ' ' ) then
 
             call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
@@ -2511,15 +2511,15 @@
 !
 !     Identify the aberration correction locus.
 !
-      if (  first  .or.  ( corloc .ne. prvloc )  ) then
+      if (  first  .or.  ( corloc /= prvloc )  ) then
 
          call ljucrs ( 1, corloc, nrmloc )
 
-         if ( nrmloc .eq. 'CENTER' ) then
+         if ( nrmloc == 'CENTER' ) then
 
             loccde = ctrcor
 
-         else if ( nrmloc .eq. 'ELLIPSOID TERMINATOR' ) then
+         else if ( nrmloc == 'ELLIPSOID TERMINATOR' ) then
 
             loccde = ellcor
 
@@ -2563,7 +2563,7 @@
 !
 !     Check MAXN.
 !
-      if ( maxn .lt. 1 ) then
+      if ( maxn < 1 ) then
 
          call setmsg ( 'MAXN = #; MAXN is required ' &
          //            'to be at least 1.'           )
@@ -2578,7 +2578,7 @@
 !     Check NCUTS; there must be room for at least one terminator point
 !     for each cut. NCUTS may not be negative.
 !
-      if (  ( ncuts .lt. 0 ) .or. ( ncuts .gt. maxn )  ) then
+      if (  ( ncuts < 0 ) .or. ( ncuts > maxn )  ) then
 
          call setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
          //            'to be non-negative and no larger than ' &
@@ -2594,9 +2594,9 @@
 !
 !     Check ROLSTP, if this step is needed.
 !
-      if ( ncuts .gt. 1 )  then
+      if ( ncuts > 1 )  then
 
-         if ( rolstp .eq. 0.0_wp ) then
+         if ( rolstp == 0.0_wp ) then
 
             call setmsg ( 'ROLSTP is zero; NCUTS = #; the roll ' &
             //            'step is required to be non-zero ' &
@@ -2613,7 +2613,7 @@
 
 
 
-      if ( shape .eq. dskshp ) then
+      if ( shape == dskshp ) then
 !
 !        This is the DSK case.
 !
@@ -2628,7 +2628,7 @@
          call zzmaxrad ( maxrad )
 
 
-      else if ( shape .ne. ellshp ) then
+      else if ( shape /= ellshp ) then
 
          call setmsg ( 'Computation method argument was <#>; this ' &
          //            'string must specify a supported shape ' &
@@ -2650,7 +2650,7 @@
 !
 !     Get illumination source radii.
 !
-      if ( ilucde .ne. prvilu ) then
+      if ( ilucde /= prvilu ) then
 !
 !        Reset counter to force lookup.
 !
@@ -2674,7 +2674,7 @@
 
       end if
 
-      if ( nrad .ne. 3 ) then
+      if ( nrad /= 3 ) then
 
          call setmsg ( 'Number of illumination source radii ' &
          //            'must be 3 but was #.'                )
@@ -2695,11 +2695,11 @@
 !
 !     Get target body radii if necessary.
 !
-      if (      ( shape   .eq. ellshp ) &
-           .or. ( svlcod  .eq. ellcor ) &
-           .or. ( trmtyp  .eq. guided )  ) then
+      if (      ( shape   == ellshp ) &
+           .or. ( svlcod  == ellcor ) &
+           .or. ( trmtyp  == guided )  ) then
 
-         if ( trgcde .ne. prvtrg ) then
+         if ( trgcde /= prvtrg ) then
 !
 !           Reset counter to force lookup.
 !
@@ -2716,7 +2716,7 @@
             return
          end if
 
-         if ( nrad .ne. 3 ) then
+         if ( nrad /= 3 ) then
 
             call setmsg ( 'Number of target radii must be 3 ' &
             //            'but was #.'                       )
@@ -2767,7 +2767,7 @@
 !     correction locus. Start with the 'CENTER' version, since this is
 !     the simpler case.
 !
-      if ( svlcod .eq. ctrcor ) then
+      if ( svlcod == ctrcor ) then
 !
 !        Aberration corrections are those applicable at the target
 !        center.
@@ -2827,11 +2827,11 @@
             call vrotv ( refvec, axis, roll, plnvec )
 
 
-            if ( shape .eq. dskshp ) then
+            if ( shape == dskshp ) then
 !
 !              This is the DSK case.
 !
-               if ( trmtyp .eq. tangnt ) then
+               if ( trmtyp == tangnt ) then
 !
 !                 This type of solution finds actual tangent rays on
 !                 the target.
@@ -2864,7 +2864,7 @@
                   npts(i) = cardd( result )
 
 
-               else if ( trmtyp .eq. guided ) then
+               else if ( trmtyp == guided ) then
 !
 !                 This option uses the target's reference ellipsoid for
 !                 guidance. For DSK shapes, the DSK terminator points
@@ -2932,7 +2932,7 @@
                end if
 
 
-            else if ( shape .eq. ellshp ) then
+            else if ( shape == ellshp ) then
 !
 !              This is the ellipsoid case.
 !
@@ -2969,7 +2969,7 @@
 
             total = total + npts(i)
 
-            if ( npts(i) .gt. room ) then
+            if ( npts(i) > room ) then
 
                call setmsg ( 'Out of room in output arrays. Index of ' &
                //            'cutting half-plane is # out of #. ' &
@@ -3008,7 +3008,7 @@
 
 
 
-      else if ( svlcod .eq. ellcor ) then
+      else if ( svlcod == ellcor ) then
 !
 !        Aberration corrections are done for each cutting half plane.
 !        Corrections are performed for the intersections of the
@@ -3017,7 +3017,7 @@
 !        This locus is supported only for the "tangent" terminator
 !        point method.
 !
-         if ( trmtyp .ne. tangnt ) then
+         if ( trmtyp /= tangnt ) then
 
             call setmsg ( 'Terminator point definition type <#> ' &
             //            'is not supported for the ' &
@@ -3070,8 +3070,8 @@
                j     = 0
                lterr = 1.0_wp
 
-               do while (       ( j     .lt. numitr ) &
-                          .and. ( lterr .gt. cnvlim )  )
+               do while (       ( j     < numitr ) &
+                          .and. ( lterr > cnvlim )  )
 !
 !                 LT was set either prior to this loop or
 !                 during the previous loop iteration.
@@ -3263,7 +3263,7 @@
 !           We're ready to compute the terminator point in the current
 !           half-plane.
 !
-            if ( shape .eq. dskshp ) then
+            if ( shape == dskshp ) then
 !
 !              Find the terminator points on the target surface as
 !              modeled by DSK data.
@@ -3313,7 +3313,7 @@
 
             total   = total + npts(i)
 
-            if ( npts(i) .gt. room ) then
+            if ( npts(i) > room ) then
 
                call setmsg ( 'Out of room in output arrays. Index of ' &
                //            'cutting half-plane is # out of #. ' &

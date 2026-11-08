@@ -102,9 +102,9 @@
 !
 !     Local Variables
 !
-      character*(wdsize)    strbff
-      character*(wdsize)    value
-      character*(wdsize)    rtebff
+      character(wdsize)     strbff
+      character(wdsize)     value
+      character(wdsize)     rtebff
 
       integer(ip)           bff
 
@@ -133,7 +133,7 @@
 !
 !     Check results, signal SPICE(BUG) if a discrepancy appears.
 !
-      if ( strbff .ne. rtebff ) then
+      if ( strbff /= rtebff ) then
 
          call setmsg   ( 'This version of SPICELIB was originally ' &
          //              'packaged by NAIF for # hardware using ' &
@@ -158,7 +158,7 @@
 
          call errch    ( '#',        strbff                            )
 
-         if ( rtebff .eq. ' ' ) then
+         if ( rtebff == ' ' ) then
             call errch ( '#', 'UNKNOWN' )
          else
             call errch ( '#',  rtebff   )

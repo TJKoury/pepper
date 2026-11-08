@@ -433,7 +433,7 @@
 !
       call unorm ( linedr, udir, mag )
 
-      if ( mag .eq. 0 ) then
+      if ( mag == 0 ) then
 
          call setmsg( 'Line direction vector is the zero vector. ' )
          call sigerr( 'SPICE(ZEROVECTOR)'                          )
@@ -443,9 +443,9 @@
 !
 !     The ellipsoid's semi-axes must have positive length.
 !
-      else if (         ( a .le. 0.0_wp ) &
-                 .or.   ( b .le. 0.0_wp ) &
-                 .or.   ( c .le. 0.0_wp )   )   then
+      else if (         ( a <= 0.0_wp ) &
+                 .or.   ( b <= 0.0_wp ) &
+                 .or.   ( c <= 0.0_wp )   )   then
 
          call setmsg ( 'Semi-axes: A = #,  B = #,  C = #.'  )
          call errdp  ( '#', a                               )
@@ -469,9 +469,9 @@
       sclb   =  b / scale
       sclc   =  c / scale
 
-      if (       ( scla**2.0_wp  .eq.  0.0_wp ) &
-           .or.  ( sclb**2.0_wp  .eq.  0.0_wp ) &
-           .or.  ( sclc**2.0_wp  .eq.  0.0_wp )   )   then
+      if (       ( scla**2.0_wp  ==  0.0_wp ) &
+           .or.  ( sclb**2.0_wp  ==  0.0_wp ) &
+           .or.  ( sclc**2.0_wp  ==  0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                        )

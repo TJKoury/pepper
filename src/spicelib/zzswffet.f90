@@ -352,28 +352,28 @@
 !
 !     Kernel variable name templates:
 !
-      character*(*)         tmalgn
+      character(*)          tmalgn
       parameter           ( tmalgn = 'FRAME_#_ALIGNED_WITH' )
 
-      character*(*)         tmcent
+      character(*)          tmcent
       parameter           ( tmcent = 'FRAME_#_CENTER' )
 
-      character*(*)         tmclas
+      character(*)          tmclas
       parameter           ( tmclas = 'FRAME_#_CLASS' )
 
-      character*(*)         tmclid
+      character(*)          tmclid
       parameter           ( tmclid = 'FRAME_#_CLASS_ID' )
 
-      character*(*)         tmid
+      character(*)          tmid
       parameter           ( tmid   = 'FRAME_#' )
 
-      character*(*)         tmfnam
+      character(*)          tmfnam
       parameter           ( tmfnam = 'FRAME_#_NAME' )
 
-      character*(*)         tmstrt
+      character(*)          tmstrt
       parameter           ( tmstrt = 'FRAME_#_START' )
 
-      character*(*)         tmstop
+      character(*)          tmstop
       parameter           ( tmstop = 'FRAME_#_STOP' )
 
 !
@@ -422,21 +422,21 @@
 !
 !     Local variables
 !
-      character*(frnmln)    basnam
-      character*(1)         bastyp
-      character*(frnmln)    frname
-      character*(kvnmln)    kvalgn
-      character*(kvnmln)    kvclid
-      character*(kvnmln)    kvcent
-      character*(kvnmln)    kvclas
-      character*(kvnmln)    kvid
-      character*(kvnmln)    kvfnam
-      character*(kvnmln)    kvnams ( nkv )
-      character*(kvnmln)    kvstrt
-      character*(kvnmln)    kvstop
-      character*(1)         stptyp
-      character*(1)         strtyp
-      character*(timlen)    timstr
+      character(frnmln)     basnam
+      character(1)          bastyp
+      character(frnmln)     frname
+      character(kvnmln)     kvalgn
+      character(kvnmln)     kvclid
+      character(kvnmln)     kvcent
+      character(kvnmln)     kvclas
+      character(kvnmln)     kvid
+      character(kvnmln)     kvfnam
+      character(kvnmln)     kvnams ( nkv )
+      character(kvnmln)     kvstrt
+      character(kvnmln)     kvstop
+      character(1)          stptyp
+      character(1)          strtyp
+      character(timlen)     timstr
 
       integer(ip)           center
       integer(ip)           fid
@@ -541,7 +541,7 @@
 !        The frame ID of the frame specification had better match
 !        the input frame ID.
 !
-         if ( kvfnd(ixid) .and. ( fid .ne. framid ) ) then
+         if ( kvfnd(ixid) .and. ( fid /= framid ) ) then
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
@@ -690,7 +690,7 @@
 !        Make sure that counts of base frames, start times, and
 !        stop times are equal.
 !
-         if ( ( nstart .ne. nstop ) .or. ( nstart .ne. nbases ) ) then
+         if ( ( nstart /= nstop ) .or. ( nstart /= nbases ) ) then
 
             call zzswfcln ( hdfram, frpool, basbeg, framat )
 
@@ -770,7 +770,7 @@
 !
       call zzhsiavl ( frpool, nfravl )
 
-      if ( ( nfravl .eq. 0 ) .or. ( room .lt. nbases ) ) then
+      if ( ( nfravl == 0 ) .or. ( room < nbases ) ) then
 !
 !        There's no room for another frame in the frame pool, or
 !        there's no room for the new frame's data in the base
@@ -781,7 +781,7 @@
 !        much data to fit in the empty base frame arrays, that's
 !        an error.
 !
-         if ( nbases .le. maxbas ) then
+         if ( nbases <= maxbas ) then
 !
 !           We can fit the frame data in by clearing out the
 !           database.
@@ -844,7 +844,7 @@
 !
       kvfnd(ixalgn) = .false.
 
-      if ( bastyp .eq. 'N' ) then
+      if ( bastyp == 'N' ) then
 !
 !        The frames are specified by ID code. We can buffer the frame
 !        ID codes immediately.
@@ -861,7 +861,7 @@
 
          end if
 
-      else if ( bastyp .eq. 'C' ) then
+      else if ( bastyp == 'C' ) then
 !
 !        The frames are specified by name. We must convert the
 !        names to frame ID codes before we can can buffer the IDs.
@@ -887,7 +887,7 @@
 
             call namfrm( basnam, baslst(free-1+i) )
 
-            if ( baslst(free-1+i) .eq. 0 ) then
+            if ( baslst(free-1+i) == 0 ) then
 
                call zzswfcln ( hdfram, frpool, basbeg, framat )
 
@@ -968,7 +968,7 @@
 !        Note that DTPOOL sets the type to 'X' if the target
 !        kernel variable is not found.
 !
-         if ( strtyp .eq. 'N' ) then
+         if ( strtyp == 'N' ) then
 !
 !           The start times are represented by double precision
 !           numbers.
@@ -976,7 +976,7 @@
             call gdpool( kvstrt, 1,            room, &
                          nstart, starts(free), kvfnd(ixstrt) )
 
-         else if ( strtyp .eq. 'C' ) then
+         else if ( strtyp == 'C' ) then
 !
 !           The start times are represented by strings.
 !
@@ -1024,14 +1024,14 @@
 !
 !        Fetch stop times.
 !
-         if ( stptyp .eq. 'N' ) then
+         if ( stptyp == 'N' ) then
 !
 !           The stop times are represented by double precision numbers.
 !
             call gdpool( kvstop, 1,           room, &
                          nstop,  stops(free), kvfnd(ixstop) )
 
-         else if ( stptyp .eq. 'C' ) then
+         else if ( stptyp == 'C' ) then
 !
 !           The stop times are represented by strings.
 !
@@ -1083,7 +1083,7 @@
 
             j = free - 1 + i
 
-            if ( starts(j) .ge. stops(j) ) then
+            if ( starts(j) >= stops(j) ) then
 
                call zzswfcln ( hdfram, frpool, basbeg, framat )
 
@@ -1118,14 +1118,14 @@
          i = 2
          binary( framat ) = .true.
 
-         do while (  ( i .le. nbases ) .and.  binary(framat)  )
+         do while (  ( i <= nbases ) .and.  binary(framat)  )
 !
 !           Note that proper ordering of start and stop times for
 !           each interval has already been verified.
 !
             j = basbeg(framat) - 1 + i
 
-            if ( stops(j-1) .gt. starts(j) ) then
+            if ( stops(j-1) > starts(j) ) then
 
                binary( framat ) = .false.
 

@@ -206,7 +206,7 @@
 !
 !     Local variables
 !
-      character*(nwc)       recc
+      character(nwc)        recc
 
       real(wp)              recd   ( nwd )
 
@@ -283,7 +283,7 @@
 !
 !     It's a mistake to use a negative value of N.
 !
-      if ( n .lt. 0 ) then
+      if ( n < 0 ) then
 
          call setmsg ( 'Number of comment records to remove must be ' // &
                        'non-negative.  Actual number requested was #.' )
@@ -334,8 +334,8 @@
 
       do i = 1, 3
 
-         if (       ( lastrc(i) .eq. lrec  ) &
-              .and. ( lastwd(i) .gt. lword )  ) then
+         if (       ( lastrc(i) == lrec  ) &
+              .and. ( lastwd(i) > lword )  ) then
 
             lword = lastwd(i)
 
@@ -350,7 +350,7 @@
 !     data have their first directory records zeroed out, and this
 !     should remain true after the removal of the comment records.
 !
-      if ( lrec .eq. 0 ) then
+      if ( lrec == 0 ) then
 !
 !        Just write the zero-filled record to record number
 !
@@ -368,7 +368,7 @@
 !
          nrec  =  nresvr + ncomr + 2
 
-         do while ( ( nrec .le. lrec ) .and. ( nrec .ne. 0 ) )
+         do while ( ( nrec <= lrec ) .and. ( nrec /= 0 ) )
 !
 !           Read the current directory record and move it.
 !
@@ -387,7 +387,7 @@
             type  =  dirrec( begdsc )
             base  =  nrec + 1
 
-            if ( nrec .eq. lrec ) then
+            if ( nrec == lrec ) then
                lindex = lword
             else
                lindex = nwi
@@ -402,9 +402,9 @@
 !
             pos  =  begdsc + 1
 
-            do while ( pos .le. lindex )
+            do while ( pos <= lindex )
 
-               if ( pos .gt. begdsc+1 ) then
+               if ( pos > begdsc+1 ) then
 !
 !                 We'll need to determine the type of the current
 !                 cluster.  If the descriptor contains a positive
@@ -412,7 +412,7 @@
 !                 the successor of the previous type, according to our
 !                 ordering of types.
 !
-                  if (  dirrec(pos)  .gt.  0  ) then
+                  if (  dirrec(pos)  >  0  ) then
                      type  =  next( type )
                   else
                      type  =  prev( type )
@@ -431,12 +431,12 @@
 !
                do i  =  base,   base + abs( dirrec(pos) ) - 1
 
-                  if ( type .eq. char ) then
+                  if ( type == char ) then
 
                      call dasioc ( 'READ',   unit,  i,         recc )
                      call dasioc ( 'WRITE',  unit,  i-nshift,  recc )
 
-                  else if ( type .eq. dp ) then
+                  else if ( type == dp ) then
 
                      call dasiod ( 'READ',   unit,  i,         recd )
                      call dasiod ( 'WRITE',  unit,  i-nshift,  recd )
@@ -482,7 +482,7 @@
 
       do i = 1, 3
 
-         if ( lastrc(i) .ne. 0 ) then
+         if ( lastrc(i) /= 0 ) then
             lastrc(i)  =  lastrc(i) - nshift
          end if
 

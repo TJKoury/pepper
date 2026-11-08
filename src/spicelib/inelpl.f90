@@ -323,7 +323,7 @@
          call chkout ( 'INELPL'                                    )
          return
 
-      else if ( inpcon .lt. 0.0_wp ) then
+      else if ( inpcon < 0.0_wp ) then
 
          call setmsg ( 'Input SPICE plane has non-positive ' &
          //            'constant #. Properly constructed ' &
@@ -348,7 +348,7 @@
 
          sep = vsep( smajor, sminor )
 
-         if (  abs( sep - halfpi() )  .gt.  seplim  ) then
+         if (  abs( sep - halfpi() )  >  seplim  ) then
 
             call setmsg ( 'Input SPICE ellipse has non-orthogonal ' &
             //            'semi-axes: (#,#,#) and (#,#,#). Angular ' &
@@ -381,7 +381,7 @@
 !        intersection point. Check the inner product of the
 !        center and the plane's normal vector.
 !
-         if (  vdot( center, normal )  .eq.  inpcon  ) then
+         if (  vdot( center, normal )  ==  inpcon  ) then
 !
 !           The center does in fact lie in the plane.
 !
@@ -459,7 +459,7 @@
 !        The ellipse lies in the plane if and only if CONST is zero.
 !        In any case, we don't modify XPT1 or XPT2.
 !
-         if ( const .eq. 0.0_wp ) then
+         if ( const == 0.0_wp ) then
             nxpts = -1
          else
             nxpts = 0
@@ -503,7 +503,7 @@
 !
 !     Let's return right now if there are no solutions.
 !
-      if (  vnormg( v, 2 )  .lt.  const  )   then
+      if (  vnormg( v, 2 )  <  const  )   then
 
          nxpts = 0
          call chkout ( 'INELPL' )
@@ -555,7 +555,7 @@
 
       else
 
-         if ( angle1 .eq. angle2 ) then
+         if ( angle1 == angle2 ) then
 !
 !           This case occurs when ALPHA is zero.
 !

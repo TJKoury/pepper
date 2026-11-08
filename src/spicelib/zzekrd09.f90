@@ -37,7 +37,7 @@
       integer(ip)           coldsc ( cdscsz )
       integer(ip)           recno
       integer(ip)           cvlen
-      character*(*)         cval
+      character(*)          cval
       logical               isnull
 
 ! $ Brief_I/O
@@ -173,8 +173,8 @@
 !
 !     Local variables
 !
-      character*(1)         cflag
-      character*(cnamsz)    column
+      character(1)          cflag
+      character(cnamsz)     column
 
       integer(ip)           addrss
       integer(ip)           colidx
@@ -199,10 +199,10 @@
       ncols   =  segdsc ( ncidx  )
       colidx  =  coldsc ( ordidx )
       metloc  =  coldsc ( metidx )
-      nullok  =  coldsc ( nflidx ) .eq. itrue
+      nullok  =  coldsc ( nflidx ) == itrue
       l       =  coldsc ( lenidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          call chkin  ( 'ZZEKRD09'                              )
          call setmsg ( 'Column index = #; valid range is 1:#.' // &
@@ -224,7 +224,7 @@
 !
       cvlen  =  l
 
-      if ( cvlen .gt. len(cval) ) then
+      if ( cvlen > len(cval) ) then
 !
 !        We have a string truncation error.  Look up the column
 !        name, record number, and file name before signaling an
@@ -277,7 +277,7 @@
 
          call dasrdc ( handle, addrss, addrss, 1, 1, cflag )
 
-         isnull  =  cflag .eq. ctrue
+         isnull  =  cflag == ctrue
 
          if ( isnull ) then
             return
@@ -305,7 +305,7 @@
 !
 !     Blank-pad CVAL if required.
 !
-      if ( len(cval) .gt. l ) then
+      if ( len(cval) > l ) then
          cval( l+1 : )  =  ' '
       end if
 

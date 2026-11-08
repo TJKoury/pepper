@@ -24,10 +24,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       real(wp)              epoch
       real(wp)              tp     ( 3 )
       real(wp)              pa     ( 3 )
@@ -411,7 +411,7 @@
 !     segment into an SPK file and diagnose it later.
 !
 
-      if ( p .le. 0 ) then
+      if ( p <= 0 ) then
 
          call setmsg ( 'The semi-latus rectum supplied to the ' &
          //            'SPK type 15 evaluator was non-positive.  This ' &
@@ -422,7 +422,7 @@
          call chkout ( 'SPKW15'                )
          return
 
-      else if ( ecc .lt. 0.0_wp ) then
+      else if ( ecc < 0.0_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 15 ' &
          //            'segment is negative.  It must be non-negative. ' &
@@ -433,7 +433,7 @@
          call chkout ( 'SPKW15'                  )
          return
 
-      else if ( gm  .le. 0.0_wp ) then
+      else if ( gm  <= 0.0_wp ) then
 
          call setmsg ( 'The mass supplied for the central body ' &
          //            'of a type 15 segment was non-positive. ' &
@@ -474,7 +474,7 @@
          return
 
 
-      else if ( radius .lt. 0.0_wp ) then
+      else if ( radius < 0.0_wp ) then
 
          call setmsg ( 'The central body radius was negative. ' &
          //            'It must be zero or positive.  The value ' &
@@ -493,7 +493,7 @@
 !
       dot = vdot ( mypa, mytp )
 
-      if ( abs(dot) .gt. 1.0e-5_wp ) then
+      if ( abs(dot) > 1.0e-5_wp ) then
 
          angle = vsep ( pa, tp ) * dpr()
 
@@ -509,7 +509,7 @@
 !
 !     Make sure the segment identifier is not too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                          )
@@ -525,7 +525,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains ' &
             //            'the nonprintable character having ascii ' &

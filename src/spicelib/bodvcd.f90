@@ -23,7 +23,7 @@
       implicit none
 
       integer(ip)           bodyid
-      character*(*)         item
+      character(*)          item
       integer(ip)           maxn
       integer(ip)           dim
       real(wp)              values  ( * )
@@ -304,9 +304,9 @@
 !
 !     Local variables
 !
-      character*(cdelen)    code
-      character*1           type
-      character*(namlen)    varnam
+      character(cdelen)     code
+      character(1)          type
+      character(namlen)     varnam
 
       logical               found
 
@@ -350,7 +350,7 @@
 !
 !     Make sure the item's data type is numeric.
 !
-      if ( type .ne. 'N' ) then
+      if ( type /= 'N' ) then
 
          call setmsg ( 'The data associated with variable # ' // &
                        'are not of numeric type.'             )
@@ -365,7 +365,7 @@
 !     Make sure there's enough room in the array VALUES to hold
 !     the requested data.
 !
-      if ( maxn .lt. dim ) then
+      if ( maxn < dim ) then
 
          call setmsg ( 'The data array associated with variable # ' // &
                        'has dimension #, which is larger than the ' // &

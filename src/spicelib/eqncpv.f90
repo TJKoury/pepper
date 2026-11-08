@@ -373,7 +373,7 @@
 !     Take care of the various errors that can arise with the
 !     input elements.
 !
-      if ( eqel(1) .le. 0.0_wp ) then
+      if ( eqel(1) <= 0.0_wp ) then
 
          call setmsg ( 'The semi-major axis supplied to EQNCPV ' &
          //            'was non-positive. The value is required ' &
@@ -389,7 +389,7 @@
 
       ecc = dsqrt ( eqel(2)*eqel(2) + eqel(3)*eqel(3) )
 
-      if ( ecc .gt. 0.9_wp ) then
+      if ( ecc > 0.9_wp ) then
 
          call setmsg ( 'The routine EQNCPV can reliably evaluate ' &
          //            'states from equinoctial elements if the ' &

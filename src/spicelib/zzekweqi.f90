@@ -27,7 +27,7 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           value
       integer(ip)           eqryi ( lbcell : * )
 
@@ -134,8 +134,8 @@
 !
 !     Local variables
 !
-      character*(namlen)    namlst ( maxnam )
-      character*(namlen)    tmpnam
+      character(namlen)     namlst ( maxnam )
+      character(namlen)     tmpnam
 
       integer(ip)           i
       integer(ip)           namidx ( maxnam )
@@ -177,7 +177,7 @@
 
       i  =  isrchc ( tmpnam, maxnam, namlst )
 
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 
          call chkin  ( 'ZZEKWEQI'           )
          call setmsg ( 'Item # not found.'  )

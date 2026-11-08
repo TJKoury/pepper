@@ -288,10 +288,10 @@
 !
 !     Local variables
 !
-      character*(inisub)    c1
-      character*(inisub)    c2
-      character*(inisub)    cdat   ( limit1 )
-      character*1           nf     ( limit1 )
+      character(inisub)     c1
+      character(inisub)     c2
+      character(inisub)     cdat   ( limit1 )
+      character(1)          nf     ( limit1 )
 
       real(wp)              d1
       real(wp)              d2
@@ -382,15 +382,15 @@
 
       inteq ( n1, n2, i1, i2 ) =            ( n1   .and.    n2  )  .or. &
                                     (       (.not. (n1 .or. n2) ) &
-                                      .and. ( i1 .eq. i2        )  )
+                                      .and. ( i1 == i2        )  )
 
       dpeq  ( n1, n2, d1, d2 ) =            ( n1   .and.    n2  )  .or. &
                                     (       (.not. (n1 .or. n2) ) &
-                                      .and. ( d1 .eq. d2        )  )
+                                      .and. ( d1 == d2        )  )
 
       chreq ( n1, n2, c1, c2 ) =            ( n1   .and.    n2  )  .or. &
                                     (       (.not. (n1 .or. n2) ) &
-                                      .and. ( c1 .eq. c2        )  )
+                                      .and. ( c1 == c2        )  )
 
 
 !
@@ -405,35 +405,35 @@
       intge  ( n1, n2, i1, i2 ) = &
 
            n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
-                       .and. (         i1 .ge. i2    )    )
+                       .and. (         i1 >= i2    )    )
 
       intle  ( n1, n2, i1, i2 ) = &
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
-                       .and. (         i1 .le. i2    )    )
+                       .and. (         i1 <= i2    )    )
 
 
 
       dpge  ( n1, n2, d1, d2 ) = &
 
            n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
-                       .and. (         d1 .ge. d2    )    )
+                       .and. (         d1 >= d2    )    )
 
       dple  ( n1, n2, d1, d2 ) = &
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
-                       .and. (         d1 .le. d2    )    )
+                       .and. (         d1 <= d2    )    )
 
 
       chrge ( n1, n2, c1, c2 ) = &
 
            n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
-                       .and. (         c1 .ge. c2    )    )
+                       .and. (         c1 >= c2    )    )
 
       chrle ( n1, n2, c1, c2 ) = &
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
-                       .and. (         c1 .le. c2    )    )
+                       .and. (         c1 <= c2    )    )
 
 
 !
@@ -448,7 +448,7 @@
 !
 !     If there are no order-by columns, that's an error.
 !
-      if ( norder .lt. 1 ) then
+      if ( norder < 1 ) then
 
          call setmsg ( 'Number of order-by columns must be '      // &
                        'positive but was #.'                       )
@@ -521,7 +521,7 @@
       dtype = dtdscs( typidx, colptr )
 
 
-      if ( nrows .le. limit1 ) then
+      if ( nrows <= limit1 ) then
 !
 !        Case 1.
 !
@@ -558,7 +558,7 @@
             call zzekvcal ( i, rwvbas, sgvbas )
 
 
-            if (  ( i .eq. 1 ) .or. ( sgvbas .ne. prvbas )  ) then
+            if (  ( i == 1 ) .or. ( sgvbas /= prvbas )  ) then
 
                call zzeksrd  ( sgvbas+1,  sgvbas+svsize,  segvec )
 
@@ -579,7 +579,7 @@
             eltidx  =  oelts ( cprime )
 
 
-            if ( dtype .eq. chr ) then
+            if ( dtype == chr ) then
 
                call zzekrsc ( handle, &
                               stsdsc(1,seg), &
@@ -608,10 +608,10 @@
 
                end if
 
-               trunc = trunc .or. ( cvlen  .gt.  inisub )
+               trunc = trunc .or. ( cvlen  >  inisub )
 
 
-            else if (  ( dtype .eq. dp ) .or. ( dtype .eq. time ) ) then
+            else if (  ( dtype == dp ) .or. ( dtype == time ) ) then
 
                call zzekrsd ( handle, &
                               stsdsc(1,seg), &
@@ -641,7 +641,7 @@
 
 
 
-            else if (  dtype .eq. int ) then
+            else if (  dtype == int ) then
 
                call zzekrsi ( handle, &
                               stsdsc(1,seg), &
@@ -711,13 +711,13 @@
 !
          gap = nrows / 2
 
-         do while ( gap .gt. 0 )
+         do while ( gap > 0 )
 
             do i = gap+1, nrows
 
                j = i - gap
 
-               do while ( j .gt. 0 )
+               do while ( j > 0 )
 
                   jg = j + gap
 !
@@ -735,8 +735,8 @@
                   rj    =   ordvec(j)
                   rjg   =   ordvec(jg)
 
-                  nfj   =   nf(rj )  .eq. ctrue
-                  nfjg  =   nf(rjg)  .eq. ctrue
+                  nfj   =   nf(rj )  == ctrue
+                  nfjg  =   nf(rjg)  == ctrue
 
 !
 !                 Start out hoping for the best:  that we won't have
@@ -745,14 +745,14 @@
                   brute = .false.
 
 
-                  if ( dtype .eq. int ) then
+                  if ( dtype == int ) then
 
-                     if ( norder .eq. 1 ) then
+                     if ( norder == 1 ) then
 !
 !                       We can make a decision based on the data in
 !                       memory.
 !
-                        if ( senses(1) .eq. eqasnd ) then
+                        if ( senses(1) == eqasnd ) then
 
                            jle = intle( nfj, nfjg, idat(rj), idat(rjg) )
                         else
@@ -766,7 +766,7 @@
 !                       If the items we're comparing are unequal, we can
 !                       still make a decision.
 !
-                        if ( senses(1) .eq. eqasnd ) then
+                        if ( senses(1) == eqasnd ) then
 
                            jle = intle( nfj, nfjg, idat(rj), idat(rjg) )
                         else
@@ -786,15 +786,15 @@
 
 
 
-                  else if (     ( dtype .eq. dp   ) &
-                           .or. ( dtype .eq. time )  ) then
+                  else if (     ( dtype == dp   ) &
+                           .or. ( dtype == time )  ) then
 
 !
 !                    The D.P. case parallels the integer case.
 !
-                     if ( norder .eq. 1 ) then
+                     if ( norder == 1 ) then
 
-                        if ( senses(1) .eq. eqasnd ) then
+                        if ( senses(1) == eqasnd ) then
 
                            jle = dple( nfj, nfjg, ddat(rj), ddat(rjg) )
                         else
@@ -805,7 +805,7 @@
                      else if ( .not. dpeq ( nfj,      nfjg, &
                                             ddat(rj), ddat(rjg) )  )then
 
-                        if ( senses(1) .eq. eqasnd ) then
+                        if ( senses(1) == eqasnd ) then
 
                            jle = dple( nfj, nfjg, ddat(rj), ddat(rjg) )
                         else
@@ -831,9 +831,9 @@
 !                    column, equality is a problem unless no truncation
 !                    occurred.
 !
-                     if ( ( norder .eq. 1 ) .and. ( .not. trunc ) ) then
+                     if ( ( norder == 1 ) .and. ( .not. trunc ) ) then
 
-                        if ( senses(1) .eq. eqasnd ) then
+                        if ( senses(1) == eqasnd ) then
 
                            jle = chrle( nfj, nfjg, cdat(rj), cdat(rjg) )
                         else
@@ -847,7 +847,7 @@
 !                       If the items we're comparing are unequal, we can
 !                       still make a decision.
 !
-                        if ( senses(1) .eq. eqasnd ) then
+                        if ( senses(1) == eqasnd ) then
 
                            jle = chrle( nfj, nfjg, cdat(rj), cdat(rjg) )
                         else
@@ -946,13 +946,13 @@
 !
          gap = nrows / 2
 
-         do while ( gap .gt. 0 )
+         do while ( gap > 0 )
 
             do i = gap+1, nrows
 
                j = i - gap
 
-               do while ( j .gt. 0 )
+               do while ( j > 0 )
 
                   jg = j + gap
 !

@@ -267,7 +267,7 @@
 !
 !     If NEXT is non-positive, return now.
 !
-      if ( next .le. 0 ) then
+      if ( next <= 0 ) then
          return
       end if
 
@@ -275,9 +275,9 @@
 !     If we arrived here, NEXT and LIST must be valid node numbers.
 !     These nodes must be allocated as well.
 !
-      if (      ( next .gt. pool(sizrow,sizcol) ) &
-           .or. ( list .lt. 1                   ) &
-           .or. ( list .gt. pool(sizrow,sizcol) )  )  then
+      if (      ( next > pool(sizrow,sizcol) ) &
+           .or. ( list < 1                   ) &
+           .or. ( list > pool(sizrow,sizcol) )  )  then
 
          call chkin  ( 'LNKILB'                                        )
          call setmsg ( 'NEXT was #.  LIST was #. '                    // &
@@ -290,8 +290,8 @@
          return
 
 
-      else if (       ( pool(bckwrd,next)  .eq.  free ) &
-                .or.  ( pool(bckwrd,list)  .eq.  free )  ) then
+      else if (       ( pool(bckwrd,next)  ==  free ) &
+                .or.  ( pool(bckwrd,list)  ==  free )  ) then
 
          call chkin  ( 'LNKILB'                                        )
          call setmsg ( 'Node NEXT: node number = #; '                 // &
@@ -319,7 +319,7 @@
 !
       head = list
 
-      do while ( pool(bckwrd,head) .gt. 0 )
+      do while ( pool(bckwrd,head) > 0 )
          head = pool(bckwrd,head)
       end do
 
@@ -344,7 +344,7 @@
       pool( forwrd, tail )  =  next
       pool( bckwrd, next )  =  tail
 
-      if ( prev .gt. 0 ) then
+      if ( prev > 0 ) then
          pool( forwrd,  prev )  =   head
       else
          pool( forwrd, -prev )  =  -head

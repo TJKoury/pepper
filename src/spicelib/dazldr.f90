@@ -445,7 +445,7 @@
 !     There is a singularity of the Jacobian matrix for points on
 !     the z-axis.
 !
-      if ( ( x .eq. 0 ) .and. ( y .eq. 0 ) ) then
+      if ( ( x == 0 ) .and. ( y == 0 ) ) then
 
          call setmsg ( 'The Jacobian matrix of the transformation ' &
          //            'from rectangular to azimuth/elevation ' &

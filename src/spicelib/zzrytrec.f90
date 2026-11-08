@@ -199,7 +199,7 @@
 
          l(i) = bounds(upper, i) - bounds(lower, i)
 
-         if ( l(i) .le. 0.0_wp ) then
+         if ( l(i) <= 0.0_wp ) then
 
             call chkin  ( 'ZZRYTREC'                               )
             call setmsg ( 'Coordinate # bounds were #:#; bounds ' &

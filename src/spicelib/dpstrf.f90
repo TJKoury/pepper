@@ -24,8 +24,8 @@
 
       real(wp)              x
       integer(ip)           sigdig
-      character*1           format
-      character*(*)         string
+      character(1)          format
+      character(*)          string
 
 ! $ Brief_I/O
 !
@@ -261,7 +261,7 @@
 !
 !     If the format is 'E' we just let DPSTR handle the problem.
 !
-      if ( format .eq. 'E' ) then
+      if ( format == 'E' ) then
 
          call dpstr  ( x,  maxdig, string )
          return
@@ -272,7 +272,7 @@
 !     If we're still here, we have a decimal format requested.  Set
 !     the sign for the number.
 !
-      if ( x .lt. 0.0_wp ) then
+      if ( x < 0.0_wp ) then
          string = '-'
       else
          string = ' '
@@ -281,7 +281,7 @@
 !     If X is zero, we can handle this without any regard to the
 !     exponent.
 !
-      if ( x .eq. 0.0_wp ) then
+      if ( x == 0.0_wp ) then
 
          call zzvststr (  x, ' ', exp )
          call zzvsbstr ( -1, maxdig, .false., string(2:), ovflow )
@@ -305,7 +305,7 @@
 !     the first and last virtual digits to retrieve.  To do this
 !     we look at EXP.
 !
-      if ( exp .ge. 0 ) then
+      if ( exp >= 0 ) then
          first  = -exp-1
       else
          first  = -exp
@@ -313,7 +313,7 @@
 
       last   =  first + maxdig - 1
 
-      if ( first .lt. 0 .and. last .ge. 0 ) then
+      if ( first < 0 .and. last >= 0 ) then
          last = last + 1
       end if
 
@@ -331,28 +331,28 @@
 !
          lastch = last - first + 2
 
-         if (       last   .gt. 0 &
-              .and. lastch .le. len(string) ) then
+         if (       last   > 0 &
+              .and. lastch <= len(string) ) then
             string(lastch:) = ' '
          end if
 
       end if
 
 
-      if ( last .lt. 0 ) then
+      if ( last < 0 ) then
 
          j  = last - first + 3
 
          do i = last+1, -1
 
-            if ( j .le. len(string) ) then
+            if ( j <= len(string) ) then
                string(j:j) = '0'
             end if
             j = j + 1
 
          end do
 
-         if ( j .le. len(string) ) then
+         if ( j <= len(string) ) then
             string(j:j) = '.'
          end if
 

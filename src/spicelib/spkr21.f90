@@ -243,7 +243,7 @@
 
       maxdim = nint ( data(1) )
 
-      if ( maxdim .gt. maxtrm ) then
+      if ( maxdim > maxtrm ) then
 
          call setmsg ( 'The input record has a maximum table ' &
          //            'dimension of #, while the maximum ' &
@@ -278,7 +278,7 @@
 !     than or equal to ET. If there are BUFSIZ or fewer records, all
 !     the record epochs can be examined in a single group.
 !
-      if ( nrec .le. bufsiz ) then
+      if ( nrec <= bufsiz ) then
 
          call dafgda ( handle, offe+1, offe+nrec, data )
          recno = lstltd ( et, nrec, data ) + 1
@@ -303,7 +303,7 @@
 
          call dafgda ( handle, offd+i, offd+i, data )
 
-         if ( data(1) .ge. et ) then
+         if ( data(1) >= et ) then
 
             off = offe + (i - 1) * bufsiz
             call dafgda ( handle, off+1, off+bufsiz, data )

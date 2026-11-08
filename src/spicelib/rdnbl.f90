@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)       file
-      character*(*)       line
+      character(*)        file
+      character(*)        line
       logical             eof
 
 ! $ Brief_I/O
@@ -179,7 +179,7 @@
 
       do while ( ( .not. eof )  .and.  ( .not. failed() ) )
 
-         if ( line .ne. ' ' ) then
+         if ( line /= ' ' ) then
             call chkout ( 'RDNBL' )
             return
 

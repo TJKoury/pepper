@@ -23,8 +23,8 @@
 
       integer(ip)           handle
       integer(ip)           unit
-      character*(*)         bmark
-      character*(*)         emark
+      character(*)          bmark
+      character(*)          emark
 
 ! $ Brief_I/O
 !
@@ -329,12 +329,12 @@
 !
 !     Local variables
 !
-      character*(maxcpr+2)  data
-      character*(1)         eot
-      character*(ifnlen)    ifname
-      character*(maxcpr)    line
-      character*(1)         null
-      character*(maxcpr)    record
+      character(maxcpr+2)   data
+      character(1)          eot
+      character(ifnlen)     ifname
+      character(maxcpr)     line
+      character(1)          null
+      character(maxcpr)     record
 
       integer(ip)           bline
       integer(ip)           bward
@@ -411,15 +411,15 @@
 !     BETWEEN the markers.  Check and make sure there is at least one
 !     line in the group.
 !
-      if ( bmark .ne. ' ' ) then
+      if ( bmark /= ' ' ) then
          bline = bline + 1
       end if
 
-      if ( emark .ne. ' ' ) then
+      if ( emark /= ' ' ) then
          eline = eline - 1
       end if
 
-      if ( bline .gt. eline ) then
+      if ( bline > eline ) then
          call chkout ( 'SPCAC' )
          return
       end if
@@ -471,7 +471,7 @@
       start  = 0
       lastrr = 0
 
-      if ( nrr .ne. 0 ) then
+      if ( nrr /= 0 ) then
 !
 !        At this point, we know there exist reserved records in the
 !        DAF. We need to search from the last record to the first,
@@ -482,7 +482,7 @@
          i      = lastrr + 1
          poseot = 0
 
-         do while ( ( i .gt. 1 ) .and. ( poseot .eq. 0 ) )
+         do while ( ( i > 1 ) .and. ( poseot == 0 ) )
 !
 !           Decrement the counter now.  This keeps it in
 !           sync with the exit conditions.
@@ -490,7 +490,7 @@
             i = i - 1
             read ( dafu, rec=i, iostat=iostat ) record
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
                call setmsg ( 'Error reading comment area of binary '// &
                              'file named FILE.  IOSTAT = *.'          )
                call errint ( '*', iostat                              )
@@ -524,7 +524,7 @@
 !        If POSEOT is 0, then there are no comments in the file, but
 !        there are reserved records.  Branch on this:
 !
-         if ( poseot .eq. 0 ) then
+         if ( poseot == 0 ) then
 !
 !           Leaving this string index at zero may be causing all sorts
 !           of warning bells to go off in your head. However, before
@@ -566,7 +566,7 @@
 !
       total = chars + lines + 1
 
-      if (  ( total - space ) .gt. 0  ) then
+      if (  ( total - space ) > 0  ) then
 
          nr = (  ( total - space ) - 1  ) / maxcpr    +   1
 
@@ -581,7 +581,7 @@
 !     to hold it all, if we need to.  If we can't do it, there's no
 !     point in going on.
 !
-      if ( nr .gt. 0 ) then
+      if ( nr > 0 ) then
 
          call dafarr ( handle, nr )
 
@@ -610,7 +610,7 @@
 
          read ( unit, fmt='(A)', iostat=iostat ) line
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error reading line # in text file named '  // &
                           'FILE.  IOSTAT = *.'                        )
             call errint ( '#', l                                      )
@@ -631,7 +631,7 @@
 
          read ( unit, fmt='(A)', iostat=iostat ) line
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error reading line # in text file named '  // &
                           'FILE.  IOSTAT = *.'                        )
             call errint ( '#', l+bline-1                              )
@@ -653,7 +653,7 @@
 !        The final line is followed by an additional
 !        end-of-transmission character.
 !
-         if ( l .eq. lines ) then
+         if ( l == lines ) then
             eol           = eol + 1
             data(eol:eol) = eot
          end if
@@ -667,12 +667,12 @@
 !
 !           If the current record is full, write it to the DAF.
 !
-            if ( pos .eq. maxcpr ) then
+            if ( pos == maxcpr ) then
 
                rec = rec + 1
                write ( dafu, rec=rec, iostat=iostat ) record
 
-               if ( iostat .eq. 0 ) then
+               if ( iostat == 0 ) then
                   record = ' '
                   pos    = 0
 
@@ -705,7 +705,7 @@
       rec = rec + 1
       write ( dafu, rec=rec, iostat=iostat ) record
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Error writing the final record, record #, '   // &
                        'of the binary file named FILE.  IOSTAT = *.'  )
          call errint ( '#', rec                                       )

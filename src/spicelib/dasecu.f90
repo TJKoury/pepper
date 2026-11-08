@@ -155,7 +155,7 @@
 !
 !     Local variables
 !
-      character*(linlen)    combuf(bufsiz)
+      character(linlen)     combuf(bufsiz)
 
       integer(ip)           numcom
 
@@ -203,7 +203,7 @@
 
          end if
 
-         if ( numcom .gt. 0 ) then
+         if ( numcom > 0 ) then
 !
 !           If NUMCOM .GT. 0 then we did get some comments, and we need
 !           to write them out, but first, set the flag indicating that

@@ -24,9 +24,9 @@
 
       include 'dla.inc'
 
-      character*(*)         fname
-      character*(*)         ftype
-      character*(*)         ifname
+      character(*)          fname
+      character(*)          ftype
+      character(*)          ifname
       integer(ip)           ncomch
       integer(ip)           handle
 
@@ -451,11 +451,11 @@
 !
 !     Compute the number of comment records required.
 !
-      if ( ncomch .gt. 0 ) then
+      if ( ncomch > 0 ) then
 
          ncomr = ( (ncomch-1) / nchrec )  +  1
 
-      else if ( ncomch .eq. 0 ) then
+      else if ( ncomch == 0 ) then
 
          ncomr = 0
 

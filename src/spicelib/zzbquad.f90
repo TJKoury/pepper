@@ -222,9 +222,9 @@
 !
 !     Reject all large magnitude coefficients.
 !
-      if (     ( abs(a) .gt. big ) &
-          .or. ( abs(b) .gt. big ) &
-          .or. ( abs(c) .gt. big ) ) then
+      if (     ( abs(a) > big ) &
+          .or. ( abs(b) > big ) &
+          .or. ( abs(c) > big ) ) then
 
          call chkin  ( 'ZZBQUAD'                                      )
          call setmsg ( 'Coefficients must have magnitude less than ' &
@@ -242,7 +242,7 @@
 !
 !     Reject large magnitude upper bounds as well.
 !
-      if ( abs(ub) .gt. big ) then
+      if ( abs(ub) > big ) then
 
          call chkin  ( 'ZZBQUAD'                                      )
          call setmsg ( 'Upper bounds must have magnitude less than ' &
@@ -258,7 +258,7 @@
 !
 !     The upper bound must be positive.
 !
-      if ( ub .le. 0.0_wp ) then
+      if ( ub <= 0.0_wp ) then
 
          call chkin  ( 'ZZBQUAD'                                 )
          call setmsg ( 'Upper bound must be positive but was #.' )
@@ -272,15 +272,15 @@
 !
 !     Handle the degenerate cases first.
 !
-      if ( a .eq. 0.0_wp ) then
+      if ( a == 0.0_wp ) then
 
-         if ( b .eq. 0.0_wp ) then
+         if ( b == 0.0_wp ) then
 !
 !           The equation is of the form
 !
 !              C = 0
 !
-            if ( c .eq. 0.0_wp ) then
+            if ( c == 0.0_wp ) then
 !
 !              The equation is satisfied for all real numbers.
 !
@@ -304,7 +304,7 @@
 !
 !           In this branch, B is non-zero.
 !
-            if ( abs(c) .le. abs(ub * b) ) then
+            if ( abs(c) <= abs(ub * b) ) then
 
                n   =   1
                nx  =   0
@@ -333,14 +333,14 @@
 !
          dscrim = touchd(  ( b*b ) - ( 4*a*c )  )
 
-         if ( dscrim .lt. 0.0_wp ) then
+         if ( dscrim < 0.0_wp ) then
 !
 !           We have complex roots, so we're done.
 !
             n  = 0
             nx = 0
 
-         else if ( dscrim .eq. 0.0_wp ) then
+         else if ( dscrim == 0.0_wp ) then
 !
 !           We have a single real root of multiplicity 2.
 !
@@ -349,7 +349,7 @@
             num1   =  -b
             denom  =   2 * a
 
-            if ( abs(num1) .ge. abs(denom * ub) ) then
+            if ( abs(num1) >= abs(denom * ub) ) then
 !
 !              The root is too large; we won't compute it.
 !
@@ -379,7 +379,7 @@
             denom  = 2 * a
             sqdisc = sqrt( dscrim )
 
-            if ( b .gt. 0.0_wp ) then
+            if ( b > 0.0_wp ) then
 
                num2 =  -b - sqdisc
                num1 =  -b + sqdisc
@@ -391,7 +391,7 @@
 !
 !           See whether the root of larger magnitude is computable.
 !
-            if ( abs(num2) .le. abs(ub * denom) ) then
+            if ( abs(num2) <= abs(ub * denom) ) then
 !
 !              The root is computable.
 
@@ -402,7 +402,7 @@
 !
                r2 = ( num2 / a ) / 2
 
-               if ( abs(r2) .gt. 0.0_wp ) then
+               if ( abs(r2) > 0.0_wp ) then
 !
 !                 Compute R1 using R2 and C; this avoids loss
 !                 of precision that may occur when NUM1 is computed.
@@ -432,7 +432,7 @@
 !              The root of larger magnitude is not computable.
 !              Check the root of smaller magnitude.
 !
-               if ( abs(num1) .le. abs(ub * denom) ) then
+               if ( abs(num1) <= abs(ub * denom) ) then
 !
 !                 The root is computable.
 !

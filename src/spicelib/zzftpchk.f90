@@ -23,7 +23,7 @@
 
       include              'zzftprms.inc'
 
-      character*(*)         string
+      character(*)          string
       logical               ftperr
 
 ! $ Brief_I/O
@@ -220,11 +220,11 @@
 !
 !     Local Variables
 !
-      character*(sizdlm)    delim
-      character*(sizexp)    filstr
-      character*(sizend)    lftbkt
-      character*(sizstr)    memstr
-      character*(sizend)    rgtbkt
+      character(sizdlm)     delim
+      character(sizexp)     filstr
+      character(sizend)     lftbkt
+      character(sizstr)     memstr
+      character(sizend)     rgtbkt
 
       integer(ip)           fsmidx
       integer(ip)           length
@@ -294,7 +294,7 @@
 !     unable to extract a properly bracketed substring.  This is an
 !     error.
 !
-      else if ( length .le. 0 ) then
+      else if ( length <= 0 ) then
 
          ftperr = .true.
 
@@ -316,7 +316,7 @@
 !        is a substring of MEMSTR, and thus we have validated all the
 !        test clusters from the file.
 !
-         if ( fsmidx .ne. 0 ) then
+         if ( fsmidx /= 0 ) then
 
             ftperr = .false.
 
@@ -335,7 +335,7 @@
 !           If this comes back as zero, then we definitely have
 !           an FTP error. Set FTPERR appropriately.
 !
-            ftperr = ( msfidx .eq. 0 )
+            ftperr = ( msfidx == 0 )
 
          end if
 

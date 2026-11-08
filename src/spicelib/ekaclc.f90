@@ -26,8 +26,8 @@
 
       integer(ip)           handle
       integer(ip)           segno
-      character*(*)         column
-      character*(*)         cvals  ( * )
+      character(*)          column
+      character(*)          cvals  ( * )
       integer(ip)           entszs ( * )
       logical               nlflgs ( * )
       integer(ip)           rcptrs ( * )
@@ -501,7 +501,7 @@
       class  =  coldsc ( clsidx )
       dtype  =  coldsc ( typidx )
 
-      if ( dtype .ne. chr ) then
+      if ( dtype /= chr ) then
 
          call setmsg ( 'Column # is of type #; EKACLC only works '  // &
                        'with character columns.'                     )
@@ -516,21 +516,21 @@
 !
 !     Hand off the task to the routine of the appropriate class.
 !
-      if ( class .eq. 3 ) then
+      if ( class == 3 ) then
 !
 !        Class 3 columns contain character scalars.
 !
          call zzekac03 (  handle,  segdsc,  coldsc,  cvals, &
                                    nlflgs,  rcptrs,  wkindx )
 
-      else if ( class .eq. 6 ) then
+      else if ( class == 6 ) then
 !
 !        Class 6 columns contain character arrays.
 !
          call zzekac06 ( handle, segdsc, coldsc, cvals, entszs, nlflgs )
 
 
-      else if ( class .eq. 9 ) then
+      else if ( class == 9 ) then
 !
 !        Class 9 columns contain fixed-count, fixed-length character
 !        scalars.

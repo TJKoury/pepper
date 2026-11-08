@@ -26,7 +26,7 @@
       implicit none
 
       integer(ip)           code
-      character*(*)         name
+      character(*)          name
 
 ! $ Brief_I/O
 !

@@ -253,9 +253,9 @@
 !
 !     Check A, B, C, and R.
 !
-      if (      ( a .le. 0.0_wp ) &
-           .or. ( b .le. 0.0_wp ) &
-           .or. ( c .le. 0.0_wp )  ) then
+      if (      ( a <= 0.0_wp ) &
+           .or. ( b <= 0.0_wp ) &
+           .or. ( c <= 0.0_wp )  ) then
 
          call setmsg ( 'Target radii must be strictly positive ' &
          //            'but were #, #, #.'                      )
@@ -268,7 +268,7 @@
 
       end if
 
-      if ( r .le. 0.0_wp ) then
+      if ( r <= 0.0_wp ) then
 
          call setmsg ( 'Source radius must be strictly positive ' &
          //            'but was #.'                             )
@@ -292,7 +292,7 @@
 
       end if
 
-      if (  r + max(a,b,c)  .ge.  vnorm(axis)  ) then
+      if (  r + max(a,b,c)  >=  vnorm(axis)  ) then
 
          call setmsg ( 'Centers of source and target are too ' &
          //            'close together; distance is #. Radius ' &
@@ -473,8 +473,8 @@
 !     stops decreasing. If the iteration count exceeds the
 !     limit, an error will be signaled.
 !
-      do while (       ( abs(angerr) .gt. cnvlim ) &
-                 .and. ( nitr        .le. maxitr )  )
+      do while (       ( abs(angerr) > cnvlim ) &
+                 .and. ( nitr        <= maxitr )  )
 !
 !        Rotate the target point about HPLNML in the positive sense
 !        by the angular error. This should make the tangent plane
@@ -511,7 +511,7 @@
 
          nitr   = nitr + 1
 
-         if ( nitr .gt. maxitr ) then
+         if ( nitr > maxitr ) then
 
             call setmsg ( 'Tangent finding loop failed to ' &
             //            'converge. Iteration count = #.' )

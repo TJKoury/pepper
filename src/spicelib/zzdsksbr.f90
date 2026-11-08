@@ -276,7 +276,7 @@
       call chkin ( 'ZZDSKSBR' )
 
 
-      if ( needed .gt. stsize ) then
+      if ( needed > stsize ) then
 !
 !        There's not enough room in the entire segment table.
 !
@@ -296,7 +296,7 @@
 !
 !     We can't make room in a body table of zero size.
 !
-      if ( maxbod .lt. 1 ) then
+      if ( maxbod < 1 ) then
 
          call setmsg ( 'Body table size must be at least 1 but is #.' )
          call errint ( '#', maxbod                                    )
@@ -311,7 +311,7 @@
 !
       avail = stsize - stfree + 1
 
-      if ( avail .lt. needed ) then
+      if ( avail < needed ) then
 !
 !        We need to make room in the segment table.
 !
@@ -324,7 +324,7 @@
          nstdel = 0
          i      = 1
 
-         do while ( ( i .le. btnbod ) .and. ( avail .lt. needed ) )
+         do while ( ( i <= btnbod ) .and. ( avail < needed ) )
 !
 !           Add the segment count for the Ith body to the total.
 !
@@ -338,7 +338,7 @@
 !        Backstop: we should always have enough room in the segment
 !        table at this point.
 !
-         if ( avail .lt. needed ) then
+         if ( avail < needed ) then
 
             call setmsg ( 'The requested number of segment entries is ' &
             //            '#; the size STSIZE of the input segment  ' &
@@ -360,7 +360,7 @@
 !
          nbtdel = i - 1
 
-         if ( nstdel .gt. 0 ) then
+         if ( nstdel > 0 ) then
 !
 !           Adjust the tables to be consistent with the deletions.
 !

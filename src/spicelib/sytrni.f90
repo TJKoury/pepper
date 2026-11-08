@@ -23,10 +23,10 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           idx1
       integer(ip)           idx2
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       integer(ip)           tabval     ( lbcell:* )
 
@@ -223,7 +223,7 @@
 !
       locsym = bsrchc ( name, nsym, tabsym(1) )
 
-      if ( locsym .gt. 0 ) then
+      if ( locsym > 0 ) then
 
 !
 !        Are there enough values associated with the symbol?
@@ -233,15 +233,15 @@
 !
 !        Are the indices valid?
 !
-         if (        idx1 .ge. 1 &
-              .and.  idx1 .le. n &
-              .and.  idx2 .ge. 1 &
-              .and.  idx2 .le. n ) then
+         if (        idx1 >= 1 &
+              .and.  idx1 <= n &
+              .and.  idx2 >= 1 &
+              .and.  idx2 <= n ) then
 
 !
 !           Exchange the values in place.
 !
-            if ( idx1 .ne. idx2 ) then
+            if ( idx1 /= idx2 ) then
 
                locval = sumai ( tabptr(1), locsym-1 ) + 1
 

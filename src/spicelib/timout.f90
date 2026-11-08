@@ -22,8 +22,8 @@
       implicit none
 
       real(wp)              et
-      character*(*)         pictur
-      character*(*)         output
+      character(*)          pictur
+      character(*)          output
 
 ! $ Brief_I/O
 !
@@ -976,7 +976,7 @@
 !     The next set of variables holds the marks and auxiliary
 !     arrays used for scanning the format string.
 !
-      character*(mrksiz)    marks  (     maxmrk )
+      character(mrksiz)     marks  (     maxmrk )
       integer(ip)           class  ( 0 : maxmrk )
       integer(ip)           nmarks
       integer(ip)           mrklen (     maxmrk )
@@ -994,7 +994,7 @@
 !     the lengths of the format pictures and whether or not various
 !     components have already been computed.
 !
-      character*(32)        orignl ( begin : finish )
+      character(32)         orignl ( begin : finish )
       real(wp)              values ( begin : finish )
       real(wp)              pad    ( begin : finish )
       integer(ip)           length ( begin : finish )
@@ -1012,9 +1012,9 @@
 !     We will be making a local copy of the input format string
 !     and the input time.
 !
-      character*(maxlen)    mystr
-      character*(maxlen)    substr
-      character*(maxlen)    string
+      character(maxlen)     mystr
+      character(maxlen)     substr
+      character(maxlen)     string
 
       real(wp)              myet
 
@@ -1029,7 +1029,7 @@
       integer(ip)           beg    (  room   )
       integer(ip)           end    (  room   )
 
-      character*(loclen)    fmt
+      character(loclen)     fmt
       integer(ip)           width
       integer(ip)           appnd
 
@@ -1041,13 +1041,13 @@
 !     in BASTYP.
 !
       integer(ip)           timtyp
-      character*(8)         ymdfmt
-      character*(8)         ywfmt
-      character*(16)        bastyp
-      character*(16)        intyp
-      character*(16)        tsys
-      character*(16)        cal
-      character*(32)        zon
+      character(8)          ymdfmt
+      character(8)          ywfmt
+      character(16)         bastyp
+      character(16)         intyp
+      character(16)         tsys
+      character(16)         cal
+      character(32)         zon
 
       real(wp)              hoff
       real(wp)              moff
@@ -1105,13 +1105,13 @@
 !
 !     Character string representations for months and week days.
 !
-      character*(9)         months ( 12 )
-      character*(9)         mymon
+      character(9)          months ( 12 )
+      character(9)          mymon
       integer(ip)           mylen
       integer(ip)           montyp
       integer(ip)           mlen   ( 12 )
-      character*(9)         wkdays (  7 )
-      character*(9)         mywkd
+      character(9)          wkdays (  7 )
+      character(9)          mywkd
       integer(ip)           wklen  (  7 )
       integer(ip)           wktyp
 
@@ -1453,11 +1453,11 @@
 !
       call timdef ( 'GET', 'SYSTEM', tsys )
 
-      if ( tsys .eq. 'UTC' ) then
+      if ( tsys == 'UTC' ) then
          timtyp = id(utc)
-      else if ( tsys .eq. 'TDB' ) then
+      else if ( tsys == 'TDB' ) then
          timtyp = id(tdb)
-      else if ( (tsys .eq. 'TDT') .or. (tsys .eq. 'TT') ) then
+      else if ( (tsys == 'TDT') .or. (tsys == 'TT') ) then
          timtyp = id(tdt)
       else
          timtyp = id(utcp)
@@ -1484,15 +1484,15 @@
       end if
 
 
-      do while ( unknwn .and. i .le. ntokns )
+      do while ( unknwn .and. i <= ntokns )
 
-         if ( class(ident(i)) .eq. timsys ) then
+         if ( class(ident(i)) == timsys ) then
             timtyp = ident(i)
             unknwn = .false.
             dozone = .false.
 
-            if(      ident(i) .eq. id(utcp) &
-                .or. ident(i) .eq. id(utcm) ) then
+            if(      ident(i) == id(utcp) &
+                .or. ident(i) == id(utcm) ) then
 
 !
 !              We've got a time zone specification. Parse it and
@@ -1515,7 +1515,7 @@
 !                 other meta markers from  our copy of the time
 !                 format string.
 !
-                  if ( last .eq. end(i+1) ) then
+                  if ( last == end(i+1) ) then
                      ident(i+1) = ident(i)
                      i          = i + 1
                   else
@@ -1546,17 +1546,17 @@
 !
       call timdef ( 'GET', 'CALENDAR', cal )
 
-      if      ( cal .eq. 'GREGORIAN' ) then
+      if      ( cal == 'GREGORIAN' ) then
          caltyp = id(gcal)
-      else if ( cal .eq. 'JULIAN'    ) then
+      else if ( cal == 'JULIAN'    ) then
          caltyp = id(jcal)
       else
          caltyp = id(mcal)
       end if
 
-      do while ( unknwn .and. i .le. ntokns )
+      do while ( unknwn .and. i <= ntokns )
 
-         if ( class(ident(i)) .eq. calndr ) then
+         if ( class(ident(i)) == calndr ) then
             caltyp = ident(i)
             unknwn = .false.
          end if
@@ -1569,15 +1569,15 @@
 !     Next determine whether or not we shall be performing rounding
 !     on output.
 !
-      pumpup =      isrchi ( id(round), ntokns, ident ) .ne. 0
+      pumpup =      isrchi ( id(round), ntokns, ident ) /= 0
 
 !
 !     Determine if we have an Era specification
 !
-      doera  =      isrchi ( id(lera),  ntokns, ident ) .ne. 0 &
-               .or. isrchi ( id(uera),  ntokns, ident ) .ne. 0 &
-               .or. isrchi ( id(uerax), ntokns, ident ) .ne. 0 &
-               .or. isrchi ( id(lerax), ntokns, ident ) .ne. 0
+      doera  =      isrchi ( id(lera),  ntokns, ident ) /= 0 &
+               .or. isrchi ( id(uera),  ntokns, ident ) /= 0 &
+               .or. isrchi ( id(uerax), ntokns, ident ) /= 0 &
+               .or. isrchi ( id(lerax), ntokns, ident ) /= 0
 
 !
 !     Until we've examined the year, we assume that the era is not
@@ -1609,17 +1609,17 @@
 !
          i = 1
 
-         do while ( i .le. ntokns )
+         do while ( i <= ntokns )
 
             type = class ( ident(i) )
 
-            if   (      ( type .eq. noname ) &
-                   .or. ( type .eq. point  ) &
-                   .or. ( type .eq. place  ) &
-                   .or. ( type .eq. noon   ) &
-                   .or. ( type .eq. era    ) &
-                   .or. ( type .eq. mon    ) &
-                   .or. ( type .eq. wkday  ) ) then
+            if   (      ( type == noname ) &
+                   .or. ( type == point  ) &
+                   .or. ( type == place  ) &
+                   .or. ( type == noon   ) &
+                   .or. ( type == era    ) &
+                   .or. ( type == mon    ) &
+                   .or. ( type == wkday  ) ) then
 
 !
 !              Don't do anything, just go on to the next token.
@@ -1642,7 +1642,7 @@
                i      = i + 1
                type   = class(ident(i))
 
-               if ( type .eq. point ) then
+               if ( type == point ) then
 
                   factor = factor * 0.1_wp
                   i      = i + 1
@@ -1651,7 +1651,7 @@
 !                 Now just look for the end of the string of place
 !                 holders
 !
-                  do while ( ident(i) .eq. id(place) )
+                  do while ( ident(i) == id(place) )
                      factor = factor * 0.1_wp
                      i      = i + 1
                   end do
@@ -1664,7 +1664,7 @@
 !
                incr = incr * factor
 
-               if ( timpad .ne. 0.0_wp ) then
+               if ( timpad /= 0.0_wp ) then
                   timpad = min ( timpad, incr )
                else
                   timpad = incr
@@ -1701,7 +1701,7 @@
 !
       myet = et
 
-      if      ( timtyp .eq. id(tdb) ) then
+      if      ( timtyp == id(tdb) ) then
 
 !
 !        Since we are likely to need SP2000, SP1950 or JD, we
@@ -1719,8 +1719,8 @@
          have  (sp1950) = .true.
          have  (julian) = .true.
 
-      else if ( (timtyp .eq. id(tdt)) .or. &
-                (timtyp .eq. id(tt)) ) then
+      else if ( (timtyp == id(tdt)) .or. &
+                (timtyp == id(tt)) ) then
 
          myet           = unitim( myet,   'TDB',  'TDT'    )  + timpad
          values(sp2000) = myet
@@ -1773,13 +1773,13 @@
 !        building is done.  We can construct the component and
 !        append it to the string we are building.
 !
-         if ( (type .ne. place) .and.  making ) then
+         if ( (type /= place) .and.  making ) then
 
 !
 !           We also need to be sure this isn't a decimal point
 !           marker before we add on to the output string.
 !
-            if ( (type .ne. point) .or. have(point) ) then
+            if ( (type /= point) .or. have(point) ) then
 
 !
 !              We are going to truncate the number to the number of
@@ -1788,7 +1788,7 @@
                trncat = brckti( width - length(numtyp) - 1, 0, 14 )
                frac   = value - dint(value )
 
-               if ( frac .lt. 0 ) then
+               if ( frac < 0 ) then
                   value = value - 1.0_wp
                   frac  = frac  + 1.0_wp
                end if
@@ -1818,7 +1818,7 @@
 !        adjust the point at which the next substring is
 !        to be appended.
 !
-         if ( type .eq. noname ) then
+         if ( type == noname ) then
 
             string(appnd:) = mystr ( beg(i) : end(i) )
             appnd          = appnd - beg(i) + end(i) + 1
@@ -1827,7 +1827,7 @@
 !        If the token is a place holder, we either just append it
 !        or tack it on to a format string we are creating..
 !
-         else if ( type .eq. place ) then
+         else if ( type == place ) then
 
 
             if ( making ) then
@@ -1846,7 +1846,7 @@
 !        format and determine the fractional part of the current
 !        quantity.
 !
-         else if ( type .eq. point ) then
+         else if ( type == point ) then
 
             if ( .not. making ) then
 
@@ -1856,7 +1856,7 @@
                appnd       =  e + 1
                have(point) = .false.
 
-            else if ( timfmt .eq. contin ) then
+            else if ( timfmt == contin ) then
 
                b           = width + 1
                e           = b     - beg(i) + end(i)
@@ -1936,18 +1936,18 @@
 !
 !              Most components are handled in the next block.
 !
-               if (       (type .eq. year) &
-                     .or. (type .eq. yr) &
-                     .or. (type .eq. month) &
-                     .or. (type .eq. mon) &
-                     .or. (type .eq. day) &
-                     .or. (type .eq. doy) &
-                     .or. (type .eq. noon) &
-                     .or. (type .eq. hour) &
-                     .or. (type .eq. era) &
-                     .or. (type .eq. ampm) &
-                     .or. (type .eq. minute) &
-                     .or. (type .eq. sec)   ) then
+               if (       (type == year) &
+                     .or. (type == yr) &
+                     .or. (type == month) &
+                     .or. (type == mon) &
+                     .or. (type == day) &
+                     .or. (type == doy) &
+                     .or. (type == noon) &
+                     .or. (type == hour) &
+                     .or. (type == era) &
+                     .or. (type == ampm) &
+                     .or. (type == minute) &
+                     .or. (type == sec)   ) then
 
 
                   call ttrans ( bastyp, ymdfmt, tvec )
@@ -1963,7 +1963,7 @@
 !                 If we need to deal with time zones, this is
 !                 the time to do it.
 !
-                  if ( timtyp .eq. id(utcp) ) then
+                  if ( timtyp == id(utcp) ) then
 
                      tvec(4) = tvec(4) + hoff
                      tvec(5) = tvec(5) + moff
@@ -1980,9 +1980,9 @@
                   values(hour)   = tvec(4)
                   values(minute) = tvec(5)
 
-                  if ( values(hour) .eq. 0.0_wp ) then
+                  if ( values(hour) == 0.0_wp ) then
                      values(ampm) =  12.0_wp
-                  else if ( values(hour) .gt. 12.0_wp ) then
+                  else if ( values(hour) > 12.0_wp ) then
                      values(ampm) = values(hour) - 12.0_wp
                   else
                      values(ampm) = values(hour)
@@ -2004,7 +2004,7 @@
 
                   call jul2gr ( gyear, gmonth, gday, gdoy )
 
-                  if      ( caltyp .eq. id(gcal) ) then
+                  if      ( caltyp == id(gcal) ) then
 
                      values(year)  = real(gyear, wp)
                      values(month) = real(gmonth, wp)
@@ -2012,7 +2012,7 @@
                      values(doy)   = real(gdoy, wp)
                      go2jul        = .false.
 
-                  else if ( caltyp .eq. id(jcal) ) then
+                  else if ( caltyp == id(jcal) ) then
 
                      values(year)  = real(jyear, wp)
                      values(month) = real(jmonth, wp)
@@ -2020,18 +2020,18 @@
                      values(doy)   = real(jdoy, wp)
                      go2jul        = .true.
 
-                  else if ( caltyp .eq. id(mcal) ) then
+                  else if ( caltyp == id(mcal) ) then
 
 
-                     if      ( gyear .lt. 1582 ) then
+                     if      ( gyear < 1582 ) then
                         go2jul = .true.
-                     else if ( gyear .gt. 1582 ) then
+                     else if ( gyear > 1582 ) then
                         go2jul = .false.
-                     else if ( gmonth .lt. 10 ) then
+                     else if ( gmonth < 10 ) then
                         go2jul = .true.
-                     else if ( gmonth .gt. 10 ) then
+                     else if ( gmonth > 10 ) then
                         go2jul = .false.
-                     else if ( gday   .ge. 15 ) then
+                     else if ( gday   >= 15 ) then
                         go2jul = .false.
                      else
                         go2jul = .true.
@@ -2064,14 +2064,14 @@
 
                   if ( doera ) then
 
-                     if ( values(year) .lt. 1 ) then
+                     if ( values(year) < 1 ) then
                         values(year) = 1.0_wp - values(year)
                         values(era)  = 1.0_wp
                      else
                         values(era)  = 2.0_wp
                      end if
 
-                     vanish = values(year) .ge. 1000.0_wp
+                     vanish = values(year) >= 1000.0_wp
 
                   end if
 
@@ -2094,7 +2094,7 @@
                   have  (era)    = .true.
 
 
-               else if ( type .eq. wkday ) then
+               else if ( type == wkday ) then
 
                   tvec(1) = myet
 
@@ -2104,7 +2104,7 @@
 !                 Weekday. If we need to deal with time zones, this is
 !                 the time to do it.
 !
-                  if ( timtyp .eq. id(utcp) ) then
+                  if ( timtyp == id(utcp) ) then
 
                      tvec(5) = tvec(5) + hoff
                      tvec(6) = tvec(6) + moff
@@ -2118,8 +2118,8 @@
                   values(wkday)  = tvec(4)
                   have  (wkday)  =.true.
 
-               else if (      ( type .eq. sp1950 ) &
-                         .or. ( type .eq. sp2000 ) ) then
+               else if (      ( type == sp1950 ) &
+                         .or. ( type == sp2000 ) ) then
 
 !
 !                 The only way to get here is if the output time
@@ -2137,7 +2137,7 @@
                   have  (sp2000) = .true.
                   have  (sp1950) = .true.
 
-               else if ( type .eq. julian ) then
+               else if ( type == julian ) then
 
 !
 !                 The same tale can be told here as in the last
@@ -2165,7 +2165,7 @@
 !           We need to treat character months, weekdays, eras, a.m.'s
 !           and p.m.'s specially.
 !
-            if ( type .eq. mon ) then
+            if ( type == mon ) then
 
                indx           = nint  ( values(month) )
                mymon          = months( indx )
@@ -2175,23 +2175,23 @@
 !              There is no ELSE case in the block below because all of
 !              the possible MONTYP values are checked explicitly.
 !
-               if      ( montyp .eq. id(umon)  ) then
+               if      ( montyp == id(umon)  ) then
                   call ucase ( mymon, mymon )
                   mymon(4:) = ' '
                   mylen     = 3
-               else if ( montyp .eq. id(mmon)   ) then
+               else if ( montyp == id(mmon)   ) then
                   mymon(4:) = ' '
                   mylen     = 3
-               else if ( montyp .eq. id(lmon)   ) then
+               else if ( montyp == id(lmon)   ) then
                   call lcase ( mymon, mymon )
                   mymon(4:) = ' '
                   mylen     = 3
-               else if ( montyp .eq. id(mmnth) ) then
+               else if ( montyp == id(mmnth) ) then
                   mylen     = mlen(indx)
-               else if ( montyp .eq. id(umnth) ) then
+               else if ( montyp == id(umnth) ) then
                   call ucase ( mymon, mymon )
                   mylen     = mlen(indx)
-               else if ( montyp .eq. id(lmnth) ) then
+               else if ( montyp == id(lmnth) ) then
                   call lcase ( mymon, mymon )
                   mylen     = mlen(indx)
                end if
@@ -2200,7 +2200,7 @@
                appnd          = appnd + mylen
                making         =.false.
 
-            else if ( type .eq. wkday ) then
+            else if ( type == wkday ) then
 
                indx           = nint  ( values(wkday) )
                mywkd          = wkdays( indx )
@@ -2210,23 +2210,23 @@
 !              There is no ELSE case in the block below because all of
 !              the possible WKTYP values are checked explicitly.
 !
-               if      ( wktyp .eq. id(uwkd)   ) then
+               if      ( wktyp == id(uwkd)   ) then
                   call ucase ( mywkd, mywkd )
                   mywkd(4:) = ' '
                   mylen     = 3
-               else if ( wktyp .eq. id(mwkd)   ) then
+               else if ( wktyp == id(mwkd)   ) then
                   mywkd(4:) = ' '
                   mylen     = 3
-               else if ( wktyp .eq. id(lwkd)   ) then
+               else if ( wktyp == id(lwkd)   ) then
                   call lcase ( mywkd, mywkd )
                   mywkd(4:) = ' '
                   mylen     = 3
-               else if ( wktyp .eq. id(mweekd) ) then
+               else if ( wktyp == id(mweekd) ) then
                   mylen     = wklen(indx)
-               else if ( wktyp .eq. id(uweekd) ) then
+               else if ( wktyp == id(uweekd) ) then
                   call ucase ( mywkd, mywkd )
                   mylen     = wklen(indx)
-               else if ( wktyp .eq. id(lweekd) ) then
+               else if ( wktyp == id(lweekd) ) then
                   call lcase ( mywkd, mywkd )
                   mylen     = wklen(indx)
                end if
@@ -2236,22 +2236,22 @@
                making         =.false.
 
 
-            else if ( type .eq. era ) then
+            else if ( type == era ) then
 
-               if      (         values(era)    .eq. 2.0_wp &
-                         .and. (      ident(i) .eq. id(uera) &
-                                 .or. ident(i) .eq. id(uerax) ) ) then
+               if      (         values(era)    == 2.0_wp &
+                         .and. (      ident(i) == id(uera) &
+                                 .or. ident(i) == id(uerax) ) ) then
 
                   string(appnd:) = ' A.D.'
 
-               else if (         values(era)   .eq. 2.0_wp &
-                         .and. (      ident(i) .eq. id(lera) &
-                                 .or. ident(i) .eq. id(lerax) ) ) then
+               else if (         values(era)   == 2.0_wp &
+                         .and. (      ident(i) == id(lera) &
+                                 .or. ident(i) == id(lerax) ) ) then
                    string(appnd:) = ' a.d.'
 
-               else if  (         values(era)  .eq. 1.0_wp &
-                         .and. (      ident(i) .eq. id(uera) &
-                                 .or. ident(i) .eq. id(uerax) ) ) then
+               else if  (         values(era)  == 1.0_wp &
+                         .and. (      ident(i) == id(uera) &
+                                 .or. ident(i) == id(uerax) ) ) then
 
                   string(appnd:) = ' B.C.'
 
@@ -2266,8 +2266,8 @@
 !              portion of the string we just filled in. and don't
 !              increment the place holder.
 !
-               if (     ident(i) .eq. id(uerax) &
-                   .or. ident(i) .eq. id(lerax)) then
+               if (     ident(i) == id(uerax) &
+                   .or. ident(i) == id(lerax)) then
 
                   if ( vanish ) then
                      string(appnd:) = ' '
@@ -2283,21 +2283,21 @@
 
                making         =.false.
 
-            else if ( type .eq. noon ) then
+            else if ( type == noon ) then
 
 
-               if      (       ident(i)   .eq. id(uampm) &
-                         .and. values(hour) .ge. 12.0_wp    ) then
+               if      (       ident(i)   == id(uampm) &
+                         .and. values(hour) >= 12.0_wp    ) then
 
                   string(appnd:) = 'P.M.'
 
-               else if (       ident(i)    .eq. id(uampm) &
-                         .and. values(hour) .lt. 12.0_wp    ) then
+               else if (       ident(i)    == id(uampm) &
+                         .and. values(hour) < 12.0_wp    ) then
 
                   string(appnd:) = 'A.M.'
 
-               else if (       ident(i)    .eq. id(lampm) &
-                         .and. values(hour) .ge. 12.0_wp    ) then
+               else if (       ident(i)    == id(lampm) &
+                         .and. values(hour) >= 12.0_wp    ) then
 
                   string(appnd:) = 'p.m.'
 
@@ -2355,21 +2355,21 @@
                end do
 
 
-               if      ( type .eq. year  .or. type .eq. yr ) then
+               if      ( type == year  .or. type == yr ) then
 
                   stopat = 1
                   timfmt = ymd
                   intyp  = ymdfmt
                   incr   = 1.0_wp
 
-               else if ( type .eq. month) then
+               else if ( type == month) then
 
                   stopat = 2
                   timfmt = ymd
                   intyp  = ymdfmt
                   incr   = 1.0_wp
 
-               else if ( type .eq. day .or. type .eq. doy ) then
+               else if ( type == day .or. type == doy ) then
 
                   stopat = 3
                   timfmt = ymd
@@ -2377,7 +2377,7 @@
                   incr   = 1.0_wp
 
 
-               else if ( type .eq. hour .or. type .eq. ampm ) then
+               else if ( type == hour .or. type == ampm ) then
 
 !
 !                 Note that in this case (and the next 2) that if we
@@ -2391,7 +2391,7 @@
                   intyp  = ymdfmt
                   incr   = 1.0_wp
 
-               else if ( type .eq. minute  ) then
+               else if ( type == minute  ) then
 
                   stopat = 5
                   timfmt = ymd
@@ -2399,7 +2399,7 @@
 
                   incr   = 1.0_wp
 
-               else if ( type .eq. sec  ) then
+               else if ( type == sec  ) then
 
                   stopat = 6
                   timfmt = ymd
@@ -2407,19 +2407,19 @@
                   incr   = 0.0_wp
 
 
-               else if ( type .eq. julian ) then
+               else if ( type == julian ) then
 
                   stopat = 1
                   timfmt = contin
                   incr   = 0.0_wp
 
-                  if      ( (timtyp .eq. id(tdt)) .or. &
-                            (timtyp .eq. id(tt))) then
+                  if      ( (timtyp == id(tdt)) .or. &
+                            (timtyp == id(tt))) then
                      intyp = 'JDTDT'
-                  else if ( timtyp .eq. id(tdb) ) then
+                  else if ( timtyp == id(tdb) ) then
                      intyp = 'JDTDB'
-                  else if (      timtyp .eq. id(utc) &
-                            .or. timtyp .eq. id(utcp) ) then
+                  else if (      timtyp == id(utc) &
+                            .or. timtyp == id(utcp) ) then
                      intyp = 'JDUTC'
                   end if
 
@@ -2454,17 +2454,17 @@
 !              beginnings of years not beginning of last months of
 !              the previous year.
 !
-               if ( type .eq. year  .or. type .eq. yr ) then
+               if ( type == year  .or. type == yr ) then
                   ptvec(2) = 1.0_wp
                   ntvec(2) = 1.0_wp
                   ptvec(3) = 1.0_wp
                   ntvec(3) = 1.0_wp
-               else if ( type .eq. month ) then
+               else if ( type == month ) then
                   ptvec(3) = 1.0_wp
                   ntvec(3) = 1.0_wp
                end if
 
-               if ( go2jul .and. timfmt .ne. contin ) then
+               if ( go2jul .and. timfmt /= contin ) then
 
 !
 !                 Convert both PTVEC and NTVEC to the gregorian
@@ -2495,7 +2495,7 @@
 !
 !              Handle the +/- time zone shifts.
 !
-               if ( dozone .and. (timfmt .ne. contin) ) then
+               if ( dozone .and. (timfmt /= contin) ) then
 
                   ptvec(4) = ptvec(4) - hoff
                   ntvec(4) = ntvec(4) - hoff
@@ -2509,7 +2509,7 @@
                   call ttrans ( 'YMDF', 'YMDF', ptvec )
                   call ttrans ( 'YMDF', 'YMDF', ntvec )
 
-                  if ( type .eq. sec ) then
+                  if ( type == sec ) then
                      ptvec(6) = values(sec)
                      ntvec(6) = values(sec)
                   end if

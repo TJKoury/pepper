@@ -146,7 +146,7 @@
 !  Check that X >= 1.
 !
 
-      if ( x .lt. 1.0_wp ) then
+      if ( x < 1.0_wp ) then
 
          call setmsg ( 'DACOSH: Invalid argument, X is less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )

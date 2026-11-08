@@ -21,10 +21,10 @@
 
       implicit none
 
-      character*(*)    in
+      character(*)     in
       integer(ip)      left
       integer(ip)      right
-      character*(*)    out
+      character(*)     out
 
 ! $ Brief_I/O
 !
@@ -183,11 +183,11 @@
 !
 !     If a character position is out of range, signal an error.
 !
-      if ( ( left  .gt. right    )   .or. &
-           ( right .lt. 1        )   .or. &
-           ( left  .lt. 1        )   .or. &
-           ( right .gt. len (in) )   .or. &
-           ( left  .gt. len (in) ) )       then
+      if ( ( left  > right    )   .or. &
+           ( right < 1        )   .or. &
+           ( left  < 1        )   .or. &
+           ( right > len (in) )   .or. &
+           ( left  > len (in) ) )       then
 
          call setmsg ( 'Left location was *. Right location was *.' )
          call errint ( '*', left             )
@@ -227,7 +227,7 @@
       i = l
       j = r + 1
 
-      do while ( ( i .le. outlen ) .and. ( j .le. inlen ) )
+      do while ( ( i <= outlen ) .and. ( j <= inlen ) )
 
          out(i:i) = in(j:j)
          i        = i + 1
@@ -238,7 +238,7 @@
 !
 !     Pad with blanks, if necessary.
 !
-      if ( i .le. outlen ) then
+      if ( i <= outlen ) then
 
          out(i: ) = ' '
 

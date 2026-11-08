@@ -26,9 +26,9 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         list
-      character*(*)         delims
-      character*(*)         set  ( lbcell:* )
+      character(*)          list
+      character(*)          delims
+      character(*)          set  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -274,7 +274,7 @@
 !
 !     Local parameters
 !
-      character*(1)         blank
+      character(1)          blank
       parameter           ( blank = ' ' )
 
       integer(ip)           ispace
@@ -283,8 +283,8 @@
 !
 !     Local variables
 !
-      character*(1)         bchr
-      character*(1)         echr
+      character(1)          bchr
+      character(1)          echr
 
       integer(ip)           b
       integer(ip)           e
@@ -328,7 +328,7 @@
 !
 !     Blank list contains a blank item.  No need to validate.
 !
-      if ( list .eq. blank ) then
+      if ( list == blank ) then
 
          call scardc ( 0,     set )
          call insrtc ( blank, set )
@@ -353,7 +353,7 @@
 !
          b = 1
 
-         do while ( b .le. eol )
+         do while ( b <= eol )
 !
 !           Skip any blanks before the next item or delimiter.
 !
@@ -363,12 +363,12 @@
 !
             bchr = list(b:b)
 
-            do while (       ( b           .le. eol    ) &
-                       .and. ( ichar(bchr) .eq. ispace ) )
+            do while (       ( b           <= eol    ) &
+                       .and. ( ichar(bchr) == ispace ) )
 
                b = b + 1
 
-               if ( b .le. eol ) then
+               if ( b <= eol ) then
                   bchr = list(b:b)
                end if
 
@@ -384,18 +384,18 @@
 !
             e = b
 
-            if ( e .le. eol ) then
+            if ( e <= eol ) then
                echr = list(e:e)
             else
                echr = blank
             end if
 
-            do while (       (  e                     .le. eol ) &
-                       .and. (  index( delims, echr ) .eq. 0   )  )
+            do while (       (  e                     <= eol ) &
+                       .and. (  index( delims, echr ) == 0   )  )
 
                e = e + 1
 
-               if ( e .le. eol ) then
+               if ( e <= eol ) then
                   echr = list(e:e)
                end if
 
@@ -410,25 +410,25 @@
 !           By definition, consecutive blanks, or a blank and any
 !           other delimiter, do not count as consecutive delimiters.)
 !
-            if (       ( e           .le. eol    ) &
-                 .and. ( ichar(echr) .eq. ispace ) ) then
+            if (       ( e           <= eol    ) &
+                 .and. ( ichar(echr) == ispace ) ) then
 !
 !              Find the next non-blank character.
 !
-               do while (       ( e           .le. eol    ) &
-                          .and. ( ichar(echr) .eq. ispace )  )
+               do while (       ( e           <= eol    ) &
+                          .and. ( ichar(echr) == ispace )  )
 
                   e = e + 1
 
-                  if ( e .le. eol ) then
+                  if ( e <= eol ) then
                      echr = list(e:e)
                   end if
 
                end do
 
-               if ( e .le. eol ) then
+               if ( e <= eol ) then
 
-                  if (  index( delims, echr ) .eq. 0  ) then
+                  if (  index( delims, echr ) == 0  ) then
 !
 !                    We're looking at a non-delimiter character.
 !
@@ -456,11 +456,11 @@
 !              Unless it's full, in which case we validate now and
 !              insert later.
 !
-               if ( n .lt. nmax ) then
+               if ( n < nmax ) then
 
                   n = n + 1
 
-                  if ( e .gt. b ) then
+                  if ( e > b ) then
                      set(n) = list(b:e-1)
                   else
                      set(n) = blank
@@ -482,7 +482,7 @@
 !
             if ( valid ) then
 
-               if ( e .gt. b ) then
+               if ( e > b ) then
                   call insrtc ( list ( b:e-1 ),   set )
                else
                   call insrtc ( blank,            set )
@@ -516,7 +516,7 @@
 !        blank item into the set. If there isn't any room, signal
 !        an error.
 !
-         if ( index( delims, list(eol:eol) ) .ne. 0 ) then
+         if ( index( delims, list(eol:eol) ) /= 0 ) then
 
             call insrtc ( blank, set )
 !

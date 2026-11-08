@@ -210,7 +210,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       real(wp)              page   ( pgsizd )
 
@@ -257,13 +257,13 @@
       colidx =  coldsc( ordidx )
       size   =  coldsc( sizidx )
 
-      nullok =  nulptr .ne. ifalse
-      fixsiz =  size   .ne. ifalse
+      nullok =  nulptr /= ifalse
+      fixsiz =  size   /= ifalse
 
 !
 !     This column had better be class 5.
 !
-      if ( class .ne. 5 ) then
+      if ( class /= 5 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -334,7 +334,7 @@
       end if
 
 
-      if ( ndata .gt. 0 ) then
+      if ( ndata > 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
@@ -370,7 +370,7 @@
       nlink   =  0
 
 
-      do while ( row .le. nrows )
+      do while ( row <= nrows )
 
 !
 !        NEWREQ is set to TRUE if we discover that the next column
@@ -400,7 +400,7 @@
          else
 
 
-            if ( nelt .eq. 1 ) then
+            if ( nelt == 1 ) then
 !
 !              We're about to write out a new column entry.  We must
 !              insert the element count into the page before writing the
@@ -439,9 +439,9 @@
 !           Decide whether we must continue the current entry on another
 !           data page.
 !
-            cntinu  =  ( nelt .lt. cursiz ) .and. ( n .eq. dpsize )
+            cntinu  =  ( nelt < cursiz ) .and. ( n == dpsize )
 
-            if ( nelt .eq. cursiz ) then
+            if ( nelt == cursiz ) then
 !
 !              The current element is the last of the current column
 !              entry.
@@ -451,8 +451,8 @@
 !              we must have enough room for the element count and at
 !              least the first entry element.
 !
-               if ( remain .gt. 0 ) then
-                  newreq   =   n  .gt. ( dpsize - 2 )
+               if ( remain > 0 ) then
+                  newreq   =   n  > ( dpsize - 2 )
                end if
 
                nelt  =  1
@@ -467,7 +467,7 @@
          end if
 
 
-         if (  ( bufptr .gt. bufsiz ) .or. ( row .gt. nrows )  ) then
+         if (  ( bufptr > bufsiz ) .or. ( row > nrows )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.
@@ -480,7 +480,7 @@
 
          if (         cntinu &
              .or.     newreq &
-             .or. ( ( row .gt. nrows ) .and. ( ndata .gt. 0 ) )  ) then
+             .or. ( ( row > nrows ) .and. ( ndata > 0 ) )  ) then
 !
 !           It's time to write out the current page.  First set the link
 !           count.
@@ -495,7 +495,7 @@
 !
 !           If there's more data to write, allocate another page.
 !
-            if ( remain .gt. 0 ) then
+            if ( remain > 0 ) then
 
                call zzekaps ( handle, segdsc, dp, .false., p2, pbase )
                call cleard  ( pgsizd, page )

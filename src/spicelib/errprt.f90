@@ -20,8 +20,8 @@
 
       implicit none
 
-       character*(*)          op
-       character*(*)          list
+       character(*)           op
+       character(*)           list
 
 ! $ Brief_I/O
 !
@@ -286,8 +286,8 @@
       integer(ip)           maxwrd
       parameter           ( maxwrd = 10 )
 
-      character*(wrdlen)    words ( maxwrd )
-      character*(wrdlen)    upword
+      character(wrdlen)     words ( maxwrd )
+      character(wrdlen)     upword
 
       integer(ip)           numwrd
 
@@ -303,8 +303,8 @@
 
       integer(ip)           oplen
       parameter           ( oplen = 3 )
-      character*(oplen)     upop
-      character*(oplen)     locop
+      character(oplen)      upop
+      character(oplen)      locop
 
 
 
@@ -335,7 +335,7 @@
       call ljust ( op,   upop )
       call ucase ( upop, upop )
 
-      if (  upop  .eq. 'GET' ) then
+      if (  upop  == 'GET' ) then
 !
 !        Construct a string indicating which messages are enabled.
 !
@@ -350,7 +350,7 @@
 
          if ( long ) then
 
-            if ( list .eq. ' ' ) then
+            if ( list == ' ' ) then
                list = 'LONG'
             else
                call suffix ( ', LONG', 0, list )
@@ -361,7 +361,7 @@
 
          if ( expl ) then
 
-            if ( list .eq. ' ' ) then
+            if ( list == ' ' ) then
                list = 'EXPLAIN'
             else
                call suffix ( ', EXPLAIN', 0, list )
@@ -372,7 +372,7 @@
 
          if ( trace ) then
 
-            if ( list .eq. ' ' ) then
+            if ( list == ' ' ) then
                list = 'TRACEBACK'
             else
                call suffix ( ', TRACEBACK', 0, list )
@@ -383,7 +383,7 @@
 
          if ( dfault ) then
 
-            if ( list .eq. ' ' ) then
+            if ( list == ' ' ) then
                list = 'DEFAULT'
             else
                call suffix ( ', DEFAULT', 0, list )
@@ -392,7 +392,7 @@
          end if
 
 
-      else if ( upop .eq. 'SET' ) then
+      else if ( upop == 'SET' ) then
 !
 !        We parse the list of words, converting each word
 !        to upper case, testing each word for validity,
@@ -415,30 +415,30 @@
 
             call ucase  ( words(i), upword )
 
-            if ( upword .eq. 'SHORT' ) then
+            if ( upword == 'SHORT' ) then
 
                short  =  .true.
 
-            else if ( upword .eq. 'LONG' ) then
+            else if ( upword == 'LONG' ) then
 
                long   =  .true.
 
-            else if ( upword .eq. 'EXPLAIN' ) then
+            else if ( upword == 'EXPLAIN' ) then
 
                expl   =  .true.
 
-            else if ( upword .eq. 'TRACEBACK' ) then
+            else if ( upword == 'TRACEBACK' ) then
 
                trace  =  .true.
 
-            else if ( upword .eq. 'ALL' ) then
+            else if ( upword == 'ALL' ) then
 
                short  =  .true.
                long   =  .true.
                expl   =  .true.
                trace  =  .true.
 
-            else if ( upword .eq. 'DEFAULT' ) then
+            else if ( upword == 'DEFAULT' ) then
 
                short  =  .true.
                long   =  .true.
@@ -446,7 +446,7 @@
                trace  =  .true.
                dfault =  .true.
 
-            else if ( upword .eq. 'NONE' ) then
+            else if ( upword == 'NONE' ) then
 
                short  =  .false.
                long   =  .false.
@@ -455,7 +455,7 @@
                dfault =  .false.
 
 
-            else if  (  upword .ne. ' '  )  then
+            else if  (  upword /= ' '  )  then
 !
 !              Oops! Invalid word...
 !

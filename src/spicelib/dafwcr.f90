@@ -22,7 +22,7 @@
 
       integer(ip)           handle
       integer(ip)           recno
-      character*(*)         crec
+      character(*)          crec
 
 ! $ Brief_I/O
 !
@@ -183,7 +183,7 @@
 !
       call dafsih ( handle, 'WRITE' )
 
-      if ( len ( crec ) .ne. 1000 ) then
+      if ( len ( crec ) /= 1000 ) then
 
          call setmsg ( 'Expected length of character record is 1000.' // &
                        ' Length of passed record is #' )
@@ -196,7 +196,7 @@
                 rec=recno, &
                 iostat=iostat) crec
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Character record write failed. Value of '  // &
                           'IOSTAT was #' )
             call errint ( '#', iostat )

@@ -168,7 +168,7 @@
          maxcor(i) = bounds(upper,i)
          l(i)      = maxcor(i) - mincor(i)
 
-         if ( l(i) .le. 0.0_wp ) then
+         if ( l(i) <= 0.0_wp ) then
 
             call chkin  ( 'ZZRECBOX'                               )
             call setmsg ( 'Coordinate # bounds were #:#; bounds ' &

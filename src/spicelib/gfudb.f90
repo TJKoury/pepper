@@ -990,7 +990,7 @@
 !
 !     Check the result window size.
 !
-      if ( (sized(result) .lt. 2) .or. odd( sized(result) ) ) then
+      if ( (sized(result) < 2) .or. odd( sized(result) ) ) then
 
          call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )

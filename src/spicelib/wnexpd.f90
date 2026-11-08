@@ -193,7 +193,7 @@
          window(i-gone  ) = window(i)   - left
          window(i-gone+1) = window(i+1) + right
 
-         if ( window(i-gone) .gt. window(i-gone+1) ) then
+         if ( window(i-gone) > window(i-gone+1) ) then
             gone = gone + 2
          end if
       end do
@@ -205,7 +205,7 @@
 !
       card = card - gone
 
-      if ( card .eq. 0 ) then
+      if ( card == 0 ) then
          call scardd ( 0, window )
          call chkout ( 'WNEXPD'  )
          return
@@ -226,9 +226,9 @@
       i = 2
       j = 2
 
-      do while ( j .lt. card )
+      do while ( j < card )
 
-         if ( window(j) .lt. window(j+1) ) then
+         if ( window(j) < window(j+1) ) then
             window(i  ) = window(j  )
             window(i+1) = window(j+1)
             i           = i + 2

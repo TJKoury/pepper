@@ -24,8 +24,8 @@
       implicit none
 
       integer(ip)           handle
-      character*(*)         idword
-      character*(*)         ifname
+      character(*)          idword
+      character(*)          ifname
       integer(ip)           nresvr
       integer(ip)           nresvc
       integer(ip)           ncomr

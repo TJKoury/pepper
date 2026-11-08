@@ -210,11 +210,11 @@
 !
 !     Local variables
 !
-      character*(ifnlen)    ifname
-      character*(maxcpr)    line
-      character*(maxcpr)    record
-      character*(1)         eot
-      character*(1)         null
+      character(ifnlen)     ifname
+      character(maxcpr)     line
+      character(maxcpr)     record
+      character(1)          eot
+      character(1)          null
 
       integer(ip)           bward
       integer(ip)           c
@@ -258,7 +258,7 @@
       call dafrfr ( handle, nd, ni, ifname, fward, bward, free )
       nrr = fward - 2
 
-      if ( nrr .eq. 0 ) then
+      if ( nrr == 0 ) then
          call chkout ( 'SPCEC' )
          return
       end if
@@ -294,7 +294,7 @@
 
          read ( dafu, rec=rec+1, iostat=iostat ) record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error reading comment area of the binary ' // &
                           'file named FNM.  Value of IOSTAT is #.'    )
             call errint ( '#', iostat                                 )
@@ -309,7 +309,7 @@
 !
 !           End-of-transmission means we're done.
 !
-            if ( record(c:c) .eq. eot ) then
+            if ( record(c:c) == eot ) then
 
                call chkout ( 'SPCEC' )
                return
@@ -320,15 +320,15 @@
 !           get written.  After this, the current line should be empty
 !           again.
 !
-            else if ( record(c:c) .eq. null ) then
+            else if ( record(c:c) == null ) then
 
-               if ( pos .eq. 0 ) then
+               if ( pos == 0 ) then
                   write ( unit, *, iostat=iostat )
                else
                   write ( unit, fmt='(A)', iostat=iostat ) line( :pos)
                end if
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
                   call setmsg ( 'Error writing to the text file '     // &
                                 'named FNM.  Value of IOSTAT is #.'   )
                   call errint ( '#', iostat                           )

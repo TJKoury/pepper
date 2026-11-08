@@ -171,17 +171,17 @@
 !     Update the segment's metadata.  For type 1 segments,
 !     the new page into the page tree of the appropriate data type.
 !
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 
          tree  =  segdsc ( cptidx )
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 
          tree  =  segdsc ( dptidx )
 
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 !
 !        The remaining possibility is that TYPE is INT.  If we had had
 !        an unrecognized type, one of the allocation routines would have

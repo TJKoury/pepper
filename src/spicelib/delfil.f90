@@ -17,7 +17,7 @@
 !
 ! $ Declarations
 !
-      character*(*)         filnam
+      character(*)          filnam
 !
 ! $ Brief_I/O
 !
@@ -135,7 +135,7 @@
 !     Check to see if the filename we got is blank. If it is, signal an
 !     error and return.
 !
-      if ( filnam .eq. ' ' ) then
+      if ( filnam == ' ' ) then
 
          call setmsg ( 'The file name is blank.' )
          call sigerr ( 'SPICE(BLANKFILENAME)'    )
@@ -155,7 +155,7 @@
 !     Not too likely, but if the INQUIRE statement fails signal an error
 !     and return.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'INQUIRE statement failed for file ''#''.' // &
                        ' IOSTAT = #.'                              )
@@ -204,7 +204,7 @@
 !     If we had trouble opening the file, signal an appropriate error
 !     and return.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Attempt to open the file ''#'' failed.' )
          call errch  ( '#', filnam                              )
@@ -220,7 +220,7 @@
 !
       close ( lunit, status='DELETE', iostat=iostat )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          close       ( lunit                                      )
          call setmsg ( 'Attempt to delete the file ''#'' failed.' )

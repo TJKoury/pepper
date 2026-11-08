@@ -572,7 +572,7 @@
 
       savtyp = dsktrg
 
-      if (  ( nsurf .lt. 0 ) .or. ( nsurf .gt. maxsrf )  ) then
+      if (  ( nsurf < 0 ) .or. ( nsurf > maxsrf )  ) then
 
          call setmsg ( 'Surface count must be in the range ' &
          //            '0:# but was #.'                     )
@@ -772,13 +772,13 @@
 
       call chkin ( 'ZZRAYSFX' )
 
-      if ( savtyp .eq. elltrg ) then
+      if ( savtyp == elltrg ) then
 
          call surfpt ( vertex,    raydir,    savrad(1), &
                        savrad(2), savrad(3), spoint,    found )
 
 
-      else if ( savtyp .eq. dsktrg ) then
+      else if ( savtyp == dsktrg ) then
 
          call zzsbfxr ( savtrg, savnsf, savsrf, et, &
                         savfid, vertex, raydir, spoint, found )
@@ -1262,7 +1262,7 @@
       call chkin ( 'ZZRAYNP' )
 
 
-      if ( savtyp .eq. elltrg ) then
+      if ( savtyp == elltrg ) then
 !
 !        Find the nearest point on the ellipsoid's surface to
 !        to the ray.
@@ -1271,7 +1271,7 @@
                        vertex,    raydir,    pnear,    dist )
 
 
-      else if ( savtyp .eq. dsktrg ) then
+      else if ( savtyp == dsktrg ) then
 !
 !        Find the nearest point on the outer bounding sphere to
 !        to the ray.

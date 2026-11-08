@@ -23,9 +23,9 @@
 
       implicit none
 
-      character*(*)      keywd
+      character(*)       keywd
       integer(ip)        maxwds
-      character*(*)      string
+      character(*)       string
       integer(ip)        nfound
       integer(ip)        parsed
       real(wp)           values ( * )
@@ -247,7 +247,7 @@
 
 
       real(wp) x
-      character*80     error
+      character(80)    error
       integer(ip)      pntr
 
 !
@@ -263,7 +263,7 @@
       positn  =  wdindx ( string, keywd )
       length  =  lastnb ( string      )
 
-      if ( positn .eq. 0 ) then
+      if ( positn == 0 ) then
          nfound = -1
          parsed =  0
          return
@@ -278,7 +278,7 @@
 
       start   = eerase + 1
 
-      if ( start .lt. length ) then
+      if ( start < length ) then
 
 !
 !        Locate the next word and try to parse it ...
@@ -286,7 +286,7 @@
          call fndnwd ( string,      start, i,     j    )
          call nparsd ( string(i:j), x,     error, pntr )
 
-         if ( error .eq. ' ' ) then
+         if ( error == ' ' ) then
 !
 !           ...  mark its starting position as a possible starting
 !           point for deletion if we run out of room for parsed numbers.
@@ -311,8 +311,8 @@
 !     Now find all of the succeeding numeric words until we run out of
 !     numeric words or string to look at.
 !
-      do while (       ( start .lt. length ) &
-                 .and. ( error .eq. ' '    ) )
+      do while (       ( start < length ) &
+                 .and. ( error == ' '    ) )
 
 !
 !        Find the next word and try to parse it as a number.
@@ -320,7 +320,7 @@
          call fndnwd ( string,      start, i,     j       )
          call nparsd ( string(i:j), x,     error, pntr )
 
-         if ( error .eq. ' ' ) then
+         if ( error == ' ' ) then
 
 !
 !           It's a number! Congratulations!
@@ -330,7 +330,7 @@
 !
 !           If there is room ...
 !
-            if ( nfound .le. maxwds ) then
+            if ( nfound <= maxwds ) then
 
 !
 !              1.  Increment the counter PARSED.
@@ -369,7 +369,7 @@
       i = berase
       j = eerase + 1
 
-      do while ( j .le. length )
+      do while ( j <= length )
          string(i:i) = string(j:j)
          i           = i + 1
          j           = j + 1

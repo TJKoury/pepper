@@ -143,7 +143,7 @@
 !
       e2 = h*h + k*k
 
-      if ( e2 .ge. 0.81_wp ) then
+      if ( e2 >= 0.81_wp ) then
 
          kepleq = 0.0_wp
          call chkin  ( 'KEPLEQ' )

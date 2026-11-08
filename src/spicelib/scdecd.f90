@@ -25,7 +25,7 @@
 
       integer(ip)           sc
       real(wp)              sclkdp
-      character*(*)         sclkch
+      character(*)          sclkch
 
 ! $ Brief_I/O
 !
@@ -496,7 +496,7 @@
 !
 !     Local variables
 !
-      character*(partln)    prtstr
+      character(partln)     prtstr
 
       integer(ip)           nparts
       integer(ip)           part
@@ -546,7 +546,7 @@
          return
       end if
 
-      if ( nparts .gt. mxpart ) then
+      if ( nparts > mxpart ) then
 !
 !        This code should be unreachable. It is included for safety.
 !
@@ -581,14 +581,14 @@
 !     Error if TICKS comes before the first partition (that is, if it's
 !     negative), or after the last one.
 !
-      if ( ticks .eq. ptotls (nparts) )  then
+      if ( ticks == ptotls (nparts) )  then
          part = nparts
       else
          part = lstled ( ticks, nparts, ptotls ) + 1
       end if
 
 
-      if ( ( ticks .lt. 0.0_wp ).or.( part .gt. nparts ) ) then
+      if ( ( ticks < 0.0_wp ).or.( part > nparts ) ) then
 
          call setmsg ( 'Value for ticks, #, does not fall in any ' // &
                        'partition for spacecraft #.'  )
@@ -605,7 +605,7 @@
 !     the preceding partition counts and add the beginning count for
 !     this partition.
 !
-      if ( part .eq. 1 ) then
+      if ( part == 1 ) then
          ticks = ticks + pstart( part )
       else
          ticks = ticks + pstart( part ) - ptotls( part - 1 )
@@ -634,7 +634,7 @@
       prelen = lastnb ( prtstr )
       suflen = lastnb ( sclkch )
 
-      if ( len ( sclkch ) - suflen .lt. prelen ) then
+      if ( len ( sclkch ) - suflen < prelen ) then
 
          call setmsg ( 'Output string too short to contain clock '    // &
                        'string. Input tick value: #, requires string '// &

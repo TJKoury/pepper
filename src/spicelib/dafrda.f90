@@ -255,7 +255,7 @@
 !
 !     Bad addresses?
 !
-      if ( begin .le. 0 ) then
+      if ( begin <= 0 ) then
          call chkin  ( 'DAFRDA' )
          call setmsg ( 'Negative value for BEGIN address: #' )
          call errint ( '#', begin )
@@ -263,7 +263,7 @@
          call chkout ( 'DAFRDA' )
          return
 
-      else if ( begin .gt. end ) then
+      else if ( begin > end ) then
          call chkin  ( 'DAFRDA' )
          call setmsg ( 'Beginning address (#) greater than ending '   // &
                        'address (#).' )
@@ -291,15 +291,15 @@
 
       do recno = begr, endr
 
-         if ( begr .eq. endr ) then
+         if ( begr == endr ) then
             first = begw
             last  = endw
 
-         else if ( recno .eq. begr ) then
+         else if ( recno == begr ) then
             first = begw
             last  = bsize
 
-         else if ( recno .eq. endr ) then
+         else if ( recno == endr ) then
             first = 1
             last  = endw
 

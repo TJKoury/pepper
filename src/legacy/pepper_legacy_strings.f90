@@ -9,10 +9,10 @@
       use pepper_strings, only: pepper_astrip => astrip
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    instr
-      character*1      asciib
-      character*1      asciie
-      character*(*)    outstr
+      character(*)     instr
+      character(1)     asciib
+      character(1)     asciie
+      character(*)     outstr
       call pepper_astrip ( instr, asciib, asciie, outstr )
       end subroutine astrip
 
@@ -20,7 +20,7 @@
       use pepper_strings, only: pepper_bedec => bedec
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
+      character(*)          string
       bedec = pepper_bedec ( string )
       end function bedec
 
@@ -28,7 +28,7 @@
       use pepper_strings, only: pepper_beint => beint
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
+      character(*)          string
       beint = pepper_beint ( string )
       end function beint
 
@@ -36,7 +36,7 @@
       use pepper_strings, only: pepper_benum => benum
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
+      character(*)          string
       benum = pepper_benum ( string )
       end function benum
 
@@ -44,7 +44,7 @@
       use pepper_strings, only: pepper_beuns => beuns
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
+      character(*)          string
       beuns = pepper_beuns ( string )
       end function beuns
 
@@ -52,10 +52,10 @@
       use pepper_strings, only: pepper_cmprss => cmprss
       use pepper_kinds, only: ip
       implicit none
-      character*1         delim
+      character(1)        delim
       integer(ip)         n
-      character*(*)       input
-      character*(*)       output
+      character(*)        input
+      character(*)        output
       call pepper_cmprss ( delim, n, input, output )
       end subroutine cmprss
 
@@ -63,8 +63,8 @@
       use pepper_strings, only: pepper_cpos => cpos
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str
-      character*(*)         chars
+      character(*)          str
+      character(*)          chars
       integer(ip)           start
       cpos = pepper_cpos ( str, chars, start )
       end function cpos
@@ -73,8 +73,8 @@
       use pepper_strings, only: pepper_cposr => cposr
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str
-      character*(*)         chars
+      character(*)          str
+      character(*)          chars
       integer(ip)           start
       cposr = pepper_cposr ( str, chars, start )
       end function cposr
@@ -83,8 +83,8 @@
       use pepper_strings, only: pepper_eqstr => eqstr
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         a
-      character*(*)         b
+      character(*)          a
+      character(*)          b
       eqstr = pepper_eqstr ( a, b )
       end function eqstr
 
@@ -92,9 +92,9 @@
       use pepper_strings, only: pepper_esrchc => esrchc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    value
+      character(*)     value
       integer(ip)      ndim
-      character*(*)    array ( * )
+      character(*)     array ( * )
       esrchc = pepper_esrchc ( value, ndim, array )
       end function esrchc
 
@@ -102,7 +102,7 @@
       use pepper_strings, only: pepper_fndnwd => fndnwd
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       integer(ip)      start
       integer(ip)      b
       integer(ip)      e
@@ -113,7 +113,7 @@
       use pepper_strings, only: pepper_frstnb => frstnb
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       integer(ip)           ispace
       parameter           ( ispace = 32 )
       frstnb = pepper_frstnb ( string )
@@ -123,7 +123,7 @@
       use pepper_strings, only: pepper_frstnp => frstnp
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       frstnp = pepper_frstnp ( string )
       end function frstnp
 
@@ -131,7 +131,7 @@
       use pepper_strings, only: pepper_frstpc => frstpc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       frstpc = pepper_frstpc ( string )
       end function frstpc
 
@@ -140,12 +140,12 @@
       use pepper_strings, only: pepper_kxtrct => kxtrct
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    keywd
-      character*(*)    terms(*)
+      character(*)     keywd
+      character(*)     terms(*)
       integer(ip)      nterms
-      character*(*)    wordsq
+      character(*)     wordsq
       logical          found
-      character*(*)    substr
+      character(*)     substr
       call pepper_kxtrct ( keywd, terms, nterms, wordsq, found, substr )
       end subroutine kxtrct
 
@@ -153,7 +153,7 @@
       use pepper_strings, only: pepper_lastnb => lastnb
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       integer(ip)           ispace
       parameter           ( ispace = 32 )
       lastnb = pepper_lastnb ( string )
@@ -163,7 +163,7 @@
       use pepper_strings, only: pepper_lastpc => lastpc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       lastpc = pepper_lastpc ( string )
       end function lastpc
 
@@ -171,10 +171,10 @@
       use pepper_strings, only: pepper_lbuild => lbuild
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    items ( * )
+      character(*)     items ( * )
       integer(ip)      n
-      character*(*)    delim
-      character*(*)    list
+      character(*)     delim
+      character(*)     list
       call pepper_lbuild ( items, n, delim, list )
       end subroutine lbuild
 
@@ -182,8 +182,8 @@
       use pepper_strings, only: pepper_lcase => lcase
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    in
-      character*(*)    out
+      character(*)     in
+      character(*)     out
       integer(ip), parameter :: uppera = ichar ('A')
       integer(ip), parameter :: upperz = ichar ('Z')
       integer(ip), parameter :: shift = ichar ('a') - uppera
@@ -195,8 +195,8 @@
       use pepper_kinds, only: ip
       implicit none
       integer(ip)         n
-      character*(*)       input
-      character*(*)       output
+      character(*)        input
+      character(*)        output
       integer(ip), parameter :: lowa = ichar ('a')
       integer(ip), parameter :: lowz = ichar ('z')
       integer(ip), parameter :: shift = ichar ('A') - lowa
@@ -207,8 +207,8 @@
       use pepper_strings, only: pepper_ljust => ljust
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    input
-      character*(*)    output
+      character(*)     input
+      character(*)     output
       call pepper_ljust ( input, output )
       end subroutine ljust
 
@@ -216,12 +216,12 @@
       use pepper_strings, only: pepper_lparse => lparse
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         list
-      character*(1)         delim
+      character(*)          list
+      character(1)          delim
       integer(ip)           nmax
       integer(ip)           n
-      character*(*)         items ( * )
-      character*(1)         blank
+      character(*)          items ( * )
+      character(1)          blank
       parameter           ( blank = ' ' )
       integer(ip)           ispace
       parameter           ( ispace = 32 )
@@ -232,12 +232,12 @@
       use pepper_strings, only: pepper_lparsm => lparsm
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    list
-      character*(*)    delims
+      character(*)     list
+      character(*)     delims
       integer(ip)      nmax
       integer(ip)      n
-      character*(*)    items ( * )
-      character*(1)         blank
+      character(*)     items ( * )
+      character(1)          blank
       parameter           ( blank = ' ' )
       integer(ip)           ispace
       parameter           ( ispace = 32 )
@@ -248,7 +248,7 @@
       use pepper_strings, only: pepper_ltrim => ltrim
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
+      character(*)          string
       ltrim = pepper_ltrim ( string )
       end function ltrim
 
@@ -256,8 +256,8 @@
       use pepper_strings, only: pepper_lxqstr => lxqstr
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
-      character*(1)         qchar
+      character(*)          string
+      character(1)          qchar
       integer(ip)           first
       integer(ip)           last
       integer(ip)           nchar
@@ -268,10 +268,10 @@
       use pepper_strings, only: pepper_matchw => matchw
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
-      character*(*)    templ
-      character*1      wstr
-      character*1      wchr
+      character(*)     string
+      character(*)     templ
+      character(1)     wstr
+      character(1)     wchr
       matchw = pepper_matchw ( string, templ, wstr, wchr )
       end function matchw
 
@@ -279,7 +279,7 @@
       use pepper_strings, only: pepper_nblen => nblen
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       nblen = pepper_nblen ( string )
       end function nblen
 
@@ -287,7 +287,7 @@
       use pepper_strings, only: pepper_nbwid => nbwid
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         array   ( * )
+      character(*)          array   ( * )
       integer(ip)           nelt
       nbwid = pepper_nbwid ( array, nelt )
       end function nbwid
@@ -296,8 +296,8 @@
       use pepper_strings, only: pepper_ncpos => ncpos
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str
-      character*(*)         chars
+      character(*)          str
+      character(*)          chars
       integer(ip)           start
       ncpos = pepper_ncpos ( str, chars, start )
       end function ncpos
@@ -306,8 +306,8 @@
       use pepper_strings, only: pepper_ncposr => ncposr
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str
-      character*(*)         chars
+      character(*)          str
+      character(*)          chars
       integer(ip)           start
       ncposr = pepper_ncposr ( str, chars, start )
       end function ncposr
@@ -316,9 +316,9 @@
       use pepper_strings, only: pepper_nextwd => nextwd
       use pepper_kinds, only: ip
       implicit none
-      character*(*)     string
-      character*(*)     next
-      character*(*)     rest
+      character(*)      string
+      character(*)      next
+      character(*)      rest
       integer(ip)           ispace
       parameter           ( ispace = 32 )
       call pepper_nextwd ( string, next, rest )
@@ -328,9 +328,9 @@
       use pepper_strings, only: pepper_nthwd => nthwd
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       integer(ip)      nth
-      character*(*)    word
+      character(*)     word
       integer(ip)      loc
       call pepper_nthwd ( string, nth, word, loc )
       end subroutine nthwd
@@ -340,12 +340,12 @@
       use pepper_strings, only: pepper_parsqs => parsqs
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
-      character*(1)         qchar
-      character*(*)         value
+      character(*)          string
+      character(1)          qchar
+      character(*)          value
       integer(ip)           length
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
       integer(ip)           ptr
       call pepper_parsqs ( string, qchar, value, length, error, errmsg, ptr )
       end subroutine parsqs
@@ -354,7 +354,7 @@
       use pepper_strings, only: pepper_pcwid => pcwid
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         array   ( * )
+      character(*)          array   ( * )
       integer(ip)           nelt
       pcwid = pepper_pcwid ( array, nelt )
       end function pcwid
@@ -363,8 +363,8 @@
       use pepper_strings, only: pepper_pos => pos
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str
-      character*(*)         substr
+      character(*)          str
+      character(*)          substr
       integer(ip)           start
       pos = pepper_pos ( str, substr, start )
       end function pos
@@ -373,8 +373,8 @@
       use pepper_strings, only: pepper_posr => posr
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str
-      character*(*)         substr
+      character(*)          str
+      character(*)          substr
       integer(ip)           start
       posr = pepper_posr ( str, substr, start )
       end function posr
@@ -383,9 +383,9 @@
       use pepper_strings, only: pepper_prefix => prefix
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    pref
+      character(*)     pref
       integer(ip)      spaces
-      character*(*)    string
+      character(*)     string
       call pepper_prefix ( pref, spaces, string )
       end subroutine prefix
 
@@ -393,10 +393,10 @@
       use pepper_strings, only: pepper_quote => quote
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    in
-      character*1      left
-      character*1      right
-      character*(*)    out
+      character(*)     in
+      character(1)     left
+      character(1)     right
+      character(*)     out
       call pepper_quote ( in, left, right, out )
       end subroutine quote
 
@@ -404,10 +404,10 @@
       use pepper_strings, only: pepper_replch => replch
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    instr
-      character*1      old
-      character*1      new
-      character*(*)    outstr
+      character(*)     instr
+      character(1)     old
+      character(1)     new
+      character(*)     outstr
       call pepper_replch ( instr, old, new, outstr )
       end subroutine replch
 
@@ -415,10 +415,10 @@
       use pepper_strings, only: pepper_replwd => replwd
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    instr
+      character(*)     instr
       integer(ip)      nth
-      character*(*)    new
-      character*(*)    outstr
+      character(*)     new
+      character(*)     outstr
       call pepper_replwd ( instr, nth, new, outstr )
       end subroutine replwd
 
@@ -426,10 +426,10 @@
       use pepper_strings, only: pepper_repmc => repmc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         in
-      character*(*)         marker
-      character*(*)         value
-      character*(*)         out
+      character(*)          in
+      character(*)          marker
+      character(*)          value
+      character(*)          out
       call pepper_repmc ( in, marker, value, out )
       end subroutine repmc
 
@@ -437,8 +437,8 @@
       use pepper_strings, only: pepper_rjust => rjust
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    input
-      character*(*)    output
+      character(*)     input
+      character(*)     output
       call pepper_rjust ( input, output )
       end subroutine rjust
 
@@ -446,7 +446,7 @@
       use pepper_strings, only: pepper_rtrim => rtrim
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         string
+      character(*)          string
       rtrim = pepper_rtrim ( string )
       end function rtrim
 
@@ -454,9 +454,9 @@
       use pepper_strings, only: pepper_samch => samch
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str1
+      character(*)          str1
       integer(ip)           l1
-      character*(*)         str2
+      character(*)          str2
       integer(ip)           l2
       samch = pepper_samch ( str1, l1, str2, l2 )
       end function samch
@@ -465,10 +465,10 @@
       use pepper_strings, only: pepper_samsub => samsub
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         str1
+      character(*)          str1
       integer(ip)           b1
       integer(ip)           e1
-      character*(*)         str2
+      character(*)          str2
       integer(ip)           b2
       integer(ip)           e2
       samsub = pepper_samsub ( str1, b1, e1, str2, b2, e2 )
@@ -491,10 +491,10 @@
       use pepper_strings, only: pepper_shiftl => shiftl
       use pepper_kinds, only: ip
       implicit none
-      character*(*)      in
+      character(*)       in
       integer(ip)        nshift
-      character*1        fillc
-      character*(*)      out
+      character(1)       fillc
+      character(*)       out
       call pepper_shiftl ( in, nshift, fillc, out )
       end subroutine shiftl
 
@@ -502,10 +502,10 @@
       use pepper_strings, only: pepper_shiftr => shiftr
       use pepper_kinds, only: ip
       implicit none
-      character*(*)      in
+      character(*)       in
       integer(ip)        nshift
-      character*1        fillc
-      character*(*)      out
+      character(1)       fillc
+      character(*)       out
       call pepper_shiftr ( in, nshift, fillc, out )
       end subroutine shiftr
 
@@ -513,8 +513,8 @@
       use pepper_strings, only: pepper_sigdgt => sigdgt
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    in
-      character*(*)    out
+      character(*)     in
+      character(*)     out
       call pepper_sigdgt ( in, out )
       end subroutine sigdgt
 
@@ -522,9 +522,9 @@
       use pepper_strings, only: pepper_suffix => suffix
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    suff
+      character(*)     suff
       integer(ip)      spaces
-      character*(*)    string
+      character(*)     string
       call pepper_suffix ( suff, spaces, string )
       end subroutine suffix
 
@@ -532,8 +532,8 @@
       use pepper_strings, only: pepper_ucase => ucase
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    in
-      character*(*)    out
+      character(*)     in
+      character(*)     out
       integer(ip), parameter :: lowa = ichar ('a')
       integer(ip), parameter :: lowz = ichar ('z')
       integer(ip), parameter :: shift = ichar ('A') - lowa
@@ -544,7 +544,7 @@
       use pepper_strings, only: pepper_wdcnt => wdcnt
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       wdcnt = pepper_wdcnt ( string )
       end function wdcnt
 
@@ -552,18 +552,18 @@
       use pepper_strings, only: pepper_wdindx => wdindx
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
-      character*(*)    word
+      character(*)     string
+      character(*)     word
       wdindx = pepper_wdindx ( string, word )
       end function wdindx
 
       subroutine zzinssub ( in, sub, loc, out )
       use pepper_strings, only: pepper_zzinssub => zzinssub
       use pepper_kinds, only: ip
-      character*(*)    in
-      character*(*)    sub
+      character(*)     in
+      character(*)     sub
       integer(ip)      loc
-      character*(*)    out
+      character(*)     out
       call pepper_zzinssub ( in, sub, loc, out )
       end subroutine zzinssub
 
@@ -571,10 +571,10 @@
       use pepper_strings, only: pepper_zzrepsub => zzrepsub
       use pepper_kinds, only: ip
       implicit none
-      character*(*)         in
+      character(*)          in
       integer(ip)           left
       integer(ip)           right
-      character*(*)         string
-      character*(*)         out
+      character(*)          string
+      character(*)          out
       call pepper_zzrepsub ( in, left, right, string, out )
       end subroutine zzrepsub

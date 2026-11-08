@@ -26,7 +26,7 @@
       integer(ip)           nwi
       parameter           ( nwi = 256 )
 
-      character*(*)         action
+      character(*)          action
       integer(ip)           unit
       integer(ip)           recno
       integer(ip)           record ( nwi )
@@ -222,7 +222,7 @@
                  rec     =    recno, &
                  iostat  =    iostat  )    record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call chkin  ( 'DASIOI'                                     )
             call setmsg ( 'Could not read DAS integer record. '       // &
@@ -246,7 +246,7 @@
                   rec     =    recno, &
                   iostat  =    iostat  )    record
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call chkin  ( 'DASIOI'                                     )
             call setmsg ( 'Could not write DAS integer record. '      // &

@@ -35,13 +35,13 @@
       include               'zzgf.inc'
       include               'zzabcorr.inc'
 
-      character*(*)         method
+      character(*)          method
       integer(ip)           trgid
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
+      character(*)          fixref
+      character(*)          abcorr
       integer(ip)           obsid
-      character*(*)         dref
+      character(*)          dref
       integer(ip)           dctr
       real(wp)              dvec   ( 3 )
       real(wp)              radii  ( 3 )
@@ -364,8 +364,8 @@
 !
 !     Local variables
 !
-      character*(bdnmln)    svobs
-      character*(bdnmln)    svtarg
+      character(bdnmln)     svobs
+      character(bdnmln)     svtarg
 
       real(wp)              acc    ( 3 )
       real(wp)              corxfi ( 6, 6 )
@@ -457,7 +457,7 @@
       found = .false.
 
 
-      if (  first  .or. ( trgid .ne. prvtrg )  ) then
+      if (  first  .or. ( trgid /= prvtrg )  ) then
 
          call bodc2s ( trgid, svtarg )
 
@@ -466,7 +466,7 @@
       end if
 
 
-      if (  first  .or. ( obsid .ne. prvobs )  ) then
+      if (  first  .or. ( obsid /= prvobs )  ) then
 
          call bodc2s ( obsid, svobs )
 
@@ -559,7 +559,7 @@
 
          end if
 
-         if ( center .ne. trgid ) then
+         if ( center /= trgid ) then
 
             call setmsg ( 'Input reference frame # is centered ' &
             //            'on body # instead of body #.'        )
@@ -625,7 +625,7 @@
 !
 !        Compute the state transformation from DREF to J2000.
 !
-         if ( obsid .eq. dctr ) then
+         if ( obsid == dctr ) then
 !
 !           DREF is centered on the observer, so there's no light time
 !           correction.

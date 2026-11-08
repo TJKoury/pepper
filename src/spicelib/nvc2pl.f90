@@ -379,7 +379,7 @@
 !
 !     The normal vector must be non-zero.
 !
-      if ( mag .eq. 0 ) then
+      if ( mag == 0 ) then
 
          call chkin  ( 'NVC2PL'                            )
          call setmsg ( 'Plane''s normal must be non-zero.' )
@@ -407,7 +407,7 @@
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      if ( plane(conpos) .lt. 0.0_wp ) then
+      if ( plane(conpos) < 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
          call vminus     (  plane(nmlpos), tmpvec        )

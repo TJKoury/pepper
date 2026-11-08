@@ -23,7 +23,7 @@
 
       implicit none
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           code
       logical               found
 

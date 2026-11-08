@@ -24,8 +24,8 @@
 
       include 'dla.inc'
 
-      character*(*)         fname
-      character*(*)         ifname
+      character(*)          fname
+      character(*)          ifname
       integer(ip)           ncomch
       integer(ip)           handle
 

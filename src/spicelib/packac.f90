@@ -25,13 +25,13 @@
 
       implicit none
 
-      character*(*)    in      ( * )
+      character(*)     in      ( * )
       integer(ip)      pack    ( * )
       integer(ip)      npack
       integer(ip)      maxout
 
       integer(ip)      nout
-      character*(*)    out     ( * )
+      character(*)     out     ( * )
 
 ! $ Brief_I/O
 !
@@ -225,7 +225,7 @@
 !
       do i = 1, nout
 
-         if ( pack (i) .lt. 1 ) then
+         if ( pack (i) < 1 ) then
             call setmsg ( 'Element number * contains index *.' )
             call errint ( '*', i                )
             call errint ( '*', pack(i)          )

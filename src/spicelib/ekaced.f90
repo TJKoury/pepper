@@ -29,7 +29,7 @@
       integer(ip)           handle
       integer(ip)           segno
       integer(ip)           recno
-      character*(*)         column
+      character(*)          column
       integer(ip)           nvals
       real(wp)              dvals  ( * )
       logical               isnull
@@ -736,7 +736,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if (  ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
+      if (  ( dtype /= dp ) .and. ( dtype /= time )  ) then
 
          call chkin  ( 'EKACED'                                        )
          call setmsg ( 'Column # is of type #; EKACED only works ' &
@@ -764,14 +764,14 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 2 ) then
+      if ( class == 2 ) then
 !
 !        Class 2 columns contain scalar d.p. data.
 !
          call zzekad02 ( handle, segdsc, coldsc, recptr, dvals, isnull )
 
 
-      else if ( class .eq. 5 ) then
+      else if ( class == 5 ) then
 !
 !        Class 5 columns contain array-valued d.p. data.
 !

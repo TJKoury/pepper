@@ -401,7 +401,7 @@
 !
       root  =  tree
 
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
          keybas  =  trkeyr
          datbas  =  trdatr
          kidbas  =  trkidr
@@ -418,7 +418,7 @@
 !
       psize =  ppage ( sizbas )
 
-      if (  ( lpkidx .lt. 1 ) .or. ( lpkidx .gt. psize-1 )  )  then
+      if (  ( lpkidx < 1 ) .or. ( lpkidx > psize-1 )  )  then
 
          call chkin  ( 'ZZEKTR32'                                )
          call setmsg ( 'Left parent key of MIDDLE is out of '   // &
@@ -446,9 +446,9 @@
       rsib  =  ppage ( kidbas+lpkidx+2 )
 
 
-      if (      ( lsib .ne. left   ) &
-           .or. ( msib .ne. middle ) &
-           .or. ( rsib .ne. right  )  ) then
+      if (      ( lsib /= left   ) &
+           .or. ( msib /= middle ) &
+           .or. ( rsib /= right  )  ) then
 
          call chkin  ( 'ZZEKTR32'                                      )
          call setmsg ( 'LEFT, RIGHT, MIDDLE, PARENT, and PKIDX are '  // &
@@ -472,7 +472,7 @@
 !
 !     Get the number of keys in the parent.
 !
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
          npkeys = ppage ( trnkr )
       else
          npkeys = ppage ( trnkc )
@@ -491,7 +491,7 @@
 !     The sum of the number of keys in the three input nodes must
 !     sum exactly to value representing an underflow level of 1 key.
 !
-      if (  sum  .ne.  ( 3*mnkeyc - 1 )  ) then
+      if (  sum  /=  ( 3*mnkeyc - 1 )  ) then
 
          call chkin  ( 'ZZEKTR32'                                      )
          call setmsg ( 'Number of keys in nodes LEFT = #; in MIDDLE ' // &
@@ -551,7 +551,7 @@
 !     ascend into the parent.
 !
 
-      if ( lpkidx .eq. 1 ) then
+      if ( lpkidx == 1 ) then
          leftsz  =  lpkey - 1
       else
          leftsz  =  lpkey - ppage(keybas+lpkidx-1) - 1
@@ -676,15 +676,15 @@
 !     updating the key count.  At this point, we can set the
 !     underflow flag, depending on the status of the parent.
 !
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
 
          ppage ( trnkr )  =  ppage ( trnkr ) - 1
-         undrfl           =  ppage ( trnkr )   .eq.   0
+         undrfl           =  ppage ( trnkr )   ==   0
 
       else
 
          ppage ( trnkc )  =  ppage ( trnkc ) - 1
-         undrfl           =  ppage ( trnkc )   .eq.   mnkeyc - 1
+         undrfl           =  ppage ( trnkc )   ==   mnkeyc - 1
 
       end if
 
@@ -692,7 +692,7 @@
 !     The last change we must make is to update the node count in
 !     the root.
 !
-      if ( parent .eq. root ) then
+      if ( parent == root ) then
 
          ppage ( trnnod ) =  ppage ( trnnod ) - 1
 

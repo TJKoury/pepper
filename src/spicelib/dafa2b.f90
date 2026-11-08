@@ -23,8 +23,8 @@
 
       implicit none
 
-      character*(*)         ascii
-      character*(*)         binary
+      character(*)          ascii
+      character(*)          binary
       integer(ip)           resv
 
 ! $ Brief_I/O

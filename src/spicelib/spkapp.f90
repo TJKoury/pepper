@@ -27,9 +27,9 @@
 
       integer(ip)           targ
       real(wp)              et
-      character*(*)         ref
+      character(*)          ref
       real(wp)              sobs     ( 6 )
-      character*(*)         abcorr
+      character(*)          abcorr
       real(wp)              starg    ( 6 )
       real(wp)              lt
 
@@ -767,9 +767,9 @@
 !
 !     Local variables
 !
-      character*(corlen)    corr
-      character*(corlen)    flags  ( nflags )
-      character*(corlen)    prvcor
+      character(corlen)     corr
+      character(corlen)     flags  ( nflags )
+      character(corlen)     prvcor
 
       real(wp)              sapos  ( 3 )
       real(wp)              tstate ( 6 )
@@ -819,7 +819,7 @@
       end if
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
@@ -834,7 +834,7 @@
 !
          i = isrchc ( corr, nflags, flags )
 
-         if ( i .eq. 0 ) then
+         if ( i == 0 ) then
 
             call setmsg ( 'Requested aberration correction # is ' // &
                           'not supported.'                         )
@@ -854,15 +854,15 @@
 !        Set logical flags indicating the attributes of the requested
 !        correction.
 !
-         xmit    =  i .gt. ixcns
+         xmit    =  i > ixcns
 
-         uselt   =       ( i .eq. ixlt  ) .or. ( i .eq. ixlts  ) &
-                    .or. ( i .eq. ixxlt ) .or. ( i .eq. ixxlts )
+         uselt   =       ( i == ixlt  ) .or. ( i == ixlts  ) &
+                    .or. ( i == ixxlt ) .or. ( i == ixxlts )
 
-         usestl  =  ( i .gt. 1 )  .and.  odd(i)
+         usestl  =  ( i > 1 )  .and.  odd(i)
 
-         usecn   =       ( i .eq. ixcn  ) .or. ( i .eq. ixcns  ) &
-                    .or. ( i .eq. ixxcn ) .or. ( i .eq. ixxcns )
+         usecn   =       ( i == ixcn  ) .or. ( i == ixcns  ) &
+                    .or. ( i == ixxcn ) .or. ( i == ixxcns )
 
          first   = .false.
 
@@ -873,7 +873,7 @@
 !
       call irfnum ( ref, refid )
 
-      if ( refid .eq. 0 ) then
+      if ( refid == 0 ) then
 
          call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )

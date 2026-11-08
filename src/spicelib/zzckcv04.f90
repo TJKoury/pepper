@@ -37,7 +37,7 @@
       integer(ip)           arrend
       integer(ip)           sclkid
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
@@ -202,7 +202,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -279,7 +279,7 @@
 !
 !        Adjust the interval using the tolerance.
 !
-         if ( tol .gt. 0.0_wp ) then
+         if ( tol > 0.0_wp ) then
 
             left   =  max( left  - tol, 0.0_wp )
             right  =       right + tol

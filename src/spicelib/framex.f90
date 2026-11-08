@@ -27,8 +27,8 @@
       include              'frmtyp.inc'
       include              'zzctr.inc'
 
-      character*(*)         cname
-      character*(*)         frname
+      character(*)          cname
+      character(*)          frname
       integer(ip)           frcode
       integer(ip)           cent
       integer(ip)           frclss
@@ -329,19 +329,19 @@
 !
 !     Local Variables
 !
-      character*(1)         dattyp
+      character(1)          dattyp
 
-      character*(bdnmln)    lcname
+      character(bdnmln)     lcname
 
-      character*(frnmln)    lcfram
-      character*(frnmln)    name   ( ncount )
-      character*(frnmln)    pname
+      character(frnmln)     lcfram
+      character(frnmln)     name   ( ncount )
+      character(frnmln)     pname
 
-      character*(kvnmln)    kvbuff ( kvbsz )
-      character*(kvnmln)    look2
-      character*(kvnmln)    lookup
+      character(kvnmln)     kvbuff ( kvbsz )
+      character(kvnmln)     look2
+      character(kvnmln)     lookup
 
-      character*(lnsize)    line   ( room )
+      character(lnsize)     line   ( room )
 
       integer(ip)           center ( ncount )
       integer(ip)           centrd ( ncount )
@@ -392,7 +392,7 @@
 !
       integer(ip)           knmlst  (          maxkfr )
       integer(ip)           knmpol  ( lbpool : maxkfr )
-      character*(frnmln)    knmnms  (          maxkfr )
+      character(frnmln)     knmnms  (          maxkfr )
       integer(ip)           knmids  (          maxkfr )
 
 !
@@ -405,7 +405,7 @@
       integer(ip)           kidpol  ( lbpool : maxkfr )
       integer(ip)           kidids  (          maxkfr )
 
-      character*(frnmln)    kname   (          maxkfr )
+      character(frnmln)     kname   (          maxkfr )
       integer(ip)           kcent   (          maxkfr )
       integer(ip)           kclass  (          maxkfr )
       integer(ip)           kclsid  (          maxkfr )
@@ -436,7 +436,7 @@
 !
       integer(ip)           bnmlst  (          maxbfr )
       integer(ip)           bnmpol  ( lbpool : maxbfr )
-      character*(frnmln)    bnmnms  (          maxbfr )
+      character(frnmln)     bnmnms  (          maxbfr )
       integer(ip)           bnmidx  (          maxbfr )
 
 !
@@ -660,7 +660,7 @@
 !
 !     For efficiency, J2000 deserves special treatment.
 !
-      if ( frname .eq. 'J2000' .or. frname .eq. 'j2000') then
+      if ( frname == 'J2000' .or. frname == 'j2000') then
          frcode = 1
          return
       end if
@@ -708,7 +708,7 @@
       call ucase ( pname,  pname )
 
       call zzhscchk ( bnmlst, bnmpol, bnmnms, pname, item )
-      if ( item .ne. 0 ) then
+      if ( item /= 0 ) then
          item = bnmidx( item )
       end if
 
@@ -716,7 +716,7 @@
 !     If the name is in our hash, we can just look up its ID code in
 !     the parallel array.
 !
-      if ( item .gt. 0 ) then
+      if ( item > 0 ) then
 
          frcode = idcode ( item )
 
@@ -738,7 +738,7 @@
 !
          call zzhscchk ( knmlst, knmpol, knmnms, pname, item )
 
-         if ( item .ne. 0 ) then
+         if ( item /= 0 ) then
 
             frcode = knmids ( item )
 
@@ -756,7 +756,7 @@
                return
             end if
 
-            if ( n .eq. 1 .and. gotit ) then
+            if ( n == 1 .and. gotit ) then
 
                frcode = values(1)
 
@@ -768,7 +768,7 @@
                call zzhscadd ( knmlst, knmpol, knmnms, pname, item, &
                                                               lnew )
 
-               if ( .not. failed() .and. item .ne. 0 ) then
+               if ( .not. failed() .and. item /= 0 ) then
 
                   knmids ( item ) = frcode
 
@@ -979,7 +979,7 @@
 !
 !     For efficiency, J2000 deserves special treatment.
 !
-      if ( frcode .eq. 1 ) then
+      if ( frcode == 1 ) then
          frname = 'J2000'
          return
       end if
@@ -1021,11 +1021,11 @@
 
 
       call zzhsichk ( bidlst, bidpol, bidids, frcode, item )
-      if ( item .ne. 0 ) then
+      if ( item /= 0 ) then
          item = bididx( item )
       end if
 
-      if ( item .ne. 0 ) then
+      if ( item /= 0 ) then
 
          frname = name(item)
 
@@ -1047,7 +1047,7 @@
 !
          call zzhsichk ( kidlst, kidpol, kidids, frcode, item )
 
-         if ( item .ne. 0 ) then
+         if ( item /= 0 ) then
 
             frname = kname ( item )
 
@@ -1062,7 +1062,7 @@
 
             call gcpool ( pname, 1, room, n, line, gotit )
 
-            if ( n .eq. 1 .and. gotit ) then
+            if ( n == 1 .and. gotit ) then
 
                call ljust ( line(1), frname )
 
@@ -1354,7 +1354,7 @@
 !
 !     For efficiency, J2000 deserves special treatment.
 !
-      if ( frcode .eq. 1 ) then
+      if ( frcode == 1 ) then
          cent   =  0
          frclss =  inertl
          clssid =  1
@@ -1407,7 +1407,7 @@
 !     of ID codes.
 !
       call zzhsichk ( bidlst, bidpol, bidids, frcode, item )
-      if ( item .ne. 0 ) then
+      if ( item /= 0 ) then
          item = bididx( item )
       end if
 
@@ -1415,7 +1415,7 @@
 !     If the name is in our hash, we can just look up its ID code in
 !     the parallel array.
 !
-      if ( item .gt. 0 ) then
+      if ( item > 0 ) then
 
          cent   =  center(item)
          frclss =  type  (item)
@@ -1440,7 +1440,7 @@
 !
          call zzhsichk ( kidlst, kidpol, kidids, frcode, item )
 
-         if ( item .ne. 0 ) then
+         if ( item /= 0 ) then
 
             cent   =  kcent  (item)
             frclss =  kclass (item)
@@ -1460,7 +1460,7 @@
 
             if ( gotit ) then
 
-               if ( n .gt. 1 ) then
+               if ( n > 1 ) then
 !
 !                 We have an array-valued variable that looks like
 !                 a frame name. We consider this an error.
@@ -1516,7 +1516,7 @@
                call zzhsiadd ( kidlst, kidpol, kidids, frcode, item, &
                                                                lnew )
 
-               if ( .not. failed() .and. item .ne. 0 ) then
+               if ( .not. failed() .and. item /= 0 ) then
 
                   kname  (item) = lcfram
                   kcent  (item) = cent
@@ -1529,7 +1529,7 @@
                   call zzhscadd ( knmlst, knmpol, knmnms, lcfram, &
                                                        item, lnew )
 
-                  if ( .not. failed() .and. item .ne. 0 ) then
+                  if ( .not. failed() .and. item /= 0 ) then
 
                      knmids ( item ) = frcode
 
@@ -1548,8 +1548,8 @@
 !        The PCK ID code is just FRCODE - 10000.
 !
          if      ( .not. found &
-                   .and. frcode .ge. 13000 &
-                   .and. frcode .lt. 14000 ) then
+                   .and. frcode >= 13000 &
+                   .and. frcode < 14000 ) then
 
             cent   = 399
             frclss = pck
@@ -1827,7 +1827,7 @@
 !
       if ( gotit ) then
 
-         if ( dattyp .eq. 'C' ) then
+         if ( dattyp == 'C' ) then
 
             call gcpool ( lookup, 1, 1, n,  pname, gotit )
 !
@@ -1835,11 +1835,11 @@
 !           of built-in names.
 !
             call zzhscchk ( bnmlst, bnmpol, bnmnms, pname, item )
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
                item = bnmidx( item )
             end if
 
-            if ( item .gt. 0 ) then
+            if ( item > 0 ) then
 
                frname = pname
                frcode = idcode ( item )
@@ -1863,7 +1863,7 @@
 !
                call zzhscchk ( knmlst, knmpol, knmnms, pname, item )
 
-               if ( item .ne. 0 ) then
+               if ( item /= 0 ) then
 
                   frname = pname
                   frcode = knmids ( item )
@@ -1888,7 +1888,7 @@
                      return
                   end if
 
-                  if ( n .eq. 1 .and. gotit ) then
+                  if ( n == 1 .and. gotit ) then
 
                      frcode = values(1)
                      found  = .true.
@@ -1901,7 +1901,7 @@
                      call zzhscadd ( knmlst, knmpol, knmnms, frname, &
                                                        item, lnew )
 
-                     if ( .not. failed() .and. item .ne. 0 ) then
+                     if ( .not. failed() .and. item /= 0 ) then
 
                         knmids ( item ) = frcode
 
@@ -1920,7 +1920,7 @@
             end if
 
 
-         else if ( dattyp .eq. 'N' ) then
+         else if ( dattyp == 'N' ) then
 !
 !           Ok. They decided to use the numeric form to specify
 !           the frame ID. We need to figure out the name of the frame.
@@ -1939,11 +1939,11 @@
 !           ID code.
 !
             call zzhsichk ( bidlst, bidpol, bidids, values(1), item )
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
                item = bididx( item )
             end if
 
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
 !
 !              Just look up the name and set the frame code.
 !
@@ -1969,7 +1969,7 @@
 !
                call zzhsichk ( kidlst, kidpol, kidids, values(1), item )
 
-               if ( item .ne. 0 ) then
+               if ( item /= 0 ) then
 
                   frname = kname ( item )
                   frcode = values(1)
@@ -1985,7 +1985,7 @@
                   call repmi (  pname, '#', values(1),   pname )
                   call gcpool ( pname, 1, room, n, line, gotit )
 
-                  if ( n .eq. 1 .and. gotit ) then
+                  if ( n == 1 .and. gotit ) then
 
                      call ljust ( line(1), frname )
                      frcode = values(1)
@@ -2025,7 +2025,7 @@
 !
 !     We have a special case for EARTH.
 !
-      if ( cent .eq. 399 ) then
+      if ( cent == 399 ) then
 
          frcode = 10013
          frname = 'IAU_EARTH'
@@ -2045,7 +2045,7 @@
 !     If the name is in our list, we can just look up its ID code and
 !     name in the parallel array.
 !
-      if ( item .gt. 0 ) then
+      if ( item > 0 ) then
 
          frcode =  idcode(item)
          frname =  name  (item)
@@ -2334,7 +2334,7 @@
 !
       if ( gotit ) then
 
-         if ( dattyp .eq. 'C' ) then
+         if ( dattyp == 'C' ) then
 
             call gcpool ( lookup, 1, 1, n,  pname, gotit )
 !
@@ -2342,11 +2342,11 @@
 !           of built-in names.
 !
             call zzhscchk ( bnmlst, bnmpol, bnmnms, pname, item )
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
                item = bnmidx( item )
             end if
 
-            if ( item .gt. 0 ) then
+            if ( item > 0 ) then
 
                frname = pname
                frcode = idcode ( item )
@@ -2370,7 +2370,7 @@
 !
                call zzhscchk ( knmlst, knmpol, knmnms, pname, item )
 
-               if ( item .ne. 0 ) then
+               if ( item /= 0 ) then
 
                   frname = pname
                   frcode = knmids ( item )
@@ -2395,7 +2395,7 @@
                      return
                   end if
 
-                  if ( n .eq. 1 .and. gotit ) then
+                  if ( n == 1 .and. gotit ) then
 
                      frcode = values(1)
                      found  = .true.
@@ -2408,7 +2408,7 @@
                      call zzhscadd ( knmlst, knmpol, knmnms, frname, &
                                                        item, lnew )
 
-                     if ( .not. failed() .and. item .ne. 0 ) then
+                     if ( .not. failed() .and. item /= 0 ) then
 
                         knmids ( item ) = frcode
 
@@ -2427,7 +2427,7 @@
             end if
 
 
-         else if ( dattyp .eq. 'N' ) then
+         else if ( dattyp == 'N' ) then
 !
 !           Ok. They decided to use the numeric form to specify
 !           the frame ID. We need to figure out the name of the frame.
@@ -2446,11 +2446,11 @@
 !           ID code.
 !
             call zzhsichk ( bidlst, bidpol, bidids, values(1), item )
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
                item = bididx( item )
             end if
 
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
 !
 !              Just look up the name and set the frame code.
 !
@@ -2476,7 +2476,7 @@
 !
                call zzhsichk ( kidlst, kidpol, kidids, values(1), item )
 
-               if ( item .ne. 0 ) then
+               if ( item /= 0 ) then
 
                   frname = kname ( item )
                   frcode = values(1)
@@ -2492,7 +2492,7 @@
                   call repmi (  pname, '#', values(1),   pname )
                   call gcpool ( pname, 1, room, n, line, gotit )
 
-                  if ( n .eq. 1 .and. gotit ) then
+                  if ( n == 1 .and. gotit ) then
 
                      call ljust ( line(1), frname )
                      frcode = values(1)
@@ -2540,7 +2540,7 @@
 !     of centers.
 !
       call zzhscchk ( bnmlst, bnmpol, bnmnms, frname, item )
-      if ( item .ne. 0 ) then
+      if ( item /= 0 ) then
          item = bnmidx( item )
       end if
 
@@ -2548,7 +2548,7 @@
 !     If the name is in our hash, we can just look up its ID code and
 !     name in the parallel array.
 !
-      if ( item .gt. 0 ) then
+      if ( item > 0 ) then
 
          frcode =  idcode(item)
          found  = .true.
@@ -2896,8 +2896,8 @@
 !
       do i = 1, ncount
 
-         if (       ( type(i)   .eq. frclss  ) &
-              .and. ( typeid(i) .eq. clssid ) ) then
+         if (       ( type(i)   == frclss  ) &
+              .and. ( typeid(i) == clssid ) ) then
 !
 !           We have a match. Assign the output arguments and return.
 !
@@ -2926,7 +2926,7 @@
       start = 1
       call gnpool ( lookup, start, kvbsz, n, kvbuff, fnd )
 
-      do while (  fnd .and. ( n .gt. 0 )  )
+      do while (  fnd .and. ( n > 0 )  )
 !
 !        For each kernel variable name found in the buffer, look up the
 !        associated class. If the class matches the input class, look
@@ -2955,7 +2955,7 @@
 
             end if
 
-            if ( kvclss .eq. frclss ) then
+            if ( kvclss == frclss ) then
 !
 !              Get the class ID for the current frame.
 !
@@ -2988,7 +2988,7 @@
 !              Check the class ID for the current kernel variable
 !              against the input value.
 !
-               if ( kvclid .eq. clssid ) then
+               if ( kvclid == clssid ) then
 !
 !                 We have a match. We need to return the frame
 !                 ID, frame name, and center. As long as we're

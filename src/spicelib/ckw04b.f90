@@ -25,10 +25,10 @@
       include               'ckparam.inc'
 
       integer(ip)           handle
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           inst
       logical               avflag
-      character*(*)         ref
+      character(*)          ref
       real(wp)              begtim
 
 ! $ Brief_I/O
@@ -346,7 +346,7 @@
 !
       call namfrm ( ref, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
          call setmsg ( 'The reference frame # is not supported.' )
          call errch  ( '#', ref                                  )
          call sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
@@ -381,7 +381,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '      // &
                           'nonprintable characters'               )
@@ -396,7 +396,7 @@
 !
 !     Also check if the segment identifier is too long.
 !
-      if ( lastnb( segid ) .gt. sidlen ) then
+      if ( lastnb( segid ) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than '   // &
                        '40 characters.'                           )

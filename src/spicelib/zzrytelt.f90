@@ -167,19 +167,19 @@
 
       corsys = nint( dskdsc(sysidx) )
 
-      if ( corsys .eq. latsys ) then
+      if ( corsys == latsys ) then
 
          call zzrytlat ( vertex, raydir, dskdsc(mn1idx), &
                          margin, nxpts,  xpt              )
 
 
-      else if ( corsys .eq. recsys ) then
+      else if ( corsys == recsys ) then
 
          call zzrytrec ( vertex, raydir, dskdsc(mn1idx), &
                          margin, nxpts,  xpt              )
 
 
-      else if ( corsys .eq. pdtsys ) then
+      else if ( corsys == pdtsys ) then
 
          call zzrytpdt ( vertex,         raydir, &
                          dskdsc(mn1idx), dskdsc(paridx), &

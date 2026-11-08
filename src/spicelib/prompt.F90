@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)         dspmsg
-      character*(*)         buffer
+      character(*)          dspmsg
+      character(*)          buffer
 
 ! $ Brief_I/O
 !
@@ -469,7 +469,7 @@
 !     Check for a write error. It's not likely, but the standard output
 !     can be redirected. Better safe than confused later.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call chkin ( 'PROMPT' )
          call setmsg ( 'An error occurred while attempting to ' &
@@ -493,7 +493,7 @@
 !
       read  (*,fmt='(A)', iostat=iostat ) buffer
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call chkin ( 'PROMPT' )
          call setmsg ( 'An error occurred while attempting to ' &

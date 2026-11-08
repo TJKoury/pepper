@@ -27,11 +27,11 @@
 
       include               'zzctr.inc'
 
-      character*(*)         targ
+      character(*)          targ
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
-      character*(*)         obs
+      character(*)          ref
+      character(*)          abcorr
+      character(*)          obs
       real(wp)              starg    ( 6 )
       real(wp)              lt
 
@@ -548,12 +548,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtgid
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsn
+      character(maxl)       svobsn
       integer(ip)           svobsi
       logical               svfnd2
 

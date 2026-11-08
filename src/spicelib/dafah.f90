@@ -37,16 +37,16 @@
       integer(ip)           lbcell
       parameter           ( lbcell  = -5 )
 
-      character*(*)         fname
-      character*(*)         ftype
+      character(*)          fname
+      character(*)          ftype
       integer(ip)           nd
       integer(ip)           ni
-      character*(*)         ifname
+      character(*)          ifname
       integer(ip)           resv
       integer(ip)           handle
       integer(ip)           unit
       integer(ip)           fhset ( lbcell : * )
-      character*(*)         access
+      character(*)          access
 
 ! $ Brief_I/O
 !
@@ -829,13 +829,13 @@
 !
 !     Other local variables
 !
-      character*(acclen)    acc
-      character*(crlen)     crec
-      character*(filen)     dafnam
-      character*(fmtlen)    format
-      character*(idlen)     idword
-      character*(ifnlen)    ifn
-      character*(typlen)    ttype
+      character(acclen)     acc
+      character(crlen)      crec
+      character(filen)      dafnam
+      character(fmtlen)     format
+      character(idlen)      idword
+      character(ifnlen)     ifn
+      character(typlen)     ttype
 
       real(wp)              drec   ( dprsiz )
 
@@ -1341,7 +1341,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .ne. 0 ) then
+      if ( findex /= 0 ) then
          ftlnk(findex) = ftlnk(findex) + 1
          call chkout ( 'DAFOPR' )
          return
@@ -1837,7 +1837,7 @@
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft .eq. ftsize ) then
+      if ( nft == ftsize ) then
 
          call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
@@ -2268,7 +2268,7 @@
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft .eq. ftsize ) then
+      if ( nft == ftsize ) then
 
          call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
@@ -2283,7 +2283,7 @@
 !
 !     Check if the file type is blank.
 !
-      if ( ftype .eq. ' ' ) then
+      if ( ftype == ' ' ) then
 
          call setmsg ( 'The file type is blank.' )
          call sigerr ( 'SPICE(BLANKFILETYPE)'    )
@@ -2299,8 +2299,8 @@
 
       do i = fnb, rtrim ( ftype )
 
-         if ( ( ichar ( ftype(i:i) ) .gt. maxpc )   .or. &
-              ( ichar ( ftype(i:i) ) .lt. minpc ) ) then
+         if ( ( ichar ( ftype(i:i) ) > maxpc )   .or. &
+              ( ichar ( ftype(i:i) ) < minpc ) ) then
 
             call setmsg ( 'The file type contains nonprinting' // &
                           ' characters.'                        )
@@ -2325,7 +2325,7 @@
 !
 !     Make sure ND and NI are in range.
 !
-      if (  ( nd .lt. 0 )  .or.  ( nd .gt. maxnd )  ) then
+      if (  ( nd < 0 )  .or.  ( nd > maxnd )  ) then
 
          call setmsg ( 'ND was #, should be in range [0,#].' )
          call errint ( '#', nd                               )
@@ -2336,7 +2336,7 @@
 
       end if
 
-      if (  ( ni .lt. 2 )  .or.  ( ni .gt. maxni )  ) then
+      if (  ( ni < 2 )  .or.  ( ni > maxni )  ) then
 
          call setmsg ( 'NI was #, should be in range [2,#].' )
          call errint ( '#', ni                               )
@@ -2347,7 +2347,7 @@
 
       end if
 
-      if (  ( nd + (ni+1)/2 )  .gt.  maxsum  ) then
+      if (  ( nd + (ni+1)/2 )  >  maxsum  ) then
 
          call setmsg ( 'Summary size was #, should not exceed #.' )
          call errint ( '#', nd + (ni+1)/2                         )
@@ -2361,7 +2361,7 @@
 !
 !     The user must reserve some non-negative number of records.
 !
-      if ( resv .lt. 0 ) then
+      if ( resv < 0 ) then
 
          call setmsg ( 'An attempt was made to reserve a negative '   // &
                        'number (#) of records.'                        )
@@ -2439,7 +2439,7 @@
 !
 !     Write NULL filled reserved records.
 !
-      if ( resv .gt. 0 ) then
+      if ( resv > 0 ) then
 
          do i = 1, crlen
             crec(i:i) = char(0)
@@ -2450,7 +2450,7 @@
 !            Place an end-of-comments marker in the first byte
 !            of the first record.
 !
-            if ( i .eq. 2 ) then
+            if ( i == 2 ) then
                crec(1:1) = char(inteoc)
             else
                crec(1:1) = char(0)
@@ -2458,7 +2458,7 @@
 
             write ( lun, rec=i, iostat=iostat ) crec
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call zzddhcls ( handle, 'DAF', .true. )
                call setmsg ( 'Attempt to write file ''#'' failed. '   // &
@@ -2477,7 +2477,7 @@
 
       write ( lun, rec=fward, iostat=iostat ) drec
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call zzddhcls ( handle, 'DAF', .true.                     )
          call setmsg   ( 'Attempt to write file ''#'' failed. '   // &
@@ -2492,7 +2492,7 @@
 
       write ( lun, rec=fward+1, iostat=iostat ) crec
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call zzddhcls ( handle, 'DAF', .true.                     )
          call setmsg   ( 'Attempt to write file ''#'' failed. '   // &
@@ -2850,7 +2850,7 @@
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft .eq. ftsize ) then
+      if ( nft == ftsize ) then
 
          call setmsg ( 'The file table is full, with # entries. '     // &
                        'Could not open ''#''.'                         )
@@ -2865,7 +2865,7 @@
 !
 !     Make sure ND and NI are in range.
 !
-      if (  ( nd .lt. 0 )  .or.  ( nd .gt. maxnd )  ) then
+      if (  ( nd < 0 )  .or.  ( nd > maxnd )  ) then
 
          call setmsg ( 'ND was #, should be in range [0,#].' )
          call errint ( '#', nd                               )
@@ -2876,7 +2876,7 @@
 
       end if
 
-      if (  ( ni .lt. 2 )  .or.  ( ni .gt. maxni )  ) then
+      if (  ( ni < 2 )  .or.  ( ni > maxni )  ) then
 
          call setmsg ( 'NI was #, should be in range [2,#].' )
          call errint ( '#', ni                               )
@@ -2887,7 +2887,7 @@
 
       end if
 
-      if (  ( nd + (ni+1)/2 )  .gt.  maxsum  ) then
+      if (  ( nd + (ni+1)/2 )  >  maxsum  ) then
 
          call setmsg ( 'Summary size was #, should not exceed #.' )
          call errint ( '#', nd + (ni+1)/2                         )
@@ -2901,7 +2901,7 @@
 !
 !     The user must reserve some non-negative number of records.
 !
-      if ( resv .lt. 0 ) then
+      if ( resv < 0 ) then
 
          call setmsg ( 'An attempt was made to reserve a negative '   // &
                        'number (#) of records.'                        )
@@ -2978,7 +2978,7 @@
 !
 !     Write NULL filled reserved records.
 !
-      if ( resv .gt. 0 ) then
+      if ( resv > 0 ) then
 
          do i = 1, crlen
             crec(i:i) = char(0)
@@ -2988,7 +2988,7 @@
 
             write ( lun, rec=i, iostat=iostat ) crec
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call zzddhcls ( handle, 'DAF', .true. )
 
@@ -3008,7 +3008,7 @@
 
       write ( lun, rec=fward, iostat=iostat ) drec
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call zzddhcls ( handle, 'DAF', .true. )
 
@@ -3024,7 +3024,7 @@
 
       write ( lun, rec=fward+1, iostat=iostat ) crec
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call zzddhcls ( handle, 'DAF', .true. )
 
@@ -3434,11 +3434,11 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .gt. 0 ) then
+      if ( findex > 0 ) then
 
          ftlnk(findex) = ftlnk(findex) - 1
 
-         if ( ftlnk(findex) .eq. 0 ) then
+         if ( ftlnk(findex) == 0 ) then
 
             call zzddhcls ( handle, 'DAF', .false. )
 
@@ -3739,7 +3739,7 @@
 
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .gt. 0 ) then
+      if ( findex > 0 ) then
 
          nd = ftnd(findex)
          ni = ftni(findex)
@@ -4165,7 +4165,7 @@
 !
       call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
-      if ( iarc .ne. daf ) then
+      if ( iarc /= daf ) then
          handle = 0
          call setmsg ( 'The file, ''#'', connected to unit # ' &
          //            'is not a DAF.'                         )
@@ -4376,7 +4376,7 @@
 
       call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
-      if ( ( .not. found ) .or. ( iarc .ne. daf ) ) then
+      if ( ( .not. found ) .or. ( iarc /= daf ) ) then
          call setmsg ( 'There is no file open with handle = #' )
          call errint ( '#', handle                             )
          call sigerr ( 'SPICE(DAFNOSUCHHANDLE)'                )
@@ -4633,7 +4633,7 @@
 !
       call zzddhnfo ( handle, dafnam, iarc, ibff, iamh, found )
 
-      if ( iarc .ne. daf ) then
+      if ( iarc /= daf ) then
          handle = 0
          call setmsg ( 'The file, ''#'', is not a DAF.' )
          call errch  ( '#', fname                       )
@@ -5112,7 +5112,7 @@
 !
 !     Make sure we recognize the access type specified by the caller.
 !
-      if (  ( acc .ne. 'READ' ) .and. ( acc .ne. 'WRITE' )  ) then
+      if (  ( acc /= 'READ' ) .and. ( acc /= 'WRITE' )  ) then
 
          call setmsg ( 'Unrecognized access type.  Type was #. ' )
          call errch  ( '#', access                               )
@@ -5146,7 +5146,7 @@
 !     This is not the case if the value of IAMH returned from the handle
 !     manager is not READ.
 !
-      else if ( ( acc .eq. 'WRITE' ) .and. ( iamh .eq. read ) ) then
+      else if ( ( acc == 'WRITE' ) .and. ( iamh == read ) ) then
 
          call setmsg ( 'DAF not open for write.  Handle = #, ' // &
                           'file = ''#'''                         )

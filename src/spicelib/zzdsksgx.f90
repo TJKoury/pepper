@@ -202,7 +202,7 @@
       retval = touchd( et )
       dc(1)  = touchd( dc )
 
-      if ( dtype .eq. 2 ) then
+      if ( dtype == 2 ) then
 !
 !        The intercept plate ID is returned in element 1 of
 !        IC, if an intercept is found.

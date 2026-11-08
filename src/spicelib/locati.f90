@@ -334,7 +334,7 @@
       nfree = lnknfn(pool)
       psize = lnksiz(pool)
 
-      if ( nfree .eq. psize ) then
+      if ( nfree == psize ) then
 !
 !        There's nothing in the list so far. Allocate a
 !        node and begin a list.
@@ -352,7 +352,7 @@
 
       end if
 
-      if ( at .le. 0 .or. at .gt. psize ) then
+      if ( at <= 0 .or. at > psize ) then
 
          call setmsg ( 'The input value for the head of the ID ' &
          //            'address linked list is out of bounds. ' &
@@ -380,17 +380,17 @@
 
 
 
-      if ( idsz .eq. 1 ) then
+      if ( idsz == 1 ) then
 
-         same = id(1) .eq. list(1,at)
-         more = at .gt. 0 .and. .not. same
+         same = id(1) == list(1,at)
+         more = at > 0 .and. .not. same
 
          do while ( more )
 
             at   =  pool ( next, at )
 
-            if ( at .gt. 0 ) then
-               same =  id(1) .eq. list(1,at)
+            if ( at > 0 ) then
+               same =  id(1) == list(1,at)
                more = .not. same
             else
                more = .false.
@@ -398,20 +398,20 @@
 
          end do
 
-      else if ( idsz .eq. 2 ) then
+      else if ( idsz == 2 ) then
 
-         same =       id(1) .eq. list(1,at) &
-                .and. id(2) .eq. list(2,at)
+         same =       id(1) == list(1,at) &
+                .and. id(2) == list(2,at)
 
-         more = at .gt. 0 .and. .not. same
+         more = at > 0 .and. .not. same
 
          do while ( more )
 
             at  = pool ( next, at )
 
-            if ( at .gt. 0 ) then
-               if (      id(1) .eq. list(1,at) ) then
-                  same = id(2) .eq. list(2,at)
+            if ( at > 0 ) then
+               if (      id(1) == list(1,at) ) then
+                  same = id(2) == list(2,at)
                   more = .not. same
                end if
             else
@@ -425,23 +425,23 @@
          i      =  1
          same   = .true.
 
-         do while ( same .and. i .lt. idsz )
-            same = same .and. id(i) .eq. list(i,at)
+         do while ( same .and. i < idsz )
+            same = same .and. id(i) == list(i,at)
             i    = i + 1
          end do
 
-         more = at .gt. 0 .and. .not. same
+         more = at > 0 .and. .not. same
 
          do while ( more )
 
             at = pool ( next, at )
 
-            if ( at .gt. 0 ) then
+            if ( at > 0 ) then
                i      =  1
                same   = .true.
 
-               do while ( same .and. i .lt. idsz )
-                  same = same .and. id(i) .eq. list(i,at)
+               do while ( same .and. i < idsz )
+                  same = same .and. id(i) == list(i,at)
                   i    = i + 1
                end do
 
@@ -468,7 +468,7 @@
 !        If AT is not already at the head of the list, we
 !        move this node to the front of the list.
 !
-         if ( last .gt. 0 ) then
+         if ( last > 0 ) then
             call lnkxsl ( at, at,   pool )
             call lnkilb ( at, head, pool )
          end if
@@ -487,7 +487,7 @@
 !
 !     We'll put it in the list. First see if there are any free nodes.
 !
-      if ( nfree .gt. 0 ) then
+      if ( nfree > 0 ) then
 !
 !        Allocate a free node and put our ID at the NEW address.
 !

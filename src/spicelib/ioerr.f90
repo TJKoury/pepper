@@ -22,8 +22,8 @@
 
       implicit none
 
-      character*(*)    action
-      character*(*)    file
+      character(*)     action
+      character(*)     file
       integer(ip)      iostat
 
 ! $ Brief_I/O
@@ -188,11 +188,11 @@
 !
 !     Local variables
 !
-      character*10          iochar
+      character(10)         iochar
 
       integer(ip)           longln
       parameter           ( longln = 320 )
-      character*(longln)    error
+      character(longln)     error
 
 !
 !     First comes some standard stuff.
@@ -212,7 +212,7 @@
 !     More standard stuff. If IOSTAT is zero, there is no need for this
 !     part of the message.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call suffix ( 'The value of IOSTAT returned was', 2, error )
 

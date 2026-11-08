@@ -46,12 +46,12 @@
       external              udrayx
       integer(ip)           trgcde
       real(wp)              et
-      character*(*)         abcorr
+      character(*)          abcorr
       logical               uselt
       logical               usecn
       logical               usestl
       logical               xmit
-      character*(*)         fixref
+      character(*)          fixref
       integer(ip)           obscde
       integer(ip)           dfrcde
       integer(ip)           dclass
@@ -512,7 +512,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'ZZSFXCOR' )
 
 
@@ -552,8 +552,8 @@
 !
 !     Local variables
 !
-      character*(corlen)    loccor
-      character*(corlen)    prvcor
+      character(corlen)     loccor
+      character(corlen)     prvcor
 
       real(wp)              dist
       real(wp)              etdiff
@@ -654,7 +654,7 @@
       end if
 
 
-      if ( first .or. ( abcorr .ne. prvcor ) ) then
+      if ( first .or. ( abcorr /= prvcor ) ) then
 !
 !        Construct aberration correction string without stellar
 !        aberration specification.
@@ -741,7 +741,7 @@
 !     from frame DREF to J2000, then from J2000 to the target
 !     frame.
 !
-      if ( dclass .eq. inertl ) then
+      if ( dclass == inertl ) then
 !
 !        Inertial frames can be evaluated at any epoch.
 !
@@ -756,7 +756,7 @@
          refepc = et
 
 
-      else if ( dcentr .eq. obscde ) then
+      else if ( dcentr == obscde ) then
 !
 !        If the center of frame DREF is the observer (which is
 !        usually the case if the observer is a spacecraft), then
@@ -887,7 +887,7 @@
             relerr = 1.0_wp
             i      = 1
 
-            do while ( ( i .le. nitr ) .and. ( relerr .gt. cnvlim ) )
+            do while ( ( i <= nitr ) .and. ( relerr > cnvlim ) )
 !
 !              Estimate the error in our previous approximation
 !              by applying the reception stellar aberration
@@ -928,7 +928,7 @@
             relerr = 1.0_wp
             i      = 1
 
-            do while ( ( i .le. nitr ) .and. ( relerr .gt. cnvlim ) )
+            do while ( ( i <= nitr ) .and. ( relerr > cnvlim ) )
 !
 !              Estimate the error in our previous approximation
 !              by applying the reception stellar aberration
@@ -985,7 +985,7 @@
 
       range = vnorm( obspos )
 
-      if ( range .eq. 0.0_wp ) then
+      if ( range == 0.0_wp ) then
 !
 !        We've already ensured that observer and target are
 !        distinct, so this should be a very unusual occurrence.
@@ -1001,7 +1001,7 @@
       end if
 
 
-      if ( range .gt. margin*maxrad ) then
+      if ( range > margin*maxrad ) then
 !
 !        Compute the arc sine with SPICE error checking.
 !
@@ -1009,7 +1009,7 @@
 
          call vminus ( obspos, negpos )
 
-         if (  vsep( negpos, trgdir )  .gt.  reject  ) then
+         if (  vsep( negpos, trgdir )  >  reject  ) then
 !
 !           The angular separation of ray and target is too great
 !           for a solution to exist, even with a better light time
@@ -1073,7 +1073,7 @@
 
          i = 1
 
-         do while (  ( i .le. nitr ) .and. ( .not. found )  )
+         do while (  ( i <= nitr ) .and. ( .not. found )  )
 
             call udnear ( obspos, trgdir, et, pnear, rayalt )
 
@@ -1181,9 +1181,9 @@
       ltdiff = 1.0_wp
       etdiff = 1.0_wp
 
-      do while (       ( i      .lt.   nitr                ) &
-                 .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
-                 .and. ( etdiff .gt.   0.0_wp                )  )
+      do while (       ( i      <   nitr                ) &
+                 .and. ( ltdiff > ( cnvlim * abs(lt) )  ) &
+                 .and. ( etdiff >   0.0_wp                )  )
 
 !
 !        Get the J2000-relative state of the target relative to
@@ -1249,7 +1249,7 @@
 !
          if ( .not. found ) then
 
-            if ( i .lt. ( nitr-1 ) ) then
+            if ( i < ( nitr-1 ) ) then
 !
 !              SPOINT is the nearest point to the ellipsoid on the
 !              line containing the ray.

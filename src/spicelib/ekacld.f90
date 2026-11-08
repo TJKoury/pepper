@@ -26,7 +26,7 @@
 
       integer(ip)           handle
       integer(ip)           segno
-      character*(*)         column
+      character(*)          column
       real(wp)              dvals  ( * )
       integer(ip)           entszs ( * )
       logical               nlflgs ( * )
@@ -501,7 +501,7 @@
       class  =  coldsc ( clsidx )
       dtype  =  coldsc ( typidx )
 
-      if ( ( dtype .ne. dp ) .and. ( dtype .ne. time )  ) then
+      if ( ( dtype /= dp ) .and. ( dtype /= time )  ) then
 
          call setmsg ( 'Column # is of type #; EKACLD only works '  // &
                        'with d.p. or TIME columns.'                  )
@@ -516,7 +516,7 @@
 !
 !     Hand off the task to the routine of the appropriate class.
 !
-      if ( class .eq. 2 ) then
+      if ( class == 2 ) then
 !
 !        Class 2 columns contain d.p. scalars.
 !
@@ -524,14 +524,14 @@
                                    nlflgs,  rcptrs,  wkindx )
 
 
-      else if ( class .eq. 5 ) then
+      else if ( class == 5 ) then
 !
 !        Class 5 columns contain d.p. arrays.
 !
          call zzekac05 ( handle, segdsc, coldsc, dvals, entszs, nlflgs )
 
 
-      else if ( class .eq. 8 ) then
+      else if ( class == 8 ) then
 !
 !        Class 8 columns contain fixed-count d.p. scalars.
 !

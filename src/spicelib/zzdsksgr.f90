@@ -217,13 +217,13 @@
 !
       corsys = nint( dskdsc(sysidx) )
 
-      if ( corsys .eq. latsys ) then
+      if ( corsys == latsys ) then
 !
 !        Fetch the minimum radius from the descriptor.
 !
          minr = dskdsc(mn3idx)
 
-         if ( minr .le. 0.0_wp ) then
+         if ( minr <= 0.0_wp ) then
 
             call chkin  ( 'ZZDSKSGR'                )
             call setmsg ( 'Minimum radius was *.'   )
@@ -241,13 +241,13 @@
          zzdsksgr = dskdsc( mx3idx )
 
 
-      else if ( corsys .eq. pdtsys ) then
+      else if ( corsys == pdtsys ) then
 !
 !        Fetch the equatorial radius from the descriptor.
 !
          re = dskdsc(paridx)
 
-         if ( re .le. 0.0_wp ) then
+         if ( re <= 0.0_wp ) then
 
             call chkin  ( 'ZZDSKSGR'                  )
             call setmsg ( 'Equatorial radius was *.'  )
@@ -263,7 +263,7 @@
 !
          f = dskdsc(paridx+1)
 
-         if ( ( f .ge. 0.0_wp ) .and. ( f .lt. 1.0_wp ) ) then
+         if ( ( f >= 0.0_wp ) .and. ( f < 1.0_wp ) ) then
 !
 !           This is the oblate case.
 !
@@ -273,7 +273,7 @@
             zzdsksgr = dskdsc(mx3idx) +  re
 
 
-         else if ( f .lt. 0.0_wp ) then
+         else if ( f < 0.0_wp ) then
 !
 !           This is the prolate case.
 !
@@ -303,7 +303,7 @@
          end if
 
 
-      else if ( corsys .eq. recsys ) then
+      else if ( corsys == recsys ) then
 !
 !        The bounding cell of the segment has its extreme value at
 !        a corner. Just take the maximum of these values.

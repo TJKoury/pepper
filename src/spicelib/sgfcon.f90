@@ -186,7 +186,7 @@
 !
 !     Perform checks on the inputs for reasonableness.
 !
-      if ( ( first .lt. 1 ) .or. ( last .gt. myncon ) ) then
+      if ( ( first < 1 ) .or. ( last > myncon ) ) then
 
          call setmsg ( 'The range of constants requested' &
          //            ' extends beyond the available constant' &
@@ -202,7 +202,7 @@
 
       end if
 
-      if ( last .lt. first ) then
+      if ( last < first ) then
 
          call setmsg ( 'The last constant item requested, #, is' &
          //            ' before the first constant item' &

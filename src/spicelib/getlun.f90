@@ -200,7 +200,7 @@
 
 
 
-      if ( unit .eq. 0 ) then
+      if ( unit == 0 ) then
 !
 !        There are no free units to be had.  C'est la vie.  Signal an
 !        error.
@@ -210,7 +210,7 @@
          call chkout ( 'GETLUN' )
          return
 
-      else if ( unit .lt. 0 ) then
+      else if ( unit < 0 ) then
 !
 !        There are no free units to be had.  In this case, we know the
 !        "INQUIRE" attempted by FNDLUN failed.  Assign 0 to the unit

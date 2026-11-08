@@ -20,8 +20,8 @@
 
       implicit none
 
-      character*(*)         binary
-      character*(*)         text
+      character(*)          binary
+      character(*)          text
 
 ! $ Brief_I/O
 !
@@ -165,10 +165,10 @@
 !
 !     Local parameters
 !
-      character*(*)         bmark
+      character(*)          bmark
       parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
 
-      character*(*)         emark
+      character(*)          emark
       parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
 !

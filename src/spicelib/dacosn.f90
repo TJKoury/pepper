@@ -133,7 +133,7 @@
 !     Check that tolerance is non negative.
 !
 
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call chkin  ( 'DACOSN'                           )
          call setmsg ( 'TOL was #; must be non-negative.' )
@@ -149,7 +149,7 @@
 !     appropriate.
 !
 
-      if  ( ( abs ( arg ) - tol ) .gt. 1.0_wp) then
+      if  ( ( abs ( arg ) - tol ) > 1.0_wp) then
 
          call chkin  ( 'DACOSN'                           )
          call setmsg ( 'The |argument| specified was greater '// &

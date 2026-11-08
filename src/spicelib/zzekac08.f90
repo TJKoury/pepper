@@ -160,7 +160,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       real(wp)              page   ( pgsizd )
 
@@ -202,13 +202,13 @@
       nulptr =  coldsc( nflidx )
       colidx =  coldsc( ordidx )
 
-      nullok =  nulptr .ne. ifalse
-      indexd =  idxtyp .ne. ifalse
+      nullok =  nulptr /= ifalse
+      indexd =  idxtyp /= ifalse
 
 !
 !     This column had better be class 8.
 !
-      if ( class .ne. 8 ) then
+      if ( class /= 8 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -260,7 +260,7 @@
          to =  to + 1
 
 
-         if (  ( to .gt. dpsize ) .or. ( from .eq. nrows )  ) then
+         if (  ( to > dpsize ) .or. ( from == nrows )  ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the

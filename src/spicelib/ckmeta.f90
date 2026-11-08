@@ -25,7 +25,7 @@
       include               'zzctr.inc'
 
       integer(ip)           ckid
-      character*(*)         meta
+      character(*)          meta
       integer(ip)           idcode
 
 ! $ Brief_I/O
@@ -334,10 +334,10 @@
 !
 !     Local variables
 !
-      character*(7)         base
-      character*(7)         mymeta
-      character*(wdsize)    lookup ( 2, nck )
-      character*(wdsize)    agent  (    nck )
+      character(7)          base
+      character(7)          mymeta
+      character(wdsize)     lookup ( 2, nck )
+      character(wdsize)     agent  (    nck )
 
 
       integer(ip)           cks    (    nck )
@@ -408,7 +408,7 @@
 !
       this = bschoi ( ckid, currnt, cks, cksord )
 
-      if ( this .gt. 0 ) then
+      if ( this > 0 ) then
 !
 !        We've got it.  Check to see if its value has been updated.
 !        (Note that every CK ID  has its own agent and saved POOL
@@ -457,7 +457,7 @@
 !
 !        We don't have this on our handy list. Find a place to put it.
 !
-         if ( currnt .lt. nck ) then
+         if ( currnt < nck ) then
 
             currnt = currnt + 1
             last   = currnt
@@ -466,7 +466,7 @@
 
             last   = last + 1
 
-            if ( last .gt. nck ) then
+            if ( last > nck ) then
                last = 1
             end if
 
@@ -479,7 +479,7 @@
 !        we may have an update pending for this watcher, so we will
 !        check it first to clear it.
 !
-         if ( agent( this ) .ne. ' ' ) then
+         if ( agent( this ) /= ' ' ) then
             call cvpool ( agent( this ), update )
             call dwpool ( agent( this ) )
          end if
@@ -544,7 +544,7 @@
 !
       if ( .not. found(sclk) ) then
 
-         if ( cks(this) .le. -1000 ) then
+         if ( cks(this) <= -1000 ) then
 
             sclks(this) = cks(this)/1000
 
@@ -558,7 +558,7 @@
 
       if ( .not. found(spk) ) then
 
-         if ( cks(this) .le. -1000 ) then
+         if ( cks(this) <= -1000 ) then
 
             spks(this) = cks(this)/1000
 
@@ -573,11 +573,11 @@
 !
 !     Set output ID.
 !
-      if ( mymeta .eq. 'SPK' ) then
+      if ( mymeta == 'SPK' ) then
 
          idcode = spks (this)
 
-      else if ( mymeta .eq. 'SCLK' ) then
+      else if ( mymeta == 'SCLK' ) then
 
          idcode = sclks(this)
 

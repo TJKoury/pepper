@@ -357,13 +357,13 @@
 !
 !     Handle the simpler zero-margin case separately.
 !
-      if ( margin .eq. 0.0_wp ) then
+      if ( margin == 0.0_wp ) then
 
          call zzinlat0 ( r, lon, lat, bounds, exclud, inside )
 
          return
 
-      else if ( margin .lt. 0.0_wp ) then
+      else if ( margin < 0.0_wp ) then
 
          call chkin  ( 'ZZINLAT'                                )
          call setmsg ( 'Margin must be non-negative but was #.' )
@@ -375,7 +375,7 @@
       end if
 
 
-      if (  ( exclud .lt. 0 ) .or. ( exclud .gt. 3 )  ) then
+      if (  ( exclud < 0 ) .or. ( exclud > 3 )  ) then
 
          call chkin  ( 'ZZINLAT'                                    )
          call setmsg ( 'EXCLUD must be in the range 0:3 but was #.' )
@@ -391,9 +391,9 @@
 !     from the origin, and the minimum radius of the volume element
 !     is less than or equal to MARGIN, the point is inside.
 !
-      if ( r .le. margin ) then
+      if ( r <= margin ) then
 
-         if ( bounds(inner, radidx) .le. margin ) then
+         if ( bounds(inner, radidx) <= margin ) then
 
             inside = .true.
 
@@ -425,7 +425,7 @@
 !     Compare coordinates to adjusted latitude and radius
 !     boundaries.
 !
-      if ( exclud .ne. radidx ) then
+      if ( exclud /= radidx ) then
 !
 !        Create adjusted radius bounds.
 !
@@ -435,21 +435,21 @@
          aminr = max( 0.0_wp,  minr*smin )
          amaxr = maxr * smax
 
-         if ( ( r .lt. aminr ) .or. ( r .gt. amaxr ) ) then
+         if ( ( r < aminr ) .or. ( r > amaxr ) ) then
              return
          end if
 
       end if
 
 
-      if ( exclud .ne. latidx ) then
+      if ( exclud /= latidx ) then
 !
 !        Create adjusted latitude bounds.
 !
          aminlt = max( -hpi, minlat - margin )
          amaxlt = min(  hpi, maxlat + margin )
 
-         if ( ( lat .lt. aminlt ) .or. ( lat .gt. amaxlt ) ) then
+         if ( ( lat < aminlt ) .or. ( lat > amaxlt ) ) then
             return
          end if
 
@@ -463,7 +463,7 @@
 !     Perform longitude tests, unless they're excluded by the
 !     caller.
 !
-      if ( exclud .ne. lonidx ) then
+      if ( exclud /= lonidx ) then
 
          call zznrmlon ( bounds(west,lonidx), bounds(east,lonidx), &
                          angmrg,              minlon, &
@@ -481,8 +481,8 @@
 !        regardless of the point's longitude. All other points get the
 !        normal longitude test.
 !
-         if (       ( lat .le. (  hpi - latmrg ) ) &
-              .and. ( lat .ge. ( -hpi + latmrg ) )  ) then
+         if (       ( lat <= (  hpi - latmrg ) ) &
+              .and. ( lat >= ( -hpi + latmrg ) )  ) then
 !
 !           This is the usual case: the latitude of the input point
 !           is bounded away from the poles.
@@ -506,9 +506,9 @@
 !           Now move the input point's longitude into range, if
 !           necessary.
 !
-            if ( lon .lt. aminlo ) then
+            if ( lon < aminlo ) then
 
-               if (  lon  .lt. ( aminlo - lonali )  ) then
+               if (  lon  < ( aminlo - lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
@@ -522,9 +522,9 @@
 
                end if
 
-            else if ( lon .gt. amaxlo ) then
+            else if ( lon > amaxlo ) then
 
-               if (  lon  .gt. ( amaxlo + lonali )  ) then
+               if (  lon  > ( amaxlo + lonali )  ) then
 !
 !                 See whether an aliased version of LON is a match.
 !
@@ -544,7 +544,7 @@
 !           Compare the adjusted longitude of the input point to the
 !           adjusted longitude bounds.
 !
-            if ( ( lon .lt. aminlo ) .or. ( lon .gt. amaxlo ) ) then
+            if ( ( lon < aminlo ) .or. ( lon > amaxlo ) ) then
 
                return
 

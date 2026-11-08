@@ -22,10 +22,10 @@
 !
 ! $ Declarations
 
-      character*(*)         file
-      character*(*)         line
+      character(*)          file
+      character(*)          line
       logical               check
-      character*(*)         termin
+      character(*)          termin
 
 ! $ Brief_I/O
 !
@@ -275,7 +275,7 @@
 !
 !     Local variables.
 !
-      character*(eoltsz)    native
+      character(eoltsz)     native
 
       integer(ip)           doscnt
       integer(ip)           i
@@ -326,7 +326,7 @@
 !     Check the length of the work string is sufficient to perform the
 !     operations. Less than 3 is a no-op.
 !
-      if ( len(line) .lt. 3 ) then
+      if ( len(line) < 3 ) then
 
          termin = '?'
 
@@ -357,7 +357,7 @@
 #endif
              iostat             = iostat  )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
 !
 !        The open failed, can't determine the terminator if the routine
@@ -387,7 +387,7 @@
 
       read ( number, rec=1, iostat=iostat ) line
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
 !
 !        If something went wrong during this read, a part or the whole
@@ -418,19 +418,19 @@
 
       i      = 1
 
-      do while ( i .lt. len(line) )
+      do while ( i < len(line) )
 
 !
 !        Check for ICHAR values of 10 (LF) and 13 (CR).
 !
-         if      ( ichar(line(i:i)) .eq. 10 ) then
+         if      ( ichar(line(i:i)) == 10 ) then
 
 !
 !           Found a UNIX line terminator LF.
 !
             unxcnt = unxcnt + 1
 
-         else if ( ichar(line(i:i)) .eq. 13 ) then
+         else if ( ichar(line(i:i)) == 13 ) then
 
 !
 !           Found CR, increment character counter and check
@@ -438,7 +438,7 @@
 !
             i = i + 1
 
-            if ( ichar(line(i:i)) .eq. 10 ) then
+            if ( ichar(line(i:i)) == 10 ) then
 
 !
 !              Found a DOS line terminator CR+LF.
@@ -463,18 +463,18 @@
 !
 !     Examine the counters.
 !
-      if      ( doscnt .gt. 0 .and. &
-                unxcnt .eq. 0 .and. &
-                maccnt .eq. 0       ) then
+      if      ( doscnt > 0 .and. &
+                unxcnt == 0 .and. &
+                maccnt == 0       ) then
 
 !
 !        Only DOS terminator counter is non-zero. ID the file as DOS.
 !
          termin = 'CR-LF'
 
-      else if ( doscnt .eq. 0 .and. &
-                unxcnt .gt. 0 .and. &
-                maccnt .eq. 0       ) then
+      else if ( doscnt == 0 .and. &
+                unxcnt > 0 .and. &
+                maccnt == 0       ) then
 
 
 !
@@ -482,9 +482,9 @@
 !
          termin =  'LF'
 
-      else if ( doscnt .eq. 0 .and. &
-                unxcnt .eq. 0 .and. &
-                maccnt .gt. 0       ) then
+      else if ( doscnt == 0 .and. &
+                unxcnt == 0 .and. &
+                maccnt > 0       ) then
 
 !
 !        Only Mac terminator counter is non-zero. ID the file as Mac

@@ -128,14 +128,14 @@
       end if
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 !
 !        Set the encoded count.
 !
          call zzeksei ( handle, base+clcidx, nlinks )
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 !
 !        Convert the input count to d.p. type.
 !

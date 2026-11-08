@@ -221,7 +221,7 @@
 !
 !     Test the pointer array index AVAL.
 !
-      if ( ( aval .lt. 1 ) .or. ( aval .gt. maxa ) ) then
+      if ( ( aval < 1 ) .or. ( aval > maxa ) ) then
 
          call setmsg ( 'Index AVAL is out of range. AVAL = #1; ' &
          //            'valid range is 1:#2.'                   )
@@ -238,7 +238,7 @@
 !
       ncell = ncell + 1
 
-      if ( ncell .gt. cellsz ) then
+      if ( ncell > cellsz ) then
 
          call setmsg ( 'NCELL larger than cell array. ' &
          //            'Cell index = #1. Array size = #2.' )

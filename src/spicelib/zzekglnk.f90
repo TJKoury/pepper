@@ -121,14 +121,14 @@
       end if
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 !
 !        Look up the encoded count.
 !
          call zzekgei ( handle, base+clcidx, nlinks )
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 !
 !        Convert the encoded count to integer type.
 !

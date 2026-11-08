@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)          device
+      character(*)           device
 
       integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -311,7 +311,7 @@
 !     The current error output device specification:
 !
 
-      character*(filen)     savdev
+      character(filen)      savdev
 
       save                  savdev
 

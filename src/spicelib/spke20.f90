@@ -229,7 +229,7 @@
 !
       ncof = ( int( record( 1 ) ) - 5 ) / 3
 
-      if ( ncof .lt. 1 ) then
+      if ( ncof < 1 ) then
 
          call setmsg ( 'The input record''s coefficient count NCOF ' &
          //            'should be positive but was #.'              )

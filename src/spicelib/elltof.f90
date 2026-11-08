@@ -186,7 +186,7 @@
          call chkin ( 'ELLTOF' )
       end if
 
-      if ( ecc .lt. 0.0_wp  .or.  ecc .ge. 1.0_wp ) then
+      if ( ecc < 0.0_wp  .or.  ecc >= 1.0_wp ) then
          call sigerr ( 'SPICE(WRONGCONIC)' )
          call chkout ( 'ELLTOF'            )
          return
@@ -209,7 +209,7 @@
 !
       m = abs ( ma )
 
-      if ( m .gt. pi() ) then
+      if ( m > pi() ) then
          n      = int ( (m-pi()) / twopi() ) + 1
          mprime = m - n * twopi()
       else
@@ -249,7 +249,7 @@
 !
       m0 = halfpi() - ecc
 
-      if ( m .ge. m0 ) then
+      if ( m >= m0 ) then
 
          a = pi() - m
          b = pi() - m0
@@ -287,17 +287,17 @@
 !     provides a reasonable estimate of E directly.
 !
 !
-      else if ( ecc .le. 0.7_wp ) then
+      else if ( ecc <= 0.7_wp ) then
 
          y = 1.0_wp - (1.0_wp - m/m0)**2 * (1.0_wp + 2.0_wp*m/m0 - m/(1.0_wp-ecc))
          e = ecc * sin(ecc*y + m) + m
 
-      else if ( ecc .le. 0.85_wp ) then
+      else if ( ecc <= 0.85_wp ) then
 
          y = 1.0_wp - (1.0_wp - m/m0)**4
          e = ecc * sin(ecc*y + m) + m
 
-      else if ( ecc .le. 0.96_wp .or. m .gt. 0.05_wp ) then
+      else if ( ecc <= 0.96_wp .or. m > 0.05_wp ) then
 
          y = 1.0_wp - (1.0_wp - m/m0)**8
          e = ecc * sin(ecc*y + m) + m
@@ -328,7 +328,7 @@
 !
       change = 1.0_wp
 
-      do while ( abs ( change ) .gt. tol )
+      do while ( abs ( change ) > tol )
 
          fn     = e    - ecc * sin(e) - m
          deriv  = 1.0_wp - ecc * cos(e)
@@ -342,15 +342,15 @@
 !
 !     "Unwrap" E' into the actual value of E.
 !
-      if ( mprime .lt. 0 ) then
+      if ( mprime < 0 ) then
          e = -e
       end if
 
-      if ( n .gt. 0 ) then
+      if ( n > 0 ) then
          e = e + n * twopi()
       end if
 
-      if ( ma .lt. 0 ) then
+      if ( ma < 0 ) then
          e = -e
       end if
 

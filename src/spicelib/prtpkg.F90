@@ -25,7 +25,7 @@
       logical               long
       logical               trace
       logical               dfault
-      character*(*)         type
+      character(*)          type
 
        integer(ip)           filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -322,10 +322,10 @@
 !
 !     Local variables:
 !
-      character*(filen)     device
+      character(filen)      device
 
-      character*(10)        ltype
-      character*(10)        loctyp
+      character(10)         ltype
+      character(10)         loctyp
 
 !
 !     Saved variables:
@@ -777,23 +777,23 @@
       call ucase ( ltype, ltype )
 
 
-      if ( ltype  .eq. 'SHORT' ) then
+      if ( ltype  == 'SHORT' ) then
 
          msgsel = svshrt
 
-      else if ( ltype  .eq. 'EXPLAIN' ) then
+      else if ( ltype  == 'EXPLAIN' ) then
 
          msgsel = svexpl
 
-      else if ( ltype  .eq. 'LONG' ) then
+      else if ( ltype  == 'LONG' ) then
 
          msgsel = svlong
 
-      else if ( ltype  .eq. 'TRACEBACK' ) then
+      else if ( ltype  == 'TRACEBACK' ) then
 
          msgsel = svtrac
 
-      else if ( ltype  .eq. 'DEFAULT' ) then
+      else if ( ltype  == 'DEFAULT' ) then
 
          msgsel = svdflt
 

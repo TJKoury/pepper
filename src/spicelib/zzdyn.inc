@@ -178,7 +178,7 @@
 !
 !     Token used to build the base frame keyword:
 !
-      character*(*)         kwbfrm
+      character(*)          kwbfrm
       parameter           ( kwbfrm = 'RELATIVE' )
 
 !
@@ -187,13 +187,13 @@
 !
 !     Token used to build the frame definition style keyword:
 !
-      character*(*)         kwstyl
+      character(*)          kwstyl
       parameter           ( kwstyl = 'DEF_STYLE' )
 
 !
 !     Token indicating parameterized dynamic frame.
 !
-      character*(*)         kvparm
+      character(*)          kvparm
       parameter           ( kvparm = 'PARAMETERIZED' )
 
 
@@ -203,7 +203,7 @@
 !
 !     Token used to build the freeze epoch keyword:
 !
-      character*(*)         kwfrez
+      character(*)          kwfrez
       parameter           ( kwfrez = 'FREEZE_EPOCH' )
 
 !
@@ -212,19 +212,19 @@
 !
 !     Token used to build the rotation state keyword:
 !
-      character*(*)         kwrsta
+      character(*)          kwrsta
       parameter           ( kwrsta = 'ROTATION_STATE' )
 
 !
 !     Token indicating rotating rotation state:
 !
-      character*(*)         kvrotg
+      character(*)          kvrotg
       parameter           ( kvrotg = 'ROTATING' )
 
 !
 !     Token indicating inertial rotation state:
 !
-      character*(*)         kvinrt
+      character(*)          kvinrt
       parameter           ( kvinrt = 'INERTIAL' )
 
 !
@@ -233,43 +233,43 @@
 !
 !     Token used to build the frame family keyword:
 !
-      character*(*)         kwffam
+      character(*)          kwffam
       parameter           ( kwffam = 'FAMILY' )
 
 !
 !     Token indicating mean equator and equinox of date frame.
 !
-      character*(*)       kvmeqt
+      character(*)        kvmeqt
       parameter         ( kvmeqt = 'MEAN_EQUATOR_AND_EQUINOX_OF_DATE'  )
 
 !
 !     Token indicating mean ecliptic and equinox of date frame.
 !
-      character*(*)       kvmecl
+      character(*)        kvmecl
       parameter         ( kvmecl = 'MEAN_ECLIPTIC_AND_EQUINOX_OF_DATE' )
 
 !
 !     Token indicating true equator and equinox of date frame.
 !
-      character*(*)       kvteqt
+      character(*)        kvteqt
       parameter         ( kvteqt = 'TRUE_EQUATOR_AND_EQUINOX_OF_DATE'  )
 
 !
 !     Token indicating two-vector frame.
 !
-      character*(*)         kv2vec
+      character(*)          kv2vec
       parameter           ( kv2vec = 'TWO-VECTOR'  )
 
 !
 !     Token indicating Euler frame.
 !
-      character*(*)         kveulr
+      character(*)          kveulr
       parameter           ( kveulr = 'EULER'  )
 
 !
 !     Token indicating product frame.
 !
-      character*(*)         kvprod
+      character(*)          kvprod
       parameter           ( kvprod = 'PRODUCT'  )
 
 
@@ -279,19 +279,19 @@
 !
 !     Token used to build the precession model keyword:
 !
-      character*(*)         kwprcm
+      character(*)          kwprcm
       parameter           ( kwprcm = 'PREC_MODEL' )
 
 !
 !     Token used to build the nutation model keyword:
 !
-      character*(*)         kwnutm
+      character(*)          kwnutm
       parameter           ( kwnutm = 'NUT_MODEL' )
 
 !
 !     Token used to build the obliquity model keyword:
 !
-      character*(*)         kwobqm
+      character(*)          kwobqm
       parameter           ( kwobqm = 'OBLIQ_MODEL' )
 
 !
@@ -302,13 +302,13 @@
 !
 !     Token indicating the Lieske earth precession model:
 !
-      character*(*)         kvm001
+      character(*)          kvm001
       parameter           ( kvm001 = 'EARTH_IAU_1976' )
 
 !
 !     Token indicating the IAU 1980 earth nutation model:
 !
-      character*(*)         kvm002
+      character(*)          kvm002
       parameter           ( kvm002 = 'EARTH_IAU_1980' )
 
 !
@@ -318,7 +318,7 @@
 !     used in the kernel variable definition indicates what
 !     kind of model is being defined.
 !
-      character*(*)         kvm003
+      character(*)          kvm003
       parameter           ( kvm003 = 'EARTH_IAU_1980' )
 
 
@@ -328,146 +328,146 @@
 !
 !     Token used to build the vector axis keyword:
 !
-      character*(*)         kwvaxi
+      character(*)          kwvaxi
       parameter           ( kwvaxi = 'AXIS' )
 
 !
 !     Tokens indicating axis values:
 !
-      character*(*)         kvx
+      character(*)          kvx
       parameter           ( kvx    = 'X' )
 
-      character*(*)         kvy
+      character(*)          kvy
       parameter           ( kvy    = 'Y' )
 
-      character*(*)         kvz
+      character(*)          kvz
       parameter           ( kvz    = 'Z' )
 
 !
 !     Prefixes used for primary and secondary vector definition
 !     keywords:
 !
-      character*(*)         kwpri
+      character(*)          kwpri
       parameter           ( kwpri  = 'PRI_' )
 
-      character*(*)         kwsec
+      character(*)          kwsec
       parameter           ( kwsec  = 'SEC_' )
 
 !
 !     Token used to build the vector definition keyword:
 !
-      character*(*)         kwvcdf
+      character(*)          kwvcdf
       parameter           ( kwvcdf = 'VECTOR_DEF' )
 
 !
 !     Token indicating observer-target position vector:
 !
-      character*(*)         kvposv
+      character(*)          kvposv
       parameter           ( kvposv = 'OBSERVER_TARGET_POSITION' )
 
 !
 !     Token indicating observer-target velocity vector:
 !
-      character*(*)         kvvelv
+      character(*)          kvvelv
       parameter           ( kvvelv = 'OBSERVER_TARGET_VELOCITY' )
 
 !
 !     Token indicating observer-target near point vector:
 !
-      character*(*)         kvnear
+      character(*)          kvnear
       parameter           ( kvnear = 'TARGET_NEAR_POINT' )
 
 !
 !     Token indicating constant vector:
 !
-      character*(*)         kvcons
+      character(*)          kvcons
       parameter           ( kvcons = 'CONSTANT' )
 
 !
 !     Token used to build the vector observer keyword:
 !
-      character*(*)         kwvobs
+      character(*)          kwvobs
       parameter           ( kwvobs = 'OBSERVER' )
 
 !
 !     Token used to build the vector target keyword:
 !
-      character*(*)         kwvtrg
+      character(*)          kwvtrg
       parameter           ( kwvtrg = 'TARGET' )
 
 !
 !     Token used to build the vector frame keyword:
 !
-      character*(*)         kwvfrm
+      character(*)          kwvfrm
       parameter           ( kwvfrm = 'FRAME' )
 
 !
 !     Token used to build the vector aberration correction keyword:
 !
-      character*(*)         kwvabc
+      character(*)          kwvabc
       parameter           ( kwvabc = 'ABCORR' )
 
 !
 !     Token used to build the constant vector specification keyword:
 !
-      character*(*)         kwvspc
+      character(*)          kwvspc
       parameter           ( kwvspc = 'SPEC' )
 
 !
 !     Token indicating rectangular coordinates used to
 !     specify constant vector:
 !
-      character*(*)         kvrecc
+      character(*)          kvrecc
       parameter           ( kvrecc = 'RECTANGULAR' )
 
 !
 !     Token indicating latitudinal coordinates used to
 !     specify constant vector:
 !
-      character*(*)         kvlatc
+      character(*)          kvlatc
       parameter           ( kvlatc = 'LATITUDINAL' )
 
 !
 !     Token indicating RA/DEC coordinates used to
 !     specify constant vector:
 !
-      character*(*)         kvradc
+      character(*)          kvradc
       parameter           ( kvradc = 'RA/DEC' )
 
 !
 !     Token used to build the cartesian vector literal keyword:
 !
-      character*(*)         kwvect
+      character(*)          kwvect
       parameter           ( kwvect = 'VECTOR' )
 
 !
 !     Token used to build the constant vector latitude keyword:
 !
-      character*(*)         kwlat
+      character(*)          kwlat
       parameter           ( kwlat  = 'LATITUDE' )
 
 !
 !     Token used to build the constant vector longitude keyword:
 !
-      character*(*)         kwlon
+      character(*)          kwlon
       parameter           ( kwlon  = 'LONGITUDE' )
 
 !
 !     Token used to build the constant vector right ascension keyword:
 !
-      character*(*)         kwra
+      character(*)          kwra
       parameter           ( kwra   = 'RA' )
 
 !
 !     Token used to build the constant vector declination keyword:
 !
-      character*(*)         kwdec
+      character(*)          kwdec
       parameter           ( kwdec  = 'DEC' )
 
 !
 !     Token used to build the angular separation tolerance keyword:
 !
-      character*(*)         kwatol
+      character(*)          kwatol
       parameter           ( kwatol = 'ANGLE_SEP_TOL' )
 
 !
@@ -481,25 +481,25 @@
 !
 !     Token used to build the epoch keyword:
 !
-      character*(*)         kwepoc
+      character(*)          kwepoc
       parameter           ( kwepoc = 'EPOCH' )
 
 !
 !     Token used to build the Euler axis sequence keyword:
 !
-      character*(*)         kweuax
+      character(*)          kweuax
       parameter           ( kweuax = 'AXES' )
 
 !
 !     Tokens used to build the Euler angle coefficients keywords:
 !
-      character*(*)         kweac1
+      character(*)          kweac1
       parameter           ( kweac1 = 'ANGLE_1_COEFFS' )
 
-      character*(*)         kweac2
+      character(*)          kweac2
       parameter           ( kweac2 = 'ANGLE_2_COEFFS' )
 
-      character*(*)         kweac3
+      character(*)          kweac3
       parameter           ( kweac3 = 'ANGLE_3_COEFFS' )
 
 !
@@ -511,10 +511,10 @@
 !     Product frame family parameters
 !     ---------------------------------
 !
-      character*(*)         kwffrm
+      character(*)          kwffrm
       parameter           ( kwffrm = 'FROM_FRAMES'  )
 
-      character*(*)         kwtfrm
+      character(*)          kwtfrm
       parameter           ( kwtfrm = 'TO_FRAMES'  )
 
 
@@ -524,19 +524,19 @@
 !
 !     Token used to build the units keyword:
 !
-      character*(*)         kwunit
+      character(*)          kwunit
       parameter           ( kwunit = 'UNITS' )
 
 !
 !     Token indicating radians:
 !
-      character*(*)         kvradn
+      character(*)          kvradn
       parameter           ( kvradn = 'RADIANS' )
 
 !
 !     Token indicating degrees:
 !
-      character*(*)         kvdegr
+      character(*)          kvdegr
       parameter           ( kvdegr = 'DEGREES' )
 
 

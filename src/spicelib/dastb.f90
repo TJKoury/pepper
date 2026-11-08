@@ -22,7 +22,7 @@
       implicit none
 
       integer(ip)           xfrlun
-      character*(*)         binfil
+      character(*)          binfil
 
 ! $ Brief_I/O
 !
@@ -254,40 +254,40 @@
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'  )
 !
-      character*(*)         begcom
+      character(*)          begcom
       parameter           ( begcom = 'BEGIN_COMMENT_BLOCK'    )
 
-      character*(*)         endcom
+      character(*)          endcom
       parameter           ( endcom = 'END_COMMENT_BLOCK'      )
 
-      character*(*)         bcblk
+      character(*)          bcblk
       parameter           ( bcblk  = 'BEGIN_CHARACTER_BLOCK'  )
 
-      character*(*)         ecblk
+      character(*)          ecblk
       parameter           ( ecblk  = 'END_CHARACTER_BLOCK'    )
 
-      character*(*)         bdblk
+      character(*)          bdblk
       parameter           ( bdblk  = 'BEGIN_DP_BLOCK'         )
 
-      character*(*)         edblk
+      character(*)          edblk
       parameter           ( edblk  = 'END_DP_BLOCK'           )
 
-      character*(*)         biblk
+      character(*)          biblk
       parameter           ( biblk  = 'BEGIN_INTEGER_BLOCK'    )
 
-      character*(*)         eiblk
+      character(*)          eiblk
       parameter           ( eiblk  = 'END_INTEGER_BLOCK'      )
 
-      character*(*)         tcmblk
+      character(*)          tcmblk
       parameter           ( tcmblk = 'TOTAL_COMMENT_BLOCKS'   )
 
-      character*(*)         tcblks
+      character(*)          tcblks
       parameter           ( tcblks = 'TOTAL_CHARACTER_BLOCKS' )
 
-      character*(*)         tdblks
+      character(*)          tdblks
       parameter           ( tdblks = 'TOTAL_DP_BLOCKS'        )
 
-      character*(*)         tiblks
+      character(*)          tiblks
       parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'   )
 
       integer(ip)           cbflen
@@ -319,16 +319,16 @@
 !
 !     Local variables
 !
-      character*(cbflen)    cbuffr(bufsiz)
-      character*(crlen)     crecrd
-      character*(errlen)    errmsg
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
-      character*(linlen)    line
-      character*(linlen)    rest
-      character*(idwlen)    tarch
-      character*(idwlen)    ttype
-      character*(linlen)    word
+      character(cbflen)     cbuffr(bufsiz)
+      character(crlen)      crecrd
+      character(errlen)     errmsg
+      character(idwlen)     idword
+      character(ifnlen)     ifname
+      character(linlen)     line
+      character(linlen)     rest
+      character(idwlen)     tarch
+      character(idwlen)     ttype
+      character(linlen)     word
 
       real(wp)              dbuffr(bufsiz)
 
@@ -510,7 +510,7 @@
       idword = ' '
       read (xfrlun,*,iostat=iostat) idword
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error reading the file ID word from the'  // &
                        ' DAS transfer file: #. IOSTAT = #.'        )
@@ -528,7 +528,7 @@
 !
       call idw2at ( idword, tarch, ttype )
 
-      if ( tarch .ne. 'DAS' ) then
+      if ( tarch /= 'DAS' ) then
 
          call setmsg ( 'File architecture was not ''DAS'' for' // &
                        ' file #.'                               )
@@ -544,7 +544,7 @@
       ifname = ' '
       read (xfrlun,*,iostat=iostat) ifname
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error reading the internal filename from' // &
                        ' the DAS transfer file: #. IOSTAT = #.'    )
@@ -613,7 +613,7 @@
 !     reserved record area is not currently implemented, so nobody
 !     should be using it.
 !
-      if ( nresvc .ne. 0 ) then
+      if ( nresvc /= 0 ) then
 !
 !        Close the file, signal the error, and exit.
 !
@@ -630,7 +630,7 @@
 
       end if
 
-      if ( nresvr .ne. 0 ) then
+      if ( nresvr /= 0 ) then
 !
 !        Close the file, signal the error, and exit.
 !
@@ -678,7 +678,7 @@
 !
 !     The comments, if there are any.
 !
-      if ( ncomc .gt. 0 ) then
+      if ( ncomc > 0 ) then
 !
 !        We assume that the condition NCOMC > 0 and NCOMR <= 0
 !        cannot occur.
@@ -739,7 +739,7 @@
 
             read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              If an error occurred while reading from the DAS transfer
 !              file close the binary file, set an appropriate error
@@ -762,14 +762,14 @@
 !
             call nextwd ( line, word, rest )
 
-            if ( word .eq. begcom ) then
+            if ( word == begcom ) then
 !
 !              Get the comment block index.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
@@ -792,7 +792,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
@@ -818,14 +818,14 @@
                inblk  = .true.
                blkcnt = blkcnt + 1
 
-            else if ( word .eq. endcom ) then
+            else if ( word == endcom ) then
 !
 !              Get the data block index.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, eindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the end comment
 !                 block index, close the binary file, set an appropriate
@@ -848,7 +848,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, ecount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
@@ -870,7 +870,7 @@
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               if ( eindex .ne. bindex ) then
+               if ( eindex /= bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
@@ -892,7 +892,7 @@
 !              Check to see if the beginning and ending comment data
 !              counts match.
 !
-               if ( ecount .ne. bcount ) then
+               if ( ecount /= bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
@@ -917,7 +917,7 @@
 !
                inblk = .false.
 
-            else if ( word .eq. tcmblk ) then
+            else if ( word == tcmblk ) then
 !
 !              We have the total comment blocks keyword to parse, so
 !              get the total number of comment blocks processed.
@@ -925,7 +925,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, numblk, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
@@ -948,7 +948,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, tcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the comment
 !                 data count, close the binary file, set an
@@ -969,7 +969,7 @@
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               if ( blkcnt .ne. numblk ) then
+               if ( blkcnt /= numblk ) then
 !
 !                 If the computed number of comment blocks and the
 !                 number of comment blocks from the text file do
@@ -994,7 +994,7 @@
 !              Check to see if the total count and the computed count
 !              match.
 !
-               if ( tcount .ne. dtacnt ) then
+               if ( tcount /= dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
@@ -1053,13 +1053,13 @@
 !
                numlft = bcount
 
-               do while ( numlft .gt. 0 )
+               do while ( numlft > 0 )
 !
 !                 Now read and decode the data in the current
 !                 comment data block, placing the data in the
 !                 comment area of the binary DAS file.
 !
-                  if ( numlft .ge. crlen ) then
+                  if ( numlft >= crlen ) then
 
                      numdta = crlen
 
@@ -1138,7 +1138,7 @@
 !
 !     Process the character data array, if there is some character data.
 !
-      if ( ncdata .gt. 0 ) then
+      if ( ncdata > 0 ) then
 !
 !        Initialize a few things: the block counter, and the data
 !        counter.
@@ -1158,7 +1158,7 @@
 
             read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
@@ -1181,14 +1181,14 @@
 !
             call nextwd ( line, word, rest )
 
-            if ( word .eq. bcblk ) then
+            if ( word == bcblk ) then
 !
 !              Get the block number.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
@@ -1211,7 +1211,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
@@ -1237,14 +1237,14 @@
                inblk  = .true.
                blkcnt = blkcnt + 1
 
-            else if ( word .eq. ecblk ) then
+            else if ( word == ecblk ) then
 !
 !              Get the data block index.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, eindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
@@ -1267,7 +1267,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, ecount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
@@ -1289,7 +1289,7 @@
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               if ( eindex .ne. bindex ) then
+               if ( eindex /= bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
@@ -1311,7 +1311,7 @@
 !              Check to see if the beginning and ending array data
 !              counts match.
 !
-               if ( ecount .ne. bcount ) then
+               if ( ecount /= bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
@@ -1336,7 +1336,7 @@
 !
                inblk = .false.
 
-            else if ( word .eq. tcblks ) then
+            else if ( word == tcblks ) then
 !
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
@@ -1344,7 +1344,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, numblk, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
@@ -1367,7 +1367,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, tcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the character
 !                 data count, close the binary file, set an
@@ -1388,7 +1388,7 @@
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               if ( blkcnt .ne. numblk ) then
+               if ( blkcnt /= numblk ) then
 !
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
@@ -1413,7 +1413,7 @@
 !              Check to see if the total count and the computed count
 !              match.
 !
-               if ( tcount .ne. dtacnt ) then
+               if ( tcount /= dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
@@ -1469,13 +1469,13 @@
 !
                numlft = bcount
 
-               do while ( numlft .gt. 0 )
+               do while ( numlft > 0 )
 !
 !                 Now read and decode the data in the current
 !                 character data block, placing the data in the
 !                 character array in the binary DAS file.
 !
-                  if ( numlft .ge. ( bufsiz * cbflen ) ) then
+                  if ( numlft >= ( bufsiz * cbflen ) ) then
 
                      numdta = bufsiz * cbflen
 
@@ -1542,7 +1542,7 @@
 !     Process the double precision data array, if there is some
 !     double precision data.
 !
-      if ( nddata .gt. 0 ) then
+      if ( nddata > 0 ) then
 !
 !        Initialize a few things: the block counter, and the data
 !        counter.
@@ -1562,7 +1562,7 @@
 
             read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
@@ -1585,14 +1585,14 @@
 !
             call nextwd ( line, word, rest )
 
-            if ( word .eq. bdblk ) then
+            if ( word == bdblk ) then
 !
 !              Get the block number.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
@@ -1615,7 +1615,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
@@ -1642,14 +1642,14 @@
                inblk  = .true.
                blkcnt = blkcnt + 1
 
-            else if ( word .eq. edblk ) then
+            else if ( word == edblk ) then
 !
 !              Get the data block index.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, eindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
@@ -1672,7 +1672,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, ecount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
@@ -1695,7 +1695,7 @@
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               if ( eindex .ne. bindex ) then
+               if ( eindex /= bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
@@ -1717,7 +1717,7 @@
 !              Check to see if the beginning and ending array data
 !              counts match.
 !
-               if ( ecount .ne. bcount ) then
+               if ( ecount /= bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
@@ -1742,7 +1742,7 @@
 !
                inblk = .false.
 
-            else if ( word .eq. tdblks ) then
+            else if ( word == tdblks ) then
 !
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
@@ -1750,7 +1750,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, numblk, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
@@ -1773,7 +1773,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, tcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the double
 !                 precision data count, close the binary file, set an
@@ -1794,7 +1794,7 @@
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               if ( blkcnt .ne. numblk ) then
+               if ( blkcnt /= numblk ) then
 !
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
@@ -1820,7 +1820,7 @@
 !              Check to see if the total count and the computed count
 !              match.
 !
-               if ( tcount .ne. dtacnt ) then
+               if ( tcount /= dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
@@ -1876,13 +1876,13 @@
 !
                numlft = bcount
 
-               do while ( numlft .gt. 0 )
+               do while ( numlft > 0 )
 !
 !                 Now read and decode the data in the current double
 !                 precision data block, placing the data in the double
 !                 precision array in the binary DAS file.
 !
-                  if ( numlft .ge. bufsiz ) then
+                  if ( numlft >= bufsiz ) then
 
                      numdta = bufsiz
 
@@ -1946,7 +1946,7 @@
 !
 !     Process the integer data array, if there is some integer data.
 !
-      if ( nidata .gt. 0 ) then
+      if ( nidata > 0 ) then
 !
 !        Initialize a few things: the block counter, and the data
 !        counter.
@@ -1966,7 +1966,7 @@
 
             read (xfrlun,fmt='(A)',iostat=iostat) line
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
@@ -1989,14 +1989,14 @@
 !
             call nextwd ( line, word, rest )
 
-            if ( word .eq. biblk ) then
+            if ( word == biblk ) then
 !
 !              Get the block number.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
@@ -2019,7 +2019,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, bcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
@@ -2045,14 +2045,14 @@
                inblk  = .true.
                blkcnt = blkcnt + 1
 
-            else if ( word .eq. eiblk ) then
+            else if ( word == eiblk ) then
 !
 !              Get the data block index.
 !
                call nextwd ( rest, word, rest             )
                call nparsi ( word, eindex, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
@@ -2075,7 +2075,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, ecount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
@@ -2097,7 +2097,7 @@
 !              Check to see if the beginning and ending array indices
 !              match.
 !
-               if ( eindex .ne. bindex ) then
+               if ( eindex /= bindex ) then
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
@@ -2119,7 +2119,7 @@
 !              Check to see if the beginning and ending array data
 !              counts match.
 !
-               if ( ecount .ne. bcount ) then
+               if ( ecount /= bcount ) then
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
@@ -2144,7 +2144,7 @@
 !
                inblk = .false.
 
-            else if ( word .eq. tiblks ) then
+            else if ( word == tiblks ) then
 !
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
@@ -2152,7 +2152,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, numblk, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
@@ -2175,7 +2175,7 @@
                call nextwd ( rest, word, rest             )
                call nparsi ( word, tcount, errmsg, errptr )
 
-               if ( errmsg .ne. ' ' ) then
+               if ( errmsg /= ' ' ) then
 !
 !                 If an error occurred while parsing the integer
 !                 data count, close the binary file, set an
@@ -2196,7 +2196,7 @@
 !              Compare the computed block count with the block count
 !              from the file.
 !
-               if ( blkcnt .ne. numblk ) then
+               if ( blkcnt /= numblk ) then
 !
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
@@ -2221,7 +2221,7 @@
 !              Check to see if the total count and the computed count
 !              match.
 !
-               if ( tcount .ne. dtacnt ) then
+               if ( tcount /= dtacnt ) then
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
@@ -2277,13 +2277,13 @@
 !
                numlft = bcount
 
-               do while ( numlft .gt. 0 )
+               do while ( numlft > 0 )
 !
 !                 Now read and decode the data in the current
 !                 integer data block, placing the data in the
 !                 integer precision array in the binary DAS file.
 !
-                  if ( numlft .ge. bufsiz ) then
+                  if ( numlft >= bufsiz ) then
 
                      numdta = bufsiz
 

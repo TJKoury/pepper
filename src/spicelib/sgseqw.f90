@@ -26,7 +26,7 @@
 
       integer(ip)           handle
       real(wp)              descr  ( * )
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           nconst
       real(wp)              const  ( * )
       integer(ip)           npkts
@@ -1244,7 +1244,7 @@
 !     calling various subroutines. Their values are not used in any of
 !     the entry points of this subroutine.
 !
-      character*(ifnlen)    dummy1
+      character(ifnlen)     dummy1
 
       real(wp)              xmeta  ( mxmeta )
       real(wp)              myref
@@ -1563,11 +1563,11 @@
 !     file table a segment has already been started by this routine or
 !     SGBWVS. In either case, we cannot continue, so we signal an error.
 !
-      if ( nft .gt. 0 ) then
+      if ( nft > 0 ) then
 
          index = isrchi ( handle, nft, fthan )
 
-         if ( index .ne. 0 ) then
+         if ( index /= 0 ) then
 
             call setmsg ( 'A segment is already being written to' &
             //            ' the file ''#''. A new segment cannot' &
@@ -1608,7 +1608,7 @@
 !     Check the segment ID to see if it is OK. Its length must be less
 !     than NC and it must consist of only printing ASCII characters.
 !
-      if ( sidlen .gt. nc )then
+      if ( sidlen > nc )then
 
          call setmsg ( 'Segment identifier contains more than ' &
          //            '# characters.'                           )
@@ -1623,7 +1623,7 @@
 
          ich = ichar( segid(i:i) )
 
-         if ( ( ich .lt. fprint ) .or. ( ich .gt. lprint ) ) then
+         if ( ( ich < fprint ) .or. ( ich > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains ' &
             //            ' a nonprinting character at location #.' )
@@ -1639,7 +1639,7 @@
 !     Check to see if the number of constants is negative. This is all
 !     we can do here, we cannot check the constant values.
 !
-      if ( nconst .lt. 0 ) then
+      if ( nconst < 0 ) then
 
          call setmsg ( 'The number of constants specified was #. ' &
          //            'This number must be non-negative. ' &
@@ -1654,7 +1654,7 @@
 !
 !     Check to see that the packet size is OK. It should be positive.
 !
-      if ( pktsiz(1) .le. 0 ) then
+      if ( pktsiz(1) <= 0 ) then
 
          call setmsg ( 'The size of the data packets must be' &
          //            ' positive. It was specified as #.' &
@@ -1669,7 +1669,7 @@
 !
 !     Check to see if the index type is one that we recognize.
 !
-      if ( ( idxtyp .lt. mnidxt) .or. ( idxtyp .gt. mxidxt ) ) then
+      if ( ( idxtyp < mnidxt) .or. ( idxtyp > mxidxt ) ) then
 
          call setmsg ( 'The index type specified was #.  This is' &
          //            ' not a valid index type. Valid types are' &
@@ -1685,7 +1685,7 @@
 !
 !     Check to see whether we still have room in the file table.
 !
-      if ( nft .eq. ftsize ) then
+      if ( nft == ftsize ) then
 
          call setmsg ( 'There are already # files being' &
          //            ' written by generic segment writing' &
@@ -1703,8 +1703,8 @@
 !     Set the flag which indicate whether this index type is an
 !     explicit type or an implicit type.
 !
-      explct = ( idxtyp .eq. explt  ) .or. ( idxtyp .eq. exple ) .or. &
-               ( idxtyp .eq. expcls )
+      explct = ( idxtyp == explt  ) .or. ( idxtyp == exple ) .or. &
+               ( idxtyp == expcls )
 !
 !     At this point, we know that the input data is OK, in so far as we
 !     can validate it, and we have room in the file table. So we proceed
@@ -1732,7 +1732,7 @@
 !     Write out the constants to the new segment, if there are any
 !     constants.
 !
-      if ( nconst .gt. 0 ) then
+      if ( nconst > 0 ) then
 
          call dafada ( const, nconst )
 
@@ -1988,11 +1988,11 @@
 !     or SGBWFS. In either case, we cannot continue, so we signal an
 !     error.
 !
-      if ( nft .gt. 0 ) then
+      if ( nft > 0 ) then
 
          index = isrchi ( handle, nft, fthan )
 
-         if ( index .ne. 0 ) then
+         if ( index /= 0 ) then
 
             call setmsg ( 'A segment is already being written to' &
             //            ' the file ''#''. A new segment cannot' &
@@ -2033,7 +2033,7 @@
 !     Check the segment ID to see if it is OK. Its length must be less
 !     than NC and it must consist of only printing ASCII characters.
 !
-      if ( sidlen .gt. nc )then
+      if ( sidlen > nc )then
 
          call setmsg ( 'Segment identifier contains more than ' &
          //            '# characters.'                           )
@@ -2048,7 +2048,7 @@
 
          ich = ichar( segid(i:i) )
 
-         if ( ( ich .lt. fprint ) .or. ( ich .gt. lprint ) ) then
+         if ( ( ich < fprint ) .or. ( ich > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains ' &
             //            ' a nonprinting character at location #.' )
@@ -2064,7 +2064,7 @@
 !     Check to see if the number of constants is negative. This is all
 !     we can do here, we cannot check the constant values.
 !
-      if ( nconst .lt. 0 ) then
+      if ( nconst < 0 ) then
 
          call setmsg ( 'The number of constants specified was #. ' &
          //            'This number must be non-negative. ' &
@@ -2080,7 +2080,7 @@
 !
 !     Check to see if the index type is one that we recognize.
 !
-      if ( ( idxtyp .lt. mnidxt) .or. ( idxtyp .gt. mxidxt ) ) then
+      if ( ( idxtyp < mnidxt) .or. ( idxtyp > mxidxt ) ) then
 
          call setmsg ( 'The index type specified was #.  This is' &
          //            ' not a valid index type. Valid types are' &
@@ -2096,7 +2096,7 @@
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft .eq. ftsize ) then
+      if ( nft == ftsize ) then
 
          call setmsg ( 'There are already # files being' &
          //            ' written by generic segment writing' &
@@ -2115,8 +2115,8 @@
 !     Set the flag which indicate whether this index type is an
 !     explicit type or an implicit type.
 !
-      explct = ( idxtyp .eq. explt  ) .or. ( idxtyp .eq. exple ) .or. &
-               ( idxtyp .eq. expcls )
+      explct = ( idxtyp == explt  ) .or. ( idxtyp == exple ) .or. &
+               ( idxtyp == expcls )
 !
 !     At this point, we know that the input data is OK, in so far as we
 !     can validate it and that there is room in the file table. So we
@@ -2144,7 +2144,7 @@
 !     Write out the constants to the new segment, if there are any
 !     constants.
 !
-      if ( nconst .gt. 0 ) then
+      if ( nconst > 0 ) then
 
          call dafada ( const, nconst )
 
@@ -2437,7 +2437,7 @@
 !     Check to see if this is the first time here. If it is, we have
 !     been called out of order, so signal an error.
 !
-      if ( numfxd .eq. 0 ) then
+      if ( numfxd == 0 ) then
 
          call setmsg ( 'No segment with fixed size packets is' &
          //            ' currently being written. This routine' &
@@ -2454,11 +2454,11 @@
 !     handle. This saves us a table lookup to get the appropriate index
 !     into the file table to restore the information for that handle.
 !
-      if ( handle .ne. lsthan ) then
+      if ( handle /= lsthan ) then
 
          index = isrchi ( handle, nft, fthan )
 
-         if ( index .eq. 0 ) then
+         if ( index == 0 ) then
 
             call setmsg ( 'No segment with fixed size packets is' &
             //            ' associated with the file ''#''. In' &
@@ -2509,7 +2509,7 @@
 !
 !     Check the number of packets to be sure that it is positive.
 !
-      if ( npkts .le. 0 ) then
+      if ( npkts <= 0 ) then
 
          call setmsg ( 'The number of packets to store is not' &
          //            ' positive.  The value supplied was #.' &
@@ -2534,7 +2534,7 @@
 !        must be equal to the number of packets. The references must
 !        also be in increasing order.
 !
-         if ( nrefs .ne. npkts ) then
+         if ( nrefs /= npkts ) then
 
             call setmsg ( 'The number of reference values' &
             //            ' supplied, #, is not compatible with' &
@@ -2555,9 +2555,9 @@
 !        values are greater then the last reference value from the
 !        previous addition of packets to the segment.
 !
-         if ( ftnpkt(index) .gt. 0 ) then
+         if ( ftnpkt(index) > 0 ) then
 
-            if ( ftrefs(1,index) .ge. refdat(1) ) then
+            if ( ftrefs(1,index) >= refdat(1) ) then
 
                call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
@@ -2579,7 +2579,7 @@
 
          do i = 2, nrefs
 
-            if ( refdat(i-1) .ge. refdat(i) ) then
+            if ( refdat(i-1) >= refdat(i) ) then
 
                call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
@@ -2639,9 +2639,9 @@
 !        these arguments are ignored.
 !
 
-         if ( ftnpkt (index) .eq. 0 ) then
+         if ( ftnpkt (index) == 0 ) then
 
-            if ( nrefs .ne. 2 ) then
+            if ( nrefs /= 2 ) then
 
                call setmsg ( 'The number of reference values' &
                //            ' supplied, #, is not compatible with' &
@@ -2655,7 +2655,7 @@
 
             end if
 
-            if ( dint(refdat(2)) .ne. refdat(2) ) then
+            if ( dint(refdat(2)) /= refdat(2) ) then
 
                call setmsg ( 'For implicitly indexed packets the' &
                //            ' step size must be an integer.'      )
@@ -2680,7 +2680,7 @@
 !        values in the file table. We only do this on the first time
 !        through the routine.
 !
-         if ( ftnpkt(index) .eq. 0 ) then
+         if ( ftnpkt(index) == 0 ) then
 
             ftnref(index)   = nrefs
             ftrefs(1,index) = refdat(1)
@@ -2965,7 +2965,7 @@
 !     Check to see if this is the first time here. If it is, we have
 !     been called out of order, so signal an error.
 !
-      if ( numvar .eq. 0 ) then
+      if ( numvar == 0 ) then
 
          call setmsg ( 'No segment with variable size packets is' &
          //            ' currently being written. This routine' &
@@ -2982,11 +2982,11 @@
 !     handle. This saves us a table lookup to get the appropriate index
 !     into the file table to restore the information for that handle.
 !
-      if ( handle .ne. lsthan ) then
+      if ( handle /= lsthan ) then
 
          index = isrchi ( handle, nft, fthan )
 
-         if ( index .eq. 0 ) then
+         if ( index == 0 ) then
 
             call setmsg ( 'No segment with variable size packets is' &
             //            ' associated with the file ''#''. In' &
@@ -3038,7 +3038,7 @@
 !
 !     Check the number of packets to be sure that it is positive.
 !
-      if ( npkts .le. 0 ) then
+      if ( npkts <= 0 ) then
 
          call setmsg ( 'The number of packets to store is not' &
          //            ' positive.  The value supplied was #.' &
@@ -3063,7 +3063,7 @@
 !        must be equal to the number of packets. The references must
 !        also be in increasing order.
 !
-         if ( nrefs .ne. npkts ) then
+         if ( nrefs /= npkts ) then
 
             call setmsg ( 'The number of reference values' &
             //            ' supplied, #, is not compatible with' &
@@ -3084,9 +3084,9 @@
 !        values are greater then the last reference value from the
 !        previous addition of packets to the segment.
 !
-         if ( ftnpkt(index) .gt. 0 ) then
+         if ( ftnpkt(index) > 0 ) then
 
-            if ( ftrefs(1,index) .ge. refdat(1) ) then
+            if ( ftrefs(1,index) >= refdat(1) ) then
 
                call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
@@ -3108,7 +3108,7 @@
 
          do i = 2, nrefs
 
-            if ( refdat(i-1) .ge. refdat(i) ) then
+            if ( refdat(i-1) >= refdat(i) ) then
 
                call setmsg ( 'Reference values are out of order.' &
                //            ' The offending value, #, was found' &
@@ -3130,7 +3130,7 @@
 !
          do i = 1, npkts
 
-            if ( pktsiz(i) .le. 0 ) then
+            if ( pktsiz(i) <= 0 ) then
 
                call setmsg ( 'The packet size for packet # was not' &
                //            ' positive. It had a value of #. All' &
@@ -3172,7 +3172,7 @@
 !
 !           Remember the maximum packet size encountered.
 !
-            if ( pktsiz(i) .gt. ftmxsz(index) ) then
+            if ( pktsiz(i) > ftmxsz(index) ) then
 
                ftmxsz(index) = pktsiz(i)
 
@@ -3202,9 +3202,9 @@
 !        data packets to a generic segment. In all subsequent calls,
 !        these arguments are ignored.
 !
-         if ( ftnpkt(index) .eq. 0 ) then
+         if ( ftnpkt(index) == 0 ) then
 
-            if ( nrefs .ne. 2 ) then
+            if ( nrefs /= 2 ) then
 
                call setmsg ( 'The number of reference values' &
                //            ' supplied, #, is not compatible with' &
@@ -3218,7 +3218,7 @@
 
             end if
 
-            if ( dint(refdat(2)) .ne. refdat(2) ) then
+            if ( dint(refdat(2)) /= refdat(2) ) then
 
                call setmsg ( 'For implicitly indexed packets the' &
                //            ' step size must be an integer.'      )
@@ -3257,7 +3257,7 @@
 !        in the file table. We only do this on the first time through
 !        the routine.
 !
-         if ( ftnpkt(index) .eq. 0 ) then
+         if ( ftnpkt(index) == 0 ) then
 
             ftnref(index)   = nrefs
             ftrefs(1,index) = refdat(1)
@@ -3418,7 +3418,7 @@
 !     Check to see if we have any fixed or variable segments being
 !     written.
 !
-      if ( nft .eq. 0 ) then
+      if ( nft == 0 ) then
 
          call setmsg ( 'No segment is currently being written.' &
          //            ' This routine has been called out of' &
@@ -3435,11 +3435,11 @@
 !     handle. This saves us a table lookup to get the appropriate index
 !     into the file table to restore the information for that handle.
 !
-      if ( handle .ne. lsthan ) then
+      if ( handle /= lsthan ) then
 
          index = isrchi ( handle, nft, fthan )
 
-         if ( index .eq. 0 ) then
+         if ( index == 0 ) then
 
             call setmsg ( 'No segment is associated with the file' &
             //            ' ''#''. In order to write packets to a' &
@@ -3514,7 +3514,7 @@
 !           3) Create a reference directory if the number of
 !              references is greater than DIRSIZ.
 !
-            if ( ftnref(index) .gt. dirsiz ) then
+            if ( ftnref(index) > dirsiz ) then
 
                refadr = ftbadr(index) + ftncon(index)
                refadr = refadr + ftnpkt(index) * size + dirsiz - 1
@@ -3637,7 +3637,7 @@
 !              This allows us to compute the size of the last data
 !              packet.
 !
-            if ( ftnref(index) .gt. dirsiz ) then
+            if ( ftnref(index) > dirsiz ) then
 
                refadr = ftbadr(index) + ftncon(index)
                refadr = refadr        + ftpksz(index)

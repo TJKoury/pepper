@@ -300,7 +300,7 @@
 !     If this segment is not of data type 1, then signal an error.
 !
 
-      if ( icd( 3 ) .ne. 1 ) then
+      if ( icd( 3 ) /= 1 ) then
          call setmsg ( 'Data type of the segment should be 1: Passed '// &
                        'descriptor shows type = #.'                   )
          call errint ( '#', icd ( 3 )                                 )

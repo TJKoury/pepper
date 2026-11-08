@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)      line
+      character(*)       line
       integer(ip)        unit
 
 ! $ Brief_I/O
@@ -345,7 +345,7 @@
 !     specifier FMT='(A)', which does not use any vertical carriage
 !     control characters.
 !
-       if ( unit .eq. stdout ) then
+       if ( unit == stdout ) then
           write ( unit, *, iostat=iostat ) line(:rtrim(line))
        else
           write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))
@@ -357,7 +357,7 @@
 !     Check to see if we got a write error, and signal it if we did.
 !     Also check in and check out.
 !
-      if ( iostat .ne. 0  ) then
+      if ( iostat /= 0  ) then
 
          call chkin  ( 'WRITLN'                                  )
          call setmsg ( 'Error Writing to file: #. IOSTAT = #.'   )

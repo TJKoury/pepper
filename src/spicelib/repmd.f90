@@ -21,11 +21,11 @@
 
       implicit none
 
-      character*(*)         in
-      character*(*)         marker
+      character(*)          in
+      character(*)          marker
       real(wp)              value
       integer(ip)           sigdig
-      character*(*)         out
+      character(*)          out
 
       integer(ip)           maxldp
       parameter           ( maxldp = 23 )
@@ -295,7 +295,7 @@
 !     Local variables
 !
 !
-      character*(maxldp)    substr
+      character(maxldp)     substr
 
       integer(ip)           mrknbf
       integer(ip)           mrknbl
@@ -309,7 +309,7 @@
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      if  ( marker .eq. ' ' ) then
+      if  ( marker == ' ' ) then
 
          out = in
          return
@@ -326,7 +326,7 @@
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      if  ( mrkpsb .eq. 0 ) then
+      if  ( mrkpsb == 0 ) then
 
          out = in
          return
@@ -344,7 +344,7 @@
       subnbf = frstnb(substr)
       subnbl = lastnb(substr)
 
-      if ( subnbf .ne. 0 .and. subnbl .ne. 0 ) then
+      if ( subnbf /= 0 .and. subnbl /= 0 ) then
 
          call zzrepsub ( in, &
                          mrkpsb, &

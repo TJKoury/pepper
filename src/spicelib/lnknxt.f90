@@ -225,8 +225,8 @@
 !
 !     If the node is out of range, something's very wrong.
 !
-      if (      ( node .lt. 1                       ) &
-           .or. ( node .gt. pool( sizrow, sizcol )  )  ) then
+      if (      ( node < 1                       ) &
+           .or. ( node > pool( sizrow, sizcol )  )  ) then
 
          lnknxt = 0
 
@@ -241,7 +241,7 @@
 !
 !     We don't do free nodes.
 !
-      else if (  pool( bckwrd, node )  .eq.  free  ) then
+      else if (  pool( bckwrd, node )  ==  free  ) then
 
          lnknxt = 0
 

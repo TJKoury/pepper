@@ -37,7 +37,7 @@
       integer(ip)           dsclst ( cdscsz, * )
       integer(ip)           ops    ( * )
       integer(ip)           dtypes ( * )
-      character*(*)         chrbuf
+      character(*)          chrbuf
       integer(ip)           cbegs  ( * )
       integer(ip)           cends  ( * )
       real(wp)              dvals  ( * )
@@ -362,7 +362,7 @@
       found = .false.
 
 
-      if (  ( ncnstr .lt. 0 ) .or. ( ncnstr .gt. maxcon )  ) then
+      if (  ( ncnstr < 0 ) .or. ( ncnstr > maxcon )  ) then
 
          call setmsg ( 'The number of constraints was #; valid '  // &
                        'range is 0:#'                              )
@@ -386,7 +386,7 @@
 
          if ( active(i) ) then
 
-            indexd  =  dsclst(ixtidx,i) .ne. ifalse
+            indexd  =  dsclst(ixtidx,i) /= ifalse
 
             if ( indexd ) then
                call insrti ( clidxs(i), idxset )
@@ -402,9 +402,9 @@
          fnd = .false.
          j   =  1
 
-         do while (  ( j .le. ncnstr ) .and. ( .not. fnd )  )
+         do while (  ( j <= ncnstr ) .and. ( .not. fnd )  )
 
-            if (   active(j) .and. ( clidxs(j) .eq. idxset(i) )  ) then
+            if (   active(j) .and. ( clidxs(j) == idxset(i) )  ) then
                fnd       =   .true.
                conmap(i) =   j
             else
@@ -420,7 +420,7 @@
 !     We finish up now if there are no indexed columns
 !     on which there are active constraints.
 !
-      if ( cardi(idxset) .eq. 0 ) then
+      if ( cardi(idxset) == 0 ) then
 
          call chkout ( 'ZZEKKEY' )
          return
@@ -441,7 +441,7 @@
       elim    = .false.
       eltidx  =  1
 
-      do while (  ( eltidx .le. cardi(idxset) )  .and. ( .not. elim )  )
+      do while (  ( eltidx <= cardi(idxset) )  .and. ( .not. elim )  )
 !
 !        Get the attribute list pointer for the current column.
 !
@@ -454,13 +454,13 @@
          maxptr       =  nrows
          i            =  1
 
-         do while (  ( i .le. ncnstr ) .and. ( .not. elim )  )
+         do while (  ( i <= ncnstr ) .and. ( .not. elim )  )
 !
 !           For each constraint, increase MINPTR or decrease MAXPTR
 !           if the constraint allows us to do so.
 !
 
-            if (  ( clidxs(i) .eq. col ) .and. ( active(i) )  )  then
+            if (  ( clidxs(i) == col ) .and. ( active(i) )  )  then
 !
 !              The Ith constraint is active and applies to this column.
 !
@@ -471,7 +471,7 @@
 !
                dtype  =  dsclst( typidx, i )
 
-               if ( dtype .eq. chr ) then
+               if ( dtype == chr ) then
                   b = cbegs(i)
                   e = cends(i)
                else
@@ -484,7 +484,7 @@
 !              1:NROWS, and MINPTR is less than or equal to MAXPTR.
 !
 
-               if ( ops(i) .eq. lt ) then
+               if ( ops(i) == lt ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less than the
@@ -499,10 +499,10 @@
 !                 to the specified value, MAXPTR will be set to zero.
 !
                   maxptr  =  min ( lastlt, maxptr )
-                  elim    =  maxptr .eq. 0
+                  elim    =  maxptr == 0
 
 
-               else if ( ops(i) .eq. le ) then
+               else if ( ops(i) == le ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less or equal to
@@ -514,10 +514,10 @@
                                         dvals(i),       ivals(i)    )
 
                   maxptr  =  min ( lastle, maxptr )
-                  elim    =  maxptr .eq. 0
+                  elim    =  maxptr == 0
 
 
-               else if ( ops(i) .eq. eq ) then
+               else if ( ops(i) == eq ) then
 !
 !                 Find both the pointer to the last row whose
 !                 value in this column is less than the value cited in
@@ -539,7 +539,7 @@
                                         dtypes(i),      chrbuf(b:e), &
                                         dvals(i),       ivals(i)    )
 
-                  if ( lastlt .lt. lastle ) then
+                  if ( lastlt < lastle ) then
 !
 !                    There is at least one row whose value in the
 !                    current column matches the value cited in the Ith
@@ -560,7 +560,7 @@
                   end if
 
 
-               else if ( ops(i) .eq. gt ) then
+               else if ( ops(i) == gt ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less or equal to
@@ -575,10 +575,10 @@
                                         dvals(i),       ivals(i)    )
 
                   minptr  =  max ( lastle + 1,  minptr )
-                  elim    =  lastle .eq. nrows
+                  elim    =  lastle == nrows
 
 
-               else if ( ops(i) .eq. ge ) then
+               else if ( ops(i) == ge ) then
 !
 !                 Find the index of the pointer to the last row
 !                 whose value in this column is less than the
@@ -593,7 +593,7 @@
                                         dvals(i),       ivals(i)    )
 
                   minptr  =  max ( lastlt + 1, minptr )
-                  elim    =  lastlt .eq. nrows
+                  elim    =  lastlt == nrows
 
                end if
 !
@@ -606,7 +606,7 @@
 !
 !           We've applied the Ith constraint, if it was active.
 !
-            if ( minptr .gt. maxptr ) then
+            if ( minptr > maxptr ) then
                elim  =  .true.
             end if
 
@@ -632,7 +632,7 @@
 
             nmatch  =  maxptr - minptr + 1
 
-            if (  nmatch .lt. ( endidx - begidx + 1 )  ) then
+            if (  nmatch < ( endidx - begidx + 1 )  ) then
 !
 !              This is our new key column, until a better one comes
 !              along.
@@ -682,13 +682,13 @@
 !
       do i = 1, ncnstr
 
-         if (  active(i)  .and.  ( clidxs(i) .eq. key )  )  then
+         if (  active(i)  .and.  ( clidxs(i) == key )  )  then
 
-            if (       ( ops(i) .eq. lt ) &
-                 .or.  ( ops(i) .eq. le ) &
-                 .or.  ( ops(i) .eq. eq ) &
-                 .or.  ( ops(i) .eq. ge ) &
-                 .or.  ( ops(i) .eq. gt )  ) then
+            if (       ( ops(i) == lt ) &
+                 .or.  ( ops(i) == le ) &
+                 .or.  ( ops(i) == eq ) &
+                 .or.  ( ops(i) == ge ) &
+                 .or.  ( ops(i) == gt )  ) then
 
 !
 !              This constraint is met by the candidate rows; we can

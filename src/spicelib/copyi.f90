@@ -173,7 +173,7 @@
 !
       call scardi ( moved, copy )
 
-      if ( card .gt. size ) then
+      if ( card > size ) then
 
          call excess ( card - size, 'cell' )
          call sigerr ( 'SPICE(CELLTOOSMALL)' )

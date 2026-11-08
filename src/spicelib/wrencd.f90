@@ -242,7 +242,7 @@
 !
 !     Local parameters
 !
-      character*(1)         quote
+      character(1)          quote
       parameter           ( quote = '''' )
 
       integer(ip)           maxenc
@@ -253,7 +253,7 @@
 !
 !     Local variables
 !
-      character*(maxenc)    work(wrksiz)
+      character(maxenc)     work(wrksiz)
 
       integer(ip)           i
       integer(ip)           iostat
@@ -274,7 +274,7 @@
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call setmsg ( 'The number of data items to be written was' // &
                        ' not positive: #.'                           )
@@ -294,7 +294,7 @@
 !     Each time the number of data items NITMS is reached, write
 !     out the encoded items in the workspace.
 !
-      do while ( itmbeg .le. n )
+      do while ( itmbeg <= n )
 !
 !        The number of items is either the size of the workspace, or
 !        the number of data items which remain to be processed, which
@@ -323,7 +323,7 @@
 !
 !           Check to see if we got a write error, IOSTAT .NE. 0.
 !
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error writing to logical unit #,'  // &
                              ' IOSTAT = #.'                       )

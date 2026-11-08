@@ -22,7 +22,7 @@
       implicit none
 
       integer(ip)        number
-      character*(*)      string
+      character(*)       string
 
       integer(ip)        minlen
       parameter        ( minlen = 5 )
@@ -157,13 +157,13 @@
 !
 !     Standard SPICE error handling.
 !
-      if ( len ( string ) .lt. minlen ) then
+      if ( len ( string ) < minlen ) then
          call chkin  ( 'PRTENC' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
          call chkout ( 'PRTENC' )
          return
 
-      else if ( number .lt. 0 ) then
+      else if ( number < 0 ) then
          call chkin  ( 'PRTENC' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
          call chkout ( 'PRTENC' )
@@ -187,7 +187,7 @@
 !
 !     More error handling.
 !
-      if ( num .gt. 0 ) then
+      if ( num > 0 ) then
          call chkin  ( 'PRTENC' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
          call chkout ( 'PRTENC' )
@@ -309,7 +309,7 @@
 !-&
 
 
-      if ( len ( string ) .lt. minlen ) then
+      if ( len ( string ) < minlen ) then
          call chkin  ( 'PRTDEC' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
          call chkout ( 'PRTDEC' )

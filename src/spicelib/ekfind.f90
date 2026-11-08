@@ -27,10 +27,10 @@
       include 'ekopcd.inc'
       include 'ekcnamsz.inc'
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           nmrows
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -722,8 +722,8 @@
 !
 !     Local variables
 !
-      character*(maxcln)    chrbuf
-      character*(maxcln)    eqryc
+      character(maxcln)     chrbuf
+      character(maxcln)     eqryc
 
       real(wp)              eqryd  ( maxqnm )
       real(wp)              numvls ( maxqnm )

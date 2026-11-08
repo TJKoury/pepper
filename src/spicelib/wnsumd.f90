@@ -380,7 +380,7 @@
 !
 !     Trivial case: no intervals. Return all zeros.
 !
-      if ( card .eq. 0 ) then
+      if ( card == 0 ) then
 
          meas   = 0.0_wp
          avg    = 0.0_wp
@@ -410,12 +410,12 @@
             sum     = sum         + m
             sumsqr  = sumsqr      + m*m
 
-            if ( m .lt. mshort ) then
+            if ( m < mshort ) then
                idxsml  = i
                mshort = m
             end if
 
-            if ( m .gt. mlong ) then
+            if ( m > mlong ) then
                idxlon  = i
                mlong = m
             end if

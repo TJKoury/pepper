@@ -120,7 +120,7 @@
 !
 !     Take care of the zero-denominator case first
 !
-      if ( denom .eq. 0.0_wp ) then
+      if ( denom == 0.0_wp ) then
          call chkin  ( 'RMAINI'                                       )
          call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )
@@ -132,7 +132,7 @@
       q   = num / denom
       rem = num - denom*q
 
-      if ( rem .lt. 0 ) then
+      if ( rem < 0 ) then
          q   = q   - 1
          rem = rem + denom
       end if

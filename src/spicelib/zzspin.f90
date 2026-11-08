@@ -26,14 +26,14 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         targ1
-      character*(*)         shape1
-      character*(*)         frame1
-      character*(*)         targ2
-      character*(*)         shape2
-      character*(*)         frame2
-      character*(*)         obsrvr
-      character*(*)         abcorr
+      character(*)          targ1
+      character(*)          shape1
+      character(*)          frame1
+      character(*)          targ2
+      character(*)          shape2
+      character(*)          frame2
+      character(*)          obsrvr
+      character(*)          abcorr
       integer(ip)           bods   (2)
       integer(ip)           frames (2)
       real(wp)              mxrad  (2)
@@ -271,8 +271,8 @@
 !
 !     Local Variables
 !
-      character*(shapln)    shap1
-      character*(shapln)    shap2
+      character(shapln)     shap1
+      character(shapln)     shap2
 
       real(wp)              axes1 (3)
       real(wp)              axes2 (3)
@@ -292,7 +292,7 @@
       integer(ip)           spshpn
       parameter           ( spshpn = 2 )
 
-      character*(32)        svshap ( spshpn )
+      character(32)         svshap ( spshpn )
 
 !
 !     Define integer ID parameters for the shape names in
@@ -378,9 +378,9 @@
 !
 !     Confirm the three bodies have unique IDs.
 !
-      if      (       ( obs     .eq. bods(1) ) &
-                 .or. ( obs     .eq. bods(2) ) &
-                 .or. ( bods(1) .eq. bods(2)) ) then
+      if      (       ( obs     == bods(1) ) &
+                 .or. ( obs     == bods(2) ) &
+                 .or. ( bods(1) == bods(2)) ) then
 
          call setmsg( 'All three objects associated ' &
             //        'with an ANGULAR SEPARATION calculation ' &
@@ -418,7 +418,7 @@
 !
       shp1 = isrchc( shap1, spshpn, svshap)
 
-      if ( shp1 .eq. 0 ) then
+      if ( shp1 == 0 ) then
 
          call setmsg ( 'The body shape, # is not recognized.  ' &
             //         'Supported quantities are: ' &
@@ -428,11 +428,11 @@
          call chkout ( 'ZZSPIN'                              )
          return
 
-      else if ( shp1 .eq. point ) then
+      else if ( shp1 == point ) then
 
          mxrad(1) = 0.0_wp
 
-      else if ( shp1 .eq. sphere ) then
+      else if ( shp1 == sphere ) then
 
          call zzgftreb( bods(1), axes1 )
 
@@ -469,7 +469,7 @@
 !
       shp2 = isrchc( shap2, spshpn, svshap)
 
-      if ( shp2 .eq. 0 ) then
+      if ( shp2 == 0 ) then
 
          call setmsg ( 'The body shape, # is not '                 // &
                        'recognized.  Supported quantities are: '   // &
@@ -479,11 +479,11 @@
          call chkout( 'ZZSPIN'                                      )
          return
 
-      else if ( shp2 .eq. point ) then
+      else if ( shp2 == point ) then
 
          mxrad(2) = 0.0_wp
 
-      else if ( shp2 .eq. sphere ) then
+      else if ( shp2 == sphere ) then
 
          call zzgftreb( bods(2), axes2 )
 
@@ -521,7 +521,7 @@
 !     This check does not apply to POINT or SPHERE shapes.
 !
 
-      if ( (shp1 .ne. point)  .and. (shp1 .ne. sphere) ) then
+      if ( (shp1 /= point)  .and. (shp1 /= sphere) ) then
 
          call namfrm ( frame1, frames(1) )
 
@@ -537,7 +537,7 @@
 
          end if
 
-         if ( bods(1) .ne. ctr1 ) then
+         if ( bods(1) /= ctr1 ) then
 
             call setmsg ( 'The reference frame #1 associated with ' // &
                       'target body #2 is not centered on #2. The '  // &
@@ -554,7 +554,7 @@
       end if
 
 
-      if ( (shp2 .ne. point)  .and. (shp2 .ne. sphere) ) then
+      if ( (shp2 /= point)  .and. (shp2 /= sphere) ) then
 
          call namfrm ( frame2, frames(2) )
 
@@ -570,7 +570,7 @@
 
          end if
 
-         if ( bods(2) .ne. ctr2 ) then
+         if ( bods(2) /= ctr2 ) then
 
             call setmsg ( 'The reference frame #1 associated with ' // &
                       'target body #2 is not centered on #2. The '  // &

@@ -149,7 +149,7 @@
 !     Compare squares of magnitudes, rather than magnitudes, for
 !     efficiency.
 !
-      if ( pmag2 .gt. r2 ) then
+      if ( pmag2 > r2 ) then
          return
       end if
 
@@ -157,13 +157,13 @@
 
       vmag2 = vdot(vertex,vertex)
 
-      if ( vmag2 .gt. r2 ) then
+      if ( vmag2 > r2 ) then
 !
 !        If the magnitude of the vertex exceeds R, the vertex is
 !        outside the sphere. Above, we have compared squares of
 !        magnitudes for efficiency.
 !
-         if ( cpar .gt. 0.0_wp ) then
+         if ( cpar > 0.0_wp ) then
 !
 !           The ray points away from the sphere; there can be no
 !           intersection.
@@ -179,7 +179,7 @@
          xpt(2) = perp(2) - s*udir(2)
          xpt(3) = perp(3) - s*udir(3)
 
-      else if ( vmag2 .lt. r2 ) then
+      else if ( vmag2 < r2 ) then
 !
 !        The vertex is inside the sphere. We can calculate the exit
 !        point by using PERP as a vertex.

@@ -23,7 +23,7 @@
 ! $ Declarations
 
       implicit none
-      character*(*)         word
+      character(*)          word
       integer(ip)           m
       integer(ip)           m2
 
@@ -417,7 +417,7 @@
 !
 !     Check and save divisor.
 !
-      if ( m .le. 0 .or. m .gt. maxdiv ) then
+      if ( m <= 0 .or. m > maxdiv ) then
 
          call chkin  ( 'ZZSHSH'                                      )
          call setmsg ( 'The input hash function divisor was not '    // &
@@ -542,7 +542,7 @@
 !
 !     Check if divisor was initialized by a prior call to ZZSHSH.
 !
-      if ( divisr .eq. -1 ) then
+      if ( divisr == -1 ) then
 
          zzhash = 0
 
@@ -564,14 +564,14 @@
 
       do i = 1, length
 
-         if ( ichar(word(i:i)) .eq. blank ) then
+         if ( ichar(word(i:i)) == blank ) then
 
             zzhash = mod ( f*base, divisr ) + 1
 
 !
 !           A negative value for ZZHASH indicates a serious problem.
 !
-            if( zzhash .lt. 0 ) then
+            if( zzhash < 0 ) then
 
                call chkin  ( 'ZZHASH'                             )
                call setmsg ( 'The ZZHASH function calculated a '  // &
@@ -597,7 +597,7 @@
 !
 !     A negative value for ZZHASH indicates a serious problem.
 !
-      if( zzhash .lt. 0 ) then
+      if( zzhash < 0 ) then
 
          call chkin  ( 'ZZHASH'                              )
          call setmsg ( 'The ZZHASH function calculated a '  // &
@@ -848,7 +848,7 @@
 !
 !     Check divisor.
 !
-      if ( m2 .le. 0 .or. m2 .gt. maxdiv ) then
+      if ( m2 <= 0 .or. m2 > maxdiv ) then
 
          zzhash2 = 0
 
@@ -871,14 +871,14 @@
 
       do i = 1, length
 
-         if ( ichar(word(i:i)) .eq. blank ) then
+         if ( ichar(word(i:i)) == blank ) then
 
             zzhash2 = mod ( f*base, m2 ) + 1
 
 !
 !           A negative value for ZZHASH2 indicates a serious problem.
 !
-            if( zzhash2 .lt. 0 ) then
+            if( zzhash2 < 0 ) then
 
                call chkin  ( 'ZZHASH2'                            )
                call setmsg ( 'The ZZHASH2 function calculated a ' // &
@@ -904,7 +904,7 @@
 !
 !     A negative value for ZZHASH2 indicates a serious problem.
 !
-      if( zzhash2 .lt. 0 ) then
+      if( zzhash2 < 0 ) then
 
          call chkin  ( 'ZZHASH2'                             )
          call setmsg ( 'The ZZHASH2 function calculated a ' // &

@@ -198,7 +198,7 @@
 !
       tsize  =  zzektrsz ( handle, tree )
 
-      if ( tsize .gt. 0 ) then
+      if ( tsize > 0 ) then
 
          call setmsg ( 'Tree has size #; should be empty.' // &
                        'EK = #; TREE = #.'                 )
@@ -255,11 +255,11 @@
       d      =  1
       s      =  1
 
-      do while ( tsize .lt. size )
+      do while ( tsize < size )
 
          d  =  d  +  1
 
-         if ( d .eq. 2 ) then
+         if ( d == 2 ) then
 
             s  =  mxkeyr
 
@@ -283,7 +283,7 @@
 !
 !     If the tree must be deeper than we expected, we've a problem.
 !
-      if ( d .gt. trmxdp ) then
+      if ( d > trmxdp ) then
 
          call setmsg ( 'Tree has depth #; max supported depth is #.' // &
                        'EK = #; TREE = #.'                           )
@@ -334,12 +334,12 @@
       level             =  1
       basidx            =  0
 
-      do while ( level .gt. 0 )
+      do while ( level > 0 )
 !
 !        At this point, LEVEL, NEXT, NODE, SUBSIZ and BASIDX are set.
 !
 
-         if ( next .eq. 1 ) then
+         if ( next == 1 ) then
 !
 !           This node has not been visited yet.  We'll fill in this
 !           node before proceeding to fill in its descendants.  The
@@ -355,13 +355,13 @@
 !           not a leaf node, the number of subtrees must be between
 !           MNKIDC and MXKIDC.
 !
-            if ( level .eq. 1 ) then
+            if ( level == 1 ) then
 !
 !              We're working on the root.  The number of subtrees is
 !              anywhere between 0 and MXKIDR, inclusive.  We'll create
 !              a tree with the minimum number of subtrees of the root.
 !
-               if ( d .gt. 1 ) then
+               if ( d > 1 ) then
 !
 !                 We'll find the number of subtrees of maximum size
 !                 that we would need to hold the non-root keys of the
@@ -450,17 +450,17 @@
 !                 of keys in the subtree between the Ith key and its
 !                 predecessor in the root.
 !
-                  if ( i .eq. 1 ) then
+                  if ( i == 1 ) then
                      npred = 0
                   else
                      npred = page( trkeyr+i-1 )
                   end if
 
-                  if ( d .gt. 1 ) then
+                  if ( d > 1 ) then
 !
 !                    The tree contains subtrees.
 !
-                     if ( i .le. nbig ) then
+                     if ( i <= nbig ) then
                         key   =  npred  + bigsiz + 1
                      else
                         key   =  npred  + bigsiz
@@ -508,7 +508,7 @@
                call zzekpgwi ( handle, tree, page )
 
 
-            else if ( level .lt. d ) then
+            else if ( level < d ) then
 !
 !              The current node is a non-leaf child node.
 !
@@ -551,7 +551,7 @@
 !              since the smallest possible number of subtrees is
 !              MNKIDC.
 !
-               if ( reqsiz .le. maxsiz ) then
+               if ( reqsiz <= maxsiz ) then
 !
 !                 Decide how many large and small subtrees we need.
 !
@@ -622,13 +622,13 @@
 !                 of keys in the subtree between the Ith key and its
 !                 predecessor in the current node.
 !
-                  if ( i .eq. 1 ) then
+                  if ( i == 1 ) then
                      npred = basidx
                   else
                      npred = basidx + page( trkeyc+i-1 )
                   end if
 
-                  if ( i .le. nbig ) then
+                  if ( i <= nbig ) then
                      key   =  npred  + bigsiz + 1
                   else
                      key   =  npred  + bigsiz
@@ -665,7 +665,7 @@
 !           Unless the current node is a leaf node, prepare to visit
 !           the first child of the current node.
 !
-            if ( level .lt. d ) then
+            if ( level < d ) then
 !
 !              Push our current state.
 !
@@ -680,7 +680,7 @@
 !              NEXT is already set to 1.  BASIDX is set, since the
 !              base index of the first child is that of the parent.
 !
-               if ( level .eq. 1 ) then
+               if ( level == 1 ) then
                   kidbas  =  trkidr
                else
                   kidbas  =  trkidc
@@ -691,7 +691,7 @@
                subsiz  =  bigsiz
 
 
-            else if ( level .gt. 1 ) then
+            else if ( level > 1 ) then
 !
 !              The current node is a child leaf node.  There are no
 !              calculations to do; we simply assign keys and pointers,
@@ -720,7 +720,7 @@
 !
                level  =  level - 1
 
-               if ( level .ge. 1 ) then
+               if ( level >= 1 ) then
 
                   node    =  stnode ( level )
                   nkeys   =  stnkey ( level )
@@ -755,14 +755,14 @@
 !           The current node has been visited already.  Visit the
 !           next child, if there is one.
 !
-            if ( next .le. nkids ) then
+            if ( next <= nkids ) then
 !
 !              Prepare to visit the next child of the current node.
 !
                stnext ( level )   =   next  +  1
 
 
-               if ( level .eq. 1 ) then
+               if ( level == 1 ) then
                   kidbas  =  trkidr
                else
                   kidbas  =  trkidc
@@ -772,14 +772,14 @@
                node    =  page ( kidbas + next )
 
 
-               if ( next .le. nbig ) then
+               if ( next <= nbig ) then
                   subsiz  =  stlsiz(level)
                else
                   subsiz  =  stlsiz(level) - 1
                end if
 
 
-               if ( next .le. nbig+1 ) then
+               if ( next <= nbig+1 ) then
 
                   basidx  =      stnbas(level) &
                              + ( next-1 ) * stlsiz(level) &
@@ -806,7 +806,7 @@
 !
                level   =  level - 1
 
-               if ( level .ge. 1 ) then
+               if ( level >= 1 ) then
 
                   node    =  stnode ( level )
                   nkeys   =  stnkey ( level )

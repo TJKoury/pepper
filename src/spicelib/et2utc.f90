@@ -21,9 +21,9 @@
       implicit none
 
       real(wp)              et
-      character*(*)         format
+      character(*)          format
       integer(ip)           prec
-      character*(*)         utcstr
+      character(*)          utcstr
 
 ! $ Brief_I/O
 !
@@ -408,10 +408,10 @@
 !     Local variables
 !
 
-      character*(4)         fmt
-      character*(80)        endstr
-      character*(80)        str
-      character*(80)        fract
+      character(4)          fmt
+      character(80)         endstr
+      character(80)         str
+      character(80)         fract
 
       real(wp)              tai
       real(wp)              frcsec
@@ -441,7 +441,7 @@
 
       integer(ip)           i
 
-      character*3           mthnam   ( 12 )
+      character(3)          mthnam   ( 12 )
 
 
 !
@@ -479,11 +479,11 @@
 !
       call ucase ( format, fmt )
 
-      if (       fmt .ne. 'J' &
-           .and. fmt .ne. 'C' &
-           .and. fmt .ne. 'D' &
-           .and. fmt .ne. 'ISOD' &
-           .and. fmt .ne. 'ISOC' ) then
+      if (       fmt /= 'J' &
+           .and. fmt /= 'C' &
+           .and. fmt /= 'D' &
+           .and. fmt /= 'ISOD' &
+           .and. fmt /= 'ISOC' ) then
 
          call setmsg ( 'ET2UTC: Format specification for output ' &
          //            'time string is not recognized. Valid ' &
@@ -506,7 +506,7 @@
 !     If the output is Julian Date, we're ready to go. Remember that
 !     the day part of Julian Date already has seven digits built in.
 !
-      if ( fmt .eq. 'J' ) then
+      if ( fmt == 'J' ) then
 
          tvec(1) = et
 
@@ -564,8 +564,8 @@
 !
       whlsec = aint ( tai )
 
-      if (        ( tai .lt. 0.0_wp  ) &
-            .and. ( tai .ne. whlsec )  )  then
+      if (        ( tai < 0.0_wp  ) &
+            .and. ( tai /= whlsec )  )  then
 
          whlsec = whlsec - 1.0_wp
 
@@ -588,7 +588,7 @@
 !     If a carry occurred, the fraction becomes zero, and
 !     we must increment WHLSEC.
 !
-      if (  frcsec  .eq.  scale  ) then
+      if (  frcsec  ==  scale  ) then
 
          whlsec = whlsec + 1.0_wp
          frcsec = 0.0_wp
@@ -607,7 +607,7 @@
 !
       tvec(1) = whlsec
 
-      if ( fmt .eq. 'C' .or. fmt .eq. 'ISOC' ) then
+      if ( fmt == 'C' .or. fmt == 'ISOC' ) then
 
          call ttrans ( 'TAI', 'YMD', tvec )
 
@@ -629,7 +629,7 @@
 !        string has a fixed size.  We set up that portion of the
 !        string now.  First fill in the month...
 !
-         if ( fmt .eq. 'C' ) then
+         if ( fmt == 'C' ) then
             endstr      = ' MMM 00 00:00:00'
             endstr(2:4) = mthnam(month)
 !
@@ -686,7 +686,7 @@
 !        minutes and seconds appear in the same location in both
 !        day of year and calendar format of strings.
 !
-         if ( fmt .eq. 'D' ) then
+         if ( fmt == 'D' ) then
             endstr = '-000 // 00:00:00'
             eday   = 4
             bday   = eday - ndigit(day) + 1
@@ -720,7 +720,7 @@
 !
 !     Append the fractional part of the seconds component.
 !
-      if ( myprec .gt. 0 ) then
+      if ( myprec > 0 ) then
 
 !
 !        DPSTRF gives MYPREC significant digits in the output,
@@ -751,22 +751,22 @@
 !     we'd get confusing day of year formats like
 !     999 A.D.-019 // 12:13:18.
 !
-      if ( year .ge. 1000 ) then
+      if ( year >= 1000 ) then
 
          call   intstr( year, str )
 
-      else if ( year .gt. 0 ) then
+      else if ( year > 0 ) then
 
          call intstr ( year,      str )
 
-         if ( fmt .eq. 'C' .or. fmt .eq. 'D' ) then
+         if ( fmt == 'C' .or. fmt == 'D' ) then
             call suffix ( 'A.D.', 1, str )
             endstr(1:1) = ' '
          end if
 
-      else if ( year .le. 0 ) then
+      else if ( year <= 0 ) then
 
-         if ( fmt .eq. 'C' .or. fmt .eq. 'D' ) then
+         if ( fmt == 'C' .or. fmt == 'D' ) then
             year = -year + 1
 
             call intstr ( year,      str )

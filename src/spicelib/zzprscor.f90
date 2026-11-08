@@ -25,7 +25,7 @@
 !
 ! $ Declarations
 
-      character*(*)         abcorr
+      character(*)          abcorr
       logical               attblk ( * )
 
       include 'zzabcorr.inc'
@@ -169,8 +169,8 @@
 !
 !     Local variables
 !
-      character*(corlen)    corlst ( nabcor )
-      character*(corlen)    tmpcor
+      character(corlen)     corlst ( nabcor )
+      character(corlen)     tmpcor
 
       integer(ip)           i
       integer(ip)           loc
@@ -276,7 +276,7 @@
 !
       loc = bsrchc ( tmpcor, nabcor, corlst )
 
-      if ( loc .eq. 0 ) then
+      if ( loc == 0 ) then
 
          call chkin  ( 'ZZPRSCOR' )
          call setmsg ( 'Aberration correction specification # is not '// &

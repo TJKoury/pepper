@@ -25,7 +25,7 @@
       integer(ip)           handle
       real(wp)              descr    ( 5 )
       real(wp)              et
-      character*(*)         ref
+      character(*)          ref
       real(wp)              state    ( 6 )
       integer(ip)           center
 
@@ -230,7 +230,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svref
+      character(frnmln)     svref
       integer(ip)           svirfr
 
       logical               first
@@ -285,13 +285,13 @@
 !
       call zznamfrm ( svctr1, svref, svirfr, ref, irfreq )
 
-      if ( irfreq .eq. 0 ) then
+      if ( irfreq == 0 ) then
 
          call setmsg ( 'No support for frame #.' )
          call errch  ( '#', ref                  )
          call sigerr ( 'SPICE(SPKREFNOTSUPP)'    )
 
-      else if ( irfreq .ne. irf ) then
+      else if ( irfreq /= irf ) then
 
          call spkpvn ( handle, descr,  et, irf, tstate, center )
          call frmchg ( irf,    irfreq, et,              xform  )

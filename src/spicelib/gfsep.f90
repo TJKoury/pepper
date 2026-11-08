@@ -40,15 +40,15 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         targ1
-      character*(*)         shape1
-      character*(*)         frame1
-      character*(*)         targ2
-      character*(*)         shape2
-      character*(*)         frame2
-      character*(*)         abcorr
-      character*(*)         obsrvr
-      character*(*)         relate
+      character(*)          targ1
+      character(*)          shape1
+      character(*)          frame1
+      character(*)          targ2
+      character(*)          shape2
+      character(*)          frame2
+      character(*)          abcorr
+      character(*)          obsrvr
+      character(*)          relate
       real(wp)              refval
       real(wp)              adjust
       real(wp)              step
@@ -1123,8 +1123,8 @@
 !
 !     Quantity definition parameter arrays:
 !
-      character*(lnsize)    qcpars ( qnpars )
-      character*(lnsize)    qpnams ( qnpars )
+      character(lnsize)     qcpars ( qnpars )
+      character(lnsize)     qpnams ( qnpars )
 
       real(wp)              qdpars ( qnpars )
 
@@ -1142,7 +1142,7 @@
       call chkin ( 'GFSEP' )
 
 
-      if ( mw .lt. 2 .or. .not. even(mw) ) then
+      if ( mw < 2 .or. .not. even(mw) ) then
 
          call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2 and an even value.'            )
@@ -1154,7 +1154,7 @@
       end if
 
 
-      if ( nw .lt. nwsep ) then
+      if ( nw < nwsep ) then
 
          call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                 )
@@ -1167,7 +1167,7 @@
       end if
 
 
-      if ( sized(result) .lt. 2 .or. .not. even( sized(result) ) ) then
+      if ( sized(result) < 2 .or. .not. even( sized(result) ) ) then
 
          call setmsg ( 'Result window size was #; size must be ' &
          //            'at least 2 and an even value.'             )

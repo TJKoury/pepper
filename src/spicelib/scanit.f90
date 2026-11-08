@@ -24,10 +24,10 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       integer(ip)           room
       integer(ip)           nmarks
-      character*(*)         marks   ( * )
+      character(*)          marks   ( * )
       integer(ip)           mrklen  ( * )
       integer(ip)           pnters  ( * )
       integer(ip)           start
@@ -394,7 +394,7 @@
 !
 !     Local variables
 !
-      character*(1)         letter
+      character(1)          letter
 
       integer(ip)           backup
       integer(ip)           eblock
@@ -816,7 +816,7 @@
 !
 !     We handle the case where NMARKS is non-positive separately.
 !
-      if ( nmarks .le. 0 ) then
+      if ( nmarks <= 0 ) then
 
          pnters(1) = 0
          pnters(2) = 0
@@ -914,7 +914,7 @@
          mrklen(i) = rtrim( marks(i)      )
          this1     = ichar( marks(i)(1:1) )
 
-         if ( this1 .ne. last1 ) then
+         if ( this1 /= last1 ) then
 
 !
 !           We need to record the address of the end of the last
@@ -1417,7 +1417,7 @@
       known  = .true.
       start  =  max ( 1, start )
 
-      do while ( start .le. last )
+      do while ( start <= last )
 
 !
 !        Get the numeric code for this letter, and look up
@@ -1435,7 +1435,7 @@
 !        If TEST is greater than FINISH, then there is a range of
 !        markers that start with this letter.
 !
-         do while ( test .gt. finish )
+         do while ( test > finish )
 
 !
 !           Look up the length of the next marker to test for
@@ -1450,7 +1450,7 @@
 !           references when we compare the current candidate mark with
 !           the substring having the same length and starting at START.
 !
-            if ( stop .gt. last ) then
+            if ( stop > last ) then
 
                test = test - 1
 
@@ -1459,7 +1459,7 @@
 !              OK. The substring reference STRING(START:STOP) is
 !              legal.  See if it is equal to the current test mark.
 !
-               equal = marks(test)(1:l) .eq. string(start:stop)
+               equal = marks(test)(1:l) == string(start:stop)
 
 !
 !              If it isn't equal, just set up to test the next mark.
@@ -1477,7 +1477,7 @@
 !                 now.
 !
                   if (       (        .not. known ) &
-                       .and. ( ntokns .eq.  room  ) ) then
+                       .and. ( ntokns ==  room  ) ) then
 
                      return
                   end if
@@ -1488,11 +1488,11 @@
 !                 is a space, we need to collect all of the consecutive
 !                 blanks beginning with the one at the START position.
 !
-                  if ( marks(test) .eq. ' ' ) then
+                  if ( marks(test) == ' ' ) then
 
                      stop = ncpos(string, ' ', start) - 1
 
-                     if ( stop .lt. 0 ) then
+                     if ( stop < 0 ) then
                         stop = last
                      end if
 
@@ -1525,7 +1525,7 @@
 !                 to continue scanning on a subsequent call
 !                 and return.
 !
-                  if ( ntokns .eq. room ) then
+                  if ( ntokns == room ) then
                      start = start + 1
                      return
                   end if

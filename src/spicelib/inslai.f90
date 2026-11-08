@@ -220,7 +220,7 @@
 !     is not out of range. If it is, signal an error and bail out.
 !
 
-      if ( ( loc .lt. 1 ) .or. ( loc .gt. size+1 ) ) then
+      if ( ( loc < 1 ) .or. ( loc > size+1 ) ) then
 
          call setmsg ( 'Location was *.'     )
          call errint ( '*', loc              )
@@ -235,7 +235,7 @@
 !     If the number of elements to be inserted is greater than zero,
 !     insert them. If not, do not modify the array.
 !
-      if ( ne .gt. 0 ) then
+      if ( ne > 0 ) then
 
 !
 !        Move the trailing elements back to make room for the new ones.

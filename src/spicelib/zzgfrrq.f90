@@ -29,7 +29,7 @@
       real(wp)              et
       integer(ip)           targ
       integer(ip)           obs
-      character*(*)         abcorr
+      character(*)          abcorr
       real(wp)              value
 
 ! $ Brief_I/O
@@ -169,7 +169,7 @@
       real(wp)              lt
       real(wp)              state    ( 6 )
 
-      character*(5)         ref
+      character(5)          ref
 
 !
 !     Standard SPICE error handling.

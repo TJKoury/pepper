@@ -227,7 +227,7 @@
 !     The degree of the equation is zero unless at least one of the
 !     second or first degree coefficients is non-zero.
 !
-      if (  ( a .eq. 0.0_wp )  .and.  ( b .eq. 0.0_wp )  )  then
+      if (  ( a == 0.0_wp )  .and.  ( b == 0.0_wp )  )  then
 
          call setmsg ( 'Both 1st and 2nd degree coefficients are zero.')
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
@@ -243,9 +243,9 @@
       scale  = max ( abs(a), abs(b), abs(c) )
 
 
-      zeroed =      (  ( a .ne. 0.0_wp ) .and. ( a / scale .eq. 0.0_wp )  ) &
-               .or. (  ( b .ne. 0.0_wp ) .and. ( b / scale .eq. 0.0_wp )  ) &
-               .or. (  ( c .ne. 0.0_wp ) .and. ( c / scale .eq. 0.0_wp )  )
+      zeroed =      (  ( a /= 0.0_wp ) .and. ( a / scale == 0.0_wp )  ) &
+               .or. (  ( b /= 0.0_wp ) .and. ( b / scale == 0.0_wp )  ) &
+               .or. (  ( c /= 0.0_wp ) .and. ( c / scale == 0.0_wp )  )
 
 
       if ( .not. zeroed ) then
@@ -266,7 +266,7 @@
 !     If the second-degree coefficient is non-zero, we have a bona fide
 !     quadratic equation, as opposed to a linear equation.
 !
-      if ( sqr .ne. 0.0_wp ) then
+      if ( sqr /= 0.0_wp ) then
 !
 !        Compute the discriminant.
 !
@@ -276,7 +276,7 @@
 !        A non-negative discriminant indicates that the roots are
 !        real.
 !
-         if ( discrm .ge. 0.0_wp ) then
+         if ( discrm >= 0.0_wp ) then
 !
 !           The imaginary parts of both roots are zero.
 !
@@ -289,7 +289,7 @@
 !           first and then divide CON/SQR by it to obtain the smaller
 !           root.
 !
-            if ( lin .lt. 0.0_wp ) then
+            if ( lin < 0.0_wp ) then
 !
 !              ROOT1 will contain the root of larger magnitude.
 !
@@ -297,7 +297,7 @@
 
                root2(1) =  ( con / sqr )  /   root1(1)
 
-            else if ( lin .gt. 0.0_wp ) then
+            else if ( lin > 0.0_wp ) then
 !
 !              ROOT2 will contain the root of larger magnitude.
 !
@@ -336,7 +336,7 @@
 !     If the second-degree coefficient is zero, we actually have a
 !     linear equation.
 !
-      else if ( lin .ne. 0.0_wp ) then
+      else if ( lin /= 0.0_wp ) then
 
          root1(1) =  - con / lin
          root1(2) =    0.0_wp

@@ -24,7 +24,7 @@
       include 'ektype.inc'
 
       integer(ip)           handle
-      character*(*)         access
+      character(*)          access
 
 ! $ Brief_I/O
 !
@@ -158,7 +158,7 @@
 !
       call dasrdi ( handle, eparch, eparch, id )
 
-      if ( id .ne. archid ) then
+      if ( id /= archid ) then
 
          call setmsg ( 'File # has architecture #, which is invalid '// &
                        'for paged access.  You are using EK software '// &
@@ -189,7 +189,7 @@
 !
       call daslla ( handle, lastc, lastd, lasti )
 
-      if ( lastc .gt. topc ) then
+      if ( lastc > topc ) then
 
          call setmsg ( 'File # has last char address #; `top'' = #.' )
          call errhan ( '#',   handle                                 )
@@ -199,7 +199,7 @@
          call chkout ( 'ZZEKPGCH'                                    )
          return
 
-      else if ( lastd .gt. topd ) then
+      else if ( lastd > topd ) then
 
          call setmsg ( 'File # has last d.p. address #; `top'' = #.' )
          call errhan ( '#',   handle                                 )
@@ -209,7 +209,7 @@
          call chkout ( 'ZZEKPGCH'                                    )
          return
 
-      else if ( lasti .gt. topi ) then
+      else if ( lasti > topi ) then
 
          call setmsg ( 'File # has last int. address #; `top'' = #.' )
          call errhan ( '#',   handle                                 )

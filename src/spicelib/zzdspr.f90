@@ -381,7 +381,7 @@
 !
 !        use next line for gsfc version and perturbed inclination
 !
-         if (inclp.ge.0.2_wp) then
+         if (inclp>=0.2_wp) then
 
             ph     = ph/sinip
             pgh    = pgh - cosip*ph
@@ -409,8 +409,8 @@
 !           NODEP used without a trigonometric function ahead
 !
 
-            if ( (nodep  .lt. 0.0_wp)      .and. &
-                 (opmode .eq. afspc)  )   then
+            if ( (nodep  < 0.0_wp)      .and. &
+                 (opmode == afspc)  )   then
                nodep = nodep + twopi()
             end if
 
@@ -425,14 +425,14 @@
 !           NODEP used without a trigonometric function ahead
 !
 
-            if ( (nodep .lt. 0.0_wp)  .and. &
-                 (opmode .eq. afspc)  )  then
+            if ( (nodep < 0.0_wp)  .and. &
+                 (opmode == afspc)  )  then
                nodep = nodep + twopi()
             end if
 
-            if (dabs(xnoh-nodep) .gt. pi()) then
+            if (dabs(xnoh-nodep) > pi()) then
 
-               if (nodep .lt. xnoh) then
+               if (nodep < xnoh) then
                   nodep = nodep+twopi()
                else
                   nodep = nodep-twopi()

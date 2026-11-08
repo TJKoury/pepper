@@ -23,7 +23,7 @@
       integer(ip)           handle
       integer(ip)           bufsiz
       integer(ip)           n
-      character*(*)         buffer(*)
+      character(*)          buffer(*)
       logical               done
 
 ! $ Brief_I/O
@@ -631,11 +631,11 @@
 !
 !     Local variables
 !
-      character*(1)         ch
-      character*(mxcrec)    crecrd
-      character*(1)         eocmrk
-      character*(1)         eolmrk
-      character*(ifnlen)    ifname
+      character(1)          ch
+      character(mxcrec)     crecrd
+      character(1)          eocmrk
+      character(1)          eolmrk
+      character(ifnlen)     ifname
 
       integer(ip)           curpos
       integer(ip)           daflun
@@ -747,7 +747,7 @@
 !
 !     Check for a nonpositive BUFFER size.
 !
-      if ( bufsiz .le. 0 ) then
+      if ( bufsiz <= 0 ) then
 
          call setmsg ( 'The output buffer size was not positive: #.' )
          call errint ( '#', bufsiz                                   )
@@ -774,7 +774,7 @@
 !     If we have extracted comments from at least one file and we
 !     didn't finish, check to see if HANDLE is in the file table.
 !
-      if ( nfiles .gt. 0 ) then
+      if ( nfiles > 0 ) then
 
          index = isrchi ( handle, nfiles, filhan )
 
@@ -787,7 +787,7 @@
 !     Check to see if we found HANDLE in the file handle table. If
 !     we did, INDEX will be > 0.
 !
-      if ( index .gt. 0 ) then
+      if ( index > 0 ) then
 !
 !        Set the record number and the starting position accordingly,
 !        i.e., where we left off when we last read from that file.
@@ -823,7 +823,7 @@
 !
          ncomr = fward - 2
 
-         if ( ncomr .gt. 0 ) then
+         if ( ncomr > 0 ) then
 !
 !           The starting record number is the number of comment records
 !           + 1 where the 1 skips the file record.
@@ -831,14 +831,14 @@
             empty  = .true.
             found  = .false.
 
-            do while (    ( ncomr .gt. 0 ) .and. ( .not. found ) &
+            do while (    ( ncomr > 0 ) .and. ( .not. found ) &
                       .and. empty                                )
 
                recno = ncomr + 1
 
                read ( daflun, rec=recno, iostat=iostat ) crecrd
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                   call setmsg ( 'Error reading comment area of' // &
                                 ' binary file named ''#''.'     // &
@@ -856,7 +856,7 @@
 !
                eocpos = cpos ( crecrd(1:mxcrec), eocmrk, 1 )
 
-               if ( eocpos .gt. 0 ) then
+               if ( eocpos > 0 ) then
 
                   found = .true.
 
@@ -864,7 +864,7 @@
 
                   nelpos = ncpos ( crecrd(1:mxcrec), eolmrk, 1 )
 
-                  if ( nelpos .ne. 0 ) then
+                  if ( nelpos /= 0 ) then
 
                      empty = .false.
 
@@ -911,7 +911,7 @@
 !        then we have no comments to read, so set the number of comments
 !        to zero, set DONE to .TRUE., check out,  and return.
 !
-         if ( ncomc .eq. 0 ) then
+         if ( ncomc == 0 ) then
 
             n    = 0
             done = .true.
@@ -930,7 +930,7 @@
 !
 !     Begin reading the comment area into the buffer.
 !
-      if ( handle .ne. lsthan ) then
+      if ( handle /= lsthan ) then
 !
 !        If the current DAF handle is not the same as the handle on
 !        the last call, then we need to read in the appropriate record
@@ -939,7 +939,7 @@
 !
          read ( daflun, rec=recno, iostat=iostat ) crecrd
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Error reading comment area of binary' // &
                           ' file named FILE.  IOSTAT = *.'        )
@@ -964,7 +964,7 @@
       numcom = 0
       done   = .false.
 
-      do while ( ( i .le. bufsiz ) .and. ( .not. done ) )
+      do while ( ( i <= bufsiz ) .and. ( .not. done ) )
 
          eol = .false.
          do while ( .not. eol )
@@ -972,10 +972,10 @@
             nchars = nchars + 1
             ch     = crecrd(curpos:curpos)
 
-            if ( ichar( ch ) .eq. inteol ) then
+            if ( ichar( ch ) == inteol ) then
 
                eol           = .true.
-               if ( j .le. linlen ) then
+               if ( j <= linlen ) then
 
                   buffer(i)(j:) = ' '
 
@@ -983,7 +983,7 @@
 
             else
 
-               if ( j .le. linlen ) then
+               if ( j <= linlen ) then
 
                   buffer(i)(j:j) = ch
                   j              = j + 1
@@ -1007,12 +1007,12 @@
 !           read in the next one and reset the current position.
 !           Otherwise, just increment the current position.
 !
-            if ( curpos .eq. mxcrec ) then
+            if ( curpos == mxcrec ) then
 
                recno = recno + 1
                read ( daflun, rec=recno, iostat=iostat ) crecrd
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                   call setmsg ( 'Error reading comment area of'  // &
                                 ' binary file named #.'          // &
@@ -1038,7 +1038,7 @@
 !           has not exceeded the number of comment characters in the
 !           comment area of the DAF file. This should never happen.
 !
-            if ( nchars .gt. ncomc ) then
+            if ( nchars > ncomc ) then
 
                call setmsg ( 'Count of comment characters (#)'     // &
                              ' exceeds the number of comment'      // &
@@ -1064,7 +1064,7 @@
 !
 !        Check for the end of the comments.
 !
-         if ( nchars .eq. ncomc ) then
+         if ( nchars == ncomc ) then
 !
 !           If we have reached the end of the comments, signaled
 !           by having processed all of the comment characters, NCOMC,
@@ -1083,7 +1083,7 @@
 !           So, if INDEX > 0, we know that there are files in the file
 !           table, and that we are currently reading from one of them.
 !
-            if ( index .gt. 0 ) then
+            if ( index > 0 ) then
 
                do k = index, nfiles - 1
 
@@ -1117,13 +1117,13 @@
 !        everything that needs to be saved in the file table before
 !        exiting.
 !
-         if ( index .eq. 0 ) then
+         if ( index == 0 ) then
 !
 !           This was the first time that the comment area of this file
 !           has been read, so add it to the file table and save all of
 !           its information if there is room in the file table.
 !
-            if ( nfiles .ge. ftsize ) then
+            if ( nfiles >= ftsize ) then
 
                call setmsg ( 'The file table is full with # files,'  // &
                              ' and another file could not be added.'  )

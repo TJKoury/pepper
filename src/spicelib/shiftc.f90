@@ -22,11 +22,11 @@
 
       implicit none
 
-      character*(*)      in
-      character*1        dir
+      character(*)       in
+      character(1)       dir
       integer(ip)        nshift
-      character*1        fillc
-      character*(*)      out
+      character(1)       fillc
+      character(*)       out
 
 ! $ Brief_I/O
 !
@@ -171,18 +171,18 @@
 !
 !     Hand off to one of the other routines.
 !
-      if ( dir .eq. 'L' .or. dir .eq. 'l' ) then
+      if ( dir == 'L' .or. dir == 'l' ) then
 
-         if ( nshift .ge. 0 ) then
+         if ( nshift >= 0 ) then
             call shiftl ( in, nshift, fillc, out )
 
          else
             call shiftr ( in, -nshift, fillc, out )
          end if
 
-      else if ( dir .eq. 'R' .or. dir .eq. 'r' ) then
+      else if ( dir == 'R' .or. dir == 'r' ) then
 
-         if ( nshift .ge. 0 ) then
+         if ( nshift >= 0 ) then
             call shiftr ( in, nshift, fillc, out )
 
          else

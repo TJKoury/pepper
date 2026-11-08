@@ -448,9 +448,9 @@
 !     Make sure the axis numbers are all right:  They must belong to
 !     the set {1, 2, 3}.
 !
-      badax =       (  ( axis3 .lt. 1 ) .or. ( axis3 .gt. 3 )  ) &
-               .or. (  ( axis2 .lt. 1 ) .or. ( axis2 .gt. 3 )  ) &
-               .or. (  ( axis1 .lt. 1 ) .or. ( axis1 .gt. 3 )  )
+      badax =       (  ( axis3 < 1 ) .or. ( axis3 > 3 )  ) &
+               .or. (  ( axis2 < 1 ) .or. ( axis2 > 3 )  ) &
+               .or. (  ( axis1 < 1 ) .or. ( axis1 > 3 )  )
 
 
       if ( badax ) then

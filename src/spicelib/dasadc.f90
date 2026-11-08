@@ -26,7 +26,7 @@
       integer(ip)           n
       integer(ip)           bpos
       integer(ip)           epos
-      character*(*)         data   ( * )
+      character(*)          data   ( * )
 
 ! $ Brief_I/O
 !
@@ -435,7 +435,7 @@
 !
 !     Local variables
 !
-      character*(nwc)       record
+      character(nwc)        record
 
       integer(ip)           chr
       integer(ip)           clbase
@@ -480,10 +480,10 @@
 !
 !     Make sure BPOS and EPOS are OK; stop here if not.
 !
-      if (      ( bpos .lt. 1              ) &
-           .or. ( epos .lt. 1              ) &
-           .or. ( bpos .gt. len( data(1) ) ) &
-           .or. ( epos .gt. len( data(1) ) )  )  then
+      if (      ( bpos < 1              ) &
+           .or. ( epos < 1              ) &
+           .or. ( bpos > len( data(1) ) ) &
+           .or. ( epos > len( data(1) ) )  )  then
 
          call setmsg ( 'Substring bounds must be in range [1,#]. '    // &
                        'Actual range [BPOS,EPOS] was [#,#].'           )
@@ -495,7 +495,7 @@
          return
 
 
-      else if ( epos .lt. bpos ) then
+      else if ( epos < bpos ) then
 
          call setmsg ( 'Substring upper bound must not be less than ' // &
                        'lower bound.  Actual range [BPOS,EPOS] was '  // &
@@ -543,7 +543,7 @@
 !     the file.  Otherwise, RECNO becomes the first record available for
 !     character data.
 !
-      if ( lastc .ge. 1 ) then
+      if ( lastc >= 1 ) then
 
          call dasa2l ( handle,  char,    lastc, &
                        clbase,  clsize,  recno,  wordno )
@@ -569,7 +569,7 @@
       elt     =  1
       chr     =  bpos
 
-      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
+      do while (  ( nwritn < n ) .and. ( .not. failed() )  )
 
 !
 !        Write as much data as we can (or need to) into the current
@@ -581,7 +581,7 @@
 !
          numchr  =  min (  n - nwritn,   nwc - wordno )
 
-         if ( numchr .gt. 0 ) then
+         if ( numchr > 0 ) then
 
 !
 !           Write NUMCHR words into the current record.  If the record
@@ -597,13 +597,13 @@
             nmoved = 0
             rcpos  = wordno
 
-            do while ( nmoved .lt. numchr )
+            do while ( nmoved < numchr )
 
 !
 !              Find out how many characters in the current array
 !              element we should move.
 !
-               if ( chr .gt. epos ) then
+               if ( chr > epos ) then
                   elt = elt + 1
                   chr = bpos
                end if
@@ -621,7 +621,7 @@
 !
 !           Now we can write or update the file with RECORD.
 !
-            if ( wordno .eq. 0 ) then
+            if ( wordno == 0 ) then
 !
 !              The record has not yet been written, so write out the
 !              entire record.
@@ -658,7 +658,7 @@
 !           We intentionally leave FREE at the value it had before
 !           we starting adding data to the file.
 !
-            if ( recno .ge. free ) then
+            if ( recno >= free ) then
                recno  =  recno + 1
             else
                recno  =  free

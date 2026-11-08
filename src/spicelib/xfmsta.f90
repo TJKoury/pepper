@@ -25,9 +25,9 @@
       include               'zzctr.inc'
 
       real(wp)              istate(6)
-      character*(*)         icosys
-      character*(*)         ocosys
-      character*(*)         body
+      character(*)          icosys
+      character(*)          ocosys
+      character(*)          body
       real(wp)              ostate(6)
 
 ! $ Brief_I/O
@@ -635,9 +635,9 @@
 !     from the user that are made insensitive to case or leading and
 !     trailing spaces.
 !
-      character*(chsiz)     cosys  (ncosys)
-      character*(chsiz)     isysu
-      character*(chsiz)     osysu
+      character(chsiz)      cosys  (ncosys)
+      character(chsiz)      isysu
+      character(chsiz)      osysu
 
 !
 !     IPOS and IVEL are the input position and velocity translated
@@ -696,7 +696,7 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svbody
+      character(maxl)       svbody
       integer(ip)           svbdid
       logical               svfnd1
 
@@ -786,9 +786,9 @@
 !     If the coordinate systems are not acceptable, an error is
 !     signaled.
 !
-      if ( ( isys .eq. 0 )  .or.  ( osys .eq. 0 ) ) then
+      if ( ( isys == 0 )  .or.  ( osys == 0 ) ) then
 
-         if    ( ( isys .eq. 0 )  .and. ( osys .eq. 0 ) ) then
+         if    ( ( isys == 0 )  .and. ( osys == 0 ) ) then
 
 !
 !           Both the input and the output coordinate systems were not
@@ -803,7 +803,7 @@
             call chkout ( 'XFMSTA' )
             return
 
-         else if ( isys .eq. 0 ) then
+         else if ( isys == 0 ) then
 
 !
 !           The input coordinate system was not recognized.
@@ -836,7 +836,7 @@
 !     output equal to the input since no conversion needs to take
 !     place.
 !
-      if ( isys .eq. osys ) then
+      if ( isys == osys ) then
 
          call vequg  ( istate, 6, ostate )
          call chkout ( 'XFMSTA' )
@@ -851,8 +851,8 @@
 !     signaled. If the NAIF ID is valid, the radii of the body are
 !     located and the flattening coefficient is calculated.
 !
-      if ( ( osys .eq. geodet ) .or. ( osys .eq. plntgr )   .or. &
-           ( isys .eq. geodet ) .or. ( isys .eq. plntgr ) ) then
+      if ( ( osys == geodet ) .or. ( osys == plntgr )   .or. &
+           ( isys == geodet ) .or. ( isys == plntgr ) ) then
 
 !
 !        Find the NAIF ID code
@@ -878,7 +878,7 @@
 !           a numeric overflow may occur, so an error is signaled.
 !
             if ( sqrt(abs( radii(1) - radii(3) )) / &
-                 sqrt(abs( radii(1) )) .ge. sqrt(dpmax()) ) then
+                 sqrt(abs( radii(1) )) >= sqrt(dpmax()) ) then
 
                call setmsg ( 'The equatorial radius for # ' &
                         //   'has a value of # and a polar radius of ' &
@@ -898,7 +898,7 @@
 !           which are not allowed with geodetic or planetographic
 !           coordinates.
 !
-            if ( radii(1) .ne. radii(2) ) then
+            if ( radii(1) /= radii(2) ) then
 
                call setmsg ( 'The body # has radii (#, #, #). ' &
                //            'Unequal equatorial ellipsoid radii are ' &
@@ -949,11 +949,11 @@
 !
       toobig = sqrt ( dpmax() / margin )
 
-      if  ( isys .ne. rectan ) then
+      if  ( isys /= rectan ) then
 !
 !        To rectangular...
 !
-         if       ( isys .eq. cyl )    then
+         if       ( isys == cyl )    then
 
 !
 !                  ... from cylindrical
@@ -963,7 +963,7 @@
             call drdcyl ( istate(1), istate(2), istate(3), jacobi )
 
 
-         else if  ( isys .eq. latnl )  then
+         else if  ( isys == latnl )  then
 
 !
 !                  ... from latitudinal
@@ -973,7 +973,7 @@
             call drdlat ( istate(1), istate(2), istate(3), jacobi )
 
 
-         else if  ( isys .eq. sphcl )  then
+         else if  ( isys == sphcl )  then
 
 !
 !                  ... from spherical
@@ -983,7 +983,7 @@
             call drdsph ( istate(1), istate(2), istate(3), jacobi )
 
 
-         else if  ( isys .eq. geodet ) then
+         else if  ( isys == geodet ) then
 
 !
 !                  ... from geodetic
@@ -1000,7 +1000,7 @@
                           f, jacobi )
 
 
-         else if  ( isys .eq. plntgr ) then
+         else if  ( isys == plntgr ) then
 
 !
 !                  ... from planetographic
@@ -1050,7 +1050,7 @@
                sqtmp = sqrt ( abs ( jacobi(i,j) ) ) * &
                        sqrt ( abs ( istate(j+3) ) )
 
-               if ( sqtmp .gt. toobig ) then
+               if ( sqtmp > toobig ) then
 
                   call setmsg ( 'The product of the Jacobian ' &
                            //   'and velocity may cause numeric ' &
@@ -1071,7 +1071,7 @@
          call mxv ( jacobi, istate(4), ivel )
 
 
-      else if  ( isys .eq. rectan ) then
+      else if  ( isys == rectan ) then
 
 !
 !        If the input coordinate system is rectangular, the input
@@ -1118,21 +1118,21 @@
 !       4)  Transform the velocity to the output coordinates using
 !           the Jacobian and the rectangular velocity IVEL.
 !
-      if ( osys .ne. rectan ) then
+      if ( osys /= rectan ) then
 
 !
 !        From rectangular for the case when the input position is along
 !        the z-axis ...
 !
-         if ( ( abs(ipos(1)) + abs(ipos(2)) ) .eq. 0.0_wp) then
+         if ( ( abs(ipos(1)) + abs(ipos(2)) ) == 0.0_wp) then
 
-            if ( ( abs(ivel(1)) + abs(ivel(2)) ) .eq. 0.0_wp ) then
+            if ( ( abs(ivel(1)) + abs(ivel(2)) ) == 0.0_wp ) then
 !
 !              If the velocity is along the z-axis, then the velocity
 !              can be computed in the output coordinate frame even
 !              though the Jacobian is not defined.
 !
-               if       ( osys .eq. cyl )    then
+               if       ( osys == cyl )    then
 
 !
 !                  ... to cylindrical
@@ -1143,7 +1143,7 @@
                                 ostate(3) )
 
 
-               else if  ( osys .eq. latnl )  then
+               else if  ( osys == latnl )  then
 
 !
 !                  ... to latitudinal
@@ -1154,7 +1154,7 @@
                                 ostate(3) )
 
 
-               else if  ( osys .eq. sphcl )  then
+               else if  ( osys == sphcl )  then
 
 !
 !                  ... to spherical
@@ -1165,7 +1165,7 @@
                                 ostate(3) )
 
 
-               else if  ( osys .eq. geodet ) then
+               else if  ( osys == geodet ) then
 
 !
 !                  ... to geodetic
@@ -1176,7 +1176,7 @@
                                 ostate(2), ostate(3) )
 
 
-               else if  ( osys .eq. plntgr ) then
+               else if  ( osys == plntgr ) then
 
 !
 !                  ... to planetographic
@@ -1228,7 +1228,7 @@
 !        From rectangular for cases when the input position is not along
 !        the z-axis ...
 !
-         if       ( osys .eq. cyl )    then
+         if       ( osys == cyl )    then
 !
 !                  ... to cylindrical
 !
@@ -1236,7 +1236,7 @@
 
             call reccyl ( ipos(1), ostate(1), ostate(2), ostate(3) )
 
-         else if  ( osys .eq. latnl )  then
+         else if  ( osys == latnl )  then
 
 !
 !                  ... to latitudinal
@@ -1245,7 +1245,7 @@
 
             call reclat ( ipos(1), ostate(1), ostate(2), ostate(3) )
 
-         else if  ( osys .eq. sphcl )  then
+         else if  ( osys == sphcl )  then
 
 !
 !                  ... to spherical
@@ -1254,7 +1254,7 @@
 
             call recsph ( ipos(1), ostate(1), ostate(2), ostate(3) )
 
-         else if  ( osys .eq. geodet ) then
+         else if  ( osys == geodet ) then
 
 !
 !                  ... to geodetic
@@ -1265,7 +1265,7 @@
             call recgeo ( ipos(1), radii(1), f, ostate(1), ostate(2), &
                           ostate(3) )
 
-         else if  ( osys .eq. plntgr ) then
+         else if  ( osys == plntgr ) then
 
 !
 !                  ... to planetographic
@@ -1310,7 +1310,7 @@
                sqtmp = sqrt ( abs ( jacobi(i,j) ) ) * &
                        sqrt ( abs ( ivel(j)     ) )
 
-               if ( sqtmp .gt. toobig ) then
+               if ( sqtmp > toobig ) then
 
                   call setmsg ( 'The product of the Jacobian ' &
                            //   'and velocity may cause numeric ' &
@@ -1331,7 +1331,7 @@
          call mxv ( jacobi, ivel, ostate(4) )
 
 
-      else if ( osys .eq. rectan ) then
+      else if ( osys == rectan ) then
 
 !
 !        If the output coordinate system is rectangular, the position

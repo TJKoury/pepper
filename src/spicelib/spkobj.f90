@@ -27,7 +27,7 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         spkfnm
+      character(*)          spkfnm
       integer(ip)           ids    ( lbcell : * )
 
 ! $ Brief_I/O
@@ -395,8 +395,8 @@
 !
 !     Local variables
 !
-      character*(lnsize)    arch
-      character*(lnsize)    kertyp
+      character(lnsize)     arch
+      character(lnsize)     kertyp
 
       real(wp)              dc     ( nd )
       real(wp)              descr  ( nd + ni/2 )
@@ -425,7 +425,7 @@
          return
       end if
 
-      if ( arch .eq. 'XFR' ) then
+      if ( arch == 'XFR' ) then
 
          call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary SPK file to be readable ' &
@@ -438,7 +438,7 @@
          call chkout ( 'SPKOBJ'                                    )
          return
 
-      else if ( arch .ne. 'DAF' ) then
+      else if ( arch /= 'DAF' ) then
 
          call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary SPK file to be readable ' &
@@ -455,7 +455,7 @@
          call chkout ( 'SPKOBJ'                                    )
          return
 
-      else if ( kertyp .ne. 'SPK' ) then
+      else if ( kertyp /= 'SPK' ) then
 
          call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary SPK file to be readable ' &

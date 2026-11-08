@@ -23,8 +23,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       integer(ip)           tabval     ( lbcell:* )
 
@@ -192,7 +192,7 @@
 !     If it's not in the table, we're done. If it is, we can proceed
 !     without fear of overflow.
 !
-      if ( locsym .gt. 0 ) then
+      if ( locsym > 0 ) then
 
          locval = sumai ( tabptr(1), locsym-1 ) + 1
          dimval = tabptr(locsym)

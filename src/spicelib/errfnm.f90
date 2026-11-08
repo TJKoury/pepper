@@ -23,7 +23,7 @@
 
       implicit none
 
-      character*(*)         marker
+      character(*)          marker
 
       integer(ip)           unit
 
@@ -202,7 +202,7 @@
 !
 !     Local variables
 !
-      character*(filen)     name
+      character(filen)      name
 
       integer(ip)           iostat
 
@@ -234,7 +234,7 @@
 !     filename was unavailable from the system.
 !
 
-      if ( ( iostat .ne. 0 ) .or. ( name .eq. ' ' ) ) then
+      if ( ( iostat /= 0 ) .or. ( name == ' ' ) ) then
 
          name = '<unavailable from the system>'
 

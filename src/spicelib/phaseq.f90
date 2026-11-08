@@ -28,10 +28,10 @@
       include               'zzctr.inc'
 
       real(wp)              et
-      character*(*)         target
-      character*(*)         illmn
-      character*(*)         obsrvr
-      character*(*)         abcorr
+      character(*)          target
+      character(*)          illmn
+      character(*)          obsrvr
+      character(*)          abcorr
 
 ! $ Brief_I/O
 !
@@ -513,7 +513,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'PHASEQ' )
 
 !
@@ -534,23 +534,23 @@
       logical               attblk ( nabcor )
       logical               fnd
 
-      character*(32)        xbcorr
+      character(32)         xbcorr
 
 !
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtgid
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svilmn
+      character(maxl)       svilmn
       integer(ip)           svicde
       logical               svfnd2
 
       integer(ip)           svctr3 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsn
       logical               svfnd3
 
@@ -705,9 +705,9 @@
 !
 !     Make sure the observer, illuminator, and target are distinct.
 !
-      if ( (targ .eq. obs  )   .or. &
-           (targ .eq. illum)   .or. &
-           (obs  .eq. illum)      ) then
+      if ( (targ == obs  )   .or. &
+           (targ == illum)   .or. &
+           (obs  == illum)      ) then
 
          call setmsg ( 'The observer, illuminator, and ' &
          //            'target must be distinct objects, but ' &

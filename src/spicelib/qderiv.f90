@@ -195,7 +195,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( delta .eq. 0.0_wp ) then
+      if ( delta == 0.0_wp ) then
 
          call chkin  ( 'QDERIV'                                    )
          call setmsg ( 'Delta abscissa value is zero; a non-zero ' // &

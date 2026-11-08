@@ -174,9 +174,9 @@
 !
 !     Handle the exceptional case first.
 !
-      if (       size .le. 0 &
-           .or. dsize .le. 0 &
-           .or. psize .le. 0 ) then
+      if (       size <= 0 &
+           .or. dsize <= 0 &
+           .or. psize <= 0 ) then
          n  = 0
          ok = .false.
          return
@@ -186,13 +186,13 @@
 
       call rmaini ( size, pd1, q, a )
 
-      if ( offset*psize .gt. a ) then
+      if ( offset*psize > a ) then
          n  = 0
          ok = .false.
          return
       end if
 
-      if ( a .eq. (a/psize)*psize ) then
+      if ( a == (a/psize)*psize ) then
 
          r  = a/psize
          n  = dsize*q + r

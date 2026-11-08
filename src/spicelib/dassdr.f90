@@ -263,8 +263,8 @@
 !
 !     Local variables
 !
-      character*(nwc)       crec
-      character*(nwc)       savec
+      character(nwc)        crec
+      character(nwc)        savec
 
       real(wp)              drec   ( nwd )
       real(wp)              saved  ( nwd )
@@ -435,8 +435,8 @@
 
       do i = 1, 3
 
-         if (       ( lastrc(i) .eq. lrec  ) &
-              .and. ( lastwd(i) .gt. lword )  ) then
+         if (       ( lastrc(i) == lrec  ) &
+              .and. ( lastwd(i) > lword )  ) then
 
             lword = lastwd(i)
             ltype = i
@@ -451,7 +451,7 @@
       recno  =  nresvr + ncomr + 2
 
 
-      do while (  ( recno .le. lrec ) .and. ( recno .gt. 0 )  )
+      do while (  ( recno <= lrec ) .and. ( recno > 0 )  )
 !
 !        Read the directory record.
 !
@@ -524,17 +524,17 @@
 !
             i = i + 1
 
-            if (      (  i     .gt. nwi                        ) &
-                 .or. ( (recno .eq. lrec) .and. (i .gt. lword) )  ) then
+            if (      (  i     > nwi                        ) &
+                 .or. ( (recno == lrec) .and. (i > lword) )  ) then
 
                more = .false.
 
             else
 
-               if ( irec(i) .gt. 0 ) then
+               if ( irec(i) > 0 ) then
                   type = next(type)
 
-               else if ( irec(i) .lt. 0 ) then
+               else if ( irec(i) < 0 ) then
                   type = prev(type)
 
                else
@@ -631,7 +631,7 @@
 !
          do j = 1, 3
 
-            if ( type .gt. j ) then
+            if ( type > j ) then
                dest = dest + count(j)
             end if
 
@@ -643,7 +643,7 @@
 !        need to do this for directory records; they'll already have
 !        this offset accounted for.
 !
-         if ( type .ne. dir ) then
+         if ( type /= dir ) then
             dest = dest + 1
          end if
 
@@ -702,7 +702,7 @@
 !
       start = 2
 
-      do while ( start .lt. total )
+      do while ( start < total )
 !
 !        Traverse the current cycle of the order vector.
 !
@@ -728,11 +728,11 @@
 !
 !        Save the record at the location DRBASE + START.
 !
-         if ( savtyp .eq. char ) then
+         if ( savtyp == char ) then
 
             call dasioc ( 'READ', unit, drbase+start, savec )
 
-         else if ( savtyp .eq. dp ) then
+         else if ( savtyp == dp ) then
 
             call dasiod ( 'READ', unit, drbase+start, saved )
 
@@ -752,7 +752,7 @@
 !
          i  =  start
 
-         do while ( offset .ne. start )
+         do while ( offset /= start )
 !
 !           Mark the order vector element by writing its negative
 !           back to the location it came from.
@@ -787,14 +787,14 @@
 !           Only pick records up if we're going to put them down in
 !           a location other than their original one.
 !
-            if ( i .ne. offset ) then
+            if ( i /= offset ) then
 
-               if ( type .eq. char ) then
+               if ( type == char ) then
 
                   call dasioc ( 'READ',  unit, drbase+offset, crec )
                   call dasioc ( 'WRITE', unit, drbase+i,      crec )
 
-               else if ( type .eq. dp ) then
+               else if ( type == dp ) then
 
                   call dasiod ( 'READ',  unit, drbase+offset, drec )
                   call dasiod ( 'WRITE', unit, drbase+i,      drec )
@@ -834,11 +834,11 @@
 !        START followed.  Therefore, the saved record corresponding
 !        to index START should be written to this location.
 !
-         if ( savtyp .eq. char ) then
+         if ( savtyp == char ) then
 
             call dasioc ( 'WRITE',  unit,  drbase+i,  savec )
 
-         else if ( savtyp .eq. dp ) then
+         else if ( savtyp == dp ) then
 
             call dasiod ( 'WRITE',  unit,  drbase+i,  saved )
 
@@ -868,7 +868,7 @@
 
          offset = -1
 
-         do while ( ( offset .lt. 0 ) .and. ( start .lt. total ) )
+         do while ( ( offset < 0 ) .and. ( start < total ) )
 
             start  =  start  + 1
 
@@ -943,7 +943,7 @@
 
          maxadr  =  lastla(type)
 
-         if ( maxadr .gt. 0 ) then
+         if ( maxadr > 0 ) then
             minadr = 1
          else
             minadr = 0
@@ -963,9 +963,9 @@
 
       do type = 1, 3
 
-         if (  lastla(type)  .gt.  0  ) then
+         if (  lastla(type)  >  0  ) then
 
-            if ( pos .eq. begdsc ) then
+            if ( pos == begdsc ) then
 !
 !              This is the first type for which any data is present.
 !              We must enter a type code at position BEGDSC in the
@@ -984,7 +984,7 @@
 !              Place an appropriately signed count at location POS in
 !              the directory.
 !
-               if ( type .eq. next(prvtyp) ) then
+               if ( type == next(prvtyp) ) then
                   irec ( pos )  =   count(type)
                else
                   irec ( pos )  =  -count(type)

@@ -29,8 +29,8 @@
       real(wp)              total
       real(wp)              wait
       integer(ip)           tcheck
-      character*(*)         begin
-      character*(*)         end
+      character(*)          begin
+      character(*)          end
       real(wp)              incr
 
 ! $ Brief_I/O
@@ -199,10 +199,10 @@
 !
 !     Local variables
 !
-      character*10          prcent
-      character*(mxendm)    finish
-      character*(mxbegm)    start
-      character*(mxmsg)     messge
+      character(10)         prcent
+      character(mxendm)     finish
+      character(mxbegm)     start
+      character(mxmsg)      messge
 
       real(wp)              cursec
       real(wp)              done
@@ -481,7 +481,7 @@
 !     Display a blank line, make sure we don't overwrite anything
 !     at the bottom of the screen. The display the message.
 !
-      if ( svunit .eq. stdout ) then
+      if ( svunit == stdout ) then
 
          call zzgfdsps ( 1, messge, 'A', 0 )
 
@@ -599,12 +599,12 @@
       done   = done  + incr
       calls  = calls + 1
 
-      if ( entire .eq. 0 ) then
+      if ( entire == 0 ) then
          call chkout  ( 'ZZGFWKIN' )
          return
       end if
 
-      if ( calls .ge. check ) then
+      if ( calls >= check ) then
 
          calls  = 0
 
@@ -613,7 +613,7 @@
          cursec = tvec(4)*3600.0_wp + tvec(5)*60.0_wp + tvec(6)
 
 
-         if ( dabs( cursec - lstsec ) .ge. step ) then
+         if ( dabs( cursec - lstsec ) >= step ) then
 
             lstsec = cursec
 !
@@ -632,7 +632,7 @@
                             finish(1:rtrim(finish))
 
 
-            if ( svunit .eq. stdout ) then
+            if ( svunit == stdout ) then
 
                call zzgfdsps ( 0, messge, 'A', 0 )
 

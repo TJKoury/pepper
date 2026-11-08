@@ -184,7 +184,7 @@
 !
       do i = 1, card, 2
 
-         if ( left .ge. window(i)  .and.  right .le. window(i+1) ) then
+         if ( left >= window(i)  .and.  right <= window(i+1) ) then
             wnincd = .true.
             call chkout ( 'WNINCD' )
             return

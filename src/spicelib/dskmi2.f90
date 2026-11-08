@@ -778,7 +778,7 @@
 !
 !     Perform error checks on inputs.
 !
-      if (  finscl .le. 0.0_wp ) then
+      if (  finscl <= 0.0_wp ) then
 
          call setmsg ( 'Fine voxel scale = #; scale must ' &
          //            'be positive. Usually scale should ' &
@@ -790,7 +790,7 @@
 
       end if
 
-      if (  corscl .lt. 1 ) then
+      if (  corscl < 1 ) then
 
          call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be >= 1.'                           )
@@ -802,7 +802,7 @@
       end if
 
 
-      if (  ( nv .lt. 3 ) .or. ( nv .gt. maxvrt )  ) then
+      if (  ( nv < 3 ) .or. ( nv > maxvrt )  ) then
 
          call setmsg ( 'Vertex count NV = #; count must ' &
          //            'be in the range 3:#.'            )
@@ -814,7 +814,7 @@
 
       end if
 
-      if (  ( np .lt. 1 ) .or. ( np .gt. maxplt )  ) then
+      if (  ( np < 1 ) .or. ( np > maxplt )  ) then
 
          call setmsg ( 'Plate count NP = #; count must ' &
          //            'be in the range 1:#.'            )
@@ -826,7 +826,7 @@
 
       end if
 
-      if ( worksz .lt. (np+1)  ) then
+      if ( worksz < (np+1)  ) then
 
          call setmsg ( 'Workspace size = #; size is too ' &
          //            'small to hold all voxel-plate ' &
@@ -841,7 +841,7 @@
 
       end if
 
-      if ( voxpsz .lt. 1 ) then
+      if ( voxpsz < 1 ) then
 
          call setmsg ( 'Voxel-pointer array size = #; size is ' &
          //            'too small to hold all voxel-plate ' &
@@ -857,7 +857,7 @@
       end if
 
 
-      if ( voxlsz .lt. (np+1)  ) then
+      if ( voxlsz < (np+1)  ) then
 
          call setmsg ( 'Voxel-plate list array size = #; size ' &
          //            'is too small to hold all voxel-plate ' &
@@ -906,7 +906,7 @@
       end if
 
 
-      if ( spxisz .lt. reqsiz ) then
+      if ( spxisz < reqsiz ) then
 
          call setmsg ( 'Integer spatial index size = #; size ' &
          //            'must be at least #.'                   )

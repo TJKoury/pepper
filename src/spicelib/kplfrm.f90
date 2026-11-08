@@ -414,13 +414,13 @@
 !
 !     Local variables
 !
-      character*(frnmln)    frname
-      character*(kvnmln)    kvbuff ( bufsiz )
-      character*(kvnmln)    kvname
-      character*(kvnmln)    kvtemp
-      character*(kvnmln)    kvcode
-      character*(kvnmln)    kvclas
-      character*(frnmln)    tmpnam
+      character(frnmln)     frname
+      character(kvnmln)     kvbuff ( bufsiz )
+      character(kvnmln)     kvname
+      character(kvnmln)     kvtemp
+      character(kvnmln)     kvcode
+      character(kvnmln)     kvclas
+      character(frnmln)     tmpnam
 
       integer(ip)           fclass
       integer(ip)           i
@@ -450,9 +450,9 @@
 !
 !     This block of code must be kept in sync with frmtyp.inc.
 !
-      if  (      ( frmcls .gt. swtch ) &
-            .or. ( frmcls .eq. 0     ) &
-            .or. ( frmcls .lt. all   )  ) then
+      if  (      ( frmcls > swtch ) &
+            .or. ( frmcls == 0     ) &
+            .or. ( frmcls < all   )  ) then
 
          call setmsg ( 'Frame class specifier FRMCLS was #; this ' &
          //            'value is not supported.'                  )
@@ -490,7 +490,7 @@
 
       total = 0
 
-      do while ( n .gt. 0 )
+      do while ( n > 0 )
 
          total = total + n
 
@@ -589,15 +589,15 @@
 !                       Check whether the frame class is one
 !                       we want.
 !
-                        if (      ( frmcls .eq. all    ) &
-                             .or. ( frmcls .eq. fclass )  ) then
+                        if (      ( frmcls == all    ) &
+                             .or. ( frmcls == fclass )  ) then
 !
 !                          We have a winner. Add it to the output set.
 !
 !                          First make sure the set is large enough to
 !                          hold another element.
 !
-                           if ( to .eq. sizei(idset) ) then
+                           if ( to == sizei(idset) ) then
 
                               call setmsg ( 'Frame ID set argument ' &
                               //            'IDSET has size #; required' &

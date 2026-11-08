@@ -147,7 +147,7 @@
 !
 !     Reject bad indices.
 !
-      if (  ( n .lt. 0 ) .or. ( n .gt. size )  )  then
+      if (  ( n < 0 ) .or. ( n > size )  )  then
 
          call chkin  ( 'ZZEKTRKI'                                  )
          call setmsg ( 'Key index = #; valid range in node # is ' // &
@@ -165,7 +165,7 @@
       base  =  zzektrbs ( node )
 
 
-      if ( level .eq. 1 ) then
+      if ( level == 1 ) then
          addrss = base + trkeyr + n
       else
          addrss = base + trkeyc + n

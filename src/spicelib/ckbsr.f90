@@ -29,14 +29,14 @@
 
       implicit none
 
-      character*(*)         fname
+      character(*)          fname
       integer(ip)           handle
       integer(ip)           inst
       real(wp)              sclkdp
       real(wp)              tol
       logical               needav
       real(wp)              descr    ( * )
-      character*(*)         segid
+      character(*)          segid
       logical               found
 
       integer(ip)           ftsize
@@ -959,7 +959,7 @@
 !     are removed, the last instrument is moved forward to take up the
 !     slack. This keeps the entries in the table contiguous.
 !
-      character*(sidlen)    itprvi   ( itsize )
+      character(sidlen)     itprvi   ( itsize )
 
       real(wp)              itprvd   ( dscsiz, itsize )
       real(wp)              itlb     ( itsize )
@@ -1002,7 +1002,7 @@
 !     as appropriate, according to the rules spelled out under
 !     entry point CKSNS.
 !
-      character*(sidlen)    stidnt (              stsize )
+      character(sidlen)     stidnt (              stsize )
 
       real(wp)              stdcd  ( nd,          stsize )
 
@@ -1013,10 +1013,10 @@
 !
 !     Other local variables
 !
-      character*(slen)      doing
-      character*(slen)      stack    ( 2 )
-      character*(slen)      status
-      character*(slen)      urgent
+      character(slen)       doing
+      character(slen)       stack    ( 2 )
+      character(slen)       status
+      character(slen)       urgent
 
       real(wp)              alpha
       real(wp)              dcd    ( nd )
@@ -1434,7 +1434,7 @@
 !     want to re-initialize just because there are no instrument table
 !     entries.
 !
-      if ( nft .eq. 0 ) then
+      if ( nft == 0 ) then
          call lnkini ( stsize, stpool )
       end if
 
@@ -1453,7 +1453,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .gt. 0 ) then
+      if ( findex > 0 ) then
 !
 !        The last call we made to DAFOPR added another DAF link to
 !        the CK file.  Remove this link.
@@ -1475,17 +1475,17 @@
 !
          i = 1
 
-         do while ( i .le. nit )
+         do while ( i <= nit )
 
             p = itbeg( i )
 
-            do while ( p .gt. 0 )
+            do while ( p > 0 )
 !
 !              Find the successor of P, if any.
 !
                nxtseg = lnknxt ( p, stpool )
 
-               if ( sthan( p ) .eq. handle ) then
+               if ( sthan( p ) == handle ) then
 !
 !                 The segment corresponding to node P came from
 !                 the file we're unloading.  Delete the node for
@@ -1495,7 +1495,7 @@
 !
                   call lnkfsl ( p, p, stpool )
 
-                  if ( p .eq. itbeg(i) ) then
+                  if ( p == itbeg(i) ) then
                      itbeg( i ) = nxtseg
                   end if
 
@@ -1513,7 +1513,7 @@
 !           instrument in the table into the space occupied by the
 !           one we've deleted.
 !
-            if ( itbeg( i ) .le. 0 ) then
+            if ( itbeg( i ) <= 0 ) then
 !
 !              Because all of the re-use intervals are invalid, we need
 !              not copy the saved items associated with them.  The
@@ -1549,7 +1549,7 @@
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         if ( nft .eq. ftsize ) then
+         if ( nft == ftsize ) then
 
             call dafcls ( handle )
 
@@ -1570,7 +1570,7 @@
 !
 !     Determine the next file number.
 !
-      if ( next .lt. intmax()-1 ) then
+      if ( next < intmax()-1 ) then
 
          next = next + 1
 
@@ -1593,7 +1593,7 @@
 !
             j = isrchi ( ithfs(i), nft, ftnum )
 
-            if ( j .gt. 0 ) then
+            if ( j > 0 ) then
 !
 !              The highest file searched for instrument I is the Jth
 !              file in the file table.
@@ -1617,7 +1617,7 @@
 !
             j = isrchi ( itlfs(i), nft, ftnum )
 
-            if ( j .gt. 0 ) then
+            if ( j > 0 ) then
 !
 !              The lowest file searched for instrument I is the Jth file
 !              in the file table.
@@ -1915,7 +1915,7 @@
 !
       findex = isrchi ( handle, nft, fthan )
 
-      if ( findex .eq. 0 ) then
+      if ( findex == 0 ) then
          call chkout ( 'CKUPF' )
          return
       end if
@@ -1941,17 +1941,17 @@
 !
       i = 1
 
-      do while ( i .le. nit )
+      do while ( i <= nit )
 
          p = itbeg( i )
 
-         do while ( p .gt. 0 )
+         do while ( p > 0 )
 
             nxtseg = lnknxt ( p, stpool )
 
-            if ( sthan(p) .eq. handle ) then
+            if ( sthan(p) == handle ) then
 
-               if ( p .eq. itbeg(i) ) then
+               if ( p == itbeg(i) ) then
                   itbeg( i ) = nxtseg
                end if
 !
@@ -1971,9 +1971,9 @@
 !        instrument in the table into the space occupied by the
 !        one we've deleted.
 !
-         if ( itbeg(i) .le. 0 ) then
+         if ( itbeg(i) <= 0 ) then
 
-            if ( i .ne. nit ) then
+            if ( i /= nit ) then
 
                itins (i) = itins (nit)
                itexp (i) = itexp (nit)
@@ -2013,7 +2013,7 @@
 
          if ( itchkp(i) ) then
 
-            if ( itprvh(i) .eq. handle ) then
+            if ( itprvh(i) == handle ) then
                itchkp(i) = .false.
             end if
 
@@ -2252,7 +2252,7 @@
 !
 !     There must be at least one file loaded.
 !
-      if ( nft .eq. 0 ) then
+      if ( nft == 0 ) then
 
          call setmsg ( 'At least one CK file must be loaded ' // &
                        'by CKLPF before beginning a search.'       )
@@ -2273,7 +2273,7 @@
 !
       iindex = isrchi ( scinst, nit, itins )
 
-      if ( iindex .eq. 0 ) then
+      if ( iindex == 0 ) then
 
          status = 'NEW INSTRUMENT'
 
@@ -2801,7 +2801,7 @@
 !        error will be signaled.
 !
 
-      if ( status .eq. 'BOGUS ENTRY' )  then
+      if ( status == 'BOGUS ENTRY' )  then
 
          call setmsg ( 'Must begin a search by calling CKBSS first.' )
          call sigerr ( 'SPICE(CALLCKBSSFIRST)' )
@@ -2811,12 +2811,12 @@
       end if
 
 
-      do while ( status .ne. 'HOPELESS' )
+      do while ( status /= 'HOPELESS' )
 !
 !        If new files have been added, they have to be searched.
 !        Otherwise, go right to the list of stored segments.
 !
-         if ( status .eq. '?' ) then
+         if ( status == '?' ) then
 !
 !           There are two ways to get to this point.
 !
@@ -2827,7 +2827,7 @@
 !               a new file.
 !
 
-            if ( ithfs( iindex ) .lt. ftnum( nft ) ) then
+            if ( ithfs( iindex ) < ftnum( nft ) ) then
 
                status = 'NEW FILES'
 
@@ -2849,8 +2849,8 @@
 !                 because one or both endpoints may belong to
 !                 higher-priority segments.
 !
-                  if (      ( reqt .gt. (itlb(iindex) + savtol) ) &
-                      .and. ( reqt .lt. (itub(iindex) - savtol) ) ) then
+                  if (      ( reqt > (itlb(iindex) + savtol) ) &
+                      .and. ( reqt < (itub(iindex) - savtol) ) ) then
 !
 !                    The request time falls into the portion of
 !                    the re-use interval that isn't blocked by
@@ -2859,7 +2859,7 @@
 !                    by TOL.
 !
                      if (      ( .not. avneed          ) &
-                          .or. ( itprvf(iindex) .ne. 0 )  ) then
+                          .or. ( itprvf(iindex) /= 0 )  ) then
 !
 !                       This segment has angular velocity if we
 !                       need it.  The segment satisfies the
@@ -2923,7 +2923,7 @@
 !              If the segment list for this instrument is empty, make
 !              sure the expense is reset to 0.
 !
-               if ( itbeg(iindex) .eq. 0 ) then
+               if ( itbeg(iindex) == 0 ) then
                   itexp(iindex) = 0
                end if
 
@@ -2938,7 +2938,7 @@
 
 
 
-         else if ( status .eq. 'NEW INSTRUMENT' ) then
+         else if ( status == 'NEW INSTRUMENT' ) then
 !
 !           New instruments are added to the end of the instrument
 !           table. If the table is full, one of the current occupants
@@ -2960,7 +2960,7 @@
 !           However, trying to handle this special case there was
 !           just more trouble than it was worth.
 !
-            if ( nit .lt. itsize ) then
+            if ( nit < itsize ) then
 !
 !              If the instrument table isn't full, the cheapest place is
 !              just the next unused row of the table.
@@ -2978,7 +2978,7 @@
 
                do i = 2, nit
 
-                  if ( itexp(i) .lt. minexp ) then
+                  if ( itexp(i) < minexp ) then
                      cheap  = i
                      minexp = itexp(i)
                   end if
@@ -2992,7 +2992,7 @@
 !
                head = itbeg(cheap)
 
-               if ( head .gt. 0 ) then
+               if ( head > 0 ) then
 
                   tail =  - lnkprv ( head, stpool )
                   call lnkfsl ( head, tail, stpool )
@@ -3043,7 +3043,7 @@
             status = 'OLD FILES'
 
 
-         else if ( status .eq. 'NEW FILES' ) then
+         else if ( status == 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
 !           order, beginning with the oldest new file not yet searched.
@@ -3063,7 +3063,7 @@
 
             findex = 1
 
-            do while ( ithfs(iindex) .ge. ftnum(findex) )
+            do while ( ithfs(iindex) >= ftnum(findex) )
 
                findex = findex + 1
 
@@ -3087,7 +3087,7 @@
             cost   = 0
 
 
-         else if ( status .eq. 'NEW SEGMENTS' ) then
+         else if ( status == 'NEW SEGMENTS' ) then
 !
 !           New files are searched in forward order. Segments, when
 !           found, are inserted at the front of the list. Invisible
@@ -3125,8 +3125,8 @@
                   return
                end if
 
-               if (       ( icd(1) .eq. scinst ) &
-                    .and. ( dcd(1) .le. dcd(2) )  ) then
+               if (       ( icd(1) == scinst ) &
+                    .and. ( dcd(1) <= dcd(2) )  ) then
 
                   doing  = 'NEW SEGMENTS'
                   urgent = 'ADD TO FRONT'
@@ -3142,7 +3142,7 @@
 !           'NEW SEGMENTS' pass.
 !
 
-         else if ( status .eq. 'OLD FILES' ) then
+         else if ( status == 'OLD FILES' ) then
 !
 !           When old files must be searched (because the segments in
 !           the list are inadequate), they should be searched in
@@ -3165,7 +3165,7 @@
 
             findex = nft
 
-            do while ( itlfs( iindex ) .le. ftnum( findex ) )
+            do while ( itlfs( iindex ) <= ftnum( findex ) )
                findex = findex - 1
             end do
 
@@ -3194,7 +3194,7 @@
 !        Each segment examined, whether applicable or not, adds to
 !        the expense of the list.
 !
-         else if ( status .eq. 'OLD SEGMENTS' ) then
+         else if ( status == 'OLD SEGMENTS' ) then
 !
 !           There is only one way to get here---from the
 !           block 'OLD FILES'.  Note we do not add to the
@@ -3230,8 +3230,8 @@
                   return
                end if
 
-               if (      ( icd(1) .eq. scinst ) &
-                   .and. ( dcd(1) .le. dcd(2) )  ) then
+               if (      ( icd(1) == scinst ) &
+                   .and. ( dcd(1) <= dcd(2) )  ) then
 
                   doing  = 'OLD SEGMENTS'
                   urgent = 'ADD TO END'
@@ -3245,7 +3245,7 @@
 
 
 
-         else if ( status .eq. 'CHECK LIST' ) then
+         else if ( status == 'CHECK LIST' ) then
 !
 !           Okay, all the new files (and maybe an old file or two)
 !           have been searched. Time to look at the list of segments
@@ -3277,14 +3277,14 @@
 
             end if
 
-            do while ( p .gt. 0 )
+            do while ( p > 0 )
 
                if ( newsch ) then
 !
 !                 Trim the re-use interval if the request time lies
 !                 outside of the current segment.
 !
-                  if ( reqt .gt. stdcd(2,p) ) then
+                  if ( reqt > stdcd(2,p) ) then
 !
 !                    REQT is to the right of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
@@ -3293,7 +3293,7 @@
                      itlb(iindex) = max ( itlb(iindex), stdcd(2,p) )
 
 
-                  else if ( reqt .lt. stdcd(1,p) ) then
+                  else if ( reqt < stdcd(1,p) ) then
 !
 !                    REQT is to the left of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
@@ -3306,13 +3306,13 @@
                end if
 
 
-               if (       ( omega .ge. stdcd(1,p) ) &
-                    .and. ( alpha .le. stdcd(2,p) )  ) then
+               if (       ( omega >= stdcd(1,p) ) &
+                    .and. ( alpha <= stdcd(2,p) )  ) then
 !
 !                 The segment coverage interval intersects the request
 !                 interval ALPHA:OMEGA.
 !
-                  if (  (.not. avneed) .or. (sticd(4,p) .ne. 0)  ) then
+                  if (  (.not. avneed) .or. (sticd(4,p) /= 0)  ) then
 !
 !                    This segment satisfies the request.
 !
@@ -3331,8 +3331,8 @@
 !                    cannot be one of the endpoints.
 !
                      if (         newsch &
-                          .and. ( reqt .gt. stdcd(1,p) ) &
-                          .and. ( reqt .lt. stdcd(2,p) )  ) then
+                          .and. ( reqt > stdcd(1,p) ) &
+                          .and. ( reqt < stdcd(2,p) )  ) then
 !
 !                       Set the re-use interval for the current
 !                       instrument.
@@ -3388,7 +3388,7 @@
 !           If there are more files, search them.
 !           Otherwise, things are hopeless, set the status that way.
 !
-            if ( itlfs( iindex ) .gt. ftnum( 1 ) ) then
+            if ( itlfs( iindex ) > ftnum( 1 ) ) then
                status = 'OLD FILES'
             else
                status = 'HOPELESS'
@@ -3396,7 +3396,7 @@
 
 
 
-         else if ( status .eq. 'MAKE ROOM' ) then
+         else if ( status == 'MAKE ROOM' ) then
 !
 !           When adding a new segment to a full table, one of the
 !           current instruments must be dropped.  The ideal
@@ -3435,10 +3435,10 @@
 
             do i = 1, nit
 
-               if ( i .ne. iindex ) then
+               if ( i /= iindex ) then
 
-                  if (      ( itexp(i) .lt. minexp   ) &
-                       .or. ( cheap    .eq. 0        )  )then
+                  if (      ( itexp(i) < minexp   ) &
+                       .or. ( cheap    == 0        )  )then
 !
 !                    This list is the cheapest seen so far,
 !                    possibly because it's the first one
@@ -3455,13 +3455,13 @@
             end do
 
 
-            if ( cheap .eq. 0 ) then
+            if ( cheap == 0 ) then
 !
 !              If there are no deletable segments, the Thing To
 !              Do depends on the task that was suspended before
 !              entering MAKE ROOM.
 !
-               if ( stack(top) .eq. 'ADD TO END' ) then
+               if ( stack(top) == 'ADD TO END' ) then
 !
 !                 The segment meta-data from the current file cannot
 !                 be buffered.  We'll search the partial list of
@@ -3514,7 +3514,7 @@
 !
                head = itbeg( cheap )
 
-               if ( head .gt. 0 ) then
+               if ( head > 0 ) then
 
                   tail = - lnkprv ( head, stpool )
 
@@ -3526,7 +3526,7 @@
 !              Fill the deleted instrument's space in the table with
 !              the final entry in the table.
 !
-               if ( cheap .ne. nit ) then
+               if ( cheap /= nit ) then
 
                   itins (cheap) = itins (nit)
                   itexp (cheap) = itexp (nit)
@@ -3545,7 +3545,7 @@
 
                end if
 
-               if ( iindex .eq. nit ) then
+               if ( iindex == nit ) then
                   iindex = cheap
                end if
 
@@ -3564,7 +3564,7 @@
 !
 
 
-         else if ( status .eq. 'ADD TO FRONT' ) then
+         else if ( status == 'ADD TO FRONT' ) then
 !
 !           The current segment information should be linked in at
 !           the head of the segment list for the current instrument,
@@ -3574,7 +3574,7 @@
 !           The only way to get here is from the block NEW SEGMENTS
 !           after suspending that task.
 
-            if ( lnknfn(stpool) .eq. 0 ) then
+            if ( lnknfn(stpool) == 0 ) then
 
                doing  = 'ADD TO FRONT'
                urgent = 'MAKE ROOM'
@@ -3610,7 +3610,7 @@
             end if
 
 
-         else if ( status .eq. 'ADD TO END' ) then
+         else if ( status == 'ADD TO END' ) then
 !
 !           The current segment information should be linked in at
 !           the tail of the segment list for the current instrument.
@@ -3618,7 +3618,7 @@
 !           The only way to get to this task is from the OLD SEGMENTS
 !           block after suspending that task.
 !
-            if ( lnknfn(stpool) .eq. 0 ) then
+            if ( lnknfn(stpool) == 0 ) then
 
                doing  = 'ADD TO END'
                urgent = 'MAKE ROOM'
@@ -3641,7 +3641,7 @@
                   return
                end if
 
-               if ( itbeg(iindex) .le. 0 ) then
+               if ( itbeg(iindex) <= 0 ) then
 !
 !                 This is the first node in the list for this
 !                 instrument.
@@ -3662,7 +3662,7 @@
             end if
 
 
-         else if ( status .eq. 'PREPARE PARTIAL LIST' ) then
+         else if ( status == 'PREPARE PARTIAL LIST' ) then
 !
 !           When the segment table is completely full, continue
 !           the search by looking through the unchecked portion
@@ -3687,9 +3687,9 @@
             slbeg  = itbeg( iindex )
             fndhan = .false.
 
-            do while (  ( .not. fndhan ) .and. ( slbeg .gt. 0 )  )
+            do while (  ( .not. fndhan ) .and. ( slbeg > 0 )  )
 
-               fndhan = sthan(slbeg) .eq. fthan(findex)
+               fndhan = sthan(slbeg) == fthan(findex)
 
                if ( .not. fndhan ) then
 !
@@ -3709,7 +3709,7 @@
 !           Otherwise, finish searching old files without buffering
 !           anything.
 !
-            if ( slbeg .gt. 0 ) then
+            if ( slbeg > 0 ) then
 !
 !              The partial list from the current node onwards is to be
 !              returned to the free list.  Save this node, since
@@ -3730,7 +3730,7 @@
 !              corresponding instrument table entry should be set to
 !              a non-positive value to indicate an empty segment list.
 !
-               if ( p .eq. itbeg(iindex) ) then
+               if ( p == itbeg(iindex) ) then
 
                   itbeg(iindex) = 0
 
@@ -3753,7 +3753,7 @@
             end if
 
 
-         else if ( status .eq. 'CHECK PARTIAL LIST' ) then
+         else if ( status == 'CHECK PARTIAL LIST' ) then
 !
 !           The only ways to get here are from the
 !           'PREPARE PARTIAL LIST' state, or by resuming a search of
@@ -3768,7 +3768,7 @@
 !           Reject a segment if there is a need for angular velocity
 !           data and the segment doesn't have it.
 !
-            do while ( p .gt. 0 )
+            do while ( p > 0 )
 !
 !              If this is a new search, update the re-use interval
 !              and its expense.
@@ -3784,7 +3784,7 @@
 !                 Trim the re-use interval if the request time lies
 !                 outside the coverage of the current segment.
 !
-                  if ( reqt .gt. stdcd(2,p) ) then
+                  if ( reqt > stdcd(2,p) ) then
 !
 !                    REQT is to the right of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
@@ -3793,7 +3793,7 @@
                      itlb(iindex) = max ( itlb(iindex), stdcd(2,p) )
 
 
-                  else if ( reqt .lt. stdcd(1,p) ) then
+                  else if ( reqt < stdcd(1,p) ) then
 !
 !                    REQT is to the left of the coverage interval of
 !                    this segment.  Trim the re-use interval on the
@@ -3808,13 +3808,13 @@
 !              We've updated the re-use interval if so required.
 !
 
-               if (       ( omega .ge. stdcd(1,p) ) &
-                    .and. ( alpha .le. stdcd(2,p) )  ) then
+               if (       ( omega >= stdcd(1,p) ) &
+                    .and. ( alpha <= stdcd(2,p) )  ) then
 !
 !                 The segment coverage interval intersects the request
 !                 interval ALPHA:OMEGA.
 !
-                  if (  (.not. avneed) .or. (sticd(4,p) .ne. 0) ) then
+                  if (  (.not. avneed) .or. (sticd(4,p) /= 0) ) then
 !
 !                    This segment satisfies the request.  Set the
 !                    output arguments.
@@ -3838,8 +3838,8 @@
 !                    interval:  it cannot be one of the endpoints.
 !
                      if (         newsch &
-                          .and. ( reqt .gt. stdcd(1,p) ) &
-                          .and. ( reqt .lt. stdcd(2,p) )  ) then
+                          .and. ( reqt > stdcd(1,p) ) &
+                          .and. ( reqt < stdcd(2,p) )  ) then
 !
 !                       Adjust the re-use interval for the current
 !                       instrument.
@@ -3929,7 +3929,7 @@
             status = 'SEARCH W/O BUFF'
 
 
-         else if ( status .eq. 'SEARCH W/O BUFF' ) then
+         else if ( status == 'SEARCH W/O BUFF' ) then
 !
 !           The only ways to get here are from the
 !           'PREPARE PARTIAL LIST' and 'CHECK PARTIAL LIST' states.
@@ -3942,7 +3942,7 @@
 !           Recall that a search is already in progress and that a
 !           segment is currently under consideration (FND = .TRUE.).
 !
-            do while ( findex .gt. 0 )
+            do while ( findex > 0 )
 
                do while ( fnd )
 
@@ -3964,7 +3964,7 @@
                   end if
 
 
-                  if ( scinst .eq. icd(1) ) then
+                  if ( scinst == icd(1) ) then
 !
 !                    This is a segment for the instrument of interest.
 
@@ -3972,7 +3972,7 @@
 !
 !                       Update the re-use interval for this instrument.
 !
-                        if ( reqt .gt. dcd(2) ) then
+                        if ( reqt > dcd(2) ) then
 !
 !                          REQT is to the right of the coverage interval
 !                          of this segment.  Trim the re-use interval
@@ -3981,7 +3981,7 @@
                            itlb(iindex) = max ( itlb(iindex), dcd(2) )
 
 
-                        else if ( reqt .lt. dcd(1) ) then
+                        else if ( reqt < dcd(1) ) then
 !
 !                          REQT is to the left of the coverage interval
 !                          of this segment.  Trim the re-use interval
@@ -3995,14 +3995,14 @@
 !
 !                    We've trimmed the re-use interval if necessary.
 !
-                     if (       ( omega .ge. dcd(1) ) &
-                          .and. ( alpha .le. dcd(2) )  ) then
+                     if (       ( omega >= dcd(1) ) &
+                          .and. ( alpha <= dcd(2) )  ) then
 !
 !                       The segment coverage interval intersects the
 !                       request interval ALPHA:OMEGA.
 !
                         if (      ( .not. avneed  ) &
-                             .or. ( icd(4) .ne. 0 )  ) then
+                             .or. ( icd(4) /= 0 )  ) then
 !
 !                          This segment satisfies the request.  Set
 !                          the output arguments.
@@ -4086,7 +4086,7 @@
 !
                findex = findex -1
 
-               if ( findex .gt. 0 ) then
+               if ( findex > 0 ) then
 
                   call dafbbs ( fthan( findex ) )
                   call daffpa ( fnd             )
@@ -4102,7 +4102,7 @@
             status         = 'HOPELESS'
 
 
-         else if ( status .eq. 'SUSPEND' ) then
+         else if ( status == 'SUSPEND' ) then
 !
 !           When a task is suspended, the current activity is placed on
 !           a stack, to be restored later. Two levels are provided,
@@ -4112,7 +4112,7 @@
             stack( top ) = doing
             status       = urgent
 
-         else if ( status .eq. 'RESUME' ) then
+         else if ( status == 'RESUME' ) then
 
             status = stack( top )
             top    = top - 1
@@ -4133,7 +4133,7 @@
 !     at this point.  Also, make sure the expense of the re-use
 !     interval is zeroed out.
 !
-      if ( iindex .gt. 0 ) then
+      if ( iindex > 0 ) then
 
          itchkp(iindex) = .false.
          itruex(iindex) =  0
@@ -4320,7 +4320,7 @@
 !-&
 
 
-      found = nft .gt. 0
+      found = nft > 0
       return
 
       end

@@ -288,7 +288,7 @@
 !
 !     Check the vertex and plate counts.
 !
-      if ( np .lt. 0 ) then
+      if ( np < 0 ) then
 
          call chkin  ( 'PLTAR'                                        )
          call setmsg ( 'Plate count must be non-negative but NP = #.' )
@@ -300,7 +300,7 @@
       end if
 
 
-      if ( np .eq. 0 ) then
+      if ( np == 0 ) then
 !
 !        The area has already been set to zero.
 !
@@ -309,7 +309,7 @@
       end if
 
 
-      if ( nv .lt. 3 ) then
+      if ( nv < 3 ) then
 
          call chkin  ( 'PLTAR'                                       )
          call setmsg ( 'At least 3 vertices are needed, but NV = #.' )
@@ -327,8 +327,8 @@
 
          do j = 1, 3
 
-            if (      ( plates(j,i) .lt. 1  ) &
-                 .or. ( plates(j,i) .gt. nv )  ) then
+            if (      ( plates(j,i) < 1  ) &
+                 .or. ( plates(j,i) > nv )  ) then
 
                call chkin  ( 'PLTAR'                                   )
                call setmsg ( 'Vertex indices must be in the range ' &

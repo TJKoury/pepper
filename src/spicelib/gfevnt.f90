@@ -44,14 +44,14 @@
 
       external              udstep
       external              udrefn
-      character*(*)         gquant
+      character(*)          gquant
       integer(ip)           qnpars
-      character*(*)         qpnams ( * )
-      character*(*)         qcpars ( * )
+      character(*)          qpnams ( * )
+      character(*)          qcpars ( * )
       real(wp)              qdpars ( * )
       integer(ip)           qipars ( * )
       logical               qlpars ( * )
-      character*(*)         op
+      character(*)          op
       real(wp)              refval
       real(wp)              tol
       real(wp)              adjust
@@ -1675,30 +1675,30 @@
 !
 !     Local variables
 !
-      character*(maxcln)    abcorr
-      character*(maxcln)    angtyp
-      character*(maxcln)    cnames ( nc )
-      character*(maxcln)    cornam
-      character*(maxcln)    corsys
-      character*(maxcln)    cpars  ( maxpar )
-      character*(maxcln)    dref
-      character*(maxcln)    frame  ( 2 )
-      character*(maxcln)    illum
-      character*(maxcln)    method
-      character*(maxcln)    obsrvr
-      character*(maxcln)    of     ( 2 )
-      character*(maxcln)    pnames ( maxpar )
-      character*(maxcln)    qnames ( nq     )
-      character*(maxcln)    qpars  ( maxpar, nq )
-      character*(maxcln)    quant
-      character*(maxcln)    ref
-      character*(maxcln)    shape  ( 2 )
-      character*(maxcln)    target
-      character*(maxcln)    vecdef
-      character*(maxop)     uop
-      character*(mxbegm)    rptpre ( 2 )
-      character*(mxbegm)    srcpre ( 2, nq )
-      character*(mxendm)    srcsuf ( 2, nq )
+      character(maxcln)     abcorr
+      character(maxcln)     angtyp
+      character(maxcln)     cnames ( nc )
+      character(maxcln)     cornam
+      character(maxcln)     corsys
+      character(maxcln)     cpars  ( maxpar )
+      character(maxcln)     dref
+      character(maxcln)     frame  ( 2 )
+      character(maxcln)     illum
+      character(maxcln)     method
+      character(maxcln)     obsrvr
+      character(maxcln)     of     ( 2 )
+      character(maxcln)     pnames ( maxpar )
+      character(maxcln)     qnames ( nq     )
+      character(maxcln)     qpars  ( maxpar, nq )
+      character(maxcln)     quant
+      character(maxcln)     ref
+      character(maxcln)     shape  ( 2 )
+      character(maxcln)     target
+      character(maxcln)     vecdef
+      character(maxop)      uop
+      character(mxbegm)     rptpre ( 2 )
+      character(mxbegm)     srcpre ( 2, nq )
+      character(mxendm)     srcsuf ( 2, nq )
 
       real(wp)              dt
 
@@ -1908,7 +1908,7 @@
       qtnum = isrchc ( quant, nq, qnames )
 
 
-      if ( qtnum .eq. 0 ) then
+      if ( qtnum == 0 ) then
 
         call setmsg ('The geometric quantity, # is not '             // &
                      'recognized. Supported quantities are: '        // &
@@ -1928,7 +1928,7 @@
 !
 !     Check number of quantity definition parameters.
 !
-      if (  ( qnpars .lt. 0 ) .or. ( qnpars .gt. maxpar )  ) then
+      if (  ( qnpars < 0 ) .or. ( qnpars > maxpar )  ) then
 
          call setmsg ( 'Number of quantity definition parameters = ' // &
                        '#;  must be in range 0:#.'                    )
@@ -1959,14 +1959,14 @@
 !
       do i = 1, maxpar
 
-         if ( qpars(i,qtnum) .ne. ' ' ) then
+         if ( qpars(i,qtnum) /= ' ' ) then
 !
 !           The Ith parameter must be supplied by the caller.
 !
             loc = isrchc ( qpars(i,qtnum), qnpars, pnames )
 
 
-            if ( loc .eq. 0 ) then
+            if ( loc == 0 ) then
 
                call setmsg ( 'The parameter # is required in order ' // &
                              'to compute events pertaining to the '  // &
@@ -2016,7 +2016,7 @@
 !
       loc = isrchc ( 'TARGET', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          target = cpars(loc)
 
@@ -2028,7 +2028,7 @@
 !
       loc = isrchc ( 'OBSERVER', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          obsrvr = cpars(loc)
 
@@ -2040,7 +2040,7 @@
 !
       loc = isrchc ( 'ILLUM', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          illum = cpars(loc)
 
@@ -2052,7 +2052,7 @@
 !
       loc = isrchc ( 'TARGET1', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          of(1) = cpars(loc)
 
@@ -2064,7 +2064,7 @@
 !
       loc = isrchc ( 'TARGET2', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          of(2) = cpars(loc)
 
@@ -2076,7 +2076,7 @@
 !
       loc = isrchc ( 'FRAME1', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          frame(1) = cpars(loc)
 
@@ -2087,7 +2087,7 @@
 !
       loc = isrchc ( 'FRAME2', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          frame(2) = cpars(loc)
 
@@ -2099,7 +2099,7 @@
 !
       loc = isrchc ( 'SHAPE1', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          shape(1) = cpars(loc)
 
@@ -2111,7 +2111,7 @@
 !
       loc = isrchc ( 'SHAPE2', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          shape(2) = cpars(loc)
 
@@ -2123,7 +2123,7 @@
 !
       loc = isrchc ( 'ABCORR', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          abcorr = cpars(loc)
 
@@ -2135,7 +2135,7 @@
 !
       loc = isrchc ( 'REFERENCE FRAME', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          ref = cpars(loc)
 
@@ -2147,7 +2147,7 @@
 !
       loc = isrchc ( 'COORDINATE SYSTEM',  qnpars, qpnams )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          corsys = qcpars(loc)
 
@@ -2159,7 +2159,7 @@
 !
       loc = isrchc ( 'COORDINATE', qnpars, qpnams )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          cornam = qcpars(loc)
 
@@ -2171,7 +2171,7 @@
 !
       loc = isrchc ( 'VECTOR DEFINITION',  qnpars, qpnams )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          vecdef = qcpars(loc)
 
@@ -2182,7 +2182,7 @@
 !
       loc = isrchc ( 'DVEC', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          call vequ( qdpars(1), dvec(1)  )
 
@@ -2194,7 +2194,7 @@
 !
       loc = isrchc ( 'METHOD',  qnpars, qpnams )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          method = qcpars(loc)
 
@@ -2206,7 +2206,7 @@
 !
       loc = isrchc ( 'DREF', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          dref = cpars(loc)
 
@@ -2217,7 +2217,7 @@
 !
       loc = isrchc ( 'ANGTYP', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          angtyp = cpars(loc)
 
@@ -2228,7 +2228,7 @@
 !
       loc = isrchc ( 'SPOINT', qnpars, pnames )
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
 
          call vequ( qdpars(1), spoint )
 
@@ -2245,7 +2245,7 @@
 
       loc = isrchc ( uop, nc, cnames )
 
-      if ( loc .eq. 0 ) then
+      if ( loc == 0 ) then
 
         call setmsg ('The comparison operator, # is not '            // &
                      'recognized.  Supported operators are: '        // &
@@ -2274,10 +2274,10 @@
 !        operator and the flag NOADJX to indicate an absolute extremum
 !        operator with zero adjustment.
 !
-         localx = ( uop .eq. 'LOCMIN' ) .or. ( uop .eq. 'LOCMAX' )
+         localx = ( uop == 'LOCMIN' ) .or. ( uop == 'LOCMAX' )
 
-         noadjx =  ( adjust .eq.  0.0_wp    ) .and. &
-                 ( ( uop    .eq. 'ABSMIN' ) .or. ( uop .eq. 'ABSMAX' ) )
+         noadjx =  ( adjust ==  0.0_wp    ) .and. &
+                 ( ( uop    == 'ABSMIN' ) .or. ( uop == 'ABSMAX' ) )
 
          if ( localx .or. noadjx ) then
 
@@ -2310,7 +2310,7 @@
 !     the quantity of interest, then call the generic relation
 !     pre-image solver ZZGFREL.
 !
-      if ( qtnum .eq. sep ) then
+      if ( qtnum == sep ) then
 
 !
 !        Separation condition initializer.
@@ -2327,7 +2327,7 @@
                         result  )
 
 
-      else if ( qtnum .eq. dist ) then
+      else if ( qtnum == dist ) then
 
 !
 !        Distance condition initializer.
@@ -2343,7 +2343,7 @@
                         srcsuf(1,dist), bail,     udbail, &
                         result  )
 
-      else if ( qtnum .eq. coord ) then
+      else if ( qtnum == coord ) then
 
 !
 !        Solve for a coordinate condition. ZZGFCSLV calls the coordinate
@@ -2356,7 +2356,7 @@
                           bail,   udbail, mw,     nw,     work, &
                           cnfine, result                        )
 
-      else if ( qtnum .eq. angspd  ) then
+      else if ( qtnum == angspd  ) then
 
 !
 !        d( sep )
@@ -2364,7 +2364,7 @@
 !        dt
 !
 
-      else if ( qtnum .eq. rngrat ) then
+      else if ( qtnum == rngrat ) then
 
 !
 !        Range rate condition initializer.
@@ -2386,7 +2386,7 @@
                         srcsuf(1,rngrat), bail,     udbail, &
                         result  )
 
-      else if ( qtnum .eq. phase ) then
+      else if ( qtnum == phase ) then
 
 !
 !        Phase angle condition initializer.
@@ -2402,13 +2402,13 @@
                         srcsuf(1,phase), bail,     udbail, &
                         result  )
 
-      else if ( qtnum .eq. apdiam ) then
+      else if ( qtnum == apdiam ) then
 
 !
 !                ---Not yet implemented---
 !
 
-      else if ( qtnum .eq. iluang ) then
+      else if ( qtnum == iluang ) then
 !
 !        Illumination angle condition initializer.
 !

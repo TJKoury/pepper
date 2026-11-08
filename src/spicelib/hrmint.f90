@@ -274,7 +274,7 @@
 !
 !     No data, no interpolation.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call chkin  ( 'HRMINT'                              )
          call setmsg ( 'Array size must be positive; was #.' )
@@ -313,7 +313,7 @@
          denom  =  xvals(i+1) - xvals(i)
 
 
-         if ( denom .eq. 0.0_wp ) then
+         if ( denom == 0.0_wp ) then
 
             call chkin  ( 'HRMINT'                  )
             call setmsg ( 'XVALS(#) = XVALS(#) = #' )
@@ -394,7 +394,7 @@
 
             denom    =     xvals(xij)   -   xvals(xi)
 
-            if ( denom .eq. 0.0_wp ) then
+            if ( denom == 0.0_wp ) then
 
                call chkin  ( 'HRMINT'                  )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )

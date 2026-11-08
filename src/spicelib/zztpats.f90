@@ -24,8 +24,8 @@
       implicit none
       integer(ip)           room
       integer(ip)           nknown
-      character*(*)         known  ( * )
-      character*(*)         meanng ( * )
+      character(*)          known  ( * )
+      character(*)          meanng ( * )
 
       integer(ip)           count
       parameter           ( count = 231 )
@@ -155,10 +155,10 @@
       integer(ip)           i
       integer(ip)           ordvec ( count )
 
-      character*(wdsize)    myknwn ( count )
+      character(wdsize)     myknwn ( count )
       save                  myknwn
 
-      character*(wdsize)    mymnng ( count )
+      character(wdsize)     mymnng ( count )
       save                  mymnng
 
       logical               first
@@ -1114,7 +1114,7 @@
 !     If there wasn't sufficient room to get all of the patterns
 !     and meanings, return FALSE.
 !
-      if ( count .gt. room ) then
+      if ( count > room ) then
          zztpats = .false.
          return
       end if

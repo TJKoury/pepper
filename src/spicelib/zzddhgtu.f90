@@ -147,7 +147,7 @@
 !
 !     First check the case when the unit table is completely empty.
 !
-      if ( nut .eq. 0 ) then
+      if ( nut == 0 ) then
 
          nut    = 1
          uindex = 1
@@ -186,7 +186,7 @@
 !     logical units are reserved for this suite of routines usage,
 !     but are not currently assigned a file.
 !
-      if ( utcst(orderv(1)) .le. 0 ) then
+      if ( utcst(orderv(1)) <= 0 ) then
 
          uindex = orderv(1)
 
@@ -207,7 +207,7 @@
 !     Now if no '0' cost rows exist, check to see if we can
 !     expand the table.
 !
-      if ( nut .lt. utsize ) then
+      if ( nut < utsize ) then
 
 !
 !        Now increment NUT and set UINDEX.
@@ -249,7 +249,7 @@
       i    = 0
       done = .false.
 
-      do while ( (.not. done) .and. (i .ne. nut) )
+      do while ( (.not. done) .and. (i /= nut) )
 
          i    = i + 1
          done = .not. utlck( orderv(i) )

@@ -434,7 +434,7 @@
 
       type = icd( 3 )
 
-      if ( type .eq. 1 ) then
+      if ( type == 1 ) then
 
          call ckr01 ( handle, descr, sclkdp, tol, needav, record, &
                       found )
@@ -443,7 +443,7 @@
             call cke01 ( needav, record, cmat, av, clkout )
          end if
 
-      else  if ( type .eq. 2 ) then
+      else  if ( type == 2 ) then
 
          call ckr02 ( handle, descr, sclkdp, tol, record, found )
 
@@ -451,7 +451,7 @@
             call cke02 ( needav, record, cmat, av, clkout )
          end if
 
-      else  if ( type .eq. 3 ) then
+      else  if ( type == 3 ) then
 
          call ckr03 (handle, descr, sclkdp, tol, needav, record, found)
 
@@ -459,7 +459,7 @@
             call cke03 ( needav, record, cmat, av, clkout )
          end if
 
-      else  if ( type .eq. 4 ) then
+      else  if ( type == 4 ) then
 
          call ckr04 (handle, descr, sclkdp, tol, needav, record, found)
 
@@ -467,7 +467,7 @@
             call cke04 ( needav, record, cmat, av, clkout )
          end if
 
-      else  if ( type .eq. 5 ) then
+      else  if ( type == 5 ) then
 
          call ckr05 (handle, descr, sclkdp, tol, needav, record, found)
 
@@ -475,7 +475,7 @@
             call cke05 ( needav, record, cmat, av, clkout )
          end if
 
-      else  if ( type .eq. 6 ) then
+      else  if ( type == 6 ) then
 
          call ckr06 (handle, descr, sclkdp, tol, needav, record, found)
 

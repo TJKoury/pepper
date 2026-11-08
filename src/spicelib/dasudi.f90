@@ -358,10 +358,10 @@
 !
 !     Validate the input addresses.
 !
-      if (      ( first .lt. 1     ) &
-           .or. ( first .gt. lasti ) &
-           .or. ( last  .lt. 1     ) &
-           .or. ( last  .gt. lasti )  ) then
+      if (      ( first < 1     ) &
+           .or. ( first > lasti ) &
+           .or. ( last  < 1     ) &
+           .or. ( last  > lasti )  ) then
 
          call setmsg ( 'FIRST was #. LAST was #. Valid range is [1,#].')
          call errint ( '#',   first                                    )
@@ -400,7 +400,7 @@
 !
       nwritn  =  0
 
-      do while (  ( nwritn .lt. n ) .and. ( .not. failed() )  )
+      do while (  ( nwritn < n ) .and. ( .not. failed() )  )
 !
 !        Write as much data as we can (or need to) into the current
 !        record.  We assume that CLBASE, RECNO, WORDNO, and NWRITN have
@@ -411,7 +411,7 @@
 !
          numint  =  min (  n - nwritn,   nwi - wordno + 1  )
 
-         if ( numint .gt. 0 ) then
+         if ( numint > 0 ) then
 !
 !           Write NUMINT words into the current record.
 !
@@ -433,7 +433,7 @@
 !           one.  Otherwise, we'll have to look up the location of the
 !           next integer logical address.
 !
-            if (  recno  .lt.  ( clbase + clsize - 1 )  ) then
+            if (  recno  <  ( clbase + clsize - 1 )  ) then
 
                recno   =  recno + 1
                wordno  =  1

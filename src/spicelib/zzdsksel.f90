@@ -576,7 +576,7 @@
 !
 !     The body ID is the only DSK segment attribute that must match.
 !
-      zzdskbdc = nint( dskdsc(ctridx) ) .eq. savbid
+      zzdskbdc = nint( dskdsc(ctridx) ) == savbid
 
       return
 
@@ -829,7 +829,7 @@
       savbid = bodyid
       savet  = et
 
-      if ( nsurf .gt. maxsrf ) then
+      if ( nsurf > maxsrf ) then
 
          call chkin ( 'ZZDSKSIT' )
 
@@ -976,12 +976,12 @@
 !
       zzdskcit = .false.
 
-      if ( savbid  .eq. nint( dskdsc(ctridx) )  ) then
+      if ( savbid  == nint( dskdsc(ctridx) )  ) then
 
-         if (      ( savet .ge. dskdsc(btmidx) ) &
-             .and. ( savet .le. dskdsc(etmidx) )  ) then
+         if (      ( savet >= dskdsc(btmidx) ) &
+             .and. ( savet <= dskdsc(etmidx) )  ) then
 
-            if ( savnsf .lt. 1 ) then
+            if ( savnsf < 1 ) then
 !
 !              There are no surface ID constraints; we have
 !              a match.
@@ -995,7 +995,7 @@
 !
                surf     = nint( dskdsc(srfidx) )
 
-               zzdskcit = bsrchi( surf, savnsf, savsrf ) .gt. 0
+               zzdskcit = bsrchi( surf, savnsf, savsrf ) > 0
 
             end if
 
@@ -1273,12 +1273,12 @@
 !
 !     Check the body ID first.
 !
-      if ( savbid  .eq. nint( dskdsc(ctridx) )  ) then
+      if ( savbid  == nint( dskdsc(ctridx) )  ) then
 !
 !        The body ID matches; check the time coverage.
 !
-         if (      ( savet .ge. dskdsc(btmidx) ) &
-             .and. ( savet .le. dskdsc(etmidx) )  ) then
+         if (      ( savet >= dskdsc(btmidx) ) &
+             .and. ( savet <= dskdsc(etmidx) )  ) then
 !
 !           Check the coordinates. Note that we don't
 !           know whether the frame and coordinates are
@@ -1294,8 +1294,8 @@
 !
             loccor(1) = savco1
 
-            if (      ( segsys .eq. latsys ) &
-                 .or. ( segsys .eq. pdtsys ) ) then
+            if (      ( segsys == latsys ) &
+                 .or. ( segsys == pdtsys ) ) then
 !
 !              Adjust segment bounds using a small margin.
 !
@@ -1306,11 +1306,11 @@
 !
 !              Move longitude into range.
 !
-               if ( loccor(1) .lt. co1min ) then
+               if ( loccor(1) < co1min ) then
 
                   loccor(1) = loccor(1) + pi2
 
-               else if ( loccor(1) .gt. co1max ) then
+               else if ( loccor(1) > co1max ) then
 
                   loccor(1) = loccor(1) - pi2
 
@@ -1331,8 +1331,8 @@
 !           Check the first coordinate against the segment's
 !           corresponding coverage range.
 !
-            if (     ( loccor(1) .lt. co1min ) &
-                .or. ( loccor(1) .gt. co1max ) ) then
+            if (     ( loccor(1) < co1min ) &
+                .or. ( loccor(1) > co1max ) ) then
 !
 !              The first input coordinate is not covered by this
 !              segment.
@@ -1345,8 +1345,8 @@
 !           Compare the second coordinate against the segment's
 !           corresponding coverage range.
 !
-            if (     ( savco2 .lt. co2min ) &
-                .or. ( savco2 .gt. co2max ) ) then
+            if (     ( savco2 < co2min ) &
+                .or. ( savco2 > co2max ) ) then
 !
 !              The second input coordinate is not covered by this
 !              segment.
@@ -1682,28 +1682,28 @@
 !
 !     Check the target ID.
 !
-      if ( savtrg  .ne. nint( dskdsc(ctridx) )  ) then
+      if ( savtrg  /= nint( dskdsc(ctridx) )  ) then
          return
       end if
 
 !
 !     Check the surface ID.
 !
-      if ( savbid  .ne. nint( dskdsc(srfidx) )  ) then
+      if ( savbid  /= nint( dskdsc(srfidx) )  ) then
          return
       end if
 
 !
 !     Check the frame ID.
 !
-      if ( savfid  .ne. nint( dskdsc(frmidx) )  ) then
+      if ( savfid  /= nint( dskdsc(frmidx) )  ) then
          return
       end if
 
 !
 !     Check the coordinate system.
 !
-      if ( savsys  .ne. nint( dskdsc(sysidx) )  ) then
+      if ( savsys  /= nint( dskdsc(sysidx) )  ) then
          return
       end if
 
@@ -1711,14 +1711,14 @@
 !     If the system is planetodetic, check the reference
 !     ellipsoid parameters.
 !
-      if ( savsys .eq. pdtsys ) then
+      if ( savsys == pdtsys ) then
 
 
-         if (  abs( savpar(1) - dskdsc(paridx)   ) .gt. margin ) then
+         if (  abs( savpar(1) - dskdsc(paridx)   ) > margin ) then
             return
          end if
 
-         if (  abs( savpar(2) - dskdsc(paridx+1) ) .gt. margin ) then
+         if (  abs( savpar(2) - dskdsc(paridx+1) ) > margin ) then
             return
          end if
 
@@ -1727,8 +1727,8 @@
 !
 !     The segment attributes match; check the time coverage.
 !
-      if (      ( savet .ge. dskdsc(btmidx) ) &
-          .and. ( savet .le. dskdsc(etmidx) )  ) then
+      if (      ( savet >= dskdsc(btmidx) ) &
+          .and. ( savet <= dskdsc(etmidx) )  ) then
 !
 !        Check the coordinates.
 !
@@ -1738,8 +1738,8 @@
 !
          loccor(1) = savco1
 
-         if (      ( segsys .eq. latsys ) &
-              .or. ( segsys .eq. pdtsys ) ) then
+         if (      ( segsys == latsys ) &
+              .or. ( segsys == pdtsys ) ) then
 !
 !           Adjust segment bounds using a small margin.
 !
@@ -1751,11 +1751,11 @@
 !
 !           Move longitude into range.
 !
-            if ( loccor(1) .lt. co1min ) then
+            if ( loccor(1) < co1min ) then
 
                loccor(1) = loccor(1) + pi2
 
-            else if ( loccor(1) .gt. co1max ) then
+            else if ( loccor(1) > co1max ) then
 
                loccor(1) = loccor(1) - pi2
 
@@ -1776,8 +1776,8 @@
 !        Check the first coordinate against the segment's
 !        corresponding coverage range.
 !
-         if (     ( loccor(1) .lt. co1min ) &
-             .or. ( loccor(1) .gt. co1max ) ) then
+         if (     ( loccor(1) < co1min ) &
+             .or. ( loccor(1) > co1max ) ) then
 !
 !           The first input coordinate is not covered by this
 !           segment.
@@ -1790,8 +1790,8 @@
 !        Compare the second coordinate against the segment's
 !        corresponding coverage range.
 !
-         if (     ( savco2 .lt. co2min ) &
-             .or. ( savco2 .gt. co2max ) ) then
+         if (     ( savco2 < co2min ) &
+             .or. ( savco2 > co2max ) ) then
 !
 !           The second input coordinate is not covered by this
 !           segment.
@@ -2110,7 +2110,7 @@
 
 !     Check the surface ID.
 !
-      if ( savbid  .ne. nint( dskdsc(srfidx) )  ) then
+      if ( savbid  /= nint( dskdsc(srfidx) )  ) then
          return
       end if
 
@@ -2118,22 +2118,22 @@
 !     Reject any segment whose target (center) ID doesn't match
 !     the request ID.
 !
-      if ( savtrg  .ne. nint( dskdsc(ctridx) )  ) then
+      if ( savtrg  /= nint( dskdsc(ctridx) )  ) then
          return
       end if
 
 !
 !     Check the time coverage.
 !
-      if (      ( savet .lt. dskdsc(btmidx) ) &
-           .or. ( savet .gt. dskdsc(etmidx) )  ) then
+      if (      ( savet < dskdsc(btmidx) ) &
+           .or. ( savet > dskdsc(etmidx) )  ) then
          return
       end if
 
 !
 !     Check the data class.
 !
-      if ( savcls  .ne. nint( dskdsc(clsidx) )  ) then
+      if ( savcls  /= nint( dskdsc(clsidx) )  ) then
          return
       end if
 
@@ -2145,7 +2145,7 @@
 !
       segfid = nint ( dskdsc(frmidx) )
 
-      if ( savfid .eq. segfid ) then
+      if ( savfid == segfid ) then
 !
 !        The request frame and segment frame match. Just copy
 !        the saved vector.
@@ -2170,17 +2170,17 @@
 !
       segsys = nint( dskdsc(sysidx) )
 
-      if (      ( segsys .eq. latsys ) &
-           .or. ( segsys .eq. pdtsys ) ) then
+      if (      ( segsys == latsys ) &
+           .or. ( segsys == pdtsys ) ) then
 !
 !        Find the latitude and longitude of the input point, expressed
 !        in the coordinate system of this segment.
 !
-         if ( segsys .eq. latsys ) then
+         if ( segsys == latsys ) then
 
             call reclat ( locpos, r, lon, lat )
 
-         else if ( segsys .eq. pdtsys ) then
+         else if ( segsys == pdtsys ) then
 
             re = dskdsc(paridx  )
             f  = dskdsc(paridx+1)
@@ -2208,11 +2208,11 @@
 
 !        Move longitude into range.
 !
-         if ( lon .lt. co1min ) then
+         if ( lon < co1min ) then
 
             lon = lon + pi2
 
-         else if ( lon .gt. co1max ) then
+         else if ( lon > co1max ) then
 
             lon = lon - pi2
 
@@ -2236,8 +2236,8 @@
 !     Check the first coordinate against the segment's
 !     corresponding coverage range.
 !
-      if (     ( lon .lt. co1min ) &
-          .or. ( lon .gt. co1max ) ) then
+      if (     ( lon < co1min ) &
+          .or. ( lon > co1max ) ) then
 !
 !        The first input coordinate is not covered by this
 !        segment.
@@ -2250,8 +2250,8 @@
 !     Compare the second coordinate against the segment's
 !     corresponding coverage range.
 !
-      if (     ( lat .lt. co2min ) &
-          .or. ( lat .gt. co2max ) ) then
+      if (     ( lat < co2min ) &
+          .or. ( lat > co2max ) ) then
 !
 !        The second input coordinate is not covered by this
 !        segment.

@@ -281,7 +281,7 @@
 !     symmetric and zero at both t1 and t2.
 !
 !
-      if ( t1 .ne. t2 ) then
+      if ( t1 /= t2 ) then
 
          call prop2b ( gm, pv(1,1), et - t1, s1 )
          call prop2b ( gm, pv(1,2), et - t2, s2 )

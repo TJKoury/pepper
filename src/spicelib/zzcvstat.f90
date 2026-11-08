@@ -25,7 +25,7 @@
       implicit none
 
       real(wp)              et
-      character*(*)         ref
+      character(*)          ref
       integer(ip)           center
       real(wp)              state ( 6 )
 
@@ -121,7 +121,7 @@
 !
 !     Local variables
 !
-      character*(frnmln)    svref
+      character(frnmln)     svref
 
       real(wp)              delta
       real(wp)              svet

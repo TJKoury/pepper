@@ -207,7 +207,7 @@
 !
 !     Local variables
 !
-      character*(filsiz)    spk
+      character(filsiz)     spk
 
       real(wp)              contrl   ( ctrlsz )
       real(wp)              data     ( bufsiz )
@@ -447,7 +447,7 @@
 !
 !     See whether there's any work to do; return immediately if not.
 !
-      if (  begin  .gt.  end  ) then
+      if (  begin  >  end  ) then
          call chkout ( 'SPKS19' )
          return
       end if
@@ -551,8 +551,8 @@
 !     item read into the buffer on the previous read
 !     operation. On the first pass NREAD is at least 1.
 !
-      do while (       ( remain      .gt. 0     ) &
-                 .and. ( data(nread) .lt. begin )  )
+      do while (       ( remain      > 0     ) &
+                 .and. ( data(nread) < begin )  )
 
          bufbas = bufbas + nread
 
@@ -629,7 +629,7 @@
 !
 !     Set the packet size, which is a function of the subtype.
 !
-      if ( ( subtyp .lt. 0 ) .or. ( subtyp .ge. s19nst ) ) then
+      if ( ( subtyp < 0 ) .or. ( subtyp >= s19nst ) ) then
 
          call setmsg ( 'Unexpected SPK type 19 subtype # found in ' &
          //            'type 19 segment within mini-segment #.'     )
@@ -676,8 +676,8 @@
 !     item read into the buffer on the previous read
 !     operation.
 !
-      do while (       ( remain      .gt. 0     ) &
-                 .and. ( data(nread) .lt. begin )  )
+      do while (       ( remain      > 0     ) &
+                 .and. ( data(nread) < begin )  )
 !
 !        Advance the buffer base to account for the NREAD
 !        epochs fetched on the previous DAFGDA call.
@@ -750,7 +750,7 @@
 !     Let EEPIDX be the index of the last epoch we select from
 !     the current input mini-segment. We'll set EEPIDX below.
 !
-      if ( ivlend .le. end ) then
+      if ( ivlend <= end ) then
 !
 !        The requested subset coverage is either equal to or extends
 !        beyond the right boundary of this interval. We'll use all data
@@ -781,7 +781,7 @@
 !
 !        NREAD is at least 2.
 !
-         if ( nread .lt. 2 ) then
+         if ( nread < 2 ) then
 !
 !           This code should not be reached.
 !
@@ -819,7 +819,7 @@
 !
 !        NREAD is (still) at least 2.
 !
-         do while (  ( remain .gt. 0 ) .and. ( data(nread) .le. end )  )
+         do while (  ( remain > 0 ) .and. ( data(nread) <= end )  )
 
             bufbas = bufbas + nread
 
@@ -860,7 +860,7 @@
 !
 !        EEPIDX is at least 2 and is less than or equal to NPKT.
 !
-         if (  ( eepidx .lt. 2 ) .or. ( eepidx .gt. npkt ) ) then
+         if (  ( eepidx < 2 ) .or. ( eepidx > npkt ) ) then
 !
 !           This code should not be reached.
 !
@@ -886,7 +886,7 @@
 !        interpolation behavior in the neighborhood of the epoch at
 !        index EEPIDX.
 !
-         if ( data(l) .eq. end ) then
+         if ( data(l) == end ) then
 !
 !           The epochs at indices EEPIDX-1 and EEPIDX comprise the
 !           first two epochs of the right half of an interpolation
@@ -971,7 +971,7 @@
 !        pass. IVLBEG has already been set to the start time of the
 !        input interval at index BEGIDX.
 !
-         if ( i .eq. bepidx ) then
+         if ( i == bepidx ) then
 !
 !           The first output interval cannot start earlier than
 !           the interval from which its data are taken. It may
@@ -984,7 +984,7 @@
 !
 !        Determine IV1END on the final loop pass.
 !
-         if ( i .eq. eepidx ) then
+         if ( i == eepidx ) then
 !
 !           The first output interval cannot end later than
 !           the interval from which its data are taken. It may
@@ -1065,7 +1065,7 @@
 !     interval. Note that this time may differ from IV1END, which
 !     is the end time of the first output interval.
 !
-      if (  ( ivlend .gt. end ) .or. ( begidx .eq. nintvl )  ) then
+      if (  ( ivlend > end ) .or. ( begidx == nintvl )  ) then
 !
 !        We've transferred all the data we need. We don't need
 !        to obtain data from other mini-segments.
@@ -1108,7 +1108,7 @@
 !        CURIVL is the index of the interval we're about to process,
 !        and if CURIVL is in range, IVLEND is its end time.
 !
-         do while (  ( ivlend .le. end ) .and. ( curivl .le. nintvl )  )
+         do while (  ( ivlend <= end ) .and. ( curivl <= nintvl )  )
 !
 !           Entering this loop means the "middle" component of the
 !           output segment is non-empty.
@@ -1137,7 +1137,7 @@
 
             nread  = min ( bufsiz, remain )
 
-            do while ( remain .gt. 0 )
+            do while ( remain > 0 )
 
                call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
@@ -1170,7 +1170,7 @@
 !
             curivl = curivl + 1
 
-            if ( curivl .le. nintvl ) then
+            if ( curivl <= nintvl ) then
 
                bufbas = ivlbas + curivl
 
@@ -1203,7 +1203,7 @@
 !
 !***********************************************************************
 
-         if ( curivl .gt. nintvl ) then
+         if ( curivl > nintvl ) then
 !
 !           The coverage of the middle group extends to the end of
 !           the coverage of the input segment. There's no more data to
@@ -1263,7 +1263,7 @@
 !
 !           Set the packet size, which is a function of the subtype.
 !
-            if ( ( subtyp .lt. 0 ) .or. ( subtyp .ge. s19nst ) ) then
+            if ( ( subtyp < 0 ) .or. ( subtyp >= s19nst ) ) then
 
                call setmsg ( 'Unexpected SPK type 19 subtype # found ' &
                //            'in type 19 segment within mini-segment ' &
@@ -1310,8 +1310,8 @@
 !           The variable NREAD is the array index of the last item read
 !           into the buffer on the previous read operation.
 !
-            do while (       ( remain      .gt. 0   ) &
-                       .and. ( data(nread) .le. end )  )
+            do while (       ( remain      > 0   ) &
+                       .and. ( data(nread) <= end )  )
 
                bufbas = bufbas + nread
 
@@ -1349,7 +1349,7 @@
 !
 !           EEPIDX is at least 2 and is less than or equal to NPKT.
 !
-            if ( eepidx .lt. 2 ) then
+            if ( eepidx < 2 ) then
 !
 !              This code should not be reached, since getting here
 !              implies the first epoch of the interval is greater than
@@ -1377,7 +1377,7 @@
 !           interpolation behavior in the neighborhood of the epoch at
 !           index EEPIDX.
 !
-            if ( data(l) .eq. end ) then
+            if ( data(l) == end ) then
 !
 !              The epochs at indices EEPIDX-1 and EEPIDX comprise
 !              the first two epochs of the right half of an
@@ -1415,7 +1415,7 @@
 !
 !           EEPIDX should always be in range at this point.
 !
-            if ( ( eepidx .lt. 2 ) .or. ( eepidx .gt. npkt ) ) then
+            if ( ( eepidx < 2 ) .or. ( eepidx > npkt ) ) then
 !
 !              This code should not be reached, since getting here
 !              implies the first epoch of the interval is greater than
@@ -1475,7 +1475,7 @@
                   return
                end if
 
-               if ( i .eq. eepidx ) then
+               if ( i == eepidx ) then
 !
 !                 The current interval is the last of the output
 !                 segment. The interval end must be greater than or
@@ -1570,7 +1570,7 @@
 !
 !     Write the remaining interval boundaries.
 !
-      if ( noivl .eq. 1 ) then
+      if ( noivl == 1 ) then
 !
 !        The final interval boundary is the stop time of
 !        the first interval.
@@ -1702,7 +1702,7 @@
 !
       call dafada ( real( 1, wp ),  1 )
 
-      if ( noivl .eq. 1 ) then
+      if ( noivl == 1 ) then
 !
 !        The next pointer indicates the first address after the
 !        mini-segment, whether or not there is another mini-segment.
@@ -1769,7 +1769,7 @@
 !
 !           On the first pass, compute the pointer shift amount.
 !
-            if ( i .eq. 2 ) then
+            if ( i == 2 ) then
 
                shift = ( min1sz + 1 ) - nint( data(1) )
 

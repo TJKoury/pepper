@@ -239,7 +239,7 @@
       card = cardd ( window )
       end  = 2*n
 
-      if ( n .lt. 1  .or.  card .lt. end ) then
+      if ( n < 1  .or.  card < end ) then
          call setmsg ( 'WNFETD: No such interval.' )
          call sigerr ( 'SPICE(NOINTERVAL)' )
       else

@@ -163,7 +163,7 @@
          return
       end if
 
-      if ( voxsiz .le. 0.0_wp ) then
+      if ( voxsiz <= 0.0_wp ) then
 
          call chkin  ( 'ZZTOGRID'                            )
          call setmsg ( 'Voxel size was #; must be positive.' )

@@ -35,7 +35,7 @@
       include 'zzsrftrn.inc'
 
       integer(ip)           bodyid
-      character*(*)         srfnam
+      character(*)          srfnam
       integer(ip)           surfid
       integer(ip)           usrctr ( 2 )
       logical               found
@@ -356,7 +356,7 @@
 !
       integer(ip)           kersid ( mxnsrf )
       integer(ip)           kerbid ( mxnsrf )
-      character*(sfnmln)    kernam ( mxnsrf )
+      character(sfnmln)     kernam ( mxnsrf )
       integer(ip)           nkvar
 !
 !        Normalized names:            NRMNAM
@@ -365,7 +365,7 @@
 !     string containing the associated body ID.
 !
 
-      character*(sfnmln)    nornam ( mxnsrf )
+      character(sfnmln)     nornam ( mxnsrf )
 
 !
 !
@@ -398,8 +398,8 @@
 !
 !     Other local declarations:
 !
-      character*(sfnmln)    nsrfnm
-      character*(sfnmln)    sqshnm
+      character(sfnmln)     nsrfnm
+      character(sfnmln)     sqshnm
 
       integer(ip)           itemat
       integer(ip)           lookat
@@ -694,16 +694,16 @@
 
       found = .false.
 
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 !
 !        Start at the head node and check each normalized name saved
 !           for this hash value until we find a name and body ID that
 !           match or run out of items in the collision list.
 !
-         do while (  ( node .gt. 0 ) .and. ( .not. found )  )
+         do while (  ( node > 0 ) .and. ( .not. found )  )
 
-            found  =       ( nsrfnm  .eq. nornam( snmidx(node) ) ) &
-                     .and. ( bodyid  .eq. kerbid( snmidx(node) ) )
+            found  =       ( nsrfnm  == nornam( snmidx(node) ) ) &
+                     .and. ( bodyid  == kerbid( snmidx(node) ) )
 
             itemat = node
             node   = snmpol ( node )
@@ -970,16 +970,16 @@
 
       found  = .false.
 
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 !
 !        Start at the head node and check each normalized name saved
 !           for this hash value until we find a name and body ID that
 !           match or run out of items in the collision list.
 !
-         do while (  ( node .gt. 0 ) .and. ( .not. found )  )
+         do while (  ( node > 0 ) .and. ( .not. found )  )
 
-            found  =       ( surfid  .eq. kersid( sididx(node) ) ) &
-                     .and. ( bodyid  .eq. kerbid( sididx(node) ) )
+            found  =       ( surfid  == kersid( sididx(node) ) ) &
+                     .and. ( bodyid  == kerbid( sididx(node) ) )
 
             itemat = node
             node   = sidpol ( node )

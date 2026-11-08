@@ -171,14 +171,14 @@
 !
 !     Local variables.
 !
-      character*(idlen)     arch
-      character*(idlen)     idword
-      character*(idlen)     type
-      character*(nchars)    strbuf
+      character(idlen)      arch
+      character(idlen)      idword
+      character(idlen)      type
+      character(nchars)     strbuf
 
-      character*(strsiz)    stramh ( numamh )
-      character*(strsiz)    strarc ( numarc )
-      character*(strsiz)    strbff ( numbff )
+      character(strsiz)     stramh ( numamh )
+      character(strsiz)     strarc ( numarc )
+      character(strsiz)     strbff ( numbff )
 
       real(wp)              mnm
 
@@ -254,7 +254,7 @@
 !
       read ( unit=unit, rec=1, iostat=iostat ) idword, intarr
 
-      if ( iostat .eq. 0 ) then
+      if ( iostat == 0 ) then
 
 !
 !        Read succeeded. Try to determine the file architecture and
@@ -264,8 +264,8 @@
 !        IDW2AT on the "cleaned" ID word to get architecture and type.
 !
          do i = 1, idlen
-            if (      ( ichar(idword(i:i)) .lt. minpch ) &
-                 .or. ( ichar(idword(i:i)) .gt. maxpch ) ) then
+            if (      ( ichar(idword(i:i)) < minpch ) &
+                 .or. ( ichar(idword(i:i)) > maxpch ) ) then
                idword(i:i) = ' '
             end if
          end do
@@ -275,7 +275,7 @@
 !
 !        Compute the output value based on the file architecture.
 !
-         if   ( arch .eq. 'DAF' ) then
+         if   ( arch == 'DAF' ) then
 
 !
 !           For DAF files, try to get the file's binary format.
@@ -292,7 +292,7 @@
 !           the first record again, now directly as characters, and
 !           translate these character to native integers.
 !
-            if ( bff .ne. natbff ) then
+            if ( bff /= natbff ) then
 
 !
 !              First, check if run-time translation is supported for
@@ -304,7 +304,7 @@
 !
                supidx = isrchi ( bff, numsup, supbff )
 
-               if ( supidx .eq. 0 ) then
+               if ( supidx == 0 ) then
                   call chkout ( 'ZZDDHMNM' )
                   return
                end if
@@ -337,7 +337,7 @@
 !
             read ( unit=unit, rec=intarr(18), iostat=iostat ) intarr
 
-            if ( iostat .eq. 0 ) then
+            if ( iostat == 0 ) then
 
                do i = 1, nints
                   mnm = mnm + intarr(i)
@@ -345,7 +345,7 @@
 
             end if
 
-         else if ( arch .eq. 'DAS' ) then
+         else if ( arch == 'DAS' ) then
 
 !
 !           For DAS files, for now, add up integers from the first

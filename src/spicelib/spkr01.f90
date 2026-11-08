@@ -227,7 +227,7 @@
 !     than or equal to ET. If there are 100 or fewer records, all
 !     the record epochs can be examined in a single group.
 !
-      if ( nrec .le. 100 ) then
+      if ( nrec <= 100 ) then
          call dafgda ( handle, offe+1, offe+nrec, data )
          recno = lstltd ( et, nrec, data ) + 1
 
@@ -249,7 +249,7 @@
       do i = 1, ndir
          call dafgda ( handle, offd+i, offd+i, data )
 
-         if ( data(1) .ge. et ) then
+         if ( data(1) >= et ) then
             off = offe + (i - 1) * 100
             call dafgda ( handle, off+1, off+100, data )
 

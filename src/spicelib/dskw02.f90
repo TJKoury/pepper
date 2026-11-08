@@ -36,7 +36,7 @@
       integer(ip)           center
       integer(ip)           surfid
       integer(ip)           dclass
-      character*(*)         frame
+      character(*)          frame
       integer(ip)           corsys
       real(wp)              corpar ( * )
       real(wp)              mncor1
@@ -970,7 +970,7 @@
 !
       call namfrm( frame, frmcde )
 
-      if ( frmcde .eq. 0  ) then
+      if ( frmcde == 0  ) then
 
          call setmsg ( 'Input reference frame # could not ' &
          //            'be mapped to an ID code. The frame ' &
@@ -986,7 +986,7 @@
 !
 !     Make sure the time bounds are in order.
 !
-      if ( last .le. first ) then
+      if ( last <= first ) then
 
          call setmsg ( 'Segment time bounds must be increasing; ' &
          //            'bounds were #:#.'                         )
@@ -1002,14 +1002,14 @@
 !     If applicable, check segment boundaries. Check the
 !     coordinate system as well.
 !
-      if ( ( corsys .eq. latsys ) .or. ( corsys .eq. pdtsys )  ) then
+      if ( ( corsys == latsys ) .or. ( corsys == pdtsys )  ) then
 !
 !        Reject invalid latitudes and longitudes. Move
 !        values that are slightly out of range into range.
 !
 !        Longitude bounds must be distinct.
 !
-         if ( mncor1 .eq. mxcor1 ) then
+         if ( mncor1 == mxcor1 ) then
 
             call setmsg ( 'Minimum longitude # radians (# degrees) ' &
             //            'was equal to maximum longitude. Longitude ' &
@@ -1025,8 +1025,8 @@
 !
 !        Check minimum longitude.
 !
-         if (      ( mncor1 .lt. -twopi()-angmrg ) &
-              .or. ( mncor1 .gt.  twopi()-angmrg ) ) then
+         if (      ( mncor1 < -twopi()-angmrg ) &
+              .or. ( mncor1 >  twopi()-angmrg ) ) then
 
             call setmsg ( 'Minimum longitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
@@ -1048,8 +1048,8 @@
 !
 !        Check maximum longitude.
 !
-         if (      ( mxcor1 .lt. -twopi()+angmrg ) &
-              .or. ( mxcor1 .gt.  twopi()+angmrg ) ) then
+         if (      ( mxcor1 < -twopi()+angmrg ) &
+              .or. ( mxcor1 >  twopi()+angmrg ) ) then
 
             call setmsg ( 'Maximum longitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
@@ -1071,7 +1071,7 @@
 !
 !        The longitude extent cannot exceed 2*pi.
 !
-         if ( mxcor1 .gt. (mncor1 + twopi() + angmrg) ) then
+         if ( mxcor1 > (mncor1 + twopi() + angmrg) ) then
 
             call setmsg ( 'Longitude bounds #:# radians ' &
             //            '(#:# degrees) are too far apart.' )
@@ -1085,7 +1085,7 @@
 
          end if
 
-         if ( mxcor1 .lt. (mncor1 - twopi() - angmrg) ) then
+         if ( mxcor1 < (mncor1 - twopi() - angmrg) ) then
 
             call setmsg ( 'Longitude bounds #:# radians ' &
             //            '(#:# degrees) are too far apart.' )
@@ -1100,7 +1100,7 @@
          end if
 
 
-         if ( segbds(2,1) .gt. segbds(1,1) ) then
+         if ( segbds(2,1) > segbds(1,1) ) then
 !
 !           The upper bound exceeds the lower by at most 2*pi + ANGMRG.
 !           Trim the upper bound to make the difference no more than
@@ -1108,7 +1108,7 @@
 !
             segbds(2,1) = min( segbds(2,1), segbds(1,1)+twopi() )
 
-         else if ( segbds(2,1) .lt. segbds(1,1) ) then
+         else if ( segbds(2,1) < segbds(1,1) ) then
 !
 !           The lower bound exceeds the upper by at most 2*pi + ANGMRG.
 !           Advance the upper bound, if necessary, to make the
@@ -1125,8 +1125,8 @@
 !        greater than the upper bound, then the difference between
 !        the bounds must not be an integer multiple of 2*pi.
 !
-         if (      ( segbds(2,1) .eq. segbds(1,1)           ) &
-              .or. ( segbds(2,1) .eq. segbds(1,1) - twopi() )  ) then
+         if (      ( segbds(2,1) == segbds(1,1)           ) &
+              .or. ( segbds(2,1) == segbds(1,1) - twopi() )  ) then
 
             call setmsg ( 'After adjustment, minimum longitude ' &
             //            '# radians (# degrees) was equal to ' &
@@ -1143,8 +1143,8 @@
 !
 !        Check minimum latitude.
 !
-         if (      ( mncor2 .lt. -halfpi()-angmrg ) &
-              .or. ( mncor2 .gt.  halfpi()-angmrg ) ) then
+         if (      ( mncor2 < -halfpi()-angmrg ) &
+              .or. ( mncor2 >  halfpi()-angmrg ) ) then
 
             call setmsg ( 'Minimum latitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
@@ -1165,8 +1165,8 @@
 !
 !        Check maximum latitude.
 !
-         if (      ( mxcor2 .lt. -halfpi()+angmrg ) &
-              .or. ( mxcor2 .gt.  halfpi()+angmrg ) ) then
+         if (      ( mxcor2 < -halfpi()+angmrg ) &
+              .or. ( mxcor2 >  halfpi()+angmrg ) ) then
 
             call setmsg ( 'Maximum latitude # radians (# degrees) ' &
             //            'was outside of valid range ' &
@@ -1188,7 +1188,7 @@
 !
 !        The latitude bounds must be in order.
 !
-         if ( mxcor2 .lt. mncor2 ) then
+         if ( mxcor2 < mncor2 ) then
 
             call setmsg ( 'Latitude bounds # and # are out of order.' )
             call errdp  ( '#',  mncor2                                )
@@ -1200,12 +1200,12 @@
          end if
 
 
-         if ( corsys .eq. latsys ) then
+         if ( corsys == latsys ) then
 !
 !           The coordinate system is latitudinal. Check radius
 !           bounds.
 !
-            if ( mncor3 .lt. 0.0_wp ) then
+            if ( mncor3 < 0.0_wp ) then
 
                call setmsg ( 'Radius lower bound must be ' &
                //            'non-negative but was #.'     )
@@ -1216,7 +1216,7 @@
 
             end if
 
-            if ( mxcor3 .le. 0.0_wp ) then
+            if ( mxcor3 <= 0.0_wp ) then
 
                call setmsg ( 'Radius upper bound must be ' &
                //            'strictly positive but was #.'  )
@@ -1230,12 +1230,12 @@
          end if
 
 
-         if ( corsys .eq. pdtsys ) then
+         if ( corsys == pdtsys ) then
 !
 !           The coordinate system is planetodetic. Check the coordinate
 !           parameters as well.
 !
-            if ( corpar(1) .le. 0.0_wp ) then
+            if ( corpar(1) <= 0.0_wp ) then
 
                call setmsg ( 'Equatorial radius was #; this radius ' &
                //            'must be strictly positive.'            )
@@ -1247,7 +1247,7 @@
             end if
 
 
-            if ( corpar(2) .ge. 1.0_wp ) then
+            if ( corpar(2) >= 1.0_wp ) then
 
                call setmsg ( 'Flattening coefficient was #; this ' &
                //            'value must be strictly less than 1.' )
@@ -1267,7 +1267,7 @@
 
             altlim = max( -(a**2)/b, -(b**2)/a )
 
-            if (  mncor3  .le.  altlim  ) then
+            if (  mncor3  <=  altlim  ) then
 
                call setmsg ( 'Reference ellipsoid has semi-axis ' &
                //            'lengths # and #. The minimum ' &
@@ -1291,9 +1291,9 @@
 !        The bounds of the third coordinate, whether radius or altitude,
 !        must be in order and must have positive extent.
 !
-         if ( mxcor3 .lt. mncor3 ) then
+         if ( mxcor3 < mncor3 ) then
 
-            if ( corsys .eq. latsys ) then
+            if ( corsys == latsys ) then
 
                call setmsg ( 'Radius bounds # and # are out of order' )
             else
@@ -1309,9 +1309,9 @@
 
          end if
 
-         if ( mxcor3 .eq. mncor3 ) then
+         if ( mxcor3 == mncor3 ) then
 
-            if ( corsys .eq. latsys ) then
+            if ( corsys == latsys ) then
 
                call setmsg ( 'Radius bounds # and # must have ' &
                //            'positive extent but are equal.'  )
@@ -1330,13 +1330,13 @@
 
 
 
-      else if ( corsys .eq. recsys ) then
+      else if ( corsys == recsys ) then
 !
 !        All coordinate bounds must be in strictly increasing order.
 !
-         if (      ( mxcor1 .le. mncor1 ) &
-              .or. ( mxcor2 .le. mncor2 ) &
-              .or. ( mxcor3 .le. mncor3 )  ) then
+         if (      ( mxcor1 <= mncor1 ) &
+              .or. ( mxcor2 <= mncor2 ) &
+              .or. ( mxcor3 <= mncor3 )  ) then
 
             call setmsg ( 'Rectangular coordinate bounds must be ' &
             //            'strictly increasing in each dimension. ' &
@@ -1372,7 +1372,7 @@
 !
 !     Check the data class.
 !
-      if (  ( dclass .lt. 1 ) .or. ( dclass .gt. 2 )  ) then
+      if (  ( dclass < 1 ) .or. ( dclass > 2 )  ) then
 
          call setmsg ( 'Data class # is not recognized.' )
          call errint ( '#', dclass                       )
@@ -1388,7 +1388,7 @@
 !     Note that we don't apply Euler's law, since the data
 !     set need not represent a complete surface.
 !
-      if (  ( nv .lt. 1 ) .or. ( nv .gt. maxvrt )  ) then
+      if (  ( nv < 1 ) .or. ( nv > maxvrt )  ) then
 
          call setmsg ( 'Vertex count NV = #; count must ' &
          //            'be in the range 1:#.'            )
@@ -1400,7 +1400,7 @@
 
       end if
 
-      if (  ( np .lt. 1 ) .or. ( np .gt. maxplt )  ) then
+      if (  ( np < 1 ) .or. ( np > maxplt )  ) then
 
          call setmsg ( 'Plate count NP = #; count must ' &
          //            'be in the range 1:#.'            )
@@ -1421,7 +1421,7 @@
 
             k = plates(j,i)
 
-            if ( ( k .lt. 1 ) .or. ( k .gt. nv ) ) then
+            if ( ( k < 1 ) .or. ( k > nv ) ) then
 
                call setmsg ( 'Vertex index # of plate # was #; ' &
                //            'vertex indices must be in the ' &
@@ -1557,8 +1557,8 @@
 !
       do i = 1, 3
 
-         if (      ( vgrext(i) .lt. 1      ) &
-              .or. ( vgrext(i) .gt. maxvox )  ) then
+         if (      ( vgrext(i) < 1      ) &
+              .or. ( vgrext(i) > maxvox )  ) then
 
             call setmsg ( 'Voxel grid extents are = (#, #, #); ' &
          //               'all be in the range 1:#.'             )
@@ -1579,7 +1579,7 @@
 !
       nvxtot = vgrext(1) * vgrext(2) * vgrext(3)
 
-      if ( nvxtot .gt. maxvox ) then
+      if ( nvxtot > maxvox ) then
 
          call setmsg ( 'Fine voxel count NVXTOT = #; count must ' &
          //            'be in the range 1:#.'                    )
@@ -1596,8 +1596,8 @@
 !     Check the coarse voxel scale. It must be at least 1, and its
 !     cube must not exceed the fine voxel count.
 !
-      if (      ( cgrscl .lt. 1                ) &
-           .or. ( cgrscl .gt. nvxtot**(1.0_wp/3) )  ) then
+      if (      ( cgrscl < 1                ) &
+           .or. ( cgrscl > nvxtot**(1.0_wp/3) )  ) then
 
          call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be in the range 1:NVXTOT**3, where ' &
@@ -1618,7 +1618,7 @@
       q = nvxtot /   (cgrscl**3)
       r = nvxtot - q*(cgrscl**3)
 
-      if ( r .ne. 0 ) then
+      if ( r /= 0 ) then
 
          call setmsg ( 'Coarse voxel scale = #; the cube of ' &
          //            'the scale must divide NVXTOT evenly, ' &
@@ -1645,7 +1645,7 @@
 !
 !     Make sure NCGR is within range.
 !
-      if (  ( ncgr .lt. 1 ) .or. ( ncgr .gt. maxcgr )  ) then
+      if (  ( ncgr < 1 ) .or. ( ncgr > maxcgr )  ) then
 
          call setmsg ( 'Coarse voxel count = #; count must ' &
          //            'be in the range 1:#.'                )

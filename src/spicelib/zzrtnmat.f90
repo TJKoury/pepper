@@ -184,7 +184,7 @@
       end if
 
 
-      if (  ( v(1) .eq. 0.0_wp ) .and. ( v(2) .eq. 0.0_wp )  ) then
+      if (  ( v(1) == 0.0_wp ) .and. ( v(2) == 0.0_wp )  ) then
 
          call cleard ( 9, m )
 

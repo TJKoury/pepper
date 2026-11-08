@@ -33,9 +33,9 @@
 
       include 'zzdyn.inc'
 
-      character*(*)         frname
+      character(*)          frname
       integer(ip)           frcode
-      character*(*)         item
+      character(*)          item
       integer(ip)           idcode
 
 ! $ Brief_I/O
@@ -232,7 +232,7 @@
 !
 !     Local parameters
 !
-      character*(*)         templt
+      character(*)          templt
       parameter           ( templt = 'FRAME_#_#' )
 
 !
@@ -245,10 +245,10 @@
 !
 !     Local variables
 !
-      character*(frnmln)    outnam
-      character*(kvnmln)    cdestr
-      character*(1)         dtype
-      character*(kvnmln)    kvname
+      character(frnmln)     outnam
+      character(kvnmln)     cdestr
+      character(1)          dtype
+      character(kvnmln)     kvname
 
       integer(ip)           codeln
       integer(ip)           itemln
@@ -292,7 +292,7 @@
 
       reqnum = codeln + itemln + templn
 
-      if ( reqnum .le. kvnmln ) then
+      if ( reqnum <= kvnmln ) then
 !
 !        First try looking for a kernel variable including the frame ID
 !        code.
@@ -323,8 +323,8 @@
 !
          reqnam = nameln + itemln + templn
 
-         if (       ( reqnam .gt. kvnmln ) &
-              .and. ( reqnum .gt. kvnmln ) ) then
+         if (       ( reqnam > kvnmln ) &
+              .and. ( reqnum > kvnmln ) ) then
 !
 !           Both forms of the name are too long.
 !
@@ -346,7 +346,7 @@
             return
 
 
-         else if  ( reqnam .gt. kvnmln ) then
+         else if  ( reqnam > kvnmln ) then
 !
 !           We couldn't find the variable having the ID-based name,
 !           and the frame name-based variable name is too long to
@@ -393,7 +393,7 @@
          call dtpool ( kvname, found, n,      dtype  )
 
 
-         if (  ( .not. found ) .and. ( reqnum .gt. kvnmln )  ) then
+         if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
 !
 !           The kernel variable's presence (in one form or the other)
 !           is mandatory:  signal an error.  The error message
@@ -467,13 +467,13 @@
 !     of the variable is KVNAME.  The data type is DTYPE and the
 !     cardinality is N.
 !
-      if ( dtype .eq. 'C' ) then
+      if ( dtype == 'C' ) then
 !
 !        Rather than using BADKPV, we check the cardinality of the
 !        kernel variable in-line so we can create a more detailed error
 !        message if need be.
 !
-         if ( n .gt. 1 ) then
+         if ( n > 1 ) then
 
             call setmsg ( 'The kernel variable # has used to define ' // &
                           'frame # was expected to have size not '    // &
@@ -513,7 +513,7 @@
 !
          call namfrm ( outnam, idcode )
 
-         if ( idcode .eq. 0 ) then
+         if ( idcode == 0 ) then
 !
 !           If IDCODE is zero, that means NAMFRM couldn't translate
 !           the name.  Perhaps the name is an integer?
@@ -550,7 +550,7 @@
 !
 !        The variable has numeric type.
 !
-         if ( n .gt. 1 ) then
+         if ( n > 1 ) then
 
             call setmsg ( 'The kernel variable # has used to define ' // &
                           'frame # was expected to have size not '    // &

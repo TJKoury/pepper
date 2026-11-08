@@ -40,15 +40,15 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         method
-      character*(*)         angtyp
-      character*(*)         target
-      character*(*)         illmn
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          method
+      character(*)          angtyp
+      character(*)          target
+      character(*)          illmn
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
-      character*(*)         relate
+      character(*)          relate
       real(wp)              refval
       real(wp)              adjust
       real(wp)              step
@@ -1289,8 +1289,8 @@
 !
 !     Quantity definition parameter arrays:
 !
-      character*(lnsize)    qcpars ( qnpars )
-      character*(lnsize)    qpnams ( qnpars )
+      character(lnsize)     qcpars ( qnpars )
+      character(lnsize)     qpnams ( qnpars )
 
       real(wp)              qdpars ( qnpars )
 
@@ -1318,7 +1318,7 @@
 !
 !     Check the result window's size.
 !
-      if ( sized(result) .lt. 2 ) then
+      if ( sized(result) < 2 ) then
 
          call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )
@@ -1332,7 +1332,7 @@
 !
 !     Check the workspace window dimensions.
 !
-      if ( mw .lt. 2 ) then
+      if ( mw < 2 ) then
 
          call setmsg ( 'Workspace window size was #; size must be ' &
          //            'at least 2.'                               )
@@ -1343,7 +1343,7 @@
 
       end if
 
-      if ( nw .lt. nwilum ) then
+      if ( nw < nwilum ) then
 
          call setmsg ( 'Workspace window count was #; count must be ' &
          //            'at least #.'                                 )
@@ -1396,7 +1396,7 @@
 !
 !     Set the step size.
 !
-      if ( step .le. 0.0_wp ) then
+      if ( step <= 0.0_wp ) then
 
          call setmsg ( 'Step size was #; step size must be positive.' )
          call errdp  ( '#',  step                                     )

@@ -32,9 +32,9 @@
       include 'ektype.inc'
 
       integer(ip)           handle
-      character*(*)         tabnam
+      character(*)          tabnam
       integer(ip)           ncols
-      character*(*)         cnames ( * )
+      character(*)          cnames ( * )
       integer(ip)           cdscrs ( cdscsz, * )
       integer(ip)           segno
 
@@ -157,9 +157,9 @@
 !
 !     Local variables
 !
-      character*(pgsizc)    cpage
-      character*(cnamsz)    tmpcnm
-      character*(tnamsz)    tmptnm
+      character(pgsizc)     cpage
+      character(cnamsz)     tmpcnm
+      character(tnamsz)     tmptnm
 
       integer(ip)           base
       integer(ip)           cbase
@@ -345,7 +345,7 @@
          nambas  =  tnamsz  +  (i-1)*cnamsz  -  (cpagno-1)*pgsizc
          room    =  pgsizc  -  nambas
 
-         if ( cnamsz .le. room ) then
+         if ( cnamsz <= room ) then
 
             cpage ( nambas+1 : nambas+cnamsz ) =  tmpcnm
 
@@ -359,7 +359,7 @@
 !           Some or all of the column name will overflow onto the next
 !           page.
 !
-            if ( room .gt. 0 ) then
+            if ( room > 0 ) then
 
                cpage ( nambas+1 : nambas+room ) = tmpcnm(:room)
 
@@ -395,7 +395,7 @@
          dscbas  =  sdscsz  +  (i-1)*cdscsz  -  (ipagno-1)*pgsizi
          room    =  pgsizi  -  dscbas
 
-         if ( cdscsz .le. room ) then
+         if ( cdscsz <= room ) then
 !
 !           The whole descriptor fits in the current page.
 !
@@ -407,7 +407,7 @@
 !           Some or all of the descriptor will overflow onto the next
 !           page.
 !
-            if ( room .gt. 0 ) then
+            if ( room > 0 ) then
                call movei ( cdscrs(1,i), room, ipage(dscbas+1) )
             end if
 

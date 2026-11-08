@@ -581,7 +581,7 @@
 !
       toobig = dpmax() / margin
 
-      if (  vnorm (vertex)  .ge.  toobig  )  then
+      if (  vnorm (vertex)  >=  toobig  )  then
 
          call chkin  ( 'INRYPL'                                    )
          call setmsg ( 'Ray''s vertex is too far from the origin.' )
@@ -597,7 +597,7 @@
 !
       call pl2nvc ( plane, normal, const )
 
-      if (  const  .ge.  toobig  )  then
+      if (  const  >=  toobig  )  then
 
          call chkin  ( 'INRYPL'                            )
          call setmsg ( 'Plane is too far from the origin.' )
@@ -628,7 +628,7 @@
 !
       mscale = max ( const, vnorm(vertex) )
 
-      if ( mscale .ne. 0.0_wp ) then
+      if ( mscale /= 0.0_wp ) then
 
          call vscl ( 1.0_wp / mscale, vertex, sclvtx )
          sclcon  =  const / mscale
@@ -640,7 +640,7 @@
 
       end if
 
-      if ( mscale .gt. 1.0_wp ) then
+      if ( mscale > 1.0_wp ) then
          toobig = toobig / mscale
       end if
 
@@ -661,13 +661,13 @@
 !
       prjdif  =  sclcon - prjvn
 
-      if ( prjdif .eq. 0.0_wp ) then
+      if ( prjdif == 0.0_wp ) then
 !
 !        XPT is the original, unscaled vertex.
 !
          call vequ ( vertex, xpt )
 
-         if (  vdot ( normal, udir )  .eq.  0.0_wp  )  then
+         if (  vdot ( normal, udir )  ==  0.0_wp  )  then
 !
 !           The ray's in the plane.
 !
@@ -766,7 +766,7 @@
 !     computed safely since PRJDIR has magnitude 1 or less.
 !
 
-      if (  abs(prjdif)  .ge.  abs(prjdir) * toobig  ) then
+      if (  abs(prjdif)  >=  abs(prjdir) * toobig  ) then
 !
 !        If the hypotenuse is too long, we say that no intersection
 !        exists.

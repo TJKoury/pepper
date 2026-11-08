@@ -28,14 +28,14 @@
 
       include               'zzabcorr.inc'
 
-      character*(*)         target
+      character(*)          target
       real(wp)              et
-      character*(*)         outref
-      character*(*)         refloc
-      character*(*)         abcorr
+      character(*)          outref
+      character(*)          refloc
+      character(*)          abcorr
       real(wp)              obspos ( 3 )
-      character*(*)         obsctr
-      character*(*)         obsref
+      character(*)          obsctr
+      character(*)          obsref
       real(wp)              state  ( 6 )
       real(wp)              lt
 

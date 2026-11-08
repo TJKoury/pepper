@@ -236,10 +236,10 @@
 !     HEAD and TAIL must be valid node numbers.  These nodes
 !     must be allocated as well.
 !
-      if (      ( head .lt. 1                   ) &
-           .or. ( head .gt. pool(sizrow,sizcol) ) &
-           .or. ( tail .lt. 1                   ) &
-           .or. ( tail .gt. pool(sizrow,sizcol) )  )  then
+      if (      ( head < 1                   ) &
+           .or. ( head > pool(sizrow,sizcol) ) &
+           .or. ( tail < 1                   ) &
+           .or. ( tail > pool(sizrow,sizcol) )  )  then
 
          call chkin  ( 'LNKFSL'                                        )
          call setmsg ( 'HEAD was #.  TAIL was #. '                    // &
@@ -252,8 +252,8 @@
          return
 
 
-      else if (       ( pool(bckwrd,head)  .eq.  free ) &
-                .or.  ( pool(bckwrd,tail)  .eq.  free )  ) then
+      else if (       ( pool(bckwrd,head)  ==  free ) &
+                .or.  ( pool(bckwrd,tail)  ==  free )  ) then
 
          call chkin  ( 'LNKFSL'                                        )
          call setmsg ( 'Node HEAD: node number = #; '                 // &
@@ -283,7 +283,7 @@
       count = 1
       node  = head
 
-      do while (  ( node .ne. tail ) .and. ( node .gt. 0 )  )
+      do while (  ( node /= tail ) .and. ( node > 0 )  )
          count  =  count + 1
          node   =  pool ( forwrd, node )
       end do
@@ -291,7 +291,7 @@
 !
 !     If we didn't find TAIL, that's an error.
 !
-      if ( node .ne. tail ) then
+      if ( node /= tail ) then
 
          call chkin  ( 'LNKFSL'                                        )
          call setmsg ( 'Node # cannot be found by forward '           // &
@@ -319,7 +319,7 @@
 !     the forward pointer of the tail node, as well as the backward
 !     pointer of the head node, of the sublist that preceded HEAD.
 !
-      if ( prev .gt. 0 ) then
+      if ( prev > 0 ) then
 !
 !        Update the forward pointer of PREV with the forward pointer of
 !        TAIL.
@@ -339,7 +339,7 @@
 !        backward pointer of the head of the input list to point to
 !        the negative of the new tail of the list, which now is PREV.
 !
-         if ( next .le. 0 ) then
+         if ( next <= 0 ) then
 !
 !           In this case, we can read off the number of the head
 !           node from NEXT:  it is just -NEXT.
@@ -361,7 +361,7 @@
 !     the backward pointer of the head node, as well as the forward
 !     pointer of the tail node, of the sublist that followed TAIL.
 !
-      if ( next .gt. 0 ) then
+      if ( next > 0 ) then
 !
 !        Update the backward pointer of NEXT with the backward pointer
 !        of HEAD.
@@ -381,7 +381,7 @@
 !        forward pointer of the tail of the input list to point to
 !        the negative of the new head of the list, which now is NEXT.
 !
-         if ( prev .le. 0 ) then
+         if ( prev <= 0 ) then
 !
 !           In this case, we can read off the number of the tail
 !           node from PREV:  it is just -PREV.
@@ -401,7 +401,7 @@
 !
       node = head
 
-      do while ( node .ne. next )
+      do while ( node /= next )
          pool(bckwrd,node) = free
          node              = pool(forwrd,node)
       end do

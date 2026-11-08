@@ -26,7 +26,7 @@
 !
 !     Supported SCLK string field delimiters:
 !
-      character*(ndelim)    delims
+      character(ndelim)     delims
       parameter           ( delims = '.:-, ' )
 
 !

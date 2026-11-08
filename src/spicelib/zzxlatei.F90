@@ -26,7 +26,7 @@
       include              'zzddhman.inc'
 
       integer(ip)           inbff
-      character*(*)         input
+      character(*)          input
       integer(ip)           space
       integer(ip)           output ( * )
 
@@ -283,9 +283,9 @@
 !
 !     Local Variables
 !
-      character*(1)         carg
-      character*(strsiz)    strbff ( numbff )
-      character*(strsiz)    tmpstr
+      character(1)          carg
+      character(strsiz)     strbff ( numbff )
+      character(strsiz)     tmpstr
 
       integer(ip)           bigint
       integer(ip)           i
@@ -369,7 +369,7 @@
 
          natbff = isrchc ( tmpstr, numbff, strbff )
 
-         if ( natbff .eq. 0 ) then
+         if ( natbff == 0 ) then
 
             call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
@@ -397,7 +397,7 @@
 !
 !        Set SMLINT to the appropriate value if INTMIN is too large.
 !
-         if ( smlint .eq. -2147483647 ) then
+         if ( smlint == -2147483647 ) then
             smlint = smlint - 1
          end if
 
@@ -412,7 +412,7 @@
 !     Check to see if INBFF is valid.  This should never occur if this
 !     routine is called properly.
 !
-      if ( ( inbff .lt. 1 ) .or. ( inbff .gt. numbff ) ) then
+      if ( ( inbff < 1 ) .or. ( inbff > numbff ) ) then
 
          call setmsg ( 'The integer code used to indicate the ' &
          //            'binary file format of the input integers, ' &
@@ -433,9 +433,9 @@
 !
 !     Now branch based on the value of NATBFF.
 !
-      if ( natbff .eq. bigi3e ) then
+      if ( natbff == bigi3e ) then
 
-         if ( inbff .eq. ltli3e ) then
+         if ( inbff == ltli3e ) then
 
 !
 !           Check to see that the length of the input string is
@@ -446,7 +446,7 @@
 !
             numint = lenipt / 4
 
-            if ( lenipt - ( numint*4 ) .ne. 0 ) then
+            if ( lenipt - ( numint*4 ) /= 0 ) then
 
                call setmsg ( 'The input string that is to be ' &
                //            'translated from the binary format ' &
@@ -465,7 +465,7 @@
 !           Verify there is enough room to store the results of
 !           the translation.
 !
-            if ( numint .gt. space ) then
+            if ( numint > space ) then
 
                call setmsg ( 'The caller specified that # integers ' &
                //            'are to be translated from binary ' &
@@ -544,7 +544,7 @@
 !
 !              Strip the sign bit if necessary.
 !
-               if ( osign .eq. 1 ) then
+               if ( osign == 1 ) then
                   value = value - 128
                end if
 
@@ -585,8 +585,8 @@
 !              which is the desired quantity.  Note, 0 must be
 !              treated as a special case.
 !
-               if ( osign .eq. 1 ) then
-                  if ( output(i) .eq. 0 ) then
+               if ( osign == 1 ) then
+                  if ( output(i) == 0 ) then
                      output(i) = smlint
                   else
                      output(i) = bigint-output(i)
@@ -611,9 +611,9 @@
 
          end if
 
-      else if ( natbff .eq. ltli3e ) then
+      else if ( natbff == ltli3e ) then
 
-         if ( inbff .eq. bigi3e ) then
+         if ( inbff == bigi3e ) then
 
 !
 !           Check to see that the length of the input string is
@@ -624,7 +624,7 @@
 !
             numint = lenipt / 4
 
-            if ( lenipt - ( numint*4 ) .ne. 0 ) then
+            if ( lenipt - ( numint*4 ) /= 0 ) then
 
                call setmsg ( 'The input string that is to be ' &
                //            'translated from the binary format ' &
@@ -643,7 +643,7 @@
 !           Verify there is enough room to store the results of
 !           the translation.
 !
-            if ( numint .gt. space ) then
+            if ( numint > space ) then
 
                call setmsg ( 'The caller specified that # integers ' &
                //            'are to be translated from binary ' &
@@ -723,7 +723,7 @@
 !
 !              Strip the sign bit if necessary.
 !
-               if ( osign .eq. 1 ) then
+               if ( osign == 1 ) then
                   value = value - 128
                end if
 
@@ -764,8 +764,8 @@
 !              which is the desired quantity.  Note, 0 must be
 !              treated as a special case.
 !
-               if ( osign .eq. 1 ) then
-                  if ( output(i) .eq. 0 ) then
+               if ( osign == 1 ) then
+                  if ( output(i) == 0 ) then
                      output(i) = smlint
                   else
                      output(i) = bigint-output(i)

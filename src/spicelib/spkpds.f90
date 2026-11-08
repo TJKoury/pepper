@@ -23,7 +23,7 @@
 
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       integer(ip)           type
       real(wp)              first
       real(wp)              last
@@ -172,8 +172,8 @@
 !
 !     Local Variables
 !
-      character*(calsiz)    calfst
-      character*(calsiz)    callst
+      character(calsiz)     calfst
+      character(calsiz)     callst
 
       real(wp)              dppart ( 2 )
 
@@ -192,7 +192,7 @@
 !     We do not support ephemerides for the solar system barycenter
 !     (at least not yet anyway).
 !
-      if ( body .eq. 0 ) then
+      if ( body == 0 ) then
 
          call setmsg ( 'You''ve attempted to create a segment' &
          //            ' for the solar system barycenter.  This' &
@@ -207,7 +207,7 @@
 !     There is no point in having an ephemeris for a body relative
 !     to itself.
 !
-      if ( body .eq. center ) then
+      if ( body == center ) then
 
          call setmsg ( 'You''ve attempted to create a segment' &
          //            ' for a body relative to itself. The' &
@@ -223,7 +223,7 @@
 !
       call namfrm ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -235,7 +235,7 @@
 !
 !     The segment stop time should be greater then the begin time.
 !
-      if ( first .ge. last ) then
+      if ( first >= last ) then
 !
 !        We've got an error. Get the calendar string for the first
 !        and last epochs.
@@ -259,7 +259,7 @@
 !     The type must be something reasonable.  The interval from
 !     1 to 1000 is what we are calling reasonable these days.
 !
-      if ( ( type .le. 0)  .or. ( type .gt. 1000 ) ) then
+      if ( ( type <= 0)  .or. ( type > 1000 ) ) then
 
          call setmsg ( 'The type specified, #, is not supported' &
          //            ' within the SPK system.'                  )

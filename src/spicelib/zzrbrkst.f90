@@ -26,10 +26,10 @@
 
       implicit none
 
-      character*(*)         string
-      character*(*)         lftend
-      character*(*)         rgtend
-      character*(*)         substr
+      character(*)          string
+      character(*)          lftend
+      character(*)          rgtend
+      character(*)          substr
       integer(ip)           length
       logical               bkpres
 
@@ -189,7 +189,7 @@
 !     for LFTEND. Otherwise, search from where the right bracket
 !     search left off.
 !
-      if ( rindex .eq. 0 ) then
+      if ( rindex == 0 ) then
 
          lindex = posr ( string, lftend, bsize )
 
@@ -204,13 +204,13 @@
 !     then return the substring they bracket, otherwise handle the
 !     failed case.
 !
-      if ( ( rindex .ne. 0 ) .and. ( lindex .ne. 0 ) ) then
+      if ( ( rindex /= 0 ) .and. ( lindex /= 0 ) ) then
 
 !
 !        Check to see whether or not the brackets are adjacent, and
 !        thus have no characters between them.
 !
-         if ( ( lindex + lsize ) .gt. ( rindex - 1 ) ) then
+         if ( ( lindex + lsize ) > ( rindex - 1 ) ) then
 
             bkpres = .true.
             length = 0
@@ -234,7 +234,7 @@
 !        indicating one was found by POSR. Set LENGTH to 0, since we
 !        will not be changing SUBSTR.
 !
-         bkpres = ( ( lindex + rindex ) .gt. 0 )
+         bkpres = ( ( lindex + rindex ) > 0 )
          length = 0
 
       end if

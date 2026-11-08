@@ -252,7 +252,7 @@
 !
 !     No data, no interpolation.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          lgrint = 0.0_wp
 
@@ -368,7 +368,7 @@
 
             denom    =     xvals(i)  -  xvals(i+j)
 
-            if ( denom .eq. 0.0_wp ) then
+            if ( denom == 0.0_wp ) then
 
                lgrint = 0.0_wp
                call chkin ( 'LGRINT'                   )

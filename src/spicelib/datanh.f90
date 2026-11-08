@@ -151,7 +151,7 @@
 !
 !     Check that -1 < X < +1.
 !
-      if ( dabs(x) .ge. 1.0_wp ) then
+      if ( dabs(x) >= 1.0_wp ) then
 
          call setmsg ( 'DATANH: Argument out of range.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )

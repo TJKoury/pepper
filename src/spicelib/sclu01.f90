@@ -22,7 +22,7 @@
 
       include               'sclk.inc'
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           sc
       integer(ip)           maxnv
       integer(ip)           n
@@ -269,14 +269,14 @@
 !
 !     Local variables
 !
-      character*(msglen)    bvlmsg
-      character*(msglen)    errmsg
-      character*(kvnmln)    kvname
-      character*(msglen)    nfdmsg
-      character*(msglen)    nummsg
-      character*(namlen)    namlst ( nkitem )
-      character*(namlen)    tmpnam
-      character*(1)         type
+      character(msglen)     bvlmsg
+      character(msglen)     errmsg
+      character(kvnmln)     kvname
+      character(msglen)     nfdmsg
+      character(msglen)     nummsg
+      character(namlen)     namlst ( nkitem )
+      character(namlen)     tmpnam
+      character(1)          type
 
       integer(ip)           i
       integer(ip)           lb     ( nkitem )
@@ -621,7 +621,7 @@
 !
       call dtpool ( tmpnam, found, n, type )
 
-      if ( n .gt. maxnv ) then
+      if ( n > maxnv ) then
 
          call setmsg ( 'Item # for SCLK # has size # but ' &
          //            'output array has size #.'         )
@@ -638,7 +638,7 @@
 !
 !     Check the data type of the variable.
 !
-      if (  found  .and.  ( type .ne. 'N' )  ) then
+      if (  found  .and.  ( type /= 'N' )  ) then
 
          call setmsg ( 'Kernel variable # for spacecraft ' &
          //            'clock # does not have numeric type.' )
@@ -668,7 +668,7 @@
 !
          n = 0
 
-         if (  name .eq. namlst(sysidx)  ) then
+         if (  name == namlst(sysidx)  ) then
 
             call chkout ( 'SCLI01' )
             return
@@ -706,9 +706,9 @@
 !
       i = isrchc ( name, nkitem, namlst )
 
-      if ( i .ne. 0 ) then
+      if ( i /= 0 ) then
 
-         if (  (  n .lt. lb(i) ) .or. ( n .gt. ub(i) )  ) then
+         if (  (  n < lb(i) ) .or. ( n > ub(i) )  ) then
 
             call repmi  (  nummsg, '#', n,      errmsg )
             call repmc  (  errmsg, '#', tmpnam, errmsg )
@@ -735,25 +735,9 @@
 !        - The time system code is at least 1 and is not greater
 !          than MXTSYS.
 !
-      if ( name .eq. namlst(delidx) ) then
+      if ( name == namlst(delidx) ) then
 
-         if (  ( ival(1) .lt. 1 ) .or. ( ival(1) .gt. ndelim )  ) then
-
-            call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
-            call repmi  (  errmsg, '#', ival(1), errmsg )
-            call setmsg (  errmsg                       )
-            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
-            call chkout ( 'SCLI01'                      )
-            return
-
-         end if
-
-      end if
-
-
-      if ( name .eq. namlst(nflidx) ) then
-
-         if (  ( ival(1) .lt. 1 ) .or. ( ival(1) .gt. mxnfld )  ) then
+         if (  ( ival(1) < 1 ) .or. ( ival(1) > ndelim )  ) then
 
             call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
             call repmi  (  errmsg, '#', ival(1), errmsg )
@@ -767,9 +751,25 @@
       end if
 
 
-      if ( name .eq. namlst(sysidx) ) then
+      if ( name == namlst(nflidx) ) then
 
-         if (  ( ival(1) .lt. 1 ) .or. ( ival(1) .gt. mxtsys )  ) then
+         if (  ( ival(1) < 1 ) .or. ( ival(1) > mxnfld )  ) then
+
+            call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
+            call repmi  (  errmsg, '#', ival(1), errmsg )
+            call setmsg (  errmsg                       )
+            call sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
+            call chkout ( 'SCLI01'                      )
+            return
+
+         end if
+
+      end if
+
+
+      if ( name == namlst(sysidx) ) then
+
+         if (  ( ival(1) < 1 ) .or. ( ival(1) > mxtsys )  ) then
 
             call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
             call repmi  (  errmsg, '#', ival(1), errmsg )
@@ -1099,7 +1099,7 @@
 !
       call dtpool ( tmpnam,  found,  n,  type )
 
-      if ( n .gt. maxnv ) then
+      if ( n > maxnv ) then
 
          call setmsg ( 'Item # has size # but output array ' &
          //            'has size #.'                         )
@@ -1115,7 +1115,7 @@
 !
 !     Check the data type of the variable.
 !
-      if (  found  .and.  ( type .ne. 'N' )  ) then
+      if (  found  .and.  ( type /= 'N' )  ) then
 
          call setmsg ( 'Kernel variable # for spacecraft ' &
          //            'clock # does not have numeric type.' )
@@ -1181,9 +1181,9 @@
 !
       i = isrchc ( name, nkitem, namlst )
 
-      if ( i .ne. 0 ) then
+      if ( i /= 0 ) then
 
-         if (  (  n .lt. lb(i) ) .or. ( n .gt. ub(i) )  ) then
+         if (  (  n < lb(i) ) .or. ( n > ub(i) )  ) then
 
             call repmi  (  nummsg, '#', n,      errmsg )
             call repmc  (  errmsg, '#', tmpnam, errmsg )
@@ -1199,9 +1199,9 @@
       end if
 
 
-      if ( name .eq. namlst(cofidx) ) then
+      if ( name == namlst(cofidx) ) then
 
-         if (  ( (n/3)*3 )  .ne.  n  ) then
+         if (  ( (n/3)*3 )  /=  n  ) then
 
             call setmsg ( 'Coefficient count for # must ' &
             //            'be multiple of 3 but was #.'  )
@@ -1219,11 +1219,11 @@
 !     Check the values of the moduli themselves. Also check the
 !     moduli count against the field count.
 !
-      if ( name .eq. namlst(modidx) ) then
+      if ( name == namlst(modidx) ) then
 
          do i = 1, n
 
-            if ( dval(i) .lt. 1.0_wp ) then
+            if ( dval(i) < 1.0_wp ) then
                call repmc  (  bvlmsg, '#', tmpnam,      errmsg )
                call repmd  (  errmsg, '#', dval(i), 14, errmsg )
                call setmsg (  errmsg                           )
@@ -1237,8 +1237,8 @@
       end if
 
 
-      if (       ( name .eq. namlst(modidx) ) &
-           .or.  ( name .eq. namlst(offidx) )  ) then
+      if (       ( name == namlst(modidx) ) &
+           .or.  ( name == namlst(offidx) )  ) then
 !
 !        Get the field count for this clock.
 !
@@ -1264,9 +1264,9 @@
 
          end if
 
-         if ( n .ne. nfield ) then
+         if ( n /= nfield ) then
 
-            if ( name .eq. namlst(modidx) ) then
+            if ( name == namlst(modidx) ) then
 
                call setmsg ( 'Modulus count # does not match ' &
                //            'field count # for SCLK #.'      )

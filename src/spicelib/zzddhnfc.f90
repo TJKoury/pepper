@@ -106,8 +106,8 @@
 !
 !     Local variables
 !
-      character*(strsiz)    strbff ( numbff )
-      character*(strsiz)    tmpstr
+      character(strsiz)     strbff ( numbff )
+      character(strsiz)     tmpstr
 
       integer(ip)           i
       integer(ip)           savbff
@@ -156,7 +156,7 @@
 
          savbff = isrchc ( tmpstr, numbff, strbff )
 
-         if ( savbff .eq. 0 ) then
+         if ( savbff == 0 ) then
 
             call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &

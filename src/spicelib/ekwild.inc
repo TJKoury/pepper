@@ -14,13 +14,13 @@
 !
 !     Wild string symbol:  this character matches any string.
 !
-      character*(1)         wstr
+      character(1)          wstr
       parameter           ( wstr = '*' )
 
 !
 !     Wild character symbol:  this character matches any character.
 !
-      character*(1)         wchr
+      character(1)          wchr
       parameter           ( wchr = '%' )
 
 !

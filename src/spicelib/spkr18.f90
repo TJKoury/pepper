@@ -283,7 +283,7 @@
 !
 !     Make sure that this really is a type 18 data segment.
 !
-      if ( type .ne. 18 ) then
+      if ( type /= 18 ) then
          call setmsg( 'You are attempting to locate type * ' // &
                       'data in a type 18 data segment.'      )
          call errint( '*',  type                             )
@@ -296,7 +296,7 @@
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+      if (  ( et < dc(1) )  .or.  ( et > dc(2) )  )  then
          call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )
          call errdp ( '#',  et                                      )
@@ -327,7 +327,7 @@
       wndsiz  =  nint ( contrl(2) )
       n       =  nint ( contrl(3) )
 
-      if ( n .lt. 2 )  then
+      if ( n < 2 )  then
 
          call setmsg( 'Packet count # is less than the minimum '   // &
                       'valid value, which is 2.'                   )
@@ -362,11 +362,11 @@
 !
 !     Set the packet size, which is a function of the subtype.
 !
-      if ( subtyp .eq. s18tp0 ) then
+      if ( subtyp == s18tp0 ) then
 
          packsz = s18ps0
 
-      else if ( subtyp .eq. s18tp1 ) then
+      else if ( subtyp == s18tp1 ) then
 
          packsz = s18ps1
 
@@ -384,7 +384,7 @@
 !
 !     Check the window size.
 !
-      if ( wndsiz .le. 0 ) then
+      if ( wndsiz <= 0 ) then
 
          call setmsg ( 'Window size in type 18 segment was #; must ' // &
                        'be positive.'                                )
@@ -396,11 +396,11 @@
       end if
 
 
-      if ( subtyp .eq. s18tp0 ) then
+      if ( subtyp == s18tp0 ) then
 
          maxwnd  =  (maxdeg+1)/2
 
-         if ( wndsiz .gt. maxwnd ) then
+         if ( wndsiz > maxwnd ) then
 
             call setmsg ( 'Window size in type 18 segment was #; max '// &
                           'allowed value is # for subtype 0 (Hermite,'// &
@@ -426,11 +426,11 @@
          end if
 
 
-      else if ( subtyp .eq. s18tp1 ) then
+      else if ( subtyp == s18tp1 ) then
 
          maxwnd  =  maxdeg + 1
 
-         if ( wndsiz .gt. maxwnd ) then
+         if ( wndsiz > maxwnd ) then
 
             call setmsg ( 'Window size in type 18 segment was #; max '// &
                           'allowed value is # for subtype 1 '         // &
@@ -476,7 +476,7 @@
       ndir    =  (n-1) / dirsiz
       dirbas  =  end  -  ndir  -  ctrlsz
 
-      if ( ndir .eq. 0 ) then
+      if ( ndir == 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
@@ -497,8 +497,8 @@
 
          call dafgda ( handle, bufbas+1, bufbas+nread, buffer )
 
-         do while (       ( buffer(nread) .lt. et ) &
-                    .and. ( remain        .gt. 0  )   )
+         do while (       ( buffer(nread) < et ) &
+                    .and. ( remain        > 0  )   )
 
             bufbas  =  bufbas + nread
             nread   =  min ( remain, dirsiz )
@@ -532,7 +532,7 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      if ( group .eq. 1 ) then
+      if ( group == 1 ) then
 
          begidx  =  1
          endidx  =  min ( n, dirsiz )
@@ -565,7 +565,7 @@
 !     The variables LOW and high are the indices of a pair of time
 !     tags that bracket the request time.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
          low  =  1
       else
          low  =  begidx + i - 1

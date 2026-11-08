@@ -28,8 +28,8 @@
       implicit none
 
       integer(ip)           nlead
-      character*(*)         string
-      character*(*)         fmt
+      character(*)          string
+      character(*)          fmt
       integer(ip)           ntrail
 
 ! $ Brief_I/O
@@ -213,7 +213,7 @@
 !
 !     Local Variables
 !
-      character*(lnsize)    tmpstr
+      character(lnsize)     tmpstr
 
       integer(ip)           i
       integer(ip)           iostat
@@ -260,7 +260,7 @@
 
       write ( *, '(A)', iostat = iostat ) tmpstr( : rtrim(tmpstr) )
 
-      if ( iostat .ne. 0  ) then
+      if ( iostat /= 0  ) then
 
          call chkin  ( 'ZZGFDSPS'                                      )
          call setmsg ( 'Error writing to standard output: IOSTAT = #.' )

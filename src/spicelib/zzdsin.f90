@@ -479,14 +479,14 @@
 !     DEEP SPACE INITIALIZATION
 !
       irez = 0
-      if ( (xn.lt.0.0052359877_wp)  .and. &
-           (xn.gt.0.0034906585_wp) ) then
+      if ( (xn<0.0052359877_wp)  .and. &
+           (xn>0.0034906585_wp) ) then
          irez = 1
       end if
 
-      if ( (xn   .ge. 8.26e-3_wp) .and. &
-           (xn   .le. 9.24e-3_wp) .and. &
-           (eccm .ge. 0.5_wp)  )then
+      if ( (xn   >= 8.26e-3_wp) .and. &
+           (xn   <= 9.24e-3_wp) .and. &
+           (eccm >= 0.5_wp)  )then
          irez = 2
       end if
 
@@ -502,12 +502,12 @@
 !
 !       sgp4fix for 180 deg incl
 !
-        if ( (inclm .lt. 5.2359877e-2_wp) .or. &
-             (inclm .gt. pi()-5.2359877e-2_wp) ) then
+        if ( (inclm < 5.2359877e-2_wp) .or. &
+             (inclm > pi()-5.2359877e-2_wp) ) then
             shs = 0.0_wp
         end if
 
-        if (sinim.ne.0.0_wp) then
+        if (sinim/=0.0_wp) then
             shs = shs/sinim
         end if
 
@@ -526,15 +526,15 @@
 !       sgp4fix for 180 deg incl
 !
 
-        if ( (inclm .lt. 5.2359877e-2_wp ) .or. &
-             (inclm .gt. pi()-5.2359877e-2_wp)) then
+        if ( (inclm < 5.2359877e-2_wp ) .or. &
+             (inclm > pi()-5.2359877e-2_wp)) then
             shl = 0.0_wp
         end if
 
         domdt= sgs+sghl
         dnodt= shs
 
-        if (sinim .ne. 0.0_wp) then
+        if (sinim /= 0.0_wp) then
             domdt = domdt-cosim/sinim*shl
             dnodt = dnodt+shl/sinim
         end if
@@ -565,14 +565,14 @@
 !
 !       Initialize the resonance terms
 !
-         if (irez .ne. 0) then
+         if (irez /= 0) then
 
             aonv = (xn/xke)**x2o3
 
 !
 !           GEOPOTENTIAL RESONANCE FOR 12 HOUR ORBITS
 !
-            if (irez .eq. 2) then
+            if (irez == 2) then
 
                cosisq = cosim*cosim
                emo    = eccm
@@ -582,7 +582,7 @@
                eoc    = eccm*emsq
                g201   = -0.306_wp-(eccm-0.64_wp)*0.440_wp
 
-               if (eccm.le.0.65_wp) then
+               if (eccm<=0.65_wp) then
 
                   g211 =   3.616_wp -  13.2470_wp*eccm + &
                               16.2900_wp*emsq
@@ -610,7 +610,7 @@
                   g422 =-3581.690_wp + 16178.11_wp*eccm - &
                               24462.77_wp*emsq + 12422.52_wp*eoc
 
-                  if (eccm.gt.0.715_wp) then
+                  if (eccm>0.715_wp) then
                      g520 =-5149.66_wp + 29936.92_wp*eccm - &
                               54087.36_wp*emsq + 31324.56_wp*eoc
                   else
@@ -620,7 +620,7 @@
 
                end if
 
-            if (eccm.lt.0.7_wp) then
+            if (eccm<0.7_wp) then
 
                 g533 = -919.22770_wp + 4988.6100_wp*eccm-9064.7700_wp*emsq &
                      + 5542.21_wp*eoc
@@ -687,7 +687,7 @@
 
          end if
 
-         if (irez .eq. 1) then
+         if (irez == 1) then
 
 !
 !           SYNCHRONOUS RESONANCE TERMS

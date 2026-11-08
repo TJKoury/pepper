@@ -29,10 +29,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           n
       real(wp)              dlines ( dlsize, * )
       real(wp)              epochs (         * )
@@ -295,7 +295,7 @@
 !
       call namfrm ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -308,7 +308,7 @@
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -326,7 +326,7 @@
 
          chrcod = ichar( segid(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -341,7 +341,7 @@
 !
 !     The difference line count must be at least one.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call setmsg ( 'The difference line count was #; the count ' // &
                        'must be at least one.'                       )
@@ -355,7 +355,7 @@
 !
 !     The segment stop time should be greater then the begin time.
 !
-      if ( first .ge. last ) then
+      if ( first >= last ) then
 
          call setmsg ( 'The segment start time: # is greater then ' // &
                        'the segment end time: #'                   )
@@ -374,7 +374,7 @@
 
       do i = 2, n
 
-         if ( epochs(i) .le. maxtim ) then
+         if ( epochs(i) <= maxtim ) then
 
             call setmsg ( 'EPOCH # having index # is not greater '    // &
                           'than its predecessor #.'                   )
@@ -395,7 +395,7 @@
 !     epoch and the end of the time interval defined by the segment
 !     descriptor.
 !
-      if (  epochs(n) .lt. last ) then
+      if (  epochs(n) < last ) then
 
          call setmsg ( 'Segment end time # follows last epoch #.'     )
          call errdp  ( '#',  last                                     )

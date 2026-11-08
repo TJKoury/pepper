@@ -33,9 +33,9 @@
       real(wp)              begtim
       real(wp)              endtim
       integer(ip)           inst
-      character*(*)         ref
+      character(*)          ref
       logical               avflag
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           n
       real(wp)              sclkdp ( * )
       real(wp)              packts ( * )
@@ -670,7 +670,7 @@
 !
 !     Make sure that the number of packets is positive.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call setmsg ( 'At least 1 packet is required for CK type 5. '// &
                        'Number of packets supplied:  #'                )
@@ -685,7 +685,7 @@
 !     Make sure that there is a positive number of interpolation
 !     intervals.
 !
-      if ( nints .le. 0 ) then
+      if ( nints <= 0 ) then
 
          call setmsg ( '# is an invalid number of interpolation ' // &
                        'intervals for type 5.'                     )
@@ -702,7 +702,7 @@
 !
       call namfrm ( ref, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', ref                                    )
@@ -715,7 +715,7 @@
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -733,7 +733,7 @@
 
          chrcod = ichar( segid(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -751,7 +751,7 @@
 !
 !     Check that the first time is nonnegative.
 !
-      if ( sclkdp(1) .lt. 0.0_wp ) then
+      if ( sclkdp(1) < 0.0_wp ) then
 
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
@@ -766,7 +766,7 @@
 !
       do i = 2, n
 
-         if ( sclkdp(i) .le. sclkdp(i-1) )  then
+         if ( sclkdp(i) <= sclkdp(i-1) )  then
 
             call setmsg ( 'The SCLKDP times are not strictly '      // &
                           'increasing. SCLKDP(#) = # and SCLKDP(#) '// &
@@ -788,7 +788,7 @@
 !
       do i = 2, nints
 
-         if ( starts(i) .le. starts(i-1) )  then
+         if ( starts(i) <= starts(i-1) )  then
 
             call setmsg ( 'The interval start times are not strictly '// &
                           'increasing. STARTS(#) = # and STARTS(#) '  // &
@@ -815,7 +815,7 @@
 !        We know the SCLKDP array is ordered, so a binary search is
 !        ok.
 !
-         if (  bsrchd ( starts(i), n, sclkdp )  .eq.  0  ) then
+         if (  bsrchd ( starts(i), n, sclkdp )  ==  0  ) then
 
             call setmsg ( 'Interval start time number # is invalid. '// &
                           'STARTS(#) = *'                             )
@@ -836,22 +836,22 @@
 !     Set the window, packet size and angular velocity flag, all of
 !     which are functions of the subtype.
 !
-      if (  subtyp .eq. c05tp0 ) then
+      if (  subtyp == c05tp0 ) then
 
          winsiz = ( degree + 1 ) / 2
          packsz = c05ps0
 
-      else if ( subtyp .eq. c05tp1  ) then
+      else if ( subtyp == c05tp1  ) then
 
          winsiz = degree + 1
          packsz = c05ps1
 
-      else if (  subtyp .eq. c05tp2 ) then
+      else if (  subtyp == c05tp2 ) then
 
          winsiz = ( degree + 1 ) / 2
          packsz = c05ps2
 
-      else if ( subtyp .eq. c05tp3  ) then
+      else if ( subtyp == c05tp3  ) then
 
          winsiz = degree + 1
          packsz = c05ps3
@@ -894,7 +894,7 @@
 !     Make sure that the degree of the interpolating polynomials is
 !     in range.
 !
-      if (  ( degree .lt. 1 ) .or. ( degree .gt. maxdeg )  )  then
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
 
          call setmsg ( 'The interpolating polynomials have degree #; '// &
                        'the valid degree range is [1, #]'              )
@@ -948,7 +948,7 @@
 !
 !     Make sure the descriptor times are in increasing order.
 !
-      if ( endtim .lt. begtim ) then
+      if ( endtim < begtim ) then
 
          call setmsg ( 'Descriptor bounds are non-increasing: #:#' )
          call errdp  ( '#', begtim                                 )
@@ -967,7 +967,7 @@
       i = lstltd ( begtim, n, sclkdp )
 
 
-      if ( i .eq. n ) then
+      if ( i == n ) then
 
          call setmsg ( 'All time tags are less than segment start ' // &
                        'time #.'                                  )
@@ -976,7 +976,7 @@
          call chkout ( 'CKW05'                                    )
          return
 
-      else if (  sclkdp(i+1)  .gt.  endtim  ) then
+      else if (  sclkdp(i+1)  >  endtim  ) then
 
          call setmsg ( 'No time tags lie between the segment start ' // &
                        'time # and segment end time #'              )
@@ -991,7 +991,7 @@
 !
 !     The clock rate must be non-zero.
 !
-      if ( rate .eq. 0.0_wp ) then
+      if ( rate == 0.0_wp ) then
 
          call setmsg ( 'The SCLK rate RATE was zero.'  )
          call sigerr ( 'SPICE(INVALIDVALUE)'           )

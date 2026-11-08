@@ -184,7 +184,7 @@
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
 
-      if ( datptr .gt. 0 ) then
+      if ( datptr > 0 ) then
 !
 !        Get the element count for the entry.
 !
@@ -216,7 +216,7 @@
 !
          call zzekglnk ( handle, dp, p, nlinks )
 
-         if ( nlinks .gt. 1 ) then
+         if ( nlinks > 1 ) then
 
             call zzekslnk ( handle, dp, p, nlinks-1 )
 
@@ -234,7 +234,7 @@
          nseen = min (  nelts,  (base+dpsize-datptr)  )
 
 
-         do while (  ( nseen .lt. nelts ) .and. ( .not. failed() )  )
+         do while (  ( nseen < nelts ) .and. ( .not. failed() )  )
 !
 !           The column entry is continued on the page indicated by
 !           NEXT.
@@ -250,7 +250,7 @@
             call zzekglnk ( handle, dp, p, nlinks )
 
 
-            if ( nlinks .gt. 1 ) then
+            if ( nlinks > 1 ) then
 
                call zzekslnk ( handle, dp, p, nlinks-1 )
 
@@ -269,14 +269,14 @@
          end do
 
 
-      else if ( datptr .eq. null ) then
+      else if ( datptr == null ) then
 !
 !        Mark the entry as `uninitialized'.
 !
          call dasudi ( handle, ptrloc, ptrloc, uninit )
 
 
-      else if ( datptr .ne. uninit ) then
+      else if ( datptr /= uninit ) then
 !
 !        UNINIT was the last valid possibility.  The data pointer is
 !        corrupted.

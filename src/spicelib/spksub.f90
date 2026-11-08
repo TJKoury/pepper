@@ -23,7 +23,7 @@
 
       integer(ip)           handle
       real(wp)              descr    ( 5 )
-      character*(*)         ident
+      character(*)          ident
       real(wp)              begin
       real(wp)              end
       integer(ip)           newh
@@ -259,9 +259,9 @@
 !
 !     Make sure the epochs check out.
 !
-      okay = (        alpha .le. begin &
-               .and.  begin .le. end &
-               .and.  end   .le. omega )
+      okay = (        alpha <= begin &
+               .and.  begin <= end &
+               .and.  end   <= omega )
 
       if ( .not. okay ) then
          call setmsg ( 'Specified interval [#, #] is not a subset ' // &
@@ -287,17 +287,17 @@
 !
 !     Let the type-specific (SPKSnn) routines decide what to move.
 !
-      if ( type .eq. 01 ) then
+      if ( type == 01 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks01 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 02 ) then
+      else if ( type == 02 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks02 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 03 ) then
+      else if ( type == 03 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks03 ( handle, baddr, eaddr, begin, end )
          call dafena
@@ -310,63 +310,63 @@
 !         CALL SPKS04 ( HANDLE, BADDR, EADDR, BEGIN, END )
 !         CALL DAFENA
 
-      else if ( type .eq. 05 ) then
+      else if ( type == 05 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks05 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 08 ) then
+      else if ( type == 08 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks08 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 09 ) then
+      else if ( type == 09 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks09 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 10 ) then
+      else if ( type == 10 ) then
          call spks10 ( handle, descr, newh, ndscr, ident )
 
-      else if ( type .eq. 12 ) then
+      else if ( type == 12 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks12 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 13 ) then
+      else if ( type == 13 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks13 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 14 ) then
+      else if ( type == 14 ) then
          call spks14 ( handle, descr, newh, ndscr, ident )
 
-      else if ( type .eq. 15 ) then
+      else if ( type == 15 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks15 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 17 ) then
+      else if ( type == 17 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks17 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 18 ) then
+      else if ( type == 18 ) then
          call dafbna ( newh, ndscr,  ident )
          call spks18 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 19 ) then
+      else if ( type == 19 ) then
          call dafbna ( newh,   ndscr, ident )
          call spks19 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 20 ) then
+      else if ( type == 20 ) then
          call dafbna ( newh,   ndscr, ident )
          call spks20 ( handle, baddr, eaddr, begin, end )
          call dafena
 
-      else if ( type .eq. 21 ) then
+      else if ( type == 21 ) then
          call dafbna ( newh,   ndscr, ident )
          call spks21 ( handle, baddr, eaddr, begin, end )
          call dafena

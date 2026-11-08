@@ -20,7 +20,7 @@
       implicit none
 
       integer(ip)      lunit
-      character*(*)    filnam
+      character(*)     filnam
 
 ! $ Brief_I/O
 !
@@ -134,7 +134,7 @@
 !
 !     First we test to see if the filename is blank.
 !
-      if ( lunit .le. 0 ) then
+      if ( lunit <= 0 ) then
 
          call setmsg ( 'The Fortran logical unit was not' // &
                        ' positive: #.'                     )
@@ -153,7 +153,7 @@
                 opened = opened, &
                 iostat = iostat  )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'An error occurred while INQUIRing on'  // &
                        ' unit #. The IOSTAT value is #.'        )

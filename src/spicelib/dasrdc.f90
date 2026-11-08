@@ -27,7 +27,7 @@
       integer(ip)           last
       integer(ip)           bpos
       integer(ip)           epos
-      character*(*)         data   ( * )
+      character(*)          data   ( * )
 
 ! $ Brief_I/O
 !
@@ -439,10 +439,10 @@
 !
 !     Make sure BPOS and EPOS are ok; stop here if not.
 !
-      if (      ( bpos .lt. 1              ) &
-           .or. ( epos .lt. 1              ) &
-           .or. ( bpos .gt. len( data(1) ) ) &
-           .or. ( epos .gt. len( data(1) ) )  )  then
+      if (      ( bpos < 1              ) &
+           .or. ( epos < 1              ) &
+           .or. ( bpos > len( data(1) ) ) &
+           .or. ( epos > len( data(1) ) )  )  then
 
          call chkin  ( 'DASRDC'                                        )
          call setmsg ( 'Substring bounds must be in range [1,#]. '    // &
@@ -455,7 +455,7 @@
          return
 
 
-      else if ( epos .lt. bpos ) then
+      else if ( epos < bpos ) then
 
          call chkin  ( 'DASRDC'                                        )
          call setmsg ( 'Substring upper bound must not be less than ' // &
@@ -498,13 +498,13 @@
       rcpos   =  wordno
 
 
-      do while ( nmoved .lt. numchr )
+      do while ( nmoved < numchr )
 
          if ( failed() ) then
             return
          end if
 
-         if ( chr .gt. epos ) then
+         if ( chr > epos ) then
             elt = elt + 1
             chr = bpos
          end if
@@ -533,7 +533,7 @@
 !     Read from as many additional records as necessary.
 !
 
-      do while ( nread .lt. n )
+      do while ( nread < n )
 
          if ( failed() ) then
             return
@@ -546,7 +546,7 @@
 !        to read from.
 !
 !
-         if (  recno  .lt.  ( clbase + clsize )  ) then
+         if (  recno  <  ( clbase + clsize )  ) then
 !
 !           We can continue reading from the current cluster.  Find
 !           out how many elements to read from the current record,
@@ -556,9 +556,9 @@
             nmoved  =  0
             rcpos   =  1
 
-            do while ( ( nmoved .lt. numchr ) .and. ( .not. failed() ) )
+            do while ( ( nmoved < numchr ) .and. ( .not. failed() ) )
 
-               if ( chr .gt. epos ) then
+               if ( chr > epos ) then
                   elt = elt + 1
                   chr = bpos
                end if

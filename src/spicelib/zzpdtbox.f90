@@ -209,7 +209,7 @@
 !
 !     The equatorial radius must be greater than zero.
 !
-      if ( re .le. 0.0_wp ) then
+      if ( re <= 0.0_wp ) then
 
          call chkin  ( 'ZZPDTBOX'                                   )
          call setmsg ( 'Equatorial radius from CORPAR array was #.' )
@@ -226,7 +226,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1.0_wp ) then
+      if ( f >= 1.0_wp ) then
 
          call chkin  ( 'ZZPDTBOX'                            )
          call setmsg ( 'Flattening coefficient from CORPAR ' &
@@ -244,11 +244,11 @@
       minlon = bounds(1,1)
       maxlon = bounds(2,1)
 
-      if ( maxlon .le. minlon ) then
+      if ( maxlon <= minlon ) then
          maxlon = maxlon + twopi()
       end if
 
-      if ( maxlon .le. minlon) then
+      if ( maxlon <= minlon) then
 
          call chkin  ( 'ZZPDTBOX'                               )
          call setmsg ( 'Longitude bounds are #:#. Minimum ' &
@@ -268,7 +268,7 @@
       minalt = bounds(1,3)
       maxalt = bounds(2,3)
 
-      if ( minlat .gt. maxlat ) then
+      if ( minlat > maxlat ) then
 
          call chkin  ( 'ZZPDTBOX'                              )
          call setmsg ( 'Latitude bounds #:# are out of order.' )
@@ -280,7 +280,7 @@
 
       end if
 
-      if ( minlat .lt. ( -halfpi() - angmrg )  ) then
+      if ( minlat < ( -halfpi() - angmrg )  ) then
 
          call chkin  ( 'ZZPDTBOX'                               )
          call setmsg ( 'Minimum latitude # is less than -pi/2.' )
@@ -291,7 +291,7 @@
 
       end if
 
-      if ( maxlat .gt. ( halfpi() + angmrg )  ) then
+      if ( maxlat > ( halfpi() + angmrg )  ) then
 
          call chkin  ( 'ZZPDTBOX'                               )
          call setmsg ( 'Maximum latitude # is more than -pi/2.' )
@@ -324,7 +324,7 @@
 !     surface of minimum altitude for which the absolute value of the
 !     latitude is maximum.
 !
-      if ( minlat .ge. 0.0_wp ) then
+      if ( minlat >= 0.0_wp ) then
 
          call georec ( 0.0_wp, minlat, maxalt, re, f, maxv )
          call georec ( 0.0_wp, maxlat, minalt, re, f, minv )
@@ -335,7 +335,7 @@
          outrad  = vnorm( maxv )
          inrad   = vnorm( minv )
 
-      else if ( maxlat .le. 0.0_wp ) then
+      else if ( maxlat <= 0.0_wp ) then
 
          call georec ( 0.0_wp, maxlat, maxalt, re, f, maxv )
          call georec ( 0.0_wp, minlat, minalt, re, f, minv )
@@ -372,7 +372,7 @@
 !     LR is the length of the bounding box in the radial direction,
 !     where "radius" is defined as the distance from the Z axis.
 !
-      if ( hdlon .le. halfpi() ) then
+      if ( hdlon <= halfpi() ) then
 
          lr = outrad - ( inrad * cos(hdlon) )
 
@@ -387,7 +387,7 @@
 !     extent. For any extent larger than Pi radians, the width
 !     is just that of the outer radius.
 !
-      if ( hdlon .gt. halfpi() ) then
+      if ( hdlon > halfpi() ) then
 
          lt = 2.0_wp * outrad
       else
@@ -398,12 +398,12 @@
 !     The height bounds are derived from the lowest and highest points
 !     on the element.
 !
-      if ( minlat .ge. 0.0_wp ) then
+      if ( minlat >= 0.0_wp ) then
 
          call georec ( 0.0_wp, maxlat, maxalt, re, f, topv )
          call georec ( 0.0_wp, minlat, minalt, re, f, botv )
 
-      else if ( maxlat .lt. 0.0_wp ) then
+      else if ( maxlat < 0.0_wp ) then
 
          call georec ( 0.0_wp, maxlat, minalt, re, f, topv )
          call georec ( 0.0_wp, minlat, maxalt, re, f, botv )

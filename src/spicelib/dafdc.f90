@@ -266,7 +266,7 @@
 !
 !     Local variables
 !
-      character*(ifnlen)    ifname
+      character(ifnlen)     ifname
 
       integer(ip)           bward
       integer(ip)           free
@@ -314,7 +314,7 @@
 !     Now we will attempt to remove the comment records, if there are
 !     any, otherwise we do nothing.
 !
-      if ( ncomr .gt. 0 ) then
+      if ( ncomr > 0 ) then
 !
 !        We have some comment records, so remove them.
 !

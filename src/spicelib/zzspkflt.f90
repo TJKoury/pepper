@@ -32,8 +32,8 @@
 
       external              trgsub
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       real(wp)              stobs  ( 6 )
       real(wp)              starg  ( 6 )
       real(wp)              lt
@@ -357,7 +357,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'ZZSPKFLT' )
 
 !
@@ -383,7 +383,7 @@
 !
 !     Local variables
 !
-      character*(corlen)    prvcor
+      character(corlen)     prvcor
 
       real(wp)              a
       real(wp)              b
@@ -434,7 +434,7 @@
       call chkin ( rname )
 
 
-      if (  pass1  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any.  Analyze the new flag.
@@ -480,7 +480,7 @@
 !
       call irfnum ( ref, refid )
 
-      if ( refid .eq. 0 ) then
+      if ( refid == 0 ) then
 
          call setmsg ( 'The requested frame ''#'' is not a ' &
          //            'recognized inertial frame. '        )
@@ -511,7 +511,7 @@
       dist = vnorm(starg)
       lt   = dist / clight()
 
-      if ( lt .eq. 0.0_wp ) then
+      if ( lt == 0.0_wp ) then
 !
 !        This can happen only if the observer and target are at the
 !        same position. We don't consider this an error, but we're not
@@ -569,8 +569,8 @@
       i      = 0
       lterr  = 1.0_wp
 
-      do while (        ( i     .lt. numitr ) &
-                  .and. ( lterr .gt. cnvlim )  )
+      do while (        ( i     < numitr ) &
+                  .and. ( lterr > cnvlim )  )
 !
 !        LT was set either prior to this loop or
 !        during the previous loop iteration.
@@ -695,7 +695,7 @@
 !     For physically realistic target velocities, S*C*A cannot equal 1.
 !     We'll check for this case anyway.
 !
-      if (  ltsign*c*a  .gt.  1.0_wp-tol ) then
+      if (  ltsign*c*a  >  1.0_wp-tol ) then
 
          call setmsg ( 'Target range rate magnitude is ' &
       //               'approximately the speed of light. The ' &

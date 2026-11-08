@@ -245,7 +245,7 @@
 !
 !     Make sure that this really is a type 8 or type 12 data segment.
 !
-      if (  ( type .ne. 08 ) .and. ( type .ne. 12 )  ) then
+      if (  ( type /= 08 ) .and. ( type /= 12 )  ) then
          call chkin ( 'SPKR08'                                        )
          call setmsg( 'You are attempting to locate type 8 or type ' // &
                       '12 data in a type # data segment.'             )
@@ -259,7 +259,7 @@
 !     Check the request time against the bounds in the segment
 !     descriptor.
 !
-      if (  ( et .lt. dc(1) )  .or.  ( et .gt. dc(2) )  )  then
+      if (  ( et < dc(1) )  .or.  ( et > dc(2) )  )  then
          call chkin ( 'SPKR08'                                      )
          call setmsg( 'Request time # is outside of descriptor '   // &
                       'bounds # : #.'                               )

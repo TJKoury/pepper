@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         binfil
+      character(*)          binfil
       integer(ip)           xfrlun
 
 ! $ Brief_I/O
@@ -189,7 +189,7 @@
 !
 !     Local parameters
 !
-      character*(*)         quote
+      character(*)          quote
       parameter           ( quote  = ''''                         )
 !
 !      CHARACTER*(*)         BEGRES
@@ -201,46 +201,46 @@
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'     )
 !
-      character*(*)         begcom
+      character(*)          begcom
       parameter           ( begcom = 'BEGIN_COMMENT_BLOCK'        )
 
-      character*(*)         endcom
+      character(*)          endcom
       parameter           ( endcom = 'END_COMMENT_BLOCK'          )
 
-      character*(*)         tcmblk
+      character(*)          tcmblk
       parameter           ( tcmblk = 'TOTAL_COMMENT_BLOCKS'       )
 
-      character*(*)         bcblk
+      character(*)          bcblk
       parameter           ( bcblk  = 'BEGIN_CHARACTER_BLOCK'      )
 
-      character*(*)         ecblk
+      character(*)          ecblk
       parameter           ( ecblk  = 'END_CHARACTER_BLOCK'        )
 
-      character*(*)         tcblks
+      character(*)          tcblks
       parameter           ( tcblks = 'TOTAL_CHARACTER_BLOCKS'     )
 
-      character*(*)         bdblk
+      character(*)          bdblk
       parameter           ( bdblk  = 'BEGIN_DP_BLOCK'             )
 
-      character*(*)         edblk
+      character(*)          edblk
       parameter           ( edblk  = 'END_DP_BLOCK'               )
 
-      character*(*)         tdblks
+      character(*)          tdblks
       parameter           ( tdblks = 'TOTAL_DP_BLOCKS'            )
 
-      character*(*)         biblk
+      character(*)          biblk
       parameter           ( biblk  = 'BEGIN_INTEGER_BLOCK'        )
 
-      character*(*)         eiblk
+      character(*)          eiblk
       parameter           ( eiblk  = 'END_INTEGER_BLOCK'          )
 
-      character*(*)         tiblks
+      character(*)          tiblks
       parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'       )
 
-      character*(*)         ftypid
+      character(*)          ftypid
       parameter           ( ftypid = 'DASETF'                     )
 
-      character*(*)         infoln
+      character(*)          infoln
       parameter           ( infoln = 'NAIF DAS ENCODED TRANSFER FILE' )
 !
 !     Some parameters for writing the array markers
@@ -285,11 +285,11 @@
 !
 !     Local variables
 !
-      character*(cbflen)    cbuffr(bufsiz)
-      character*(crlen)     crecrd
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
-      character*(linlen)    line
+      character(cbflen)     cbuffr(bufsiz)
+      character(crlen)      crecrd
+      character(idwlen)     idword
+      character(ifnlen)     ifname
+      character(linlen)     line
 
       real(wp)              dbuffr(bufsiz)
 
@@ -500,7 +500,7 @@
 !     reserved record area is not currently implemented, so nobody
 !     should be using it.
 !
-      if ( nresvc .ne. 0 ) then
+      if ( nresvc /= 0 ) then
 !
 !        Set the error message, close the file, signal the error, and
 !        exit.
@@ -518,7 +518,7 @@
 
       end if
 
-      if ( nresvr .ne. 0 ) then
+      if ( nresvr /= 0 ) then
 !
 !        Set the error message, close the file, signal the error, and
 !        exit.
@@ -545,7 +545,7 @@
 !
       write (xfrlun,fmt='(A)',iostat=iostat) ftypid // ' ' // infoln
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        An error occurred, so close the binary DAS file, set an
 !        appropriate error message, and return to the caller.
@@ -565,7 +565,7 @@
 !
       write (xfrlun,fmt='(A)',iostat=iostat) quote // idword // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        An error occurred, so close the binary DAS file, set an
 !        appropriate error message, and return to the caller.
@@ -586,7 +586,7 @@
 !
       write (xfrlun,fmt='(A)',iostat=iostat) quote // ifname // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        An error occurred, so close the binary DAS file, set an
 !        appropriate error message, and return to the caller.
@@ -650,7 +650,7 @@
 !     Write out the comment area of the DAS file, if there are any
 !     comment characters stored in it.
 !
-      if ( ncomc .gt. 0 ) then
+      if ( ncomc > 0 ) then
 !
 !        Write out the comment records, one at a time.
 !
@@ -659,12 +659,12 @@
          numblk = 0
          recno  = 1 + nresvr
 
-         do while ( numlft .gt. 0 )
+         do while ( numlft > 0 )
 
             numblk = numblk + 1
             recno  = recno  + 1
 
-            if ( numlft .gt. crlen ) then
+            if ( numlft > crlen ) then
 
                numdta = crlen
 
@@ -682,7 +682,7 @@
             call repmi ( line, '#', numdta, line  )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -725,7 +725,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -756,7 +756,7 @@
          call repmi ( line, '#', ncomc, line  )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
@@ -802,17 +802,17 @@
 !     Encode and write the CHARACTER data to the DAS transfer file, if
 !     there is any character data.
 !
-      if ( ncdata .gt. 0 ) then
+      if ( ncdata > 0 ) then
 
          numblk = 0
          dtabeg = 1
          numlft = ncdata
 
-         do while ( numlft .gt. 0 )
+         do while ( numlft > 0 )
 
             numblk = numblk + 1
 
-            if ( numlft .ge. ( cbflen * bufsiz ) ) then
+            if ( numlft >= ( cbflen * bufsiz ) ) then
 
                numdta = cbflen * bufsiz
 
@@ -830,7 +830,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -881,7 +881,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -913,7 +913,7 @@
          call repmi ( line, '#', ncdata, line )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
@@ -934,17 +934,17 @@
 !     Encode and write the DOUBLE PRECISION data to the DAS transfer
 !     file.
 !
-      if ( nddata .gt. 0 ) then
+      if ( nddata > 0 ) then
 
          numblk = 0
          dtabeg = 1
          numlft = nddata
 
-         do while ( numlft .gt. 0 )
+         do while ( numlft > 0 )
 
             numblk = numblk + 1
 
-            if ( numlft .ge. bufsiz ) then
+            if ( numlft >= bufsiz ) then
 
                numdta = bufsiz
 
@@ -962,7 +962,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -1010,7 +1010,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -1042,7 +1042,7 @@
          call repmi ( line, '#', nddata, line )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.
@@ -1063,17 +1063,17 @@
 !     Encode and write the INTEGER data to the DAS transfer file, if
 !     there is any.
 !
-      if ( nidata .gt. 0 ) then
+      if ( nidata > 0 ) then
 
          numblk = 0
          dtabeg = 1
          numlft = nidata
 
-         do while ( numlft .gt. 0 )
+         do while ( numlft > 0 )
 
             numblk = numblk + 1
 
-            if ( numlft .ge. bufsiz ) then
+            if ( numlft >= bufsiz ) then
 
                numdta = bufsiz
 
@@ -1091,7 +1091,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -1139,7 +1139,7 @@
             call repmi ( line, '#', numdta, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 !
 !              An error occurred, so close the binary DAS file, set an
 !              appropriate error message, and return to the caller.
@@ -1171,7 +1171,7 @@
          call repmi ( line, '#', nidata, line )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 !
 !           An error occurred, so close the binary DAS file, set an
 !           appropriate error message, and return to the caller.

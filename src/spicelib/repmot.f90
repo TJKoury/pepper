@@ -22,11 +22,11 @@
 
       implicit none
 
-      character*(*)         in
-      character*(*)         marker
+      character(*)          in
+      character(*)          marker
       integer(ip)           value
-      character*1           rtcase
-      character*(*)         out
+      character(1)          rtcase
+      character(*)          out
 
       integer(ip)           maxlon
       parameter           ( maxlon = 147 )
@@ -298,8 +298,8 @@
 !
 !     Local variables
 !
-      character*(maxlon)    ord
-      character*(1)         tmpcas
+      character(maxlon)     ord
+      character(1)          tmpcas
 
       integer(ip)           mrknbf
       integer(ip)           mrknbl
@@ -323,9 +323,9 @@
       call ljust ( rtcase, tmpcas )
       call ucase ( tmpcas, tmpcas )
 
-      if (        ( tmpcas .ne. 'U' ) &
-            .and. ( tmpcas .ne. 'L' ) &
-            .and. ( tmpcas .ne. 'C' )  ) then
+      if (        ( tmpcas /= 'U' ) &
+            .and. ( tmpcas /= 'L' ) &
+            .and. ( tmpcas /= 'C' )  ) then
 
          call setmsg ( 'Case (#) must be U, L, or C.' )
          call errch  ( '#', rtcase                    )
@@ -338,7 +338,7 @@
 !
 !     If MARKER is blank, no substitution is possible.
 !
-      if ( marker .eq. ' ' ) then
+      if ( marker == ' ' ) then
 
          out = in
 
@@ -357,7 +357,7 @@
 
       mrkpsb = index ( in, marker ( mrknbf : mrknbl )  )
 
-      if  ( mrkpsb .eq. 0 ) then
+      if  ( mrkpsb == 0 ) then
 
          out = in
 
@@ -379,11 +379,11 @@
 !     CARD is always returned in upper case; change to the specified
 !     case, if required.
 !
-      if ( tmpcas .eq. 'L' ) then
+      if ( tmpcas == 'L' ) then
 
          call lcase ( ord, ord )
 
-      else if ( tmpcas .eq. 'C' ) then
+      else if ( tmpcas == 'C' ) then
 
          call lcase ( ord(2:), ord(2:) )
 

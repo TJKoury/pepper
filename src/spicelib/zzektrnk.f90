@@ -109,7 +109,7 @@
 !     Go straight to the address at which the key count for the
 !     node is stored.
 !
-      if ( tree .eq. node ) then
+      if ( tree == node ) then
          addrss  =  zzektrbs ( node )  +  trnkr
       else
          addrss  =  zzektrbs ( node )  +  trnkc

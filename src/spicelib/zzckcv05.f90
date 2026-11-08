@@ -38,7 +38,7 @@
       integer(ip)           sclkid
       real(wp)              dc     ( 2 )
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
@@ -230,7 +230,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -284,13 +284,13 @@
 !     Compute the packet size.  This requires parameters listed
 !     in the include file 'ck05.inc' and is based on the subtype.
 !
-      if      ( subtyp .eq. c05tp0 ) then
+      if      ( subtyp == c05tp0 ) then
          rsize = c05ps0
-      else if ( subtyp .eq. c05tp1 ) then
+      else if ( subtyp == c05tp1 ) then
          rsize = c05ps1
-      else if ( subtyp .eq. c05tp2 ) then
+      else if ( subtyp == c05tp2 ) then
          rsize = c05ps2
-      else if ( subtyp .eq. c05tp3 ) then
+      else if ( subtyp == c05tp3 ) then
          rsize = c05ps3
       else
          call setmsg ( 'CK type 5 subtype <#> is not supported.' )
@@ -351,7 +351,7 @@
       call dafgda ( handle, intat,  intat,   start )
       call dafgda ( handle, tickat, tickat,  tick  )
 
-      do while ( tick .lt. start .and. tickat .lt. lsttik )
+      do while ( tick < start .and. tickat < lsttik )
          tickat = tickat + 1
          call dafgda ( handle, tickat, tickat, tick )
       end do
@@ -360,7 +360,7 @@
 !     If we did not find a TICK at least as big as START, we can
 !     just return now.
 !
-      if ( tick .lt. start ) then
+      if ( tick < start ) then
          call chkout ( 'ZZCKCV05' )
          return
       end if
@@ -368,8 +368,8 @@
 
       bail = .false.
 
-      do while (       ( intat  .le.  lstint ) &
-                 .and. ( tickat .le.  lsttik ) &
+      do while (       ( intat  <=  lstint ) &
+                 .and. ( tickat <=  lsttik ) &
                  .and. (        .not. bail   )  )
 !
 !        At this point, we have an interval that begins at START
@@ -383,7 +383,7 @@
 !        interval available, we can short cut the remainder of the
 !        reads.
 !
-         if ( intat .eq. lstint ) then
+         if ( intat == lstint ) then
 
             call dafgda ( handle, lsttik, lsttik, finish )
 
@@ -408,7 +408,7 @@
 !           Read forward from the last tick until we reach the
 !           START of the next interval or until we run out of TICKS.
 !
-            do while ( tick .lt. start .and. tickat .lt. lsttik )
+            do while ( tick < start .and. tickat < lsttik )
                finish = tick
                tickat = tickat + 1
                call dafgda ( handle, tickat, tickat, tick  )
@@ -420,7 +420,7 @@
 !           police the writers of C-kernels.  The only way to get into
 !           the block below is if TICKAT .EQ. LSTTIK
 !
-            if ( tick .lt. start ) then
+            if ( tick < start ) then
                finish = tick
                tickat = tickat + 1
             end if
@@ -438,9 +438,9 @@
 !        intervals *do not get expanded*; this choice is
 !        consistent with the type 5 reading algorithm.
 !
-         if ( begin .le. finish ) then
+         if ( begin <= finish ) then
 
-            if ( tol .gt. 0.0_wp ) then
+            if ( tol > 0.0_wp ) then
 
                begin   =  max( begin  - tol, 0.0_wp )
                finish  =       finish + tol
@@ -465,7 +465,7 @@
 !
 !        Insert the interval into the window.
 !
-         if ( begin .le. finish ) then
+         if ( begin <= finish ) then
             call wninsd ( begin, finish, schedl )
          end if
 

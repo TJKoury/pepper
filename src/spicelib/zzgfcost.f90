@@ -35,14 +35,14 @@
       include               'gf.inc'
       include               'zzgf.inc'
 
-      character*(*)         vecdef
-      character*(*)         method
+      character(*)          vecdef
+      character(*)          method
       integer(ip)           trgid
       real(wp)              et
-      character*(*)         ref
-      character*(*)         abcorr
+      character(*)          ref
+      character(*)          abcorr
       integer(ip)           obsid
-      character*(*)         dref
+      character(*)          dref
       integer(ip)           dctr
       real(wp)              dvec   ( 3 )
       real(wp)              radii  ( 3 )
@@ -386,7 +386,7 @@
       found = .false.
 
 
-      if ( vecdef .eq. posdef  ) then
+      if ( vecdef == posdef  ) then
 !
 !        Find the observer-target state vector.
 !
@@ -394,7 +394,7 @@
 
          found = .true.
 
-      else if ( vecdef .eq. sobdef ) then
+      else if ( vecdef == sobdef ) then
 !
 !        The caller has requested the state of a sub-observer point.
 !
@@ -404,7 +404,7 @@
          found = .true.
 
 
-      else if ( vecdef .eq. sindef ) then
+      else if ( vecdef == sindef ) then
 !
 !        The caller has requested the state of a surface intercept
 !        point.

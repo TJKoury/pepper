@@ -33,9 +33,9 @@
       integer(ip)           natbff
       integer(ip)           supbff ( * )
       integer(ip)           numsup
-      character*(*)         stramh ( * )
-      character*(*)         strarc ( * )
-      character*(*)         strbff ( * )
+      character(*)          stramh ( * )
+      character(*)          strarc ( * )
+      character(*)          strbff ( * )
 
 ! $ Brief_I/O
 !
@@ -139,8 +139,8 @@
 !
 !     Local Variables.
 !
-      character*(strlen)    linstr
-      character*(strsiz)    tmpstr
+      character(strlen)     linstr
+      character(strsiz)     tmpstr
 
       integer(ip)           i
 
@@ -176,7 +176,7 @@
 
       natbff = isrchc ( tmpstr, numbff, strbff )
 
-      if ( natbff .eq. 0 ) then
+      if ( natbff == 0 ) then
 
          call chkin  ( 'ZZDDHINI'                                   )
          call setmsg ( 'The binary file format, ''#'', is not ' &
@@ -212,7 +212,7 @@
 !
 !        See if we're done.
 !
-         done = ( i .gt. numbff ) .or. ( tmpstr .eq. ' ' )
+         done = ( i > numbff ) .or. ( tmpstr == ' ' )
 
 !
 !        If we're not done, then convert this string to the
@@ -226,7 +226,7 @@
 !           Check to see if the binary file format listed
 !           is properly supported.
 !
-            if ( supbff(i) .eq. 0 ) then
+            if ( supbff(i) == 0 ) then
 
                call chkin  ( 'ZZDDHINI'                             )
                call setmsg ( 'The binary file format, ''#'', is ' &

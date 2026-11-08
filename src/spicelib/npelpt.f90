@@ -261,7 +261,7 @@
       minlen = vnorm (sminor)
       majlen = vnorm (smajor)
 
-      if (   min ( majlen, minlen )  .eq.  0.0_wp  ) then
+      if (   min ( majlen, minlen )  ==  0.0_wp  ) then
 
          call setmsg ( 'Semi-axis lengths: # #. ' )
          call errdp  ( '#', majlen                )

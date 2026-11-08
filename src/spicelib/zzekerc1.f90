@@ -30,7 +30,7 @@
       integer(ip)           handle
       integer(ip)           segdsc ( sdscsz )
       integer(ip)           coldsc ( cdscsz )
-      character*(*)         ckey
+      character(*)          ckey
       integer(ip)           recptr
       logical               null
       integer(ip)           prvidx
@@ -208,7 +208,7 @@
       tsize  =  zzektrsz ( handle, tree )
       nrec   =  segdsc   ( nridx  )
 
-      if ( tsize .gt. nrec ) then
+      if ( tsize > nrec ) then
 
          call chkin  ( 'ZZEKERC1'                                      )
          call setmsg ( 'Index size = # but column contains # records.' )
@@ -223,7 +223,7 @@
 !
 !     Handle the case of an empty tree gracefully.
 !
-      if ( tsize .eq. 0 ) then
+      if ( tsize == 0 ) then
 
          prvidx = 0
          prvptr = 0
@@ -265,7 +265,7 @@
                              begptr,  1,       chr,     ckey, &
                              0.0_wp,    0,       null            ) &
 
-                .and.      (  recptr  .lt.  begptr )             ) then
+                .and.      (  recptr  <  begptr )             ) then
 !
 !        The smallest entry of the column is greater than the input
 !        value, based on a comparison of record pointers, so none of the
@@ -302,7 +302,7 @@
                             endptr,  1,       chr,     ckey, &
                             0.0_wp,    0,       null             ) &
 
-               .and.      (  endptr  .le.  recptr )       ) then
+               .and.      (  endptr  <=  recptr )       ) then
 !
 !        The last element of the column is less than or equal to the
 !        input value, based on a comparison of record pointers.
@@ -323,7 +323,7 @@
 !     Below, we'll use the variable LEQ to indicate whether the "middle"
 !     element in our search is less than or equal to the input value.
 !
-      do while ( end .gt. begin+1 )
+      do while ( end > begin+1 )
 !
 !        Find the record pointer of the element whose ordinal position
 !        is halfway between BEGIN and END.
@@ -353,7 +353,7 @@
 !           The column entry's value matches CKEY.  We must
 !           compare record pointers at this point.
 !
-            leq  =  midptr .le. recptr
+            leq  =  midptr <= recptr
 
          else
 !

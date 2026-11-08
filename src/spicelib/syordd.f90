@@ -23,8 +23,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
 
@@ -191,7 +191,7 @@
 !
 !     If so, sort the components in place.
 !
-      if ( locsym .gt. 0 ) then
+      if ( locsym > 0 ) then
 
          locval = sumai ( tabptr(1), locsym-1 ) + 1
          n      = tabptr(locsym)

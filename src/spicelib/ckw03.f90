@@ -29,9 +29,9 @@
       real(wp)              begtim
       real(wp)              endtim
       integer(ip)           inst
-      character*(*)         ref
+      character(*)          ref
       logical               avflag
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           nrec
       real(wp)              sclkdp (      * )
       real(wp)              quats  ( 0:3, * )
@@ -832,7 +832,7 @@
 !
 !     Make sure that there is a positive number of pointing records.
 !
-      if ( nrec .le. 0 ) then
+      if ( nrec <= 0 ) then
 
          call setmsg ( '# is an invalid number of pointing ' // &
                        'instances for type 3.'                     )
@@ -847,7 +847,7 @@
 !     Make sure that there is a positive number of interpolation
 !     intervals.
 !
-      if ( nints .le. 0 ) then
+      if ( nints <= 0 ) then
 
          call setmsg ( '# is an invalid number of interpolation ' // &
                        'intervals for type 3.'                     )
@@ -861,7 +861,7 @@
 !
 !     Check that the SCLK bounds on the segment are reasonable.
 !
-      if ( begtim .gt. sclkdp(1) ) then
+      if ( begtim > sclkdp(1) ) then
 
          call setmsg ( 'The segment begin time is greater than the ' // &
                        'time associated with the first pointing '    // &
@@ -876,7 +876,7 @@
 
       end if
 
-      if ( endtim .lt. sclkdp(nrec) ) then
+      if ( endtim < sclkdp(nrec) ) then
 
          call setmsg ( 'The segment end time is less than the time '  // &
                        'associated with the last pointing instance '  // &
@@ -900,7 +900,7 @@
 !
       call namfrm ( ref, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', ref                                    )
@@ -935,7 +935,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -950,7 +950,7 @@
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -967,7 +967,7 @@
 !
 !     Check that the first time is nonnegative.
 !
-      if ( sclkdp(1) .lt. 0.0_wp ) then
+      if ( sclkdp(1) < 0.0_wp ) then
 
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
@@ -982,7 +982,7 @@
 !
       do i = 2, nrec
 
-         if ( sclkdp(i) .le. sclkdp(i-1) )  then
+         if ( sclkdp(i) <= sclkdp(i-1) )  then
 
             call setmsg ( 'The SCLKDP times are not strictly '      // &
                           'increasing. SCLKDP(#) = # and SCLKDP(#) '// &
@@ -1003,7 +1003,7 @@
 !     Now check that the start time of the first interval is the
 !     same as the time of the first pointing instance.
 !
-      if ( sclkdp(1) .ne. starts(1) ) then
+      if ( sclkdp(1) /= starts(1) ) then
 
          call setmsg ( 'The start time of the first interval # ' // &
                        'and the time of the first pointing '     // &
@@ -1022,7 +1022,7 @@
 !
       do i = 2, nints
 
-         if ( starts(i) .le. starts(i-1) )  then
+         if ( starts(i) <= starts(i-1) )  then
 
             call setmsg ( 'The interval start times are not strictly '// &
                           'increasing. STARTS(#) = # and STARTS(#) '  // &
@@ -1051,11 +1051,11 @@
 
          match = .false.
 
-         do while ( ( .not. match ) .and. ( index .lt. nrec ) )
+         do while ( ( .not. match ) .and. ( index < nrec ) )
 
             index = index + 1
 
-            match = ( starts(i) .eq. sclkdp(index) )
+            match = ( starts(i) == sclkdp(index) )
 
          end do
 

@@ -168,7 +168,7 @@
       integer(ip)           bp
       integer(ip)           cp
       real(wp)              end
-      character*1           use
+      character(1)          use
       integer(ip)           over
 
 
@@ -210,26 +210,26 @@
 !
 !     When the ends of both input windows are reached, we're done.
 !
-      do while ( ap .lt. acard  .or.  bp .lt. bcard )
+      do while ( ap < acard  .or.  bp < bcard )
 
 !
 !        If the end of one window has been reached, copy (or merge)
 !        the next interval from the other window.
 !
-         if ( ap .gt. acard ) then
+         if ( ap > acard ) then
             use = 'B'
 
-         else if ( bp .gt. bcard ) then
+         else if ( bp > bcard ) then
             use = 'A'
 
 !
 !        Otherwise, let's see what we can do with the earlier of
 !        the next intervals from A and B.
 !
-         else if ( a(ap) .lt. b(bp) ) then
+         else if ( a(ap) < b(bp) ) then
             use = 'A'
 
-         else if ( b(bp) .le. a(ap) ) then
+         else if ( b(bp) <= a(ap) ) then
             use = 'B'
          end if
 
@@ -244,11 +244,11 @@
 !        interval to the right). Otherwise, insert the next interval
 !        intact.
 !
-         if ( use .eq. 'A' ) then
+         if ( use == 'A' ) then
 
-            if ( cp .lt. csize ) then
+            if ( cp < csize ) then
 
-               if ( a(ap) .le. end .and. cp .gt. 0 ) then
+               if ( a(ap) <= end .and. cp > 0 ) then
                   c(cp) = max ( c(cp), a(ap+1) )
                else
                   cp      = cp + 2
@@ -260,7 +260,7 @@
 
             else
 
-               if ( a(ap) .le. end ) then
+               if ( a(ap) <= end ) then
                   end  = max ( end, a(ap+1) )
                else
                   over = over + 2
@@ -274,11 +274,11 @@
 !
 !        This is the same as the last clause, with B replacing A.
 !
-         else if ( use .eq. 'B' ) then
+         else if ( use == 'B' ) then
 
-            if ( cp .lt. csize ) then
+            if ( cp < csize ) then
 
-               if ( b(bp) .le. end .and. cp .gt. 0 ) then
+               if ( b(bp) <= end .and. cp > 0 ) then
                   c(cp)   = max ( c(cp), b(bp+1) )
                else
                   cp      = cp + 2
@@ -290,7 +290,7 @@
 
             else
 
-               if ( b(bp) .le. end ) then
+               if ( b(bp) <= end ) then
                   end  = max ( end, b(bp+1) )
                else
                   over = over + 2
@@ -313,7 +313,7 @@
 !     If there is an excess of elements, signal an error and check out
 !     as usual.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
          call excess ( over, 'window' )
          call sigerr ( 'SPICE(WINDOWEXCESS)' )
       end if

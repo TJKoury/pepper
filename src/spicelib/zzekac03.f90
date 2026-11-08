@@ -31,7 +31,7 @@
       integer(ip)           handle
       integer(ip)           segdsc ( * )
       integer(ip)           coldsc ( * )
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       logical               nlflgs ( * )
       integer(ip)           rcptrs ( * )
       integer(ip)           wkindx ( * )
@@ -175,8 +175,8 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
-      character*(pgsizc)    page
+      character(cnamsz)     column
+      character(pgsizc)     page
 
       integer(ip)           adrbuf ( bufsiz )
       integer(ip)           bufptr
@@ -229,14 +229,14 @@
       colidx =  coldsc ( ordidx )
       colwid =  coldsc ( lenidx )
 
-      nullok =  nulptr .ne. ifalse
-      indexd =  idxtyp .ne. ifalse
-      fixlen =  colwid .ne. ifalse
+      nullok =  nulptr /= ifalse
+      indexd =  idxtyp /= ifalse
+      fixlen =  colwid /= ifalse
 
 !
 !     This column had better be class 3.
 !
-      if ( class .ne. 3 ) then
+      if ( class /= 3 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -254,7 +254,7 @@
 !     If the column is indexed, the index type should be 1; we don't
 !     know how to create any other type of index.
 !
-      if  (  indexd  .and.  ( idxtyp .ne. 1 )  ) then
+      if  (  indexd  .and.  ( idxtyp /= 1 )  ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -307,7 +307,7 @@
       end if
 
 
-      if ( ndata .gt. 0 ) then
+      if ( ndata > 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
@@ -346,7 +346,7 @@
       nwrite  =  0
       n       =  0
 
-      do while ( remain .gt. 0 )
+      do while ( remain > 0 )
 !
 !        Examine a column entry.  Write it out if it's non-null.
 !
@@ -386,11 +386,11 @@
             nchars  =   strlen
 
 
-            do while ( nchars .gt. 0 )
+            do while ( nchars > 0 )
 
                room  =  cpsize - n
 
-               if ( nchars .le. room ) then
+               if ( nchars <= room ) then
 !
 !                 The remaining portion of the string will fit on the
 !                 current page.
@@ -462,7 +462,7 @@
 !        We're done with the current column entry, null or not.
 !
 
-         if ( nwrite .lt. ndata ) then
+         if ( nwrite < ndata ) then
 !
 !           There is at least one more column entry to write.
 !           If there's not enough room on the current page to begin
@@ -471,7 +471,7 @@
 !
             room  =  cpsize - n
 
-            if ( room  .lt.  ( 1 + encsiz )  ) then
+            if ( room  <  ( 1 + encsiz )  ) then
 
                call zzekpgwc ( handle, p,      page  )
                call zzekaps  ( handle, segdsc, chr, .false., p, pbase )
@@ -485,7 +485,7 @@
             end if
 
 
-         else if ( n .gt. 0 ) then
+         else if ( n > 0 ) then
 !
 !           We've written the last of the non-null data to the current
 !           page.  Write out this page.
@@ -499,7 +499,7 @@
          remain  =  remain - 1
 
 
-         if (  ( bufptr .eq. bufsiz ) .or. ( remain .eq. 0 )  ) then
+         if (  ( bufptr == bufsiz ) .or. ( remain == 0 )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.

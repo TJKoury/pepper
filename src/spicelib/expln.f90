@@ -18,8 +18,8 @@
 
       implicit none
 
-      character*(*)                 msg
-      character*(*)                 expl
+      character(*)                  msg
+      character(*)                  expl
 
 ! $ Brief_I/O
 !
@@ -143,220 +143,220 @@
 !     alphabetically.
 !
 
-      if      (  msg  .eq.  'SPICE(BADENDPOINTS)' ) then
+      if      (  msg  ==  'SPICE(BADENDPOINTS)' ) then
 
          expl  = 'Invalid Endpoints--Left Endpoint Exceeds Right'     // &
                  ' Endpoint'
 
-      else if (  msg  .eq.  'SPICE(BADGEFVERSION)'  ) then
+      else if (  msg  ==  'SPICE(BADGEFVERSION)'  ) then
 
          expl  =  'Version Identification of GEF File is Invalid'
 
-      else if (  msg  .eq.  'SPICE(BLANKMODULENAME)' ) then
+      else if (  msg  ==  'SPICE(BLANKMODULENAME)' ) then
 
          expl  =  'A blank string was used as a module name'
 
-      else if (  msg  .eq.  'SPICE(BOGUSENTRY)'   ) then
+      else if (  msg  ==  'SPICE(BOGUSENTRY)'   ) then
 
          expl  = 'This Entry Point Contains No Executable Code'
 
-      else if (  msg  .eq.  'SPICE(CELLTOOSMALL)' ) then
+      else if (  msg  ==  'SPICE(CELLTOOSMALL)' ) then
 
          expl  = 'Cardinality of Output Cell is Too Small'
 
-      else if (  msg  .eq.  'SPICE(CLUSTERWRITEERROR)' ) then
+      else if (  msg  ==  'SPICE(CLUSTERWRITEERROR)' ) then
 
          expl  = 'Error Writing to Ephemeris File'
 
-      else if (  msg  .eq.  'SPICE(DATATYPENOTRECOG)' )  then
+      else if (  msg  ==  'SPICE(DATATYPENOTRECOG)' )  then
 
          expl  = 'Unrecognized Data Type Specification was Encountered'
 
 
-      else if (  msg  .eq.  'SPICE(DATEEXPECTED)'  ) then
+      else if (  msg  ==  'SPICE(DATEEXPECTED)'  ) then
 
          expl  = 'The Value in the Kernel File was Expected to be a ' // &
                  'date.'
 
-      else if (  msg  .eq.  'SPICE(DEVICENAMETOOLONG)' ) then
+      else if (  msg  ==  'SPICE(DEVICENAMETOOLONG)' ) then
 
          expl  = 'Name of Device Exceeds 128-Character Limit'
 
-      else if (  msg  .eq.  'SPICE(EMBEDDEDBLANK)' ) then
+      else if (  msg  ==  'SPICE(EMBEDDEDBLANK)' ) then
 
          expl  = 'Invalid embedded blank was found in character string'
 
-      else if (  msg  .eq.  'SPICE(FILEALREADYOPEN)' ) then
+      else if (  msg  ==  'SPICE(FILEALREADYOPEN)' ) then
 
          expl  = 'File Open Failed Because the File was Already Open'
 
-      else if (  msg  .eq.  'SPICE(FILEOPENFAILED)'  ) then
+      else if (  msg  ==  'SPICE(FILEOPENFAILED)'  ) then
 
          expl  = 'An Attempt to Open a File Failed'
 
-      else if (  msg  .eq.  'SPICE(FILEREADFAILED)'  ) then
+      else if (  msg  ==  'SPICE(FILEREADFAILED)'  ) then
 
          expl  = 'An Attempt to Read a File Failed'
 
-      else if (  msg  .eq.  'SPICE(FILEWRITEFAILED)' ) then
+      else if (  msg  ==  'SPICE(FILEWRITEFAILED)' ) then
 
          expl  = 'An Attempt to Write a File Failed'
 
-      else if (  msg  .eq.  'SPICE(INCOMPATIBLEUNITS)' )  then
+      else if (  msg  ==  'SPICE(INCOMPATIBLEUNITS)' )  then
 
          expl  = 'The Input and Output Units are Incompatible'
 
-      else if (  msg  .eq.  'SPICE(INVALIDACTION)'  ) then
+      else if (  msg  ==  'SPICE(INVALIDACTION)'  ) then
 
          expl  = 'An Invalid Action Value Was Supplied'
 
-      else if (  msg  .eq.  'SPICE(INVALIDARGUMENT)'  ) then
+      else if (  msg  ==  'SPICE(INVALIDARGUMENT)'  ) then
 
          expl  = 'An Invalid Function Argument was Supplied'
 
-      else if (  msg  .eq.  'SPICE(INVALIDCHECKOUT)' )  then
+      else if (  msg  ==  'SPICE(INVALIDCHECKOUT)' )  then
 
          expl  = 'Checkout Was Attempted When No Routines Were'       // &
                  ' Checked In'
 
-      else if (  msg  .eq.  'SPICE(INVALIDCLUSTERNUM)'  ) then
+      else if (  msg  ==  'SPICE(INVALIDCLUSTERNUM)'  ) then
 
          expl  = 'Invalid Cluster Number -- Cluster Numbers Must'     // &
                  ' Exceed 1 '
 
-      else if (  msg  .eq.  'SPICE(INVALIDEPOCH)' ) then
+      else if (  msg  ==  'SPICE(INVALIDEPOCH)' ) then
 
          expl  = 'An Invalid Epoch Type Specification Was Supplied'
 
-      else if (  msg  .eq.  'SPICE(INVALIDINDEX)' ) then
+      else if (  msg  ==  'SPICE(INVALIDINDEX)' ) then
 
          expl  = 'There Is No Element Corresponding to the'           // &
                  ' Supplied Index'
 
-      else if (  msg  .eq.  'SPICE(INVALIDTIMESTRING)'  ) then
+      else if (  msg  ==  'SPICE(INVALIDTIMESTRING)'  ) then
 
          expl  = 'Time String Could Not Be Parsed'
 
-      else if (  msg  .eq.  'SPICE(INVALIDLISTITEM)' )  then
+      else if (  msg  ==  'SPICE(INVALIDLISTITEM)' )  then
 
          expl  = 'An Invalid Item Was Found in a List'
 
-      else if (  msg  .eq.  'SPICE(INVALIDMSGTYPE)'  )  then
+      else if (  msg  ==  'SPICE(INVALIDMSGTYPE)'  )  then
 
          expl  = 'An Invalid Error Message Type Was Specified'
 
-      else if (  msg  .eq.  'SPICE(INVALIDOPERATION)' ) then
+      else if (  msg  ==  'SPICE(INVALIDOPERATION)' ) then
 
          expl  = 'An Invalid Operation Value Was Supplied'
 
-      else if (  msg  .eq.  'SPICE(INVALIDOPTION)'  )  then
+      else if (  msg  ==  'SPICE(INVALIDOPTION)'  )  then
 
          expl  = 'An Invalid Option Value Was Supplied'
 
-      else if (  msg  .eq.  'SPICE(INVALIDTIMEFORMAT)')  then
+      else if (  msg  ==  'SPICE(INVALIDTIMEFORMAT)')  then
 
          expl  = 'Specification of Time String Format Was Not '       // &
                  'Recognized'
 
-      else if (  msg  .eq.  'SPICE(KERNELVARNOTFOUND)' )  then
+      else if (  msg  ==  'SPICE(KERNELVARNOTFOUND)' )  then
 
          expl  = 'The Variable Was not Found in the Kernel Pool.'
 
-      else if (  msg  .eq.  'SPICE(NAMETABLEFULL)')  then
+      else if (  msg  ==  'SPICE(NAMETABLEFULL)')  then
 
          expl  = 'No Further Symbols Can be Inserted; the Name Table'// &
                  ' is Full'
 
-      else if (  msg  .eq.  'SPICE(NOFREELOGICALUNIT)' ) then
+      else if (  msg  ==  'SPICE(NOFREELOGICALUNIT)' ) then
 
          expl  = 'No More Logical Units are Available for Allocation'
 
-      else if (  msg  .eq.  'SPICE(NOINTERVAL)'  )  then
+      else if (  msg  ==  'SPICE(NOINTERVAL)'  )  then
 
          expl  = 'Window Does Not Contain Interval Corresponding'     // &
                  ' to the Supplied Index'
 
-      else if (  msg  .eq.  'SPICE(NOSEGMENT)'  )  then
+      else if (  msg  ==  'SPICE(NOSEGMENT)'  )  then
 
          expl  = 'No Applicable Segment Found in Ephemeris File'
 
-      else if (  msg  .eq.  'SPICE(NOSUCHSYMBOL)' ) then
+      else if (  msg  ==  'SPICE(NOSUCHSYMBOL)' ) then
 
          expl  = 'The Symbol Does Not Exist in the Symbol Table'
 
-      else if (  msg  .eq.  'SPICE(NOTDISTINCT)' ) then
+      else if (  msg  ==  'SPICE(NOTDISTINCT)' ) then
 
          expl  = 'The Elements Must Be Distinct'
 
-      else if (  msg  .eq.  'SPICE(NUMBEREXPECTED)'  )  then
+      else if (  msg  ==  'SPICE(NUMBEREXPECTED)'  )  then
 
          expl  = 'The Value in the Kernel File was Expected '         // &
                  'to be a Number.'
 
-      else if (  msg  .eq.  'SPICE(POINTERTABLEFULL)' )   then
+      else if (  msg  ==  'SPICE(POINTERTABLEFULL)' )   then
 
          expl  = 'No Further Symbols Can be Inserted; the Pointer '   // &
                  'Table is Full'
 
-      else if (  msg  .eq.  'SPICE(REFNOTREC)'    ) then
+      else if (  msg  ==  'SPICE(REFNOTREC)'    ) then
 
          expl  = 'A Reference Frame Specification was Not'            // &
                  ' Recognized'
 
-      else if (  msg  .eq.  'SPICE(SETEXCESS)'    ) then
+      else if (  msg  ==  'SPICE(SETEXCESS)'    ) then
 
          expl  = 'Cardinality of Set Is Too Small to Contain'         // &
                  ' Result of the Requested Operation'
 
-      else if (  msg  .eq.  'SPICE(TOOMANYFILESOPEN)'  ) then
+      else if (  msg  ==  'SPICE(TOOMANYFILESOPEN)'  ) then
 
          expl  = 'The SPICELIB Limit for Number of Open Files'        // &
                  ' Has Already Been Reached'
 
-      else if (  msg  .eq.  'SPICE(TRACEBACKOVERFLOW)'  ) then
+      else if (  msg  ==  'SPICE(TRACEBACKOVERFLOW)'  ) then
 
          expl  = 'No More Entries Can Be Added to the Traceback'      // &
                  ' Representation'
 
-      else if (  msg  .eq.  'SPICE(UNITSNOTREC)'  ) then
+      else if (  msg  ==  'SPICE(UNITSNOTREC)'  ) then
 
          expl  = 'The Input or Output Units Were Not Recognized'
 
-      else if (  msg  .eq.  'SPICE(UNMATCHENDPTS)') then
+      else if (  msg  ==  'SPICE(UNMATCHENDPTS)') then
 
          expl  = 'Window Does Not Have an Even Number of Endpoints'
 
-      else if (  msg  .eq.  'SPICE(VALUETABLEFULL)' )  then
+      else if (  msg  ==  'SPICE(VALUETABLEFULL)' )  then
 
          expl  = 'No Further Symbols Can be Inserted; the Value '     // &
                  'Table is Full'
 
-      else if (  msg  .eq.  'SPICE(WINDOWEXCESS)' ) then
+      else if (  msg  ==  'SPICE(WINDOWEXCESS)' ) then
 
          expl  = 'Cardinality of Window Is Too Small to Contain'      // &
                  ' Result of the Requested Operation'
 
-      else if (  msg  .eq.  'SPICE(WINDOWTOOSMALL)' )  then
+      else if (  msg  ==  'SPICE(WINDOWTOOSMALL)' )  then
 
          expl  = 'Cardinality of Output Window is Too Small'
 
-      else if (  msg  .eq.  'SPICE(WRITEERROR)'  ) then
+      else if (  msg  ==  'SPICE(WRITEERROR)'  ) then
 
 
          expl  = 'An Attempt to write to a specified unit failed.'
 
 
-      else if (  msg  .eq.  'SPICE(ZERORADIUS)'   ) then
+      else if (  msg  ==  'SPICE(ZERORADIUS)'   ) then
 
          expl  = 'Invalid Radius--Equatorial or Polar Radius is Zero'
 
 
-      else if (  msg  .eq.  'SPICE(ZEROVECTOR)'  ) then
+      else if (  msg  ==  'SPICE(ZEROVECTOR)'  ) then
 
          expl  = 'Input Vector is the Zero Vector'
 
 
-      else if (  msg  .eq.  'SPICE(ZEROAXISLENGTH)'  )  then
+      else if (  msg  ==  'SPICE(ZEROAXISLENGTH)'  )  then
 
          expl  = 'Input Axis Length is Zero'
 

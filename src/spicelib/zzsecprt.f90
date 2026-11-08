@@ -188,7 +188,7 @@
 !     resonance flag.
 !
 
-      if ( isynfl .eq. 0 ) then
+      if ( isynfl == 0 ) then
 
 !
 !        Resonance flag set.

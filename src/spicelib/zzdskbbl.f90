@@ -185,7 +185,7 @@
 !        PRVBOD is the last body for which a successful list
 !        build was performed.
 !
-         newbod = bodyid .ne. prvbod
+         newbod = bodyid /= prvbod
 
       end if
 

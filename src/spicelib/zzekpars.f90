@@ -35,21 +35,21 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           ntoken
       integer(ip)           lxbegs ( * )
       integer(ip)           lxends ( * )
       integer(ip)           tokens ( * )
       integer(ip)           values ( * )
       real(wp)              numvls ( * )
-      character*(*)         chrbuf
+      character(*)          chrbuf
       integer(ip)           chbegs ( * )
       integer(ip)           chends ( * )
       integer(ip)           eqryi  ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd  ( * )
       logical               error
-      character*(*)         prserr
+      character(*)          prserr
 
 ! $ Brief_I/O
 !
@@ -348,8 +348,8 @@
 !
 !     Local variables
 !
-      character*(typlen)    errtyp
-      character*(keylen)    expkey
+      character(typlen)     errtyp
+      character(keylen)     expkey
 
       integer(ip)           alsdsc ( eqvdsz )
       integer(ip)           b
@@ -465,13 +465,13 @@
       end if
 
 
-      do while ( state .ne. term )
+      do while ( state /= term )
 !
 !        Advance to the next token, if there is one.
 !
          toknum  =  toknum + 1
 
-         if ( toknum .gt. ntoken ) then
+         if ( toknum > ntoken ) then
 !
 !           We're out of tokens.  Set the token value to indicate
 !           `end of query'.
@@ -487,12 +487,12 @@
 !
 !        Perform semantic actions based on the state and current token.
 !
-         if ( state .eq. from ) then
+         if ( state == from ) then
 !
 !           We expect to see an identifier representing a table name.
 !           No other tokens are allowed.
 !
-            if ( token .eq. tkid ) then
+            if ( token == tkid ) then
 !
 !              We've found a table name (as far as we can tell at
 !              this point).  Make sure we haven't exceeded the limit
@@ -502,7 +502,7 @@
                ntabs  =   ntabs  +  1
 
 
-               if ( ntabs .gt. maxtab ) then
+               if ( ntabs > maxtab ) then
 
                   error   =  .true.
                   errtyp  =  'TOO_MANY_TABLES'
@@ -558,7 +558,7 @@
                end if
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 
                error   =  .true.
                errtyp  =  'MORE_TOKENS_EXP'
@@ -578,12 +578,12 @@
 !           State is a member of {FRMTAB, TERM}.
 !
 
-         else if ( state .eq. frmtab ) then
+         else if ( state == frmtab ) then
 !
 !           We should see a comma, an alias, one of the SELECT,
 !           WHERE or ORDER keywords, or the end of the query.
 !
-            if ( token .eq. tkeoq ) then
+            if ( token == tkeoq ) then
 !
 !              We're out of tokens.  It's time to parse the
 !              WHERE clause.
@@ -591,14 +591,14 @@
                state   =  where
 
 
-            else if ( token .eq. tkcoma ) then
+            else if ( token == tkcoma ) then
 !
 !              It's time to look for another table name.
 !
                state  =  from
 
 
-            else if ( token .eq. tkid ) then
+            else if ( token == tkid ) then
 !
 !              We've got an alias.  Add this string to the encoded
 !              query.
@@ -630,15 +630,15 @@
                state  =  frmals
 
 
-            else if (  token .eq.  tkkey  )  then
+            else if (  token ==  tkkey  )  then
 !
 !              The last table name in the FROM clause is followed by
 !              a keyword.  SELECT, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               if (       ( values(toknum) .ne. kwwher ) &
-                    .and. ( values(toknum) .ne. kwsel  ) &
-                    .and. ( values(toknum) .ne. kwordr )  ) then
+               if (       ( values(toknum) /= kwwher ) &
+                    .and. ( values(toknum) /= kwsel  ) &
+                    .and. ( values(toknum) /= kwordr )  ) then
 !
 !                 We've got a keyword we don't want here.
 !
@@ -671,12 +671,12 @@
 
 
 
-         else if ( state .eq. frmals ) then
+         else if ( state == frmals ) then
 !
 !           We should see a comma, the SELECT, WHERE or ORDER
 !           keywords, or the end of the query.
 !
-            if ( token .eq. tkeoq ) then
+            if ( token == tkeoq ) then
 !
 !              We're out of tokens.  It's time to parse the
 !              WHERE clause.
@@ -684,22 +684,22 @@
                state   =  where
 
 
-            else if ( token .eq. tkcoma ) then
+            else if ( token == tkcoma ) then
 !
 !              It's time to look for another table name.
 !
                state  =  from
 
 
-            else if (  token .eq.  tkkey  )  then
+            else if (  token ==  tkkey  )  then
 !
 !              The last table name in the FROM clause is followed by
 !              a keyword.  SELECT, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               if (       ( values(toknum) .ne. kwwher ) &
-                    .and. ( values(toknum) .ne. kwsel  ) &
-                    .and. ( values(toknum) .ne. kwordr )  ) then
+               if (       ( values(toknum) /= kwwher ) &
+                    .and. ( values(toknum) /= kwsel  ) &
+                    .and. ( values(toknum) /= kwordr )  ) then
 !
 !                 We've got a keyword we don't want here.
 !
@@ -730,7 +730,7 @@
 !
 
 
-         else if ( state .eq. selkey ) then
+         else if ( state == selkey ) then
 !
 !           It's time to parse the SELECT clause.  We'll need to
 !           locate the SELECT keyword.
@@ -751,7 +751,7 @@
             end if
 
 
-         else if ( state .eq. select ) then
+         else if ( state == select ) then
 !
 !           We must see either the * token, the ALL keyword,
 !           or an identifier here.  The identifier may be a lone
@@ -760,7 +760,7 @@
 !
 !           For the moment, we don't support the * or ALL options.
 !
-            if ( token .eq. tkid ) then
+            if ( token == tkid ) then
 !
 !              We've found a name (as far as we can tell at this point).
 !              Make sure we haven't exceeded the limit for SELECT
@@ -771,7 +771,7 @@
 !
                nsel  =  nsel  +  1
 
-               if ( nsel.gt. maxsel ) then
+               if ( nsel> maxsel ) then
 
                   error   =  .true.
                   errtyp  =  'TOO_MANY_SEL_COLS'
@@ -819,7 +819,7 @@
                end if
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 
                error  =  .true.
                errtyp =  'MORE_TOKENS_EXP'
@@ -840,12 +840,12 @@
 !
 
 
-         else if ( state .eq. selnam ) then
+         else if ( state == selnam ) then
 !
 !           We've seen a SELECT column name, or else the name
 !           of a table qualifying a SELECT column name.
 !
-            if ( token .eq. tkeoq ) then
+            if ( token == tkeoq ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
@@ -858,7 +858,7 @@
                state   =   term
 
 
-            else if ( token .eq. tkcoma ) then
+            else if ( token == tkcoma ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
@@ -871,7 +871,7 @@
                state  =  select
 
 
-            else if ( token .eq. tkdot ) then
+            else if ( token == tkdot ) then
 !
 !              The name we picked up was a table name or alias.  A
 !              column name should follow.
@@ -879,7 +879,7 @@
                state  =  seltab
 
 
-            else if ( token .eq. tkkey ) then
+            else if ( token == tkkey ) then
 !
 !              We have the last column name in the SELECT clause.
 !
@@ -895,9 +895,9 @@
 !              a keyword.  FROM, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               if (      ( values(toknum) .eq. kwwher ) &
-                    .or. ( values(toknum) .eq. kwfrom ) &
-                    .or. ( values(toknum) .eq. kwordr )  ) then
+               if (      ( values(toknum) == kwwher ) &
+                    .or. ( values(toknum) == kwfrom ) &
+                    .or. ( values(toknum) == kwordr )  ) then
 !
 !                 We're done with the SELECT clause.
 !
@@ -927,12 +927,12 @@
 !
 
 
-         else if ( state .eq. seltab ) then
+         else if ( state == seltab ) then
 !
 !           We've picked up a qualifying table name for a SELECT
 !           column.  We must see a column name here.
 !
-            if ( token .eq. tkid ) then
+            if ( token == tkid ) then
 !
 !              Update the place-holder table name descriptor in the
 !              encoded query.
@@ -972,7 +972,7 @@
                state  =  selcol
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 
                error  =  .true.
                errtyp =  'MORE_TOKENS_EXP'
@@ -990,21 +990,21 @@
 !
 
 
-         else if ( state .eq. selcol ) then
+         else if ( state == selcol ) then
 !
 !           We've picked up a qualified column name.  At this point,
 !           we should see a keyword, a comma, or the end of the
 !           query.
 !
-            if ( token .eq. tkkey ) then
+            if ( token == tkkey ) then
 !
 !              The last column name in the SELECT clause is followed by
 !              a keyword.  FROM, WHERE and ORDER are the only valid
 !              possibilities.
 !
-               if (      ( values(toknum) .eq. kwwher ) &
-                    .or. ( values(toknum) .eq. kwfrom ) &
-                    .or. ( values(toknum) .eq. kwordr )  ) then
+               if (      ( values(toknum) == kwwher ) &
+                    .or. ( values(toknum) == kwfrom ) &
+                    .or. ( values(toknum) == kwordr )  ) then
 !
 !                 We're done with the SELECT clause.
 !
@@ -1021,14 +1021,14 @@
                end if
 
 
-            else if ( token .eq. tkcoma ) then
+            else if ( token == tkcoma ) then
 !
 !              We expect another SELECT column.
 !
                state  =  select
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 !
 !              We're done with the SELECT clause.
 !
@@ -1046,7 +1046,7 @@
 !
 
 
-         else if ( state .eq. where ) then
+         else if ( state == where ) then
 !
 !           The WHERE clause is optional.  See whether we have one.  The
 !           clause is started by a WHERE keyword.
@@ -1107,7 +1107,7 @@
 !
 
 
-         else if ( state .eq. order ) then
+         else if ( state == order ) then
 !
 !           The ORDER BY clause is optional.  See whether we have one.
 !           The clause is started by an ORDER keyword.
@@ -1120,12 +1120,12 @@
 !
 !              The BY keyword should follow the ORDER keyword.
 !
-               if ( toknum .lt. ntoken ) then
+               if ( toknum < ntoken ) then
 
                   toknum  =  toknum + 1
 
-                  if (       (  tokens(toknum) .eq. tkkey ) &
-                       .and. (  values(toknum) .eq. kwby  )  ) then
+                  if (       (  tokens(toknum) == tkkey ) &
+                       .and. (  values(toknum) == kwby  )  ) then
 !
 !                    We're ready to parse the ORDER BY clause.
 !
@@ -1166,13 +1166,13 @@
 
 
 
-         else if ( state .eq. ordrby ) then
+         else if ( state == ordrby ) then
 !
 !           We must see a name in the order column list here.
 !           The name may be a lone column name, or it may be a column
 !           name qualified by a table name or alias.
 !
-            if ( token .eq. tkid ) then
+            if ( token == tkid ) then
 !
 !              We've found a name (as far as we can tell at this point).
 !              Make sure we haven't exceeded the limit for order-by
@@ -1183,7 +1183,7 @@
 !
                norder  =  norder  +  1
 
-               if ( norder .gt. maxord ) then
+               if ( norder > maxord ) then
 
                   error   =  .true.
                   errtyp  =  'TOO_MANY_ORD_COLS'
@@ -1231,7 +1231,7 @@
                end if
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 
                error  =  .true.
                errtyp =  'MORE_TOKENS_EXP'
@@ -1252,12 +1252,12 @@
 !
 
 
-         else if ( state .eq. ordnam ) then
+         else if ( state == ordnam ) then
 !
 !           We've seen an order-by column name, or else the name
 !           of a table qualifying an order-by column name.
 !
-            if ( token .eq. tkeoq ) then
+            if ( token == tkeoq ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
@@ -1281,7 +1281,7 @@
                state   =  selkey
 
 
-            else if ( token .eq. tkcoma ) then
+            else if ( token == tkcoma ) then
 !
 !              The name we picked up was an unqualified column
 !              name.  Append the saved name descriptor to the encoded
@@ -1301,7 +1301,7 @@
                state  = ordrby
 
 
-            else if ( token .eq. tkdot ) then
+            else if ( token == tkdot ) then
 !
 !              The name we picked up was a table name or alias.  A
 !              column name should follow.
@@ -1309,7 +1309,7 @@
                state = ordtab
 
 
-            else if ( token .eq. tkkey ) then
+            else if ( token == tkkey ) then
 !
 !              We have a column name, which may be followed by a
 !              keyword indicating the sense of the ordering, or may
@@ -1327,23 +1327,23 @@
 !              picked up.  After this, we're ready to look for another
 !              order-by column.
 !
-               if ( values(toknum) .eq. kwasnd ) then
+               if ( values(toknum) == kwasnd ) then
 
                   call appndi ( eqasnd, eqryi )
 
                   state = ordsns
 
 
-               else if ( values(toknum) .eq. kwdsnd ) then
+               else if ( values(toknum) == kwdsnd ) then
 
                   call appndi ( eqdsnd, eqryi )
 
                   state = ordsns
 
 
-               else if (      ( values(toknum) .eq. kwwher ) &
-                         .or. ( values(toknum) .eq. kwfrom ) &
-                         .or. ( values(toknum) .eq. kwsel  )  ) then
+               else if (      ( values(toknum) == kwwher ) &
+                         .or. ( values(toknum) == kwfrom ) &
+                         .or. ( values(toknum) == kwsel  )  ) then
 
 !
 !                 Since no ASCENDING or DESCENDING sense keyword was
@@ -1383,12 +1383,12 @@
 !
 
 
-         else if ( state .eq. ordtab ) then
+         else if ( state == ordtab ) then
 !
 !           We've picked up a qualifying table name for an order-by
 !           column.  We must see a column name here.
 !
-            if ( token .eq. tkid ) then
+            if ( token == tkid ) then
 !
 !              Update the place-holder table name descriptor in the
 !              encoded query.
@@ -1428,7 +1428,7 @@
                state  =  ordcol
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 
                error  =  .true.
                errtyp =  'MORE_TOKENS_EXP'
@@ -1446,15 +1446,15 @@
 !
 
 
-         else if ( state .eq. ordcol ) then
+         else if ( state == ordcol ) then
 !
 !           We've picked up a qualified column name.  At this point,
 !           we should see a sense keyword, a comma, the end of the
 !           query, or one of the FROM, SELECT, or WHERE keywords.
 !
-            if ( token .eq. tkkey ) then
+            if ( token == tkkey ) then
 
-               if ( values(toknum) .eq. kwasnd ) then
+               if ( values(toknum) == kwasnd ) then
 !
 !                 The ASCENDING keyword has been supplied.  After this,
 !                 look for another column.
@@ -1464,7 +1464,7 @@
                   state  =  ordsns
 
 
-               else if ( values(toknum) .eq. kwdsnd ) then
+               else if ( values(toknum) == kwdsnd ) then
 !
 !                 The DESCENDING keyword has been supplied.  After this,
 !                 look for another column.
@@ -1474,9 +1474,9 @@
                   state  =  ordsns
 
 
-               else if (      ( values(toknum) .eq. kwwher ) &
-                         .or. ( values(toknum) .eq. kwfrom ) &
-                         .or. ( values(toknum) .eq. kwsel  )  ) then
+               else if (      ( values(toknum) == kwwher ) &
+                         .or. ( values(toknum) == kwfrom ) &
+                         .or. ( values(toknum) == kwsel  )  ) then
 !
 !                 We're done with the ORDER BY clause.  Go on to
 !                 parse the SELECT clause.
@@ -1492,7 +1492,7 @@
                end if
 
 
-            else if ( token .eq. tkcoma ) then
+            else if ( token == tkcoma ) then
 !
 !              The ASCENDING keyword is implied.
 !
@@ -1501,7 +1501,7 @@
                state  =  ordrby
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 !
 !              The ASCENDING keyword is implied.
 !
@@ -1525,20 +1525,20 @@
 !
 
 
-         else if ( state .eq. ordsns ) then
+         else if ( state == ordsns ) then
 !
 !           We've picked up an order sense keyword.  At this point,
 !           we should see comma or the end of the query, or one of the
 !           FROM, SELECT, or WHERE keywords.
 !
-            if ( token .eq. tkcoma ) then
+            if ( token == tkcoma ) then
 !
 !              We're ready to look for another column.
 !
                state  =  ordrby
 
 
-            else if ( token .eq. tkeoq ) then
+            else if ( token == tkeoq ) then
 !
 !              We're done with the ORDER BY clause.  Parse the SELECT
 !              clause.
@@ -1546,11 +1546,11 @@
                state  =  selkey
 
 
-            else if ( token .eq. tkkey ) then
+            else if ( token == tkkey ) then
 
-               if (      ( values(toknum) .eq. kwwher ) &
-                    .or. ( values(toknum) .eq. kwfrom ) &
-                    .or. ( values(toknum) .eq. kwsel  )  ) then
+               if (      ( values(toknum) == kwwher ) &
+                    .or. ( values(toknum) == kwfrom ) &
+                    .or. ( values(toknum) == kwsel  )  ) then
 !
 !                 We're done with the ORDER BY clause.  Go on to
 !                 parse the SELECT clause.
@@ -1604,25 +1604,25 @@
 !
       if ( error ) then
 
-         if ( errtyp .eq. 'FROM_NOT_FOUND' ) then
+         if ( errtyp == 'FROM_NOT_FOUND' ) then
 
             prserr = 'Every query must contain a FROM clause. ' // &
                      'The FROM keyword was not found.'
 
 
-         else if ( errtyp .eq. 'SELECT_NOT_FOUND' ) then
+         else if ( errtyp == 'SELECT_NOT_FOUND' ) then
 
             prserr = 'Every query must contain a SELECT clause. ' // &
                      'The SELECT keyword was not found.'
 
 
-         else if ( errtyp .eq. 'BY_EXPECTED' ) then
+         else if ( errtyp == 'BY_EXPECTED' ) then
 
             prserr = 'The BY keyword was not found following the ' // &
                      'ORDER keyword.'
 
 
-         else if ( errtyp .eq. 'BAD_KEYWORD' ) then
+         else if ( errtyp == 'BAD_KEYWORD' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1632,7 +1632,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'TABLE_OR_COLUMN_EXP' ) then
+         else if ( errtyp == 'TABLE_OR_COLUMN_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1642,7 +1642,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'TABLE_EXP' ) then
+         else if ( errtyp == 'TABLE_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1652,7 +1652,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'COLUMN_EXP' ) then
+         else if ( errtyp == 'COLUMN_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1662,7 +1662,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'ALIAS_EXP' ) then
+         else if ( errtyp == 'ALIAS_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1672,7 +1672,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'COMMA_OR_KEY_EXP' ) then
+         else if ( errtyp == 'COMMA_OR_KEY_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1682,7 +1682,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'COMMA_EXP' ) then
+         else if ( errtyp == 'COMMA_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1691,12 +1691,12 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'MORE_TOKENS_EXP' ) then
+         else if ( errtyp == 'MORE_TOKENS_EXP' ) then
 
             prserr  =  'More tokens were expected in query.'
 
 
-         else if ( errtyp .eq. 'KEYWORD_EXP' ) then
+         else if ( errtyp == 'KEYWORD_EXP' ) then
 
             prserr = 'The keyword # was expected at location ' // &
                      '#. Actual token was: #'
@@ -1705,7 +1705,7 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'BAD_TOKEN' ) then
+         else if ( errtyp == 'BAD_TOKEN' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
@@ -1714,28 +1714,28 @@
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
 
-         else if ( errtyp .eq. 'TOO_MANY_TABLES' ) then
+         else if ( errtyp == 'TOO_MANY_TABLES' ) then
 
             prserr  =  'Number of tables in "FROM" clause exceeds ' // &
                        'allowed maximum of #.'
             call repmi  ( prserr, '#', maxtab, prserr )
 
 
-         else if ( errtyp .eq. 'TOO_MANY_ORD_COLS' ) then
+         else if ( errtyp == 'TOO_MANY_ORD_COLS' ) then
 
             prserr  =  'Number of order-by columns exceeds allowed ' // &
                        'maximum of #.'
             call repmi  ( prserr, '#', maxtab, prserr )
 
 
-         else if ( errtyp .eq. 'TOO_MANY_SEL_COLS' ) then
+         else if ( errtyp == 'TOO_MANY_SEL_COLS' ) then
 
             prserr  =  'Number of SELECT columns exceeds allowed ' // &
                        'maximum of #.'
             call repmi  ( prserr, '#', maxsel, prserr )
 
 
-         else if ( errtyp .ne. 'WHERE_ERROR' ) then
+         else if ( errtyp /= 'WHERE_ERROR' ) then
 
             prserr  =  'SPICE(BUG)--Unrecognized error type.  Type ' // &
                        'was #.'

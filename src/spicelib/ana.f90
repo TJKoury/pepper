@@ -1,6 +1,6 @@
 !$Procedure ANA ( AN or A ? )
 
-      character*(*) function ana ( word, case )
+      character(*) function ana ( word, case )
       use pepper_kinds, only: ip
 
 ! $ Abstract
@@ -21,8 +21,8 @@
 
       implicit none
 
-      character*(*)         word
-      character*(*)         case
+      character(*)          word
+      character(*)          case
 
 ! $ Brief_I/O
 !
@@ -163,21 +163,21 @@
       integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      character*(8)         anword ( anwrds )
-      character*(8)         aword  ( awrds  )
+      character(8)          anword ( anwrds )
+      character(8)          aword  ( awrds  )
 
-      character*(wdsize)    myword
-      character*(1)         mycase
-      character*(1)         begin
+      character(wdsize)     myword
+      character(1)          mycase
+      character(1)          begin
 
 
       integer(ip)           i
       integer(ip)           caps
 
-      character*(wdsize)    start ( 7 )
+      character(wdsize)     start ( 7 )
 
-      character*(2)         a  ( 3 )
-      character*(2)         an ( 3 )
+      character(2)          a  ( 3 )
+      character(2)          an ( 3 )
 
       save
 
@@ -209,9 +209,9 @@
 
       ana = ' '
 
-      if ( mycase .eq. 'U' ) then
+      if ( mycase == 'U' ) then
          caps = 1
-      else if ( mycase .eq. 'C' ) then
+      else if ( mycase == 'C' ) then
          caps = 2
       else
          caps = 3
@@ -222,12 +222,12 @@
 !
       begin = myword(1:1)
 
-      if      ( index( 'AI', begin ) .gt. 0 ) then
+      if      ( index( 'AI', begin ) > 0 ) then
 
          ana = an(caps)
          return
 
-      else if ( index( 'BCDGJKPQTVWYZ', begin ) .gt. 0 ) then
+      else if ( index( 'BCDGJKPQTVWYZ', begin ) > 0 ) then
 
          ana = a(caps)
          return
@@ -250,14 +250,14 @@
 !
       do i = 7, 2, -1
 
-         if ( isrchc ( start(i), awrds,  aword ) .ne. 0 ) then
+         if ( isrchc ( start(i), awrds,  aword ) /= 0 ) then
 
             ana = a (caps)
             return
 
          end if
 
-         if ( isrchc ( start(i), anwrds, anword ) .ne. 0 ) then
+         if ( isrchc ( start(i), anwrds, anword ) /= 0 ) then
 
             ana = an(caps)
             return
@@ -270,7 +270,7 @@
 !     If we got this far we can determine the ANA by
 !     just looking at the beginning of the string.
 !
-      if ( index( 'AEIOU', myword(1:1) ) .gt. 0 ) then
+      if ( index( 'AEIOU', myword(1:1) ) > 0 ) then
 
          ana = an(caps)
 

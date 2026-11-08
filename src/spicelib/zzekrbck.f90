@@ -28,7 +28,7 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      character*(*)         action
+      character(*)          action
       integer(ip)           handle
       integer(ip)           segdsc ( sdscsz )
       integer(ip)           coldsc ( cdscsz )
@@ -215,7 +215,7 @@
 !
 !-&
 
-      character*(1)         tmpchr
+      character(1)          tmpchr
       integer(ip)           i
 
       tmpchr = action(1:1)

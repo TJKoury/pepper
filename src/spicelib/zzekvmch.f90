@@ -274,7 +274,7 @@
 !
 !     Local variables
 !
-      character*(maxstr)    cval   ( 2 )
+      character(maxstr)     cval   ( 2 )
 
       integer(ip)           cldscs ( cdscsz, 2 )
       integer(ip)           cmplen ( 2 )
@@ -300,7 +300,7 @@
       zzekvmch  =  .true.
       n         =   1
 
-      do while  (  ( n .le. ncnstr ) .and.  zzekvmch  )
+      do while  (  ( n <= ncnstr ) .and.  zzekvmch  )
 
 
          if ( active(n) ) then
@@ -339,38 +339,38 @@
 !           Determine the truth of the Nth input relational expression,
 !           and set ZZEKVMCH accordingly.
 !
-            if ( ops(n) .eq. eq )   then
+            if ( ops(n) == eq )   then
 
-               zzekvmch  =  rel .eq. eq
-
-
-            else if ( ops(n) .eq. lt )   then
-
-               zzekvmch  =   rel .eq. lt
+               zzekvmch  =  rel == eq
 
 
-            else if ( ops(n) .eq. le )   then
+            else if ( ops(n) == lt )   then
 
-               zzekvmch  =   rel .ne. gt
-
-
-            else if ( ops(n) .eq. gt )   then
-
-               zzekvmch  =   rel .eq. gt
+               zzekvmch  =   rel == lt
 
 
-            else if ( ops(n) .eq. ge )   then
+            else if ( ops(n) == le )   then
 
-               zzekvmch  =   rel .ne. lt
-
-
-            else if ( ops(n) .eq. ne )   then
-
-               zzekvmch  =   rel .ne. eq
+               zzekvmch  =   rel /= gt
 
 
-            else if (       ( ops(n)            .eq. like ) &
-                      .and. ( cldscs(typidx,1)  .eq. chr  )  ) then
+            else if ( ops(n) == gt )   then
+
+               zzekvmch  =   rel == gt
+
+
+            else if ( ops(n) == ge )   then
+
+               zzekvmch  =   rel /= lt
+
+
+            else if ( ops(n) == ne )   then
+
+               zzekvmch  =   rel /= eq
+
+
+            else if (       ( ops(n)            == like ) &
+                      .and. ( cldscs(typidx,1)  == chr  )  ) then
 
 
                do i = 1, 2
@@ -419,8 +419,8 @@
 
 
 
-            else if (       ( ops(n)            .eq. unlike ) &
-                      .and. ( cldscs(typidx,1)  .eq. chr    )  ) then
+            else if (       ( ops(n)            == unlike ) &
+                      .and. ( cldscs(typidx,1)  == chr    )  ) then
 
                do i = 1, 2
 

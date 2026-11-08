@@ -501,17 +501,17 @@
       last    =  lastla( type )
       dscrec  =  lastrc( type )
 
-      if ( type .eq. dp ) then
+      if ( type == dp ) then
 
          nw      =  nwd
          rngloc  =  dprng
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 
          nw      =  nwi
          rngloc  =  intrng
 
-      else if ( type .eq. char ) then
+      else if ( type == char ) then
 
          nw      =  nwc
          rngloc  =  chrrng
@@ -529,7 +529,7 @@
 !
 !     Make sure that NWORDS is something sensible.
 !
-      if ( nwords .lt. 0 ) then
+      if ( nwords < 0 ) then
 
          call setmsg ( 'NWORDS was #; should be non-negative.' )
          call errint ( '#',  nwords                            )
@@ -550,8 +550,8 @@
 
       do i = 1, 3
 
-         if (       ( lastrc(i) .eq. lrec  ) &
-              .and. ( lastwd(i) .gt. lword )  ) then
+         if (       ( lastrc(i) == lrec  ) &
+              .and. ( lastwd(i) > lword )  ) then
 
             lword = lastwd(i)
             ltype = i
@@ -571,7 +571,7 @@
 !     Compute the number of words we have room for in the current
 !     last data record of the indicated type.
 !
-      if ( last .gt. 0 ) then
+      if ( last > 0 ) then
          room  =  nw   -   (  last  -  ( (last-1) / nw ) * nw  )
       else
          room  =  0
@@ -589,7 +589,7 @@
 !     Now, update the descriptor directories.
 !
 
-      if (  ( room .ge. nwords ) .and. ( dscrec .gt. 0 )  ) then
+      if (  ( room >= nwords ) .and. ( dscrec > 0 )  ) then
 !
 !        This is case (1).
 !
@@ -623,9 +623,9 @@
 
 
 
-      else if (       ( type   .eq. ltype ) &
-                .and. ( dscrec .gt. 0     ) &
-                .and. ( lword  .lt. nwi   )  ) then
+      else if (       ( type   == ltype ) &
+                .and. ( dscrec > 0     ) &
+                .and. ( lword  < nwi   )  ) then
 !
 !
 !        This is case (2).
@@ -644,7 +644,7 @@
 !
 !        Update the descriptor and write it back into the file.
 !
-         if ( descr .lt. 0 ) then
+         if ( descr < 0 ) then
             descr = descr - needed
          else
             descr = descr + needed
@@ -685,7 +685,7 @@
 !        This is case (3).  We need a new descriptor.
 !
 
-         if ( lrec .eq. 0 ) then
+         if ( lrec == 0 ) then
 !
 !           This is case (3a).  We have a virgin directory record.
 !           Set the number of this record.
@@ -741,7 +741,7 @@
                           lastwd )
 
 
-         else if ( lword .lt. nwi ) then
+         else if ( lword < nwi ) then
 !
 !           This is case (3b).  We have room for another descriptor
 !           in the current directory record.
@@ -753,9 +753,9 @@
 !           course, this update is required only if there IS such a
 !           descriptor, and if it is in a record that precedes LREC.
 !
-            if (       ( dscrec .gt. 0    ) &
-                 .and. ( dscrec .lt. lrec ) &
-                 .and. ( room   .gt. 0    )   )  then
+            if (       ( dscrec > 0    ) &
+                 .and. ( dscrec < lrec ) &
+                 .and. ( room   > 0    )   )  then
 !
 !              Update the address range for TYPE in record DSCREC.
 !              The upper bound is increased by ROOM, since that many
@@ -774,7 +774,7 @@
 !           sign of the new descriptor is a function of the type of
 !           the current last descriptor.
 !
-            if (  type  .eq.  next(ltype)  ) then
+            if (  type  ==  next(ltype)  ) then
 !
 !              TYPE is the successor in the type sequence of the type
 !              of the previous descriptor; use a positive count.
@@ -794,7 +794,7 @@
 !           assigned only if this is the first descriptor of TYPE in
 !           this directory record.
 !
-            if ( dscrec .lt. lrec ) then
+            if ( dscrec < lrec ) then
 
                minadr = last + room + 1
 
@@ -831,7 +831,7 @@
 !           of the new directory record to make the linked list valid.
 !
 
-            if ( lword+1 .eq. nwi ) then
+            if ( lword+1 == nwi ) then
 !
 !              Update the previous directory to point forward to the
 !              next one.
@@ -881,7 +881,7 @@
 !           increased by the last data addition.  Of course, this
 !           update is required only if there IS such a descriptor.
 !
-            if (  ( dscrec .gt. 0 ) .and. ( room .gt. 0 )  )  then
+            if (  ( dscrec > 0 ) .and. ( room > 0 )  )  then
 !
 !              Update the address range for TYPE in record DSCREC.
 !              The upper bound is increased by ROOM, since that many

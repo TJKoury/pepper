@@ -193,7 +193,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    column
+      character(cnamsz)     column
 
       integer(ip)           adrbuf ( bufsiz )
       integer(ip)           bufptr
@@ -237,13 +237,13 @@
       nulptr =  coldsc( nflidx )
       colidx =  coldsc ( ordidx )
 
-      nullok =  nulptr .ne. ifalse
-      indexd =  idxtyp .ne. ifalse
+      nullok =  nulptr /= ifalse
+      indexd =  idxtyp /= ifalse
 
 !
 !     This column had better be class 1.
 !
-      if ( class .ne. 1 ) then
+      if ( class /= 1 ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -261,7 +261,7 @@
 !     If the column is indexed, the index type should be 1; we don't
 !     know how to create any other type of index.
 !
-      if  (  indexd  .and.  ( idxtyp .ne. 1 )  ) then
+      if  (  indexd  .and.  ( idxtyp /= 1 )  ) then
 
          call zzekcnam ( handle, coldsc, column )
 
@@ -315,7 +315,7 @@
       end if
 
 
-      if ( ndata .gt. 0 ) then
+      if ( ndata > 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
 !        prepare a data buffer to be written out as a page.
@@ -347,7 +347,7 @@
       nwrite  =  0
       n       =  0
 
-      do while ( remain .gt. 0 )
+      do while ( remain > 0 )
 
          if (  nullok  .and.  ( nlflgs(from) )  ) then
 
@@ -368,7 +368,7 @@
          remain  =  remain - 1
 
 
-         if (  ( bufptr .eq. bufsiz ) .or. ( remain .eq. 0 )  ) then
+         if (  ( bufptr == bufsiz ) .or. ( remain == 0 )  ) then
 !
 !           The address buffer is full or we're out of input values
 !           to look at, so push the buffer contents on the stack.
@@ -383,8 +383,8 @@
          end if
 
 
-         if (  (   n      .eq. ipsize ) .or. &
-               ( ( nwrite .eq. ndata  ) .and. ( ndata  .ne. 0 ) ) ) then
+         if (  (   n      == ipsize ) .or. &
+               ( ( nwrite == ndata  ) .and. ( ndata  /= 0 ) ) ) then
 !
 !           Either the current data page is full, or we've buffered
 !           the last of the available data.  It's time to write out the
@@ -400,7 +400,7 @@
 !
 !           If there's more data to write, allocate another page.
 !
-            if ( nwrite .lt. ndata ) then
+            if ( nwrite < ndata ) then
 
                call zzekaps ( handle, segdsc, int, .false., p, pbase )
                call cleari  ( pgsizi, page )

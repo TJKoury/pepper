@@ -273,7 +273,7 @@
          l2 = vnorm(e2)
          l3 = vnorm(e3)
 
-         if ( ( l1 .eq. 0.0_wp ) .and. ( l2 .eq. 0.0_wp ) ) then
+         if ( ( l1 == 0.0_wp ) .and. ( l2 == 0.0_wp ) ) then
 !
 !           Up to round-off error, the vertices coincide.
 !           The vertex V1 for practical purposes is the plate.
@@ -288,13 +288,13 @@
 !           One of the edges will coincide with the segment.
 !           Determine which vertices are the endpoints.
 !
-            if ( l1 .gt. max(l2, l3) ) then
+            if ( l1 > max(l2, l3) ) then
 !
 !              The segment is bounded by V1 and V2.
 !
                call npsgpt( v1, v2, point, pnear, dist )
 
-            else if ( l2 .gt. max(l3, l1) ) then
+            else if ( l2 > max(l3, l1) ) then
 !
 !              The segment is bounded by V2 and V3.
 !
@@ -334,9 +334,9 @@
 !     constant for edge 2 is that of the offset of V2
 !     from V1; this offset is edge 1.
 !
-      in1 = vdot( perp, enorm1 ) .le. 0.0_wp
-      in2 = vdot( perp, enorm2 ) .le. vdot(e1,enorm2)
-      in3 = vdot( perp, enorm3 ) .le. 0.0_wp
+      in1 = vdot( perp, enorm1 ) <= 0.0_wp
+      in2 = vdot( perp, enorm2 ) <= vdot(e1,enorm2)
+      in3 = vdot( perp, enorm3 ) <= 0.0_wp
 
 
       if ( in1 .and. in2 .and. in3 ) then
@@ -386,12 +386,12 @@
             call npsgpt ( v2, v3, point, np2,   d2 )
             call npsgpt ( v3, v1, point, pnear, d3 )
 
-            if ( d1 .le. min(d2, d3) ) then
+            if ( d1 <= min(d2, d3) ) then
 
                call vequ ( np1, pnear )
                dist = d1
 
-            else if ( d2 .le. min(d3, d1) ) then
+            else if ( d2 <= min(d3, d1) ) then
 
                call vequ ( np2, pnear )
                dist = d2

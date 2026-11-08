@@ -446,7 +446,7 @@
 !
 !     Validate join row set count.
 !
-      if (  ( njrs .lt. 1 ) .or. ( njrs .gt. mxjrs )  ) then
+      if (  ( njrs < 1 ) .or. ( njrs > mxjrs )  ) then
 
          call setmsg ( 'Number of join row sets was #; valid ' // &
                        'range is 1:#'                           )
@@ -465,7 +465,7 @@
 
       do i = 1, njrs
 
-         if (  ( bases(i) .lt. 0 ) .or. ( bases(i) .gt. top )  ) then
+         if (  ( bases(i) < 0 ) .or. ( bases(i) > top )  ) then
 
             call setmsg ( 'Base address # was #; valid range is ' // &
                           '1:#'                                    )
@@ -490,7 +490,7 @@
       addrss  =  bases(1) + jtcidx
       call zzeksrd ( addrss, addrss, ntabs )
 
-      if (  ( ntabs .lt. 1 ) .or. ( ntabs .gt. mxjoin )  ) then
+      if (  ( ntabs < 1 ) .or. ( ntabs > mxjoin )  ) then
 
          call setmsg ( 'Table count for first join row set was #; '  // &
                        'valid range is 1:#'                           )
@@ -507,7 +507,7 @@
          addrss  =  bases(i) + jtcidx
          call zzeksrd ( addrss, addrss, j )
 
-         if ( j .ne. ntabs ) then
+         if ( j /= ntabs ) then
 
             call setmsg ( 'Join row set # contains # tables; first ' // &
                           'join row set contains # tables.  These '  // &
@@ -536,7 +536,7 @@
          addrss  =  bases(i) + jrcidx
          call zzeksrd ( addrss, addrss, j )
 
-         if (  ( j .lt. 0 ) .or. ( j .gt. top )  ) then
+         if (  ( j < 0 ) .or. ( j > top )  ) then
 
             call setmsg ( 'Join row set # has row count #; valid ' // &
                           'range is 0:#'                            )
@@ -549,7 +549,7 @@
 
          end if
 
-         if ( i .lt. njrs ) then
+         if ( i < njrs ) then
             begidx(i+1)  =  begidx(i)  +  j
          end if
 
@@ -572,7 +572,7 @@
          addrss  =  bases(i) + jscidx
          call zzeksrd ( addrss, addrss, nsv )
 
-         if ( nsv .lt. 0 ) then
+         if ( nsv < 0 ) then
 
             call setmsg ( 'Join row set # has segment vector '     // &
                           'count #; count must be non-negative.'    )
@@ -717,7 +717,7 @@
 !
 !     If the index is out of range, that's an error.
 !
-      if (  ( rwvidx .lt. 1 ) .or. ( rwvidx .gt. maxrwv )  ) then
+      if (  ( rwvidx < 1 ) .or. ( rwvidx > maxrwv )  ) then
 
          call chkin  ( 'ZZEKVCAL'                                   )
          call setmsg ( 'Row vector index was #; valid range is 0:#' )

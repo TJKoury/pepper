@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           unit
-      character*(*)         binary
+      character(*)          binary
 
 ! $ Brief_I/O
 !
@@ -231,10 +231,10 @@
 !
 !     Local parameters
 !
-      character*(*)         bmark
+      character(*)          bmark
       parameter           ( bmark ='~NAIF/SPC BEGIN COMMENTS~')
 
-      character*(*)         emark
+      character(*)          emark
       parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
       integer(ip)           maxcpr
@@ -242,7 +242,7 @@
 !
 !     Local variables
 !
-      character*(maxcpr)    line
+      character(maxcpr)     line
 
       integer(ip)           handle
       integer(ip)           iostat
@@ -277,7 +277,7 @@
 !
       read ( unit, fmt='(A)', iostat=iostat ) line
 
-      if ( iostat .gt. 0 ) then
+      if ( iostat > 0 ) then
          call setmsg ( 'Error reading the text file named FNM.  '     // &
                        'Value of IOSTAT is #.'                        )
          call errint ( '#', iostat                                    )
@@ -288,8 +288,8 @@
       end if
 
 
-      if (   (  line ( ltrim(line): )  .ne.  bmark  )   .or. &
-             (  iostat                 .lt.  0      )   ) then
+      if (   (  line ( ltrim(line): )  /=  bmark  )   .or. &
+             (  iostat                 <  0      )   ) then
          call chkout ( 'SPCT2B' )
          return
       end if
@@ -311,7 +311,7 @@
              status          = 'SCRATCH', &
              iostat          =  iostat      )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Error opening a scratch file.  File name '    // &
                        'was FNM.  Value of IOSTAT is #.'              )
          call errint ( '#', iostat                                    )
@@ -323,7 +323,7 @@
 
       write ( scrtch, fmt='(A)', iostat=iostat ) line(1:rtrim(line))
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call setmsg ( 'Error writing to scratch file. File name '    // &
                        'is FNM.  Value of IOSTAT is #.'               )
          call errint ( '#', iostat                                    )
@@ -337,11 +337,11 @@
 !     Continue reading lines from the text file and storing them
 !     in the scratch file until we get to the end marker.
 !
-      do while (  line ( ltrim(line): ) .ne. emark  )
+      do while (  line ( ltrim(line): ) /= emark  )
 
          read ( unit, fmt='(A)', iostat=iostat ) line
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error reading the text file named FNM.  ' // &
                           'Value of IOSTAT is #.'                    )
             call errint ( '#', iostat                                )
@@ -353,7 +353,7 @@
 
          write ( scrtch, fmt='(A)', iostat=iostat ) line(1:rtrim(line))
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
             call setmsg ( 'Error writing to scratch file.  File name '// &
                           'is FNM.  Value of IOSTAT is #.'            )
             call errint ( '#', iostat                                 )

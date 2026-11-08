@@ -172,17 +172,17 @@
 !        for the current column.  The classes of interest range from
 !        7 to 9.
 !
-         if ( class .eq. 7 ) then
+         if ( class == 7 ) then
 
             offset  =  offset + mdsz07
 
 
-         else if ( class .eq. 8 ) then
+         else if ( class == 8 ) then
 
             offset  =  offset + mdsz08
 
 
-         else if ( class .eq. 9 ) then
+         else if ( class == 9 ) then
 
             offset  =  offset + mdsz09
 

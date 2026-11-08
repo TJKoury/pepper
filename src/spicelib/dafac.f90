@@ -24,7 +24,7 @@
 
       integer(ip)           handle
       integer(ip)           n
-      character*(*)         buffer(*)
+      character(*)          buffer(*)
 
 ! $ Brief_I/O
 !
@@ -394,10 +394,10 @@
 !
 !     Local variables
 !
-      character*(mxcrec)    crecrd
-      character*(1)         eocmrk
-      character*(1)         eolmrk
-      character*(ifnlen)    ifname
+      character(mxcrec)     crecrd
+      character(1)          eocmrk
+      character(1)          eolmrk
+      character(ifnlen)     ifname
 
       integer(ip)           curpos
       integer(ip)           daflun
@@ -487,7 +487,7 @@
 !
 !     Check for a nonpositive number of lines in the buffer.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
 
          call setmsg ( 'The number of comment lines to be added'  // &
                        ' to the binary DAF file ''#'' was not'    // &
@@ -523,8 +523,8 @@
 !           characters are given by MINPCH and MAXPCH, which are
 !           defined in the $ Local Parameters section of the header.
 !
-            if ( ( ichar ( buffer(i)(j:j) ) .gt. maxpch ) .or. &
-                 ( ichar ( buffer(i)(j:j) ) .lt. minpch )      ) then
+            if ( ( ichar ( buffer(i)(j:j) ) > maxpch ) .or. &
+                 ( ichar ( buffer(i)(j:j) ) < minpch )      ) then
 
                   call setmsg ( 'A nonprinting character was'      // &
                                 ' encountered in the comment'      // &
@@ -573,7 +573,7 @@
 !
       ncomr = fward - 2
 
-      if ( ncomr .gt. 0 ) then
+      if ( ncomr > 0 ) then
 !
 !        The starting record number is the number of comment records + 1
 !        where the 1 skips the file record.
@@ -582,13 +582,13 @@
          found  = .false.
          notusd = 0
 
-         do while ( ( ncomr .gt. 0 ) .and. ( .not. found ) .and. empty )
+         do while ( ( ncomr > 0 ) .and. ( .not. found ) .and. empty )
 
             recno = ncomr + 1
 
             read ( daflun, rec=recno, iostat=iostat ) crecrd
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error reading comment area of binary' // &
                              ' file named ''#''.  IOSTAT = #.'       )
@@ -605,7 +605,7 @@
 !
             eocpos = cpos ( crecrd(1:mxcrec), eocmrk, 1 )
 
-            if ( eocpos .gt. 0 ) then
+            if ( eocpos > 0 ) then
 
                found = .true.
 
@@ -613,7 +613,7 @@
 
                nelpos = ncpos ( crecrd(1:mxcrec), eolmrk, 1 )
 
-               if ( nelpos .ne. 0 ) then
+               if ( nelpos /= 0 ) then
 
                   empty = .false.
 
@@ -664,7 +664,7 @@
 !     a comment record, minus the number of comment characters already
 !     used. Otherwise, the space available is zero.
 !
-      if ( ncomr + notusd .gt. 0 ) then
+      if ( ncomr + notusd > 0 ) then
 
          space = notusd * mxcrec + ncomr * mxcrec - ncomc
 
@@ -677,7 +677,7 @@
 !     Determine the number of new comment records which are necessary
 !     to store all of the comments from the buffer.
 !
-      if ( nchars .gt. space ) then
+      if ( nchars > space ) then
 !
 !        If there are more characters to store than available space
 !        we need at least one new record.
@@ -695,7 +695,7 @@
 !     Now add the necessary number of comment records to the file,
 !     if we need to add any.
 !
-      if ( newrec .gt. 0 ) then
+      if ( newrec > 0 ) then
 
          call dafarr ( handle, newrec )
 
@@ -715,7 +715,7 @@
 !
 !     We begin initializing the appropriate variables.
 !
-      if ( ncomc .eq. 0 ) then
+      if ( ncomc == 0 ) then
 !
 !        If there are no comments in the comment area, then we need
 !        to skip the file record. The first available comment record
@@ -762,11 +762,11 @@
 !           increment the record number, RECNO, and reset the values
 !           of the current position and the comment record.
 !
-            if ( curpos .gt. mxcrec ) then
+            if ( curpos > mxcrec ) then
 
                write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                   call setmsg ( 'Error writing to record # of the'  // &
                                 ' binary file named ''#''. IOSTAT'  // &
@@ -798,11 +798,11 @@
 !        number, RECNO, and reset the values of the current position
 !        and the comment record.
 !
-         if ( curpos .gt. mxcrec ) then
+         if ( curpos > mxcrec ) then
 
                write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                   call setmsg ( 'Error writing to record # of the'  // &
                                 ' binary file named ''#''. IOSTAT'  // &
@@ -835,7 +835,7 @@
 !     record will always contain something, so we always need to write
 !     it.
 !
-      if ( curpos .gt. mxcrec ) then
+      if ( curpos > mxcrec ) then
 !
 !        If we have completely filled the comment record, the last
 !        character of the last line n the buffer coincides with the
@@ -845,7 +845,7 @@
 !
          write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Error writing to record # of the'    // &
                           ' binary file named ''#''. IOSTAT'    // &
@@ -872,7 +872,7 @@
 
       write ( daflun, rec=recno, iostat=iostat ) crecrd
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error writing to record # of the'    // &
                        ' binary file named ''#''. IOSTAT'    // &

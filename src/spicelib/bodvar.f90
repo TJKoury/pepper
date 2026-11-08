@@ -27,7 +27,7 @@
       implicit none
 
       integer(ip)           body
-      character*(*)         item
+      character(*)          item
       integer(ip)           dim
       real(wp)              values  ( * )
 
@@ -225,8 +225,8 @@
 !
 !     Local variables
 !
-      character*16          code
-      character*32          varnam
+      character(16)         code
+      character(32)         varnam
       logical               found
 
 

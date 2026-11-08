@@ -18,9 +18,9 @@
       use pepper_arrays, only: pepper_bschoc => bschoc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    value
+      character(*)     value
       integer(ip)      ndim
-      character*(*)    array ( * )
+      character(*)     array ( * )
       integer(ip)      order ( * )
       bschoc = pepper_bschoc ( value, ndim, array, order )
       end function bschoc
@@ -40,9 +40,9 @@
       use pepper_arrays, only: pepper_bsrchc => bsrchc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    value
+      character(*)     value
       integer(ip)      ndim
-      character*(*)    array ( * )
+      character(*)     array ( * )
       bsrchc = pepper_bsrchc ( value, ndim, array )
       end function bsrchc
 
@@ -71,7 +71,7 @@
       use pepper_kinds, only: ip
       implicit none
       integer(ip)         ndim
-      character*(*)       array ( * )
+      character(*)        array ( * )
       call pepper_clearc ( ndim, array )
       end subroutine clearc
 
@@ -97,9 +97,9 @@
       use pepper_arrays, only: pepper_fillc => fillc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    value
+      character(*)     value
       integer(ip)      ndim
-      character*(*)    array ( * )
+      character(*)     array ( * )
       call pepper_fillc ( value, ndim, array )
       end subroutine fillc
 
@@ -136,9 +136,9 @@
       use pepper_arrays, only: pepper_isrchc => isrchc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    value
+      character(*)     value
       integer(ip)      ndim
-      character*(*)    array ( * )
+      character(*)     array ( * )
       isrchc = pepper_isrchc ( value, ndim, array )
       end function isrchc
 
@@ -186,9 +186,9 @@
       use pepper_arrays, only: pepper_lstlec => lstlec
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       integer(ip)      n
-      character*(*)    array ( * )
+      character(*)     array ( * )
       lstlec = pepper_lstlec ( string, n, array )
       end function lstlec
 
@@ -216,9 +216,9 @@
       use pepper_arrays, only: pepper_lstltc => lstltc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    string
+      character(*)     string
       integer(ip)      n
-      character*(*)    array ( * )
+      character(*)     array ( * )
       lstltc = pepper_lstltc ( string, n, array )
       end function lstltc
 
@@ -246,9 +246,9 @@
       use pepper_arrays, only: pepper_maxac => maxac
       use pepper_kinds, only: ip
       implicit none
-      character*(*)   array ( * )
+      character(*)    array ( * )
       integer(ip)     ndim
-      character*(*)   maxval
+      character(*)    maxval
       integer(ip)     loc
       call pepper_maxac ( array, ndim, maxval, loc )
       end subroutine maxac
@@ -279,9 +279,9 @@
       use pepper_arrays, only: pepper_minac => minac
       use pepper_kinds, only: ip
       implicit none
-      character*(*)   array ( * )
+      character(*)    array ( * )
       integer(ip)     ndim
-      character*(*)   minval
+      character(*)    minval
       integer(ip)     loc
       call pepper_minac ( array, ndim, minval, loc )
       end subroutine minac
@@ -312,9 +312,9 @@
       use pepper_arrays, only: pepper_movec => movec
       use pepper_kinds, only: ip
       implicit none
-      character*(*)   arrfrm ( * )
+      character(*)    arrfrm ( * )
       integer(ip)     ndim
-      character*(*)   arrto  ( * )
+      character(*)    arrto  ( * )
       call pepper_movec ( arrfrm, ndim, arrto )
       end subroutine movec
 
@@ -351,7 +351,7 @@
       use pepper_arrays, only: pepper_orderc => orderc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    array  ( * )
+      character(*)     array  ( * )
       integer(ip)      ndim
       integer(ip)      iorder ( * )
       call pepper_orderc ( array, ndim, iorder )
@@ -401,7 +401,7 @@
       implicit none
       integer(ip)      iorder ( * )
       integer(ip)      ndim
-      character*(*)    array  ( * )
+      character(*)     array  ( * )
       call pepper_reordc ( iorder, ndim, array )
       end subroutine reordc
 
@@ -440,7 +440,7 @@
       use pepper_kinds, only: ip
       implicit none
       integer(ip)      nelt
-      character*(*)    array   (*)
+      character(*)     array   (*)
       call pepper_rmdupc ( nelt, array )
       end subroutine rmdupc
 
@@ -477,7 +477,7 @@
       use pepper_kinds, only: ip
       implicit none
       integer(ip)      ndim
-      character*(*)    array ( * )
+      character(*)     array ( * )
       call pepper_shellc ( ndim, array )
       end subroutine shellc
 
@@ -539,8 +539,8 @@
       use pepper_arrays, only: pepper_swapc => swapc
       use pepper_kinds, only: ip
       implicit none
-      character*(*)    a
-      character*(*)    b
+      character(*)     a
+      character(*)     b
       call pepper_swapc ( a, b )
       end subroutine swapc
 

@@ -30,8 +30,8 @@
       integer(ip)           hashsz
       integer(ip)           hedlst  (          * )
       integer(ip)           collst  ( lbpool : * )
-      character*(*)         items   (          * )
-      character*(*)         item
+      character(*)          items   (          * )
+      character(*)          item
       integer(ip)           itemat
       logical               new
       integer(ip)           avail
@@ -541,7 +541,7 @@
 !
       call chkin  ( 'ZZHSCINI' )
 
-      if ( hashsz .gt. 0 ) then
+      if ( hashsz > 0 ) then
 
 !
 !        Wipe out head node pointer list.
@@ -697,7 +697,7 @@
 !
 !     Set flag indicating whether the hash is full.
 !
-      full   = collst ( freidx ) .gt. collst ( sizidx )
+      full   = collst ( freidx ) > collst ( sizidx )
 
 !
 !     Use hash function to get index of the head node.
@@ -715,16 +715,16 @@
 !     See if this item (or one colliding with it in the hash scheme)
 !     has already been stored in the item list.
 !
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 
 !
 !        Start at the head node and check each item saved for this hash
 !        value until we find a item that matches or run out of items in
 !        this conflict resolution list.
 !
-         do while ( node .gt. 0 .and. .not. lfound )
+         do while ( node > 0 .and. .not. lfound )
 
-            lfound = items ( node ) .eq. item
+            lfound = items ( node ) == item
             itemat = node
             node   = collst ( node )
 
@@ -962,16 +962,16 @@
 !     See if this item (or one colliding with it in the hash scheme) is
 !     in the item list.
 !
-      if ( node .gt. 0 ) then
+      if ( node > 0 ) then
 
 !
 !        Start at the head node and check each item saved for this hash
 !        value until we find a item that matches or run out of items in
 !        this conflict resolution list.
 !
-         do while ( node .gt. 0 .and. .not. lfound )
+         do while ( node > 0 .and. .not. lfound )
 
-            lfound = items ( node ) .eq. item
+            lfound = items ( node ) == item
             itemat = node
             node   = collst ( node )
 
@@ -1201,18 +1201,18 @@
 !
 !     Get the hash size.
 !
-      if      ( item .eq. 'HASH SIZE' ) then
+      if      ( item == 'HASH SIZE' ) then
 
          avail = collst ( sizidx )
 
 !
 !     Get the count of used nodes in the head list.
 !
-      else if ( item .eq. 'USED HEADNODE COUNT' ) then
+      else if ( item == 'USED HEADNODE COUNT' ) then
 
          avail = 0
          do i = 1, collst ( sizidx )
-            if ( hedlst ( i ) .ne. 0 ) then
+            if ( hedlst ( i ) /= 0 ) then
                avail = avail + 1
             end if
          end do
@@ -1220,11 +1220,11 @@
 !
 !     Get the count of unused nodes in the head list.
 !
-      else if ( item .eq. 'UNUSED HEADNODE COUNT' ) then
+      else if ( item == 'UNUSED HEADNODE COUNT' ) then
 
          avail = 0
          do i = 1, collst ( sizidx )
-            if ( hedlst ( i ) .eq. 0 ) then
+            if ( hedlst ( i ) == 0 ) then
                avail = avail + 1
             end if
          end do
@@ -1232,27 +1232,27 @@
 !
 !     Get the count of used slots in the item list.
 !
-      else if ( item .eq. 'USED ITEM COUNT' ) then
+      else if ( item == 'USED ITEM COUNT' ) then
 
          avail = collst ( freidx ) - 1
 
 !
 !     Get the count of unused slots in the item list.
 !
-      else if ( item .eq. 'UNUSED ITEM COUNT' ) then
+      else if ( item == 'UNUSED ITEM COUNT' ) then
 
          avail = collst ( sizidx ) - collst ( freidx ) + 1
 
 !
 !     Get the size of the longest item list for any hash value.
 !
-      else if ( item .eq. 'LONGEST LIST SIZE' ) then
+      else if ( item == 'LONGEST LIST SIZE' ) then
 
          avail = 0
          do i = 1, collst ( sizidx )
             node = hedlst ( i )
             lookat = 0
-            do while ( node .gt. 0 )
+            do while ( node > 0 )
                lookat = lookat + 1
                node   = collst ( node )
             end do

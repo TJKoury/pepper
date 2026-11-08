@@ -122,10 +122,10 @@
       parameter           ( maxids = 10 )
 
 
-      character*(wdsize)    sclk
-      character*(wdsize)    sclkvr ( 7 )
-      character*(wdsize)    type
-      character*(wdsize)    agent
+      character(wdsize)     sclk
+      character(wdsize)     sclkvr ( 7 )
+      character(wdsize)     type
+      character(wdsize)     agent
 
       integer(ip)           dtsize ( 7 )
       integer(ip)           i
@@ -191,7 +191,7 @@
          keepid = .true.
          call cvpool ( agent, update )
 
-      else if ( cardi(known) .lt. sizei(known) ) then
+      else if ( cardi(known) < sizei(known) ) then
 !
 !        The SCLKID specified is not in the list of SCLKIDs for
 !        this routine and there is room left in the pool of
@@ -252,8 +252,8 @@
          call dtpool ( sclkvr(i), found, n, type )
 
          if (       .not. found &
-              .or.  type .ne. 'N' &
-              .or. (n/dtsize(i))*dtsize(i) .ne. n   )then
+              .or.  type /= 'N' &
+              .or. (n/dtsize(i))*dtsize(i) /= n   )then
 !
 !           We don't have adequate SCLK data for the specified
 !           object.  Remove this AGENT from the list of agents

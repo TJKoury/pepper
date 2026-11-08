@@ -242,7 +242,7 @@
 !
 !     Local Variables
 !
-      character*(acclen)    access
+      character(acclen)     access
 
       logical               found
 
@@ -261,9 +261,9 @@
 !     'READ'.  In the future this should make use of the private entry
 !     in the handle manager umbrella, ZZDDHNFO.
 !
-      if ( handle .lt. 0 ) then
+      if ( handle < 0 ) then
          access = 'WRITE'
-      else if ( handle .gt. 0 ) then
+      else if ( handle > 0 ) then
          access = 'READ'
       end if
 
@@ -271,7 +271,7 @@
 !     If the file is open for writing and there are segments in the file
 !     fix the ID word and close the file, or just close the file.
 !
-      if ( access .eq. 'WRITE' ) then
+      if ( access == 'WRITE' ) then
 !
 !        Check to see if there are any segments in the file. If there
 !        are no segments, we signal an error. This probably indicates a

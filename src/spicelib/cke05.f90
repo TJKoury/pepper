@@ -468,19 +468,19 @@
       subtyp =  nint( record(sbtidx) )
 
 
-      if ( subtyp .eq. c05tp0 ) then
+      if ( subtyp == c05tp0 ) then
 
          packsz = c05ps0
 
-      else if ( subtyp .eq. c05tp1 ) then
+      else if ( subtyp == c05tp1 ) then
 
          packsz = c05ps1
 
-      else if ( subtyp .eq. c05tp2 ) then
+      else if ( subtyp == c05tp2 ) then
 
          packsz = c05ps2
 
-      else if ( subtyp .eq. c05tp3 ) then
+      else if ( subtyp == c05tp3 ) then
 
          packsz = c05ps3
 
@@ -512,7 +512,7 @@
 !     only for subtypes that don't store quaternion derivatives
 !     (these are the Lagrange subtypes).
 !
-      if (  ( subtyp .eq. c05tp1 ) .or. ( subtyp .eq. c05tp3 )  ) then
+      if (  ( subtyp == c05tp1 ) .or. ( subtyp == c05tp3 )  ) then
 !
 !        For these subtypes, only the quaternions themselves need be
 !        adjusted.
@@ -536,7 +536,7 @@
 !           than the current quaternion to the previous quaternion.
 !
             if (     vdistg( record(prvptr), qneg,           4 ) &
-                .lt. vdistg( record(prvptr), record(newptr), 4 ) ) then
+                < vdistg( record(prvptr), record(newptr), 4 ) ) then
 
                call moved ( qneg, 4, record( newptr ) )
 
@@ -570,7 +570,7 @@
 !           than the current quaternion to the previous quaternion.
 !
             if (     vdistg( record(prvptr), qneg,           4 ) &
-                .lt. vdistg( record(prvptr), record(newptr), 4 ) ) then
+                < vdistg( record(prvptr), record(newptr), 4 ) ) then
 
                call setmsg ( 'Quaternion sign error: quaternion at ' &
                //            'index # in the input record is farther ' &
@@ -606,7 +606,7 @@
 
 
 
-      if ( subtyp .eq. c05tp1 ) then
+      if ( subtyp == c05tp1 ) then
 !
 !        We perform Lagrange interpolation on each quaternion
 !        component, and obtain quaternion derivatives from the
@@ -651,7 +651,7 @@
          mags = vnormg( state, 4 )
 
 
-         if ( mags .eq. 0.0_wp ) then
+         if ( mags == 0.0_wp ) then
 
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
             call errdp  ( '#',  sclkdp                               )
@@ -705,7 +705,7 @@
 !
 
 
-      else if ( subtyp .eq. c05tp3 ) then
+      else if ( subtyp == c05tp3 ) then
 !
 !        This is the easiest case:  we perform Lagrange interpolation
 !        on each quaternion or angular velocity component.
@@ -813,7 +813,7 @@
 !
          mags = vnormg( state, 4 )
 
-         if ( mags .eq. 0.0_wp ) then
+         if ( mags == 0.0_wp ) then
 
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
             call errdp  ( '#',  sclkdp                               )
@@ -828,7 +828,7 @@
 
          if ( needav ) then
 
-            if ( subtyp .eq. c05tp0 ) then
+            if ( subtyp == c05tp0 ) then
 !
 !              Find the time derivative of the unit quaternion:
 !              Letting S represent the quaternion portion of STATE, we

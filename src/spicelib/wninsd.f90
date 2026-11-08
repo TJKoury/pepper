@@ -317,7 +317,7 @@
 !     Let's try the easy cases first. No input interval? No change.
 !     Signal that an error has occurred and set the error message.
 !
-      if ( left .gt. right ) then
+      if ( left > right ) then
          call setmsg ( 'Left endpoint was *. Right endpoint was *.' )
          call errdp  ( '*', left  )
          call errdp  ( '*', right )
@@ -329,9 +329,9 @@
 !     Empty window? Input interval later than the end of the window?
 !     Just insert the interval, if there's room.
 !
-      else if ( card .eq. 0  .or.  left .gt. window(card) ) then
+      else if ( card == 0  .or.  left > window(card) ) then
 
-         if ( size .ge. card+2 ) then
+         if ( size >= card+2 ) then
 
             call scardd ( card+2, window )
             window(card+1) = left
@@ -359,7 +359,7 @@
 !
       i = 2
 
-      do while ( i .le. card  .and.  window(i) .lt. left )
+      do while ( i <= card  .and.  window(i) < left )
          i = i + 2
       end do
 
@@ -380,9 +380,9 @@
 !     Case (1). If there's room, move succeeding intervals back and
 !     insert the new one. If there isn't room, signal an error.
 !
-      if ( right .lt. window(i-1) ) then
+      if ( right < window(i-1) ) then
 
-         if ( size .ge. card+2 ) then
+         if ( size >= card+2 ) then
 
             do j = card, i-1, -1
                window(j+2) = window(j)
@@ -421,7 +421,7 @@
 !
          j = i + 2
 
-         do while ( j .le. card  .and.  window(j) .le. window(i) )
+         do while ( j <= card  .and.  window(j) <= window(i) )
             j = j + 2
          end do
 
@@ -429,7 +429,7 @@
 !        If the modified interval extends into the next interval,
 !        merge the two. (The modified interval grows to the right.)
 !
-         if ( j .le. card  .and.  window(i) .ge. window(j-1) ) then
+         if ( j <= card  .and.  window(i) >= window(j-1) ) then
             window(i) = window(j)
             j         = j + 2
          end if
@@ -438,7 +438,7 @@
 !        Move the rest of the intervals forward to take up the
 !        spaces left by the absorbed intervals.
 !
-         do while ( j .le. card )
+         do while ( j <= card )
             i           = i + 2
             window(i-1) = window(j-1)
             window(i  ) = window(j  )

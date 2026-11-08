@@ -267,7 +267,7 @@
 !
 !     Local variables
 !
-      character*(msglen)    mssg  ( msgdim )
+      character(msglen)     mssg  ( msgdim )
 
       real(wp)              p     ( 3 )
       real(wp)              pmag
@@ -325,17 +325,17 @@
 !
       bad = 0
 
-      if ( a .le. 0 ) &
+      if ( a <= 0 ) &
          bad = bad + 1
 
-      if ( b .le. 0 ) &
+      if ( b <= 0 ) &
          bad = bad + 2
 
-      if ( c .le. 0 ) &
+      if ( c <= 0 ) &
          bad = bad + 4
 
 
-      if ( bad .gt. 0 ) then
+      if ( bad > 0 ) then
 
          call chkin  ( 'SURFPT'                           )
          call setmsg ( mssg (bad)                         // &
@@ -402,11 +402,11 @@
 !     Now determine whether there's an intersection.  Consider
 !     the case where Y is outside the sphere first.
 !
-      if ( ymag .gt. 1 ) then
+      if ( ymag > 1 ) then
 !
 !        If P is outside of the sphere, there can be no intersection.
 !
-         if ( pmag .gt. 1.0_wp ) then
+         if ( pmag > 1.0_wp ) then
             return
          end if
 
@@ -415,14 +415,14 @@
 !        is pointing away from the sphere, and there is no
 !        intersection.
 !
-         if (  vdot(yproj, x) .gt. 0.0_wp ) then
+         if (  vdot(yproj, x) > 0.0_wp ) then
             return
          end if
 
 !
 !        At this point we know there's an intersection.
 !
-         if ( pmag .eq. 1.0_wp ) then
+         if ( pmag == 1.0_wp ) then
 !
 !           The vector P we've found is the singleton point of
 !           intersection.  All we have to do is transform P by
@@ -448,7 +448,7 @@
          sign = -1.0_wp
 
 
-      else if ( ymag .eq. 1 ) then
+      else if ( ymag == 1 ) then
 !
 !        The ray's vertex is on the surface of the ellipsoid.
 !        The vertex is the first point of intersection.

@@ -504,7 +504,7 @@
 !     First, check to see if the number of coefficient sets and epochs
 !     is positive.
 !
-      if ( ncsets .le. 0 ) then
+      if ( ncsets <= 0 ) then
 
          call setmsg ( 'The number of coefficient sets and epochs' &
          //            ' to be added to the SPK segment in the file' &

@@ -229,7 +229,7 @@
 !
 !     Just a binary search.
 !
-      elemi = ( bsrchi ( item, cardi ( a ), a(1) ) .ne. 0 )
+      elemi = ( bsrchi ( item, cardi ( a ), a(1) ) /= 0 )
 
       call chkout ( 'ELEMI' )
       return

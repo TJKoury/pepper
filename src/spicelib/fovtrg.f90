@@ -32,12 +32,12 @@
 
       include              'gf.inc'
 
-      character*(*)         inst
-      character*(*)         target
-      character*(*)         tshape
-      character*(*)         tframe
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          inst
+      character(*)          target
+      character(*)          tshape
+      character(*)          tframe
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              et
       logical               visibl
 

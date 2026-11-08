@@ -313,7 +313,7 @@
       rel  =  eq
       col  =  1
 
-      do while (  ( col .le. ncols ) .and. ( rel .eq. eq )  )
+      do while (  ( col <= ncols ) .and. ( rel == eq )  )
 !
 !        Compare the entries in the two rows in the columns indicated
 !        by the Nth column descriptor pair.
@@ -349,7 +349,7 @@
          end do
 
 
-         if ( dtype(1) .eq. dtype(2) ) then
+         if ( dtype(1) == dtype(2) ) then
 !
 !           Find the order of the rows according to the order-by
 !           column having index COL.  If the order sense for this
@@ -357,11 +357,11 @@
 !
             rel  =  zzekecmp ( hans, sgdscs, cldscs, rows, elidxs )
 
-            if ( senses(col) .eq. eqdsnd ) then
+            if ( senses(col) == eqdsnd ) then
 
-               if ( rel .eq. lt ) then
+               if ( rel == lt ) then
                   rel = gt
-               else if ( rel .eq. gt ) then
+               else if ( rel == gt ) then
                   rel = lt
                end if
 
@@ -395,34 +395,34 @@
 !
 !     Determine the truth of the input relational expression.
 !
-      if ( op .eq. eq )   then
+      if ( op == eq )   then
 
-         zzekvcmp  =  rel .eq. eq
-
-
-      else if ( op .eq. lt )   then
-
-         zzekvcmp  =  rel .eq. lt
+         zzekvcmp  =  rel == eq
 
 
-      else if ( op .eq. le )   then
+      else if ( op == lt )   then
 
-         zzekvcmp  =  rel .ne. gt
-
-
-      else if ( op .eq. gt )   then
-
-         zzekvcmp  =  rel .eq. gt
+         zzekvcmp  =  rel == lt
 
 
-      else if ( op .eq. ge )   then
+      else if ( op == le )   then
 
-         zzekvcmp  =  rel .ne. lt
+         zzekvcmp  =  rel /= gt
 
 
-      else if ( op .eq. ne )   then
+      else if ( op == gt )   then
 
-         zzekvcmp  =  rel .ne. eq
+         zzekvcmp  =  rel == gt
+
+
+      else if ( op == ge )   then
+
+         zzekvcmp  =  rel /= lt
+
+
+      else if ( op == ne )   then
+
+         zzekvcmp  =  rel /= eq
 
 
       else

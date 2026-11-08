@@ -32,14 +32,14 @@
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      character*(maxl)      names  (          * )
-      character*(maxl)      nornam (          * )
+      character(maxl)       names  (          * )
+      character(maxl)       nornam (          * )
       integer(ip)           codes  (          * )
       integer(ip)           nvals
       integer(ip)           maxval
       integer(ip)           bnmlst (          * )
       integer(ip)           bnmpol ( lbpool : * )
-      character*(maxl)      bnmnms (          * )
+      character(maxl)       bnmnms (          * )
       integer(ip)           bnmidx (          * )
       integer(ip)           bidlst (          * )
       integer(ip)           bidpol ( lbpool : * )
@@ -245,7 +245,7 @@
 !
 !     Consistency check.
 !
-      if ( maxval .lt. nvals ) then
+      if ( maxval < nvals ) then
          call chkin  ( 'ZZBODINI' )
          call setmsg ( 'There is an inconsistency between the '  // &
                        'number of input bodies and the size of ' // &
@@ -278,7 +278,7 @@
 !
          call zzhscadd ( bnmlst, bnmpol, bnmnms, nornam(i), item, new )
          if ( new ) then
-            if ( item .ne. 0 ) then
+            if ( item /= 0 ) then
                bnmidx( item ) = i
             else
                call chkin  ( 'ZZBODINI' )
@@ -303,7 +303,7 @@
 !
             call zzhsiadd ( bidlst, bidpol, bidids, codes(i), item, new)
             if ( new ) then
-               if ( item .ne. 0 ) then
+               if ( item /= 0 ) then
                   bididx( item ) = i
                else
                   call chkin  ( 'ZZBODINI' )

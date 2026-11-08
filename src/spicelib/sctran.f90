@@ -23,7 +23,7 @@
 
       implicit none
 
-      character*(*)         clknam
+      character(*)          clknam
       integer(ip)           clkid
       logical               found
 
@@ -142,7 +142,7 @@
 !
 !     Local variables
 !
-      character*(maxlen)    tmpnam
+      character(maxlen)     tmpnam
 
       integer(ip)           loc
 
@@ -326,7 +326,7 @@
       loc = posr ( tmpnam, 'SCLK', rtrim(tmpnam) )
 
 
-      if ( loc .gt. 0 ) then
+      if ( loc > 0 ) then
          tmpnam(loc:loc+3) = ' '
       end if
 

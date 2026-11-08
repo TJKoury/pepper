@@ -41,13 +41,13 @@
       include               'zzctr.inc'
       include               'zzdsk.inc'
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         corloc
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          corloc
+      character(*)          obsrvr
       real(wp)              refvec ( 3 )
       real(wp)              rolstp
       integer(ip)           ncuts
@@ -2118,10 +2118,10 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'LIMBPT' )
 
-      character*(*)         iref
+      character(*)          iref
       parameter           ( iref   = 'J2000' )
 
 !
@@ -2174,14 +2174,14 @@
 !
 !     Local variables
 !
-      character*(cvtlen)    lmbstr
-      character*(acllen)    nrmloc
-      character*(corlen)    prvcor
-      character*(acllen)    prvloc
-      character*(mthlen)    prvmth
-      character*(shplen)    shpstr
-      character*(sublen)    subtyp
-      character*(tmtlen)    trmstr
+      character(cvtlen)     lmbstr
+      character(acllen)     nrmloc
+      character(corlen)     prvcor
+      character(acllen)     prvloc
+      character(mthlen)     prvmth
+      character(shplen)     shpstr
+      character(sublen)     subtyp
+      character(tmtlen)     trmstr
 
       real(wp)              axis   ( 3 )
       real(wp)              center ( 3 )
@@ -2253,12 +2253,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -2266,7 +2266,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr3 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svfxfc
 
 
@@ -2372,7 +2372,7 @@
       end if
 
 
-      if (  first  .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
 !        The aberration correction flag differs from the value it
 !        had on the previous call, if any. Analyze the new flag.
@@ -2473,7 +2473,7 @@
 !     Check the input body codes. If they are equal, signal
 !     an error.
 !
-      if ( obscde .eq. trgcde ) then
+      if ( obscde == trgcde ) then
 
          call setmsg ( 'In computing the surface intercept point, ' // &
                        'the observing body and target body are the '// &
@@ -2513,7 +2513,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( fxcent .ne. trgcde ) then
+      if ( fxcent /= trgcde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -2537,7 +2537,7 @@
 !     The choice of initialization routine depends on the target
 !     surface type.
 !
-      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
+      if ( first  .or.  surfup  .or.  ( method /= prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -2610,7 +2610,7 @@
 !        There should be no subtype specification in the method
 !        string.
 !
-         if ( subtyp .ne. ' ' ) then
+         if ( subtyp /= ' ' ) then
 
             call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
@@ -2629,7 +2629,7 @@
 !        There should be no terminator specification in the method
 !        string.
 !
-         if ( trmstr .ne. ' ' ) then
+         if ( trmstr /= ' ' ) then
 
             call setmsg ( 'Spurious terminator shadow type <#> ' &
             //            'was present in the method string #. ' &
@@ -2652,15 +2652,15 @@
 !
 !     Identify the aberration correction locus.
 !
-      if (  first  .or.  ( corloc .ne. prvloc )  ) then
+      if (  first  .or.  ( corloc /= prvloc )  ) then
 
          call ljucrs ( 1, corloc, nrmloc )
 
-         if ( nrmloc .eq. 'CENTER' ) then
+         if ( nrmloc == 'CENTER' ) then
 
             loccde = ctrcor
 
-         else if ( nrmloc .eq. 'ELLIPSOID LIMB' ) then
+         else if ( nrmloc == 'ELLIPSOID LIMB' ) then
 
             loccde = ellcor
 
@@ -2703,7 +2703,7 @@
 !
 !     Check MAXN.
 !
-      if ( maxn .lt. 1 ) then
+      if ( maxn < 1 ) then
 
          call setmsg ( 'MAXN = #; MAXN is required ' &
          //            'to be at least 1.'           )
@@ -2718,7 +2718,7 @@
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
-      if (  ( ncuts .lt. 1 ) .or. ( ncuts .gt. maxn )  ) then
+      if (  ( ncuts < 1 ) .or. ( ncuts > maxn )  ) then
 
          call setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
          //            'to be non-negative and no larger than ' &
@@ -2735,9 +2735,9 @@
 !     Check the angular search step size and convergence
 !     tolerance. These checks apply only to DSK shapes.
 !
-      if ( shape .eq. dskshp ) then
+      if ( shape == dskshp ) then
 
-         if ( schstp .le. 0.0_wp ) then
+         if ( schstp <= 0.0_wp ) then
 
             call setmsg ( 'The angular search step ' &
             //            'SCHSTP = #; SCHSTP is required ' &
@@ -2749,7 +2749,7 @@
 
          end if
 
-         if ( soltol .le. 0.0_wp ) then
+         if ( soltol <= 0.0_wp ) then
 
             call setmsg ( 'The angular search tolerance ' &
             //            'SOLTOL = #; SOLTOL is required ' &
@@ -2767,7 +2767,7 @@
 !     Check the roll step. This value applies only if
 !     there are multiple cutting half-planes.
 !
-      if (  ( ncuts .gt. 1 ) .and. ( rolstp .eq. 0.0_wp )  ) then
+      if (  ( ncuts > 1 ) .and. ( rolstp == 0.0_wp )  ) then
 
          call setmsg ( 'The angular roll step is 0.D0. ' &
          //            'NCUTS = #. ROLSTP is required ' &
@@ -2781,7 +2781,7 @@
       end if
 
 
-      if ( shape .eq. dskshp ) then
+      if ( shape == dskshp ) then
 !
 !        This is the DSK case.
 !
@@ -2790,7 +2790,7 @@
 !
          call zzsudski ( trgcde, nsurf, srflst, fxfcde )
 
-      else if ( shape .ne. ellshp ) then
+      else if ( shape /= ellshp ) then
 
          call setmsg ( 'Computation method argument was <#>; this ' &
          //            'string must specify a supported shape ' &
@@ -2813,7 +2813,7 @@
 !
 !     Check MAXN.
 !
-      if ( maxn .lt. 1 ) then
+      if ( maxn < 1 ) then
 
          call setmsg ( 'MAXN = #; MAXN is required ' &
          //            'to be at least 1.'           )
@@ -2828,7 +2828,7 @@
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
-      if (  ( ncuts .lt. 1 ) .or. ( ncuts .gt. maxn )  ) then
+      if (  ( ncuts < 1 ) .or. ( ncuts > maxn )  ) then
 
          call setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
          //            'to be non-negative and no larger than ' &
@@ -2844,11 +2844,11 @@
 !
 !     Get target body radii if necessary.
 !
-      if (      ( shape  .eq. ellshp ) &
-           .or. ( loccde .eq. ellcor ) &
-           .or. ( lmbtyp .eq. guided )  ) then
+      if (      ( shape  == ellshp ) &
+           .or. ( loccde == ellcor ) &
+           .or. ( lmbtyp == guided )  ) then
 
-         if ( trgcde .ne. prvtrg ) then
+         if ( trgcde /= prvtrg ) then
 !
 !           Reset counter to force lookup.
 !
@@ -2865,7 +2865,7 @@
             return
          end if
 
-         if ( svnrad .ne. 3 ) then
+         if ( svnrad /= 3 ) then
 
             call setmsg ( 'Number of target radii must be 3 ' &
             //            'but was #.'                       )
@@ -2917,7 +2917,7 @@
 !     simpler case.
 !
 
-      if ( loccde .eq. ctrcor ) then
+      if ( loccde == ctrcor ) then
 !
 !        Aberration corrections are those applicable at the target
 !        center.
@@ -2953,7 +2953,7 @@
 !        we're using the "guided" limb option, find the
 !        limb parameters of the reference ellipsoid.
 !
-         if (  ( shape .eq. ellshp ) .or. ( lmbtyp .eq. guided ) ) then
+         if (  ( shape == ellshp ) .or. ( lmbtyp == guided ) ) then
 
             call edlimb ( svradi(1), svradi(2), svradi(3), &
                           axis,      limb                 )
@@ -2971,14 +2971,14 @@
 !           Make sure ENORML points into the same half-space as
 !           AXIS.
 !
-            if ( vdot( enorml, axis ) .lt. 0.0_wp ) then
+            if ( vdot( enorml, axis ) < 0.0_wp ) then
 
                call vsclip ( -1.0_wp, enorml )
 
             end if
 
 
-            if ( shape .eq. dskshp ) then
+            if ( shape == dskshp ) then
 !
 !              Caution: this requires that ZZSUDSKI has been
 !              called first.
@@ -3014,11 +3014,11 @@
             call ucrss ( axis, plnvec, cutnml )
 
 
-            if ( shape .eq. dskshp ) then
+            if ( shape == dskshp ) then
 !
 !              This is the DSK case.
 !
-               if ( lmbtyp .eq. tangnt ) then
+               if ( lmbtyp == tangnt ) then
 !
 !                 This type of solution finds actual tangent rays on
 !                 the target.
@@ -3046,7 +3046,7 @@
                   npts(i) = cardd( result )
 
 
-               else if ( lmbtyp .eq. guided ) then
+               else if ( lmbtyp == guided ) then
 !
 !                 This option uses the target's reference ellipsoid for
 !                 guidance. For DSK shapes, the limb points are
@@ -3110,7 +3110,7 @@
                end if
 
 
-            else if ( shape .eq. ellshp ) then
+            else if ( shape == ellshp ) then
 !
 !              This is the ellipsoid case.
 !
@@ -3174,7 +3174,7 @@
 
             total = total + npts(i)
 
-            if ( npts(i) .gt. room ) then
+            if ( npts(i) > room ) then
 
                call setmsg ( 'Out of room in output arrays. Index of ' &
                //            'cutting half-plane is # out of #. ' &
@@ -3210,7 +3210,7 @@
          end do
 
 
-      else if ( loccde .eq. ellcor ) then
+      else if ( loccde == ellcor ) then
 !
 !        Aberration corrections are done for each cutting half plane.
 !        Corrections are performed for the intersections of the
@@ -3219,14 +3219,14 @@
 !        This locus is supported only for the "tangent" limb point
 !        method.
 !
-         if ( lmbtyp .ne. tangnt ) then
+         if ( lmbtyp /= tangnt ) then
 
             call setmsg ( 'Limb type <#> is not supported for the ' &
             //            '# aberration correction locus. Only the ' &
             //            'TANGENT limb type is supported for this ' &
             //            'locus.'                                  )
 
-            if ( lmbtyp .eq. guided ) then
+            if ( lmbtyp == guided ) then
                call errch  ( '#',  'GUIDED' )
             else
                call errint ( '#',  lmbtyp )
@@ -3280,8 +3280,8 @@
                j     = 0
                lterr = 1.0_wp
 
-               do while (       ( j     .lt. numitr ) &
-                          .and. ( lterr .gt. cnvlim )  )
+               do while (       ( j     < numitr ) &
+                          .and. ( lterr > cnvlim )  )
 !
 !                 LT was set either prior to this loop or
 !                 during the previous loop iteration.
@@ -3306,7 +3306,7 @@
 !                    Apply a stellar aberration correction to the
 !                    observer-target center vector.
 !
-                     if ( j .eq. 0 ) then
+                     if ( j == 0 ) then
 !
 !                       On the first pass, we approximate the
 !                       correction by using the correction applicable
@@ -3382,7 +3382,7 @@
 !                 Make sure ENORML points into the same half-space as
 !                 AXIS.
 !
-                  if ( vdot( enorml, axis ) .lt. 0.0_wp ) then
+                  if ( vdot( enorml, axis ) < 0.0_wp ) then
 
                      call vsclip ( -1.0_wp, enorml )
 
@@ -3547,7 +3547,7 @@
 !              Make sure ENORML points into the same half-space as
 !              AXIS.
 !
-               if ( vdot( enorml, axis ) .lt. 0.0_wp ) then
+               if ( vdot( enorml, axis ) < 0.0_wp ) then
 
                   call vsclip ( -1.0_wp, enorml )
 
@@ -3615,7 +3615,7 @@
             npts(i) = 1
 
 
-            if ( shape .eq. dskshp ) then
+            if ( shape == dskshp ) then
 !
 !              Find the limb points on the target surface as modeled
 !              by DSK data. We'll use the axis and epoch we've
@@ -3642,7 +3642,7 @@
                npts(i) = cardd( result )
 
 
-            else if ( shape .ne. ellshp ) then
+            else if ( shape /= ellshp ) then
 
                call setmsg ( 'Backstop error: SHAPE = #.' )
                call errint ( '#', shape                   )
@@ -3655,7 +3655,7 @@
 
             total = total + npts(i)
 
-            if ( npts(i) .gt. room ) then
+            if ( npts(i) > room ) then
 
                call setmsg ( 'Out of room in output arrays. Index of ' &
                //            'cutting half-plane is # out of #. ' &

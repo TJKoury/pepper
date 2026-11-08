@@ -427,7 +427,7 @@
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      if ( re.le. 0.0_wp ) then
+      if ( re<= 0.0_wp ) then
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
@@ -441,7 +441,7 @@
 !     the length of the axis is zero. Either case is a problem, so
 !     signal an error and check out.
 !
-      if ( f .ge. 1 ) then
+      if ( f >= 1 ) then
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'         )
@@ -471,8 +471,8 @@
 !
 !     Compute longitude directly rather than from the normal vector.
 !
-      if (       ( rectan(1) .eq.0.0_wp ) &
-           .and. ( rectan(2) .eq.0.0_wp ) ) then
+      if (       ( rectan(1) ==0.0_wp ) &
+           .and. ( rectan(2) ==0.0_wp ) ) then
 
          lon = 0.0_wp
       else

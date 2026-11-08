@@ -231,7 +231,7 @@
 
       offdot = vdot( offset, seg )
 
-      if ( offdot .lt. 0.0_wp ) then
+      if ( offdot < 0.0_wp ) then
 !
 !        The nearest point on the line precedes the first endpoint.
 !        The closest point on the segment is the first endpoint.
@@ -248,7 +248,7 @@
 !
          segdot = vdot( seg, seg )
 
-         if ( offdot .gt. segdot ) then
+         if ( offdot > segdot ) then
 !
 !           The nearest point on the line follows the last endpoint.
 !           The closest point on the segment is the last endpoint.

@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         catnam
+      character(*)          catnam
       real(wp)              westra
       real(wp)              eastra
       real(wp)              sthdec
@@ -243,10 +243,10 @@
 !
 !     Local variables
 !
-      character*(errlen)    errmsg
-      character*(qrylen)    query
-      character*(qrylen)    qrytm1
-      character*(qrylen)    qrytm2
+      character(errlen)     errmsg
+      character(qrylen)     query
+      character(qrylen)     qrytm1
+      character(qrylen)     qrytm2
 
       real(wp)              ramin
       real(wp)              ramax
@@ -289,7 +289,7 @@
 !
 !     Choose query template to be used.
 !
-      if ( westra .le. eastra ) then
+      if ( westra <= eastra ) then
          query = qrytm1
       else
          query = qrytm2

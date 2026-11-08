@@ -387,7 +387,7 @@
 !
 !     Check to make sure that the segment is type 2.
 !
-      if ( icd( 3 ) .ne. dtype ) then
+      if ( icd( 3 ) /= dtype ) then
 
          call setmsg ( 'The segment is not a type 2 segment.  ' // &
                        'Type is #'                                 )
@@ -455,7 +455,7 @@
 !
 !     There is only one group if there are no directory epochs.
 !
-      if ( ndir .eq. 0 ) then
+      if ( ndir == 0 ) then
          group = 1
 
       else
@@ -500,11 +500,11 @@
 !
             i = lstled( sclkdp, n, buffer )
 
-            if ( i .lt. n ) then
+            if ( i < n ) then
                group =  group + i + 1
                fnd   = .true.
 
-            else if ( remain .eq. 0 ) then
+            else if ( remain == 0 ) then
                group =  ndir + 1
                fnd   = .true.
 
@@ -577,9 +577,9 @@
 !     If SCLKDP is less than the first time in BUFFER then check to see
 !     if we want the first START time in the group.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 
-         if ( ( sclkdp + tol ) .ge. buffer(1) ) then
+         if ( ( sclkdp + tol ) >= buffer(1) ) then
 
             found  = .true.
             start  =  buffer(1)
@@ -603,7 +603,7 @@
 
          call dafgda ( handle, stploc, stploc, stopi )
 
-         if ( sclkdp .le. stopi )  then
+         if ( sclkdp <= stopi )  then
 
             found  = .true.
             start  =  buffer(i)
@@ -620,9 +620,9 @@
 !           If I = N then we need to consider only the STOP time
 !           because of the way that the directory is constructed.
 !
-            if ( i .eq. n ) then
+            if ( i == n ) then
 
-               if ( ( sclkdp - tol ) .le. stopi ) then
+               if ( ( sclkdp - tol ) <= stopi ) then
 
                   found  = .true.
                   start  =  buffer(i)
@@ -645,14 +645,14 @@
                diff1 = sclkdp      - stopi
                diff2 = buffer(i+1) - sclkdp
 
-               if ( min ( diff1, diff2 ) .le. tol ) then
+               if ( min ( diff1, diff2 ) <= tol ) then
 
                   found = .true.
 !
 !                 Notice that if the request time is equidistant from
 !                 the STOP and START time the START time will be chosen.
 !
-                  if ( diff2 .le. diff1 ) then
+                  if ( diff2 <= diff1 ) then
 
                      start  = buffer(i+1)
                      clkout = buffer(i+1)

@@ -300,7 +300,7 @@
 !
 !     Local variables
 !
-      character*(lmsgln)    errmsg
+      character(lmsgln)     errmsg
 
       real(wp)              a
       real(wp)              apex   ( 3 )
@@ -446,7 +446,7 @@
       a = vnorm ( smajor )
       b = vnorm ( sminor )
 
-      if ( b .eq. 0.0_wp ) then
+      if ( b == 0.0_wp ) then
 
          call setmsg ( 'Scaled ellipse''s semi-minor axis length = 0.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
@@ -472,7 +472,7 @@
 !
 !     There must be at least three boundary vectors.
 !
-      if ( n .lt. 3 ) then
+      if ( n < 3 ) then
 
          call setmsg ( 'The number of boundary vectors was #; ' // &
                        'this number must be at least 3.'        )
@@ -486,7 +486,7 @@
 !
 !     There must be no more than MAXFOV boundary vectors.
 !
-      if ( n .gt. maxfov ) then
+      if ( n > maxfov ) then
 
          call setmsg ( 'The number of boundary vectors was #; ' // &
                        'this number must not exceed #.'         )
@@ -525,7 +525,7 @@
 !
          asep = vsep ( axis, bounds(1,i) )
 
-         if ( asep .ge. pi()/2  ) then
+         if ( asep >= pi()/2  ) then
 
             call setmsg ( 'The angular separation of boundary '   // &
                           'vector # from the axis is #. This '    // &
@@ -544,7 +544,7 @@
 !        Each boundary vector must have non-zero angular separation
 !        from its neighbors.
 !
-         if ( i .lt. n ) then
+         if ( i < n ) then
             j  = i + 1
          else
             j  = 1
@@ -607,7 +607,7 @@
 !
       d  =  vdist ( center, apex )
 
-      if ( a .lt. d ) then
+      if ( a < d ) then
 
          easize  =  asin ( a / d )
 
@@ -624,7 +624,7 @@
 !
          consep = vsep ( ctrvec, axis )  -  ( easize + pasize )
 
-         if ( consep .gt. 0.0_wp ) then
+         if ( consep > 0.0_wp ) then
 
             call chkout ( 'ZZELVUPY' )
             return
@@ -647,7 +647,7 @@
 !     The center of the ellipse must lie in the correct half-space
 !     for this test to be applicable.
 !
-      if (  vdot( axis, ctrvec ) .gt. 0.0_wp ) then
+      if (  vdot( axis, ctrvec ) > 0.0_wp ) then
 !
 !        Construct the plane and find the polygon.
 !
@@ -666,7 +666,7 @@
 !           We expect to have a single point of intersection for each
 !           boundary vector.
 !
-            if ( nxpts .ne. 1 ) then
+            if ( nxpts /= 1 ) then
 
                call setmsg ( 'NXPTS = # for boundary vector #/FOV ' // &
                              'plane intersection.'                  )
@@ -686,7 +686,7 @@
 !        the polygon about the ellipse center is non-zero, we conclude
 !        the center is in the pyramid.
 !
-         if (   zzwind( fovpln, n, work, ctrvec )  .ne.  0 ) then
+         if (   zzwind( fovpln, n, work, ctrvec )  /=  0 ) then
 !
 !           The center of the ellipse is inside the pyramid.  We're
 !           done.
@@ -726,7 +726,7 @@
 !     and plane.  If the value is 1, the boundary ray may intersect
 !     the region bounded by the ellipse.
 !
-      if ( nxpts .eq. 1 ) then
+      if ( nxpts == 1 ) then
 !
 !        The boundary ray intersects the plane of the ellipse in a
 !        single point. Decide whether this point is inside the ellipse.
@@ -751,7 +751,7 @@
          x  =  vdot  ( offset, smajor ) / a
          y  =  vdot  ( offset, sminor ) / b
 
-         if (  ( (x/a)**2.0_wp  +  (y/b)**2.0_wp ) .le.  1.0_wp  ) then
+         if (  ( (x/a)**2.0_wp  +  (y/b)**2.0_wp ) <=  1.0_wp  ) then
 !
 !           The boundary-vector-plane intercept lies in the
 !           topologically closed region bounded by the ellipse.
@@ -776,12 +776,12 @@
 !
       i  =  1
 
-      do while (  ( i .le. n ) .and. ( .not. found )  )
+      do while (  ( i <= n ) .and. ( .not. found )  )
 !
 !        Create a SPICELIB plane containing the Ith side of the
 !        pyramid.
 !
-         if ( i .lt. n ) then
+         if ( i < n ) then
             j  = i + 1
          else
             j  = 1
@@ -804,7 +804,7 @@
 !        whether it has non-empty intersection with the current side of
 !        the pyramid.
 !
-         if ( nxpts .gt. 0 ) then
+         if ( nxpts > 0 ) then
 !
 !           Let EDGE1 and EDGE2 be the unit length boundary vectors
 !           forming the edges of the currently considered side of the
@@ -890,19 +890,19 @@
 !              Case 3:  VBSCTR lies between EDGE1 and EDGE2.
 !              Case 4:  EBSCTR lies between VXPT1 and VXPT2.
 !
-            if      ( vsep(vxpt1,  ebsctr) .le. hafedg ) then
+            if      ( vsep(vxpt1,  ebsctr) <= hafedg ) then
 
                found = .true.
 
-            else if ( vsep(vxpt2,  ebsctr) .le. hafedg ) then
+            else if ( vsep(vxpt2,  ebsctr) <= hafedg ) then
 
                found = .true.
 
-            else if ( vsep(vbsctr, ebsctr) .le. hafedg ) then
+            else if ( vsep(vbsctr, ebsctr) <= hafedg ) then
 
                found = .true.
 
-            else if ( vsep(ebsctr, vbsctr) .le. hafsec ) then
+            else if ( vsep(ebsctr, vbsctr) <= hafsec ) then
 
                found = .true.
 

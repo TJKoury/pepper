@@ -41,14 +41,14 @@
 
       integer(ip)           handle
       integer(ip)           recno
-      character*(*)         recc
+      character(*)          recc
       real(wp)              recd    ( nwd )
       integer(ip)           reci    ( nwi )
       integer(ip)           first
       integer(ip)           last
       real(wp)              datad   ( * )
       integer(ip)           datai   ( * )
-      character*(*)         datac
+      character(*)          datac
 
       integer(ip)           bufszd
       parameter           ( bufszd = 10 )
@@ -334,7 +334,7 @@
 !      +---+      +------------+    +---+    +---+    +---+
 !
 !
-      character*(nwc)       rcbufc (      bufszc )
+      character(nwc)        rcbufc (      bufszc )
       real(wp)              rcbufd ( nwd, bufszd )
       integer(ip)           rcbufi ( nwi, bufszi )
 
@@ -646,10 +646,10 @@
 !
 !     Check FIRST and LAST.  Use discovery check-in.
 !
-      if (        ( first .lt. 1   ) &
-            .or.  ( first .gt. nwd ) &
-            .or.  ( last  .lt. 1   ) &
-            .or.  ( last  .gt. nwd )    )  then
+      if (        ( first < 1   ) &
+            .or.  ( first > nwd ) &
+            .or.  ( last  < 1   ) &
+            .or.  ( last  > nwd )    )  then
 
          call chkin  ( 'DASRRD' )
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
@@ -671,7 +671,7 @@
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
          return
       end if
 
@@ -683,15 +683,15 @@
 !
       node = headd
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufd(node)  ) &
-               .and.  (  recno  .eq. rnbufd(node)  )    )  then
+         if (         (  handle == hnbufd(node)  ) &
+               .and.  (  recno  == rnbufd(node)  )    )  then
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
 !
-            if ( node .ne. headd ) then
+            if ( node /= headd ) then
 
                call lnkxsl ( node, node,  poold )
                call lnkilb ( node, headd, poold )
@@ -703,7 +703,7 @@
 !
 !           Don't forget to return the requested data.
 !
-            if ( first .eq. last ) then
+            if ( first == last ) then
 
                datad(1) = rcbufd( first, node )
 
@@ -735,7 +735,7 @@
 !
       call chkin ( 'DASRRD' )
 
-      if (  usedd .eq. bufszd ) then
+      if (  usedd == bufszd ) then
 !
 !        Grab the buffer entry at the tail end of the list.
 !
@@ -1033,10 +1033,10 @@
 !
 !     Check FIRST and LAST.  Use discovery check-in.
 !
-      if (        ( first .lt. 1   ) &
-            .or.  ( first .gt. nwi ) &
-            .or.  ( last  .lt. 1   ) &
-            .or.  ( last  .gt. nwi )    )  then
+      if (        ( first < 1   ) &
+            .or.  ( first > nwi ) &
+            .or.  ( last  < 1   ) &
+            .or.  ( last  > nwi )    )  then
 
          call chkin  ( 'DASRRI'      )
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
@@ -1058,7 +1058,7 @@
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
          return
       end if
 
@@ -1070,16 +1070,16 @@
 !
       node = headi
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufi(node)  ) &
-               .and.  (  recno  .eq. rnbufi(node)  )    )  then
+         if (         (  handle == hnbufi(node)  ) &
+               .and.  (  recno  == rnbufi(node)  )    )  then
 !
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
 !
-            if ( node .ne. headi ) then
+            if ( node /= headi ) then
 
                call lnkxsl ( node, node,  pooli )
                call lnkilb ( node, headi, pooli )
@@ -1091,7 +1091,7 @@
 !
 !           Don't forget to return the requested data.
 !
-            if ( first .eq. last ) then
+            if ( first == last ) then
 
                datai(1) = rcbufi( first, node )
 
@@ -1123,7 +1123,7 @@
 !
       call chkin ( 'DASRRI' )
 
-      if (  usedi .eq. bufszi ) then
+      if (  usedi == bufszi ) then
 !
 !        Grab the buffer entry at the tail end of the list.
 !
@@ -1410,10 +1410,10 @@
 !
 !     Check FIRST and LAST.  Use discovery check-in.
 !
-      if (        ( first .lt. 1   ) &
-            .or.  ( first .gt. nwc ) &
-            .or.  ( last  .lt. 1   ) &
-            .or.  ( last  .gt. nwc )    )  then
+      if (        ( first < 1   ) &
+            .or.  ( first > nwc ) &
+            .or.  ( last  < 1   ) &
+            .or.  ( last  > nwc )    )  then
 
          call chkin  ( 'DASRRC' )
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
@@ -1435,7 +1435,7 @@
 !     There's nothing to do if LAST < FIRST.  (We're not checked in at
 !     this point.)
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
          return
       end if
 
@@ -1447,16 +1447,16 @@
 !
       node = headc
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufc(node)  ) &
-               .and.  (  recno  .eq. rnbufc(node)  )    )  then
+         if (         (  handle == hnbufc(node)  ) &
+               .and.  (  recno  == rnbufc(node)  )    )  then
 !
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
 !
-            if ( node .ne. headc ) then
+            if ( node /= headc ) then
 
                call lnkxsl ( node, node,  poolc )
                call lnkilb ( node, headc, poolc )
@@ -1492,7 +1492,7 @@
 !
       call chkin ( 'DASRRC' )
 
-      if (  usedc .eq. bufszc ) then
+      if (  usedc == bufszc ) then
 !
 !        Grab the buffer entry at the tail end of the list.
 !
@@ -1788,10 +1788,10 @@
 !
       node = headd
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufd(node)  ) &
-               .and.  (  recno  .eq. rnbufd(node)  )    )  then
+         if (         (  handle == hnbufd(node)  ) &
+               .and.  (  recno  == rnbufd(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
@@ -1807,7 +1807,7 @@
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            if ( node .ne. headd ) then
+            if ( node /= headd ) then
 
                call lnkxsl ( node, node,  poold )
                call lnkilb ( node, headd, poold )
@@ -1831,7 +1831,7 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      if ( usedd .lt. bufszd ) then
+      if ( usedd < bufszd ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
@@ -2114,10 +2114,10 @@
 !
       node = headi
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufi(node)  ) &
-               .and.  (  recno  .eq. rnbufi(node)  )    )  then
+         if (         (  handle == hnbufi(node)  ) &
+               .and.  (  recno  == rnbufi(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
@@ -2133,7 +2133,7 @@
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            if ( node .ne. headi ) then
+            if ( node /= headi ) then
 
                call lnkxsl ( node, node,  pooli )
                call lnkilb ( node, headi, pooli )
@@ -2157,7 +2157,7 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      if ( usedi .lt. bufszi ) then
+      if ( usedi < bufszi ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
@@ -2442,10 +2442,10 @@
 !
       node = headc
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufc(node)  ) &
-               .and.  (  recno  .eq. rnbufc(node)  )    )  then
+         if (         (  handle == hnbufc(node)  ) &
+               .and.  (  recno  == rnbufc(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
@@ -2461,7 +2461,7 @@
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            if ( node .ne. headc ) then
+            if ( node /= headc ) then
 
                call lnkxsl ( node, node,  poolc )
                call lnkilb ( node, headc, poolc )
@@ -2485,7 +2485,7 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      if ( usedc .lt. bufszc ) then
+      if ( usedc < bufszc ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
@@ -2794,10 +2794,10 @@
 !
 !     If FIRST or LAST are out of range, no dice.
 !
-      if (        ( first .lt. 1   ) &
-            .or.  ( first .gt. nwd ) &
-            .or.  ( last  .lt. 1   ) &
-            .or.  ( last  .gt. nwd )    )  then
+      if (        ( first < 1   ) &
+            .or.  ( first > nwd ) &
+            .or.  ( last  < 1   ) &
+            .or.  ( last  > nwd )    )  then
 
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
@@ -2817,7 +2817,7 @@
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
          call chkout ( 'DASURD' )
          return
       end if
@@ -2832,10 +2832,10 @@
 !
       node = headd
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufd(node)  ) &
-               .and.  (  recno  .eq. rnbufd(node)  )    )  then
+         if (         (  handle == hnbufd(node)  ) &
+               .and.  (  recno  == rnbufd(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
@@ -2851,7 +2851,7 @@
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            if ( node .ne. headd ) then
+            if ( node /= headd ) then
 
                call lnkxsl ( node, node,  poold )
                call lnkilb ( node, headd, poold )
@@ -2876,7 +2876,7 @@
 !     record.  Before using this record, we'll write its contents out
 !     to the corresponding file, if the record has been updated.
 !
-      if ( usedd .lt. bufszd ) then
+      if ( usedd < bufszd ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
@@ -3200,10 +3200,10 @@
 !
 !     If FIRST or LAST are out of range, no dice.
 !
-      if (        ( first .lt. 1   ) &
-            .or.  ( first .gt. nwi ) &
-            .or.  ( last  .lt. 1   ) &
-            .or.  ( last  .gt. nwi )    )  then
+      if (        ( first < 1   ) &
+            .or.  ( first > nwi ) &
+            .or.  ( last  < 1   ) &
+            .or.  ( last  > nwi )    )  then
 
          call setmsg ( 'Array indices FIRST and LAST were #,  #; '    // &
                        'allowed range for both is [#, #]. File was '  // &
@@ -3223,7 +3223,7 @@
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
          call chkout ( 'DASURI' )
          return
       end if
@@ -3238,10 +3238,10 @@
 !
       node = headi
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufi(node)  ) &
-               .and.  (  recno  .eq. rnbufi(node)  )    )  then
+         if (         (  handle == hnbufi(node)  ) &
+               .and.  (  recno  == rnbufi(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
@@ -3257,7 +3257,7 @@
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            if ( node .ne. headi ) then
+            if ( node /= headi ) then
 
                call lnkxsl ( node, node,  pooli )
                call lnkilb ( node, headi, pooli )
@@ -3281,7 +3281,7 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      if ( usedi .lt. bufszi ) then
+      if ( usedi < bufszi ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
@@ -3609,10 +3609,10 @@
 !
 !     If FIRST or LAST are out of range, no dice.
 !
-      if (        ( first .lt. 1   ) &
-            .or.  ( first .gt. nwc ) &
-            .or.  ( last  .lt. 1   ) &
-            .or.  ( last  .gt. nwc )    )  then
+      if (        ( first < 1   ) &
+            .or.  ( first > nwc ) &
+            .or.  ( last  < 1   ) &
+            .or.  ( last  > nwc )    )  then
 
          call setmsg ( 'String indices FIRST and LAST were #,  #; '   // &
                        'allowed range for both is [#, #]. File was '  // &
@@ -3632,7 +3632,7 @@
 !
 !     There's nothing to do if LAST < FIRST.
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
          call chkout ( 'DASURC' )
          return
       end if
@@ -3647,10 +3647,10 @@
 !
       node = headc
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if (         (  handle .eq. hnbufc(node)  ) &
-               .and.  (  recno  .eq. rnbufc(node)  )    )  then
+         if (         (  handle == hnbufc(node)  ) &
+               .and.  (  recno  == rnbufc(node)  )    )  then
 !
 !           Found it.  Update the buffered record.
 !
@@ -3666,7 +3666,7 @@
 !           Put the information about this record at the head of the
 !           active list, if it is not already there.
 !
-            if ( node .ne. headc ) then
+            if ( node /= headc ) then
 
                call lnkxsl ( node, node,  poolc )
                call lnkilb ( node, headc, poolc )
@@ -3690,7 +3690,7 @@
 !     this record, we'll write its contents out to the corresponding
 !     file, if the record has been updated.
 !
-      if ( usedc .lt. bufszc ) then
+      if ( usedc < bufszc ) then
 !
 !        There's a free buffer entry available.  Just allocate it.
 !
@@ -4261,9 +4261,9 @@
 !
       node = headd
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if ( handle .eq. hnbufd(node) ) then
+         if ( handle == hnbufd(node) ) then
 !
 !           This record belongs to the file of interest, so write the
 !           the record out.
@@ -4287,7 +4287,7 @@
 !
             next = poold ( forwrd, node )
 
-            if ( node .eq. headd ) then
+            if ( node == headd ) then
                headd = next
             end if
 
@@ -4313,9 +4313,9 @@
 !
       node = headi
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if ( handle .eq. hnbufi(node) ) then
+         if ( handle == hnbufi(node) ) then
 !
 !           This record belongs to the file of interest, so write the
 !           the record out.
@@ -4339,7 +4339,7 @@
 !
             next = pooli ( forwrd, node )
 
-            if ( node .eq. headi ) then
+            if ( node == headi ) then
                headi = next
             end if
 
@@ -4365,9 +4365,9 @@
 !
       node = headc
 
-      do while ( node .gt. 0 )
+      do while ( node > 0 )
 
-         if ( handle .eq. hnbufc(node) ) then
+         if ( handle == hnbufc(node) ) then
 !
 !           This record belongs to the file of interest, so write the
 !           the record out.
@@ -4391,7 +4391,7 @@
 !
             next = poolc ( forwrd, node )
 
-            if ( node .eq. headc ) then
+            if ( node == headc ) then
                headc = next
             end if
 

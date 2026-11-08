@@ -31,10 +31,10 @@
       include              'zzctr.inc'
 
       integer(ip)           usrctr    ( ctrsiz )
-      character*(*)         savnam
+      character(*)          savnam
       integer(ip)           savcde
       logical               savfnd
-      character*(*)         name
+      character(*)          name
       integer(ip)           code
       logical               found
 
@@ -271,7 +271,7 @@
 !
       if ( .not. update     .and. &
            savfnd           .and. &
-           savnam .eq. name      ) then
+           savnam == name      ) then
 
 !
 !        No change in body-name mapping state, the saved name was

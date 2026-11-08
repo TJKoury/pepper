@@ -29,9 +29,9 @@
       integer(ip)           handle
       integer(ip)           segno
       integer(ip)           recno
-      character*(*)         column
+      character(*)          column
       integer(ip)           nvals
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       logical               isnull
 
 ! $ Brief_I/O
@@ -489,7 +489,7 @@
 !
       dtype  =  coldsc(typidx)
 
-      if ( dtype .ne. chr ) then
+      if ( dtype /= chr ) then
 
          call chkin  ( 'EKUCEC'                                        )
          call setmsg ( 'Column # is of type #; EKUCEC only works '    // &
@@ -531,14 +531,14 @@
       class  =  coldsc ( clsidx )
 
 
-      if ( class .eq. 3 ) then
+      if ( class == 3 ) then
 !
 !        Class 3 columns contain scalar character data.
 !
          call zzekue03 ( handle, segdsc, coldsc, recptr, cvals, isnull )
 
 
-      else if ( class .eq. 6 ) then
+      else if ( class == 6 ) then
 !
 !        Class 6 columns contain array-valued character data.
 !

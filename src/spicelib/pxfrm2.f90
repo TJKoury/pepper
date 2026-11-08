@@ -24,8 +24,8 @@
 
       include               'zzctr.inc'
 
-      character*(*)         from
-      character*(*)         to
+      character(*)          from
+      character(*)          to
       real(wp)              etfrom
       real(wp)              etto
       real(wp)              rotate  ( 3, 3 )
@@ -604,11 +604,11 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(frnmln)    svfrom
+      character(frnmln)     svfrom
       integer(ip)           svfcod
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(frnmln)    svto
+      character(frnmln)     svto
       integer(ip)           svtcde
 
       logical               first
@@ -666,7 +666,7 @@
 !     Only non-zero ID codes are legitimate frame ID codes.  Zero
 !     indicates that the frame was not recognized.
 !
-      if      ( (fcode .ne. 0) .and. (tcode .ne. 0) ) then
+      if      ( (fcode /= 0) .and. (tcode /= 0) ) then
 
 !
 !        The following three lines of code calculate the following:
@@ -684,7 +684,7 @@
          call refchg ( jcode, tcode, etto,   tj )
          call mxm    ( tj,    jf,    rotate     )
 
-      else if ( (fcode .eq. 0) .and. (tcode .eq. 0) ) then
+      else if ( (fcode == 0) .and. (tcode == 0) ) then
 
          call setmsg ( 'Neither frame # nor # was ' &
          //            'recognized as a known reference frame. ' )
@@ -692,7 +692,7 @@
          call errch  ( '#', to   )
          call sigerr ( 'SPICE(UNKNOWNFRAME)'  )
 
-      else if   (fcode .eq. 0) then
+      else if   (fcode == 0) then
 
          call setmsg ( 'The frame # was not recognized as a ' &
          //            'known reference frame. ' )

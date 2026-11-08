@@ -25,9 +25,9 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           unit
-      character*(*)         name
-      character*(*)         dirctv
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          dirctv
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
 
@@ -168,23 +168,23 @@
 !
 !     Local variables
 !
-      character*1           blank
+      character(1)          blank
       parameter           ( blank = ' '    )
 
-      character*1           lparen
+      character(1)          lparen
       parameter           ( lparen = '('   )
 
-      character*3           rparen
+      character(3)          rparen
       parameter           ( rparen = '  )' )
 
-      character*2           comma
+      character(2)          comma
       parameter           ( comma  = ','   )
 
       integer(ip)           varlen
       integer(ip)           margin
       integer(ip)           vardim
 
-      character*132         line
+      character(132)        line
       real(wp)              dvalue
 
       logical               found
@@ -221,12 +221,12 @@
 !        an optional left parenthesis, and the first value. The values
 !        of a multi-dimensional variable are separated by commas.
 !
-         if ( i .eq. 1 ) then
+         if ( i == 1 ) then
 
             call ljust ( name,   line                    )
             call rjust ( dirctv, line(margin-4:margin-3) )
 
-            if ( vardim .gt. 1 ) then
+            if ( vardim > 1 ) then
 
                line(margin-1:margin-1) = lparen
                write (unit,*,iostat=iostat) line(1:margin), dvalue, &
@@ -243,7 +243,7 @@
 !        The last line of a multi-dimensional variable ends with a
 !        right parenthesis.
 !
-         else if ( i .gt. 1  .and.  i .eq. vardim ) then
+         else if ( i > 1  .and.  i == vardim ) then
 
             line = ' '
             write (unit,*,iostat=iostat) line(1:margin), dvalue, rparen
@@ -257,7 +257,7 @@
 
       end do
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
          call ioerr ( 'writing a variable to the output kernel file', &
                       ' ', &
                       iostat                                          )

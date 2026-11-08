@@ -258,7 +258,7 @@
 !
 !     Is the item in the set? If so, it needs to be removed.
 !
-      in = ( loc .gt. 0 )
+      in = ( loc > 0 )
 
       if ( in ) then
 

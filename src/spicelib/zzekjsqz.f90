@@ -220,7 +220,7 @@
          call zzeksrd ( cntloc, cntloc, rc )
 
 
-         if ( rc .gt. 0 ) then
+         if ( rc > 0 ) then
 !
 !           The row vector set for this segment vector is non-empty.
 !           scan the rows, looking for those marked for deletion, and
@@ -237,7 +237,7 @@
 
                call zzeksrd ( rbase+1, rbase+1, rowvec(1) )
 
-               if ( rowvec(1) .eq. 0 ) then
+               if ( rowvec(1) == 0 ) then
                   nrvdel = nrvdel + 1
                end if
 
@@ -251,7 +251,7 @@
          svbase  =  jrsbas + jsvbas + (i-1)*svsize
 
 
-         if (  ( rc .eq. 0 ) .or. ( nrvdel .eq. rc )  ) then
+         if (  ( rc == 0 ) .or. ( nrvdel == rc )  ) then
 !
 !           We're going to delete the current segment vector.  We'll
 !           just skip over it without advancing our target pointers.
@@ -259,7 +259,7 @@
             nsvdel   =  nsvdel + 1
 
 
-         else if ( nsvdel .gt. 0 ) then
+         else if ( nsvdel > 0 ) then
 !
 !           We need to shift the current segment vector to its
 !           destination.
@@ -290,7 +290,7 @@
 !
 !     We need to do this only if we deleted some segment vectors.
 !
-      if ( nsvdel .gt. 0 ) then
+      if ( nsvdel > 0 ) then
 
          newnsv =  nsv    - nsvdel
          ptarg  =  jrsbas + jsvbas + (newnsv)*svsize
@@ -306,7 +306,7 @@
 
             ptbase  =  cntloc - 2
 
-            if ( rc .gt. 0 ) then
+            if ( rc > 0 ) then
 !
 !              Shift the current row vector pointer and row vector
 !              count.
@@ -381,7 +381,7 @@
 
             call zzeksrd  ( rbase+1, rbase+rvsize, rowvec )
 
-            if ( rowvec(1) .eq. 0 ) then
+            if ( rowvec(1) == 0 ) then
 !
 !              This row vector is to be deleted; don't copy it.
 !
@@ -410,7 +410,7 @@
 !        already eliminated any segment vectors for which that
 !        could happen, before we entered this loop.
 !
-         if ( nrvdel .gt. 0 ) then
+         if ( nrvdel > 0 ) then
             call zzeksupd (  cntloc,  cntloc,  rc - nrvdel  )
          end if
 

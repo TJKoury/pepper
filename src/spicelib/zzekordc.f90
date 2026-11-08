@@ -20,7 +20,7 @@
 !
 ! $ Declarations
 
-      character*(*)         cvals  ( * )
+      character(*)          cvals  ( * )
       logical               nullok
       logical               nlflgs ( * )
       integer(ip)           nvals
@@ -197,12 +197,12 @@
 
 
       cmp1 ( le1, eq1, i1, i2 )   =         ( le1                      ) &
-                                       .or. ( eq1 .and. ( i1 .lt. i2 ) )
+                                       .or. ( eq1 .and. ( i1 < i2 ) )
 
 
       cmp2 ( i1, i2, n1, n2 )     =         ( n1 .and. .not. n2  ) &
                                        .or. (      ( n1 .and. n2 ) &
-                                             .and. ( i1 .lt.  i2 ) )
+                                             .and. ( i1 <  i2 ) )
 
       cmp3 ( le1, eq1, i1, i2, n1, n2 )  =   ( .not. ( n1 .or. n2 ) ) &
                                                .and. &
@@ -235,21 +235,21 @@
 !
       gap = nvals / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, nvals
 
 
             j = i - gap
 
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
 
                jg    =   j + gap
 
                le1  =   lle (   cvals ( iorder(j)  ), &
                                 cvals ( iorder(jg) )   )
 
-               eq1  =   cvals ( iorder(j) ) .eq.  cvals ( iorder(jg) )
+               eq1  =   cvals ( iorder(j) ) ==  cvals ( iorder(jg) )
 
                if (   le (   le1, &
                              eq1, &

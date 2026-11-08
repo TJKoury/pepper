@@ -23,10 +23,10 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           nth
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
-      character*(*)         name
+      character(*)          name
       logical               found
 
 ! $ Brief_I/O
@@ -184,7 +184,7 @@
 !
 !     If the value of NTH is out of range, that's a problem.
 !
-      if ( nth .lt. 1  .or.  nth .gt. nsym ) then
+      if ( nth < 1  .or.  nth > nsym ) then
 
          found = .false.
 

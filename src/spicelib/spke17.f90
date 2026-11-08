@@ -234,7 +234,7 @@
 !     going on in this routine so that the small amount of overhead
 !     here should not be significant.
 !
-      if ( a .le. 0 ) then
+      if ( a <= 0 ) then
 
          call setmsg ( 'The semi-major axis supplied to the ' &
          //            'SPK type 17 evaluator was non-positive.  This ' &
@@ -245,7 +245,7 @@
          call chkout ( 'SPKE17'                )
          return
 
-      else if ( ecc .gt. 0.9_wp ) then
+      else if ( ecc > 0.9_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 17 ' &
          //            'segment is greater than 0.9.  It must be ' &

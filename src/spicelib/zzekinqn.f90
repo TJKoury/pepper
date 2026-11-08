@@ -147,7 +147,7 @@
 !
       call zzekreqi ( eqryi, 'INITIALIZED', init )
 
-      if ( init .ne. itrue ) then
+      if ( init /= itrue ) then
 
          call chkin  ( 'ZZEKINQN'                                    )
          call setmsg ( 'Encoded query must be initialized before it ' // &
@@ -166,7 +166,7 @@
 
       room  =  size - free + 1
 
-      if ( room .le. 0 ) then
+      if ( room <= 0 ) then
 
          call chkin  ( 'ZZEKINQN'                                    )
          call setmsg ( 'Out of room in numeric portion of encoded ' // &

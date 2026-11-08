@@ -1,6 +1,6 @@
 !> Constants. These replace SPICELIB's constant functions (``pi()``,
 !> ``dpr()``, ``spd()``, ...): new code uses the named constants directly.
-!> The functions remain, for existing callers, in pepper_legacy_constants.f90.
+!> The functions remain, for existing callers, in src/legacy/pepper_legacy_constants.f90.
 !> The values are the ones the SPICELIB functions return.
 module pepper_constants
 

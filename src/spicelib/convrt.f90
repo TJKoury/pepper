@@ -23,8 +23,8 @@
       implicit none
 
       real(wp) x
-      character*(*)    in
-      character*(*)    out
+      character(*)     in
+      character(*)     out
       real(wp) y
 
 ! $ Brief_I/O
@@ -218,8 +218,8 @@
 !
 !     Local variables
 !
-      character*16     inu
-      character*16     outu
+      character(16)    inu
+      character(16)    outu
 
 
 
@@ -269,13 +269,13 @@
       integer(ip)      total
       parameter      ( total = tme + 7  )
 
-      character*16     units  (total)
+      character(16)    units  (total)
       save             units
 
       real(wp) cnvrtn (total)
       save             cnvrtn
 
-      character*8      type   (total)
+      character(8)     type   (total)
       save             type
 
       logical          first
@@ -469,11 +469,11 @@
       i    = isrchc( inu,  total, units )
       j    = isrchc( outu, total, units )
 
-      if (      ( i .eq. 0 ) &
-           .or. ( j.eq. 0 ) ) then
+      if (      ( i == 0 ) &
+           .or. ( j== 0 ) ) then
 
-         if (       ( i .eq. 0 ) &
-              .and. ( j .eq. 0 ) ) then
+         if (       ( i == 0 ) &
+              .and. ( j == 0 ) ) then
 
 
             call setmsg ('CONVRT: Neither the input units ' // inu  // &
@@ -486,7 +486,7 @@
             call chkout ( 'CONVRT' )
             return
 
-         else if ( i .eq. 0 ) then
+         else if ( i == 0 ) then
 
             call setmsg ('CONVRT: Input units '// inu // &
                          ' were not recognized' &
@@ -497,7 +497,7 @@
             call chkout ( 'CONVRT' )
             return
 
-         else if ( j .eq. 0 ) then
+         else if ( j == 0 ) then
 
             call setmsg ('CONVRT: Output units '// outu // &
                          ' were not recognized' &
@@ -512,7 +512,7 @@
 
       end if
 
-      if ( type(i) .ne. type(j) ) then
+      if ( type(i) /= type(j) ) then
 
          call setmsg ('CONVRT: Incompatible units. '   // &
                       'You are attempting to convert ' // &

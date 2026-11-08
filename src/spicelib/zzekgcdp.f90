@@ -137,7 +137,7 @@
       ncols  =  segdsc ( ncidx  )
       colidx =  coldsc ( ordidx )
 
-      if (  ( colidx .lt. 1 ) .or. ( colidx .gt. ncols )  ) then
+      if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
 

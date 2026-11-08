@@ -21,10 +21,10 @@
 
       include              'zzftprms.inc'
 
-      character*(*)         tstcom
-      character*(*)         lend
-      character*(*)         rend
-      character*(*)         delim
+      character(*)          tstcom
+      character(*)          lend
+      character(*)          rend
+      character(*)          delim
 
 ! $ Brief_I/O
 !
@@ -256,21 +256,21 @@
 !
 !     Local Variables
 !
-      character*(sizdlm)    locdlm
-      character*(sizend)    loclnd
-      character*(sizend)    locrnd
-      character*(sizstr)    locstr
-      character*(siztsq)    testsq ( numtst )
+      character(sizdlm)     locdlm
+      character(sizend)     loclnd
+      character(sizend)     locrnd
+      character(sizstr)     locstr
+      character(siztsq)     testsq ( numtst )
 
 !
 !     Non-printing character values.
 !
-      character*(1)         asc000
-      character*(1)         asc010
-      character*(1)         asc013
-      character*(1)         asc016
-      character*(1)         asc129
-      character*(1)         asc206
+      character(1)          asc000
+      character(1)          asc010
+      character(1)          asc013
+      character(1)          asc016
+      character(1)          asc129
+      character(1)          asc206
 
       integer(ip)           i
 

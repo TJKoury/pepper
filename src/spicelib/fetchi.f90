@@ -192,7 +192,7 @@
 !
 !     Check to see if the N'TH element exists.
 !
-      if ( nth .lt. 1  .or.  nth .gt. cardi ( set ) ) then
+      if ( nth < 1  .or.  nth > cardi ( set ) ) then
          fetchi = 0
          call setmsg ( 'NTH element does not exist. NTH was *.' )
          call errint ( '*', nth              )

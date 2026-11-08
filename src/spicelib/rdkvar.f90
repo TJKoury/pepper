@@ -24,10 +24,10 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       real(wp)              tabval     ( lbcell:* )
-      character*(*)         name
+      character(*)          name
       logical               eof
 
       integer(ip)           linlen
@@ -226,28 +226,28 @@
 !
 !     Local variables
 !
-      character*1           comma
+      character(1)          comma
       parameter           ( comma = ',' )
 
-      character*1           blank
+      character(1)          blank
       parameter           ( blank = ' ' )
 
-      character*1           lparen
+      character(1)          lparen
       parameter           ( lparen = '(' )
 
-      character*1           rparen
+      character(1)          rparen
       parameter           ( rparen = ')' )
 
-      character*(linlen)    line
-      character*(linlen)    varnam
-      character*3           dirctv
-      character*6           status
+      character(linlen)     line
+      character(linlen)     varnam
+      character(3)          dirctv
+      character(6)          status
 
-      character*30          cvalue
+      character(30)         cvalue
       real(wp)              dvalue
       integer(ip)           i
 
-      character*80          error
+      character(80)         error
 
 
 
@@ -280,7 +280,7 @@
 !
       status = 'BEGIN'
 
-      do while ( ( status .ne. 'DONE' ) .and. ( .not. failed() ) )
+      do while ( ( status /= 'DONE' ) .and. ( .not. failed() ) )
 
          call rdkdat ( line, eof )
 
@@ -299,7 +299,7 @@
 !        The first word on the first line should be the name of a
 !        variable. The second word should be a directive: = or +=.
 !
-         if ( status .eq. 'BEGIN' ) then
+         if ( status == 'BEGIN' ) then
 
             call nextwd ( line, varnam, line )
             call nextwd ( line, dirctv, line )
@@ -309,7 +309,7 @@
 !           delete the values currently associated with the variable.
 !           They will be replaced later.
 !
-            if ( dirctv .eq. '=' ) then
+            if ( dirctv == '=' ) then
                call sydeld ( varnam, tabsym, tabptr, tabval )
             end if
 
@@ -322,7 +322,7 @@
 !
             call nextwd ( line, cvalue, line )
 
-            if ( cvalue .eq. lparen ) then
+            if ( cvalue == lparen ) then
                call nextwd ( line, cvalue, line )
             else
                line = rparen
@@ -345,13 +345,13 @@
 !
 !        Dates begin with @; anything else is presumed to be a number.
 !
-         do while ( cvalue .ne. rparen  .and.  cvalue .ne. blank )
+         do while ( cvalue /= rparen  .and.  cvalue /= blank )
 
-            if ( cvalue(1:1) .eq. '@' ) then
+            if ( cvalue(1:1) == '@' ) then
 
                call tparse ( cvalue(2: ), dvalue, error )
 
-               if ( error .ne. ' ' ) then
+               if ( error /= ' ' ) then
                   error  =  'Encountered : ' // cvalue(2: )
                   call setmsg ( error    )
                   call sigerr ( 'SPICE(DATEEXPECTED)' )
@@ -363,7 +363,7 @@
 
                call nparsd ( cvalue, dvalue, error, i )
 
-               if ( error .ne. ' ' ) then
+               if ( error /= ' ' ) then
                   error =  'Encountered : ' // cvalue
                   call setmsg ( error    )
                   call sigerr ( 'SPICE(NUMBEREXPECTED)' )
@@ -381,7 +381,7 @@
 
          end do
 
-         if ( cvalue .eq. rparen ) then
+         if ( cvalue == rparen ) then
             status = 'DONE'
          else
             status = 'INVAR'

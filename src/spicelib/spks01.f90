@@ -210,12 +210,12 @@
       do i = 1, nrec
          call dafgda ( handle, offe+i, offe+i, data )
 
-         if (        first   .eq. 0 &
-              .and.  data(1) .ge. begin )   first = i
+         if (        first   == 0 &
+              .and.  data(1) >= begin )   first = i
 
-         if (        first   .ne. 0 &
-              .and.  last    .eq. 0 &
-              .and.  data(1) .ge. end )     last = i
+         if (        first   /= 0 &
+              .and.  last    == 0 &
+              .and.  data(1) >= end )     last = i
 
       end do
 

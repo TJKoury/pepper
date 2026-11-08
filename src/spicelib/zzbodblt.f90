@@ -28,12 +28,12 @@
       include              'zzbodtrn.inc'
 
       integer(ip)           room
-      character*(*)         names  ( * )
-      character*(*)         nornam ( * )
+      character(*)          names  ( * )
+      character(*)          nornam ( * )
       integer(ip)           codes  ( * )
       integer(ip)           nvals
-      character*(*)         device
-      character*(*)         reqst
+      character(*)          device
+      character(*)          reqst
 
 ! $ Brief_I/O
 !
@@ -346,11 +346,11 @@
 !
 !     Local Variables
 !
-      character*(maxl)      bltnam ( nperm )
-      character*(maxl)      bltnor ( nperm )
-      character*(4)         zzrqst
-      character*(maxl)      zzint
-      character*(2*maxl+3)  zzline
+      character(maxl)       bltnam ( nperm )
+      character(maxl)       bltnor ( nperm )
+      character(4)          zzrqst
+      character(maxl)       zzint
+      character(2*maxl+3)   zzline
 
       integer(ip)           bltcod ( nperm )
       integer(ip)           i
@@ -533,7 +533,7 @@
 !     Copy the contents of BLTNAM, BLTNOR, and BLTCOD to the output
 !     arguments, but only if there is sufficient room.
 !
-      if ( room .lt. nperm ) then
+      if ( room < nperm ) then
 
          call setmsg ( 'Insufficient room to copy the stored ' &
          //            'body name-code mappings to the output ' &

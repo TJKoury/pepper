@@ -222,7 +222,7 @@
 !
       totkey  =  rpage ( trnkey )
 
-      if (  ( key .lt. 1 ) .or. ( key .gt. totkey)  ) then
+      if (  ( key < 1 ) .or. ( key > totkey)  ) then
 
          call chkin  ( 'ZZEKTRUD'                                )
          call setmsg ( 'Key = #. Valid range is 1:#.  File = #.' )
@@ -244,7 +244,7 @@
 !     Find the point at which the deletion is to occur.  When the
 !     tree contains only one node, no search is necessary.
 !
-      if ( nnode .eq. 1 ) then
+      if ( nnode == 1 ) then
 !
 !        This is the simplest case; all we need do is delete the
 !        key from the root node.
@@ -299,7 +299,7 @@
 !        The first key in the root will serve as the target key,
 !        as long as the root isn't empty.
 !
-         if ( nkeys .gt. 0 ) then
+         if ( nkeys > 0 ) then
             trgkey  =  rpage(trkeyr+1)
          else
             trgkey  =  0
@@ -312,7 +312,7 @@
 
 
 
-      else if ( key .eq. totkey ) then
+      else if ( key == totkey ) then
 !
 !        The deleted key is the last key in the tree.  This case
 !        is simple, because no remaining keys change as a result of
@@ -353,7 +353,7 @@
 !        Underflow occurs when the node started out at the minimum
 !        key count.
 !
-         undrfl  =  nkeys .eq. mnkeyc
+         undrfl  =  nkeys == mnkeyc
 
 !
 !        The first key in the target page is the target key.  Return
@@ -376,7 +376,7 @@
                          target,  toffst,  level,  datptr )
 
 
-         if ( level .eq. depth ) then
+         if ( level == depth ) then
 !
 !           The node containing KEY is a leaf node, which is what we
 !           want.  Deletions always take place at leaf nodes.
@@ -406,7 +406,7 @@
 !           Each node is allowed to underflow by 1 element.  If there
 !           is already a deficit, OK, that's it.
 !
-            if ( tnkeys .lt. mnkeyc ) then
+            if ( tnkeys < mnkeyc ) then
 
                call chkin  ( 'ZZEKTRUD'                            )
                call setmsg ( 'Node = #. Tree = #. File = #. Key ' // &
@@ -450,7 +450,7 @@
 !           Underflow occurs when the node started out at the minimum
 !           count.
 !
-            undrfl  =  tnkeys .eq. mnkeyc
+            undrfl  =  tnkeys == mnkeyc
 
 !
 !           The first key in the target page is the target key.
@@ -506,7 +506,7 @@
             call zzekpgri ( handle, leaf, lpage )
 
 
-            if ( target .eq. root ) then
+            if ( target == root ) then
 !
 !              The root page has already been read into RPAGE.
 !
@@ -542,7 +542,7 @@
 !           Underflow occurs when the leaf node started out at the
 !           minimum count.
 !
-            undrfl  =  nlkeys .eq. mnkeyc
+            undrfl  =  nlkeys == mnkeyc
 
 !
 !           The first key in the leaf page is the target key.
@@ -554,7 +554,7 @@
 !
             call zzekpgwi ( handle, leaf, lpage )
 
-            if ( target .ne. root ) then
+            if ( target /= root ) then
                call zzekpgwi ( handle, target, tpage )
             end if
 
@@ -572,7 +572,7 @@
 !        We've already looked up information for the parent of
 !        TARGET.  See the note at the prior call to ZZEKTRPI.
 !
-         do while ( parent .ne. root )
+         do while ( parent /= root )
 !
 !           Before going to work on the parent, get *its* parent's info.
 !           This is the last chance to do so.
@@ -591,7 +591,7 @@
             tnkeys  =  tpage ( trnkc  )
 
 
-            if ( rpidx .gt. 0 ) then
+            if ( rpidx > 0 ) then
 
                do i = rpidx, tnkeys
                   tpage(trkeyc + i)  =  tpage(trkeyc + i) - 1
@@ -617,7 +617,7 @@
          tnkeys  =  rpage ( trnkr )
 
 
-         if ( rpidx .gt. 0 ) then
+         if ( rpidx > 0 ) then
 
             do i = rpidx, tnkeys
                rpage(trkeyr + i)  =  rpage(trkeyr + i) - 1

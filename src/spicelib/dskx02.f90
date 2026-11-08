@@ -1080,15 +1080,15 @@
 !
       newseg = .true.
 
-      if ( handle .eq. prvhan ) then
+      if ( handle == prvhan ) then
 !
 !        The input handle matches the previous handle.  Note that the
 !        initial value of PRVHAN is 0, which is never a valid handle,
 !        so on the first pass, this test will fail.
 !
-         if (       ( dladsc(ibsidx) .eq. prvdsc(ibsidx) ) &
-              .and. ( dladsc(dbsidx) .eq. prvdsc(dbsidx) ) &
-              .and. ( dladsc(cbsidx) .eq. prvdsc(cbsidx) )  ) then
+         if (       ( dladsc(ibsidx) == prvdsc(ibsidx) ) &
+              .and. ( dladsc(dbsidx) == prvdsc(dbsidx) ) &
+              .and. ( dladsc(cbsidx) == prvdsc(cbsidx) )  ) then
 !
 !           All of the DLA segment base addresses match.
 !
@@ -1125,7 +1125,7 @@
 !        Compute the grid dimensions in units of km. First check
 !        the voxel size.
 !
-         if ( voxsiz .eq. 0 ) then
+         if ( voxsiz == 0 ) then
             call setmsg ( 'Voxel size is zero. This is an error ' &
             //            'in the DSK file attached to handle #.' )
             call errint ( '#', handle                             )
@@ -1148,7 +1148,7 @@
 !
 !        Check the coarse grid voxel scale.
 !
-         if ( cgscal .lt. 1 ) then
+         if ( cgscal < 1 ) then
 
             call setmsg ( 'Coarse grid scale = #; should be >= 1.' )
             call errint ( '#', cgscal                              )
@@ -1170,7 +1170,7 @@
 
          ncgr   = nvxtot / cgscal**3
 
-         if ( ncgr .gt. maxcgr ) then
+         if ( ncgr > maxcgr ) then
 
             call setmsg ( 'Coarse grid size NCGR = #. Buffer size = #' )
             call errint ( '#', ncgr                                    )
@@ -1241,7 +1241,7 @@
 !     We don't expect the voxel list to be empty, but leave now
 !     if it is.
 !
-      if ( nvxout .eq. 0 ) then
+      if ( nvxout == 0 ) then
          call chkout ( 'DSKX02' )
          return
       end if
@@ -1260,12 +1260,12 @@
 !
       call vsub ( vertex, voxori, vtxoff )
 
-      if (      (  vtxoff(1) .lt.   -grdtol               ) &
-           .or. (  vtxoff(1) .gt.  ( grdtol + grdext(1) ) ) &
-           .or. (  vtxoff(2) .lt.   -grdtol               ) &
-           .or. (  vtxoff(2) .gt.  ( grdtol + grdext(2) ) ) &
-           .or. (  vtxoff(3) .lt.   -grdtol               ) &
-           .or. (  vtxoff(3) .gt.  ( grdtol + grdext(3) ) )   ) then
+      if (      (  vtxoff(1) <   -grdtol               ) &
+           .or. (  vtxoff(1) >  ( grdtol + grdext(1) ) ) &
+           .or. (  vtxoff(2) <   -grdtol               ) &
+           .or. (  vtxoff(2) >  ( grdtol + grdext(2) ) ) &
+           .or. (  vtxoff(3) <   -grdtol               ) &
+           .or. (  vtxoff(3) >  ( grdtol + grdext(3) ) )   ) then
 
 !
 !        The vertex is outside of the voxel grid by more than the
@@ -1306,7 +1306,7 @@
          cvid = vox2id ( cgxyz(1),  cgxyz(2), cgxyz(3), &
                          cgrext(1), cgrext(2)           )
 
-         if ( cgrptr(cvid) .gt. 0 ) then
+         if ( cgrptr(cvid) > 0 ) then
 !
 !           This coarse voxel is non-empty; add the index of the
 !           current voxel to the output list.  Save the coordinates of
@@ -1335,7 +1335,7 @@
 !     If the voxel list became empty after compression, we're
 !     done.
 !
-      if ( nvxout .eq. 0 ) then
+      if ( nvxout == 0 ) then
          call chkout( 'DSKX02' )
          return
       end if
@@ -1365,7 +1365,7 @@
       group  =  1
 
 
-      do while (  ( group .le. ngroup )  .and.  ( .not. have )  )
+      do while (  ( group <= ngroup )  .and.  ( .not. have )  )
 
 
          pntr   = 1
@@ -1405,7 +1405,7 @@
                return
             end if
 
-            if ( voxptr .eq. -1 ) then
+            if ( voxptr == -1 ) then
 
                nplate = 0
 
@@ -1424,9 +1424,9 @@
             end if
 
 
-            if ( nplate .gt. 0 ) then
+            if ( nplate > 0 ) then
 
-               if ( nplate .le. plroom ) then
+               if ( nplate <= plroom ) then
 !
 !                 Get the plate list for this voxel.
 !
@@ -1504,7 +1504,7 @@
 !           ID at index I-1 may have been "marked" via negation.
 !
             if (              platid( ordvec(i  ) ) &
-                 .eq.  abs (  platid( ordvec(i-1) )  )    ) then
+                 ==  abs (  platid( ordvec(i-1) )  )    ) then
 !
 !              The plates having indices ORDVEC(I-1) and ORDVEC(I) are
 !              duplicates.
@@ -1517,7 +1517,7 @@
 !              at the old "minimum"; otherwise negate the plate ID at
 !              index ORDVEC(I).
 !
-               if ( ordvec(i) .lt. minidx ) then
+               if ( ordvec(i) < minidx ) then
 !
 !                 The plate that was previously at the minimum index is
 !                 now considered a duplicate. The new minimum index for
@@ -1565,14 +1565,14 @@
 
          i      = 1
 
-         do while (  ( i .le. totplt ) .and. ( .not. extra )  )
+         do while (  ( i <= totplt ) .and. ( .not. extra )  )
 !
 !           Retrieve the current plate ID.
 !
             j = platid(i)
 
 
-            if ( j .gt. 0 ) then
+            if ( j > 0 ) then
 !
 !              This is not a duplicate plate; consider it.
 !
@@ -1582,7 +1582,7 @@
 !                 in the voxel in which the last hit was found, or in a
 !                 later voxel.
 !
-                  if ( source(i) .gt. final ) then
+                  if ( source(i) > final ) then
 !
 !                    This is a "late plate": it occurs in a voxel later
 !                    than that in which the first valid hit was found.
@@ -1618,7 +1618,7 @@
 !
                      vloc = isrchi ( vids(k), nvbuf, vidxs )
 
-                     if ( vloc .gt. 0 ) then
+                     if ( vloc > 0 ) then
 !
 !                       The vertex was buffered; just copy it.
 !
@@ -1642,7 +1642,7 @@
 !
 !                       If there's room, buffer this vertex.
 !
-                        if ( nvbuf .lt. bufsiz ) then
+                        if ( nvbuf < bufsiz ) then
 
                            nvbuf = nvbuf + 1
 
@@ -1688,7 +1688,7 @@
                      call pltnrm ( points(1,1), points(1,2), &
                                    points(1,3), normal      )
 
-                     hits = vdot( udir, normal ) .le. 0.0_wp
+                     hits = vdot( udir, normal ) <= 0.0_wp
 
                   end if
 
@@ -1696,7 +1696,7 @@
 !
 !                    The ray intersects this plate.
 !
-                     if ( ( .not. have ) .or. ( scale .lt. near ) ) then
+                     if ( ( .not. have ) .or. ( scale < near ) ) then
 !
 !                       Either this is the first intersection we've
 !                       found, or this is the closest intersection to
@@ -1735,12 +1735,12 @@
                         vxc2  = voxlst(2,k)
                         vxc3  = voxlst(3,k)
 
-                        invox =       ( hitcor(1) .gt. (vxc1-xtol-1) ) &
-                                .and. ( hitcor(1) .lt. (vxc1+xtol  ) ) &
-                                .and. ( hitcor(2) .gt. (vxc2-xtol-1) ) &
-                                .and. ( hitcor(2) .lt. (vxc2+xtol  ) ) &
-                                .and. ( hitcor(3) .gt. (vxc3-xtol-1) ) &
-                                .and. ( hitcor(3) .lt. (vxc3+xtol  ) )
+                        invox =       ( hitcor(1) > (vxc1-xtol-1) ) &
+                                .and. ( hitcor(1) < (vxc1+xtol  ) ) &
+                                .and. ( hitcor(2) > (vxc2-xtol-1) ) &
+                                .and. ( hitcor(2) < (vxc2+xtol  ) ) &
+                                .and. ( hitcor(3) > (vxc3-xtol-1) ) &
+                                .and. ( hitcor(3) < (vxc3+xtol  ) )
 
 
                         if ( invox ) then
@@ -1794,7 +1794,7 @@
 
                            do k = 1, totplt
 
-                              if ( abs(platid(k)) .eq. w ) then
+                              if ( abs(platid(k)) == w ) then
                                  platid(k) = w
                               end if
 

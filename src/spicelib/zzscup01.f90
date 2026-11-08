@@ -415,7 +415,7 @@
 
          samclk = .false.
       else
-         samclk = ( sc .ne. 0 ) .and. ( sc .eq. prvsc )
+         samclk = ( sc /= 0 ) .and. ( sc == prvsc )
       end if
 
 !
@@ -429,7 +429,7 @@
 !
          call zzhsichk ( hdsclk, scpool, clklst, sc, sclkat )
 
-         if ( sclkat .eq. 0 ) then
+         if ( sclkat == 0 ) then
 !
 !           This clock is unknown to the SC01 subsystem. Try to look up
 !           the clock's specification from the kernel pool.

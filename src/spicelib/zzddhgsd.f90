@@ -25,9 +25,9 @@
 
       include              'zzddhman.inc'
 
-      character*(*)         class
+      character(*)          class
       integer(ip)           id
-      character*(*)         label
+      character(*)          label
 
 ! $ Brief_I/O
 !
@@ -139,11 +139,11 @@
 !
 !     Local Variables
 !
-      character*(locsiz)    clslst ( numcls )
-      character*(strsiz)    stramh ( numamh )
-      character*(strsiz)    strarc ( numarc )
-      character*(strsiz)    strbff ( numbff )
-      character*(locsiz)    tmpstr
+      character(locsiz)     clslst ( numcls )
+      character(strsiz)     stramh ( numamh )
+      character(strsiz)     strarc ( numarc )
+      character(strsiz)     strbff ( numbff )
+      character(locsiz)     tmpstr
 
       integer(ip)           clsid
 
@@ -185,21 +185,21 @@
 !     Branch on CLSID and return the appropriate label as requested
 !     by ID.
 !
-      if      (       ( clsid .eq. method ) &
-                .and. (    id .ge. 1      ) &
-                .and. (    id .le. numamh ) ) then
+      if      (       ( clsid == method ) &
+                .and. (    id >= 1      ) &
+                .and. (    id <= numamh ) ) then
 
          label = stramh ( id )
 
-      else if (       ( clsid .eq. arch   ) &
-                .and. (    id .ge. 1      ) &
-                .and. (    id .le. numarc ) ) then
+      else if (       ( clsid == arch   ) &
+                .and. (    id >= 1      ) &
+                .and. (    id <= numarc ) ) then
 
          label = strarc ( id )
 
-      else if (       ( clsid .eq. bff    ) &
-                .and. (    id .ge. 1      ) &
-                .and. (    id .le. numbff ) ) then
+      else if (       ( clsid == bff    ) &
+                .and. (    id >= 1      ) &
+                .and. (    id <= numbff ) ) then
 
          label = strbff ( id )
 

@@ -36,7 +36,7 @@
       integer(ip)           row
       integer(ip)           eltidx
       integer(ip)           dtype
-      character*(*)         cval
+      character(*)          cval
       real(wp)              dval
       integer(ip)           ival
       logical               null
@@ -255,7 +255,7 @@
 !
 !     Local variables
 !
-      character*(maxstr)    eltc
+      character(maxstr)     eltc
 
       real(wp)              eltd
       real(wp)              numval
@@ -285,7 +285,7 @@
 !
       coltyp   =  coldsc(typidx)
 
-      if ( coltyp .eq. chr ) then
+      if ( coltyp == chr ) then
 !
 !        We'll use at most the first MAXSTR characters of the input
 !        string.
@@ -317,13 +317,13 @@
             cmplen = 0
          end if
 
-      else if ( ( coltyp .eq. dp ) .or. ( coltyp .eq. time )  ) then
+      else if ( ( coltyp == dp ) .or. ( coltyp == time )  ) then
 
          call zzekrsd (  handle,  segdsc,  coldsc, row, &
                          eltidx,  eltd,    enull,  found )
 
 
-      else if ( coltyp .eq. int ) then
+      else if ( coltyp == int ) then
 
          call zzekrsi (  handle,  segdsc,  coldsc, row, &
                          eltidx,  elti,    enull,  found )
@@ -359,12 +359,12 @@
 !
 !     Handle the ISNULL and NOTNUL operators, if perchance we see them.
 !
-      if ( op .eq. isnull ) then
+      if ( op == isnull ) then
 
          zzekscmp  =  enull
          return
 
-      else if ( op .eq. notnul ) then
+      else if ( op == notnul ) then
 
          zzekscmp  =  .not. enull
          return
@@ -399,9 +399,9 @@
 !
 !        Compare the value we looked up with the input scalar value.
 !
-         if (  coltyp .eq. chr ) then
+         if (  coltyp == chr ) then
 
-            if ( dtype .ne. chr ) then
+            if ( dtype /= chr ) then
 
                call chkin  ( 'ZZEKSCMP'                          )
                call setmsg ( 'Column type is #; value type is #.')
@@ -422,9 +422,9 @@
             end if
 
 
-         else if ( coltyp .eq. time ) then
+         else if ( coltyp == time ) then
 
-            if (  ( dtype .ne. time ) .and. ( dtype .ne. dp )  ) then
+            if (  ( dtype /= time ) .and. ( dtype /= dp )  ) then
 
                call chkin  ( 'ZZEKSCMP'                          )
                call setmsg ( 'Column type is #; value type is #.')
@@ -436,23 +436,23 @@
 
             end if
 
-            if ( eltd .lt. dval ) then
+            if ( eltd < dval ) then
                rel = lt
-            else if ( eltd .gt. dval ) then
+            else if ( eltd > dval ) then
                rel = gt
             else
                rel = eq
             end if
 
 
-         else if ( coltyp .eq. dp ) then
+         else if ( coltyp == dp ) then
 
-            if ( dtype .eq. int ) then
+            if ( dtype == int ) then
 
                numval = ival
 
 
-            else if ( ( dtype .eq. dp ) .or. ( dtype .eq. time ) ) then
+            else if ( ( dtype == dp ) .or. ( dtype == time ) ) then
 
                numval = dval
 
@@ -468,23 +468,23 @@
 
             end if
 
-            if ( eltd .lt. numval ) then
+            if ( eltd < numval ) then
                rel = lt
-            else if ( eltd .gt. numval ) then
+            else if ( eltd > numval ) then
                rel = gt
             else
                rel = eq
             end if
 
 
-         else if ( coltyp .eq. int ) then
+         else if ( coltyp == int ) then
 
-            if ( dtype .eq. int ) then
+            if ( dtype == int ) then
 
                numval = ival
 
 
-            else if ( dtype .eq. dp ) then
+            else if ( dtype == dp ) then
 
                numval = dval
 
@@ -500,9 +500,9 @@
 
             end if
 
-            if ( elti .lt. numval ) then
+            if ( elti < numval ) then
                rel = lt
-            else if ( elti .gt. numval ) then
+            else if ( elti > numval ) then
                rel = gt
             else
                rel = eq
@@ -528,37 +528,37 @@
 !
 !     Determine the truth of the input relational expression.
 !
-      if ( op .eq. eq )   then
+      if ( op == eq )   then
 
-         zzekscmp  =  rel .eq. eq
-
-
-      else if ( op .eq. lt )   then
-
-         zzekscmp  =  rel .eq. lt
+         zzekscmp  =  rel == eq
 
 
-      else if ( op .eq. le )   then
+      else if ( op == lt )   then
 
-         zzekscmp  =  rel .ne. gt
-
-
-      else if ( op .eq. gt )   then
-
-         zzekscmp  =  rel .eq. gt
+         zzekscmp  =  rel == lt
 
 
-      else if ( op .eq. ge )   then
+      else if ( op == le )   then
 
-         zzekscmp  =  rel .ne. lt
-
-
-      else if ( op .eq. ne )   then
-
-         zzekscmp  =  rel .ne. eq
+         zzekscmp  =  rel /= gt
 
 
-      else if (  ( op .eq. like ) .and. ( dtype .eq. chr )  ) then
+      else if ( op == gt )   then
+
+         zzekscmp  =  rel == gt
+
+
+      else if ( op == ge )   then
+
+         zzekscmp  =  rel /= lt
+
+
+      else if ( op == ne )   then
+
+         zzekscmp  =  rel /= eq
+
+
+      else if (  ( op == like ) .and. ( dtype == chr )  ) then
 
          if ( null .or. enull ) then
             zzekscmp = .false.
@@ -567,7 +567,7 @@
          end if
 
 
-      else if (  ( op .eq. unlike ) .and. ( dtype .eq. chr )  ) then
+      else if (  ( op == unlike ) .and. ( dtype == chr )  ) then
 
          if ( null .or. enull ) then
             zzekscmp = .false.

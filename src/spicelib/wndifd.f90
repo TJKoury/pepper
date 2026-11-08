@@ -210,11 +210,11 @@
 !
 !     Let's handle the pathological cases first.
 !
-      if ( bcard .eq. 0 ) then
+      if ( bcard == 0 ) then
          call copyd ( a, c )
          call chkout ( 'WNDIFD' )
          return
-      else if ( acard .eq. 0 ) then
+      else if ( acard == 0 ) then
          call chkout ( 'WNDIFD' )
          return
       end if
@@ -232,7 +232,7 @@
 !     of A we need to examine intervals and decide how much of
 !     them to keep in C.
 !
-      do while ( ape .le. acard )
+      do while ( ape <= acard )
 !
 !        We will work with the interval [F,L] which starts out
 !        as the next interval of A.  We modify it below as required
@@ -244,12 +244,12 @@
 !        Right now we have not resolved whether to keep the interval
 !        [F,L], but until we know better we assume it is a keeper.
 !
-         unrslv =  bpe .le. bcard
+         unrslv =  bpe <= bcard
          keep   = .true.
 
          do while ( unrslv )
 
-            if ( l .lt. b(bpb) ) then
+            if ( l < b(bpb) ) then
 !
 !              The interval [F,L] is before the next interval of B, we
 !              have resolved what to do with this one.   It is a
@@ -257,14 +257,14 @@
 !
                unrslv = .false.
 
-            else if ( f .gt. b(bpe) ) then
+            else if ( f > b(bpe) ) then
 !
 !              [F,L] is after the end of the current interval in B,
 !              we need to look at the next interval of B
 !
                bpb    = bpb + 2
                bpe    = bpe + 2
-               unrslv = bpe .le. bcard
+               unrslv = bpe <= bcard
 
             else
 !
@@ -317,31 +317,31 @@
 !                 keep all of what's left because all other intervals
 !                 of B are to the right of [F,L]
 !
-               if (       b(bpb) .le. f &
-                    .and. l      .le. b(bpe) ) then
+               if (       b(bpb) <= f &
+                    .and. l      <= b(bpe) ) then
 !
 !                 Case 1 above
 !
                   keep   = .false.
                   unrslv = .false.
 
-               else if ( b(bpb) .le. f ) then
+               else if ( b(bpb) <= f ) then
 !
 !                 Case 2 above
 !
                   f      = b(bpe)
                   bpb    = bpb+2
                   bpe    = bpe+2
-                  unrslv = bpe .le. bcard
+                  unrslv = bpe <= bcard
 
-               else if (      f      .le. b(bpb) &
-                        .and. l      .ge. b(bpe) &
-                        .and. b(bpb) .lt. b(bpe) ) then
+               else if (      f      <= b(bpb) &
+                        .and. l      >= b(bpe) &
+                        .and. b(bpb) < b(bpe) ) then
 !
 !                 Case 3 above (non-singleton interval of B).
 !
 
-                  if ( put .lt. csize ) then
+                  if ( put < csize ) then
                      c(put)   = f
                      c(put+1) = b(bpb)
 
@@ -357,24 +357,24 @@
 !                 If the interval from B contained L, we will not
 !                 want to be keeping the singleton [F,L].
 !
-                  if ( f .eq. l ) then
+                  if ( f == l ) then
                      keep   = .false.
                      unrslv = .false.
                   end if
 
                   bpb    = bpb + 2
                   bpe    = bpe + 2
-                  unrslv = unrslv .and. bpe .le. bcard
+                  unrslv = unrslv .and. bpe <= bcard
 
-               else if (      f      .le. b(bpb) &
-                        .and. l      .ge. b(bpe) &
-                        .and. b(bpb) .eq. b(bpe) ) then
+               else if (      f      <= b(bpb) &
+                        .and. l      >= b(bpe) &
+                        .and. b(bpb) == b(bpe) ) then
 !
 !                 Case 3 above (singleton interval of B).
 !
                   bpb    = bpb + 2
                   bpe    = bpe + 2
-                  unrslv = bpe .le. bcard
+                  unrslv = bpe <= bcard
 
                else
 !
@@ -396,7 +396,7 @@
 !
 !           Make sure there is sufficient room to do the putting.
 !
-            if ( put .lt. csize ) then
+            if ( put < csize ) then
                c(put)   = f
                c(put+1) = l
                call scardd ( put+1, c )
@@ -418,7 +418,7 @@
 !     We've examined all of the intervals of A and B, but if we
 !     didn't actually store all of the difference, signal an error.
 !
-      if ( over .gt. 0 ) then
+      if ( over > 0 ) then
 
          needed = over + csize
 

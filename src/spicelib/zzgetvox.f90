@@ -193,7 +193,7 @@
          return
       end if
 
-      if ( voxsiz .le. 0.0_wp ) then
+      if ( voxsiz <= 0.0_wp ) then
 
          call chkin  ( 'ZZGETVOX'                            )
          call setmsg ( 'Voxel size was #; must be positive.' )
@@ -234,7 +234,7 @@
 !
 !        If the point is outside of the grid, return now.
 !
-         if ( ( term .lt. 0.0_wp ) .or. ( term .gt. nvox(i) ) ) then
+         if ( ( term < 0.0_wp ) .or. ( term > nvox(i) ) ) then
 
             return
 
@@ -247,7 +247,7 @@
 !
 !        Note that TERM is non-negative at this point.
 !
-         if ( int(term) .lt. nvox(i) ) then
+         if ( int(term) < nvox(i) ) then
 
             voxcor(i) =  1 + int(term)
 

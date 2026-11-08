@@ -439,12 +439,12 @@
 !     Complete the fast write preparations appropriate to the segment's
 !     type.
 !
-      if ( stype .eq. 1 ) then
+      if ( stype == 1 ) then
 
          call zzekff01 ( handle, segno, rcptrs )
 
 
-      else if ( stype .eq. 2 ) then
+      else if ( stype == 2 ) then
 !
 !        Currently, no actions are taken to complete a type 2 segment.
 !

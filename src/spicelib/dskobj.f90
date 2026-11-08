@@ -31,7 +31,7 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         dskfnm
+      character(*)          dskfnm
       integer(ip)           bodids ( lbcell : * )
 
 ! $ Brief_I/O
@@ -257,8 +257,8 @@
 !
 !     Local variables
 !
-      character*(toklen)    arch
-      character*(toklen)    kertyp
+      character(toklen)     arch
+      character(toklen)     kertyp
 
       real(wp)              dskdsc ( dskdsz )
 
@@ -286,7 +286,7 @@
          return
       end if
 
-      if ( arch .eq. 'XFR' ) then
+      if ( arch == 'XFR' ) then
 
          call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary DSK file to be readable ' &
@@ -299,7 +299,7 @@
          call chkout ( 'DSKOBJ'                                    )
          return
 
-      else if ( arch .ne. 'DAS' ) then
+      else if ( arch /= 'DAS' ) then
 
          call setmsg ( 'Input file # has architecture #. The file ' &
          //            'must be a binary DSK file to be readable ' &
@@ -316,7 +316,7 @@
          call chkout ( 'DSKOBJ'                                    )
          return
 
-      else if ( kertyp .ne. 'DSK' ) then
+      else if ( kertyp /= 'DSK' ) then
 
          call setmsg ( 'Input file # has file type #. The file ' &
          //            'must be a binary DSK file to be readable ' &
@@ -367,7 +367,7 @@
 !
          bid = nint( dskdsc(ctridx) )
 
-         if ( cardi(bodids) .eq. sizei(bodids) ) then
+         if ( cardi(bodids) == sizei(bodids) ) then
 !
 !           We're going to signal an error. Close the DSK
 !           first.

@@ -212,7 +212,7 @@
 !
 !     The equatorial radius must be greater than zero.
 !
-      if ( re .le. 0.0_wp ) then
+      if ( re <= 0.0_wp ) then
 
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
@@ -228,7 +228,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1 ) then
+      if ( f >= 1 ) then
 
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
@@ -246,7 +246,7 @@
 !     nothing to do: the point is automatically on the correct side of
 !     the X-Y plane.
 !
-      if ( f .le. 0.0_wp ) then
+      if ( f <= 0.0_wp ) then
 
          zzpdpltc = .true.
 
@@ -270,12 +270,12 @@
 !              LAT * P(3) > 0
 !
 !
-         if (  ( p(3) * lat )  .ge.  0.0_wp  ) then
+         if (  ( p(3) * lat )  >=  0.0_wp  ) then
 
             zzpdpltc = .true.
 
 
-         else if ( abs(lat) .ge. limit ) then
+         else if ( abs(lat) >= limit ) then
 !
 !           Ideally, the input point is considered to have the given
 !           latitude if the point is on the side of the X-Y plane
@@ -339,7 +339,7 @@
 
             r        = sqrt(  max( r2, 0.0_wp )  )
 
-            zzpdpltc = r .ge. xxpt
+            zzpdpltc = r >= xxpt
 
          end if
 

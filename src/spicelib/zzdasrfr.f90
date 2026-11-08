@@ -30,8 +30,8 @@
       include 'zzddhman.inc'
 
       integer(ip)           handle
-      character*(*)         idword
-      character*(*)         ifname
+      character(*)          idword
+      character(*)          ifname
       integer(ip)           nresvr
       integer(ip)           nresvc
       integer(ip)           ncomr
@@ -251,9 +251,9 @@
 !
 !     Local variables
 !
-      character*(nwc)       chrbuf
-      character*(idwlen)    tmpidw
-      character*(ifnlen)    tmpifn
+      character(nwc)        chrbuf
+      character(idwlen)     tmpidw
+      character(ifnlen)     tmpifn
 
       integer(ip)           ibff
       integer(ip)           iostat
@@ -315,7 +315,7 @@
          return
       end if
 
-      if ( ibff .eq. natbff ) then
+      if ( ibff == natbff ) then
 !
 !        We're looking at a native file. Just read the file record.
 !
@@ -328,7 +328,7 @@
                                     ncomr, &
                                     ncomc
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Could not DAS read file record. File was ' &
             //            '#.  IOSTAT was #.'                        )
@@ -358,7 +358,7 @@
                 rec     =  1, &
                 iostat  =  iostat ) chrbuf
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Could not read DAS file record. File is ' &
             //            '#. IOSTAT was #. File''s BFF integer ' &

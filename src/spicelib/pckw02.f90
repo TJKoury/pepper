@@ -27,10 +27,10 @@
 
       integer(ip)           handle
       integer(ip)           clssid
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       real(wp)              intlen
       integer(ip)           n
       integer(ip)           polydg
@@ -390,8 +390,8 @@
 !
 !     Local variables
 !
-      character*(sidlen)    etstr
-      character*(sidlen)    netstr
+      character(sidlen)     etstr
+      character(sidlen)     netstr
 
       real(wp)              dcd   ( nd )
       real(wp)              descr ( ns )
@@ -420,7 +420,7 @@
 !
 !     The number of sets of coefficients must be positive.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
 
          call setmsg ( 'The number of sets of Euler angle'  // &
                        'coefficients is not positive. N = #'       )
@@ -433,7 +433,7 @@
 !
 !     The interval length must be positive.
 !
-      if ( intlen .le. 0 ) then
+      if ( intlen <= 0 ) then
 
          call setmsg ( 'The interval length is not positive.'  // &
                        'N = #'                                     )
@@ -448,7 +448,7 @@
 !
       call irfnum ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -461,7 +461,7 @@
 !
 !     The segment stop time must be greater than the begin time.
 !
-      if ( first .gt. last ) then
+      if ( first > last ) then
 
          call setmsg ( 'The segment start time: # is greater than ' // &
                        'the segment end time: #'                   )
@@ -479,7 +479,7 @@
 !     The begin time of the first record must be less than or equal
 !     to the begin time of the segment.
 !
-      if ( first .lt. btime ) then
+      if ( first < btime ) then
 
          call setmsg ( 'The segment descriptor start time: # is '// &
                        'less than the beginning time of the '// &
@@ -498,7 +498,7 @@
 !     equal to the end time of the segment.
 !
       ltime = btime + n * intlen
-      if ( last .gt. ltime ) then
+      if ( last > ltime ) then
 
          call setmsg ( 'The segment descriptor end time: # is '// &
                        'greater than the end time of the segment '// &

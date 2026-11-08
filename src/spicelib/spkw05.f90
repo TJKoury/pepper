@@ -27,10 +27,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       real(wp)              gm
       integer(ip)           n
       real(wp)              states   ( 6, * )
@@ -388,7 +388,7 @@
       end if
 
 
-      if ( gm .le. 0.0_wp ) then
+      if ( gm <= 0.0_wp ) then
 
          call setmsg ( 'GM = #; Non-positive gravitational parameter' )
          call errdp  ( '#',  gm                   )
@@ -404,7 +404,7 @@
 !
       call namfrm ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -417,7 +417,7 @@
 !
 !     Make sure that the number of states and epochs is positive.
 !
-      if ( n .le. 0 ) then
+      if ( n <= 0 ) then
 
          call setmsg ( 'The number of states and epochs is not '  // &
                        'positive. N = #'                           )
@@ -433,7 +433,7 @@
 !
       do i = 2, n
 
-         if ( epochs(i) .le. epochs(i-1) ) then
+         if ( epochs(i) <= epochs(i-1) ) then
 
             call setmsg ( 'Epoch # is out of order. ' )
             call errdp  ( '#',  epochs(i)             )
@@ -448,7 +448,7 @@
 !
 !     The segment stop time should be greater then the begin time.
 !
-      if ( first .gt. last ) then
+      if ( first > last ) then
 
          call setmsg ( 'The segment start time: # is greater then ' // &
                        'the segment end time: #'                   )
@@ -467,7 +467,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -482,7 +482,7 @@
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -535,7 +535,7 @@
 !
       i = 100
 
-      do while ( i .le. n )
+      do while ( i <= n )
          call dafada ( epochs(i), 1 )
          i = i + 100
       end do

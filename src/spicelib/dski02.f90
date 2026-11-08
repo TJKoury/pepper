@@ -568,7 +568,7 @@
       end if
 
 
-      if ( room .le. 0 ) then
+      if ( room <= 0 ) then
 
          call chkin  ( 'DSKI02' )
          call setmsg ( 'ROOM was #; must be positive.' )
@@ -594,8 +594,8 @@
 !     but they can't share an integer base address with a type 2
 !     segment.
 !
-      if (      ( handle .ne. prvhan ) &
-           .or. ( ibase  .ne. prvbas )  ) then
+      if (      ( handle /= prvhan ) &
+           .or. ( ibase  /= prvbas )  ) then
 !
 !        Treat the input file and segment as new.
 !
@@ -611,7 +611,7 @@
 !
 !        Check the coarse voxel scale.
 !
-         if ( ibuff(ixcgsc) .lt. 1 ) then
+         if ( ibuff(ixcgsc) < 1 ) then
 
             call chkin  ( 'DSKI02'                         )
             call setmsg ( 'Coarse voxel grid scale is #; ' // &
@@ -654,7 +654,7 @@
 !     Note that we haven't checked the validity of START; we'll do this
 !     after the IF block.
 !
-      if ( item .eq. kwnv ) then
+      if ( item == kwnv ) then
 !
 !        Return the number of vertices.
 !
@@ -666,35 +666,35 @@
 !        let control pass to the error handling block near
 !        the end of this routine.
 !
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
-      else if ( item .eq. kwnp ) then
+      else if ( item == kwnp ) then
 !
 !        Return the number of plates.
 !
          n         = 1
          values(1) = np
 
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
 
-      else if ( item .eq. kwnvxt ) then
+      else if ( item == kwnvxt ) then
 !
 !        Return the total number of voxels.
 !
          n         = 1
          values(1) = nvxtot
 
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
 
-      else if ( item .eq. kwvgrx ) then
+      else if ( item == kwvgrx ) then
 !
 !        Return the voxel grid extents.
 !
@@ -702,55 +702,55 @@
          b    = ibase + ixvgrx + start - 1
 
 
-      else if ( item .eq. kwcgsc ) then
+      else if ( item == kwcgsc ) then
 !
 !        Return the coarse voxel grid scale.
 !
          n         = 1
          values(1) = cgscal
 
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
 
-      else if ( item .eq. kwvxps ) then
+      else if ( item == kwvxps ) then
 !
 !        Return the voxel-plate pointer list size.
 !
          n         = 1
          values(1) = voxnpt
 
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
 
-      else if ( item .eq. kwvxls ) then
+      else if ( item == kwvxls ) then
 !
 !        Return the voxel-plate list size.
 !
          n         = 1
          values(1) = voxnpl
 
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
 
-      else if ( item .eq. kwvtls ) then
+      else if ( item == kwvtls ) then
 !
 !        Return the vertex-plate list size.
 !
          n         = 1
          values(1) = vtxnpl
 
-         if ( start .eq. 1 ) then
+         if ( start == 1 ) then
             return
          end if
 
 
-      else if ( item .eq. kwplat ) then
+      else if ( item == kwplat ) then
 !
 !        Return plate data.  There are 3*NP values in all.  First
 !        locate the data.
@@ -759,7 +759,7 @@
          b    = ( ibase + ixplat ) + start - 1
 
 
-      else if ( item .eq. kwvxpt )  then
+      else if ( item == kwvxpt )  then
 !
 !        Return voxel pointer data.  There are VOXNPT values in all.
 !        First locate the data.
@@ -768,7 +768,7 @@
          b    = ( ibase + ixplat + 3*np ) + start - 1
 
 
-      else if ( item .eq. kwvxpl )  then
+      else if ( item == kwvxpl )  then
 !
 !        Return voxel-plate list data.  There are VOXNPL values in all.
 !        First locate the data.
@@ -777,7 +777,7 @@
          b    = ( ibase + ixplat + 3*np + voxnpt ) + start - 1
 
 
-      else if ( item .eq. kwvtpt )  then
+      else if ( item == kwvtpt )  then
 !
 !        Return vertex-plate pointer data.  There are NV values in all.
 !        First locate the data.
@@ -787,7 +787,7 @@
                  + start - 1
 
 
-      else if ( item .eq. kwvtpl )  then
+      else if ( item == kwvtpl )  then
 !
 !        Return vertex-plate list data.  There are VTXNPL values in
 !        all. First locate the data.
@@ -798,7 +798,7 @@
               + start - 1
 
 
-      else if ( item .eq. kwcgpt )  then
+      else if ( item == kwcgpt )  then
 !
 !        Compute the coarse grid size.
 !
@@ -832,7 +832,7 @@
 !
 !     The valid range for START is 1:SIZE.
 !
-      if (  ( start .lt. 1 ) .or. ( start .gt. size )  ) then
+      if (  ( start < 1 ) .or. ( start > size )  ) then
 
          call chkin  ( 'DSKI02'                              )
          call setmsg ( 'START must be in the range defined ' // &

@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         name
+      character(*)          name
       integer(ip)           unit
 
 ! $ Brief_I/O
@@ -120,14 +120,14 @@
       integer(ip)           wdsize
       parameter           ( wdsize = 8 )
 
-      character*(wdsize)    myname
+      character(wdsize)     myname
 
       call ljust ( name,   myname )
       call ucase ( myname, myname )
 
-      if ( myname .eq. 'STDIN' ) then
+      if ( myname == 'STDIN' ) then
          unit = 5
-      else if ( myname .eq. 'STDOUT' ) then
+      else if ( myname == 'STDOUT' ) then
          unit = 6
       else if ( return() ) then
          return

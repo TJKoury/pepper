@@ -22,12 +22,12 @@
 
       implicit none
 
-      character*(*)         caller
-      character*(*)         name
-      character*(*)         comp
+      character(*)          caller
+      character(*)          name
+      character(*)          comp
       integer(ip)           size
       integer(ip)           divby
-      character*(*)         type
+      character(*)          type
 
 ! $ Brief_I/O
 !
@@ -379,7 +379,7 @@
 !     Local Variables
 !
 
-      character*(1)         class
+      character(1)          class
 
       integer(ip)           dim
       integer(ip)           ratio
@@ -427,25 +427,25 @@
 !     Compare the dimension of the specified variable with the
 !     input SIZE.
 !
-      if      ( comp .eq. '='  ) then
+      if      ( comp == '='  ) then
 
-         ok = dim .eq. size
+         ok = dim == size
 
-      else if ( comp .eq. '<'  ) then
+      else if ( comp == '<'  ) then
 
-         ok = dim .lt. size
+         ok = dim < size
 
-      else if ( comp .eq. '>'  ) then
+      else if ( comp == '>'  ) then
 
-         ok = dim .gt. size
+         ok = dim > size
 
-      else if ( comp .eq. '<=' ) then
+      else if ( comp == '<=' ) then
 
-         ok = dim .le. size
+         ok = dim <= size
 
-      else if ( comp .eq. '=>' ) then
+      else if ( comp == '=>' ) then
 
-         ok = dim .ge. size
+         ok = dim >= size
 
       else
 
@@ -491,13 +491,13 @@
 !     Check to see that DIVBY evenly divides the dimension of
 !     the variable.
 !
-      if ( divby .ne. 0 ) then
+      if ( divby /= 0 ) then
          ratio = dim / divby
       else
          ratio = 1
       end if
 
-      if ( divby*ratio .ne. dim ) then
+      if ( divby*ratio /= dim ) then
 
          call setmsg ( '#: The number of components of the ' &
          //            'kernel pool variable ''#'' is required ' &
@@ -521,7 +521,7 @@
 !
       if      ( eqchr ( type, 'C' ) ) then
 
-         if ( class .ne. 'C' ) then
+         if ( class /= 'C' ) then
 
 
             call setmsg ( '#: The kernel pool variable ''#'' ' &
@@ -539,7 +539,7 @@
       else if ( eqchr ( type, 'N' ) ) then
 
 
-         if ( class .ne. 'N' ) then
+         if ( class /= 'N' ) then
 
             call setmsg ( '#: The kernel pool variable ''#'' ' &
             //            'must be of type "NUMERIC".  However, ' &

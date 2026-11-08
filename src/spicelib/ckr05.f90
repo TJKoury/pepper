@@ -380,7 +380,7 @@
 !
 !     Make sure that this really is a type 05 data segment.
 !
-      if ( type .ne. 5 ) then
+      if ( type /= 5 ) then
          call setmsg( 'You are attempting to locate type * ' // &
                       'data in a type 5 data segment.'       )
          call errint( '*',  type                             )
@@ -392,7 +392,7 @@
 !
 !     Check the tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
          call setmsg( 'Tolerance must be non-negative but '  // &
                       'was actually *.'                      )
          call errdp ( '*',  tol                              )
@@ -405,8 +405,8 @@
 !     Check the request time and tolerance against the bounds in
 !     the segment descriptor.
 !
-      if (       ( (sclkdp + tol) .lt. dc(1) ) &
-           .or.  ( (sclkdp - tol) .gt. dc(2) )  )  then
+      if (       ( (sclkdp + tol) < dc(1) ) &
+           .or.  ( (sclkdp - tol) > dc(2) )  )  then
 !
 !        The request time is too far outside the segment's coverage
 !        interval for any pointing to satisfy the request.
@@ -461,19 +461,19 @@
 !
 !     Set the packet size, which is a function of the subtype.
 !
-      if ( subtyp .eq. c05tp0 ) then
+      if ( subtyp == c05tp0 ) then
 
          packsz = c05ps0
 
-      else if ( subtyp .eq. c05tp1 ) then
+      else if ( subtyp == c05tp1 ) then
 
          packsz = c05ps1
 
-      else if ( subtyp .eq. c05tp2 ) then
+      else if ( subtyp == c05tp2 ) then
 
          packsz = c05ps2
 
-      else if ( subtyp .eq. c05tp3 ) then
+      else if ( subtyp == c05tp3 ) then
 
          packsz = c05ps3
 
@@ -491,7 +491,7 @@
 !
 !     Check the window size.
 !
-      if ( wndsiz .le. 0 ) then
+      if ( wndsiz <= 0 ) then
 
          call setmsg ( 'Window size in type 05 segment was #; must ' // &
                        'be positive.'                                )
@@ -503,14 +503,14 @@
       end if
 
 
-      if (      ( subtyp .eq. c05tp0 ) &
-           .or. ( subtyp .eq. c05tp2 )  ) then
+      if (      ( subtyp == c05tp0 ) &
+           .or. ( subtyp == c05tp2 )  ) then
 !
 !        These are the Hermite subtypes.
 !
          maxwnd  =  (maxdeg+1)/2
 
-         if ( wndsiz .gt. maxwnd ) then
+         if ( wndsiz > maxwnd ) then
 
             call setmsg ( 'Window size in type 05 segment was #; max '// &
                           'allowed value is # for subtypes 0 and 2 '  // &
@@ -536,14 +536,14 @@
          end if
 
 
-      else if (      ( subtyp .eq. c05tp1 ) &
-                .or. ( subtyp .eq. c05tp3 )  ) then
+      else if (      ( subtyp == c05tp1 ) &
+                .or. ( subtyp == c05tp3 )  ) then
 !
 !        These are the Lagrange subtypes.
 !
          maxwnd  =  maxdeg + 1
 
-         if ( wndsiz .gt. maxwnd ) then
+         if ( wndsiz > maxwnd ) then
 
             call setmsg ( 'Window size in type 05 segment was #; max '// &
                           'allowed value is # for subtypes 1 and 3 '  // &
@@ -600,7 +600,7 @@
       npdir   =  (n-1) / dirsiz
       dirbas  =  begin +  n*packsz  +  n  -  1
 
-      if ( npdir .eq. 0 ) then
+      if ( npdir == 0 ) then
 !
 !        There's no mystery about which group of epochs to search.
 !
@@ -623,8 +623,8 @@
          remain  =  npdir - npread
 
 
-         do while (       ( pbuffr(npread) .lt. t ) &
-                    .and. ( remain         .gt. 0 )   )
+         do while (       ( pbuffr(npread) < t ) &
+                    .and. ( remain         > 0 )   )
 
             bufbas  =  bufbas + npread
             npread  =  min ( remain, dirsiz )
@@ -692,7 +692,7 @@
 !     the indices, relative to the set of time tags, of the first
 !     and last time tags in the set we're going to look up.
 !
-      if ( pgroup .eq. 1 ) then
+      if ( pgroup == 1 ) then
 
          pbegix  =  1
          pendix  =  min ( n, dirsiz )
@@ -719,13 +719,13 @@
 !     At this point, we'll deal with the cases where T lies outside
 !     of the range of epochs we've buffered.
 !
-      if ( t .lt. pbuffr(1) ) then
+      if ( t < pbuffr(1) ) then
 !
 !        This can happen only if PGROUP = 1 and T precedes all epochs.
 !        If the input request time is too far from PBUFFR(1) on
 !        the low side, we're done.
 !
-         if ( sclkdp + tol .lt. pbuffr(1) ) then
+         if ( sclkdp + tol < pbuffr(1) ) then
 
             call chkout ( 'CKR05' )
             return
@@ -738,11 +738,11 @@
          t = pbuffr(1)
 
 
-      else if ( t .gt. pbuffr(npread) ) then
+      else if ( t > pbuffr(npread) ) then
 !
 !        This can happen only if T follows all epochs.
 !
-         if ( sclkdp - tol .gt. pbuffr(npread) ) then
+         if ( sclkdp - tol > pbuffr(npread) ) then
 
             call chkout ( 'CKR05' )
             return
@@ -782,14 +782,14 @@
 !     tags that bracket the request time.  Remember that NPREAD could
 !     be equal to 1, in which case we would have LOW = HIGH.
 !
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 !
 !        This can happen only if PGROUP = 1 and T = PBUFFR(1).
 !
          low    =  1
          lepoch =  pbuffr(1)
 
-         if ( n .eq. 1 ) then
+         if ( n == 1 ) then
             high = 1
          else
             high = 2
@@ -835,11 +835,11 @@
 !        LEND       segment in the file LHAND that PREVS and PREVN
 !                   were found in.
 !
-      if (  ( handle .eq. lhand ) .and. &
-            ( begin  .eq. lbeg  ) .and. &
-            ( end    .eq. lend  ) .and. &
-            ( t      .ge. prevs ) .and. &
-            ( t      .lt. prevn )      ) then
+      if (  ( handle == lhand ) .and. &
+            ( begin  == lbeg  ) .and. &
+            ( end    == lend  ) .and. &
+            ( t      >= prevs ) .and. &
+            ( t      < prevn )      ) then
 
 
          start  = prevs
@@ -853,7 +853,7 @@
          nidir   =  (nints-1) / dirsiz
          dirbas  =   end - ctrlsz - nidir
 
-         if ( nidir .eq. 0 ) then
+         if ( nidir == 0 ) then
 !
 !           There's no mystery about which group of epochs to search.
 !
@@ -875,8 +875,8 @@
 
             call dafgda ( handle, bufbas+1, bufbas+nsread, sbuffr )
 
-            do while (       ( sbuffr(nsread) .lt. t ) &
-                       .and. ( remain         .gt. 0 )   )
+            do while (       ( sbuffr(nsread) < t ) &
+                       .and. ( remain         > 0 )   )
 
                bufbas  =  bufbas + nsread
                nsread  =  min ( remain, dirsiz )
@@ -912,7 +912,7 @@
 !        indices, relative to the set of start times, of the first and
 !        last start times in the set we're going to look up.
 !
-         if ( sgroup .eq. 1 ) then
+         if ( sgroup == 1 ) then
 
             sbegix  =  1
             sendix  =  min ( nints, dirsiz + 2 )
@@ -953,11 +953,11 @@
 !        START, if START is not the last start time.  If NSTART
 !        has a successor, let NNSTRT be that start time.
 !
-         if ( i .lt. nsread ) then
+         if ( i < nsread ) then
 
             nstart = sbuffr(i+1)
 
-            if ( i+1 .lt. nsread ) then
+            if ( i+1 < nsread ) then
 
                nnstrt = sbuffr(i+2)
             else
@@ -981,7 +981,7 @@
 !     to the closer endpoint of the closer interval.  Otherwise,
 !     we return without finding pointing.
 !
-      if ( hepoch .eq. nstart ) then
+      if ( hepoch == nstart ) then
 !
 !        The first time tag greater than or equal to T is the start
 !        time of the next interpolation interval.
@@ -990,11 +990,11 @@
 !        LEPOCH is the last time tag of the first interval; HEPOCH
 !        is the first time tag of the next interval.
 !
-         if (  abs( t - lepoch ) .le. abs( hepoch - t )  ) then
+         if (  abs( t - lepoch ) <= abs( hepoch - t )  ) then
 !
 !           T is closer to the first interval...
 !
-            if (  abs( t - lepoch )  .gt.  tol  ) then
+            if (  abs( t - lepoch )  >  tol  ) then
 !
 !              ...But T is too far from the interval.
 !
@@ -1014,7 +1014,7 @@
 !
 !           T is closer to the second interval...
 !
-            if (  abs( hepoch - t )  .gt.  tol  ) then
+            if (  abs( hepoch - t )  >  tol  ) then
 !
 !              ...But T is too far from the interval.
 !
@@ -1111,7 +1111,7 @@
       j = lstltd ( nstart, wndsiz, pbuffr )
 
 
-      if ( i .eq. j ) then
+      if ( i == j ) then
 !
 !        Fuggedaboudit.
 !

@@ -31,7 +31,7 @@
       integer(ip)           targ
       integer(ip)           illmn
       integer(ip)           obs
-      character*(*)         abcorr
+      character(*)          abcorr
       real(wp)              value
 
 ! $ Brief_I/O
@@ -158,7 +158,7 @@
       real(wp)              pv1    ( 3 )
       real(wp)              pv2    ( 3 )
 
-      character*(5)         ref
+      character(5)          ref
 
 !
 !     Standard SPICE error handling.

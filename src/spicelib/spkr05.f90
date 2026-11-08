@@ -251,7 +251,7 @@
 !
 !     Make sure that this really is a type 5 data segment.
 !
-      if ( type .ne. 05 ) then
+      if ( type /= 05 ) then
          call setmsg( 'You are attempting to locate type 5 '      // &
                       'data in a type # data segment.'              )
          call errint( '#',  type                                    )
@@ -293,7 +293,7 @@
 !                              .               .            .
 !                              N     (N-1)*100+1        N*100
 
-      if ( ndir .eq. 0 ) then
+      if ( ndir == 0 ) then
 !
 !        There is only one group if there are no directory epochs.
 !
@@ -339,12 +339,12 @@
 !
             i = lstltd( et, n, data )
 
-            if ( i .lt. n ) then
+            if ( i < n ) then
 
                group =  group + i + 1
                fnd   = .true.
 
-            else if ( remain .eq. 0 ) then
+            else if ( remain == 0 ) then
 
                group =  ndir + 1
                fnd   = .true.
@@ -386,7 +386,7 @@
 !
       n = min ( dirsiz, nrec - skip )
 
-      if ( n .ne. 0 ) then
+      if ( n /= 0 ) then
 
          call dafgda ( handle, grpadd, grpadd + n - 1, data )
 !
@@ -421,9 +421,9 @@
 !     than the first time or greater than the last one in the GROUP.
 !
 
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 
-         if ( group .eq. 1 ) then
+         if ( group == 1 ) then
 
 !
 !           ET is less than or equal to the first time in the segment.
@@ -454,9 +454,9 @@
 
          end if
 
-      else if ( i .eq. n ) then
+      else if ( i == n ) then
 
-         if ( group .eq. (ndir + 1) ) then
+         if ( group == (ndir + 1) ) then
 !
 !           ET is greater than all of the times in the segment. Return
 !           the state for the last time twice.

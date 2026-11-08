@@ -26,9 +26,9 @@
 
       include               'zzctr.inc'
 
-      character*(*)         body
+      character(*)          body
       real(wp)              et
-      character*(*)         abcorr
+      character(*)          abcorr
 
 ! $ Brief_I/O
 !
@@ -308,7 +308,7 @@
 !
 !     Local parameters
 !
-      character*(*)         ref
+      character(*)          ref
       parameter           ( ref     = 'J2000' )
 
       integer(ip)           sun
@@ -344,7 +344,7 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svbody
+      character(maxl)       svbody
       integer(ip)           svidcd
       logical               svfnd1
 

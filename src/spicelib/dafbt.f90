@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         binfil
+      character(*)          binfil
       integer(ip)           xfrlun
 
 ! $ Brief_I/O
@@ -245,22 +245,22 @@
 !
 !     Local parameters
 !
-      character*(*)         quote
+      character(*)          quote
       parameter           ( quote  = ''''           )
 
-      character*(*)         begarr
+      character(*)          begarr
       parameter           ( begarr = 'BEGIN_ARRAY'  )
 
-      character*(*)         endarr
+      character(*)          endarr
       parameter           ( endarr = 'END_ARRAY'    )
 
-      character*(*)         totarr
+      character(*)          totarr
       parameter           ( totarr = 'TOTAL_ARRAYS' )
 
-      character*(*)         ftypid
+      character(*)          ftypid
       parameter           ( ftypid = 'DAFETF'       )
 
-      character*(*)         infoln
+      character(*)          infoln
       parameter           ( infoln = 'NAIF DAF ENCODED TRANSFER FILE' )
 
       integer(ip)           bufsiz
@@ -280,10 +280,10 @@
 !
 !     Local variables
 !
-      character*(idwlen)    idword
-      character*(ifnlen)    ifname
-      character*(linlen)    line
-      character*(crecl)     name
+      character(idwlen)     idword
+      character(ifnlen)     ifname
+      character(linlen)     line
+      character(crecl)      name
 
       real(wp)              buffer( bufsiz )
       real(wp)              dsumry( 125    )
@@ -472,7 +472,7 @@
 !
       read( binlun,rec=1,iostat=iostat ) idword
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error reading the file ID word from the'  // &
                        ' binary DAF file ''#''. IOSTAT = #.'       )
@@ -507,7 +507,7 @@
 !
       write(xfrlun,fmt='(A)',iostat=iostat) ftypid // ' ' // infoln
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error writing to the DAF transfer'  // &
                        ' file ''#''.IOSTAT = #.'             )
@@ -523,7 +523,7 @@
 !
       write (xfrlun,fmt='(A)',iostat=iostat) quote // idword // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error writing to the DAF transfer'   // &
                        ' file ''#''. IOSTAT = #.'             )
@@ -553,7 +553,7 @@
 !
       write (xfrlun,fmt='(A)',iostat=iostat) quote // ifname // quote
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error writing to the DAF transfer'   // &
                        ' file ''#''. IOSTAT = #.'             )
@@ -649,7 +649,7 @@
             call repmi ( line, '#', dtacnt, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
@@ -666,7 +666,7 @@
             write (xfrlun,fmt='(A)',iostat=iostat) &
                                     quote // name( :snmlen) // quote
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
@@ -703,9 +703,9 @@
 
             numlft = dtacnt
 
-            do while ( numlft .gt. 0 )
+            do while ( numlft > 0 )
 
-               if ( numlft .ge. bufsiz ) then
+               if ( numlft >= bufsiz ) then
 
                   numdta = bufsiz
 
@@ -741,7 +741,7 @@
                call repmi ( line, '#', numdta, line )
                write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-               if ( iostat .ne. 0 ) then
+               if ( iostat /= 0 ) then
 
                call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
@@ -780,7 +780,7 @@
             call repmi ( line, '#', dtacnt, line )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error writing to the DAF transfer'   // &
                              ' file ''#''. IOSTAT = #.'             )
@@ -805,7 +805,7 @@
       call repmi ( line, '#', numarr, line )
       write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'Error writing to the DAF transfer'   // &
                        ' file ''#''. IOSTAT = #.'             )

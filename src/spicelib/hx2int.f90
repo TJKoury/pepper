@@ -19,10 +19,10 @@
 !
 ! $ Declarations
 !
-      character*(*)         string
+      character(*)          string
       integer(ip)           number
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
 !
 ! $ Brief_I/O
 !
@@ -396,7 +396,7 @@
 !
 !     If the string is blank, set the error flag and return immediately.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
 
          error  = .true.
          errmsg = 'ERROR: A blank input string is not allowed.'
@@ -419,7 +419,7 @@
 !
       strbeg = 1
 
-      do while ( ichar( string(strbeg:strbeg) ) .eq. ispace )
+      do while ( ichar( string(strbeg:strbeg) ) == ispace )
 
          strbeg = strbeg + 1
 
@@ -433,9 +433,9 @@
 
       do while ( more )
 
-         if ( strend .le. len( string ) ) then
+         if ( strend <= len( string ) ) then
 
-            if ( string(strend:) .ne. ' ' ) then
+            if ( string(strend:) /= ' ' ) then
 
                strend = strend + 1
 
@@ -477,12 +477,12 @@
 !     If the character is a plus sign, we want to increment the
 !     position.
 !
-      if ( ichar( string(pos:pos) ) .eq. iminus ) then
+      if ( ichar( string(pos:pos) ) == iminus ) then
 
          negtiv = .true.
          pos    = pos + 1
 
-      else if ( ichar( string(pos:pos) ) .eq. iplus ) then
+      else if ( ichar( string(pos:pos) ) == iplus ) then
 
          pos = pos + 1
 
@@ -502,22 +502,22 @@
 !
       if ( negtiv ) then
 
-         do while ( pos .le. strend )
+         do while ( pos <= strend )
 
             letter = ichar( string(pos:pos) )
 
-            if ( ( letter .ge. digbeg ) .and. &
-                 ( letter .le. digend ) ) then
+            if ( ( letter >= digbeg ) .and. &
+                 ( letter <= digend ) ) then
 
                idigit = letter - digbeg
 
-            else if ( ( letter .ge. uccbeg ) .and. &
-                      ( letter .le. uccend ) ) then
+            else if ( ( letter >= uccbeg ) .and. &
+                      ( letter <= uccend ) ) then
 
                idigit = 10 + letter - uccbeg
 
-            else if ( ( letter .ge. lccbeg ) .and. &
-                      ( letter .le. lccend ) ) then
+            else if ( ( letter >= lccbeg ) .and. &
+                      ( letter <= lccend ) ) then
 
                idigit = 10 + letter - lccbeg
 
@@ -531,13 +531,13 @@
 
             end if
 
-            if ( tmpnum .gt. mini ) then
+            if ( tmpnum > mini ) then
 
                tmpnum = tmpnum * base - idigit
                pos    = pos + 1
 
-            else if ( ( tmpnum .eq. mini   ) .and. &
-                      ( idigit .le. minmod ) ) then
+            else if ( ( tmpnum == mini   ) .and. &
+                      ( idigit <= minmod ) ) then
 
                tmpnum = tmpnum * base - idigit
                pos    = pos + 1
@@ -555,22 +555,22 @@
 
       else
 
-         do while ( pos .le. strend )
+         do while ( pos <= strend )
 
             letter = ichar( string(pos:pos) )
 
-            if ( ( letter .ge. digbeg ) .and. &
-                 ( letter .le. digend ) ) then
+            if ( ( letter >= digbeg ) .and. &
+                 ( letter <= digend ) ) then
 
                idigit = letter - digbeg
 
-            else if ( ( letter .ge. uccbeg ) .and. &
-                      ( letter .le. uccend ) ) then
+            else if ( ( letter >= uccbeg ) .and. &
+                      ( letter <= uccend ) ) then
 
                idigit = 10 + letter - uccbeg
 
-            else if ( ( letter .ge. lccbeg) .and. &
-                      ( letter .le. lccend) ) then
+            else if ( ( letter >= lccbeg) .and. &
+                      ( letter <= lccend) ) then
 
                idigit = 10 + letter - lccbeg
 
@@ -584,13 +584,13 @@
 
             end if
 
-            if ( tmpnum .lt. maxi ) then
+            if ( tmpnum < maxi ) then
 
                tmpnum = tmpnum * base + idigit
                pos    = pos + 1
 
-            else if ( ( tmpnum .eq. maxi   ) .and. &
-                      ( idigit .le. maxmod ) ) then
+            else if ( ( tmpnum == maxi   ) .and. &
+                      ( idigit <= maxmod ) ) then
 
                tmpnum = tmpnum * base + idigit
                pos    = pos + 1

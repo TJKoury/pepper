@@ -508,7 +508,7 @@
 !
       do k = 1, npkts
 
-         if ( pktsiz( k ) .le. 0 ) then
+         if ( pktsiz( k ) <= 0 ) then
 
             call setmsg ( 'The number of coefficient sets and '      // &
                           'epochs in the # data packet (record) '    // &
@@ -529,7 +529,7 @@
 !        inside CKPFS will have one more element -- time at which
 !        the pointing will be evaluated.
 !
-         if ( pktsiz( k ) .ge. ck4rsz ) then
+         if ( pktsiz( k ) >= ck4rsz ) then
 
             call setmsg ( 'The total size of the # data packet '     // &
                           '(record) to be added to the DAF segment ' // &

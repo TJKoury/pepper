@@ -34,7 +34,7 @@
       integer(ip)           endp1
       integer(ip)           frame2
       integer(ip)           endp2
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -290,10 +290,10 @@
 !
 !     Local variables
 !
-      character*(frnmln)    bname ( 2 )
-      character*(frnmln)    name  ( 2 )
-      character*(phrsln)    phrase
-      character*(timlen)    timstr
+      character(frnmln)     bname ( 2 )
+      character(frnmln)     name  ( 2 )
+      character(phrsln)     phrase
+      character(timlen)     timstr
 
       integer(ip)           endps  ( 2 )
       integer(ip)           center
@@ -356,7 +356,7 @@
 
       do i = 1, 2
 
-         if ( name(i) .eq. ' ' ) then
+         if ( name(i) == ' ' ) then
 
             name(i)   = 'Name not available'
             havnam(i) = .false.
@@ -364,7 +364,7 @@
             havnam(i) = .true.
          end if
 
-         if ( bname(i) .eq. ' ' ) then
+         if ( bname(i) == ' ' ) then
             bname(i) = 'Name not available'
          end if
 
@@ -393,7 +393,7 @@
 !
       do i = 1, 2
 
-         if ( frames(i) .ne. endps(i)  ) then
+         if ( frames(i) /= endps(i)  ) then
 
             phrase = 'Frame # could be transformed to frame # (@).'
 
@@ -412,7 +412,7 @@
 !           The error messages below are appended only if they're not
 !           redundant.
 !
-            if (  ( i .eq. 1 )  .or.  ( endps(2) .ne. endps(1) )  ) then
+            if (  ( i == 1 )  .or.  ( endps(2) /= endps(1) )  ) then
 !
 !              For each endpoint frame, if that frame is of CK type,
 !              indicate the instrument ID for which CK data are needed.
@@ -428,7 +428,7 @@
 
                if ( found ) then
 
-                  if ( class .eq. ck ) then
+                  if ( class == ck ) then
 
                      phrase = 'The latter is a CK frame; a CK file ' &
                      //       'containing data for instrument or ' &
@@ -483,8 +483,8 @@
 !           End of distinct frame case.
 !
 
-         else if (        ( i        .eq. 1        ) &
-                    .or.  ( endps(2) .ne. endps(1) )  ) then
+         else if (        ( i        == 1        ) &
+                    .or.  ( endps(2) /= endps(1) )  ) then
 !
 !           The error messages below are appended only if they're not
 !           redundant.
@@ -503,7 +503,7 @@
 
             if ( found ) then
 
-               if ( class .eq. ck ) then
+               if ( class == ck ) then
 
                   phrase = '# is a CK frame; a CK file ' &
                   //       'containing data for instrument or ' &

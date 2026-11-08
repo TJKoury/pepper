@@ -327,8 +327,8 @@
 !
 !     Check for obvious bad inputs.
 !
-      if (      ( max(indexp,indexa) .gt. 3 ) &
-           .or. ( min(indexp,indexa) .lt. 1 ) ) then
+      if (      ( max(indexp,indexa) > 3 ) &
+           .or. ( min(indexp,indexa) < 1 ) ) then
 
          call setmsg ( 'The definition indices must lie in the range '// &
                        'from 1 to 3.  The value of INDEXA was #. '    // &
@@ -339,7 +339,7 @@
          call chkout ( 'ZZTWOVXF'        )
          return
 
-      else if ( indexa .eq. indexp ) then
+      else if ( indexa == indexp ) then
 
          call setmsg ( 'The values of INDEXA and INDEXP were the '    // &
                        'same, namely #.  They are required to be '    // &
@@ -377,7 +377,7 @@
 !
 !     Select column indices...
 !
-      if ( indexp .eq. i2 ) then
+      if ( indexp == i2 ) then
 !
 !        We compute the third axis in the sequence, then the second.
 !

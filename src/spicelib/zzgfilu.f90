@@ -34,13 +34,13 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         method
-      character*(*)         angtyp
-      character*(*)         target
-      character*(*)         illum
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          method
+      character(*)          angtyp
+      character(*)          target
+      character(*)          illum
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              et
       external              udfunc
@@ -212,13 +212,13 @@
 !
 !     Local Variables
 !
-      character*(namlen)    angnms ( 3 )
-      character*(corlen)    svcorr
-      character*(bdnmln)    svinam
-      character*(mthlen)    svmeth
-      character*(bdnmln)    svonam
-      character*(frnmln)    svref
-      character*(bdnmln)    svtnam
+      character(namlen)     angnms ( 3 )
+      character(corlen)     svcorr
+      character(bdnmln)     svinam
+      character(mthlen)     svmeth
+      character(bdnmln)     svonam
+      character(frnmln)     svref
+      character(bdnmln)     svtnam
 
       real(wp)              angles ( 3 )
       real(wp)              emista ( 2 )
@@ -597,7 +597,7 @@
 !
 !     Make sure the observer and target are distinct.
 !
-      if ( svtarg .eq. svobs ) then
+      if ( svtarg == svobs ) then
 
          call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
@@ -613,7 +613,7 @@
 !
 !     Make sure the target and illumination source are distinct.
 !
-      if ( svtarg .eq. svilum ) then
+      if ( svtarg == svilum ) then
 
          call setmsg ( 'The target and illumination source must ' &
          //            'be distinct objects, but are not: ' &
@@ -701,7 +701,7 @@
       call ljust ( method, svmeth )
       call ucase ( svmeth, svmeth )
 
-      if ( svmeth .ne. 'ELLIPSOID' ) then
+      if ( svmeth /= 'ELLIPSOID' ) then
 
          call setmsg ( 'The only supported computation method ' &
          //            'is ELLIPSOID; the input method was #.' )
@@ -751,7 +751,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( fxcent .ne. svtarg ) then
+      if ( fxcent /= svtarg ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -770,7 +770,7 @@
 !
       svaidx = esrchc ( angtyp, 3, angnms )
 
-      if ( svaidx .eq. 0 ) then
+      if ( svaidx == 0 ) then
 
          call setmsg ( 'Illumination angle type # is not recognized.' )
          call errch  ( '#',  angtyp                                   )
@@ -931,15 +931,15 @@
          return
       end if
 
-      if ( svaidx .eq. phsidx ) then
+      if ( svaidx == phsidx ) then
 
          rate = phssta(2)
 
-      else if ( svaidx .eq. incidx ) then
+      else if ( svaidx == incidx ) then
 
          rate = incsta(2)
 
-      else if ( svaidx .eq. emtidx ) then
+      else if ( svaidx == emtidx ) then
 
          rate = emista(2)
 
@@ -956,7 +956,7 @@
 !     The observer-target illumination angle is decreasing if and only
 !     the derivative of the angle with respect to time is negative.
 !
-      decres  =  rate  .lt.  0.0_wp
+      decres  =  rate  <  0.0_wp
 
       call chkout ( 'ZZGFILDC' )
       return

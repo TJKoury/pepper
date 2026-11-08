@@ -23,7 +23,7 @@
 
       include 'errhnd.inc'
 
-      character*(*)        marker
+      character(*)         marker
       real(wp)             dpnum
 
 ! $ Brief_I/O
@@ -240,14 +240,14 @@
 !
 !     Local Variables:
 !
-      character*(lmsgln)    lngmsg
-      character*(lmsgln)    tmpmsg
+      character(lmsgln)     lngmsg
+      character(lmsgln)     tmpmsg
 
 !
 !     Length of DPSTRG is number of significant digits plus 7
 !     (see DPSTR header)
 !
-      character*(21)        dpstrg
+      character(21)         dpstrg
 
       integer(ip)           strpos
 
@@ -266,7 +266,7 @@
 !
 !     MARKER has to have some non-blank characters, or we do nothing.
 !
-      if (  lastnb (marker)  .eq.  0  )   then
+      if (  lastnb (marker)  ==  0  )   then
          return
       end if
 
@@ -285,7 +285,7 @@
       strpos = index (  lngmsg, &
                         marker ( frstnb(marker):lastnb(marker) )  )
 
-      if  ( strpos .eq. 0 ) then
+      if  ( strpos == 0 ) then
 
          return
 
@@ -294,10 +294,10 @@
 !        We put together TMPMSG, a copy of LNGMSG with MARKER
 !        replaced by the character representation of DPNUM:
 !
-         if ( strpos .gt. 1 ) then
+         if ( strpos > 1 ) then
 
             if (    ( strpos + lastnb(marker) - frstnb(marker) ) &
-                .lt.  lastnb ( lngmsg )                          ) then
+                <  lastnb ( lngmsg )                          ) then
 !
 !              There's more of the long message after the marker...
 !
@@ -319,7 +319,7 @@
 !           We're starting with the d.p. number, so we know it fits...
 !
             if (      ( lastnb(marker) - frstnb(marker) ) &
-                 .lt.   lastnb(lngmsg)                    ) then
+                 <   lastnb(lngmsg)                    ) then
 !
 !              There's more of the long message after the marker...
 !

@@ -30,8 +30,8 @@
       include              'srftrn.inc'
       include              'zzsrftrn.inc'
 
-      character*(sfnmln)    kernam (          * )
-      character*(sfnmln)    nornam (          * )
+      character(sfnmln)     kernam (          * )
+      character(sfnmln)     nornam (          * )
       integer(ip)           kersid (          * )
       integer(ip)           kerbid (          * )
       logical               extker
@@ -218,13 +218,13 @@
 !
 !     Local parameters
 !
-      character*(*)         kvsfbd
+      character(*)          kvsfbd
       parameter           ( kvsfbd = 'NAIF_SURFACE_BODY' )
 
-      character*(*)         kvsfcd
+      character(*)          kvsfcd
       parameter           ( kvsfcd = 'NAIF_SURFACE_CODE' )
 
-      character*(*)         kvsfnm
+      character(*)          kvsfnm
       parameter           ( kvsfnm = 'NAIF_SURFACE_NAME' )
 
       integer(ip)           kvnmln
@@ -236,10 +236,10 @@
 !
 !     Local variables
 !
-      character*(1)         bdtype
-      character*(1)         cdtype
-      character*(1)         ndtype
-      character*(kvnmln)    names  ( nnames )
+      character(1)          bdtype
+      character(1)          cdtype
+      character(1)          ndtype
+      character(kvnmln)     names  ( nnames )
 
       integer(ip)           i
       integer(ip)           nbody
@@ -373,9 +373,9 @@
 !
 !     Check variable types.
 !
-      if (     ( ndtype .ne. 'C' ) &
-          .or. ( cdtype .ne. 'N' ) &
-          .or. ( bdtype .ne. 'N' ) ) then
+      if (     ( ndtype /= 'C' ) &
+          .or. ( cdtype /= 'N' ) &
+          .or. ( bdtype /= 'N' ) ) then
 
          call setmsg ( 'Surface mapping kernel variable types ' &
          //            'are: # = #; # = #; # = #. These types ' &
@@ -396,9 +396,9 @@
 !
 !     Check variable dimensions.
 !
-      if (     ( nname .gt. mxnsrf ) &
-          .or. ( ncode .gt. mxnsrf ) &
-          .or. ( nbody .gt. mxnsrf ) ) then
+      if (     ( nname > mxnsrf ) &
+          .or. ( ncode > mxnsrf ) &
+          .or. ( nbody > mxnsrf ) ) then
 
          call setmsg ( 'Surface mapping kernel variable sizes ' &
          //            'are: # = #; # = #; # = #. Maximum ' &
@@ -416,7 +416,7 @@
 
       end if
 
-      if (  ( ncode .ne. nname ) .or. ( nbody .ne. nname )  ) then
+      if (  ( ncode /= nname ) .or. ( nbody /= nname )  ) then
 
          call setmsg ( 'Surface variable sizes do not match. Size ' &
          //            'of # is #; size of # is #; size of # is #.'  )
@@ -455,7 +455,7 @@
 !
       do i = 1, nkvar
 
-         if ( kernam(i) .eq. ' ' ) then
+         if ( kernam(i) == ' ' ) then
 
             call setmsg ( 'An attempt to assign the code, #, to ' &
             //            'a blank string was made.  Check loaded ' &

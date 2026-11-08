@@ -20,7 +20,7 @@
 
       implicit none
 
-      character*(*)         string
+      character(*)          string
       integer(ip)           first
       integer(ip)           last
       integer(ip)           nchar
@@ -180,7 +180,7 @@
 !
 !     If start is beyond the ends of the string, we  can quit now.
 !
-      if ( first .lt. 1 .or. first .gt. l ) then
+      if ( first < 1 .or. first > l ) then
          nchar = 0
          return
       end if
@@ -190,13 +190,13 @@
 !
       i = ichar( string(first:first) )
 
-      if ( next .lt. l ) then
+      if ( next < l ) then
          j = ichar( string(next:next) )
       else
          j = ichar( ' ' )
       end if
 
-      if ( i .eq. ichar('.' ) ) then
+      if ( i == ichar('.' ) ) then
 !
 !        Case 1. The string begins with a decimal point.
 !        There must be an unsigned integer following.
@@ -205,15 +205,15 @@
 
          call lx4uns ( string, f, last, nchar )
 
-         if ( nchar .eq. 0 ) then
+         if ( nchar == 0 ) then
             last  = first - 1
          else
             nchar = nchar + 1
          end if
 
-      else if (    (     i .eq. ichar('-') &
-                    .or. i .eq. ichar('+') ) &
-               .and.     j .eq. ichar('.')    ) then
+      else if (    (     i == ichar('-') &
+                    .or. i == ichar('+') ) &
+               .and.     j == ichar('.')    ) then
 !
 !        Case 2. The string begins with a sign followed by
 !        a decimal point. There must be an unsigned integer following.
@@ -222,13 +222,13 @@
 
          call lx4uns ( string, f, last, nchar )
 
-         if ( nchar .eq. 0 ) then
+         if ( nchar == 0 ) then
             last  = first - 1
          else
             nchar = nchar + 1
          end if
 
-      else if ( i .eq. ichar('+') .and. j .eq. ichar('.') ) then
+      else if ( i == ichar('+') .and. j == ichar('.') ) then
 !
 !        Case 2. The string begins with a minus sign followed by
 !        a decimal point. There must be an unsigned integer following.
@@ -237,7 +237,7 @@
 
          call lx4uns ( string, f, last, nchar )
 
-         if ( nchar .eq. 0 ) then
+         if ( nchar == 0 ) then
             last  = first - 1
          else
             nchar = nchar + 1
@@ -254,12 +254,12 @@
 !        if there is a decimal point followed by an unsigned
 !        integer.
 !
-         if ( nchar .gt. 0 .and. last .lt. l ) then
+         if ( nchar > 0 .and. last < l ) then
 
             f = last + 1
             i = ichar( string(f:f) )
 
-            if ( i .eq. ichar( '.' ) ) then
+            if ( i == ichar( '.' ) ) then
 
                last = f
                f    = last + 1

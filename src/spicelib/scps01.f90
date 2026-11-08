@@ -24,9 +24,9 @@
       include               'sclk.inc'
 
       integer(ip)           sc
-      character*(*)         clkstr
+      character(*)          clkstr
       logical               error
-      character*(*)         msg
+      character(*)          msg
       real(wp)              ticks
 
 ! $ Brief_I/O
@@ -362,9 +362,9 @@
 !
 !     Local variables
 !
-      character*(dplen)     cmp    ( mxnfld )
-      character*(errlen)    strerr
-      character*(namlen)    namlst ( nkitem )
+      character(dplen)      cmp    ( mxnfld )
+      character(errlen)     strerr
+      character(namlen)     namlst ( nkitem )
 
       real(wp)              cmptks ( mxnfld )
       real(wp)              cmpval ( mxnfld )
@@ -432,7 +432,7 @@
 !
 !     If our clock string is blank, we can stop now.
 !
-      if ( clkstr .eq. ' ' ) then
+      if ( clkstr == ' ' ) then
 
          msg =  'Non partition part of the input clock string is ' // &
                 'blank.'
@@ -465,7 +465,7 @@
 !     If the string has too many fields for the specified spacecraft
 !     then signal an error.
 !
-      if  ( n .gt. nfield )  then
+      if  ( n > nfield )  then
 
          error = .true.
 
@@ -487,13 +487,13 @@
 !
       do i = 1, n
 
-         if ( cmp(i) .eq. ' ' )  then
+         if ( cmp(i) == ' ' )  then
             cmpval(i) = offset(i)
          else
             call nparsd ( cmp(i), cmpval(i), strerr, pntr )
          end if
 
-         if ( strerr .ne. ' ' ) then
+         if ( strerr /= ' ' ) then
 
             error = .true.
 
@@ -516,7 +516,7 @@
 !
          cmpval(i) = cmpval(i) - offset(i)
 
-         if  ( anint( cmpval(i) ) .lt. 0.0_wp  )   then
+         if  ( anint( cmpval(i) ) < 0.0_wp  )   then
 
             error = .true.
 

@@ -35,7 +35,7 @@
       integer(ip)           arrend
       integer(ip)           sclkid
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
@@ -202,7 +202,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -266,9 +266,9 @@
 !
       seglen = arrend - arrbeg + 1
 
-      if ( seglen .eq. navsln ) then
+      if ( seglen == navsln ) then
          rsize = 4
-      else if ( seglen .eq. avsln ) then
+      else if ( seglen == avsln ) then
          rsize = 7
       else
          call setmsg ( 'The requested segment in file # reports a ' &
@@ -330,7 +330,7 @@
       call dafgda ( handle, intat,  intat,   start )
       call dafgda ( handle, tickat, tickat,  tick  )
 
-      do while ( tick .lt. start .and. tickat .lt. lsttik )
+      do while ( tick < start .and. tickat < lsttik )
          tickat = tickat + 1
          call dafgda ( handle, tickat, tickat, tick )
       end do
@@ -339,7 +339,7 @@
 !     If we did not find a TICK at least as big as START, we can
 !     just return now.
 !
-      if ( tick .lt. start ) then
+      if ( tick < start ) then
          call chkout ( 'ZZCKCV03' )
          return
       end if
@@ -347,8 +347,8 @@
 
       bail = .false.
 
-      do while (       ( intat  .le.  lstint ) &
-                 .and. ( tickat .le.  lsttik ) &
+      do while (       ( intat  <=  lstint ) &
+                 .and. ( tickat <=  lsttik ) &
                  .and. (        .not. bail   )  )
 !
 !        At this point, we have an interval that begins at START
@@ -362,7 +362,7 @@
 !        interval available, we can short cut the remainder of the
 !        reads.
 !
-         if ( intat .eq. lstint ) then
+         if ( intat == lstint ) then
 
             call dafgda ( handle, lsttik, lsttik, finish )
 
@@ -388,7 +388,7 @@
 !           Read forward from the last tick until we reach the
 !           START of the next interval or until we run out of TICKS.
 !
-            do while ( tick .lt. start .and. tickat .lt. lsttik )
+            do while ( tick < start .and. tickat < lsttik )
                finish = tick
                tickat = tickat + 1
                call dafgda ( handle, tickat, tickat, tick  )
@@ -400,7 +400,7 @@
 !           police the writers of C-kernels.  The only way to get into
 !           the block below is if TICKAT .EQ. LSTTIK
 !
-            if ( tick .lt. start ) then
+            if ( tick < start ) then
                finish = tick
                tickat = tickat + 1
             end if
@@ -410,7 +410,7 @@
 !
 !        Adjust the interval using the tolerance.
 !
-         if ( tol .gt. 0.0_wp ) then
+         if ( tol > 0.0_wp ) then
 
             begin   =  max( begin  - tol, 0.0_wp )
             finish  =       finish + tol

@@ -24,8 +24,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          name
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
       integer(ip)           tabval     ( lbcell:* )
       integer(ip)           value
@@ -222,7 +222,7 @@
 !
 !     If it's not in the table, it's definitely a problem.
 !
-      if ( locsym .eq. 0 ) then
+      if ( locsym == 0 ) then
 
          found = .false.
 
@@ -248,7 +248,7 @@
 !        symbol from the name and pointer tables. Otherwise just
 !        decrement the dimension.
 !
-         if ( tabptr(locsym) .eq. 1 ) then
+         if ( tabptr(locsym) == 1 ) then
 
             call remlac ( 1, locsym, tabsym(1), nsym )
             call scardc ( nsym, tabsym )

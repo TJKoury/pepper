@@ -27,7 +27,7 @@
       include              'zzddhman.inc'
 
       integer(ip)           inbff
-      character*(*)         input
+      character(*)          input
       integer(ip)           space
       real(wp)              output ( * )
 
@@ -287,9 +287,9 @@
 !
 !     Local Variables
 !
-      character*(1)         carg
-      character*(strsiz)    strbff ( numbff )
-      character*(strsiz)    tmpstr
+      character(1)          carg
+      character(strsiz)     strbff ( numbff )
+      character(strsiz)     tmpstr
 
       real(wp)              dpbufr ( dpblen )
 
@@ -382,7 +382,7 @@
 
          natbff = isrchc ( tmpstr, numbff, strbff )
 
-         if ( natbff .eq. 0 ) then
+         if ( natbff == 0 ) then
 
             call setmsg ( 'The binary file format, ''#'', is not ' &
             //            'supported by this version of the toolkit. ' &
@@ -410,7 +410,7 @@
 !
 !        Set SMLINT to the appropriate value if INTMIN is too large.
 !
-         if ( smlint .eq. -2147483647 ) then
+         if ( smlint == -2147483647 ) then
             smlint = smlint - 1
          end if
 
@@ -424,7 +424,7 @@
 !
 !     Check to see if INBFF makes sense.
 !
-      if ( ( inbff .lt. 1 ) .or. ( inbff .gt. numbff ) ) then
+      if ( ( inbff < 1 ) .or. ( inbff > numbff ) ) then
 
          call setmsg ( 'The integer code used to indicate the ' &
          //            'binary file format of the input integers, ' &
@@ -447,9 +447,9 @@
 !
 !     Now branch based on NATBFF.
 !
-      if ( natbff .eq. bigi3e ) then
+      if ( natbff == bigi3e ) then
 
-         if ( inbff .eq. ltli3e ) then
+         if ( inbff == ltli3e ) then
 
 !
 !           Check to see that the length of the input string is
@@ -460,7 +460,7 @@
 !
             numdp = lenipt / 8
 
-            if ( lenipt - ( numdp*8 ) .ne. 0 ) then
+            if ( lenipt - ( numdp*8 ) /= 0 ) then
 
                call setmsg ( 'The input string that is to be ' &
                //            'translated from the binary format ' &
@@ -479,7 +479,7 @@
 !           Verify there is enough room to store the results of
 !           the translation.
 !
-            if ( numdp .gt. space ) then
+            if ( numdp > space ) then
 
                call setmsg ( 'The caller specified that # double ' &
                //            'precision numbers are to be ' &
@@ -592,7 +592,7 @@
 !
 !              Strip the sign bit if necessary.
 !
-               if ( osign .eq. 1 ) then
+               if ( osign == 1 ) then
                   value = value - 128
                end if
 
@@ -633,8 +633,8 @@
 !              which is the desired quantity.  Note, 0 must be
 !              treated as a special case.
 !
-               if ( osign .eq. 1 ) then
-                  if ( inbufr(k) .eq. 0 ) then
+               if ( osign == 1 ) then
+                  if ( inbufr(k) == 0 ) then
                      inbufr(k) = smlint
                   else
                      inbufr(k) = bigint-inbufr(k)
@@ -665,7 +665,7 @@
 !
 !              Strip the sign bit if necessary.
 !
-               if ( osign .eq. 1 ) then
+               if ( osign == 1 ) then
                   value = value - 128
                end if
 
@@ -682,8 +682,8 @@
 !              arranged.  Perform the computations as with the
 !              previous integer.
 !
-               if ( osign .eq. 1 ) then
-                  if ( inbufr(k+1) .eq. 0 ) then
+               if ( osign == 1 ) then
+                  if ( inbufr(k+1) == 0 ) then
                      inbufr(k+1) = smlint
                   else
                      inbufr(k+1) = bigint-inbufr(k+1)
@@ -698,7 +698,7 @@
 !              double precision numbers need to be moved into the
 !              next block of OUTPUT.
 !
-               if ( k .eq. inblen-1 ) then
+               if ( k == inblen-1 ) then
 
                   call moved ( dpbufr, dpblen, output(outpos) )
                   outpos = outpos + dpblen
@@ -717,7 +717,7 @@
 !           Copy any remaining double precision numbers from DPBUFR
 !           into OUTPUT.
 !
-            if ( k .ne. 1 ) then
+            if ( k /= 1 ) then
                call moved ( dpbufr, k/2, output(outpos) )
             end if
 
@@ -735,9 +735,9 @@
 
          end if
 
-      else if ( natbff .eq. ltli3e ) then
+      else if ( natbff == ltli3e ) then
 
-         if ( inbff .eq. bigi3e ) then
+         if ( inbff == bigi3e ) then
 
 !
 !           Check to see that the length of the input string is
@@ -748,7 +748,7 @@
 !
             numdp = lenipt / 8
 
-            if ( lenipt - ( numdp*8 ) .ne. 0 ) then
+            if ( lenipt - ( numdp*8 ) /= 0 ) then
 
                call setmsg ( 'The input string that is to be ' &
                //            'translated from the binary format ' &
@@ -767,7 +767,7 @@
 !           Verify there is enough room to store the results of
 !           the translation.
 !
-            if ( numdp .gt. space ) then
+            if ( numdp > space ) then
 
                call setmsg ( 'The caller specified that # double ' &
                //            'precision numbers are to be ' &
@@ -880,7 +880,7 @@
 !
 !              Strip the sign bit if necessary.
 !
-               if ( osign .eq. 1 ) then
+               if ( osign == 1 ) then
                   value = value - 128
                end if
 
@@ -921,8 +921,8 @@
 !              which is the desired quantity.  Note, 0 must be
 !              treated as a special case.
 !
-               if ( osign .eq. 1 ) then
-                  if ( inbufr(k) .eq. 0 ) then
+               if ( osign == 1 ) then
+                  if ( inbufr(k) == 0 ) then
                      inbufr(k) = smlint
                   else
                      inbufr(k) = bigint-inbufr(k)
@@ -953,7 +953,7 @@
 !
 !              Strip the sign bit if necessary.
 !
-               if ( osign .eq. 1 ) then
+               if ( osign == 1 ) then
                   value = value - 128
                end if
 
@@ -970,8 +970,8 @@
 !              arranged.  Perform the computations as with the
 !              previous integer.
 !
-               if ( osign .eq. 1 ) then
-                  if ( inbufr(k+1) .eq. 0 ) then
+               if ( osign == 1 ) then
+                  if ( inbufr(k+1) == 0 ) then
                      inbufr(k+1) = smlint
                   else
                      inbufr(k+1) = bigint-inbufr(k+1)
@@ -986,7 +986,7 @@
 !              double precision numbers need to be moved into the
 !              next block of OUTPUT.
 !
-               if ( k .eq. inblen-1 ) then
+               if ( k == inblen-1 ) then
 
                   call moved ( dpbufr, dpblen, output(outpos) )
                   outpos = outpos + dpblen
@@ -1005,7 +1005,7 @@
 !           Copy any remaining double precision numbers from DPBUFR
 !           into OUTPUT.
 !
-            if ( k .ne. 1 ) then
+            if ( k /= 1 ) then
                call moved ( dpbufr, k/2, output(outpos) )
             end if
 

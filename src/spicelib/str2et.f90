@@ -21,7 +21,7 @@
 
       implicit none
 
-      character*(*)         timstr
+      character(*)          timstr
       real(wp)              et
 
 ! $ Brief_I/O
@@ -727,24 +727,24 @@
       integer(ip)           system
       parameter           ( system = ampm   + 1 )
 
-      character*(lnsize)    pictur
-      character*(msgsiz)    error
+      character(lnsize)     pictur
+      character(msgsiz)     error
 
-      character*(smwdsz)    calndr
-      character*(smwdsz)    check
-      character*(smwdsz)    defsys
-      character*(smwdsz)    defzon
-      character*(smwdsz)    forml
-      character*(smwdsz)    juln
-      character*(smwdsz)    mixed
-      character*(smwdsz)    gregrn
-      character*(smwdsz)    modify ( system )
-      character*(smwdsz)    type
+      character(smwdsz)     calndr
+      character(smwdsz)     check
+      character(smwdsz)     defsys
+      character(smwdsz)     defzon
+      character(smwdsz)     forml
+      character(smwdsz)     juln
+      character(smwdsz)     mixed
+      character(smwdsz)     gregrn
+      character(smwdsz)     modify ( system )
+      character(smwdsz)     type
 
-      character*(2)         hstr
-      character*(2)         mstr
+      character(2)          hstr
+      character(2)          mstr
 
-      character*(smwdsz)    mname  ( 12 )
+      character(smwdsz)     mname  ( 12 )
 
       real(wp)              dhoff
       real(wp)              dmoff
@@ -832,7 +832,7 @@
       call timdef ( 'GET', 'ZONE',     defzon )
       call timdef ( 'GET', 'CALENDAR', calndr )
 
-      if ( defzon .ne. ' ' ) then
+      if ( defzon /= ' ' ) then
          call prefix  ( '::', 0, defzon )
          call zzutcpm ( defzon, 1, dhoff, dmoff, last, succes )
       else
@@ -862,8 +862,8 @@
 !     A system and time zone are incompatible components in a
 !     time string.
 !
-      if (       modify(zone)   .ne. ' ' &
-           .and. modify(system) .ne. ' ' ) then
+      if (       modify(zone)   /= ' ' &
+           .and. modify(system) /= ' ' ) then
 
          call setmsg ( 'Both a time system and time zone have ' &
          //            'been specified in the input string (# ' &
@@ -884,16 +884,16 @@
 !
       zoned = .false.
 
-      if ( modify(zone) .eq. ' ' .and. modify(system) .eq. ' ' ) then
+      if ( modify(zone) == ' ' .and. modify(system) == ' ' ) then
 
          modify(zone)   = defzon
          modify(system) = defsys
          hoff           = dhoff
          moff           = dmoff
-         zoned          = modify(zone) .ne. ' '
+         zoned          = modify(zone) /= ' '
 
 
-      else if ( modify(zone) .ne. ' ' ) then
+      else if ( modify(zone) /= ' ' ) then
 !
 !        Parse the time zone specification.  If we don't succeed
 !        in the parsing, signal an error.
@@ -918,13 +918,13 @@
 !     complications associated with it that the calendar strings
 !     have.
 !
-      if ( type .eq. 'JD' ) then
+      if ( type == 'JD' ) then
 
-         if      ( modify(system) .eq. 'UTC' ) then
+         if      ( modify(system) == 'UTC' ) then
             type = 'JDUTC'
-         else if ( modify(system) .eq. 'TDB' ) then
+         else if ( modify(system) == 'TDB' ) then
             type = 'JDTDB'
-         else if ( modify(system) .eq. 'TDT' ) then
+         else if ( modify(system) == 'TDT' ) then
             type = 'JDTDT'
          else
             type = 'JDUTC'
@@ -942,7 +942,7 @@
 !     Set the indexes of the hours, minutes, seconds, etc. components
 !     of the time vector.
 !
-      if ( type .eq. 'YD' ) then
+      if ( type == 'YD' ) then
          yr    =  1
          dy    =  2
          hr    =  3
@@ -973,10 +973,10 @@
 !
       adjust = .false.
 
-      if ( zoned .or.  calndr .ne. gregrn ) then
+      if ( zoned .or.  calndr /= gregrn ) then
 
-         if (       tvec(sc) .ge. 60.0_wp &
-              .and. tvec(sc) .lt. 61.0_wp ) then
+         if (       tvec(sc) >= 60.0_wp &
+              .and. tvec(sc) < 61.0_wp ) then
 
             adjust   = .true.
             tvec(sc) = tvec(sc) - 1.0_wp
@@ -987,7 +987,7 @@
 
 
 
-      if ( calndr .eq. mixed  ) then
+      if ( calndr == mixed  ) then
 !
 !        This is a bit awkward, but here's what's going on.
 !        If the input calendar is part of the Julian calendar
@@ -1002,7 +1002,7 @@
 !        have a problem we call TCHECK twice and .OR. the results
 !        of the checks to see if we have a legitimate time vector.
 !
-         if ( tvec(yr) .lt. 1580.0_wp ) then
+         if ( tvec(yr) < 1580.0_wp ) then
 
             call moved  ( tvec, 6, tvecm )
 
@@ -1019,7 +1019,7 @@
 
          end if
 
-      else if ( calndr .eq. juln  ) then
+      else if ( calndr == juln  ) then
 !
 !        Basically, this is the same story as before, but there
 !        are no bounds in the years where we might be on a century.
@@ -1070,10 +1070,10 @@
 !     There are no leapseconds in the TDT and TDB time systems
 !     This means that the seconds component must be less than 60.
 !
-      if (      modify(system) .eq. 'TDT' &
-           .or. modify(system) .eq. 'TDB' ) then
+      if (      modify(system) == 'TDT' &
+           .or. modify(system) == 'TDB' ) then
 
-         if ( tvec(sc) .ge. 60.0_wp ) then
+         if ( tvec(sc) >= 60.0_wp ) then
 
             call setmsg ( 'The seconds component of time must ' &
             //            'be less than 60 for any ' &
@@ -1091,7 +1091,7 @@
 !
 !     If a B.C. era marker is present we can't have a year abbreviation
 !
-      if ( modify(era) .eq. 'B.C.' .and. yabbrv ) then
+      if ( modify(era) == 'B.C.' .and. yabbrv ) then
 
          call setmsg ( 'The Year may be abbreviated only if the ' &
          //            'year belongs to the Christian Era (A.D.) ' )
@@ -1103,7 +1103,7 @@
 !
 !     If the era is B.C. we need to reset the year.
 !
-      if ( modify(era) .eq. 'B.C.' ) then
+      if ( modify(era) == 'B.C.' ) then
          tvec(yr) = 1.0_wp - tvec(yr)
       end if
 
@@ -1111,15 +1111,15 @@
 !     If there is a A.M. or P.M. time string modifier, we need to adjust
 !     the hours component of the time.
 !
-      if     ( modify(ampm) .eq. 'P.M.'   ) then
+      if     ( modify(ampm) == 'P.M.'   ) then
 
-         if ( tvec(hr) .lt. 12.0_wp ) then
+         if ( tvec(hr) < 12.0_wp ) then
             tvec(hr) = tvec(hr) + 12.0_wp
          end if
 
-      else if ( modify(ampm) .eq. 'A.M.' ) then
+      else if ( modify(ampm) == 'A.M.' ) then
 
-         if ( tvec(hr) .ge. 12.0_wp ) then
+         if ( tvec(hr) >= 12.0_wp ) then
             tvec(hr) = tvec(hr) - 12.0_wp
          end if
 
@@ -1138,8 +1138,8 @@
          call       texpyr ( year )
          tvec(yr) = real( year, wp )
 
-      else if (       year        .lt. 100 &
-                .and. modify(era) .eq. ' ' ) then
+      else if (       year        < 100 &
+                .and. modify(era) == ' ' ) then
 
          call       texpyr ( year )
          tvec(yr) = real( year, wp )
@@ -1151,28 +1151,28 @@
 !     We may need to convert to the Gregorian Calendar, now is
 !     the time to do so.
 !
-      if ( calndr .eq. mixed ) then
+      if ( calndr == mixed ) then
 !
 !        We need to check the components.
 !
-         if ( type .eq. 'YD' ) then
+         if ( type == 'YD' ) then
 
-            dojul =            tvec(yr) .lt. 1582.0_wp &
-                   .or. (      tvec(yr) .eq. 1582.0_wp &
-                         .and. tvec(dy) .lt.  279.0_wp )
+            dojul =            tvec(yr) < 1582.0_wp &
+                   .or. (      tvec(yr) == 1582.0_wp &
+                         .and. tvec(dy) <  279.0_wp )
 
          else
 
-            dojul =             tvec(yr) .lt. 1582.0_wp &
-                   .or. (       tvec(yr) .le. 1582.0_wp &
-                          .and. tvec(mm) .lt.   10.0_wp ) &
-                   .or. (       tvec(yr) .le. 1582.0_wp &
-                          .and. tvec(mm) .le.   10.0_wp &
-                          .and. tvec(dy) .lt.    6.0_wp )
+            dojul =             tvec(yr) < 1582.0_wp &
+                   .or. (       tvec(yr) <= 1582.0_wp &
+                          .and. tvec(mm) <   10.0_wp ) &
+                   .or. (       tvec(yr) <= 1582.0_wp &
+                          .and. tvec(mm) <=   10.0_wp &
+                          .and. tvec(dy) <    6.0_wp )
 
          end if
 
-      else if ( calndr .eq. juln ) then
+      else if ( calndr == juln ) then
 
          dojul = .true.
 
@@ -1189,7 +1189,7 @@
 !
       if ( dojul ) then
 
-         if ( type .eq. 'YD' ) then
+         if ( type == 'YD' ) then
 
             year   = dint( tvec(yr) )
             month  = 1
@@ -1228,7 +1228,7 @@
 !     The TDT and TDB calendars don't need to worry about time
 !     zone adjustments.
 !
-      if      ( modify(system) .eq. 'TDT' ) then
+      if      ( modify(system) == 'TDT' ) then
 
          call ttrans ( forml, 'FORMAL', tvec )
          call ttrans ( 'TDT',  'TDB',    tvec )
@@ -1236,7 +1236,7 @@
          call chkout ( 'STR2ET' )
          return
 
-      else if ( modify(system) .eq. 'TDB' ) then
+      else if ( modify(system) == 'TDB' ) then
 
          call ttrans ( forml, 'FORMAL', tvec(1) )
          et = tvec(1)
@@ -1369,10 +1369,10 @@
 !
       minute = 59.0_wp + moff
 
-      if ( minute .gt. 59.0_wp ) then
+      if ( minute > 59.0_wp ) then
          minute = minute - 60.0_wp
          extra  = 1.0_wp
-      else if ( minute .lt. 0.0_wp ) then
+      else if ( minute < 0.0_wp ) then
          minute = minute + 60.0_wp
          extra  = -1.0_wp
       else
@@ -1382,7 +1382,7 @@
 
       hour = 23.0_wp + hoff + extra
 
-      if ( hour .gt. 23 ) then
+      if ( hour > 23 ) then
          hour = hour - 24
       end if
 
@@ -1439,7 +1439,7 @@
             end if
 
 
-            if ( year .eq. orgnyr ) then
+            if ( year == orgnyr ) then
 
                call repmc ( error, '#', mname(month), error  )
                call repmi ( error, '#', day,          error  )

@@ -26,7 +26,7 @@
 
       include               'zzctr.inc'
 
-      character*(*)         body
+      character(*)          body
       real(wp)              rectan ( 3 )
       real(wp)              re
       real(wp)              f
@@ -491,10 +491,10 @@
 !
 !     Local parameters
 !
-      character*(*)         pmtmp
+      character(*)          pmtmp
       parameter           ( pmtmp  = 'BODY#_PM' )
 
-      character*(*)         ovrtmp
+      character(*)          ovrtmp
       parameter           ( ovrtmp = 'BODY#_PGR_POSITIVE_LON' )
 
 
@@ -526,9 +526,9 @@
 !
 !     Local variables
 !
-      character*(lnsize)    kvalue
-      character*(kvnmln)    pmkvar
-      character*(sensln)    pgrlon
+      character(lnsize)     kvalue
+      character(kvnmln)     pmkvar
+      character(sensln)     pgrlon
 
       integer(ip)           bodyid
       integer(ip)           n
@@ -540,7 +540,7 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svbody
+      character(maxl)       svbody
       integer(ip)           svbdid
       logical               svfnd1
 
@@ -609,7 +609,7 @@
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      if ( re .le. 0.0_wp ) then
+      if ( re <= 0.0_wp ) then
 
          call setmsg ( 'Equatorial radius was #.' )
          call errdp  ( '#', re                    )
@@ -624,7 +624,7 @@
 !     is negative. If F is equal to 1, the polar radius is zero. Either
 !     case is a problem, so signal an error and check out.
 !
-      if ( f .ge. 1.0_wp ) then
+      if ( f >= 1.0_wp ) then
 
          call setmsg ( 'Flattening coefficient was #.'  )
          call errdp  ( '#', f                           )
@@ -647,11 +647,11 @@
 !
          call ljucrs ( 0, kvalue, pgrlon )
 
-         if ( pgrlon .eq. 'EAST' ) then
+         if ( pgrlon == 'EAST' ) then
 
             sense =  1
 
-         else if ( pgrlon .eq. 'WEST' ) then
+         else if ( pgrlon == 'WEST' ) then
 
             sense = -1
 
@@ -679,7 +679,7 @@
 !        PLNSNS returns the code 0.  Here we consider this situation
 !        to be an error.
 !
-         if ( sense .eq. 0 ) then
+         if ( sense == 0 ) then
 
             call repmi  ( pmtmp, '#', bodyid, pmkvar )
 
@@ -697,9 +697,9 @@
 !
 !        Handle the special cases:  earth, moon, and sun.
 !
-         if (      ( bodyid .eq. earth ) &
-              .or. ( bodyid .eq. moon  ) &
-              .or. ( bodyid .eq. sun   )  ) then
+         if (      ( bodyid == earth ) &
+              .or. ( bodyid == moon  ) &
+              .or. ( bodyid == sun   )  ) then
 
             sense = 1
 
@@ -724,7 +724,7 @@
 !     Convert the longitude from the range (-pi, pi] to [0, 2*pi),
 !     the latter being the range of planetographic longitude.
 !
-      if ( lon .lt. 0.0_wp ) then
+      if ( lon < 0.0_wp ) then
 
          lon = lon + twopi()
 

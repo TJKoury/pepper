@@ -225,7 +225,7 @@
 !     Discovery check-in is used in place of standard SPICE error
 !     handling.
 !
-      if (  pool( nfrrow, nfrcol )  .eq.  0  ) then
+      if (  pool( nfrrow, nfrcol )  ==  0  ) then
 
          call chkin  ( 'LNKAN'               )
          call setmsg ( 'There are no free nodes left for ' &

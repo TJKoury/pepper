@@ -247,13 +247,13 @@
       data                  centry  / 1900 /
       data                  lbound  / 1969 /
 
-      if ( year .ge. 100 .or. year .lt. 0 ) then
+      if ( year >= 100 .or. year < 0 ) then
          return
       end if
 
       year = year + centry
 
-      if ( year .lt. lbound ) then
+      if ( year < lbound ) then
          year = year + 100
       end if
 
@@ -468,7 +468,7 @@
 !-&
 
 
-      if ( year .gt. 0 ) then
+      if ( year > 0 ) then
 
          centry = ( year/100 ) * 100
          lbound =   year

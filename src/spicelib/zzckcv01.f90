@@ -35,7 +35,7 @@
       integer(ip)           arrend
       integer(ip)           sclkid
       real(wp)              tol
-      character*(*)         timsys
+      character(*)          timsys
       real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
@@ -215,7 +215,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.0_wp ) then
+      if ( tol < 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -279,9 +279,9 @@
 !
       seglen = arrend - arrbeg + 1
 
-      if ( seglen .eq. navsln ) then
+      if ( seglen == navsln ) then
          psiz = qsiz
-      else if ( seglen .eq. avsln ) then
+      else if ( seglen == avsln ) then
          psiz = qavsiz
       else
          call setmsg ( 'The requested segment in file # reports a ' &
@@ -315,7 +315,7 @@
       remain = nrec
       offset = 0
 
-      do while ( remain .gt. 0 )
+      do while ( remain > 0 )
 
 !
 !        Buffer the next set of epochs.
@@ -336,7 +336,7 @@
             finish  =  buffer(i)
 
 
-            if ( tol .gt. 0.0_wp ) then
+            if ( tol > 0.0_wp ) then
 !
 !              Adjust the interval using the tolerance.
 !

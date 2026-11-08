@@ -30,9 +30,9 @@
       integer(ip)           mxspec
       parameter           ( mxspec = 512 )
 
-      character*(*)         hdchrs
-      character*(*)         tlchrs
-      character*(*)         string
+      character(*)          hdchrs
+      character(*)          tlchrs
+      character(*)          string
       integer(ip)           first
       integer(ip)           idspec ( lbcell : * )
       integer(ip)           last
@@ -511,7 +511,7 @@
 !     Handle the cases in which we can tell right away that
 !     no token can be found.
 !
-      if (  ( first .lt. 1 ) .or. ( first .gt. l )  ) then
+      if (  ( first < 1 ) .or. ( first > l )  ) then
 
          last  = first - 1
          nchar = 0
@@ -528,7 +528,7 @@
       c     =  ichar  (  string(first:first)       )
       i     =  bsrchi (  c,  nhead,  idspec(hcpos) )
 
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 
          last  = first - 1
          nchar = 0
@@ -546,12 +546,12 @@
       ntail  =  idspec(ntpos)
       tcpos  =  3 + nhead
 
-      do while ( last .lt. l )
+      do while ( last < l )
 
          c  =  ichar  (  string( last+1 : last+1 )       )
          i  =  bsrchi (  c,      ntail,   idspec(tcpos)  )
 
-         if ( i .eq. 0 ) then
+         if ( i == 0 ) then
             return
          else
             nchar  =  nchar + 1
@@ -944,7 +944,7 @@
 
          c  =  ichar( hdchrs(i:i) )
 
-         if (  ( c .lt. minprt ) .or. ( c .gt. maxprt )  ) then
+         if (  ( c < minprt ) .or. ( c > maxprt )  ) then
 
             call setmsg ( 'The character having integer code # in '  // &
                           'position # of the head character string ' // &
@@ -964,7 +964,7 @@
 
          c  =  ichar( tlchrs(i:i) )
 
-         if (  ( c .lt. minprt ) .or. ( c .gt. maxprt )  ) then
+         if (  ( c < minprt ) .or. ( c > maxprt )  ) then
 
             call setmsg ( 'The character having integer code # in '  // &
                           'position # of the tail character string ' // &
@@ -989,7 +989,7 @@
 
          c  =  ichar( hdchrs(i:i) )
 
-         if ( c .ne. blank ) then
+         if ( c /= blank ) then
             call insrti ( c, headc )
          end if
 
@@ -1003,7 +1003,7 @@
 
          c  =  ichar( tlchrs(i:i) )
 
-         if ( c .ne. blank ) then
+         if ( c /= blank ) then
             call insrti ( c, tailc )
          end if
 

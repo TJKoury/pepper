@@ -34,7 +34,7 @@
       real(wp)              margin
       parameter           ( margin = 1.0e-12_wp )
 
-      character*(*)         inst
+      character(*)          inst
       integer(ip)           n
       real(wp)              bounds ( 3, n )
       real(wp)              axis   ( 3 )
@@ -252,7 +252,7 @@
 !
 !     We must have at least 3 boundary vectors.
 !
-      if ( n .lt. 3 ) then
+      if ( n < 3 ) then
 
          call setmsg ( 'Polygonal FOV requires at least 3 ' &
          //            'boundary vectors but number ' &
@@ -274,7 +274,7 @@
 !        Set the index of the next ray. When we get to the
 !        last boundary vector, the next ray is the first.
 !
-         if ( i .eq. n ) then
+         if ( i == n ) then
             next = 1
          else
             next = i + 1
@@ -336,11 +336,11 @@
       ok    = .true.
       i     = 1
 
-      do while (  ( i .le. n ) .and.  ok  )
+      do while (  ( i <= n ) .and.  ok  )
 
          sep = vsep( bounds(1,i), axis )
 
-         if ( sep .gt.  limit  ) then
+         if ( sep >  limit  ) then
             ok = .false.
          else
             i  =  i + 1

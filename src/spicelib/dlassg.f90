@@ -196,7 +196,7 @@
 !
 !     If the handles don't match, we're done.
 !
-      if ( han1 .ne. han2 ) then
+      if ( han1 /= han2 ) then
          return
       end if
 !
@@ -205,7 +205,7 @@
 !
       do i = 1, dladsz
 
-         if ( dsc1(i) .ne. dsc2(i) ) then
+         if ( dsc1(i) /= dsc2(i) ) then
             return
          end if
 

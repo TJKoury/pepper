@@ -395,7 +395,7 @@
       real(wp)              time
       real(wp)              tol
 
-      character*(idlen)     segid
+      character(idlen)      segid
 
       logical               needav
       logical               sfnd

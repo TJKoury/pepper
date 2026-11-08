@@ -16,7 +16,7 @@ For each MODULE (a key of modules.MODULES, e.g. pepper_math):
     * routines and constants from other modules are imported with
       ``use <module>, only: ...``,
     * the final ``end`` becomes ``end subroutine <name>`` / ``end function``.
-- src/pepper_legacy_<name>.f90 is written: for each routine an external
+- src/legacy/pepper_legacy_<name>.f90 is written: for each routine an external
   procedure with the original name and argument declarations that calls the
   module procedure (SPICELIB's interface, for tspice and existing callers).
 - The routine's file in src/spicelib is deleted.
@@ -361,7 +361,7 @@ MODULE_HEADER = """\
 !> The procedures keep SPICELIB's names, arguments and documentation. They
 !> have no saved state and do not signal SPICE errors. Moved here from
 !> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in {legacy}.
+!> original interface are in src/legacy/{legacy}.
 module {mod}
 
 {uses}   implicit none
@@ -381,7 +381,7 @@ def legacy_name(mod: str) -> str:
 
 def generate(mod: str, where: dict, dry_run: bool) -> list:
     written = []
-    legacy = SRC / legacy_name(mod)
+    legacy = SRC / "legacy" / legacy_name(mod)
     if mod == "pepper_constants":
         wrappers = [constant_wrapper(n, CONSTANTS[n]) for n in MODULES[mod]]
         sources = [SPICELIB / f"{n}.f90" for n in MODULES[mod]]

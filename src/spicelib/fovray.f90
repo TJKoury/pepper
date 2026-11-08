@@ -32,11 +32,11 @@
 
       include               'gf.inc'
 
-      character*(*)         inst
+      character(*)          inst
       real(wp)              raydir ( 3 )
-      character*(*)         rframe
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          rframe
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              et
       logical               visibl
 

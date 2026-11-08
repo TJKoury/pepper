@@ -28,8 +28,8 @@
       implicit none
 
       integer(ip)           code
-      character*(*)         bodstr
-      character*(*)         srfstr
+      character(*)          bodstr
+      character(*)          srfstr
       logical               isname
 
 ! $ Brief_I/O

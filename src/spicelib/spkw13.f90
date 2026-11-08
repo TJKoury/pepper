@@ -28,10 +28,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           degree
       integer(ip)           n
       real(wp)              states ( 6, * )
@@ -474,7 +474,7 @@
 !
       call namfrm ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -487,7 +487,7 @@
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -505,7 +505,7 @@
 
          chrcod = ichar( segid(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -521,7 +521,7 @@
 !     Make sure that the degree of the interpolating polynomials is
 !     in range.
 !
-      if (  ( degree .lt. 1 ) .or. ( degree .gt. maxdeg )  )  then
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
 
          call setmsg ( 'The interpolating polynomials have degree #; '// &
                        'the valid degree range is [1, #]'              )
@@ -551,7 +551,7 @@
 !     Make sure that the number of states is sufficient to define a
 !     polynomial whose degree is DEGREE.
 !
-      if ( n .lt. winsiz ) then
+      if ( n < winsiz ) then
 
          call setmsg ( 'At least # states are required to define a '  // &
                        'Hermite polynomial of degree #.  Number of '  // &
@@ -568,7 +568,7 @@
 !
 !     The segment stop time should be greater then the begin time.
 !
-      if ( first .ge. last ) then
+      if ( first >= last ) then
 
          call setmsg ( 'The segment start time: # is greater then ' // &
                        'the segment end time: #'                   )
@@ -587,7 +587,7 @@
 
       do i = 2, n
 
-         if ( epochs(i) .le. maxtim ) then
+         if ( epochs(i) <= maxtim ) then
 
             call setmsg ( 'EPOCH # having index # is not greater '    // &
                           'than its predecessor #.'                   )
@@ -607,7 +607,7 @@
 !     Make sure that the span of the input epochs includes the interval
 !     defined by the segment descriptor.
 !
-      if (  epochs(1) .gt. first ) then
+      if (  epochs(1) > first ) then
 
          call setmsg ( 'Segment start time # precedes first epoch #.' )
          call errdp  ( '#',  first                                    )
@@ -616,7 +616,7 @@
          call chkout ( 'SPKW13'                                       )
          return
 
-      else if (  epochs(n) .lt. last ) then
+      else if (  epochs(n) < last ) then
 
          call setmsg ( 'Segment end time # follows last epoch #.'     )
          call errdp  ( '#',  last                                     )

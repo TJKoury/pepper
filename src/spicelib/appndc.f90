@@ -22,8 +22,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         item
-      character*(*)         cell ( lbcell:* )
+      character(*)          item
+      character(*)          cell ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -173,7 +173,7 @@
 
       nwcard = cardc (cell) + 1
 
-      if (  ( nwcard )  .le.  ( sizec (cell) )  ) then
+      if (  ( nwcard )  <=  ( sizec (cell) )  ) then
 
          cell (nwcard) = item
          call scardc ( nwcard, cell )

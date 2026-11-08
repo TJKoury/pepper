@@ -41,11 +41,11 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         inst
+      character(*)          inst
       real(wp)              raydir ( 3 )
-      character*(*)         rframe
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          rframe
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              step
       real(wp)              cnfine ( lbcell : * )
       real(wp)              result ( lbcell : * )
@@ -931,7 +931,7 @@
 !
 !     Check the result window's size.
 !
-      if ( sized(result) .lt. 2 ) then
+      if ( sized(result) < 2 ) then
 
          call setmsg ( 'Result window size must be at least 2 ' &
          //            'but was #.'                            )

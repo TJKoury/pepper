@@ -46,13 +46,13 @@
       integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
-      character*(*)         inst
-      character*(*)         tshape
+      character(*)          inst
+      character(*)          tshape
       real(wp)              raydir ( 3 )
-      character*(*)         target
-      character*(*)         tframe
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          target
+      character(*)          tframe
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              time
       logical               vistat
 
@@ -262,13 +262,13 @@
 !
 !     Local variables
 !
-      character*(frnmln)    svifrm
-      character*(bdnmln)    svinam
-      character*(shplen)    svishp
-      character*(frnmln)    svtfrm
-      character*(bdnmln)    svtnam
-      character*(shplen)    svtshp
-      character*(corlen)    svcorr
+      character(frnmln)     svifrm
+      character(bdnmln)     svinam
+      character(shplen)     svishp
+      character(frnmln)     svtfrm
+      character(bdnmln)     svtnam
+      character(shplen)     svtshp
+      character(corlen)     svcorr
 
       real(wp)              bsite  ( 3 )
       real(wp)              coord  ( 2 )
@@ -867,9 +867,9 @@
 !     Note for maintenance programmer: these checks will
 !     require modification to handle DSK-based shapes.
 !
-      if (      ( svtshp .ne. ptshap ) &
-          .and. ( svtshp .ne. edshap ) &
-          .and. ( svtshp .ne. ryshap )  ) then
+      if (      ( svtshp /= ptshap ) &
+          .and. ( svtshp /= edshap ) &
+          .and. ( svtshp /= ryshap )  ) then
 
          call setmsg ( 'The target shape specification, ' &
          //            '''#'', is not recognized.'       )
@@ -884,13 +884,13 @@
 !     We'll use the logical variable USERAY to indicate that the
 !     target is modeled as ray.
 !
-      svuray = svtshp .eq. ryshap
+      svuray = svtshp == ryshap
 
 !
 !     Indicate whether we have an ellipsoidal target. SVETRG is .TRUE.
 !     if and only we have one.
 !
-      svetrg = svtshp .eq. edshap
+      svetrg = svtshp == edshap
 
 !
 !     If the target is an ephemeris object, obtain its ID code.
@@ -922,7 +922,7 @@
 !
 !        Make sure the observer and target are distinct.
 !
-         if ( svtarg .eq. svobs ) then
+         if ( svtarg == svobs ) then
 
             call setmsg ( 'The observer and target must be ' &
             //            'distinct objects, but are not: ' &
@@ -947,7 +947,7 @@
 !        frame's ID code. But first, check for a blank frame name,
 !        since this may be a common problem for the GF FOV system.
 !
-         if ( tframe .eq. ' ' ) then
+         if ( tframe == ' ' ) then
 
             call setmsg ( 'The target is not modeled as a ' &
             //            'point, but the associated ' &
@@ -960,7 +960,7 @@
 
          call namfrm ( tframe, framid )
 
-         if ( framid .eq. 0 ) then
+         if ( framid == 0 ) then
 
             call setmsg ( 'The target frame name # is not recognized.' )
             call errch  ( '#',  tframe                                 )
@@ -1004,7 +1004,7 @@
 !           We have an ellipsoidal target. Check the target frame's
 !           center.
 !
-            if ( frcent .ne. svtarg ) then
+            if ( frcent /= svtarg ) then
 !
 !              The supposed body-fixed frame for the target isn't
 !              actually centered on the target.
@@ -1193,7 +1193,7 @@
 !     If the instrument's shape is 'RECTANGLE', map it to
 !     'POLYGON'
 !
-      if (  svishp .eq. recfov ) then
+      if (  svishp == recfov ) then
 
          svishp = polfov
 
@@ -1204,7 +1204,7 @@
 !     FOVs, the boresight serves as this axis. For polygonal FOVs
 !     (rectangular FOVs are included), we'll generate an axis vector.
 !
-      if ( svishp .eq. polfov ) then
+      if ( svishp == polfov ) then
 
          call zzfovaxi ( inst,  svnvrt, svbnds, svfaxi )
 
@@ -1237,7 +1237,7 @@
 !     Our algorithms can't handle FOVs with angular radius of 90
 !     degrees.
 !
-      if (  svarad   .gt. ( halfpi()-atol )  ) then
+      if (  svarad   > ( halfpi()-atol )  ) then
 
          call setmsg ( 'FOV angular radius of # degrees ' &
          //            'exceeds limit of # degrees.'     )
@@ -1281,14 +1281,14 @@
 !     these computations are not needed for the combination of a
 !     circular FOV and a point or ray target.
 !
-      if (        ( svishp .eq. ellfov ) &
-           .or. ( ( svishp .eq. cirfov ) .and. svetrg )  ) then
+      if (        ( svishp == ellfov ) &
+           .or. ( ( svishp == cirfov ) .and. svetrg )  ) then
 !
 !        Also compute the center, semi-axis vectors, and semi-axis
 !        lengths of the FOV. If the FOV is circular, we create an
 !        artificial, second semi-axis vector.
 !
-         if ( svishp .eq. cirfov ) then
+         if ( svishp == cirfov ) then
 !
 !           We have a circular FOV. We'll create an artificial, second
 !           boundary vector, which will give rise to a second
@@ -1306,7 +1306,7 @@
             call inrypl ( svorig, svbnds(1,i), &
                           svplan, nxpts,       semipt(1,i) )
 
-            if ( nxpts .ne. 1 ) then
+            if ( nxpts /= 1 ) then
 
                call setmsg ( 'Error creating FOV semi-axis ' &
                //            'vectors, NXPTS = #. This ' &
@@ -1327,7 +1327,7 @@
 
             svxmag(i) = vnorm ( svsemi(1,i) )
 
-            if ( svxmag(i) .eq. 0.0_wp ) then
+            if ( svxmag(i) == 0.0_wp ) then
 
                call setmsg ( 'FOV semi-axis #* for @ ' &
                //            'has zero length.'        )
@@ -1349,8 +1349,8 @@
 !     the FOV. This allows use to later use ZZOCCED to determine the
 !     target's visibility.
 !
-      if (   (      ( svishp .eq. cirfov ) &
-               .or. ( svishp .eq. ellfov ) )  .and.  svetrg  ) then
+      if (   (      ( svishp == cirfov ) &
+               .or. ( svishp == ellfov ) )  .and.  svetrg  ) then
 !
 !
 !        Create an ellipsoid whose semi-axes are consistent with the
@@ -1447,7 +1447,7 @@
       end if
 
 
-      if ( ( svishp .eq. cirfov ) .and. ( .not. svetrg ) ) then
+      if ( ( svishp == cirfov ) .and. ( .not. svetrg ) ) then
 !
 !        We have a circular FOV and a point or ray target model.
 !        In this case, our FOV inclusion test is simple as can
@@ -1458,8 +1458,8 @@
          svarad = vsep ( svfaxi, svbnds(1,1) )
 
 
-      else if (       (      ( svishp .eq. recfov ) &
-                        .or. ( svishp .eq. polfov ) ) &
+      else if (       (      ( svishp == recfov ) &
+                        .or. ( svishp == polfov ) ) &
                 .and. ( .not.  svetrg               )   ) then
 !
 !        We have a rectangular or polygonal FOV and a ray or point
@@ -1497,7 +1497,7 @@
             call inrypl ( svorig, svbnds(1,i), &
                           svplan, nxpts,       xpt)
 
-            if ( nxpts .ne. 1 ) then
+            if ( nxpts /= 1 ) then
 
                call setmsg ( 'Error finding FOV plane intercept ' &
                //            'of FOV boundary vector #, NXPTS = #. ' &
@@ -1693,7 +1693,7 @@
          call mxm ( m2, m1, insmat )
 
 
-         if ( ( svishp .eq. recfov ) .or. ( svishp .eq. polfov ) ) then
+         if ( ( svishp == recfov ) .or. ( svishp == polfov ) ) then
 !
 !           The FOV is a rectangle or other polygon; we treat both
 !           cases the same way.
@@ -1746,8 +1746,8 @@
                             svnvrt, svbnds, vistat )
 
 
-         else if (      ( svishp .eq. cirfov ) &
-                   .or. ( svishp .eq. ellfov )  ) then
+         else if (      ( svishp == cirfov ) &
+                   .or. ( svishp == ellfov )  ) then
 !
 !           The FOV is a circle or ellipse. For both FOV shapes,
 !           we represent the FOV by an ellipsoid in the FOV
@@ -1778,7 +1778,7 @@
 !           return code indicates a non-empty intersection of the
 !           target and FOV.
 !
-            vistat = ocstat .ne. 0
+            vistat = ocstat /= 0
 
          else
 !
@@ -1920,15 +1920,15 @@
 !
          sep = vsep( dir, svfaxi )
 
-         if ( svishp .eq. cirfov ) then
+         if ( svishp == cirfov ) then
 !
 !           Just compare the angular separation of POS with the
 !           FOV axis direction against the FOV angular radius SVARAD.
 !
-            vistat =  sep .le. svarad
+            vistat =  sep <= svarad
 
 
-         else if ( sep .gt. svarad ) then
+         else if ( sep > svarad ) then
 !
 !           The FOV is an ellipse or polygon.
 !
@@ -1955,11 +1955,11 @@
 !
 !           If there's no intersection, the target isn't visible.
 !
-            if ( nxpts .eq. 0 ) then
+            if ( nxpts == 0 ) then
 
                vistat = .false.
 
-            else if ( nxpts .ne. 1 ) then
+            else if ( nxpts /= 1 ) then
 !
 !              "This can't happen." :)
 !
@@ -1981,7 +1981,7 @@
 !
                call vsub ( xpt, svfvct, fovpt )
 
-               if ( svishp .eq. ellfov ) then
+               if ( svishp == ellfov ) then
 !
 !                 The FOV shape is elliptical. To decide whether FOVPT
 !                 is within the FOV, compute the level surface
@@ -2007,10 +2007,10 @@
 !                 The target is visible if FOVPT is inside the FOV
 !                 ellipse; this condition is indicated by L <= 1.
 !
-                  vistat = l .le. 1.0_wp
+                  vistat = l <= 1.0_wp
 
 
-               else if ( svishp .eq. polfov ) then
+               else if ( svishp == polfov ) then
 !
 !                The FOV is a polygon. Convert FOVPT to the FOV frame,
 !                then find the winding number of the FOV about the X-Y
@@ -2029,7 +2029,7 @@
 !                 the intercept of the target direction with the
 !                 FOV plane.
 !
-                  vistat   = w .ne. 0
+                  vistat   = w /= 0
 
                else
 !

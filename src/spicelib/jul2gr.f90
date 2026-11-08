@@ -534,12 +534,12 @@
       mon = mon + 1
       dy  = day
 
-      if ( yr .le. 0 ) then
+      if ( yr <= 0 ) then
 
          call rmaini ( yr, 4, m4, tmpyr )
          yr = tmpyr
 
-         if ( yr .eq. 0 ) then
+         if ( yr == 0 ) then
             yr = yr + 4
             m4   = m4   - 1
          end if
@@ -596,7 +596,7 @@
 !     Now look up the month number and compute the day of the month.
 !     How we do this depends on whether or not this is a leap year.
 !
-      if ( gldays(yr) .eq. 0 ) then
+      if ( gldays(yr) == 0 ) then
          mon  = lstlti ( dofyr, 12, dpjan0 )
          dy   = dofyr  -            dpjan0(mon)
       else
@@ -829,12 +829,12 @@
       mon = mon  + 1
       dy  = day
 
-      if ( yr .le. 0 ) then
+      if ( yr <= 0 ) then
 
          call rmaini ( yr, 400, m400, tmpyr )
          yr = tmpyr
 
-         if ( yr .eq. 0 ) then
+         if ( yr == 0 ) then
             yr   = yr + 400
             m400 = m400 - 1
          end if
@@ -883,7 +883,7 @@
 !     Now look up the month number and compute the day of the month.
 !     How we do this depends on whether or not this is a leap year.
 !
-      if ( jldays(yr) .eq. 0 ) then
+      if ( jldays(yr) == 0 ) then
          mon  = lstlti ( dofyr, 12, dpjan0 )
          dy   = dofyr  -            dpjan0(mon)
       else

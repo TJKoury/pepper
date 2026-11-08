@@ -647,7 +647,7 @@
 !
 !     If this segment is not of data type 6, then signal an error.
 !
-      if ( ic( 3 ) .ne. dtype ) then
+      if ( ic( 3 ) /= dtype ) then
 
          call setmsg ( 'Data type of the segment should be 6: Passed ' &
          //            'descriptor shows type = #.'                   )
@@ -675,7 +675,7 @@
 
       nintvl = nint ( dpdata(1) )
 
-      if (  ( msno .lt. 1 )  .or.  ( msno .gt. nintvl )  ) then
+      if (  ( msno < 1 )  .or.  ( msno > nintvl )  ) then
 
          call setmsg ( 'Mini-segment index must be in range 1:# but ' &
          //            'was #.'                                       )
@@ -733,7 +733,7 @@
 !     Compute the packet size for this mini-segment. This will
 !     be used a bit later. We'll also check the subtype.
 !
-      if (  ( subtyp .lt. c06tp0 ) .or. ( subtyp .gt. c06tp3 )  ) then
+      if (  ( subtyp < c06tp0 ) .or. ( subtyp > c06tp3 )  ) then
 
          call setmsg ( 'Unexpected CK type 6 subtype # ' &
          //            'found in mini-segment #.'       )
@@ -750,7 +750,7 @@
 !
 !     Check the record index.
 !
-      if (  ( recno .lt. 1 )  .or.  ( recno .gt. nrec )  ) then
+      if (  ( recno < 1 )  .or.  ( recno > nrec )  ) then
 
          call setmsg ( 'Record index must be in range 1:# but ' &
          //            'was #.'                                 )

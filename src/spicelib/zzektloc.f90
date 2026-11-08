@@ -123,16 +123,16 @@
       found  = .false.
       loc    =  1
 
-      do while ( loc .le. ntoken )
+      do while ( loc <= ntoken )
 
 
-         if ( tokens(loc) .eq. tokid ) then
+         if ( tokens(loc) == tokid ) then
 
-            if ( tokid .eq. tkkey ) then
+            if ( tokid == tkkey ) then
 !
 !              To get a match, the keyword codes must match.
 !
-               if ( values(loc) .eq. kwcode ) then
+               if ( values(loc) == kwcode ) then
                   found  =  .true.
                   return
                end if

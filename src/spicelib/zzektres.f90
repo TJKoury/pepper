@@ -35,12 +35,12 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           eqryi  ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd  ( * )
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
       integer(ip)           errptr
 
 ! $ Brief_I/O
@@ -181,11 +181,11 @@
 !
 !     Local variables
 !
-      character*(tnamsz)    alias  ( maxtab )
-      character*(cnamsz)    colnam
-      character*(tnamsz)    table  ( maxtab )
-      character*(short)     timstr
-      character*(1)         touchc
+      character(tnamsz)     alias  ( maxtab )
+      character(cnamsz)     colnam
+      character(tnamsz)     table  ( maxtab )
+      character(short)      timstr
+      character(1)          touchc
 
       real(wp)              et
 
@@ -225,7 +225,7 @@
          return
       end if
 
-      if ( irsolv .eq. ifalse ) then
+      if ( irsolv == ifalse ) then
 
          call chkin  ( 'ZZEKTRES'                                  )
          call setmsg ( 'Names are not resolved in encoded query.'  )
@@ -255,9 +255,9 @@
          cnstyp  =  eqryi ( base + eqctyp )
          opcode  =  eqryi ( base + eqopcd )
 
-         if (        ( cnstyp .eq. eqval  ) &
-              .and.  ( opcode .ne. isnull ) &
-              .and.  ( opcode .ne. notnul )  ) then
+         if (        ( cnstyp == eqval  ) &
+              .and.  ( opcode /= isnull ) &
+              .and.  ( opcode /= notnul )  ) then
 !
 !           Get the index of the table containing the LHS column, and
 !           get the index of this column within that table.  Get the
@@ -273,7 +273,7 @@
             dtype  =  attdsc(2)
 
 
-            if ( dtype .eq. time ) then
+            if ( dtype == time ) then
 !
 !              The RHS points to a string representing a time
 !              value.

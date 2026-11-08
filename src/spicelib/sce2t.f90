@@ -285,7 +285,7 @@
 !
 !     Just hand off the conversion to the appropriate routine.
 !
-      if (  sctype ( sc )  .eq.  1  ) then
+      if (  sctype ( sc )  ==  1  ) then
 
          call scet01 ( sc, et, sclkdp )
 

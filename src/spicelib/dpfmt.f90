@@ -23,8 +23,8 @@
       implicit none
 
       real(wp)              x
-      character*(*)         pictur
-      character*(*)         str
+      character(*)          pictur
+      character(*)          str
 
 ! $ Brief_I/O
 !
@@ -273,9 +273,9 @@
       parameter           ( wdsize = 32 )
 
 
-      character*(1)         fill
-      character*(1)         sign
-      character*(wdsize)    mystr
+      character(1)          fill
+      character(1)          sign
+      character(wdsize)     mystr
 
       real(wp)              y
 
@@ -308,7 +308,7 @@
 !
       firstb  = pos( pictur, ' ',  1 )
 
-      if ( firstb .eq. 0 ) then
+      if ( firstb == 0 ) then
          lastch = len ( pictur )
       else
          lastch = firstb - 1
@@ -317,7 +317,7 @@
 !
 !     Make sure there is a picture to worry about.
 !
-      if ( lastch .eq. 0 ) then
+      if ( lastch == 0 ) then
 
          call chkin  ( 'DPFMT'                                      )
          call setmsg ( 'The format picture must begin with a '       // &
@@ -327,11 +327,11 @@
          call chkout ( 'DPFMT'                                      )
          return
 
-      else if ( lastch .eq. 1 ) then
+      else if ( lastch == 1 ) then
 
-         if (     pictur .eq. '+' &
-             .or. pictur .eq. '-' &
-             .or. pictur .eq. '.' ) then
+         if (     pictur == '+' &
+             .or. pictur == '-' &
+             .or. pictur == '.' ) then
 
             call chkin ( 'DPFMT' )
             call setmsg ( 'Format pictures must have at least ' &
@@ -344,10 +344,10 @@
 
          end if
 
-      else if ( lastch .eq. 2 ) then
+      else if ( lastch == 2 ) then
 
-         if (     pictur .eq. '+.' &
-             .or. pictur .eq. '-.' ) then
+         if (     pictur == '+.' &
+             .or. pictur == '-.' ) then
 
             call chkin ( 'DPFMT' )
             call setmsg ( 'Format pictures must have at least ' &
@@ -359,7 +359,7 @@
             return
          end if
 
-      else if ( lastch .gt. len(str) ) then
+      else if ( lastch > len(str) ) then
 
          call chkin  ( 'DPFMT'                                      )
          call setmsg ( 'The output string is not long enough to ' &
@@ -383,10 +383,10 @@
 !     are needed to represent the sign if leading sign is suppressed for
 !     positive numbers.
 !
-      if ( x .gt. 0 ) then
+      if ( x > 0 ) then
          sign   = '+'
          sprsiz =  0
-      else if ( x .lt. 0 ) then
+      else if ( x < 0 ) then
          sign   = '-'
          sprsiz = 1
       else
@@ -398,23 +398,23 @@
 !     if so whether the sign just determined should use a different
 !     character and how many characters are needed for the sign.
 !
-      if      ( pictur(1:1) .eq. '+' ) then
+      if      ( pictur(1:1) == '+' ) then
 
          needsn = .true.
          sgnlen =  1
 
-      else if ( pictur(1:1) .eq. '-' ) then
+      else if ( pictur(1:1) == '-' ) then
 
          needsn = .true.
          sgnlen = 1
 
-         if ( x .gt. 0 ) then
+         if ( x > 0 ) then
             sign = ' '
          end if
 
       else
 
-         if ( x .gt. 0 ) then
+         if ( x > 0 ) then
             sign = ' '
          end if
 
@@ -442,7 +442,7 @@
 !     Determine what character should be use for leading characters
 !     before the first significant character of the output string.
 !
-      if ( pictur(start:start) .eq. '0' ) then
+      if ( pictur(start:start) == '0' ) then
          fill   = '0'
       else
          fill  = ' '
@@ -458,7 +458,7 @@
 !     that is explicitly required.  The length of the decimal
 !     portion is the stuff to the right of the decimal point.
 !
-      if ( dpat .gt. 0 ) then
+      if ( dpat > 0 ) then
 
          intlen = dpat - start
          declen = lastch - dpat
@@ -482,7 +482,7 @@
 !     the sign and any blanks that might lie between the sign
 !     and the first significant character of the output string.
 !
-      if ( start .eq. 1 .and. sgnlen .eq. 1 ) then
+      if ( start == 1 .and. sgnlen == 1 ) then
          intlen = intlen - 1
          shift  = .true.
 !
@@ -491,12 +491,12 @@
 !        be negative. Add 1 back onto the INTLEN but take one
 !        away from the decimal length DECLEN.
 !
-         if ( intlen .eq. -1 ) then
+         if ( intlen == -1 ) then
             intlen = 0
             declen = declen - 1
 
-            if (       declen .eq. 0 &
-                 .and. intlen .eq. 0 ) then
+            if (       declen == 0 &
+                 .and. intlen == 0 ) then
 !
 !              There is no room for anything other than a
 !              decimal point.  We simply fill the output
@@ -533,7 +533,7 @@
 !
 
 
-      if ( exp .ge. intlen .and. y .ne. 0.0_wp ) then
+      if ( exp >= intlen .and. y /= 0.0_wp ) then
 !
 !        See if we have room to print an exponential form.
 !        First we need the number of characters for the
@@ -552,7 +552,7 @@
 !        there's not much we can do.  Fill the string with '*'.
 !
 
-         if ( sigdig .lt. 1 ) then
+         if ( sigdig < 1 ) then
             do i = 1, lastch
                str(i:i) = '*'
             end do
@@ -573,9 +573,9 @@
 !     One more check.  If -INTLEN is greater than DECLEN, or if
 !     both are zero, we don't have room to create an output string.
 !
-      if (  (       intlen .eq. 0 &
-              .and. declen .eq. 0 ) &
-              .or. -intlen .gt. declen ) then
+      if (  (       intlen == 0 &
+              .and. declen == 0 ) &
+              .or. -intlen > declen ) then
 
          do i = 1, lastch
             str(i:i) = '*'
@@ -613,7 +613,7 @@
          sigdig = lastch - sgnlen - expsiz - 1
 
 
-         if ( sigdig .lt. 1 ) then
+         if ( sigdig < 1 ) then
             do i = 1, lastch
                str(i:i) = '*'
             end do
@@ -634,7 +634,7 @@
 !
          frstch = ncpos ( str, ' -', 1 )
 
-         if ( frstch .gt. 2 ) then
+         if ( frstch > 2 ) then
             str(frstch-1:frstch-1) = str(1:1)
             str(1:1)               = ' '
          end if

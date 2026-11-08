@@ -28,14 +28,14 @@
       include 'zzdyn.inc'
 
       real(wp)              et
-      character*(*)         targ1
-      character*(*)         shape1
-      character*(*)         frame1
-      character*(*)         targ2
-      character*(*)         shape2
-      character*(*)         frame2
-      character*(*)         obsrvr
-      character*(*)         abcorr
+      character(*)          targ1
+      character(*)          shape1
+      character(*)          frame1
+      character(*)          targ2
+      character(*)          shape2
+      character(*)          frame2
+      character(*)          obsrvr
+      character(*)          abcorr
 
 ! $ Brief_I/O
 !
@@ -449,7 +449,7 @@
 !
 !     Local Variables
 !
-      character*(5)         ref
+      character(5)          ref
 
       real(wp)              rad    (2)
 

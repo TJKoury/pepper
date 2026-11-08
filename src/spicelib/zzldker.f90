@@ -23,9 +23,9 @@
 ! $ Declarations
 
       implicit none
-      character*(*)         file
-      character*(*)         nofile
-      character*(*)         filtyp
+      character(*)          file
+      character(*)          nofile
+      character(*)          filtyp
       integer(ip)           handle
 
 ! $ Brief_I/O
@@ -243,11 +243,11 @@
       integer(ip)           klinsz
       parameter           ( klinsz = 132 )
 
-      character*(wdsize)    versn
-      character*(wdsize)    arch
-      character*(wdsize)    mytype
-      character*(eoltsz)    termin
-      character*(klinsz)    kerlin
+      character(wdsize)     versn
+      character(wdsize)     arch
+      character(wdsize)     mytype
+      character(eoltsz)     termin
+      character(klinsz)     kerlin
 
       if ( return() ) then
          return
@@ -284,8 +284,8 @@
 !
 !     Some of these are obviously losers.
 !
-      if (      arch .eq. 'XFR' &
-           .or. arch .eq. 'DEC' ) then
+      if (      arch == 'XFR' &
+           .or. arch == 'DEC' ) then
 
          call setmsg ( nofile )
          call errch  ( '#', file )
@@ -296,7 +296,7 @@
          call chkout ( 'ZZLDKER' )
          return
 
-      else if ( arch .eq. 'TE1' ) then
+      else if ( arch == 'TE1' ) then
 
          call setmsg ( nofile )
          call errch  ( '#', file )
@@ -316,17 +316,17 @@
       handle = 0
       filtyp = ' '
 
-      if ( arch .eq. 'DAF' )      then
+      if ( arch == 'DAF' )      then
 
-         if      ( mytype .eq. 'SPK' ) then
+         if      ( mytype == 'SPK' ) then
 
             call spklef ( file, handle )
 
-         else if ( mytype .eq. 'CK' ) then
+         else if ( mytype == 'CK' ) then
 
             call cklpf ( file, handle )
 
-         else if ( mytype .eq. 'PCK' ) then
+         else if ( mytype == 'PCK' ) then
 
             call pcklof ( file, handle )
 
@@ -351,13 +351,13 @@
          filtyp = mytype
 
 
-      else if ( arch .eq. 'DAS' ) then
+      else if ( arch == 'DAS' ) then
 
-         if ( mytype .eq. 'EK' ) then
+         if ( mytype == 'EK' ) then
 
             call eklef ( file, handle )
 
-         else if ( mytype .eq. 'DSK' ) then
+         else if ( mytype == 'DSK' ) then
 
             call zzdsklsf ( file, handle )
 

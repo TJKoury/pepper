@@ -342,7 +342,7 @@
 !     We're assuming the record pointer can fit on an integer page.
 !     If this is not the case, we've got a bug.
 !
-      if ( size .gt. ipsize ) then
+      if ( size > ipsize ) then
 
          call setmsg ( 'Record pointer requires # integer words; '  // &
                        'EK software assumes size is <= #.  This is '// &
@@ -361,7 +361,7 @@
 !
       nrec  =  segdsc ( nridx )
 
-      if (  ( recno .lt. 1 ) .or. ( recno .gt. nrec+1 )  ) then
+      if (  ( recno < 1 ) .or. ( recno > nrec+1 )  ) then
 
          call setmsg ( 'Record number = #; valid range is 1:#.' )
          call errint ( '#',  recno                              )
@@ -401,7 +401,7 @@
 !
 !     Find a place to write the record pointer.
 !
-      if ( size .le. room ) then
+      if ( size <= room ) then
 !
 !        Just write the record pointer into the current integer page.
 !

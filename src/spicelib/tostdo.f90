@@ -19,7 +19,7 @@
 
       implicit none
 
-      character*(*)         line
+      character(*)          line
 
 ! $ Brief_I/O
 !

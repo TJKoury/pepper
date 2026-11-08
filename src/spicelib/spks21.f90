@@ -210,16 +210,16 @@
 
          call dafgda ( handle, offe+i, offe+i, data )
 
-         if (       (  first   .eq. 0     ) &
-              .and. (  data(1) .ge. begin ) ) then
+         if (       (  first   == 0     ) &
+              .and. (  data(1) >= begin ) ) then
 
              first = i
 
          end if
 
-         if (        ( first   .ne. 0   ) &
-              .and.  ( last    .eq. 0   ) &
-              .and.  ( data(1) .ge. end )  ) then
+         if (        ( first   /= 0   ) &
+              .and.  ( last    == 0   ) &
+              .and.  ( data(1) >= end )  ) then
 
             last = i
 

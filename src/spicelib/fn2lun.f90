@@ -19,7 +19,7 @@
 
       implicit none
 
-      character*(*)    filnam
+      character(*)     filnam
       integer(ip)      lunit
 
 ! $ Brief_I/O
@@ -138,7 +138,7 @@
 !
 !     First we test to see if the filename is blank.
 !
-      if ( filnam .eq. ' ' ) then
+      if ( filnam == ' ' ) then
 
          call setmsg ( 'The filename is blank.' )
          call sigerr ( 'SPICE(BLANKFILENAME)'   )
@@ -156,7 +156,7 @@
                 opened = opened, &
                 iostat = iostat  )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          call setmsg ( 'INQUIRE error on file ''#''.'  // &
                        ' The value of IOSTAT is: #.'    )

@@ -30,12 +30,12 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         value
+      character(*)          value
       integer(ip)           length
       integer(ip)           lexbeg
       integer(ip)           lexend
       integer(ip)           eqryi  ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       integer(ip)           descr  ( * )
 
 ! $ Brief_I/O
@@ -152,7 +152,7 @@
 !
       call zzekreqi ( eqryi, 'INITIALIZED', init )
 
-      if ( init .ne. itrue ) then
+      if ( init /= itrue ) then
 
          call chkin  ( 'ZZEKINQC'                                    )
          call setmsg ( 'Encoded query must be initialized before it ' // &
@@ -166,7 +166,7 @@
 !
 !     Check the input length value.
 !
-      if ( length .lt. 1 ) then
+      if ( length < 1 ) then
 
          call chkin  ( 'ZZEKINQC'                                    )
          call setmsg ( 'Length of string value was #; must be > 0.'  )
@@ -185,7 +185,7 @@
 
       room  =  size - free + 1
 
-      if ( length .gt. room ) then
+      if ( length > room ) then
 
          call chkin  ( 'ZZEKINQC'                                    )
          call setmsg ( 'Out of room in character portion of encoded ' // &

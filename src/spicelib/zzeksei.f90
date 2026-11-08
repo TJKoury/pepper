@@ -115,7 +115,7 @@
 !
 !     Local variables
 !
-      character*(encsiz)    cval
+      character(encsiz)     cval
 
 
 !

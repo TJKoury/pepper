@@ -20,10 +20,10 @@
 
       implicit none
 
-      character*(*)         sample
-      character*(*)         pictur
+      character(*)          sample
+      character(*)          pictur
       logical               ok
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -243,8 +243,8 @@
 !
 !     Local variables
 !
-      character*(5)         type
-      character*(8)         modify   ( 5 )
+      character(5)          type
+      character(8)          modify   ( 5 )
 
       real(wp)              tvec     ( 10 )
 
@@ -266,7 +266,7 @@
                     pictur, errmsg )
 
 
-      if ( pictur .eq. ' ' ) then
+      if ( pictur == ' ' ) then
          ok = .false.
       else
          ok    = .true.

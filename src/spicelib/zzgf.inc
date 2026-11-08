@@ -54,25 +54,25 @@
 !     match after being left justified, converted to upper case,
 !     and having all embedded blanks removed.
 !
-      character*(*)         recsys
+      character(*)          recsys
       parameter           ( recsys = 'RECTANGULAR' )
 
-      character*(*)         latsys
+      character(*)          latsys
       parameter           ( latsys = 'LATITUDINAL' )
 
-      character*(*)         sphsys
+      character(*)          sphsys
       parameter           ( sphsys = 'SPHERICAL' )
 
-      character*(*)         radsys
+      character(*)          radsys
       parameter           ( radsys = 'RA/DEC' )
 
-      character*(*)         cylsys
+      character(*)          cylsys
       parameter           ( cylsys = 'CYLINDRICAL' )
 
-      character*(*)         geosys
+      character(*)          geosys
       parameter           ( geosys = 'GEODETIC' )
 
-      character*(*)         pgrsys
+      character(*)          pgrsys
       parameter           ( pgrsys = 'PLANETOGRAPHIC' )
 
 
@@ -81,22 +81,22 @@
 !     inputs naming coordinates must match these when
 !     compared using EQSTR.
 !
-      character*(*)         xcrd
+      character(*)          xcrd
       parameter           ( xcrd   = 'X' )
 
-      character*(*)         ycrd
+      character(*)          ycrd
       parameter           ( ycrd   = 'Y' )
 
-      character*(*)         zcrd
+      character(*)          zcrd
       parameter           ( zcrd   = 'Z' )
 
-      character*(*)         radcrd
+      character(*)          radcrd
       parameter           ( radcrd = 'RADIUS' )
 
-      character*(*)         loncrd
+      character(*)          loncrd
       parameter           ( loncrd = 'LONGITUDE' )
 
-      character*(*)         latcrd
+      character(*)          latcrd
       parameter           ( latcrd = 'LATITUDE' )
 
 !
@@ -106,19 +106,19 @@
 !
 !     when extra blanks are compressed out of the above value.
 !
-      character*(*)         racrd
+      character(*)          racrd
       parameter           ( racrd  = 'RIGHT ASCENSION' )
 
-      character*(*)         deccrd
+      character(*)          deccrd
       parameter           ( deccrd = 'DECLINATION' )
 
-      character*(*)         rngcrd
+      character(*)          rngcrd
       parameter           ( rngcrd = 'RANGE' )
 
-      character*(*)         cltcrd
+      character(*)          cltcrd
       parameter           ( cltcrd = 'COLATITUDE' )
 
-      character*(*)         altcrd
+      character(*)          altcrd
       parameter           ( altcrd = 'ALTITUDE' )
 
 !
@@ -131,7 +131,7 @@
 !     POSDEF indicates the vector is defined by the
 !     position of a target relative to an observer.
 !
-      character*(*)         posdef
+      character(*)          posdef
       parameter           ( posdef = 'POSITION' )
 
 !
@@ -139,7 +139,7 @@
 !     of a target body to the sub-observer point on
 !     that body, for a given observer and target.
 !
-      character*(*)         sobdef
+      character(*)          sobdef
       parameter           ( sobdef = 'SUB-OBSERVER POINT' )
 
 !
@@ -147,7 +147,7 @@
 !     of a target body to the surface intercept point on
 !     that body, for a given observer, ray, and target.
 !
-      character*(*)         sindef
+      character(*)          sindef
       parameter           ( sindef = 'SURFACE INTERCEPT POINT' )
 
 

@@ -21,7 +21,7 @@
       implicit none
 
       real(wp) epoch
-      character*(*)    eptype
+      character(*)     eptype
       real(wp) delta
 
 ! $ Brief_I/O
@@ -225,9 +225,9 @@
 !
 !     Local variables
 !
-      character*20          missed   ( 5 )
-      character*4           type
-      character*1           dtype
+      character(20)         missed   ( 5 )
+      character(4)          type
+      character(1)          dtype
 
       real(wp)              aet
       real(wp)              dleap  ( 2,nmax )
@@ -295,7 +295,7 @@
 !
       call dtpool ( 'DELTET/DELTA_AT', found(5), nleap, dtype )
 
-      if ( nleap .gt. (2*nmax) ) then
+      if ( nleap > (2*nmax) ) then
 
          call setmsg ( 'Number of leapseconds, #, is greater than ' // &
                        'the number that can be buffered, #.'         )
@@ -354,10 +354,10 @@
 !     When counting leap seconds for UTC epochs, we can compare
 !     directly against the values in DLEAP.
 !
-      if ( type .eq. 'UTC' ) then
+      if ( type == 'UTC' ) then
 
          do i = 1, nleap
-            if ( epoch .ge. dleap(2,i) ) then
+            if ( epoch >= dleap(2,i) ) then
                leaps = dleap(1,i)
             end if
          end do
@@ -372,10 +372,10 @@
 !     There must be a hundred ways to do this more efficiently.
 !     For now, we'll settle for one that works.
 !
-      else if ( type .eq. 'ET' ) then
+      else if ( type == 'ET' ) then
 
          do i = 1, nleap
-            if ( epoch .gt. dleap(2,i) ) then
+            if ( epoch > dleap(2,i) ) then
 
                aet   = dnint ( dleap(2,i) + dta + dleap(1,i) )
 
@@ -385,7 +385,7 @@
 
                et    = dleap(2,i) + dta + dleap(1,i) + ettai
 
-               if ( epoch .ge. et ) then
+               if ( epoch >= et ) then
                   leaps = dleap(1,i)
                end if
 
@@ -411,10 +411,10 @@
 !     Add the constant offset, leap seconds, and the relativistic term
 !     (as before, computed at the nearest ET second).
 !
-      if ( type .eq. 'ET' ) then
+      if ( type == 'ET' ) then
          aet = dnint ( epoch )
 
-      else if ( type .eq. 'UTC' ) then
+      else if ( type == 'UTC' ) then
          aet = dnint ( epoch + dta + leaps )
       end if
 

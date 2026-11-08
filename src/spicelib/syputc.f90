@@ -24,12 +24,12 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         name
-      character*(*)         values     (        * )
+      character(*)          name
+      character(*)          values     (        * )
       integer(ip)           n
-      character*(*)         tabsym     ( lbcell:* )
+      character(*)          tabsym     ( lbcell:* )
       integer(ip)           tabptr     ( lbcell:* )
-      character*(*)         tabval     ( lbcell:* )
+      character(*)          tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -231,7 +231,7 @@
 !
 !     Check to see if the number of values is a valid quantity.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
          call setmsg ( 'SYPUTC: The dimension of the values array is' // &
                        'less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
@@ -251,7 +251,7 @@
 !     Where does this symbol belong? is it already in the table?
 !
       locsym = lstlec ( name, nsym, tabsym(1) )
-      oldsym = ( locsym .ne. 0  .and.  tabsym(locsym) .eq. name )
+      oldsym = ( locsym /= 0  .and.  tabsym(locsym) == name )
 
 !
 !     If the new symbol already exists, we need to know its dimension
@@ -272,7 +272,7 @@
 !
 !     Can we do this without overflow?
 !
-      if ( nsym+newsym .gt. sizec ( tabsym ) ) then
+      if ( nsym+newsym > sizec ( tabsym ) ) then
 
          call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the name table.' )
@@ -280,7 +280,7 @@
          call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
 
-      else if ( nptr+newsym .gt. sizei ( tabptr ) ) then
+      else if ( nptr+newsym > sizei ( tabptr ) ) then
 
          call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the pointer table.' )
@@ -288,7 +288,7 @@
          call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
 
-      else if ( nval+newval .gt. sizec ( tabval ) ) then
+      else if ( nval+newval > sizec ( tabval ) ) then
 
          call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the value table.' )
@@ -306,7 +306,7 @@
 !        change the dimension. Otherwise add the new name and
 !        dimension to the name and pointer tables.
 !
-         if ( dimval .gt. 0 ) then
+         if ( dimval > 0 ) then
             call remlac ( dimval, locval, tabval(1), nval )
             call scardc ( nval, tabval )
 

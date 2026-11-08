@@ -26,10 +26,10 @@
       parameter           ( maxman = 31 )
 
 
-      character*(*)         string
+      character(*)          string
       real(wp)              number
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
 
 ! $ Brief_I/O
 !
@@ -404,7 +404,7 @@
 !
 !     Local Parameters
 !
-      character*(1)         expchr
+      character(1)          expchr
       parameter           ( expchr = '^' )
 
       real(wp)              base
@@ -570,7 +570,7 @@
 !
 !     If the string is blank, set the error flag and return immediately.
 !
-      if ( string .eq. ' ' ) then
+      if ( string == ' ' ) then
 
          error  = .true.
          errmsg = 'ERROR: A blank input string is not allowed.'
@@ -593,7 +593,7 @@
 !
       strbeg = 1
 
-      do while ( ichar( string(strbeg:strbeg ) ) .eq. ispace )
+      do while ( ichar( string(strbeg:strbeg ) ) == ispace )
 
          strbeg = strbeg + 1
 
@@ -607,9 +607,9 @@
 
       do while ( more )
 
-         if ( strend .le. len( string ) ) then
+         if ( strend <= len( string ) ) then
 
-            if ( string(strend:) .ne. ' ' ) then
+            if ( string(strend:) /= ' ' ) then
 
                strend = strend + 1
 
@@ -652,12 +652,12 @@
 !     If the character is a plus sign, we want to increment the
 !     position.
 !
-      if ( ichar( string(positn:positn) ) .eq. iminus ) then
+      if ( ichar( string(positn:positn) ) == iminus ) then
 
          negtiv = .true.
          positn = positn + 1
 
-      else if ( ichar( string(positn:positn) ) .eq. iplus ) then
+      else if ( ichar( string(positn:positn) ) == iplus ) then
 
          positn = positn + 1
 
@@ -677,32 +677,32 @@
 !
       ndigit = 0
       fndexp = .false.
-      do while ( ( positn .le. strend ) .and. ( .not. fndexp ) )
+      do while ( ( positn <= strend ) .and. ( .not. fndexp ) )
 
          letter = ichar( string(positn:positn) )
 
-         if ( ( letter .ge. digbeg ) .and. &
-              ( letter .le. digend ) ) then
+         if ( ( letter >= digbeg ) .and. &
+              ( letter <= digend ) ) then
 
             positn       = positn + 1
             ndigit       = ndigit + 1
             ival(ndigit) = letter - digbeg
 
-         else if ( ( letter .ge. uccbeg ) .and. &
-                   ( letter .le. uccend ) ) then
+         else if ( ( letter >= uccbeg ) .and. &
+                   ( letter <= uccend ) ) then
 
             positn       = positn + 1
             ndigit       = ndigit + 1
             ival(ndigit) = 10 + letter - uccbeg
 
-         else if ( ( letter .ge. lccbeg ) .and. &
-                   ( letter .le. lccend ) ) then
+         else if ( ( letter >= lccbeg ) .and. &
+                   ( letter <= lccend ) ) then
 
             positn       = positn + 1
             ndigit       = ndigit + 1
            ival(ndigit) = 10 + letter - lccbeg
 
-         else if ( letter .eq. iexpch ) then
+         else if ( letter == iexpch ) then
 !
 !           We have found the exponent character, so set the
 !           indicator and increment the position.
@@ -723,7 +723,7 @@
 !        remains less than or equal to the number of mantissa
 !        digits that we declared, see the MAXMAN parameter.
 !
-         if ( ndigit .gt. maxman ) then
+         if ( ndigit > maxman ) then
 
             error  = .true.
             errmsg = 'ERROR: Too many digits in the mantissa (> #).'
@@ -742,7 +742,7 @@
 !        2) We are positioned on the first digit of the exponent,
 !           and are ready to try and parse it.
 !
-      if ( positn .le. strend ) then
+      if ( positn <= strend ) then
 !
 !        If there is at least one significant character left in the
 !        string, we need to try and parse it as an exponent.
@@ -776,7 +776,7 @@
 !
       if ( negtiv ) then
 
-         do while ( ndigit .gt. 0 )
+         do while ( ndigit > 0 )
 
             tmpnum = tmpnum - dpval(ival(ndigit)) * scales(ndigit)
             ndigit = ndigit - 1
@@ -785,7 +785,7 @@
 
       else
 
-         do while ( ndigit .gt. 0 )
+         do while ( ndigit > 0 )
 
             tmpnum = tmpnum + dpval(ival(ndigit)) * scales(ndigit)
             ndigit = ndigit - 1
@@ -808,7 +808,7 @@
 !     the exponent is zero, we will simply fall through the loop
 !     structures below at no greater cost than a few comparisons.
 !
-      if ( iexpon .lt. 0 ) then
+      if ( iexpon < 0 ) then
 !
 !        We do not check for any sort of underflow conditions.
 !
@@ -824,7 +824,7 @@
 
             do i = 1, iexpon
 
-               if ( tmpnum .ge. mindp ) then
+               if ( tmpnum >= mindp ) then
 
                   tmpnum = tmpnum * base
 
@@ -843,7 +843,7 @@
 
             do i = 1, iexpon
 
-               if ( tmpnum .le. maxdp ) then
+               if ( tmpnum <= maxdp ) then
 
                   tmpnum = tmpnum * base
 

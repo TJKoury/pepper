@@ -299,7 +299,7 @@
 !
 !     Check the step size.
 !
-      if ( step .le. 0.0_wp ) then
+      if ( step <= 0.0_wp ) then
 
          call chkin  ( 'GFSSTP'                                       )
          call setmsg ( 'Step has value #; step size must be positive.')

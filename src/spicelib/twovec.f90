@@ -209,8 +209,8 @@
 !
 !     Check for obvious bad inputs.
 !
-      if (      ( max(indexp,indexa) .gt. 3 ) &
-           .or. ( min(indexp,indexa) .lt. 1 ) ) then
+      if (      ( max(indexp,indexa) > 3 ) &
+           .or. ( min(indexp,indexa) < 1 ) ) then
 
          call setmsg ( 'The definition indexes must lie in the range '// &
                        'from 1 to 3.  The value of INDEXA was #. '    // &
@@ -222,7 +222,7 @@
          call chkout (     'TWOVEC' )
          return
 
-      else if   ( indexa .eq. indexp )  then
+      else if   ( indexa == indexp )  then
 
          call setmsg ( 'The values of INDEXA and INDEXP were the '    // &
                        'same, namely #.  They are required to be '    // &
@@ -257,7 +257,7 @@
 !     depends on whether INDEXP = I2 (next axis in right-handed order)
 !     or INDEXP = I3 (previous axis in right-handed order).
 !
-      if ( indexp .eq. i2 ) then
+      if ( indexp == i2 ) then
 
          call ucrss ( axdef,      plndef,        mout(1,i3) )
          call ucrss ( mout(1,i3), axdef,         mout(1,i2) )
@@ -274,9 +274,9 @@
 !     in one of the one columns of MOUT(1,I2) and MOUT(1,I3) (we need
 !     only check one of them since they are related by a cross product).
 !
-      if (       ( mout(1,i2) .eq. 0.0_wp ) &
-           .and. ( mout(2,i2) .eq. 0.0_wp ) &
-           .and. ( mout(3,i2) .eq. 0.0_wp ) ) then
+      if (       ( mout(1,i2) == 0.0_wp ) &
+           .and. ( mout(2,i2) == 0.0_wp ) &
+           .and. ( mout(3,i2) == 0.0_wp ) ) then
 
          call setmsg ( 'The input vectors AXDEF and PLNDEF are '      // &
                        'linearly dependent.'                          )

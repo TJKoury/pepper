@@ -34,10 +34,10 @@
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
-      character*(*)         frame
+      character(*)          frame
       real(wp)              first
       real(wp)              last
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           nintvl
       integer(ip)           npkts  ( * )
       integer(ip)           subtps ( * )
@@ -462,7 +462,7 @@
 !
 !     Start with a parameter compatibility check.
 !
-      if ( maxrec .lt. maxrsz ) then
+      if ( maxrec < maxrsz ) then
 
          call setmsg ( 'SPK type 19 record size may be as ' &
          //            'large as #, but SPKPVN record size ' &
@@ -479,7 +479,7 @@
 !     Make sure the segment descriptor bounds are
 !     correctly ordered.
 !
-      if ( last .lt. first ) then
+      if ( last < first ) then
 
          call setmsg ( 'Segment start time is #; stop time is #; ' &
          //            'bounds must be in nondecreasing order.'    )
@@ -496,7 +496,7 @@
 !
       call namfrm ( frame, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', frame                                  )
@@ -509,7 +509,7 @@
 !
 !     Check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' &
          //            '40 characters.'                        )
@@ -527,7 +527,7 @@
 
          chrcod = ichar( segid(i:i) )
 
-         if ( ( chrcod .lt. fprint ) .or. ( chrcod .gt. lprint ) ) then
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains ' &
             //            'nonprintable characters'         )
@@ -542,7 +542,7 @@
 !
 !     The mini-segment/interval count must be positive.
 !
-      if ( nintvl .lt. 1 ) then
+      if ( nintvl < 1 ) then
 
          call setmsg ( 'Mini-segment/interval count was #; ' &
          //            'this count must be positive.'       )
@@ -561,7 +561,7 @@
 !
       do i = 1, nintvl
 
-         if ( ivlbds(i) .ge. ivlbds(i+1) ) then
+         if ( ivlbds(i) >= ivlbds(i+1) ) then
 
             call setmsg ( 'Interval bounds at indices # and # ' &
             //            'are # and # respectively. The ' &
@@ -584,8 +584,8 @@
 !     Make sure the time span of the descriptor doesn't extend
 !     beyond the span of the interval bounds.
 !
-      if (      ( first .lt. ivlbds(1       ) ) &
-           .or. ( last  .gt. ivlbds(nintvl+1) ) ) then
+      if (      ( first < ivlbds(1       ) ) &
+           .or. ( last  > ivlbds(nintvl+1) ) ) then
 
          call setmsg ( 'First interval start time is #; ' &
          //            'segment start time is #; segment ' &
@@ -629,7 +629,7 @@
 !
 !        Check the number of packets.
 !
-         if ( npkts(i) .lt. 2 ) then
+         if ( npkts(i) < 2 ) then
 
             call setmsg ( 'At least 2 packets are required ' &
             //            'for SPK type 19. Number of packets ' &
@@ -649,7 +649,7 @@
 !
          subtyp = subtps(i)
 
-         if (  ( subtyp .lt. 0 ) .or. ( subtyp .gt. s19nst-1 ) ) then
+         if (  ( subtyp < 0 ) .or. ( subtyp > s19nst-1 ) ) then
 
             call setmsg ( 'Unexpected SPK type 19 subtype # ' &
             //            'found in mini-segment #.'          )
@@ -663,15 +663,15 @@
 
          pktsiz = pktszs ( subtyp )
 
-         if ( subtyp .eq. s19tp0 ) then
+         if ( subtyp == s19tp0 ) then
 
             winsiz = ( degres(i) + 1 ) / 2
 
-         else if ( subtyp .eq. s19tp1 ) then
+         else if ( subtyp == s19tp1 ) then
 
             winsiz =   degres(i) + 1
 
-         else if ( subtyp .eq. s19tp2 ) then
+         else if ( subtyp == s19tp2 ) then
 
             winsiz = ( degres(i) + 1 ) / 2
 
@@ -685,8 +685,8 @@
 !        Make sure that the degree of the interpolating polynomials is
 !        in range.
 !
-         if (      ( degres(i) .lt. 1      ) &
-              .or. ( degres(i) .gt. maxdeg )  )  then
+         if (      ( degres(i) < 1      ) &
+              .or. ( degres(i) > maxdeg )  )  then
 
             call setmsg ( 'The interpolating polynomials of ' &
             //            'mini-segment # have degree #; the ' &
@@ -739,7 +739,7 @@
 
             k = bepix + j - 1
 
-            if ( epochs(k) .ge. epochs(k+1) ) then
+            if ( epochs(k) >= epochs(k+1) ) then
 
                call setmsg ( 'In mini-segment #, epoch # having ' &
                //            'index # in array EPOCHS and index # ' &
@@ -762,7 +762,7 @@
 !        Make sure that the span of the input epochs of the Ith
 !        mini-segment includes the Ith interpolation interval.
 !
-         if (  epochs(bepix) .gt. ivlbds(i) ) then
+         if (  epochs(bepix) > ivlbds(i) ) then
 
             call setmsg ( 'Interpolation interval # start time # ' &
             //            'precedes mini-segment''s first epoch #.' )
@@ -773,7 +773,7 @@
             call chkout ( 'SPKW19'                                  )
             return
 
-         else if (  epochs(eepix) .lt. ivlbds(i+1) ) then
+         else if (  epochs(eepix) < ivlbds(i+1) ) then
 
             call setmsg ( 'Interpolation interval # end time # ' &
             //            'exceeds mini-segment''s last epoch #.'   )
@@ -916,15 +916,15 @@
 
          pktsiz = pktszs ( subtyp )
 
-         if ( subtyp .eq. s19tp0 ) then
+         if ( subtyp == s19tp0 ) then
 
             winsiz = ( degres(i) + 1 ) / 2
 
-         else if ( subtyp .eq. s19tp1 ) then
+         else if ( subtyp == s19tp1 ) then
 
             winsiz =   degres(i) + 1
 
-         else if ( subtyp .eq. s19tp2 ) then
+         else if ( subtyp == s19tp2 ) then
 
             winsiz = ( degres(i) + 1 ) / 2
 

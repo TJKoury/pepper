@@ -206,8 +206,8 @@
 !
 !     Local variables
 !
-      character*(maxc)      crec
-      character*(ifnlen)    ifname
+      character(maxc)       crec
+      character(ifnlen)     ifname
 
       real(wp)              dc      ( maxd )
       real(wp)              drec    ( wpr  )
@@ -269,7 +269,7 @@
 !
       remove = min ( resv, fward - 2 )
 
-      if ( remove .lt. 1 ) then
+      if ( remove < 1 ) then
 
          call chkout ( 'DAFRRR' )
          return
@@ -305,7 +305,7 @@
 !
       begblk = fward
 
-      do while ( ( begblk .gt. 0 )  .and.  ( .not. failed() ) )
+      do while ( ( begblk > 0 )  .and.  ( .not. failed() ) )
 
 !
 !        Move the summary record first. The location of the next
@@ -318,7 +318,7 @@
          recno = begblk
          call dafrdr ( handle, recno, 1, wpr, drec, found )
 
-         if ( int ( drec(1) ) .gt. 0 ) then
+         if ( int ( drec(1) ) > 0 ) then
             endblk = int ( drec(1) ) - 1
             next   = int ( drec(1) )
          else
@@ -326,11 +326,11 @@
             next = 0
          end if
 
-         if ( int ( drec(1) ) .gt. 0 ) then
+         if ( int ( drec(1) ) > 0 ) then
             drec(1) = drec(1) - real( remove, wp )
          end if
 
-         if ( int ( drec(2) ) .gt. 0 ) then
+         if ( int ( drec(2) ) > 0 ) then
             drec(2) = drec(2) - real( remove, wp )
          end if
 

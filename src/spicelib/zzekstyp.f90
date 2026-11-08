@@ -134,13 +134,13 @@
 
       do i = 1, ncols
 
-         if (       ( cdscrs(clsidx,i) .ge. 1 ) &
-              .and. ( cdscrs(clsidx,i) .le. 6 )  ) then
+         if (       ( cdscrs(clsidx,i) >= 1 ) &
+              .and. ( cdscrs(clsidx,i) <= 6 )  ) then
 
             var   = .true.
 
-         else if (       ( cdscrs(clsidx,i) .ge. 7 ) &
-                   .and. ( cdscrs(clsidx,i) .le. 9 )  ) then
+         else if (       ( cdscrs(clsidx,i) >= 7 ) &
+                   .and. ( cdscrs(clsidx,i) <= 9 )  ) then
 
             fixed = .true.
 

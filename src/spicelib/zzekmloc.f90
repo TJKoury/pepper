@@ -165,7 +165,7 @@
 !
 !     Check out SEGNO.
 !
-      if (  ( segno .lt. 1 ) .or. ( segno .gt. nseg )  )  then
+      if (  ( segno < 1 ) .or. ( segno > nseg )  )  then
 
          call chkin  ( 'ZZEKMLOC'                                )
          call setmsg ( 'Segment number = #; valid range is 1:#.' )

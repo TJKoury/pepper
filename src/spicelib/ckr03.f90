@@ -507,7 +507,7 @@
 !
 !     Check to make sure that the segment is type 3.
 !
-      if ( icd( 3 ) .ne. dtype ) then
+      if ( icd( 3 ) /= dtype ) then
 
          call setmsg ( 'The segment is not a type 3 segment.  '   // &
                        'Type is #'                                 )
@@ -522,7 +522,7 @@
 !
 !     Does this segment contain angular velocity?
 !
-      if ( icd ( 4 ) .eq. 1 ) then
+      if ( icd ( 4 ) == 1 ) then
 
          psiz = qavsiz
 
@@ -643,7 +643,7 @@
 !
 !     There is only one group if there are no directory epochs.
 !
-      if ( nrdir .eq. 0 ) then
+      if ( nrdir == 0 ) then
 
          group = 1
 
@@ -678,12 +678,12 @@
 !
             i = lstltd( sclkdp, n, buffer )
 
-            if ( i .lt. n ) then
+            if ( i < n ) then
 
                group =  group + i + 1
                fnd   = .true.
 
-            else if ( remain .eq. 0 ) then
+            else if ( remain == 0 ) then
 !
 !              The request time is greater than the last directory time
 !              so we want the last group in the segment.
@@ -745,16 +745,16 @@
 !     the last or less than the first time in the segment separately.
 !
 
-      if ( i .eq. 0 ) then
+      if ( i == 0 ) then
 
-         if ( group .eq. 1 ) then
+         if ( group == 1 ) then
 !
 !           The time occurs before the first time in the segment. Since
 !           this time cannot possibly be in any of the intervals, the
 !           first time can satisfy the request for pointing only if it
 !           is within the tolerance of the request time.
 !
-            if ( ( buffer(1) - sclkdp ) .le. tol ) then
+            if ( ( buffer(1) - sclkdp ) <= tol ) then
 
                record ( 1 ) = buffer(1)
                record ( 9 ) = buffer(1)
@@ -793,7 +793,7 @@
 
          end if
 
-      else  if ( i .eq. n ) then
+      else  if ( i == n ) then
 
 !
 !        There are two possible cases, but the same action can handle
@@ -814,7 +814,7 @@
 !           SCLKDP - BUFFER(N) will be zero in this case. )
 !
 
-         if ( ( sclkdp - buffer(n) ) .le. tol ) then
+         if ( ( sclkdp - buffer(n) ) <= tol ) then
 
             record ( 1 ) = buffer(n)
             record ( 9 ) = buffer(n)
@@ -885,11 +885,11 @@
 !     LEND       segment in the file LHAND that PREVS and PREVN
 !                were found in.
 !
-      if (  ( handle .eq. lhand ) .and. &
-            ( beg    .eq. lbeg  ) .and. &
-            ( end    .eq. lend  ) .and. &
-            ( sclkdp .ge. prevs ) .and. &
-            ( sclkdp .lt. prevn )      ) then
+      if (  ( handle == lhand ) .and. &
+            ( beg    == lbeg  ) .and. &
+            ( end    == lend  ) .and. &
+            ( sclkdp >= prevs ) .and. &
+            ( sclkdp < prevn )      ) then
 
          start  = prevs
          nstart = prevn
@@ -910,7 +910,7 @@
 !
 !        There is only one group if there are no directory epochs.
 !
-         if ( nidir .eq. 0 ) then
+         if ( nidir == 0 ) then
 
             group = 1
 
@@ -950,12 +950,12 @@
 !
                i = lstltd ( sclkdp, n, buffer )
 
-               if ( i .lt. n ) then
+               if ( i < n ) then
 
                   group =  group + i + 1
                   fnd   = .true.
 
-               else if ( remain .eq. 0 ) then
+               else if ( remain == 0 ) then
 !
 !                 The request time is greater than the last directory
 !                 time so we want the last group in the segment.
@@ -1007,7 +1007,7 @@
 !
          i = lstled ( sclkdp, n, buffer )
 
-         if ( i .eq. 0 ) then
+         if ( i == 0 ) then
 !
 !           The first start time in the buffer is the start of the
 !           interval following the one containing the request time.
@@ -1022,9 +1022,9 @@
 
             call dafgda ( handle, addr, addr, start )
 
-         else  if ( i .eq. n ) then
+         else  if ( i == n ) then
 
-            if ( group .eq. ( nidir + 1 ) ) then
+            if ( group == ( nidir + 1 ) ) then
 !
 !              This is the last interval in the segment.
 !
@@ -1078,7 +1078,7 @@
 !     time of the next interval.
 !
 
-      if ( rsclk .lt. nstart ) then
+      if ( rsclk < nstart ) then
 
          record ( 1 ) = lsclk
 
@@ -1097,14 +1097,14 @@
          ldiff = sclkdp - lsclk
          rdiff = rsclk  - sclkdp
 
-         if ( ( ldiff .le. tol ) .or. ( rdiff .le. tol ) ) then
+         if ( ( ldiff <= tol ) .or. ( rdiff <= tol ) ) then
 !
 !           Return the pointing instance closest to the request time.
 !
 !           If the request time is midway between LSCLK and RSCLK then
 !           grab the pointing instance associated with the greater time.
 !
-            if ( ldiff .lt. rdiff ) then
+            if ( ldiff < rdiff ) then
 
                record ( 1 ) = lsclk
                record ( 9 ) = lsclk

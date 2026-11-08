@@ -194,14 +194,14 @@
       logical               le
 
 
-      cmp1 ( i1, i2, i3, i4 )          =          ( i1 .lt. i2 ) &
-                                          .or. (  ( i1 .eq. i2 ) .and. &
-                                                  ( i3 .lt. i4 )       )
+      cmp1 ( i1, i2, i3, i4 )          =          ( i1 < i2 ) &
+                                          .or. (  ( i1 == i2 ) .and. &
+                                                  ( i3 < i4 )       )
 
 
       cmp2 ( i3, i4, n1, n2 )          =       ( n1 .and. .not. n2  ) &
                                           .or. (      ( n1 .and. n2 ) &
-                                                .and. ( i3 .lt. i4  ) )
+                                                .and. ( i3 < i4  ) )
 
 
       cmp3 ( i1, i2, i3, i4, n1, n2 )  =        ( .not. ( n1 .or. n2 ) ) &
@@ -234,14 +234,14 @@
 !
       gap = nvals / 2
 
-      do while ( gap .gt. 0 )
+      do while ( gap > 0 )
 
          do i = gap+1, nvals
 
 
             j = i - gap
 
-            do while ( j .gt. 0 )
+            do while ( j > 0 )
 
                jg = j + gap
 

@@ -31,13 +31,13 @@
 
       real(wp)              trgsta ( 6 )
       real(wp)              trgepc
-      character*(*)         trgctr
-      character*(*)         trgref
+      character(*)          trgctr
+      character(*)          trgref
       real(wp)              et
-      character*(*)         outref
-      character*(*)         refloc
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          outref
+      character(*)          refloc
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              state  ( 6 )
       real(wp)              lt
 
@@ -1120,8 +1120,8 @@
 !
 !     Local variables
 !
-      character*(evlfln)    evlflg ( nevflg )
-      character*(corlen)    prvcor
+      character(evlfln)     evlflg ( nevflg )
+      character(corlen)     prvcor
 
       real(wp)              dlt
       real(wp)              j2stat ( 6 )
@@ -1145,12 +1145,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtctr
+      character(maxl)       svtctr
       integer(ip)           svccde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -1158,7 +1158,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr3 ( ctrsiz )
-      character*(frnmln)    svoref
+      character(frnmln)     svoref
       integer(ip)           svorfc
 
 
@@ -1233,7 +1233,7 @@
 
       end if
 
-      if (  first .or.  ( abcorr .ne. prvcor )  ) then
+      if (  first .or.  ( abcorr /= prvcor )  ) then
 !
 !        On the first pass, save the ID code of the J2000 frame.
 !
@@ -1298,7 +1298,7 @@
 !
       call zznamfrm ( svctr3, svoref, svorfc, outref, orfcde )
 
-      if ( orfcde .eq. 0 ) then
+      if ( orfcde == 0 ) then
 !
 !        Only non-zero ID codes are legitimate.  Zero
 !        indicates that the frame wasn't recognized.
@@ -1319,7 +1319,7 @@
 !
       evltyp = esrchc ( refloc, nevflg, evlflg )
 
-      if ( evltyp .eq. 0 ) then
+      if ( evltyp == 0 ) then
 !
 !        REFLOC is not a valid evaluation choice.
 !
@@ -1366,7 +1366,7 @@
 !     Getting to this point implies light time corrections are used.
 !     The action to take depends on the frame evaluation locus.
 !
-      if ( evltyp .eq. evlctr ) then
+      if ( evltyp == evlctr ) then
 !
 !        We're going to use the traditional SPK method of specifying
 !        the output frame evaluation epoch; this is what ZZSPKFZT
@@ -1376,7 +1376,7 @@
                          abcorr,   obscde, state,  lt )
 
 
-      else if ( evltyp .eq. evlobs ) then
+      else if ( evltyp == evlobs ) then
 !
 !        The output frame orientation is to be evaluated at the
 !        observation epoch ET.
@@ -1388,7 +1388,7 @@
          call zzspkfzt ( zzcvxsta, et,     'J2000', &
                          abcorr,   obscde, j2stat,  lt )
 
-         if ( orfcde .eq. j2code ) then
+         if ( orfcde == j2code ) then
 
             call moved ( j2stat, 6, state )
 
@@ -1406,7 +1406,7 @@
          end if
 
 
-      else if ( evltyp .eq. evltrg ) then
+      else if ( evltyp == evltrg ) then
 !
 !        We must evaluate the output frame at the epoch associated
 !        with the target. This may well not be the epoch associated
@@ -1446,7 +1446,7 @@
          end if
 
 
-         if (  orfcde .eq. j2code ) then
+         if (  orfcde == j2code ) then
 !
 !           The output frame is J2000. No frame transformation is
 !           required.

@@ -195,7 +195,7 @@
 !
 !     Is the set size big enough?
 !
-      if ( n .gt. size ) then
+      if ( n > size ) then
 
          call setmsg ( 'Size of un-validated set is too small.  '     // &
                        'Size is #, size required is #. ' )

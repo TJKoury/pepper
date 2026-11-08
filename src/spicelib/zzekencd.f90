@@ -29,12 +29,12 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)         query
+      character(*)          query
       integer(ip)           eqryi  ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd  ( * )
       logical               error
-      character*(*)         errmsg
+      character(*)          errmsg
       integer(ip)           errptr
 
 ! $ Brief_I/O
@@ -145,7 +145,7 @@
 !
 !     Local variables
 !
-      character*(maxcln)    chrbuf
+      character(maxcln)     chrbuf
 
       real(wp)              numvls ( maxqnm )
 

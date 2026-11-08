@@ -342,7 +342,7 @@
 !
 !     Local variables
 !
-      character*(frnmln)    frname
+      character(frnmln)     frname
 
       real(wp)              dskdsc ( dskdsz )
       real(wp)              et
@@ -379,7 +379,7 @@
 !
       i = isrchi( bodyid, btnbod, btbody )
 
-      if ( i .gt. 0 ) then
+      if ( i > 0 ) then
 
          call setmsg ( 'Body # is already present in the DSK segment ' &
          //            'buffer body table. The table must be ' &
@@ -436,7 +436,7 @@
 !     this situation should not occur if STSIZE is consistent with
 !     the value in ZZDSKBSR.
 !
-      if ( nseg .gt. stsize ) then
+      if ( nseg > stsize ) then
 
          call setmsg ( 'The number of segments for body # is #; ' &
          //            'the size STSIZE of the input segment table ' &
@@ -456,7 +456,7 @@
 !
       avail = stsize - stfree + 1
 
-      if (  ( btnbod .eq. maxbod ) .or. ( avail .lt. nseg )  ) then
+      if (  ( btnbod == maxbod ) .or. ( avail < nseg )  ) then
 
          call zzdsksbr ( nseg, &
                          maxbod, stsize, btbody, btnbod, btsegp, &
@@ -556,7 +556,7 @@
 !
          segctr = nint( stdscr(ctridx,j) )
 
-         if ( segctr .eq. frmctr ) then
+         if ( segctr == frmctr ) then
 
             call cleard ( 3, stoff(1,j) )
 
@@ -564,7 +564,7 @@
 
             call frmnam ( segfid, frname )
 
-            if ( frname .eq. ' ' ) then
+            if ( frname == ' ' ) then
 
                call setmsg ( 'Could not look up frame info for ' &
                //            'segment frame having ID #.'       )

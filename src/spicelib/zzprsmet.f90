@@ -31,15 +31,15 @@
       implicit none
 
       integer(ip)           bodyid
-      character*(*)         method
+      character(*)          method
       integer(ip)           mxnsrf
-      character*(*)         shape
-      character*(*)         subtyp
+      character(*)          shape
+      character(*)          subtyp
       logical               pri
       integer(ip)           nsurf
       integer(ip)           srflst ( * )
-      character*(*)         pntdef
-      character*(*)         trmtyp
+      character(*)          pntdef
+      character(*)          trmtyp
 
 ! $ Brief_I/O
 !
@@ -324,16 +324,16 @@
 !
 !     Local parameters
 !
-      character*(*)         comma
+      character(*)          comma
       parameter           ( comma  = ',' )
 
-      character*(*)         dquote
+      character(*)          dquote
       parameter           ( dquote = '"' )
 
-      character*(*)         equals
+      character(*)          equals
       parameter           ( equals = '=' )
 
-      character*(*)         slash
+      character(*)          slash
       parameter           ( slash  = '/' )
 
       integer(ip)           nmax
@@ -345,8 +345,8 @@
 !
 !     Local variables
 !
-      character*(1)         chr
-      character*(metlen)    locmth
+      character(1)          chr
+      character(metlen)     locmth
 
       integer(ip)           begs ( nmax + 2 )
       integer(ip)           code
@@ -422,19 +422,19 @@
 
       do while ( .not. done )
 
-         if (  locmth( begs(i):ends(i) ) .eq.  'ELLIPSOID' ) then
+         if (  locmth( begs(i):ends(i) ) ==  'ELLIPSOID' ) then
 
             nshape = nshape + 1
             shape  = 'ELLIPSOID'
 
-         else if (  locmth( begs(i):ends(i) ) .eq.  'DSK' ) then
+         else if (  locmth( begs(i):ends(i) ) ==  'DSK' ) then
 
             nshape = nshape + 1
             shape  = 'DSK'
 
          end if
 
-         if ( i .eq. n ) then
+         if ( i == n ) then
 
             done = .true.
          else
@@ -444,7 +444,7 @@
       end do
 
 
-      if ( nshape .ne. 1 ) then
+      if ( nshape /= 1 ) then
 
          call setmsg ( 'The "method" or "shape" string must contain ' &
          //            'exactly one instance of a shape keyword: ' &
@@ -461,24 +461,24 @@
       end if
 
 
-      if ( shape .eq. 'DSK' ) then
+      if ( shape == 'DSK' ) then
 !
 !        Traverse the tokens; identify clauses in the method string.
 !
          i = 1
 
-         do while ( i .lt. n )
+         do while ( i < n )
 
             chr = locmth( begs(i):ends(i) )
 
-            if ( chr .eq. slash ) then
+            if ( chr == slash ) then
 !
 !              If the method string is correct, the next token should
 !              be a keyword.
 !
                i = i + 1
 
-               if ( locmth( begs(i):ends(i) )  .eq.  'SURFACES' ) then
+               if ( locmth( begs(i):ends(i) )  ==  'SURFACES' ) then
 !
 !                 Normally, we're looking at the start of a surface
 !                 list at this point. We need at least an assignment
@@ -487,7 +487,7 @@
 !
                   nsrfls = nsrfls + 1
 
-                  if ( nsrfls .gt. 1 ) then
+                  if ( nsrfls > 1 ) then
 !
 !                    We have too many surface specifications.
 !
@@ -500,7 +500,7 @@
 
                   end if
 
-                  if ( i .gt. n-2 ) then
+                  if ( i > n-2 ) then
 
                      call setmsg ( 'The surface list in the method ' &
                      //            'string appears to be truncated. ' &
@@ -516,7 +516,7 @@
 
                   chr = locmth( begs(i):ends(i) )
 
-                  if ( chr .ne. equals ) then
+                  if ( chr /= equals ) then
 
                      call setmsg ( 'The surface list in the method ' &
                      //            'string lacks an "=" sign after ' &
@@ -542,12 +542,12 @@
 
                      chr = locmth( begs(i):begs(i) )
 
-                     if ( chr .eq. dquote ) then
+                     if ( chr == dquote ) then
 !
 !                       We expect the current token to be a quoted
 !                       string.
 !
-                        if ( ends(i) .gt. begs(i)+1 ) then
+                        if ( ends(i) > begs(i)+1 ) then
 
                            begs(i) = begs(i) + 1
                            ends(i) = ends(i) - 1
@@ -601,7 +601,7 @@
 !
 !                    Make sure there's room in the surface ID array.
 !
-                     if ( nsurf .gt. mxnsrf ) then
+                     if ( nsurf > mxnsrf ) then
 
                         call setmsg ( 'The surface name <#> could not ' &
                         //            'be stored in the surface list ' &
@@ -624,7 +624,7 @@
                      srflst( nsurf ) = code
 
 
-                     if ( i .eq. n ) then
+                     if ( i == n ) then
 !
 !                       We're at the end of the method string.
 !
@@ -638,7 +638,7 @@
                         i   = i + 1
                         chr = locmth( begs(i):ends(i) )
 
-                        if ( chr .eq. slash ) then
+                        if ( chr == slash ) then
 !
 !                          We're at the end of the surface list.
 !
@@ -650,12 +650,12 @@
                            i    = i - 1
 
 
-                        else if ( chr .eq. comma ) then
+                        else if ( chr == comma ) then
 !
 !                          We expect to find another surface name or
 !                          ID in the list.
 !
-                           if ( i .lt. n ) then
+                           if ( i < n ) then
 
                               i = i + 1
 
@@ -700,12 +700,12 @@
 
 
                else if (      locmth( begs(i):ends(i) ) &
-                         .eq. 'UNPRIORITIZED'            ) then
+                         == 'UNPRIORITIZED'            ) then
 
 
                   npri = npri + 1
 
-                  if ( npri .gt. 1 ) then
+                  if ( npri > 1 ) then
 !
 !                    We have too many prioritization specifications.
 !
@@ -723,15 +723,15 @@
 
 
                else if (     (       locmth( begs(i):ends(i) ) &
-                               .eq. 'INTERCEPT'                ) &
+                               == 'INTERCEPT'                ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'NADIR'                    )  ) then
+                               == 'NADIR'                    )  ) then
 !
 !                 This is a sub-point type specification.
 !
                   nsubtp = nsubtp + 1
 
-                  if ( nsubtp .gt. 1 ) then
+                  if ( nsubtp > 1 ) then
 !
 !                    We have too many sub-point specifications.
 !
@@ -749,15 +749,15 @@
 
 
                else if (     (       locmth( begs(i):ends(i) ) &
-                               .eq. 'TANGENT'                ) &
+                               == 'TANGENT'                ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'GUIDED'                   )  ) then
+                               == 'GUIDED'                   )  ) then
 !
 !                 This is a point definition specification.
 !
                   nlmbtp = nlmbtp + 1
 
-                  if ( nlmbtp .gt. 1 ) then
+                  if ( nlmbtp > 1 ) then
 !
 !                    We have too many point definition specifications.
 !
@@ -776,15 +776,15 @@
 
 
                else if (     (       locmth( begs(i):ends(i) ) &
-                               .eq. 'UMBRAL'                   ) &
+                               == 'UMBRAL'                   ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'PENUMBRAL'                )  ) then
+                               == 'PENUMBRAL'                )  ) then
 !
 !                 This is a terminator type specification.
 !
                   ntrmtp = ntrmtp + 1
 
-                  if ( ntrmtp .gt. 1 ) then
+                  if ( ntrmtp > 1 ) then
 !
 !                    We have too many terminator type specifications.
 !
@@ -802,7 +802,7 @@
 
 
 
-               else if (  locmth( begs(i):ends(i) ) .eq. slash  )  then
+               else if (  locmth( begs(i):ends(i) ) == slash  )  then
 !
 !                 Adjust the token index in the message to account
 !                 for the insertion of a slash at the beginning.
@@ -817,7 +817,7 @@
                   return
 
 
-               else if ( locmth( begs(i):ends(i) )  .ne.  'DSK'  ) then
+               else if ( locmth( begs(i):ends(i) )  /=  'DSK'  ) then
 !
 !                 'DSK' was the only valid token that could appear
 !                 at this point.
@@ -858,7 +858,7 @@
          end if
 
 
-      else if ( shape .eq. 'ELLIPSOID' ) then
+      else if ( shape == 'ELLIPSOID' ) then
 !
 !        Check for legacy string inputs.
 !
@@ -900,16 +900,16 @@
 !
          i = 1
 
-         do while ( i .le. n )
+         do while ( i <= n )
 
             chr = locmth( begs(i):ends(i) )
 
-            if ( chr .eq. slash ) then
+            if ( chr == slash ) then
 !
 !              If the method string is correct, the next token should
 !              be a keyword. There had better be a next token.
 !
-               if ( i .eq. n ) then
+               if ( i == n ) then
 
                   call setmsg ( 'Expected more tokens after final <#> ' &
                      //         'in the method string <#>.'            )
@@ -924,23 +924,23 @@
                i = i + 1
 
 
-               if (  locmth( begs(i):ends(i) ) .eq.  'ELLIPSOID' ) then
+               if (  locmth( begs(i):ends(i) ) ==  'ELLIPSOID' ) then
 !
 !                 This case is a no-op.
 !
 
                else if (     (       locmth( begs(i):ends(i) ) &
-                               .eq. 'INTERCEPT'                ) &
+                               == 'INTERCEPT'                ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'NADIR'                    ) &
+                               == 'NADIR'                    ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'NEAR'                     )  ) then
+                               == 'NEAR'                     )  ) then
 !
 !                 This is a sub-point type specification.
 !
                   nsubtp = nsubtp + 1
 
-                  if ( nsubtp .gt. 1 ) then
+                  if ( nsubtp > 1 ) then
 !
 !                    We have too many sub-point specifications.
 !
@@ -954,19 +954,19 @@
 
                   end if
 
-                  if ( locmth( begs(i):ends(i) ) .eq. 'NEAR' ) then
+                  if ( locmth( begs(i):ends(i) ) == 'NEAR' ) then
 !
 !                    This may be a combination of old style and
 !                    new syntax, e.g. 'ELLIPSOID/NEAR POINT'.
 !
-                     if (       ( shape .eq. 'ELLIPSOID' ) &
-                          .and. ( i     .lt.  n          )  ) then
+                     if (       ( shape == 'ELLIPSOID' ) &
+                          .and. ( i     <  n          )  ) then
 !
 !                       We allow the "near point" sub-point type
 !                       for ellipsoids but not for DSK surfaces.
 !
                         if (     locmth( begs(i+1) : ends(i+1) ) &
-                            .eq. 'POINT'                          ) then
+                            == 'POINT'                          ) then
 
                            subtyp = 'NADIR'
 
@@ -983,16 +983,16 @@
 
 
                else if (     (       locmth( begs(i):ends(i) ) &
-                               .eq. 'TANGENT'                ) &
+                               == 'TANGENT'                ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'GUIDED'                   )  ) then
+                               == 'GUIDED'                   )  ) then
 !
 !                 This is a point definition specification.
 !
 
                   nlmbtp = nlmbtp + 1
 
-                  if ( nlmbtp .gt. 1 ) then
+                  if ( nlmbtp > 1 ) then
 !
 !                    We have too many point definition specifications.
 !
@@ -1009,15 +1009,15 @@
                   pntdef = locmth( begs(i):ends(i) )
 
                else if (     (       locmth( begs(i):ends(i) ) &
-                               .eq. 'UMBRAL'                   ) &
+                               == 'UMBRAL'                   ) &
                         .or. (       locmth( begs(i):ends(i) ) &
-                               .eq. 'PENUMBRAL'                )  ) then
+                               == 'PENUMBRAL'                )  ) then
 !
 !                 This is a terminator type specification.
 !
                   ntrmtp = ntrmtp + 1
 
-                  if ( ntrmtp .gt. 1 ) then
+                  if ( ntrmtp > 1 ) then
 !
 !                    We have too many terminator type specifications.
 !

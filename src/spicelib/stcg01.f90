@@ -26,7 +26,7 @@
       real(wp)              rasig
       real(wp)              decsig
       integer(ip)           catnum
-      character*(*)         sptype
+      character(*)          sptype
       real(wp)              vmag
 
 ! $ Brief_I/O

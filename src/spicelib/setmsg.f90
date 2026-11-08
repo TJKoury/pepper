@@ -18,7 +18,7 @@
 
       implicit none
 
-      character*(*)                 msg
+      character(*)                  msg
 
 ! $ Brief_I/O
 !

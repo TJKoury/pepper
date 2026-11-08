@@ -34,13 +34,13 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         method
-      character*(*)         target
-      character*(*)         illum
+      character(*)          method
+      character(*)          target
+      character(*)          illum
       real(wp)              et
-      character*(*)         fixref
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          fixref
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              spoint ( 3 )
       real(wp)              normal ( 3 )
       real(wp)              phssta ( 2 )
@@ -202,7 +202,7 @@
 !
 !     Local parameters
 !
-      character*(*)         iref
+      character(*)          iref
       parameter           ( iref = 'J2000' )
 
 !

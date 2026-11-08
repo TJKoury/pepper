@@ -21,7 +21,7 @@
 ! $ Declarations
 !
       integer(ip)        unit
-      character*(*)      line
+      character(*)       line
       logical            eof
 !
 ! $ Brief_I/O
@@ -138,7 +138,7 @@
 !
 !     Check to see if we got a read error, and signal it if we did.
 !
-      if ( iostat .gt. 0  ) then
+      if ( iostat > 0  ) then
 
          call chkin  ( 'READLN'                                  )
          call setmsg ( 'Error reading from file: #. IOSTAT = #.' )
@@ -153,7 +153,7 @@
 !     Check to see if we got the end of file, and set the logical
 !     flag EOF if we did.
 !
-      if ( iostat .lt. 0 ) then
+      if ( iostat < 0 ) then
 
          eof = .true.
 

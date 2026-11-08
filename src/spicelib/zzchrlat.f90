@@ -238,7 +238,7 @@
          return
       end if
 
-      if ( ( dlon .lt. 0.0_wp ) .or. ( dlon .ge. pi() ) )  then
+      if ( ( dlon < 0.0_wp ) .or. ( dlon >= pi() ) )  then
 
          call chkin  ( 'ZZCHRLAT'                          )
          call setmsg ( 'The input longitude extent was #; ' &
@@ -251,7 +251,7 @@
 
       end if
 
-      if (  abs(midlat)  .gt.  ( halfpi()+angmrg )  ) then
+      if (  abs(midlat)  >  ( halfpi()+angmrg )  ) then
 
          call chkin  ( 'ZZCHRLAT'                          )
          call setmsg ( 'The input latitude was #; this ' &

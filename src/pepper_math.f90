@@ -3,7 +3,7 @@
 !> The procedures keep SPICELIB's names, arguments and documentation. They
 !> have no saved state and do not signal SPICE errors. Moved here from
 !> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in pepper_legacy_math.f90.
+!> original interface are in src/legacy/pepper_legacy_math.f90.
 module pepper_math
 
    implicit none
@@ -150,7 +150,7 @@ contains
 !
 !     Just shorthand, really.
 !
-      approx = ( abs ( x - y ) .le. tol )
+      approx = ( abs ( x - y ) <= tol )
 
       return
       end function approx
@@ -1147,7 +1147,7 @@ contains
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         if ( az .ne. 0.0_wp ) then
+         if ( az /= 0.0_wp ) then
             azimut = -az
          end if
 
@@ -1163,7 +1163,7 @@ contains
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         if ( el .ne. 0.0_wp ) then
+         if ( el /= 0.0_wp ) then
             elevat = -el
          end if
 
@@ -1474,7 +1474,7 @@ contains
 !
 !     What else is there to say?
 !
-      if ( end1 .lt. end2 ) then
+      if ( end1 < end2 ) then
 
          brcktd = max (  end1, min(end2,number)  )
 
@@ -1776,7 +1776,7 @@ contains
 !
 !     What else is there to say?
 !
-      if ( end1 .lt. end2 ) then
+      if ( end1 < end2 ) then
 
          brckti = max (  end1, min(end2,number)  )
 
@@ -2168,7 +2168,7 @@ contains
 !
 !     Evaluate the polynomial ...
 !
-      do while ( j .gt. 1 )
+      do while ( j > 1 )
 
          partdp (3,0) = partdp (2,0)
          partdp (2,0) = partdp (1,0)
@@ -2557,7 +2557,7 @@ contains
 !
 !     Evaluate the polynomial and its derivative using recursion.
 !
-      do while ( j .gt. 1 )
+      do while ( j > 1 )
 
          w (3) = w (2)
          w (2) = w (1)
@@ -2880,7 +2880,7 @@ contains
 !
 !     Evaluate the polynomial using recursion.
 !
-      do while ( j .gt. 1 )
+      do while ( j > 1 )
          w(3) = w (2)
          w(2) = w (1)
          w(1) = cp(j) + (s2*w(2) - w(3))
@@ -3313,7 +3313,7 @@ contains
 !
       big = max( dabs(r), dabs(z) )
 
-      if ( big .gt. 0 ) then
+      if ( big > 0 ) then
          x   = r/big
          y   = z/big
          rho = big * dsqrt( x*x + y*y )
@@ -3322,7 +3322,7 @@ contains
       end if
 
 
-      if (rho.eq.0.0_wp) then
+      if (rho==0.0_wp) then
          lattud = 0.0_wp
       else
          lattud = datan2 (z,r)
@@ -4136,7 +4136,7 @@ contains
 !
       big = max( dabs(r), dabs(z) )
 
-      if ( big .eq. 0.0_wp ) then
+      if ( big == 0.0_wp ) then
 
          th = 0.0_wp
          rh = 0.0_wp
@@ -5968,14 +5968,14 @@ contains
       f1 = max( abs(s1(1)), abs(s1(2)), abs(s1(3)) )
       f2 = max( abs(s2(1)), abs(s2(2)), abs(s2(3)) )
 
-      if ( f1 .gt. 0.0_wp ) then
+      if ( f1 > 0.0_wp ) then
 
          call vsclg ( 1.0_wp/f1, s1, 6, scls1 )
       else
          call moved ( s1,          6, scls1 )
       end if
 
-      if ( f2 .gt. 0.0_wp ) then
+      if ( f2 > 0.0_wp ) then
 
          call vsclg ( 1.0_wp/f2, s2, 6, scls2 )
       else
@@ -6859,7 +6859,7 @@ contains
 !
       call unorm ( s1(pos), sout(pos), length )
 
-      if ( length .eq. 0.0_wp ) then
+      if ( length == 0.0_wp ) then
 !
 !        If the length of the input position is zero, just copy
 !        the input velocity to the output velocity.
@@ -7124,7 +7124,7 @@ contains
 !     If "x" describes the zero vector, return zero as the derivative
 !     of the vector norm.
 !
-      if ( vnorm( state(1) ) .eq. 0.0_wp ) then
+      if ( vnorm( state(1) ) == 0.0_wp ) then
 
          dvnorm = 0.0_wp
          return
@@ -7615,7 +7615,7 @@ contains
 !
 !     Self-explanatory.
 !
-      even = ( mod (ival,2) .eq. 0 )
+      even = ( mod (ival,2) == 0 )
 
       return
       end function even
@@ -7738,7 +7738,7 @@ contains
 !
 !     Just shorthand, really.
 !
-      if ( abs ( number - value ) .le. tol ) then
+      if ( abs ( number - value ) <= tol ) then
          exact = value
 
       else
@@ -7957,7 +7957,7 @@ contains
 !
 !     If X is zero, then just return the ijk frame.
 !
-      if ( a+b+c .eq. 0.0_wp ) then
+      if ( a+b+c == 0.0_wp ) then
 
          x(1) = 1.0_wp
          x(2) = 0.0_wp
@@ -7984,16 +7984,16 @@ contains
 !     set of values which it gets from the smallest component
 !     of X, the non-zero components of Y and the length of Y.
 !
-      if      (       ( a .le. b ) &
-                .and. ( a .le. c ) ) then
+      if      (       ( a <= b ) &
+                .and. ( a <= c ) ) then
 
          f  = dsqrt ( b + c )
          s1 = 1
          s2 = 2
          s3 = 3
 
-      else if (       ( b .le. a ) &
-                .and. ( b .le. c ) ) then
+      else if (       ( b <= a ) &
+                .and. ( b <= c ) ) then
 
          f  = dsqrt ( a + c )
          s1 = 2
@@ -8163,7 +8163,7 @@ contains
       absa = abs(a)
       absb = abs(b)
 
-      if ( absa .gt. absb ) then
+      if ( absa > absb ) then
          p = absa
          q = absb
       else
@@ -8174,9 +8174,9 @@ contains
       remndr = 1
 
 
-      if ( q .ne. 0 ) then
+      if ( q /= 0 ) then
 
-         do while (remndr .ne. 0 )
+         do while (remndr /= 0 )
             gcd    = q
             remndr = p - (p/q)*q
             p      = q
@@ -8627,7 +8627,7 @@ contains
 !     are perpendicular, E3 is a linear combination of E1 and E2.
 !     In this case set FOUND to FALSE and return.
 !
-      if ( en .eq. 0.0_wp ) then
+      if ( en == 0.0_wp ) then
          found = .false.
          return
       end if
@@ -8635,14 +8635,14 @@ contains
 !     Now check to see if V and E3 are in the same half space.  If
 !     not, we can stop and return the value FALSE.
 !
-      if (       en   .gt. 0.0_wp &
-           .and. vn12 .lt. 0.0_wp ) then
+      if (       en   > 0.0_wp &
+           .and. vn12 < 0.0_wp ) then
 
          found = .false.
          return
 
-      else if (       en   .lt. 0.0_wp &
-                .and. vn12 .gt. 0.0_wp ) then
+      else if (       en   < 0.0_wp &
+                .and. vn12 > 0.0_wp ) then
 
          found = .false.
          return
@@ -8662,14 +8662,14 @@ contains
 !
 !     The following tests are the same as in the previous case.
 !
-      if (       en   .gt. 0.0_wp &
-           .and. vn23 .lt. 0.0_wp ) then
+      if (       en   > 0.0_wp &
+           .and. vn23 < 0.0_wp ) then
 
          found = .false.
          return
 
-      else if (       en   .lt. 0.0_wp &
-                .and. vn23 .gt. 0.0_wp ) then
+      else if (       en   < 0.0_wp &
+                .and. vn23 > 0.0_wp ) then
 
          found = .false.
          return
@@ -8683,14 +8683,14 @@ contains
       call vcrss ( e3, e1, norm31 )
       vn31 = vdot  ( v,      norm31 )
 
-      if (       en   .gt. 0.0_wp &
-           .and. vn31 .lt. 0.0_wp ) then
+      if (       en   > 0.0_wp &
+           .and. vn31 < 0.0_wp ) then
 
          found = .false.
          return
 
-      else if (       en   .lt. 0.0_wp &
-                .and. vn31 .gt. 0.0_wp ) then
+      else if (       en   < 0.0_wp &
+                .and. vn31 > 0.0_wp ) then
 
          found = .false.
          return
@@ -8740,7 +8740,7 @@ contains
 !
       denom = vn12 + vn23 + vn31
 
-      if ( denom .eq. 0.0_wp ) then
+      if ( denom == 0.0_wp ) then
          found = .false.
       else
          found = .true.
@@ -8984,7 +8984,7 @@ contains
 !  Find the determinant of M and check for singularity
 !
       mdet = det(m)
-      if ( dabs(mdet) .lt. 1.0e-16_wp ) then
+      if ( dabs(mdet) < 1.0e-16_wp ) then
          call filld ( 0.0_wp, 9, mout )
          return
       end if
@@ -13034,7 +13034,7 @@ contains
 !
 !     Self-explanatory.
 !
-      odd = ( mod (ival,2) .ne. 0 )
+      odd = ( mod (ival,2) /= 0 )
 
       return
       end function odd
@@ -13171,8 +13171,8 @@ contains
 !-&
 
 
-      opsgnd = (      (( x .gt. 0 ) .and. ( y .lt. 0 )) &
-                 .or. (( x .lt. 0 ) .and. ( y .gt. 0 )) &
+      opsgnd = (      (( x > 0 ) .and. ( y < 0 )) &
+                 .or. (( x < 0 ) .and. ( y > 0 )) &
                )
 
       return
@@ -13314,8 +13314,8 @@ contains
 !-&
 
 
-      opsgni = (      (( x .gt. 0 ) .and. ( y .lt. 0 )) &
-                 .or. (( x .lt. 0 ) .and. ( y .gt. 0 )) &
+      opsgni = (      (( x > 0 ) .and. ( y < 0 )) &
+                 .or. (( x < 0 ) .and. ( y > 0 )) &
                )
 
       return
@@ -14846,7 +14846,7 @@ contains
       real(wp) scale
 
 
-      if ( nderiv .lt. 0 ) then
+      if ( nderiv < 0 ) then
          return
       end if
 
@@ -14948,9 +14948,9 @@ contains
       i     = nderiv
       scale = real( nderiv, wp )
 
-      do while ( k .ge. 0 )
+      do while ( k >= 0 )
 
-         do while ( i .gt. 0 )
+         do while ( i > 0 )
             p(i)  = t*p(i) + scale*p(i-1)
             scale = scale - 1
             i     = i - 1
@@ -15539,7 +15539,7 @@ contains
 !
       l2   =  q(0) * q(0) + q1s + q2s + q3s
 
-      if ( l2 .ne. 1.0_wp .and. l2 .ne. 0.0_wp ) then
+      if ( l2 /= 1.0_wp .and. l2 /= 0.0_wp ) then
 
          sharpn = 1.0_wp / l2
 
@@ -18270,7 +18270,7 @@ contains
 !        zero to 2*pi. The value of AZ returned from RECRAD is never
 !        negative, but it may be zero.
 !
-         if ( az .gt. 0.0_wp ) then
+         if ( az > 0.0_wp ) then
 !
 !            Replace AZ with its 2*pi complement.
 !
@@ -18297,7 +18297,7 @@ contains
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         if ( el .ne. 0.0_wp ) then
+         if ( el /= 0.0_wp ) then
             el = -el
          end if
 
@@ -18690,7 +18690,7 @@ contains
 !
       z = rectan ( 3 )
 
-      if ( big .eq. 0 ) then
+      if ( big == 0 ) then
          r      = 0.0_wp
          clon   = 0.0_wp
       else
@@ -18702,7 +18702,7 @@ contains
          clon   = datan2 ( y, x )
       end if
 
-      if ( clon .lt. 0.0_wp) then
+      if ( clon < 0.0_wp) then
          clon = clon + twopi
       end if
 
@@ -19103,7 +19103,7 @@ contains
 !
       big = max ( dabs(rectan(1)), dabs(rectan(2)), dabs(rectan(3)) )
 
-      if ( big .gt. 0 ) then
+      if ( big > 0 ) then
 
          x      = rectan(1) / big
          y      = rectan(2) / big
@@ -19116,7 +19116,7 @@ contains
          x      = rectan(1)
          y      = rectan(2)
 
-         if (x.eq.0.0_wp .and. y.eq.0.0_wp) then
+         if (x==0.0_wp .and. y==0.0_wp) then
             lon = 0.0_wp
          else
             lon = datan2 (y,x)
@@ -19315,7 +19315,7 @@ contains
       call reclat ( rectan, range, ra, dec )
 
 
-      if ( ra .lt. 0 ) then
+      if ( ra < 0 ) then
          ra = ra + twopi
       end if
 
@@ -19706,7 +19706,7 @@ contains
 !
       big = max ( dabs(rectan(1)), dabs(rectan(2)), dabs(rectan(3)) )
 
-      if ( big .gt. 0 ) then
+      if ( big > 0 ) then
 
          x      = rectan(1) / big
          y      = rectan(2) / big
@@ -19719,7 +19719,7 @@ contains
          x      = rectan(1)
          y      = rectan(2)
 
-         if (x.eq.0.0_wp .and. y.eq.0.0_wp) then
+         if (x==0.0_wp .and. y==0.0_wp) then
             slon  = 0.0_wp
          else
             slon  = datan2 (y,x)
@@ -20004,8 +20004,8 @@ contains
 !-&
 
 
-      smsgnd = (      (( x .gt. 0 ) .and. ( y .gt. 0 )) &
-                 .or. (( x .lt. 0 ) .and. ( y .lt. 0 )) &
+      smsgnd = (      (( x > 0 ) .and. ( y > 0 )) &
+                 .or. (( x < 0 ) .and. ( y < 0 )) &
                )
 
       return
@@ -20139,8 +20139,8 @@ contains
 !-&
 
 
-      smsgni = (      (( x .gt. 0 ) .and. ( y .gt. 0 )) &
-                 .or. (( x .lt. 0 ) .and. ( y .lt. 0 )) &
+      smsgni = (      (( x > 0 ) .and. ( y > 0 )) &
+                 .or. (( x < 0 ) .and. ( y < 0 )) &
                )
 
       return
@@ -22107,7 +22107,7 @@ contains
 !
 !     Scale V1 and V2 by 1/MAXV1 and 1/MAXV2 respectively
 !
-      if ( maxv1 .ne. 0 ) then
+      if ( maxv1 /= 0 ) then
          tv1(1) = v1(1)/maxv1
          tv1(2) = v1(2)/maxv1
          tv1(3) = v1(3)/maxv1
@@ -22117,7 +22117,7 @@ contains
          tv1(3) = 0.0_wp
       end if
 
-      if ( maxv2 .ne. 0 ) then
+      if ( maxv2 /= 0 ) then
          tv2(1) = v2(1)/maxv2
          tv2(2) = v2(2)/maxv2
          tv2(3) = v2(3)/maxv2
@@ -22139,7 +22139,7 @@ contains
 !
       vmag = vnorm(vcross)
 
-      if (vmag.gt.0.0_wp) then
+      if (vmag>0.0_wp) then
          vout(1) = vcross(1) / vmag
          vout(2) = vcross(2) / vmag
          vout(3) = vcross(3) / vmag
@@ -22350,7 +22350,7 @@ contains
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if ( vmag .gt. 0.0_wp ) then
+      if ( vmag > 0.0_wp ) then
          vout(1) = v1(1) / vmag
          vout(2) = v1(2) / vmag
          vout(3) = v1(3) / vmag
@@ -22579,7 +22579,7 @@ contains
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if (vmag.gt.0.0_wp) then
+      if (vmag>0.0_wp) then
          do i = 1, ndim
             vout(i) = v1(i) / vmag
          end do
@@ -23572,7 +23572,7 @@ contains
       end do
 
 
-      if ( scale .eq. 0.0_wp ) then
+      if ( scale == 0.0_wp ) then
 
          vdistg = 0.0_wp
          return
@@ -24600,7 +24600,7 @@ contains
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if (vmag.gt.0.0_wp) then
+      if (vmag>0.0_wp) then
          vout(1) = v1(1) / vmag
          vout(2) = v1(2) / vmag
          vout(3) = v1(3) / vmag
@@ -24826,7 +24826,7 @@ contains
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if (vmag.gt.0.0_wp) then
+      if (vmag>0.0_wp) then
          do i = 1, ndim
             vout(i) = v1(i) / vmag
          end do
@@ -24981,7 +24981,7 @@ contains
 !     small. In fact, the magnitude of any vector is never less than
 !     the magnitude of any component.
 !
-      if ( vmag .gt. 0.0_wp ) then
+      if ( vmag > 0.0_wp ) then
 
          v(1) = v(1) / vmag
          v(2) = v(2) / vmag
@@ -26316,7 +26316,7 @@ contains
 !  or underflow.  In the cases where such is not a problem it not worth
 !  it to optimize further.
 !
-      if (v1max.eq.0.0_wp) then
+      if (v1max==0.0_wp) then
          vnorm = 0.0_wp
       else
          vnorm = v1max * dsqrt (  (v1(1)/v1max)**2 &
@@ -26516,7 +26516,7 @@ contains
 
       do i=1,ndim
 
-         if ( dabs(v1(i)) .gt. v1max ) &
+         if ( dabs(v1(i)) > v1max ) &
             v1max = dabs(v1(i))
 
       end do
@@ -26526,7 +26526,7 @@ contains
 !  or underflow.  In the cases where such is not a problem it not worth
 !  it to optimize further.
 !
-      if ( v1max .eq. 0.0_wp ) then
+      if ( v1max == 0.0_wp ) then
 
          vnormg = 0.0_wp
 
@@ -26896,7 +26896,7 @@ contains
 !
 !     If A is the zero vector, just set P to zero and return.
 !
-      if ( biga .eq. 0.0_wp ) then
+      if ( biga == 0.0_wp ) then
 
          p(1) = 0.0_wp
          p(2) = 0.0_wp
@@ -26908,7 +26908,7 @@ contains
 !
 !     If B is the zero vector, then set P equal to A.
 !
-      if ( bigb .eq. 0.0_wp ) then
+      if ( bigb == 0.0_wp ) then
 
          p(1) = a(1)
          p(2) = a(2)
@@ -27174,14 +27174,14 @@ contains
       biga = max ( dabs(a(1)), dabs(a(2)), dabs(a(3)) )
       bigb = max ( dabs(b(1)), dabs(b(2)), dabs(b(3)) )
 
-      if ( biga .eq. 0 ) then
+      if ( biga == 0 ) then
          p(1) = 0.0_wp
          p(2) = 0.0_wp
          p(3) = 0.0_wp
          return
       end if
 
-      if (  bigb .eq. 0 ) then
+      if (  bigb == 0 ) then
          p(1) = 0.0_wp
          p(2) = 0.0_wp
          p(3) = 0.0_wp
@@ -27445,7 +27445,7 @@ contains
       adotb  = vdotg (a,b,ndim)
       bdotb  = vdotg (b,b,ndim)
 
-      if ( bdotb .eq. 0.0_wp ) then
+      if ( bdotb == 0.0_wp ) then
          scale = 0.0_wp
       else
          scale = adotb/bdotb
@@ -27660,7 +27660,7 @@ contains
 !
       nunorm = vdist ( v1, v2 )
 
-      if ( nunorm .eq. 0.0_wp ) then
+      if ( nunorm == 0.0_wp ) then
 
          vrel = 0.0_wp
 
@@ -27909,7 +27909,7 @@ contains
 !
       nunorm = vdistg ( v1, v2, ndim )
 
-      if ( nunorm .eq. 0.0_wp ) then
+      if ( nunorm == 0.0_wp ) then
 
          vrelg = 0.0_wp
 
@@ -28103,7 +28103,7 @@ contains
 !     Just in case the user tries to rotate about the zero vector -
 !     check, and if so return the input vector
 !
-      if ( vnorm( axis ) .eq. 0.0_wp ) then
+      if ( vnorm( axis ) == 0.0_wp ) then
          call moved (v,3,r)
          return
       end if
@@ -28947,25 +28947,25 @@ contains
 !  Calculate the magnitudes of V1 and V2; if either is 0, VSEP = 0
 !
       call unorm ( v1, u1, dmag1 )
-      if ( dmag1 .eq. 0.0_wp ) then
+      if ( dmag1 == 0.0_wp ) then
          vsep = 0.0_wp
          return
       end if
 
       call unorm ( v2, u2, dmag2 )
-      if ( dmag2 .eq. 0.0_wp ) then
+      if ( dmag2 == 0.0_wp ) then
          vsep = 0.0_wp
          return
       end if
 
-      if      ( vdot(u1,u2) .gt. 0 ) then
+      if      ( vdot(u1,u2) > 0 ) then
          vtemp(1) = u1(1) - u2(1)
          vtemp(2) = u1(2) - u2(2)
          vtemp(3) = u1(3) - u2(3)
 
          vsep = 2.0_wp * asin (0.5_wp * vnorm(vtemp))
 
-      else if ( vdot(u1,u2) .lt. 0 ) then
+      else if ( vdot(u1,u2) < 0 ) then
          vtemp(1) = u1(1) + u2(1)
          vtemp(2) = u1(2) + u2(2)
          vtemp(3) = u1(3) + u2(3)
@@ -29257,19 +29257,19 @@ contains
 !     Calculate the magnitudes of V1 and V2; if either is 0, VSEPG = 0
 !
       dmag1 = vnormg ( v1, ndim )
-      if ( dmag1 .eq. 0.0_wp ) then
+      if ( dmag1 == 0.0_wp ) then
          vsepg = 0.0_wp
          return
       end if
 
       dmag2 = vnormg ( v2, ndim )
-      if ( dmag2 .eq. 0.0_wp ) then
+      if ( dmag2 == 0.0_wp ) then
          vsepg = 0.0_wp
          return
       end if
 
 
-      if      ( vdotg (v1, v2, ndim) .gt. 0 ) then
+      if      ( vdotg (v1, v2, ndim) > 0 ) then
 
          r1 = 1.0_wp/dmag1
          r2 = 1.0_wp/dmag2
@@ -29282,7 +29282,7 @@ contains
 
          vsepg = 2.0_wp * asin (0.5_wp * magdif)
 
-      else if ( vdotg (v1, v2, ndim) .lt. 0 ) then
+      else if ( vdotg (v1, v2, ndim) < 0 ) then
 
          r1 = 1.0_wp/dmag1
          r2 = 1.0_wp/dmag2
@@ -30550,9 +30550,9 @@ contains
 !     `Just do it'.
 !
 !
-      vzero   =        (  v(1) .eq. 0.0_wp  ) &
-                .and.  (  v(2) .eq. 0.0_wp  ) &
-                .and.  (  v(3) .eq. 0.0_wp  )
+      vzero   =        (  v(1) == 0.0_wp  ) &
+                .and.  (  v(2) == 0.0_wp  ) &
+                .and.  (  v(3) == 0.0_wp  )
 
       return
       end function vzero
@@ -30856,7 +30856,7 @@ contains
 !
       do i = 1, ndim
 
-         if ( v(i) .ne. 0.0_wp ) then
+         if ( v(i) /= 0.0_wp ) then
             vzerog = .false.
             return
          end if
@@ -30867,7 +30867,7 @@ contains
 !     We have a zero vector if and only if the vector's dimension is at
 !     least 1.
 !
-      vzerog  =  ( ndim .ge. 1 )
+      vzerog  =  ( ndim >= 1 )
 
       end function vzerog
 
@@ -31635,7 +31635,7 @@ contains
 !
 !     Take care of dumb cases first.
 !
-      if (( nrow .le. 0 ) .or. ( ncol .le. 0 )) then
+      if (( nrow <= 0 ) .or. ( ncol <= 0 )) then
          return
       end if
 
@@ -31654,7 +31654,7 @@ contains
 !     Until MOVED is equal to NMOVES, there is some matrix element that
 !     has not been moved to its proper location in the transpose matrix.
 !
-      do while (moved .lt. nmoves)
+      do while (moved < nmoves)
          source  = matrix(start)
          k       = start / n
          r       = start - n*k
@@ -31665,7 +31665,7 @@ contains
 !        the destination of the next element is equal to the starting
 !        position of the first element to be moved in this cycle.
 !
-         do while (dest .ne. start)
+         do while (dest /= start)
             temp         = matrix(dest)
             xposem(dest) = source
             source       = temp
@@ -31686,15 +31686,15 @@ contains
 !        Find the next element of the matrix that has not already been
 !        moved by the transposition operation.
 !
-         if (moved .lt. nmoves) then
+         if (moved < nmoves) then
 
-            do while (dest .ne. start)
+            do while (dest /= start)
                start = start + 1
                k     = start / n
                r     = start - k*n
                dest  = r*m   + k
 
-               do while ( dest .gt. start)
+               do while ( dest > start)
                   k     = dest / n
                   r     = dest - k*n
                   dest  = m*r  + k
@@ -31899,7 +31899,7 @@ contains
 !
 !     Take care of dumb cases first.
 !
-      if ( ( nrow .le. 0 ) .or. ( ncol .le. 0 ) ) then
+      if ( ( nrow <= 0 ) .or. ( ncol <= 0 ) ) then
          return
       end if
 
@@ -31921,7 +31921,7 @@ contains
 !     Until MOVED is equal to NMOVES, there is some matrix element that
 !     has not been moved to its proper location in the transpose matrix.
 !
-      do while ( moved .lt. nmoves )
+      do while ( moved < nmoves )
 
          source  =  matrix( start )
          k       =  start / n
@@ -31933,7 +31933,7 @@ contains
 !        the destination of the next element is equal to the starting
 !        position of the first element to be moved in this cycle.
 !
-         do while ( dest .ne. start )
+         do while ( dest /= start )
 
             temp           = matrix( dest )
             matrix( dest ) = source
@@ -31954,16 +31954,16 @@ contains
 !        Find the next element of the matrix that has not already been
 !        moved by the transposition operation.
 !
-         if ( moved .lt. nmoves ) then
+         if ( moved < nmoves ) then
 
-            do while ( dest .ne. start )
+            do while ( dest /= start )
 
                start = start + 1
                k     = start / n
                r     = start - k*n
                dest  = r*m   + k
 
-               do while ( dest .gt. start )
+               do while ( dest > start )
 
                   k     = dest / n
                   r     = dest - k*n
@@ -32158,7 +32158,7 @@ contains
 !     We perform tests in the order they seem most likely to
 !     occur.
 !
-      if ( n .eq. 2 ) then
+      if ( n == 2 ) then
 !
 !        If there are exactly two inputs, then the output takes
 !        only a single matrix multiply.
@@ -32200,7 +32200,7 @@ contains
 
 
 
-      else if ( n .gt. 2 ) then
+      else if ( n > 2 ) then
 
 !
 !        We need to compute the product
@@ -32349,7 +32349,7 @@ contains
 
 
 
-      else if ( n .eq. 1 ) then
+      else if ( n == 1 ) then
 !
 !        If there is only one matrix in the list the output is
 !        simply the input.
@@ -32361,7 +32361,7 @@ contains
          end do
 
 
-      else if ( n .le. 0 ) then
+      else if ( n <= 0 ) then
 
          do j = 1, 6
 
@@ -32507,7 +32507,7 @@ contains
 !     We perform tests in the order they seem most likely to
 !     occur.
 !
-      if ( n .eq. 2 ) then
+      if ( n == 2 ) then
 !
 !        If there are exactly two inputs, then the output takes
 !        only a single matrix multiply.
@@ -32522,7 +32522,7 @@ contains
          end do
 
 
-      else if ( n .gt. 2 ) then
+      else if ( n > 2 ) then
 
 !
 !        We need to compute the product
@@ -32598,7 +32598,7 @@ contains
          end do
 
 
-      else if ( n .eq. 1 ) then
+      else if ( n == 1 ) then
 !
 !        If there is only one matrix in the list the output is
 !        simply the input.
@@ -32610,7 +32610,7 @@ contains
          end do
 
 
-      else if ( n .le. 0 ) then
+      else if ( n <= 0 ) then
 
          call ident ( output )
 

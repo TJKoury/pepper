@@ -148,7 +148,7 @@
 !
 !     Local variables
 !
-      character*(namlen)    names  ( ndspar )
+      character(namlen)     names  ( ndspar )
 
       real(wp)              dppars ( ndspar )
 
@@ -347,7 +347,7 @@
 !
 !     Use discovery check-in.
 !
-      if (  ( keywrd .lt. 1 ) .or. ( keywrd .gt. ndspar )  ) then
+      if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
 
          call chkin  ( 'DSKGTL'                                     )
          call setmsg ( 'Valid keyword range is 1:#; keyword was #.' )
@@ -557,7 +557,7 @@
       call chkin  ( 'DSKSTL' )
 
 
-      if (  ( keywrd .lt. 1 ) .or. ( keywrd .gt. ndspar )  ) then
+      if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
 
          call setmsg ( 'Valid keyword range is 1:#; keyword was #.' )
          call errint ( '#', ndspar                                  )

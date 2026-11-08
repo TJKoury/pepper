@@ -23,7 +23,7 @@
 
       integer(ip)           unit
       integer(ip)           n
-      character*(*)         data ( * )
+      character(*)          data ( * )
 
 ! $ Brief_I/O
 !
@@ -455,16 +455,16 @@
 !
 !     Local parameters
 !
-      character*(1)         quote
+      character(1)          quote
       parameter           ( quote = '''' )
 
-      character*(1)         escchr
+      character(1)          escchr
       parameter           ( escchr = '@')
 
-      character*(1)         chrfpc
+      character(1)          chrfpc
       parameter           ( chrfpc = ' ')
 
-      character*(1)         chrlpc
+      character(1)          chrlpc
       parameter           ( chrlpc = '~')
 
       integer(ip)           maxenc
@@ -476,11 +476,11 @@
 !
 !     Local variables
 !
-      character*(1)         carg
-      character*(1)         ch
-      character*(maxenc)    encchr
-      character*(1)         hexdig(0:15)
-      character*(2)         lftovr
+      character(1)          carg
+      character(1)          ch
+      character(maxenc)     encchr
+      character(1)          hexdig(0:15)
+      character(2)          lftovr
 
       integer(ip)           dtalen
       integer(ip)           dtalin
@@ -583,7 +583,7 @@
 !     Check to see if the number of data items is less than or equal
 !     to zero. If it is, signal an error.
 !
-      if ( n .lt. 1 ) then
+      if ( n < 1 ) then
 
          call setmsg ( 'The number of data items to be written was' // &
                        ' not positive: #.'                           )
@@ -619,7 +619,7 @@
       nchars = 0
       nchout = 0
 
-      do while ( nchars .lt. n )
+      do while ( nchars < n )
 !
 !        At this point, we know the following:
 !
@@ -637,10 +637,10 @@
 !        character is a printing character, so just put it in the
 !        encoded character buffer.
 !
-         if ( ( intch .lt. intfpc ) .or. &
-              ( intch .gt. intlpc ) .or. &
-              ( intch .eq. intesc ) .or. &
-              ( intch .eq. intquo ) ) then
+         if ( ( intch < intfpc ) .or. &
+              ( intch > intlpc ) .or. &
+              ( intch == intesc ) .or. &
+              ( intch == intquo ) ) then
 !
 !           The character is a nonprinting character, the escape
 !           character, or a single quote, and so we need to encode
@@ -661,12 +661,12 @@
 !
             room = maxenc - encpos
 
-            if ( room .ge. 2 ) then
+            if ( room >= 2 ) then
 
                encchr(encpos+1:encpos+1) = hexdig(hibits)
                encchr(encpos+2:encpos+2) = hexdig(lobits)
 
-            else if ( room .eq. 1 ) then
+            else if ( room == 1 ) then
 
                encchr(encpos+1:encpos+1) = hexdig(hibits)
                lftovr(1:1)               = hexdig(lobits)
@@ -705,7 +705,7 @@
 !        If we have filled the encoded character buffer, we need to
 !        write it out to the file and prepare it for reuse.
 !
-         if ( encpos .gt. maxenc ) then
+         if ( encpos > maxenc ) then
 !
 !           Write out the encoded character buffer placing single
 !           quotes around it so that it may be read using a Fortran
@@ -717,7 +717,7 @@
                     iostat=iostat ) &
                     quote // encchr // quote
 
-            if ( iostat .ne. 0 ) then
+            if ( iostat /= 0 ) then
 
                call setmsg ( 'Error writing to logical unit #,' // &
                              ' IOSTAT = #.'                      )
@@ -735,7 +735,7 @@
 !
             nchout = nchout - maxenc
 
-            if ( nchout .gt. 0 ) then
+            if ( nchout > 0 ) then
 
                encchr(1:2) = lftovr(1:2)
 
@@ -751,7 +751,7 @@
 !        data buffer DATA, we need to increment the data line pointer
 !        and reset the data position pointer.
 !
-         if ( dtapos .gt. dtalen ) then
+         if ( dtapos > dtalen ) then
 
             dtalin = dtalin + 1
             dtapos = 1
@@ -769,7 +769,7 @@
 !     blanks out to MAXENC character positions, so there is no
 !     ``garbage'' written at the end of the data.
 !
-      if ( nchout .gt. 0 ) then
+      if ( nchout > 0 ) then
 !
 !        Write out the encoded character buffer placing single
 !        quotes around it so that it may be read using a Fortran
@@ -781,7 +781,7 @@
                  iostat=iostat) &
                  quote // encchr // quote
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             call setmsg ( 'Error writing to logical unit #,' // &
                           ' IOSTAT = #.'                      )

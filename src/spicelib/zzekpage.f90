@@ -30,9 +30,9 @@
       integer(ip)           handle
       integer(ip)           type
       integer(ip)           addrss
-      character*(*)         stat
+      character(*)          stat
       integer(ip)           p
-      character*(*)         pagec
+      character(*)          pagec
       real(wp)              paged ( * )
       integer(ip)           pagei ( * )
       integer(ip)           base
@@ -145,8 +145,8 @@
 !     Note:  the integer fill buffer should be as large as the maximum
 !     of the integer page size and the metadata area size.
 !
-      character*(pgsizc)    cfill
-      character*(5)         encpag
+      character(pgsizc)     cfill
+      character(5)          encpag
 
       real(wp)              dfill  ( pgsizd )
       real(wp)              dpptr
@@ -301,9 +301,9 @@
 !
       call daslla ( handle, lastc, lastd, lasti )
 
-      if (      ( lastc .gt. 0 ) &
-           .or. ( lastd .gt. 0 ) &
-           .or. ( lasti .gt. 0 ) ) then
+      if (      ( lastc > 0 ) &
+           .or. ( lastd > 0 ) &
+           .or. ( lasti > 0 ) ) then
 
          call setmsg ( 'File # contains data; LASTC = #; LASTD = #; '// &
                        'LASTI = #.'                                  )
@@ -481,7 +481,7 @@
       end if
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 !
 !        The new page follows the last character address.
 !
@@ -500,7 +500,7 @@
          base  =  npc * pgsizc
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 
          call dasadd ( handle, pgsizd, dfill )
 
@@ -511,7 +511,7 @@
          base  =  npd * pgsizd
 
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 
          call dasadi ( handle, pgsizi, ifill )
 
@@ -658,7 +658,7 @@
       end if
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 !
 !        If the character free list is non-empty, take a page from
 !        that list.
@@ -666,7 +666,7 @@
          call dasrdi ( handle, epfpc, epfpc, freec )
 
 
-         if ( freec .gt. 0 ) then
+         if ( freec > 0 ) then
 !
 !           We'll return the first free page.
 !
@@ -718,7 +718,7 @@
 
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 !
 !        If the d.p. free list is non-empty, take a page from
 !        that list.
@@ -726,7 +726,7 @@
          call dasrdi ( handle, epfpd, epfpd, freed )
 
 
-         if ( freed .gt. 0 ) then
+         if ( freed > 0 ) then
 !
 !           We'll return the first free page.
 !
@@ -775,7 +775,7 @@
          end if
 
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 !
 !        If the integer free list is non-empty, take a page from
 !        that list.
@@ -783,7 +783,7 @@
          call dasrdi ( handle, epfpi, epfpi, freei )
 
 
-         if ( freei .gt. 0 ) then
+         if ( freei > 0 ) then
 !
 !           We'll return the first free page.
 !
@@ -959,14 +959,14 @@
       end if
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 !
 !        Validate the page number.  Find out how many pages are
 !        out there.
 !
          call dasrdi ( handle, epnpc, epnpc, npc )
 
-         if (  ( p .lt. 1 ) .or. ( p .gt. npc )  ) then
+         if (  ( p < 1 ) .or. ( p > npc )  ) then
 
             call setmsg ( 'Attempt to free non-existent CHR page. ' // &
                           'Page number = #; valid range is 1:#'     )
@@ -1000,14 +1000,14 @@
          call dasudi ( handle, epnfpc, epnfpc, nfreec+1 )
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 !
 !        Validate the page number.  Find out how many pages are
 !        out there.
 !
          call dasrdi ( handle, epnpd, epnpd, npd )
 
-         if (  ( p .lt. 1 ) .or. ( p .gt. npd )  ) then
+         if (  ( p < 1 ) .or. ( p > npd )  ) then
 
             call setmsg ( 'Attempt to free non-existent DP page. ' // &
                           'Page number = #; valid range is 1:#'     )
@@ -1042,14 +1042,14 @@
 
 
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 !
 !        Validate the page number.  Find out how many pages are
 !        out there.
 !
          call dasrdi ( handle, epnpi, epnpi, npi )
 
-         if (  ( p .lt. 1 ) .or. ( p .gt. npi )  ) then
+         if (  ( p < 1 ) .or. ( p > npi )  ) then
 
             call setmsg ( 'Attempt to free non-existent INT page. ' // &
                           'Page number = #; valid range is 1:#'     )
@@ -1205,7 +1205,7 @@
 !
       call dasrdi ( handle, epnpc, epnpc, npc )
 
-      if (  ( p .lt. 1 )  .or.  ( p .gt. npc )  ) then
+      if (  ( p < 1 )  .or.  ( p > npc )  ) then
 
          call chkin  ( 'ZZEKPGRC'                           )
          call setmsg ( 'CHR page = #; valid range is [1:#]' )
@@ -1224,7 +1224,7 @@
 
       call dasrdc ( handle, addr, addr+pgsizc-1, 1, e, pagec )
 
-      if ( l .gt. e ) then
+      if ( l > e ) then
          pagec ( e+1: ) = ' '
       end if
 
@@ -1335,7 +1335,7 @@
 !
       call dasrdi ( handle, epnpd, epnpd, npd )
 
-      if (  ( p .lt. 1 )  .or.  ( p .gt. npd )  ) then
+      if (  ( p < 1 )  .or.  ( p > npd )  ) then
 
          call chkin  ( 'ZZEKPGRD'                           )
          call setmsg ( 'DP page = #; valid range is [1:#]'  )
@@ -1459,7 +1459,7 @@
 !
       call dasrdi ( handle, epnpi, epnpi, npi )
 
-      if (  ( p .lt. 1 )  .or.  ( p .gt. npi )  ) then
+      if (  ( p < 1 )  .or.  ( p > npi )  ) then
 
          call chkin  ( 'ZZEKPGRI'                           )
          call setmsg ( 'INT page = #; valid range is [1:#]' )
@@ -1601,7 +1601,7 @@
 !
       call dasrdi ( handle, epnpc, epnpc, npc )
 
-      if (  ( p .lt. 1 )  .or.  ( p .gt. npc )  ) then
+      if (  ( p < 1 )  .or.  ( p > npc )  ) then
 
          call chkin  ( 'ZZEKPGWC'                           )
          call setmsg ( 'CHR page = #; valid range is [1:#]' )
@@ -1616,7 +1616,7 @@
 
       l  =  len( pagec )
 
-      if ( l .lt. pgsizc ) then
+      if ( l < pgsizc ) then
 
          call chkin  ( 'ZZEKPGWC'                                    )
          call setmsg ( 'Input CHR page size = #; valid size is [#:]' )
@@ -1756,7 +1756,7 @@
 !
       call dasrdi ( handle, epnpd, epnpd, npd )
 
-      if (  ( p .lt. 1 )  .or.  ( p .gt. npd )  ) then
+      if (  ( p < 1 )  .or.  ( p > npd )  ) then
 
          call chkin  ( 'ZZEKPGWD'                           )
          call setmsg ( 'DP page = #; valid range is [1:#]'  )
@@ -1896,7 +1896,7 @@
 !
       call dasrdi ( handle, epnpi, epnpi, npi )
 
-      if (  ( p .lt. 1 )  .or.  ( p .gt. npi )  ) then
+      if (  ( p < 1 )  .or.  ( p > npi )  ) then
 
          call chkin  ( 'ZZEKPGWI'                           )
          call setmsg ( 'INT page = #; valid range is [1:#]' )
@@ -2014,17 +2014,17 @@
 !
 !-&
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 
          base  =   ( p - 1 ) * pgsizc
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 
          base  =   ( p - 1 ) * pgsizd
 
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 
          base  =   ( p - 1 ) * pgsizi   +   pgbasi
 
@@ -2154,19 +2154,19 @@
 
 
 
-      if ( type .eq. chr ) then
+      if ( type == chr ) then
 
          p     =   ( addrss  + pgsizc - 1 ) / pgsizc
          base  =   ( p - 1 ) * pgsizc
 
 
-      else if ( type .eq. dp ) then
+      else if ( type == dp ) then
 
          p     =   ( addrss  + pgsizd - 1 ) / pgsizd
          base  =   ( p - 1 ) * pgsizd
 
 
-      else if ( type .eq. int ) then
+      else if ( type == int ) then
 
          p     =   ( ( addrss-pgbasi )  +   pgsizi - 1 ) / pgsizi
          base  =   ( p - 1 ) * pgsizi   +   pgbasi

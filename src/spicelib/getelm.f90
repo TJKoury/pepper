@@ -21,7 +21,7 @@
       implicit none
 
       integer(ip)           frstyr
-      character*(*)         lines ( 2  )
+      character(*)          lines ( 2  )
       real(wp)              epoch
       real(wp)              elems ( 10 )
 
@@ -725,7 +725,7 @@
 !     Local variables
 !
       logical               ok
-      character*(256)       error
+      character(256)        error
 
 !
 !     Standard SPICE error handling.

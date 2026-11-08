@@ -21,8 +21,8 @@
 ! $ Declarations
 
       implicit none
-      character*(*)         sub
-      character*(*)         replac
+      character(*)          sub
+      character(*)          replac
       logical               l2r
 
 ! $ Brief_I/O

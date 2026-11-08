@@ -23,12 +23,12 @@
       real(wp)              et
       integer(ip)           body
       real(wp)              lon
-      character*(*)         type
+      character(*)          type
       integer(ip)           hr
       integer(ip)           mn
       integer(ip)           sc
-      character*(*)         time
-      character*(*)         ampm
+      character(*)          time
+      character(*)          ampm
 
 ! $ Brief_I/O
 !
@@ -449,15 +449,15 @@
 !
 !     Local Variables
 !
-      character*(4)         amorpm
-      character*(bdnmln)    bodnam
-      character*(wdsize)    frame
-      character*(2)         h
-      character*(wdsize)    bpmkwd
-      character*(2)         m
-      character*(wdsize)    mytype
-      character*(2)         s
-      character*(1)         kwtype
+      character(4)          amorpm
+      character(bdnmln)     bodnam
+      character(wdsize)     frame
+      character(2)          h
+      character(wdsize)     bpmkwd
+      character(2)          m
+      character(wdsize)     mytype
+      character(2)          s
+      character(1)          kwtype
 
       real(wp)              angle
       real(wp)              hours
@@ -495,7 +495,7 @@
       call ljust ( type,   mytype )
       call ucase ( mytype, mytype )
 
-      if ( mytype .eq. 'PLANETOGRAPHIC' ) then
+      if ( mytype == 'PLANETOGRAPHIC' ) then
 !
 !        Find planetocentric longitude corresponding to the input
 !        longitude.  We first represent in rectangular coordinates
@@ -533,7 +533,7 @@
          call reclat ( spoint, range, mylong, lat )
 
 
-      else if ( mytype .eq. 'PLANETOCENTRIC' ) then
+      else if ( mytype == 'PLANETOCENTRIC' ) then
 
          mylong = lon
 
@@ -554,7 +554,7 @@
 !
 !     It's always noon on the surface of the sun.
 !
-      if ( body .eq. 10 ) then
+      if ( body == 10 ) then
 
          hr = 12
          mn = 0
@@ -600,7 +600,7 @@
       call rmaind ( angle, twopi(), q, tmpang )
       angle = tmpang
 
-      if ( angle .gt. pi() ) then
+      if ( angle > pi() ) then
          angle = angle - twopi()
       end if
 
@@ -615,8 +615,8 @@
       call dtpool ( bpmkwd, found, n, kwtype )
 
       if (      .not. found &
-            .or. kwtype .ne. 'N' &
-            .or. n      .lt.  2  ) then
+            .or. kwtype /= 'N' &
+            .or. n      <  2  ) then
 
          call setmsg ( 'The rotation type for the body # could ' &
          //            'not be determined because the # keyword ' &
@@ -638,7 +638,7 @@
 !
          call gdpool ( bpmkwd, 2, 1, n, rate, found )
 
-         if ( rate .lt. 0.0_wp ) then
+         if ( rate < 0.0_wp ) then
             angle = - angle
          end if
 
@@ -664,23 +664,23 @@
 !
 !     Set the A.M./P.M. components of local time.
 !
-      if      ( hr .eq. 24 ) then
+      if      ( hr == 24 ) then
 
          hr     = 0
          hrampm = 12
          amorpm = 'A.M.'
 
-      else if ( hr .gt. 12 ) then
+      else if ( hr > 12 ) then
 
          hrampm = hr - 12
          amorpm = 'P.M.'
 
-      else if ( hr .eq. 12 ) then
+      else if ( hr == 12 ) then
 
          hrampm = 12
          amorpm = 'P.M.'
 
-      else if ( hr .eq. 0 ) then
+      else if ( hr == 0 ) then
 
          hrampm = 12
          amorpm = 'A.M.'

@@ -23,7 +23,7 @@
       implicit none
 
       integer(ip)        number
-      character*(*)      string
+      character(*)       string
 
       integer(ip)        minlen
       parameter        ( minlen = 5 )
@@ -179,13 +179,13 @@
       if ( return () ) then
          return
 
-      else if ( len ( string ) .lt. minlen ) then
+      else if ( len ( string ) < minlen ) then
          call chkin  ( 'ENCHAR' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
          call chkout ( 'ENCHAR' )
          return
 
-      else if ( number .lt. 0 ) then
+      else if ( number < 0 ) then
          call chkin  ( 'ENCHAR' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
          call chkout ( 'ENCHAR' )
@@ -209,7 +209,7 @@
 !
 !     More error handling.
 !
-      if ( num .gt. 0 ) then
+      if ( num > 0 ) then
          call chkin  ( 'ENCHAR' )
          call sigerr ( 'SPICE(OUTOFRANGE)' )
          call chkout ( 'ENCHAR' )
@@ -357,7 +357,7 @@
       if ( return () ) then
          return
 
-      else if ( len ( string ) .lt. minlen ) then
+      else if ( len ( string ) < minlen ) then
          call chkin  ( 'DECHAR' )
          call sigerr ( 'SPICE(INSUFFLEN)' )
          call chkout ( 'DECHAR' )

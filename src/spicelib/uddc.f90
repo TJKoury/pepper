@@ -184,7 +184,7 @@
          return
       end if
 
-      isdecr = deriv .lt. 0.0_wp
+      isdecr = deriv < 0.0_wp
 
       call chkout ( 'UDDC' )
       return

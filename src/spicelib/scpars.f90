@@ -24,9 +24,9 @@
       include               'sclk.inc'
 
       integer(ip)           sc
-      character*(*)         sclkch
+      character(*)          sclkch
       logical               error
-      character*(*)         msg
+      character(*)          msg
       real(wp)              sclkdp
 
 ! $ Brief_I/O
@@ -438,8 +438,8 @@
 !
 !     Local variables
 !
-      character*(255)       psmsg
-      character*(255)       strerr
+      character(255)        psmsg
+      character(255)        strerr
 
       real(wp)              pstart   ( mxpart )
       real(wp)              pstop    ( mxpart )
@@ -490,7 +490,7 @@
          return
       end if
 
-      if ( dtype .ne. 1 )  then
+      if ( dtype /= 1 )  then
 
          call setmsg ( 'Clock type # is not supported.' )
          call errint ( '#', dtype                       )
@@ -517,7 +517,7 @@
 
       end if
 
-      if ( nparts .gt. mxpart ) then
+      if ( nparts > mxpart ) then
 !
 !        This code should be unreachable but is provided for safety.
 !
@@ -535,7 +535,7 @@
 !
 !     First check if the string is blank.
 !
-      if ( sclkch .eq. ' ' ) then
+      if ( sclkch == ' ' ) then
 
          error = .true.
 
@@ -552,7 +552,7 @@
 !
       pos = cpos ( sclkch, '/', 1 )
 
-      if ( pos .eq. 1 ) then
+      if ( pos == 1 ) then
 !
 !        The slash character is first character in the string which
 !        means that the partition number is not there.
@@ -567,7 +567,7 @@
 
       end if
 
-      if ( pos .eq. len(sclkch) ) then
+      if ( pos == len(sclkch) ) then
 
          msg = 'SCLK string ends with slash.'
 
@@ -641,7 +641,7 @@
 !              of the partitions.
 !
 !
-      if ( pos .gt. 1 ) then
+      if ( pos > 1 ) then
 !
 !        Try to parse the partition number.
 !
@@ -651,7 +651,7 @@
 !
 !        Make sure that the number parsed is correct.
 !
-         if ( strerr .ne. ' ' ) then
+         if ( strerr /= ' ' ) then
 !
 !          Was not able to parse a number.
 !
@@ -664,7 +664,7 @@
             call chkout ( 'SCPARS' )
             return
 
-         else if ( part .le. 0 .or. part .gt. nparts ) then
+         else if ( part <= 0 .or. part > nparts ) then
 
 !
 !           The parsed number does not fall in the range of valid
@@ -682,8 +682,8 @@
             call chkout ( 'SCPARS' )
             return
 
-         else if ( ticks .lt. pstart( part )   .or. &
-                   ticks .gt. pstop ( part ) )  then
+         else if ( ticks < pstart( part )   .or. &
+                   ticks > pstop ( part ) )  then
 
 !
 !           The TICKS value does not fall in the range of valid
@@ -711,15 +711,15 @@
 !
          part = 1
 
-         do while (   part  .le. nparts             .and. &
-                    ( ticks .lt. pstart( part )     .or. &
-                      ticks .gt. pstop ( part ) )        )
+         do while (   part  <= nparts             .and. &
+                    ( ticks < pstart( part )     .or. &
+                      ticks > pstop ( part ) )        )
 
             part = part + 1
 
          end do
 
-         if ( part .gt. nparts ) then
+         if ( part > nparts ) then
 
             msg = 'SCLK count # does not fall in the boundaries ' // &
                   'of any of the partitions for spacecraft #.'
@@ -741,7 +741,7 @@
 !     mission, add in the total number of ticks in preceding partitions
 !     and subtract off the starting ticks value for this partition.
 !
-      if ( part .gt. 1 ) then
+      if ( part > 1 ) then
          sclkdp = ticks - pstart( part ) + ptotls( part - 1 )
       else
          sclkdp = ticks - pstart( part )

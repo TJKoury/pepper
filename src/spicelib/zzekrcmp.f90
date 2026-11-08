@@ -286,7 +286,7 @@
       rel      =  eq
       col      =  1
 
-      do while (  ( col .le. ncols ) .and. ( rel .eq. eq )  )
+      do while (  ( col <= ncols ) .and. ( rel == eq )  )
 !
 !        Compare the entries in the two rows in the columns indicated
 !        by the Nth column descriptor pair.
@@ -310,34 +310,34 @@
 !
 !     Determine the truth of the input relational expression.
 !
-      if ( op .eq. eq )   then
+      if ( op == eq )   then
 
-         zzekrcmp  =  rel .eq. eq
-
-
-      else if ( op .eq. lt )   then
-
-         zzekrcmp  =  rel .eq. lt
+         zzekrcmp  =  rel == eq
 
 
-      else if ( op .eq. le )   then
+      else if ( op == lt )   then
 
-         zzekrcmp  =  rel .ne. gt
-
-
-      else if ( op .eq. gt )   then
-
-         zzekrcmp  =  rel .eq. gt
+         zzekrcmp  =  rel == lt
 
 
-      else if ( op .eq. ge )   then
+      else if ( op == le )   then
 
-         zzekrcmp  =  rel .ne. lt
+         zzekrcmp  =  rel /= gt
 
 
-      else if ( op .eq. ne )   then
+      else if ( op == gt )   then
 
-         zzekrcmp  =  rel .ne. eq
+         zzekrcmp  =  rel == gt
+
+
+      else if ( op == ge )   then
+
+         zzekrcmp  =  rel /= lt
+
+
+      else if ( op == ne )   then
+
+         zzekrcmp  =  rel /= eq
 
 
       else

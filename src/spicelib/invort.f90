@@ -279,7 +279,7 @@
 
          call unorm ( m(1,i), temp(1,i), length )
 
-         if ( length .eq. 0.0_wp ) then
+         if ( length == 0.0_wp ) then
 
             call chkin  ( 'INVORT'                                     )
             call setmsg ( 'Column # of the input matrix has a norm '  // &
@@ -294,9 +294,9 @@
 !
 !        Make sure we can actually rescale the rows.
 !
-         if    ( length .lt. 1.0_wp ) then
+         if    ( length < 1.0_wp ) then
 
-            if (  ( length * bound ) .lt. 1.0_wp ) then
+            if (  ( length * bound ) < 1.0_wp ) then
 
                call chkin  ( 'INVORT' )
                call setmsg ( 'The length of column # is #. This '     // &

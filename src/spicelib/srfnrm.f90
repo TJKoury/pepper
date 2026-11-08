@@ -37,10 +37,10 @@
       include 'zzctr.inc'
       include 'zzdsk.inc'
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         fixref
+      character(*)          fixref
       integer(ip)           npts
       real(wp)              srfpts ( 3, * )
       real(wp)              normls ( 3, * )
@@ -821,7 +821,7 @@
 !
 !     Local parameters
 !
-      character*(*)         rname
+      character(*)          rname
       parameter           ( rname  = 'SRFNRM' )
 
       integer(ip)           bdnmln
@@ -833,11 +833,11 @@
 !
 !     Local variables
 !
-      character*(cvtlen)    lmbtyp
-      character*(mthlen)    prvmth
-      character*(shplen)    shpstr
-      character*(sublen)    subtyp
-      character*(tmtlen)    trmtyp
+      character(cvtlen)     lmbtyp
+      character(mthlen)     prvmth
+      character(shplen)     shpstr
+      character(sublen)     subtyp
+      character(tmtlen)     trmtyp
 
       real(wp)              a2
       real(wp)              b2
@@ -868,7 +868,7 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(bdnmln)    svtarg
+      character(bdnmln)     svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
@@ -876,7 +876,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr2 ( ctrsiz )
-      character*(frnmln)    svfref
+      character(frnmln)     svfref
       integer(ip)           svfxfc
 
 !
@@ -1004,7 +1004,7 @@
 !
 !     Make sure that FIXREF is centered at the target body's center.
 !
-      if ( fxcent .ne. trgcde ) then
+      if ( fxcent /= trgcde ) then
 
          call setmsg ( 'Reference frame # is not centered at the ' &
          //            'target body #. The ID code of the frame ' &
@@ -1028,7 +1028,7 @@
 !     The choice of initialization routine depends on the target
 !     surface type.
 !
-      if ( first  .or.  surfup  .or.  ( method .ne. prvmth ) ) then
+      if ( first  .or.  surfup  .or.  ( method /= prvmth ) ) then
 !
 !        Set the previous method string to an invalid value, so it
 !        cannot match any future, valid input. This will force this
@@ -1079,7 +1079,7 @@
 !        There should be no subtype specification in the method
 !        string.
 !
-         if ( subtyp .ne. ' ' ) then
+         if ( subtyp /= ' ' ) then
 
             call setmsg ( 'Spurious sub-observer point type <#> ' &
             //            'was present in the method string #. ' &
@@ -1106,9 +1106,9 @@
 !
 !     Check the target body shape.
 !
-      if ( shape .eq. ellshp ) then
+      if ( shape == ellshp ) then
 
-         if ( trgcde .ne. svprvt ) then
+         if ( trgcde /= svprvt ) then
 !
 !           Reset counter to force lookup.
 !
@@ -1125,7 +1125,7 @@
             return
          end if
 
-         if (  min( svradi(1), svradi(2), svradi(3) ) .le. 0.0_wp ) then
+         if (  min( svradi(1), svradi(2), svradi(3) ) <= 0.0_wp ) then
 
             call setmsg ( 'Body # radii should be positive but ' &
             //            'were # # #.'                         )
@@ -1170,7 +1170,7 @@
 !           The test below is a distance test if the target shape
 !           is a sphere. For other ellipsoids, it's an approximation.
 !
-            if ( abs( level - 1.0_wp ) .ge. limit ) then
+            if ( abs( level - 1.0_wp ) >= limit ) then
 
                call setmsg ( 'Input point at index # is not on ' &
                //            'the target body surface. The ' &
@@ -1197,7 +1197,7 @@
          end do
 
 
-      else if  ( shape .eq. dskshp ) then
+      else if  ( shape == dskshp ) then
 !
 !        Generate normal vectors.
 !

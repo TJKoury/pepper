@@ -22,7 +22,7 @@
       implicit none
 
       integer(ip)           code
-      character*(*)         name
+      character(*)          name
       logical               found
 
 ! $ Brief_I/O

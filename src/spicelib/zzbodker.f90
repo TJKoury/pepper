@@ -32,14 +32,14 @@
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      character*(maxl)      names  (          nroom )
-      character*(maxl)      nornam (          nroom )
+      character(maxl)       names  (          nroom )
+      character(maxl)       nornam (          nroom )
       integer(ip)           codes  (          nroom )
       integer(ip)           nvals
       logical               extker
       integer(ip)           bnmlst (          nroom )
       integer(ip)           bnmpol ( lbpool : nroom )
-      character*(maxl)      bnmnms (          nroom )
+      character(maxl)       bnmnms (          nroom )
       integer(ip)           bnmidx (          nroom )
       integer(ip)           bidlst (          nroom )
       integer(ip)           bidpol ( lbpool : nroom )
@@ -231,9 +231,9 @@
 !
 !     Local Variables
 !
-      character*(keylen)    nbc
-      character*(keylen)    nbn
-      character*(1)         type   ( 2 )
+      character(keylen)     nbc
+      character(keylen)     nbn
+      character(1)          type   ( 2 )
 
       integer(ip)           i
       integer(ip)           nsiz   ( 2 )
@@ -329,7 +329,7 @@
          return
       end if
 
-      if ( ( nsiz(1) .gt. nroom ) .or. ( nsiz(2) .gt. nroom ) ) then
+      if ( ( nsiz(1) > nroom ) .or. ( nsiz(2) > nroom ) ) then
 
          call setmsg ( 'The kernel pool vectors used to ' &
          //            'define the names/ID-codes mapping' &
@@ -344,7 +344,7 @@
          call chkout ( 'ZZBODKER'                            )
          return
 
-      else if ( nsiz(1) .ne. nsiz(2) ) then
+      else if ( nsiz(1) /= nsiz(2) ) then
 
          call setmsg ( 'The kernel pool vectors used for ' &
          //            'mapping between names and ID-codes ' &
@@ -376,7 +376,7 @@
 !
 !        Check for blank strings.
 !
-         if ( names(i) .eq. ' ' ) then
+         if ( names(i) == ' ' ) then
 
             call setmsg ( 'An attempt to assign the code, #, to ' &
             //            'a blank string was made.  Check loaded ' &

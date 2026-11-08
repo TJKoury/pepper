@@ -35,12 +35,12 @@
       include              'frmtyp.inc'
       include               'zzctr.inc'
 
-      character*(*)         method
-      character*(*)         target
+      character(*)          method
+      character(*)          target
       real(wp)              et
-      character*(*)         abcorr
-      character*(*)         obsrvr
-      character*(*)         dref
+      character(*)          abcorr
+      character(*)          obsrvr
+      character(*)          dref
       real(wp)              dvec   ( 3 )
       real(wp)              spoint ( 3 )
       real(wp)              dist
@@ -1062,8 +1062,8 @@
 !
 !     Local variables
 !
-      character*(frnmln)    frname
-      character*(abclen)    loccor
+      character(frnmln)     frname
+      character(abclen)     loccor
 
       real(wp)              etdiff
       real(wp)              j2dir  ( 3 )
@@ -1115,12 +1115,12 @@
 !     Saved name/ID item declarations.
 !
       integer(ip)           svctr1 ( ctrsiz )
-      character*(maxl)      svtarg
+      character(maxl)       svtarg
       integer(ip)           svtcde
       logical               svfnd1
 
       integer(ip)           svctr2 ( ctrsiz )
-      character*(maxl)      svobsr
+      character(maxl)       svobsr
       integer(ip)           svobsc
       logical               svfnd2
 
@@ -1130,7 +1130,7 @@
 !     Saved frame name/ID item declarations.
 !
       integer(ip)           svctr3 ( ctrsiz )
-      character*(frnmln)    svdref
+      character(frnmln)     svdref
       integer(ip)           svrefc
 
 
@@ -1236,7 +1236,7 @@
 !     Check the input body codes.  If they are equal, signal
 !     an error.
 !
-      if ( obscde .eq. trgcde ) then
+      if ( obscde == trgcde ) then
 
          call setmsg ( 'In computing the surface intercept point, ' // &
                        'the observing body and target body are the '// &
@@ -1258,7 +1258,7 @@
 !
 !     Check for stellar aberration in the aberration correction flag.
 !
-      usestl  =  index( loccor, '+S') .gt. 0
+      usestl  =  index( loccor, '+S') > 0
 
 !
 !     Now remove the stellar aberration component from the aberration
@@ -1276,11 +1276,11 @@
 !
 !     Decide what sort of light time correction has been requested.
 !
-      usecn = ( loccor(1:2) .eq. 'CN' ) .or. ( loccor(1:3) .eq. 'XCN' )
+      usecn = ( loccor(1:2) == 'CN' ) .or. ( loccor(1:3) == 'XCN' )
 
       uselt =        usecn &
-              .or. ( loccor(1:2) .eq. 'LT'  ) &
-              .or. ( loccor(1:3) .eq. 'XLT' )
+              .or. ( loccor(1:2) == 'LT'  ) &
+              .or. ( loccor(1:3) == 'XLT' )
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.
@@ -1394,7 +1394,7 @@
 !     from frame DREF to J2000, then from J2000 to the target
 !     frame.
 !
-      if ( type .eq. inertl ) then
+      if ( type == inertl ) then
 !
 !        Inertial frames can be evaluated at any epoch.
 !
@@ -1409,7 +1409,7 @@
          refepc = et
 
 
-      else if ( center .eq. obscde ) then
+      else if ( center == obscde ) then
 !
 !        If the center of frame DREF is the observer (which is
 !        usually the case if the observer is a spacecraft), then
@@ -1611,7 +1611,7 @@
 
          range  = vnorm(obspos)
 
-         if ( range .eq. 0.0_wp ) then
+         if ( range == 0.0_wp ) then
 !
 !           We've already ensured that observer and target are
 !           distinct, so this should be a very unusual occurrence.
@@ -1624,7 +1624,7 @@
          end if
 
 
-         if ( range .gt. margin*maxrad ) then
+         if ( range > margin*maxrad ) then
 !
 !           Compute the arc sine with SPICE error checking.
 !
@@ -1632,7 +1632,7 @@
 
             call vminus ( obspos, negpos )
 
-            if (  vsep( negpos, trgdir )  .gt.  reject  ) then
+            if (  vsep( negpos, trgdir )  >  reject  ) then
 !
 !              The angular separation of ray and target is too great
 !              for a solution to exist, even with a better light time
@@ -1696,7 +1696,7 @@
 
             i = 1
 
-            do while (  ( i .le. nitr ) .and. ( .not. found )  )
+            do while (  ( i <= nitr ) .and. ( .not. found )  )
 
                call npedln ( radii(1), radii(2), radii(3), obspos, &
                              trgdir,   pnear,    rayalt           )
@@ -1802,9 +1802,9 @@
          ltdiff = 1.0_wp
          etdiff = 1.0_wp
 
-         do while (       ( i      .lt.   nitr                ) &
-                    .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
-                    .and. ( etdiff .gt.   0.0_wp                )  )
+         do while (       ( i      <   nitr                ) &
+                    .and. ( ltdiff > ( cnvlim * abs(lt) )  ) &
+                    .and. ( etdiff >   0.0_wp                )  )
 
 !
 !           Get the J2000-relative state of the target relative to

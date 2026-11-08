@@ -31,15 +31,15 @@
 
       include 'zzabcorr.inc'
 
-      character*(*)         target
-      character*(*)         abcorr
-      character*(*)         obsrvr
+      character(*)          target
+      character(*)          abcorr
+      character(*)          obsrvr
       real(wp)              et
       real(wp)              dt
       logical               decres
       real(wp)              rvl
       integer(ip)           xtarg
-      character*(*)         xabcor
+      character(*)          xabcor
       integer(ip)           xobs
       real(wp)              xdt
 
@@ -268,13 +268,13 @@
 !
 !     Saved Variables
 !
-      character*(corlen)    svabco
+      character(corlen)     svabco
       save                  svabco
 
       integer(ip)           svtarg
       save                  svtarg
 
-      character*(32)        svref
+      character(32)         svref
       save                  svref
 
       integer(ip)           svobs
@@ -513,7 +513,7 @@
 !
 !     Make sure the observer and target are distinct.
 !
-      if ( svtarg .eq. svobs ) then
+      if ( svtarg == svobs ) then
 
          call setmsg ( 'The observer and target must be ' &
          //            'distinct objects, but are not: ' &
@@ -549,7 +549,7 @@
 !
 !     The "delta" argument for QDERIV, DT, must have a non-zero value.
 !
-      if ( dt .eq. 0.0_wp ) then
+      if ( dt == 0.0_wp ) then
 
          call setmsg ( 'Delta value for QDERIV is zero; a non-zero ' // &
                        'value is required.'                        )
@@ -741,7 +741,7 @@
       call dvhat ( state, srhat )
 
       drvel  =  vdot( dfdt(4), srhat ) + vdot( state(4), srhat(4) )
-      decres =  drvel .lt. 0.0_wp
+      decres =  drvel < 0.0_wp
 
       call chkout ( 'ZZGFRRDC' )
       return

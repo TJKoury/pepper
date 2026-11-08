@@ -22,7 +22,7 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)      cell   ( lbcell:* )
+      character(*)       cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -173,7 +173,7 @@
 
       call dechar ( cell(0), card )
 
-      if (  size .lt. 0  )  then
+      if (  size < 0  )  then
 
          call setmsg ( 'Invalid cell size.  The size was #.')
          call errint ( '#', size )
@@ -181,7 +181,7 @@
          call chkout ( 'SIZEC' )
          return
 
-      else if ( card .lt. 0  ) then
+      else if ( card < 0  ) then
 
          call setmsg ( 'Invalid cell cardinality.  The cardinality '  // &
                        'was #.'      )
@@ -190,7 +190,7 @@
          call chkout ( 'SIZEC' )
          return
 
-      else if ( card .gt. size ) then
+      else if ( card > size ) then
 
          call setmsg ( 'Invalid cell cardinality; cardinality exceeds'// &
                        ' cell size.  The cardinality was #.  The size'// &

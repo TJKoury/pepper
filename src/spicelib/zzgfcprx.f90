@@ -28,7 +28,7 @@
       include 'zzgf.inc'
 
       real(wp)              state  ( 6 )
-      character*(*)         corsys
+      character(*)          corsys
       real(wp)              re
       real(wp)              f
       integer(ip)           sense
@@ -330,9 +330,9 @@
 !
 !     For planetographic coordinates, check the longitude sense.
 !
-      if ( corsys .eq. pgrsys ) then
+      if ( corsys == pgrsys ) then
 
-         if (  ( sense .ne. 1 ) .and. ( sense .ne. -1 )  ) then
+         if (  ( sense /= 1 ) .and. ( sense /= -1 )  ) then
 
             call setmsg ( 'Longitude sense # should be 1 or -1.'  )
             call errint ( '#', sense                              )
@@ -369,14 +369,14 @@
 !
 !     The rectangular case is trivial; handle it now.
 !
-      if ( corsys .eq. recsys ) then
+      if ( corsys == recsys ) then
 !
 !        The output system is rectangular. Just indicate the
 !        signs of the input velocity.
 !
          do i = 1, 3
 
-            if ( vel(i) .eq. 0.0_wp ) then
+            if ( vel(i) == 0.0_wp ) then
 
                cdsign(i) = 0
 
@@ -405,8 +405,8 @@
 !     There's quite a bit of common logic for the "on Z-axis" case;
 !     take care of it here.
 !
-      if (       ( state(1) .eq. 0.0_wp ) &
-           .and. ( state(2) .eq. 0.0_wp ) ) then
+      if (       ( state(1) == 0.0_wp ) &
+           .and. ( state(2) == 0.0_wp ) ) then
 !
 !        The position lies on the Z-axis.
 !
@@ -440,7 +440,7 @@
 !        Cylindrical coordinates are a special case which we treat
 !        separately.
 !
-         if ( state(3) .ne. 0.0_wp ) then
+         if ( state(3) /= 0.0_wp ) then
 !
 !           The position is on the Z-axis but not at the origin.
 !
@@ -449,7 +449,7 @@
 !
             dp = vdot ( state, vel )
 
-            if ( dp .eq. 0.0_wp ) then
+            if ( dp == 0.0_wp ) then
 
                dpsign = 0
             else
@@ -486,7 +486,7 @@
 !        Planetographic  Longitude, Latitude, Altitude
 !
 !
-         if ( corsys .eq. latsys ) then
+         if ( corsys == latsys ) then
 !
 !           The radial derivative sign was computed; the
 !           other derivative signs are set to zero.
@@ -495,7 +495,7 @@
             cdsign(2) = 0
             cdsign(3) = 0
 
-         else if ( corsys .eq. sphsys ) then
+         else if ( corsys == sphsys ) then
 !
 !           The radial derivative sign was computed; the
 !           longitude derivative signs is set to zero.
@@ -514,7 +514,7 @@
 !
             cdsign(2) = 0
 
-         else if ( corsys .eq. radsys ) then
+         else if ( corsys == radsys ) then
 !
 !           RA/Dec derivatives are assigned in the same manner
 !           as latitudinal ones.
@@ -523,7 +523,7 @@
             cdsign(2) = 0
             cdsign(3) = 0
 
-         else if ( corsys .eq. geosys ) then
+         else if ( corsys == geosys ) then
 !
 !           Altitude plays the role of radius for this
 !           system.
@@ -532,7 +532,7 @@
             cdsign(2) = 0
             cdsign(3) = dpsign
 
-         else if ( corsys .eq. pgrsys ) then
+         else if ( corsys == pgrsys ) then
 !
 !           Altitude plays the role of radius for this
 !           system.
@@ -541,7 +541,7 @@
             cdsign(2) = 0
             cdsign(3) = dpsign
 
-         else if ( corsys .eq. cylsys ) then
+         else if ( corsys == cylsys ) then
 
             cdsign(1) = 0
             cdsign(2) = 0
@@ -549,7 +549,7 @@
 !           For cylindrical coordinates, the derivative of Z with
 !           respect to time is already present in VEL.
 !
-            if ( vel(3) .eq. 0.0_wp ) then
+            if ( vel(3) == 0.0_wp ) then
                cdsign(3) = 0
             else
                cdsign(3) = nint(  sign( 1.0_wp, vel(3) )  )
@@ -585,7 +585,7 @@
 !     Planetodetic and planetographic coordinate systems are a special
 !     case.
 !
-      if ( ( corsys .eq. geosys ) .or. ( corsys .eq. pgrsys )  ) then
+      if ( ( corsys == geosys ) .or. ( corsys == pgrsys )  ) then
 !
 !        Instead of defining the MRTN frame using the input
 !        position vector, we define it using an outward normal vector
@@ -602,7 +602,7 @@
          call latrec ( 1.0_wp,  lon, lat, normal )
 
 
-      else if ( corsys .eq. cylsys ) then
+      else if ( corsys == cylsys ) then
 !
 !        The normal vector is aligned with the local radial
 !        direction; this vector is parallel to the X-Y plane.
@@ -632,7 +632,7 @@
 !
       do i = 1, 3
 
-         if ( rtnvel(i) .eq. 0.0_wp ) then
+         if ( rtnvel(i) == 0.0_wp ) then
 
             rtnsgn(i) = 0
          else
@@ -659,13 +659,13 @@
 !        Planetographic  Longitude, Latitude, Altitude
 !
 !
-      if ( corsys .eq. latsys ) then
+      if ( corsys == latsys ) then
 
          cdsign(1) = rtnsgn(upidx)
          cdsign(2) = rtnsgn(estidx)
          cdsign(3) = rtnsgn(noridx)
 
-      else if ( corsys .eq. sphsys ) then
+      else if ( corsys == sphsys ) then
 !
 !        For spherical coordinate systems, the sign of the
 !        derivative of co-latitude is the negative of the
@@ -675,19 +675,19 @@
          cdsign(2) = - rtnsgn(noridx)
          cdsign(3) =   rtnsgn(estidx)
 
-      else if ( corsys .eq. radsys ) then
+      else if ( corsys == radsys ) then
 
          cdsign(1) = rtnsgn(upidx)
          cdsign(2) = rtnsgn(estidx)
          cdsign(3) = rtnsgn(noridx)
 
-      else if ( corsys .eq. geosys ) then
+      else if ( corsys == geosys ) then
 
          cdsign(1) = rtnsgn(estidx)
          cdsign(2) = rtnsgn(noridx)
          cdsign(3) = rtnsgn(upidx)
 
-      else if ( corsys .eq. pgrsys ) then
+      else if ( corsys == pgrsys ) then
 !
 !        For planetographic coordinates, altitude and latitude
 !        behave identically to their geodetic counterparts. We
@@ -698,7 +698,7 @@
          cdsign(2) = rtnsgn(noridx)
          cdsign(3) = rtnsgn(upidx)
 
-      else if ( corsys .eq. cylsys ) then
+      else if ( corsys == cylsys ) then
 
          cdsign(1) = rtnsgn(upidx)
          cdsign(2) = rtnsgn(estidx)

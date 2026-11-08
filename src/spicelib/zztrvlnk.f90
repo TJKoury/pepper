@@ -233,7 +233,7 @@
 
       call chkin  ( 'ZZTRVLNK' )
 
-      if ( ( aval .lt. 1 ) .or. ( aval .gt. maxa ) ) then
+      if ( ( aval < 1 ) .or. ( aval > maxa ) ) then
 
          call setmsg ( 'Index AVAL is out of range. ' &
          //            'Index = #1. Valid range = 1:#2.' )
@@ -245,7 +245,7 @@
 
       end if
 
-      if ( maxb .lt. 1 ) then
+      if ( maxb < 1 ) then
 
          call setmsg ( 'Maximum output list size MAXB is invalid. ' &
          //            'MAXB = #1.'                                )
@@ -262,11 +262,11 @@
 
       ptr = pntrs(aval)
 
-      do while ( ptr .ne. -1 )
+      do while ( ptr /= -1 )
 
-         if (      ( ptr .lt. -1     ) &
-              .or. ( ptr .eq. 0      ) &
-              .or. ( ptr .gt. cellsz )  ) then
+         if (      ( ptr < -1     ) &
+              .or. ( ptr == 0      ) &
+              .or. ( ptr > cellsz )  ) then
 
             call setmsg ( 'Value in PNTRS array is not a ' &
             //            'valid index in the cell array.' &
@@ -282,7 +282,7 @@
 
          nb = nb + 1
 
-         if ( nb .gt. maxb ) then
+         if ( nb > maxb ) then
 
             call setmsg ( 'Output value count is larger than ' &
             //            'B-list array room. Count = #1. Output ' &

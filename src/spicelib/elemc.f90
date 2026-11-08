@@ -23,8 +23,8 @@
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      character*(*)      item
-      character*(*)      a      ( lbcell:* )
+      character(*)       item
+      character(*)       a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -241,7 +241,7 @@
 !
 !     Just a binary search.
 !
-      elemc = ( bsrchc ( item, cardc ( a ), a(1) ) .ne. 0 )
+      elemc = ( bsrchc ( item, cardc ( a ), a(1) ) /= 0 )
 
 
       call chkout ( 'ELEMC' )

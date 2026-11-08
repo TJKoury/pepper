@@ -25,7 +25,7 @@
       implicit none
 
       integer(ip)           n
-      character*(*)         string
+      character(*)          string
 
 ! $ Brief_I/O
 !
@@ -150,9 +150,9 @@
       integer(ip)           lngest
       parameter           ( lngest = 9 )
 
-      character*(lngest)    number (19)
-      character*(lngest)    suff
-      character*(lngest)    tens   ( 9)
+      character(lngest)     number (19)
+      character(lngest)     suff
+      character(lngest)     tens   ( 9)
 
       integer(ip)           num
       integer(ip)           pad
@@ -189,7 +189,7 @@
 !
 !     Zero is easy.
 !
-      if ( n .eq. 0 ) then
+      if ( n == 0 ) then
 
          string = 'ZERO'
          return
@@ -201,7 +201,7 @@
 !     `NEGATIVE', and otherwise the number can be treated as though
 !     it were positive.
 !
-      if ( n .lt. 0 ) then
+      if ( n < 0 ) then
 
          num    = - n
          string = 'NEGATIVE'
@@ -219,26 +219,26 @@
 !     leaves the output string unchanged, so there is no need to
 !     check explicitly for truncation.
 !
-      do while ( num .gt. 0 )
+      do while ( num > 0 )
 
 !
 !        Find the right unit (billion, million, or whatever),
 !        and the number (X) of those units. X should always
 !        be between zero and 999, regardless of the units.
 !
-         if ( num .ge. 1000000000 ) then
+         if ( num >= 1000000000 ) then
 
             x    = num / 1000000000
             suff = 'BILLION'
             num  = num - x * 1000000000
 
-         else if  ( num .ge. 1000000 ) then
+         else if  ( num >= 1000000 ) then
 
             x    = num / 1000000
             suff = 'MILLION'
             num  = num - x * 1000000
 
-         else if  ( num .ge. 1000 )    then
+         else if  ( num >= 1000 )    then
 
             x    = num / 1000
             suff = 'THOUSAND'
@@ -257,15 +257,15 @@
 !
          space = 1
 
-         do while ( x .gt. 0 )
+         do while ( x > 0 )
 
-            if ( string .eq. ' ' ) then
+            if ( string == ' ' ) then
                pad = 0
             else
                pad = 1
             end if
 
-            if ( x .ge. 100 ) then
+            if ( x >= 100 ) then
 
                y = x / 100
                x = x - y*100
@@ -273,14 +273,14 @@
                call suffix ( number(y), pad, string )
                call suffix ( 'HUNDRED', 1,   string )
 
-            else if ( x .ge. 20 ) then
+            else if ( x >= 20 ) then
 
                y = x / 10
                x = x - y*10
 
                call suffix ( tens(y), pad, string )
 
-               if ( x .ne. 0 ) then
+               if ( x /= 0 ) then
                   call suffix ( '-', 0, string )
                   space = 0
                end if
@@ -290,7 +290,7 @@
                y = x
                x = 0
 
-               if ( string .eq. ' ' ) then
+               if ( string == ' ' ) then
                   space = 0
                end if
 

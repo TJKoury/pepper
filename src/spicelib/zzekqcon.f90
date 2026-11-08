@@ -40,18 +40,18 @@
       parameter           ( lbcell = -5 )
 
       integer(ip)           eqryi ( lbcell : * )
-      character*(*)         eqryc
+      character(*)          eqryc
       real(wp)              eqryd ( * )
       integer(ip)           n
       integer(ip)           cnstyp
-      character*(*)         ltname
+      character(*)          ltname
       integer(ip)           ltidx
-      character*(*)         lcname
+      character(*)          lcname
       integer(ip)           lcidx
       integer(ip)           opcode
-      character*(*)         rtname
+      character(*)          rtname
       integer(ip)           rtidx
-      character*(*)         rcname
+      character(*)          rcname
       integer(ip)           rcidx
       integer(ip)           dtype
       integer(ip)           cbeg
@@ -251,7 +251,7 @@
          return
       end if
 
-      if ( icheck .eq. ifalse ) then
+      if ( icheck == ifalse ) then
 
          call chkin  ( 'ZZEKQCON'                                )
          call setmsg ( 'Encoded query has not been semantically '// &
@@ -266,7 +266,7 @@
       call zzekreqi ( eqryi, 'NUM_TABLES',        ntab   )
 
 
-      if (  ( n .lt. 1 ) .or. ( n .gt. ncns )  ) then
+      if (  ( n < 1 ) .or. ( n > ncns )  ) then
 
          call chkin  ( 'ZZEKQCON'                                      )
          call setmsg ( 'Constraint index # is out of valid range 1:#.' )
@@ -297,7 +297,7 @@
       tb     =  eqryi ( base + eqltab - 1 + eqbstr )
       te     =  eqryi ( base + eqltab - 1 + eqestr )
 
-      if ( tb .ne. 0 ) then
+      if ( tb /= 0 ) then
          ltname =  eqryc ( tb:te )
       else
          ltname = ' '
@@ -317,13 +317,13 @@
 !     If the constraint compares two columns, get the RHS table and
 !     column info.
 !
-      if ( cnstyp .eq. eqcol ) then
+      if ( cnstyp == eqcol ) then
 
          rtidx  =  eqryi ( base + eqrtab - 1 + eqtord )
          tb     =  eqryi ( base + eqrtab - 1 + eqbstr )
          te     =  eqryi ( base + eqrtab - 1 + eqestr )
 
-         if ( tb .ne. 0 ) then
+         if ( tb /= 0 ) then
             rtname =  eqryc ( tb:te )
          else
             rtname = ' '
@@ -348,7 +348,7 @@
 !        The constraint compares a column and a value.  Set the
 !        appropriate scalar output, and clear out the other outputs.
 !
-         if ( ( opcode .eq. isnull ) .or. ( opcode .eq. notnul ) ) then
+         if ( ( opcode == isnull ) .or. ( opcode == notnul ) ) then
 !
 !           There's no output value; the opcode implies the value NULL.
 !           Set the outputs to innocuous defaults.
@@ -365,14 +365,14 @@
 !
             dtype  =  eqryi ( base + eqbval - 1 + eqdtyp )
 
-            if ( dtype .eq. chr ) then
+            if ( dtype == chr ) then
 
                cbeg   =  eqryi ( base + eqbval - 1 + eqbstr )
                cend   =  eqryi ( base + eqbval - 1 + eqestr )
                dval   =  0.0_wp
                ival   =  0
 
-            else if ( dtype .eq. int ) then
+            else if ( dtype == int ) then
 
                ptr    =  eqryi ( base + eqbval - 1 + eqvptr )
                ival   =  nint  ( eqryd(ptr) )

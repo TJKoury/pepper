@@ -39,17 +39,17 @@
       real(wp)              cntrct
       parameter           ( cntrct = 1.0_wp )
 
-      character*(*)         vecdef
-      character*(*)         method
-      character*(*)         target
-      character*(*)         ref
-      character*(*)         abcorr
-      character*(*)         obsrvr
-      character*(*)         dref
+      character(*)          vecdef
+      character(*)          method
+      character(*)          target
+      character(*)          ref
+      character(*)          abcorr
+      character(*)          obsrvr
+      character(*)          dref
       real(wp)              dvec   ( 3 )
-      character*(*)         crdsys
-      character*(*)         crdnam
-      character*(*)         relate
+      character(*)          crdsys
+      character(*)          crdnam
+      character(*)          relate
       real(wp)              refval
       real(wp)              tol
       real(wp)              adjust
@@ -805,13 +805,13 @@
 !
 !     Local variables
 !
-      character*(maxop)     cnames ( nc )
-      character*(lnsize)    loccrd
-      character*(lnsize)    locvdf
-      character*(mxbegm)    prebuf ( mxpass )
-      character*(mxbegm)    rptpre ( mxpass )
-      character*(mxendm)    rptsuf ( mxpass )
-      character*(maxop)     uop
+      character(maxop)      cnames ( nc )
+      character(lnsize)     loccrd
+      character(lnsize)     locvdf
+      character(mxbegm)     prebuf ( mxpass )
+      character(mxbegm)     rptpre ( mxpass )
+      character(mxendm)     rptsuf ( mxpass )
+      character(maxop)      uop
 
       real(wp)              excon
       real(wp)              finish
@@ -863,7 +863,7 @@
 !
 !     Check the workspace window count.
 !
-      if ( nw .lt. nwmax ) then
+      if ( nw < nwmax ) then
 
          call setmsg ( 'Workspace window count was # but must be ' &
          //            'at least #.'                              )
@@ -879,7 +879,7 @@
 !     Check the workspace window size. The minimum size that
 !     makes any sense is 2.
 !
-      if ( mw .lt. 2 ) then
+      if ( mw < 2 ) then
 
          call setmsg ( 'Workspace window size was # but must be ' &
          //            'at least 2.'                              )
@@ -893,7 +893,7 @@
 !
 !     Make sure ADJUST is non-negative.
 !
-      if ( adjust .lt. 0.0_wp ) then
+      if ( adjust < 0.0_wp ) then
 
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
@@ -906,7 +906,7 @@
 !
 !     Make sure TOL is positive.
 !
-      if ( tol .le. 0.0_wp ) then
+      if ( tol <= 0.0_wp ) then
 
          call setmsg ( 'TOL was #; must be positive.' )
          call errdp  ( '#',  tol                      )
@@ -925,7 +925,7 @@
 
       loc = isrchc ( uop, nc, cnames )
 
-      if ( loc .eq. 0 ) then
+      if ( loc == 0 ) then
 
          call setmsg ( 'The comparison operator, # is not '     // &
                        'recognized.  Supported operators are: ' // &
@@ -968,7 +968,7 @@
 !     find the "existence window": the window over which
 !     the intercept and its time derivative are computable.
 !
-      if ( locvdf .eq. sindef ) then
+      if ( locvdf == sindef ) then
 !
 !        Initialize the search for the existence window.
 !
@@ -1069,10 +1069,10 @@
 !        operator and the flag NOADJX to indicate an absolute extremum
 !        operator with zero adjustment.
 !
-         localx =   ( uop .eq. 'LOCMIN' ) .or. ( uop .eq. 'LOCMAX' )
+         localx =   ( uop == 'LOCMIN' ) .or. ( uop == 'LOCMAX' )
 
-         noadjx =  ( adjust .eq.  0.0_wp    ) .and. &
-                 ( ( uop    .eq. 'ABSMIN' ) .or. ( uop .eq. 'ABSMAX' ) )
+         noadjx =  ( adjust ==  0.0_wp    ) .and. &
+                 ( ( uop    == 'ABSMIN' ) .or. ( uop == 'ABSMAX' ) )
 
 
          if ( localx .or. noadjx ) then
@@ -1106,7 +1106,7 @@
 !     have a special case, since the mapping from Cartesian to
 !     latitudinal coordinates has a branch discontinuity.
 !
-      if ( ( loccrd .eq. loncrd ) .or. ( loccrd .eq. racrd ) ) then
+      if ( ( loccrd == loncrd ) .or. ( loccrd == racrd ) ) then
 
 !
 !        The coordinate is longitude or right ascension.

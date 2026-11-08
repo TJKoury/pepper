@@ -182,7 +182,7 @@
 !
       root  =  tree
 
-      if ( ( left .eq. root ) .or. ( right .eq. root )  ) then
+      if ( ( left == root ) .or. ( right == root )  ) then
 
          call chkin  ( 'ZZEKTRBN'                                  )
          call setmsg ( 'Input node is root; only children can be ' // &
@@ -210,8 +210,8 @@
       sum  =  lnkeys + rnkeys
 
 
-      if (      (  sum .gt.  2*mxkeyc  ) &
-           .or. (  sum .lt.  2*mnkeyc  )   )  then
+      if (      (  sum >  2*mxkeyc  ) &
+           .or. (  sum <  2*mnkeyc  )   )  then
 
          call chkin  ( 'ZZEKTRBN'                                      )
          call setmsg ( 'Node # and right sibling # contain # and # '  // &
@@ -233,11 +233,11 @@
 !     Now, the actions we take depend on whether we must schlep keys
 !     to the right or left.
 !
-      if ( lnkeys .gt. rnkeys ) then
+      if ( lnkeys > rnkeys ) then
 
          schlep  =        lnkeys  -  ( (sum+1) / 2 )
 
-      else if ( lnkeys .lt. rnkeys ) then
+      else if ( lnkeys < rnkeys ) then
 
          schlep  =  - (   rnkeys  -  ( (sum+1) / 2 )   )
 

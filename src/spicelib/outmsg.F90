@@ -21,7 +21,7 @@
 
       include 'errhnd.inc'
 
-      character*(*)           list
+      character(*)            list
 
       integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -492,7 +492,7 @@
 !
 !     These parameters are system-independent.
 !
-      character*(*)         borchr
+      character(*)          borchr
       parameter           ( borchr = '=' )
 
       integer(ip)           deflen
@@ -521,19 +521,19 @@
 !
 !     Local variables
 !
-      character*(ll)        border
-      character*(ll)        defmsg ( deflen )
-      character*(filen)     device
-      character*(ll)        line
-      character*(lmsgln)    lmsg
-      character*(namlen)    name
-      character*(lmsgln)    outwrd
-      character*(smsgln)    smsg
-      character*(tmplen)    tmpmsg
-      character*(wordln)    upword
-      character*(verlen)    versn
-      character*(wordln)    words  ( maxwrd )
-      character*(xlen)      xmsg
+      character(ll)         border
+      character(ll)         defmsg ( deflen )
+      character(filen)      device
+      character(ll)         line
+      character(lmsgln)     lmsg
+      character(namlen)     name
+      character(lmsgln)     outwrd
+      character(smsgln)     smsg
+      character(tmplen)     tmpmsg
+      character(wordln)     upword
+      character(verlen)     versn
+      character(wordln)     words  ( maxwrd )
+      character(xlen)       xmsg
 
       integer(ip)           depth
       integer(ip)           i
@@ -612,23 +612,23 @@
 
          call ucase ( words(i), upword )
 
-         if ( upword  .eq. 'SHORT' ) then
+         if ( upword  == 'SHORT' ) then
 
             short  =  .true.
 
-         else if ( upword  .eq. 'EXPLAIN'   ) then
+         else if ( upword  == 'EXPLAIN'   ) then
 
             expl   =  .true.
 
-         else if ( upword  .eq. 'LONG'      ) then
+         else if ( upword  == 'LONG'      ) then
 
             long   =  .true.
 
-         else if ( upword  .eq. 'TRACEBACK' ) then
+         else if ( upword  == 'TRACEBACK' ) then
 
             trace  =  .true.
 
-         else if ( upword  .eq. 'DEFAULT'   ) then
+         else if ( upword  == 'DEFAULT'   ) then
 
             dfault =  .true.
 
@@ -670,7 +670,7 @@
                 .or.  (  long    .and.  msgsel ( 'LONG'      )  ) &
                 .or.  (  trace   .and.  msgsel ( 'TRACEBACK' )  ) &
                 .or.  (  dfault  .and.  msgsel ( 'DEFAULT'   )  ) &
-                .and. (  device  .ne.   'NULL'                  )
+                .and. (  device  /=   'NULL'                  )
 
 !
 !     We go ahead and output those messages that have been specified
@@ -769,14 +769,14 @@
 
             wrdlen = rtrim ( outwrd )
 
-            if ( start + wrdlen .le. ll ) then
+            if ( start + wrdlen <= ll ) then
 
               line(start: ) = outwrd
               start         = start + wrdlen + 1
 
             else
 
-               if ( wrdlen .le. ll ) then
+               if ( wrdlen <= ll ) then
 !
 !                 We had a short word, so just write the line and
 !                 continue.
@@ -796,7 +796,7 @@
 !                 trailing space, otherwise the line is blank. If line
 !                 is empty, we have all of the space available.
 !
-                  if ( start .gt. 1 ) then
+                  if ( start > 1 ) then
                      remain = ll - start
                   else
                     remain = ll
@@ -810,7 +810,7 @@
 !                 write it and then begin stuffing the long word into
 !                 output lines.
 !
-                  if ( remain .lt. 10 ) then
+                  if ( remain < 10 ) then
 
                      call wrline  ( device, line )
                      line   = ' '
@@ -824,7 +824,7 @@
 !                 part of the long word that we just wrote, left
 !                 justifying the remaining part before proceeding.
 !
-                  do while ( wrdlen .gt. ll )
+                  do while ( wrdlen > ll )
 
                      line(start:) = outwrd(1:remain)
                      call wrline ( device, line )
@@ -845,7 +845,7 @@
 !                 line. If we finished the word, WRDLEN .EQ. 0, then
 !                 START and LINE have already been initialized.
 !
-                  if ( wrdlen .gt. 0 ) then
+                  if ( wrdlen > 0 ) then
                      start = wrdlen + 2
                      line  = outwrd
                   end if
@@ -858,7 +858,7 @@
 !
 !        We may need to write the remaining part of a line.
 !
-         if ( line .ne. ' ' ) then
+         if ( line /= ' ' ) then
             call wrline  (  device, line )
          end if
 
@@ -874,7 +874,7 @@
 !
          call trcdep ( depth )
 
-         if ( depth .gt. 0 ) then
+         if ( depth > 0 ) then
 !
 !           We know we'll be outputting some trace information.
 !           So, write a line telling the reader what's coming.
@@ -908,7 +908,7 @@
 !              line, otherwise, add the call order sign and put the
 !              name into the output line.
 !
-               if ( index .eq. 1 ) then
+               if ( index == 1 ) then
                   call suffix ( name, 0,  line )
                   remain = remain - length
                else
@@ -917,7 +917,7 @@
 !                 If not, write the line and put the indicator as
 !                 the first thing on the next line.
 !
-                  if( remain .ge. 4 ) then
+                  if( remain >= 4 ) then
                      call suffix ( '-->', 1,  line )
                      remain = remain - 4
                   else
@@ -930,7 +930,7 @@
 !                 it, if it doesn't, write it, then make the name
 !                 the first thing on the next line.
 !
-                  if( remain .ge. length ) then
+                  if( remain >= length ) then
                      call suffix ( name, 1,  line )
                      remain = remain - length - 1
                   else
@@ -949,7 +949,7 @@
 !           names, or part of a long name.  If it does,
 !           we now write it out.
 !
-            if ( line .ne. ' ' ) then
+            if ( line /= ' ' ) then
                call wrline ( device, line )
             end if
 

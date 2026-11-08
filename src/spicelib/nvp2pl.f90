@@ -225,7 +225,7 @@
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      if ( plane(conpos) .lt. 0.0_wp ) then
+      if ( plane(conpos) < 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
          call vminus     (  plane(nmlpos), tmpvec        )

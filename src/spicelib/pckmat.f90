@@ -264,7 +264,7 @@
 !
 !     Local Variables
 !
-      character*(40)        ident
+      character(40)         ident
 
       real(wp)              dcd    (     nd )
       real(wp)              descr  (     ns )
@@ -307,7 +307,7 @@
          type = icd( nt )
          ref  = icd( nr )
 
-         if ( type .eq. 02 ) then
+         if ( type == 02 ) then
 !
 !           Read in Chebyshev coefficients from segment.
 !
@@ -350,7 +350,7 @@
             end if
 
 
-         else if ( type .eq. 03 ) then
+         else if ( type == 03 ) then
 !
 !           Fetch the number of Chebyshev coefficients, compute the
 !           record size needed, and signal an error if there is not
@@ -367,7 +367,7 @@
 
             recsiz = nstate * int(record(1)) + 2
 
-            if ( recsiz .gt. maxrec ) then
+            if ( recsiz > maxrec ) then
 
                call setmsg ( 'Storage for # double precision numbers' &
                //            ' is needed for a PCK data record and' &
@@ -392,7 +392,7 @@
             end if
 
 
-         else if ( type .eq. 20 ) then
+         else if ( type == 20 ) then
 !
 !           Read in Chebyshev coefficients from segment.
 !

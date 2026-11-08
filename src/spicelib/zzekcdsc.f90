@@ -29,7 +29,7 @@
 
       integer(ip)           handle
       integer(ip)           segdsc ( sdscsz )
-      character*(*)         column
+      character(*)          column
       integer(ip)           coldsc ( cdscsz )
 
 ! $ Brief_I/O
@@ -115,7 +115,7 @@
 !
 !     Local variables
 !
-      character*(cnamsz)    cname
+      character(cnamsz)     cname
 
       integer(ip)           dscbas
       integer(ip)           i
@@ -145,7 +145,7 @@
       found = .false.
       i     =  1
 
-      do while (  ( i .le. ncols )  .and.  ( .not. found )  )
+      do while (  ( i <= ncols )  .and.  ( .not. found )  )
 
          dscbas  =  mbase + sdscsz + (i-1)*cdscsz
 !

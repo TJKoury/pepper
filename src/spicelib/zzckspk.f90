@@ -24,7 +24,7 @@
 
       implicit none
       integer(ip)           handle
-      character*(*)         ckspk
+      character(*)          ckspk
 
 ! $ Brief_I/O
 !
@@ -177,8 +177,8 @@
 !
       call dafhsf ( handle, thisnd, thisni )
 
-      if (     thisnd .ne. nd &
-          .or. thisni .ne. ni ) then
+      if (     thisnd /= nd &
+          .or. thisni /= ni ) then
          ckspk = '?'
          call chkout ( 'ZZCKSPK' )
          return
@@ -225,13 +225,13 @@
 !     Test 1. The value of ANGVEL may do the trick
 !     right at the start.
 !
-      if ( angvel .eq. 0 ) then
+      if ( angvel == 0 ) then
          ckspk   = 'CK'
          call chkout ( 'ZZCKSPK' )
          return
       end if
 
-      if ( angvel .gt. 1 ) then
+      if ( angvel > 1 ) then
          ckspk   = 'SPK'
          call chkout ( 'ZZCKSPK' )
          return
@@ -242,7 +242,7 @@
 !     See if this is something orbiting the solar system
 !     barycenter.
 !
-      if ( ic(cenid) .eq. 0 ) then
+      if ( ic(cenid) == 0 ) then
          ckspk   = 'SPK'
          call chkout ( 'ZZCKSPK' )
          return
@@ -274,7 +274,7 @@
 !     See if the last number in the file is the allowed number of
 !     MDA records.  If not, this must be a CK segment.
 !
-      if ( lastdp .ne. real(nspk, wp) ) then
+      if ( lastdp /= real(nspk, wp) ) then
          ckspk   = 'CK'
          call chkout ( 'ZZCKSPK' )
          return
@@ -284,7 +284,7 @@
 !     expected number of MDA records.  If the potential CK type is
 !     not 2, we must have an SPK file.
 !
-      if ( type .ne. 2 ) then
+      if ( type /= 2 ) then
          ckspk = 'SPK'
          call chkout ( 'ZZCKSPK' )
          return
@@ -314,7 +314,7 @@
 !     (15,108), (20,144), (25, 180).  In all of these cases there is
 !     exactly 1 ck type 02 directory value.)
 !
-      if ( nck2 .lt. 201 ) then
+      if ( nck2 < 201 ) then
 !
 !        Recall that MDA record contains its stop time as the first
 !        entry of the record.  These epochs show up duplicated in the
@@ -342,7 +342,7 @@
 !        will come from the array of stop ticks.  The array of stop
 !        ticks is non-decreasing so:
 !
-         if ( chcktm .gt. frsttm ) then
+         if ( chcktm > frsttm ) then
             ckspk = 'SPK'
          else
             ckspk = 'CK'
@@ -382,7 +382,7 @@
 !        In the first case TIMES(1) > TIMES(2), in the later case
 !        we have TIMES(1) < TIMES(2)
 !
-         if ( times(1) .gt. times(2) ) then
+         if ( times(1) > times(2) ) then
             ckspk = 'CK'
          else
             ckspk = 'SPK'

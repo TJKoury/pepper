@@ -181,7 +181,7 @@
 !     The number of keys in the root must correspond exactly to an
 !     overflow level of 1 key.
 !
-      if (  nrkeys  .ne.  ( mxkeyr + 1 )  ) then
+      if (  nrkeys  /=  ( mxkeyr + 1 )  ) then
 
          call chkin  ( 'ZZEKTR13'                                 )
          call setmsg ( 'Number of keys in root = #; should be #.' )

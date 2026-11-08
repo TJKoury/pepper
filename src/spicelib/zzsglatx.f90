@@ -275,7 +275,7 @@
 !     If there are interior extrema, we'll update these outputs
 !     as needed.
 !
-      if ( lat1 .le. lat2 ) then
+      if ( lat1 <= lat2 ) then
 
          minlat = lat1
          maxlat = lat2
@@ -391,7 +391,7 @@
             return
          end if
 
-         if ( nxpts .eq. 1 ) then
+         if ( nxpts == 1 ) then
 !
 !           This is the normal case: we have one intersection of the
 !           segment with PLANE2. Update whichever of the extrema is
@@ -408,12 +408,12 @@
 !
             call reclat ( t, r, lon, lat )
 
-            if ( lat .gt. maxlat ) then
+            if ( lat > maxlat ) then
 
                maxlat = lat
                call vequ ( t, maxp )
 
-            else if ( lat .lt. minlat ) then
+            else if ( lat < minlat ) then
 
                minlat = lat
                call vequ ( t, minp )

@@ -22,10 +22,10 @@
 
       implicit none
 
-      character*(*)    in
-      character*(*)    sub
+      character(*)     in
+      character(*)     sub
       integer(ip)      loc
-      character*(*)    out
+      character(*)     out
 
 ! $ Brief_I/O
 !
@@ -236,7 +236,7 @@
 !
 !     Local Variables
 !
-      character*(1)         chr
+      character(1)          chr
 
       integer(ip)           from
       integer(ip)           i
@@ -272,7 +272,7 @@
 !     If insertion occurs before the beginning of the string
 !     or after INLEN + 1, signal an error.
 !
-      if (  ( loc .lt. 1 )  .or.  ( loc .gt. inlen+1 )  ) then
+      if (  ( loc < 1 )  .or.  ( loc > inlen+1 )  ) then
 
          call chkin  ( 'INSSUB'                                    )
          call setmsg ( 'Index at which the substring is to be ' &
@@ -293,9 +293,9 @@
 !     is not needed in this cause and could cause a run-time error if
 !     OUT and IN refer to the same memory.
 !
-      same  =  out .eq. in
+      same  =  out == in
 
-      if ( loc .gt. outlen ) then
+      if ( loc > outlen ) then
 
          if ( .not. same ) then
             out = in
@@ -321,7 +321,7 @@
 !     The first part of the input string is copied without change
 !     to the output string, if this first part is non-empty.
 !
-      if ( loc .gt. 1 ) then
+      if ( loc > 1 ) then
 !
 !        Again, do the assignment only if it's required.
 !
@@ -339,8 +339,8 @@
       subend  =  loc - 1 + sublen
 
 
-      if (        ( loc    .le. inlen  ) &
-            .and. ( subend .lt. outlen )  ) then
+      if (        ( loc    <= inlen  ) &
+            .and. ( subend < outlen )  ) then
 
 
          nmove  =  min (  outlen-subend, inlen-loc+1  )
@@ -364,7 +364,7 @@
 !
 !     Blank-pad the output string if necessary.
 !
-      if ( outlen .gt. inlen+sublen ) then
+      if ( outlen > inlen+sublen ) then
          out( inlen+sublen+1 : ) = ' '
       end if
 

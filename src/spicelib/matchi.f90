@@ -21,10 +21,10 @@
 
       implicit none
 
-      character*(*)    string
-      character*(*)    templ
-      character*1      wstr
-      character*1      wchr
+      character(*)     string
+      character(*)     templ
+      character(1)     wstr
+      character(1)     wchr
 
 ! $ Brief_I/O
 !
@@ -211,12 +211,12 @@
 !
 !     A blank template matches a blank string, and nothing else.
 !
-      if ( ( tlast .eq. 0 ) .and. ( slast .eq. 0 ) ) then
+      if ( ( tlast == 0 ) .and. ( slast == 0 ) ) then
 
          matchi = .true.
          return
 
-      else if ( tlast .eq. 0 ) then
+      else if ( tlast == 0 ) then
 
          matchi = .false.
          return
@@ -229,12 +229,12 @@
 !     up to the first occurrence of a wild string.
 !
 
-      do while (       ( tcur             .le. tlast ) &
-                 .and. ( scur             .le. slast ) &
+      do while (       ( tcur             <= tlast ) &
+                 .and. ( scur             <= slast ) &
                  .and. ( .not. samch( templ,tcur, wstr,1) ) )
 
          if ( nechr ( templ(tcur:tcur) ,    string(scur:scur) ) &
-              .and. ( templ(tcur:tcur) .ne. wchr              ) ) then
+              .and. ( templ(tcur:tcur) /= wchr              ) ) then
 
             matchi = .false.
             return
@@ -255,8 +255,8 @@
 !     Case 1.  Both the string and template ran out of characters at
 !     the same time without running into a wild string in the template.
 !
-      if (       ( tcur .gt. tlast ) &
-           .and. ( scur .gt. slast ) ) then
+      if (       ( tcur > tlast ) &
+           .and. ( scur > slast ) ) then
 
          matchi = .true.
          return
@@ -267,8 +267,8 @@
 !     Case 2. The template ran out of characters while there were still
 !     characters remaining in the in the string.  No match.
 !
-      if (       ( tcur .gt. tlast ) &
-           .and. ( scur .le. slast ) ) then
+      if (       ( tcur > tlast ) &
+           .and. ( scur <= slast ) ) then
 
          matchi = .false.
          return
@@ -283,13 +283,13 @@
 !     remain.  If so, we DO NOT have a match.  On the other hand if
 !     only wild string characters remain we DO have a match.
 !
-      if (       ( tcur .le. tlast ) &
-           .and. ( scur .gt. slast ) ) then
+      if (       ( tcur <= tlast ) &
+           .and. ( scur > slast ) ) then
 
          matchi = .true.
 
          do i = tcur, tlast
-            matchi = matchi .and. ( templ(i:i) .eq. wstr )
+            matchi = matchi .and. ( templ(i:i) == wstr )
          end do
 
          return
@@ -305,14 +305,14 @@
 !     template. (If there isn't one, we have a match.)
 !
 
-      do while (       ( tcur             .le. tlast ) &
+      do while (       ( tcur             <= tlast ) &
                  .and. ( samch ( templ,tcur, wstr,1 )  ) )
 
          tcur = tcur + 1
 
       end do
 
-      if ( tcur .gt. tlast ) then
+      if ( tcur > tlast ) then
 
          matchi = .true.
          return
@@ -327,7 +327,7 @@
 !
       left = tcur
 
-      do while (       ( tcur             .le.   tlast   ) &
+      do while (       ( tcur             <=   tlast   ) &
                  .and. ( .not. samch(templ,tcur, wstr,1) ) )
 
          tcur = tcur + 1
@@ -337,13 +337,13 @@
       right = tcur - 1
 
 
-      do while ( left .le. tlast )
+      do while ( left <= tlast )
 
 !
 !        First see if there is enough room left in the string to
 !        match TEMPL(LEFT:RIGHT)
 !
-         if ( slast - scur .lt. right - left ) then
+         if ( slast - scur < right - left ) then
 
             matchi = .false.
             return
@@ -355,12 +355,12 @@
 !        string.  In such a case the ends of STRING must match
 !        exactly with the end of TEMPL.
 !
-         if ( right .eq. tlast ) then
+         if ( right == tlast ) then
 
             i = slast
             j = tlast
 
-            do while ( j .ge. left )
+            do while ( j >= left )
 
                if (      samch (templ,j, wchr,  1 ) &
                     .or. samchi(templ,j, string,i )  ) then
@@ -396,7 +396,7 @@
                i = scur
                j = left
 
-               do while (     ( j           .le. right           ) &
+               do while (     ( j           <= right           ) &
                          .and.(      samchi( string,i, templ,j ) &
                                 .or. samch ( wchr,  1, templ,j ) ) )
 
@@ -408,7 +408,7 @@
 !
 !              If J made it past RIGHT, we have a substring match
 !
-               if ( j .gt. right ) then
+               if ( j > right ) then
 
                   scur   = i
                   nosubm = .false.
@@ -424,7 +424,7 @@
 !
 !                 Make sure there's room to even attempt a match.
 !
-                  if ( slast - scur .lt. right - left ) then
+                  if ( slast - scur < right - left ) then
 
                      matchi = .false.
                      return
@@ -442,14 +442,14 @@
 !        string character.  Hunt for the next substring that doesn't
 !        contain a wild string character.
 !
-         do while (       ( tcur             .le. tlast ) &
+         do while (       ( tcur             <= tlast ) &
                     .and.   samch ( templ,tcur,  wstr,1) )
 
             tcur = tcur + 1
 
          end do
 
-         if ( tcur .gt. tlast ) then
+         if ( tcur > tlast ) then
 
 !
 !           All that was left was wild string characters.  We've
@@ -468,7 +468,7 @@
 !
          left = tcur
 
-         do while (       ( tcur             .le. tlast ) &
+         do while (       ( tcur             <= tlast ) &
                     .and. ( .not. samch( templ,tcur, wstr,1 ) ) )
 
             tcur = tcur + 1

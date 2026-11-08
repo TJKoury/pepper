@@ -390,7 +390,7 @@
 
       c = sqrt (  max( 0.0_wp,  1 - s*s )  )
 
-      if ( c .eq. 0.0_wp ) then
+      if ( c == 0.0_wp ) then
 !
 !        C will be used as a divisor later (in the computation
 !        of DPHI), so we'll put a stop to the problem here.
@@ -443,7 +443,7 @@
 !     Note that S is non-negative by construction, so we don't
 !     need to use the absolute value of S here.
 !
-      if ( s .ge. seplim ) then
+      if ( s >= seplim ) then
 !
 !        This is the analytic case.
 !
@@ -519,7 +519,7 @@
 !
 !           Set the sign of the time offset.
 !
-            if ( i .eq. 1 ) then
+            if ( i == 1 ) then
                sgn = -1.0_wp
             else
                sgn =  1.0_wp

@@ -32,7 +32,7 @@
       integer(ip)           coldsc ( cdscsz )
       integer(ip)           recptr
       integer(ip)           nvals
-      character*(*)         cvals
+      character(*)          cvals
       logical               isnull
 
 ! $ Brief_I/O

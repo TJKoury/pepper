@@ -294,9 +294,9 @@
       i = 0
       j = 2
 
-      do while ( j .le. card )
+      do while ( j <= card )
 
-         if ( ( window(j) - window(j-1) ) .gt. smlint ) then
+         if ( ( window(j) - window(j-1) ) > smlint ) then
 
             i           = i + 2
             window(i-1) = window(j-1)

@@ -212,12 +212,12 @@
 !
 !     Handle the degenerate cases first.
 !
-      if ( ( a .eq. 0.0_wp ) .and. ( b .eq. 0.0_wp )  ) then
+      if ( ( a == 0.0_wp ) .and. ( b == 0.0_wp )  ) then
 
          r1 = 0.0_wp
          r2 = 0.0_wp
 
-         if ( c .eq. 0.0_wp ) then
+         if ( c == 0.0_wp ) then
 
             n = -1
          else
@@ -245,7 +245,7 @@
 
       do i = 2, 3
 
-         if ( abs(coeffs(i)) .gt. abs(coeffs(maxix)) ) then
+         if ( abs(coeffs(i)) > abs(coeffs(maxix)) ) then
 !
 !           Record the index of the maximum magnitude.
 !
@@ -263,8 +263,8 @@
 !
 !     Find roots in a manner suited to the coefficients we have.
 !
-      if (       (  abs( coeffs(1) ) .ge.  small  ) &
-           .or.  (       coeffs(1)   .eq.  0.0_wp   )  ) then
+      if (       (  abs( coeffs(1) ) >=  small  ) &
+           .or.  (       coeffs(1)   ==  0.0_wp   )  ) then
 !
 !        This is a numerically well-behaved case. Delegate the
 !        job to ZZBQUAD.
@@ -274,7 +274,7 @@
 
 
 
-      else if (  abs( coeffs(3) ) .ge.  small  ) then
+      else if (  abs( coeffs(3) ) >=  small  ) then
 
 !
 !        The zero-order coefficient has magnitude >= SMALL.
@@ -313,11 +313,11 @@
          call zzbquad ( coeffs(3), coeffs(2), coeffs(1), invub, &
                         n,         nx,        inv1,      inv2  )
 
-         if ( n .eq. 1 ) then
+         if ( n == 1 ) then
 !
 !           We have one real root. Make sure we can invert it.
 !
-            if (  abs( inv1 * ub )  .ge.  1.0_wp  ) then
+            if (  abs( inv1 * ub )  >=  1.0_wp  ) then
 !
 !
 !              |1/INV1| <= UB
@@ -339,14 +339,14 @@
 !
             r2 = 0.0_wp
 
-         else if ( n .eq. 2 ) then
+         else if ( n == 2 ) then
 !
 !           We have two real roots. The one of larger magnitude is
 !           the second one. The reciprocal of this root will be
 !           the smaller root of the original equation, as long
 !           as the reciprocal is within bounds.
 !
-            if (  abs( inv2 * ub )  .ge.  1.0_wp  ) then
+            if (  abs( inv2 * ub )  >=  1.0_wp  ) then
 !
 !
 !              |1/INV2| <= UB
@@ -357,7 +357,7 @@
 !
 !              Proceed to the first root of the transformed equation.
 !
-               if (  abs( inv1 * ub )  .ge.  1.0_wp  ) then
+               if (  abs( inv1 * ub )  >=  1.0_wp  ) then
 !
 !
 !                 |1/INV1| <= UB
@@ -414,7 +414,7 @@
 !
 !        It will be convenient to make B equal to 1; do this now.
 !
-         if ( b .lt. 0.0_wp ) then
+         if ( b < 0.0_wp ) then
 
             coeffs(1) = -coeffs(1)
             coeffs(2) = -coeffs(2)
@@ -489,14 +489,14 @@
          r1 = 0.0_wp
          r2 = 0.0_wp
 
-         if ( abs( coeffs(3) ) .le. ub ) then
+         if ( abs( coeffs(3) ) <= ub ) then
 
             r1 = -coeffs(3)
 
             n  = 1
 
             if (        abs( coeffs(1)*coeffs(3) - 1.0_wp ) &
-                  .lt.  abs( coeffs(1)*ub               )  ) then
+                  <  abs( coeffs(1)*ub               )  ) then
 
                r2 = coeffs(3) - 1.0_wp/coeffs(1)
 

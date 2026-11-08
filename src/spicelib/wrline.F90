@@ -21,8 +21,8 @@
 
       implicit none
 
-      character*(*)          device
-      character*(*)          line
+      character(*)           device
+      character(*)           line
 
       integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -531,9 +531,9 @@
 !
 !     Local variables
 !
-      character*240         error
-      character*11          errstr
-      character*(filen)     tmpnam
+      character(240)        error
+      character(11)         errstr
+      character(filen)      tmpnam
 
       integer(ip)           iostat
       integer(ip)           unit
@@ -551,11 +551,11 @@
 !
 !     TMPNAM is now left justified and is in upper case.
 !
-      if ( tmpnam .eq. 'NULL' ) then
+      if ( tmpnam == 'NULL' ) then
 
          return
 
-      else if ( tmpnam .eq. 'SCREEN' ) then
+      else if ( tmpnam == 'SCREEN' ) then
 
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
          write ( *, *, iostat=iostat ) line(:rtrim(line))
@@ -580,7 +580,7 @@
                 iostat       = iostat   )
 
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
 !        if the syntax is correct?  But just in case...
@@ -599,7 +599,7 @@
 !
          call fndlun ( unit )
 
-         if ( unit .lt. 1 ) then
+         if ( unit < 1 ) then
 
             write (*,*) 'SPICE(NOFREELOGICALUNIT)'
             write (*,*) ' '
@@ -624,7 +624,7 @@
                 status          = 'NEW', &
                 iostat          = iostat )
 
-         if ( iostat .ne. 0 ) then
+         if ( iostat /= 0 ) then
 
             write (*,*) 'SPICE(FILEOPENFAILED)'
             write (*,*) ' '
@@ -661,7 +661,7 @@
 !     Well, what happened? Any non-zero value for IOSTAT indicates
 !     an error.
 !
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 
          error = 'WRLINE: An error occurred while attempting to '     // &
                  'WRITE to '
@@ -857,7 +857,7 @@
                 number       = unit, &
                 iostat       = iostat   )
 
-      if ( iostat .ne. 0 ) then
+      if ( iostat /= 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
 !        if the syntax is correct?  But just in case...

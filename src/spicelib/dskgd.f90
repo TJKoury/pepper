@@ -611,7 +611,7 @@
 !     If we don't have enough d.p. elements to hold a descriptor,
 !     something's wrong.
 !
-      if ( dpsize .lt. dskdsz ) then
+      if ( dpsize < dskdsz ) then
 
          call setmsg ( 'Size of d.p. component of segment is #; ' &
          //            'cannot extract descriptor.  This is a ' &

@@ -19,8 +19,8 @@
 
       implicit none
 
-      character*(*)         fname
-      character*(*)         ifname
+      character(*)          fname
+      character(*)          ifname
       integer(ip)           ncomch
       integer(ip)           handle
 
@@ -343,7 +343,7 @@
 !
 !     Local parameters
 !
-      character*(*)         type
+      character(*)          type
       parameter           ( type = 'CK'    )
 !
 !     DAF ND and NI values for CK files.
@@ -379,7 +379,7 @@
 !     we always allocate an extra record to account for the end of line
 !     marks in the comment area.
 !
-      if ( ncomch .gt. 0 ) then
+      if ( ncomch > 0 ) then
          ncomr = ( ncomch - 1 )/mxcrec + 1
       else
          ncomr = 0

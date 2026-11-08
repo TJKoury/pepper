@@ -27,9 +27,9 @@
       real(wp)              begtim
       real(wp)              endtim
       integer(ip)           inst
-      character*(*)         ref
+      character(*)          ref
       logical               avflag
-      character*(*)         segid
+      character(*)          segid
       integer(ip)           nrec
       real(wp)              sclkdp (      * )
       real(wp)              quats  ( 0:3, * )
@@ -716,7 +716,7 @@
 !
 !     Make sure that there is a positive number of pointing records.
 !
-      if ( nrec .le. 0 ) then
+      if ( nrec <= 0 ) then
 
          call setmsg ( '# is an invalid number of pointing ' // &
                        'instances for type 1.'                     )
@@ -730,7 +730,7 @@
 !
 !     Check that the SCLK bounds on the segment are reasonable.
 !
-      if ( begtim .gt. sclkdp(1) ) then
+      if ( begtim > sclkdp(1) ) then
 
          call setmsg ( 'The first d.p. component of the descriptor ' // &
                        'is invalid. DCD(1) = # and SCLKDP(1) = # '    )
@@ -742,7 +742,7 @@
 
       end if
 
-      if ( endtim .lt. sclkdp(nrec) ) then
+      if ( endtim < sclkdp(nrec) ) then
 
          call setmsg ( 'The second d.p. component of the descriptor ' // &
                        'is invalid. DCD(2) = # and SCLKDP(NREC) = # '  )
@@ -763,7 +763,7 @@
 !
       call namfrm ( ref, refcod )
 
-      if ( refcod .eq. 0 ) then
+      if ( refcod == 0 ) then
 
          call setmsg ( 'The reference frame # is not supported.'   )
          call errch  ( '#', ref                                    )
@@ -798,7 +798,7 @@
 
          value = ichar( segid(i:i) )
 
-         if ( ( value .lt. fprint ) .or. ( value .gt. lprint ) ) then
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
 
             call setmsg ( 'The segment identifier contains '  // &
                           'nonprintable characters'               )
@@ -813,7 +813,7 @@
 !
 !     Also check to see if the segment identifier is too long.
 !
-      if ( lastnb(segid) .gt. sidlen ) then
+      if ( lastnb(segid) > sidlen ) then
 
          call setmsg ( 'Segment identifier contains more than ' // &
                        '40 characters.'                          )
@@ -830,7 +830,7 @@
 !
 !     Check that the first time is nonnegative.
 !
-      if ( sclkdp(1) .lt. 0.0_wp ) then
+      if ( sclkdp(1) < 0.0_wp ) then
 
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
@@ -845,7 +845,7 @@
 !
       do i = 2, nrec
 
-         if ( sclkdp(i) .le. sclkdp(i-1) )  then
+         if ( sclkdp(i) <= sclkdp(i-1) )  then
 
             call setmsg ( 'The SCLKDP times are not strictly '      // &
                           'increasing. SCLKDP(#) = # and SCLKDP(#) '// &

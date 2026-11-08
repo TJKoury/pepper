@@ -464,7 +464,7 @@
          axis(2) = 0.0_wp
          axis(3) = 1.0_wp
 
-      else if ( q(0) .eq. 0.0_wp ) then
+      else if ( q(0) == 0.0_wp ) then
 
          angle   = pi()
          axis(1) = q(1)

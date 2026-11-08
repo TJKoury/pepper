@@ -160,13 +160,13 @@
 
       head = datlst( nameat )
 
-      if      ( head .lt. 0 ) then
+      if      ( head < 0 ) then
 
          head = -head
          tail = -chpool(prev,head)
          call lnkfsl ( head, tail, chpool )
 
-      else if ( head .gt. 0 ) then
+      else if ( head > 0 ) then
 
          tail = -dppool(prev,head)
          call lnkfsl ( head, tail, dppool )
@@ -183,9 +183,9 @@
       head =  namlst(lookat)
       tail = -nmpool(prev,head)
 
-      if ( head .eq. tail ) then
+      if ( head == tail ) then
          namlst(lookat) = 0
-      else if ( namlst(lookat) .eq. nameat ) then
+      else if ( namlst(lookat) == nameat ) then
          namlst(lookat) = nmpool(next,nameat)
       end if
 !

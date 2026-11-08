@@ -217,7 +217,7 @@
 !
       maxdim = nint ( record(1) )
 
-      if ( maxdim .gt. maxtrm ) then
+      if ( maxdim > maxtrm ) then
 
          call chkin  ( 'SPKE21'                                )
          call setmsg ( 'The input record has a maximum table ' &
@@ -303,7 +303,7 @@
 !
 !        Make sure we're not about to attempt division by zero.
 !
-         if ( g(j) .eq. 0.0_wp ) then
+         if ( g(j) == 0.0_wp ) then
 
             call chkin  ( 'SPKE21'                             )
             call setmsg ( 'A  value of zero was found at ' &
@@ -337,7 +337,7 @@
       jx  = 0
       ks1 = ks - 1
 
-      do while ( ks .ge. 2 )
+      do while ( ks >= 2 )
 
          jx  = jx+1
 

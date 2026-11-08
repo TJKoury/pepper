@@ -27,7 +27,7 @@
       include               'zzsc01.inc'
 
       integer(ip)           sc
-      character*(*)         clkstr
+      character(*)          clkstr
       real(wp)              ticks
       real(wp)              sclkdp
       real(wp)              et
@@ -367,12 +367,12 @@
 !
 !     Other local variables
 !
-      character*(msglen)    bvlmsg
-      character*(dplen)     cmp    ( mxnfld )
-      character*(1)         del    ( ndelim )
-      character*(dplen)     dpchar
-      character*(errlen)    error
-      character*(kvnmln)    kvname
+      character(msglen)     bvlmsg
+      character(dplen)      cmp    ( mxnfld )
+      character(1)          del    ( ndelim )
+      character(dplen)      dpchar
+      character(errlen)     error
+      character(kvnmln)     kvname
 
       real(wp)              cmptks ( mxnfld )
       real(wp)              cmpval ( mxnfld )
@@ -923,7 +923,7 @@
 !
 !     If our clock string is blank, we can stop now.
 !
-      if ( clkstr .eq. ' ' ) then
+      if ( clkstr == ' ' ) then
 
          pass1 = .true.
 
@@ -957,7 +957,7 @@
 !     If the string has too many fields for the specified spacecraft
 !     then signal an error.
 !
-      if  ( n .gt. nfield )  then
+      if  ( n > nfield )  then
 
          pass1 = .true.
 
@@ -977,14 +977,14 @@
 !
       do i = 1, n
 
-         if ( cmp(i) .eq. ' ' )  then
+         if ( cmp(i) == ' ' )  then
             cmpval(i) = offset(i)
          else
             call nparsd ( cmp(i), cmpval(i), error, pntr )
          end if
 
 
-         if ( error .ne. ' ' ) then
+         if ( error /= ' ' ) then
 
             pass1 = .true.
 
@@ -1007,7 +1007,7 @@
          savcmp    = cmpval(i)
          cmpval(i) = cmpval(i) - offset(i)
 
-         if  ( anint( cmpval(i) ) .lt. 0.0_wp  )   then
+         if  ( anint( cmpval(i) ) < 0.0_wp  )   then
 
             pass1 = .true.
 
@@ -1414,7 +1414,7 @@
 !
       needed  =  nfield  -  1  +  sumai ( cmpwid, nfield )
 
-      if (  len( clkstr )  .lt.  needed  ) then
+      if (  len( clkstr )  <  needed  ) then
 
          pass1 = .true.
 
@@ -1432,7 +1432,7 @@
 !
 !     Need to check that TICKS is a positive number.
 !
-      if (  anint( ticks ) .lt. 0  ) then
+      if (  anint( ticks ) < 0  ) then
 
          pass1 = .true.
 
@@ -1483,7 +1483,7 @@
 
          pad = cmpwid(i) - length(i)
 
-         if ( pad .gt. 0 )  then
+         if ( pad > 0 )  then
 
             do  j = 1, pad
                call prefix ( '0', 0, cmp(i) )
@@ -1501,7 +1501,7 @@
 
       do  i = 2, nfield
 
-         if ( del(delcde) .ne. ' ' ) then
+         if ( del(delcde) /= ' ' ) then
 
             call prefix ( del(delcde), 0, cmp(i) )
             call suffix ( cmp(i),      0, clkstr )
@@ -1866,8 +1866,8 @@
 !     MXTICK are, respectively, the first and last absolute
 !     tick values of the clock.
 !
-      if (      ( sclkdp .lt. coeffs(1,1)    ) &
-           .or. ( sclkdp .gt. mxtick         )   ) then
+      if (      ( sclkdp < coeffs(1,1)    ) &
+           .or. ( sclkdp > mxtick         )   ) then
 
          pass1 = .true.
 
@@ -1903,7 +1903,7 @@
 !           last SCLK value in the array is the one we want.
 !
 
-      if (  sclkdp .lt.  coeffs(1, ncoeff/3) ) then
+      if (  sclkdp <  coeffs(1, ncoeff/3) ) then
 
          lower  =  1
          upper  =  ncoeff / 3
@@ -1921,11 +1921,11 @@
 !        Note that we start out with if LOWER < UPPER, since we've
 !        already made sure that the invariant expression above is true.
 !
-         do while ( lower .lt. upper - 1 )
+         do while ( lower < upper - 1 )
 
             middle  =  ( lower + upper ) / 2
 
-            if (  sclkdp  .lt. coeffs(1,middle) ) then
+            if (  sclkdp  < coeffs(1,middle) ) then
                upper = middle
             else
                lower = middle
@@ -1976,7 +1976,7 @@
          tikmsc  =  tikmsc * moduli(i)
       end do
 
-      if (  coeffs( 3, lower ) .le. 0.0_wp  ) then
+      if (  coeffs( 3, lower ) <= 0.0_wp  ) then
 
          pass1 = .true.
 
@@ -1998,11 +1998,11 @@
 !     We don't need to check the validity of TIMSYS, because SCLI01
 !     already made this check.
 !
-      if ( timsys .eq. tdb ) then
+      if ( timsys == tdb ) then
 
          et = partim
 
-      else if ( timsys .eq. tdt ) then
+      else if ( timsys == tdt ) then
 
          et = unitim ( partim, 'TDT', 'TDB' )
 
@@ -2383,11 +2383,11 @@
 !     We don't need to check the validity of TIMSYS, because SCLI01
 !     already made this check.
 !
-      if ( timsys .eq. tdb ) then
+      if ( timsys == tdb ) then
 
          partim = et
 
-      else if ( timsys .eq. tdt ) then
+      else if ( timsys == tdt ) then
 
          partim = unitim ( et, 'TDB', 'TDT' )
 
@@ -2448,14 +2448,14 @@
 !           last time value in the array is the one we want.
 !
 !
-      if (  partim  .lt.  coeffs( 2, 1 )  ) then
+      if (  partim  <  coeffs( 2, 1 )  ) then
 !
 !        The coefficient set to use for extrapolation is the first.
 !
          lower = 1
 
 
-      else if (  partim .lt. coeffs( 2, ncoeff/3 )  ) then
+      else if (  partim < coeffs( 2, ncoeff/3 )  ) then
 !
 !        In the following loop, we maintain an invariant:
 !
@@ -2473,11 +2473,11 @@
          lower  =  1
          upper  =  ncoeff / 3
 
-         do while ( lower .lt. upper - 1 )
+         do while ( lower < upper - 1 )
 
             middle  =  ( lower + upper ) / 2
 
-            if (  partim  .lt.  coeffs( 2, middle )  ) then
+            if (  partim  <  coeffs( 2, middle )  ) then
                upper = middle
             else
                lower = middle
@@ -2529,7 +2529,7 @@
       timdif =  partim  -  coeffs( 2, lower )
       const  =             coeffs( 1, lower )
 
-      if (  coeffs( 3, lower ) .le. 0.0_wp  ) then
+      if (  coeffs( 3, lower ) <= 0.0_wp  ) then
 
          pass1 = .true.
 
@@ -2577,8 +2577,8 @@
       sclkdp = anint ( sclkdp      )
       dval   = anint ( coeffs(1,1) )
 
-      if (      ( sclkdp .lt. dval  ) &
-           .or. ( sclkdp .gt. mxtick       )   ) then
+      if (      ( sclkdp < dval  ) &
+           .or. ( sclkdp > mxtick       )   ) then
 
          pass1 = .true.
 
@@ -2892,11 +2892,11 @@
 !     We don't need to check the validity of TIMSYS, because SCLI01
 !     already made this check.
 !
-      if ( timsys .eq. tdb ) then
+      if ( timsys == tdb ) then
 
          partim = et
 
-      else if ( timsys .eq. tdt ) then
+      else if ( timsys == tdt ) then
 
          partim = unitim ( et, 'TDB', 'TDT' )
 
@@ -2952,7 +2952,7 @@
 !           last time value in the array is the one we want.
 !
 !
-      if (  partim  .lt.  coeffs( 2, 1 )  ) then
+      if (  partim  <  coeffs( 2, 1 )  ) then
 !
 !        PARTIM precedes the coverage of the kernel.
 !
@@ -2966,7 +2966,7 @@
          return
 
 
-      else if (  partim .lt. coeffs( 2, ncoeff/3 )  ) then
+      else if (  partim < coeffs( 2, ncoeff/3 )  ) then
 !
 !        In the following loop, we maintain an invariant:
 !
@@ -2984,11 +2984,11 @@
          lower  =  1
          upper  =  ncoeff / 3
 
-         do while ( lower .lt. upper - 1 )
+         do while ( lower < upper - 1 )
 
             middle  =  ( lower + upper ) / 2
 
-            if (  partim  .lt.  coeffs( 2, middle )  ) then
+            if (  partim  <  coeffs( 2, middle )  ) then
                upper = middle
             else
                lower = middle
@@ -3036,7 +3036,7 @@
       timdif =  partim  -  coeffs( 2, lower )
       const  =             coeffs( 1, lower )
 
-      if (  coeffs( 3, lower ) .le. 0.0_wp  ) then
+      if (  coeffs( 3, lower ) <= 0.0_wp  ) then
 
          pass1 = .true.
 
@@ -3078,7 +3078,7 @@
 !     using the tick value that ET mapped to and the maximum tick
 !     value of the spacecraft clock.
 !
-      if ( sclkdp .gt. mxtick ) then
+      if ( sclkdp > mxtick ) then
 
          pass1 = .true.
 
@@ -3268,7 +3268,7 @@
 !        We never indicate the clock is the "same" as the previous
 !        one unless the clock is type 1.
 !
-         samclk = ( sc .ne. 0 ) .and. ( sc .eq. prvsc )
+         samclk = ( sc /= 0 ) .and. ( sc == prvsc )
 
       end if
 
@@ -3314,7 +3314,7 @@
 !
 !        At this point, the clock type is set.
 !
-         if ( clktyp .ne. 1 ) then
+         if ( clktyp /= 1 ) then
 !
 !           The clock is not type 1, so we don't add it to the
 !           SC01 database.

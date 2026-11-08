@@ -30,7 +30,7 @@
       include              'srftrn.inc'
       include              'zzsrftrn.inc'
 
-      character*(*)         nornam (          * )
+      character(*)          nornam (          * )
       integer(ip)           codes  (          * )
       integer(ip)           bodies (          * )
       integer(ip)           nvals
@@ -215,7 +215,7 @@
 !
 !     Local Variables
 !
-      character*(sfnmln)    sqshnm
+      character(sfnmln)     sqshnm
 
       integer(ip)           head
       integer(ip)           i
@@ -234,7 +234,7 @@
 !
 !     Consistency check.
 !
-      if ( maxval .lt. nvals ) then
+      if ( maxval < nvals ) then
 
          call chkin  ( 'ZZSRFINI'                                )
          call setmsg ( 'There is an inconsistency between the ' &
@@ -306,16 +306,16 @@
 !
          node = head
 
-         if ( node .gt. 0 ) then
+         if ( node > 0 ) then
 !
 !           Start at the head node and check each normalized name saved
 !           for this hash value until we find a name and body ID that
 !           match or run out of items in the collision list.
 !
-            do while (  ( node .gt. 0 ) .and. ( .not. lfound )  )
+            do while (  ( node > 0 ) .and. ( .not. lfound )  )
 
-               lfound =       ( nornam( snmidx(node) ) .eq. nornam(i) ) &
-                        .and. ( bodies( snmidx(node) ) .eq. bodies(i) )
+               lfound =       ( nornam( snmidx(node) ) == nornam(i) ) &
+                        .and. ( bodies( snmidx(node) ) == bodies(i) )
 
                itemat = node
                node   = snmpol ( node )
@@ -339,7 +339,7 @@
 !           We need to add the current normalized name and BODY ID
 !           to the hash. Make sure there's room.
 !
-            full = ( snmpol(freidx) .gt. snmpol(sizidx) )
+            full = ( snmpol(freidx) > snmpol(sizidx) )
 
             if ( full ) then
 
@@ -360,7 +360,7 @@
                node           = snmpol(freidx)
                snmpol(freidx) = snmpol(freidx) + 1
 
-               if ( head .gt. 0 ) then
+               if ( head > 0 ) then
 !
 !                 Link the new entry at the tail of the applicable
 !                 collision list. The index of the tail node is ITEMAT.
@@ -419,17 +419,17 @@
 !
             node = head
 
-            if ( node .gt. 0 ) then
+            if ( node > 0 ) then
 !
 !              Start at the head node and check each surface ID saved
 !              for this hash value until we find a surface ID and body
 !              ID that match or run out of items in this collision
 !              list.
 !
-               do while (  ( node .gt. 0 ) .and. ( .not. lfound )  )
+               do while (  ( node > 0 ) .and. ( .not. lfound )  )
 
-                  lfound =      ( codes (sididx(node)) .eq. codes (i) ) &
-                          .and. ( bodies(sididx(node)) .eq. bodies(i) )
+                  lfound =      ( codes (sididx(node)) == codes (i) ) &
+                          .and. ( bodies(sididx(node)) == bodies(i) )
 
                   itemat = node
                   node   = sidpol ( node )
@@ -454,7 +454,7 @@
 !              We need to add the current surface ID and BODY ID
 !              to the hash. Make sure there's room.
 !
-               full = ( sidpol(freidx) .gt. sidpol(sizidx) )
+               full = ( sidpol(freidx) > sidpol(sizidx) )
 
                if ( full ) then
 
@@ -475,7 +475,7 @@
                   node           = sidpol(freidx)
                   sidpol(freidx) = sidpol(freidx) + 1
 
-                  if ( head .gt. 0 ) then
+                  if ( head > 0 ) then
 !
 !                    Link the new entry at the tail of the applicable
 !                    collision list. The index of the tail node is

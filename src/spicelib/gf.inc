@@ -159,50 +159,50 @@
 !
 
 
-      character*(*)         ftcirc
+      character(*)          ftcirc
       parameter           ( ftcirc = 'CIRCLE' )
 
-      character*(*)         ftelli
+      character(*)          ftelli
       parameter           ( ftelli = 'ELLIPSE' )
 
-      character*(*)         ftpoly
+      character(*)          ftpoly
       parameter           ( ftpoly = 'POLYGON' )
 
-      character*(*)         ftrect
+      character(*)          ftrect
       parameter           ( ftrect = 'RECTANGLE' )
 
 !
 !     Character strings that are allowed in the
 !     specification of occultation types:
 !
-      character*(*)         annulr
+      character(*)          annulr
       parameter           ( annulr = 'ANNULAR' )
 
-      character*(*)         any
+      character(*)          any
       parameter           ( any    = 'ANY'     )
 
-      character*(*)         partl
+      character(*)          partl
       parameter           ( partl  = 'PARTIAL' )
 
-      character*(*)         full
+      character(*)          full
       parameter           ( full   = 'FULL'    )
 
 !
 !     Occultation target shape specifications:
 !
-      character*(*)         dsshap
+      character(*)          dsshap
       parameter           ( dsshap = 'DSK' )
 
-      character*(*)         edshap
+      character(*)          edshap
       parameter           ( edshap = 'ELLIPSOID' )
 
-      character*(*)         ptshap
+      character(*)          ptshap
       parameter           ( ptshap = 'POINT' )
 
-      character*(*)         ryshap
+      character(*)          ryshap
       parameter           ( ryshap = 'RAY' )
 
-      character*(*)         spshap
+      character(*)          spshap
       parameter           ( spshap = 'SPHERE' )
 
 !
@@ -234,16 +234,16 @@
 !        polygon
 !        rectangle
 !
-      character*(*)         cirfov
+      character(*)          cirfov
       parameter           ( cirfov = 'CIRCLE' )
 
-      character*(*)         ellfov
+      character(*)          ellfov
       parameter           ( ellfov = 'ELLIPSE' )
 
-      character*(*)         polfov
+      character(*)          polfov
       parameter           ( polfov = 'POLYGON' )
 
-      character*(*)         recfov
+      character(*)          recfov
       parameter           ( recfov = 'RECTANGLE' )
 
 

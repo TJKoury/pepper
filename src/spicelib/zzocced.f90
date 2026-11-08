@@ -578,7 +578,7 @@
 !     a more stringent test later, but we must prevent divide-by-zero
 !     errors at this point.
 !
-      if (  ( minrad(1) .le. 0.0_wp ) .or. ( minrad(2) .le. 0.0_wp )  ) then
+      if (  ( minrad(1) <= 0.0_wp ) .or. ( minrad(2) <= 0.0_wp )  ) then
 
          call setmsg ( 'Minimum radii of bodies 1 and 2 are #, #. ' // &
                        'Target radii must be positive.'             )
@@ -604,7 +604,7 @@
          dist(i) = vnorm( tpos(1,i) )
 
 
-         if ( dist(i) .eq. 0.0_wp ) then
+         if ( dist(i) == 0.0_wp ) then
 
             call setmsg ( 'Center of object # coincides with ' // &
                           'the viewing point.'                 )
@@ -650,7 +650,7 @@
 !
 !     Make sure the targets are non-intersecting.
 !
-      if (  ttdist  .le.  ( minrad(1) + minrad(2) )  ) then
+      if (  ttdist  <=  ( minrad(1) + minrad(2) )  ) then
 
          call setmsg ( 'Targets must be non-intersecting, but  '     // &
                        'spheres inscribed in the targets intersect.' )
@@ -680,7 +680,7 @@
                  +  ( xtpos(2,i) / r(2,i) )**2 &
                  +  ( xtpos(3,i) / r(3,i) )**2
 
-         if ( level .lt. 1.0_wp ) then
+         if ( level < 1.0_wp ) then
 
             call setmsg ( 'Viewpoint is inside target #; level ' // &
                           'surface parameter = #.'               )
@@ -714,7 +714,7 @@
 !        ellipsoids but inside one or both maximum bounding spheres.
 !        We handle that special case separately.
 !
-         if ( dist(i) .ge. maxrad(i) ) then
+         if ( dist(i) >= maxrad(i) ) then
 !
 !           The viewing point is outside the sphere; we use the sphere
 !           to define the maximum angular radius.
@@ -818,7 +818,7 @@
 !     If bounding cones defined by the maximum radii don't intersect,
 !     we're done.
 !
-      if (  trgsep  .gt. ( maxang(1) + maxang(2) )  ) then
+      if (  trgsep  > ( maxang(1) + maxang(2) )  ) then
 
          zzocced = noocc
 
@@ -836,7 +836,7 @@
 !     the ellipsoid of larger angular size. This choice is made to
 !     improve efficiency.
 !
-      if (  maxang(1)  .gt.  maxang(2)  ) then
+      if (  maxang(1)  >  maxang(2)  ) then
          bigidx  =  1
       else
          bigidx  =  2
@@ -858,7 +858,7 @@
 !     (of course they always intersect at their common vertex), we're
 !     guaranteed some sort of occultation.  Check for this case.
 !
-      if (  ( minang(1) + minang(2) )  .gt.  trgsep  ) then
+      if (  ( minang(1) + minang(2) )  >  trgsep  ) then
 !
 !        The minimum bounding cones do overlap. Determine which target
 !        is "in front" of the other.  We do this determining which
@@ -892,7 +892,7 @@
          t2sep  =  vsep ( t1opos, t12pos )
 
 
-         if ( t2sep .lt. angcmp ) then
+         if ( t2sep < angcmp ) then
 !
 !           The second target is "in front" of the first.
 !
@@ -921,13 +921,13 @@
 !           (The subscript 3-I used below is 2 if I is 1 and vice
 !           versa.)
 !
-            if (  minang(i)  .ge.  ( maxang(3-i) + trgsep )  ) then
+            if (  minang(i)  >=  ( maxang(3-i) + trgsep )  ) then
 !
 !              If target I is in front, it totally occults the other
 !              target.  Otherwise, the other target is in annular
 !              transit across target I.
 !
-               if ( frtidx .eq. i ) then
+               if ( frtidx == i ) then
                   zzocced = s * total2
                else
                   zzocced = s * annlr2
@@ -951,8 +951,8 @@
 !        is also guaranteed that neither target is totally blocked
 !        by the other.
 !
-         if (       (  ( minang(1) + trgsep ) .gt. maxang(2)  ) &
-              .and. (  ( minang(2) + trgsep ) .gt. maxang(1)  )   ) then
+         if (       (  ( minang(1) + trgsep ) > maxang(2)  ) &
+              .and. (  ( minang(2) + trgsep ) > maxang(1)  )   ) then
 !
 !           The occultation code is +/- PARTL2, depending on whether
 !           the first target is in front.
@@ -1125,7 +1125,7 @@
 !     center of the unit sphere and the transformed limb of the
 !     smaller ellipsoid.
 !
-      if ( minsep .gt. uasize ) then
+      if ( minsep > uasize ) then
 !
 !        There's no overlap.
 !
@@ -1159,7 +1159,7 @@
 !
 !     Set the sign S used later to set the return code as well.
 !
-      if (  vsep(minvec, invray)  .le.  ( halfpi() - uasize )  ) then
+      if (  vsep(minvec, invray)  <=  ( halfpi() - uasize )  ) then
 !
 !        MINPT is in front.
 !
@@ -1169,8 +1169,8 @@
       end if
 
 
-      if (      (          sfront   .and.  ( smlidx .eq. 1 )  ) &
-           .or. (  ( .not. sfront ) .and.  ( smlidx .eq. 2 )  )  ) then
+      if (      (          sfront   .and.  ( smlidx == 1 )  ) &
+           .or. (  ( .not. sfront ) .and.  ( smlidx == 2 )  )  ) then
 !
 !        The first target is in front.
 !
@@ -1180,7 +1180,7 @@
       end if
 
 
-      if ( minsep .le. -uasize ) then
+      if ( minsep <= -uasize ) then
 !
 !        Arriving here implies that the "smaller" ellipsoid actually
 !        appears larger than the other.  Recall that our determination
@@ -1254,7 +1254,7 @@
          majlen = vnorm( smlmaj )
          minlen = vnorm( smlmin )
 
-         if ( xdist(smlidx) .ge. majlen ) then
+         if ( xdist(smlidx) >= majlen ) then
 !
 !           The viewing point is outside a sphere of radius MAJLEN
 !           centered at the limb's center.  We use this sphere to
@@ -1338,7 +1338,7 @@
 !
          tilt = vsep ( lnorml, xsmlvu )
 
-         if ( tilt .gt. halfpi() ) then
+         if ( tilt > halfpi() ) then
 
             tilt = pi() - tilt
 
@@ -1367,7 +1367,7 @@
 !        Test for inclusion of the maximum bounding cone of the small
 !        ellipsoid in the circumscribing cone of the sphere.
 !
-         if (  ( xasep + maxang(smlidx) )  .le.  uasize  ) then
+         if (  ( xasep + maxang(smlidx) )  <=  uasize  ) then
 !
 !           The small ellipsoid is either in total occultation or
 !           in annular transit across the sphere.
@@ -1397,7 +1397,7 @@
 !        Test for non-containment of the minimum bounding cone of the
 !        small ellipsoid by the circumscribing cone of the sphere.
 !
-         if (  ( xasep + minang(smlidx) )  .gt.  uasize  ) then
+         if (  ( xasep + minang(smlidx) )  >  uasize  ) then
 !
 !           The small ellipsoid is either in partial occultation or
 !           in partial transit across the sphere.
@@ -1424,7 +1424,7 @@
          end if
 
 
-         if ( abs(maxsep) .le. uasize ) then
+         if ( abs(maxsep) <= uasize ) then
 !
 !           Whether the ray from the viewing point to the center
 !           of the unit sphere does nor does not penetrate the plane

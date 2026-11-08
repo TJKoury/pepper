@@ -25,7 +25,7 @@
 
       include              'zzddhman.inc'
 
-      character*(*)         nsum
+      character(*)          nsum
       integer(ip)           bff
       logical               found
 
@@ -229,7 +229,7 @@
 !
 !     Local Variables
 !
-      character*(1)         carg
+      character(1)          carg
 
       integer(ip)           leader
       integer(ip)           trailr
@@ -404,17 +404,17 @@
 !
 !     Now determine what file we are looking at.
 !
-      if ( ( leader .eq. 8 ) .and. ( trailr .eq. 0 ) ) then
+      if ( ( leader == 8 ) .and. ( trailr == 0 ) ) then
 
          found = .true.
          bff   = vaxdfl
 
-      else if ( trailr .ne. 0 ) then
+      else if ( trailr /= 0 ) then
 
          found = .true.
          bff   = vaxdfl
 
-      else if ( ( leader .lt. 8 ) .and. ( trailr .eq. 0 ) ) then
+      else if ( ( leader < 8 ) .and. ( trailr == 0 ) ) then
 
          found = .true.
          bff   = vaxgfl

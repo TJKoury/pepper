@@ -32,7 +32,7 @@
 
       integer(ip)           targid
       real(wp)              et
-      character*(*)         abcorr
+      character(*)          abcorr
       integer(ip)           obsid
       real(wp)              dist
 

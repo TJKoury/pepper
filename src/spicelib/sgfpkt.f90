@@ -247,7 +247,7 @@
 !
 !     Perform checks on the inputs for reasonableness.
 !
-      if ( ( first .lt. 1 ) .or. ( last .gt. mynpkt ) ) then
+      if ( ( first < 1 ) .or. ( last > mynpkt ) ) then
 
          call setmsg ( 'The range of packets requested ' &
          //            'extends beyond the available packet ' &
@@ -263,7 +263,7 @@
 
       end if
 
-      if ( last .lt. first ) then
+      if ( last < first ) then
 
          call setmsg ( 'The last packet requested, #, is ' &
          //            'before the first packet ' &
@@ -286,13 +286,13 @@
 !     have values zero (0) and one (1) for, respectively, fixed size
 !     packets and variable size packets.
 !
-      if ( mypdrt .eq. 0 ) then
+      if ( mypdrt == 0 ) then
 !
 !        All packets have the same size MYPKSZ so the address of the
 !        start of the first packet and end of the last packet are easily
 !        computed.
 !
-         if ( mypkto .eq. 0 ) then
+         if ( mypkto == 0 ) then
 !
 !           Compute tha addresses for the packet data in the generic
 !           segment.

@@ -275,7 +275,7 @@
          call chkout ( 'WNVALD' )
          return
 
-      else if ( n .gt. size ) then
+      else if ( n > size ) then
 
          call setmsg ( 'WNVALD: Inconsistent value for SIZE.' )
          call sigerr ( 'SPICE(WINDOWTOOSMALL)' )
@@ -298,12 +298,12 @@
 
       i = 1
 
-      do while  ( i .lt. n )
+      do while  ( i < n )
 
          left  = window(i)
          right = window(i+1)
 
-         if ( left .gt. right ) then
+         if ( left > right ) then
            call setmsg ( 'WNVALD: Left endpoint may not exceed ' // &
                          'right endpoint.'                        )
            call sigerr ( 'SPICE(BADENDPOINTS)'                    )
