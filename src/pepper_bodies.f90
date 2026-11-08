@@ -2818,6 +2818,383 @@ contains
       return
       end procedure zzhashi
 
+!$Procedure ZZHSC ( Private---Add-only Character Hash )
+!
+!     PEPPER: SPICELIB's umbrella routine ZZHSC is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_zzhsc. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     SPICE Private routine intended solely for the support of SPICE
+!     routines. Users should not call this routine directly due
+!     to the volatile nature of this routine.
+!
+!     Manipulate add-only character hash.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     PRIVATE UTILITY
+!
+! $ Declarations
+
+
+
+
+! $ Detailed_Input
+!
+!     See the ENTRY points for a discussion of their arguments.
+!
+! $ Detailed_Output
+!
+!     See the ENTRY points for a discussion of their arguments.
+!
+! $ Parameters
+!
+!     LBPOOL      is the lower bound of the collision list array.
+!
+! $ Exceptions
+!
+!     1) If ZZHSC is called directly, the error SPICE(BOGUSENTRY) is
+!        signaled.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     ZZHSC should never be called directly, but should instead be
+!     accessed only through its entry points.
+!
+!     The purpose of this routine is to manipulate add-only character
+!     hashes used for buffering purposes by various SPICE subsystems.
+!     This umbrella has the following entry points:
+!
+!           ZZHSCINI       Initialize a hash.
+!
+!           ZZHSCADD       Add an item to a hash.
+!
+!           ZZHSCCHK       Check if a item is in a hash.
+!
+!           ZZHSCAVL       Get available room in hash.
+!
+!           ZZHSCINF       Get h/k information about hash.
+!
+!     An add-only hash consists of the head node pointer list (HEDLST),
+!     hash node collision list (COLLST), and the item list (ITEMS).
+!
+!     The function ZZHASH2 computes the index of an element in the head
+!     node pointer list (HEDLST).
+!
+!     The HEDLST element at this index contains either 0, indicating
+!     that there is not yet data for this hash value in the hash, or
+!     the index of the head node and its item in the hash collision
+!     (COLLST) and item (ITEMS) lists.
+!
+!     The COLLST element at the head node index contain either 0,
+!     indicating that there is only one item for this hash value in the
+!     hash, or the index of the next node and its item in the hash
+!     collision (COLLST) and item (ITEMS) lists.
+!
+!     The COLLST element at the next node index contain either 0,
+!     indicating that this is the last item for this hash value in the
+!     hash, or the index of the next node and its item in the hash
+!     collision (COLLST) and item (ITEMS) lists.
+!
+!     And so on.
+!
+!     Pictorially the hash looks like this:
+!
+!                     List of head   List of hash      List of
+!                        nodes        collisions        items
+!
+!                       HEDLST          COLLST          ITEMS
+!
+!                                     +---------+
+!                                     |         |
+!                                     +---------+
+!                                         ...
+!                                     +---------+
+!                                     | 1st Free|
+!                                     +---------+
+!                                     |  Size   |
+!                     +---------+     +---------+     +---------+
+!                     |         |     |         |     |         |
+!                     +---------+ !=0 +---------+     +---------+
+!                  .->|Head Node| -.  |         |     |         |
+!                  |  +---------+  |  +---------+     +---------+
+!       ZZHASH2(ITEM) |         |  |  |         |     |         |
+!                     +---------+  |  +---------+     +---------+
+!                     |         |  `->|Head of  |     |Item     |
+!                     |         |     |collision| !=0 |corresp. |
+!                     |         |     |list for | -.  |to head  |
+!                     |         |     | ITEM    |  |  |of list  |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |  |  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |<-'  |         |
+!                     |         |     |Next Node| !=0 |Next Item|
+!                     |         |     |         |--.  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |  |  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |  |  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |Next Node|<-'  |Next Item|
+!                     +---------+     +---------+ etc +---------+
+!                        ...              ...            ...
+!                     +---------+     +---------+     +---------+
+!                     |         |     |         |     |         |
+!                     +---------+     +---------+     +---------+
+!
+!
+! $ Examples
+!
+!     An add-only hash used together with flat data arrays provides a
+!     simple, fast-access buffering mechanism. The subsystems that need
+!     such buffering would normally initialize the hash, add items to
+!     the hash and buffer data associated with items in flat data
+!     arrays, and find items in the hash and, if found, use buffered
+!     data associated with the items rather than computing/getting
+!     their data again.
+!
+!     An add-only hash is normally used in one of the following ways --
+!     set up to never be filled up, stop buffering when filled up, and
+!     trash when filled up and start buffering again. Three examples
+!     below illustrate each of these ways.
+!
+!     Example 1: Set up to never be filled up
+!     ---------------------------------------
+!
+!     C
+!     C     Parameters: pool lower boundary, hash size and item
+!     C     size.
+!     C
+!           INTEGER               LBPOOL
+!           PARAMETER           ( LBPOOL = -5 )
+!
+!           INTEGER               HSHSIZ
+!           PARAMETER           ( HSHSIS = 5003 )
+!
+!           INTEGER               NAMSIZ
+!           PARAMETER           ( NAMSIZ = 32 )
+!
+!     C
+!     C     Hash arrays and data buffer.
+!     C
+!           INTEGER               HEDLST  (          HSHSIZ )
+!           INTEGER               COLLST  ( LBPOOL : HSHSIZ )
+!           CHARACTER*(NAMSIZ)    ITEMS   (          HSHSIZ )
+!           INTEGER               DATBUF  (          HSHSIZ )
+!
+!     C
+!     C     Miscellaneous variables.
+!     C
+!           CHARACTER*(NAMSIZ)    ITEM
+!
+!           INTEGER               ITEMAT
+!           INTEGER               MYDATA
+!
+!           LOGICAL               FIRST
+!           INTEGER               AVAIL
+!           LOGICAL               NEW
+!
+!     C
+!     C     Data items.
+!     C
+!           DATA FIRST             / .TRUE.  /
+!
+!     C
+!     C     Initialize hash.
+!     C
+!           IF ( FIRST ) THEN
+!              CALL ZZHSCINI ( HSHSIZ, HEDLST, COLLST )
+!              FIRST = .FALSE.
+!           END IF
+!           ...
+!     C
+!     C     Check for presence of or add an item to the hash. If the
+!     C     item is in the hash, NEW will be .FALSE. If the item is
+!     C     not in the hash, it will be added and NEW will be .TRUE.
+!     C     This call can fail only if the hash fills up which
+!     C     should not happen because it was declared to never fill
+!     C     up.
+!     C
+!           CALL ZZHSCADD ( HEDLST, COLLST, ITEMS, ITEM,
+!          .                                ITEMAT, NEW )
+!           IF ( FAILED() ) THEN
+!              RETURN
+!           END IF
+!
+!           IF ( .NOT. NEW ) THEN
+!     C
+!     C        Simply use buffered value.
+!     C
+!              MYDATA = DATBUF( ITEMAT )
+!
+!           ELSE
+!     C
+!     C        Get value.
+!     C
+!              ...
+!     C
+!     C        Buffer value.
+!     C
+!              DATBUF( ITEMAT ) = MYDATA
+!
+!           END IF
+!
+!
+!
+!     Example 2: Stop buffering when filled up
+!     ----------------------------------------
+!
+!     C
+!     C     Use the same declarations as the first example.
+!     C
+!           ...
+!     C
+!     C     Initialize hash.
+!     C
+!           IF ( FIRST ) THEN
+!              CALL ZZHSCINI ( HSHSIZ, HEDLST, COLLST )
+!              FIRST = .FALSE.
+!           END IF
+!           ...
+!     C
+!     C     Check if this item is in the hash.
+!     C
+!           CALL ZZHSCCHK ( HEDLST, COLLST, ITEMS, ITEM, ITEMAT )
+!
+!           IF ( ITEMAT .NE. 0 ) THEN
+!     C
+!     C        Simply use buffered value.
+!     C
+!              MYDATA = DATBUF( ITEMAT )
+!
+!           ELSE
+!     C
+!     C        Get value.
+!     C
+!              ...
+!     C
+!     C        Buffer value, but only if the hash is not full.
+!     C
+!              CALL ZZHSCAVL( COLLST, AVAIL )
+!              IF ( AVAIL .GT. 0 ) THEN
+!                 CALL ZZHSCADD ( HEDLST, COLLST, ITEMS, ITEM,
+!          .                                  ITEMAT, NEW )
+!                 DATBUF( ITEMAT ) = MYDATA
+!              END IF
+!
+!           END IF
+!
+!
+!     Example 3: Trash when filled up and start buffering again
+!     ---------------------------------------------------------
+!
+!     C
+!     C     Use the same declarations as the first example.
+!     C
+!           ...
+!     C
+!     C     Initialize hash.
+!     C
+!           IF ( FIRST ) THEN
+!              CALL ZZHSCINI ( HSHSIZ, HEDLST, COLLST )
+!              FIRST = .FALSE.
+!           END IF
+!           ...
+!     C
+!     C     Check if this item is in the hash.
+!     C
+!           CALL ZZHSCCHK ( HEDLST, COLLST, ITEMS, ITEM, ITEMAT )
+!
+!           IF ( ITEMAT .NE. 0 ) THEN
+!     C
+!     C        Simply use buffered value.
+!     C
+!              MYDATA = DATBUF( ITEMAT )
+!
+!           ELSE
+!     C
+!     C        Get value.
+!     C
+!              ...
+!     C
+!     C        Buffer value, if the hash is full trash re-initialize
+!     C        it first.
+!     C
+!              CALL ZZHSCAVL( COLLST, AVAIL )
+!              IF ( AVAIL .LE. 0 ) THEN
+!                 CALL ZZHSCINI ( HSHSIZ, HEDLST, COLLST )
+!              END IF
+!              CALL ZZHSCADD ( HEDLST, COLLST, ITEMS, ITEM,
+!          .                                  ITEMAT, NEW )
+!              DATBUF( ITEMAT ) = MYDATA
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     For sake of speed all entry points do no or minimal error
+!     checking. It is the responsibility of the caller to ensure that
+!     all inputs are properly initialized.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 12-OCT-2020 (JDR) (BVS)
+!
+!        Changed entry point ZZHSCINI to not check RETURN()
+!        on entry. That entry point now initializes the hash
+!        as long as the size parameter is greater than zero.
+!
+!        Fixed short error message in umbrella routine.
+!
+!-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     manipulate add-only character hash
+!
+!-&
+
+!
+!     Hash control area items.
+!
+
+
+!
+!     SPICELIB functions.
+!
+
+
+!
+!     Local variables.
+!
+
+
+!
+!     Standard SPICE error handling.
+
       module procedure zzhscini
 
 ! $ Abstract
@@ -3657,6 +4034,386 @@ contains
 
       return
       end procedure zzhscinf
+
+!$Procedure ZZHSI ( Private---Add-only Integer Hash )
+!
+!     PEPPER: SPICELIB's umbrella routine ZZHSI is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_zzhsi. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     SPICE Private routine intended solely for the support of SPICE
+!     routines. Users should not call this routine directly due
+!     to the volatile nature of this routine.
+!
+!     Manipulate add-only integer hash.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     PRIVATE UTILITY
+!
+! $ Declarations
+
+
+
+
+! $ Detailed_Input
+!
+!     See the ENTRY points for a discussion of their arguments.
+!
+! $ Detailed_Output
+!
+!     See the ENTRY points for a discussion of their arguments.
+!
+! $ Parameters
+!
+!     LBPOOL      is the lower bound of the collision list array.
+!
+! $ Exceptions
+!
+!     1) If ZZHSI is called directly, the error SPICE(BOGUSENTRY) is
+!        signaled.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     ZZHSI should never be called directly, but should instead be
+!     accessed only through its entry points.
+!
+!     The purpose of this routine is to manipulate add-only integer
+!     hashes used for buffering purposes by various SPICE subsystems.
+!     This umbrella has the following entry points:
+!
+!           ZZHSIINI       Initialize a hash.
+!
+!           ZZHSIADD       Add an item to a hash.
+!
+!           ZZHSICHK       Check if a item is in a hash.
+!
+!           ZZHSIAVL       Get available room in hash.
+!
+!           ZZHSIINF       Get h/k information about hash.
+!
+!     An add-only hash consists of the head node pointer list (HEDLST),
+!     hash node collision list (COLLST), and the item list (ITEMS).
+!
+!     The function ZZHASH2 computes the index of an element in the head
+!     node pointer list (HEDLST).
+!
+!     The HEDLST element at this index contains either 0, indicating
+!     that there is not yet data for this hash value in the hash, or
+!     the index of the head node and its item in the hash collision
+!     (COLLST) and item (ITEMS) lists.
+!
+!     The COLLST element at the head node index contain either 0,
+!     indicating that there is only one item for this hash value in the
+!     hash, or the index of the next node and its item in the hash
+!     collision (COLLST) and item (ITEMS) lists.
+!
+!     The COLLST element at the next node index contain either 0,
+!     indicating that this is the last item for this hash value in the
+!     hash, or the index of the next node and its item in the hash
+!     collision (COLLST) and item (ITEMS) lists.
+!
+!     And so on.
+!
+!     Pictorially the hash looks like this:
+!
+!                     List of head   List of hash      List of
+!                        nodes        collisions        items
+!
+!                       HEDLST          COLLST          ITEMS
+!
+!                                     +---------+
+!                                     |         |
+!                                     +---------+
+!                                         ...
+!                                     +---------+
+!                                     | 1st Free|
+!                                     +---------+
+!                                     |  Size   |
+!                     +---------+     +---------+     +---------+
+!                     |         |     |         |     |         |
+!                     +---------+ !=0 +---------+     +---------+
+!                  .->|Head Node| -.  |         |     |         |
+!                  |  +---------+  |  +---------+     +---------+
+!       ZZHASHI(ITEM) |         |  |  |         |     |         |
+!                     +---------+  |  +---------+     +---------+
+!                     |         |  `->|Head of  |     |Item     |
+!                     |         |     |collision| !=0 |corresp. |
+!                     |         |     |list for | -.  |to head  |
+!                     |         |     | ITEM    |  |  |of list  |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |  |  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |<-'  |         |
+!                     |         |     |Next Node| !=0 |Next Item|
+!                     |         |     |         |--.  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |  |  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |         |  |  |         |
+!                     +---------+     +---------+  |  +---------+
+!                     |         |     |Next Node|<-'  |Next Item|
+!                     +---------+     +---------+ etc +---------+
+!                        ...              ...            ...
+!                     +---------+     +---------+     +---------+
+!                     |         |     |         |     |         |
+!                     +---------+     +---------+     +---------+
+!
+!
+! $ Examples
+!
+!     An add-only hash used together with flat data arrays provides a
+!     simple, fast-access buffering mechanism. The subsystems that need
+!     such buffering would normally initialize the hash, add items to
+!     the hash and buffer data associated with items in flat data
+!     arrays, and find items in the hash and, if found, use buffered
+!     data associated with the items rather than computing/getting
+!     their data again.
+!
+!     An add-only hash is normally used in one of the following ways --
+!     set up to never be filled up, stop buffering when filled up, and
+!     trash when filled up and start buffering again. Three examples
+!     below illustrate each of these ways.
+!
+!     Example 1: Set up to never be filled up
+!     ---------------------------------------
+!
+!     C
+!     C     Parameters: list lower boundary, hash size and item
+!     C     size.
+!     C
+!           INTEGER               LBPOOL
+!           PARAMETER           ( LBPOOL = -5 )
+!
+!           INTEGER               HSHSIZ
+!           PARAMETER           ( HSHSIS = 5003 )
+!
+!           INTEGER               NAMSIZ
+!           PARAMETER           ( NAMSIZ = 32 )
+!
+!     C
+!     C     Hash arrays and data buffer.
+!     C
+!           INTEGER               HEDLST  (          HSHSIZ )
+!           INTEGER               COLLST  ( LBPOOL : HSHSIZ )
+!           INTEGER               ITEMS   (          HSHSIZ )
+!           INTEGER               DATBUF  (          HSHSIZ )
+!
+!     C
+!     C     Miscellaneous variables.
+!     C
+!           INTEGER               ITEM
+!
+!           INTEGER               ITEMAT
+!           INTEGER               MYDATA
+!
+!           LOGICAL               FIRST
+!           INTEGER               AVAIL
+!           LOGICAL               NEW
+!
+!     C
+!     C     Data items.
+!     C
+!           DATA FIRST             / .TRUE.  /
+!
+!     C
+!     C     Initialize hash.
+!     C
+!           IF ( FIRST ) THEN
+!              CALL ZZHSIINI ( HSHSIZ, HEDLST, COLLST )
+!              FIRST = .FALSE.
+!           END IF
+!           ...
+!     C
+!     C     Check for presence of or add an item to the hash. If the
+!     C     item is in the hash, NEW will be .FALSE. If the item is
+!     C     not in the hash, it will be added and NEW will be .TRUE.
+!     C     This call can fail only if the hash fills up which
+!     C     should not happen because it was declared to never fill
+!     C     up.
+!     C
+!           CALL ZZHSIADD ( HEDLST, COLLST, ITEMS, ITEM,
+!          .                                ITEMAT, NEW )
+!           IF ( FAILED() ) THEN
+!              RETURN
+!           END IF
+!
+!           IF ( .NOT. NEW ) THEN
+!     C
+!     C        Simply use buffered value.
+!     C
+!              MYDATA = DATBUF( ITEMAT )
+!
+!           ELSE
+!     C
+!     C        Get value.
+!     C
+!              ...
+!     C
+!     C        Buffer value.
+!     C
+!              DATBUF( ITEMAT ) = MYDATA
+!
+!           END IF
+!
+!
+!
+!     Example 2: Stop buffering when filled up
+!     ----------------------------------------
+!
+!     C
+!     C     Use the same declarations as the first example.
+!     C
+!           ...
+!     C
+!     C     Initialize hash.
+!     C
+!           IF ( FIRST ) THEN
+!              CALL ZZHSIINI ( HSHSIZ, HEDLST, COLLST )
+!              FIRST = .FALSE.
+!           END IF
+!           ...
+!     C
+!     C     Check if this item is in the hash.
+!     C
+!           CALL ZZHSICHK ( HEDLST, COLLST, ITEMS, ITEM, ITEMAT )
+!
+!           IF ( ITEMAT .NE. 0 ) THEN
+!     C
+!     C        Simply use buffered value.
+!     C
+!              MYDATA = DATBUF( ITEMAT )
+!
+!           ELSE
+!     C
+!     C        Get value.
+!     C
+!              ...
+!     C
+!     C        Buffer value, but only if the hash is not full.
+!     C
+!              CALL ZZHSIAVL( COLLST, AVAIL )
+!              IF ( AVAIL .GT. 0 ) THEN
+!                 CALL ZZHSIADD ( HEDLST, COLLST, ITEMS, ITEM,
+!          .                                  ITEMAT, NEW )
+!                 DATBUF( ITEMAT ) = MYDATA
+!              END IF
+!
+!           END IF
+!
+!
+!     Example 3: Trash when filled up and start buffering again
+!     ---------------------------------------------------------
+!
+!     C
+!     C     Use the same declarations as the first example.
+!     C
+!           ...
+!     C
+!     C     Initialize hash.
+!     C
+!           IF ( FIRST ) THEN
+!              CALL ZZHSIINI ( HSHSIZ, HEDLST, COLLST )
+!              FIRST = .FALSE.
+!           END IF
+!           ...
+!     C
+!     C     Check if this item is in the hash.
+!     C
+!           CALL ZZHSICHK ( HEDLST, COLLST, ITEMS, ITEM, ITEMAT )
+!
+!           IF ( ITEMAT .NE. 0 ) THEN
+!     C
+!     C        Simply use buffered value.
+!     C
+!              MYDATA = DATBUF( ITEMAT )
+!
+!           ELSE
+!     C
+!     C        Get value.
+!     C
+!              ...
+!     C
+!     C        Buffer value, if the hash is full trash re-initialize
+!     C        it first.
+!     C
+!              CALL ZZHSIAVL( COLLST, AVAIL )
+!              IF ( AVAIL .LE. 0 ) THEN
+!                 CALL ZZHSIINI ( HSHSIZ, HEDLST, COLLST )
+!              END IF
+!              CALL ZZHSIADD ( HEDLST, COLLST, ITEMS, ITEM,
+!          .                                  ITEMAT, NEW )
+!              DATBUF( ITEMAT ) = MYDATA
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     For sake of speed all entry points do no or minimal error
+!     checking. It is the responsibility of the caller to ensure that
+!     all inputs are properly initialized.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 14-OCT-2021 (JDR) (BVS) (NJB)
+!
+!        Changed entry point ZZHSIINI to not check RETURN()
+!        on entry. That entry point now initializes the hash
+!        as long as the size parameter is greater than zero.
+!
+!        Fixed short error message in umbrella routine.
+!
+!        Bug fix: fixed routine name in CHKIN/CHKOUT calls
+!        in the ZZHSICHK entry (ZZHSIADD -> ZZHSICHK).
+!
+!-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     manipulate add-only integer hash
+!
+!-&
+
+!
+!     Hash control area items.
+!
+
+
+!
+!     SPICELIB functions.
+!
+
+
+!
+!     Local variables.
+!
+
+
+!
+!     Standard SPICE error handling.
 
       module procedure zzhsiini
 
@@ -5151,6 +5908,346 @@ contains
 
       end procedure zzbodker
 
+!$Procedure ZZBODBLT ( Private --- Retrieve Built-In Body-Code Maps )
+!
+!     PEPPER: SPICELIB's umbrella routine ZZBODBLT is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_zzbodblt. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     SPICE Private routine intended solely for the support of SPICE
+!     routines.  Users should not call this routine directly due
+!     to the volatile nature of this routine.
+!
+!     This is the umbrella routine that contains entry points to
+!     access the built-in body name-code mappings.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     BODY
+!
+! $ Declarations
+
+
+
+
+! $ Detailed_Input
+!
+!     See the entry points for a discussion of their arguments.
+!
+! $ Detailed_Output
+!
+!     See the entry points for a discussion of their arguments.
+!
+! $ Parameters
+!
+!     See the include file 'zzbodtrn.inc' for the list of parameters
+!     this routine utilizes.
+!
+! $ Exceptions
+!
+!     1) The error SPICE(BOGUSENTRY) is signaled if ZZBODBLT is
+!        called directly.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     ZZBODBLT should never be called directly, instead access
+!     the entry points:
+!
+!        ZZBODGET      Fetch the built-in body name/code list.
+!
+!        ZZBODLST      Output the name-ID mapping list.
+!
+! $ Examples
+!
+!     See ZZBODTRN and its entry points for details.
+!
+! $ Restrictions
+!
+!     1) No duplicate entries should appear in the built-in
+!        BLTNAM list.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     F.S. Turner     (JPL)
+!     B.V. Semenov    (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.3.2, 01-OCT-2021 (NJB)
+!
+!        Corrected typos in comments.
+!
+!-    SPICELIB Version 2.3.1, 27-FEB-2007 (EDW)
+!
+!        Completed the ZZBODLST declarations section.
+!
+!-    SPICELIB Version 2.3.0, 17-MAR-2003 (EDW)
+!
+!        Added a call to ZZIDMAP to retrieve the default
+!        mapping list. "zzbodtrn.inc" no longer
+!        contains the default mapping list.
+!
+!-    SPICELIB Version 2.2.0  21-FEB-2003 (BVS)
+!
+!        Changed MER-A and MER-B to MER-1 and MER-2.
+!
+!-    SPICELIB Version 2.1.0  04-DEC-2002 (EDW)
+!
+!       Added new assignments to the default collection:
+!
+!       -226     ROSETTA
+!        517     CALLIRRHOE
+!        518     THEMISTO
+!        519     MAGACLITE
+!        520     TAYGETE
+!        521     CHALDENE
+!        522     HARPALYKE
+!        523     KALYKE
+!        524     IOCASTE
+!        525     ERINOME
+!        526     ISONOE
+!        527     PRAXIDIKE
+!
+!-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
+!
+!        Initial release.  This begins at Version 2.0.0 because
+!        the entry point ZZBODLST was cut out of ZZBODTRN and
+!        placed here at Version 1.0.0.
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
+!
+!        The entries following this one were copied from
+!        the version section of ZZBODTRN.  SPICELIB has
+!        been changed to ZZBODTRN for convenience in noting
+!        version information relevant for that module.
+!
+!        This was done to carry the history of body name-code
+!        additions with this new umbrella.
+!
+!        Added to the collection:
+!        -236   MESSENGER
+!
+!-    ZZBODTRN Version 3.2.0, 14-AUG-2002 (EDW)
+!
+!        Added the ZZBODKIK entry point.
+!
+!        Moved the NAIF_BODY_NAME/CODE to subroutine
+!        ZZBODKER. No change in logic.
+!
+!        Added logic to enforce the precedence masking;
+!        logic removes duplicate assignments of ZZBODDEF.
+!        Removed the NAMENOTUNIQUE error block.
+!
+!-    ZZBODTRN Version 3.1.5, 27-NOV-2001 (EDW)
+!
+!        Added to the collection:
+!        -200   CONTOUR
+!        -146   LUNAR-A
+!        -135   DRTS-W
+!
+!        Added the subroutine ZZBODLST as an entry point.
+!        The routine outputs the current name-ID mapping
+!        list to some output device.
+!
+!-    ZZBODTRN Version 3.1.0, 17-OCT-2001 (EDW)
+!
+!        To improve clarity, the BEGXX block initialization now
+!        exists in the include file zzbodtrn.inc.
+!
+!        Removed the comments concerning the 851, 852, ... temporary
+!        codes.
+!
+!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
+!        as a DATA statement.
+!
+!        Edited headers to match information in naif_ids required
+!        reading.
+!
+!        Edited headers, removed typos and bad grammar, clarified
+!        descriptions.
+!
+!        Added to the collection
+!        -41    MARS EXPRESS, MEX
+!        -44    BEAGLE 2, BEAGLE2
+!        -70    DEEP IMPACT IMPACTOR SPACECRAFT
+!        -94    MO, MARS OBSERVER
+!        -140   DEEP IMPACT FLYBY SPACECRAFT
+!        -172   SLCOMB, STARLIGHT COMBINER
+!        -205   SLCOLL, STARLIGHT COLLECTOR
+!        -253   MER-A
+!        -254   MER-B
+!
+!        Corrected typo, vehicle -188 should properly be MUSES-C,
+!        previous versions listed the name as MUSES-B.
+!
+!        Removed from collection
+!        -84    MARS SURVEYOR 01 LANDER
+!        -154   EOS-PM1
+!        -200   PLUTO EXPRESS 1, PEX1
+!        -202   PLUTO EXPRESS 2, PEX2
+!
+!-    ZZBODTRN Version 3.0.0, 29-MAR-2000 (WLT)
+!
+!        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
+!        ID coded for Pluto Express were removed.  The ID codes
+!        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
+!        and Contour were added.
+!
+!-    ZZBODTRN Version 2.0.0, 26-JAN-1998 (EDW)
+!
+!        The Galileo probe ID -228 replaces the incorrect ID -344.
+!        DSS stations 5 through 65 added to the collection.
+!
+!        Added to the collection
+!        -107   TROPICAL RAINFALL MEASURING MISSION, TRMM
+!        -154,  EOS-PM1
+!        -142   EOS-AM1
+!        -151   AXAF
+!        -1     GEOTAIL
+!        -13    POLAR
+!        -21    SOHO
+!        -8     WIND
+!        -25    LUNAR PROSPECTOR, LPM
+!        -116   MARS POLAR LANDER, MPL
+!        -127   MARS CLIMATE ORBITER, MCO
+!        -188   MUSES-C
+!        -97    TOPEX/POSEIDON
+!        -6     PIONEER-6, P6
+!        -7     PIONEER-7, P7
+!        -20    PIONEER-8, P8
+!        -23    PIONEER-10, P10
+!        -24    PIONEER-11, P11
+!        -178   NOZOMI, PLANET-B
+!        -79    SPACE INFRARED TELESCOPE FACILITY, SIRTF
+!        -29    STARDUST, SDU
+!        -47    GENESIS
+!        -48    HUBBLE SPACE TELESCOPE, HST
+!        -200   PLUTO EXPRESS 1, PEX1
+!        -202   PLUTO EXPRESS 2, PEX2
+!        -164   YOHKOH, SOLAR-A
+!        -165   MAP
+!        -166   IMAGE
+!        -53    MARS SURVEYOR 01 ORBITER
+!         618   PAN
+!         716   CALIBAN
+!         717   SYCORAX
+!        -30    DS-1 (low priority)
+!        -58    HALCA
+!        -150   HUYGEN PROBE, CASP
+!        -55    ULS
+!
+!        Modified ZZBODC2N and ZZBODN2C so the user may load an
+!        external IDs kernel to override or supplement the standard
+!        collection.  The kernel must be loaded prior a call to
+!        ZZBODC2N or ZZBODN2C.
+!
+!-    ZZBODTRN Version 1.1.0, 22-MAY-1996 (WLT)
+!
+!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp,
+!        Mars 96, Cassini Simulation, MGS Simulation.
+!
+!-    ZZBODTRN Version 1.0.0, 25-SEP-1995 (BVS)
+!
+!        Renamed umbrella subroutine and entry points to
+!        correspond private routine convention (ZZ...). Added IDs for
+!        tracking stations Goldstone (399001), Canberra (399002),
+!        Madrid (399003), Usuda (399004).
+!
+!-    ZZBODTRN Version 2.2.0, 01-AUG-1995 (HAN)
+!
+!        Added the IDs for Near Earth Asteroid Rendezvous (-93),
+!        Mars Pathfinder (-53), Ulysses (-55), VSOP (-58),
+!        Radioastron (-59), Cassini spacecraft (-82), and Cassini
+!        Huygens probe (-150).
+!        Mars Observer (-94) was replaced with Mars Global
+!        Surveyor (-94).
+!
+!-    ZZBODTRN Version 2.1.0, 15-MAR-1995 (KSZ) (HAN)
+!
+!        Two Shoemaker Levy 9 fragments were added, Q1 and P2
+!        (IDs 50000022 and 50000023). Two asteroids were added,
+!        Eros and Mathilde (IDs 2000433 and 2000253). The
+!        Saturnian satellite Pan (ID 618) was added.
+!
+!-    ZZBODTRN Version 2.0.0, 03-FEB-1995 (NJB)
+!
+!        The Galileo probe (ID -344) has been added to the permanent
+!        collection.
+!
+!-    ZZBODTRN Version 1.0.0, 29-APR-1994 (MJS)
+!
+!        SPICELIB symbol tables are no longer used. Instead, two order
+!        vectors are used to index the NAMES and CODES arrays. Also,
+!        this version does not support reading body name ID pairs from a
+!        file.
+!
+!-    ZZBODTRN Version 2.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    ZZBODTRN Version 2.0.0, 15-JUL-1991 (WLT)
+!
+!       The body id's for the Uranian satellites discovered by Voyager
+!       were modified to conform to those established by the IAU
+!       nomenclature committee.  In addition the id's for Gaspra and
+!       Ida were added.
+!
+!-    ZZBODTRN Version 1.0.0,  7-MAR-1991 (WLT)
+!
+!       Some items previously considered errors were removed
+!       and some minor modifications were made to improve the
+!       robustness of the routines.
+!
+!-    ZZBODTRN Version 1.0.0, 28-JUN-1990 (JEM)
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+
+
+!
+!     Local Parameters
+!
+
+!
+!     Local Variables
+!
+
+
+
+!
+!     Saved Variables
+!
+
+!
+!     Data Statements
+!
+
+!
+!     Standard SPICE error handling.
+
       module procedure zzbodget
 
 ! $ Abstract
@@ -5541,6 +6638,734 @@ contains
       return
       end associate
       end procedure zzbodlst
+
+!$Procedure ZZBODTRN ( Private --- Body name and code translation )
+!
+!     PEPPER: SPICELIB's umbrella routine ZZBODTRN is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_zzbodtrn. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     SPICE Private routine intended solely for the support of SPICE
+!     routines.  Users should not call this routine directly due
+!     to the volatile nature of this routine.
+!
+!     This is the umbrella routine that contains entry points to
+!     translate between body names and NAIF integer codes, and
+!     for definition of new name/code pairs.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!
+! $ Keywords
+!
+!     BODY
+!
+! $ Declarations
+
+
+
+
+! $ Detailed_Input
+!
+!     See the entry points for a discussion of their arguments.
+!
+! $ Detailed_Output
+!
+!     See the entry points for a discussion of their arguments.
+!
+! $ Parameters
+!
+!     These parameters are defined in zzbodtrn.inc:
+!
+!     MAXL        is the maximum length of a body name.
+!
+!     MAXP        is the maximum number of additional names that may
+!                 be added via the ZZBODDEF interface.
+!
+!     NPERM       is the count of the mapping assignments built into
+!                 SPICE.
+!
+!     MAXE        is the size of the lists and hashes storing combined
+!                 built-in and ZZBODDEF-defined name/ID mappings. To
+!                 ensure efficient hashing this size is the set to the
+!                 first prime number greater than ( MAXP + NPERM ).
+!
+!     NROOM       is the size of the lists and hashes storing the
+!                 POOL-defined name/ID mappings. To ensure efficient
+!                 hashing and to provide the ability to store nearly as
+!                 many names as can fit in the POOL, this size is
+!                 set to the first prime number less than MAXLIN
+!                 defined in the POOL umbrella routine.
+!
+!     This parameter is defined in zzctr.inc:
+!
+!     CTRSIZ     is the dimension of the counter array used by various
+!                SPICE subsystems to identify changes in their states.
+!
+! $ Exceptions
+!
+!     1) The error SPICE(BOGUSENTRY) is signaled if ZZBODTRN
+!        is called directly.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     ZZBODTRN should never be called, instead access the entry
+!     points:
+!
+!        ZZBODN2C      Body name to code
+!
+!        ZZBODC2N      Body code to name
+!
+!        ZZBODDEF      Body name/code definition
+!
+!        ZZBODKIK      Force an examination of the kernel pool
+!                      variables, subsequent processing and
+!                      the generation of any error messages
+!                      resultant from the processing.
+!
+!        ZZBODRST      Reset the mappings provided via the ZZBODDEF
+!                      interface.
+!
+!        ZZBCTRCK      Check and, if needed, update the caller's copy
+!                      of the ZZBODTRN state counter.
+!
+!     ZZBODN2C and ZZBODC2N perform translations between body names
+!     and their corresponding integer codes used in SPK and PCK files
+!     and associated routines.  A default set of name/code
+!     pairs are automatically defined during the first call to
+!     any of the entry points.  Additional name/code pairs may
+!     be defined via ZZBODDEF for two purposes:
+!
+!        1) to associate another, perhaps more familiar or
+!           abbreviated name with a previously defined body
+!           integer code
+!
+!        2) to define a new body integer code and name
+!
+!     Each body name maps to a unique integer code, but more than
+!     one name may map to a code.  Associating more than one
+!     integer code with a particular name creates ambiguity.
+!     Therefore the name-code mapping system establishes a
+!     clearly defined precedence structure that assures at any
+!     given instant only one code is assigned to a particular
+!     name.
+!
+!     Entries provided via the kernel pool variables are examined
+!     first to resolve name-code mappings.  The last listed entries
+!     in the kernel pool arrays NAIF_BODY_CODE and NAIF_BODY_NAME
+!     resolve any ambiguities that occur.  For example, consider
+!     the following text kernel excerpt:
+!
+!        \begindata
+!
+!           NAIF_BODY_NAME += 'NAME'
+!           NAIF_BODY_CODE += 1000
+!
+!           NAIF_BODY_NAME += 'NAME'
+!           NAIF_BODY_CODE += 1001
+!
+!        \begintext
+!
+!     If, after loading this kernel, the following calls are made:
+!
+!        CALL ZZBODN2C ( 'NAME', CODE,  NAMFND )
+!
+!        CALL ZZBODC2N ( 1000,   NAME0, FND000 )
+!        CALL ZZBODC2N ( 1001,   NAME1, FND001 )
+!
+!     The values of CODE, NAMFND, NAME0, FND000, NAME1, and FND001
+!     will be:
+!
+!        NAMFND = .TRUE.,  CODE  = 1001
+!        FND000 = .FALSE., NAME0 remains unchanged
+!        FND001 = .TRUE.,  NAME1 = 'NAME'
+!
+!     FND000 is .FALSE., because this name-code mapping is masked
+!     by the higher precedent 'NAME' <-> 1001 mapping.
+!
+!     If the name-code mapping is not resolved by the entries
+!     provided in the kernel pool, the values assigned via the
+!     ZZBODDEF interface are examined next.  As with the kernel
+!     pool, the last assignment made via the ZZBODDEF interface
+!     has the highest precedence.  Lastly, if the name-code
+!     mapping is not resolved by the contents of ZZBODDEF, the
+!     built-in mappings are examined.  In actuality, the built-in
+!     mappings represent an initial state of the ZZBODDEF listings.
+!     As changes are made to this listing, the original mappings
+!     are discarded.
+!
+!     For the case in which multiple names map to a single code, a
+!     ZZBODC2N call returns the name last assigned to that code - a
+!     LIFO situation.
+!
+! $ Examples
+!
+!     1) The following code fragment shows SPKEZ compute the state
+!        (position and velocity) of Jupiter as seen from the Galileo
+!        Orbiter.  It requires the NAIF integer codes of the target
+!        and observer, so we use ZZBODN2C to convert names to integer
+!        codes for those bodies.
+!
+!           CALL ZZBODN2C ( 'JUPITER',         TARGET, FOUND )
+!
+!           CALL ZZBODN2C ( 'GALILEO ORBITER', OBSRVR, FOUND )
+!
+!           CALL SPKEZ    ( TARGET, EPOCH, FRAME, ABCORR,
+!          .                OBSRVR, STATE, LT             )
+!
+!
+!     2) This example assumes ZZBODDEF has not been called.
+!        Thus, only the set of default name/code pairs has been
+!        defined.
+!
+!        Given these names, ZZBODN2C returns the following codes:
+!
+!           Name                         Code    Found?
+!           ------------------------   ------    ------
+!           'EARTH'                       399    Yes
+!           '  Earth '                    399    Yes
+!           'EMB'                           3    Yes
+!           'Solar System Barycenter'       0    Yes
+!           'SolarSystemBarycenter'         -    No
+!           'SSB'                           0    Yes
+!           'Voyager 2'                   -32    Yes
+!           'U.S.S. Enterprise'             -    No
+!           ' '                             -    No
+!           'Halley's Comet'                -    No
+!
+!        and, given these codes, ZZBODC2N returns the following
+!        names:
+!
+!           Code        Name                        Found?
+!           -------     -------------------         ------
+!           399         'EARTH'                     Yes
+!             0         'SOLAR SYSTEM BARYCENTER'   Yes
+!             3         'EARTH BARYCENTER'          Yes
+!           -77         'GALILEO ORBITER'           Yes
+!            11          -                          No
+!            -1         'GEOTAIL'                   Yes
+!
+!     3) This example shows the method to define a name/code pair.
+!        You may associate a new name with a previously defined
+!        code:
+!
+!           CALL ZZBODDEF ( 'JB', 5 )
+!
+!        You may also define the name and integer code for a new
+!        body:
+!
+!           CALL ZZBODDEF ( 'Asteroid Frank', 20103456 )
+!
+!        After these calls to ZZBODDEF, ZZBODN2C would return
+!        the following translations:
+!
+!           Name                         Code    Found?
+!           ------------------------   ------    ------
+!           'JB'                            5    Yes
+!           'Jupiter Barycenter'            5    Yes
+!           'ASTEROID FRANK'         20103456    Yes
+!           'ASTEROIDFRANK'                 -    No
+!           'Frank'                         -    No
+!
+!        and ZZBODC2N returns these translations:
+!
+!           Code        Name                     Found?
+!           -------     -------------------      ------
+!                  5    'JB'                     Yes
+!           20103456    'Asteroid Frank'         Yes
+!
+!        ZZBODC2N exactly returns the string as used in the
+!        body name/ID mapping definition.
+!
+!     4) To use an external IDs kernel, simply load via a FURNSH
+!        call.
+!
+!           CALL FURNSH ( 'ids.ker' )
+!
+!        With ids.ker listing data such as:
+!
+!           \begintext
+!
+!           Define an additional set of body, ID code mappings.
+!
+!           \begindata
+!
+!           NAIF_BODY_CODE  = ( 22, 23, 24, 25 )
+!
+!           NAIF_BODY_NAME  = ( 'LARRY', 'MOE', 'CURLEY', 'SHEMP' )
+!
+!        Which maps the names defined in NAIF_BODY_NAME
+!        to the corresponding index of NAIF_BODY_CODE, i.e.
+!        LARRY -> 22, MOE -> 23, etc, and the IDs in NAIF_BODY_CODE
+!        map to the corresponding index of NAIF_BODY_NAME.
+!
+!        NOTE:  When using an external NAME-ID kernel, all ID codes
+!        MUST be listed in the kernel variable NAIF_BODY_CODE, and
+!        all names MUST be listed in the kernel variable
+!        NAIF_BODY_NAME.
+!
+!     5) Suppose you ran the utility program SPACIT to summarize
+!        an SPK ephemeris file and the following data was output
+!        to the terminal screen.
+!
+!           ----------------------------------------------------------
+!           Segment identifier: JPL archive 21354
+!           Body        : -77                         Center     : 399
+!           From        : 1990 DEC 08 18:00:00.000
+!           To          : 1990 DEC 10 21:10:00.000
+!           Reference   : DE-200                      SPK Type    :1
+!           ----------------------------------------------------------
+!
+!        You could write a program to translate the body codes
+!        shown in the SPACIT output:
+!
+!           CALL ZZBODC2N ( -77, BODY,   FOUND )
+!           CALL ZZBODC2N ( 399, CENTER, FOUND )
+!
+!           IF ( FOUND ) THEN
+!
+!              WRITE ( *,* ) 'BODY:    -77 = ', BODY
+!              WRITE ( *,* ) 'CENTER:  399 = ', CENTER
+!
+!           END IF
+!
+!        You could also read the body and center codes directly from
+!        the SPK files, using the appropriate DAF routines, and then
+!        translate them, as above.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman   (JPL)
+!     J.E. McLean    (JPL)
+!     H.A. Neilan    (JPL)
+!     B.V. Semenov   (JPL)
+!     M.J. Spencer   (JPL)
+!     W.L. Taber     (JPL)
+!     F.S. Turner    (JPL)
+!     E.D. Wright    (JPL)
+!     K.S. Zukor     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!
+!        Changed to use name- and ID-based hashes instead of the order
+!        arrays (see inline comments next to hash declarations for
+!        descriptions of the hashes).
+!
+!        Changed to keep track of the POOL's and ZZBODTRN internal
+!        states using state counters.
+!
+!        Changed to call ZZCVPOOL to bypass watcher look-ups if the
+!        POOL counter did not change.
+!
+!        Added ZZBCTRCK routine to allow a caller to check the ZZBODTRN
+!        state counter against the caller's saved counter.
+!
+!        Changed umbrella calling sequence to include USRCTR and UPDATE
+!        arguments.
+!
+!-    SPICELIB Version 4.3.0, 05-MAR-2009 (NJB)
+!
+!        Bug fixes: the entry points ZZBODN2C, ZZBODC2N, and ZZBODKIK
+!        now keep track of whether their kernel pool look-ups
+!        succeeded. If not, a kernel pool lookup is attempted on the
+!        next call to any entry point that calls ZZBODKER.
+!
+!-    SPICELIB Version 4.0.2, 19-SEP-2006 (EDW)
+!
+!        Added text to previously empty Declarations section.
+!
+!-    SPICELIB Version 4.0.1, 17-APR-2003 (EDW)
+!
+!        Corrected typo in header docs.
+!
+!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!
+!        Cleaned up  ZZBODTRN routine/entry point source code
+!        and private subroutines used exclusively by ZZBODTRN
+!        to process name-code mappings.
+!
+!        ZZBODLST has been removed from this umbrella and
+!        added to the ZZBODBLT umbrella.
+!
+!        The built-in (permanent collection) of name-code
+!        mappings has been moved from this umbrella into
+!        the ZZBODBLT umbrella.  The collection is retrieved
+!        from the entry point ZZBODGET in ZZBODBLT.
+!
+!        See the Revisions section below for details.
+!
+!-    SPICELIB Version 3.2.0, 14-AUG-2002 (EDW)
+!
+!        Added the ZZBODKIK entry point.
+!
+!        Moved the NAIF_BODY_NAME/CODE to subroutine
+!        ZZBODKER. No change in logic.
+!
+!        Added logic to enforce the precedence masking;
+!        logic removes duplicate assignments of ZZBODDEF.
+!        Removed the NAMENOTUNIQUE error block.
+!
+!-    SPICELIB Version 3.1.5, 27-NOV-2001 (EDW)
+!
+!        Added to the collection:
+!        -200   CONTOUR
+!        -146   LUNAR-A
+!        -135   DRTS-W
+!
+!        Added the subroutine ZZBODLST as an entry point.
+!        The routine outputs the current name-ID mapping
+!        list to some output device.
+!
+!-    SPICELIB Version 3.1.0, 17-OCT-2001 (EDW)
+!
+!        To improve clarity, the BEGXX block initialization now
+!        exists in the include file zzbodtrn.inc.
+!
+!        Removed the comments concerning the 851, 852, ... temporary
+!        codes.
+!
+!        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
+!        as a DATA statement.
+!
+!        Edited headers to match information in naif_ids required
+!        reading.
+!
+!        Edited headers, removed typos and bad grammar, clarified
+!        descriptions.
+!
+!        Added to the collection
+!        -41    MARS EXPRESS, MEX
+!        -44    BEAGLE 2, BEAGLE2
+!        -70    DEEP IMPACT IMPACTOR SPACECRAFT
+!        -94    MO, MARS OBSERVER
+!        -140   DEEP IMPACT FLYBY SPACECRAFT
+!        -172   SLCOMB, STARLIGHT COMBINER
+!        -205   SLCOLL, STARLIGHT COLLECTOR
+!        -253   MER-A
+!        -254   MER-B
+!
+!        Corrected typo, vehicle -188 should properly be MUSES-C,
+!        previous versions listed the name as MUSES-B.
+!
+!        Removed from collection
+!        -84    MARS SURVEYOR 01 LANDER
+!        -154   EOS-PM1
+!        -200   PLUTO EXPRESS 1, PEX1
+!        -202   PLUTO EXPRESS 2, PEX2
+!
+!-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
+!
+!        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
+!        ID coded for Pluto Express were removed.  The ID codes
+!        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
+!        and Contour were added.
+!
+!-    SPICELIB Version 2.0.0, 26-JAN-1998 (EDW)
+!
+!        The Galileo probe ID -228 replaces the incorrect ID -344.
+!        DSS stations 5 through 65 added to the collection.
+!
+!        Added to the collection
+!        -107   TROPICAL RAINFALL MEASURING MISSION, TRMM
+!        -154,  EOS-PM1
+!        -142   EOS-AM1
+!        -151   AXAF
+!        -1     GEOTAIL
+!        -13    POLAR
+!        -21    SOHO
+!        -8     WIND
+!        -25    LUNAR PROSPECTOR, LPM
+!        -116   MARS POLAR LANDER, MPL
+!        -127   MARS CLIMATE ORBITER, MCO
+!        -188   MUSES-C
+!        -97    TOPEX/POSEIDON
+!        -6     PIONEER-6, P6
+!        -7     PIONEER-7, P7
+!        -20    PIONEER-8, P8
+!        -23    PIONEER-10, P10
+!        -24    PIONEER-11, P11
+!        -178   NOZOMI, PLANET-B
+!        -79    SPACE INFRARED TELESCOPE FACILITY, SIRTF
+!        -29    STARDUST, SDU
+!        -47    GENESIS
+!        -48    HUBBLE SPACE TELESCOPE, HST
+!        -200   PLUTO EXPRESS 1, PEX1
+!        -202   PLUTO EXPRESS 2, PEX2
+!        -164   YOHKOH, SOLAR-A
+!        -165   MAP
+!        -166   IMAGE
+!        -53    MARS SURVEYOR 01 ORBITER
+!         618   PAN
+!         716   CALIBAN
+!         717   SYCORAX
+!        -30    DS-1 (low priority)
+!        -58    HALCA
+!        -150   HUYGEN PROBE, CASP
+!        -55    ULS
+!
+!        Modified ZZBODC2N and ZZBODN2C so the user may load an
+!        external IDs kernel to override or supplement the standard
+!        collection.  The kernel must be loaded prior a call to
+!        ZZBODC2N or ZZBODN2C.
+!
+!-    SPICELIB Version 1.1.0, 22-MAY-1996 (WLT)
+!
+!        Added the id-code for Comet Hyakutake, Comet Hale-Bopp,
+!        Mars 96, Cassini Simulation, MGS Simulation.
+!
+!-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
+!
+!        Renamed umbrella subroutine and entry points to
+!        correspond private routine convention (ZZ...). Added IDs for
+!        tracking stations Goldstone (399001), Canberra (399002),
+!        Madrid (399003), Usuda (399004).
+!
+!-    Beta Version 2.2.0, 01-AUG-1995 (HAN)
+!
+!        Added the IDs for Near Earth Asteroid Rendezvous (-93),
+!        Mars Pathfinder (-53), Ulysses (-55), VSOP (-58),
+!        Radioastron (-59), Cassini spacecraft (-82), and Cassini
+!        Huygens probe (-150).
+!        Mars Observer (-94) was replaced with Mars Global
+!        Surveyor (-94).
+!
+!-    Beta Version 2.1.0, 15-MAR-1995 (KSZ) (HAN)
+!
+!        Two Shoemaker Levy 9 fragments were added, Q1 and P2
+!        (IDs 50000022 and 50000023). Two asteroids were added,
+!        Eros and Mathilde (IDs 2000433 and 2000253). The
+!        Saturnian satellite Pan (ID 618) was added.
+!
+!-    Beta Version 2.0.0, 03-FEB-1995 (NJB)
+!
+!        The Galileo probe (ID -344) has been added to the permanent
+!        collection.
+!
+!-    Beta Version 1.0.0, 29-APR-1994 (MJS)
+!
+!        SPICELIB symbol tables are no longer used. Instead, two order
+!        vectors are used to index the NAMES and CODES arrays. Also,
+!        this version does not support reading body name ID pairs from a
+!        file.
+!
+!-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
+!
+!       The body id's for the Uranian satellites discovered by Voyager
+!       were modified to conform to those established by the IAU
+!       nomenclature committee.  In addition the id's for Gaspra and
+!       Ida were added.
+!
+!-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
+!
+!       Some items previously considered errors were removed
+!       and some minor modifications were made to improve the
+!       robustness of the routines.
+!
+!-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!
+!        For clarity, some variable names have changed.  The
+!        mappings from the old names to the new are provided
+!        below:
+!
+!           Old      New     Function
+!           ---      ---     --------
+!           NAMES    DEFNAM  Name definition as provided with ZZBODDEF
+!           NORNAM   DEFNOR  Normalized name definitions
+!           CODES    DEFCOD  Integer codes mapping to entries in DEFNAM
+!           ORDCOD   DEFOCD  "Modified" order vector for DEFCOD
+!           ORDNOM   DEFONR  Order vector for DEFNOR
+!           NNAM     DEFSIZ  Size of DEFNAM, DEFNOR, DEFCOD, and DEFONR
+!           NCOD     DEFOSZ  Size of DEFOCD
+!
+!           CVALS    KERNAM  Name definition as provided from pool
+!           CVLNOM   KERNOM  Normalized name definitions
+!           IVALS    KERCOD  Integer codes mapping to entries in KERNAM
+!           XORDCD   KEROCD  "Modified" order vector for KERCOD
+!           XORNOM   KERONR  Order vector for KERNOR
+!           NUM(1)   DEFSIZ  Size of KERNAM, KERNOR, KERCOD, and KERONR
+!           NUM(2)   DEFOSZ  Size of KEROCD
+!
+!        The reason for changing the names in this fashion,
+!        is simply that these are two instances of variables
+!        that have the same properties and utility.  The first
+!        set implements the ZZBODDEF style mappings, and the
+!        second implements the kernel pool style mappings.
+!
+!        ZZBODDEF now properly signals an error when a caller
+!        attempts to use it to assign a blank string an ID code.
+!        This should have never been allowed, but somehow
+!        slipped by in previous versions.
+!
+!        The argument lists for ZZBODKER and ZZBODINI have
+!        changed as of previous versions.  Some arguments
+!        were removed, as they were no longer necessary.
+!
+!        ZZBODINI no longer normalizes the input name array;
+!        rather it simply computes the order vector for the
+!        normalized array input and the "modified" order
+!        vector for the input code array.  This was done to
+!        save from unnecessarily recomputing the normalization
+!        array.
+!
+!        An additional umbrella has been added to the set of
+!        modules of which ZZBODTRN makes use: ZZBODBLT.  This
+!        umbrella houses the data statements that used to be
+!        present in this module, which defines the "built-in"
+!        name-code mappings.  These mappings, as of the changes
+!        in N0053, store the mappings the define the initial
+!        state of the DEF* arrays.  It contains two entry
+!        points:
+!
+!           ZZBODGET    retrieve the initial values of DEFNAM,
+!                       DEFNOR, DEFCOD, and DEFSIZ.
+!
+!           ZZBODLST    dump the "built-in" codes to a device.
+!
+!        ZZBODLST used to be present in this umbrella, but the
+!        creation of ZZBODBLT made moving it there the logical
+!        choice.
+!
+!        The entry point ZZBODRST has been added to the
+!        ZZBODTRN umbrella.  This entry point resets the
+!        state of the DEF* arrays to their initial values.
+!        This effectively resets any changes made via the
+!        ZZBODDEF interface.  It does not effect the kernel
+!        pool mappings.
+!
+!        To support ZZBODRST, a logical BODCHG has been added
+!        to the list of saved variables.  This variable
+!        indicates when ZZBODDEF has been used to change the
+!        built-in body list.
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+
+!
+!     Local Parameters
+!
+
+!
+!     Length of watched POOL keywords.
+!
+
+!
+!     Lower bound of the built-in/BODDEF and kernel-defined hash
+!     collision list arrays.
+!
+
+
+!
+!     Local variables.
+!
+
+!
+!     DEFNAM, DEFNOR, and DEFCOD are the name, normalized name, and ID
+!     code lists storing built-in/BODDEF name-code mappings. DEFSIZ is
+!     the current size of the lists
+!
+
+!
+!     Name-based hash for built-in/BODDEF bodies. DNMLST, DNMPOL, and
+!     DNMNMS provide the index in DNMIDX which stores the index of the
+!     body name, normalized name, and ID in the arrays DEFNAM, DEFNOR,
+!     DEFCOD.
+!
+
+!
+!     ID-based hash for built-in/BODDEF bodies. DIDLST, DIDPOL, and
+!     DIDIDS provide the index in DIDIDX which stores the index of the
+!     body name, normalized name, and ID in the arrays DEFNAM, DEFNOR,
+!     DEFCOD.
+!
+
+!
+!     KERNAM, KERNOR, and KERCOD are the name, normalized name, and ID
+!     code lists storing kernel POOL name-code mappings. KERSIZ is the
+!     current size of the lists
+!
+
+!
+!     Name-based hash for kernel POOL bodies. KNMLST, KNMPOL, and
+!     KNMNMS provide the index in KNMIDX which stores the index of the
+!     body name, normalized name, and ID in the arrays KERNAM, KERNOR,
+!     KERCOD.
+!
+
+!
+!     ID-based hash for kernel POOL bodies. KIDLST, KIDPOL, and KIDIDS
+!     provide the index in KIDIDX which stores the index of the body
+!     name, normalized name, and ID in the arrays KERNAM, KERNOR,
+!     KERCOD.
+!
+
+!
+!     ZZBODTRN state counter and POOL state counter.
+!
+
+!
+!     Flag indicating whether the built-in list was altered by BODDEF
+!     calls.
+!
+
+!
+!     Flag indicating whether valid kernel POOL defined mappings
+!     are present in the KERNAM, KERNOR, and KERCOD lists.
+!
+
+!
+!     Flag indicating whether valid kernel POOL defined mappings
+!     were successfully fetched from the POOL.
+!
+
+!
+!     Other variables.
+!
+
+
+
+!
+!     Save all variables.
+!
+
+!
+!     Data statements.
+!
+
+!
+!     Standard SPICELIB error handling.
 
       module procedure zzbodn2c
 

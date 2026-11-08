@@ -2,6 +2,10 @@
 ! points). PEPPER has no traceback: these do nothing, and the traceback
 ! is always empty. They exist so that existing callers (such as the tspice
 ! tests) still link.
+!
+! SPICELIB's documentation of the traceback (TRCPKG and its entry points)
+! describes behavior that PEPPER does not have, so it is not repeated here;
+! see the NAIF toolkit (N0067) for it.
 
       !> Check in a module name (no-op: there is no traceback).
       subroutine chkin ( module )

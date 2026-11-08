@@ -282,6 +282,38 @@ class Umbrella:
         out += ["contains", ""] + bodies + [f"end module pepper_state_{self.name}", ""]
         return "\n".join(out)
 
+    def header_docs(self) -> list:
+        """The documentation of the umbrella routine itself (its NAIF header:
+        the comment lines from the start of the file to the end of its
+        specification part), without the Brief_I/O section (each entry
+        point has its own) and the code. For an umbrella whose routine only
+        signals BOGUSENTRY (so it is not a procedure any more), this is kept
+        as a comment block before the procedures of its entry points."""
+        end = self.stmts[self.body_start].first if self.body_start < len(self.stmts) else len(self.lines)
+        out, skip = [], False
+        for i, line in enumerate(self.lines[:end]):
+            s = line.lstrip()
+            if line.startswith("! $ "):
+                skip = line.startswith("! $ Brief_I/O")
+            if skip or not (s.startswith("!") or not s):
+                continue
+            if s.startswith("#"):
+                continue
+            out.append(line)
+        while out and not out[-1].strip("! \t"):
+            out.pop()
+        name = self.name.upper()
+        intro = [f"!     PEPPER: SPICELIB's umbrella routine {name} is not a procedure any more:",
+                 f"!     its entry points are the module procedures below, and its saved",
+                 f"!     variables are in pepper_state_{self.name}. Its documentation follows.",
+                 "!"]
+        if out and out[0].startswith("!$Procedure"):
+            return [out[0], "!"] + intro + out[1:]
+        return intro + out
+
+    def main_dropped(self) -> bool:
+        return not any(e.name == self.name for e in self.entries)
+
     def comment_of(self, name: str):
         """The comment just above the declaration of a variable in the
         source, if it is short text (not a diagram), as one line."""

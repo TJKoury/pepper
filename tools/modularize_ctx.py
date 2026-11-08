@@ -393,8 +393,17 @@ def generate(mod: str, dry_run: bool) -> list:
                      for e in parse_decl(s.text)[2]} | set(r.args):
             raise SystemExit(f"modularize_ctx: {r.name} already has a variable named ctx")
         check_calls(r, mod, ctx_where, stateless)
-    procs = [entry_procedure(r, ctx_where, stateless) if hasattr(r, "umbrella")
-             else module_procedure(r, ctx_where, stateless) for r in routines]
+    procs = []
+    for r in routines:
+        if hasattr(r, "umbrella"):
+            text = entry_procedure(r, ctx_where, stateless)
+            u = r.umbrella
+            if u.main_dropped() and r is u.entries[0]:
+                # The umbrella routine's own documentation, before its entries.
+                text = "\n".join(u.header_docs()) + "\n\n" + text
+            procs.append(text)
+        else:
+            procs.append(module_procedure(r, ctx_where, stateless))
     ext = ".F90" if any(p.suffix == ".F90" for p in sources) else ".f90"
     sub = SRC / f"{mod}{ext}"
     body = (f"!> {DOCS[mod]}\n!>\n"

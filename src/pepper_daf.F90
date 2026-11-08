@@ -5106,6 +5106,776 @@ contains
       end associate
       end procedure zzdafgsr
 
+!$Procedure DAFAH ( DAF, assign handles )
+!
+!     PEPPER: SPICELIB's umbrella routine DAFAH is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_dafah. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     Assign handles to DAFs as they are opened.
+!
+! $ Required_Reading
+!
+!     DAF
+!
+! $ Keywords
+!
+!     DAF
+!     FILES
+!
+! $ Declarations
+
+
+
+
+
+
+! $ Detailed_Input
+!
+!     FNAME    on input, is the name of a DAF to be opened, or
+!              the name of a DAF about which some information
+!              (handle, logical unit) is requested.
+!
+!     FTYPE    on input, is a code for the type of data that is
+!              contained in the DAF file. This code has no meaning or
+!              interpretation at the level of the DAF file
+!              architecture, but is provided as a convenience for
+!              higher level software. The maximum length for the file
+!              type is four (4) characters. If the input string is
+!              longer than four characters, the first nonblank
+!              character and its three, or fewer, immediate nonblank
+!              successors will be used as the file type. The file
+!              type may not contain nonprinting characters, and it IS
+!              case sensitive.
+!
+!              NAIF has reserved for its own use file types
+!              consisting of the upper case letters (A-Z) and the
+!              digits 0-9. NAIF recommends lower case or mixed case
+!              file types be used by all others in order to avoid
+!              any conflicts with NAIF file types.
+!
+!     ND       on input, is the number of double precision components
+!              in each array summary of a new file.
+!
+!     NI       on input, is the number of integer components in each
+!              array summary in a new file.
+!
+!     IFNAME   is the internal file name for a DAF to be created.
+!
+!     RESV     is the number of records to be reserved in a DAF
+!              to be created.
+!
+!     HANDLE   on input, is the handle of a DAF about which some
+!              information (file name, logical unit) is requested,
+!              or the handle of a DAF to be closed.
+!
+!     UNIT     on input, is the logical unit connected to a DAF
+!              about which some information (file name, handle) is
+!              requested.
+!
+!     ACCESS   is the type of access a DAF is open for, that is,
+!              either reading or writing. The values of ACCESS
+!              may be
+!
+!                 'READ'
+!                 'WRITE'
+!
+!              Leading and trailing blanks are ignored, and case
+!              is not significant.
+!
+! $ Detailed_Output
+!
+!     FNAME    on output, is the name of a DAF for which
+!              the corresponding handle or logical unit has been
+!              supplied.
+!
+!     ND       on output, is the number of double precision
+!              components in each array summary of an existing file.
+!
+!     NI       on output, is the number of integer components in
+!              each array summary in an existing file.
+!
+!     HANDLE   on output, is the handle of a DAF for which
+!              the corresponding file name or logical unit has been
+!              supplied.
+!
+!     UNIT     on output, is the logical unit connected to a DAF
+!              for which the corresponding file name or handle has
+!              been supplied.
+!
+!     FHSET    is a SPICE set containing the handles of the
+!              currently open DAFs.
+!
+! $ Parameters
+!
+!     RECL     is the record length of a DAF. Each record
+!              must be large enough to hold 128 double
+!              precision numbers or 1000 characters, whichever
+!              is greater. The units in which the record length
+!              must be specified vary from environment to
+!              environment. For example, VAX Fortran requires
+!              record lengths to be specified in longwords,
+!              where two longwords equal one double precision
+!              number. See the include file 'zzddhman.inc' for
+!              details.
+!
+!     FTSIZE   is the size of the file table maintained internally
+!              by DAFAH. In effect, FTSIZE is the maximum number
+!              of DAFs that the DAF routines allow to be open
+!              simultaneously. See the include file 'zzddhman.inc'
+!              for details.
+!
+!     FILEN    is the maximum filename length. See the include file
+!              'zzddhman.inc' for details.
+!
+!
+!     INTEOC   is the ASCII decimal integer code of the character
+!              recognized by SPICE as representing the end of the
+!              comment data in the reserved record area.
+!
+! $ Exceptions
+!
+!     1)  If DAFAH is called directly, the error SPICE(BOGUSENTRY)
+!         is signaled.
+!
+!     2)  See entry points DAFOPR, DAFOPW, DAFONW, DAFOPN, DAFCLS,
+!         DAFHSF, DAFHLU, DAFLUH, DAFHFN, DAFNFH, DAFHOF, and DAFSIH for
+!         exceptions specific to those entry points.
+!
+! $ Files
+!
+!     All DAFs opened by this routine are specified by name.
+!
+! $ Particulars
+!
+!     DAFAH serves as an umbrella, allowing data to be shared by its
+!     entry points:
+!
+!        DAFOPR         Open for read.
+!        DAFOPW         Open for write.
+!        DAFONW         Open new.
+!        DAFOPN         Open new. (Obsolete, use DAFONW )
+!
+!        DAFCLS         Close.
+!
+!        DAFHSF         Handle to summary format.
+!
+!        DAFHLU         Handle to logical unit.
+!        DAFLUH         Logical to handle.
+!
+!        DAFHFN         Handle to name.
+!        DAFFNH         File name to handle.
+!
+!        DAFHOF         Handles of open files.
+!        DAFSIH         Signal invalid handles.
+!
+!     Before a DAF can be used, it must be opened. Entry points
+!     DAFOPR and DAFOPW provide the only means for opening an
+!     existing DAF.
+!
+!     Several files may be opened for use simultaneously. (This makes
+!     it convenient to combine data from several files to produce a
+!     single result.) As each DAF is opened, it is assigned a file
+!     handle, which is used to keep track of the file internally, and
+!     which is used by the calling program to refer to the file in all
+!     subsequent calls to DAF routines.
+!
+!     DAFs may be opened for two kinds of access: read, and write.
+!     Files opened for read access may not be changed in any way. Files
+!     opened for write access may be both read and written.
+!
+!     DAFONW is used to open a new DAF file. This routine extends the
+!     functionality of DAFOPN by providing a mechanism for associating a
+!     type with the data in the DAF file. The use of this entry over
+!     DAFOPN is highly recommended.
+!
+!     Since the only reason for creating a new file is to write
+!     something in it, all new files are opened for write access.
+!
+!     Entry point DAFOPN, for opening a new DAF file, has been rendered
+!     obsolete by the new entry point DAFONW. The entry point DAFOPN
+!     will continue to be supported for purposes of backward
+!     compatibility, but its use in new software development is
+!     discouraged.
+!
+!     Entry point DAFCLS provides the only official means of closing
+!     a DAF that is currently open. Closing a DAF any other way (for
+!     example, by determining its logical unit and using the Fortran
+!     CLOSE statement directly) may affect your calling program in
+!     mysterious ways.
+!
+!     Entry point DAFHSF allows you to determine the summary format
+!     of any DAF that is currently open, without calling DAFRFR to
+!     re-read the file record.
+!
+!     Entry point DAFHOF allows you to determine which DAFs are open
+!     at any time. In particular, you can use DAFHOF to determine
+!     whether any file handle points to an open DAF.
+!
+!     Entry point DAFSIH signals errors when it is supplied with invalid
+!     handles, so it serves to centralize error handling associated
+!     with invalid handles.
+!
+!     The remaining entry points exist mainly to translate between
+!     alternative representations of DAFs. There are three ways to
+!     identify any open DAF: by name, by handle, and by logical
+!     unit. Given any one of these, you may use these entry points to
+!     find the other two.
+!
+! $ Examples
+!
+!     See entry points DAFOPR, DAFOPW, DAFONW, DAFOPN, DAFCLS, DAFHSF,
+!     DAFHLU, DAFLUH, DAFHFN, DAFNFH, DAFHOF, and DAFSIH for examples
+!     specific to those entry points.
+!
+! $ Restrictions
+!
+!     1)  The value of parameter RECL may need to be changed when DAFAH
+!         and its entry points are ported to a new environment (CPU and
+!         compiler).
+!
+!     2)  An integer overflow may occur if the number of files opened
+!         by a single program exceeds the maximum number that can be
+!         stored in an integer variable.
+!
+! $ Literature_References
+!
+!     [1]  "Sun FORTRAN Programmer's Guide", Sun Microsystems, Rev. A, 6
+!          May 1988.
+!
+!     [2]  "Microsoft Fortran Optimizing Compiler User's Guide",
+!          Microsoft Corporation, 1987.
+!
+!     [3]  "Lahey F77L EM/32 Programmers Reference Manual", version 4.0,
+!          p 144.
+!
+!     [4]  "Language Systems FORTRAN Reference Manual", Language Systems
+!          Corporation, p 12-7.
+!
+!     [5]  "FORTRAN/9000 Reference HP 9000 Series 700 Computers", 1st
+!          Edition, June 1991, Hewlett Packard Company, page 5-110.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     J.E. McLean        (JPL)
+!     H.A. Neilan        (JPL)
+!     M.J. Spencer       (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!     I.M. Underwood     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 9.0.2, 25-NOV-2021 (JDR)
+!
+!        Edited the header of DAFAH umbrella routine and all its entry
+!        points to comply with NAIF standard.
+!
+!        Added DAFOPR, DAFOPW, DAFCLS and DAFHSF header examples.
+!
+!        Corrected spelling mistakes.
+!
+!-    SPICELIB Version 9.0.1, 10-OCT-2012 (EDW)
+!
+!        Edited DAFOPN $Abstract section to use "Deprecated" keyword
+!        and state replacement routine.
+!
+!        Corrected ordering of all header sections.
+!
+!        Added a functional code example to the $Examples section
+!        in DAFOPN and DAFCLS.
+!
+!        Removed the obsolete Reference citation to "NAIF
+!        Document 167.0."
+!
+!-    SPICELIB Version 9.0.0, 09-NOV-2006 (NJB)
+!
+!        Updated the entry point DAFONW so that a non-empty reserved
+!        record area will also be a valid empty comment area.  DAFONW
+!        now writes a EOC character to the first byte of the second
+!        record when the input number of reserved records NRESV is
+!        greater than zero.
+!
+!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+!
+!        Updated the following entry points in response to changes
+!        to the handle manager interfaces:
+!
+!           DAFCLS
+!           DAFOPR
+!           DAFOPW
+!           DAFONW
+!           DAFOPN
+!
+!        See the $Revisions section for details.
+!
+!        Minor bug fix to DAFFNH. An error was signaled but the
+!        intended call to CHKOUT and RETURN statement were omitted.
+!
+!-    SPICELIB Version 8.0.0, 14-NOV-2000 (FST)
+!
+!        Cleaned up entry point headers by removing duplicate
+!        entries from the $Revisions section where appropriate.
+!
+!        Integrated the new handle manager code into this module.
+!        The number of DAFs the system can load is now 1000,
+!        and some supported environments can read non-native
+!        binary DAFs. See the Convert User's Guide for details.
+!
+!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+!
+!        The environment lines were expanded so that the supported
+!        environments are now explicitly given. New
+!        environments are WIN-NT
+!
+!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+!
+!        CSPICE environments were added. Some typos were corrected.
+!
+!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+!
+!        The environment lines were expanded so that the supported
+!        environments are now explicitly given. New
+!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+!
+!-    SPICELIB Version 7.0.1, 22-MAR-1999 (WLT)
+!
+!        The environment lines were expanded so that the supported
+!        environments are now explicitly given. Previously,
+!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+!        by the environment label SUN.
+!
+!-    SPICELIB Version 7.0.0, 22-MAR-1999 (FST)
+!
+!        To accommodate the DAF FTP validation check, the following
+!        entry points were modified:
+!
+!           DAFOPR, DAFOPW, DAFONW, DAFOPN.
+!
+!        See their headers and code for the details of the changes.
+!
+!-    SPICELIB Version 6.0.0, 05-APR-1998 (NJB)
+!
+!        Added references to the PC-LINUX environment.
+!
+!-    SPICELIB Version 5.1.0, 08-MAR-1996 (KRG)
+!
+!        The Following entry points have been modified: DAFONW and
+!        DAFOPN.
+!
+!        The modifications support the notion of a DAF comment area,
+!        and involve writing NULL filled reserved records when the
+!        number of reserved records is greater than zero (0).
+!
+!        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
+!        were expanded to be independent IF...THEN...END IF tests.
+!        The tests were for IOSTAT errors on cascading write statements
+!        nested in the IF...ELSE IF... statements, and this was
+!        confusing. These tests were restructured so that IOSTAT is
+!        tested after each write statement which is equivalent to the
+!        original intent and easier to read.
+!
+!-    SPICELIB Version 5.0.0, 27-SEP-1993 (KRG)
+!
+!        The following entry points have had code modifications:
+!        DAFOPR, DAFOPW and DAFOPN.
+!
+!        A new entry point has been added: DAFONW.
+!
+!        The modifications are to allow a type to be associated with a
+!        DAF file.
+!
+!        A new parameter has been added to this subroutine's parameter
+!        list, FTYPE, so that type information may be passed to the
+!        entry point DAFONW. Two new variables were added to the
+!        routine as well, TARCH and TTYPE, which provide temporary
+!        storage for the file architecture and type.
+!
+!        Several new parameters have been added to the declarations for
+!        this routine:
+!
+!           ARCLEN   The length of a file architecture.
+!
+!           MAXPC    The maximum decimal value for the range of
+!                    printable characters.
+!
+!           MINPC    The minimum decimal value for the range of
+!                    printable characters.
+!
+!           TYPLEN   The length of a file type.
+!
+!        See the individual entry points for detailed descriptions of
+!        their modifications.
+!
+!        Removed the variables MINHAN and NIL, as they were not used in
+!        any of the entry points, yet they had values assigned to them
+!        through DATA statements.
+!
+!        Made all occurrences of error message formatting of filenames
+!        consistent. All filenames will be single quoted in the output
+!        error message.
+!
+!-    SPICELIB Version 4.0.0, 25-FEB-1993 (JML)
+!
+!        In the entry points DAFOPR, DAFOPW, and DAFFNH, the INQUIRE
+!        statement that checks if the file is already open now also
+!        checks that the file exists.
+!
+!        IOSTAT is now checked after all INQUIRE statements.
+!
+!        A new variable LUN is used in DAFOPR, DAFOPW, and DAFOPN
+!        for the logical unit number returned by GETLUN.
+!
+!        The IF-THEN statements in DAFOPR and DAFOPW were reorganized
+!        to make the routines more readable.
+!
+!        In DAFOPR and DAFOPW, a long error message was added for the
+!        case when the NAIF/DAF id word was not recognized. Also, the
+!        file is closed when this error is signaled.
+!
+!        In DAFOPR and DAFOPW, IOSTAT is now checked after the file
+!        record is read.
+!
+!        In DAFOPR, DAFOPW, DAFOPN, and DAFFNH, the file name is
+!        checked to see if it is blank.
+!
+!        In DAFOPR, DAFOPW, DAFOPN, and DAFFNH, the file name passed
+!        to the FORTRAN OPEN and INQUIRE statements has been chopped
+!        at the last non-blank character.
+!
+!        A minor error in the $Particulars section of the header of
+!        DAFCLS was corrected. It formerly stated that a file could be
+!        open more than once for read or write access instead of just
+!        read access.
+!
+!-    SPICELIB Version 3.2.0, 06-OCT-1992 (HAN)
+!
+!        Module was updated to include the record length and source
+!        for the Hewlett Packard UX 9000/750 environment. Moved FILEN
+!        to the $Declarations section, and corrected $Revisions section
+!        to include the last code change description, 3.1.0.
+!
+!-    SPICELIB Version 3.1.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 3.1.0, 13-NOV-1991 (MJS)
+!
+!        Module was updated to operate in the Lahey F77 EM/32
+!        PC environment.
+!
+!-    SPICELIB Version 3.0.0, 03-SEP-1991 (NJB) (WLT)
+!
+!        DAFAH and its entry points were modified to permit multiple
+!        DAFs to be open for writing at the same time. Also, the
+!        entry points DAFHOF and DAFSIH were added.
+!
+!-    SPICELIB Version 2.0.0, 25-MAR-1991 (JEM) (MJS)
+!
+!        The variable MINHAN was initialized to zero and the variable
+!        NEXT was saved. DAFOPW now accepts the ID word 'NAIF/NIP'
+!        as well 'NAIF/DAF'. Spelling mistakes were corrected.
+!
+!-    SPICELIB Version 1.1.0, 05-NOV-1990 (HAN)
+!
+!        The parameter FTSIZE was increased from 4 to 20.
+!
+!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!
+!        Literature references added to the header.
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     assign DAF handles
+!
+!-&
+
+
+! $ Revisions
+!
+!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+!
+!        The entry point ZZDDHCLS in the handle manager (ZZDDHMAN)
+!        had its argument list augmented to allow files to be
+!        deleted on close. This allows the removal of a series
+!        of "raw" CLOSE statements in a few of the entry points
+!        of this routine.
+!
+!-    SPICELIB Version 8.0.0, 14-NOV-2000 (FST)
+!
+!        The DAF system now utilizes the handle manager umbrella
+!        (ZZDDHMAN) and its entry points to provide most of the
+!        handle and logical unit based operations that DAFAH
+!        previously managed.
+!
+!        FTSIZE Files with UTSIZE Units:
+!
+!        In previous versions of the DAF system all files opened
+!        through the DAFAH entry points were connected to logical
+!        units. In contrast, the handle manager umbrella entry
+!        points allow FTSIZE files to be loaded (opened), while
+!        only utilizing UTSIZE (less than FTSIZE, see the include
+!        file 'zzddhman.inc') logical units.  The entry points in
+!        the handle manager automatically connect and disconnect
+!        loaded files from their logical units as new files are
+!        loaded and accessed.
+!
+!        Previously, one could buffer a logical unit associated
+!        with a particular handle and access the file directly
+!        with Fortran I/O statements.  To preserve this capability
+!        invoking DAFHLU locks a handle to its assigned logical
+!        unit, until that lock is removed (see ZZDDHUNL, an entry
+!        point in ZZDDHMAN) or the file is closed.  See the
+!        $Revisions section in the DAFHLU entry point for details.
+!
+!        Another consequence of the utilization of the handle
+!        manager code is that the process of connecting a file
+!        name to a HANDLE may require performing up to FTSIZE
+!        INQUIRE statements.  This is necessary to insure that
+!        different names referring to the same file return the
+!        same handle.  This was the case previously with the DAF
+!        system since an INQUIRE on a different, but equivalent,
+!        file name would produce the same logical unit.
+!
+!        FTP Error Detection:
+!
+!        The FTP error detection software is now integrated into
+!        the handle manager umbrella entry points, and as such
+!        is no longer present in DAFAH.
+!
+!        Non-Native Files:
+!
+!        In addition to expanding the number of loaded files the
+!        DAF system supports, the handle manager also detects and
+!        tracks binary file formats.  This allows a layer of
+!        private code that has been inserted between DAF routines
+!        and the Fortran I/O statements to provide translation
+!        services for DAF.  Some environments are now endowed with
+!        the ability to read files created with certain non-native
+!        binary file formats.  See the Convert User's Guide for
+!        details.
+!
+!-    SPICELIB Version 7.0.0, 22-MAR-1999 (FST)
+!
+!        Binary File Format Identification:
+!
+!        The file record now contains an 8 character string that
+!        identifies the binary file format utilized by DAFs.
+!        The purpose of this string's inclusion in the file record
+!        is preparatory in nature, to accelerate the migration to
+!        files that support the runtime translation update that
+!        is scheduled.
+!
+!        FTP Validation:
+!
+!        The DAF system now employs a validation scheme to assist
+!        users in detecting DAFs potentially corrupted via ASCII mode
+!        FTP transfers.  A string that contains sequences of
+!        characters commonly corrupted by improper FTP transfers is
+!        inserted into the unused portion of the file record. When any
+!        DAFAH entry point attempts to open a file, this string is
+!        located and examined.  If the string indicates the file is
+!        corrupted, the entry point signals an error.
+!
+!           Detection Scheme Implementation:
+!
+!           When a new DAF is created, the entry points DAFONW and
+!           DAFOPN(obsolete) retrieve the FTP validation string from
+!           the defining routine (ZZFTPSTR) and insert it into the
+!           tail of the file record.  A diagram illustrating the new
+!           file record for 32-bit environments with single byte
+!           characters follows:
+!
+!              +=============+
+!              | File Record |
+!              |    Data     |
+!              +=============+
+!                     |
+!               +=====|===+==========================+===+========+
+!               |     |   |    603 bytes of nulls    | | | nulls  |
+!               +=========+==========================+=|=+========+
+!           Byte 1                                     |         1024
+!                                                 +============+
+!                                                 | FTP        |
+!                                                 | Validation |
+!                                                 | String     |
+!                                                 +============+
+!
+!           As can be seen above, the file record is now null padded,
+!           which was not the case previously.
+!
+!           When an existing DAF is opened, the entry points DAFOPR
+!           and DAFOPW attempt to verify that the validation string is
+!           intact.  This is accomplished by reading the file
+!           record into a character string, and then passing the last
+!           half of this string into the validation subroutine
+!           ZZFTPCHK.  Only sending the latter half of the file record
+!           into ZZFTPCHK is done to prevent other portions of the file
+!           record from confusing the validation process.  The following
+!           three abnormal situations may arise during validation:
+!
+!              (1) Older DAFs without the FTP validation string are
+!                  not validated.  As far as the DAF open routines
+!                  are concerned such files are valid by default. The
+!                  only notable exception is that the garbage that
+!                  resides in the unused portion of the file record may
+!                  confuse ZZFTPCHK into thinking the validation
+!                  string is present.  (The probability of this event
+!                  is minimal and noted only for completeness.)
+!
+!              (2) Files with an older version of the validation
+!                  string are examined for errors supported by the
+!                  contemporaneous version of the Toolkit.
+!
+!              (3) Files with a newer version of the validation
+!                  string are examined for errors supported by the
+!                  current version of the Toolkit.
+!
+!           Updates to the FTP Validation String:
+!
+!           In the event that it becomes necessary to add additional
+!           test characters to the validation string, refer to
+!           ZZFTPSTR for the proper procedure.  The instructions
+!           provided there ensure that the above behavior is properly
+!           adhered to by the modifications.
+!
+!           FTP Validation Issues in Code Portability:
+!
+!           The scheme as currently implemented will function
+!           properly in any computing environment whose character data
+!           conforms to the single byte ASCII standards with a word
+!           size that is between 32 and 64 bits inclusive.  Refer to
+!           the above diagram that displays the new DAF file record
+!           and the following discussion for details.
+!
+!           Since the DAF file record block contains integer data,
+!           it may expand if the word size increases above the
+!           currently supported 32 bits.  However, the FTP validation
+!           string is extracted by reading in 1000 bytes of character
+!           data and examining bytes 500-1000. (See the parameters
+!           FTPBLK and FTPSTR if you need to alter these numbers).
+!           So as long as the alteration in word size does not cause
+!           the FTP string information to shift out of bytes 500-1000
+!           in the file record, the existing code will function
+!           properly.
+!
+!-    SPICELIB Version 3.2.0, 6-OCT-1992 (HAN)
+!
+!        The code was also reformatted so that a utility program can
+!        create the source file for a specific environment given a
+!        master source file.
+!
+!-    SPICELIB Version 3.0.0, 03-SEP-1991 (NJB) (WLT)
+!
+!        DAFAH and the entry point DAFOPW were modified to permit
+!        multiple DAFs to be open for writing at the same time.
+!        Also, the entry points DAFHOF and DAFSIH were added.  DAFHOF
+!        returns a set containing the handles of currently open DAFs.
+!        To accommodate the addition of DAFHOF, the argument FHSET
+!        was added to DAFAH's argument list, and local declarations
+!        for DAFHOF were added to DAFAH's declaration section.  DAFSIH
+!        signals an error if the file indicated by the handle is not
+!        open for the specified type of access.
+!
+!-    SPICELIB Version 2.0.0, 25-MAR-1991 (JEM) (MJS)
+!
+!        The entry point DAFOPW accepted only 'NAIF/DAF' as a valid
+!        ID word. It now accepts 'NAIF/NIP' as well for
+!        backwards compatibility. The entry point DAFOPR did not need
+!        this fix because it already accepts both ID words.
+!
+!-    SPICELIB Version 1.1.0,  5-NOV-1990 (HAN)
+!
+!        The parameter FTSIZE was increased from 4 to 20. The number
+!        4 was chosen for testing purposes and was not removed.
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+
+
+
+
+
+
+
+
+
+
+
+
+
+!
+!     Local variables
+!
+
+!
+!     As each file is opened, it is assigned a handle, and the
+!     internal file name is stored for comparison with other files.
+!     All names in the file table begin with FT.
+!
+!        HAN      Handle
+!        LNK      Number of links
+!        ND,
+!        NI       Summary format
+!
+!     The columns are stored in no particular order. New files are
+!     added to the end of the list; the list is repacked whenever a
+!     file is removed from the list.
+!
+!     NFT is the number of files currently opened: this may not be
+!     greater than FTSIZE. FINDEX refers to a file of interest within
+!     the table.
+!
+!     NEXT is incremented each time a file is opened to become the
+!     next file handle assigned.
+!
+
+!
+!     Other local variables
+!
+
+
+
+
+!
+!     Saved variables
+!
+
+!
+!     Save everything between calls.
+!
+
+!
+!     Initial values
+!
+
+!
+!     Standard SPICE error handling.
+
       module procedure dafopr
 
 ! $ Abstract
@@ -10571,6 +11341,311 @@ contains
 
       return
       end procedure dafus
+
+!$Procedure DAFRWD ( DAF, read, write double precision )
+!
+!     PEPPER: SPICELIB's umbrella routine DAFRWD is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_dafrwd. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     Read, write, and rewrite double precision records to and
+!     from DAFs.
+!
+! $ Required_Reading
+!
+!     DAF
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle associated with a DAF.
+!
+!     RECNO    is the record number of a double precision record
+!              within a DAF to be read or written.
+!
+!     BEGIN    is the first in word in a double precision record
+!              to be read.
+!
+!     END      is the last in word in a double precision record
+!              to be read.
+!
+!     DREC     contains a single double precision record, to be
+!              written to the specified DAF.
+!
+! $ Detailed_Output
+!
+!     DATA     contains a portion of a single double precision
+!              record, read from the specified DAF.
+!
+!     FOUND    is .TRUE. when the specified record is found, and is
+!              .FALSE. otherwise.
+!
+!     READS,
+!     REQS     are the number of physical reads and the number
+!              of requests processed by DAFRDR during the current
+!              execution of the calling program.
+!
+! $ Parameters
+!
+!     RBSIZE   is the size of the record buffer maintained by
+!              DAFRWD. In effect, RBSIZE is the maximum number
+!              of records that can be stored (buffered) at any
+!              one time. Higher values of RBSIZE reduce the
+!              amount of time spent reading from disk at the
+!              cost of increasing the amount of space required
+!              by the calling program. The optimal value of
+!              RBSIZE may differ from environment to environment,
+!              and may even vary from application to application.
+!
+! $ Exceptions
+!
+!     1)  If DAFRWD is called directly, the error SPICE(BOGUSENTRY)
+!         is signaled.
+!
+!     2)  See entry points DAFGDR, DAFGSR, DAFRDR, DAFWDR, and DAFNRR
+!         for exceptions specific to those entry points.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     DAFRWD serves as an umbrella, allowing data to be shared by its
+!     entry points:
+!
+!        DAFGDR         Read double precision record.
+!
+!        DAFGSR         Read summary/descriptor record.
+!
+!        DAFRDR         Read double precision record. (Obsolete, use
+!                       DAFGDR)
+!
+!        DAFWDR         Write double precision record.
+!
+!        DAFNRR         Number of reads, requests.
+!
+!     DAFGDR, DAFGSR, and DAFWDR are the only approved means for
+!     reading and writing double precision records to and from DAFs.
+!     DAFRDR continues to function, but only on files of the native
+!     binary format. They keep track of which records have been read
+!     most recently, and of which records have been requested most
+!     often, in order to minimize the amount of time spent actually
+!     reading from external storage.
+!
+!     DAFNRR may be used at any time during the execution of a
+!     program to determine the number of requests that have been
+!     processed, and the number of actual read operations needed
+!     to fulfill those requests. Ideally, the ratio of reads to
+!     requests should approach zero. In the worst case, the ratio
+!     approaches one. The ratio is related to the size of the
+!     record buffer, which controlled by parameter RBSIZE. The
+!     results returned by DAFNRR may be used to determine the
+!     optimal value of RBSIZE empirically.
+!
+!     All data records in a DAF can be treated as an undifferentiated
+!     collection of double precision numbers. Summary records must
+!     be read using the DAFGSR interface, but their contents are
+!     properly buffered in a single buffer with the data records.
+!     No special buffers are required for each new data type, or to
+!     keep summary records separate from data records.
+!
+! $ Examples
+!
+!     See entry points DAFGDR, DAFGSR, DAFRDR, DAFWDR, and DAFNRR
+!     for examples specific to those entry points.
+!
+! $ Restrictions
+!
+!     1)  An integer overflow may occur if the number of requests
+!         by a single program exceeds the maximum number that can
+!         be stored in an integer variable.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     H.A. Neilan        (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!     I.M. Underwood     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 12-AUG-2021 (NJB) (JDR)
+!
+!        Bug fixes: now NREAD is not incremented once it reaches
+!        INTMAX(), if it does.
+!
+!        Re-ordered header sections in all entry points. Corrected
+!        typos in comments.
+!
+!        Edited the header of the DAFRWD umbrella routine and all its
+!        entry entry points to comply with NAIF standard.
+!
+!        Removed DAF required reading from $Literature_References.
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Added DAFGDR and DAFGSR entry points to allow read access
+!        to DAFs utilizing non-native, but supported, binary file
+!        formats.
+!
+!        DAFRDR was phased into obsolescence.
+!
+!        The umbrella no longer suffers from integer overflow if
+!        a sufficient number of successful read requests are made.
+!
+!        DAFWDR no longer uses DAFHLU to retrieve a logical unit
+!        for HANDLE. This call has been replaced with the handle
+!        manager interface, which does not lock handles to their
+!        logical units.
+!
+!-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
+!
+!        The loop in DAFRDR that moved buffered d.p.s into the output
+!        array DATA was modified to use the routine MOVED.
+!
+!-    SPICELIB Version 1.2.0, 01-AUG-1997 (NJB)
+!
+!        Unnecessary CHKIN and CHKOUT calls were removed from entry
+!        point DAFRDR.
+!
+!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+!
+!        1) In DAFRDR, the found flag is now set to false if the
+!           call to DAFHLU fails.
+!
+!        2) In the example code fragment in DAFRDR and DAFWDR, the
+!           calling sequence to MOVED was corrected.
+!
+!        3) In DAFRDR a variable name was changed.
+!
+!        4) In DAFNRR a cut and paste error in the header was fixed.
+!
+!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!
+!        Literature references added to the header.
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     read write d.p. DAF
+!
+!-&
+
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Updated this umbrella and its entry points in preparation
+!        for DAF's utilization of the handle manager. DAFRDR is
+!        obsolete, and will now signal errors when used to read
+!        records from DAFs using non-native, binary file formats.
+!
+!        Two new entry points were added: DAFGDR and DAFGDR. These
+!        are the translation-aware 'get data record' and 'get
+!        summary record' routines that all new software developed
+!        should utilize.
+!
+!-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
+!
+!        The loop in DAFRDR that moved buffered d.p.s into the output
+!        array DATA was modified to use the routine MOVED.
+!
+!-    SPICELIB Version 1.2.0, 01-AUG-1997 (NJB)
+!
+!        Unnecessary CHKIN and CHKOUT calls were removed from entry
+!        point DAFRDR.
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local variables
+!
+
+
+
+
+
+
+!
+!     Saved variables
+!
+
+
+!
+!     Initial values
+!
+
+
+
+!
+!     As double precision records are processed, they are stored in a
+!     record buffer. (File and character records are not buffered.)
+!     The user controls the number of records that may be stored at
+!     any one time by setting the value of the parameter RBSIZE before
+!     compiling the routine.
+!
+!     The record buffer contains one entry for each record that has
+!     been read.
+!
+!        +----------+----------+----------+----------+
+!        | File       Record     Request    Contents |
+!        | Handle     Number     Number              |
+!        +----------+----------+----------+----------+
+!        | INT        INT        INT        DP(128)  |
+!        +----------+----------+----------+----------+
+!
+!     The request number is a counter that is incremented every time
+!     a record is requested. When all the slots in the record buffer are
+!     full, the least recently requested record (the one with the lowest
+!     request number) is replaced by the new record.
+!
+!     In addition, a separate counter is used to keep track of the
+!     number of actual file reads performed. It is possible to tune
+!     the entire package by checking the read/request ratio for
+!     any specific buffer configuration.
+!
+!     Note also that whenever a write operation fails, the affected
+!     buffers (if any) should NOT be updated.
+!
+
+!
+!     Standard SPICE error handling.
 
       module procedure dafgdr
 
@@ -18265,6 +19340,878 @@ contains
       end associate
       end procedure dafec
 
+!$Procedure DAFANA ( DAF, add new array )
+!
+!     PEPPER: SPICELIB's umbrella routine DAFANA is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_dafana. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     Add a new array to an existing DAF.
+!
+! $ Required_Reading
+!
+!     DAF
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+
+
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of a DAF opened for write access
+!              by a previous call to DAFOPW or DAFOPN.
+!
+!     SUM      is the summary for the array being added.
+!
+!     NAME     is the name of the array being added.
+!
+!     DATA     contains all or part of the data in the array.
+!
+!     N        is the number of elements in DATA.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     TBSIZE   is the size of the file table maintained internally
+!              by DAFANA,  TBSIZE is the maximum number of DAFs
+!              that can be in use simultaneously by this routine.
+!
+! $ Exceptions
+!
+!     1)  If DAFANA is called directly, the error SPICE(BOGUSENTRY)
+!         is signaled.
+!
+!     2)  See entry points DAFBNA, DAFADA, DAFENA, and DAFCAD
+!         for exceptions specific to those entry points.
+!
+! $ Files
+!
+!     See argument HANDLE, above.
+!
+! $ Particulars
+!
+!     DAFANA serves as an umbrella, allowing data to be shared by its
+!     entry points:
+!
+!        DAFBNA         Begin new array.
+!        DAFADA         Add data to array.
+!        DAFCAD         Continue adding data.
+!        DAFENA         End new array.
+!
+!     The main function of these entry points is to simplify the
+!     addition of new arrays to existing DAFs.
+!
+!     An application can add data to a single DAF, or to multiple DAFs,
+!     simultaneously. In the case of writing to a single DAF, the
+!     creation of a new array requires four steps:
+!
+!        1) Open a DAF for write access, using either DAFOPW
+!           (if the file already exists) or DAFOPN (if it does not).
+!
+!              CALL DAFOPW ( FNAME, HANDLE )
+!
+!        2) Begin the new DAF by calling DAFBNA,
+!
+!              CALL DAFBNA ( HANDLE, SUM, NAME )
+!
+!        3) Add data to the array by calling DAFADA as many times
+!           as necessary,
+!
+!              CALL GET_DATA ( DATA, N, FOUND )
+!
+!              DO WHILE ( FOUND )
+!                 CALL DAFADA   ( DATA, N        )
+!                 CALL GET_DATA ( DATA, N, FOUND )
+!              END DO
+!
+!        4) End the array by calling DAFENA,
+!
+!              CALL DAFENA
+!
+!     Note that the data can be added in chunks of any size, so long
+!     as the chunks are ordered correctly.
+!
+!     In applications that add data to multiple DAFs simultaneously, it
+!     is necessary to specify which DAF to add data to. The DAFANA
+!     entry points that allow specification of a DAF via a file handle
+!     argument are DAFBNA (DAF, begin new array) and DAFCAD (DAF,
+!     continue adding data).  As in the single-DAF case, arrays are
+!     started by calls to DAFBNA, and data is added to arrays by calls
+!     to DAFADA. The last DAF designated by the input file handle
+!     supplied to DAFBNA or DAFCAD is the `current DAF'. If a
+!     DAF contains an array started by a call to DAFBNA but not yet
+!     completed by a call to DAFENA, we call this array the `current
+!     array' for that DAF. Each call to DAFADA will add data to the
+!     current array in the current DAF. A call to DAFENA will make the
+!     current array in the current DAF a permanent addition to that DAF.
+!
+!     The notion of `current DAF' as discussed here applies only to
+!     DAFs acted upon by entry points of DAFANA. In DAFFA, there is a
+!     DAF that is treated as the `current DAF' for searching; there is
+!     no connection between the DAFs regarded as current by DAFANA and
+!     DAFFA.
+!
+!     In the following example, we write data obtained from the routine
+!     GET_DATA into two separate DAFs. The first N/2 elements of the
+!     array DATA will be written to the first DAF; the rest of the
+!     array will be written to the second DAF.
+!
+!
+!        1) Open the DAFs for write access, using either DAFOPW
+!           (if the files already exist) or DAFOPN (if they do not).
+!
+!              CALL DAFOPW ( FNAME1, HANDL1 )
+!              CALL DAFOPW ( FNAME2, HANDL2 )
+!
+!        2) Begin the new DAFs by calling DAFBNA,
+!
+!              CALL DAFBNA ( HANDL1, SUM1, NAME1 )
+!              CALL DAFBNA ( HANDL2, SUM2, NAME2 )
+!
+!        3) Add data to the arrays by calling DAFCAD and DAFADA as many
+!           times as necessary, selecting the file to add data to by
+!           calling DAFCAD:
+!
+!              CALL GET_DATA ( DATA, N, FOUND )
+!
+!              DO WHILE ( FOUND )
+!
+!                 CALL DAFCAD   ( HANDL1                          )
+!                 CALL DAFADA   ( DATA,               N/2         )
+!
+!                 CALL DAFCAD   ( HANDL2                          )
+!                 CALL DAFADA   ( DATA( N/2 + 1 ),    N - N/2     )
+!
+!                 CALL GET_DATA ( DATA, N, FOUND )
+!
+!              END DO
+!
+!        4) End each array by calling DAFENA, selecting the file
+!           in which to end the array by calling DAFCAD:
+!
+!              CALL DAFCAD ( HANDL1 )
+!              CALL DAFENA
+!
+!              CALL DAFCAD ( HANDL2 )
+!              CALL DAFENA
+!
+! $ Examples
+!
+!     The numerical results shown for these examples may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following example illustrates one possible way to copy
+!        an array from one DAF to another, N words at a time.
+!
+!        Use the CK kernel below as the original DAF file.
+!
+!           vo2_swu_ck2.bc
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM DAFANA_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               MAXNSZ
+!              PARAMETER           ( MAXNSZ = 1000 )
+!
+!              INTEGER               MAXND
+!              PARAMETER           ( MAXND  = 124  )
+!
+!              INTEGER               MAXNI
+!              PARAMETER           ( MAXNI  = 250  )
+!
+!              INTEGER               NWORDS
+!              PARAMETER           ( NWORDS = 100  )
+!
+!              INTEGER               MAXSUM
+!              PARAMETER           ( MAXSUM = 125  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(MAXNSZ)    NAME
+!
+!              DOUBLE PRECISION      DATA   ( NWORDS )
+!              DOUBLE PRECISION      DC     ( MAXND  )
+!              DOUBLE PRECISION      SUM    ( MAXSUM )
+!
+!              INTEGER               BIDX
+!              INTEGER               CHUNK
+!              INTEGER               EIDX
+!              INTEGER               IC     ( MAXNI  )
+!              INTEGER               ND
+!              INTEGER               NI
+!              INTEGER               ORIGIN
+!              INTEGER               TARGET
+!
+!              LOGICAL               FOUND
+!
+!        C
+!        C     Open the origin DAF file for reading.
+!        C
+!              CALL DAFOPR ( 'vo2_swu_ck2.bc', ORIGIN )
+!
+!        C
+!        C     Start forward search in origin DAF.
+!        C
+!              CALL DAFBFS ( ORIGIN )
+!
+!        C
+!        C     Find the first array in origin DAF.
+!        C
+!              CALL DAFFNA ( FOUND  )
+!
+!        C
+!        C     Get the summary and name of the current array in the
+!        C     ORIGIN DAF file
+!        C
+!              CALL DAFGS  ( SUM  )
+!              CALL DAFGN  ( NAME )
+!
+!        C
+!        C     Unpack the summary.
+!        C
+!              CALL DAFHSF ( ORIGIN, ND, NI )
+!              CALL DAFUS  ( SUM,    ND, NI, DC, IC )
+!
+!        C
+!        C     Open the target DAF file for writing. Use 'CK' as
+!        C     data type, and reserve no records for comments.
+!        C
+!              CALL DAFONW ( 'dafana_ex1.bc', 'CK', ND, NI,
+!             .              'CK file created for example 1 DAFANA', 0,
+!             .              TARGET )
+!
+!        C
+!        C     Begin a new array in the target DAF file, using the
+!        C     origin SUM and NAME.
+!        C
+!              CALL DAFBNA ( TARGET, SUM, NAME )
+!
+!        C
+!        C     Copy the complete array for the first segment of the
+!        C     origin DAF file.
+!        C
+!              BIDX = IC(NI-1)
+!              EIDX = IC(NI  )
+!
+!              DO WHILE ( BIDX .LE. EIDX )
+!
+!                 CHUNK = MIN ( BIDX + NWORDS - 1, EIDX )
+!
+!                 CALL DAFGDA ( ORIGIN, BIDX, CHUNK, DATA )
+!                 CALL DAFADA ( DATA,   NWORDS )
+!
+!                 BIDX = BIDX + NWORDS
+!
+!              END DO
+!
+!        C
+!        C     End the new array in the target DAF.
+!        C
+!              CALL DAFENA
+!
+!        C
+!        C     Close the DAF files.
+!        C
+!              CALL DAFCLS ( ORIGIN )
+!              CALL DAFCLS ( TARGET )
+!
+!              END
+!
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new CK file exists in the
+!        output directory.
+!
+!
+!     2)  A simple example demonstrating simultaneous addition
+!         of data to multiple DAFs.
+!
+!         Assume we have data from a text file containing three
+!         columns of numbers. We will write the data from each
+!         column out to a separate DAF.
+!
+!         To confirm that the DAFs created by this program contain the
+!         correct contents, we will read the data from each DAF and
+!         combine it to create a matrix. This matrix should contain
+!         the same data as the file we assumed to be the source for
+!         our dataset.
+!
+!         The format of the output text should be as follows:
+!
+!            .-                   -.
+!            |  n11    n12    n13  |
+!            |  n21    n22    n23  |
+!            |   .      .      .   |
+!            |   .      .      .   |
+!            |   .      .      .   |
+!            `-                   -'
+!
+!         where the symbol nij indicates the jth number on the ith line
+!         of the source data file.
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM DAFANA_EX2
+!              IMPLICIT NONE
+!
+!        C
+!        C     Assume we have read columns of d.p. numbers
+!        C     from a text file. Write the data from each
+!        C     column into a separate DAF.  Read these DAFs
+!        C     and create a matrix containing the same data
+!        C     as assumed input text file.
+!        C
+!        C     Since we do not need to retain any descriptive
+!        C     information about the DAFs inside of the files
+!        C     themselves, we'll use a summary format having
+!        C     two integer components (the minimum--these are
+!        C     reserved for use by the DAF routines) and zero
+!        C     double precision components.
+!        C
+!        C     The internal file names and array names will
+!        C     simply indicate the data sources.
+!        C
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               FNMLEN
+!              PARAMETER           ( FNMLEN = 20 )
+!
+!              INTEGER               LINLEN
+!              PARAMETER           ( LINLEN = 80 )
+!
+!              INTEGER               MAXLNS
+!              PARAMETER           ( MAXLNS =  9 )
+!
+!              INTEGER               MAXCOL
+!              PARAMETER           ( MAXCOL =  3 )
+!
+!              INTEGER               ND
+!              PARAMETER           ( ND     =  0 )
+!
+!              INTEGER               NDAF
+!              PARAMETER           ( NDAF   =  3 )
+!
+!              INTEGER               NI
+!              PARAMETER           ( NI     =  2 )
+!
+!              INTEGER               NUMLEN
+!              PARAMETER           ( NUMLEN = 30 )
+!
+!              INTEGER               SIG
+!              PARAMETER           ( SIG    = 10 )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(FNMLEN)    DAFNAM ( NDAF   )
+!              CHARACTER*(FNMLEN)    INFILE
+!              CHARACTER*(LINLEN)    LINE
+!              CHARACTER*(NUMLEN)    NUMCH
+!              CHARACTER*(LINLEN)    PRSERR
+!              CHARACTER*(FNMLEN)    RESULT
+!
+!              DOUBLE PRECISION      DC     ( 1      )
+!              DOUBLE PRECISION      NUMBER ( MAXLNS, MAXCOL )
+!              DOUBLE PRECISION      NUMDP
+!              DOUBLE PRECISION      SUMMRY ( 1      )
+!
+!              INTEGER               FA
+!              INTEGER               HAN    ( NDAF   )
+!              INTEGER               I
+!              INTEGER               IA
+!              INTEGER               IC     ( NI     )
+!              INTEGER               J
+!              INTEGER               LENGTH
+!              INTEGER               NCOLS
+!              INTEGER               PTR
+!
+!              LOGICAL               EOF
+!              LOGICAL               FOUND
+!
+!        C
+!        C     Initial values
+!        C
+!              DATA                  DAFNAM   /  'COLUMN1.DAF',
+!             .                                  'COLUMN2.DAF',
+!             .                                  'COLUMN3.DAF'  /
+!
+!              DATA                  NUMBER  /
+!             .               11.D0, 21.D0, 31.D0, 41.D0, 51.D0,
+!             .               61.D0, 71.D0, 81.D0, 91.D0,
+!             .               12.D0, 22.D0, 32.D0, 42.D0, 52.D0,
+!             .               62.D0, 72.D0, 82.D0, 92.D0,
+!             .               13.D0, 23.D0, 33.D0, 43.D0, 52.D0,
+!             .               63.D0, 73.D0, 83.D0, 93.D0        /
+!
+!        C
+!        C     Create the new DAFs, and start a new array in each
+!        C     one.  Just use the file name for the internal file
+!        C     name and array name, for each DAF.  No assignments
+!        C     are required for the array summaries.
+!        C
+!              DO I = 1, NDAF
+!
+!                 CALL DAFOPN ( DAFNAM(I), ND, NI,
+!             .                 DAFNAM(I), 0,  HAN(I) )
+!
+!                 CALL DAFBNA ( HAN(I), SUMMRY, DAFNAM(I) )
+!
+!              END DO
+!
+!        C
+!        C     At this point, we assume that we have read the
+!        C     file line by line. Add the numbers from each column
+!        C     to the corresponding DAF.
+!        C
+!              DO I = 1, MAXLNS
+!
+!        C
+!        C        Add the number from the ith column to the array
+!        C        in the ith DAF.  We'll use DAFCAD to select
+!        C        the correct DAF to add data to.
+!        C
+!                 DO J = 1, NDAF
+!                    CALL DAFCAD ( HAN(J)         )
+!                    CALL DAFADA ( NUMBER(I,J), 1 )
+!                 END DO
+!
+!              END DO
+!
+!        C
+!        C     Finish ("end") the arrays.  Again, we'll use DAFCAD
+!        C     to select the DAFs in which the arrays are to be
+!        C     finished.  After finishing each array, close the DAF
+!        C     containing it.
+!        C
+!              DO I = 1, NDAF
+!                 CALL DAFCAD ( HAN(I) )
+!                 CALL DAFENA
+!                 CALL DAFCLS ( HAN(I) )
+!              END DO
+!
+!        C
+!        C     Now for the verification step.  We'll try to
+!        C     print a matrix containing the same data as
+!        C     the original input file.  The format of the numbers,
+!        C     the delimiters separating the numbers, spacing, and
+!        C     non-printing characters may differ.
+!        C
+!        C     Open the DAFs for reading.
+!        C
+!              DO I = 1, NDAF
+!                 CALL DAFOPR ( DAFNAM(I), HAN(I) )
+!              END DO
+!
+!        C
+!        C     Obtain the start and end addresses of the
+!        C     data in each DAF.  To do this, we'll need to
+!        C     obtain and unpack the array summaries.
+!        C
+!        C     If all went well, the addresses should be the
+!        C     same for each DAF.  We'll assume that the initial
+!        C     and final addresses in the first DAF are correct
+!        C     for all three.
+!        C
+!              CALL DAFBFS ( HAN(1) )
+!              CALL DAFFNA ( FOUND  )
+!              CALL DAFGS  ( SUMMRY )
+!              CALL DAFUS  ( SUMMRY, ND, NI, DC, IC )
+!
+!              IA      =  IC( NI-1 )
+!              FA      =  IC( NI   )
+!              LENGTH  =  FA - IA + 1
+!
+!        C
+!        C     Now read numbers from the DAFs and build up
+!        C     lines of text.  Print these lines out.
+!        C
+!              DO I = 0,  LENGTH - 1
+!
+!                 LINE = ' '
+!
+!                 DO J = 1, NDAF
+!
+!                    CALL DAFRDA ( HAN(J), IA+I, IA+I, NUMDP )
+!
+!        C
+!        C           Convert the double precision number to a
+!        C           character string, and append it to the current
+!        C           line.
+!        C
+!                    CALL DPSTR  ( NUMDP,  SIG,        NUMCH )
+!                    CALL SUFFIX ( NUMCH,  3,          LINE  )
+!
+!                 END DO
+!
+!                 WRITE(*,*) LINE
+!
+!              END DO
+!
+!        C
+!        C     Close the DAFs.
+!        C
+!              DO I = 1, NDAF
+!                 CALL DAFCLS( HAN(I) )
+!              END DO
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!
+!             1.100000000E+01    1.200000000E+01    1.300000000E+01
+!             2.100000000E+01    2.200000000E+01    2.300000000E+01
+!             3.100000000E+01    3.200000000E+01    3.300000000E+01
+!             4.100000000E+01    4.200000000E+01    4.300000000E+01
+!             5.100000000E+01    5.200000000E+01    5.200000000E+01
+!             6.100000000E+01    6.200000000E+01    6.300000000E+01
+!             7.100000000E+01    7.200000000E+01    7.300000000E+01
+!             8.100000000E+01    8.200000000E+01    8.300000000E+01
+!             9.100000000E+01    9.200000000E+01    9.300000000E+01
+!
+!
+!        Note that after run completion, three new DAF files exist in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     H.A. Neilan        (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!     I.M. Underwood     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.1.0, 13-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header of DAFANA and all entry points to comply with
+!        NAIF standard. Added complete code examples to DAFANA $Examples
+!        section based on the existing fragments.
+!
+!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+!
+!        Updated the entry points of DAFANA to enable its
+!        internal state table size, TBSIZE, to be smaller
+!        than the file table maintained by DAFAH: FTSIZE.
+!
+!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
+!
+!        Updated to remove potential compiler warnings from the
+!        truncation of double precision numbers to integers.
+!
+!        Also changed was a numeric constant from 1.D0 to the
+!        equivalent, but more aesthetically pleasing 1.0D0.
+!
+!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+!
+!        Updated to support simultaneous writes to multiple DAFs.
+!        The $Examples section of this routine now illustrates
+!        usage of the routine DAFCAD.
+!
+!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!
+!        Literature references added to the header.
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     add new DAF array
+!
+!-&
+
+
+! $ Revisions
+!
+!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+!
+!        This umbrella and its entry points were updated to
+!        work properly with the changes in the DAF system as
+!        a result of its utilization of the new handle manager.
+!
+!        Since DAFAH now tracks FTSIZE files as defined in
+!        the include file 'zzddhman.inc', it was decided that
+!        in the interest of releasing the toolkit this module
+!        would undergo simple changes.  As such most previous
+!        references to FTSIZE in this umbrella have been replaced
+!        with TBSIZE where appropriate.  DAFBNA now signals an
+!        error if there is not enough room to add a new DAF's
+!        dossier to the state table.  Also, after attempting to
+!        clean up all files listed in the state table that are
+!        not currently open, DAFBNA attempts to locate the
+!        first dossier with STADDG set to FALSE.  This is then
+!        freed to make room for the new DAF.  If DAFBNA fails
+!        to locate such a dossier in the state table, it
+!        signals the error SPICE(STFULL).
+!
+!        The parameter FILEN was removed, as it is defined
+!        on an environmental basis in the include file
+!        'zzddhman.inc'.
+!
+!
+!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
+!
+!        Updated to remove potential compiler warnings from the
+!        truncation of double precision numbers to integers. Two
+!        assignments to NARRAY were updated, being changed from:
+!
+!           NARRAY = SUMREC(ARYCNT)
+!
+!        to
+!
+!           NARRAY = IDINT ( SUMREC(ARYCNT) )
+!
+!        Also changed was a numeric constant from 1.D0 to the
+!        equivalent, but more aesthetically pleasing 1.0D0.
+!
+!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+!
+!        Updated to support simultaneous writes to multiple DAFs.
+!
+!        In previous versions of DAFANA, data could be added to only
+!        one DAF array at a time.  In fact, DAFAH allowed only one
+!        DAF to be open for writing at any time.  Therefore, there was
+!        no question about which DAF was being operated on by either of
+!        the DAFANA entry points that don't accept file handles as
+!        input arguments:  DAFADA and DAFENA.  In the current version
+!        of DAFANA, the entry points that don't accept file handles as
+!        inputs operate on the `current DAF'.  The current DAF is the
+!        last one in which a new array was started by DAFBNA, or in
+!        which addition of data to an array was continued by the new
+!        entry point DAFCAD.  DAFCAD was added to allow users to set
+!        the current DAF, so that additions of data to arrays in
+!        multiple DAFs can be interleaved.
+!
+!        Note that the notion of `current DAF' as discussed here applies
+!        only to DAFs acted upon by entry points of DAFANA. In DAFFA,
+!        there is a DAF that is treated as the `current DAF' for
+!        searching; there is no connection between the DAFs regarded
+!        as current by DAFANA and DAFFA.
+!
+!        The two principal changes to DAFANA are the addition of the
+!        new entry point DAFCAD, and the addition of a data structure
+!        called the `state table'. The state table is a collection of
+!        parallel arrays that maintain information about the state
+!        of each data addition that is currently in progress. The
+!        state table arrays are indexed by a singly linked list pool;
+!        this mechanism allows addition and deletion of information
+!        about data additions without requiring movement of data
+!        already in the state table.
+!
+!        The linked list pool contains an `active' list and a `free'
+!        list. Nodes in the active list are used to index elements of
+!        the state table where information about additions in progress
+!        is stored. The head node of the active list is of particular
+!        significance: the state information pointed to by this node
+!        is that of the current DAF. Nodes in the free list index
+!        elements of the state table that are available for use.
+!
+!        When an array is started in a DAF that is not already `known'
+!        to DAFANA, information about the DAF is added to the state
+!        table. If there are no free elements in the state table,
+!        the routine starting the array (DAFBNA) will perform garbage
+!        collection: the routine will test the handles of each file
+!        about which information in stored in the state table to see
+!        whether that file is still open. Nodes containing information
+!        about DAFs that are no longer open will be moved to the free
+!        list.
+!
+!        Whenever a DAF becomes the current DAF, the linked list
+!        that indexes the state table is adjusted so that the node
+!        pointing to information about the current DAF is at the head
+!        of the active list. This way, a slight efficiency is gained
+!        when repeated data additions are made to the same DAF, since
+!        the linear search through the state table for information on
+!        that DAF will be shortened.
+!
+!        Since the algorithms for maintenance of linked lists are well
+!        known, they are not documented here. However, see the
+!        internals of the SPICELIB routine SPKBSR for a nice diagram
+!        describing a similar data structure.
+!
+!        The state table contains two arrays that are quite large:
+!        there are buffers that contain the name and array summary for
+!        each array under construction. A parallel situation exists
+!        in DAFFA, where there are buffers that contain the last
+!        character record and summary record read from each DAF. The
+!        total storage required for these arrays (in DAFANA and DAFFA
+!        together) is 4000 * TBSIZE bytes. For this reason, it may be
+!        a good idea to reduce the value of TBSIZE in SPICELIB versions
+!        for machines where memory is scarce.
+!
+!        On a completely different topic: the local declarations in
+!        DAFANA have been alphabetized and separated by type, except
+!        for those relating to the state table. Several hard-coded
+!        constants have been replaced by parameters.
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+
+
+
+
+
+
+
+
+
+
+
+
+!
+!     Local variables
+!
+
+!
+!     State variables.
+!
+!     These variables define the state of each DAF to which data
+!     is currently being added.  For each DAF that we're writing to, we
+!     maintain a copy of:
+!
+!        STFH           File handle.
+!
+!        STIFNM         Internal file name.
+!
+!        STADDG         (`State table: adding') Flag indicating
+!                       whether addition of data to an array is in
+!                       progress.
+!
+!        STFRST         Record number of initial summary record.
+!
+!        STLAST         Record number of final summary record.
+!
+!        STBEGN         Beginning address of new array.
+!
+!        STFREE         Address of next free word.
+!
+!        STLSUM         Local copy of the array summary for the current
+!                       array.
+!
+!        STNAME         Local copy of the array name for the current
+!                       array.
+!
+!
+!     These variables are maintained in a table of parallel arrays;
+!     the size of the table is TBSIZE.
+!
+!
+
+!
+!     The table of state variables is indexed by a singly linked list
+!     of pointers.  This mechanism avoids the work of moving
+!     the state variable data about as information about DAFs is
+!     added to or deleted from the table.
+!
+!     The structure containing the linked list pointers is called a
+!     `pool.'  The pool contains a list of `active' nodes and a list
+!     of free nodes.  The head nodes of the active and free lists are
+!     maintained as the variables STHEAD (`state table head') and
+!     STFPTR (`state table free pointer'), respectively.  Every node in
+!     the pool is on exactly one of these lists.
+!
+
+!
+!     The pool starts out with all of the nodes on the free list.
+!     DAFBNA initializes the pool.  As new DAFs are written to,
+!     DAFBNA adds information about them to the state table.  Every
+!     time a DAF array is started by DAFBNA, or selected for
+!     continuation by DAFCAD, the routine in question `moves' the
+!     DAF's state information to the head of the active list, if the
+!     state information is not already there.  This re-organization is
+!     accomplished by deleting the node for the DAF from its current
+!     position in the active list and inserting the node at the head of
+!     the list.  Thus, the change is made merely by setting pointers,
+!     not by moving chunks of data in the state table.
+!
+!     It may happen that there is no room left in the state table
+!     to accommodate information about a new DAF.  In this case,
+!     garbage collection must be performed:  DAFBNA frees all nodes in
+!     the table that index DAFs that are not currently open.
+!
+!     Note that the routine DAFADA does not modify the state table; it
+!     merely adds data to the DAF that is at the head of the active
+!     list.
+!
+
+
+!
+!     Other local variables
+!
+
+
+
+
+!
+!     Save everything between calls
+!
+
+!
+!     Initial values
+!
+
+!
+!     Standard SPICE error handling.
+
       module procedure dafbna
 
 ! $ Abstract
@@ -19638,6 +21585,1194 @@ contains
       return
       end associate
       end procedure dafcad
+
+!$Procedure DAFFA ( DAF, find array )
+!
+!     PEPPER: SPICELIB's umbrella routine DAFFA is not a procedure any more:
+!     its entry points are the module procedures below, and its saved
+!     variables are in pepper_state_daffa. Its documentation follows.
+!
+
+
+! $ Abstract
+!
+!     Find arrays in a DAF.
+!
+! $ Required_Reading
+!
+!     DAF
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+
+
+
+
+! $ Detailed_Input
+!
+!     HANDLE   on input is the handle of the DAF to be searched.
+!
+!     SUM      on input is an array summary that replaces the
+!              summary of the current array in the DAF currently
+!              being searched.
+!
+!     NAME     on input is an array name that replaces the name
+!              of the current array in the DAF currently being
+!              searched.
+!
+! $ Detailed_Output
+!
+!     HANDLE   on output is the handle of the DAF currently being
+!              searched.
+!
+!     SUM      on output is the summary for the array found most
+!              recently.
+!
+!     NAME     on output is the name for the array found
+!              most recently.
+!
+!     FOUND    is .TRUE. whenever the search for the next or the
+!              previous array is successful, and is .FALSE. otherwise.
+!
+! $ Parameters
+!
+!     TBSIZE   is the maximum number of files (DAS and DAF) that may be
+!              simultaneously open. TBSIZE is set to FTSIZE which is
+!              assigned and defined in zzdhman.inc.
+!
+! $ Exceptions
+!
+!     1)  If DAFFA is called directly, the error SPICE(BOGUSENTRY)
+!         is signaled.
+!
+!     2)  See entry points DAFBFS, DAFFNA, DAFBBS, DAFFPA, DAFGS, DAFGN,
+!         DAFGH, DAFRS, DAFWS, DAFRN, and DAFCS for exceptions specific
+!         to those entry points.
+!
+! $ Files
+!
+!     DAFs read by DAFFA and its entry points are opened
+!     elsewhere, and referred to only by their handles.
+!
+! $ Particulars
+!
+!     DAFFA serves as an umbrella, allowing data to be shared by its
+!     entry points:
+!
+!        DAFBFS         Begin forward search.
+!        DAFFNA         Find next array.
+!
+!        DAFBBS         Begin backward search.
+!        DAFFPA         Find previous array.
+!
+!        DAFGS          Get summary.
+!        DAFGN          Get name.
+!        DAFGH          Get handle.
+!
+!        DAFRS          Replace summary.
+!        DAFWS          Write summary.
+!        DAFRN          Replace name.
+!
+!        DAFCS          Continue search.
+!
+!     The main function of these entry points is to allow the
+!     contents of any DAF to be examined on an array-by-array
+!     basis.
+!
+!     Conceptually, the arrays in a DAF form a doubly linked list,
+!     which can be searched in either of two directions: forward or
+!     backward. It is possible to search multiple DAFs simultaneously.
+!
+!     DAFBFS (begin forward search) and DAFFNA are used to search the
+!     arrays in a DAF in forward order. In applications that search a
+!     single DAF at a time, the normal usage is
+!
+!        CALL DAFBFS ( HANDLE )
+!        CALL DAFFNA ( FOUND  )
+!
+!        DO WHILE ( FOUND )
+!
+!           CALL DAFGS ( SUM  )
+!           CALL DAFGN ( NAME )
+!            .
+!            .
+!
+!           CALL DAFFNA ( FOUND )
+!
+!        END DO
+!
+!
+!
+!     DAFBBS (begin backward search) and DAFFPA are used to search the
+!     arrays in a DAF in backward order. In applications that search
+!     a single DAF at a time, the normal usage is
+!
+!        CALL DAFBBS ( HANDLE )
+!        CALL DAFFPA ( FOUND  )
+!
+!        DO WHILE ( FOUND )
+!
+!           CALL DAFGS ( SUM  )
+!           CALL DAFGN ( NAME )
+!            .
+!            .
+!
+!           CALL DAFFPA ( FOUND )
+!
+!        END DO
+!
+!
+!     In applications that conduct multiple searches simultaneously,
+!     the above usage must be modified to specify the handle of the
+!     file to operate on, in any case where the file may not be the
+!     last one specified by DAFBFS or DAFBBS. The routine DAFCS
+!     (DAF, continue search) is used for this purpose. Below, we
+!     give an example of an interleaved search of two files specified
+!     by the handles HANDL1 and HANDL2. The directions of searches
+!     in different DAFs are independent; here we conduct a forward
+!     search on one file and a backward search on the other.
+!     Throughout, we use DAFCS to specify which file to operate on,
+!     before calling DAFFNA, DAFFPA, DAFGS, DAFRS, DAFWS, DAFGN, or
+!     DAFRN.
+!
+!
+!        CALL DAFBFS ( HANDL1 )
+!        CALL DAFBBS ( HANDL2 )
+!
+!        CALL DAFCS  ( HANDL1 )
+!        CALL DAFFNA ( FOUND1 )
+!
+!        CALL DAFCS  ( HANDL2 )
+!        CALL DAFFPA ( FOUND2 )
+!
+!        DO WHILE ( FOUND1 .OR. FOUND2 )
+!
+!           IF ( FOUND1 ) THEN
+!
+!              CALL DAFCS ( HANDL1 )
+!              CALL DAFGS ( SUM    )
+!              CALL DAFGN ( NAME   )
+!               .
+!               .
+!              CALL DAFCS  ( HANDL1 )
+!              CALL DAFFNA ( FOUND1 )
+!
+!           END IF
+!
+!           IF ( FOUND2 ) THEN
+!
+!              CALL DAFCS ( HANDL2 )
+!              CALL DAFGS ( SUM    )
+!              CALL DAFGN ( NAME   )
+!               .
+!               .
+!              CALL DAFCS  ( HANDL2 )
+!              CALL DAFFPA ( FOUND2 )
+!
+!           END IF
+!
+!        END DO
+!
+!
+!     At any time, the latest array found (whether by DAFFNA or DAFFPA)
+!     is regarded as the `current' array for the file in which the
+!     array was found. The last DAF in which a search was started,
+!     executed, or continued by any of DAFBFS, DAFBBS, DAFFNA, DAFFPA
+!     or DAFCS is regarded as the `current' DAF. The summary and name
+!     for the current array in the current DAF can be returned
+!     separately, as shown above, by calls to DAFGS (get summary) and
+!     DAFGN (get name). The handle of the current DAF can also be
+!     returned by calling DAFGH (get handle).
+!
+!     The summary and name of the current array in the current DAF can
+!     be updated (again, separately) by providing new ones through DAFRS
+!     (replace summary) and DAFRN (replace name). This feature
+!     should not be used except to correct errors that occurred during
+!     the creation of a file. Note that changes can only be made to
+!     files opened for write access. Also, the addresses of an array
+!     cannot be changed using these routines. (Another routine,
+!     DAFWS, is provided for this purpose, but should be used only
+!     to reorder the arrays in a file.)
+!
+!     Once a search has been begun, it may be continued in either
+!     direction. That is, DAFFPA may be used to back up during a
+!     forward search, and DAFFNA may be used to advance during a
+!     backward search.
+!
+! $ Examples
+!
+!     The numerical results shown for these examples may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following program illustrates the way summaries and
+!        names for the arrays contained in a DAF can be modified.
+!
+!        This example is provided for educational purpose only.
+!
+!        Replace the body ID code 301 (Moon) with a test body ID,
+!        e.g. -999, in every descriptor of an SPK file; update the
+!        segment identifier to indicate that such change has been
+!        implemented.
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM DAFFA_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     SPICELIB functions
+!        C
+!              INTEGER               CARDI
+!              INTEGER               RTRIM
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               DSCSIZ
+!              PARAMETER           ( DSCSIZ  = 5    )
+!
+!              INTEGER               FILSIZ
+!              PARAMETER           ( FILSIZ  = 255  )
+!
+!              INTEGER               LBCELL
+!              PARAMETER           ( LBCELL = -5 )
+!
+!              INTEGER               MAXOBJ
+!              PARAMETER           ( MAXOBJ  = 1000 )
+!
+!              INTEGER               ND
+!              PARAMETER           ( ND      = 2    )
+!
+!              INTEGER               NI
+!              PARAMETER           ( NI      = 6    )
+!
+!              INTEGER               NEWCODE
+!              PARAMETER           ( NEWCODE = -999 )
+!
+!              INTEGER               OLDCODE
+!              PARAMETER           ( OLDCODE =  301 )
+!
+!              INTEGER               SGIDLN
+!              PARAMETER           ( SGIDLN  = 1000 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(FILSIZ)    FNAME
+!              CHARACTER*(SGIDLN)    SEGID
+!              CHARACTER*(SGIDLN)    UPDSID
+!
+!              DOUBLE PRECISION      DC     ( ND )
+!              DOUBLE PRECISION      SUM    ( DSCSIZ )
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               IC     ( NI )
+!              INTEGER               IDS    ( LBCELL : MAXOBJ )
+!              INTEGER               OBJ
+!
+!              LOGICAL               FOUND
+!              LOGICAL               UPDATE
+!
+!        C
+!        C     Get the SPK file name.
+!        C
+!              CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
+!
+!        C
+!        C     Initialize the set IDS.
+!        C
+!              CALL SSIZEI ( MAXOBJ, IDS )
+!
+!        C
+!        C     Find the set of objects in the SPK file.
+!        C
+!              CALL SPKOBJ ( FNAME, IDS )
+!
+!              WRITE(*,'(A)') 'Objects in the original DAF file:'
+!              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
+!
+!        C
+!        C     Open for writing the SPK file.
+!        C
+!              CALL DAFOPW ( FNAME, HANDLE )
+!
+!        C
+!        C     Search the file in forward order.
+!        C
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!              WRITE(*,'(A)') 'Original Segment IDs (forward order):'
+!
+!              DO WHILE ( FOUND )
+!
+!        C
+!        C        Fetch and unpack the descriptor (aka summary)
+!        C        of the current segment, and get its name.
+!        C
+!                 CALL DAFGN ( SEGID )
+!                 CALL DAFGS ( SUM   )
+!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+!
+!        C
+!        C        Print the current segment name
+!        C
+!                 WRITE(*,'(2I6,2X,A)') IC(1), IC(2),
+!             .                         SEGID(:RTRIM(SEGID))
+!
+!        C
+!        C        Replace ID codes if necessary.
+!        C
+!                 UPDATE = .FALSE.
+!                 IF ( IC(1) .EQ. OLDCODE ) THEN
+!
+!                    IC(1)  = NEWCODE
+!                    UPDATE = .TRUE.
+!
+!                 END IF
+!                 IF ( IC(2) .EQ. OLDCODE ) THEN
+!
+!                    IC(2) = NEWCODE
+!                    UPDATE = .TRUE.
+!
+!                 END IF
+!
+!        C
+!        C        Update segment ID if necessary.
+!        C
+!                 IF ( UPDATE ) THEN
+!
+!                    UPDSID = '# - Updated. Do not use.'
+!                    CALL REPMC ( UPDSID, '#', SEGID(:RTRIM(SEGID)),
+!             .                   UPDSID                            )
+!                    CALL DAFRN ( UPDSID )
+!
+!                 END IF
+!
+!        C
+!        C        Re-pack the descriptor; replace the descriptor
+!        C        in the file.
+!        C
+!                 CALL DAFPS ( ND, NI, DC, IC, SUM )
+!
+!                 CALL DAFRS ( SUM )
+!
+!        C
+!        C        Find the next segment.
+!        C
+!                 CALL DAFFNA ( FOUND )
+!
+!              END DO
+!
+!        C
+!        C     Close the file.
+!        C
+!              CALL DAFCLS ( HANDLE )
+!
+!        C
+!        C     Reset the set IDS.
+!        C
+!              CALL SCARDI ( 0, IDS )
+!
+!        C
+!        C     Find the set of objects in the updated SPK file.
+!        C
+!              CALL SPKOBJ ( FNAME, IDS )
+!
+!              WRITE(*,*) ' '
+!              WRITE(*,'(A)') 'Objects in the updated DAF file:'
+!              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
+!
+!        C
+!        C     Search the file in backwards order and output the
+!        C     segment IDs.
+!        C
+!              CALL DAFOPR ( FNAME, HANDLE )
+!
+!              CALL DAFBBS ( HANDLE )
+!              CALL DAFFPA ( FOUND  )
+!
+!              WRITE(*,'(A)') 'Updated Segment IDs (backwards order):'
+!
+!              DO WHILE ( FOUND )
+!
+!        C
+!        C        Fetch and unpack the descriptor (aka summary)
+!        C        of the current segment, and get its name.
+!        C
+!                 CALL DAFGN ( SEGID )
+!                 CALL DAFGS ( SUM   )
+!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+!
+!                 WRITE(*,'(2I6,2X,A)') IC(1), IC(2),
+!             .                         SEGID(:RTRIM(SEGID))
+!
+!        C
+!        C        Find the previous segment.
+!        C
+!                 CALL DAFFPA ( FOUND )
+!
+!              END DO
+!
+!        C
+!        C     Close the file.
+!        C
+!              CALL DAFCLS ( HANDLE )
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, using the SPK file named de430.bsp, the output was:
+!
+!
+!        Enter name of the SPK file > de430.bsp
+!        Objects in the original DAF file:
+!           1   2   3   4   5   6   7   8   9  10 199 299 301 399
+!        Original Segment IDs (forward order):
+!             1     0  DE-0430LE-0430
+!             2     0  DE-0430LE-0430
+!             3     0  DE-0430LE-0430
+!             4     0  DE-0430LE-0430
+!             5     0  DE-0430LE-0430
+!             6     0  DE-0430LE-0430
+!             7     0  DE-0430LE-0430
+!             8     0  DE-0430LE-0430
+!             9     0  DE-0430LE-0430
+!            10     0  DE-0430LE-0430
+!           301     3  DE-0430LE-0430
+!           399     3  DE-0430LE-0430
+!           199     1  DE-0430LE-0430
+!           299     2  DE-0430LE-0430
+!
+!        Objects in the updated DAF file:
+!        -999   1   2   3   4   5   6   7   8   9  10 199 299 399
+!        Updated Segment IDs (backwards order):
+!           299     2  DE-0430LE-0430
+!           199     1  DE-0430LE-0430
+!           399     3  DE-0430LE-0430
+!          -999     3  DE-0430LE-0430 - Updated. Do not use.
+!            10     0  DE-0430LE-0430
+!             9     0  DE-0430LE-0430
+!             8     0  DE-0430LE-0430
+!             7     0  DE-0430LE-0430
+!             6     0  DE-0430LE-0430
+!             5     0  DE-0430LE-0430
+!             4     0  DE-0430LE-0430
+!             3     0  DE-0430LE-0430
+!             2     0  DE-0430LE-0430
+!             1     0  DE-0430LE-0430
+!
+!
+!     2) The following program compares data in two DAFs. The DAFs are
+!        expected to have the same number of arrays, the same number
+!        of elements in each corresponding array, and the same summary
+!        format.
+!
+!        Each difference whose magnitude exceeds a specified tolerance
+!        is flagged. The difference information is written to the
+!        screen.
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM DAFFA_EX2
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               RTRIM
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               ARRYSZ
+!              PARAMETER           ( ARRYSZ = 10000000 )
+!
+!              INTEGER               ERRLEN
+!              PARAMETER           ( ERRLEN =  240 )
+!
+!              INTEGER               FILEN
+!              PARAMETER           ( FILEN  =  128 )
+!
+!              INTEGER               LINLEN
+!              PARAMETER           ( LINLEN =   80 )
+!
+!              INTEGER               MAXND
+!              PARAMETER           ( MAXND  =  125 )
+!
+!              INTEGER               MAXNI
+!              PARAMETER           ( MAXNI  =  250 )
+!
+!              INTEGER               MAXSUM
+!              PARAMETER           ( MAXSUM =  128 )
+!
+!              INTEGER               RLEN
+!              PARAMETER           ( RLEN   = 1000 )
+!
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(RLEN)      ANAME1
+!              CHARACTER*(RLEN)      ANAME2
+!              CHARACTER*(FILEN)     DAF1
+!              CHARACTER*(FILEN)     DAF2
+!              CHARACTER*(FILEN)     LOG
+!              CHARACTER*(ERRLEN)    PRSERR
+!              CHARACTER*(LINLEN)    STR
+!              CHARACTER*(LINLEN)    TOLCH
+!
+!              DOUBLE PRECISION      ARRAY1 ( ARRYSZ )
+!              DOUBLE PRECISION      ARRAY2 ( ARRYSZ )
+!              DOUBLE PRECISION      DC1    ( MAXND )
+!              DOUBLE PRECISION      DC2    ( MAXND )
+!              DOUBLE PRECISION      TOL
+!              DOUBLE PRECISION      DIFF
+!              DOUBLE PRECISION      SUM1   ( MAXSUM )
+!              DOUBLE PRECISION      SUM2   ( MAXSUM )
+!
+!              INTEGER               FA1
+!              INTEGER               FA2
+!              INTEGER               I
+!              INTEGER               IA1
+!              INTEGER               IA2
+!              INTEGER               IC1    ( MAXNI )
+!              INTEGER               IC2    ( MAXNI )
+!              INTEGER               HANDL1
+!              INTEGER               HANDL2
+!              INTEGER               LEN1
+!              INTEGER               LEN2
+!              INTEGER               ND1
+!              INTEGER               ND2
+!              INTEGER               NI1
+!              INTEGER               NI2
+!              INTEGER               PTR
+!
+!              LOGICAL               FOUND
+!
+!
+!        C
+!        C     Start out by obtaining the names of the DAFs to be
+!        C     compared.
+!        C
+!              CALL PROMPT ( 'Enter name of first DAF  > ', DAF1 )
+!              CALL PROMPT ( 'Enter name of second DAF > ', DAF2 )
+!              CALL PROMPT ( 'Enter tolerance for data comparison > ',
+!             .              TOLCH                                   )
+!
+!              CALL NPARSD ( TOLCH, TOL, PRSERR, PTR )
+!
+!        C
+!        C     Open both DAFs for reading.
+!        C
+!              CALL DAFOPR ( DAF1, HANDL1 )
+!              CALL DAFOPR ( DAF2, HANDL2 )
+!
+!        C
+!        C     Start forward searches in both DAFS.
+!        C
+!              CALL DAFBFS ( HANDL1 )
+!              CALL DAFBFS ( HANDL2 )
+!
+!        C
+!        C     Obtain the summary formats for each DAF. Stop now
+!        C     if the summary formats don't match.
+!        C
+!              CALL DAFHSF ( HANDL1, ND1, NI1 )
+!              CALL DAFHSF ( HANDL2, ND2, NI2 )
+!
+!              IF (  ( ND1 .NE. ND2 ) .OR. ( NI1 .NE. NI2 )  ) THEN
+!
+!                 STR = 'Summary formats do not match.  NI1 = #, '//
+!             .                      'NI2 = #, ND1 = #, ND2 = #.'
+!
+!                 CALL REPMI  ( STR, '#', NI1, STR )
+!                 CALL REPMI  ( STR, '#', NI2, STR )
+!                 CALL REPMI  ( STR, '#', ND1, STR )
+!                 CALL REPMI  ( STR, '#', ND2, STR )
+!
+!                 WRITE(*,*) STR
+!
+!                 CALL SIGERR ( 'Incompatible DAFs' )
+!
+!              END IF
+!
+!        C
+!        C     Find the first array in each DAF. Use DAFCS
+!        C     (DAF, continue search) to set the handle of the DAF
+!        C     to search in before calling DAFFNA.
+!        C
+!              CALL DAFCS  ( HANDL1 )
+!              CALL DAFFNA ( FOUND  )
+!
+!              IF ( FOUND ) THEN
+!                 CALL DAFCS  ( HANDL2 )
+!                 CALL DAFFNA ( FOUND  )
+!              END IF
+!
+!              DO WHILE ( FOUND )
+!
+!        C
+!        C        Get the summary and name of each array, using
+!        C        DAFCS to select the DAF to get the information
+!        C        from. Unpack the summaries and find the beginning
+!        C        and ending addresses of the arrays. Read the
+!        C        arrays into the variables ARRAY1 and ARRAY2.
+!        C
+!                 CALL DAFCS ( HANDL1 )
+!                 CALL DAFGN ( ANAME1 )
+!                 CALL DAFGS ( SUM1   )
+!                 CALL DAFUS ( SUM1, ND1, NI1, DC1, IC1 )
+!
+!                 IA1  = IC1 ( NI1 - 1 )
+!                 FA1  = IC1 ( NI1     )
+!                 LEN1 = FA1 - IA1  + 1
+!
+!                 IF (  LEN1  .GT.  ARRYSZ  ) THEN
+!                    CALL SETMSG ( 'Buffer too small; need # elts.')
+!                    CALL ERRINT ( '#', LEN1                       )
+!                    CALL SIGERR ( 'ARRAYTOOSMALL'                 )
+!                 ELSE
+!                    CALL DAFGDA ( HANDL1, IA1, FA1, ARRAY1 )
+!                 END IF
+!
+!                 CALL DAFCS ( HANDL2 )
+!                 CALL DAFGN ( ANAME2 )
+!                 CALL DAFGS ( SUM2   )
+!                 CALL DAFUS ( SUM2, ND2, NI2, DC2, IC2 )
+!
+!                 IA2 = IC2 ( NI2 - 1 )
+!                 FA2 = IC2 ( NI2     )
+!
+!                 LEN2 = FA2 - IA2  + 1
+!
+!                 IF (  LEN2  .GT.  ARRYSZ  ) THEN
+!
+!                    CALL SETMSG ( 'Buffer too small; need # elts.')
+!                    CALL ERRINT ( '#', LEN2                       )
+!                    CALL SIGERR ( 'ARRAYTOOSMALL'                 )
+!
+!                 ELSE IF ( LEN1 .NE. LEN2 ) THEN
+!
+!                    CALL SETMSG ( 'DAF structures do not match. '//
+!             .                    'LEN1 = #, LEN2 = #. ' )
+!                    CALL ERRINT ( '#', LEN1              )
+!                    CALL ERRINT ( '#', LEN2              )
+!                    CALL SIGERR ( 'Incompatible DAFs' )
+!
+!                 ELSE
+!                    CALL DAFGDA ( HANDL2, IA2, FA2, ARRAY2 )
+!                 END IF
+!        C
+!        C
+!        C        Compare the data in the two arrays. Log a message
+!        C        for every instance of data that differs by more
+!        C        than the allowed tolerance. Use the array names
+!        C        to label the data sources.
+!        C
+!                 DO I = 1, LEN1
+!
+!                    DIFF  =  ABS( ARRAY1(I) - ARRAY2(I) )
+!
+!                    IF (  DIFF  .GT.  TOL  ) THEN
+!        C
+!        C              Get the array names.
+!        C
+!                       CALL DAFCS ( HANDL1 )
+!                       CALL DAFGN ( ANAME1 )
+!                       CALL DAFCS ( HANDL2 )
+!                       CALL DAFGN ( ANAME2 )
+!
+!        C
+!        C              Construct the report strings. The number 14
+!        C              below is the number of significant digits to
+!        C              show in the strings representing d.p.
+!        C              numbers.
+!        C
+!
+!                       WRITE(*,*) ' '
+!                       WRITE(*,*) 'Difference of array ' //
+!             .                    'elements exceeded '   //
+!             .                    'tolerance.'
+!                       WRITE(*,*) 'First array : ',
+!             .                     ANAME1(:RTRIM(ANAME1))
+!                       WRITE(*,*) 'Second array: ',
+!             .                     ANAME2(:RTRIM(ANAME2))
+!
+!                       STR = 'First value : #'
+!                       CALL REPMD  ( STR, '#', ARRAY1(I), 14, STR )
+!                       WRITE(*,*) STR
+!
+!                       STR = 'Second value: #'
+!                       CALL REPMD  ( STR, '#', ARRAY2(I), 14, STR )
+!                       WRITE(*,*) STR
+!
+!                       STR = 'Difference  :  #'
+!                       CALL REPMD  ( STR, '#', DIFF,      14, STR )
+!                       WRITE(*,*) STR
+!
+!                    END IF
+!
+!                 END DO
+!
+!        C
+!        C        Find the next pair of arrays.
+!        C
+!                 CALL DAFCS  ( HANDL1 )
+!                 CALL DAFFNA ( FOUND  )
+!
+!                 IF ( FOUND ) THEN
+!                    CALL DAFCS  ( HANDL2 )
+!                    CALL DAFFNA ( FOUND  )
+!                 END IF
+!
+!              END DO
+!
+!        C
+!        C     Close the DAFs.
+!        C
+!              CALL DAFCLS ( HANDL1 )
+!              CALL DAFCLS ( HANDL2 )
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, using the PCK (DAF) files named
+!        earth_720101_031229.bpc and earth_720101_070527.bpc, and a
+!        tolerance of '1.D0', the output was:
+!
+!
+!        Enter name of first DAF  > earth_720101_031229.bpc
+!        Enter name of second DAF > earth_720101_070527.bpc
+!        Enter tolerance for data comparison > 1.D0
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8352636890345E+08
+!         Second value: -8.8352636783584E+08
+!         Difference  :  1.0676109790802E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8343997629503E+08
+!         Second value: -8.8343997451568E+08
+!         Difference  :  1.7793515920639E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8335358368661E+08
+!         Second value: -8.8335358119552E+08
+!         Difference  :  2.4910920858383E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8326719107819E+08
+!         Second value: -8.8326718787536E+08
+!         Difference  :  3.2028328180313E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8318079846977E+08
+!         Second value: -8.8318079455519E+08
+!         Difference  :  3.9145733118057E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8309440586135E+08
+!         Second value: -8.8309440123503E+08
+!         Difference  :  4.6263140439987E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8300801325293E+08
+!         Second value: -8.8300800791487E+08
+!         Difference  :  5.3380546569824E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8292162064451E+08
+!         Second value: -8.8292161459471E+08
+!         Difference  :  6.0497951507568E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8283522803609E+08
+!         Second value: -8.8283522127455E+08
+!         Difference  :  6.7615358829498E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8274883542767E+08
+!         Second value: -8.8274882795439E+08
+!         Difference  :  7.4732763767242E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8266244281925E+08
+!         Second value: -8.8266243463423E+08
+!         Difference  :  8.1850171089172E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8257605021083E+08
+!         Second value: -8.8257604131407E+08
+!         Difference  :  8.8967577219009E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8248965760241E+08
+!         Second value: -8.8248964799391E+08
+!         Difference  :  9.6084982156754E+00
+!
+!         Difference of array elements exceeded tolerance.
+!         First array : Earth PCK, ITRF93 Frame
+!         Second array: Earth PCK, ITRF93 Frame
+!         First value : -8.8240326499398E+08
+!         Second value: -8.8240325467375E+08
+!
+!        [...]
+!
+!
+!        Warning: incomplete output. Only 100 out of 80582 lines have
+!        been provided.
+!
+!
+! $ Restrictions
+!
+!     1)  Calls that do or may change DAF addresses of DAF summaries,
+!         names, or data of a given DAF file should not be made during
+!         a search of that file initiated by either DAFBFS or DAFBBS.
+!         No such changes should be made between the start of a search
+!         and calls to any entry point that reads or writes to the
+!         summary of the "current array" found by that search, or
+!         that returns a "found" flag indicating whether the current
+!         array exists.
+!
+!         Changing the size of the comment area while a search is in
+!         progress can invalidate record numbers stored in local data
+!         structures of this routine. This can cause corrupted array
+!         summaries and names to be returned upon read access and file
+!         corruption to occur upon write access.
+!
+!         Adding arrays (aka "segments") while either a forward or
+!         backward search is in progress can cause the search to miss
+!         the new segments.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     H.A. Neilan        (JPL)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!     I.M. Underwood     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.2.0, 27-OCT-2021 (JDR) (NJB)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header of DAFFA umbrella routine and all its entry
+!        to comply with NAIF standard.
+!
+!        Updated $Restrictions sections of this routine and its entry
+!        points.
+!
+!-    SPICELIB Version 3.1.1, 14-MAR-2017 (NJB)
+!
+!        Updated second header code example in this routine: fixed
+!        error check for array overflow, corrected indentation of
+!        continuation characters, added IMPLICIT NONE, deleted unused
+!        declaration, increased buffer size, and changed DAFRDA call to
+!        DAFGDA call.
+!
+!        Updated header example in entry point DAFGH: changed DAFRDA
+!        call to DAFGDA call.
+!
+!-    SPICELIB Version 3.1.0, 10-FEB-2014 (EDW) (BVS)
+!
+!        Added a functional code example to the $Examples section
+!        in DAFBFS, DAFFNA, DAFGS.
+!
+!        Added check on value of "found" boolean returned from
+!        DAFGSR calls. Failure to check this value can cause an
+!        infinite loop during segment searches on damaged SPKs.
+!
+!        Eliminated unneeded $Revisions section.
+!
+!        Removed the obsolete Reference citation to "NAIF
+!        Document 167.0."
+!
+!        Added full declaration of HANDLE to the $Declarations section
+!        of the DAFCS header.
+!
+!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+!
+!        This umbrella and its entry points were updated to
+!        work properly with the changes in the DAF system as
+!        a result of its utilization of the new handle manager.
+!        Calls to DAFRDR were replaced with the translation-aware
+!        interface DAFGSR for retrieving summary records from
+!        DAFs.
+!
+!        Updated the entry points of DAFFA to enable its
+!        internal state table size, TBSIZE, to be smaller
+!        than the file table maintained by DAFAH: FTSIZE.
+!
+!        Since DAFAH now tracks FTSIZE files as defined in
+!        the include file 'zzddhman.inc', it was decided that
+!        in the interest of releasing the toolkit this module
+!        would undergo simple changes. As such most previous
+!        references to FTSIZE in this umbrella have been replaced
+!        with TBSIZE where appropriate. DAFBFS and DAFBBS now signal
+!        errors if there is not enough room to add a new DAF's
+!        dossier to the state table. Also, after attempting to
+!        clean up all files listed in the state table that are
+!        not currently open, DAFBFS and DAFBBS attempt to locate
+!        the first dossier with STADDG set to .FALSE. This is then
+!        freed to make room for the new DAF. If DAFBNA fails
+!        to locate such a dossier in the state table, it
+!        signals the error SPICE(STFULL).
+!
+!        The parameter FILEN was removed, as it is defined
+!        on an environmental basis in the include file
+!        'zzddhman.inc'.
+!
+!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+!
+!        Updated to support simultaneous searches of multiple DAFs.
+!
+!        In previous versions of DAFFA, only one search could be
+!        conducted at a time. Therefore, there was no question about
+!        which DAF was being operated on by any of the DAFFA entry
+!        points that don't accept file handles as input arguments.
+!        In the current version of DAFFA, the entry points that don't
+!        accept file handles as inputs operate on the `current DAF'.
+!        The current DAF is the last one in which a search was
+!        started by DAFBFS or DAFBBS, or continued by the new entry
+!        point DAFCS. DAFCS was added to allow users to set the
+!        current DAF, so that searches of multiple DAFs can be
+!        interleaved.
+!
+!        Note that the notion of `current DAF' as discussed here applies
+!        only to DAFs acted upon by entry points of DAFFA. In DAFANA,
+!        there is a DAF that is treated as the `current DAF' for
+!        adding data; there is no connection between the DAFs regarded
+!        as current by DAFFA and DAFANA.
+!
+!        The two principal changes to DAFFA are the addition of the
+!        new entry point DAFCS, and the addition of a data structure
+!        called the `state table'. The state table is a collection of
+!        parallel arrays that maintain information about the state
+!        of each search that is currently in progress. The arrays are
+!        indexed by a singly linked list pool; this mechanism allows
+!        addition and deletion of information about searches without
+!        requiring movement of data already in the state table. The
+!        linked list pool contains an `active' list and a `free' list.
+!        Nodes in the active list are used to index elements of the
+!        state table where data about searches in progress is stored.
+!        The head node of the active list is of particular significance:
+!        the state information pointed to by this node is that of the
+!        current DAF. Nodes in the free list index elements of the
+!        state table that are available for use.
+!
+!        When a search is started on a DAF that is not already `known'
+!        to DAFFA, information about the DAF is added to the state
+!        table. If there are no free elements in the state table,
+!        the routine starting the search (DAFBFS or DAFBBS) will
+!        perform garbage collection: the routine will test the handles
+!        of each file about which information in stored in the state
+!        table to see whether that file is still open. Nodes containing
+!        information about DAFs that are no longer open will be moved
+!        to the free list.
+!
+!        Whenever a DAF becomes the current DAF, the linked list
+!        that indexes the state table is adjusted so that the
+!        information about the current DAF is at the head of the list.
+!        This way, a slight efficiency is gained when repeated search
+!        accesses are made to the same DAF, since the linear search
+!        through the state table for information on that DAF will
+!        be shortened.
+!
+!        Since the algorithms for maintenance of linked lists are well
+!        known, they are not documented here. However, see the
+!        internals of the SPICELIB routine SPKBSR for a nice diagram
+!        describing a similar data structure.
+!
+!        The state table contains two arrays that are quite large:
+!        there are buffers that contain the last character record
+!        and summary record read from each DAF. A parallel situation
+!        exists in DAFANA, where the name and array summary for each
+!        array under construction are buffered. The total storage
+!        required for these arrays (in DAFANA and DAFFA together) is
+!        4000 * TBSIZE bytes. For this reason, it may be a good idea
+!        to reduce the value of TBSIZE in SPICELIB versions for
+!        machines where memory is scarce.
+!
+!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+!
+!        Literature references added to the header.
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     find DAF array
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+
+
+
+!
+!     Local parameters
+!
+
+
+
+
+
+
+
+
+!
+!     Local variables
+!
+
+!
+!     State variables.
+!
+!     These variables define the state of each DAF to which data
+!     is currently being added. For each DAF that we're writing to, we
+!     maintain a copy of:
+!
+!        STFH           File handle.
+!
+!        STPREV         Record number of previous array summary.
+!
+!        STTHIS         Record number of current array summary.
+!
+!        STNEXT         Record number of next array summary.
+!
+!        STNSEG         Number of summaries in current summary record.
+!
+!        STCURR         Index of current summary within summary record.
+!
+!        STNR           Last name record read.
+!
+!        STHVNR         Flag indicating whether name record containing
+!                       name of current array is buffered.
+!
+!        STSR           Last summary record read.
+!
+!     These variables are maintained in a table of parallel arrays;
+!     the size of the table is TBSIZE.
+!
+
+!
+!     The table of state variables is indexed by a singly linked list
+!     of pointers. This mechanism avoids the work of moving
+!     the state variable data about as information about DAFs is
+!     added to or deleted from the table.
+!
+!     The structure containing the linked list pointers is called a
+!     `pool'. The pool contains a list of `active' nodes and a list
+!     of free nodes. The head nodes of the active and free lists are
+!     maintained as the variables STHEAD (`state table head') and
+!     STFPTR (`state table free pointer'), respectively. Every node in
+!     the pool is on exactly one of these lists.
+!
+
+!
+!     The pool starts out with all of the nodes on the free list. The
+!     first one of DAFBFS or DAFBBS to be called initializes the pool.
+!     As new DAFs are searched, DAFBFS and DAFBBS add information about
+!     them to the state table. Every time a search is started by DAFBFS
+!     or DAFBBS, the routine in question `moves' the DAF's state
+!     information to the head of the active list, if the state
+!     information is not already there. This re-organization is
+!     accomplished by deleting the node for the DAF from its current
+!     position in the active list and inserting the node at the head of
+!     the list. Thus, the change is made merely by setting pointers,
+!     not by moving chunks of data in the state table.
+!
+!     It may happen that there is no room left in the state table
+!     to accommodate information about a new DAF. In this case,
+!     garbage collection must be performed:  whichever of DAFBFS or
+!     DAFBBS needs more room frees all nodes in the table that index
+!     DAFs that are not currently open.
+!
+!     Note that the routines DAFGS, DAFGN, DAFRS, DAFRN, and DAFWS do
+!     not modify the state table; they merely act on the current array
+!     in the DAF that is at the head of the active list.
+!
+
+
+!
+!     Other local variables
+!
+
+
+
+
+
+!
+!     Save everything between calls
+!
+
+
+!
+!     Initial values
+!
+
+
+!
+!     Standard SPICE error handling.
 
       module procedure dafbfs
 
