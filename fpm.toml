@@ -6,6 +6,11 @@ maintainer = "jacobwilliams@users.noreply.github.com"
 copyright = "Copyright 2026, Jacob Williams"
 
 
+[library]
+source-dir = "src"
+# SPICELIB include files; the test suite (test/) uses them too.
+include-dir = ["src/spicelib"]
+
 [build]
 auto-executables = true
 auto-tests = true
@@ -19,28 +24,31 @@ implicit-typing = true
 implicit-external = true
 source-form = "default"
 
-[preprocess]
-[preprocess.cpp]
-# Only the platform-specific SPICELIB sources (.F) contain directives.
-suffixes = ["F"]
-
-# Platform selection for SPICELIB. The merged platform files (src/spicelib/*.F)
-# select their code with these macros: exactly one SPICE_OS_* and one
-# SPICE_COMPILER_* must be defined. Combinations NAIF does not ship (e.g.
-# Windows + gfortran) use the #else branches, which are NAIF's Cygwin gfortran
+# Platform selection for SPICELIB and the test suite. The merged platform
+# files (*.F) select their code with these macros: exactly one SPICE_OS_* and
+# one SPICE_COMPILER_* must be defined. Combinations NAIF does not ship (e.g.
+# Windows + gfortran) use the #else branches, which are NAIF's Unix gfortran
 # code. The "platform" feature is applied automatically through the default
 # profile (it is also applied with --profile debug/release).
+#
+# The macros are passed as plain -D flags rather than through
+# [preprocess.cpp]: fpm adds -cpp to *every* source file when a cpp
+# preprocessor is configured, and running cpp over the legacy fixed-form .f
+# sources is not safe (e.g. "/*" in comments). Compilers preprocess .F files
+# automatically based on the extension, except Intel Fortran on Windows,
+# which needs /fpp (its preprocessor is Fortran-aware, so .f files are safe).
 [features]
-platform.macos.preprocess.cpp.macros = ["SPICE_OS_MACOS"]
-platform.linux.preprocess.cpp.macros = ["SPICE_OS_LINUX"]
-platform.windows.preprocess.cpp.macros = ["SPICE_OS_WINDOWS"]
-platform.cygwin.preprocess.cpp.macros = ["SPICE_OS_CYGWIN"]
-platform.gfortran.preprocess.cpp.macros = ["SPICE_COMPILER_GFORTRAN"]
-platform.ifx.preprocess.cpp.macros = ["SPICE_COMPILER_INTEL"]
-platform.ifort.preprocess.cpp.macros = ["SPICE_COMPILER_INTEL"]
-# gfortran >= 10 rejects SPICELIB's (legal in F77 practice) argument
-# rank/type mismatches without this.
-platform.gfortran.flags = "-fallow-argument-mismatch"
+platform.macos.flags = "-DSPICE_OS_MACOS"
+platform.linux.flags = "-DSPICE_OS_LINUX"
+platform.windows.flags = "-DSPICE_OS_WINDOWS"
+platform.cygwin.flags = "-DSPICE_OS_CYGWIN"
+# gfortran >= 10 rejects SPICELIB's argument rank/type mismatches without
+# -fallow-argument-mismatch.
+platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -fallow-argument-mismatch"
+platform.ifx.flags = "-DSPICE_COMPILER_INTEL"
+platform.ifort.flags = "-DSPICE_COMPILER_INTEL"
+platform.windows.ifx.flags = "/fpp"
+platform.windows.ifort.flags = "/fpp"
 
 [profiles]
 default = ["platform"]

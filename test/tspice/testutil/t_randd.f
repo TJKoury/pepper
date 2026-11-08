@@ -1,0 +1,213 @@
+C$Procedure      T_RANDD ( Random double precision number )
+
+      DOUBLE PRECISION FUNCTION T_RANDD ( LOWER, UPPER, SEED )
+
+C$ Abstract
+C
+C     Return a random double precision number.  
+C
+C$ Disclaimer
+C
+C     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+C     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+C     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+C     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+C     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+C     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+C     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+C     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+C     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+C     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+C
+C     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+C     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+C     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+C     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+C     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+C     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+C
+C     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+C     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+C     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+C     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+C
+C$ Required_Reading
+C
+C     None.
+C
+C$ Keywords
+C
+C     MATH
+C     NUMBERS
+C
+C$ Declarations
+
+      DOUBLE PRECISION      LOWER
+      DOUBLE PRECISION      UPPER
+      INTEGER               SEED
+
+C$ Brief_I/O
+C
+C     Variable  I/O  Description
+C     --------  ---  --------------------------------------------------
+C     LOWER,
+C     UPPER      I   Bounds of range of RAND.
+C     SEED      I-O  Seed for random number generation.
+C     
+C     The function returns values that are uniformly distributed over 
+C     the closed interval [ LOWER, UPPER ].  
+C     
+C$ Detailed_Input
+C
+C     LOWER,
+C     UPPER          are bounds for the closed interval in which the
+C                    values of RAND lie.  
+C                    
+C     SEED           is a seed for the random number generator.  SEED
+C                    is a `work space' argument. On the first call to
+C                    T_RANDD, SEED should be set equal to a negative
+C                    number.  After the first call, SEED should not be
+C                    modified by the caller except to start a new 
+C                    sequence of random numbers.
+C
+C$ Detailed_Output
+C
+C     SEED           is the seed value to be used as input on the next
+C                    call to RAND to produce the next random number in 
+C                    the sequence.
+C
+C     The function returns values that are approximately uniformly
+C     distributed over the closed interval [ LOWER, UPPER ].
+C     
+C$ Parameters
+C
+C     None.
+C
+C$ Exceptions
+C
+C     1)  If the bounds are out of order, the error SPICE(INVALIDBOUNDS)
+C         is signaled.
+C
+C$ Files
+C
+C     None.
+C
+C$ Particulars
+C
+C     This routine returns random numbers in the specified interval.
+C     Each call to the routine produces a new random number.  The
+C     sequence of numbers returned depends on the initial value of
+C     SEED.   To obtain multiple sequences of random numbers within a
+C     single program run, different seed variables can be used, each
+C     seed variable corresponding to a random sequence.
+C     
+C     This routine can be used for testing routines that take double
+C     precision variables as inputs.  
+C     
+C     For some testing applications, it may be appropriate to use this
+C     routine to generate the logarithms of the input numbers.  
+C     Otherwise, numbers close to zero may be under-represented in the
+C     set of test cases.
+C
+C     The set of random number routines includes:
+C     
+C        T_URAND ( Uniform random deviate in range 0:1 )
+C        T_RANDD ( Random double-precision number )
+C        T_RANID ( Random integer )
+C        
+C$ Examples
+C
+C     1)  Print a series of 100 random numbers in the interval 
+C        [-2.D0, 5.D0]:
+C     
+C            SEED = -100001
+C            
+C            DO I = 1, 100
+C               PRINT *, T_RANDD ( -2.D0, 5.D0, SEED )
+C            END DO
+C            
+C            
+C     2)  This time generate two different sequences:
+C            
+C            SEED1 = -999
+C            SEED2 = -9999
+C            
+C            DO I = 1, 100
+C               WRITE( *, '(1X,F25.16)' ), T_RANDD( -2.D0, 5.D0, SEED1 )
+C            END DO
+C            
+C            DO I = 1, 100
+C               WRITE( *, '(1X,F25.16)' ), T_RANDD( -2.D0, 5.D0, SEED2 )
+C            END DO
+C            
+C$ Restrictions
+C
+C     1) Users must verify that the pseudo-random number sequences
+C        generated by this routine are suitable for their applications.
+C
+C$ Literature_References
+C
+C     [1]  "Numerical Recipes---The Art of Scientific Computing" by
+C           William H. Press, Brian P. Flannery, Saul A. Teukolsky,
+C           William T. Vetterling (pp 272-273).
+C
+C$ Author_and_Institution
+C
+C     N.J. Bachman   (JPL)
+C
+C$ Version
+C
+C-    Testutil Version 1.0.0, 09-NOV-2005 (NJB) 
+C
+C-&
+
+
+C
+C     SPICELIB functions
+C
+      LOGICAL               RETURN
+
+C
+C     Other functions
+C
+      DOUBLE PRECISION      T_URAND
+
+
+
+C
+C     Give the function an initial value.
+C
+      T_RANDD = LOWER
+
+C
+C     Standard SPICE error handling.
+C
+      IF ( RETURN () ) THEN
+         RETURN
+      ELSE
+         CALL CHKIN ( 'T_RANDD' )
+      END IF
+
+C
+C     Check bounds.
+C
+      IF ( LOWER .GT. UPPER ) THEN
+      
+         CALL SETMSG ( 'Lower, upper bounds are:  #  #. ' )
+         CALL ERRDP  ( '#', LOWER                         )
+         CALL ERRDP  ( '#', UPPER                         )
+         CALL SIGERR ( 'SPICE(INVALIDBOUNDS)'             )
+         CALL CHKOUT ( 'T_RANDD'                          )
+         RETURN
+         
+      END IF
+      
+C
+C     Get a random number in the range [LOWER, UPPER].  The 
+C     T_URAND function returns numbers in the range [0, 1].
+C
+      T_RANDD  =  LOWER  +  ( UPPER - LOWER ) * T_URAND( SEED )
+
+      CALL CHKOUT ( 'T_RANDD' )
+      RETURN
+      END

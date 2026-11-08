@@ -1,0 +1,460 @@
+C$Procedure      F_SPKGEO ( Family of tests for SPKGEO )
+ 
+      SUBROUTINE F_SPKGEO ( OK )
+      IMPLICIT NONE
+ 
+      LOGICAL               OK
+ 
+C$ Abstract
+C
+C     This routine tests the behaviour of the SPICE routine SPKGEO
+C     with the addition of non-inertial frames.
+C
+C$ Disclaimer
+C
+C     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+C     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+C     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+C     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+C     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+C     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+C     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+C     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+C     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+C     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+C
+C     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+C     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+C     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+C     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+C     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+C     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+C
+C     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+C     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+C     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+C     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+C
+C$ Version 
+C
+C-    TSPICE Version 2.0.0, 10-NOV-2005 (NJB)
+C
+C        Updated to remove non-standard use of duplicate arguments
+C        in VADDG calls. 
+C
+C-&
+ 
+      CHARACTER*(40)        BEGTXT
+      CHARACTER*(40)        BEGDAT
+ 
+C
+C     Spicelib Routines.
+C
+      DOUBLE PRECISION      VNORM
+      DOUBLE PRECISION      CLIGHT
+ 
+ 
+C
+C     Local Variables
+C
+      INTEGER               LNSIZE
+      PARAMETER           ( LNSIZE = 80 )
+ 
+      INTEGER               WDSIZE
+      PARAMETER           ( WDSIZE = 32 )
+ 
+      INTEGER               LWSIZE
+      PARAMETER           ( LWSIZE = 40 )
+ 
+      INTEGER               NLINES
+      PARAMETER           ( NLINES = 46 )
+ 
+ 
+      CHARACTER*(LNSIZE)    ERROR
+      CHARACTER*(LNSIZE)    LINES  ( NLINES )
+      CHARACTER*(LWSIZE)    SEGID
+      CHARACTER*(WDSIZE)    REF
+ 
+ 
+      INTEGER               CENTER
+      INTEGER               CKHAN
+      INTEGER               IAUE
+      INTEGER               IDCODE ( 46 )
+      INTEGER               J
+      INTEGER               K
+      INTEGER               OBS
+      INTEGER               REF1
+      INTEGER               REF2
+      INTEGER               REF3
+      INTEGER               REF4
+      INTEGER               REF5
+      INTEGER               REF6
+      INTEGER               REF7
+      INTEGER               REFID
+      INTEGER               SPKHAN
+      INTEGER               TARG
+ 
+ 
+ 
+      DOUBLE PRECISION      ET
+      DOUBLE PRECISION      GM
+      DOUBLE PRECISION      IAUST1  ( 6 )
+      DOUBLE PRECISION      IAUST2  ( 6 )
+      DOUBLE PRECISION      IAUST3  ( 6 )
+      DOUBLE PRECISION      IAUST4  ( 6 )
+      DOUBLE PRECISION      IAUST5  ( 6 )
+      DOUBLE PRECISION      IAUST6  ( 6 )
+      DOUBLE PRECISION      IAUST7  ( 6 )
+      DOUBLE PRECISION      LT
+      DOUBLE PRECISION      LT2
+      DOUBLE PRECISION      STATE   ( 6 )
+      DOUBLE PRECISION      STATE1  ( 6 )
+      DOUBLE PRECISION      STATE2  ( 6 )
+      DOUBLE PRECISION      STATE3  ( 6 )
+      DOUBLE PRECISION      STATE4  ( 6 )
+      DOUBLE PRECISION      STATE5  ( 6 )
+      DOUBLE PRECISION      STATE6  ( 6 )
+      DOUBLE PRECISION      STATE7  ( 6 )
+      DOUBLE PRECISION      TSIPM   ( 6, 6 )
+      DOUBLE PRECISION      TSTATE  ( 6 )
+      DOUBLE PRECISION      XFORM   ( 6, 6 )
+      DOUBLE PRECISION      XFORM1  ( 6, 6 )
+      DOUBLE PRECISION      XFORM2  ( 6, 6 )
+      DOUBLE PRECISION      XFORM3  ( 6, 6 )
+      DOUBLE PRECISION      XFORM4  ( 6, 6 )
+      DOUBLE PRECISION      XFORM5  ( 6, 6 )
+      DOUBLE PRECISION      XFORM6  ( 6, 6 )
+      DOUBLE PRECISION      XFORM7  ( 6, 6 )
+      DOUBLE PRECISION      STXFRM  ( 6, 6 )
+ 
+      LINES(  1 ) = BEGTXT()
+      LINES(  2 ) = 'This PCK file contains definitions for T'
+     .//            'OPOGRAPHIC reference'
+      LINES(  3 ) = 'frames at 3 different observatories arou'
+     .//            'nd the world.  Note'
+      LINES(  4 ) = 'that the definition of these frames is a'
+     .//            'pproximate and that'
+      LINES(  5 ) = 'they are accurate to only about 0.1 degr'
+     .//            'ees.'
+      LINES(  6 ) = ' '
+      LINES(  7 ) = BEGDAT()
+      LINES(  8 ) = ' '
+      LINES(  9 ) = 'FRAME_CANBERRA_TOPO    = 1000002'
+      LINES( 10 ) = 'FRAME_MADRID_TOPO      = 1000019'
+      LINES( 11 ) = 'FRAME_GOLDSTONE_TOPO   = 1000023'
+      LINES( 12 ) = ' '
+      LINES( 13 ) = ' '
+      LINES( 14 ) = 'FRAME_1000002_CENTER   =  399'
+      LINES( 15 ) = 'FRAME_1000002_CLASS    =  4'
+      LINES( 16 ) = 'FRAME_1000002_CLASS_ID = 1000002'
+      LINES( 17 ) = 'FRAME_1000002_NAME     = ''CANBERRA_TOPO'
+     .//            ''''
+      LINES( 18 ) = ' '
+      LINES( 19 ) = 'FRAME_1000019_CENTER   =  399'
+      LINES( 20 ) = 'FRAME_1000019_CLASS    =  4'
+      LINES( 21 ) = 'FRAME_1000019_CLASS_ID = 1000019'
+      LINES( 22 ) = 'FRAME_1000019_NAME     = ''MADRID_TOPO'''
+      LINES( 23 ) = ' '
+      LINES( 24 ) = 'FRAME_1000023_CENTER   =  399'
+      LINES( 25 ) = 'FRAME_1000023_CLASS    =  4'
+      LINES( 26 ) = 'FRAME_1000023_CLASS_ID = 1000023'
+      LINES( 27 ) = 'FRAME_1000023_NAME     = ''GOLDSTONE_TOP'
+     .//            'O'''
+      LINES( 28 ) = ' '
+      LINES( 29 ) = ' '
+      LINES( 30 ) = 'TKFRAME_1000002_ANGLES   = ( -149.0, -12'
+     .//            '5.3, 180 )'
+      LINES( 31 ) = 'TKFRAME_1000002_AXES     = (       3,   '
+     .//            '     2,   3 )'
+      LINES( 32 ) = 'TKFRAME_1000002_RELATIVE = ''IAU_EARTH'''
+      LINES( 33 ) = 'TKFRAME_1000002_SPEC     = ''ANGLES'''
+      LINES( 34 ) = 'TKFRAME_1000002_UNITS    = ''DEGREES'''
+      LINES( 35 ) = ' '
+      LINES( 36 ) = 'TKFRAME_1000019_ANGLES   = ( 03.7, -49.6'
+     .//            ', 180 )'
+      LINES( 37 ) = 'TKFRAME_1000019_AXES     = (       3,   '
+     .//            '     2,   3 )'
+      LINES( 38 ) = 'TKFRAME_1000019_RELATIVE = ''IAU_EARTH'''
+      LINES( 39 ) = 'TKFRAME_1000019_SPEC     = ''ANGLES'''
+      LINES( 40 ) = 'TKFRAME_1000019_UNITS    = ''DEGREES'''
+      LINES( 41 ) = ' '
+      LINES( 42 ) = 'TKFRAME_1000023_ANGLES   = ( 116.8, -54.'
+     .//            '6, 180 )'
+      LINES( 43 ) = 'TKFRAME_1000023_AXES     = (       3,   '
+     .//            '     2,   3 )'
+      LINES( 44 ) = 'TKFRAME_1000023_RELATIVE = ''IAU_EARTH'''
+      LINES( 45 ) = 'TKFRAME_1000023_SPEC     = ''ANGLES'''
+      LINES( 46 ) = 'TKFRAME_1000023_UNITS    = ''DEGREES'''
+ 
+ 
+C
+C     Begin every test family with an open call.
+C
+      CALL TOPEN ( 'F_SPKGEO' )
+ 
+C
+C     Set up the data needed for testing.
+C
+ 
+      CALL KILFIL ( 'test_pck.ker' )
+      CALL TSTPCK ( 'test_pck.ker', .TRUE.,  .FALSE.         )
+      CALL TSTCK3 ( 'phoenix.bc',
+     .              'phoenix.tsc',  .FALSE., .TRUE., .FALSE.,
+     .               CKHAN )
+      CALL CKLPF  ( 'phoenix.bc',                     CKHAN  )
+      CALL TSTSPK ( 'test_spk.bsp', .TRUE.,           SPKHAN )
+ 
+ 
+      IDCODE(  1 ) = 1
+      IDCODE(  2 ) = 2
+      IDCODE(  3 ) = 3
+      IDCODE(  4 ) = 4
+      IDCODE(  5 ) = 5
+      IDCODE(  6 ) = 6
+      IDCODE(  7 ) = 7
+      IDCODE(  8 ) = 8
+      IDCODE(  9 ) = 9
+      IDCODE( 10 ) = 301
+      IDCODE( 11 ) = 401
+      IDCODE( 12 ) = 402
+      IDCODE( 13 ) = 501
+      IDCODE( 14 ) = 502
+      IDCODE( 15 ) = 503
+      IDCODE( 16 ) = 504
+      IDCODE( 17 ) = 603
+      IDCODE( 18 ) = 604
+      IDCODE( 19 ) = 605
+      IDCODE( 20 ) = 606
+      IDCODE( 21 ) = 607
+      IDCODE( 22 ) = 608
+      IDCODE( 23 ) = 701
+      IDCODE( 24 ) = 702
+      IDCODE( 25 ) = 703
+      IDCODE( 26 ) = 704
+      IDCODE( 27 ) = 705
+      IDCODE( 28 ) = 801
+      IDCODE( 29 ) = 802
+      IDCODE( 30 ) = 901
+      IDCODE( 31 ) = 199
+      IDCODE( 32 ) = 299
+      IDCODE( 33 ) = 399
+      IDCODE( 34 ) = 499
+      IDCODE( 35 ) = 599
+      IDCODE( 36 ) = 699
+      IDCODE( 37 ) = 799
+      IDCODE( 38 ) = 899
+      IDCODE( 39 ) = 999
+      IDCODE( 40 ) = 10
+      IDCODE( 41 ) = 399001
+      IDCODE( 42 ) = 399002
+      IDCODE( 43 ) = 399003
+      IDCODE( 44 ) = -9
+      IDCODE( 45 ) = 401001
+      IDCODE( 46 ) = 301001
+ 
+      ET = 0.0D0
+ 
+      CALL TCASE ( 'Check that exceptions behave as expected.' )
+ 
+         CALL SPKGEO ( -10, ET, 'J2000', 399, STATE,   LT )
+         CALL CHCKXC ( .TRUE., 'SPICE(SPKINSUFFDATA)', OK )
+ 
+      CALL TCASE ( 'Get the state of the moon in the earth '
+     .//           'bodyfixed frame and compare it to the old '
+     .//           'fashioned way of computing this. ' )
+ 
+ 
+         CALL SPKGEO  (  301, ET, 'IAU_EARTH', 399, STATE,  LT  )
+         CALL SPKGEO_O(  301, ET, 'J2000',     399, STATE1, LT2 )
+         CALL TISBOD  ( 'J2000', 399,    ET,        TSIPM      )
+         CALL MXVG    (  TSIPM,  STATE1, 6,    6,   STATE2     )
+ 
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL CHCKAD ( 'STATE', STATE, '~/', STATE2, 6, 1.0D-10, OK )
+         CALL CHCKSD ( 'LT',    LT,    '~/', LT2,       1.0D-10, OK )
+ 
+ 
+      CALL TCASE ( 'Get the state of the moon relative to the '
+     .//           'earth in the mars bodyfixed frame and '
+     .//           'compare it to the old fashioned way of '
+     .//           'computing this. ' )
+ 
+ 
+ 
+         CALL SPKGEO  (  301, ET, 'IAU_MARS', 399, STATE,  LT   )
+ 
+         CALL SPKGEO_O(  301, ET, 'J2000',     399, STATE1, LT2 )
+         CALL TISBOD  ( 'J2000', 499,    ET, XFORM  )
+         CALL MXVG    (  XFORM,  STATE1, 6,  6, STATE2 )
+ 
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL CHCKAD ( 'STATE', STATE, '~/', STATE2, 6, 1.0D-10, OK )
+         CALL CHCKSD ( 'LT',    LT,    '~/', LT2,       1.0D-10, OK )
+ 
+ 
+      CALL TCASE ( 'Compute the state of body -9 relative to 401 '
+     .//           'in the IAU_EARTH frame using SPKGEO and '
+     .//           'computed via TSTST. ' )
+ 
+ 
+         CALL SPKGEO ( -9, ET, 'IAU_EARTH', 401, STATE,  LT  )
+ 
+         CALL NAMFRM ( 'IAU_EARTH', IAUE )
+ 
+         CALL TSTST  ( -9,     ET, SEGID, REF1, STATE1, CENTER, GM )
+         CALL TSTST  ( 301,    ET, SEGID, REF2, STATE2, CENTER, GM )
+         CALL TSTST  ( 399,    ET, SEGID, REF3, STATE3, CENTER, GM )
+         CALL TSTST  (   3,    ET, SEGID, REF4, STATE4, CENTER, GM )
+ 
+         CALL TSTST  ( 401,    ET, SEGID, REF5, STATE5, CENTER, GM )
+         CALL TSTST  ( 499,    ET, SEGID, REF6, STATE6, CENTER, GM )
+         CALL TSTST  (   4,    ET, SEGID, REF7, STATE7, CENTER, GM )
+ 
+         CALL FRMCHG ( REF1, IAUE, ET, XFORM1 )
+         CALL FRMCHG ( REF2, IAUE, ET, XFORM2 )
+         CALL FRMCHG ( REF3, IAUE, ET, XFORM3 )
+         CALL FRMCHG ( REF4, IAUE, ET, XFORM4 )
+         CALL FRMCHG ( REF5, IAUE, ET, XFORM5 )
+         CALL FRMCHG ( REF6, IAUE, ET, XFORM6 )
+         CALL FRMCHG ( REF7, IAUE, ET, XFORM7 )
+ 
+         CALL MXVG   ( XFORM1, STATE1, 6, 6, IAUST1 )
+         CALL MXVG   ( XFORM2, STATE2, 6, 6, IAUST2 )
+         CALL MXVG   ( XFORM3, STATE3, 6, 6, IAUST3 )
+         CALL MXVG   ( XFORM4, STATE4, 6, 6, IAUST4 )
+         CALL MXVG   ( XFORM5, STATE5, 6, 6, IAUST5 )
+         CALL MXVG   ( XFORM6, STATE6, 6, 6, IAUST6 )
+         CALL MXVG   ( XFORM7, STATE7, 6, 6, IAUST7 )
+ 
+         CALL CLEARD ( 6,                    STATE1 )
+         CALL CLEARD ( 6,                    STATE2 )
+
+         CALL VADDG  ( STATE1, IAUST1, 6,    TSTATE )
+         CALL VADDG  ( TSTATE, IAUST2, 6,    STATE1 )
+         CALL VADDG  ( STATE1, IAUST3, 6,    TSTATE )
+         CALL VADDG  ( TSTATE, IAUST4, 6,    STATE1 )
+ 
+         CALL VADDG  ( STATE2, IAUST5, 6,    TSTATE )
+         CALL VADDG  ( TSTATE, IAUST6, 6,    STATE2 )
+         CALL VADDG  ( STATE2, IAUST7, 6,    TSTATE )
+         CALL MOVED  ( TSTATE,         6,    STATE2 )
+
+         CALL VSUBG  ( STATE1, STATE2, 6,    STATE3 )
+ 
+         LT2 = VNORM( STATE3 ) / CLIGHT()
+ 
+         CALL CHCKXC ( .FALSE., ' ', OK )
+         CALL CHCKAD ( 'STATE', STATE, '~/', STATE3, 6, 1.0D-10, OK )
+         CALL CHCKSD ( 'LT',    LT,    '~/', LT2,       1.0D-10, OK )
+ 
+ 
+      CALL TCASE ( 'Compare states as generated with the old '
+     .//           'version of SPKGEO with the current version. '
+     .//           'This case uses a long ephemeris and a large '
+     .//           'variety of observer-target pairs.' )
+C
+C        This routine tests determines the states of every object
+C        in a pair of SPK files with every other object in every
+C        available inertial reference frame.
+C
+C        This test is probably overkill, but is intended to demonstrate
+C        that under normal circumstances, nothing has changed in the
+C        latest upgrade of the SPK system.
+C
+ 
+         CALL TPARSE ( '1 JAN 1995', ET, ERROR )
+ 
+ 
+         DO REFID = 1, 18, 5
+ 
+            CALL FRMNAM ( REFID, REF )
+ 
+            DO J = 1, 46, 10
+ 
+               DO K = 46, 1, -3
+ 
+                  CALL TSTMSG ( '#', 'ET: #, Frame: #, '
+     .            //                 'Target: #, Observer: '
+     .            //                 '#. ' )
+ 
+                  TARG = IDCODE( J )
+                  OBS  = IDCODE( K )
+ 
+                  CALL TSTMSD ( ET   )
+                  CALL TSTMSC ( REF  )
+                  CALL TSTMSI ( TARG )
+                  CALL TSTMSI ( OBS  )
+ 
+ 
+                  CALL SPKGEO  ( TARG, ET, REF, OBS, STATE,  LT  )
+                  CALL SPKGEO_O( TARG, ET, REF, OBS, STATE2, LT2 )
+ 
+                  CALL CHCKXC ( .FALSE., ' ', OK )
+ 
+                  CALL CHCKAD ( 'STATE', STATE, '~/',
+     .                                   STATE2, 6, 1.0D-10, OK )
+                  CALL CHCKSD ( 'LT',    LT, '~/',
+     .                                   LT2,       1.0D-10, OK )
+ 
+               END DO
+ 
+            END DO
+ 
+         END DO
+ 
+         CALL TSTMSG ( '#', ' ' )
+ 
+ 
+      CALL TCASE ( 'Check to make sure that the logic that '
+     .//           'handles long chains of target center pairs '
+     .//           'functions as expected. ' )
+ 
+         CALL SPKGEO   ( 401001, ET, 'IAU_EARTH', 301001, STATE,  LT  )
+         CALL SPKGEO_S ( 401001, ET, 'IAU_EARTH', 301001, STATE2, LT2 )
+ 
+ 
+         CALL CHCKXC ( .FALSE., ' ', OK )
+         CALL CHCKAD ( 'STATE', STATE, '~/',  STATE2, 6, 1.0D-10, OK )
+         CALL CHCKSD ( 'LT',    LT,    '~/',  LT2,       1.0D-10, OK )
+ 
+ 
+ 
+      CALL TCASE ( 'Check to make sure that SPKSSB returns the '
+     .//           'same state as SPKGEO when the observer in '
+     .//           'SPKGEO is set to be the solar system '
+     .//           'barycenter ' )
+ 
+ 
+         CALL SPKGEO ( 401, ET, 'J2000', 0, STATE2, LT )
+         CALL SPKSSB ( 401, ET, 'J2000',    STATE     )
+ 
+         CALL CHCKXC ( .FALSE.,  ' ', OK )
+         CALL CHCKAD ( 'STATE', STATE, '=',  STATE2, 6, 0.0D0, OK )
+ 
+      CALL TCASE ( 'Make sure we can get the state of an object '
+     .//           'relative to a topocentric frame. ' )
+ 
+         CALL KILFIL ( 'topo.txt'     )
+         CALL TSTTXT ( 'topo.txt',  LINES, NLINES, .TRUE., .TRUE. )
+         CALL CHCKXC ( .FALSE., ' ', OK )
+ 
+         CALL SPKGEO ( 401001, ET, 'IAU_EARTH', 301001,  STATE,  LT  )
+         CALL SXFORM ( 'IAU_EARTH','GOLDSTONE_TOPO', ET, STXFRM     )
+         CALL MXVG   ( STXFRM, STATE, 6, 6, STATE2 )
+ 
+         CALL SPKGEO ( 401001, ET, 'GOLDSTONE_TOPO', 301001, STATE, LT)
+         CALL CHCKXC ( .FALSE., ' ', OK )
+         CALL CHCKAD ( 'STATE', STATE, '~/',  STATE2, 6, 1.0D-10, OK )
+C
+C     That's all folks.
+C
+      CALL SPKUEF ( SPKHAN )
+      CALL CKUPF  ( CKHAN  )
+ 
+      CALL KILFIL ( 'phoenix.bc'    )
+      CALL KILFIL ( 'test_spk.bsp'  )
+      CALL KILFIL ( 'topo.txt'     )
+ 
+      CALL T_SUCCESS ( OK )
+      RETURN
+      END
