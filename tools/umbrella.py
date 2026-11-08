@@ -127,16 +127,29 @@ class Umbrella:
             break
         self.body_start = k
         ents = [i for i, s in enumerate(self.stmts) if re.match(r"entry\b", s.text, re.I)]
-        if not ents:
-            raise SystemExit(f"umbrella: {name} has no ENTRY statements")
         last = len(self.stmts) - 1
         if self.stmts[last].low != "end":
             raise SystemExit(f"umbrella: {name}: last statement is not END")
         self.entries = [Entry(self, k, nxt) for k, nxt in zip(ents, ents[1:] + [last])]
-        # The umbrella routine itself, unless it only signals BOGUSENTRY.
-        main = Entry(self, 0, ents[0], main=True)
-        if not any("bogusentry" in s.low for s in main.body):
+        # The umbrella routine itself, unless it only signals BOGUSENTRY. (A
+        # routine without ENTRY statements, e.g. one with a saved cache, is
+        # just this procedure.)
+        main = Entry(self, 0, ents[0] if ents else last, main=True)
+        if not ents or not any("bogusentry" in s.low for s in main.body):
             self.entries.insert(0, main)
+        if state == "saved":
+            # The saved variables: named in SAVE statements or initialized
+            # by DATA (a bare SAVE is "all").
+            if any(re.match(r"\s*save\s*$", s.text, re.I) for s in self.spec):
+                state = "all"
+            else:
+                state = []
+                for s in self.spec:
+                    if re.match(r"\s*save\b", s.text, re.I):
+                        state += [entity_name(e) for e in split_top(s.text.split(None, 1)[1])]
+                    elif re.match(r"\s*data\b", s.text, re.I):
+                        state += [g[0][0].lower() for g in data_groups(s.text) if len(g[0]) == 1]
+                state = list(dict.fromkeys(x.lower() for x in state))
         if state == "all":
             # Every local variable (all of them are saved in SPICELIB): exactly
             # SPICELIB's behavior, per context.

@@ -40,6 +40,11 @@ module pepper_instance
    use pepper_state_zztime, only: zztime_state, init_zztime_state
    use pepper_state_pool, only: pool_state, init_pool_state
    ! --- end pepper_pool
+   ! --- pepper_bodies
+   use pepper_state_zzbodblt, only: zzbodblt_state, init_zzbodblt_state
+   use pepper_state_zzbodtrn, only: zzbodtrn_state, init_zzbodtrn_state
+   use pepper_state_bodvrd, only: bodvrd_state, init_bodvrd_state
+   ! --- end pepper_bodies
    ! <<< generated state modules
 
    implicit none
@@ -64,6 +69,12 @@ module pepper_instance
       !> Incremented by every change of the loaded kernels or the kernel
       !> pool; caches in contexts are valid while it is unchanged.
       integer(ip) :: generation = 0
+      ! Body names defined by the program (boddef), in order of definition.
+      ! Each context applies them to its own name tables (see pepper_bodies).
+      character(36), allocatable :: boddef_names(:)  !! names defined with boddef
+      integer(ip), allocatable :: boddef_codes(:)  !! their codes
+      integer(ip) :: boddef_count = 0  !! number of definitions recorded
+      integer(ip) :: boddef_epoch = 0  !! changed by every definition and by a reset
       ! The state of the subsystems (allocated when first used).
       ! >>> generated state components (tools/modularize_ctx.py)
       ! --- pepper_pool
@@ -94,6 +105,11 @@ module pepper_instance
       ! --- pepper_pool
       type(zztime_state), allocatable :: zztime  !! state of ZZTIME
       ! --- end pepper_pool
+      ! --- pepper_bodies
+      type(zzbodblt_state), allocatable :: zzbodblt  !! state of ZZBODBLT
+      type(zzbodtrn_state), allocatable :: zzbodtrn  !! state of ZZBODTRN
+      type(bodvrd_state), allocatable :: bodvrd_cache  !! state of BODVRD
+      ! --- end pepper_bodies
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -308,6 +324,17 @@ module pepper_instance
       procedure, non_overridable :: gnpool
       procedure, non_overridable :: dwpool
       ! --- end pepper_pool
+      ! --- pepper_bodies
+      procedure, non_overridable :: bodn2c
+      procedure, non_overridable :: bodc2n
+      procedure, non_overridable :: bods2c
+      procedure, non_overridable :: bodc2s
+      procedure, non_overridable :: boddef
+      procedure, non_overridable :: bodfnd
+      procedure, non_overridable :: bodvar
+      procedure, non_overridable :: bodvcd
+      procedure, non_overridable :: bodvrd
+      ! --- end pepper_bodies
       ! <<< generated bindings
    end type pepper_context
 
@@ -2815,6 +2842,478 @@ module pepper_instance
 
    end interface
    ! --- end pepper_pool
+   ! --- pepper_bodies
+   public :: zzidmap, zzhashi, zzhscini, zzhscadd, zzhscchk, zzhscavl, zzhscinf,&
+      zzhsiini, zzhsiadd, zzhsichk, zzhsiavl, zzhsiinf, zzbodini, zzbodker,&
+      zzbodget, zzbodlst, zzbodn2c, zzbodc2n, zzboddef, zzbodkik, zzbodrst,&
+      zzbctrck, zzbods2c, zzbodvcd
+
+   interface
+
+      !> The default SPICE body/ID mapping assignments available
+      !> to the SPICE library.
+      !>
+      !> NPERM      P   Number of name/ID mappings.
+      module subroutine zzidmap ( ctx, bltcod, bltnam )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzbodtrn.inc'
+         integer(ip), intent(out) :: bltcod(nperm)  !! List of default integer ID codes.
+         character(maxl), intent(out) :: bltnam(nperm)  !! List of default names.
+      end subroutine zzidmap
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns the hash value associated with N.
+      module integer(ip) function zzhashi ( ctx, n, m )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! An integer number.
+         integer(ip), intent(in) :: m  !! Divisor used for the hash function
+      end function zzhashi
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhscini ( ctx, hashsz, hedlst, collst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: hashsz  !! Hash size
+         integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
+      end subroutine zzhscini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhscadd ( ctx, hedlst, collst, items, item, itemat, new )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
+         character(*), intent(inout) :: items   (          * )  !! Hash item list
+         character(*), intent(in) :: item  !! Item to be checked for/added
+         integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
+         logical, intent(out) :: new  !! Flag indicting if item was added
+      end subroutine zzhscadd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhscchk ( ctx, hedlst, collst, items, item, itemat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+         character(*), intent(in) :: items   (          * )  !! Hash item list
+         character(*), intent(in) :: item  !! Item to find
+         integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
+      end subroutine zzhscchk
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhscavl ( ctx, collst, avail )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+         integer(ip), intent(out) :: avail  !! Room available in the hash
+      end subroutine zzhscavl
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhscinf ( ctx, hedlst, collst, items, item, avail )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+         character(*), intent(in) :: items   (          * )  !! Hash item list
+         character(*), intent(in) :: item  !! parameter to report
+         integer(ip), intent(out) :: avail  !! parameter Value
+      end subroutine zzhscinf
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhsiini ( ctx, hashsz, hedlst, collst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: hashsz  !! Hash size
+         integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
+      end subroutine zzhsiini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhsiadd ( ctx, hedlst, collst, items, item, itemat, new )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
+         integer(ip), intent(inout) :: items   (          * )  !! Hash item list
+         integer(ip), intent(in) :: item  !! Item to be checked for/added
+         integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
+         logical, intent(out) :: new  !! Flag indicting if item was added
+      end subroutine zzhsiadd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhsichk ( ctx, hedlst, collst, items, item, itemat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+         integer(ip), intent(in) :: items   (          * )  !! Hash item list
+         integer(ip), intent(in) :: item  !! Item to find
+         integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
+      end subroutine zzhsichk
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhsiavl ( ctx, collst, avail )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+         integer(ip), intent(out) :: avail  !! Room available in the hash
+      end subroutine zzhsiavl
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Collision list array lower bound
+      module subroutine zzhsiinf ( ctx, hedlst, collst, items, param, avail )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+         integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+         integer(ip), intent(in) :: items   (          * )  !! Hash item list
+         character(*), intent(in) :: param  !! parameter to report
+         integer(ip), intent(out) :: avail  !! parameter Value
+      end subroutine zzhsiinf
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Lower bound of hash pool arrays
+      !> MAXL       P   Maximum length of body name strings
+      module subroutine zzbodini ( ctx, names, nornam, codes, nvals, maxval, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzbodtrn.inc'
+         integer(ip), parameter :: lbpool = -5
+         character(maxl), intent(in) :: names  (          * )  !! Array of names
+         character(maxl), intent(in) :: nornam (          * )  !! Array of normalized names
+         integer(ip), intent(in) :: codes  (          * )  !! Array of ID codes for NAMES/NORNAM
+         integer(ip), intent(in) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays
+         integer(ip), intent(in) :: maxval  !! Size of the hash arrays
+         integer(ip), intent(out) :: bnmlst (          * )  !! Body name-based hash head node
+                                                            !! pointer list
+         integer(ip), intent(out) :: bnmpol ( lbpool : * )  !! Body name-based hash node collision
+                                                            !! list
+         character(maxl), intent(out) :: bnmnms (          * )  !! Body name-based hash item list
+         integer(ip), intent(out) :: bnmidx (          * )  !! Body name-based hash index storage
+                                                            !! array
+         integer(ip), intent(out) :: bidlst (          * )  !! Body ID-based hash head node pointer
+                                                            !! list
+         integer(ip), intent(out) :: bidpol ( lbpool : * )  !! Body ID-based hash node collision
+                                                            !! list
+         integer(ip), intent(out) :: bidids (          * )  !! Body ID-based hash item list
+         integer(ip), intent(out) :: bididx (          * )  !! Body ID-based hash index storage
+                                                            !! array
+      end subroutine zzbodini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBPOOL     P   Lower bound of hash pool arrays
+      !> MAXL       P   Maximum length of body name strings.
+      !> NROOM      P   Maximum length of kernel pool data vectors.
+      module subroutine zzbodker ( ctx, names, nornam, codes, nvals, extker, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         integer(ip), parameter :: lbpool = -5
+         character(maxl), intent(out) :: names  (          nroom )  !! Array of kernel pool assigned
+                                                                    !! names.
+         character(maxl), intent(out) :: nornam (          nroom )  !! Array of normalized kernel
+                                                                    !! pool assigned names.
+         integer(ip), intent(out) :: codes  (          nroom )  !! Array of ID codes for
+                                                                !! NAMES/NORNAM.
+         integer(ip), intent(out) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays.
+         logical, intent(out) :: extker  !! Logical indicating presence of kernel pool names.
+         integer(ip), intent(out) :: bnmlst (          nroom )  !! Body name-based hash head node
+                                                                !! pointer list
+         integer(ip), intent(out) :: bnmpol ( lbpool : nroom )  !! Body name-based hash node
+                                                                !! collision list
+         character(maxl), intent(out) :: bnmnms (          nroom )  !! Body name-based hash item
+                                                                    !! list
+         integer(ip), intent(out) :: bnmidx (          nroom )  !! Body name-based hash index
+                                                                !! storage array
+         integer(ip), intent(out) :: bidlst (          nroom )  !! Body ID-based hash head node
+                                                                !! pointer list
+         integer(ip), intent(out) :: bidpol ( lbpool : nroom )  !! Body ID-based hash node collision
+                                                                !! list
+         integer(ip), intent(out) :: bidids (          nroom )  !! Body ID-based hash item list
+         integer(ip), intent(out) :: bididx (          nroom )  !! Body ID-based hash index storage
+                                                                !! array
+      end subroutine zzbodker
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzbodget ( ctx, room, names, nornam, codes, nvals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzbodtrn.inc'
+         integer(ip), intent(in) :: room  !! Space available in NAMES, NORNAM, and CODES.
+         character(*), intent(out) :: names  ( * )  !! Array of built-in body names.
+         character(*), intent(out) :: nornam ( * )  !! Array of normalized built-in body names.
+         integer(ip), intent(out) :: codes  ( * )  !! Array of built-in ID codes for NAMES/NORNAM.
+         integer(ip), intent(out) :: nvals  !! Length of NAMES, NORNAM, CODES, and ORDNOM arrays.
+      end subroutine zzbodget
+
+      !> Output the complete list of built-in body/ID mappings to
+      !> some output device. Thw routine generates 2 lists: one
+      !> sorted by ID number, one sorted by name.
+      module subroutine zzbodlst ( ctx, device, reqst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzbodtrn.inc'
+         character(*), intent(in) :: device  !! Device name to receive the output.
+         character(*), intent(in) :: reqst  !! Data list name to output.
+      end subroutine zzbodlst
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> MAXL       P   Max name length.
+      module subroutine zzbodn2c ( ctx, name, code, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         include               'zzctr.inc'
+         character(*), intent(in) :: name  !! Body name to be translated.
+         integer(ip), intent(out) :: code  !! Integer code for that body.
+         logical, intent(out) :: found  !! True if translated, otherwise false.
+      end subroutine zzbodn2c
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> MAXL       P   Max name length.
+      module subroutine zzbodc2n ( ctx, code, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         include               'zzctr.inc'
+         character(*), intent(out) :: name  !! Common name for the body identified by CODE.
+         integer(ip), intent(in) :: code  !! Integer code to be translated.
+         logical, intent(out) :: found  !! True if translated, otherwise false.
+      end subroutine zzbodc2n
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> MAXL       P   Max name length and max number of digits in code.
+      !> MAXP       P   Maximum number of name/code pair definitions.
+      module subroutine zzboddef ( ctx, name, code )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         include               'zzctr.inc'
+         character(*), intent(in) :: name  !! Common name of some body.
+         integer(ip), intent(in) :: code  !! Integer code for that body.
+      end subroutine zzboddef
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> None.
+      module subroutine zzbodkik ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         include               'zzctr.inc'
+      end subroutine zzbodkik
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> None.
+      module subroutine zzbodrst ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         include               'zzctr.inc'
+      end subroutine zzbodrst
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> CTRSIZ     P   Dimension of the counter array
+      module subroutine zzbctrck ( ctx, usrctr, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzbodtrn.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter tracked by
+                                                             !! the caller
+         logical, intent(out) :: update  !! Flag indicating if input counter was updated
+      end subroutine zzbctrck
+
+      !> Translate the name of a body or object to the corresponding SPICE
+      !> integer ID code.
+      !>
+      !> MAXL       P   Maximum length of NAME string.
+      module subroutine bodn2c ( ctx, name, code, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! Body name to be translated into a SPICE ID code.
+         integer(ip), intent(out) :: code  !! SPICE integer ID code for the named body.
+         logical, intent(out) :: found  !! .TRUE. if translated, otherwise false.
+      end subroutine bodn2c
+
+      !> Translate the SPICE integer code of a body into a common name
+      !> for that body.
+      !>
+      !> MAXL       P   Maximum length of NAME string.
+      module subroutine bodc2n ( ctx, code, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: code  !! Integer ID code to be translated into a name.
+         character(*), intent(out) :: name  !! A common name for the body identified by CODE.
+         logical, intent(out) :: found  !! .TRUE. if translated, otherwise false.
+      end subroutine bodc2n
+
+      !> Translate a string containing a body name or ID code to an
+      !> integer code.
+      module subroutine bods2c ( ctx, name, code, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! String to be translated to an ID code.
+         integer(ip), intent(out) :: code  !! Integer ID code corresponding to NAME.
+         logical, intent(out) :: found  !! Flag indicating whether translation succeeded.
+      end subroutine bods2c
+
+      !> Translate a body ID code to either the corresponding name
+      !> or if no name to ID code mapping exists, the string
+      !> representation of the body ID value.
+      module subroutine bodc2s ( ctx, code, name )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: code  !! Integer ID code to translate to a string.
+         character(*), intent(out) :: name  !! String corresponding to CODE.
+      end subroutine bodc2s
+
+      !> Define a body name/ID code pair for later translation via
+      !> BODN2C or BODC2N.
+      !>
+      !> MAXL       P   Maximum length of NAME string.
+      module subroutine boddef ( ctx, name, code )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! Common name of some body.
+         integer(ip), intent(in) :: code  !! Integer code for that body.
+      end subroutine boddef
+
+      !> Determine whether values exist for some item for any body
+      !> in the kernel pool.
+      !>
+      !> The function returns .TRUE. if ITEM is in the kernel pool, .FALSE.
+      !> otherwise.
+      module logical function bodfnd ( ctx, body, item )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of body.
+         character(*), intent(in) :: item  !! Item to find ('RADII', 'NUT_AMP_RA', etc.).
+      end function bodfnd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> CTRSIZ     P   Counter array size.
+      module subroutine zzbods2c ( ctx, usrctr, savnam, savcde, savfnd, name, code, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter saved by the
+                                                             !! caller.
+         character(*), intent(inout) :: savnam  !! Body name saved by the caller.
+         integer(ip), intent(inout) :: savcde  !! Body ID code saved by the caller.
+         logical, intent(inout) :: savfnd  !! Translation success flag saved in the caller.
+         character(*), intent(in) :: name  !! Body name.
+         integer(ip), intent(out) :: code  !! Body ID code.
+         logical, intent(out) :: found  !! Translation success flag.
+      end subroutine zzbods2c
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzbodvcd ( ctx, bodyid, item, maxn, varctr, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         character(*), intent(in) :: item  !! Item for which values are desired.
+         integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
+         integer(ip), intent(inout) :: varctr ( ctrsiz )  !! POOL state counter saved by the caller.
+         integer(ip), intent(inout) :: n  !! Number of values returned.
+         real(wp), intent(inout) :: values ( * )  !! Array of double precision values.
+      end subroutine zzbodvcd
+
+      !> Deprecated: This routine has been superseded by BODVCD and
+      !> BODVRD. This routine is supported for purposes of backward
+      !> compatibility only.
+      module subroutine bodvar ( ctx, body, item, dim, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of body.
+         character(*), intent(in) :: item  !! Item for which values are desired.
+         integer(ip), intent(out) :: dim  !! Number of values returned.
+         real(wp), intent(out) :: values  ( * )  !! Values.
+      end subroutine bodvar
+
+      !> Fetch from the kernel pool the double precision values
+      !> of an item associated with a body, where the body is
+      !> specified by an integer ID code.
+      module subroutine bodvcd ( ctx, bodyid, item, maxn, dim, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         character(*), intent(in) :: item  !! Item for which values are desired. ('RADII',
+                                           !! 'NUT_PREC_ANGLES', etc. )
+         integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
+         integer(ip), intent(out) :: dim  !! Number of values returned.
+         real(wp), intent(out) :: values  ( * )  !! Values.
+      end subroutine bodvcd
+
+      !> Fetch from the kernel pool the double precision values
+      !> of an item associated with a body.
+      module subroutine bodvrd ( ctx, bodynm, item, maxn, dim, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: bodynm  !! Body name.
+         character(*), intent(in) :: item  !! Item for which values are desired. ('RADII',
+                                           !! 'NUT_PREC_ANGLES', etc. )
+         integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
+         integer(ip), intent(out) :: dim  !! Number of values returned.
+         real(wp), intent(out) :: values  ( * )  !! Values.
+      end subroutine bodvrd
+
+   end interface
+   ! --- end pepper_bodies
    ! <<< generated interfaces
 
 contains

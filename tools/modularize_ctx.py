@@ -52,7 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lowercase_code import map_code  # noqa: E402
 from modularize import (Routine, SRC, SPICELIB, parse_decl, split_top,  # noqa: E402
                         entity_name, remove_entities, module_of, _wrap)
-from modules import MODULES, CONSTANTS, CONTEXT_MODULES, UMBRELLAS  # noqa: E402
+from modules import MODULES, CONSTANTS, CONTEXT_MODULES, UMBRELLAS, ALLOWED_LEGACY  # noqa: E402
 from add_intents import table as io_table  # noqa: E402
 from document_procedures import abstract, descriptions, leftover_text  # noqa: E402
 
@@ -78,6 +78,9 @@ DOCS = {
     "pepper_pool": "The kernel pool: variables loaded from text kernels or set by the "
                    "program (ldpool, gdpool, pdpool, ...), reading text kernels, and "
                    "the watchers that tell subsystems when variables change.",
+    "pepper_bodies": "Body names and NAIF ID codes (built-in, and defined in the kernel "
+                     "pool or by boddef), and body constants from the pool (bodvrd, "
+                     "bodvcd); hash sets of names and integers.",
 }
 
 
@@ -130,7 +133,8 @@ def check_calls(r, mod: str, ctx_where: dict, stateless: dict) -> None:
             if ORDER.index(ctx_where[n]) > ORDER.index(mod):
                 raise SystemExit(f"modularize_ctx: {r.name} calls {n} ({ctx_where[n]}), "
                                  "which comes later")
-        elif n in ERROR_CALLS or n in ERROR_FUNCS or n in stateless or n in CONSTANTS:
+        elif n in ERROR_CALLS or n in ERROR_FUNCS or n in stateless or n in CONSTANTS \
+                or n in ALLOWED_LEGACY:
             continue
         elif n in legacy and n != r.name:
             raise SystemExit(f"modularize_ctx: {r.name} calls {n}, which is still in "

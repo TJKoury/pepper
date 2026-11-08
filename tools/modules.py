@@ -109,6 +109,11 @@ CONTEXT_MODULES = {
         zztpats tpartv zztime tparse zzpini zzrvar zzrvbf zzgapool zzgpnm
         zznwpool pool
         """.split(),
+    "pepper_bodies": """
+        zzidmap zzhashi zzhsc zzhsi zzbodini zzbodker zzbodblt zzbodtrn
+        bodn2c bodc2n bods2c bodc2s boddef bodfnd zzbods2c zzbodvcd bodvar
+        bodvcd bodvrd
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -126,8 +131,18 @@ HANDWRITTEN = {
 # state of a computation in progress). "state": "all" makes every local
 # variable state (exactly SPICELIB's behavior with a bare SAVE). All other
 # saved variables are temporaries and become plain local variables. An
-# umbrella is listed by its name in CONTEXT_MODULES.
+# umbrella is listed by its name in CONTEXT_MODULES. "state": "saved" takes the
+# variables named in SAVE statements or initialized by DATA; it also works for
+# routines without ENTRY points (e.g. with a saved cache).
 UMBRELLAS = {
+    # Saved caches of the last name/code translated: per context.
+    "bodvrd": {"state": "saved", "component": "bodvrd_cache", "where": "context", "entries": ['bodvrd']},
+    "zzhsc": {"state": [], "component": None, "entries": ['zzhscini', 'zzhscadd', 'zzhscchk', 'zzhscavl', 'zzhscinf']},
+    "zzhsi": {"state": [], "component": None, "entries": ['zzhsiini', 'zzhsiadd', 'zzhsichk', 'zzhsiavl', 'zzhsiinf']},
+    # Built-in body names and codes (tables built on the first call).
+    "zzbodblt": {"state": "all", "component": "zzbodblt", "where": "context", "entries": ['zzbodget', 'zzbodlst']},
+    # Body name/code tables derived from the pool: a cache, per context.
+    "zzbodtrn": {"state": "all", "component": "zzbodtrn", "where": "context", "entries": ['zzbodn2c', 'zzbodc2n', 'zzboddef', 'zzbodkik', 'zzbodrst', 'zzbctrck']},
     "zzctr": {"state": [], "component": None, "entries": ['zzctruin', 'zzctrsin', 'zzctrinc', 'zzctrchk']},
     "tcheck": {"state": ["dochck"], "component": "tcheck", "entries": ['tcheck', 'tparch', 'tchckd'], "docs": {'dochck': 'check the components of parsed times (set by TPARCH)'}},
     "texpyr": {"state": ["centry", "lbound"], "component": "texpyr", "entries": ['texpyr', 'tsetyr'], "docs": {'centry': 'the century assumed for two-digit years', 'lbound': 'the lower bound of the 100-year window for two-digit years'}},
@@ -138,4 +153,11 @@ UMBRELLAS = {
     "pool": {"state": """pnames namlst nmpool datlst chpool dppool chvals dpvals
                          wtvars wtpool wtagnt wtptrs active agents notify first subctr
                          begdat begtxt""".split(), "component": "pool", "entries": ['clpool', 'ldpool', 'rtpool', 'expool', 'wrpool', 'swpool', 'cvpool', 'gcpool', 'gdpool', 'gipool', 'dtpool', 'pcpool', 'pdpool', 'pipool', 'lmpool', 'szpool', 'dvpool', 'gnpool', 'dwpool', 'zzvupool', 'zzpctrck'], "docs": {'pnames': 'names of the kernel pool variables', 'namlst': 'heads of the hash collision lists (by hash value of the name)', 'nmpool': 'linked-list pool of the name collision lists', 'datlst': 'heads of the value lists of the variables (positive: numeric, negative: character)', 'chpool': 'linked-list pool of the character values', 'dppool': 'linked-list pool of the numeric values', 'chvals': 'character values', 'dpvals': 'numeric values', 'wtvars': 'watcher table: the watched variables (a set)', 'wtpool': 'linked-list pool of the watcher table', 'wtagnt': 'watcher table: the agents watching each variable', 'wtptrs': 'watcher table: pointers into wtpool for each watched variable', 'active': 'set of the agents that have watchers', 'agents': 'work set of agents', 'notify': 'set of the agents to notify of an update', 'first': 'the pool has not been initialized yet', 'subctr': 'pool state counter (changes when the pool changes)', 'begdat': 'the begin-data marker of text kernels', 'begtxt': 'the begin-text marker of text kernels'}},
+}
+
+# Legacy routines (still in src/spicelib) that moved code may call for now,
+# with the reason. Remove an entry when the routine moves.
+ALLOWED_LEGACY = {
+    "wrline": "writes a line to a device or file (SPICELIB's error output; it moves "
+              "with the error output, phase 7)",
 }
