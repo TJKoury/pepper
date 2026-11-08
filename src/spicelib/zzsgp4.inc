@@ -1,126 +1,126 @@
-C$Procedure ZZSGP4 ( SGP4 parameters )
-C
-C$ Abstract
-C
-C      Parameter assignments for SGP4 algorithm as expressed
-C      by Vallado [2].
-C
-C$ Disclaimer
-C
-C     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
-C     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
-C     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
-C     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
-C     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
-C     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
-C     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
-C     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
-C     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
-C     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
-C
-C     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
-C     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
-C     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
-C     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
-C     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
-C     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
-C
-C     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
-C     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
-C     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
-C     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
-C
-C$ Required_Reading
-C
-C     None.
-C
-C$ Keywords
-C
-C     None.
-C
-C$ Declarations
-C
-C     None.
-C
-C$ Brief_I/O
-C
-C     None.
-C
-C$ Detailed_Input
-C
-C     None.
-C
-C$ Detailed_Output
-C
-C     None.
-C
-C$ Parameters
-C
-C     None.
-C
-C$ Exceptions
-C
-C     None.
-C
-C$ Files
-C
-C     None.
-C
-C$ Particulars
-C
-C     None.
-C
-C$ Examples
-C
-C     J2    = GEOPHS(K_J2)
-C     J3    = GEOPHS(K_J3)
-C     J4    = GEOPHS(K_J4)
-C     ER    = GEOPHS(K_ER)
-C     XKE   = GEOPHS(K_KE)
-C
-C     TUMIN = 1.D0/XKE
-C     J3OJ2 = J3/J2
-C
-C$ Restrictions
-C
-C     None.
-C
-C$ Literature_References
-C
-C   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
-C       Propagation of the NORAD Element Sets." Spacetrack Report #3.
-C       U.S. Air Force: Aerospace Defense Command.
-C
-C   [2] Vallado, David, Crawford, Paul, Hujsak, Richard, and Kelso, T.S.
-C       2006. Revisiting Spacetrack Report #3. Paper AIAA 2006-6753
-C       presented at the AIAA/AAS Astrodynamics Specialist Conference,
-C       August 21-24, 2006. Keystone, CO.
-C
-C$ Author_and_Institution
-C
-C     E. D. Wright    (JPL)
-C
-C$ Version
-C
-C-    SPICELIB Version 1.0.0, MAY-27-2020 (EDW)
-C
-C        Updated descriptions of GEOPHS constants to be consistent
-C        with what's used in other routines.
-C
-C-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
-C
-C-&
+!$Procedure ZZSGP4 ( SGP4 parameters )
+!
+! $ Abstract
+!
+!      Parameter assignments for SGP4 algorithm as expressed
+!      by Vallado [2].
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     None.
+!
+! $ Declarations
+!
+!     None.
+!
+! $ Brief_I/O
+!
+!     None.
+!
+! $ Detailed_Input
+!
+!     None.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     None.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     None.
+!
+! $ Examples
+!
+!     J2    = GEOPHS(K_J2)
+!     J3    = GEOPHS(K_J3)
+!     J4    = GEOPHS(K_J4)
+!     ER    = GEOPHS(K_ER)
+!     XKE   = GEOPHS(K_KE)
+!
+!     TUMIN = 1.D0/XKE
+!     J3OJ2 = J3/J2
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
+!       Propagation of the NORAD Element Sets." Spacetrack Report #3.
+!       U.S. Air Force: Aerospace Defense Command.
+!
+!   [2] Vallado, David, Crawford, Paul, Hujsak, Richard, and Kelso, T.S.
+!       2006. Revisiting Spacetrack Report #3. Paper AIAA 2006-6753
+!       presented at the AIAA/AAS Astrodynamics Specialist Conference,
+!       August 21-24, 2006. Keystone, CO.
+!
+! $ Author_and_Institution
+!
+!     E. D. Wright    (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.0, MAY-27-2020 (EDW)
+!
+!        Updated descriptions of GEOPHS constants to be consistent
+!        with what's used in other routines.
+!
+!-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
+!
+!-&
 
-C$ Index_Entries
-C
-C  SGP4
-C
-C-&
+! $ Index_Entries
+!
+!  SGP4
+!
+!-&
 
 
-C
-C      WGS gravitational constants IDs.
-C
+!
+!      WGS gravitational constants IDs.
+!
 
       INTEGER                       NGRAVS
       PARAMETER                   ( NGRAVS = 3 )
@@ -139,9 +139,9 @@ C
       PARAMETER                   ( WGS84  = 3 )
 
 
-C
-C      Gravitational constant indices.
-C
+!
+!      Gravitational constant indices.
+!
 
       INTEGER                       P_RAD
       PARAMETER                   ( P_RAD =  1 )
@@ -168,22 +168,22 @@ C
       PARAMETER                   ( P_J3J2 = 8 )
 
 
-C
-C     The following parameters give the indices in the GEOPHS
-C     array of the various geophysical parameters needed for
-C     the two line element sets.
-C
-C     K_J2  --- index of J2 gravitational harmonic for earth
-C     K_J3  --- index of J3 gravitational harmonic for earth
-C     K_J4  --- index of J4 gravitational harmonic for earth
-C     K_KE  --- index of KE = sqrt(GM) in earth-radii**1.5/MIN
-C     K_QO  --- index of high altitude bound for atmospheric
-C               model in km
-C     K_SO  --- index of low altitude bound for atmospheric
-C               model in km
-C     K_ER  --- index of earth equatorial radius in km
-C     K_AE  --- index of distance units/earth radius
-C
+!
+!     The following parameters give the indices in the GEOPHS
+!     array of the various geophysical parameters needed for
+!     the two line element sets.
+!
+!     K_J2  --- index of J2 gravitational harmonic for earth
+!     K_J3  --- index of J3 gravitational harmonic for earth
+!     K_J4  --- index of J4 gravitational harmonic for earth
+!     K_KE  --- index of KE = sqrt(GM) in earth-radii**1.5/MIN
+!     K_QO  --- index of high altitude bound for atmospheric
+!               model in km
+!     K_SO  --- index of low altitude bound for atmospheric
+!               model in km
+!     K_ER  --- index of earth equatorial radius in km
+!     K_AE  --- index of distance units/earth radius
+!
 
       INTEGER                       K_J2
       PARAMETER                   ( K_J2 = 1 )
@@ -212,9 +212,9 @@ C
       INTEGER                       NGEO
       PARAMETER                   ( NGEO = K_AE )
 
-C
-C     Operation mode values, OPMODE.
-C
+!
+!     Operation mode values, OPMODE.
+!
 
       INTEGER                       AFSPC
       PARAMETER                   ( AFSPC  = 1 )
@@ -222,20 +222,20 @@ C
       INTEGER                       IMPRVD
       PARAMETER                   ( IMPRVD = 2 )
 
-C
-C     An enumeration of the various components of the
-C     elements array---ELEMS
-C
-C     KNDT20  --- location of NDT20
-C     KNDD60  --- location of NDD60
-C     KBSTAR  --- location of BSTAR
-C     KINCL   --- location of INCL
-C     KNODE0  --- location of NODE0
-C     KECC    --- location of ECC
-C     KOMEGA  --- location of OMEGA
-C     KMO     --- location of MO
-C     KNO     --- location of NO
-C
+!
+!     An enumeration of the various components of the
+!     elements array---ELEMS
+!
+!     KNDT20  --- location of NDT20
+!     KNDD60  --- location of NDD60
+!     KBSTAR  --- location of BSTAR
+!     KINCL   --- location of INCL
+!     KNODE0  --- location of NODE0
+!     KECC    --- location of ECC
+!     KOMEGA  --- location of OMEGA
+!     KMO     --- location of MO
+!     KNO     --- location of NO
+!
 
       INTEGER                       KNDT20
       PARAMETER                   ( KNDT20 = 1 )

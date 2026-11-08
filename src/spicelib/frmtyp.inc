@@ -1,100 +1,100 @@
-C$ Abstract
-C
-C     The parameters below form an enumerated list of the recognized
-C     frame types. They are: INERTL, PCK, CK, TK, DYN, SWTCH, and ALL.
-C     The meanings are outlined below.
-C
-C$ Disclaimer
-C
-C     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
-C     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
-C     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
-C     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
-C     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
-C     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
-C     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
-C     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
-C     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
-C     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
-C
-C     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
-C     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
-C     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
-C     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
-C     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
-C     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
-C
-C     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
-C     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
-C     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
-C     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
-C
-C$ Parameters
-C
-C     INERTL      an inertial frame that is listed in the routine
-C                 CHGIRF and that requires no external file to
-C                 compute the transformation from or to any other
-C                 inertial frame.
-C
-C     PCK         is a frame that is specified relative to some
-C                 INERTL frame and that has an IAU model that
-C                 may be retrieved from the PCK system via a call
-C                 to the routine TISBOD.
-C
-C     CK          is a frame defined by a C-kernel.
-C
-C     TK          is a "text kernel" frame.  These frames are offset
-C                 from their associated "relative" frames by a
-C                 constant rotation.
-C
-C     DYN         is a "dynamic" frame.  These currently are
-C                 parameterized, built-in frames where the full frame
-C                 definition depends on parameters supplied via a
-C                 frame kernel.
-C
-C     SWTCH       is a "switch" frame. These frames have orientation
-C                 defined by their alignment with base frames selected
-C                 from a prioritized list. The base frames optionally
-C                 have associated time intervals of applicability.
-C
-C     ALL         indicates any of the above classes. This parameter
-C                 is used in APIs that fetch information about frames
-C                 of a specified class.
-C
-C
-C$ Author_and_Institution
-C
-C     N.J. Bachman    (JPL)
-C     B.V. Semenov    (JPL)
-C     W.L. Taber      (JPL)
-C
-C$ Literature_References
-C
-C     None.
-C
-C$ Version
-C
-C-    SPICELIB Version 5.0.0, 08-OCT-2020 (NJB) (BVS)
-C
-C       The parameter SWTCH was added to support the switch
-C       frame class.
-C
-C-    SPICELIB Version 4.0.0, 08-MAY-2012 (NJB)
-C
-C       The parameter ALL was added to support frame fetch APIs.
-C
-C-    SPICELIB Version 3.0.0, 28-MAY-2004 (NJB)
-C
-C       The parameter DYN was added to support the dynamic frame class.
-C
-C-    SPICELIB Version 2.0.0, 12-DEC-1996 (WLT)
-C
-C        Various unused frames types were removed and the
-C        frame time TK was added.
-C
-C-    SPICELIB Version 1.0.0, 10-DEC-1995 (WLT)
-C
-C-&
+! $ Abstract
+!
+!     The parameters below form an enumerated list of the recognized
+!     frame types. They are: INERTL, PCK, CK, TK, DYN, SWTCH, and ALL.
+!     The meanings are outlined below.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Parameters
+!
+!     INERTL      an inertial frame that is listed in the routine
+!                 CHGIRF and that requires no external file to
+!                 compute the transformation from or to any other
+!                 inertial frame.
+!
+!     PCK         is a frame that is specified relative to some
+!                 INERTL frame and that has an IAU model that
+!                 may be retrieved from the PCK system via a call
+!                 to the routine TISBOD.
+!
+!     CK          is a frame defined by a C-kernel.
+!
+!     TK          is a "text kernel" frame.  These frames are offset
+!                 from their associated "relative" frames by a
+!                 constant rotation.
+!
+!     DYN         is a "dynamic" frame.  These currently are
+!                 parameterized, built-in frames where the full frame
+!                 definition depends on parameters supplied via a
+!                 frame kernel.
+!
+!     SWTCH       is a "switch" frame. These frames have orientation
+!                 defined by their alignment with base frames selected
+!                 from a prioritized list. The base frames optionally
+!                 have associated time intervals of applicability.
+!
+!     ALL         indicates any of the above classes. This parameter
+!                 is used in APIs that fetch information about frames
+!                 of a specified class.
+!
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman    (JPL)
+!     B.V. Semenov    (JPL)
+!     W.L. Taber      (JPL)
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Version
+!
+!-    SPICELIB Version 5.0.0, 08-OCT-2020 (NJB) (BVS)
+!
+!       The parameter SWTCH was added to support the switch
+!       frame class.
+!
+!-    SPICELIB Version 4.0.0, 08-MAY-2012 (NJB)
+!
+!       The parameter ALL was added to support frame fetch APIs.
+!
+!-    SPICELIB Version 3.0.0, 28-MAY-2004 (NJB)
+!
+!       The parameter DYN was added to support the dynamic frame class.
+!
+!-    SPICELIB Version 2.0.0, 12-DEC-1996 (WLT)
+!
+!        Various unused frames types were removed and the
+!        frame time TK was added.
+!
+!-    SPICELIB Version 1.0.0, 10-DEC-1995 (WLT)
+!
+!-&
 
 
 
@@ -119,6 +119,6 @@ C-&
       INTEGER               ALL
       PARAMETER           ( ALL    = -1 )
 
-C
-C     End of INCLUDE file frmtyp.inc
-C
+!
+!     End of INCLUDE file frmtyp.inc
+!

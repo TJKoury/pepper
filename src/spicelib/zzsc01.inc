@@ -1,186 +1,186 @@
-C
-C     Include file zzsclk01.inc
-C
-C     SPICE private file intended solely for the support of SPICE
-C     routines. Users should not include this file directly due
-C     to the volatile nature of this file.
-C
-C     Include file for SPICE-private declarations of SC01.
-C
-C-    Version 1.0.0, 11-NOV-2020
-C
+!
+!     Include file zzsclk01.inc
+!
+!     SPICE private file intended solely for the support of SPICE
+!     routines. Users should not include this file directly due
+!     to the volatile nature of this file.
+!
+!     Include file for SPICE-private declarations of SC01.
+!
+!-    Version 1.0.0, 11-NOV-2020
+!
 
-C
-C    Parameters copied from sclk.inc:
-C
-C        NOTE: these declarations are duplicated in the include file
-C        sclk.inc. Those declarations must be kept in sync with
-C        these ones.
-C
-C
-C     Number of supported SCLK field delimiters:
-C
+!
+!    Parameters copied from sclk.inc:
+!
+!        NOTE: these declarations are duplicated in the include file
+!        sclk.inc. Those declarations must be kept in sync with
+!        these ones.
+!
+!
+!     Number of supported SCLK field delimiters:
+!
       INTEGER               NDELIM
       PARAMETER           ( NDELIM = 5 )
 
-C
-C     Supported SCLK string field delimiters:
-C
+!
+!     Supported SCLK string field delimiters:
+!
       CHARACTER*(NDELIM)    DELIMS
       PARAMETER           ( DELIMS = '.:-, ' )
 
-C
-C     Time system codes
-C
+!
+!     Time system codes
+!
       INTEGER               TDB
       PARAMETER           ( TDB    =      1 )
 
       INTEGER               TDT
       PARAMETER           ( TDT    =      2 )
 
-C
-C     Maximum number of partitions:
-C
+!
+!     Maximum number of partitions:
+!
       INTEGER               MXPART
       PARAMETER           ( MXPART = 9999 )
 
-C
-C     Maximum number of coefficient records:
-C
+!
+!     Maximum number of coefficient records:
+!
       INTEGER               MXCOEF
       PARAMETER           ( MXCOEF = 100000 )
 
-C
-C     Maximum number of fields in an SCLK string:
-C
+!
+!     Maximum number of fields in an SCLK string:
+!
       INTEGER               MXNFLD
       PARAMETER           ( MXNFLD = 10 )
 
-C
-C     Length of strings used to represent D.P. numbers:
-C
+!
+!     Length of strings used to represent D.P. numbers:
+!
       INTEGER               DPLEN
       PARAMETER           ( DPLEN = 30 )
 
-C
-C     End of duplicated declarations.
-C
+!
+!     End of duplicated declarations.
+!
 
-C
-C     Indices of integer data items, relative to base index into
-C     the integer data buffer:
-C
-C
-C     Index of number of fields
-C
+!
+!     Indices of integer data items, relative to base index into
+!     the integer data buffer:
+!
+!
+!     Index of number of fields
+!
       INTEGER               IXNFLD
       PARAMETER           ( IXNFLD = 1 )
 
-C
-C     Index of delimiter code
-C
+!
+!     Index of delimiter code
+!
       INTEGER               IXDLIM
       PARAMETER           ( IXDLIM = IXNFLD + 1 )
-C
-C     Index of time system code
-C
+!
+!     Index of time system code
+!
       INTEGER               IXTSYS
       PARAMETER           ( IXTSYS = IXDLIM + 1 )
 
-C
-C     Index of coefficient count. The count is 3 x the number of
-C     coefficient records.
-C
+!
+!     Index of coefficient count. The count is 3 x the number of
+!     coefficient records.
+!
       INTEGER               IXNCOF
       PARAMETER           ( IXNCOF = IXTSYS + 1 )
 
-C
-C     Index of the number of partitions
-C
+!
+!     Index of the number of partitions
+!
       INTEGER               IXNPRT
       PARAMETER           ( IXNPRT = IXNCOF + 1 )
 
-C
-C     Index of the base index in the double precision buffer of the
-C     coefficient set
-C
+!
+!     Index of the base index in the double precision buffer of the
+!     coefficient set
+!
       INTEGER               IXBCOF
       PARAMETER           ( IXBCOF = IXNPRT + 1 )
 
-C
-C     Index of the base index in the double precision buffer of the
-C     partition start times
-C
+!
+!     Index of the base index in the double precision buffer of the
+!     partition start times
+!
       INTEGER               IXBSTR
       PARAMETER           ( IXBSTR = IXBCOF + 1 )
 
-C
-C     Index of the base index in the double precision buffer of the
-C     partition end times
-C
+!
+!     Index of the base index in the double precision buffer of the
+!     partition end times
+!
       INTEGER               IXBEND
       PARAMETER           ( IXBEND = IXBSTR + 1 )
 
-C
-C     Index of the base index in the double precision buffer of the
-C     SCLK field moduli
-C
+!
+!     Index of the base index in the double precision buffer of the
+!     SCLK field moduli
+!
       INTEGER               IXBMOD
       PARAMETER           ( IXBMOD  = IXBEND + 1 )
 
-C
-C     Index of the base index in the double precision buffer of the
-C     SCLK field offsets
-C
+!
+!     Index of the base index in the double precision buffer of the
+!     SCLK field offsets
+!
       INTEGER               IXBOFF
       PARAMETER           ( IXBOFF   = IXBMOD + 1 )
 
-C
-C     Number of integer values per clock
-C
+!
+!     Number of integer values per clock
+!
       INTEGER               NIVALS
       PARAMETER           ( NIVALS = IXBOFF )
 
 
-C
-C     Data structure parameters
-C
+!
+!     Data structure parameters
+!
 
-C
-C     Maximum number of clocks
-C
+!
+!     Maximum number of clocks
+!
       INTEGER               MXNCLK
       PARAMETER           ( MXNCLK = 100 )
 
-C
-C     DP buffer size
-C
-C     The buffer is large enough to hold data for one clock having the
-C     maximum amount of data.
-C
+!
+!     DP buffer size
+!
+!     The buffer is large enough to hold data for one clock having the
+!     maximum amount of data.
+!
       INTEGER               DBUFSZ
-      PARAMETER           ( DBUFSZ =   ( 3 * MXCOEF )
-     .                               + ( 2 * MXPART )
-     .                               + ( 2 * MXNFLD ) )
+      PARAMETER           ( DBUFSZ =   ( 3 * MXCOEF ) &
+                                     + ( 2 * MXPART ) &
+                                     + ( 2 * MXNFLD ) )
 
-C
-C     Integer buffer size
-C
+!
+!     Integer buffer size
+!
       INTEGER               IBUFSZ
       PARAMETER           ( IBUFSZ = NIVALS * MXNCLK )
 
-C
-C     Lower bound of control area of singly linked list:
-C
+!
+!     Lower bound of control area of singly linked list:
+!
       INTEGER               LBSNGL
       PARAMETER           ( LBSNGL = -5 )
 
-C
-C     The add-only hash pool for frame IDs is singly linked.
-C
+!
+!     The add-only hash pool for frame IDs is singly linked.
+!
       INTEGER               CPLSIZ
       PARAMETER           ( CPLSIZ = MXNCLK - LBSNGL + 1 )
 
-C
-C     End include file zzsc01.inc
-C
+!
+!     End include file zzsc01.inc
+!

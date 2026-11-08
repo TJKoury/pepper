@@ -1,0 +1,4567 @@
+!$Procedure      T_PCK10 (Create a test text PCK based on pck00010.tpc )
+
+      SUBROUTINE T_PCK10 ( NAMEPC, LOADPC, KEEPPC )
+
+! $ Abstract
+!
+!     Create and if appropriate load a test PCK kernel.  The kernel
+!     created by this routine is meant to contain data consistent with
+!     the equations implemented in the test utility routine t_pckeq.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     TESTING
+!
+! $ Declarations
+
+      IMPLICIT NONE
+      CHARACTER*(*)         NAMEPC
+      LOGICAL               LOADPC
+      LOGICAL               KEEPPC
+
+
+! $ Brief_I/O
+!
+!      VARIABLE  I/O  DESCRIPTION
+!      --------  ---  --------------------------------------------------
+!      NAMEPC     I   The name of the PC-kernel to create
+!      LOADPC     I   Load the PC-kernel if TRUE
+!      KEEPPC     I   Keep the PC-kernel if TRUE, else delete it.
+!
+! $ Detailed_Input
+!
+!     NAMEPC      is the name of a PC-kernel to create and load if
+!                 LOADPC is set to TRUE.  If a PC-kernel of the same
+!                 name already exists it is deleted.
+!
+!
+!     LOADPC      is a logical that indicates whether or not the PCK
+!                 file should be loaded after it is created.  If it
+!                 has the value TRUE the PC-kernel is loaded after
+!                 it is created.  Otherwise it is left un-opened.
+!
+!
+!     KEEPPC      is a logical that indicates whether or not the PCK
+!                 file should be deleted after it is loaded.  If KEEPPC
+!                 is TRUE the file is not deleted.  If KEEPPC is FALSE
+!                 the file is deleted after it is loaded.  NOTE that
+!                 unless LOADSC is TRUE, the PCK file is not deleted
+!                 by this routine.  This routine deletes the PC-kernel
+!                 only if it LOADSC is TRUE and KEEPPC is FALSE.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!      None.
+!
+! $ Exceptions
+!
+!     None.
+!
+! $ Files
+!
+!     This routine creates a text PCK based on the current
+!     IAU report [1].
+!
+! $ Particulars
+!
+!     This test utility supports validation of the current NAIF
+!     text PCK.
+!
+! $ Examples
+!
+!     See F_RDPCK.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     [1]   Seidelmann, P.K., Archinal, B.A., A'Hearn, M.F.,
+!           Conrad, A., Consolmagno, G.J., Hestroffer, D.,
+!           Hilton, J.L., Krasinsky, G.A., Neumann, G.,
+!           Oberst, J., Stooke, P., Tedesco, E.F., Tholen, D.J.,
+!           and Thomas, P.C. "Report of the IAU/IAG Working Group
+!           on cartographic coordinates and rotational elements: 2006."
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman    (JPL)
+!     W.L. Taber      (JPL)
+!
+! $ Version
+!
+!-    Test Utilities 2.0.0, 21-OCT-2011 (NJB)
+!
+!        Updated to reflect changes for Pluto, Charon, and Ida.
+!
+!-    Test Utilities 1.0.0, 29-JAN-2011 (WLT) (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Create current NAIF text PCK file.
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+      INTEGER               RTRIM
+
+!
+!     Test Utility Functions
+!
+      CHARACTER*(10)        BEGDAT
+      CHARACTER*(10)        BEGTXT
+
+!
+!     Local Variables.
+!
+      INTEGER               LNSIZE
+      PARAMETER           ( LNSIZE = 80 )
+
+      INTEGER               NLINES
+      PARAMETER           ( NLINES = 3151 )
+
+      CHARACTER*(LNSIZE)    PCK  ( NLINES )
+
+      INTEGER               I
+      INTEGER               R
+      INTEGER               UNIT
+
+      CALL KILFIL ( NAMEPC )
+
+      CALL CLEARC ( NLINES, PCK )
+
+
+      PCK(  1 ) = 'Orientation Constants for the Sun and Plan' &
+      //          'ets'
+      PCK(  2 ) = '------------------------------------------' &
+      //          '--------------'
+      PCK(  3 ) = ' '
+      PCK(  4 ) = ' '
+      PCK(  5 ) = 'Sun'
+      PCK(  6 ) = ' '
+      PCK(  7 ) = '     Old values:'
+      PCK(  8 ) = ' '
+      PCK(  9 ) = '        Values are unchanged in the 2009 I' &
+      //          'AU report.'
+      PCK( 10 ) = ' '
+      PCK( 11 ) = '     Current values:'
+      PCK( 12 ) = ' '
+      PCK( 13 ) = BEGDAT()
+      PCK( 14 ) = ' '
+      PCK( 15 ) = '        BODY10_POLE_RA         = (  286.13' &
+      //          '       0.          0. )'
+      PCK( 16 ) = '        BODY10_POLE_DEC        = (   63.87' &
+      //          '       0.          0. )'
+      PCK( 17 ) = '        BODY10_PM              = (   84.17' &
+      //          '6     14.18440     0. )'
+      PCK( 18 ) = '        BODY10_LONG_AXIS       = (    0.  ' &
+      //          '                      )'
+      PCK( 19 ) = ' '
+      PCK( 20 ) = BEGTXT()
+      PCK( 21 ) = ' '
+      PCK( 22 ) = 'Mercury'
+      PCK( 23 ) = ' '
+      PCK( 24 ) = '     Old values:'
+      PCK( 25 ) = ' '
+      PCK( 26 ) = '        Values are from the 2006 IAU repor' &
+      //          't.'
+      PCK( 27 ) = ' '
+      PCK( 28 ) = '        body199_pole_ra          = (  281.' &
+      //          '01     -0.033      0. )'
+      PCK( 29 ) = '        body199_pole_dec         = (   61.' &
+      //          '45     -0.005      0. )'
+      PCK( 30 ) = '        body199_pm               = (  329.' &
+      //          '548     6.1385025  0. )'
+      PCK( 31 ) = ' '
+      PCK( 32 ) = ' '
+      PCK( 33 ) = '     Current values:'
+      PCK( 34 ) = ' '
+      PCK( 35 ) = BEGDAT()
+      PCK( 36 ) = ' '
+      PCK( 37 ) = '        BODY199_POLE_RA          = (  281.' &
+      //          '0097   -0.0328     0. )'
+      PCK( 38 ) = '        BODY199_POLE_DEC         = (   61.' &
+      //          '4143   -0.0049     0. )'
+      PCK( 39 ) = '        BODY199_PM               = (  329.' &
+      //          '5469    6.1385025  0. )'
+      PCK( 40 ) = ' '
+      PCK( 41 ) = '        BODY199_LONG_AXIS        = (    0.' &
+      //          '                        )'
+      PCK( 42 ) = ' '
+      PCK( 43 ) = '        BODY199_NUT_PREC_RA  = ( 0. 0. 0. ' &
+      //          '0. 0. )'
+      PCK( 44 ) = ' '
+      PCK( 45 ) = '        BODY199_NUT_PREC_DEC = ( 0. 0. 0. ' &
+      //          '0. 0. )'
+      PCK( 46 ) = ' '
+      PCK( 47 ) = '        BODY199_NUT_PREC_PM  = (    0.0099' &
+      //          '3822'
+      PCK( 48 ) = '                                   -0.0010' &
+      //          '4581'
+      PCK( 49 ) = '                                   -0.0001' &
+      //          '0280'
+      PCK( 50 ) = '                                   -0.0000' &
+      //          '2364'
+      PCK( 51 ) = '                                   -0.0000' &
+      //          '0532  )'
+      PCK( 52 ) = BEGTXT()
+      PCK( 53 ) = ' '
+      PCK( 54 ) = '           The linear coefficients have be' &
+      //          'en scaled up from degrees/day'
+      PCK( 55 ) = '           to degrees/century, because the' &
+      //          ' SPICELIB PCK reader expects'
+      PCK( 56 ) = '           these units.  The original cons' &
+      //          'tants were:'
+      PCK( 57 ) = ' '
+      PCK( 58 ) = '                                    174.79' &
+      //          '1086      4.092335'
+      PCK( 59 ) = '                                    349.58' &
+      //          '2171      8.184670'
+      PCK( 60 ) = '                                    164.37' &
+      //          '3257     12.277005'
+      PCK( 61 ) = '                                    339.16' &
+      //          '4343     16.369340'
+      PCK( 62 ) = '                                    153.95' &
+      //          '5429     20.461675'
+      PCK( 63 ) = ' '
+      PCK( 64 ) = ' '
+      PCK( 65 ) = BEGDAT()
+      PCK( 66 ) = ' '
+      PCK( 67 ) = '        BODY1_NUT_PREC_ANGLES  = ( 174.791' &
+      //          '086  0.14947253587500003E+06'
+      PCK( 68 ) = '                                   349.582' &
+      //          '171  0.29894507175000006E+06'
+      PCK( 69 ) = '                                   164.373' &
+      //          '257  0.44841760762500006E+06'
+      PCK( 70 ) = '                                   339.164' &
+      //          '343  0.59789014350000012E+06'
+      PCK( 71 ) = '                                   153.955' &
+      //          '429  0.74736267937499995E+06 )'
+      PCK( 72 ) = BEGTXT()
+      PCK( 73 ) = ' '
+      PCK( 74 ) = ' '
+      PCK( 75 ) = 'Venus'
+      PCK( 76 ) = ' '
+      PCK( 77 ) = '     Old values:'
+      PCK( 78 ) = ' '
+      PCK( 79 ) = '        Values are unchanged in the 2009 I' &
+      //          'AU report.'
+      PCK( 80 ) = ' '
+      PCK( 81 ) = '     Current values:'
+      PCK( 82 ) = ' '
+      PCK( 83 ) = BEGDAT()
+      PCK( 84 ) = ' '
+      PCK( 85 ) = '        BODY299_POLE_RA          = (  272.' &
+      //          '76       0.          0. )'
+      PCK( 86 ) = '        BODY299_POLE_DEC         = (   67.' &
+      //          '16       0.          0. )'
+      PCK( 87 ) = '        BODY299_PM               = (  160.' &
+      //          '20      -1.4813688   0. )'
+      PCK( 88 ) = ' '
+      PCK( 89 ) = '        BODY299_LONG_AXIS        = (    0.' &
+      //          '                        )'
+      PCK( 90 ) = ' '
+      PCK( 91 ) = BEGTXT()
+      PCK( 92 ) = ' '
+      PCK( 93 ) = ' '
+      PCK( 94 ) = 'Earth'
+      PCK( 95 ) = ' '
+      PCK( 96 ) = '     Old values:'
+      PCK( 97 ) = ' '
+      PCK( 98 ) = '        Values are unchanged in the 2009 r' &
+      //          'eport.'
+      PCK( 99 ) = ' '
+      PCK( 100 ) = '     Current values:'
+      PCK( 101 ) = ' '
+      PCK( 102 ) = BEGDAT()
+      PCK( 103 ) = ' '
+      PCK( 104 ) = '        BODY399_POLE_RA        = (    0. ' &
+      //           '     -0.641         0. )'
+      PCK( 105 ) = '        BODY399_POLE_DEC       = (   90. ' &
+      //           '     -0.557         0. )'
+      PCK( 106 ) = '        BODY399_PM             = (  190.1' &
+      //           '47  360.9856235     0. )'
+      PCK( 107 ) = '        BODY399_LONG_AXIS      = (    0. ' &
+      //           '                       )'
+      PCK( 108 ) = ' '
+      PCK( 109 ) = BEGTXT()
+      PCK( 110 ) = ' '
+      PCK( 111 ) = ' '
+      PCK( 112 ) = '        Nutation precession angles for th' &
+      //           'e Earth-Moon system:'
+      PCK( 113 ) = ' '
+      PCK( 114 ) = '           The linear coefficients have b' &
+      //           'een scaled up from degrees/day'
+      PCK( 115 ) = '           to degrees/century, because th' &
+      //           'e SPICELIB PCK reader expects'
+      PCK( 116 ) = '           these units.  The original con' &
+      //           'stants were:'
+      PCK( 117 ) = ' '
+      PCK( 118 ) = '                                    125.0' &
+      //           '45D0   -0.0529921D0'
+      PCK( 119 ) = '                                    250.0' &
+      //           '89D0   -0.1059842D0'
+      PCK( 120 ) = '                                    260.0' &
+      //           '08D0   13.0120009D0'
+      PCK( 121 ) = '                                    176.6' &
+      //           '25D0   13.3407154D0'
+      PCK( 122 ) = '                                    357.5' &
+      //           '29D0    0.9856003D0'
+      PCK( 123 ) = '                                    311.5' &
+      //           '89D0   26.4057084D0'
+      PCK( 124 ) = '                                    134.9' &
+      //           '63D0   13.0649930D0'
+      PCK( 125 ) = '                                    276.6' &
+      //           '17D0    0.3287146D0'
+      PCK( 126 ) = '                                     34.2' &
+      //           '26D0    1.7484877D0'
+      PCK( 127 ) = '                                     15.1' &
+      //           '34D0   -0.1589763D0'
+      PCK( 128 ) = '                                    119.7' &
+      //           '43D0    0.0036096D0'
+      PCK( 129 ) = '                                    239.9' &
+      //           '61D0    0.1643573D0'
+      PCK( 130 ) = '                                     25.0' &
+      //           '53D0   12.9590088D0'
+      PCK( 131 ) = ' '
+      PCK( 132 ) = ' '
+      PCK( 133 ) = BEGDAT()
+      PCK( 134 ) = ' '
+      PCK( 135 ) = ' '
+      PCK( 136 ) = '        BODY3_NUT_PREC_ANGLES  = (  125.0' &
+      //           '45         -1935.5364525000'
+      PCK( 137 ) = '                                    250.0' &
+      //           '89         -3871.0729050000'
+      PCK( 138 ) = '                                    260.0' &
+      //           '08        475263.3328725000'
+      PCK( 139 ) = '                                    176.6' &
+      //           '25        487269.6299850000'
+      PCK( 140 ) = '                                    357.5' &
+      //           '29         35999.0509575000'
+      PCK( 141 ) = '                                    311.5' &
+      //           '89        964468.4993100000'
+      PCK( 142 ) = '                                    134.9' &
+      //           '63        477198.8693250000'
+      PCK( 143 ) = '                                    276.6' &
+      //           '17         12006.3007650000'
+      PCK( 144 ) = '                                     34.2' &
+      //           '26         63863.5132425000'
+      PCK( 145 ) = '                                     15.1' &
+      //           '34         -5806.6093575000'
+      PCK( 146 ) = '                                    119.7' &
+      //           '43           131.8406400000'
+      PCK( 147 ) = '                                    239.9' &
+      //           '61          6003.1503825000'
+      PCK( 148 ) = '                                     25.0' &
+      //           '53        473327.7964200000 )'
+      PCK( 149 ) = ' '
+      PCK( 150 ) = ' '
+      PCK( 151 ) = BEGTXT()
+      PCK( 152 ) = ' '
+      PCK( 153 ) = ' '
+      PCK( 154 ) = '     Earth north geomagnetic centered dip' &
+      //           'ole:'
+      PCK( 155 ) = ' '
+      PCK( 156 ) = '           The north dipole location is t' &
+      //           'ime-varying.  The values shown'
+      PCK( 157 ) = '           below, taken from [8], represe' &
+      //           'nt a discrete sampling of the'
+      PCK( 158 ) = '           north dipole location from 194' &
+      //           '5 to 2000. The terms DGRF and'
+      PCK( 159 ) = '           IGRF refer to, respectively, "' &
+      //           'Definitive Geomagnetic'
+      PCK( 160 ) = '           Reference Field" and "Internat' &
+      //           'ional Geomagnetic Reference'
+      PCK( 161 ) = '           Field."  See references [6], [' &
+      //           '8], and [9] for details.'
+      PCK( 162 ) = ' '
+      PCK( 163 ) = '           Coordinates are planetocentric' &
+      //           '.'
+      PCK( 164 ) = ' '
+      PCK( 165 ) = '             Data source    Lat      Lon'
+      PCK( 166 ) = '             -----------   -----    -----' &
+      //           '-'
+      PCK( 167 ) = '              DGRF 1945    78.47    291.4' &
+      //           '7'
+      PCK( 168 ) = '              DGRF 1950    78.47    291.1' &
+      //           '5'
+      PCK( 169 ) = '              DGRF 1955    78.46    290.8' &
+      //           '4'
+      PCK( 170 ) = '              DGRF 1960    78.51    290.5' &
+      //           '3'
+      PCK( 171 ) = '              DGRF 1965    78.53    290.1' &
+      //           '5'
+      PCK( 172 ) = '              DGRF 1970    78.59    289.8' &
+      //           '2'
+      PCK( 173 ) = '              DGRF 1975    78.69    289.5' &
+      //           '3'
+      PCK( 174 ) = '              DGRF 1980    78.81    289.2' &
+      //           '4'
+      PCK( 175 ) = '              DGRF 1985    78.97    289.1' &
+      //           '0'
+      PCK( 176 ) = '              DGRF 1990    79.13    288.8' &
+      //           '9'
+      PCK( 177 ) = '              IGRF 1995    79.30    288.5' &
+      //           '9'
+      PCK( 178 ) = '              IGRF 2000    79.54    288.4' &
+      //           '3'
+      PCK( 179 ) = ' '
+      PCK( 180 ) = '        Original values:'
+      PCK( 181 ) = ' '
+      PCK( 182 ) = '           Values are from [7].  Note the' &
+      //           ' year of publication was 1971.'
+      PCK( 183 ) = ' '
+      PCK( 184 ) = '           body399_mag_north_pole_lon  = ' &
+      //           ' ( -69.761 )'
+      PCK( 185 ) = '           body399_mag_north_pole_lat  = ' &
+      //           ' (  78.565 )'
+      PCK( 186 ) = ' '
+      PCK( 187 ) = '        Previous values:'
+      PCK( 188 ) = ' '
+      PCK( 189 ) = '           body399_n_geomag_ctr_dipole_lo' &
+      //           'n  =  ( 288.43 )'
+      PCK( 190 ) = '           body399_n_geomag_ctr_dipole_la' &
+      //           't  =  (  79.54 )'
+      PCK( 191 ) = ' '
+      PCK( 192 ) = ' '
+      PCK( 193 ) = '        Current values:'
+      PCK( 194 ) = ' '
+      PCK( 195 ) = '           Values are given for the epoch' &
+      //           ' 2012.0 and were derived'
+      PCK( 196 ) = '           by Nat Bachman from constants ' &
+      //           'provided by [11].'
+      PCK( 197 ) = ' '
+      PCK( 198 ) = BEGDAT()
+      PCK( 199 ) = ' '
+      PCK( 200 ) = '        BODY399_N_GEOMAG_CTR_DIPOLE_LON  ' &
+      //           '=  ( 287.62 )'
+      PCK( 201 ) = '        BODY399_N_GEOMAG_CTR_DIPOLE_LAT  ' &
+      //           '=  (  80.13 )'
+      PCK( 202 ) = ' '
+      PCK( 203 ) = BEGTXT()
+      PCK( 204 ) = ' '
+      PCK( 205 ) = ' '
+      PCK( 206 ) = ' '
+      PCK( 207 ) = ' '
+      PCK( 208 ) = 'Mars'
+      PCK( 209 ) = ' '
+      PCK( 210 ) = '     Old values:'
+      PCK( 211 ) = ' '
+      PCK( 212 ) = '        Values are unchanged in the 2009 ' &
+      //           'IAU report.'
+      PCK( 213 ) = ' '
+      PCK( 214 ) = '     Current values:'
+      PCK( 215 ) = ' '
+      PCK( 216 ) = BEGDAT()
+      PCK( 217 ) = ' '
+      PCK( 218 ) = '        BODY499_POLE_RA          = (  317' &
+      //           '.68143   -0.1061      0.  )'
+      PCK( 219 ) = '        BODY499_POLE_DEC         = (   52' &
+      //           '.88650   -0.0609      0.  )'
+      PCK( 220 ) = '        BODY499_PM               = (  176' &
+      //           '.630    350.89198226  0.  )'
+      PCK( 221 ) = ' '
+      PCK( 222 ) = BEGTXT()
+      PCK( 223 ) = ' '
+      PCK( 224 ) = '        Source [5] specifies the followin' &
+      //           'g value for the lambda_a term'
+      PCK( 225 ) = '        (BODY499_LONG_AXIS ) for Mars. Th' &
+      //           'is term is the POSITIVE EAST'
+      PCK( 226 ) = '        LONGITUDE, measured from the prim' &
+      //           'e meridian, of the meridian'
+      PCK( 227 ) = '        containing the longest axis of th' &
+      //           'e reference ellipsoid.'
+      PCK( 228 ) = '        (CAUTION: previous values were PO' &
+      //           'SITIVE WEST.)'
+      PCK( 229 ) = ' '
+      PCK( 230 ) = '           body499_long_axis        = (  ' &
+      //           '252.  )'
+      PCK( 231 ) = ' '
+      PCK( 232 ) = '        We list this lambda_a value for c' &
+      //           'ompleteness. The IAU report'
+      PCK( 233 ) = '        [1] gives equal values for both e' &
+      //           'quatorial radii, so the'
+      PCK( 234 ) = '        lambda_a offset does not apply to' &
+      //           ' the IAU model.'
+      PCK( 235 ) = ' '
+      PCK( 236 ) = '        The 2003 IAU report defines M2, t' &
+      //           'he second nutation precession angle,'
+      PCK( 237 ) = '        by:'
+      PCK( 238 ) = ' '
+      PCK( 239 ) = '                                         ' &
+      //           '       2'
+      PCK( 240 ) = '           192.93  +  1128.4096700 d  +  ' &
+      //           '8.864 T'
+      PCK( 241 ) = ' '
+      PCK( 242 ) = '        We truncate the M2 series to a li' &
+      //           'near expression, because the PCK'
+      PCK( 243 ) = '        software cannot handle the quadra' &
+      //           'tic term.'
+      PCK( 244 ) = ' '
+      PCK( 245 ) = '        Again, the linear terms are scale' &
+      //           'd by 36525.0:'
+      PCK( 246 ) = ' '
+      PCK( 247 ) = '            -0.4357640000000000       -->' &
+      //           '     -15916.28010000000'
+      PCK( 248 ) = '          1128.409670000000           -->' &
+      //           '   41215163.19675000'
+      PCK( 249 ) = '            -1.8151000000000000E-02   -->' &
+      //           '       -662.9652750000000'
+      PCK( 250 ) = ' '
+      PCK( 251 ) = '        We also introduce a fourth nutati' &
+      //           'on precession angle, which'
+      PCK( 252 ) = '        is the pi/2-complement of the thi' &
+      //           'rd angle.  This angle is used'
+      PCK( 253 ) = '        in computing the prime meridian l' &
+      //           'ocation for Deimos.  See the'
+      PCK( 254 ) = '        discussion of this angle below in' &
+      //           ' the section containing orientation'
+      PCK( 255 ) = '        constants for Deimos.'
+      PCK( 256 ) = ' '
+      PCK( 257 ) = BEGDAT()
+      PCK( 258 ) = ' '
+      PCK( 259 ) = '        BODY4_NUT_PREC_ANGLES  = (  169.5' &
+      //           '1     -15916.2801'
+      PCK( 260 ) = '                                    192.9' &
+      //           '3   41215163.19675'
+      PCK( 261 ) = '                                     53.4' &
+      //           '7       -662.965275'
+      PCK( 262 ) = '                                     36.5' &
+      //           '3        662.965275  )'
+      PCK( 263 ) = ' '
+      PCK( 264 ) = BEGTXT()
+      PCK( 265 ) = ' '
+      PCK( 266 ) = ' '
+      PCK( 267 ) = 'Jupiter'
+      PCK( 268 ) = ' '
+      PCK( 269 ) = '     Old values:'
+      PCK( 270 ) = ' '
+      PCK( 271 ) = '        The rotation rate is from the 200' &
+      //           '6 IAU report; all other'
+      PCK( 272 ) = '        values are unchanged in the 2009 ' &
+      //           'report.'
+      PCK( 273 ) = ' '
+      PCK( 274 ) = '           body599_pm             = (   2' &
+      //           '84.95        870.5366420      0. )'
+      PCK( 275 ) = ' '
+      PCK( 276 ) = ' '
+      PCK( 277 ) = '     Current values:'
+      PCK( 278 ) = ' '
+      PCK( 279 ) = '        The number of nutation precession' &
+      //           ' angles is 15. The ninth and'
+      PCK( 280 ) = '        tenth are twice the first and sec' &
+      //           'ond, respectively. The'
+      PCK( 281 ) = '        eleventh through fifteenth corres' &
+      //           'pond to angles JA-JE in'
+      PCK( 282 ) = '        the 2006 IAU report; angles JA-JE' &
+      //           ' were not used prior to that'
+      PCK( 283 ) = '        report.'
+      PCK( 284 ) = ' '
+      PCK( 285 ) = BEGDAT()
+      PCK( 286 ) = ' '
+      PCK( 287 ) = ' '
+      PCK( 288 ) = '        BODY599_POLE_RA        = (   268.' &
+      //           '056595     -0.006499       0. )'
+      PCK( 289 ) = '        BODY599_POLE_DEC       = (    64.' &
+      //           '495303      0.002413       0. )'
+      PCK( 290 ) = '        BODY599_PM             = (   284.' &
+      //           '95        870.5360000      0. )'
+      PCK( 291 ) = '        BODY599_LONG_AXIS      = (     0.' &
+      //           '                        )'
+      PCK( 292 ) = ' '
+      PCK( 293 ) = '        BODY599_NUT_PREC_RA  = ( 0. 0. 0.' &
+      //           ' 0. 0. 0. 0. 0. 0. 0.  0.000117'
+      PCK( 294 ) = '                                         ' &
+      //           '                       0.000938'
+      PCK( 295 ) = '                                         ' &
+      //           '                       0.001432'
+      PCK( 296 ) = '                                         ' &
+      //           '                       0.000030'
+      PCK( 297 ) = '                                         ' &
+      //           '                       0.002150 )'
+      PCK( 298 ) = ' '
+      PCK( 299 ) = '        BODY599_NUT_PREC_DEC = ( 0. 0. 0.' &
+      //           ' 0. 0. 0. 0. 0. 0. 0.  0.000050'
+      PCK( 300 ) = '                                         ' &
+      //           '                       0.000404'
+      PCK( 301 ) = '                                         ' &
+      //           '                       0.000617'
+      PCK( 302 ) = '                                         ' &
+      //           '                      -0.000013'
+      PCK( 303 ) = '                                         ' &
+      //           '                       0.000926 )'
+      PCK( 304 ) = ' '
+      PCK( 305 ) = '        BODY599_NUT_PREC_PM  = ( 0. 0. 0.' &
+      //           ' 0. 0. 0. 0. 0. 0. 0.  0.0'
+      PCK( 306 ) = '                                         ' &
+      //           '                       0.0'
+      PCK( 307 ) = '                                         ' &
+      //           '                       0.0'
+      PCK( 308 ) = '                                         ' &
+      //           '                       0.0'
+      PCK( 309 ) = '                                         ' &
+      //           '                       0.0  )'
+      PCK( 310 ) = ' '
+      PCK( 311 ) = ' '
+      PCK( 312 ) = '        BODY5_NUT_PREC_ANGLES  = (    73.' &
+      //           '32      91472.9'
+      PCK( 313 ) = '                                      24.' &
+      //           '62      45137.2'
+      PCK( 314 ) = '                                     283.' &
+      //           '90       4850.7'
+      PCK( 315 ) = '                                     355.' &
+      //           '80       1191.3'
+      PCK( 316 ) = '                                     119.' &
+      //           '90        262.1'
+      PCK( 317 ) = '                                     229.' &
+      //           '80         64.3'
+      PCK( 318 ) = '                                     352.' &
+      //           '25       2382.6'
+      PCK( 319 ) = '                                     113.' &
+      //           '35       6070.0'
+      PCK( 320 ) = '                                     146.' &
+      //           '64     182945.8'
+      PCK( 321 ) = '                                      49.' &
+      //           '24      90274.4'
+      PCK( 322 ) = '                                      99.' &
+      //           '360714   4850.4046'
+      PCK( 323 ) = '                                     175.' &
+      //           '895369   1191.9605'
+      PCK( 324 ) = '                                     300.' &
+      //           '323162    262.5475'
+      PCK( 325 ) = '                                     114.' &
+      //           '012305   6070.2476'
+      PCK( 326 ) = '                                      49.' &
+      //           '511251     64.3000  )'
+      PCK( 327 ) = BEGTXT()
+      PCK( 328 ) = ' '
+      PCK( 329 ) = ' '
+      PCK( 330 ) = 'Saturn'
+      PCK( 331 ) = ' '
+      PCK( 332 ) = '     Old values:'
+      PCK( 333 ) = ' '
+      PCK( 334 ) = '        Values are from the 2006 IAU repo' &
+      //           'rt.'
+      PCK( 335 ) = ' '
+      PCK( 336 ) = ' '
+      PCK( 337 ) = '        body699_pole_ra        = (    40.' &
+      //           '589    -0.036      0.  )'
+      PCK( 338 ) = '        body699_pole_dec       = (    83.' &
+      //           '537    -0.004      0.  )'
+      PCK( 339 ) = '        body699_pm             = (    38.' &
+      //           '90    810.7939024  0.  )'
+      PCK( 340 ) = '        body699_long_axis      = (     0.' &
+      //           '                       )'
+      PCK( 341 ) = ' '
+      PCK( 342 ) = ' '
+      PCK( 343 ) = '        The first seven angles given here' &
+      //           ' are the angles S1'
+      PCK( 344 ) = '        through S7 from the 2000 report; ' &
+      //           'the eighth and'
+      PCK( 345 ) = '        ninth angles are 2*S1 and 2*S2, r' &
+      //           'espectively.'
+      PCK( 346 ) = ' '
+      PCK( 347 ) = ' '
+      PCK( 348 ) = '        body6_nut_prec_angles  = (  353.3' &
+      //           '2   75706.7'
+      PCK( 349 ) = '                                     28.7' &
+      //           '2   75706.7'
+      PCK( 350 ) = '                                    177.4' &
+      //           '0  -36505.5'
+      PCK( 351 ) = '                                    300.0' &
+      //           '0   -7225.9'
+      PCK( 352 ) = '                                    316.4' &
+      //           '5     506.2'
+      PCK( 353 ) = '                                    345.2' &
+      //           '0   -1016.3'
+      PCK( 354 ) = '                                     29.8' &
+      //           '0     -52.1'
+      PCK( 355 ) = '                                    706.6' &
+      //           '4  151413.4'
+      PCK( 356 ) = '                                     57.4' &
+      //           '4  151413.4  )'
+      PCK( 357 ) = ' '
+      PCK( 358 ) = ' '
+      PCK( 359 ) = '     Current values:'
+      PCK( 360 ) = ' '
+      PCK( 361 ) = ' '
+      PCK( 362 ) = '        The change from the previous set ' &
+      //           'of values is the'
+      PCK( 363 ) = '        removal of S7. This causes BODY6_' &
+      //           'NUT_PREC_ANGLES'
+      PCK( 364 ) = '        elements that formerly correspond' &
+      //           'ed to 2*S1 and 2*S1'
+      PCK( 365 ) = '        to be shifted toward the start of' &
+      //           ' the array.'
+      PCK( 366 ) = ' '
+      PCK( 367 ) = BEGDAT()
+      PCK( 368 ) = ' '
+      PCK( 369 ) = '        BODY699_POLE_RA        = (    40.' &
+      //           '589    -0.036      0.  )'
+      PCK( 370 ) = '        BODY699_POLE_DEC       = (    83.' &
+      //           '537    -0.004      0.  )'
+      PCK( 371 ) = '        BODY699_PM             = (    38.' &
+      //           '90    810.7939024  0.  )'
+      PCK( 372 ) = '        BODY699_LONG_AXIS      = (     0.' &
+      //           '                       )'
+      PCK( 373 ) = ' '
+      PCK( 374 ) = BEGTXT()
+      PCK( 375 ) = ' '
+      PCK( 376 ) = '        The first six angles given here a' &
+      //           're the angles S1'
+      PCK( 377 ) = '        through S6 from the 2009 report; ' &
+      //           'the seventh and'
+      PCK( 378 ) = '        eigth angles are 2*S1 and 2*S2, r' &
+      //           'espectively.'
+      PCK( 379 ) = ' '
+      PCK( 380 ) = ' '
+      PCK( 381 ) = BEGDAT()
+      PCK( 382 ) = ' '
+      PCK( 383 ) = '        BODY6_NUT_PREC_ANGLES  = (  353.3' &
+      //           '2   75706.7'
+      PCK( 384 ) = '                                     28.7' &
+      //           '2   75706.7'
+      PCK( 385 ) = '                                    177.4' &
+      //           '0  -36505.5'
+      PCK( 386 ) = '                                    300.0' &
+      //           '0   -7225.9'
+      PCK( 387 ) = '                                    316.4' &
+      //           '5     506.2'
+      PCK( 388 ) = '                                    345.2' &
+      //           '0   -1016.3'
+      PCK( 389 ) = '                                    706.6' &
+      //           '4  151413.4'
+      PCK( 390 ) = '                                     57.4' &
+      //           '4  151413.4  )'
+      PCK( 391 ) = BEGTXT()
+      PCK( 392 ) = ' '
+      PCK( 393 ) = ' '
+      PCK( 394 ) = 'Uranus'
+      PCK( 395 ) = ' '
+      PCK( 396 ) = '     Old values:'
+      PCK( 397 ) = ' '
+      PCK( 398 ) = '        Values are unchanged in the 2009 ' &
+      //           'IAU report.'
+      PCK( 399 ) = ' '
+      PCK( 400 ) = '     Current values:'
+      PCK( 401 ) = ' '
+      PCK( 402 ) = BEGDAT()
+      PCK( 403 ) = ' '
+      PCK( 404 ) = '        BODY799_POLE_RA        = (  257.3' &
+      //           '11     0.         0.  )'
+      PCK( 405 ) = '        BODY799_POLE_DEC       = (  -15.1' &
+      //           '75     0.         0.  )'
+      PCK( 406 ) = '        BODY799_PM             = (  203.8' &
+      //           '1   -501.1600928  0.  )'
+      PCK( 407 ) = '        BODY799_LONG_AXIS      = (    0. ' &
+      //           '                      )'
+      PCK( 408 ) = ' '
+      PCK( 409 ) = BEGTXT()
+      PCK( 410 ) = ' '
+      PCK( 411 ) = '        The first 16 angles given here ar' &
+      //           'e the angles U1'
+      PCK( 412 ) = '        through U16 from the 2000 report;' &
+      //           ' the 17th and'
+      PCK( 413 ) = '        18th angles are 2*U11 and 2*U12, ' &
+      //           'respectively.'
+      PCK( 414 ) = ' '
+      PCK( 415 ) = BEGDAT()
+      PCK( 416 ) = ' '
+      PCK( 417 ) = '        BODY7_NUT_PREC_ANGLES  = (  115.7' &
+      //           '5   54991.87'
+      PCK( 418 ) = '                                    141.6' &
+      //           '9   41887.66'
+      PCK( 419 ) = '                                    135.0' &
+      //           '3   29927.35'
+      PCK( 420 ) = '                                     61.7' &
+      //           '7   25733.59'
+      PCK( 421 ) = '                                    249.3' &
+      //           '2   24471.46'
+      PCK( 422 ) = '                                     43.8' &
+      //           '6   22278.41'
+      PCK( 423 ) = '                                     77.6' &
+      //           '6   20289.42'
+      PCK( 424 ) = '                                    157.3' &
+      //           '6   16652.76'
+      PCK( 425 ) = '                                    101.8' &
+      //           '1   12872.63'
+      PCK( 426 ) = '                                    138.6' &
+      //           '4    8061.81'
+      PCK( 427 ) = '                                    102.2' &
+      //           '3   -2024.22'
+      PCK( 428 ) = '                                    316.4' &
+      //           '1    2863.96'
+      PCK( 429 ) = '                                    304.0' &
+      //           '1     -51.94'
+      PCK( 430 ) = '                                    308.7' &
+      //           '1     -93.17'
+      PCK( 431 ) = '                                    340.8' &
+      //           '2     -75.32'
+      PCK( 432 ) = '                                    259.1' &
+      //           '4    -504.81'
+      PCK( 433 ) = '                                    204.4' &
+      //           '6   -4048.44'
+      PCK( 434 ) = '                                    632.8' &
+      //           '2    5727.92     )'
+      PCK( 435 ) = ' '
+      PCK( 436 ) = BEGTXT()
+      PCK( 437 ) = ' '
+      PCK( 438 ) = ' '
+      PCK( 439 ) = ' '
+      PCK( 440 ) = 'Neptune'
+      PCK( 441 ) = ' '
+      PCK( 442 ) = '     Old values:'
+      PCK( 443 ) = ' '
+      PCK( 444 ) = '        Values are unchanged in the 2009 ' &
+      //           'IAU report.'
+      PCK( 445 ) = ' '
+      PCK( 446 ) = '     Current values:'
+      PCK( 447 ) = ' '
+      PCK( 448 ) = BEGDAT()
+      PCK( 449 ) = ' '
+      PCK( 450 ) = '           BODY899_POLE_RA        = (  29' &
+      //           '9.36     0.         0. )'
+      PCK( 451 ) = '           BODY899_POLE_DEC       = (   4' &
+      //           '3.46     0.         0. )'
+      PCK( 452 ) = '           BODY899_PM             = (  25' &
+      //           '3.18   536.3128492  0. )'
+      PCK( 453 ) = '           BODY899_LONG_AXIS      = (    ' &
+      //           '0.                     )'
+      PCK( 454 ) = ' '
+      PCK( 455 ) = ' '
+      PCK( 456 ) = '           BODY899_NUT_PREC_RA    = (  0.' &
+      //           '70 0. 0. 0. 0. 0. 0. 0. )'
+      PCK( 457 ) = '           BODY899_NUT_PREC_DEC   = ( -0.' &
+      //           '51 0. 0. 0. 0. 0. 0. 0. )'
+      PCK( 458 ) = '           BODY899_NUT_PREC_PM    = ( -0.' &
+      //           '48 0. 0. 0. 0. 0. 0. 0. )'
+      PCK( 459 ) = ' '
+      PCK( 460 ) = BEGTXT()
+      PCK( 461 ) = ' '
+      PCK( 462 ) = '           The 2000 report defines the nu' &
+      //           'tation precession angles'
+      PCK( 463 ) = ' '
+      PCK( 464 ) = '              N, N1, N2, ... , N7'
+      PCK( 465 ) = ' '
+      PCK( 466 ) = '           and also uses the multiples of' &
+      //           ' N1 and N7'
+      PCK( 467 ) = ' '
+      PCK( 468 ) = '              2*N1'
+      PCK( 469 ) = ' '
+      PCK( 470 ) = '           and'
+      PCK( 471 ) = ' '
+      PCK( 472 ) = '              2*N7, 3*N7, ..., 9*N7'
+      PCK( 473 ) = ' '
+      PCK( 474 ) = '           In this file, we treat the ang' &
+      //           'les and their multiples as'
+      PCK( 475 ) = '           separate angles.  In the kerne' &
+      //           'l variable'
+      PCK( 476 ) = ' '
+      PCK( 477 ) = '              BODY8_NUT_PREC_ANGLES'
+      PCK( 478 ) = ' '
+      PCK( 479 ) = '           the order of the angles is'
+      PCK( 480 ) = ' '
+      PCK( 481 ) = '              N, N1, N2, ... , N7, 2*N1, ' &
+      //           '2*N7, 3*N7, ..., 9*N7'
+      PCK( 482 ) = ' '
+      PCK( 483 ) = '           Each angle is defined by a lin' &
+      //           'ear polynomial, so two'
+      PCK( 484 ) = '           consecutive array elements are' &
+      //           ' allocated for each'
+      PCK( 485 ) = '           angle.  The first term of each' &
+      //           ' pair is the constant term,'
+      PCK( 486 ) = '           the second is the linear term.'
+      PCK( 487 ) = ' '
+      PCK( 488 ) = BEGDAT()
+      PCK( 489 ) = ' '
+      PCK( 490 ) = '              BODY8_NUT_PREC_ANGLES = (  ' &
+      //           ' 357.85         52.316'
+      PCK( 491 ) = '                                         ' &
+      //           ' 323.92      62606.6'
+      PCK( 492 ) = '                                         ' &
+      //           ' 220.51      55064.2'
+      PCK( 493 ) = '                                         ' &
+      //           ' 354.27      46564.5'
+      PCK( 494 ) = '                                         ' &
+      //           '  75.31      26109.4'
+      PCK( 495 ) = '                                         ' &
+      //           '  35.36      14325.4'
+      PCK( 496 ) = '                                         ' &
+      //           ' 142.61       2824.6'
+      PCK( 497 ) = '                                         ' &
+      //           ' 177.85         52.316'
+      PCK( 498 ) = '                                         ' &
+      //           ' 647.840    125213.200'
+      PCK( 499 ) = '                                         ' &
+      //           ' 355.700       104.632'
+      PCK( 500 ) = '                                         ' &
+      //           ' 533.550       156.948'
+      PCK( 501 ) = '                                         ' &
+      //           ' 711.400       209.264'
+      PCK( 502 ) = '                                         ' &
+      //           ' 889.250       261.580'
+      PCK( 503 ) = '                                         ' &
+      //           '1067.100       313.896'
+      PCK( 504 ) = '                                         ' &
+      //           '1244.950       366.212'
+      PCK( 505 ) = '                                         ' &
+      //           '1422.800       418.528'
+      PCK( 506 ) = '                                         ' &
+      //           '1600.650       470.844   )'
+      PCK( 507 ) = ' '
+      PCK( 508 ) = BEGTXT()
+      PCK( 509 ) = ' '
+      PCK( 510 ) = ' '
+      PCK( 511 ) = ' '
+      PCK( 512 ) = ' '
+      PCK( 513 ) = 'Orientation Constants for the Dwarf Plane' &
+      //           't Pluto'
+      PCK( 514 ) = '-----------------------------------------' &
+      //           '---------------'
+      PCK( 515 ) = ' '
+      PCK( 516 ) = 'Pluto'
+      PCK( 517 ) = ' '
+      PCK( 518 ) = '     Old values:'
+      PCK( 519 ) = ' '
+      PCK( 520 ) = '        Values are from the 2006 IAU repo' &
+      //           'rt.'
+      PCK( 521 ) = ' '
+      PCK( 522 ) = '        body999_pole_ra        = (  312.9' &
+      //           '93   0.          0. )'
+      PCK( 523 ) = '        body999_pole_dec       = (    6.1' &
+      //           '63   0.          0. )'
+      PCK( 524 ) = '        body999_pm             = (  237.3' &
+      //           '05  -56.3625225  0. )'
+      PCK( 525 ) = '        body999_long_axis      = (    0. ' &
+      //           '                    )'
+      PCK( 526 ) = ' '
+      PCK( 527 ) = ' '
+      PCK( 528 ) = '     Current values:'
+      PCK( 529 ) = ' '
+      PCK( 530 ) = '        Due to the new definition of plan' &
+      //           'etocentric coordinates'
+      PCK( 531 ) = '        for small bodies, and to the recl' &
+      //           'assification of Pluto'
+      PCK( 532 ) = '        as a dwarf planet, Pluto''s north' &
+      //           ' pole direction has been'
+      PCK( 533 ) = '        inverted.'
+      PCK( 534 ) = ' '
+      PCK( 535 ) = '        The PM constant W0 is from [2].'
+      PCK( 536 ) = ' '
+      PCK( 537 ) = BEGDAT()
+      PCK( 538 ) = ' '
+      PCK( 539 ) = '        BODY999_POLE_RA        = (  132.9' &
+      //           '93   0.          0. )'
+      PCK( 540 ) = '        BODY999_POLE_DEC       = (   -6.1' &
+      //           '63   0.          0. )'
+      PCK( 541 ) = '        BODY999_PM             = (  302.6' &
+      //           '95   56.3625225  0. )'
+      PCK( 542 ) = '        BODY999_LONG_AXIS      = (    0. ' &
+      //           '                    )'
+      PCK( 543 ) = ' '
+      PCK( 544 ) = BEGTXT()
+      PCK( 545 ) = ' '
+      PCK( 546 ) = ' '
+      PCK( 547 ) = ' '
+      PCK( 548 ) = ' '
+      PCK( 549 ) = 'Orientation constants for the satellites'
+      PCK( 550 ) = '-----------------------------------------' &
+      //           '---------------'
+      PCK( 551 ) = ' '
+      PCK( 552 ) = ' '
+      PCK( 553 ) = 'Satellites of Earth'
+      PCK( 554 ) = ' '
+      PCK( 555 ) = '     Old values:'
+      PCK( 556 ) = ' '
+      PCK( 557 ) = '        Values are unchanged in the 2009 ' &
+      //           'IAU report.'
+      PCK( 558 ) = ' '
+      PCK( 559 ) = '     New values:'
+      PCK( 560 ) = ' '
+      PCK( 561 ) = BEGDAT()
+      PCK( 562 ) = ' '
+      PCK( 563 ) = ' '
+      PCK( 564 ) = '        BODY301_POLE_RA      = (  269.994' &
+      //           '9        0.0031        0.      )'
+      PCK( 565 ) = '        BODY301_POLE_DEC     = (   66.539' &
+      //           '2        0.0130        0.      )'
+      PCK( 566 ) = '        BODY301_PM           = (   38.321' &
+      //           '3       13.17635815   -1.4D-12 )'
+      PCK( 567 ) = '        BODY301_LONG_AXIS    = (    0.   ' &
+      //           '                               )'
+      PCK( 568 ) = ' '
+      PCK( 569 ) = '        BODY301_NUT_PREC_RA  = (   -3.878' &
+      //           '7   -0.1204   0.0700   -0.0172'
+      PCK( 570 ) = '                                    0.0  ' &
+      //           '     0.0072   0.0       0.0'
+      PCK( 571 ) = '                                    0.0  ' &
+      //           '    -0.0052   0.0       0.0'
+      PCK( 572 ) = '                                    0.004' &
+      //           '3                              )'
+      PCK( 573 ) = ' '
+      PCK( 574 ) = '        BODY301_NUT_PREC_DEC = (   1.5419' &
+      //           '     0.0239  -0.0278    0.0068'
+      PCK( 575 ) = '                                   0.0   ' &
+      //           '    -0.0029   0.0009    0.0'
+      PCK( 576 ) = '                                   0.0   ' &
+      //           '     0.0008   0.0       0.0'
+      PCK( 577 ) = '                                  -0.0009' &
+      //           '                               )'
+      PCK( 578 ) = ' '
+      PCK( 579 ) = '        BODY301_NUT_PREC_PM  = (   3.5610' &
+      //           '     0.1208  -0.0642    0.0158'
+      PCK( 580 ) = '                                   0.0252' &
+      //           '    -0.0066  -0.0047   -0.0046'
+      PCK( 581 ) = '                                   0.0028' &
+      //           '     0.0052   0.0040    0.0019'
+      PCK( 582 ) = '                                  -0.0044' &
+      //           '                               )'
+      PCK( 583 ) = BEGTXT()
+      PCK( 584 ) = ' '
+      PCK( 585 ) = ' '
+      PCK( 586 ) = ' '
+      PCK( 587 ) = 'Satellites of Mars'
+      PCK( 588 ) = ' '
+      PCK( 589 ) = ' '
+      PCK( 590 ) = '     Phobos'
+      PCK( 591 ) = ' '
+      PCK( 592 ) = '          Old values:'
+      PCK( 593 ) = ' '
+      PCK( 594 ) = '             Values are unchanged in the ' &
+      //           '2009 IAU report.'
+      PCK( 595 ) = ' '
+      PCK( 596 ) = ' '
+      PCK( 597 ) = '          Current values:'
+      PCK( 598 ) = ' '
+      PCK( 599 ) = '            The quadratic prime meridian ' &
+      //           'term is scaled by 1/36525**2:'
+      PCK( 600 ) = ' '
+      PCK( 601 ) = '               8.864000000000000   --->  ' &
+      //           ' 6.6443009930565219E-09'
+      PCK( 602 ) = ' '
+      PCK( 603 ) = BEGDAT()
+      PCK( 604 ) = ' '
+      PCK( 605 ) = '          BODY401_POLE_RA  = ( 317.68    ' &
+      //           '-0.108     0.                     )'
+      PCK( 606 ) = '          BODY401_POLE_DEC = (  52.90    ' &
+      //           '-0.061     0.                     )'
+      PCK( 607 ) = '          BODY401_PM       = (  35.06  11' &
+      //           '28.8445850 6.6443009930565219E-09 )'
+      PCK( 608 ) = ' '
+      PCK( 609 ) = '          BODY401_LONG_AXIS     = (    0.' &
+      //           '   )'
+      PCK( 610 ) = ' '
+      PCK( 611 ) = '          BODY401_NUT_PREC_RA   = (   1.7' &
+      //           '9    0.    0.   0. )'
+      PCK( 612 ) = '          BODY401_NUT_PREC_DEC  = (  -1.0' &
+      //           '8    0.    0.   0. )'
+      PCK( 613 ) = '          BODY401_NUT_PREC_PM   = (  -1.4' &
+      //           '2   -0.78  0.   0. )'
+      PCK( 614 ) = ' '
+      PCK( 615 ) = ' '
+      PCK( 616 ) = BEGTXT()
+      PCK( 617 ) = ' '
+      PCK( 618 ) = ' '
+      PCK( 619 ) = '     Deimos'
+      PCK( 620 ) = ' '
+      PCK( 621 ) = '        Old values:'
+      PCK( 622 ) = ' '
+      PCK( 623 ) = '           Values are unchanged in the 20' &
+      //           '09 IAU report.'
+      PCK( 624 ) = ' '
+      PCK( 625 ) = '        New values:'
+      PCK( 626 ) = ' '
+      PCK( 627 ) = '           The Deimos prime meridian expr' &
+      //           'ession is:'
+      PCK( 628 ) = ' '
+      PCK( 629 ) = ' '
+      PCK( 630 ) = '                                         ' &
+      //           '            2'
+      PCK( 631 ) = '              W = 79.41  +  285.1618970 d' &
+      //           '  -  0.520 T  -  2.58 sin M'
+      PCK( 632 ) = '                                         ' &
+      //           '                           3'
+      PCK( 633 ) = ' '
+      PCK( 634 ) = '                                         ' &
+      //           '              +  0.19 cos M .'
+      PCK( 635 ) = '                                         ' &
+      //           '                           3'
+      PCK( 636 ) = ' '
+      PCK( 637 ) = ' '
+      PCK( 638 ) = '           At the present time, the PCK k' &
+      //           'ernel software (the routine'
+      PCK( 639 ) = '           BODEUL in particular) cannot h' &
+      //           'andle the cosine term directly,'
+      PCK( 640 ) = '           but we can represent it as'
+      PCK( 641 ) = ' '
+      PCK( 642 ) = '              0.19 sin M'
+      PCK( 643 ) = '                        4'
+      PCK( 644 ) = ' '
+      PCK( 645 ) = '           where'
+      PCK( 646 ) = ' '
+      PCK( 647 ) = '              M   =  90.D0 - M'
+      PCK( 648 ) = '               4              3'
+      PCK( 649 ) = ' '
+      PCK( 650 ) = '           Therefore, the nutation preces' &
+      //           'sion angle assignments for Phobos'
+      PCK( 651 ) = '           and Deimos contain four coeffi' &
+      //           'cients rather than three.'
+      PCK( 652 ) = ' '
+      PCK( 653 ) = '           The quadratic prime meridian t' &
+      //           'erm is scaled by 1/36525**2:'
+      PCK( 654 ) = ' '
+      PCK( 655 ) = '              -0.5200000000000000  --->  ' &
+      //           ' -3.8978300049519307E-10'
+      PCK( 656 ) = ' '
+      PCK( 657 ) = BEGDAT()
+      PCK( 658 ) = ' '
+      PCK( 659 ) = '           BODY402_POLE_RA       = (  316' &
+      //           '.65     -0.108       0.           )'
+      PCK( 660 ) = '           BODY402_POLE_DEC      = (   53' &
+      //           '.52     -0.061       0.           )'
+      PCK( 661 ) = '           BODY402_PM            = (   79' &
+      //           '.41    285.1618970  -3.897830D-10 )'
+      PCK( 662 ) = '           BODY402_LONG_AXIS     = (    0' &
+      //           '.                                 )'
+      PCK( 663 ) = ' '
+      PCK( 664 ) = '           BODY402_NUT_PREC_RA   = (    0' &
+      //           '.   0.   2.98    0.   )'
+      PCK( 665 ) = '           BODY402_NUT_PREC_DEC  = (    0' &
+      //           '.   0.  -1.78    0.   )'
+      PCK( 666 ) = '           BODY402_NUT_PREC_PM   = (    0' &
+      //           '.   0.  -2.58    0.19 )'
+      PCK( 667 ) = ' '
+      PCK( 668 ) = BEGTXT()
+      PCK( 669 ) = ' '
+      PCK( 670 ) = ' '
+      PCK( 671 ) = ' '
+      PCK( 672 ) = ' '
+      PCK( 673 ) = 'Satellites of Jupiter'
+      PCK( 674 ) = ' '
+      PCK( 675 ) = ' '
+      PCK( 676 ) = '     Io'
+      PCK( 677 ) = ' '
+      PCK( 678 ) = '          Old values:'
+      PCK( 679 ) = ' '
+      PCK( 680 ) = '             Values are unchanged in the ' &
+      //           '2009 IAU report.'
+      PCK( 681 ) = ' '
+      PCK( 682 ) = '          Current values:'
+      PCK( 683 ) = ' '
+      PCK( 684 ) = BEGDAT()
+      PCK( 685 ) = ' '
+      PCK( 686 ) = '        BODY501_POLE_RA       = (  268.05' &
+      //           '          -0.009      0. )'
+      PCK( 687 ) = '        BODY501_POLE_DEC      = (   64.50' &
+      //           '           0.003      0. )'
+      PCK( 688 ) = '        BODY501_PM            = (  200.39' &
+      //           '         203.4889538  0. )'
+      PCK( 689 ) = '        BODY501_LONG_AXIS     = (    0.  ' &
+      //           '                         )'
+      PCK( 690 ) = ' '
+      PCK( 691 ) = '        BODY501_NUT_PREC_RA   = (    0.  ' &
+      //           ' 0.     0.094    0.024   )'
+      PCK( 692 ) = '        BODY501_NUT_PREC_DEC  = (    0.  ' &
+      //           ' 0.     0.040    0.011   )'
+      PCK( 693 ) = '        BODY501_NUT_PREC_PM   = (    0.  ' &
+      //           ' 0.    -0.085   -0.022   )'
+      PCK( 694 ) = ' '
+      PCK( 695 ) = BEGTXT()
+      PCK( 696 ) = ' '
+      PCK( 697 ) = ' '
+      PCK( 698 ) = ' '
+      PCK( 699 ) = '     Europa'
+      PCK( 700 ) = ' '
+      PCK( 701 ) = ' '
+      PCK( 702 ) = '        Old values:'
+      PCK( 703 ) = ' '
+      PCK( 704 ) = '           Values are unchanged in the 20' &
+      //           '09 IAU report.'
+      PCK( 705 ) = ' '
+      PCK( 706 ) = ' '
+      PCK( 707 ) = '        Current values:'
+      PCK( 708 ) = ' '
+      PCK( 709 ) = BEGDAT()
+      PCK( 710 ) = ' '
+      PCK( 711 ) = '        BODY502_POLE_RA       = (  268.08' &
+      //           '          -0.009      0.   )'
+      PCK( 712 ) = '        BODY502_POLE_DEC      = (   64.51' &
+      //           '           0.003      0.   )'
+      PCK( 713 ) = '        BODY502_PM            = (   36.02' &
+      //           '2        101.3747235  0.   )'
+      PCK( 714 ) = '        BODY502_LONG_AXIS     = (    0.  ' &
+      //           '                           )'
+      PCK( 715 ) = ' '
+      PCK( 716 ) = '        BODY502_NUT_PREC_RA   = ( 0. 0. 0' &
+      //           '.   1.086   0.060   0.015   0.009 )'
+      PCK( 717 ) = '        BODY502_NUT_PREC_DEC  = ( 0. 0. 0' &
+      //           '.   0.468   0.026   0.007   0.002 )'
+      PCK( 718 ) = '        BODY502_NUT_PREC_PM   = ( 0. 0. 0' &
+      //           '.  -0.980  -0.054  -0.014  -0.008 )'
+      PCK( 719 ) = ' '
+      PCK( 720 ) = BEGTXT()
+      PCK( 721 ) = ' '
+      PCK( 722 ) = ' '
+      PCK( 723 ) = '     Ganymede'
+      PCK( 724 ) = ' '
+      PCK( 725 ) = '        Old values:'
+      PCK( 726 ) = ' '
+      PCK( 727 ) = '             Values are unchanged in the ' &
+      //           '2009 IAU report.'
+      PCK( 728 ) = ' '
+      PCK( 729 ) = '        Current values:'
+      PCK( 730 ) = ' '
+      PCK( 731 ) = BEGDAT()
+      PCK( 732 ) = ' '
+      PCK( 733 ) = '        BODY503_POLE_RA       = (  268.20' &
+      //           '         -0.009       0.  )'
+      PCK( 734 ) = '        BODY503_POLE_DEC      = (   64.57' &
+      //           '          0.003       0.  )'
+      PCK( 735 ) = '        BODY503_PM            = (   44.06' &
+      //           '4        50.3176081   0.  )'
+      PCK( 736 ) = '        BODY503_LONG_AXIS     = (    0.  ' &
+      //           '                          )'
+      PCK( 737 ) = ' '
+      PCK( 738 ) = '        BODY503_NUT_PREC_RA   = ( 0. 0. 0' &
+      //           '.  -0.037   0.431   0.091   )'
+      PCK( 739 ) = '        BODY503_NUT_PREC_DEC  = ( 0. 0. 0' &
+      //           '.  -0.016   0.186   0.039   )'
+      PCK( 740 ) = '        BODY503_NUT_PREC_PM   = ( 0. 0. 0' &
+      //           '.   0.033  -0.389  -0.082   )'
+      PCK( 741 ) = ' '
+      PCK( 742 ) = BEGTXT()
+      PCK( 743 ) = ' '
+      PCK( 744 ) = ' '
+      PCK( 745 ) = '     Callisto'
+      PCK( 746 ) = ' '
+      PCK( 747 ) = '        Old values:'
+      PCK( 748 ) = ' '
+      PCK( 749 ) = '             Values are unchanged in the ' &
+      //           '2009 IAU report.'
+      PCK( 750 ) = ' '
+      PCK( 751 ) = '        Current values:'
+      PCK( 752 ) = ' '
+      PCK( 753 ) = ' '
+      PCK( 754 ) = BEGDAT()
+      PCK( 755 ) = ' '
+      PCK( 756 ) = '        BODY504_POLE_RA       = (   268.7' &
+      //           '2    -0.009       0.  )'
+      PCK( 757 ) = '        BODY504_POLE_DEC      = (    64.8' &
+      //           '3     0.003       0.  )'
+      PCK( 758 ) = '        BODY504_PM            = (   259.5' &
+      //           '1    21.5710715   0.  )'
+      PCK( 759 ) = '        BODY504_LONG_AXIS     = (     0. ' &
+      //           '                      )'
+      PCK( 760 ) = ' '
+      PCK( 761 ) = '        BODY504_NUT_PREC_RA   = ( 0. 0. 0' &
+      //           '. 0.  -0.068   0.590  0.   0.010 )'
+      PCK( 762 ) = '        BODY504_NUT_PREC_DEC  = ( 0. 0. 0' &
+      //           '. 0.  -0.029   0.254  0.  -0.004 )'
+      PCK( 763 ) = '        BODY504_NUT_PREC_PM   = ( 0. 0. 0' &
+      //           '. 0.   0.061  -0.533  0.  -0.009 )'
+      PCK( 764 ) = ' '
+      PCK( 765 ) = BEGTXT()
+      PCK( 766 ) = ' '
+      PCK( 767 ) = ' '
+      PCK( 768 ) = '     Amalthea'
+      PCK( 769 ) = ' '
+      PCK( 770 ) = ' '
+      PCK( 771 ) = '        Old values:'
+      PCK( 772 ) = ' '
+      PCK( 773 ) = '           Values are unchanged in the 20' &
+      //           '09 IAU report.'
+      PCK( 774 ) = ' '
+      PCK( 775 ) = '        Current values:'
+      PCK( 776 ) = ' '
+      PCK( 777 ) = BEGDAT()
+      PCK( 778 ) = ' '
+      PCK( 779 ) = '        BODY505_POLE_RA       = (   268.0' &
+      //           '5    -0.009      0.  )'
+      PCK( 780 ) = '        BODY505_POLE_DEC      = (    64.4' &
+      //           '9     0.003      0.  )'
+      PCK( 781 ) = '        BODY505_PM            = (   231.6' &
+      //           '7   722.6314560  0.  )'
+      PCK( 782 ) = '        BODY505_LONG_AXIS     = (     0. ' &
+      //           '                     )'
+      PCK( 783 ) = ' '
+      PCK( 784 ) = '        BODY505_NUT_PREC_RA  = ( -0.84  0' &
+      //           '. 0. 0. 0. 0. 0. 0.   0.01  0. )'
+      PCK( 785 ) = '        BODY505_NUT_PREC_DEC = ( -0.36  0' &
+      //           '. 0. 0. 0. 0. 0. 0.   0.    0. )'
+      PCK( 786 ) = '        BODY505_NUT_PREC_PM  = (  0.76  0' &
+      //           '. 0. 0. 0. 0. 0. 0.  -0.01  0. )'
+      PCK( 787 ) = ' '
+      PCK( 788 ) = BEGTXT()
+      PCK( 789 ) = ' '
+      PCK( 790 ) = ' '
+      PCK( 791 ) = '     Thebe'
+      PCK( 792 ) = ' '
+      PCK( 793 ) = ' '
+      PCK( 794 ) = '        Old values:'
+      PCK( 795 ) = ' '
+      PCK( 796 ) = '           Values are unchanged in the 20' &
+      //           '09 IAU report.'
+      PCK( 797 ) = ' '
+      PCK( 798 ) = '        Current values:'
+      PCK( 799 ) = ' '
+      PCK( 800 ) = BEGDAT()
+      PCK( 801 ) = ' '
+      PCK( 802 ) = '        BODY514_POLE_RA       = (  268.05' &
+      //           '     -0.009       0.  )'
+      PCK( 803 ) = '        BODY514_POLE_DEC      = (   64.49' &
+      //           '      0.003       0.  )'
+      PCK( 804 ) = '        BODY514_PM            = (    8.56' &
+      //           '    533.7004100   0.  )'
+      PCK( 805 ) = '        BODY514_LONG_AXIS     = (    0.  ' &
+      //           '                      )'
+      PCK( 806 ) = ' '
+      PCK( 807 ) = '        BODY514_NUT_PREC_RA  = ( 0.  -2.1' &
+      //           '1  0. 0. 0. 0. 0. 0. 0.  0.04 )'
+      PCK( 808 ) = '        BODY514_NUT_PREC_DEC = ( 0.  -0.9' &
+      //           '1  0. 0. 0. 0. 0. 0. 0.  0.01 )'
+      PCK( 809 ) = '        BODY514_NUT_PREC_PM  = ( 0.   1.9' &
+      //           '1  0. 0. 0. 0. 0. 0. 0. -0.04 )'
+      PCK( 810 ) = ' '
+      PCK( 811 ) = BEGTXT()
+      PCK( 812 ) = ' '
+      PCK( 813 ) = ' '
+      PCK( 814 ) = '     Adrastea'
+      PCK( 815 ) = ' '
+      PCK( 816 ) = '        Old values:'
+      PCK( 817 ) = ' '
+      PCK( 818 ) = '           Values are unchanged in the 20' &
+      //           '09 IAU report.'
+      PCK( 819 ) = ' '
+      PCK( 820 ) = '        Current values:'
+      PCK( 821 ) = ' '
+      PCK( 822 ) = BEGDAT()
+      PCK( 823 ) = ' '
+      PCK( 824 ) = '        BODY515_POLE_RA       = (  268.05' &
+      //           '     -0.009       0.  )'
+      PCK( 825 ) = '        BODY515_POLE_DEC      = (   64.49' &
+      //           '      0.003       0.  )'
+      PCK( 826 ) = '        BODY515_PM            = (   33.29' &
+      //           '   1206.9986602   0.  )'
+      PCK( 827 ) = '        BODY515_LONG_AXIS     = (    0.  ' &
+      //           '                      )'
+      PCK( 828 ) = ' '
+      PCK( 829 ) = BEGTXT()
+      PCK( 830 ) = ' '
+      PCK( 831 ) = ' '
+      PCK( 832 ) = '     Metis'
+      PCK( 833 ) = ' '
+      PCK( 834 ) = '        Old values:'
+      PCK( 835 ) = ' '
+      PCK( 836 ) = '           Values are unchanged in the 20' &
+      //           '09 IAU report.'
+      PCK( 837 ) = ' '
+      PCK( 838 ) = '        Current values:'
+      PCK( 839 ) = ' '
+      PCK( 840 ) = BEGDAT()
+      PCK( 841 ) = ' '
+      PCK( 842 ) = '        BODY516_POLE_RA       = (  268.05' &
+      //           '     -0.009       0.  )'
+      PCK( 843 ) = '        BODY516_POLE_DEC      = (   64.49' &
+      //           '      0.003       0.  )'
+      PCK( 844 ) = '        BODY516_PM            = (  346.09' &
+      //           '   1221.2547301   0.  )'
+      PCK( 845 ) = '        BODY516_LONG_AXIS     = (    0.  ' &
+      //           '                      )'
+      PCK( 846 ) = ' '
+      PCK( 847 ) = BEGTXT()
+      PCK( 848 ) = ' '
+      PCK( 849 ) = ' '
+      PCK( 850 ) = ' '
+      PCK( 851 ) = 'Satellites of Saturn'
+      PCK( 852 ) = ' '
+      PCK( 853 ) = ' '
+      PCK( 854 ) = '     Mimas'
+      PCK( 855 ) = ' '
+      PCK( 856 ) = '        Old values:'
+      PCK( 857 ) = ' '
+      PCK( 858 ) = '           Values are from the 2006 IAU r' &
+      //           'eport.'
+      PCK( 859 ) = ' '
+      PCK( 860 ) = '           body601_pole_ra       = (   40' &
+      //           '.66     -0.036      0.  )'
+      PCK( 861 ) = '           body601_pole_dec      = (   83' &
+      //           '.52     -0.004      0.  )'
+      PCK( 862 ) = '           body601_pm            = (  337' &
+      //           '.46    381.9945550  0.  )'
+      PCK( 863 ) = '           body601_long_axis     = (     ' &
+      //           '0.                      )'
+      PCK( 864 ) = ' '
+      PCK( 865 ) = '           body601_nut_prec_ra   = ( 0. 0' &
+      //           '.   13.56  0.    0.    0. 0. 0. 0. )'
+      PCK( 866 ) = '           body601_nut_prec_dec  = ( 0. 0' &
+      //           '.   -1.53  0.    0.    0. 0. 0. 0. )'
+      PCK( 867 ) = '           body601_nut_prec_pm   = ( 0. 0' &
+      //           '.  -13.48  0.  -44.85  0. 0. 0. 0. )'
+      PCK( 868 ) = ' '
+      PCK( 869 ) = ' '
+      PCK( 870 ) = '        Current values:'
+      PCK( 871 ) = ' '
+      PCK( 872 ) = BEGDAT()
+      PCK( 873 ) = ' '
+      PCK( 874 ) = '           BODY601_POLE_RA       = (   40' &
+      //           '.66     -0.036      0.  )'
+      PCK( 875 ) = '           BODY601_POLE_DEC      = (   83' &
+      //           '.52     -0.004      0.  )'
+      PCK( 876 ) = '           BODY601_PM            = (  333' &
+      //           '.46    381.9945550  0.  )'
+      PCK( 877 ) = '           BODY601_LONG_AXIS     = (     ' &
+      //           '0.                      )'
+      PCK( 878 ) = ' '
+      PCK( 879 ) = '           BODY601_NUT_PREC_RA   = ( 0. 0' &
+      //           '.   13.56  0.    0.    0. 0. 0.  )'
+      PCK( 880 ) = '           BODY601_NUT_PREC_DEC  = ( 0. 0' &
+      //           '.   -1.53  0.    0.    0. 0. 0.  )'
+      PCK( 881 ) = '           BODY601_NUT_PREC_PM   = ( 0. 0' &
+      //           '.  -13.48  0.  -44.85  0. 0. 0.  )'
+      PCK( 882 ) = ' '
+      PCK( 883 ) = BEGTXT()
+      PCK( 884 ) = ' '
+      PCK( 885 ) = ' '
+      PCK( 886 ) = '     Enceladus'
+      PCK( 887 ) = ' '
+      PCK( 888 ) = ' '
+      PCK( 889 ) = '        Old values:'
+      PCK( 890 ) = ' '
+      PCK( 891 ) = '           Values are from the 2006 IAU r' &
+      //           'eport.'
+      PCK( 892 ) = ' '
+      PCK( 893 ) = '           body602_pole_ra       = (   40' &
+      //           '.66    -0.036       0. )'
+      PCK( 894 ) = '           body602_pole_dec      = (   83' &
+      //           '.52    -0.004       0. )'
+      PCK( 895 ) = '           body602_pm            = (    2' &
+      //           '.82   262.7318996   0. )'
+      PCK( 896 ) = '           body602_long_axis     = (    0' &
+      //           '.                      )'
+      PCK( 897 ) = ' '
+      PCK( 898 ) = ' '
+      PCK( 899 ) = '        Current values:'
+      PCK( 900 ) = ' '
+      PCK( 901 ) = BEGDAT()
+      PCK( 902 ) = ' '
+      PCK( 903 ) = '           BODY602_POLE_RA       = (   40' &
+      //           '.66    -0.036       0. )'
+      PCK( 904 ) = '           BODY602_POLE_DEC      = (   83' &
+      //           '.52    -0.004       0. )'
+      PCK( 905 ) = '           BODY602_PM            = (    6' &
+      //           '.32   262.7318996   0. )'
+      PCK( 906 ) = '           BODY602_LONG_AXIS     = (    0' &
+      //           '.                      )'
+      PCK( 907 ) = ' '
+      PCK( 908 ) = BEGTXT()
+      PCK( 909 ) = ' '
+      PCK( 910 ) = ' '
+      PCK( 911 ) = ' '
+      PCK( 912 ) = '     Tethys'
+      PCK( 913 ) = ' '
+      PCK( 914 ) = ' '
+      PCK( 915 ) = '        Old values:'
+      PCK( 916 ) = ' '
+      PCK( 917 ) = '           Values are from the 2006 IAU r' &
+      //           'eport.'
+      PCK( 918 ) = ' '
+      PCK( 919 ) = '           body603_pole_ra       = (   40' &
+      //           '.66    -0.036       0. )'
+      PCK( 920 ) = '           body603_pole_dec      = (   83' &
+      //           '.52    -0.004       0. )'
+      PCK( 921 ) = '           body603_pm            = (   10' &
+      //           '.45   190.6979085   0. )'
+      PCK( 922 ) = '           body603_long_axis     = (    0' &
+      //           '.                      )'
+      PCK( 923 ) = ' '
+      PCK( 924 ) = '           body603_nut_prec_ra   = ( 0. 0' &
+      //           '. 0.   9.66   0.    0.  0.  0.  0. )'
+      PCK( 925 ) = '           body603_nut_prec_dec  = ( 0. 0' &
+      //           '. 0.  -1.09   0.    0.  0.  0.  0. )'
+      PCK( 926 ) = '           body603_nut_prec_pm   = ( 0. 0' &
+      //           '. 0.  -9.60   2.23  0.  0.  0.  0. )'
+      PCK( 927 ) = ' '
+      PCK( 928 ) = ' '
+      PCK( 929 ) = '        Current values:'
+      PCK( 930 ) = ' '
+      PCK( 931 ) = BEGDAT()
+      PCK( 932 ) = ' '
+      PCK( 933 ) = '           BODY603_POLE_RA       = (   40' &
+      //           '.66    -0.036       0. )'
+      PCK( 934 ) = '           BODY603_POLE_DEC      = (   83' &
+      //           '.52    -0.004       0. )'
+      PCK( 935 ) = '           BODY603_PM            = (    8' &
+      //           '.95   190.6979085   0. )'
+      PCK( 936 ) = '           BODY603_LONG_AXIS     = (    0' &
+      //           '.                      )'
+      PCK( 937 ) = ' '
+      PCK( 938 ) = '           BODY603_NUT_PREC_RA   = ( 0. 0' &
+      //           '. 0.   9.66   0.    0.  0.  0. )'
+      PCK( 939 ) = '           BODY603_NUT_PREC_DEC  = ( 0. 0' &
+      //           '. 0.  -1.09   0.    0.  0.  0. )'
+      PCK( 940 ) = '           BODY603_NUT_PREC_PM   = ( 0. 0' &
+      //           '. 0.  -9.60   2.23  0.  0.  0. )'
+      PCK( 941 ) = ' '
+      PCK( 942 ) = BEGTXT()
+      PCK( 943 ) = ' '
+      PCK( 944 ) = ' '
+      PCK( 945 ) = '     Dione'
+      PCK( 946 ) = ' '
+      PCK( 947 ) = ' '
+      PCK( 948 ) = '        Old values:'
+      PCK( 949 ) = ' '
+      PCK( 950 ) = '           Values are from the 2006 IAU r' &
+      //           'eport.'
+      PCK( 951 ) = ' '
+      PCK( 952 ) = '           body604_pole_ra       = (  40.' &
+      //           '66      -0.036      0.  )'
+      PCK( 953 ) = '           body604_pole_dec      = (  83.' &
+      //           '52      -0.004      0.  )'
+      PCK( 954 ) = '           body604_pm            = (  357' &
+      //           '.00    131.5349316  0.  )'
+      PCK( 955 ) = '           body604_long_axis     = (    0' &
+      //           '.                       )'
+      PCK( 956 ) = ' '
+      PCK( 957 ) = ' '
+      PCK( 958 ) = '        Current values:'
+      PCK( 959 ) = ' '
+      PCK( 960 ) = BEGDAT()
+      PCK( 961 ) = ' '
+      PCK( 962 ) = '           BODY604_POLE_RA       = (  40.' &
+      //           '66      -0.036      0.  )'
+      PCK( 963 ) = '           BODY604_POLE_DEC      = (  83.' &
+      //           '52      -0.004      0.  )'
+      PCK( 964 ) = '           BODY604_PM            = (  357' &
+      //           '.6     131.5349316  0.  )'
+      PCK( 965 ) = '           BODY604_LONG_AXIS     = (    0' &
+      //           '.                       )'
+      PCK( 966 ) = ' '
+      PCK( 967 ) = BEGTXT()
+      PCK( 968 ) = ' '
+      PCK( 969 ) = ' '
+      PCK( 970 ) = ' '
+      PCK( 971 ) = '     Rhea'
+      PCK( 972 ) = ' '
+      PCK( 973 ) = ' '
+      PCK( 974 ) = '        Old values:'
+      PCK( 975 ) = ' '
+      PCK( 976 ) = '           Values are from the 2009 IAU r' &
+      //           'eport.'
+      PCK( 977 ) = ' '
+      PCK( 978 ) = '           body605_pole_ra       = (   40' &
+      //           '.38   -0.036       0. )'
+      PCK( 979 ) = '           body605_pole_dec      = (   83' &
+      //           '.55   -0.004       0. )'
+      PCK( 980 ) = '           body605_pm            = (  235' &
+      //           '.16   79.6900478   0. )'
+      PCK( 981 ) = '           body605_long_axis     = (    0' &
+      //           '.                     )'
+      PCK( 982 ) = ' '
+      PCK( 983 ) = '           body605_nut_prec_ra   = ( 0. 0' &
+      //           '. 0. 0. 0.   3.10   0. 0. 0. )'
+      PCK( 984 ) = '           body605_nut_prec_dec  = ( 0. 0' &
+      //           '. 0. 0. 0.  -0.35   0. 0. 0. )'
+      PCK( 985 ) = '           body605_nut_prec_pm   = ( 0. 0' &
+      //           '. 0. 0. 0.  -3.08   0. 0. 0. )'
+      PCK( 986 ) = ' '
+      PCK( 987 ) = ' '
+      PCK( 988 ) = '        Current values:'
+      PCK( 989 ) = ' '
+      PCK( 990 ) = '           Data values are unchanged in t' &
+      //           'he 2009 IAU report. However'
+      PCK( 991 ) = '           the kernel variable contents h' &
+      //           'ave changed due to removal of'
+      PCK( 992 ) = '           the angle S7.'
+      PCK( 993 ) = ' '
+      PCK( 994 ) = BEGDAT()
+      PCK( 995 ) = ' '
+      PCK( 996 ) = '           BODY605_POLE_RA       = (   40' &
+      //           '.38   -0.036       0. )'
+      PCK( 997 ) = '           BODY605_POLE_DEC      = (   83' &
+      //           '.55   -0.004       0. )'
+      PCK( 998 ) = '           BODY605_PM            = (  235' &
+      //           '.16   79.6900478   0. )'
+      PCK( 999 ) = '           BODY605_LONG_AXIS     = (    0' &
+      //           '.                     )'
+      PCK( 1000 ) = ' '
+      PCK( 1001 ) = '           BODY605_NUT_PREC_RA   = ( 0. ' &
+      //            '0. 0. 0. 0.   3.10   0. 0. )'
+      PCK( 1002 ) = '           BODY605_NUT_PREC_DEC  = ( 0. ' &
+      //            '0. 0. 0. 0.  -0.35   0. 0. )'
+      PCK( 1003 ) = '           BODY605_NUT_PREC_PM   = ( 0. ' &
+      //            '0. 0. 0. 0.  -3.08   0. 0. )'
+      PCK( 1004 ) = ' '
+      PCK( 1005 ) = BEGTXT()
+      PCK( 1006 ) = ' '
+      PCK( 1007 ) = ' '
+      PCK( 1008 ) = ' '
+      PCK( 1009 ) = '     Titan'
+      PCK( 1010 ) = ' '
+      PCK( 1011 ) = ' '
+      PCK( 1012 ) = '        Old values:'
+      PCK( 1013 ) = ' '
+      PCK( 1014 ) = '           Values are from the 2006 IAU ' &
+      //            'report.'
+      PCK( 1015 ) = ' '
+      PCK( 1016 ) = '           BODY606_POLE_RA       = (    ' &
+      //            '36.41   -0.036      0. )'
+      PCK( 1017 ) = '           BODY606_POLE_DEC      = (    ' &
+      //            '83.94   -0.004      0. )'
+      PCK( 1018 ) = '           BODY606_PM            = (   1' &
+      //            '89.64   22.5769768  0. )'
+      PCK( 1019 ) = '           BODY606_LONG_AXIS     = (    ' &
+      //            ' 0.                    )'
+      PCK( 1020 ) = ' '
+      PCK( 1021 ) = '           BODY606_NUT_PREC_RA   = ( 0. ' &
+      //            '0. 0. 0. 0. 0.  2.66  0. 0 )'
+      PCK( 1022 ) = '           BODY606_NUT_PREC_DEC  = ( 0. ' &
+      //            '0. 0. 0. 0. 0. -0.30  0. 0 )'
+      PCK( 1023 ) = '           BODY606_NUT_PREC_PM   = ( 0. ' &
+      //            '0. 0. 0. 0. 0. -2.64  0. 0 )'
+      PCK( 1024 ) = ' '
+      PCK( 1025 ) = ' '
+      PCK( 1026 ) = '        Current values:'
+      PCK( 1027 ) = ' '
+      PCK( 1028 ) = '              Note removal of dependence' &
+      //            ' on the nutation precession'
+      PCK( 1029 ) = '              angles.'
+      PCK( 1030 ) = ' '
+      PCK( 1031 ) = BEGDAT()
+      PCK( 1032 ) = ' '
+      PCK( 1033 ) = '           BODY606_POLE_RA       = (    ' &
+      //            '39.4827    0.         0. )'
+      PCK( 1034 ) = '           BODY606_POLE_DEC      = (    ' &
+      //            '83.4279    0.         0. )'
+      PCK( 1035 ) = '           BODY606_PM            = (   1' &
+      //            '86.5855   22.5769768  0. )'
+      PCK( 1036 ) = '           BODY606_LONG_AXIS     = (    ' &
+      //            ' 0.                      )'
+      PCK( 1037 ) = ' '
+      PCK( 1038 ) = '           BODY606_NUT_PREC_RA   = ( 0. ' &
+      //            '0. 0. 0. 0. 0. 0. 0 )'
+      PCK( 1039 ) = '           BODY606_NUT_PREC_DEC  = ( 0. ' &
+      //            '0. 0. 0. 0. 0. 0. 0 )'
+      PCK( 1040 ) = '           BODY606_NUT_PREC_PM   = ( 0. ' &
+      //            '0. 0. 0. 0. 0. 0. 0 )'
+      PCK( 1041 ) = ' '
+      PCK( 1042 ) = BEGTXT()
+      PCK( 1043 ) = ' '
+      PCK( 1044 ) = ' '
+      PCK( 1045 ) = ' '
+      PCK( 1046 ) = '     Hyperion'
+      PCK( 1047 ) = ' '
+      PCK( 1048 ) = '         The IAU report does not give an' &
+      //            ' orientation model for Hyperion.'
+      PCK( 1049 ) = '         Hyperion''s rotation is in chao' &
+      //            'tic and is not predictable for'
+      PCK( 1050 ) = '         long periods.'
+      PCK( 1051 ) = ' '
+      PCK( 1052 ) = ' '
+      PCK( 1053 ) = '     Iapetus'
+      PCK( 1054 ) = ' '
+      PCK( 1055 ) = ' '
+      PCK( 1056 ) = '        Old values:'
+      PCK( 1057 ) = ' '
+      PCK( 1058 ) = '           Values are from the 2006 IAU ' &
+      //            'report.'
+      PCK( 1059 ) = ' '
+      PCK( 1060 ) = '           body608_pole_ra       = (   3' &
+      //            '18.16  -3.949      0.  )'
+      PCK( 1061 ) = '           body608_pole_dec      = (    ' &
+      //            '75.03  -1.143      0.  )'
+      PCK( 1062 ) = '           body608_pm            = (   3' &
+      //            '50.20   4.5379572  0.  )'
+      PCK( 1063 ) = '           body608_long_axis     = (    ' &
+      //            ' 0.                    )'
+      PCK( 1064 ) = ' '
+      PCK( 1065 ) = ' '
+      PCK( 1066 ) = '        Current values:'
+      PCK( 1067 ) = ' '
+      PCK( 1068 ) = BEGDAT()
+      PCK( 1069 ) = ' '
+      PCK( 1070 ) = '           BODY608_POLE_RA       = (   3' &
+      //            '18.16  -3.949      0.  )'
+      PCK( 1071 ) = '           BODY608_POLE_DEC      = (    ' &
+      //            '75.03  -1.143      0.  )'
+      PCK( 1072 ) = '           BODY608_PM            = (   3' &
+      //            '55.2    4.5379572  0.  )'
+      PCK( 1073 ) = '           BODY608_LONG_AXIS     = (    ' &
+      //            ' 0.                    )'
+      PCK( 1074 ) = ' '
+      PCK( 1075 ) = BEGTXT()
+      PCK( 1076 ) = ' '
+      PCK( 1077 ) = ' '
+      PCK( 1078 ) = ' '
+      PCK( 1079 ) = '     Phoebe'
+      PCK( 1080 ) = ' '
+      PCK( 1081 ) = ' '
+      PCK( 1082 ) = '        Old values:'
+      PCK( 1083 ) = ' '
+      PCK( 1084 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1085 ) = ' '
+      PCK( 1086 ) = '        Current values:'
+      PCK( 1087 ) = ' '
+      PCK( 1088 ) = BEGDAT()
+      PCK( 1089 ) = ' '
+      PCK( 1090 ) = '           BODY609_POLE_RA       = ( 356' &
+      //            '.90       0.         0.  )'
+      PCK( 1091 ) = '           BODY609_POLE_DEC      = (  77' &
+      //            '.80       0.         0.  )'
+      PCK( 1092 ) = '           BODY609_PM            = ( 178' &
+      //            '.58     931.639      0.  )'
+      PCK( 1093 ) = '           BODY609_LONG_AXIS     = (    ' &
+      //            '0.                       )'
+      PCK( 1094 ) = ' '
+      PCK( 1095 ) = BEGTXT()
+      PCK( 1096 ) = ' '
+      PCK( 1097 ) = ' '
+      PCK( 1098 ) = '     Janus'
+      PCK( 1099 ) = ' '
+      PCK( 1100 ) = ' '
+      PCK( 1101 ) = '        Old values:'
+      PCK( 1102 ) = ' '
+      PCK( 1103 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1104 ) = ' '
+      PCK( 1105 ) = ' '
+      PCK( 1106 ) = '        Current values:'
+      PCK( 1107 ) = ' '
+      PCK( 1108 ) = '           Data values are unchanged in ' &
+      //            'the 2009 IAU report. However'
+      PCK( 1109 ) = '           the kernel variable contents ' &
+      //            'have changed due to removal of'
+      PCK( 1110 ) = '           the angle S7.'
+      PCK( 1111 ) = ' '
+      PCK( 1112 ) = BEGDAT()
+      PCK( 1113 ) = ' '
+      PCK( 1114 ) = '           BODY610_POLE_RA       = (  40' &
+      //            '.58    -0.036       0. )'
+      PCK( 1115 ) = '           BODY610_POLE_DEC      = (  83' &
+      //            '.52    -0.004       0. )'
+      PCK( 1116 ) = '           BODY610_PM            = (  58' &
+      //            '.83   518.2359876   0. )'
+      PCK( 1117 ) = '           BODY610_LONG_AXIS     = (   0' &
+      //            '.                      )'
+      PCK( 1118 ) = ' '
+      PCK( 1119 ) = '           BODY610_NUT_PREC_RA   = ( 0. ' &
+      //            '-1.623  0. 0. 0. 0. 0.  0.023 )'
+      PCK( 1120 ) = '           BODY610_NUT_PREC_DEC  = ( 0. ' &
+      //            '-0.183  0. 0. 0. 0. 0.  0.001 )'
+      PCK( 1121 ) = '           BODY610_NUT_PREC_PM   = ( 0. ' &
+      //            ' 1.613  0. 0. 0. 0. 0. -0.023 )'
+      PCK( 1122 ) = ' '
+      PCK( 1123 ) = BEGTXT()
+      PCK( 1124 ) = ' '
+      PCK( 1125 ) = ' '
+      PCK( 1126 ) = ' '
+      PCK( 1127 ) = '     Epimetheus'
+      PCK( 1128 ) = ' '
+      PCK( 1129 ) = ' '
+      PCK( 1130 ) = '        Old values:'
+      PCK( 1131 ) = ' '
+      PCK( 1132 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1133 ) = ' '
+      PCK( 1134 ) = '        Current values:'
+      PCK( 1135 ) = ' '
+      PCK( 1136 ) = '           Data values are unchanged in ' &
+      //            'the 2009 IAU report. However'
+      PCK( 1137 ) = '           the kernel variable contents ' &
+      //            'have changed due to removal of'
+      PCK( 1138 ) = '           the angle S7.'
+      PCK( 1139 ) = ' '
+      PCK( 1140 ) = BEGDAT()
+      PCK( 1141 ) = ' '
+      PCK( 1142 ) = '           BODY611_POLE_RA       = (  40' &
+      //            '.58    -0.036        0. )'
+      PCK( 1143 ) = '           BODY611_POLE_DEC      = (  83' &
+      //            '.52    -0.004        0. )'
+      PCK( 1144 ) = '           BODY611_PM            = ( 293' &
+      //            '.87   518.4907239    0. )'
+      PCK( 1145 ) = '           BODY611_LONG_AXIS     = (   0' &
+      //            '.                       )'
+      PCK( 1146 ) = ' '
+      PCK( 1147 ) = '           BODY611_NUT_PREC_RA   = ( -3.' &
+      //            '153   0. 0. 0. 0. 0.   0.086  0. )'
+      PCK( 1148 ) = '           BODY611_NUT_PREC_DEC  = ( -0.' &
+      //            '356   0. 0. 0. 0. 0.   0.005  0. )'
+      PCK( 1149 ) = '           BODY611_NUT_PREC_PM   = (  3.' &
+      //            '133   0. 0. 0. 0. 0.  -0.086  0. )'
+      PCK( 1150 ) = ' '
+      PCK( 1151 ) = BEGTXT()
+      PCK( 1152 ) = ' '
+      PCK( 1153 ) = ' '
+      PCK( 1154 ) = ' '
+      PCK( 1155 ) = '     Helene'
+      PCK( 1156 ) = ' '
+      PCK( 1157 ) = ' '
+      PCK( 1158 ) = '        Old values:'
+      PCK( 1159 ) = ' '
+      PCK( 1160 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1161 ) = ' '
+      PCK( 1162 ) = '        Current values:'
+      PCK( 1163 ) = ' '
+      PCK( 1164 ) = BEGDAT()
+      PCK( 1165 ) = ' '
+      PCK( 1166 ) = '           BODY612_POLE_RA       = (  40' &
+      //            '.85     -0.036        0. )'
+      PCK( 1167 ) = '           BODY612_POLE_DEC      = (  83' &
+      //            '.34     -0.004        0. )'
+      PCK( 1168 ) = '           BODY612_PM            = ( 245' &
+      //            '.12    131.6174056    0. )'
+      PCK( 1169 ) = '           BODY612_LONG_AXIS     = (   0' &
+      //            '.                        )'
+      PCK( 1170 ) = ' '
+      PCK( 1171 ) = BEGTXT()
+      PCK( 1172 ) = ' '
+      PCK( 1173 ) = ' '
+      PCK( 1174 ) = ' '
+      PCK( 1175 ) = '     Telesto'
+      PCK( 1176 ) = ' '
+      PCK( 1177 ) = ' '
+      PCK( 1178 ) = '        Old values:'
+      PCK( 1179 ) = ' '
+      PCK( 1180 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1181 ) = ' '
+      PCK( 1182 ) = '        Current values:'
+      PCK( 1183 ) = ' '
+      PCK( 1184 ) = BEGDAT()
+      PCK( 1185 ) = ' '
+      PCK( 1186 ) = '           BODY613_POLE_RA       = ( 50.' &
+      //            '51    -0.036      0.  )'
+      PCK( 1187 ) = '           BODY613_POLE_DEC      = ( 84.' &
+      //            '06    -0.004      0.  )'
+      PCK( 1188 ) = '           BODY613_PM            = ( 56.' &
+      //            '88   190.6979332  0.  )'
+      PCK( 1189 ) = '           BODY613_LONG_AXIS     = (  0.' &
+      //            '                      )'
+      PCK( 1190 ) = ' '
+      PCK( 1191 ) = BEGTXT()
+      PCK( 1192 ) = ' '
+      PCK( 1193 ) = ' '
+      PCK( 1194 ) = ' '
+      PCK( 1195 ) = '     Calypso'
+      PCK( 1196 ) = ' '
+      PCK( 1197 ) = ' '
+      PCK( 1198 ) = '        Old values:'
+      PCK( 1199 ) = ' '
+      PCK( 1200 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1201 ) = ' '
+      PCK( 1202 ) = '        Current values:'
+      PCK( 1203 ) = ' '
+      PCK( 1204 ) = BEGDAT()
+      PCK( 1205 ) = ' '
+      PCK( 1206 ) = '           BODY614_POLE_RA       = (   3' &
+      //            '6.41    -0.036        0.  )'
+      PCK( 1207 ) = '           BODY614_POLE_DEC      = (   8' &
+      //            '5.04    -0.004        0.  )'
+      PCK( 1208 ) = '           BODY614_PM            = (  15' &
+      //            '3.51   190.6742373    0.  )'
+      PCK( 1209 ) = '           BODY614_LONG_AXIS     = (    ' &
+      //            '0.                        )'
+      PCK( 1210 ) = ' '
+      PCK( 1211 ) = BEGTXT()
+      PCK( 1212 ) = ' '
+      PCK( 1213 ) = ' '
+      PCK( 1214 ) = ' '
+      PCK( 1215 ) = '     Atlas'
+      PCK( 1216 ) = ' '
+      PCK( 1217 ) = ' '
+      PCK( 1218 ) = '        Old values:'
+      PCK( 1219 ) = ' '
+      PCK( 1220 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1221 ) = ' '
+      PCK( 1222 ) = '        Current values:'
+      PCK( 1223 ) = ' '
+      PCK( 1224 ) = BEGDAT()
+      PCK( 1225 ) = ' '
+      PCK( 1226 ) = '           BODY615_POLE_RA       = (   4' &
+      //            '0.58     -0.036      0. )'
+      PCK( 1227 ) = '           BODY615_POLE_DEC      = (   8' &
+      //            '3.53     -0.004      0. )'
+      PCK( 1228 ) = '           BODY615_PM            = (  13' &
+      //            '7.88    598.3060000  0. )'
+      PCK( 1229 ) = '           BODY615_LONG_AXIS     = (    ' &
+      //            '0.                      )'
+      PCK( 1230 ) = ' '
+      PCK( 1231 ) = BEGTXT()
+      PCK( 1232 ) = ' '
+      PCK( 1233 ) = ' '
+      PCK( 1234 ) = ' '
+      PCK( 1235 ) = '     Prometheus'
+      PCK( 1236 ) = ' '
+      PCK( 1237 ) = ' '
+      PCK( 1238 ) = '        Old values:'
+      PCK( 1239 ) = ' '
+      PCK( 1240 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1241 ) = ' '
+      PCK( 1242 ) = '        Current values:'
+      PCK( 1243 ) = ' '
+      PCK( 1244 ) = BEGDAT()
+      PCK( 1245 ) = ' '
+      PCK( 1246 ) = '           BODY616_POLE_RA       = (  40' &
+      //            '.58      -0.036    )'
+      PCK( 1247 ) = '           BODY616_POLE_DEC      = (  83' &
+      //            '.53      -0.004    )'
+      PCK( 1248 ) = '           BODY616_PM            = ( 296' &
+      //            '.14     587.289000 )'
+      PCK( 1249 ) = '           BODY616_LONG_AXIS     = (   0' &
+      //            '.                  )'
+      PCK( 1250 ) = ' '
+      PCK( 1251 ) = BEGTXT()
+      PCK( 1252 ) = ' '
+      PCK( 1253 ) = ' '
+      PCK( 1254 ) = ' '
+      PCK( 1255 ) = '     Pandora'
+      PCK( 1256 ) = ' '
+      PCK( 1257 ) = ' '
+      PCK( 1258 ) = '        Old values:'
+      PCK( 1259 ) = ' '
+      PCK( 1260 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1261 ) = ' '
+      PCK( 1262 ) = '        Current values:'
+      PCK( 1263 ) = ' '
+      PCK( 1264 ) = BEGDAT()
+      PCK( 1265 ) = ' '
+      PCK( 1266 ) = '           BODY617_POLE_RA       = (   4' &
+      //            '0.58     -0.036      0.  )'
+      PCK( 1267 ) = '           BODY617_POLE_DEC      = (   8' &
+      //            '3.53     -0.004      0.  )'
+      PCK( 1268 ) = '           BODY617_PM            = (  16' &
+      //            '2.92    572.7891000  0.  )'
+      PCK( 1269 ) = '           BODY617_LONG_AXIS     = (    ' &
+      //            ' 0.                      )'
+      PCK( 1270 ) = ' '
+      PCK( 1271 ) = BEGTXT()
+      PCK( 1272 ) = ' '
+      PCK( 1273 ) = ' '
+      PCK( 1274 ) = ' '
+      PCK( 1275 ) = '     Pan'
+      PCK( 1276 ) = ' '
+      PCK( 1277 ) = ' '
+      PCK( 1278 ) = '        Old values:'
+      PCK( 1279 ) = ' '
+      PCK( 1280 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1281 ) = ' '
+      PCK( 1282 ) = '        Current values:'
+      PCK( 1283 ) = ' '
+      PCK( 1284 ) = BEGDAT()
+      PCK( 1285 ) = ' '
+      PCK( 1286 ) = '           BODY618_POLE_RA       = (   4' &
+      //            '0.6     -0.036       0. )'
+      PCK( 1287 ) = '           BODY618_POLE_DEC      = (   8' &
+      //            '3.5     -0.004       0. )'
+      PCK( 1288 ) = '           BODY618_PM            = (   4' &
+      //            '8.8    626.0440000   0. )'
+      PCK( 1289 ) = '           BODY618_LONG_AXIS     = (    ' &
+      //            '0.                      )'
+      PCK( 1290 ) = ' '
+      PCK( 1291 ) = BEGTXT()
+      PCK( 1292 ) = ' '
+      PCK( 1293 ) = ' '
+      PCK( 1294 ) = ' '
+      PCK( 1295 ) = ' '
+      PCK( 1296 ) = ' '
+      PCK( 1297 ) = 'Satellites of Uranus'
+      PCK( 1298 ) = ' '
+      PCK( 1299 ) = ' '
+      PCK( 1300 ) = ' '
+      PCK( 1301 ) = '     Ariel'
+      PCK( 1302 ) = ' '
+      PCK( 1303 ) = '        Old values:'
+      PCK( 1304 ) = ' '
+      PCK( 1305 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1306 ) = ' '
+      PCK( 1307 ) = '        Current values:'
+      PCK( 1308 ) = ' '
+      PCK( 1309 ) = BEGDAT()
+      PCK( 1310 ) = ' '
+      PCK( 1311 ) = '           BODY701_POLE_RA       = ( 257' &
+      //            '.43     0.          0. )'
+      PCK( 1312 ) = '           BODY701_POLE_DEC      = ( -15' &
+      //            '.10     0.          0. )'
+      PCK( 1313 ) = '           BODY701_PM            = ( 156' &
+      //            '.22  -142.8356681   0. )'
+      PCK( 1314 ) = '           BODY701_LONG_AXIS     = (   0' &
+      //            '.                      )'
+      PCK( 1315 ) = ' '
+      PCK( 1316 ) = '           BODY701_NUT_PREC_RA   = (  0.' &
+      //            ' 0. 0. 0. 0.'
+      PCK( 1317 ) = '                                      0.' &
+      //            ' 0. 0. 0. 0.  0.    0.    0.29 )'
+      PCK( 1318 ) = ' '
+      PCK( 1319 ) = '           BODY701_NUT_PREC_DEC  = (  0.' &
+      //            ' 0. 0. 0. 0.'
+      PCK( 1320 ) = '                                      0.' &
+      //            ' 0. 0. 0. 0.  0.    0.    0.28 )'
+      PCK( 1321 ) = ' '
+      PCK( 1322 ) = '           BODY701_NUT_PREC_PM   = (  0.' &
+      //            ' 0. 0. 0. 0.'
+      PCK( 1323 ) = '                                      0.' &
+      //            ' 0. 0. 0. 0.  0.   0.05   0.08 )'
+      PCK( 1324 ) = BEGTXT()
+      PCK( 1325 ) = ' '
+      PCK( 1326 ) = ' '
+      PCK( 1327 ) = ' '
+      PCK( 1328 ) = '     Umbriel'
+      PCK( 1329 ) = ' '
+      PCK( 1330 ) = '        Old values:'
+      PCK( 1331 ) = ' '
+      PCK( 1332 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1333 ) = ' '
+      PCK( 1334 ) = '        Current values:'
+      PCK( 1335 ) = ' '
+      PCK( 1336 ) = BEGDAT()
+      PCK( 1337 ) = ' '
+      PCK( 1338 ) = '           BODY702_POLE_RA       = (  25' &
+      //            '7.43     0.          0. )'
+      PCK( 1339 ) = '           BODY702_POLE_DEC      = (  -1' &
+      //            '5.10     0.          0. )'
+      PCK( 1340 ) = '           BODY702_PM            = (  10' &
+      //            '8.05   -86.8688923   0. )'
+      PCK( 1341 ) = '           BODY702_LONG_AXIS     = (    ' &
+      //            '0.                      )'
+      PCK( 1342 ) = ' '
+      PCK( 1343 ) = '           BODY702_NUT_PREC_RA   = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1344 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0.   0.    0.   0.21 )'
+      PCK( 1345 ) = ' '
+      PCK( 1346 ) = '           BODY702_NUT_PREC_DEC  = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1347 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0.   0.    0.   0.20 )'
+      PCK( 1348 ) = ' '
+      PCK( 1349 ) = '           BODY702_NUT_PREC_PM   = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1350 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0.  -0.09  0.   0.06 )'
+      PCK( 1351 ) = ' '
+      PCK( 1352 ) = BEGTXT()
+      PCK( 1353 ) = ' '
+      PCK( 1354 ) = ' '
+      PCK( 1355 ) = ' '
+      PCK( 1356 ) = '     Titania'
+      PCK( 1357 ) = ' '
+      PCK( 1358 ) = '        Old values:'
+      PCK( 1359 ) = ' '
+      PCK( 1360 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1361 ) = ' '
+      PCK( 1362 ) = '        Current values:'
+      PCK( 1363 ) = ' '
+      PCK( 1364 ) = BEGDAT()
+      PCK( 1365 ) = ' '
+      PCK( 1366 ) = '           BODY703_POLE_RA       = (  25' &
+      //            '7.43    0.          0. )'
+      PCK( 1367 ) = '           BODY703_POLE_DEC      = (  -1' &
+      //            '5.10    0.          0. )'
+      PCK( 1368 ) = '           BODY703_PM            = (   7' &
+      //            '7.74  -41.3514316   0. )'
+      PCK( 1369 ) = '           BODY703_LONG_AXIS     = (    ' &
+      //            '0.                     )'
+      PCK( 1370 ) = ' '
+      PCK( 1371 ) = '           BODY703_NUT_PREC_RA   = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1372 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0. 0. 0. 0.   0.29 )'
+      PCK( 1373 ) = ' '
+      PCK( 1374 ) = '           BODY703_NUT_PREC_DEC  = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1375 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0. 0. 0. 0.   0.28 )'
+      PCK( 1376 ) = ' '
+      PCK( 1377 ) = '           BODY703_NUT_PREC_PM   = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1378 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0. 0. 0. 0.   0.08 )'
+      PCK( 1379 ) = BEGTXT()
+      PCK( 1380 ) = ' '
+      PCK( 1381 ) = ' '
+      PCK( 1382 ) = ' '
+      PCK( 1383 ) = '     Oberon'
+      PCK( 1384 ) = ' '
+      PCK( 1385 ) = '        Old values:'
+      PCK( 1386 ) = ' '
+      PCK( 1387 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1388 ) = ' '
+      PCK( 1389 ) = '        Current values:'
+      PCK( 1390 ) = ' '
+      PCK( 1391 ) = BEGDAT()
+      PCK( 1392 ) = ' '
+      PCK( 1393 ) = '           BODY704_POLE_RA       = (  25' &
+      //            '7.43    0.          0. )'
+      PCK( 1394 ) = '           BODY704_POLE_DEC      = (  -1' &
+      //            '5.10    0.          0. )'
+      PCK( 1395 ) = '           BODY704_PM            = (    ' &
+      //            '6.77  -26.7394932   0. )'
+      PCK( 1396 ) = '           BODY704_LONG_AXIS     = (    ' &
+      //            '0.                     )'
+      PCK( 1397 ) = ' '
+      PCK( 1398 ) = ' '
+      PCK( 1399 ) = '           BODY704_NUT_PREC_RA   = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1400 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1401 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0.16 )'
+      PCK( 1402 ) = ' '
+      PCK( 1403 ) = '           BODY704_NUT_PREC_DEC  = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1404 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1405 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0.16 )'
+      PCK( 1406 ) = ' '
+      PCK( 1407 ) = '           BODY704_NUT_PREC_PM   = ( 0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1408 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.'
+      PCK( 1409 ) = '                                     0. ' &
+      //            '0. 0. 0. 0.   0.04 )'
+      PCK( 1410 ) = BEGTXT()
+      PCK( 1411 ) = ' '
+      PCK( 1412 ) = ' '
+      PCK( 1413 ) = ' '
+      PCK( 1414 ) = '     Miranda'
+      PCK( 1415 ) = ' '
+      PCK( 1416 ) = '        Old values:'
+      PCK( 1417 ) = ' '
+      PCK( 1418 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1419 ) = ' '
+      PCK( 1420 ) = '        Current values:'
+      PCK( 1421 ) = ' '
+      PCK( 1422 ) = BEGDAT()
+      PCK( 1423 ) = ' '
+      PCK( 1424 ) = '           BODY705_POLE_RA      = (  257' &
+      //            '.43     0.         0. )'
+      PCK( 1425 ) = '           BODY705_POLE_DEC     = (  -15' &
+      //            '.08     0.         0. )'
+      PCK( 1426 ) = '           BODY705_PM           = (   30' &
+      //            '.70  -254.6906892  0. )'
+      PCK( 1427 ) = '           BODY705_LONG_AXIS    = (    0' &
+      //            '.                     )'
+      PCK( 1428 ) = ' '
+      PCK( 1429 ) = '           BODY705_NUT_PREC_RA  = ( 0.  ' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1430 ) = '                                    0.  ' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1431 ) = '                                    4.41' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1432 ) = '                                    0.  ' &
+      //            '  -0.04   0.             )'
+      PCK( 1433 ) = ' '
+      PCK( 1434 ) = '           BODY705_NUT_PREC_DEC = ( 0.  ' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1435 ) = '                                    0.  ' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1436 ) = '                                    4.25' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1437 ) = '                                    0.  ' &
+      //            '  -0.02   0.             )'
+      PCK( 1438 ) = ' '
+      PCK( 1439 ) = '           BODY705_NUT_PREC_PM  = ( 0.  ' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1440 ) = '                                    0.  ' &
+      //            '   0.     0.    0.    0.'
+      PCK( 1441 ) = '                                    1.15' &
+      //            '  -1.27   0.    0.    0.'
+      PCK( 1442 ) = '                                    0.  ' &
+      //            '  -0.09   0.15           )'
+      PCK( 1443 ) = BEGTXT()
+      PCK( 1444 ) = ' '
+      PCK( 1445 ) = ' '
+      PCK( 1446 ) = ' '
+      PCK( 1447 ) = '     Cordelia'
+      PCK( 1448 ) = ' '
+      PCK( 1449 ) = '        Old values:'
+      PCK( 1450 ) = ' '
+      PCK( 1451 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1452 ) = ' '
+      PCK( 1453 ) = '        Current values:'
+      PCK( 1454 ) = ' '
+      PCK( 1455 ) = BEGDAT()
+      PCK( 1456 ) = ' '
+      PCK( 1457 ) = '           BODY706_POLE_RA      = (   25' &
+      //            '7.31      0.         0.  )'
+      PCK( 1458 ) = '           BODY706_POLE_DEC     = (   -1' &
+      //            '5.18      0.         0.  )'
+      PCK( 1459 ) = '           BODY706_PM           = (   12' &
+      //            '7.69  -1074.5205730  0.  )'
+      PCK( 1460 ) = '           BODY706_LONG_AXIS    = (     ' &
+      //            '0.                       )'
+      PCK( 1461 ) = ' '
+      PCK( 1462 ) = '           BODY706_NUT_PREC_RA  = (   -0' &
+      //            '.15    0.     0.    0.    0.'
+      PCK( 1463 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1464 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1465 ) = '                                       0' &
+      //            '.      0.     0.             )'
+      PCK( 1466 ) = ' '
+      PCK( 1467 ) = '           BODY706_NUT_PREC_DEC = (    0' &
+      //            '.14    0.     0.    0.    0.'
+      PCK( 1468 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1469 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1470 ) = '                                       0' &
+      //            '.      0.     0.             )'
+      PCK( 1471 ) = ' '
+      PCK( 1472 ) = '           BODY706_NUT_PREC_PM  = (   -0' &
+      //            '.04    0.     0.    0.    0.'
+      PCK( 1473 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1474 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1475 ) = '                                       0' &
+      //            '.      0.     0.             )'
+      PCK( 1476 ) = ' '
+      PCK( 1477 ) = BEGTXT()
+      PCK( 1478 ) = ' '
+      PCK( 1479 ) = ' '
+      PCK( 1480 ) = ' '
+      PCK( 1481 ) = '     Ophelia'
+      PCK( 1482 ) = ' '
+      PCK( 1483 ) = ' '
+      PCK( 1484 ) = '        Old values:'
+      PCK( 1485 ) = ' '
+      PCK( 1486 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1487 ) = ' '
+      PCK( 1488 ) = '        Current values:'
+      PCK( 1489 ) = ' '
+      PCK( 1490 ) = BEGDAT()
+      PCK( 1491 ) = ' '
+      PCK( 1492 ) = '           BODY707_POLE_RA      = (  257' &
+      //            '.31     0.         0. )'
+      PCK( 1493 ) = '           BODY707_POLE_DEC     = (  -15' &
+      //            '.18     0.         0. )'
+      PCK( 1494 ) = '           BODY707_PM           = (  130' &
+      //            '.35  -956.4068150  0. )'
+      PCK( 1495 ) = '           BODY707_LONG_AXIS    = (    0' &
+      //            '.                     )'
+      PCK( 1496 ) = ' '
+      PCK( 1497 ) = '           BODY707_NUT_PREC_RA  = (    0' &
+      //            '.     -0.09   0.    0.    0.'
+      PCK( 1498 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1499 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1500 ) = '                                       0' &
+      //            '.      0.     0.             )'
+      PCK( 1501 ) = ' '
+      PCK( 1502 ) = '           BODY707_NUT_PREC_DEC = (    0' &
+      //            '.      0.09   0.    0.    0.'
+      PCK( 1503 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1504 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1505 ) = '                                       0' &
+      //            '.      0.     0.             )'
+      PCK( 1506 ) = ' '
+      PCK( 1507 ) = '           BODY707_NUT_PREC_PM  = (    0' &
+      //            '.     -0.03   0.    0.    0.'
+      PCK( 1508 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1509 ) = '                                       0' &
+      //            '.      0.     0.    0.    0.'
+      PCK( 1510 ) = '                                       0' &
+      //            '.      0.     0.             )'
+      PCK( 1511 ) = ' '
+      PCK( 1512 ) = BEGTXT()
+      PCK( 1513 ) = ' '
+      PCK( 1514 ) = ' '
+      PCK( 1515 ) = ' '
+      PCK( 1516 ) = '     Bianca'
+      PCK( 1517 ) = ' '
+      PCK( 1518 ) = '        Old values:'
+      PCK( 1519 ) = ' '
+      PCK( 1520 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1521 ) = ' '
+      PCK( 1522 ) = '        Current values:'
+      PCK( 1523 ) = ' '
+      PCK( 1524 ) = BEGDAT()
+      PCK( 1525 ) = ' '
+      PCK( 1526 ) = '           BODY708_POLE_RA      = (  257' &
+      //            '.31     0.         0.  )'
+      PCK( 1527 ) = '           BODY708_POLE_DEC     = (  -15' &
+      //            '.18     0.         0.  )'
+      PCK( 1528 ) = '           BODY708_PM           = (  105' &
+      //            '.46  -828.3914760  0.  )'
+      PCK( 1529 ) = '           BODY708_LONG_AXIS    = (    0' &
+      //            '.                      )'
+      PCK( 1530 ) = ' '
+      PCK( 1531 ) = '           BODY708_NUT_PREC_RA  = (    0' &
+      //            '.      0.    -0.16    0.    0.'
+      PCK( 1532 ) = '                                       0' &
+      //            '.      0.     0.      0.    0.'
+      PCK( 1533 ) = '                                       0' &
+      //            '.      0.     0.      0.    0.'
+      PCK( 1534 ) = '                                       0' &
+      //            '.      0.     0.               )'
+      PCK( 1535 ) = ' '
+      PCK( 1536 ) = '           BODY708_NUT_PREC_DEC = (    0' &
+      //            '.      0.     0.16    0.    0.'
+      PCK( 1537 ) = '                                       0' &
+      //            '.      0.     0.      0.    0.'
+      PCK( 1538 ) = '                                       0' &
+      //            '.      0.     0.      0.    0.'
+      PCK( 1539 ) = '                                       0' &
+      //            '.      0.     0.               )'
+      PCK( 1540 ) = ' '
+      PCK( 1541 ) = '           BODY708_NUT_PREC_PM  = (    0' &
+      //            '.      0.    -0.04    0.    0.'
+      PCK( 1542 ) = '                                       0' &
+      //            '.      0.     0.      0.    0.'
+      PCK( 1543 ) = '                                       0' &
+      //            '.      0.     0.      0.    0.'
+      PCK( 1544 ) = '                                       0' &
+      //            '.      0.     0.               )'
+      PCK( 1545 ) = ' '
+      PCK( 1546 ) = BEGTXT()
+      PCK( 1547 ) = ' '
+      PCK( 1548 ) = ' '
+      PCK( 1549 ) = ' '
+      PCK( 1550 ) = '     Cressida'
+      PCK( 1551 ) = ' '
+      PCK( 1552 ) = '        Old values:'
+      PCK( 1553 ) = ' '
+      PCK( 1554 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1555 ) = ' '
+      PCK( 1556 ) = '        Current values:'
+      PCK( 1557 ) = ' '
+      PCK( 1558 ) = BEGDAT()
+      PCK( 1559 ) = ' '
+      PCK( 1560 ) = ' '
+      PCK( 1561 ) = '           BODY709_POLE_RA      = (  257' &
+      //            '.31      0.          0.  )'
+      PCK( 1562 ) = '           BODY709_POLE_DEC     = (  -15' &
+      //            '.18      0.          0.  )'
+      PCK( 1563 ) = '           BODY709_PM           = (   59' &
+      //            '.16   -776.5816320   0.  )'
+      PCK( 1564 ) = '           BODY709_LONG_AXIS    = (    0' &
+      //            '.                        )'
+      PCK( 1565 ) = ' '
+      PCK( 1566 ) = ' '
+      PCK( 1567 ) = '           BODY709_NUT_PREC_RA  = (    0' &
+      //            '.      0.     0.     -0.04   0.'
+      PCK( 1568 ) = '                                       0' &
+      //            '.      0.     0.      0.     0.'
+      PCK( 1569 ) = '                                       0' &
+      //            '.      0.     0.      0.     0.'
+      PCK( 1570 ) = '                                       0' &
+      //            '.      0.     0.                )'
+      PCK( 1571 ) = ' '
+      PCK( 1572 ) = ' '
+      PCK( 1573 ) = '           BODY709_NUT_PREC_DEC = (    0' &
+      //            '.      0.     0.      0.04   0.'
+      PCK( 1574 ) = '                                       0' &
+      //            '.      0.     0.      0.     0.'
+      PCK( 1575 ) = '                                       0' &
+      //            '.      0.     0.      0.     0.'
+      PCK( 1576 ) = '                                       0' &
+      //            '.      0.     0.                )'
+      PCK( 1577 ) = ' '
+      PCK( 1578 ) = ' '
+      PCK( 1579 ) = '           BODY709_NUT_PREC_PM  = (    0' &
+      //            '.      0.     0.     -0.01   0.'
+      PCK( 1580 ) = '                                       0' &
+      //            '.      0.     0.      0.     0.'
+      PCK( 1581 ) = '                                       0' &
+      //            '.      0.     0.      0.     0.'
+      PCK( 1582 ) = '                                       0' &
+      //            '.      0.     0.                )'
+      PCK( 1583 ) = ' '
+      PCK( 1584 ) = ' '
+      PCK( 1585 ) = BEGTXT()
+      PCK( 1586 ) = ' '
+      PCK( 1587 ) = ' '
+      PCK( 1588 ) = ' '
+      PCK( 1589 ) = '     Desdemona'
+      PCK( 1590 ) = ' '
+      PCK( 1591 ) = '        Old values:'
+      PCK( 1592 ) = ' '
+      PCK( 1593 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1594 ) = ' '
+      PCK( 1595 ) = '        Current values:'
+      PCK( 1596 ) = ' '
+      PCK( 1597 ) = BEGDAT()
+      PCK( 1598 ) = ' '
+      PCK( 1599 ) = '           BODY710_POLE_RA      = ( 257.' &
+      //            '31      0.           0.  )'
+      PCK( 1600 ) = '           BODY710_POLE_DEC     = ( -15.' &
+      //            '18      0.           0.  )'
+      PCK( 1601 ) = '           BODY710_PM           = (  95.' &
+      //            '08   -760.0531690    0.  )'
+      PCK( 1602 ) = '           BODY710_LONG_AXIS    = (   0.' &
+      //            '                         )'
+      PCK( 1603 ) = ' '
+      PCK( 1604 ) = '           BODY710_NUT_PREC_RA  = (   0.' &
+      //            '      0.     0.      0.    -0.17'
+      PCK( 1605 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1606 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1607 ) = '                                      0.' &
+      //            '      0.     0.                  )'
+      PCK( 1608 ) = ' '
+      PCK( 1609 ) = '           BODY710_NUT_PREC_DEC = (   0.' &
+      //            '      0.     0.      0.     0.16'
+      PCK( 1610 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1611 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1612 ) = '                                      0.' &
+      //            '      0.     0.                  )'
+      PCK( 1613 ) = ' '
+      PCK( 1614 ) = '           BODY710_NUT_PREC_PM  = (   0.' &
+      //            '      0.     0.      0.    -0.04'
+      PCK( 1615 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1616 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1617 ) = '                                      0.' &
+      //            '      0.     0.                 )'
+      PCK( 1618 ) = ' '
+      PCK( 1619 ) = BEGTXT()
+      PCK( 1620 ) = ' '
+      PCK( 1621 ) = ' '
+      PCK( 1622 ) = ' '
+      PCK( 1623 ) = '     Juliet'
+      PCK( 1624 ) = ' '
+      PCK( 1625 ) = '        Old values:'
+      PCK( 1626 ) = ' '
+      PCK( 1627 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1628 ) = ' '
+      PCK( 1629 ) = '        Current values:'
+      PCK( 1630 ) = ' '
+      PCK( 1631 ) = BEGDAT()
+      PCK( 1632 ) = ' '
+      PCK( 1633 ) = '           BODY711_POLE_RA      = (  257' &
+      //            '.31     0.           0.   )'
+      PCK( 1634 ) = '           BODY711_POLE_DEC     = (  -15' &
+      //            '.18     0.           0.   )'
+      PCK( 1635 ) = '           BODY711_PM           = (  302' &
+      //            '.56  -730.1253660    0.   )'
+      PCK( 1636 ) = '           BODY711_LONG_AXIS    = (    0' &
+      //            '.                         )'
+      PCK( 1637 ) = ' '
+      PCK( 1638 ) = '           BODY711_NUT_PREC_RA  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1639 ) = '                                     -0.' &
+      //            '06    0.     0.      0.     0.'
+      PCK( 1640 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1641 ) = '                                      0.' &
+      //            '      0.     0.                 )'
+      PCK( 1642 ) = ' '
+      PCK( 1643 ) = '           BODY711_NUT_PREC_DEC = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1644 ) = '                                      0.' &
+      //            '06    0.     0.      0.     0.'
+      PCK( 1645 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1646 ) = '                                      0.' &
+      //            '      0.     0.                 )'
+      PCK( 1647 ) = ' '
+      PCK( 1648 ) = '           BODY711_NUT_PREC_PM  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1649 ) = '                                     -0.' &
+      //            '02    0.     0.      0.     0.'
+      PCK( 1650 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1651 ) = '                                      0.' &
+      //            '      0.     0.                 )'
+      PCK( 1652 ) = ' '
+      PCK( 1653 ) = BEGTXT()
+      PCK( 1654 ) = ' '
+      PCK( 1655 ) = ' '
+      PCK( 1656 ) = ' '
+      PCK( 1657 ) = '     Portia'
+      PCK( 1658 ) = ' '
+      PCK( 1659 ) = '        Old values:'
+      PCK( 1660 ) = ' '
+      PCK( 1661 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1662 ) = ' '
+      PCK( 1663 ) = '        Current values:'
+      PCK( 1664 ) = ' '
+      PCK( 1665 ) = BEGDAT()
+      PCK( 1666 ) = ' '
+      PCK( 1667 ) = '           BODY712_POLE_RA      = (  257' &
+      //            '.31      0.           0.   )'
+      PCK( 1668 ) = '           BODY712_POLE_DEC     = (  -15' &
+      //            '.18      0.           0.   )'
+      PCK( 1669 ) = '           BODY712_PM           = (   25' &
+      //            '.03   -701.4865870    0.   )'
+      PCK( 1670 ) = '           BODY712_LONG_AXIS    = (    0' &
+      //            '.                          )'
+      PCK( 1671 ) = ' '
+      PCK( 1672 ) = '           BODY712_NUT_PREC_RA  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1673 ) = '                                      0.' &
+      //            '     -0.09   0.      0.     0.'
+      PCK( 1674 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1675 ) = '                                      0.' &
+      //            '      0.     0.                )'
+      PCK( 1676 ) = ' '
+      PCK( 1677 ) = '           BODY712_NUT_PREC_DEC = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1678 ) = '                                      0.' &
+      //            '      0.09   0.      0.     0.'
+      PCK( 1679 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1680 ) = '                                      0.' &
+      //            '      0.     0.               )'
+      PCK( 1681 ) = ' '
+      PCK( 1682 ) = '           BODY712_NUT_PREC_PM  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1683 ) = '                                      0.' &
+      //            '     -0.02   0.      0.     0.'
+      PCK( 1684 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1685 ) = '                                      0.' &
+      //            '      0.     0.               )'
+      PCK( 1686 ) = ' '
+      PCK( 1687 ) = BEGTXT()
+      PCK( 1688 ) = ' '
+      PCK( 1689 ) = ' '
+      PCK( 1690 ) = ' '
+      PCK( 1691 ) = '     Rosalind'
+      PCK( 1692 ) = ' '
+      PCK( 1693 ) = '        Old values:'
+      PCK( 1694 ) = ' '
+      PCK( 1695 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1696 ) = ' '
+      PCK( 1697 ) = '        Current values:'
+      PCK( 1698 ) = ' '
+      PCK( 1699 ) = BEGDAT()
+      PCK( 1700 ) = ' '
+      PCK( 1701 ) = '           BODY713_POLE_RA      = ( 257.' &
+      //            '31      0.          0.  )'
+      PCK( 1702 ) = '           BODY713_POLE_DEC     = ( -15.' &
+      //            '18      0.          0.  )'
+      PCK( 1703 ) = '           BODY713_PM           = ( 314.' &
+      //            '90   -644.6311260   0.  )'
+      PCK( 1704 ) = '           BODY713_LONG_AXIS    = (   0.' &
+      //            '                        )'
+      PCK( 1705 ) = ' '
+      PCK( 1706 ) = '           BODY713_NUT_PREC_RA  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1707 ) = '                                      0.' &
+      //            '      0.    -0.29    0.     0.'
+      PCK( 1708 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1709 ) = '                                      0.' &
+      //            '      0.     0.               )'
+      PCK( 1710 ) = ' '
+      PCK( 1711 ) = '           BODY713_NUT_PREC_DEC = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1712 ) = '                                      0.' &
+      //            '      0.     0.28    0.     0.'
+      PCK( 1713 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1714 ) = '                                      0.' &
+      //            '      0.     0.              )'
+      PCK( 1715 ) = ' '
+      PCK( 1716 ) = '           BODY713_NUT_PREC_PM  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1717 ) = '                                      0.' &
+      //            '      0.    -0.08    0.     0.'
+      PCK( 1718 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1719 ) = '                                      0.' &
+      //            '      0.     0.              )'
+      PCK( 1720 ) = ' '
+      PCK( 1721 ) = BEGTXT()
+      PCK( 1722 ) = ' '
+      PCK( 1723 ) = ' '
+      PCK( 1724 ) = ' '
+      PCK( 1725 ) = '     Belinda'
+      PCK( 1726 ) = ' '
+      PCK( 1727 ) = '        Old values:'
+      PCK( 1728 ) = ' '
+      PCK( 1729 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1730 ) = ' '
+      PCK( 1731 ) = '        Current values:'
+      PCK( 1732 ) = ' '
+      PCK( 1733 ) = BEGDAT()
+      PCK( 1734 ) = ' '
+      PCK( 1735 ) = '           BODY714_POLE_RA      = (   25' &
+      //            '7.31      0.         0. )'
+      PCK( 1736 ) = '           BODY714_POLE_DEC     = (   -1' &
+      //            '5.18      0.         0. )'
+      PCK( 1737 ) = '           BODY714_PM           = (   29' &
+      //            '7.46   -577.3628170  0. )'
+      PCK( 1738 ) = '           BODY714_LONG_AXIS    = (     ' &
+      //            '0.                      )'
+      PCK( 1739 ) = ' '
+      PCK( 1740 ) = '           BODY714_NUT_PREC_RA  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1741 ) = '                                      0.' &
+      //            '      0.     0.     -0.03   0.'
+      PCK( 1742 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1743 ) = '                                      0.' &
+      //            '      0.     0.                )'
+      PCK( 1744 ) = ' '
+      PCK( 1745 ) = '           BODY714_NUT_PREC_DEC = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1746 ) = '                                      0.' &
+      //            '      0.     0.      0.03   0.'
+      PCK( 1747 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1748 ) = '                                      0.' &
+      //            '      0.     0.                )'
+      PCK( 1749 ) = ' '
+      PCK( 1750 ) = '           BODY714_NUT_PREC_PM  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1751 ) = '                                      0.' &
+      //            '      0.     0.     -0.01   0.'
+      PCK( 1752 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1753 ) = '                                      0.' &
+      //            '      0.     0.                )'
+      PCK( 1754 ) = BEGTXT()
+      PCK( 1755 ) = ' '
+      PCK( 1756 ) = ' '
+      PCK( 1757 ) = ' '
+      PCK( 1758 ) = '     Puck'
+      PCK( 1759 ) = ' '
+      PCK( 1760 ) = '        Old values:'
+      PCK( 1761 ) = ' '
+      PCK( 1762 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1763 ) = ' '
+      PCK( 1764 ) = '        Current values:'
+      PCK( 1765 ) = ' '
+      PCK( 1766 ) = BEGDAT()
+      PCK( 1767 ) = ' '
+      PCK( 1768 ) = '           BODY715_POLE_RA      = (  257' &
+      //            '.31      0.         0.  )'
+      PCK( 1769 ) = '           BODY715_POLE_DEC     = (  -15' &
+      //            '.18      0.         0.  )'
+      PCK( 1770 ) = '           BODY715_PM           = (   91' &
+      //            '.24   -472.5450690  0.  )'
+      PCK( 1771 ) = '           BODY715_LONG_AXIS    = (    0' &
+      //            '.                       )'
+      PCK( 1772 ) = ' '
+      PCK( 1773 ) = '           BODY715_NUT_PREC_RA  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1774 ) = '                                      0.' &
+      //            '      0.     0.      0.    -0.33'
+      PCK( 1775 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1776 ) = '                                      0.' &
+      //            '      0.     0.                  )'
+      PCK( 1777 ) = ' '
+      PCK( 1778 ) = '           BODY715_NUT_PREC_DEC = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1779 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.31'
+      PCK( 1780 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1781 ) = '                                      0.' &
+      //            '      0.     0.                  )'
+      PCK( 1782 ) = ' '
+      PCK( 1783 ) = '           BODY715_NUT_PREC_PM  = (   0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1784 ) = '                                      0.' &
+      //            '      0.     0.      0.    -0.09'
+      PCK( 1785 ) = '                                      0.' &
+      //            '      0.     0.      0.     0.'
+      PCK( 1786 ) = '                                      0.' &
+      //            '      0.     0.                  )'
+      PCK( 1787 ) = ' '
+      PCK( 1788 ) = BEGTXT()
+      PCK( 1789 ) = ' '
+      PCK( 1790 ) = ' '
+      PCK( 1791 ) = ' '
+      PCK( 1792 ) = ' '
+      PCK( 1793 ) = 'Satellites of Neptune'
+      PCK( 1794 ) = ' '
+      PCK( 1795 ) = ' '
+      PCK( 1796 ) = '     Triton'
+      PCK( 1797 ) = ' '
+      PCK( 1798 ) = '        Old values:'
+      PCK( 1799 ) = ' '
+      PCK( 1800 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1801 ) = ' '
+      PCK( 1802 ) = '        Current values:'
+      PCK( 1803 ) = ' '
+      PCK( 1804 ) = BEGDAT()
+      PCK( 1805 ) = ' '
+      PCK( 1806 ) = '           BODY801_POLE_RA       = ( 299' &
+      //            '.36     0.         0.  )'
+      PCK( 1807 ) = '           BODY801_POLE_DEC      = (  41' &
+      //            '.17     0.         0.  )'
+      PCK( 1808 ) = '           BODY801_PM            = ( 296' &
+      //            '.53   -61.2572637  0.  )'
+      PCK( 1809 ) = '           BODY801_LONG_AXIS     = (   0' &
+      //            '.                      )'
+      PCK( 1810 ) = ' '
+      PCK( 1811 ) = ' '
+      PCK( 1812 ) = '           BODY801_NUT_PREC_RA   = (  0.' &
+      //            '      0.      0.      0.'
+      PCK( 1813 ) = '                                      0.' &
+      //            '      0.      0.    -32.35'
+      PCK( 1814 ) = '                                      0.' &
+      //            '     -6.28   -2.08   -0.74'
+      PCK( 1815 ) = '                                     -0.' &
+      //            '28   -0.11   -0.07   -0.02'
+      PCK( 1816 ) = '                                     -0.' &
+      //            '01                         )'
+      PCK( 1817 ) = ' '
+      PCK( 1818 ) = ' '
+      PCK( 1819 ) = '           BODY801_NUT_PREC_DEC  = (  0.' &
+      //            '      0.      0.      0.'
+      PCK( 1820 ) = '                                      0.' &
+      //            '      0.      0.     22.55'
+      PCK( 1821 ) = '                                      0.' &
+      //            '      2.10    0.55    0.16'
+      PCK( 1822 ) = '                                      0.' &
+      //            '05    0.02    0.01    0.'
+      PCK( 1823 ) = '                                      0.' &
+      //            '                           )'
+      PCK( 1824 ) = ' '
+      PCK( 1825 ) = ' '
+      PCK( 1826 ) = '           BODY801_NUT_PREC_PM   = (  0.' &
+      //            '      0.      0.      0.'
+      PCK( 1827 ) = '                                      0.' &
+      //            '      0.      0.     22.25'
+      PCK( 1828 ) = '                                      0.' &
+      //            '      6.73    2.05    0.74'
+      PCK( 1829 ) = '                                      0.' &
+      //            '28    0.11    0.05    0.02'
+      PCK( 1830 ) = '                                      0.' &
+      //            '01                         )'
+      PCK( 1831 ) = ' '
+      PCK( 1832 ) = BEGTXT()
+      PCK( 1833 ) = ' '
+      PCK( 1834 ) = ' '
+      PCK( 1835 ) = ' '
+      PCK( 1836 ) = ' '
+      PCK( 1837 ) = '     Nereid'
+      PCK( 1838 ) = ' '
+      PCK( 1839 ) = '        Old values:'
+      PCK( 1840 ) = ' '
+      PCK( 1841 ) = '           Values are from the 1988 IAU ' &
+      //            'report [10].  Note that this'
+      PCK( 1842 ) = '           rotation model pre-dated the ' &
+      //            '1989 Voyager 2 Neptune'
+      PCK( 1843 ) = '           encounter.'
+      PCK( 1844 ) = ' '
+      PCK( 1845 ) = ' '
+      PCK( 1846 ) = '           body802_pole_ra       = (    ' &
+      //            '273.48    0.        0.  )'
+      PCK( 1847 ) = '           body802_pole_dec      = (    ' &
+      //            ' 67.22    0.        0.  )'
+      PCK( 1848 ) = '           body802_pm            = (    ' &
+      //            '237.22    0.9996465 0.  )'
+      PCK( 1849 ) = '           body802_long_axis     = (    ' &
+      //            '  0.                    )'
+      PCK( 1850 ) = ' '
+      PCK( 1851 ) = ' '
+      PCK( 1852 ) = '           The report seems to have a ty' &
+      //            'po:  in the nut_prec_ra expression,'
+      PCK( 1853 ) = '           where the report gives  -0.51' &
+      //            ' sin 3N3, we use -0.51 3N2.'
+      PCK( 1854 ) = ' '
+      PCK( 1855 ) = '           body802_nut_prec_ra   = (  0.' &
+      //            '    -17.81'
+      PCK( 1856 ) = '                                      0.' &
+      //            '      0.     0.      0.'
+      PCK( 1857 ) = '                                      0.' &
+      //            '      0.     0.'
+      PCK( 1858 ) = '                                      2.' &
+      //            '56   -0.51   0.11   -0.03  )'
+      PCK( 1859 ) = ' '
+      PCK( 1860 ) = '           body802_nut_prec_dec  = (  0.' &
+      //            '     -6.67'
+      PCK( 1861 ) = '                                      0.' &
+      //            '      0.     0.      0.'
+      PCK( 1862 ) = '                                      0.' &
+      //            '      0.     0.'
+      PCK( 1863 ) = '                                      0.' &
+      //            '47   -0.07   0.01          )'
+      PCK( 1864 ) = ' '
+      PCK( 1865 ) = '           body802_nut_prec_pm   = (  0.' &
+      //            '     16.48'
+      PCK( 1866 ) = '                                      0.' &
+      //            '      0.     0.      0.'
+      PCK( 1867 ) = '                                      0.' &
+      //            '      0.     0.'
+      PCK( 1868 ) = '                                     -2.' &
+      //            '57    0.51 -0.11    0.02  )'
+      PCK( 1869 ) = ' '
+      PCK( 1870 ) = ' '
+      PCK( 1871 ) = ' '
+      PCK( 1872 ) = '        Current values:'
+      PCK( 1873 ) = ' '
+      PCK( 1874 ) = '           The 2009 report [1] states th' &
+      //            'at values for Nereid are not'
+      PCK( 1875 ) = '           given because Nereid is not i' &
+      //            'n synchronous rotation with Neptune'
+      PCK( 1876 ) = '           (notes following table 2).'
+      PCK( 1877 ) = ' '
+      PCK( 1878 ) = ' '
+      PCK( 1879 ) = ' '
+      PCK( 1880 ) = '     Naiad'
+      PCK( 1881 ) = ' '
+      PCK( 1882 ) = '        Old values:'
+      PCK( 1883 ) = ' '
+      PCK( 1884 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1885 ) = ' '
+      PCK( 1886 ) = '        Current values:'
+      PCK( 1887 ) = ' '
+      PCK( 1888 ) = ' '
+      PCK( 1889 ) = BEGDAT()
+      PCK( 1890 ) = ' '
+      PCK( 1891 ) = '           BODY803_POLE_RA       = (  29' &
+      //            '9.36      0.          0.  )'
+      PCK( 1892 ) = '           BODY803_POLE_DEC      = (   4' &
+      //            '3.36      0.          0.  )'
+      PCK( 1893 ) = '           BODY803_PM            = (  25' &
+      //            '4.06  +1222.8441209   0.  )'
+      PCK( 1894 ) = '           BODY803_LONG_AXIS     = (    ' &
+      //            '0.                        )'
+      PCK( 1895 ) = ' '
+      PCK( 1896 ) = ' '
+      PCK( 1897 ) = '           BODY803_NUT_PREC_RA   = (    ' &
+      //            '0.70     -6.49     0.      0.'
+      PCK( 1898 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1899 ) = '                                        ' &
+      //            '0.25      0.       0.      0.'
+      PCK( 1900 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1901 ) = '                                        ' &
+      //            '0.                            )'
+      PCK( 1902 ) = ' '
+      PCK( 1903 ) = '           BODY803_NUT_PREC_DEC  = (   -' &
+      //            '0.51     -4.75     0.      0.'
+      PCK( 1904 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1905 ) = '                                        ' &
+      //            '0.09      0.       0.      0.'
+      PCK( 1906 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1907 ) = '                                        ' &
+      //            '0.                            )'
+      PCK( 1908 ) = ' '
+      PCK( 1909 ) = '           BODY803_NUT_PREC_PM   = (   -' &
+      //            '0.48      4.40     0.      0.'
+      PCK( 1910 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1911 ) = '                                       -' &
+      //            '0.27      0.       0.      0.'
+      PCK( 1912 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1913 ) = '                                        ' &
+      //            '0.                            )'
+      PCK( 1914 ) = ' '
+      PCK( 1915 ) = BEGTXT()
+      PCK( 1916 ) = ' '
+      PCK( 1917 ) = ' '
+      PCK( 1918 ) = ' '
+      PCK( 1919 ) = ' '
+      PCK( 1920 ) = '     Thalassa'
+      PCK( 1921 ) = ' '
+      PCK( 1922 ) = ' '
+      PCK( 1923 ) = '        Old values:'
+      PCK( 1924 ) = ' '
+      PCK( 1925 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1926 ) = ' '
+      PCK( 1927 ) = '        Current values:'
+      PCK( 1928 ) = ' '
+      PCK( 1929 ) = BEGDAT()
+      PCK( 1930 ) = ' '
+      PCK( 1931 ) = '           BODY804_POLE_RA       = (  29' &
+      //            '9.36      0.          0. )'
+      PCK( 1932 ) = '           BODY804_POLE_DEC      = (   4' &
+      //            '3.45      0.          0. )'
+      PCK( 1933 ) = '           BODY804_PM            = (  10' &
+      //            '2.06   1155.7555612   0. )'
+      PCK( 1934 ) = '           BODY804_LONG_AXIS     = (    ' &
+      //            '0.                       )'
+      PCK( 1935 ) = ' '
+      PCK( 1936 ) = ' '
+      PCK( 1937 ) = '           BODY804_NUT_PREC_RA   = (    ' &
+      //            '0.70      0.      -0.28    0.'
+      PCK( 1938 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1939 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1940 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1941 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 1942 ) = ' '
+      PCK( 1943 ) = ' '
+      PCK( 1944 ) = '           BODY804_NUT_PREC_DEC  = (   -' &
+      //            '0.51      0.      -0.21    0.'
+      PCK( 1945 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1946 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1947 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1948 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 1949 ) = ' '
+      PCK( 1950 ) = '           BODY804_NUT_PREC_PM   = (   -' &
+      //            '0.48      0.       0.19    0.'
+      PCK( 1951 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1952 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1953 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1954 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 1955 ) = ' '
+      PCK( 1956 ) = BEGTXT()
+      PCK( 1957 ) = ' '
+      PCK( 1958 ) = ' '
+      PCK( 1959 ) = ' '
+      PCK( 1960 ) = '     Despina'
+      PCK( 1961 ) = ' '
+      PCK( 1962 ) = '        Old values:'
+      PCK( 1963 ) = ' '
+      PCK( 1964 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 1965 ) = ' '
+      PCK( 1966 ) = '        Current values:'
+      PCK( 1967 ) = ' '
+      PCK( 1968 ) = ' '
+      PCK( 1969 ) = BEGDAT()
+      PCK( 1970 ) = ' '
+      PCK( 1971 ) = '           BODY805_POLE_RA       = (  29' &
+      //            '9.36      0.          0. )'
+      PCK( 1972 ) = '           BODY805_POLE_DEC      = (   4' &
+      //            '3.45      0.          0. )'
+      PCK( 1973 ) = '           BODY805_PM            = (  30' &
+      //            '6.51  +1075.7341562   0. )'
+      PCK( 1974 ) = '           BODY805_LONG_AXIS     = (    ' &
+      //            '0.                       )'
+      PCK( 1975 ) = ' '
+      PCK( 1976 ) = ' '
+      PCK( 1977 ) = '           BODY805_NUT_PREC_RA   = (    ' &
+      //            '0.70      0.       0.     -0.09'
+      PCK( 1978 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1979 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1980 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1981 ) = '                                        ' &
+      //            '0.                              )'
+      PCK( 1982 ) = ' '
+      PCK( 1983 ) = '           BODY805_NUT_PREC_DEC  = (   -' &
+      //            '0.51      0.       0.     -0.07'
+      PCK( 1984 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1985 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1986 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1987 ) = '                                        ' &
+      //            '0.                              )'
+      PCK( 1988 ) = ' '
+      PCK( 1989 ) = '           BODY805_NUT_PREC_PM   = (   -' &
+      //            '0.49      0.       0.      0.06'
+      PCK( 1990 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1991 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1992 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 1993 ) = '                                        ' &
+      //            '0.                              )'
+      PCK( 1994 ) = BEGTXT()
+      PCK( 1995 ) = ' '
+      PCK( 1996 ) = ' '
+      PCK( 1997 ) = ' '
+      PCK( 1998 ) = '     Galatea'
+      PCK( 1999 ) = ' '
+      PCK( 2000 ) = ' '
+      PCK( 2001 ) = '        Old values:'
+      PCK( 2002 ) = ' '
+      PCK( 2003 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2004 ) = ' '
+      PCK( 2005 ) = '        Current values:'
+      PCK( 2006 ) = ' '
+      PCK( 2007 ) = ' '
+      PCK( 2008 ) = BEGDAT()
+      PCK( 2009 ) = ' '
+      PCK( 2010 ) = '           BODY806_POLE_RA       = (   2' &
+      //            '99.36      0.          0. )'
+      PCK( 2011 ) = '           BODY806_POLE_DEC      = (    ' &
+      //            '43.43      0.          0. )'
+      PCK( 2012 ) = '           BODY806_PM            = (   2' &
+      //            '58.09    839.6597686   0. )'
+      PCK( 2013 ) = '           BODY806_LONG_AXIS     = (    ' &
+      //            ' 0.                       )'
+      PCK( 2014 ) = ' '
+      PCK( 2015 ) = ' '
+      PCK( 2016 ) = '           BODY806_NUT_PREC_RA   = (    ' &
+      //            '0.70      0.       0.      0.'
+      PCK( 2017 ) = '                                       -' &
+      //            '0.07      0.       0.      0.'
+      PCK( 2018 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2019 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2020 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 2021 ) = ' '
+      PCK( 2022 ) = '           BODY806_NUT_PREC_DEC  = (   -' &
+      //            '0.51      0.       0.      0.'
+      PCK( 2023 ) = '                                       -' &
+      //            '0.05      0.       0.      0.'
+      PCK( 2024 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2025 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2026 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 2027 ) = ' '
+      PCK( 2028 ) = '           BODY806_NUT_PREC_PM   = (   -' &
+      //            '0.48      0.       0.      0.'
+      PCK( 2029 ) = '                                        ' &
+      //            '0.05      0.       0.      0.'
+      PCK( 2030 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2031 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2032 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 2033 ) = BEGTXT()
+      PCK( 2034 ) = ' '
+      PCK( 2035 ) = ' '
+      PCK( 2036 ) = '     Larissa'
+      PCK( 2037 ) = ' '
+      PCK( 2038 ) = ' '
+      PCK( 2039 ) = '        Old values:'
+      PCK( 2040 ) = ' '
+      PCK( 2041 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2042 ) = ' '
+      PCK( 2043 ) = '        Current values:'
+      PCK( 2044 ) = ' '
+      PCK( 2045 ) = BEGDAT()
+      PCK( 2046 ) = ' '
+      PCK( 2047 ) = '           BODY807_POLE_RA       = (   2' &
+      //            '99.36     0.           0. )'
+      PCK( 2048 ) = '           BODY807_POLE_DEC      = (    ' &
+      //            '43.41     0.           0. )'
+      PCK( 2049 ) = '           BODY807_PM            = (   1' &
+      //            '79.41  +649.0534470    0. )'
+      PCK( 2050 ) = '           BODY807_LONG_AXIS     = (    ' &
+      //            ' 0.                       )'
+      PCK( 2051 ) = ' '
+      PCK( 2052 ) = ' '
+      PCK( 2053 ) = '           BODY807_NUT_PREC_RA   = (    ' &
+      //            '0.70      0.       0.      0.'
+      PCK( 2054 ) = '                                        ' &
+      //            '0.       -0.27     0.      0.'
+      PCK( 2055 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2056 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2057 ) = '                                        ' &
+      //            '0.                            )'
+      PCK( 2058 ) = ' '
+      PCK( 2059 ) = '           BODY807_NUT_PREC_DEC  = (   -' &
+      //            '0.51      0.       0.      0.'
+      PCK( 2060 ) = '                                        ' &
+      //            '0.       -0.20     0.      0.'
+      PCK( 2061 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2062 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2063 ) = '                                        ' &
+      //            '0.                            )'
+      PCK( 2064 ) = ' '
+      PCK( 2065 ) = '           BODY807_NUT_PREC_PM   = (   -' &
+      //            '0.48      0.       0.      0.'
+      PCK( 2066 ) = '                                        ' &
+      //            '0.        0.19     0.      0.'
+      PCK( 2067 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2068 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2069 ) = '                                        ' &
+      //            '0.                            )'
+      PCK( 2070 ) = BEGTXT()
+      PCK( 2071 ) = ' '
+      PCK( 2072 ) = ' '
+      PCK( 2073 ) = ' '
+      PCK( 2074 ) = '     Proteus'
+      PCK( 2075 ) = ' '
+      PCK( 2076 ) = ' '
+      PCK( 2077 ) = '        Old values:'
+      PCK( 2078 ) = ' '
+      PCK( 2079 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2080 ) = ' '
+      PCK( 2081 ) = '        Current values:'
+      PCK( 2082 ) = ' '
+      PCK( 2083 ) = BEGDAT()
+      PCK( 2084 ) = ' '
+      PCK( 2085 ) = '           BODY808_POLE_RA       = (  29' &
+      //            '9.27      0.          0.  )'
+      PCK( 2086 ) = '           BODY808_POLE_DEC      = (   4' &
+      //            '2.91      0.          0.  )'
+      PCK( 2087 ) = '           BODY808_PM            = (   9' &
+      //            '3.38   +320.7654228   0.  )'
+      PCK( 2088 ) = '           BODY808_LONG_AXIS     = (    ' &
+      //            '0.                        )'
+      PCK( 2089 ) = ' '
+      PCK( 2090 ) = ' '
+      PCK( 2091 ) = '           BODY808_NUT_PREC_RA   = (    ' &
+      //            '0.70      0.       0.      0.'
+      PCK( 2092 ) = '                                        ' &
+      //            '0.        0.      -0.05    0.'
+      PCK( 2093 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2094 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2095 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 2096 ) = ' '
+      PCK( 2097 ) = '           BODY808_NUT_PREC_DEC  = (   -' &
+      //            '0.51      0.       0.      0.'
+      PCK( 2098 ) = '                                        ' &
+      //            '0.        0.      -0.04    0.'
+      PCK( 2099 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2100 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2101 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 2102 ) = ' '
+      PCK( 2103 ) = '           BODY808_NUT_PREC_PM   = (   -' &
+      //            '0.48      0.       0.      0.'
+      PCK( 2104 ) = '                                        ' &
+      //            '0.        0.       0.04    0.'
+      PCK( 2105 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2106 ) = '                                        ' &
+      //            '0.        0.       0.      0.'
+      PCK( 2107 ) = '                                        ' &
+      //            '0.                             )'
+      PCK( 2108 ) = ' '
+      PCK( 2109 ) = BEGTXT()
+      PCK( 2110 ) = ' '
+      PCK( 2111 ) = ' '
+      PCK( 2112 ) = ' '
+      PCK( 2113 ) = ' '
+      PCK( 2114 ) = ' '
+      PCK( 2115 ) = 'Satellites of Pluto'
+      PCK( 2116 ) = ' '
+      PCK( 2117 ) = '     Charon'
+      PCK( 2118 ) = ' '
+      PCK( 2119 ) = '        Old values:'
+      PCK( 2120 ) = ' '
+      PCK( 2121 ) = '           Values are from the 2006 IAU ' &
+      //            'report.'
+      PCK( 2122 ) = ' '
+      PCK( 2123 ) = '           body901_pole_ra       = (   3' &
+      //            '12.993    0.         0. )'
+      PCK( 2124 ) = '           body901_pole_dec      = (    ' &
+      //            ' 6.163    0.         0. )'
+      PCK( 2125 ) = '           body901_pm            = (    ' &
+      //            '57.305  -56.3625225  0. )'
+      PCK( 2126 ) = '           body901_long_axis     = (    ' &
+      //            ' 0.                     )'
+      PCK( 2127 ) = ' '
+      PCK( 2128 ) = ' '
+      PCK( 2129 ) = '        Current values:'
+      PCK( 2130 ) = ' '
+      PCK( 2131 ) = '        Due to the new definition of pla' &
+      //            'netocentric coordinates'
+      PCK( 2132 ) = '        for small bodies, and to the rec' &
+      //            'lassification of Pluto'
+      PCK( 2133 ) = '        as a dwarf planet, Charon''s nor' &
+      //            'th pole direction has been'
+      PCK( 2134 ) = '        inverted.'
+      PCK( 2135 ) = ' '
+      PCK( 2136 ) = '        The PM constant W0 is from [2].'
+      PCK( 2137 ) = ' '
+      PCK( 2138 ) = BEGDAT()
+      PCK( 2139 ) = ' '
+      PCK( 2140 ) = '           BODY901_POLE_RA       = (   1' &
+      //            '32.993    0.         0. )'
+      PCK( 2141 ) = '           BODY901_POLE_DEC      = (    ' &
+      //            '-6.163    0.         0. )'
+      PCK( 2142 ) = '           BODY901_PM            = (   1' &
+      //            '22.695   56.3625225  0. )'
+      PCK( 2143 ) = '           BODY901_LONG_AXIS     = (    ' &
+      //            ' 0.                     )'
+      PCK( 2144 ) = ' '
+      PCK( 2145 ) = BEGTXT()
+      PCK( 2146 ) = ' '
+      PCK( 2147 ) = ' '
+      PCK( 2148 ) = ' '
+      PCK( 2149 ) = 'Orientation constants for Selected Comet' &
+      //            's and Asteroids'
+      PCK( 2150 ) = '----------------------------------------' &
+      //            '----------------'
+      PCK( 2151 ) = ' '
+      PCK( 2152 ) = ' '
+      PCK( 2153 ) = ' '
+      PCK( 2154 ) = 'Ceres'
+      PCK( 2155 ) = ' '
+      PCK( 2156 ) = '        Current values:'
+      PCK( 2157 ) = ' '
+      PCK( 2158 ) = BEGDAT()
+      PCK( 2159 ) = ' '
+      PCK( 2160 ) = '           BODY2000001_POLE_RA       = (' &
+      //            '   291.       0.         0.  )'
+      PCK( 2161 ) = '           BODY2000001_POLE_DEC      = (' &
+      //            '    59.       0.         0.  )'
+      PCK( 2162 ) = '           BODY2000001_PM            = (' &
+      //            '   170.90   952.1532     0.  )'
+      PCK( 2163 ) = '           BODY2000001_LONG_AXIS     = (' &
+      //            '     0.                      )'
+      PCK( 2164 ) = ' '
+      PCK( 2165 ) = BEGTXT()
+      PCK( 2166 ) = ' '
+      PCK( 2167 ) = ' '
+      PCK( 2168 ) = ' '
+      PCK( 2169 ) = 'Pallas'
+      PCK( 2170 ) = ' '
+      PCK( 2171 ) = '        Current values:'
+      PCK( 2172 ) = ' '
+      PCK( 2173 ) = BEGDAT()
+      PCK( 2174 ) = ' '
+      PCK( 2175 ) = '           BODY2000002_POLE_RA       = (' &
+      //            '    33.       0.         0.  )'
+      PCK( 2176 ) = '           BODY2000002_POLE_DEC      = (' &
+      //            '    -3.       0.         0.  )'
+      PCK( 2177 ) = '           BODY2000002_PM            = (' &
+      //            '    38.    1105.8036     0.  )'
+      PCK( 2178 ) = '           BODY2000002_LONG_AXIS     = (' &
+      //            '     0.                      )'
+      PCK( 2179 ) = ' '
+      PCK( 2180 ) = BEGTXT()
+      PCK( 2181 ) = ' '
+      PCK( 2182 ) = ' '
+      PCK( 2183 ) = ' '
+      PCK( 2184 ) = 'Vesta'
+      PCK( 2185 ) = ' '
+      PCK( 2186 ) = '        Old values:'
+      PCK( 2187 ) = ' '
+      PCK( 2188 ) = '           Values are from the 2009 IAU ' &
+      //            'report.'
+      PCK( 2189 ) = ' '
+      PCK( 2190 ) = '           body2000004_pole_ra       = (' &
+      //            '   301.      0.         0.  )'
+      PCK( 2191 ) = '           body2000004_pole_dec      = (' &
+      //            '    41.      0.         0.  )'
+      PCK( 2192 ) = '           body2000004_pm            = (' &
+      //            '   292.   1617.332776   0.  )'
+      PCK( 2193 ) = '           body2000004_long_axis     = (' &
+      //            '     0.                     )'
+      PCK( 2194 ) = ' '
+      PCK( 2195 ) = '        Current values:'
+      PCK( 2196 ) = ' '
+      PCK( 2197 ) = BEGDAT()
+      PCK( 2198 ) = ' '
+      PCK( 2199 ) = '           BODY2000004_POLE_RA       = (' &
+      //            '   305.8     0.         0.  )'
+      PCK( 2200 ) = '           BODY2000004_POLE_DEC      = (' &
+      //            '    41.4     0.         0.  )'
+      PCK( 2201 ) = '           BODY2000004_PM            = (' &
+      //            '   292.   1617.332776   0.  )'
+      PCK( 2202 ) = '           BODY2000004_LONG_AXIS     = (' &
+      //            '     0.                     )'
+      PCK( 2203 ) = ' '
+      PCK( 2204 ) = BEGTXT()
+      PCK( 2205 ) = ' '
+      PCK( 2206 ) = ' '
+      PCK( 2207 ) = ' '
+      PCK( 2208 ) = 'Lutetia'
+      PCK( 2209 ) = ' '
+      PCK( 2210 ) = '        Current values:'
+      PCK( 2211 ) = ' '
+      PCK( 2212 ) = BEGDAT()
+      PCK( 2213 ) = ' '
+      PCK( 2214 ) = '           BODY2000021_POLE_RA       = (' &
+      //            '    52.       0.         0.  )'
+      PCK( 2215 ) = '           BODY2000021_POLE_DEC      = (' &
+      //            '    12.       0.         0.  )'
+      PCK( 2216 ) = '           BODY2000021_PM            = (' &
+      //            '    94.    1057.7515     0.  )'
+      PCK( 2217 ) = '           BODY2000021_LONG_AXIS     = (' &
+      //            '     0.                      )'
+      PCK( 2218 ) = ' '
+      PCK( 2219 ) = BEGTXT()
+      PCK( 2220 ) = ' '
+      PCK( 2221 ) = ' '
+      PCK( 2222 ) = ' '
+      PCK( 2223 ) = 'Ida'
+      PCK( 2224 ) = ' '
+      PCK( 2225 ) = '        Old values:'
+      PCK( 2226 ) = ' '
+      PCK( 2227 ) = '           BODY2431010_POLE_RA       = (' &
+      //            '  168.76      0.         0. )'
+      PCK( 2228 ) = '           BODY2431010_POLE_DEC      = (' &
+      //            '   -2.88      0.         0. )'
+      PCK( 2229 ) = '           BODY2431010_PM            = (' &
+      //            '  265.95  +1864.6280070  0. )'
+      PCK( 2230 ) = '           BODY2431010_LONG_AXIS     = (' &
+      //            '    0.                      )'
+      PCK( 2231 ) = ' '
+      PCK( 2232 ) = '        Current values:'
+      PCK( 2233 ) = ' '
+      PCK( 2234 ) = '        The PM constant W0 is from [2].'
+      PCK( 2235 ) = ' '
+      PCK( 2236 ) = BEGDAT()
+      PCK( 2237 ) = ' '
+      PCK( 2238 ) = '           BODY2431010_POLE_RA       = (' &
+      //            '  168.76      0.         0. )'
+      PCK( 2239 ) = '           BODY2431010_POLE_DEC      = (' &
+      //            '   -2.88      0.         0. )'
+      PCK( 2240 ) = '           BODY2431010_PM            = (' &
+      //            '  274.05  +1864.6280070  0. )'
+      PCK( 2241 ) = '           BODY2431010_LONG_AXIS     = (' &
+      //            '    0.                      )'
+      PCK( 2242 ) = ' '
+      PCK( 2243 ) = BEGTXT()
+      PCK( 2244 ) = ' '
+      PCK( 2245 ) = ' '
+      PCK( 2246 ) = ' '
+      PCK( 2247 ) = 'Eros'
+      PCK( 2248 ) = ' '
+      PCK( 2249 ) = '        Old values:'
+      PCK( 2250 ) = ' '
+      PCK( 2251 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2252 ) = ' '
+      PCK( 2253 ) = '        Current values:'
+      PCK( 2254 ) = ' '
+      PCK( 2255 ) = BEGDAT()
+      PCK( 2256 ) = ' '
+      PCK( 2257 ) = '           BODY2000433_POLE_RA       = (' &
+      //            '   11.35       0.           0. )'
+      PCK( 2258 ) = '           BODY2000433_POLE_DEC      = (' &
+      //            '   17.22       0.           0. )'
+      PCK( 2259 ) = '           BODY2000433_PM            = (' &
+      //            '  326.07    1639.38864745   0. )'
+      PCK( 2260 ) = '           BODY2000433_LONG_AXIS     = (' &
+      //            '    0.                         )'
+      PCK( 2261 ) = ' '
+      PCK( 2262 ) = BEGTXT()
+      PCK( 2263 ) = ' '
+      PCK( 2264 ) = ' '
+      PCK( 2265 ) = ' '
+      PCK( 2266 ) = 'Davida'
+      PCK( 2267 ) = ' '
+      PCK( 2268 ) = '        Current values:'
+      PCK( 2269 ) = ' '
+      PCK( 2270 ) = BEGDAT()
+      PCK( 2271 ) = ' '
+      PCK( 2272 ) = '           BODY2000511_POLE_RA       = (' &
+      //            '  297.        0.           0. )'
+      PCK( 2273 ) = '           BODY2000511_POLE_DEC      = (' &
+      //            '    5.        0.           0. )'
+      PCK( 2274 ) = '           BODY2000511_PM            = (' &
+      //            '  268.1    1684.4193549    0. )'
+      PCK( 2275 ) = '           BODY2000511_LONG_AXIS     = (' &
+      //            '    0.                        )'
+      PCK( 2276 ) = ' '
+      PCK( 2277 ) = BEGTXT()
+      PCK( 2278 ) = ' '
+      PCK( 2279 ) = ' '
+      PCK( 2280 ) = ' '
+      PCK( 2281 ) = 'Gaspra'
+      PCK( 2282 ) = ' '
+      PCK( 2283 ) = '        Old values:'
+      PCK( 2284 ) = ' '
+      PCK( 2285 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2286 ) = ' '
+      PCK( 2287 ) = '        Current values:'
+      PCK( 2288 ) = ' '
+      PCK( 2289 ) = BEGDAT()
+      PCK( 2290 ) = ' '
+      PCK( 2291 ) = '           BODY9511010_POLE_RA       = (' &
+      //            '   9.47     0.         0. )'
+      PCK( 2292 ) = '           BODY9511010_POLE_DEC      = (' &
+      //            '  26.70     0.         0. )'
+      PCK( 2293 ) = '           BODY9511010_PM            = (' &
+      //            '  83.67  1226.9114850  0. )'
+      PCK( 2294 ) = '           BODY9511010_LONG_AXIS     = (' &
+      //            '   0.                     )'
+      PCK( 2295 ) = ' '
+      PCK( 2296 ) = BEGTXT()
+      PCK( 2297 ) = ' '
+      PCK( 2298 ) = ' '
+      PCK( 2299 ) = ' '
+      PCK( 2300 ) = 'Steins'
+      PCK( 2301 ) = ' '
+      PCK( 2302 ) = '        Current values:'
+      PCK( 2303 ) = ' '
+      PCK( 2304 ) = BEGDAT()
+      PCK( 2305 ) = ' '
+      PCK( 2306 ) = '           BODY2002867_POLE_RA       = (' &
+      //            '  90.        0.        0. )'
+      PCK( 2307 ) = '           BODY2002867_POLE_DEC      = (' &
+      //            ' -62.        0.        0. )'
+      PCK( 2308 ) = '           BODY2002867_PM            = (' &
+      //            '  93.94   1428.852332  0. )'
+      PCK( 2309 ) = '           BODY2002867_LONG_AXIS     = (' &
+      //            '   0.                     )'
+      PCK( 2310 ) = ' '
+      PCK( 2311 ) = BEGTXT()
+      PCK( 2312 ) = ' '
+      PCK( 2313 ) = ' '
+      PCK( 2314 ) = ' '
+      PCK( 2315 ) = 'Itokawa'
+      PCK( 2316 ) = ' '
+      PCK( 2317 ) = '        Old values:'
+      PCK( 2318 ) = ' '
+      PCK( 2319 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2320 ) = ' '
+      PCK( 2321 ) = '        Current values:'
+      PCK( 2322 ) = ' '
+      PCK( 2323 ) = BEGDAT()
+      PCK( 2324 ) = ' '
+      PCK( 2325 ) = '           BODY2025143_POLE_RA       = (' &
+      //            '   90.53       0.           0. )'
+      PCK( 2326 ) = '           BODY2025143_POLE_DEC      = (' &
+      //            '  -66.30       0.           0. )'
+      PCK( 2327 ) = '           BODY2025143_PM            = (' &
+      //            '  000.0      712.143        0. )'
+      PCK( 2328 ) = '           BODY2025143_LONG_AXIS     = (' &
+      //            '    0.                         )'
+      PCK( 2329 ) = ' '
+      PCK( 2330 ) = BEGTXT()
+      PCK( 2331 ) = ' '
+      PCK( 2332 ) = ' '
+      PCK( 2333 ) = ' '
+      PCK( 2334 ) = '9P/Tempel 1'
+      PCK( 2335 ) = ' '
+      PCK( 2336 ) = ' '
+      PCK( 2337 ) = '        Old values:'
+      PCK( 2338 ) = ' '
+      PCK( 2339 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2340 ) = ' '
+      PCK( 2341 ) = '        Current values:'
+      PCK( 2342 ) = ' '
+      PCK( 2343 ) = BEGDAT()
+      PCK( 2344 ) = ' '
+      PCK( 2345 ) = '           BODY1000093_POLE_RA       = (' &
+      //            '   294.       0.         0.  )'
+      PCK( 2346 ) = '           BODY1000093_POLE_DEC      = (' &
+      //            '    73.       0.         0.  )'
+      PCK( 2347 ) = '           BODY1000093_PM            = (' &
+      //            '   252.63   212.064      0.  )'
+      PCK( 2348 ) = '           BODY1000093_LONG_AXIS     = (' &
+      //            '     0.                      )'
+      PCK( 2349 ) = ' '
+      PCK( 2350 ) = BEGTXT()
+      PCK( 2351 ) = ' '
+      PCK( 2352 ) = ' '
+      PCK( 2353 ) = ' '
+      PCK( 2354 ) = '19P/Borrelly'
+      PCK( 2355 ) = ' '
+      PCK( 2356 ) = '        Old values:'
+      PCK( 2357 ) = ' '
+      PCK( 2358 ) = '           Values are unchanged in the 2' &
+      //            '009 IAU report.'
+      PCK( 2359 ) = ' '
+      PCK( 2360 ) = '        Current values:'
+      PCK( 2361 ) = ' '
+      PCK( 2362 ) = BEGDAT()
+      PCK( 2363 ) = ' '
+      PCK( 2364 ) = '           BODY1000005_POLE_RA       = (' &
+      //            '   218.5      0.         0.  )'
+      PCK( 2365 ) = '           BODY1000005_POLE_DEC      = (' &
+      //            '   -12.5      0.         0.  )'
+      PCK( 2366 ) = '           BODY1000005_PM            = (' &
+      //            '   000.     390.0        0.  )'
+      PCK( 2367 ) = '           BODY1000005_LONG_AXIS     = (' &
+      //            '     0.                      )'
+      PCK( 2368 ) = ' '
+      PCK( 2369 ) = BEGTXT()
+      PCK( 2370 ) = ' '
+      PCK( 2371 ) = ' '
+      PCK( 2372 ) = ' '
+      PCK( 2373 ) = ' '
+      PCK( 2374 ) = ' '
+      PCK( 2375 ) = ' '
+      PCK( 2376 ) = ' '
+      PCK( 2377 ) = 'Radii of Sun and Planets'
+      PCK( 2378 ) = '----------------------------------------' &
+      //            '----------------'
+      PCK( 2379 ) = ' '
+      PCK( 2380 ) = ' '
+      PCK( 2381 ) = 'Sun'
+      PCK( 2382 ) = ' '
+      PCK( 2383 ) = BEGDAT()
+      PCK( 2384 ) = ' '
+      PCK( 2385 ) = '        BODY10_RADII      = (  696000.  ' &
+      //            '696000.  696000.  )'
+      PCK( 2386 ) = ' '
+      PCK( 2387 ) = BEGTXT()
+      PCK( 2388 ) = ' '
+      PCK( 2389 ) = ' '
+      PCK( 2390 ) = 'Mercury'
+      PCK( 2391 ) = ' '
+      PCK( 2392 ) = '     Old values:'
+      PCK( 2393 ) = ' '
+      PCK( 2394 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2395 ) = ' '
+      PCK( 2396 ) = '     Current values:'
+      PCK( 2397 ) = ' '
+      PCK( 2398 ) = BEGDAT()
+      PCK( 2399 ) = ' '
+      PCK( 2400 ) = '        BODY199_RADII     = ( 2439.7   2' &
+      //            '439.7   2439.7 )'
+      PCK( 2401 ) = ' '
+      PCK( 2402 ) = BEGTXT()
+      PCK( 2403 ) = ' '
+      PCK( 2404 ) = ' '
+      PCK( 2405 ) = 'Venus'
+      PCK( 2406 ) = ' '
+      PCK( 2407 ) = '     Old values:'
+      PCK( 2408 ) = ' '
+      PCK( 2409 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2410 ) = ' '
+      PCK( 2411 ) = '     Current values:'
+      PCK( 2412 ) = ' '
+      PCK( 2413 ) = BEGDAT()
+      PCK( 2414 ) = ' '
+      PCK( 2415 ) = '        BODY299_RADII     = ( 6051.8   6' &
+      //            '051.8   6051.8 )'
+      PCK( 2416 ) = ' '
+      PCK( 2417 ) = BEGTXT()
+      PCK( 2418 ) = ' '
+      PCK( 2419 ) = ' '
+      PCK( 2420 ) = 'Earth'
+      PCK( 2421 ) = ' '
+      PCK( 2422 ) = '     Old values:'
+      PCK( 2423 ) = ' '
+      PCK( 2424 ) = '        Values are from the 2006 IAU rep' &
+      //            'ort.'
+      PCK( 2425 ) = ' '
+      PCK( 2426 ) = '        body399_radii     = ( 6378.14   ' &
+      //            '6378.14   6356.75 )'
+      PCK( 2427 ) = ' '
+      PCK( 2428 ) = ' '
+      PCK( 2429 ) = '     Current values:'
+      PCK( 2430 ) = ' '
+      PCK( 2431 ) = ' '
+      PCK( 2432 ) = BEGDAT()
+      PCK( 2433 ) = ' '
+      PCK( 2434 ) = '        BODY399_RADII     = ( 6378.1366 ' &
+      //            '  6378.1366   6356.7519 )'
+      PCK( 2435 ) = ' '
+      PCK( 2436 ) = BEGTXT()
+      PCK( 2437 ) = ' '
+      PCK( 2438 ) = ' '
+      PCK( 2439 ) = 'Mars'
+      PCK( 2440 ) = ' '
+      PCK( 2441 ) = ' '
+      PCK( 2442 ) = '     Old values:'
+      PCK( 2443 ) = ' '
+      PCK( 2444 ) = '        Values are from the 2006 IAU rep' &
+      //            'ort.'
+      PCK( 2445 ) = ' '
+      PCK( 2446 ) = '        body499_radii       = (  3397.  ' &
+      //            '3397.  3375.  )'
+      PCK( 2447 ) = ' '
+      PCK( 2448 ) = ' '
+      PCK( 2449 ) = '     Current values:'
+      PCK( 2450 ) = ' '
+      PCK( 2451 ) = '        The 2009 IAU report gives separa' &
+      //            'te values for the north and'
+      PCK( 2452 ) = '        south polar radii:'
+      PCK( 2453 ) = ' '
+      PCK( 2454 ) = '           north:  3373.19'
+      PCK( 2455 ) = '           south:  3379.21'
+      PCK( 2456 ) = ' '
+      PCK( 2457 ) = '        The report provides the average ' &
+      //            'of these values as well,'
+      PCK( 2458 ) = '        which we use as the polar radius' &
+      //            ' for the triaxial model.'
+      PCK( 2459 ) = ' '
+      PCK( 2460 ) = BEGDAT()
+      PCK( 2461 ) = ' '
+      PCK( 2462 ) = '        BODY499_RADII       = ( 3396.19 ' &
+      //            '  3396.19   3376.20 )'
+      PCK( 2463 ) = ' '
+      PCK( 2464 ) = BEGTXT()
+      PCK( 2465 ) = ' '
+      PCK( 2466 ) = ' '
+      PCK( 2467 ) = ' '
+      PCK( 2468 ) = 'Jupiter'
+      PCK( 2469 ) = ' '
+      PCK( 2470 ) = '     Old values:'
+      PCK( 2471 ) = ' '
+      PCK( 2472 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2473 ) = ' '
+      PCK( 2474 ) = '     Current values:'
+      PCK( 2475 ) = ' '
+      PCK( 2476 ) = BEGDAT()
+      PCK( 2477 ) = ' '
+      PCK( 2478 ) = '        BODY599_RADII     = ( 71492   71' &
+      //            '492   66854 )'
+      PCK( 2479 ) = ' '
+      PCK( 2480 ) = BEGTXT()
+      PCK( 2481 ) = ' '
+      PCK( 2482 ) = ' '
+      PCK( 2483 ) = ' '
+      PCK( 2484 ) = 'Saturn'
+      PCK( 2485 ) = ' '
+      PCK( 2486 ) = '     Old values:'
+      PCK( 2487 ) = ' '
+      PCK( 2488 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2489 ) = ' '
+      PCK( 2490 ) = '     Current values:'
+      PCK( 2491 ) = ' '
+      PCK( 2492 ) = BEGDAT()
+      PCK( 2493 ) = ' '
+      PCK( 2494 ) = '        BODY699_RADII     = ( 60268   60' &
+      //            '268   54364 )'
+      PCK( 2495 ) = ' '
+      PCK( 2496 ) = BEGTXT()
+      PCK( 2497 ) = ' '
+      PCK( 2498 ) = ' '
+      PCK( 2499 ) = ' '
+      PCK( 2500 ) = 'Uranus'
+      PCK( 2501 ) = ' '
+      PCK( 2502 ) = '     Old values:'
+      PCK( 2503 ) = ' '
+      PCK( 2504 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2505 ) = ' '
+      PCK( 2506 ) = '     Current values:'
+      PCK( 2507 ) = ' '
+      PCK( 2508 ) = BEGDAT()
+      PCK( 2509 ) = ' '
+      PCK( 2510 ) = '        BODY799_RADII     = ( 25559   25' &
+      //            '559   24973 )'
+      PCK( 2511 ) = ' '
+      PCK( 2512 ) = BEGTXT()
+      PCK( 2513 ) = ' '
+      PCK( 2514 ) = ' '
+      PCK( 2515 ) = ' '
+      PCK( 2516 ) = 'Neptune'
+      PCK( 2517 ) = ' '
+      PCK( 2518 ) = '     Old values:'
+      PCK( 2519 ) = ' '
+      PCK( 2520 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2521 ) = ' '
+      PCK( 2522 ) = '     Current values:'
+      PCK( 2523 ) = ' '
+      PCK( 2524 ) = '        (Values are for the 1 bar pressu' &
+      //            're level.)'
+      PCK( 2525 ) = ' '
+      PCK( 2526 ) = BEGDAT()
+      PCK( 2527 ) = ' '
+      PCK( 2528 ) = '        BODY899_RADII     = ( 24764   24' &
+      //            '764  24341 )'
+      PCK( 2529 ) = ' '
+      PCK( 2530 ) = BEGTXT()
+      PCK( 2531 ) = ' '
+      PCK( 2532 ) = ' '
+      PCK( 2533 ) = ' '
+      PCK( 2534 ) = 'Radii of the Dwarf Planet Pluto'
+      PCK( 2535 ) = '----------------------------------------' &
+      //            '----------------'
+      PCK( 2536 ) = ' '
+      PCK( 2537 ) = ' '
+      PCK( 2538 ) = 'Pluto'
+      PCK( 2539 ) = ' '
+      PCK( 2540 ) = '     Old values:'
+      PCK( 2541 ) = ' '
+      PCK( 2542 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2543 ) = ' '
+      PCK( 2544 ) = '     Current values:'
+      PCK( 2545 ) = ' '
+      PCK( 2546 ) = BEGDAT()
+      PCK( 2547 ) = ' '
+      PCK( 2548 ) = '        BODY999_RADII     = ( 1195   119' &
+      //            '5   1195 )'
+      PCK( 2549 ) = ' '
+      PCK( 2550 ) = BEGTXT()
+      PCK( 2551 ) = ' '
+      PCK( 2552 ) = ' '
+      PCK( 2553 ) = ' '
+      PCK( 2554 ) = ' '
+      PCK( 2555 ) = 'Radii of Satellites'
+      PCK( 2556 ) = '----------------------------------------' &
+      //            '----------------'
+      PCK( 2557 ) = ' '
+      PCK( 2558 ) = ' '
+      PCK( 2559 ) = 'Moon'
+      PCK( 2560 ) = ' '
+      PCK( 2561 ) = '     Old values:'
+      PCK( 2562 ) = ' '
+      PCK( 2563 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2564 ) = ' '
+      PCK( 2565 ) = '     Current values:'
+      PCK( 2566 ) = ' '
+      PCK( 2567 ) = BEGDAT()
+      PCK( 2568 ) = ' '
+      PCK( 2569 ) = '        BODY301_RADII     = ( 1737.4   1' &
+      //            '737.4   1737.4 )'
+      PCK( 2570 ) = ' '
+      PCK( 2571 ) = BEGTXT()
+      PCK( 2572 ) = ' '
+      PCK( 2573 ) = ' '
+      PCK( 2574 ) = ' '
+      PCK( 2575 ) = 'Satellites of Mars'
+      PCK( 2576 ) = ' '
+      PCK( 2577 ) = '     Old values:'
+      PCK( 2578 ) = ' '
+      PCK( 2579 ) = '        Values are from the 2006 IAU rep' &
+      //            'ort.'
+      PCK( 2580 ) = ' '
+      PCK( 2581 ) = '        body401_radii     = ( 13.4    11' &
+      //            '.2    9.2 )'
+      PCK( 2582 ) = '        body402_radii     = (  7.5     6' &
+      //            '.1    5.2 )'
+      PCK( 2583 ) = ' '
+      PCK( 2584 ) = '     Current values:'
+      PCK( 2585 ) = ' '
+      PCK( 2586 ) = BEGDAT()
+      PCK( 2587 ) = ' '
+      PCK( 2588 ) = '        BODY401_RADII     = ( 13.0    11' &
+      //            '.4    9.1 )'
+      PCK( 2589 ) = '        BODY402_RADII     = (  7.8     6' &
+      //            '.0    5.1 )'
+      PCK( 2590 ) = ' '
+      PCK( 2591 ) = BEGTXT()
+      PCK( 2592 ) = ' '
+      PCK( 2593 ) = ' '
+      PCK( 2594 ) = ' '
+      PCK( 2595 ) = 'Satellites of Jupiter'
+      PCK( 2596 ) = ' '
+      PCK( 2597 ) = '     Old values:'
+      PCK( 2598 ) = ' '
+      PCK( 2599 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report,'
+      PCK( 2600 ) = '        except for those of Europa, Gany' &
+      //            'mede, Callisto,'
+      PCK( 2601 ) = '        and Metis. For Metis, now all th' &
+      //            'ree radii are'
+      PCK( 2602 ) = '        provided.'
+      PCK( 2603 ) = ' '
+      PCK( 2604 ) = '           body502_radii     = ( 1564.13' &
+      //            '  1561.23  1560.93 )'
+      PCK( 2605 ) = '           body503_radii     = ( 2632.4 ' &
+      //            '  2632.29  2632.35 )'
+      PCK( 2606 ) = '           body504_radii     = ( 2409.4 ' &
+      //            '  2409.2   2409.3  )'
+      PCK( 2607 ) = ' '
+      PCK( 2608 ) = '           The value for the second radi' &
+      //            'us for body 516 is not given in'
+      PCK( 2609 ) = '           2003 IAU report.   The values' &
+      //            ' given are:'
+      PCK( 2610 ) = ' '
+      PCK( 2611 ) = '              body516_radii    = (  30  ' &
+      //            ' ---   20   )'
+      PCK( 2612 ) = ' '
+      PCK( 2613 ) = '           For use within the SPICE syst' &
+      //            'em, we use only the mean radius.'
+      PCK( 2614 ) = ' '
+      PCK( 2615 ) = '           body516_radii    = (  21.5   ' &
+      //            '21.5  21.5  )'
+      PCK( 2616 ) = ' '
+      PCK( 2617 ) = ' '
+      PCK( 2618 ) = ' '
+      PCK( 2619 ) = ' '
+      PCK( 2620 ) = '     Current values:'
+      PCK( 2621 ) = ' '
+      PCK( 2622 ) = '        Note that for Ganymede and Calli' &
+      //            'sto only mean radii'
+      PCK( 2623 ) = '        are provided.'
+      PCK( 2624 ) = ' '
+      PCK( 2625 ) = BEGDAT()
+      PCK( 2626 ) = ' '
+      PCK( 2627 ) = '        BODY501_RADII     = ( 1829.4   1' &
+      //            '819.4   1815.7  )'
+      PCK( 2628 ) = '        BODY502_RADII     = ( 1562.6  15' &
+      //            '60.3    1559.5  )'
+      PCK( 2629 ) = '        BODY503_RADII     = ( 2631.2  26' &
+      //            '31.2    2631.2  )'
+      PCK( 2630 ) = '        BODY504_RADII     = ( 2410.3  24' &
+      //            '10.3    2410.3  )'
+      PCK( 2631 ) = '        BODY505_RADII     = (  125      ' &
+      //            ' 73       64    )'
+      PCK( 2632 ) = ' '
+      PCK( 2633 ) = BEGTXT()
+      PCK( 2634 ) = ' '
+      PCK( 2635 ) = '        Only mean radii are available in' &
+      //            ' the 2003 IAU report for bodies'
+      PCK( 2636 ) = '        506-513.'
+      PCK( 2637 ) = ' '
+      PCK( 2638 ) = BEGDAT()
+      PCK( 2639 ) = ' '
+      PCK( 2640 ) = '        BODY506_RADII    = (    85      ' &
+      //            ' 85       85   )'
+      PCK( 2641 ) = '        BODY507_RADII    = (    40      ' &
+      //            ' 40       40   )'
+      PCK( 2642 ) = '        BODY508_RADII    = (    18      ' &
+      //            ' 18       18   )'
+      PCK( 2643 ) = '        BODY509_RADII    = (    14      ' &
+      //            ' 14       14   )'
+      PCK( 2644 ) = '        BODY510_RADII    = (    12      ' &
+      //            ' 12       12   )'
+      PCK( 2645 ) = '        BODY511_RADII    = (    15      ' &
+      //            ' 15       15   )'
+      PCK( 2646 ) = '        BODY512_RADII    = (    10      ' &
+      //            ' 10       10   )'
+      PCK( 2647 ) = '        BODY513_RADII    = (     5      ' &
+      //            '  5        5   )'
+      PCK( 2648 ) = '        BODY514_RADII    = (    58      ' &
+      //            ' 49       42   )'
+      PCK( 2649 ) = '        BODY515_RADII    = (    10      ' &
+      //            '  8        7   )'
+      PCK( 2650 ) = '        BODY516_RADII    = (    30      ' &
+      //            ' 20       17   )'
+      PCK( 2651 ) = ' '
+      PCK( 2652 ) = BEGTXT()
+      PCK( 2653 ) = ' '
+      PCK( 2654 ) = ' '
+      PCK( 2655 ) = ' '
+      PCK( 2656 ) = 'Satellites of Saturn'
+      PCK( 2657 ) = ' '
+      PCK( 2658 ) = ' '
+      PCK( 2659 ) = '     Old values:'
+      PCK( 2660 ) = ' '
+      PCK( 2661 ) = '        Values are from the 2006 IAU rep' &
+      //            'ort.'
+      PCK( 2662 ) = ' '
+      PCK( 2663 ) = '        body601_radii     = (  207.4    ' &
+      //            ' 196.8     190.6  )'
+      PCK( 2664 ) = '        body602_radii     = (  256.6    ' &
+      //            ' 251.4     248.3  )'
+      PCK( 2665 ) = '        body603_radii     = (  540.4    ' &
+      //            ' 531.1     527.5  )'
+      PCK( 2666 ) = '        body604_radii     = (  563.8    ' &
+      //            ' 561.0     560.3  )'
+      PCK( 2667 ) = '        body605_radii     = (  767.2    ' &
+      //            ' 762.5     763.1  )'
+      PCK( 2668 ) = '        body606_radii     = ( 2575      ' &
+      //            '2575      2575    )'
+      PCK( 2669 ) = '        body607_radii     = (  164      ' &
+      //            ' 130       107    )'
+      PCK( 2670 ) = '        body608_radii     = (  747.4    ' &
+      //            ' 747.4     712.4  )'
+      PCK( 2671 ) = '        body609_radii     = (  108.6    ' &
+      //            ' 107.7     101.5  )'
+      PCK( 2672 ) = '        body610_radii     = (   97.0    ' &
+      //            '  95.0      77.0  )'
+      PCK( 2673 ) = '        body611_radii     = (   69.0    ' &
+      //            '  55.0      55.0  )'
+      PCK( 2674 ) = ' '
+      PCK( 2675 ) = ' '
+      PCK( 2676 ) = '        Only the first equatorial radius' &
+      //            ' for Helene (body 612) is given in the'
+      PCK( 2677 ) = '        2006 IAU report:'
+      PCK( 2678 ) = ' '
+      PCK( 2679 ) = '            body612_radii     = (       ' &
+      //            '17.5        ---          ---     )'
+      PCK( 2680 ) = ' '
+      PCK( 2681 ) = '        The mean radius is 16km; we use ' &
+      //            'this radius for all three axes, as'
+      PCK( 2682 ) = '        we do for the satellites for whi' &
+      //            'ch only the mean radius is available.'
+      PCK( 2683 ) = ' '
+      PCK( 2684 ) = '        body612_radii     = (  17.5     ' &
+      //            ' 17.5      17.5  )'
+      PCK( 2685 ) = '        body613_radii     = (  15       ' &
+      //            ' 12.5       7.5  )'
+      PCK( 2686 ) = '        body614_radii     = (  15.0     ' &
+      //            '  8.0       8.0  )'
+      PCK( 2687 ) = '        body615_radii     = (  18.5     ' &
+      //            ' 17.2      13.5  )'
+      PCK( 2688 ) = '        body616_radii     = (  74.0     ' &
+      //            ' 50.0      34.0  )'
+      PCK( 2689 ) = '        body617_radii     = (  55.0     ' &
+      //            ' 44.0      31.0  )'
+      PCK( 2690 ) = ' '
+      PCK( 2691 ) = '         For Pan, only a mean radius is ' &
+      //            'given in the 2006 report.'
+      PCK( 2692 ) = ' '
+      PCK( 2693 ) = '        body618_radii     = (   10      ' &
+      //            ' 10     10   )'
+      PCK( 2694 ) = ' '
+      PCK( 2695 ) = ' '
+      PCK( 2696 ) = ' '
+      PCK( 2697 ) = '     Current values:'
+      PCK( 2698 ) = ' '
+      PCK( 2699 ) = BEGDAT()
+      PCK( 2700 ) = ' '
+      PCK( 2701 ) = '        BODY601_RADII     = (  207.8    ' &
+      //            ' 196.7     190.6   )'
+      PCK( 2702 ) = '        BODY602_RADII     = (  256.6    ' &
+      //            ' 251.4     248.3   )'
+      PCK( 2703 ) = '        BODY603_RADII     = (  538.4    ' &
+      //            ' 528.3     526.3   )'
+      PCK( 2704 ) = '        BODY604_RADII     = (  563.4    ' &
+      //            ' 561.3     559.6   )'
+      PCK( 2705 ) = '        BODY605_RADII     = (  765.0    ' &
+      //            ' 763.1     762.4   )'
+      PCK( 2706 ) = '        BODY606_RADII     = ( 2575.15   ' &
+      //            ' 2574.78   2574.47 )'
+      PCK( 2707 ) = '        BODY607_RADII     = (  180.1    ' &
+      //            '  133.0    102.7   )'
+      PCK( 2708 ) = '        BODY608_RADII     = (  745.7    ' &
+      //            ' 745.7     712.1   )'
+      PCK( 2709 ) = '        BODY609_RADII     = (  109.4    ' &
+      //            ' 108.5     101.8   )'
+      PCK( 2710 ) = '        BODY610_RADII     = (  101.5    ' &
+      //            '  92.5      76.3   )'
+      PCK( 2711 ) = '        BODY611_RADII     = (   64.9    ' &
+      //            '  57.0      53.1   )'
+      PCK( 2712 ) = '        BODY612_RADII     = (   21.7    ' &
+      //            '  19.1      13.0   )'
+      PCK( 2713 ) = '        BODY613_RADII     = (   16.3    ' &
+      //            '  11.8      10.0   )'
+      PCK( 2714 ) = '        BODY614_RADII     = (   15.1    ' &
+      //            '  11.5       7.0   )'
+      PCK( 2715 ) = '        BODY615_RADII     = (   20.4    ' &
+      //            '  17.7       9.4   )'
+      PCK( 2716 ) = '        BODY616_RADII     = (   67.8    ' &
+      //            '  39.7      29.7   )'
+      PCK( 2717 ) = '        BODY617_RADII     = (   52.0    ' &
+      //            '  40.5      32.0   )'
+      PCK( 2718 ) = '        BODY618_RADII     = (   17.2    ' &
+      //            '  15.7      10.4   )'
+      PCK( 2719 ) = ' '
+      PCK( 2720 ) = '        BODY632_RADII     = (    1.6    ' &
+      //            '   1.6       1.6   )'
+      PCK( 2721 ) = '        BODY633_RADII     = (    2.9    ' &
+      //            '   2.8       2.0   )'
+      PCK( 2722 ) = '        BODY634_RADII     = (    1.5    ' &
+      //            '   1.2       1.0   )'
+      PCK( 2723 ) = '        BODY635_RADII     = (    4.3    ' &
+      //            '   4.1       3.2   )'
+      PCK( 2724 ) = '        BODY649_RADII     = (    1      ' &
+      //            '   1         1     )'
+      PCK( 2725 ) = ' '
+      PCK( 2726 ) = BEGTXT()
+      PCK( 2727 ) = ' '
+      PCK( 2728 ) = ' '
+      PCK( 2729 ) = ' '
+      PCK( 2730 ) = 'Satellites of Uranus'
+      PCK( 2731 ) = ' '
+      PCK( 2732 ) = '     Old values:'
+      PCK( 2733 ) = ' '
+      PCK( 2734 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2735 ) = ' '
+      PCK( 2736 ) = '     Current values:'
+      PCK( 2737 ) = ' '
+      PCK( 2738 ) = BEGDAT()
+      PCK( 2739 ) = ' '
+      PCK( 2740 ) = '        BODY701_RADII     = (  581.1   5' &
+      //            '77.9   577.7 )'
+      PCK( 2741 ) = '        BODY702_RADII     = (  584.7   5' &
+      //            '84.7   584.7 )'
+      PCK( 2742 ) = '        BODY703_RADII     = (  788.9   7' &
+      //            '88.9   788.9 )'
+      PCK( 2743 ) = '        BODY704_RADII     = (  761.4   7' &
+      //            '61.4   761.4 )'
+      PCK( 2744 ) = '        BODY705_RADII     = (  240.4   2' &
+      //            '34.2   232.9 )'
+      PCK( 2745 ) = ' '
+      PCK( 2746 ) = BEGTXT()
+      PCK( 2747 ) = ' '
+      PCK( 2748 ) = '        The 2000 report gives only mean ' &
+      //            'radii for satellites 706--715.'
+      PCK( 2749 ) = ' '
+      PCK( 2750 ) = BEGDAT()
+      PCK( 2751 ) = ' '
+      PCK( 2752 ) = '        BODY706_RADII     = (   13      ' &
+      //            '13      13 )'
+      PCK( 2753 ) = '        BODY707_RADII     = (   15      ' &
+      //            '15      15 )'
+      PCK( 2754 ) = '        BODY708_RADII     = (   21      ' &
+      //            '21      21 )'
+      PCK( 2755 ) = '        BODY709_RADII     = (   31      ' &
+      //            '31      31 )'
+      PCK( 2756 ) = '        BODY710_RADII     = (   27      ' &
+      //            '27      27 )'
+      PCK( 2757 ) = '        BODY711_RADII     = (   42      ' &
+      //            '42      42 )'
+      PCK( 2758 ) = '        BODY712_RADII     = (   54      ' &
+      //            '54      54 )'
+      PCK( 2759 ) = '        BODY713_RADII     = (   27      ' &
+      //            '27      27 )'
+      PCK( 2760 ) = '        BODY714_RADII     = (   33      ' &
+      //            '33      33 )'
+      PCK( 2761 ) = '        BODY715_RADII     = (   77      ' &
+      //            '77      77 )'
+      PCK( 2762 ) = ' '
+      PCK( 2763 ) = BEGTXT()
+      PCK( 2764 ) = ' '
+      PCK( 2765 ) = ' '
+      PCK( 2766 ) = ' '
+      PCK( 2767 ) = ' '
+      PCK( 2768 ) = 'Satellites of Neptune'
+      PCK( 2769 ) = ' '
+      PCK( 2770 ) = ' '
+      PCK( 2771 ) = '     Old values:'
+      PCK( 2772 ) = ' '
+      PCK( 2773 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2774 ) = ' '
+      PCK( 2775 ) = '     Current values:'
+      PCK( 2776 ) = ' '
+      PCK( 2777 ) = '        The 2009 report gives mean radii' &
+      //            ' only for bodies 801-806.'
+      PCK( 2778 ) = ' '
+      PCK( 2779 ) = BEGDAT()
+      PCK( 2780 ) = ' '
+      PCK( 2781 ) = '        BODY801_RADII     = ( 1352.6  13' &
+      //            '52.6  1352.6 )'
+      PCK( 2782 ) = '        BODY802_RADII     = (  170     1' &
+      //            '70     170   )'
+      PCK( 2783 ) = '        BODY803_RADII     = (   29      ' &
+      //            '29     29    )'
+      PCK( 2784 ) = '        BODY804_RADII     = (   40      ' &
+      //            '40     40    )'
+      PCK( 2785 ) = '        BODY805_RADII     = (   74      ' &
+      //            '74     74    )'
+      PCK( 2786 ) = '        BODY806_RADII     = (   79      ' &
+      //            '79     79    )'
+      PCK( 2787 ) = ' '
+      PCK( 2788 ) = BEGTXT()
+      PCK( 2789 ) = ' '
+      PCK( 2790 ) = '        The second equatorial radius for' &
+      //            ' Larissa is not given in the 2009'
+      PCK( 2791 ) = '        report.  The available values ar' &
+      //            'e:'
+      PCK( 2792 ) = ' '
+      PCK( 2793 ) = '            BODY807_RADII     = (   104 ' &
+      //            '    ---     89   )'
+      PCK( 2794 ) = ' '
+      PCK( 2795 ) = '        For use within the SPICE system,' &
+      //            ' we use only the mean radius.'
+      PCK( 2796 ) = ' '
+      PCK( 2797 ) = BEGDAT()
+      PCK( 2798 ) = ' '
+      PCK( 2799 ) = '        BODY807_RADII     = (   96      ' &
+      //            '96     96   )'
+      PCK( 2800 ) = '        BODY808_RADII     = (  218     2' &
+      //            '08    201   )'
+      PCK( 2801 ) = ' '
+      PCK( 2802 ) = BEGTXT()
+      PCK( 2803 ) = ' '
+      PCK( 2804 ) = ' '
+      PCK( 2805 ) = ' '
+      PCK( 2806 ) = ' '
+      PCK( 2807 ) = 'Satellites of Pluto'
+      PCK( 2808 ) = ' '
+      PCK( 2809 ) = ' '
+      PCK( 2810 ) = '     Old values:'
+      PCK( 2811 ) = ' '
+      PCK( 2812 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2813 ) = ' '
+      PCK( 2814 ) = '     Current values:'
+      PCK( 2815 ) = ' '
+      PCK( 2816 ) = BEGDAT()
+      PCK( 2817 ) = ' '
+      PCK( 2818 ) = '        BODY901_RADII     = (  605     6' &
+      //            '05    605   )'
+      PCK( 2819 ) = ' '
+      PCK( 2820 ) = BEGTXT()
+      PCK( 2821 ) = ' '
+      PCK( 2822 ) = ' '
+      PCK( 2823 ) = ' '
+      PCK( 2824 ) = 'Radii for Selected Comets and Asteroids'
+      PCK( 2825 ) = '----------------------------------------' &
+      //            '----------------'
+      PCK( 2826 ) = ' '
+      PCK( 2827 ) = ' '
+      PCK( 2828 ) = ' '
+      PCK( 2829 ) = ' '
+      PCK( 2830 ) = ' '
+      PCK( 2831 ) = 'Ceres'
+      PCK( 2832 ) = ' '
+      PCK( 2833 ) = '     Old values:'
+      PCK( 2834 ) = ' '
+      PCK( 2835 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2836 ) = ' '
+      PCK( 2837 ) = '     Current values:'
+      PCK( 2838 ) = ' '
+      PCK( 2839 ) = ' '
+      PCK( 2840 ) = BEGDAT()
+      PCK( 2841 ) = ' '
+      PCK( 2842 ) = '        BODY2000001_RADII     = ( 487.3 ' &
+      //            ' 487.3  454.7 )'
+      PCK( 2843 ) = ' '
+      PCK( 2844 ) = BEGTXT()
+      PCK( 2845 ) = ' '
+      PCK( 2846 ) = ' '
+      PCK( 2847 ) = ' '
+      PCK( 2848 ) = 'Vesta'
+      PCK( 2849 ) = ' '
+      PCK( 2850 ) = ' '
+      PCK( 2851 ) = '     Old values:'
+      PCK( 2852 ) = ' '
+      PCK( 2853 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2854 ) = ' '
+      PCK( 2855 ) = '     Current values:'
+      PCK( 2856 ) = ' '
+      PCK( 2857 ) = ' '
+      PCK( 2858 ) = BEGDAT()
+      PCK( 2859 ) = ' '
+      PCK( 2860 ) = '        BODY2000004_RADII     = ( 289.  ' &
+      //            '280.  229.  )'
+      PCK( 2861 ) = ' '
+      PCK( 2862 ) = BEGTXT()
+      PCK( 2863 ) = ' '
+      PCK( 2864 ) = ' '
+      PCK( 2865 ) = ' '
+      PCK( 2866 ) = 'Lutetia'
+      PCK( 2867 ) = ' '
+      PCK( 2868 ) = ' '
+      PCK( 2869 ) = '     Current values:'
+      PCK( 2870 ) = ' '
+      PCK( 2871 ) = ' '
+      PCK( 2872 ) = BEGDAT()
+      PCK( 2873 ) = ' '
+      PCK( 2874 ) = '        BODY2000021_RADII     = (  62.0 ' &
+      //            '  50.5   46.5  )'
+      PCK( 2875 ) = ' '
+      PCK( 2876 ) = BEGTXT()
+      PCK( 2877 ) = ' '
+      PCK( 2878 ) = ' '
+      PCK( 2879 ) = ' '
+      PCK( 2880 ) = 'Ida'
+      PCK( 2881 ) = ' '
+      PCK( 2882 ) = ' '
+      PCK( 2883 ) = '     Old values:'
+      PCK( 2884 ) = ' '
+      PCK( 2885 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2886 ) = ' '
+      PCK( 2887 ) = '     Current values:'
+      PCK( 2888 ) = ' '
+      PCK( 2889 ) = ' '
+      PCK( 2890 ) = BEGDAT()
+      PCK( 2891 ) = ' '
+      PCK( 2892 ) = '        BODY2431010_RADII     = (   26.8' &
+      //            '   12.0    7.6 )'
+      PCK( 2893 ) = ' '
+      PCK( 2894 ) = BEGTXT()
+      PCK( 2895 ) = ' '
+      PCK( 2896 ) = ' '
+      PCK( 2897 ) = ' '
+      PCK( 2898 ) = 'Mathilde'
+      PCK( 2899 ) = ' '
+      PCK( 2900 ) = ' '
+      PCK( 2901 ) = '     Old values:'
+      PCK( 2902 ) = ' '
+      PCK( 2903 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2904 ) = ' '
+      PCK( 2905 ) = '     Current values:'
+      PCK( 2906 ) = ' '
+      PCK( 2907 ) = ' '
+      PCK( 2908 ) = BEGDAT()
+      PCK( 2909 ) = ' '
+      PCK( 2910 ) = '        BODY2000253_RADII     = (  33.  ' &
+      //            ' 24.   23.  )'
+      PCK( 2911 ) = ' '
+      PCK( 2912 ) = BEGTXT()
+      PCK( 2913 ) = ' '
+      PCK( 2914 ) = ' '
+      PCK( 2915 ) = ' '
+      PCK( 2916 ) = 'Eros'
+      PCK( 2917 ) = ' '
+      PCK( 2918 ) = ' '
+      PCK( 2919 ) = '     Old values:'
+      PCK( 2920 ) = ' '
+      PCK( 2921 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2922 ) = ' '
+      PCK( 2923 ) = '     Current values:'
+      PCK( 2924 ) = ' '
+      PCK( 2925 ) = ' '
+      PCK( 2926 ) = BEGDAT()
+      PCK( 2927 ) = ' '
+      PCK( 2928 ) = '        BODY2000433_RADII     = (  17.0 ' &
+      //            '  5.5   5.5  )'
+      PCK( 2929 ) = ' '
+      PCK( 2930 ) = BEGTXT()
+      PCK( 2931 ) = ' '
+      PCK( 2932 ) = ' '
+      PCK( 2933 ) = ' '
+      PCK( 2934 ) = 'Davida'
+      PCK( 2935 ) = ' '
+      PCK( 2936 ) = ' '
+      PCK( 2937 ) = '     Current values:'
+      PCK( 2938 ) = ' '
+      PCK( 2939 ) = ' '
+      PCK( 2940 ) = BEGDAT()
+      PCK( 2941 ) = ' '
+      PCK( 2942 ) = '        BODY2000511_RADII     = (  180. ' &
+      //            '  147.   127.  )'
+      PCK( 2943 ) = ' '
+      PCK( 2944 ) = BEGTXT()
+      PCK( 2945 ) = ' '
+      PCK( 2946 ) = ' '
+      PCK( 2947 ) = ' '
+      PCK( 2948 ) = 'Gaspra'
+      PCK( 2949 ) = ' '
+      PCK( 2950 ) = ' '
+      PCK( 2951 ) = '     Old values:'
+      PCK( 2952 ) = ' '
+      PCK( 2953 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2954 ) = ' '
+      PCK( 2955 ) = '     Current values:'
+      PCK( 2956 ) = ' '
+      PCK( 2957 ) = ' '
+      PCK( 2958 ) = BEGDAT()
+      PCK( 2959 ) = ' '
+      PCK( 2960 ) = '        BODY9511010_RADII     = (    9.1' &
+      //            '    5.2    4.4 )'
+      PCK( 2961 ) = ' '
+      PCK( 2962 ) = BEGTXT()
+      PCK( 2963 ) = ' '
+      PCK( 2964 ) = ' '
+      PCK( 2965 ) = ' '
+      PCK( 2966 ) = 'Steins'
+      PCK( 2967 ) = ' '
+      PCK( 2968 ) = ' '
+      PCK( 2969 ) = '     Current values:'
+      PCK( 2970 ) = ' '
+      PCK( 2971 ) = ' '
+      PCK( 2972 ) = BEGDAT()
+      PCK( 2973 ) = ' '
+      PCK( 2974 ) = '        BODY2002867_RADII     = (  3.24 ' &
+      //            '    2.73     2.04  )'
+      PCK( 2975 ) = ' '
+      PCK( 2976 ) = BEGTXT()
+      PCK( 2977 ) = ' '
+      PCK( 2978 ) = ' '
+      PCK( 2979 ) = ' '
+      PCK( 2980 ) = 'Toutatis'
+      PCK( 2981 ) = ' '
+      PCK( 2982 ) = ' '
+      PCK( 2983 ) = '     Old values:'
+      PCK( 2984 ) = ' '
+      PCK( 2985 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 2986 ) = ' '
+      PCK( 2987 ) = '     Current values:'
+      PCK( 2988 ) = ' '
+      PCK( 2989 ) = ' '
+      PCK( 2990 ) = BEGDAT()
+      PCK( 2991 ) = ' '
+      PCK( 2992 ) = '        BODY2004179_RADII     = (  2.13 ' &
+      //            ' 1.015  0.85  )'
+      PCK( 2993 ) = ' '
+      PCK( 2994 ) = BEGTXT()
+      PCK( 2995 ) = ' '
+      PCK( 2996 ) = ' '
+      PCK( 2997 ) = ' '
+      PCK( 2998 ) = 'Itokawa'
+      PCK( 2999 ) = ' '
+      PCK( 3000 ) = ' '
+      PCK( 3001 ) = '     Old values:'
+      PCK( 3002 ) = ' '
+      PCK( 3003 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 3004 ) = ' '
+      PCK( 3005 ) = '     Current values:'
+      PCK( 3006 ) = ' '
+      PCK( 3007 ) = ' '
+      PCK( 3008 ) = BEGDAT()
+      PCK( 3009 ) = ' '
+      PCK( 3010 ) = '        BODY2025143_RADII     = (  0.535' &
+      //            '   0.294   0.209  )'
+      PCK( 3011 ) = ' '
+      PCK( 3012 ) = BEGTXT()
+      PCK( 3013 ) = ' '
+      PCK( 3014 ) = ' '
+      PCK( 3015 ) = 'Kleopatra'
+      PCK( 3016 ) = ' '
+      PCK( 3017 ) = ' '
+      PCK( 3018 ) = '     Old values:'
+      PCK( 3019 ) = ' '
+      PCK( 3020 ) = '        Values are from the 2003 report.'
+      PCK( 3021 ) = ' '
+      PCK( 3022 ) = ' '
+      PCK( 3023 ) = '        body2000216_radii     = (   108.' &
+      //            '5      47    40.5  )'
+      PCK( 3024 ) = ' '
+      PCK( 3025 ) = ' '
+      PCK( 3026 ) = '     Current values:'
+      PCK( 3027 ) = ' '
+      PCK( 3028 ) = ' '
+      PCK( 3029 ) = '        No values are provided in the 20' &
+      //            '09 report.'
+      PCK( 3030 ) = ' '
+      PCK( 3031 ) = ' '
+      PCK( 3032 ) = ' '
+      PCK( 3033 ) = ' '
+      PCK( 3034 ) = ' '
+      PCK( 3035 ) = 'Halley'
+      PCK( 3036 ) = ' '
+      PCK( 3037 ) = ' '
+      PCK( 3038 ) = '     Old values:'
+      PCK( 3039 ) = ' '
+      PCK( 3040 ) = '        Values are unchanged in the 2009' &
+      //            ' IAU report.'
+      PCK( 3041 ) = ' '
+      PCK( 3042 ) = '     Current values:'
+      PCK( 3043 ) = ' '
+      PCK( 3044 ) = BEGDAT()
+      PCK( 3045 ) = ' '
+      PCK( 3046 ) = '        BODY1000036_RADII     = (  8.0  ' &
+      //            ' 4.0   4.0  )'
+      PCK( 3047 ) = ' '
+      PCK( 3048 ) = BEGTXT()
+      PCK( 3049 ) = ' '
+      PCK( 3050 ) = ' '
+      PCK( 3051 ) = ' '
+      PCK( 3052 ) = '9P/Tempel 1'
+      PCK( 3053 ) = ' '
+      PCK( 3054 ) = ' '
+      PCK( 3055 ) = '     Old values:'
+      PCK( 3056 ) = ' '
+      PCK( 3057 ) = '        The effective radius is unchange' &
+      //            'd in the 2009 IAU report.'
+      PCK( 3058 ) = ' '
+      PCK( 3059 ) = '     Current values:'
+      PCK( 3060 ) = ' '
+      PCK( 3061 ) = ' '
+      PCK( 3062 ) = '        The value in the data assignment' &
+      //            ' below is the'
+      PCK( 3063 ) = '        "effective radius."'
+      PCK( 3064 ) = ' '
+      PCK( 3065 ) = '        According to [1]:'
+      PCK( 3066 ) = ' '
+      PCK( 3067 ) = '           The maximum and minimum radii' &
+      //            ' are not properly'
+      PCK( 3068 ) = '           the values of the principal s' &
+      //            'emi-axes, they'
+      PCK( 3069 ) = '           are half the maximum and mini' &
+      //            'mum values of the'
+      PCK( 3070 ) = '           diameter. Due to the large de' &
+      //            'viations from a'
+      PCK( 3071 ) = '           simple ellipsoid, they may no' &
+      //            't correspond with'
+      PCK( 3072 ) = '           measurements along the princi' &
+      //            'pal axes, or be'
+      PCK( 3073 ) = '           orthogonal to each other.'
+      PCK( 3074 ) = ' '
+      PCK( 3075 ) = BEGDAT()
+      PCK( 3076 ) = ' '
+      PCK( 3077 ) = '        BODY1000093_RADII     = (  3.0  ' &
+      //            ' 3.0   3.0  )'
+      PCK( 3078 ) = ' '
+      PCK( 3079 ) = BEGTXT()
+      PCK( 3080 ) = ' '
+      PCK( 3081 ) = ' '
+      PCK( 3082 ) = '19P/Borrelly'
+      PCK( 3083 ) = ' '
+      PCK( 3084 ) = ' '
+      PCK( 3085 ) = '     Old values:'
+      PCK( 3086 ) = ' '
+      PCK( 3087 ) = '        Values are unchanged in the 2009' &
+      //            ' report.'
+      PCK( 3088 ) = ' '
+      PCK( 3089 ) = '     Current values:'
+      PCK( 3090 ) = ' '
+      PCK( 3091 ) = ' '
+      PCK( 3092 ) = '        The value in the data assignment' &
+      //            ' below is the'
+      PCK( 3093 ) = '        "effective radius."'
+      PCK( 3094 ) = ' '
+      PCK( 3095 ) = '        The first principal axis length ' &
+      //            'is'
+      PCK( 3096 ) = ' '
+      PCK( 3097 ) = '           3.5 km'
+      PCK( 3098 ) = ' '
+      PCK( 3099 ) = '        The lengths of the other semi-ax' &
+      //            'es are not provided'
+      PCK( 3100 ) = '        by [1].'
+      PCK( 3101 ) = ' '
+      PCK( 3102 ) = BEGDAT()
+      PCK( 3103 ) = ' '
+      PCK( 3104 ) = '        BODY1000005_RADII     = (  4.22 ' &
+      //            '  4.22   4.22  )'
+      PCK( 3105 ) = ' '
+      PCK( 3106 ) = BEGTXT()
+      PCK( 3107 ) = ' '
+      PCK( 3108 ) = ' '
+      PCK( 3109 ) = ' '
+      PCK( 3110 ) = '81P/Wild 2'
+      PCK( 3111 ) = ' '
+      PCK( 3112 ) = ' '
+      PCK( 3113 ) = '     Old values:'
+      PCK( 3114 ) = ' '
+      PCK( 3115 ) = '        Values are unchanged in the 2009' &
+      //            ' report.'
+      PCK( 3116 ) = ' '
+      PCK( 3117 ) = '     Current values:'
+      PCK( 3118 ) = ' '
+      PCK( 3119 ) = ' '
+      PCK( 3120 ) = BEGDAT()
+      PCK( 3121 ) = ' '
+      PCK( 3122 ) = '        BODY1000107_RADII     = (  2.7  ' &
+      //            ' 1.9   1.5 )'
+      PCK( 3123 ) = ' '
+      PCK( 3124 ) = BEGTXT()
+      PCK( 3125 ) = ' '
+      PCK( 3126 ) = ' '
+      PCK( 3127 ) = ' '
+      PCK( 3128 ) = '========================================' &
+      //            '==================================='
+      PCK( 3129 ) = 'End of file pck00010.tpc'
+      PCK( 3130 ) = '========================================' &
+      //            '==================================='
+      PCK( 3131 ) = ' '
+
+
+
+      PCK( 3141  ) = BEGDAT()
+      PCK( 3142  ) = 'BODY-10_CONSTANTS_REF_FRAME = 2'
+      PCK( 3143  ) = 'BODY-10_CONSTANTS_JED_EPOCH = 2433282.42345905D0'
+      PCK( 3144  ) = ' '
+      PCK( 3145  ) = 'BODY-10_POLE_RA         = (  286.13       ' &
+      //          '0.          0. )'
+      PCK( 3146  ) = 'BODY-10_POLE_DEC        = (   63.87       ' &
+      //          '0.          0. )'
+      PCK( 3147  ) = 'BODY-10_PM              = (   84.176     1' &
+      //          '4.18440     0. )'
+      PCK( 3148  ) = 'BODY-10_LONG_AXIS       = (  459.00       ' &
+      //          '               )'
+      PCK( 3149 ) = ' '
+      PCK( 3150 ) = BEGTXT()
+      PCK( 3151 ) = ' '
+
+
+
+
+!
+!     Create the PCK kernel.
+!
+      CALL TXTOPN ( NAMEPC, UNIT )
+
+      DO I = 1, NLINES
+         R =     RTRIM ( PCK(I) )
+
+         CALL WRITLN ( PCK(I)(1:R), UNIT )
+      END DO
+
+      CLOSE ( UNIT )
+!
+!     If this file needs to be loaded.  Do it now.  If not we are
+!     done and can return.
+!
+      IF ( LOADPC ) THEN
+         CALL LDPOOL ( NAMEPC )
+
+         IF ( KEEPPC ) THEN
+!
+!           If we are keeping this file, we need to register it
+!           with FILREG.
+!
+            CALL TFILES ( NAMEPC )
+            RETURN
+         END IF
+
+      ELSE
+!
+!        We are keeping this file, so we need to register it
+!        with FILREG.
+!
+         CALL TFILES ( NAMEPC )
+         RETURN
+      END IF
+
+
+      CALL KILFIL ( NAMEPC )
+
+      RETURN
+      END

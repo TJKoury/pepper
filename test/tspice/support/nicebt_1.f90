@@ -1,0 +1,1232 @@
+!$Procedure     NICEBT_1 ( Nicely buffered text )
+
+      SUBROUTINE NICEBT_1 ( STRING, STYLE, BUFFER )
+      IMPLICIT NONE
+
+! $ Abstract
+!
+!     Output a string to a unit using one of a set of available styles.
+!     Format and output a string so that it has a pleasing appearance
+!     (breaks for newlines occurring at natural places, margins set at
+!     desired levels, etc.)
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Keywords
+!
+!     STRING
+!     TEXT
+!     UTILITY
+!
+! $ Declarations
+
+      INTEGER               LBCELL
+      PARAMETER           ( LBCELL = -5 )
+
+      CHARACTER*(*)         STRING
+      CHARACTER*(*)         STYLE
+      CHARACTER*(*)         BUFFER ( LBCELL: * )
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  ---------------------------------------------------
+!     STRING     I   Message to be printed.
+!     STYLE      I   Format specification string.
+!     BUFFER     O   Buffer to which formatted lines should be appended.
+!
+! $ Detailed_Input
+!
+!     STRING    A long string to be broken into columns and output.
+!               If desired, the user can force various changes to the
+!               format of the output by inserting control substrings
+!               into the desired text, and specifying these control
+!               strings in the character string STYLE.
+!
+!               Three control functions are possible.  They are:
+!
+!               1) Force a newline.
+!               2) Force a newline and alter the margins for output.
+!               3) Insert a vertical tab in the output.
+!
+!               To force a new line at some location of the string
+!               during output you must put the KEYWORD 'NEWLINE'
+!               into the string STYLE followed by a word that will
+!               be used to signal a linebreak.  For example you
+!               might use ' NEWLINE \cr '.  At any point of the
+!               string that a newline is desired, insert the string
+!               associated with the NEWLINE keyword ( in this case
+!               '\cr' ).  Spaces are not required around the NEWLINE
+!               control string (or any other control string).
+!
+!               To modify the margins after a line break, you insert
+!               the line break control string into STRING and insert
+!               immediately after it a string of the form (x:y) where
+!               x and y are numeric strings.  The number x indicates
+!               that the left margin should be moved x to the right.
+!               The number y indicates the right margin should be
+!               moved y to the left.  Both negative and positive
+!               values are allowed.  Spaces are allowed within the
+!               spaces between parentheses. In keeping with our
+!               previous example both
+!
+!                      '\cr(5:-2)' and '\cr( 5 : -2 )'
+!
+!               directs the routine to force an line break; move the
+!               left margin 5 to the right; move the right margin
+!               -2 to the left (.i.e. 2 to the right).
+!
+!                      \cr (5: -2)
+!
+!               would be treated as simply a new line directive, the
+!               remainder (5: -2) is treated as part of the string
+!               to output.
+!
+!               To force a vertical tab at any point of the string
+!               you must specify a vertical tab control string in
+!               the style string.  Then at the point in string
+!               where you want a vertical tab to appear, simply insert
+!               the vertical tab string, spaces are NOT required
+!               around the vertical tab string.
+!
+!               All control substrings in STRING are treated as having
+!               zero width and invisible to output.
+!
+!     STYLE  is a character string that controls how the string
+!            should be formatted on output and what substrings
+!            of STRING will be treated as control characters
+!            for display of STRING.  STYLE should consist of
+!            a sequence of keyword/value word pairs.  That is,
+!            it should consist of a sequence of words ( according
+!            to the SPICE definition of a word ) in a pattern
+!            as illustrated here:
+!
+!            Keyword_1 Value_1 Keyword_2 Value_2 ... Keyword_n Value_n
+!
+!            Acceptable keywords, their meanings, and expectations
+!            regarding their associate values are spelled at below.
+!
+!          'FLAG'       is a keyword used to indicate that a string
+!                       will prefix the output of STRING.  Moreover
+!                       STRING will be printed in a block that is
+!                       indented by one more than the nonblank length
+!                       of the FLAG. (The appearance will parallel what
+!                       you see here in this description, where 'FLAG'
+!                       is the flag associated with this block of text.)
+!
+!                       If a flag is specified, the resulting output
+!                       will consist of a flag, 1 space and formatted
+!                       output text.
+!
+!                       Unless the FLAG keyword appears, no flag is
+!                       used with the output.
+!
+!          'LEADER'     is the keyword used to indicate that the left
+!                       margin of the output will always begin with
+!                       the word that follows LEADER.  The leader
+!                       string will not appear on the FLAG line
+!                       if a FLAG is specified. The leader can
+!                       be placed on the FLAG line by simply making
+!                       it part of the flag.
+!
+!                       Unless the LEADER keyword appears, no leader is
+!                       used with the output.
+!
+!          'TRAILER'    is the keyword used to indicate that the right
+!                       margin of the output will always end with
+!                       the word that follows TRAILER.  The trailer
+!                       will appear in every line.
+!
+!           The effect of using the keywords LEADER, TRAILER and FLAG
+!           is to change the margins specified (or implied) through
+!           the use of LEFT and RIGHT.  The effective value of LEFT
+!           will become LEFT + MAX ( LEN(LEADER), LEN(FLAG)+1 ).
+!           The right margin becomes RIGHT - LEN(TRAILER).
+!
+!
+!          'LEFT'       is the keyword used to indicate where the
+!                       left margin of the output text should appear
+!                       (either on the output screen or in a file).
+!                       Note if a FLAG is present, when displayed the
+!                       flag will start in this column of the output.
+!                       The remaining text will be indented one
+!                       more than the width of the nonblank portion of
+!                       the flag.  If no flag is present, output will
+!                       begin in the specified LEFT column.
+!
+!                       The word that immediately follows LEFT must
+!                       successfully parse as an integer.
+!
+!                       If the LEFT keyword does not appear the left
+!                       margin is set to 1.
+!
+!          'RIGHT'      is the keyword used to indicate where the
+!                       right margin of the output text should appear
+!                       (either on the output screen or in a file).
+!
+!                       The word that immediately follows RIGHT must
+!                       successfully parse as an integer.
+!
+!                       If the RIGHT keyword does not appear the right
+!                       margin is set to 80.
+!
+!          'NEWLINE'    is the keyword used to indicate what substring
+!                       if any within the text string will be
+!                       intrepreted as meaning "start a new line" and
+!                       optionally "reset the margins."  (See STRING
+!                       for details concerning the use of the newline
+!                       substring.)
+!
+!                       If the keyword NEWLINE is not present, no
+!                       substring of STRING will be interpreted as
+!                       directing a newline to be started.
+!
+!          'VTAB'       is the keyword used to indicate what substring
+!                       within the text string will be interpreted
+!                       as meaning "start a new line, but indent it
+!                       to the current position within this line."
+!                       This is refered to as a vertical tab.
+!
+!                       If the keyword VTAB is not present no substring
+!                       of STRING will be interpreted as a vertical
+!                       tab.
+!
+!          'HARDSPACE'  is the keyword used to indicate what character
+!                       within the text string will be processed as a
+!                       normal text character, but will be written out
+!                       as a space upon output. Note HARDSPACES in both
+!                       the FLAG and LEADER will converted into spaces
+!                       upon output.
+!
+!                       If the keyword HARDSPACE is not present, no
+!                       character will be interpreted as a hard space.
+!
+! $ Detailed_Output
+!
+!     BUFFER    is an initialized cell to which formatted lines
+!               of text should be appended.
+!
+! $ Exceptions
+!
+!     1)  If a keyword/value pair is entered more than once in
+!         the style string, the last pair takes precedence.
+!
+!     2)  If a keyword appears without a following value in the
+!         style string the SPICE error 'SPICE(UNBALACEDPAIR)' is
+!         signaled.
+!
+!     3)  If a keyword is not recognized, the error 'SPICE(UNKNOWNKEY)'
+!         is signaled
+!
+!     4)  If one of the margin keywords (LEFT RIGHT) is not followed
+!         by a numeric string, the error 'SPICE(NONNUMERICSTRING)'
+!         is signaled.
+!
+!     5)  If the left column becomes less than zero, or the right column
+!         becomes less than the left column the error
+!         'SPICE(INVALIDCOLUMN)' is signaled.
+!
+!     6)  If the number of columns from the left to the right margin
+!         becomes less than or equal to the number of characters in the
+!         flag (assuming one is specified) the error
+!         'SPICE(SPACETOONARROW)' is signaled.
+!
+!      7) If output cannot be performed, the error 'SPICE(OUTPUTERROR)'
+!         will be signaled and a descriptive long message set to
+!         aid in determining the cause of the output failure.
+!
+!      8) If the right margin exceeds 512, the output will be truncated
+!         at column 512.
+!
+! $ Particulars
+!
+!     This routine is designed to aid in the problem of creating
+!     nice looking messages that must extend over 1 line.  It
+!     allows the user to construct messages by simply appending,
+!     prefixing or inserting text into an existing string until
+!     the message is finished.  The user need not be concerned
+!     about breaking up the message in good spots for output.
+!     This routine searches the message in STRING for "good" places
+!     at which to break STRING.
+!
+!     The user may specify a "flag" that will be used to prefix the
+!     first output line, left and right margins for the output,
+!     and special strings for forcing creation of newlines, changing
+!     margins, and inserting vertical tabs.
+!
+!     This routine always sends to output a blank line prior to
+!     the start of the output formatted string.
+!
+!     Since strings are often built by concatenation, the user may
+!     want to compress out extra spaces in string before calling
+!     this routine.  This routine breaks the input string at gaps
+!     in the string, but does not get rid of large gaps within
+!     a successfully broken output line. (See the examples below.)
+!
+!     For a discussion of the string breaking algorithm see the
+!     particulars section of the SPICE routine CUTSTR.
+!
+! $ Files
+!
+!     None.
+!
+! $ Examples
+!
+!     Suppose
+!
+!           STYLE  = 'LEFT 10 RIGHT 50 '
+!     and
+!
+!           STRING = 'Now is the time for all good men to come to ' //
+!          .         'the aid of their party. Out with the bad ' //
+!          .         'air and in with the good.  Health and purity '//
+!          .         'preserve our essence. '
+!
+!     The the output would look like:
+!
+!     Column
+!     1........10........20........30........40........50........60
+!
+!              Now is the time for all good men to come
+!              the aid of their party.  Out with the
+!              bad air and in with the good.  Health and
+!              purity preserve our essence.
+!
+!
+!
+!     Suppose
+!
+!           STYLE  = 'FLAG Example: LEFT 10 RIGHT 50 '
+!     and
+!
+!           STRING = 'Now is the time for all good men to come to ' //
+!          .         'the aid of their party. Out with the bad ' //
+!          .         'air and in with the good.  Health and purity '//
+!          .         'preserve our essence. '
+!
+!     The the output would look like:
+!
+!     Column
+!     1........10........20........30........40........50........60
+!
+!               Example: Now is the time for all good men
+!                        to come to the aid of their
+!                        party. Out with the bad air and
+!                        in with the good.  Health and
+!                        purity preserve our essence.
+!
+!
+!
+!
+!
+!     Suppose
+!
+!           STYLE  = 'FLAG Example: LEFT 10 RIGHT 50 NEWLINE .'
+!     and
+!
+!           STRING = 'Now is the time for all good men to come to ' //
+!          .         'the aid of their party. Out with the bad ' //
+!          .         'air and in with the good.  Health and purity '//
+!          .         'preserve our essence. '
+!
+!     The the output would look like:
+!
+!     Column
+!     1........10........20........30........40........50........60
+!
+!              Example: Now is the time for all good men
+!                       to come to the aid of their
+!                       party
+!                       Out with the bad air and in with
+!                       the good
+!                       Health and purity preserve our
+!                       essence
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!     Suppose
+!
+!           STYLE  = 'FLAG Example: LEFT 10 RIGHT 50 VTAB . HARDSPACE _'
+!     and
+!
+!           STRING = '___ is the time for all good men to come to ' //
+!          .         'the aid of their party. Out with the bad ' //
+!          .         'air and in with the good.  Health and purity '//
+!          .         'preserve our essence. '
+!
+!     The the output would look like:
+!
+!     Column
+!     1........10........20........30........40........50........60
+!
+!              Example:     is the time for all good men
+!                       to come to the aid of their
+!                       party
+!                             Out with the bad air and
+!                       in with the good
+!                                         Health and
+!                       purity preserve our essence
+!
+!
+!
+!
+!
+!     Suppose
+!
+!        STYLE  = 'FLAG Error: LEFT 1 RIGHT 60 NEWLINE \cr VTAB \vt'
+!
+!     and
+!
+!        STRING = 'I believe the command you were attempting to enter'//
+!       .         'was \cr\cr(5:5)FIND TIMES OF GREATEST ELONGATION ' //
+!       .         'FOR VENUS \cr\cr(-5:-5) I was expecting to the '   //
+!       .         'word GREATEST when I encountered the word GRETEST '//
+!       .         'in your input command. \cr\cr(5:5) FIND TIMES OF ' //
+!       .         '\vt\vt GRETEST \vt\vt ELONGATION FOR VENUS '       //
+!       .         '\cr\cr(-5:-5) I think you left out the fourth '    //
+!       .         'letter --- "A" .
+!
+!     The the output would look like:
+!
+!     Column
+!     1........10........20........30........40........50........60
+!
+!     Error: I believe the command you were attempting to enter
+!            was
+!
+!                 FIND TIMES OF GREATEST ELONGATION FOR VENUS
+!
+!            I was expecting to see the word GREATEST when I
+!            encountered the word GRETEST in your input command.
+!
+!                 FIND TIMES OF
+!
+!                               GRETEST
+!
+!                                       ELONGATION FOR VENUS
+!
+!            I think you left out the fourth letter --- "A" .
+!
+!
+!   Some care should be taken when choosing substrings to indidicate
+!   newline and vertical tab control.  For example, suppose
+!
+!      STYLE  = ' FLAG NAIF: LEFT 6 RIGHT 56 NEWLINE xx VTAB AA '
+!
+!   and
+!
+!      STRING = 'Officials at Exxon today reported a deal with the '  //
+!     .         'Automobile Association of America (AAA) that would ' //
+!     .         'provide club memebers with discount prices on '      //
+!     .         'gasoline. xxxx( 3:3) Spokesmen said AA "Get your '   //
+!     .         'AAA membership cards now." AA xx(-3:-3)xx Texeco '   //
+!     .         'officials had no comment.'
+!
+!
+!     The the output would look like:
+!
+!     Column
+!     1........10........20........30........40........50........60
+!
+!          NAIF: Officials at E
+!                on today reported a deal with the Automobile
+!                Assosiation of America (
+!                                        A) that would provide
+!                club members with discount prices on
+!                gasoline.
+!
+!                   Spokesmen said
+!                                   "Get your
+!                                             A membership
+!                   cards now."
+!
+!                Texeco officials had no comment.
+!
+!
+! $ Restrictions
+!
+!     It is the responsibility of the calling program to properly
+!     prepare the buffer to receive the output from this routine.
+!
+!     The RIGHT margin must be less than or equal to 512.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     W.L. Taber     (JPL)
+!     I.M. Underwood (JPL)
+!
+! $ Version
+!
+!     Beta Version 2.1.0, 22-APR-1997 (WLT)
+!
+!        SETMSG calls modified so that as needed ERRCH is used
+!        to fill in values instead of concatenating the value
+!        in the error message.
+!
+!     Beta Version 2.0.0, 10-APR-1995 (WLT)
+!
+!        This routine was updated to avoid out of range violations
+!        in the do-while loops used to examine the input string.
+!
+!     Beta Version 1.0.0, 12-AUG-1988 (WLT) (IMU)
+!
+!-&
+
+
+
+!
+!     SPICELIB Functions.
+!
+      LOGICAL               RETURN
+      INTEGER               FRSTNB
+      INTEGER               QLSTNB
+      INTEGER               UPTO
+      LOGICAL               MATCH
+      INTEGER               POS
+      INTEGER               NCPOS
+!
+!   Local Variables
+!
+      INTEGER               LEFT
+      INTEGER               RIGHT
+
+      LOGICAL               NLINTK
+      LOGICAL               VTABTK
+      LOGICAL               FLAGTK
+      LOGICAL               HARDSP
+
+      CHARACTER*1           HSPCHR
+
+      INTEGER               BEG
+      INTEGER               END
+      INTEGER               B
+      INTEGER               E
+
+      INTEGER               VBEG
+      INTEGER               VB
+      INTEGER               VE
+
+      INTEGER               FLAGB
+      INTEGER               FLAGE
+      INTEGER               PRAMBW
+      INTEGER               PSTAMB
+
+      INTEGER               VTABB
+      INTEGER               VTABE
+      INTEGER               VTABW
+
+      INTEGER               NLINB
+      INTEGER               NLINE
+      INTEGER               NLINEW
+
+      INTEGER               K
+      CHARACTER*160         ERRORL
+      CHARACTER*160         ERRORR
+
+      CHARACTER*512         LINE
+      CHARACTER*1           BREAKS
+
+      INTEGER               LEFTB
+      INTEGER               LEFTE
+      INTEGER               RIGHTB
+      INTEGER               RIGHTE
+      INTEGER               NLEFT
+      INTEGER               NRIGHT
+
+      INTEGER               WIDTH
+      INTEGER               W
+      INTEGER               START
+
+
+      INTEGER               VTABAT
+      INTEGER               INDENT
+
+      LOGICAL               LOOPED
+      INTEGER               LRIGHT
+
+      INTEGER               LAST
+
+      LOGICAL               NEWLIN
+      LOGICAL               MRGCHG
+
+      LOGICAL               LEADTK
+      LOGICAL               TRLTK
+      INTEGER               FLAGW
+      INTEGER               LEADRW
+      INTEGER               TRAILW
+      INTEGER               ORIGR
+      INTEGER               ORIGL
+      INTEGER               RMARG
+      INTEGER               TRAILE
+      INTEGER               TRAILB
+      INTEGER               LEADRB
+      INTEGER               LEADRE
+
+!
+!     Standard SPICE error handling.
+!
+      IF ( RETURN () ) THEN
+         RETURN
+      ELSE
+         CALL CHKIN ( 'NICEBT_1' )
+      END IF
+
+!
+!     Set the defaults and initial values.
+!
+!
+!     Set the defaults and initial values.
+!
+      LEFT   = 1
+      RIGHT  = 80
+
+      FLAGTK = .FALSE.
+      LEADTK = .FALSE.
+      HARDSP = .FALSE.
+      NLINTK = .FALSE.
+      TRLTK  = .FALSE.
+      VTABTK = .FALSE.
+
+      HSPCHR = ' '
+
+      FLAGW  = 0
+      LEADRW = 0
+      TRAILW = 0
+      PRAMBW = 0
+
+      VTABW  = 0
+      BEG    = 1
+      ERRORL = ' '
+      ERRORR = ' '
+      BREAKS = ' '
+
+!
+!     Parse the style string.
+!
+
+      CALL FNDNWD ( STYLE, BEG, B, E )
+
+      DO WHILE ( B .NE. 0 )
+
+         VBEG = E + 1
+
+         CALL  FNDNWD ( STYLE, VBEG, VB, VE )
+
+         IF ( VB .NE. 0 ) THEN
+
+            IF      ( STYLE(B:E) .EQ. 'FLAG'    ) THEN
+
+               FLAGB  = VB
+               FLAGE  = VE
+               FLAGW  = VE - VB + 2
+               FLAGTK = .TRUE.
+
+            ELSE IF ( STYLE(B:E) .EQ. 'LEADER'    ) THEN
+
+               LEADRB = VB
+               LEADRE = VE
+               LEADRW = VE - VB + 1
+               LEADTK = .TRUE.
+
+
+            ELSE IF ( STYLE(B:E) .EQ. 'TRAILER'   ) THEN
+
+               TRAILB = VB
+               TRAILE = VE
+               TRAILW = VE - VB + 1
+               TRLTK  = .TRUE.
+
+
+            ELSE IF ( STYLE(B:E) .EQ. 'VTAB'    ) THEN
+
+               VTABB  = VB
+               VTABE  = VE
+               VTABW  = VE - VB + 1
+               VTABTK = .TRUE.
+
+            ELSE IF ( STYLE(B:E) .EQ. 'NEWLINE' ) THEN
+
+               NLINB  = VB
+               NLINE  = VE
+               NLINEW = VE - VB + 1
+               NLINTK = .TRUE.
+
+            ELSE IF ( STYLE(B:E) .EQ. 'LEFT'    ) THEN
+
+               CALL NPARSI ( STYLE(VB:VE), LEFT, ERRORL,  K )
+               IF ( ERRORL .NE. ' ' ) THEN
+
+                  CALL SETMSG ( 'The word following the keyword '     // &
+                                '''LEFT'' must parse as an '          // &
+                                'integer. # '                         )
+                  CALL ERRCH  ( '#', ERRORL )
+                  CALL SIGERR ( 'SPICE(NONNUMERICSTRING)' )
+                  CALL CHKOUT ( 'NICEBT_1' )
+                  RETURN
+
+               END IF
+
+            ELSE IF ( STYLE(B:E) .EQ. 'RIGHT'   ) THEN
+
+               CALL NPARSI ( STYLE(VB:VE), RIGHT, ERRORR, K )
+               IF ( ERRORR .NE. ' ' ) THEN
+
+                  CALL SETMSG ( 'The word following the keyword '     // &
+                                '''RIGHT'' must parse as an '         // &
+                                'integer. #'  )
+                  CALL ERRCH  ( '#', ERRORL )
+                  CALL SIGERR ( 'SPICE(NONNUMERICSTRING)' )
+                  CALL CHKOUT ( 'NICEBT_1' )
+                  RETURN
+
+               END IF
+
+            ELSE IF ( STYLE(B:E) .EQ. 'HARDSPACE'    ) THEN
+
+               HARDSP = .TRUE.
+
+               IF ( VB .NE. VE ) THEN
+
+                  CALL SETMSG ( 'Hardspaces must be a single '        // &
+                                'character.  You have "#".'            )
+                  CALL ERRCH  ( '#', STYLE(VB:VE)     )
+                  CALL SIGERR ( 'SPICE(BADHARDSPACE)' )
+                  CALL CHKOUT ( 'NICEBT_1'            )
+                  RETURN
+
+               ELSE
+
+                  HSPCHR = STYLE(VB:VB)
+
+               END IF
+
+
+            ELSE
+
+               LINE = STYLE ( B:E )
+               CALL SUFFIX ( 'is not a recognized keyword for '       // &
+                             'the SPICELIB routine NICEIO. ', &
+                             1, LINE   )
+
+               CALL SETMSG ( LINE                )
+               CALL SIGERR ( 'SPICE(UNKNOWNKEY)' )
+               CALL CHKOUT ( 'NICEBT_1' )
+               RETURN
+
+            END IF
+
+            BEG = VE + 1
+            CALL  FNDNWD ( STYLE, BEG, B, E )
+
+         ELSE
+               CALL SETMSG ( '# did not have an associated value' )
+               CALL ERRCH  ( '#', STYLE(B:E)                      )
+               CALL SIGERR ( 'SPICE(UNBALANCEDPAIR)'              )
+               CALL CHKOUT ( 'NICEBT_1' )
+               RETURN
+         END IF
+
+      END DO
+
+!
+!     So ends the parsing of the style string.  Now do the actual work.
+!
+      LINE = ' '
+
+!
+!     Determine how much space needs to be allocated for the
+!     flag and leaders.
+!
+      ORIGR  = RIGHT
+      ORIGL  = LEFT
+      RMARG  = RIGHT
+
+      PRAMBW = MAX ( FLAGW, LEADRW )
+      PSTAMB = RIGHT - TRAILW + 1
+      RIGHT  = RIGHT - TRAILW
+
+      IF ( FLAGW .GT. 0 ) THEN
+         LINE(ORIGL:) =  STYLE(FLAGB:FLAGE)
+      ELSE IF ( LEADRW .GT. 0 ) THEN
+         LINE(ORIGL:) = STYLE(LEADRB:LEADRE)
+      END IF
+
+      IF ( TRAILW .GT. 0 ) THEN
+         LINE(PSTAMB:ORIGR) = STYLE(TRAILB:TRAILE)
+      END IF
+
+      B    = MAX(1,FRSTNB(STRING))
+      LAST =       QLSTNB(STRING)
+!
+!     If there is a newline token, we have to write out empty lines
+!     and modify the margins as we encounter newline tokens and
+!     newline tokens with margin modifiers.  Typically the loop
+!     in the if block below will never be exercised.
+!
+      IF ( NLINTK ) THEN
+
+
+         E  = B+NLINEW-1
+
+         IF ( E .LT. LAST ) THEN
+            NEWLIN = STRING(B:E) .EQ. STYLE(NLINB:NLINE)
+         ELSE
+            NEWLIN = .FALSE.
+         END IF
+
+
+         DO WHILE ( NEWLIN )
+!
+!           See if the new line token is qualified so as to change
+!           the margins of the output.
+!
+            IF ( E+1 .LT. LAST ) THEN
+               MRGCHG = MATCH( STRING(E+1:), '(*:*)*' )
+            ELSE
+               MRGCHG = .FALSE.
+            END IF
+
+            IF ( MRGCHG ) THEN
+
+!
+!              Looks like we should change the columns. Locate the
+!              tokens of the newline marker.
+!
+               CALL FNDNTK( STRING, '(:', E+1,   LEFTB,  LEFTE  )
+               CALL FNDNTK( STRING, ':)', LEFTE, RIGHTB, RIGHTE )
+
+!
+!              Parse the strings representing the increments to left
+!              and right column positions.
+!
+               ERRORL = ' '
+               ERRORR = ' '
+
+               IF (LEFTB .LE. LEFTE) THEN
+                  CALL NPARSI( STRING(LEFTB:LEFTE),   NLEFT, ERRORL,  K)
+               ELSE
+                  NLEFT  = 0
+               END IF
+
+               IF ( RIGHTB .LE. RIGHTE ) THEN
+                  CALL NPARSI( STRING(RIGHTB:RIGHTE), NRIGHT, ERRORR, K)
+               ELSE
+                  NRIGHT = 0
+               END IF
+
+!
+!              Only if no errors were encountered during parsing do we
+!              change the columns.
+!
+               IF (       ( ERRORL .EQ. ' ' ) &
+                    .AND. ( ERRORR .EQ. ' ' ) ) THEN
+
+                  B     = RIGHTE + 2
+                  LEFT  = LEFT   + NLEFT
+                  RIGHT = RIGHT  - NRIGHT
+
+                  RMARG = MAX ( ORIGR, RIGHT )
+
+               ELSE
+                  B     = B      + NLINEW
+               END IF
+
+            ELSE
+               B = B + NLINEW
+            END IF
+
+!
+!           Check for goofy margins.
+!
+            IF      ( LEFT .LT. 1     ) THEN
+
+               CALL SETMSG ( 'The current value for the left column ' // &
+                             'is #. This is less than 1 and thus '    // &
+                             'not a valid value. '  )
+               CALL ERRINT ( '#', LEFT              )
+               CALL SIGERR ( 'SPICE(INVALIDCOLUMN)' )
+               CALL CHKOUT ( 'NICEBT_1' )
+               RETURN
+
+            ELSE IF ( LEFT .GT. RIGHT ) THEN
+               CALL SETMSG ( 'The current value for the left column ' // &
+                             'is greater than the value for the '     // &
+                             'right column. The value for the left '  // &
+                             'column is #.  The value for the right ' // &
+                             'column is #. '        )
+               CALL ERRINT ( '#', LEFT              )
+               CALL ERRINT ( '#', RIGHT             )
+               CALL SIGERR ( 'SPICE(INVALIDCOLUMN)' )
+               CALL CHKOUT ( 'NICEBT_1' )
+               RETURN
+            END IF
+
+!
+!           Output something, but first replace hard spaces by spaces
+!
+
+            IF ( HARDSP ) THEN
+               CALL &
+               REPLCH ( LINE(1:RMARG), HSPCHR, ' ', LINE(1:RMARG) )
+            END IF
+
+            CALL APPNDC ( LINE(1:RMARG), BUFFER )
+
+            LINE = ' '
+
+            IF ( LEADTK ) THEN
+               LINE (ORIGL:)  = STYLE(LEADRB:LEADRE)
+            END IF
+
+            IF ( TRLTK  ) THEN
+               LINE (PSTAMB:) = STYLE(TRAILB:TRAILE)
+            END IF
+
+
+!
+!           Adjust the beginning and ending of the next portion
+!           of the string to examine.
+!
+            B = MAX( B, NCPOS( STRING, ' ', B ) )
+            E = B + NLINEW - 1
+
+            IF ( E .LT. LAST ) THEN
+               NEWLIN = STRING(B:E) .EQ. STYLE(NLINB:NLINE)
+            ELSE
+               NEWLIN = .FALSE.
+            END IF
+
+         END DO
+!
+!        Find the next portion of the string to examine (it's up to
+!        the next new line token or end of string whichever
+!        comes first.
+!
+         E     = UPTO   ( STRING,  STYLE(NLINB:NLINE), B )
+      ELSE
+         E     = LAST
+      END IF
+
+
+!
+!     Now we have are to the point of processing legitimate text.
+!     Process the current substring  STRING(B:E).  It contains
+!     no newline tokens.
+!
+      DO WHILE ( E .NE. 0 )
+
+         WIDTH = RIGHT - LEFT + 1 - PRAMBW
+
+         IF ( WIDTH .LT. 1 ) THEN
+            CALL SIGERR ( 'SPICE(SPACETOONARROW)')
+            CALL CHKOUT ( 'NICEBT_1' )
+            RETURN
+         END IF
+
+         W      = WIDTH
+         START  = B
+         INDENT = 0
+
+!
+!        Grab the biggest piece of the substring that can be output
+!        within the allowed space.
+!
+
+         CALL CUTSTR ( STRING(1:E), START, W, BREAKS, BEG, END )
+
+         DO WHILE ( BEG .NE. 0 )
+
+!
+!           See if there are any vertical tab marks
+!
+            IF ( .NOT. VTABTK ) THEN
+
+               LINE  (LEFT + PRAMBW : RIGHT     ) = STRING( BEG: END )
+
+            ELSE
+
+               VTABAT = POS( STRING(1:E), STYLE(VTABB:VTABE), START )
+
+               IF ( VTABAT .GT. 0 .AND. VTABAT .LE. END ) THEN
+!
+!                 If there is a vertical tab at the beginning of the
+!                 string, we don't need to modify LINE.
+!
+                  IF ( VTABAT .GT. BEG ) THEN
+
+                     END    = VTABAT - 1
+                     LINE(  LEFT+PRAMBW+INDENT:RIGHT) = STRING(BEG:END)
+
+                     INDENT = INDENT + END - BEG + 1
+                     END    = END    + VTABE - VTABB + 1
+
+                  ELSE IF ( VTABAT .EQ. BEG ) THEN
+
+                     LINE(  LEFT+PRAMBW+INDENT:RIGHT) = ' '
+                     END    = BEG    + VTABE - VTABB
+
+                  END IF
+
+               ELSE
+!
+!                 We just fill out the rest of this line.  There will
+!                 be no need to indent the next one.
+!
+                  LINE ( LEFT+PRAMBW+INDENT:RIGHT) = STRING(BEG:END)
+                  INDENT = 0
+
+               END IF
+
+            END IF
+
+!
+!           Handle any hard spaces
+!
+            IF ( HARDSP ) THEN
+               CALL &
+               REPLCH ( LINE(1:RMARG), HSPCHR, ' ', LINE(1:RMARG) )
+            END IF
+
+            CALL APPNDC ( LINE(1:RMARG), BUFFER )
+
+            LINE  = ' '
+
+            IF ( LEADTK ) THEN
+               LINE (ORIGL:)  = STYLE(LEADRB:LEADRE)
+            END IF
+
+            IF ( TRLTK  ) THEN
+               LINE (PSTAMB:) = STYLE(TRAILB:TRAILE)
+            END IF
+
+            START = END + 1
+            W     = WIDTH - INDENT
+
+            IF ( W .LT. 3 ) THEN
+               W = WIDTH
+            END IF
+
+            CALL CUTSTR ( STRING(1:E), START, W, BREAKS, BEG, END )
+
+         END DO
+
+!
+!        Check to see if we should be looking for a newline token.
+!
+         IF ( NLINTK ) THEN
+
+!
+!           Ok.  Get ready to jump through hoops again.  We have to
+!           look for newline tokens, for all those in excess of one
+!           in a row, we have to output a blank line.
+!
+            B      = E + 1
+            E      = E + NLINEW
+            LOOPED = .FALSE.
+
+            IF ( E .LE. LAST ) THEN
+               NEWLIN = STRING(B:E) .EQ. STYLE(NLINB:NLINE)
+            ELSE
+               NEWLIN = .FALSE.
+            END IF
+
+            DO WHILE ( NEWLIN )
+
+               LRIGHT = RIGHT
+!
+!              See if the new line token is qualified so as to change
+!              the margins of the output.
+!
+               IF ( E .GE. LAST ) THEN
+
+!
+!                 In this case we can't possibly match as in the case
+!                 below
+!
+                  B = B + NLINEW
+
+               ELSE IF ( MATCH( STRING(E+1:), '(*:*)*' ) ) THEN
+
+!
+!                 Looks like we should change the columns. Locate the
+!                 tokens of the newline marker.
+!
+                  CALL FNDNTK( STRING, '(:', E,     LEFTB,  LEFTE  )
+                  CALL FNDNTK( STRING, ':)', LEFTE, RIGHTB, RIGHTE )
+
+!
+!                 Parse the strings representing the increments to left
+!                 and right column positions.
+!
+                  ERRORL = ' '
+                  ERRORR = ' '
+
+                  IF (LEFTB .LE. LEFTE) THEN
+                     CALL NPARSI ( STRING(LEFTB:LEFTE), NLEFT, &
+                                   ERRORL, K )
+                  ELSE
+                     NLEFT  = 0
+                  END IF
+
+                  IF ( RIGHTB .LE. RIGHTE ) THEN
+                     CALL NPARSI ( STRING(RIGHTB:RIGHTE), NRIGHT, &
+                                   ERRORR, K )
+                  ELSE
+                     NRIGHT = 0
+                  END IF
+
+!
+!                 Only if no errors were encountered during parsing do
+!                 we change the columns.
+!
+                  IF (       ( ERRORL .EQ. ' ' ) &
+                       .AND. ( ERRORR .EQ. ' ' ) ) THEN
+
+                     B     = RIGHTE + 2
+                     LEFT  = LEFT   + NLEFT
+                     RIGHT = RIGHT  - NRIGHT
+                     RMARG = MAX(ORIGR, RIGHT )
+
+                  ELSE
+                     B     = B      + NLINEW
+                  END IF
+
+               ELSE
+                  B = B + NLINEW
+               END IF
+
+!
+!              Take care of the case when outdenting or indenting has
+!              forced us into absurd margins.
+!
+               IF      ( LEFT .LT. 1     ) THEN
+
+                  CALL SETMSG ( 'The current value for the left '     // &
+                                'column '                             // &
+                                'is #. This is less than 1 and thus ' // &
+                                'not a valid value. '  )
+                  CALL ERRINT ( '#', LEFT              )
+                  CALL SIGERR ( 'SPICE(INVALIDCOLUMN)' )
+                  CALL CHKOUT ( 'NICEBT_1' )
+                  RETURN
+
+               ELSE IF ( LEFT .GT. RIGHT ) THEN
+
+                  CALL SETMSG ( 'The current value for the left '     // &
+                                'column '                             // &
+                                'is greater than the value for the '  // &
+                                'right column. The value for the '    // &
+                                'left '                               // &
+                                'column is #.  The value for the '    // &
+                                'right column is #. '  )
+                  CALL ERRINT ( '#', LEFT              )
+                  CALL ERRINT ( '#', RIGHT             )
+                  CALL SIGERR ( 'SPICE(INVALIDCOLUMN)' )
+                  CALL CHKOUT ( 'NICEBT_1' )
+                  RETURN
+               END IF
+
+!
+!              Output something if this is not the first pass through
+!              the loop.
+!
+               IF ( .NOT. LOOPED ) THEN
+                  LOOPED = .TRUE.
+                  LINE   = ' '
+
+                  IF ( LEADTK ) THEN
+                     LINE (ORIGL:)  = STYLE(LEADRB:LEADRE)
+                  END IF
+
+                  IF ( TRLTK  ) THEN
+                     LINE (PSTAMB:) = STYLE(TRAILB:TRAILE)
+                  END IF
+
+               ELSE
+!
+!                 Handle any hard spaces
+!
+                  IF ( HARDSP ) THEN
+                     CALL &
+                     REPLCH( LINE(1:RMARG), HSPCHR, ' ', LINE(1:RMARG) )
+                  END IF
+
+                  CALL APPNDC ( LINE(1:RMARG), BUFFER )
+
+               END IF
+
+               B = MAX( B, NCPOS( STRING, ' ', B ) )
+               E = B + NLINEW - 1
+
+               IF ( E .LE. LAST ) THEN
+                  NEWLIN = STRING(B:E) .EQ. STYLE(NLINB:NLINE)
+               ELSE
+                  NEWLIN = .FALSE.
+               END IF
+
+            END DO
+
+            E = UPTO ( STRING, STYLE(NLINB:NLINE), B )
+
+!
+!           Just in case we went through the loop, and didn't
+!           output a line, and we've reached the end of the
+!           string.  We check and write a blank line if necessary
+!
+            IF ( LOOPED .AND. ( E .EQ. 0 )) THEN
+
+!
+!              Handle any hard spaces
+!
+               IF ( HARDSP ) THEN
+                  CALL &
+                  REPLCH ( LINE(1:RMARG), HSPCHR, ' ', LINE(1:RMARG) )
+               END IF
+
+               CALL APPNDC ( LINE(1:RMARG), BUFFER )
+
+            END IF
+
+         ELSE
+            E = 0
+         END IF
+
+      END DO
+
+      CALL CHKOUT ( 'NICEBT_1' )
+      RETURN
+
+      END

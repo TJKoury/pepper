@@ -3,3 +3,4 @@
 *.inc text eol=lf
 *.f90 text eol=lf
 *.F text eol=lf
+*.F90 text eol=lf

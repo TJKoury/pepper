@@ -1,0 +1,103 @@
+
+      SUBROUTINE T_CRCKDS ( SEGNO, INST, START, STOP, DESCR, GOTAV )
+      IMPLICIT NONE
+
+! $ Abstract
+!
+!     Create a new CK descriptor having specified ID code, angular
+!     velocity flag, and time bounds.  The segment number is also
+!     encoded in the integer components of the decriptor having
+!     indices 2:NI.
+!
+!        18-NOV-2001 (NJB)
+!
+!     Support routine for TSPICE test family
+!
+!       f_ckbsr
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+!-&
+
+      INTEGER               SEGNO
+      INTEGER               INST
+      DOUBLE PRECISION      START
+      DOUBLE PRECISION      STOP
+      DOUBLE PRECISION      DESCR ( * )
+      LOGICAL               GOTAV
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      INTEGER               ND
+      PARAMETER           ( ND     = 2 )
+
+      INTEGER               NI
+      PARAMETER           ( NI     = 6 )
+
+      INTEGER               SCALE
+      PARAMETER           ( SCALE  = 10000 )
+
+!
+!     Local variables
+!
+      DOUBLE PRECISION      DC ( ND )
+
+      INTEGER               I
+      INTEGER               IC ( NI )
+
+
+      CALL CHKIN ( 'T_CRCKDS' )
+
+
+      CALL CLEARI ( NI, IC )
+      CALL CLEARD ( ND, DC )
+
+      IC(1) = INST
+
+      DO I = 2, NI
+         IC(I) = SCALE * SEGNO + I
+      END DO
+
+      IF ( GOTAV ) THEN
+         IC(4) = 1
+      ELSE
+         IC(4) = 0
+      END IF
+
+      DC(1) = START
+      DC(2) = STOP
+
+      CALL DAFPS ( ND, NI, DC, IC, DESCR )
+
+      CALL CHKOUT ( 'T_CRCKDS' )
+      END
+
+
+

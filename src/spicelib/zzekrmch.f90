@@ -1,0 +1,319 @@
+!$Procedure      ZZEKRMCH ( EK, row match )
+
+      LOGICAL FUNCTION ZZEKRMCH ( NCNSTR, &
+                                  ACTIVE, &
+                                  HANDLE, &
+                                  SEGDSC, &
+                                  CDSCRS, &
+                                  ROW, &
+                                  ELTS, &
+                                  OPS, &
+                                  VTYPES, &
+                                  CHRBUF, &
+                                  CBEGS, &
+                                  CENDS, &
+                                  DVALS, &
+                                  IVALS  )
+
+! $ Abstract
+!
+!     Determine whether a specified row in an EK file satisfies
+!     a specified set of constraints.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     EK
+!
+! $ Keywords
+!
+!     EK
+!     PRIVATE
+!
+! $ Declarations
+
+
+      INCLUDE 'ekcnamsz.inc'
+      INCLUDE 'ekcoldsc.inc'
+      INCLUDE 'ektype.inc'
+      INCLUDE 'ekopcd.inc'
+      INCLUDE 'ekwild.inc'
+      INCLUDE 'ekqlimit.inc'
+
+      INTEGER               MAXCOL
+      PARAMETER           ( MAXCOL = 10 )
+
+      INTEGER               NCNSTR
+      LOGICAL               ACTIVE ( * )
+      INTEGER               HANDLE
+      INTEGER               SEGDSC ( * )
+      INTEGER               CDSCRS ( CDSCSZ, * )
+      INTEGER               ROW
+      INTEGER               ELTS   ( * )
+      INTEGER               OPS    ( * )
+      INTEGER               VTYPES ( * )
+      CHARACTER*(*)         CHRBUF
+      INTEGER               CBEGS  ( * )
+      INTEGER               CENDS  ( * )
+      DOUBLE PRECISION      DVALS  ( * )
+      INTEGER               IVALS  ( * )
+
+! $ Brief_I/O
+!
+!     Variable  I/O  Description
+!     --------  ---  --------------------------------------------------
+!     NCNSTR     I   Number of constraints present in query.
+!     ACTIVE     I   Array of flags indicating applicable constraints.
+!     HANDLE     I   Handle of EK file containing row.
+!     SEGDSC     I   Segment descriptor.
+!     CDSCRS     I   Descriptors of columns referenced in query.
+!     ROW        I   Index of row to match.
+!     ELTS       I   Indices of column entry elements to match.
+!     OPS        I   Operators used in query constraints.
+!     VTYPES     I   Data types of values on RHS of constraints.
+!     CHRBUF     I   Buffer containing query tokens.
+!     CBEGS      I   Begin indices of character query tokens.
+!     CENDS      I   End indices of character query tokens.
+!     DVALS      I   D.p. values used in query constraints.
+!     IVALS      I   Integer values used in query constraints.
+!     MAXCOL     P   Maximum number of columns per segment.
+!
+!     The function returns .TRUE. if and only if the specified
+!     EK row satisfies the input constraints.
+!
+! $ Detailed_Input
+!
+!     NCNSTR         is the number of input constraints against which
+!                    the input row is to be compared.
+!
+!     ACTIVE         is an array of logical flags indicating which
+!                    constraints are currently applicable.  The Nth
+!                    element of ACTIVE indicates whether or not to apply
+!                    the Nth constraint:  if ACTIVE(N) is .TRUE., the
+!                    constraint is applicable, otherwise it isn't.
+!
+!                    The elements of the other input arguments that
+!                    define constraints are defined when the
+!                    corresponding element of ACTIVE is .TRUE.  For
+!                    example, when the second constraint is not active,
+!                    the second column descriptor in LDSCRS may not be
+!                    defined.
+!
+!     HANDLE         is an EK file handle.  The file may be open for
+!                    reading or writing.
+!
+!     SEGDSC         is the descriptor of the EK segment containing the
+!                    column entry to be compared.
+!
+!     CDSCRS         is an array of column descriptors for the columns
+!                    referenced in the input constraints.  The Ith
+!                    descriptor corresponds to the Ith constraint.
+!
+!     ROW            is the index of the row to compare against the
+!                    input constraints.
+!
+!     ELTS           is an array of column entry elements to match.
+!
+!
+!     OPS            are relational operators used in the input
+!                    constraints.  The elements of OPS are any of the
+!                    integer parameters
+!
+!                       EQ, GE, GT, LE, LT, NE, LIKE, ISNULL, NOTNUL
+!
+!                    The Ith element of OPS corresponds to the Ith
+!                    constraint.
+!
+!     VTYPES         is an array of data type codes which indicate the
+!                    types of the values on the right hand sides of the
+!                    input constraints.  The Ith element of VTYPES
+!                    applies to the Ith constraint.
+!
+!     CHRBUF,
+!     CBEGS,
+!     CENDS          are, respectively, a string containing character
+!                    tokens representing values on the right hand sides
+!                    of query constraints, and arrays of begin and end
+!                    indices of these tokens within CHRBUF.  If the Nth
+!                    constraint has a character value on the right hand
+!                    side, that value is CHRBUF( CBEGS(N) : CENDS(N) ).
+!                    For constraints whose right hand sides do not
+!                    specify character values, the corresponding
+!                    elements of CBEGS and CENDS are not used.
+!
+!     DVALS,
+!     IVALS          are, respectively, arrays of double precision and
+!                    integer values appearing on the right hand sides of
+!                    input constraints.  The contents of DVALS and IVALS
+!                    are meaningful only for those constraints whose
+!                    right hand sides specify values having these data
+!                    types.
+!
+!                    Constraints involving unary operators can be either
+!
+!                       COLUMN_ENTRY(I)  ISNULL
+!                       COLUMN_ENTRY(I)  NOTNUL
+!
+!                    For constraints of this form, the corresponding
+!                    elements of the value arrays are ignored.
+!
+! $ Detailed_Output
+!
+!     The function returns .TRUE. if and only if the specified
+!     EK row satisfies the input constraints.
+!
+! $ Parameters
+!
+!     Within the EK system, operators used in EK queries are
+!     represented by integer codes.  The codes and their meanings are
+!     listed below.
+!
+!     Relational expressions in EK queries have the form
+!
+!        <column name> <operator> <value>
+!
+!     For columns containing numeric values, the operators
+!
+!        EQ,  GE,  GT,  LE,  LT,  NE
+!
+!     may be used; these operators have the same meanings as their
+!     Fortran counterparts.  For columns containing character values,
+!     the list of allowed operators includes those in the above list,
+!     and in addition includes the operator
+!
+!        LIKE
+!
+!     which is used to compare strings to a template.  In the character
+!     case, the meanings of the parameters
+!
+!        GE,  GT,  LE,  LT
+!
+!     match those of the Fortran lexical functions
+!
+!        LGE, LGT, LLE, LLT
+!
+!
+!     The additional unary operators
+!
+!        ISNULL, NOTNUL
+!
+!     are used to test whether a value of any type is null.
+!
+! $ Exceptions
+!
+!     1)  If an error is detected, the function will return the value
+!         .FALSE.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine is a utility intended primarily for use by EKSRCH.
+!
+! $ Examples
+!
+!     See EKSRCH.
+!
+! $ Restrictions
+!
+!     1)  Constraints must apply to scalar columns only.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman   (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
+!
+!        Corrected typo in comments.
+!
+!-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
+!
+!
+!-&
+
+
+!
+!     Non-SPICELIB functions
+!
+      LOGICAL               ZZEKSCMP
+
+!
+!     Local variables
+!
+      INTEGER               I
+
+!
+!     Use discovery check-in.
+!
+!     For each active constraint in the list, see whether the specified
+!     row satisfies the constraint.  If any constraint is not satisfied,
+!     return immediately.
+!
+      I        =  1
+      ZZEKRMCH = .TRUE.
+
+      DO WHILE (  ( I .LE. NCNSTR ) .AND. ZZEKRMCH  )
+
+
+         IF ( ACTIVE(I) ) THEN
+!
+!           See whether the row satisfies the Ith constraint.
+!
+            ZZEKRMCH  =  ZZEKSCMP ( OPS(I), &
+                                    HANDLE, &
+                                    SEGDSC, &
+                                    CDSCRS(1,I), &
+                                    ROW, &
+                                    ELTS(I), &
+                                    VTYPES(I), &
+                                    CHRBUF( CBEGS(I) : CENDS(I) ), &
+                                    DVALS(I), &
+                                    IVALS(I), &
+                                    .FALSE.   )
+
+         END IF
+
+!
+!        Take a look at the next constraint.
+!
+         I  =  I + 1
+
+      END DO
+
+!
+!     It's a match if we got this far.
+!
+      RETURN
+      END

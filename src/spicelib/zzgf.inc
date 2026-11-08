@@ -1,84 +1,84 @@
-C$ Abstract
-C
-C     SPICE private include file intended solely for the support of
-C     SPICE routines. Users should not include this routine in their
-C     source code due to the volatile nature of this file.
-C
-C     This file contains private, global parameter declarations
-C     for the SPICELIB Geometry Finder (GF) subsystem.
-C
-C$ Disclaimer
-C
-C     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
-C     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
-C     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
-C     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
-C     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
-C     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
-C     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
-C     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
-C     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
-C     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
-C
-C     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
-C     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
-C     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
-C     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
-C     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
-C     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
-C
-C     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
-C     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
-C     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
-C     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
-C
-C$ Required_Reading
-C
-C     GF
-C
-C$ Keywords
-C
-C     GEOMETRY
-C     ROOT
-C
-C$ Restrictions
-C
-C     None.
-C
-C$ Author_and_Institution
-C
-C     N.J. Bachman      (JPL)
-C     E.D. Wright       (JPL)
-C
-C$ Literature_References
-C
-C     None.
-C
-C$ Version      
-C
-C-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-C
-C-&
+! $ Abstract
+!
+!     SPICE private include file intended solely for the support of
+!     SPICE routines. Users should not include this routine in their
+!     source code due to the volatile nature of this file.
+!
+!     This file contains private, global parameter declarations
+!     for the SPICELIB Geometry Finder (GF) subsystem.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     GF
+!
+! $ Keywords
+!
+!     GEOMETRY
+!     ROOT
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman      (JPL)
+!     E.D. Wright       (JPL)
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
+!
+!-&
 
-C
-C     The set of supported coordinate systems 
-C   
-C        System          Coordinates
-C        ----------      -----------
-C        Rectangular     X, Y, Z
-C        Latitudinal     Radius, Longitude, Latitude
-C        Spherical       Radius, Colatitude, Longitude
-C        RA/Dec          Range, Right Ascension, Declination
-C        Cylindrical     Radius, Longitude, Z
-C        Geodetic        Longitude, Latitude, Altitude
-C        Planetographic  Longitude, Latitude, Altitude
-C
-C     Below we declare parameters for naming coordinate systems.
-C     User inputs naming coordinate systems must match these
-C     when compared using EQSTR. That is, user inputs must
-C     match after being left justified, converted to upper case,
-C     and having all embedded blanks removed.
-C
+!
+!     The set of supported coordinate systems
+!
+!        System          Coordinates
+!        ----------      -----------
+!        Rectangular     X, Y, Z
+!        Latitudinal     Radius, Longitude, Latitude
+!        Spherical       Radius, Colatitude, Longitude
+!        RA/Dec          Range, Right Ascension, Declination
+!        Cylindrical     Radius, Longitude, Z
+!        Geodetic        Longitude, Latitude, Altitude
+!        Planetographic  Longitude, Latitude, Altitude
+!
+!     Below we declare parameters for naming coordinate systems.
+!     User inputs naming coordinate systems must match these
+!     when compared using EQSTR. That is, user inputs must
+!     match after being left justified, converted to upper case,
+!     and having all embedded blanks removed.
+!
       CHARACTER*(*)         RECSYS
       PARAMETER           ( RECSYS = 'RECTANGULAR' )
 
@@ -101,14 +101,14 @@ C
       PARAMETER           ( PGRSYS = 'PLANETOGRAPHIC' )
 
 
-C
-C     Below we declare names for coordinates. Again, user
-C     inputs naming coordinates must match these when
-C     compared using EQSTR.
-C
+!
+!     Below we declare names for coordinates. Again, user
+!     inputs naming coordinates must match these when
+!     compared using EQSTR.
+!
       CHARACTER*(*)         XCRD
       PARAMETER           ( XCRD   = 'X' )
-      
+
       CHARACTER*(*)         YCRD
       PARAMETER           ( YCRD   = 'Y' )
 
@@ -124,13 +124,13 @@ C
       CHARACTER*(*)         LATCRD
       PARAMETER           ( LATCRD = 'LATITUDE' )
 
-C     
-C     Note that the RA parameter value below matches
-C
-C        'RIGHT ASCENSION'
-C
-C     when extra blanks are compressed out of the above value.
-C
+!
+!     Note that the RA parameter value below matches
+!
+!        'RIGHT ASCENSION'
+!
+!     when extra blanks are compressed out of the above value.
+!
       CHARACTER*(*)         RACRD
       PARAMETER           ( RACRD  = 'RIGHT ASCENSION' )
 
@@ -146,78 +146,78 @@ C
       CHARACTER*(*)         ALTCRD
       PARAMETER           ( ALTCRD = 'ALTITUDE' )
 
-C
-C     Parameters specifying types of vector definitions
-C     used for GF coordinate searches:
-C
-C     All string parameter values are left justified, upper
-C     case, with extra blanks compressed out.
-C
-C     POSDEF indicates the vector is defined by the
-C     position of a target relative to an observer.
-C
+!
+!     Parameters specifying types of vector definitions
+!     used for GF coordinate searches:
+!
+!     All string parameter values are left justified, upper
+!     case, with extra blanks compressed out.
+!
+!     POSDEF indicates the vector is defined by the
+!     position of a target relative to an observer.
+!
       CHARACTER*(*)         POSDEF
       PARAMETER           ( POSDEF = 'POSITION' )
 
-C
-C     SOBDEF indicates the vector points from the center
-C     of a target body to the sub-observer point on
-C     that body, for a given observer and target.
-C
+!
+!     SOBDEF indicates the vector points from the center
+!     of a target body to the sub-observer point on
+!     that body, for a given observer and target.
+!
       CHARACTER*(*)         SOBDEF
       PARAMETER           ( SOBDEF = 'SUB-OBSERVER POINT' )
 
-C
-C     SOBDEF indicates the vector points from the center
-C     of a target body to the surface intercept point on
-C     that body, for a given observer, ray, and target.
-C
+!
+!     SOBDEF indicates the vector points from the center
+!     of a target body to the surface intercept point on
+!     that body, for a given observer, ray, and target.
+!
       CHARACTER*(*)         SINDEF
       PARAMETER           ( SINDEF = 'SURFACE INTERCEPT POINT' )
 
 
-C
-C     Number of workspace windows used by ZZGFREL:
-C
+!
+!     Number of workspace windows used by ZZGFREL:
+!
       INTEGER               NWREL
       PARAMETER           ( NWREL  = 5 )
 
-C
-C     Number of additional workspace windows used by ZZGFLONG:
-C
+!
+!     Number of additional workspace windows used by ZZGFLONG:
+!
       INTEGER               NWLONG
       PARAMETER           ( NWLONG = 7 )
 
-C
-C     Index of "existence window" used by ZZGFCSLV:
-C
+!
+!     Index of "existence window" used by ZZGFCSLV:
+!
       INTEGER               EXWIDX
       PARAMETER           ( EXWIDX = NWREL + NWLONG + 1 )
 
-C
-C     Progress report parameters:
-C
-C     MXBEGM,
-C     MXENDM    are, respectively, the maximum lengths of the progress
-C               report message prefix and suffix.
-C
-C     Note: the sum of these lengths, plus the length of the
-C     "percent complete" substring, should not be long enough
-C     to cause wrap-around on any platform's terminal window.
-C
+!
+!     Progress report parameters:
+!
+!     MXBEGM,
+!     MXENDM    are, respectively, the maximum lengths of the progress
+!               report message prefix and suffix.
+!
+!     Note: the sum of these lengths, plus the length of the
+!     "percent complete" substring, should not be long enough
+!     to cause wrap-around on any platform's terminal window.
+!
       INTEGER               MXBEGM
       PARAMETER           ( MXBEGM = 55 )
 
       INTEGER               MXENDM
       PARAMETER           ( MXENDM = 13 )
-      
-C
-C     Total progress report message length upper bound:
-C
+
+!
+!     Total progress report message length upper bound:
+!
       INTEGER               MXMSG
       PARAMETER           ( MXMSG  = MXBEGM + MXENDM + 10 )
 
 
-C
-C     End of file zzgf.inc.
-C  
+!
+!     End of file zzgf.inc.
+!

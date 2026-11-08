@@ -1,0 +1,267 @@
+!$Procedure ZZRBRKST ( Private --- Reverse Bracketed String Extractor )
+
+      SUBROUTINE ZZRBRKST ( STRING, &
+                            LFTEND, &
+                            RGTEND, &
+                            SUBSTR, &
+                            LENGTH, &
+                            BKPRES  )
+! $ Abstract
+!
+!    Extract from a string the last instance of a substring bracketed
+!    by specified left and right strings .
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     STRINGS
+!     UTILITY
+!     SCANNING
+!
+! $ Declarations
+
+      IMPLICIT NONE
+
+      CHARACTER*(*)         STRING
+      CHARACTER*(*)         LFTEND
+      CHARACTER*(*)         RGTEND
+      CHARACTER*(*)         SUBSTR
+      INTEGER               LENGTH
+      LOGICAL               BKPRES
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     STRING     I   A string from which to extract SUBSTR.
+!     LFTEND     I   A string that brackets SUBSTR on the left.
+!     RGTEND     I   A string that brackets SUBSTR on the right.
+!     SUBSTR     O   The extracted substring.
+!     LENGTH     O   The length of the extracted substring.
+!     BKPRES     O   Logical indicating if either bracket is present.
+!
+! $ Detailed_Input
+!
+!     STRING     is a string to be searched for a substring bracketed
+!                by the strings LFTEND and RGTEND (see below).
+!
+!     LFTEND,    are respectively the left and right bracketing strings.
+!     RGTEND     Trailing and leading white space is significant. LFTEND
+!                may equal RGTEND.  See the Exceptions section for a
+!                discussion of the case in which either of these strings
+!                is absent.
+!
+! $ Detailed_Output
+!
+!     SUBSTR     is the substring of interest.  It consists of the
+!                substring between the last instances of LFTEND
+!                and RGTEND in STRING. Note: The argument passed into
+!                the routine should be large enough to hold the entire
+!                substring, or else truncation will occur. SUBSTR is
+!                padded with trailing blanks.
+!
+!     LENGTH     is the number of characters placed into SUBSTR. This
+!                value permits any significant trailing whitespace to be
+!                dealt with appropriately. In the event that no
+!                substring is assigned to SUBSTR, LENGTH will be 0.
+!
+!     BKPRES     is a logical that indicates whether or not at least
+!                one of LFTEND or RGTEND is present in STRING.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Files
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1) If LFTEND or RGTEND are not present in STRING, then the routine
+!        does not modify the contents of SUBSTR, LENGTH is returned as
+!        0, and BKPRES is TRUE only if LFTEND or RGTEND is present.
+!
+!     2) If LFTEND and RGTEND are adjacent, then SUBSTR is not modified,
+!        LENGTH is returned as 0, and BKPRES is TRUE.
+!
+! $ Particulars
+!
+!     The purpose of this routine is to extract the last instance of
+!     a substring bracketed by two specified strings.  The searching
+!     is case sensitive, and all white space is significant.  The
+!     characters between LFTEND and RGTEND are placed into SUBSTR,
+!     and LENGTH is set to the number of characters copied into SUBSTR.
+!     The assignment is not substring assignment, so the resultant
+!     SUBSTR will be blank padded.  The logical BKPRES is a flag that
+!     indicates whether or not either of the two brackets was found.
+!     This is diagnostic information of some limited use in the event
+!     that SUBSTR was not assigned a value.
+!
+! $ Examples
+!
+!     The following table demonstrates the behavior of this routine:
+!     ( If a row in the table has no entry for SUBSTR, then the
+!       contents of SUBSTR are not modified by calling the routine
+!       with these inputs. )
+!
+!     STRING               LFTEND   RGTEND   SUBSTR             LENGTH
+!     ===================  =======  =======  =================  ======
+!     'abc def ghi jkl'    'a'      'l'      'bc def ghi jk'      13
+!     'abc def ghi jkl'    'abc'    'ghi'    ' def '              5
+!     'abc def ghi jkl'    'abc'    '123'                         0
+!     'abc def ghi jkl'    '123'    'def'                         0
+!     'abc def ghi jkl'    'jkl'    'zzz'                         0
+!     'abc def abc jkl'    'abc'    'abc'    ' def '              5
+!     'ab cd ab ef ab '    'ab'     'ab'     ' ef '               4
+!     'ab cd ab ef ab '    'ef'     'cd'                          0
+!     'abc def-fed abc'    'def'    '-fed'                        0
+!     'aaaaaaaaaaaaaaa'    'aa'     'aaaa'                        0
+!     'aaaabbbaabababa'    'ba'     'a'      'b'                  1
+!     'aaaabbbaababada'    'ba'     'a'      'd'                  1
+!     'abcd efgh ijkl '    ' '      'l'      'ijk'                3
+!     'abcd efgh ijkl '    '    '   'l'                           0
+!     'ab  ef   ijklm '    '  '     'm'      'ijkl'               4
+!     'ab   ef  ijklm '    '   '    'm'      'ef  ijkl'           8
+!
+! $ Restrictions
+!
+!     1) The size of SUBSTR must be large enough to contain any
+!        possible substring bracketed by LFTEND or RGTEND, otherwise
+!        truncation will occur at assignment.
+!
+! $ Author_and_Institution
+!
+!     F.S. Turner     (JPL)
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
+!
+!
+!-&
+
+! $ Index_Entries
+!
+!     reverse bracketed string extraction
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+      INTEGER               POSR
+
+!
+!     Local Variables
+!
+      INTEGER               BSIZE
+      INTEGER               LINDEX
+      INTEGER               LSIZE
+      INTEGER               RINDEX
+      INTEGER               RSIZE
+
+!
+!     Compute the sizes of the bracketing substrings and the text
+!     block.
+!
+      LSIZE = LEN ( LFTEND )
+      RSIZE = LEN ( RGTEND )
+      BSIZE = LEN ( STRING )
+
+!
+!     Search from the right for RGTEND.
+!
+      RINDEX = POSR ( STRING, RGTEND, BSIZE )
+
+!
+!     Now continue the search from RINDEX to the right, this time
+!     looking for LFTEND. If RINDEX comes back as 0, then the right
+!     bracketing substring is not present, so search the entire string
+!     for LFTEND. Otherwise, search from where the right bracket
+!     search left off.
+!
+      IF ( RINDEX .EQ. 0 ) THEN
+
+         LINDEX = POSR ( STRING, LFTEND, BSIZE )
+
+      ELSE
+
+         LINDEX = POSR ( STRING, LFTEND, RINDEX - LSIZE )
+
+      END IF
+
+!
+!     Interpret the results.  If RINDEX and LINDEX are both non-zero,
+!     then return the substring they bracket, otherwise handle the
+!     failed case.
+!
+      IF ( ( RINDEX .NE. 0 ) .AND. ( LINDEX .NE. 0 ) ) THEN
+
+!
+!        Check to see whether or not the brackets are adjacent, and
+!        thus have no characters between them.
+!
+         IF ( ( LINDEX + LSIZE ) .GT. ( RINDEX - 1 ) ) THEN
+
+            BKPRES = .TRUE.
+            LENGTH = 0
+
+!
+!        If they aren't adjacent, then compute the length and prepare
+!        SUBSTR.
+!
+         ELSE
+
+            LENGTH = RINDEX - ( LINDEX + LSIZE )
+            BKPRES = .TRUE.
+            SUBSTR = STRING ( ( LINDEX  + LSIZE ) : ( RINDEX - 1 ) )
+
+         END IF
+
+      ELSE
+
+!
+!        Set BKPRES to TRUE only if LINDEX or RINDEX is non-zero,
+!        indicating one was found by POSR. Set LENGTH to 0, since we
+!        will not be changing SUBSTR.
+!
+         BKPRES = ( ( LINDEX + RINDEX ) .GT. 0 )
+         LENGTH = 0
+
+      END IF
+
+      RETURN
+      END

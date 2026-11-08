@@ -1,0 +1,664 @@
+!$Procedure DSKTOL ( DSK, tolerance umbrella )
+
+      SUBROUTINE DSKTOL ( KEYWRD, DPVAL )
+
+! $ Abstract
+!
+!     Umbrella routine for DSK tolerance and margin parameter access
+!     routines.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     DSK
+!
+! $ Keywords
+!
+!     DSK
+!     MARGIN
+!     NUMERIC
+!     TOLERANCE
+!
+! $ Declarations
+
+      IMPLICIT NONE
+
+      INCLUDE 'dsktol.inc'
+
+      INTEGER               KEYWRD
+      DOUBLE PRECISION      DPVAL
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  ENTRY POINTS
+!     --------  ---  --------------------------------------------------
+!     KEYWRD     I   DSKGTL, DSKSTL
+!     DPVAL     I-O  DSKGTL, DSKSTL
+!
+! $ Detailed_Input
+!
+!     See the entry points for descriptions of their input arguments.
+!
+! $ Detailed_Output
+!
+!     See the entry points for descriptions of their output arguments.
+!
+! $ Parameters
+!
+!     See the include file
+!
+!        dsktol.inc
+!
+!     for descriptions and values of the tolerance or margin parameters
+!     accessed by the entry points of this routine, and of the keyword
+!     parameters used to refer to them.
+!
+! $ Exceptions
+!
+!     1)  If this routine is called directly, the error
+!         SPICE(BOGUSENTRY) is signaled.
+!
+!     2)  See the entry points for descriptions of exceptions specific
+!         to those entry points.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     The routines in this package serve to centralize numeric
+!     tolerance and margin values used by the DSK subsystem. The
+!     subsystem retrieves values from this package to use at run time.
+!
+!     The entry points of this routine are
+!
+!        DSKGTL {DSK, get tolerance value}
+!        DSKSTL {DSK, set tolerance value}
+!
+!     To minimize run time overhead, the "keywords" used by these
+!     routines to identify parameters are actually integer codes.
+!
+!     SPICE users may override certain values maintained by this
+!     package; others values are fixed.
+!
+!     One use of this system would be to disable the "greedy"
+!     algorithms used to prevent "false miss" ray-surface intercepts
+!     results. Setting to zero the margins used for this purpose would
+!     accomplish this.
+!
+!     It is recommended that any change to the tolerance values made at
+!     run time be programmed only by SPICE experts.
+!
+! $ Examples
+!
+!     See the entry points.
+!
+! $ Restrictions
+!
+!     1)  The default settings used by the DSK subsystem should
+!         be overridden only by expert SPICE users.
+!
+!     2)  The entry points of this routine do not check the
+!         validity of new parameter values supplied by the
+!         calling application.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+!
+!        Edited the entry points and umbrella headers to comply with
+!        NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     DSK tolerance and margin umbrella
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+      LOGICAL               RETURN
+
+!
+!     Local parameters
+!
+      INTEGER               NDSPAR
+      PARAMETER           ( NDSPAR = 6 )
+
+      INTEGER               NAMLEN
+      PARAMETER           ( NAMLEN = 6 )
+
+!
+!     Local variables
+!
+      CHARACTER*(NAMLEN)    NAMES  ( NDSPAR )
+
+      DOUBLE PRECISION      DPPARS ( NDSPAR )
+
+      LOGICAL               ISFIXD ( NDSPAR )
+
+!
+!     Saved values
+!
+      SAVE                  DPPARS
+      SAVE                  ISFIXD
+      SAVE                  NAMES
+
+!
+!     Initial values
+!
+!     Caution: this array must be declared in
+!     the order defined by the keywords declared
+!     in dsktol.inc.
+!
+      DATA                  DPPARS / &
+                            XFRACT, SGREED, SGPADM, &
+                            PTMEMM, ANGMRG, LONALI &
+                                   /
+
+      DATA                  ISFIXD / &
+                            .FALSE., .FALSE., .FALSE., &
+                            .FALSE., .TRUE.,  .TRUE. &
+                                   /
+
+      DATA                  NAMES  / &
+                            'XFRACT', 'SGREED', 'SGPADM', &
+                            'PTMEMM', 'ANGMRG', 'LONALI' &
+                                   /
+
+      CALL CHKIN  ( 'DSKTOL' )
+      CALL SIGERR ( 'SPICE(BOGUSENTRY)' )
+      CALL CHKOUT ( 'DSKTOL' )
+      RETURN
+
+
+
+!$Procedure DSKGTL ( DSK, get tolerance )
+
+      ENTRY DSKGTL ( KEYWRD, DPVAL )
+
+! $ Abstract
+!
+!     Retrieve the value of a specified DSK tolerance or margin
+!     parameter.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     DSK
+!
+! $ Keywords
+!
+!     DSK
+!     MARGIN
+!     NUMERIC
+!     TOLERANCE
+!
+! $ Declarations
+!
+!     INTEGER               KEYWRD
+!     DOUBLE PRECISION      DPVAL
+!
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     KEYWRD     I   Code specifying parameter to retrieve.
+!     DPVAL      O   Value of parameter.
+!
+! $ Detailed_Input
+!
+!     KEYWRD   is an integer code specifying the parameter to
+!              retrieve. See the include file dsktol.inc for
+!              a description of the possible keywords.
+!
+! $ Detailed_Output
+!
+!     DPVAL    is the value of the parameter specified by KEYWRD.
+!
+! $ Parameters
+!
+!     See the include file
+!
+!        dsktol.inc
+!
+!     for descriptions and values of the tolerance or margin parameters
+!     accessed by this routine, and of the keyword parameters used to
+!     refer to them.
+!
+! $ Exceptions
+!
+!     1)  If the input keyword is not recognized, the error
+!         SPICE(INDEXOUTOFRANGE) is signaled.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     The routines in this package serve to centralize numeric
+!     tolerance and margin values used by the DSK subsystem.
+!     The subsystem retrieves values from this package to use
+!     at run time.
+!
+!     The entry points of this routine are
+!
+!        DSKGTL {DSK, get tolerance value}
+!        DSKSTL {DSK, set tolerance value}
+!
+!     To minimize run time overhead, the "keywords" used by
+!     these routines to identify parameters are actually
+!     integer codes.
+!
+!     SPICE users may override certain values maintained by
+!     this package; others values are fixed. It is recommended
+!     that any change to the tolerance values made at run
+!     time be performed only by expert SPICE users.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Obtain and display the DSK type 2 plate expansion fraction.
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM DSKGTL_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Include files
+!        C
+!              INCLUDE 'dsktol.inc'
+!
+!        C
+!        C     Local variables
+!        C
+!              DOUBLE PRECISION      DPVAL
+!
+!              CALL DSKGTL ( KEYXFR, DPVAL )
+!
+!              WRITE(*,*) 'Plate expansion fraction = ', DPVAL
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!
+!         Plate expansion fraction =    1.0000000000000000E-010
+!
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+!
+!        Updated the header to comply with NAIF standard. Added
+!        complete example code.
+!
+!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     retrieve DSK tolerance or margin parameters
+!
+!-&
+
+
+!
+!     Use discovery check-in.
+!
+      IF (  ( KEYWRD .LT. 1 ) .OR. ( KEYWRD .GT. NDSPAR )  ) THEN
+
+         CALL CHKIN  ( 'DSKGTL'                                     )
+         CALL SETMSG ( 'Valid keyword range is 1:#; keyword was #.' )
+         CALL ERRINT ( '#', NDSPAR                                  )
+         CALL ERRINT ( '#', KEYWRD                                  )
+         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                     )
+         CALL CHKOUT ( 'DSKGTL'                                     )
+         RETURN
+
+      END IF
+
+      DPVAL = DPPARS( KEYWRD )
+
+      RETURN
+
+
+
+
+
+!$Procedure DSKSTL ( DSK, set tolerance )
+
+      ENTRY DSKSTL ( KEYWRD, DPVAL )
+
+! $ Abstract
+!
+!     Set the value of a specified DSK tolerance or margin parameter.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     DSK
+!
+! $ Keywords
+!
+!     DSK
+!     MARGIN
+!     NUMERIC
+!     TOLERANCE
+!
+! $ Declarations
+!
+!     INTEGER               KEYWRD
+!     DOUBLE PRECISION      DPVAL
+!
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     KEYWRD     I   Code specifying parameter to modify.
+!     DPVAL      I   New value of parameter.
+!
+! $ Detailed_Input
+!
+!     KEYWRD   is an integer code specifying the parameter to
+!              set. See the include file dsktol.inc for
+!              a description of the possible keywords.
+!
+!     DPVAL    is the new value of the parameter specified by KEYWRD.
+!              This value will be retrieved by future calls to
+!              to DSKGTL made to retrieve the specified parameter.
+!
+!              <<< Use extreme caution. This routine performs no
+!              checks on DPVAL. >>>
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     This routine operates by side effects.
+!
+! $ Parameters
+!
+!     See the include file
+!
+!        dsktol.inc
+!
+!     for descriptions and values of the tolerance or margin parameters
+!     accessed by this routine, and of the keyword parameters used to
+!     refer to them.
+!
+! $ Exceptions
+!
+!     1)  If the input keyword is not recognized, the error
+!         SPICE(INDEXOUTOFRANGE) is signaled.
+!
+!     2)  If an attempt is made to modify a fixed parameter,
+!         the error SPICE(IMMUTABLEVALUE) is signaled.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     The routines in this package serve to centralize numeric
+!     tolerance and margin values used by the DSK subsystem.
+!     The subsystem retrieves values from this package to use
+!     at run time.
+!
+!     The entry points of this routine are
+!
+!        DSKGTL {DSK, get tolerance value}
+!        DSKSTL {DSK, set tolerance value}
+!
+!     To minimize run time overhead, the "keywords" used by
+!     these routines to identify parameters are actually
+!     integer codes.
+!
+!     SPICE users may override certain values maintained by
+!     this package; others values are fixed. It is recommended
+!     that any change to the tolerance values made at run
+!     time be performed only by expert SPICE users.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Obtain, display, and update the DSK type 2 plate expansion
+!        fraction.
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM DSKSTL_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Include files
+!        C
+!              INCLUDE 'dsktol.inc'
+!
+!        C
+!        C     Local variables
+!        C
+!              DOUBLE PRECISION      DPVAL
+!
+!              CALL DSKGTL ( KEYXFR, DPVAL )
+!
+!              WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
+!
+!        C
+!        C     Update the parameter.
+!        C
+!              CALL DSKSTL ( KEYXFR, 1.D-8 )
+!
+!        C
+!        C     Verify the update.
+!        C
+!              CALL DSKGTL ( KEYXFR, DPVAL )
+!
+!              WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!
+!         Default plate expansion fraction =    1.0000000000000000E-010
+!         New plate expansion fraction     =    1.0000000000000000E-008
+!
+!
+! $ Restrictions
+!
+!     1)  The default settings used by the DSK subsystem should
+!         be overridden only by expert SPICE users.
+!
+!     2)  This routine does not check the  validity of new parameter
+!         values supplied by the calling application.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+!
+!        Updated the header to comply with NAIF standard. Added
+!        complete example code.
+!
+!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     set DSK tolerance or margin parameters
+!
+!-&
+
+
+      IF ( RETURN() ) THEN
+         RETURN
+      END IF
+
+      CALL CHKIN  ( 'DSKSTL' )
+
+
+      IF (  ( KEYWRD .LT. 1 ) .OR. ( KEYWRD .GT. NDSPAR )  ) THEN
+
+         CALL SETMSG ( 'Valid keyword range is 1:#; keyword was #.' )
+         CALL ERRINT ( '#', NDSPAR                                  )
+         CALL ERRINT ( '#', KEYWRD                                  )
+         CALL SIGERR ( 'SPICE(INDEXOUTOFRANGE)'                     )
+         CALL CHKOUT ( 'DSKSTL'                                     )
+         RETURN
+
+      END IF
+
+      IF ( ISFIXD(KEYWRD) ) THEN
+
+         CALL SETMSG ( 'The parameter # cannot be modified.' )
+         CALL ERRCH  ( '#', NAMES(KEYWRD)                    )
+         CALL SIGERR ( 'SPICE(IMMUTABLEVALUE)'               )
+         CALL CHKOUT ( 'DSKSTL'                              )
+         RETURN
+
+      END IF
+
+!
+!     We have a valid parameter index. We don't check
+!     the new parameter value; the user presumably knows
+!     the reason for change.
+!
+      DPPARS(KEYWRD) = DPVAL
+
+      CALL CHKOUT ( 'DSKSTL' )
+      RETURN
+      END

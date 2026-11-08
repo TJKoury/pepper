@@ -1,0 +1,2659 @@
+!$Procedure SUBPNT ( Sub-observer point )
+
+      SUBROUTINE SUBPNT ( METHOD, TARGET, ET,     FIXREF, &
+                          ABCORR, OBSRVR, SPOINT, TRGEPC, SRFVEC )
+
+! $ Abstract
+!
+!     Compute the rectangular coordinates of the sub-observer point on
+!     a target body at a specified epoch, optionally corrected for
+!     light time and stellar aberration.
+!
+!     The surface of the target body may be represented by a triaxial
+!     ellipsoid or by topographic data provided by DSK files.
+!
+!     This routine supersedes SUBPT.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     DSK
+!     FRAMES
+!     NAIF_IDS
+!     PCK
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     GEOMETRY
+!
+! $ Declarations
+
+      IMPLICIT NONE
+
+      INCLUDE               'dsk.inc'
+      INCLUDE               'frmtyp.inc'
+      INCLUDE               'gf.inc'
+      INCLUDE               'zzabcorr.inc'
+      INCLUDE               'zzctr.inc'
+      INCLUDE               'zzdsk.inc'
+
+
+      CHARACTER*(*)         METHOD
+      CHARACTER*(*)         TARGET
+      DOUBLE PRECISION      ET
+      CHARACTER*(*)         FIXREF
+      CHARACTER*(*)         ABCORR
+      CHARACTER*(*)         OBSRVR
+      DOUBLE PRECISION      SPOINT ( 3 )
+      DOUBLE PRECISION      TRGEPC
+      DOUBLE PRECISION      SRFVEC ( 3 )
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     METHOD     I   Computation method.
+!     TARGET     I   Name of target body.
+!     ET         I   Epoch in ephemeris seconds past J2000 TDB.
+!     FIXREF     I   Body-fixed, body-centered target body frame.
+!     ABCORR     I   Aberration correction.
+!     OBSRVR     I   Name of observing body.
+!     SPOINT     O   Sub-observer point on the target body.
+!     TRGEPC     O   Sub-observer point epoch.
+!     SRFVEC     O   Vector from observer to sub-observer point.
+!
+! $ Detailed_Input
+!
+!     METHOD   is a short string providing parameters defining
+!              the computation method to be used. In the syntax
+!              descriptions below, items delimited by brackets
+!              are optional.
+!
+!              METHOD may be assigned the following values:
+!
+!                 'NEAR POINT/ELLIPSOID'
+!
+!                    The sub-observer point computation uses a
+!                    triaxial ellipsoid to model the surface of the
+!                    target body. The sub-observer point is defined
+!                    as the nearest point on the target relative to
+!                    the observer.
+!
+!                    The word "NADIR" may be substituted for the phrase
+!                    "NEAR POINT" in the string above.
+!
+!                    For backwards compatibility, the older syntax
+!
+!                       'Near point: ellipsoid'
+!
+!                    is accepted as well.
+!
+!
+!                 'INTERCEPT/ELLIPSOID'
+!
+!                    The sub-observer point computation uses a
+!                    triaxial ellipsoid to model the surface of the
+!                    target body. The sub-observer point is defined
+!                    as the target surface intercept of the line
+!                    containing the observer and the target's
+!                    center.
+!
+!                    For backwards compatibility, the older syntax
+!
+!                       'Intercept: ellipsoid'
+!
+!                    is accepted as well.
+!
+!
+!                 'NADIR/DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
+!
+!                    The sub-observer point computation uses DSK data
+!                    to model the surface of the target body. The
+!                    sub-observer point is defined as the intercept, on
+!                    the surface represented by the DSK data, of the
+!                    line containing the observer and the nearest point
+!                    on the target's reference ellipsoid. If multiple
+!                    such intercepts exist, the one closest to the
+!                    observer is selected.
+!
+!                    Note that this definition of the sub-observer
+!                    point is not equivalent to the "nearest point on
+!                    the surface to the observer." The phrase "NEAR
+!                    POINT" may NOT be substituted for "NADIR" in the
+!                    string above.
+!
+!                    The surface list specification is optional. The
+!                    syntax of the list is
+!
+!                       <surface 1> [, <surface 2>...]
+!
+!                    If present, it indicates that data only for the
+!                    listed surfaces are to be used; however, data
+!                    need not be available for all surfaces in the
+!                    list. If absent, loaded DSK data for any surface
+!                    associated with the target body are used.
+!
+!                    The surface list may contain surface names or
+!                    surface ID codes. Names containing blanks must
+!                    be delimited by double quotes, for example
+!
+!                       SURFACES = "Mars MEGDR 128 PIXEL/DEG"
+!
+!                    If multiple surfaces are specified, their names
+!                    or IDs must be separated by commas.
+!
+!                    See the $Particulars section below for details
+!                    concerning use of DSK data.
+!
+!
+!                 'INTERCEPT/DSK/UNPRIORITIZED[/SURFACES =
+!                                              <surface list>]'
+!
+!                    The sub-observer point computation uses DSK data
+!                    to model the surface of the target body. The
+!                    sub-observer point is defined as the target
+!                    surface intercept of the line containing the
+!                    observer and the target's center.
+!
+!                    If multiple such intercepts exist, the one closest
+!                    to the observer is selected.
+!
+!                    The surface list specification is optional. The
+!                    syntax of the list is identical to that for the
+!                    NADIR option described above.
+!
+!
+!                 Neither case nor white space are significant in
+!                 METHOD, except within double-quoted strings. For
+!                 example, the string ' eLLipsoid/nearpoint ' is valid.
+!
+!                 Within double-quoted strings, blank characters are
+!                 significant, but multiple consecutive blanks are
+!                 considered equivalent to a single blank. Case is
+!                 not significant. So
+!
+!                    "Mars MEGDR 128 PIXEL/DEG"
+!
+!                 is equivalent to
+!
+!                    " mars megdr  128  pixel/deg "
+!
+!                 but not to
+!
+!                    "MARS MEGDR128PIXEL/DEG"
+!
+!
+!     TARGET   is the name of the target body. The target body is
+!              an ephemeris object (its trajectory is given by
+!              SPK data), and is an extended object.
+!
+!              The string TARGET is case-insensitive, and leading
+!              and trailing blanks in TARGET are not significant.
+!              Optionally, you may supply a string containing the
+!              integer ID code for the object. For example both
+!              'MOON' and '301' are legitimate strings that indicate
+!              the Moon is the target body.
+!
+!              When the target body's surface is represented by a
+!              tri-axial ellipsoid, this routine assumes that a
+!              kernel variable representing the ellipsoid's radii is
+!              present in the kernel pool. Normally the kernel
+!              variable would be defined by loading a PCK file.
+!
+!
+!     ET       is the epoch of participation of the observer,
+!              expressed as ephemeris seconds past J2000 TDB: ET is
+!              the epoch at which the observer's state is computed.
+!
+!              When aberration corrections are not used, ET is also
+!              the epoch at which the position and orientation of
+!              the target body are computed.
+!
+!              When aberration corrections are used, the position
+!              and orientation of the target body are computed at
+!              ET-LT or ET+LT, where LT is the one-way light time
+!              between the sub-observer point and the observer, and
+!              the sign applied to LT depends on the selected
+!              correction. See the description of ABCORR below for
+!              details.
+!
+!
+!     FIXREF   is the name of a body-fixed reference frame centered
+!              on the target body. FIXREF may be any such frame
+!              supported by the SPICE system, including built-in
+!              frames (documented in the Frames Required Reading)
+!              and frames defined by a loaded frame kernel (FK). The
+!              string FIXREF is case-insensitive, and leading and
+!              trailing blanks in FIXREF are not significant.
+!
+!              The output sub-observer point SPOINT and the
+!              observer-to-sub-observer point vector SRFVEC will be
+!              expressed relative to this reference frame.
+!
+!     ABCORR   indicates the aberration corrections to be applied
+!              when computing the target's position and orientation.
+!
+!              For remote sensing applications, where the apparent
+!              sub-observer point seen by the observer is desired,
+!              normally either of the corrections
+!
+!                 'LT+S'
+!                 'CN+S'
+!
+!              should be used. These and the other supported options
+!              are described below. ABCORR may be any of the
+!              following:
+!
+!                 'NONE'     Apply no correction. Return the
+!                            geometric sub-observer point on the
+!                            target body.
+!
+!              Let LT represent the one-way light time between the
+!              observer and the sub-observer point (note: NOT
+!              between the observer and the target body's center).
+!              The following values of ABCORR apply to the
+!              "reception" case in which photons depart from the
+!              sub-observer point's location at the light-time
+!              corrected epoch ET-LT and *arrive* at the observer's
+!              location at ET:
+!
+!
+!                 'LT'       Correct for one-way light time (also
+!                            called "planetary aberration") using a
+!                            Newtonian formulation. This correction
+!                            yields the location of sub-observer
+!                            point at the moment it emitted photons
+!                            arriving at the observer at ET.
+!
+!                            The light time correction uses an
+!                            iterative solution of the light time
+!                            equation. The solution invoked by the
+!                            'LT' option uses one iteration.
+!
+!                            Both the target position as seen by the
+!                            observer, and rotation of the target
+!                            body, are corrected for light time.
+!
+!                 'LT+S'     Correct for one-way light time and
+!                            stellar aberration using a Newtonian
+!                            formulation. This option modifies the
+!                            sub-observer point obtained with the
+!                            'LT' option to account for the
+!                            observer's velocity relative to the
+!                            solar system barycenter. These
+!                            corrections yield the apparent
+!                            sub-observer point.
+!
+!                 'CN'       Converged Newtonian light time
+!                            correction. In solving the light time
+!                            equation, the 'CN' correction iterates
+!                            until the solution converges. Both the
+!                            position and rotation of the target
+!                            body are corrected for light time.
+!
+!                 'CN+S'     Converged Newtonian light time and
+!                            stellar aberration corrections. This
+!                            option produces a solution that is at
+!                            least as accurate at that obtainable
+!                            with the `LT+S' option. Whether the
+!                            'CN+S' solution is substantially more
+!                            accurate depends on the geometry of the
+!                            participating objects and on the
+!                            accuracy of the input data. In all
+!                            cases this routine will execute more
+!                            slowly when a converged solution is
+!                            computed.
+!
+!
+!              The following values of ABCORR apply to the
+!              "transmission" case in which photons *depart* from
+!              the observer's location at ET and arrive at the
+!              sub-observer point at the light-time corrected epoch
+!              ET+LT:
+!
+!                 'XLT'      "Transmission" case: correct for
+!                            one-way light time using a Newtonian
+!                            formulation. This correction yields the
+!                            sub-observer location at the moment it
+!                            receives photons emitted from the
+!                            observer's location at ET.
+!
+!                            The light time correction uses an
+!                            iterative solution of the light time
+!                            equation. The solution invoked by the
+!                            'LT' option uses one iteration.
+!
+!                            Both the target position as seen by the
+!                            observer, and rotation of the target
+!                            body, are corrected for light time.
+!
+!                 'XLT+S'    "Transmission" case: correct for
+!                            one-way light time and stellar
+!                            aberration using a Newtonian
+!                            formulation  This option modifies the
+!                            sub-observer point obtained with the
+!                            'XLT' option to account for the
+!                            observer's velocity relative to the
+!                            solar system barycenter.
+!
+!                 'XCN'      Converged Newtonian light time
+!                            correction. This is the same as 'XLT'
+!                            correction but with further iterations
+!                            to a converged Newtonian light time
+!                            solution.
+!
+!                 'XCN+S'    "Transmission" case: converged
+!                            Newtonian light time and stellar
+!                            aberration corrections.
+!
+!
+!              Neither case nor white space are significant in
+!              ABCORR. For example, the string
+!
+!                'Lt + s'
+!
+!              is valid.
+!
+!
+!     OBSRVR   is the name of the observing body. The observing body
+!              is an ephemeris object: it typically is a spacecraft,
+!              the earth, or a surface point on the earth. OBSRVR is
+!              case-insensitive, and leading and trailing blanks in
+!              OBSRVR are not significant. Optionally, you may
+!              supply a string containing the integer ID code for
+!              the object. For example both 'MOON' and '301' are
+!              legitimate strings that indicate the Moon is the
+!              observer.
+!
+! $ Detailed_Output
+!
+!     SPOINT   is the sub-observer point on the target body.
+!
+!              For target shapes modeled by ellipsoids, the
+!              sub-observer point is defined either as the point on
+!              the target body that is closest to the observer, or
+!              the target surface intercept of the line from the
+!              observer to the target's center.
+!
+!              For target shapes modeled by topographic data
+!              provided by DSK files, the sub-observer point is
+!              defined as the target surface intercept of the line
+!              from the observer to either the nearest point on the
+!              reference ellipsoid, or to the target's center. If
+!              multiple such intercepts exist, the one closest to
+!              the observer is selected.
+!
+!              The input argument METHOD selects the target shape
+!              model and sub-observer point definition to be used.
+!
+!              SPOINT is expressed in Cartesian coordinates,
+!              relative to the body-fixed target frame designated by
+!              FIXREF. The body-fixed target frame is evaluated at
+!              the sub-observer epoch TRGEPC (see description below).
+!
+!              When light time correction is used, the duration of
+!              light travel between SPOINT to the observer is
+!              considered to be the one way light time.
+!
+!              When aberration corrections are used, SPOINT is
+!              computed using target body position and orientation
+!              that have been adjusted for the corrections
+!              applicable to SPOINT itself rather than to the target
+!              body's center. In particular, if the stellar
+!              aberration correction applicable to SPOINT is
+!              represented by a shift vector S, then the light-time
+!              corrected position of the target is shifted by S
+!              before the sub-observer point is computed.
+!
+!              The components of SPOINT have units of km.
+!
+!
+!     TRGEPC   is the "sub-observer point epoch." TRGEPC is defined
+!              as follows: letting LT be the one-way light time
+!              between the observer and the sub-observer point,
+!              TRGEPC is the epoch ET-LT, ET+LT, or ET depending on
+!              whether the requested aberration correction is,
+!              respectively, for received radiation, transmitted
+!              radiation, or omitted. LT is computed using the
+!              method indicated by ABCORR.
+!
+!              TRGEPC is expressed as seconds past J2000 TDB.
+!
+!
+!     SRFVEC   is the vector from the observer's position at ET to
+!              the aberration-corrected (or optionally, geometric)
+!              position of SPOINT, where the aberration corrections
+!              are specified by ABCORR. SRFVEC is expressed in the
+!              target body-fixed reference frame designated by
+!              FIXREF, evaluated at TRGEPC.
+!
+!              The components of SRFVEC are given in units of km.
+!
+!              One can use the SPICELIB function VNORM to obtain the
+!              distance between the observer and SPOINT:
+!
+!                 DIST = VNORM ( SRFVEC )
+!
+!              The observer's position OBSPOS, relative to the
+!              target body's center, where the center's position is
+!              corrected for aberration effects as indicated by
+!              ABCORR, can be computed via the call:
+!
+!                 CALL VSUB ( SPOINT, SRFVEC, OBSPOS )
+!
+!              To transform the vector SRFVEC from a reference frame
+!              FIXREF at time TRGEPC to a time-dependent reference
+!              frame REF at time ET, the routine PXFRM2 should be
+!              called. Let XFORM be the 3x3 matrix representing the
+!              rotation from the reference frame FIXREF at time
+!              TRGEPC to the reference frame REF at time ET. Then
+!              SRFVEC can be transformed to the result REFVEC as
+!              follows:
+!
+!                  CALL PXFRM2 ( FIXREF, REF,    TRGEPC, ET, XFORM )
+!                  CALL MXV    ( XFORM,  SRFVEC, REFVEC )
+!
+!              The second example in the $Examples header section
+!              below presents a complete program that demonstrates
+!              this procedure.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the specified aberration correction is unrecognized, an
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If either the target or observer input strings cannot be
+!         converted to an integer ID code, the error
+!         SPICE(IDCODENOTFOUND) is signaled.
+!
+!     3)  If OBSRVR and TARGET map to the same NAIF integer ID code,
+!         the error SPICE(BODIESNOTDISTINCT) is signaled.
+!
+!     4)  If the input target body-fixed frame FIXREF is not
+!         recognized, the error SPICE(NOFRAME) is signaled. A frame
+!         name may fail to be recognized because a required frame
+!         specification kernel has not been loaded; another cause is a
+!         misspelling of the frame name.
+!
+!     5)  If the input frame FIXREF is not centered at the target body,
+!         the error SPICE(INVALIDFRAME) is signaled.
+!
+!     6)  If the input argument METHOD is not recognized, the error
+!         SPICE(INVALIDMETHOD) is signaled by this routine, or, the
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     7)  If the sub-observer point type is not specified or is not
+!         recognized, the error SPICE(INVALIDSUBTYPE) is signaled.
+!
+!     8)  If the target and observer have distinct identities but are
+!         at the same location (for example, the target is Mars and the
+!         observer is the Mars barycenter), the error
+!         SPICE(NOSEPARATION) is signaled.
+!
+!     9)  If insufficient ephemeris data have been loaded prior to
+!         calling SUBPNT, an error is signaled by a
+!         routine in the call tree of this routine. Note that when
+!         light time correction is used, sufficient ephemeris data must
+!         be available to propagate the states of both observer and
+!         target to the solar system barycenter.
+!
+!     10) If the computation method specifies an ellipsoidal target
+!         shape and triaxial radii of the target body have not been
+!         loaded into the kernel pool prior to calling SUBPNT, an error
+!         is signaled by a routine in the call tree of this routine.
+!
+!     11) The target must be an extended body, and must have a shape
+!         for which a sub-observer point can be defined.
+!
+!         If the target body's shape is modeled by DSK data, the shape
+!         must be such that the specified sub-observer point
+!         definition is applicable. For example, if the target shape
+!         is a torus, both the NADIR and INTERCEPT definitions might
+!         be inapplicable, depending on the relative locations of the
+!         observer and target.
+!
+!     12) If PCK data specifying the target body-fixed frame orientation
+!         have not been loaded prior to calling SUBPNT, an error is
+!         signaled by a routine in the call tree of this routine.
+!
+!     13) If METHOD specifies that the target surface is represented by
+!         DSK data, and no DSK files are loaded for the specified
+!         target, an error is signaled by a routine in the call tree
+!         of this routine.
+!
+!     14) If METHOD specifies that the target surface is represented
+!         by DSK data, and the ray from the observer to the
+!         sub-observer point doesn't intersect the target body's
+!         surface, the error SPICE(SUBPOINTNOTFOUND) is signaled.
+!
+!     15) If the surface intercept on the target body's reference
+!         ellipsoid of the observer to target center vector cannot not
+!         be computed, the error SPICE(DEGENERATECASE) is signaled. Note
+!         that this is a very rare case.
+!
+!     16) If radii for TARGET are not found in the kernel pool, an error
+!         is signaled by a routine in the call tree of this routine.
+!
+!     17) If the size of the TARGET body radii kernel variable is not
+!         three, an error is signaled by a routine in the call tree of
+!         this routine.
+!
+!     18) If any of the three TARGET body radii is less-than or equal to
+!         zero, an error is signaled by a routine in the call tree of
+!         this routine.
+!
+! $ Files
+!
+!     Appropriate kernels must be loaded by the calling program before
+!     this routine is called.
+!
+!     The following data are required:
+!
+!     -  SPK data: ephemeris data for target and observer must be
+!        loaded. If aberration corrections are used, the states of
+!        target and observer relative to the solar system barycenter
+!        must be calculable from the available ephemeris data.
+!        Typically ephemeris data are made available by loading one
+!        or more SPK files via FURNSH.
+!
+!     -  PCK data: rotation data for the target body must be
+!        loaded. These may be provided in a text or binary PCK file.
+!
+!     -  Shape data for the target body:
+!
+!           PCK data:
+!
+!              If the target body shape is modeled as an ellipsoid,
+!              triaxial radii for the target body must be loaded into
+!              the kernel pool. Typically this is done by loading a
+!              text PCK file via FURNSH.
+!
+!              Triaxial radii are also needed if the target shape is
+!              modeled by DSK data, but the DSK NADIR method is
+!              selected.
+!
+!           DSK data:
+!
+!              If the target shape is modeled by DSK data, DSK files
+!              containing topographic data for the target body must be
+!              loaded. If a surface list is specified, data for at
+!              least one of the listed surfaces must be loaded.
+!
+!     The following data may be required:
+!
+!     -  Frame data: if a frame definition is required to convert the
+!        observer and target states to the body-fixed frame of the
+!        target, that definition must be available in the kernel
+!        pool. Typically the definition is supplied by loading a
+!        frame kernel via FURNSH.
+!
+!     -  Surface name-ID associations: if surface names are specified
+!        in METHOD, the association of these names with their
+!        corresponding surface ID codes must be established by
+!        assignments of the kernel variables
+!
+!           NAIF_SURFACE_NAME
+!           NAIF_SURFACE_CODE
+!           NAIF_SURFACE_BODY
+!
+!        Normally these associations are made by loading a text
+!        kernel containing the necessary assignments. An example
+!        of such an assignment is
+!
+!           NAIF_SURFACE_NAME += 'Mars MEGDR 128 PIXEL/DEG'
+!           NAIF_SURFACE_CODE += 1
+!           NAIF_SURFACE_BODY += 499
+!
+!     In all cases, kernel data are normally loaded once per program
+!     run, NOT every time this routine is called.
+!
+! $ Particulars
+!
+!     For ellipsoidal target bodies, there are two different popular
+!     ways to define the sub-observer point: "nearest point on the
+!     target to the observer" or "target surface intercept of the line
+!     containing observer and target." These coincide when the target
+!     is spherical and generally are distinct otherwise.
+!
+!     For target body shapes modeled using topographic data provided by
+!     DSK files, the "surface intercept" notion is valid, but the
+!     "nearest point on the surface" computation is both inefficient to
+!     execute and may fail to yield a result that is "under" the
+!     observer in an intuitively clear way. The NADIR option for DSK
+!     shapes instead finds the surface intercept of a ray that passes
+!     through the nearest point on the target reference ellipsoid. For
+!     shapes modeled using topography, there may be multiple
+!     ray-surface intercepts; the closest one to the observer is
+!     selected.
+!
+!     The NADIR definition makes sense only if the target shape is
+!     reasonably close to the target's reference ellipsoid. If the
+!     target is very different---the nucleus of comet
+!     Churyumov-Gerasimenko is an example---the intercept definition
+!     should be used.
+!
+!     This routine computes light time corrections using light time
+!     between the observer and the sub-observer point, as opposed to
+!     the center of the target. Similarly, stellar aberration
+!     corrections done by this routine are based on the direction of
+!     the vector from the observer to the light-time corrected
+!     sub-observer point, not to the target center. This technique
+!     avoids errors due to the differential between aberration
+!     corrections across the target body. Therefore it's valid to use
+!     aberration corrections with this routine even when the observer
+!     is very close to the sub-observer point, in particular when the
+!     observer to sub-observer point distance is much less than the
+!     observer to target center distance.
+!
+!     When comparing sub-observer point computations with results from
+!     sources other than SPICE, it's essential to make sure the same
+!     geometric definitions are used.
+!
+!
+!     Using DSK data
+!     ==============
+!
+!        DSK loading and unloading
+!        -------------------------
+!
+!        DSK files providing data used by this routine are loaded by
+!        calling FURNSH and can be unloaded by calling UNLOAD or
+!        KCLEAR. See the documentation of FURNSH for limits on numbers
+!        of loaded DSK files.
+!
+!        For run-time efficiency, it's desirable to avoid frequent
+!        loading and unloading of DSK files. When there is a reason to
+!        use multiple versions of data for a given target body---for
+!        example, if topographic data at varying resolutions are to be
+!        used---the surface list can be used to select DSK data to be
+!        used for a given computation. It is not necessary to unload
+!        the data that are not to be used. This recommendation presumes
+!        that DSKs containing different versions of surface data for a
+!        given body have different surface ID codes.
+!
+!
+!        DSK data priority
+!        -----------------
+!
+!        A DSK coverage overlap occurs when two segments in loaded DSK
+!        files cover part or all of the same domain---for example, a
+!        given longitude-latitude rectangle---and when the time
+!        intervals of the segments overlap as well.
+!
+!        When DSK data selection is prioritized, in case of a coverage
+!        overlap, if the two competing segments are in different DSK
+!        files, the segment in the DSK file loaded last takes
+!        precedence. If the two segments are in the same file, the
+!        segment located closer to the end of the file takes
+!        precedence.
+!
+!        When DSK data selection is unprioritized, data from competing
+!        segments are combined. For example, if two competing segments
+!        both represent a surface as sets of triangular plates, the
+!        union of those sets of plates is considered to represent the
+!        surface.
+!
+!        Currently only unprioritized data selection is supported.
+!        Because prioritized data selection may be the default behavior
+!        in a later version of the routine, the UNPRIORITIZED keyword is
+!        required in the METHOD argument.
+!
+!
+!        Syntax of the METHOD input argument
+!        -----------------------------------
+!
+!        The keywords and surface list in the METHOD argument
+!        are called "clauses." The clauses may appear in any
+!        order, for example
+!
+!           NADIR/DSK/UNPRIORITIZED/<surface list>
+!           DSK/NADIR/<surface list>/UNPRIORITIZED
+!           UNPRIORITIZED/<surface list>/DSK/NADIR
+!
+!        The simplest form of the METHOD argument specifying use of
+!        DSK data is one that lacks a surface list, for example:
+!
+!           'NADIR/DSK/UNPRIORITIZED'
+!           'INTERCEPT/DSK/UNPRIORITIZED'
+!
+!        For applications in which all loaded DSK data for the target
+!        body are for a single surface, and there are no competing
+!        segments, the above strings suffice. This is expected to be
+!        the usual case.
+!
+!        When, for the specified target body, there are loaded DSK
+!        files providing data for multiple surfaces for that body, the
+!        surfaces to be used by this routine for a given call must be
+!        specified in a surface list, unless data from all of the
+!        surfaces are to be used together.
+!
+!        The surface list consists of the string
+!
+!           SURFACES =
+!
+!        followed by a comma-separated list of one or more surface
+!        identifiers. The identifiers may be names or integer codes in
+!        string format. For example, suppose we have the surface
+!        names and corresponding ID codes shown below:
+!
+!           Surface Name                              ID code
+!           ------------                              -------
+!           'Mars MEGDR 128 PIXEL/DEG'                1
+!           'Mars MEGDR 64 PIXEL/DEG'                 2
+!           'Mars_MRO_HIRISE'                         3
+!
+!        If data for all of the above surfaces are loaded, then
+!        data for surface 1 can be specified by either
+!
+!           'SURFACES = 1'
+!
+!        or
+!
+!           'SURFACES = "Mars MEGDR 128 PIXEL/DEG"'
+!
+!        Double quotes are used to delimit the surface name because
+!        it contains blank characters.
+!
+!        To use data for surfaces 2 and 3 together, any
+!        of the following surface lists could be used:
+!
+!           'SURFACES = 2, 3'
+!
+!           'SURFACES = "Mars MEGDR  64 PIXEL/DEG", 3'
+!
+!           'SURFACES = 2, Mars_MRO_HIRISE'
+!
+!           'SURFACES = "Mars MEGDR 64 PIXEL/DEG", Mars_MRO_HIRISE'
+!
+!        An example of a METHOD argument that could be constructed
+!        using one of the surface lists above is
+!
+!        'NADIR/DSK/UNPRIORITIZED/SURFACES= "Mars MEGDR 64 PIXEL/DEG",3'
+!
+!
+!
+!        Aberration corrections
+!        ----------------------
+!
+!        For irregularly shaped target bodies, the distance between the
+!        observer and the nearest surface intercept need not be a
+!        continuous function of time; hence the one-way light time
+!        between the intercept and the observer may be discontinuous as
+!        well. In such cases, the computed light time, which is found
+!        using an iterative algorithm, may converge slowly or not at
+!        all. In all cases, the light time computation will terminate,
+!        but the result may be less accurate than expected.
+!
+! $ Examples
+!
+!     The numerical results shown for these examples may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!
+!     1) Find the sub-Earth point on Mars for a specified time.
+!
+!        Compute the sub-Earth points using both triaxial ellipsoid
+!        and topographic surface models. Topography data are provided by
+!        a DSK file. For the ellipsoid model, use both the "intercept"
+!        and "near point" sub-observer point definitions; for the DSK
+!        case, use both the "intercept" and "nadir" definitions.
+!
+!        Display the locations of both the Earth and the sub-Earth
+!        point relative to the center of Mars, in the IAU_MARS
+!        body-fixed reference frame, using both planetocentric and
+!        planetographic coordinates.
+!
+!        The topographic model is based on data from the MGS MOLA DEM
+!        megr90n000cb, which has a resolution of 4 pixels/degree. A
+!        triangular plate model was produced by computing a 720 x 1440
+!        grid of interpolated heights from this DEM, then tessellating
+!        the height grid. The plate model is stored in a type 2 segment
+!        in the referenced DSK file.
+!
+!        Use the meta-kernel shown below to load the required SPICE
+!        kernels.
+!
+!
+!           KPL/MK
+!
+!           File: subpnt_ex1.tm
+!
+!           This meta-kernel is intended to support operation of SPICE
+!           example programs. The kernels shown here should not be
+!           assumed to contain adequate or correct versions of data
+!           required by SPICE-based user applications.
+!
+!           In order for an application to use this meta-kernel, the
+!           kernels referenced here must be present in the user's
+!           current working directory.
+!
+!           The names and contents of the kernels referenced
+!           by this meta-kernel are as follows:
+!
+!              File name                        Contents
+!              ---------                        --------
+!              de430.bsp                        Planetary ephemeris
+!              mar097.bsp                       Mars satellite ephemeris
+!              pck00010.tpc                     Planet orientation and
+!                                               radii
+!              naif0011.tls                     Leapseconds
+!              megr90n000cb_plate.bds           Plate model based on
+!                                               MEGDR DEM, resolution
+!                                               4 pixels/degree.
+!
+!           \begindata
+!
+!              KERNELS_TO_LOAD = ( 'de430.bsp',
+!                                  'mar097.bsp',
+!                                  'pck00010.tpc',
+!                                  'naif0011.tls',
+!                                  'megr90n000cb_plate.bds' )
+!           \begintext
+!
+!           End of meta-kernel
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM SUBPNT_EX1
+!              IMPLICIT NONE
+!        C
+!        C     SPICELIB functions
+!        C
+!              DOUBLE PRECISION      DPR
+!              DOUBLE PRECISION      VNORM
+!        C
+!        C     Local parameters
+!        C
+!              CHARACTER*(*)         META
+!              PARAMETER           ( META   = 'subpnt_ex1.tm' )
+!
+!              CHARACTER*(*)         FM
+!              PARAMETER           ( FM     =  '(A,F21.9)' )
+!
+!              INTEGER               MTHLEN
+!              PARAMETER           ( MTHLEN = 50 )
+!
+!              INTEGER               NMETH
+!              PARAMETER           ( NMETH  = 4 )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(MTHLEN)    METHOD ( NMETH )
+!
+!              DOUBLE PRECISION      ET
+!              DOUBLE PRECISION      F
+!              DOUBLE PRECISION      OBSPOS ( 3 )
+!              DOUBLE PRECISION      ODIST
+!              DOUBLE PRECISION      OPCLAT
+!              DOUBLE PRECISION      OPCLON
+!              DOUBLE PRECISION      OPCRAD
+!              DOUBLE PRECISION      OPGALT
+!              DOUBLE PRECISION      OPGLAT
+!              DOUBLE PRECISION      OPGLON
+!              DOUBLE PRECISION      RADII  ( 3 )
+!              DOUBLE PRECISION      RE
+!              DOUBLE PRECISION      RP
+!              DOUBLE PRECISION      SPCLAT
+!              DOUBLE PRECISION      SPCLON
+!              DOUBLE PRECISION      SPCRAD
+!              DOUBLE PRECISION      SPGALT
+!              DOUBLE PRECISION      SPGLAT
+!              DOUBLE PRECISION      SPGLON
+!              DOUBLE PRECISION      SPOINT ( 3 )
+!              DOUBLE PRECISION      SRFVEC ( 3 )
+!              DOUBLE PRECISION      TRGEPC
+!
+!              INTEGER               I
+!              INTEGER               N
+!        C
+!        C     Saved variables
+!        C
+!              SAVE                  METHOD
+!        C
+!        C     Initial values
+!        C
+!              DATA                  METHOD / 'Intercept/ellipsoid',
+!             .                               'Near point/ellipsoid',
+!             .                      'Intercept/DSK/Unprioritized',
+!             .                      'Nadir/DSK/Unprioritized'      /
+!
+!        C
+!        C     Load kernel files via the meta-kernel.
+!        C
+!              CALL FURNSH ( META )
+!
+!        C
+!        C     Convert the UTC request time string seconds past
+!        C     J2000, TDB.
+!        C
+!              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+!
+!        C
+!        C     Look up the target body's radii. We'll use these to
+!        C     convert Cartesian to planetographic coordinates. Use
+!        C     the radii to compute the flattening coefficient of
+!        C     the reference ellipsoid.
+!        C
+!              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+!
+!        C
+!        C     Let RE and RP be, respectively, the equatorial and
+!        C     polar radii of the target.
+!        C
+!              RE = RADII( 1 )
+!              RP = RADII( 3 )
+!
+!              F  = ( RE - RP ) / RE
+!
+!        C
+!        C     Compute sub-observer point using light time and
+!        C     stellar aberration corrections. Use both ellipsoid
+!        C     and DSK shape models, and use all of the
+!        C     "near point," "intercept," and "nadir" sub-observer
+!        C     point definitions.
+!        C
+!              DO I = 1, NMETH
+!
+!                 CALL SUBPNT ( METHOD(I),
+!             .                'MARS',  ET,     'IAU_MARS', 'CN+S',
+!             .                'EARTH', SPOINT, TRGEPC,     SRFVEC )
+!        C
+!        C        Compute the observer's distance from SPOINT.
+!        C
+!                 ODIST  = VNORM ( SRFVEC )
+!
+!        C
+!        C        Convert the sub-observer point's rectangular
+!        C        coordinates to planetographic longitude, latitude
+!        C        and altitude. Convert radians to degrees.
+!        C
+!                 CALL RECPGR ( 'MARS', SPOINT, RE,    F,
+!             .                 SPGLON, SPGLAT, SPGALT   )
+!
+!                 SPGLON = SPGLON * DPR ()
+!                 SPGLAT = SPGLAT * DPR ()
+!
+!        C
+!        C        Convert sub-observer point's rectangular coordinates
+!        C        to planetocentric radius, longitude, and latitude.
+!        C        Convert radians to degrees.
+!        C
+!                 CALL RECLAT ( SPOINT, SPCRAD, SPCLON, SPCLAT )
+!
+!                 SPCLON = SPCLON * DPR ()
+!                 SPCLAT = SPCLAT * DPR ()
+!
+!        C
+!        C        Compute the observer's position relative to the center
+!        C        of the target, where the center's location has been
+!        C        adjusted using the aberration corrections applicable
+!        C        to the sub-point. Express the observer's location in
+!        C        planetographic coordinates.
+!        C
+!                 CALL VSUB ( SPOINT, SRFVEC, OBSPOS )
+!
+!                 CALL RECPGR ( 'MARS', OBSPOS, RE,    F,
+!             .                 OPGLON, OPGLAT, OPGALT   )
+!
+!                 OPGLON = OPGLON * DPR ()
+!                 OPGLAT = OPGLAT * DPR ()
+!
+!        C
+!        C        Convert the observer's rectangular coordinates to
+!        C        planetocentric radius, longitude, and latitude.
+!        C        Convert radians to degrees.
+!        C
+!                 CALL RECLAT ( OBSPOS, OPCRAD, OPCLON, OPCLAT )
+!
+!                 OPCLON = OPCLON * DPR ()
+!                 OPCLAT = OPCLAT * DPR ()
+!
+!        C
+!        C        Write the results.
+!        C
+!                 WRITE(*,FM) ' '
+!                 WRITE(*,* ) 'Computation method = ', METHOD(I)
+!                 WRITE(*,FM) ' '
+!                 WRITE(*,FM)
+!             .   '  Observer ALT relative to spheroid (km) =', OPGALT
+!                 WRITE(*,FM)
+!             .   '  Length of SRFVEC                  (km) =', ODIST
+!                 WRITE(*,FM)
+!             .   '  Sub-observer point ALT            (km) =', SPGALT
+!                 WRITE(*,FM)
+!             .   '  Sub-observer planetographic LON  (deg) =', SPGLON
+!                 WRITE(*,FM)
+!             .   '  Observer planetographic LON      (deg) =', OPGLON
+!                 WRITE(*,FM)
+!             .   '  Sub-observer planetographic LAT  (deg) =', SPGLAT
+!                 WRITE(*,FM)
+!             .   '  Observer planetographic LAT      (deg) =', OPGLAT
+!                 WRITE(*,FM)
+!             .   '  Sub-observer planetocentric LON  (deg) =', SPCLON
+!                 WRITE(*,FM)
+!             .   '  Observer planetocentric LON      (deg) =', OPCLON
+!                 WRITE(*,FM)
+!             .   '  Sub-observer planetocentric LAT  (deg) =', SPCLAT
+!                 WRITE(*,FM)
+!             .   '  Observer planetocentric LAT      (deg) =', OPCLAT
+!                 WRITE(*,FM) ' '
+!
+!              END DO
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!
+!         Computation method = Intercept/ellipsoid
+!
+!          Observer ALT relative to spheroid (km) =  349199089.540947020
+!          Length of SRFVEC                  (km) =  349199089.577642620
+!          Sub-observer point ALT            (km) =          0.000000000
+!          Sub-observer planetographic LON  (deg) =        199.302305028
+!          Observer planetographic LON      (deg) =        199.302305028
+!          Sub-observer planetographic LAT  (deg) =         26.262401237
+!          Observer planetographic LAT      (deg) =         25.994936751
+!          Sub-observer planetocentric LON  (deg) =        160.697694972
+!          Observer planetocentric LON      (deg) =        160.697694972
+!          Sub-observer planetocentric LAT  (deg) =         25.994934171
+!          Observer planetocentric LAT      (deg) =         25.994934171
+!
+!
+!         Computation method = Near point/ellipsoid
+!
+!          Observer ALT relative to spheroid (km) =  349199089.540938556
+!          Length of SRFVEC                  (km) =  349199089.540938556
+!          Sub-observer point ALT            (km) =          0.000000000
+!          Sub-observer planetographic LON  (deg) =        199.302305029
+!          Observer planetographic LON      (deg) =        199.302305029
+!          Sub-observer planetographic LAT  (deg) =         25.994936751
+!          Observer planetographic LAT      (deg) =         25.994936751
+!          Sub-observer planetocentric LON  (deg) =        160.697694971
+!          Observer planetocentric LON      (deg) =        160.697694971
+!          Sub-observer planetocentric LAT  (deg) =         25.729407227
+!          Observer planetocentric LAT      (deg) =         25.994934171
+!
+!
+!         Computation method = Intercept/DSK/Unprioritized
+!
+!          Observer ALT relative to spheroid (km) =  349199089.541017115
+!          Length of SRFVEC                  (km) =  349199091.785406590
+!          Sub-observer point ALT            (km) =         -2.207669751
+!          Sub-observer planetographic LON  (deg) =        199.302304999
+!          Observer planetographic LON      (deg) =        199.302304999
+!          Sub-observer planetographic LAT  (deg) =         26.262576677
+!          Observer planetographic LAT      (deg) =         25.994936751
+!          Sub-observer planetocentric LON  (deg) =        160.697695001
+!          Observer planetocentric LON      (deg) =        160.697695001
+!          Sub-observer planetocentric LAT  (deg) =         25.994934171
+!          Observer planetocentric LAT      (deg) =         25.994934171
+!
+!
+!         Computation method = Nadir/DSK/Unprioritized
+!
+!          Observer ALT relative to spheroid (km) =  349199089.541007578
+!          Length of SRFVEC                  (km) =  349199091.707172215
+!          Sub-observer point ALT            (km) =         -2.166164622
+!          Sub-observer planetographic LON  (deg) =        199.302305000
+!          Observer planetographic LON      (deg) =        199.302305000
+!          Sub-observer planetographic LAT  (deg) =         25.994936751
+!          Observer planetographic LAT      (deg) =         25.994936751
+!          Sub-observer planetocentric LON  (deg) =        160.697695000
+!          Observer planetocentric LON      (deg) =        160.697695000
+!          Sub-observer planetocentric LAT  (deg) =         25.729237570
+!          Observer planetocentric LAT      (deg) =         25.994934171
+!
+!
+!     2) Use SUBPNT to find the sub-spacecraft point on Mars for the
+!        Mars Reconnaissance Orbiter spacecraft (MRO) at a specified
+!        time, using both the 'Ellipsoid/Near point' computation method
+!        and an ellipsoidal target shape, and the
+!        'DSK/Unprioritized/Nadir' method and a DSK-based shape model.
+!
+!        Use both LT+S and CN+S aberration corrections to illustrate
+!        the differences.
+!
+!        Convert the spacecraft to sub-observer point vector obtained
+!        from SUBPNT into the MRO_HIRISE_LOOK_DIRECTION reference frame
+!        at the observation time. Perform a consistency check with this
+!        vector: compare the Mars surface intercept of the ray
+!        emanating from the spacecraft and pointed along this vector
+!        with the sub-observer point.
+!
+!        Perform the sub-observer point and surface intercept
+!        computations using both triaxial ellipsoid and topographic
+!        surface models.
+!
+!        For this example, the topographic model is based on the MGS
+!        MOLA DEM megr90n000eb, which has a resolution of 16
+!        pixels/degree. Eight DSKs, each covering longitude and
+!        latitude ranges of 90 degrees, were made from this data set.
+!        For the region covered by a given DSK, a grid of approximately
+!        1500 x 1500 interpolated heights was produced, and this grid
+!        was tessellated using approximately 4.5 million triangular
+!        plates, giving a total plate count of about 36 million for the
+!        entire DSK set.
+!
+!        All DSKs in the set use the surface ID code 499001, so there
+!        is no need to specify the surface ID in the METHOD strings
+!        passed to SINCPT and SUBPNT.
+!
+!        Use the meta-kernel shown below to load the required SPICE
+!        kernels.
+!
+!
+!           KPL/MK
+!
+!           File: subpnt_ex2.tm
+!
+!           This meta-kernel is intended to support operation of SPICE
+!           example programs. The kernels shown here should not be
+!           assumed to contain adequate or correct versions of data
+!           required by SPICE-based user applications.
+!
+!           In order for an application to use this meta-kernel, the
+!           kernels referenced here must be present in the user's
+!           current working directory.
+!
+!           The names and contents of the kernels referenced
+!           by this meta-kernel are as follows:
+!
+!              File name                        Contents
+!              ---------                        --------
+!              de430.bsp                        Planetary ephemeris
+!              mar097.bsp                       Mars satellite ephemeris
+!              pck00010.tpc                     Planet orientation and
+!                                               radii
+!              naif0011.tls                     Leapseconds
+!              mro_psp4_ssd_mro95a.bsp          MRO ephemeris
+!              mro_v11.tf                       MRO frame specifications
+!              mro_sclkscet_00022_65536.tsc     MRO SCLK coefficients
+!                                               parameters
+!              mro_sc_psp_070925_071001.bc      MRO attitude
+!              megr90n000eb_*_plate.bds         Plate model DSKs based
+!                                               on MEGDR DEM, resolution
+!                                               16 pixels/degree.
+!
+!           \begindata
+!
+!              KERNELS_TO_LOAD = (
+!
+!                 'de430.bsp',
+!                 'mar097.bsp',
+!                 'pck00010.tpc',
+!                 'naif0011.tls',
+!                 'mro_psp4_ssd_mro95a.bsp',
+!                 'mro_v11.tf',
+!                 'mro_sclkscet_00022_65536.tsc',
+!                 'mro_sc_psp_070925_071001.bc',
+!                 'megr90n000eb_LL000E00N_UR090E90N_plate.bds'
+!                 'megr90n000eb_LL000E90S_UR090E00S_plate.bds'
+!                 'megr90n000eb_LL090E00N_UR180E90N_plate.bds'
+!                 'megr90n000eb_LL090E90S_UR180E00S_plate.bds'
+!                 'megr90n000eb_LL180E00N_UR270E90N_plate.bds'
+!                 'megr90n000eb_LL180E90S_UR270E00S_plate.bds'
+!                 'megr90n000eb_LL270E00N_UR360E90N_plate.bds'
+!                 'megr90n000eb_LL270E90S_UR360E00S_plate.bds'  )
+!
+!           \begintext
+!
+!           End of meta-kernel
+!
+!
+!        Example code begins here.
+!
+!
+!              PROGRAM SUBPNT_EX2
+!              IMPLICIT NONE
+!        C
+!        C     SPICELIB functions
+!        C
+!              DOUBLE PRECISION      DPR
+!              DOUBLE PRECISION      VDIST
+!              DOUBLE PRECISION      VNORM
+!
+!        C
+!        C     Local parameters
+!        C
+!              CHARACTER*(*)         META
+!              PARAMETER           ( META   = 'subpnt_ex2.tm' )
+!
+!              CHARACTER*(*)         F1
+!              PARAMETER           ( F1     = '(A,F21.9)' )
+!
+!              CHARACTER*(*)         F2
+!              PARAMETER           ( F2     = '(A)' )
+!
+!              INTEGER               FRNMLN
+!              PARAMETER           ( FRNMLN = 32 )
+!
+!              INTEGER               MTHLEN
+!              PARAMETER           ( MTHLEN = 50 )
+!
+!              INTEGER               CORLEN
+!              PARAMETER           ( CORLEN = 5 )
+!
+!              INTEGER               NCORR
+!              PARAMETER           ( NCORR  = 2 )
+!
+!              INTEGER               NMETH
+!              PARAMETER           ( NMETH  = 2 )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(CORLEN)    ABCORR ( NCORR )
+!              CHARACTER*(FRNMLN)    FIXREF
+!              CHARACTER*(FRNMLN)    HIREF
+!              CHARACTER*(MTHLEN)    SINMTH ( NMETH )
+!              CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
+!
+!              DOUBLE PRECISION      ALT
+!              DOUBLE PRECISION      ET
+!              DOUBLE PRECISION      LAT
+!              DOUBLE PRECISION      LON
+!              DOUBLE PRECISION      MROVEC ( 3 )
+!              DOUBLE PRECISION      RADIUS
+!              DOUBLE PRECISION      SPOINT ( 3 )
+!              DOUBLE PRECISION      SRFVEC ( 3 )
+!              DOUBLE PRECISION      TRGEPC
+!              DOUBLE PRECISION      XFORM  ( 3, 3 )
+!              DOUBLE PRECISION      XEPOCH
+!              DOUBLE PRECISION      XPOINT ( 3 )
+!              DOUBLE PRECISION      XVEC   ( 3 )
+!
+!              INTEGER               I
+!              INTEGER               J
+!
+!              LOGICAL               FOUND
+!
+!        C
+!        C     Initial values
+!        C
+!              DATA                  ABCORR / 'LT+S', 'CN+S'         /
+!              DATA                  FIXREF / 'IAU_MARS'             /
+!              DATA                  SINMTH / 'Ellipsoid',
+!             .                               'DSK/Unprioritized'    /
+!              DATA                  SUBMTH / 'Ellipsoid/Near point',
+!             .                            'DSK/Unprioritized/Nadir' /
+!
+!        C
+!        C     Load kernel files via the meta-kernel.
+!        C
+!              CALL FURNSH ( META )
+!
+!        C
+!        C     Convert the TDB request time string to seconds past
+!        C     J2000, TDB.
+!        C
+!              CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
+!
+!        C
+!        C     Compute the sub-spacecraft point using the
+!        C     "NEAR POINT: ELLIPSOID" definition.
+!        C     Compute the results using both LT+S and CN+S
+!        C     aberration corrections.
+!        C
+!        C     Repeat the computation for each method.
+!        C
+!        C
+!              DO I = 1, NMETH
+!
+!                 WRITE(*,F2) ' '
+!                 WRITE(*,F2) 'Sub-observer point computation method = '
+!             .               // SUBMTH(I)
+!
+!                 DO J = 1, NCORR
+!
+!                    CALL SUBPNT ( SUBMTH(I),
+!             .                    'Mars', ET,     FIXREF, ABCORR(J),
+!             .                    'MRO',  SPOINT, TRGEPC, SRFVEC    )
+!        C
+!        C           Compute the observer's altitude above SPOINT.
+!        C
+!                    ALT = VNORM ( SRFVEC )
+!        C
+!        C           Express SRFVEC in the MRO_HIRISE_LOOK_DIRECTION
+!        C           reference frame at epoch ET. Since SRFVEC is
+!        c           expressed relative to the IAU_MARS frame at
+!        C           TRGEPC, we must call PXFRM2 to compute the position
+!        C           transformation matrix from IAU_MARS at TRGEPC to
+!        C           the MRO_HIRISE_LOOK_DIRECTION frame at time ET.
+!        C
+!        C           To make code formatting a little easier, we'll
+!        C           store the long MRO reference frame name in a
+!        C           variable:
+!        C
+!                    HIREF = 'MRO_HIRISE_LOOK_DIRECTION'
+!
+!                    CALL PXFRM2 ( FIXREF, HIREF,  TRGEPC, ET, XFORM )
+!                    CALL MXV    ( XFORM,  SRFVEC, MROVEC )
+!
+!        C
+!        C           Convert rectangular coordinates to planetocentric
+!        C           latitude and longitude. Convert radians to degrees.
+!        C
+!                    CALL RECLAT ( SPOINT, RADIUS, LON, LAT  )
+!
+!                    LON = LON * DPR ()
+!                    LAT = LAT * DPR ()
+!        C
+!        C           Write the results.
+!        C
+!                    WRITE(*,F2) ' '
+!                    WRITE(*,F2) '   Aberration correction = '
+!             .      // ABCORR(J)
+!                    WRITE(*,F1) ' '
+!                    WRITE(*,F2) '      MRO-to-sub-observer vector in'
+!                    WRITE(*,F2) '      MRO HIRISE look direction frame'
+!                    WRITE(*,F1) '        X-component             '
+!             .      // '(km) = ', MROVEC(1)
+!                    WRITE(*,F1) '        Y-component             '
+!             .      // '(km) = ', MROVEC(2)
+!                    WRITE(*,F1) '        Z-component             '
+!             .      // '(km) = ', MROVEC(3)
+!                    WRITE(*,F1) '      Sub-observer point radius '
+!             .      // '(km) = ', RADIUS
+!                    WRITE(*,F1) '      Planetocentric latitude  '
+!             .      // '(deg) = ', LAT
+!                    WRITE(*,F1) '      Planetocentric longitude '
+!             .      // '(deg) = ', LON
+!                    WRITE(*,F1) '      Observer altitude         '
+!             .      // '(km) = ', ALT
+!
+!        C
+!        C           Consistency check: find the surface intercept on
+!        C           Mars of the ray emanating from the spacecraft and
+!        C           having direction vector MROVEC in the MRO HIRISE
+!        C           reference frame at ET. Call the intercept point
+!        C           XPOINT. XPOINT should coincide with SPOINT, up to
+!        C           a small round-off error.
+!        C
+!                    CALL SINCPT ( SINMTH(I), 'Mars', ET,    FIXREF,
+!             .                    ABCORR(J), 'MRO',  HIREF, MROVEC,
+!             .                    XPOINT,    XEPOCH, XVEC,  FOUND  )
+!
+!                    IF ( .NOT. FOUND ) THEN
+!                       WRITE (*,F1) 'Bug: no intercept'
+!                    ELSE
+!        C
+!        C              Report the distance between XPOINT and SPOINT.
+!        C
+!                       WRITE (*,* ) ' '
+!                       WRITE (*,F1) '   Intercept comparison '
+!             .         //           'error (km) = ',
+!             .                      VDIST( XPOINT, SPOINT )
+!                    END IF
+!
+!                 END DO
+!
+!              END DO
+!
+!              END
+!
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!
+!        Sub-observer point computation method = Ellipsoid/Near point
+!
+!           Aberration correction = LT+S
+!
+!              MRO-to-sub-observer vector in
+!              MRO HIRISE look direction frame
+!                X-component             (km) =           0.286933229
+!                Y-component             (km) =          -0.260425939
+!                Z-component             (km) =         253.816326385
+!              Sub-observer point radius (km) =        3388.299078378
+!              Planetocentric latitude  (deg) =         -38.799836378
+!              Planetocentric longitude (deg) =        -114.995297227
+!              Observer altitude         (km) =         253.816622175
+!
+!           Intercept comparison error (km) =           0.000002144
+!
+!           Aberration correction = CN+S
+!
+!              MRO-to-sub-observer vector in
+!              MRO HIRISE look direction frame
+!                X-component             (km) =           0.286933107
+!                Y-component             (km) =          -0.260426683
+!                Z-component             (km) =         253.816315915
+!              Sub-observer point radius (km) =        3388.299078376
+!              Planetocentric latitude  (deg) =         -38.799836382
+!              Planetocentric longitude (deg) =        -114.995297449
+!              Observer altitude         (km) =         253.816611705
+!
+!           Intercept comparison error (km) =           0.000000001
+!
+!        Sub-observer point computation method = DSK/Unprioritized/Nadir
+!
+!           Aberration correction = LT+S
+!
+!              MRO-to-sub-observer vector in
+!              MRO HIRISE look direction frame
+!                X-component             (km) =           0.282372596
+!                Y-component             (km) =          -0.256289313
+!                Z-component             (km) =         249.784871247
+!              Sub-observer point radius (km) =        3392.330239436
+!              Planetocentric latitude  (deg) =         -38.800230156
+!              Planetocentric longitude (deg) =        -114.995297338
+!              Observer altitude         (km) =         249.785162334
+!
+!           Intercept comparison error (km) =           0.000002412
+!
+!           Aberration correction = CN+S
+!
+!              MRO-to-sub-observer vector in
+!              MRO HIRISE look direction frame
+!                X-component             (km) =           0.282372464
+!                Y-component             (km) =          -0.256290075
+!                Z-component             (km) =         249.784860121
+!              Sub-observer point radius (km) =        3392.330239564
+!              Planetocentric latitude  (deg) =         -38.800230162
+!              Planetocentric longitude (deg) =        -114.995297569
+!              Observer altitude         (km) =         249.785151209
+!
+!           Intercept comparison error (km) =           0.000000001
+!
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     S.C. Krening       (JPL)
+!     B.V. Semenov       (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 01-NOV-2021 (JDR) (EDW) (NJB)
+!
+!        Bug fix: PRVCOR is no longer set to blank before
+!        ABCORR is parsed.
+!
+!        Body radii accessed from kernel pool using ZZGFTREB.
+!
+!        Edited the header to comply with NAIF standard.
+!        Changed code examples' output to comply with maximum
+!        line length for header comments.
+!
+!        Bug fix: TRGEPC is now initialized prior to first use.
+!        Previously the lack of initialization could cause this routine
+!        to fail to find DSK data within the time bounds of a DSK
+!        segment.
+!
+!-    SPICELIB Version 2.0.0, 04-APR-2017 (NJB)
+!
+!        Added FAILED tests.
+!
+!        01-JUL-2016 (NJB)
+!
+!        Now uses surface mapping tracking capability.
+!        Updated header. Changed aberration correction
+!        in example 1 to CN+S.
+!
+!        09-FEB-2015 (NJB)
+!
+!        Updated code to support use of surface list.
+!        Updated header to document DSK capabilities.
+!        Added check for invalid sub-point type.
+!
+!        24-DEC-2014 (NJB)
+!
+!        Updated to support surfaces represented by DSK data.
+!
+!        Bug fix: set initial value of PRVMTH to a valid
+!        value.
+!
+!-    SPICELIB Version 1.3.0, 31-MAR-2014 (BVS)
+!
+!        Updated to save the input body names and ZZBODTRN state
+!        counters and to do name-ID conversions only if the counters
+!        have changed.
+!
+!        Updated to save the input frame name and POOL state counter
+!        and to do frame name-ID conversion only if the counter has
+!        changed.
+!
+!        Updated to call LJUCRS instead of CMPRSS/UCASE.
+!
+!-    SPICELIB Version 1.2.0, 02-APR-2012 (NJB) (SCK)
+!
+!        Bug fix: FIRST is now set to .FALSE. at the completion
+!        of a successful initialization pass. This does not affect
+!        the routine's outputs but improves efficiency.
+!
+!        References to the new PXFRM2 routine were added, which changed
+!        the Detailed Output section and the second example.
+!
+!        Upgrade: this routine now uses ZZVALCOR rather than
+!        ZZPRSCOR, simplifying the implementation.
+!
+!-    SPICELIB Version 1.1.0, 18-MAY-2010 (NJB)
+!
+!        Bug fix: calls to FAILED() have been added after
+!        SPK calls, target radius lookup, near point
+!        and surface intercept computations.
+!
+!-    SPICELIB Version 1.0.1, 06-FEB-2009 (NJB)
+!
+!        Typo correction: changed FIXFRM to FIXREF in header
+!        documentation. Meta-kernel name suffix was changed to
+!        ".tm" in header code example.
+!
+!-    SPICELIB Version 1.0.0, 02-MAR-2008 (NJB)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     find sub-observer point on target body
+!     find sub-spacecraft point on target body
+!     find nearest point to observer on target body
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+      DOUBLE PRECISION      CLIGHT
+      DOUBLE PRECISION      TOUCHD
+      DOUBLE PRECISION      VDIST
+      DOUBLE PRECISION      VNORM
+
+      LOGICAL               EQSTR
+      LOGICAL               FAILED
+      LOGICAL               RETURN
+
+!
+!     Local parameters
+!
+      CHARACTER*(*)         RNAME
+      PARAMETER           ( RNAME  =  'SUBPNT' )
+
+!
+!     This value will become system-dependent when systems
+!     using 128-bit d.p. numbers are supported by SPICELIB.
+!     CNVLIM, when added to 1.0D0, should yield 1.0D0.
+!
+      DOUBLE PRECISION      CNVLIM
+      PARAMETER           ( CNVLIM = 1.D-17 )
+
+
+      INTEGER               MAXITR
+      PARAMETER           ( MAXITR =  5 )
+
+!
+!     Saved body name length.
+!
+      INTEGER               MAXL
+      PARAMETER           ( MAXL   = 36 )
+
+!
+!     Saved frame name length.
+!
+      INTEGER               FRNMLN
+      PARAMETER           ( FRNMLN = 32 )
+
+!
+!     Local variables
+!
+      CHARACTER*(CVTLEN)    PNTDEF
+      CHARACTER*(CORLEN)    PRVCOR
+      CHARACTER*(MTHLEN)    PRVMTH
+      CHARACTER*(SHPLEN)    SHPSTR
+      CHARACTER*(SUBLEN)    SUBTYP
+      CHARACTER*(TMTLEN)    TRMSTR
+
+      DOUBLE PRECISION      ALT
+      DOUBLE PRECISION      CORPOS ( 3 )
+      DOUBLE PRECISION      CORVJ2 ( 3 )
+      DOUBLE PRECISION      DVEC   ( 3 )
+      DOUBLE PRECISION      ETDIFF
+      DOUBLE PRECISION      J2POS  ( 3 )
+      DOUBLE PRECISION      LT
+      DOUBLE PRECISION      LTDIFF
+      DOUBLE PRECISION      OBSPOS ( 3 )
+      DOUBLE PRECISION      PREVET
+      DOUBLE PRECISION      PREVLT
+      DOUBLE PRECISION      RADII  ( 3 )
+      DOUBLE PRECISION      RANGE
+      DOUBLE PRECISION      S
+      DOUBLE PRECISION      SSBOST ( 6 )
+      DOUBLE PRECISION      SSBTST ( 6 )
+      DOUBLE PRECISION      STLOFF ( 3 )
+      DOUBLE PRECISION      SUBVEC ( 3 )
+      DOUBLE PRECISION      SUBVJ2 ( 3 )
+      DOUBLE PRECISION      TPOS   ( 3 )
+      DOUBLE PRECISION      VTEMP  ( 3 )
+      DOUBLE PRECISION      XFORM  ( 3, 3 )
+
+      INTEGER               FIXCID
+      INTEGER               FIXCLS
+      INTEGER               FIXCTR
+      INTEGER               FIXFID
+      INTEGER               I
+      INTEGER               NITR
+      INTEGER               NSURF
+      INTEGER               OBSCDE
+      INTEGER               SHAPE
+      INTEGER               SRFLST ( MAXSRF )
+      INTEGER               TRGCDE
+
+      LOGICAL               ATTBLK ( NABCOR )
+      LOGICAL               FIRST
+      LOGICAL               FND
+      LOGICAL               NEAR
+      LOGICAL               PRI
+      LOGICAL               SURFUP
+      LOGICAL               USECN
+      LOGICAL               USELT
+      LOGICAL               USESTL
+      LOGICAL               XMIT
+
+!
+!     Saved name/ID item declarations.
+!
+      INTEGER               SVCTR1 ( CTRSIZ )
+      CHARACTER*(MAXL)      SVTARG
+      INTEGER               SVTCDE
+      LOGICAL               SVFND1
+
+      INTEGER               SVCTR2 ( CTRSIZ )
+      CHARACTER*(MAXL)      SVOBSR
+      INTEGER               SVOBSC
+      LOGICAL               SVFND2
+
+!
+!     Saved frame name/ID item declarations.
+!
+      INTEGER               SVCTR3 ( CTRSIZ )
+      CHARACTER*(FRNMLN)    SVFREF
+      INTEGER               SVREFC
+
+!
+!     Saved surface name/ID item declarations.
+!
+      INTEGER               SVCTR4 ( CTRSIZ )
+
+!
+!     Saved variables
+!
+      SAVE                  FIRST
+      SAVE                  NEAR
+      SAVE                  NSURF
+      SAVE                  PRI
+      SAVE                  PRVCOR
+      SAVE                  PRVMTH
+      SAVE                  SHAPE
+      SAVE                  SRFLST
+      SAVE                  SUBTYP
+      SAVE                  USECN
+      SAVE                  USELT
+      SAVE                  USESTL
+      SAVE                  XMIT
+
+!
+!     Saved name/ID items.
+!
+      SAVE                  SVCTR1
+      SAVE                  SVTARG
+      SAVE                  SVTCDE
+      SAVE                  SVFND1
+
+      SAVE                  SVCTR2
+      SAVE                  SVOBSR
+      SAVE                  SVOBSC
+      SAVE                  SVFND2
+
+!
+!     Saved frame name/ID items.
+!
+      SAVE                  SVCTR3
+      SAVE                  SVFREF
+      SAVE                  SVREFC
+
+!
+!     Saved surface name/ID items.
+!
+      SAVE                  SVCTR4
+
+
+
+!
+!     Initial values
+!
+      DATA                  FIRST   / .TRUE. /
+      DATA                  NEAR    / .TRUE. /
+      DATA                  PRVCOR  / ' '    /
+      DATA                  PRVMTH  / ' '    /
+      DATA                  SHAPE   / -1     /
+
+
+!
+!     Standard SPICE error handling.
+!
+      IF ( RETURN () ) THEN
+         RETURN
+      END IF
+
+      CALL CHKIN ( RNAME )
+
+!
+!     Counter initialization is done separately.
+!
+      IF ( FIRST ) THEN
+!
+!        Initialize counters.
+!
+         CALL ZZCTRUIN( SVCTR1 )
+         CALL ZZCTRUIN( SVCTR2 )
+         CALL ZZCTRUIN( SVCTR3 )
+
+      END IF
+
+
+      IF (  FIRST  .OR.  ( ABCORR .NE. PRVCOR )  ) THEN
+!
+!        The aberration correction flag differs from the value it
+!        had on the previous call, if any. Analyze the new flag.
+!
+         CALL ZZVALCOR ( ABCORR, ATTBLK )
+
+         IF ( FAILED() ) THEN
+            CALL CHKOUT ( RNAME )
+            RETURN
+         END IF
+
+!
+!        Set logical flags indicating the attributes of the requested
+!        correction:
+!
+!           XMIT is .TRUE. when the correction is for transmitted
+!           radiation.
+!
+!           USELT is .TRUE. when any type of light time correction
+!           (normal or converged Newtonian) is specified.
+!
+!           USECN indicates converged Newtonian light time correction.
+!
+!           USESTL indicates stellar aberration corrections.
+!
+!
+!        The above definitions are consistent with those used by
+!        ZZVALCOR.
+!
+         XMIT    =  ATTBLK ( XMTIDX )
+         USELT   =  ATTBLK ( LTIDX  )
+         USECN   =  ATTBLK ( CNVIDX )
+         USESTL  =  ATTBLK ( STLIDX )
+
+!
+!        The aberration correction flag is recognized; save it.
+!
+         PRVCOR = ABCORR
+
+      END IF
+
+!
+!     Obtain integer codes for the target and observer.
+!
+      CALL ZZBODS2C ( SVCTR1, SVTARG, SVTCDE, SVFND1, &
+                      TARGET, TRGCDE, FND    )
+
+      IF ( .NOT. FND ) THEN
+
+         CALL SETMSG ( 'The target, ' &
+         //            '''#'', is not a recognized name for an ' &
+         //            'ephemeris object. The cause of this ' &
+         //            'problem may be that you need an updated ' &
+         //            'version of the SPICE Toolkit, or that you ' &
+         //            'failed to load a kernel containing a ' &
+         //            'name-ID mapping for this body.'           )
+         CALL ERRCH  ( '#', TARGET                                )
+         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
+         CALL CHKOUT ( RNAME                                      )
+         RETURN
+
+      END IF
+
+
+      CALL ZZBODS2C ( SVCTR2, SVOBSR, SVOBSC, SVFND2, &
+                      OBSRVR, OBSCDE, FND    )
+
+      IF ( .NOT. FND ) THEN
+
+         CALL SETMSG ( 'The observer, ' &
+         //            '''#'', is not a recognized name for an ' &
+         //            'ephemeris object. The cause of this ' &
+         //            'problem may be that you need an updated ' &
+         //            'version of the SPICE Toolkit, or that you ' &
+         //            'failed to load a kernel containing a ' &
+         //            'name-ID mapping for this body.'           )
+         CALL ERRCH  ( '#', OBSRVR                                )
+         CALL SIGERR ( 'SPICE(IDCODENOTFOUND)'                    )
+         CALL CHKOUT ( RNAME                                      )
+         RETURN
+
+      END IF
+
+!
+!     Check the input body codes.  If they are equal, signal
+!     an error.
+!
+      IF ( OBSCDE .EQ. TRGCDE ) THEN
+
+         CALL SETMSG ( 'In computing the sub-observer point, ' &
+         //            'the observing body and target body are the ' &
+         //            'same. Both are #.'                          )
+         CALL ERRCH  ( '#',  OBSRVR                                 )
+         CALL SIGERR ( 'SPICE(BODIESNOTDISTINCT)'                   )
+         CALL CHKOUT ( RNAME                                        )
+         RETURN
+
+      END IF
+
+!
+!     Determine the attributes of the frame designated by FIXREF.
+!
+      CALL ZZNAMFRM ( SVCTR3, SVFREF, SVREFC, FIXREF, FIXFID )
+
+      CALL FRINFO ( FIXFID, FIXCTR, FIXCLS, FIXCID, FND )
+
+      IF ( FAILED() ) THEN
+         CALL CHKOUT ( RNAME )
+         RETURN
+      END IF
+
+      IF ( .NOT. FND ) THEN
+
+         CALL SETMSG ( 'Reference frame # is not recognized by ' // &
+                       'the SPICE frame subsystem. Possibly '    // &
+                       'a required frame definition kernel has ' // &
+                       'not been loaded.'                        )
+         CALL ERRCH  ( '#',  FIXREF                              )
+         CALL SIGERR ( 'SPICE(NOFRAME)'                          )
+         CALL CHKOUT ( RNAME                                     )
+         RETURN
+
+      END IF
+
+!
+!     Make sure that FIXREF is centered at the target body's center.
+!
+      IF ( FIXCTR .NE. TRGCDE ) THEN
+
+         CALL SETMSG ( 'Reference frame # is not centered at the ' &
+         //            'the target body #. The ID code of the ' &
+         //            'frame center is #.'                       )
+         CALL ERRCH  ( '#',  FIXREF                               )
+         CALL ERRCH  ( '#',  TARGET                               )
+         CALL ERRINT ( '#',  FIXCTR                               )
+         CALL SIGERR ( 'SPICE(INVALIDFRAME)'                      )
+         CALL CHKOUT ( RNAME                                      )
+         RETURN
+
+      END IF
+
+!
+!     Check whether the surface name/ID mapping has been updated.
+!
+      CALL ZZSRFTRK ( SVCTR4, SURFUP )
+
+!
+!     If necessary, parse the method specification. PRVMTH records the
+!     last valid value of METHOD; PRI, NEAR, SHAPE, NSURF, and SRFLST
+!     are the corresponding saved variables.
+!
+      IF ( FIRST  .OR.  SURFUP  .OR.  ( METHOD .NE. PRVMTH ) ) THEN
+!
+!        Make sure parsed values from METHOD can't be reused before
+!        we've checked them.
+!
+         PRVMTH = ' '
+
+!
+!        Parse the method string. If the string is valid, the
+!        outputs SHAPE and SUBTYP will always be be set. However,
+!        SUBTYP is not used in this routine.
+!
+!        For DSK shapes, the surface list array and count will be set
+!        if the method string contains a surface list.
+!
+         CALL ZZPRSMET ( TRGCDE, METHOD, MAXSRF, SHPSTR, SUBTYP, &
+                         PRI,    NSURF,  SRFLST, PNTDEF, TRMSTR )
+
+         IF ( FAILED() ) THEN
+            CALL CHKOUT ( RNAME )
+            RETURN
+         END IF
+
+
+         IF ( SUBTYP .EQ. ' ' ) THEN
+
+            CALL SETMSG ( 'Sub-observer point type was invalid or ' &
+            //            'was not found in the method string #.'   )
+            CALL ERRCH  ( '#', METHOD                               )
+            CALL SIGERR ( 'SPICE(INVALIDSUBTYPE)'                   )
+            CALL CHKOUT ( RNAME                                     )
+            RETURN
+
+         END IF
+
+
+         IF (  EQSTR( SHPSTR, 'ELLIPSOID' )  ) THEN
+
+            SHAPE = ELLSHP
+
+         ELSE IF (  EQSTR( SHPSTR, 'DSK' )  ) THEN
+
+            SHAPE = DSKSHP
+
+         ELSE
+!
+!           This is a backstop check.
+!
+            CALL SETMSG ( 'Returned shape value from method ' &
+            //            'string was <#>.'                  )
+            CALL ERRCH  ( '#', SHPSTR                        )
+            CALL SIGERR ( 'SPICE(BUG)'                       )
+            CALL CHKOUT ( RNAME                              )
+            RETURN
+
+         END IF
+
+
+         IF ( SHAPE .EQ. ELLSHP ) THEN
+!
+!           Allow both "near point" and "nadir" expressions the
+!           ellipsoid case, since in these case, these are equivalent.
+!
+            NEAR =      EQSTR( SUBTYP, 'NEAR POINT' ) &
+                   .OR. EQSTR( SUBTYP, 'NADIR'      )
+
+         ELSE
+!
+!           "near point" is not supported for DSKs.
+!
+            NEAR = EQSTR( SUBTYP, 'NADIR' )
+
+         END IF
+
+
+         IF ( .NOT. NEAR ) THEN
+
+            IF ( .NOT. EQSTR( SUBTYP, 'INTERCEPT' ) ) THEN
+
+               CALL SETMSG ( 'Invalid sub-observer point type <#> ' &
+               //            'was found in the method string #.' )
+               CALL ERRCH  ( '#', SUBTYP                         )
+               CALL ERRCH  ( '#', METHOD                         )
+               CALL SIGERR ( 'SPICE(INVALIDSUBTYPE)'             )
+               CALL CHKOUT ( RNAME                               )
+               RETURN
+
+            END IF
+
+         END IF
+
+!
+!        Save the current value of METHOD.
+!
+         PRVMTH = METHOD
+
+      END IF
+
+!
+!     At this point, the first pass actions were successful.
+!
+      FIRST  = .FALSE.
+
+
+      IF ( SHAPE .EQ. DSKSHP ) THEN
+!
+!        This is the DSK case.
+!
+!        Initialize the intercept algorithm to use a DSK
+!        model for the surface of the target body.
+!
+         CALL ZZSUDSKI ( TRGCDE, NSURF, SRFLST, FIXFID )
+
+
+      ELSE IF ( SHAPE .NE. ELLSHP ) THEN
+
+         CALL SETMSG ( 'Computation method argument was <#>; this ' &
+         //            'string must specify a supported shape ' &
+         //            'model and computation type. See the ' &
+         //            'description of METHOD in the header of ' &
+         //            'SUBPNT for details.'                      )
+         CALL ERRCH  ( '#',  METHOD                               )
+         CALL SIGERR ( 'SPICE(INVALIDMETHOD)'                     )
+         CALL CHKOUT ( RNAME                                      )
+         RETURN
+
+      END IF
+
+      IF ( FAILED() ) THEN
+         CALL CHKOUT ( RNAME )
+         RETURN
+      END IF
+
+!
+!     Get the sign S prefixing LT in the expression for TRGEPC.
+!     When light time correction is not used, setting S = 0
+!     allows us to seamlessly set TRGEPC equal to ET.
+!
+      IF ( USELT ) THEN
+
+         IF ( XMIT ) THEN
+            S   =  1.D0
+         ELSE
+            S   = -1.D0
+         END IF
+
+      ELSE
+         S = 0.D0
+      END IF
+
+!
+!     Determine the position of the observer in the target body-fixed
+!     frame. This is a first estimate.
+!
+!         -  Call SPKEZP to compute the position of the target body as
+!            seen from the observing body and the light time (LT)
+!            between them. We request that the coordinates of POS be
+!            returned relative to the body fixed reference frame
+!            associated with the target body, using aberration
+!            corrections specified by the input argument ABCORR.
+!
+!         -  Call VMINUS to negate the direction of the vector (OBSPOS)
+!            so it will be the position of the observer as seen from
+!            the target body in target body fixed coordinates.
+!
+!            Note that this result is not the same as the result of
+!            calling SPKEZP with the target and observer switched. We
+!            computed the vector FROM the observer TO the target in
+!            order to get the proper light time and stellar aberration
+!            corrections (if requested). Now we need the inverse of
+!            that corrected vector in order to compute the sub-observer
+!            point.
+!
+      CALL SPKEZP ( TRGCDE, ET, FIXREF, ABCORR, OBSCDE, TPOS, LT )
+
+      IF ( FAILED() ) THEN
+         CALL CHKOUT ( RNAME )
+         RETURN
+      END IF
+
+!
+!     Negate the target's position to obtain the position of the
+!     observer relative to the target.
+!
+      CALL VMINUS ( TPOS, OBSPOS )
+
+!
+!     Make a first estimate of the target epoch.
+!
+      TRGEPC = ET + S*LT
+
+!
+!     Find the sub-observer point given the target epoch,
+!     observer-target position, and target body orientation we've
+!     already computed. If we're not using light time correction, this
+!     is all we need do. Otherwise, our result will give us an initial
+!     estimate of the target epoch, which we'll then improve.
+!
+
+!
+!     Get the radii of the target body from the kernel pool.
+!
+      CALL ZZGFTREB ( TRGCDE, RADII )
+
+      IF ( FAILED() ) THEN
+         CALL CHKOUT ( RNAME )
+         RETURN
+      END IF
+
+      RANGE  = VNORM(OBSPOS)
+
+      IF ( RANGE .EQ. 0.D0 ) THEN
+!
+!        We've already ensured that observer and target are
+!        distinct, so this should be a very unusual occurrence.
+!
+         CALL SETMSG ( 'Observer-target distance is zero. ' &
+         //            'Observer is #; target is #.'       )
+         CALL ERRCH  ( '#', OBSRVR                         )
+         CALL ERRCH  ( '#', TARGET                         )
+         CALL SIGERR ( 'SPICE(NOSEPARATION)'               )
+         CALL CHKOUT ( RNAME                               )
+         RETURN
+
+      END IF
+
+!
+!     Make a first estimate of the sub-observer point. The algorithm
+!     we use depends on the sub-observer point definition.
+!
+      IF ( NEAR ) THEN
+!
+!        Locate the nearest point to the observer on the target
+!        body's reference ellipsoid.
+!
+         CALL NEARPT ( OBSPOS, RADII(1), RADII(2), RADII(3), &
+                       SPOINT, ALT                           )
+
+         IF ( FAILED() ) THEN
+            CALL CHKOUT ( RNAME )
+            RETURN
+         END IF
+
+!
+!        If the target is an ellipsoid, the NEARPT call above does
+!        the trick. For DSKs, we define a ray emanating from the
+!        observer and passing through the near point on the
+!        reference ellipsoid. The closest ray-DSK surface intercept
+!        to the observer is the initial estimate of the sub-point.
+!
+         IF ( SHAPE .EQ. DSKSHP ) THEN
+!
+!           Generate the ray direction; find the DSK intercept.
+!
+            CALL VSUB ( SPOINT, OBSPOS, DVEC )
+
+            CALL ZZSBFXR ( TRGCDE, NSURF,  SRFLST, TRGEPC, &
+                           FIXFID, OBSPOS, DVEC,   SPOINT, FND )
+
+            IF ( FAILED() ) THEN
+               CALL CHKOUT ( RNAME )
+               RETURN
+            END IF
+
+            IF ( .NOT. FND ) THEN
+
+               CALL SETMSG ( 'No sub-observer point was found on ' &
+               //            'the surface defined by DSK data.' &
+               //            'Observer is #; target is #. This ' &
+               //            'problem can occur for bodies having ' &
+               //            'shapes not well modeled by ' &
+               //            'ellipsoids. Consider using the ' &
+               //            '"Intercept: DSK" computation method.' )
+               CALL ERRCH  ( '#', OBSRVR                            )
+               CALL ERRCH  ( '#', TARGET                            )
+               CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'              )
+               CALL CHKOUT ( RNAME                                  )
+               RETURN
+
+            END IF
+
+!
+!           Re-compute the altitude using the intercept on the DSK
+!           surface.
+!
+            CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+
+            ALT = VNORM( SRFVEC )
+
+         END IF
+
+
+      ELSE
+
+!
+!        This is the case for the "intercept" sub-point definition.
+!
+         IF ( SHAPE .EQ. ELLSHP ) THEN
+!
+!           Locate the surface intercept of the ray from the
+!           observer to the target center.
+!
+            CALL SURFPT ( OBSPOS, TPOS, RADII(1), RADII(2), RADII(3), &
+                          SPOINT, FND                                )
+
+            IF ( FAILED() ) THEN
+               CALL CHKOUT ( RNAME )
+               RETURN
+            END IF
+
+            IF ( .NOT. FND ) THEN
+!
+!              If there's no intercept, we have a numerical problem.
+!
+               CALL SETMSG ( 'No intercept of observer-target ' &
+               //            'ray was found.'                  )
+               CALL SIGERR ( 'SPICE(DEGENERATECASE)'           )
+               CALL CHKOUT ( RNAME                             )
+               RETURN
+
+            END IF
+
+            ALT = VDIST ( OBSPOS, SPOINT )
+
+
+         ELSE
+!
+!           Generate the ray direction; find the DSK intercept.
+!
+            CALL VMINUS ( OBSPOS, DVEC )
+
+            CALL ZZSBFXR ( TRGCDE, NSURF,  SRFLST, TRGEPC, &
+                           FIXFID, OBSPOS, DVEC,   SPOINT, FND )
+
+            IF ( FAILED() ) THEN
+               CALL CHKOUT ( RNAME )
+               RETURN
+            END IF
+
+            IF ( .NOT. FND ) THEN
+
+               CALL SETMSG ( 'No sub-observer point was found on ' &
+               //            'the surface defined by DSK data.' &
+               //            'Observer is #; target is #. This ' &
+               //            'problem can occur for a body having ' &
+               //            'an irregular shape such that the ' &
+               //            'origin of the body-fixed reference ' &
+               //            'frame is outside of the body. A tor' &
+               //            'us is an example of such a shape.'   )
+               CALL ERRCH  ( '#', OBSRVR                           )
+               CALL ERRCH  ( '#', TARGET                           )
+               CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'             )
+               CALL CHKOUT ( RNAME                                 )
+               RETURN
+
+            END IF
+!
+!           Re-compute the altitude using the intercept on the DSK
+!           surface.
+!
+            CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+
+            ALT = VNORM( SRFVEC )
+
+         END IF
+
+      END IF
+
+      IF ( FAILED() ) THEN
+         CALL CHKOUT ( RNAME )
+         RETURN
+      END IF
+
+!
+!     If we're not using light time and stellar aberration
+!     corrections, we're almost done now. Note that we need only
+!     check for use of light time corrections, because use of
+!     stellar aberration corrections alone has been prevented by an
+!     earlier check.
+
+      IF ( .NOT. USELT ) THEN
+
+         TRGEPC = ET
+!
+!        The TRGEPC value we'll return is just the input time.
+!        The previous call to SPKEZP call yielded
+!        the vector OBSPOS. SPOINT was set immediately above. The
+!        only output left to compute is SRFVEC.
+!
+         CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+
+         CALL CHKOUT ( RNAME )
+         RETURN
+
+      END IF
+
+!
+!     Compute the one-way light time and target epoch based on our
+!     first computation of SPOINT. The coefficient S has been
+!     set to give us the correct answer for each aberration
+!     correction case.
+!
+      LT     = ALT / CLIGHT()
+      TRGEPC = ET  + S*LT
+
+!
+!     We'll now make an improved sub-observer point estimate using
+!     the previous estimate of the sub-observer point. The number of
+!     iterations depends on the light time correction type.
+
+      IF ( USECN ) THEN
+         NITR = MAXITR
+      ELSE
+         NITR = 1
+      END IF
+
+!
+!     Get the J2000-relative state of the observer relative to
+!     the solar system barycenter at ET.
+!
+      CALL SPKSSB ( OBSCDE, ET, 'J2000', SSBOST )
+
+      IF ( FAILED() ) THEN
+         CALL CHKOUT ( RNAME )
+         RETURN
+      END IF
+
+!
+!     Initialize the variables required to evaluate the
+!     loop termination condition.
+!
+      I      = 0
+      LTDIFF = 1.D0
+      ETDIFF = 1.D0
+      PREVLT = LT
+      PREVET = TRGEPC
+
+      DO WHILE (       ( I      .LT.   NITR                ) &
+                 .AND. ( LTDIFF .GT. ( CNVLIM * ABS(LT) )  ) &
+                 .AND. ( ETDIFF .GT.   0.D0                )  )
+!
+!        Get the J2000-relative state of the target relative to
+!        the solar system barycenter at the target epoch.
+!
+         CALL SPKSSB ( TRGCDE, TRGEPC, 'J2000', SSBTST )
+
+         IF ( FAILED() ) THEN
+            CALL CHKOUT ( RNAME )
+            RETURN
+         END IF
+
+!
+!        Find the position of the observer relative to the target.
+!        Convert this vector from the J2000 frame to the target
+!        frame at TRGEPC.
+!
+         CALL VSUB   ( SSBOST,  SSBTST, J2POS         )
+         CALL PXFORM ( 'J2000', FIXREF, TRGEPC, XFORM )
+
+         IF ( FAILED() ) THEN
+            CALL CHKOUT ( RNAME )
+            RETURN
+         END IF
+
+         CALL MXV ( XFORM, J2POS, OBSPOS )
+
+!
+!        If we're using stellar aberration corrections, adjust the
+!        observer position to account for the stellar aberration
+!        correction applicable to SPOINT.
+!
+         IF ( USESTL ) THEN
+!
+!           We want to apply the stellar aberration correction that
+!           applies to our current estimate of the sub-observer point
+!           location, NOT the correction for the target body's center.
+!           In most cases the two corrections will be similar, but they
+!           might not be---consider the case of a highly prolate target
+!           body where the observer is close to one "end" of the body.
+!
+!           Find the vector from the observer to the estimated
+!           sub-observer point. Find the stellar aberration offset
+!           STLOFF for this vector. Note that all vectors are expressed
+!           relative to the target body-fixed frame at TRGEPC. We must
+!           perform our corrections in an inertial frame.
+!
+            CALL VSUB ( SPOINT, OBSPOS, SUBVEC )
+
+            CALL MTXV ( XFORM,  SUBVEC, SUBVJ2 )
+
+            IF ( XMIT ) THEN
+               CALL STLABX ( SUBVJ2, SSBOST(4), CORVJ2 )
+            ELSE
+               CALL STELAB ( SUBVJ2, SSBOST(4), CORVJ2 )
+            END IF
+
+            CALL MXV  ( XFORM,  CORVJ2, CORPOS )
+            CALL VSUB ( CORPOS, SUBVEC, STLOFF )
+
+!
+!           In principle, we want to shift the target body position
+!           relative to the solar system barycenter by STLOFF, but we
+!           can skip this step and just re-compute the observer's
+!           location relative to the target body's center by
+!           subtracting off STLOFF.
+!
+            CALL VSUB ( OBSPOS, STLOFF, VTEMP  )
+            CALL VEQU ( VTEMP,          OBSPOS )
+
+         END IF
+
+!
+!        Find the sub-observer point using the current estimated
+!        geometry.
+!
+         IF ( NEAR ) THEN
+!
+!           Locate the nearest point to the observer on the target's
+!           reference ellipsoid.
+!
+            CALL NEARPT ( OBSPOS, RADII(1), RADII(2), RADII(3), &
+                          SPOINT, ALT                           )
+
+            IF ( FAILED() ) THEN
+               CALL CHKOUT ( RNAME )
+               RETURN
+            END IF
+
+!
+!           If the target is an ellipsoid, the NEARPT call above
+!           does the trick. For DSKs, we define a ray emanating from
+!           the observer and passing through the near point on the
+!           reference ellipsoid. The closest ray-DSK surface
+!           intercept to the observer is the initial estimate of the
+!           sub-point.
+
+            IF ( SHAPE .EQ. DSKSHP ) THEN
+!
+!              Generate the ray direction; find the DSK intercept.
+!
+               CALL VSUB ( SPOINT, OBSPOS, DVEC )
+
+               CALL ZZSBFXR ( TRGCDE, NSURF,  SRFLST, TRGEPC, &
+                              FIXFID, OBSPOS, DVEC,   SPOINT, FND )
+
+               IF ( FAILED() ) THEN
+                  CALL CHKOUT ( RNAME )
+                  RETURN
+               END IF
+
+               IF ( .NOT. FND ) THEN
+
+                  CALL SETMSG ( 'No sub-observer point was found on ' &
+                  //            'the surface defined by DSK data.' &
+                  //            'Observer is #; target is #. This ' &
+                  //            'problem can occur for bodies hav' &
+                  //            'ing shapes not well modeled by ' &
+                  //            'ellipsoids. Consider using the ' &
+                  //            '"Intercept: DSK" computation ' &
+                  //            'method.'                           )
+                  CALL ERRCH  ( '#', OBSRVR                         )
+                  CALL ERRCH  ( '#', TARGET                         )
+                  CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'           )
+                  CALL CHKOUT ( RNAME                               )
+                  RETURN
+
+               END IF
+
+!
+!              Re-compute the altitude using the intercept on the
+!              DSK surface.
+!
+               CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+
+               ALT = VNORM( SRFVEC )
+
+            END IF
+
+
+         ELSE
+
+!
+!           This is the "intercept" case.
+!
+!           Generate the ray direction.
+!
+            CALL VMINUS ( OBSPOS, DVEC )
+!
+!           Locate the surface intercept of the ray from the
+!           observer to the target center.
+!
+            IF ( SHAPE .EQ. ELLSHP ) THEN
+
+               CALL SURFPT ( OBSPOS,   DVEC,   RADII(1), RADII(2), &
+                             RADII(3), SPOINT, FND                )
+
+               IF ( FAILED() ) THEN
+                  CALL CHKOUT ( RNAME )
+                  RETURN
+               END IF
+
+               IF ( .NOT. FND ) THEN
+!
+!                 If there's no intercept, we have a numerical
+!                 problem.
+!
+                  CALL SETMSG ( 'No intercept of observer-target ' &
+                  //            'ray was found.'                  )
+                  CALL SIGERR ( 'SPICE(DEGENERATECASE)'           )
+                  CALL CHKOUT ( RNAME                             )
+                  RETURN
+
+               END IF
+
+               ALT = VDIST( OBSPOS, SPOINT )
+
+
+            ELSE
+!
+!              Find the ray-DSK surface intercept.
+!
+               CALL ZZSBFXR ( TRGCDE, NSURF,  SRFLST, TRGEPC, &
+                              FIXFID, OBSPOS, DVEC,   SPOINT, FND )
+
+               IF ( FAILED() ) THEN
+                  CALL CHKOUT ( RNAME )
+                  RETURN
+               END IF
+
+               IF ( .NOT. FND ) THEN
+
+                  CALL SETMSG ( 'No sub-observer point was found on ' &
+                  //            'the surface defined by DSK data.' &
+                  //            'Observer is #; target is #. This ' &
+                  //            'problem can occur for a body having ' &
+                  //            'an irregular shape such that the ' &
+                  //            'origin of the body-fixed reference ' &
+                  //            'frame is outside of the body. A tor' &
+                  //            'us is an example of such a shape.'   )
+                  CALL ERRCH  ( '#', OBSRVR                           )
+                  CALL ERRCH  ( '#', TARGET                           )
+                  CALL SIGERR ( 'SPICE(SUBPOINTNOTFOUND)'             )
+                  CALL CHKOUT ( RNAME                                 )
+                  RETURN
+
+               END IF
+!
+!              Compute the altitude using the intercept on the DSK
+!              surface.
+!
+               CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+
+               ALT = VNORM( SRFVEC )
+
+            END IF
+
+         END IF
+
+         IF ( FAILED() ) THEN
+            CALL CHKOUT ( RNAME )
+            RETURN
+         END IF
+
+!
+!        Compute a new light time estimate and new target epoch.
+!
+         LT      =  ALT / CLIGHT()
+         TRGEPC  =  ET  + S*LT
+
+!
+!        At this point, we have new estimates of the sub-observer
+!        point SPOINT, the observer altitude ALT, the target epoch
+!        TRGEPC, and the position of the observer relative to the
+!        target OBSPOS.
+!
+!        We use the d.p. identity function TOUCHD to force the compiler
+!        to create double precision arguments from the differences
+!        LT-PREVLT and TRGEPC-PREVET. Some compilers will perform
+!        extended-precision register arithmetic, which can prevent a
+!        difference from rounding to zero. Simply storing the result of
+!        the subtraction in a double precision variable doesn't solve
+!        the problem, because that variable can be optimized out of
+!        existence.
+!
+         LTDIFF  =   ABS( TOUCHD(LT     - PREVLT) )
+         ETDIFF  =   ABS( TOUCHD(TRGEPC - PREVET) )
+         PREVLT  =   LT
+         PREVET  =   TRGEPC
+         I       =   I + 1
+
+      END DO
+
+!
+!     SPOINT, TRGEPC, and OBSPOS have been set at this point. Compute
+!     SRFVEC.
+!
+      CALL VSUB ( SPOINT, OBSPOS, SRFVEC )
+
+      CALL CHKOUT ( RNAME )
+      RETURN
+      END

@@ -1,0 +1,450 @@
+!$Procedure      EXPFNM_1 ( Expand a filename )
+
+      SUBROUTINE EXPFNM_1 ( INFIL, OUTFIL )
+
+! $ Abstract
+!
+!     Given a filename, expand it to be a full filename.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     FILES
+!     UTILITY
+!
+! $ Declarations
+
+
+      CHARACTER*(*)         INFIL
+      CHARACTER*(*)         OUTFIL
+
+! $ Brief_I/O
+!
+!     Variable  I/O  Description
+!     --------  ---  --------------------------------------------------
+!     INFIL      I   The filename to be expanded.
+!     OUTFIL     O   The expanded filename.
+!
+! $ Detailed_Input
+!
+!     INFIL      is the filename to be expanded.
+!
+! $ Detailed_Output
+!
+!     OUTFIL     is the expanded filename. If no expansion could be
+!                done, the value of OUTFIL is equal to the value of
+!                INFIL. OUTFIL may not overwrite INFIL.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1) If the input filename is blank, begins with blank characters,
+!        or has embedded blanks in it, the error SPICE(BADFILENAME)
+!        is signaled.
+!
+!     2) If the expanded filename is too long to fit into the
+!        output string, the error SPICE(STRINGTOOSMALL) is signaled.
+!
+!     3) The output string may not overwrite the input string.
+!
+!     4) If no expansion of the input filename can be done, the
+!        output filename is assigned the value of the input filename.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     The input filename may not be blank, begin with blank characters,
+!     nor may it it contain embedded blanks. As a general rule,
+!     SPICELIB routines do not allow blank characters as part of a
+!     filename.
+!
+!     Unix platforms:
+!
+!     On the Unix platforms, a filename containing an environment
+!     variable must be expanded completely before FORTRAN can do
+!     anything with it. FORTRAN interacts directly with the kernel, and
+!     as a result does not pass input filenames through the shell
+!     for expansion of environment variables.
+!
+!     VAX/VMS, Alpha/OpenVMS platforms:
+!
+!     The operating system does filename expansion itself, so this
+!     routine currently does not expand the name.
+!
+! $ Examples
+!
+!     None.
+!
+! $ Restrictions
+!
+!     Unix platforms:
+!
+!     This routine cannot be used to expand a file name whose form
+!     is '~xxx', where xxx is an account name.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     H.A. Neilan    (JPL)
+!
+! $ Version
+!
+!-    Beta Version 3.26.0, 28-NOV-2021 (BVS)
+!
+!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!
+!-    Beta Version 3.25.0, 10-MAR-2014 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-INTEL.
+!
+!-    Beta Version 3.24.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-IFORT.
+!
+!-    Beta Version 3.23.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-GFORTRAN.
+!
+!-    Beta Version 3.22.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!
+!-    Beta Version 3.21.0, 10-MAR-2014 (BVS)
+!
+!        Updated for PC-CYGWIN-64BIT-GCC_C.
+!
+!-    Beta Version 3.20.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL.
+!
+!-    Beta Version 3.19.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL-CC_C.
+!
+!-    Beta Version 3.18.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!
+!-    Beta Version 3.17.0, 13-MAY-2010 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!
+!-    Beta Version 3.16.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-WINDOWS-64BIT-IFORT.
+!
+!-    Beta Version 3.15.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-GFORTRAN.
+!
+!-    Beta Version 3.14.0, 13-MAY-2010 (BVS)
+!
+!        Updated for PC-64BIT-MS_C.
+!
+!-    Beta Version 3.13.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-INTEL_C.
+!
+!-    Beta Version 3.12.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-IFORT.
+!
+!-    Beta Version 3.11.0, 13-MAY-2010 (BVS)
+!
+!        Updated for MAC-OSX-64BIT-GFORTRAN.
+!
+!-    Beta Version 3.10.0, 18-MAR-2009 (BVS)
+!
+!        Updated for PC-LINUX-GFORTRAN.
+!
+!-    Beta Version 3.9.0, 18-MAR-2009 (BVS)
+!
+!        Updated for MAC-OSX-GFORTRAN.
+!
+!-    Beta Version 3.8.0, 19-FEB-2008 (BVS)
+!
+!        Updated for PC-LINUX-IFORT.
+!
+!-    Beta Version 3.7.0, 14-NOV-2006 (BVS)
+!
+!        Updated for PC-LINUX-64BIT-GCC_C.
+!
+!-    Beta Version 3.6.0, 14-NOV-2006 (BVS)
+!
+!        Updated for MAC-OSX-INTEL_C.
+!
+!-    Beta Version 3.5.0, 14-NOV-2006 (BVS)
+!
+!        Updated for MAC-OSX-IFORT.
+!
+!-    Beta Version 3.4.0, 14-NOV-2006 (BVS)
+!
+!        Updated for PC-WINDOWS-IFORT.
+!
+!-    Beta Version 3.3.0, 26-OCT-2005 (BVS)
+!
+!        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!
+!-    Beta Version 3.2.0, 03-JAN-2005 (BVS)
+!
+!        Updated for PC-CYGWIN_C.
+!
+!-    Beta Version 3.1.0, 03-JAN-2005 (BVS)
+!
+!        Updated for PC-CYGWIN.
+!
+!-    Beta Version 3.0.5, 17-JUL-2002 (BVS)
+!
+!        Added MAC-OSX environments.
+!
+!-    Beta Version 3.0.4, 08-OCT-1999 (WLT)
+!
+!        The environment lines were expanded so that the supported
+!        environments are now explicitly given.  New
+!        environments are WIN-NT
+!
+!-    Beta Version 3.0.3, 21-SEP-1999 (NJB)
+!
+!        CSPICE environments were added.  Some typos were corrected.
+!
+!-    Beta Version 3.0.2, 28-JUL-1999 (WLT)
+!
+!        The environment lines were expanded so that the supported
+!        environments are now explicitly given.  New
+!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+!
+!-    Beta Version 3.0.1, 18-MAR-1999 (WLT)
+!
+!        The environment lines were expanded so that the supported
+!        environments are now explicitly given.  Previously,
+!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+!        by the environment label SUN.
+!
+!-    Beta Version 3.0.0, 05-APR-1998 (NJB)
+!
+!        Added references to the PC-LINUX environment.
+!
+!-    Beta Version 2.1.0, 5-JAN-1995 (HAN)
+!
+!        Removed Sun Solaris environment since it is now the same
+!        as the Sun OS 4.1.x environment.
+!        Removed DEC Alpha/OpenVMS environment since it is now the
+!        same as the VAX environment.
+!
+!-    Beta Version 2.0.0, 08-JUL-1994 (HAN)
+!
+!        The capability of resolving a Unix filename that contains
+!        an environment variable directory specification plus a
+!        filename has been added.
+!
+!-    Beta Version 1.0.0, 06-APR-1992 (HAN)
+!
+!-&
+
+! $ Index_Entries
+!
+!     expand a filename
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+      LOGICAL               RETURN
+      INTEGER               POS
+      INTEGER               RTRIM
+
+!
+#if defined(SPICE_COMPILER_INTEL)
+#else
+!     Parameters
+!
+      INTEGER               MAXLEN
+      PARAMETER           ( MAXLEN = 255 )
+
+
+!
+#endif
+!     Local variables
+!
+      INTEGER               BLANK
+#if defined(SPICE_COMPILER_INTEL)
+#else
+      INTEGER               SLASH
+
+      CHARACTER*(MAXLEN)    WORD
+      CHARACTER*(MAXLEN)    DIR
+
+      INTEGER               INLEN
+      INTEGER               WRDLEN
+      INTEGER               DIRLEN
+      INTEGER               OUTLEN
+      INTEGER               KEEP
+      INTEGER               NEED
+#endif
+
+!
+!     Standard SPICE error handling.
+!
+      IF ( RETURN () ) THEN
+         RETURN
+      ELSE
+         CALL CHKIN ( 'EXPFNM_1' )
+      END IF
+
+
+!
+!     If the input filename is blank, that's an error.
+!
+      IF ( INFIL .EQ. ' ' ) THEN
+         CALL SETMSG ( 'The input filename ''#'' was blank.' )
+         CALL ERRCH  ( '#', INFIL                            )
+         CALL SIGERR ( 'SPICE(BADFILENAME)'                  )
+         CALL CHKOUT ( 'EXPFNM_1'                            )
+         RETURN
+      END IF
+
+!
+!     If there are blanks anywhere in the filename, SPICELIB
+!     considers the filename to be invalid.
+!
+      BLANK = POS( INFIL(1:RTRIM(INFIL)), ' ', 1 )
+
+      IF ( BLANK .NE. 0 ) THEN
+         CALL SETMSG ( 'The input filename ''#'' had blank '         // &
+                       'characters in it.'                            )
+         CALL ERRCH  ( '#', INFIL                                     )
+         CALL SIGERR ( 'SPICE(BADFILENAME)'                           )
+         CALL CHKOUT ( 'EXPFNM_1'                                     )
+         RETURN
+      END IF
+
+!
+#if defined(SPICE_COMPILER_INTEL)
+!     Because the operating system takes care of any necessary filename
+!     translations, just return the input filename.
+#else
+!     Look for a slash in the filename.
+#endif
+!
+#if defined(SPICE_COMPILER_INTEL)
+      OUTFIL = INFIL
+#else
+      SLASH = POS( INFIL, '/', 1 )
+
+!
+!     If we found a slash in a position other than the first
+!     character position, we want to examine the word that
+!     comes before it just in case it is an environment
+!     variable.
+!
+      IF ( SLASH .GT. 1 ) THEN
+
+         WORD   = ( INFIL(1: SLASH - 1 ) )
+
+         CALL GETENV ( WORD, DIR  )
+
+!
+!        If the word was an environment variable, then construct
+!        the expanded filename. If it wasn't, just return the original
+!        input filename.
+!
+         IF ( DIR .NE. ' ' ) THEN
+
+            OUTFIL = INFIL
+
+            INLEN  = RTRIM( INFIL  )
+            WRDLEN = RTRIM( WORD   )
+            DIRLEN = RTRIM( DIR    )
+            OUTLEN = LEN( OUTFIL )
+            KEEP   = INLEN - WRDLEN
+            NEED   = KEEP + DIRLEN
+
+!
+!           If the output filename length is not long enough for
+!           the substitution, signal an error. Otherwise, substitute
+!           in the new value.
+!
+            IF ( NEED .GT. OUTLEN ) THEN
+
+               CALL SETMSG ( 'The expanded filename for the input '   // &
+                             'filename ''#'' exceeded the length '    // &
+                             'of the output filename. The expanded '  // &
+                             'name was # characters too long.'         )
+               CALL ERRCH  ( '#', INFIL                                )
+               CALL ERRINT ( '#', NEED - OUTLEN                        )
+               CALL SIGERR ( 'SPICE(STRINGTOOSMALL)'                   )
+               CALL CHKOUT ( 'EXPFNM_1'                                )
+               RETURN
+
+            ELSE
+
+               CALL REPSUB ( INFIL, 1, SLASH - 1, &
+                             DIR(1:RTRIM(DIR)), OUTFIL )
+
+            END IF
+
+         ELSE
+
+            OUTFIL = INFIL
+
+         END IF
+
+      ELSE
+
+!
+!        No slashes are in the filename, so it's just an easy case.
+!
+!        It's possible that the entire filename is an environment
+!        variable. If it's not, then just return the input filename.
+!
+
+         CALL GETENV ( INFIL, OUTFIL )
+
+         IF ( OUTFIL .EQ. ' ' ) THEN
+            OUTFIL = INFIL
+         END IF
+
+      END IF
+#endif
+
+      CALL CHKOUT ( 'EXPFNM_1' )
+      RETURN
+      END

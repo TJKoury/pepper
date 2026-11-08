@@ -1,136 +1,136 @@
-C
-C     Include file dskdsc.inc
-C
-C     This include file declares parameters for DSK segment descriptors.
-C
-C-       SPICELIB Version 1.0.0 08-FEB-2017 (NJB)
-C
-C           Updated version info.
-C
-C           22-JAN-2016 (NJB)
-C
-C              Added parameter for data class 2. Changed name of data
-C              class 1 parameter. Corrected data class descriptions.
-C
-C           13-MAY-2010 (NJB)
-C
-C              Descriptor now contains two ID codes, one for the
-C              surface, one for the associated ephemeris object. This
-C              supports association of multiple surfaces with one
-C              ephemeris object without creating file management
-C              issues.
-C
-C              Room was added for coordinate system definition
-C              parameters.
-C
-C               Flag arrays and model ID/component entries were deleted.
-C
-C            11-SEP-2008 (NJB)
-C
-C
-C     DSK segment descriptors are implemented as an array of d.p.
-C     numbers.  Note that each integer descriptor datum occupies one
-C     d.p. value. 
-C
-C     
-C     
-C
-C     Segment descriptor parameters
-C
-C     Each segment descriptor occupies a contiguous
-C     range of DAS d.p. addresses.
-C
-C        The DSK segment descriptor layout is:
-C
-C           +---------------------+
-C           | Surface ID code     |      
-C           +---------------------+
-C           | Center ID code      |      
-C           +---------------------+
-C           | Data class code     |  
-C           +---------------------+
-C           | Data type           |  
-C           +---------------------+
-C           | Ref frame code      |  
-C           +---------------------+
-C           | Coord sys code      |  
-C           +---------------------+
-C           | Coord sys parameters|  {10 elements}
-C           +---------------------+
-C           | Min coord 1         |  
-C           +---------------------+
-C           | Max coord 1         |  
-C           +---------------------+
-C           | Min coord 2         |  
-C           +---------------------+
-C           | Max coord 2         |  
-C           +---------------------+
-C           | Min coord 3         |  
-C           +---------------------+
-C           | Max coord 3         |  
-C           +---------------------+
-C           | Start time          |  
-C           +---------------------+
-C           | Stop time           |  
-C           +---------------------+
-C
-C     Parameters defining offsets for segment descriptor elements
-C     follow.
-C
-C
-C     Surface ID code:
-C
+!
+!     Include file dskdsc.inc
+!
+!     This include file declares parameters for DSK segment descriptors.
+!
+!-       SPICELIB Version 1.0.0 08-FEB-2017 (NJB)
+!
+!           Updated version info.
+!
+!           22-JAN-2016 (NJB)
+!
+!              Added parameter for data class 2. Changed name of data
+!              class 1 parameter. Corrected data class descriptions.
+!
+!           13-MAY-2010 (NJB)
+!
+!              Descriptor now contains two ID codes, one for the
+!              surface, one for the associated ephemeris object. This
+!              supports association of multiple surfaces with one
+!              ephemeris object without creating file management
+!              issues.
+!
+!              Room was added for coordinate system definition
+!              parameters.
+!
+!               Flag arrays and model ID/component entries were deleted.
+!
+!            11-SEP-2008 (NJB)
+!
+!
+!     DSK segment descriptors are implemented as an array of d.p.
+!     numbers.  Note that each integer descriptor datum occupies one
+!     d.p. value.
+!
+!
+!
+!
+!     Segment descriptor parameters
+!
+!     Each segment descriptor occupies a contiguous
+!     range of DAS d.p. addresses.
+!
+!        The DSK segment descriptor layout is:
+!
+!           +---------------------+
+!           | Surface ID code     |
+!           +---------------------+
+!           | Center ID code      |
+!           +---------------------+
+!           | Data class code     |
+!           +---------------------+
+!           | Data type           |
+!           +---------------------+
+!           | Ref frame code      |
+!           +---------------------+
+!           | Coord sys code      |
+!           +---------------------+
+!           | Coord sys parameters|  {10 elements}
+!           +---------------------+
+!           | Min coord 1         |
+!           +---------------------+
+!           | Max coord 1         |
+!           +---------------------+
+!           | Min coord 2         |
+!           +---------------------+
+!           | Max coord 2         |
+!           +---------------------+
+!           | Min coord 3         |
+!           +---------------------+
+!           | Max coord 3         |
+!           +---------------------+
+!           | Start time          |
+!           +---------------------+
+!           | Stop time           |
+!           +---------------------+
+!
+!     Parameters defining offsets for segment descriptor elements
+!     follow.
+!
+!
+!     Surface ID code:
+!
       INTEGER               SRFIDX
       PARAMETER           ( SRFIDX = 1 )
 
-C
-C     Central ephemeris object NAIF ID:
-C
+!
+!     Central ephemeris object NAIF ID:
+!
       INTEGER               CTRIDX
       PARAMETER           ( CTRIDX = SRFIDX + 1 )
 
-C
-C     Data class:
-C
-C     The "data class" is a code indicating the category of
-C     data contained in the segment.
-C     
+!
+!     Data class:
+!
+!     The "data class" is a code indicating the category of
+!     data contained in the segment.
+!
       INTEGER               CLSIDX
       PARAMETER           ( CLSIDX = CTRIDX + 1 )
 
-C
-C     Data type:
-C
+!
+!     Data type:
+!
       INTEGER               TYPIDX
       PARAMETER           ( TYPIDX = CLSIDX + 1 )
 
-C
-C     Frame ID:
-C
+!
+!     Frame ID:
+!
       INTEGER               FRMIDX
       PARAMETER           ( FRMIDX = TYPIDX + 1 )
 
-C
-C     Coordinate system code:
-C
+!
+!     Coordinate system code:
+!
       INTEGER               SYSIDX
       PARAMETER           ( SYSIDX = FRMIDX + 1 )
-      
-C
-C     Coordinate system parameter start index:
-C
+
+!
+!     Coordinate system parameter start index:
+!
       INTEGER               PARIDX
       PARAMETER           ( PARIDX = SYSIDX + 1 )
 
-C
-C     Number of coordinate system parameters:
-C
+!
+!     Number of coordinate system parameters:
+!
       INTEGER               NSYPAR
       PARAMETER           ( NSYPAR = 10 )
 
-C
-C     Ranges for coordinate bounds:
-C
+!
+!     Ranges for coordinate bounds:
+!
       INTEGER               MN1IDX
       PARAMETER           ( MN1IDX = PARIDX + NSYPAR )
 
@@ -148,101 +148,101 @@ C
 
       INTEGER               MX3IDX
       PARAMETER           ( MX3IDX = MN3IDX + 1 )
-      
-C
-C     Coverage time bounds:
-C
+
+!
+!     Coverage time bounds:
+!
       INTEGER               BTMIDX
       PARAMETER           ( BTMIDX = MX3IDX + 1 )
 
       INTEGER               ETMIDX
       PARAMETER           ( ETMIDX = BTMIDX + 1 )
 
-C
-C     Descriptor size (24):
-C
+!
+!     Descriptor size (24):
+!
       INTEGER               DSKDSZ
       PARAMETER           ( DSKDSZ = ETMIDX )
 
 
 
-C
-C     Data class values:
-C
-C        Class 1 indicates a surface that can be represented as a
-C                single-valued function of its domain coordinates.
-C
-C                An example is a surface defined by a function that
-C                maps each planetodetic longitude and latitude pair to
-C                a unique altitude.
-C       
+!
+!     Data class values:
+!
+!        Class 1 indicates a surface that can be represented as a
+!                single-valued function of its domain coordinates.
+!
+!                An example is a surface defined by a function that
+!                maps each planetodetic longitude and latitude pair to
+!                a unique altitude.
+!
       INTEGER               SVFCLS
       PARAMETER           ( SVFCLS = 1 )
-C
-C        Class 2 indicates a general surface. Surfaces that
-C                have multiple points for a given pair of domain
-C                coordinates---for example, multiple radii for a given
-C                latitude and longitude---belong to class 2.
-C     
+!
+!        Class 2 indicates a general surface. Surfaces that
+!                have multiple points for a given pair of domain
+!                coordinates---for example, multiple radii for a given
+!                latitude and longitude---belong to class 2.
+!
       INTEGER               GENCLS
       PARAMETER           ( GENCLS = 2 )
 
-C
-C
-C     Coordinate system values:
-C
-C        The coordinate system code indicates the system to which the
-C        tangential coordinate bounds belong. 
-C
-C        Code 1 refers to the planetocentric latitudinal system. 
-C
-C        In this system, the first tangential coordinate is longitude
-C        and the second tangential coordinate is latitude. The third
-C        coordinate is radius.
-C         
-C
+!
+!
+!     Coordinate system values:
+!
+!        The coordinate system code indicates the system to which the
+!        tangential coordinate bounds belong.
+!
+!        Code 1 refers to the planetocentric latitudinal system.
+!
+!        In this system, the first tangential coordinate is longitude
+!        and the second tangential coordinate is latitude. The third
+!        coordinate is radius.
+!
+!
       INTEGER               LATSYS
       PARAMETER           ( LATSYS = 1 )
 
 
-C
-C        Code 2 refers to the cylindrical system. 
-C
-C        In this system, the first tangential coordinate is radius and
-C        the second tangential coordinate is longitude. The third,
-C        orthogonal coordinate is Z.
-C         
-C
+!
+!        Code 2 refers to the cylindrical system.
+!
+!        In this system, the first tangential coordinate is radius and
+!        the second tangential coordinate is longitude. The third,
+!        orthogonal coordinate is Z.
+!
+!
       INTEGER               CYLSYS
       PARAMETER           ( CYLSYS = 2 )
 
- 
-C
-C        Code 3 refers to the rectangular system. 
-C
-C        In this system, the first tangential coordinate is X and
-C        the second tangential coordinate is Y. The third,
-C        orthogonal coordinate is Z.
-C         
-C
+
+!
+!        Code 3 refers to the rectangular system.
+!
+!        In this system, the first tangential coordinate is X and
+!        the second tangential coordinate is Y. The third,
+!        orthogonal coordinate is Z.
+!
+!
       INTEGER               RECSYS
       PARAMETER           ( RECSYS = 3 )
 
 
-C
-C        Code 4 refers to the planetodetic/geodetic system. 
-C
-C        In this system, the first tangential coordinate is longitude
-C        and the second tangential coordinate is planetodetic
-C        latitude. The third, orthogonal coordinate is altitude.
-C         
-C
+!
+!        Code 4 refers to the planetodetic/geodetic system.
+!
+!        In this system, the first tangential coordinate is longitude
+!        and the second tangential coordinate is planetodetic
+!        latitude. The third, orthogonal coordinate is altitude.
+!
+!
       INTEGER               PDTSYS
       PARAMETER           ( PDTSYS = 4 )
 
 
 
-C
-C     End of include file dskdsc.inc
-C
+!
+!     End of include file dskdsc.inc
+!
 

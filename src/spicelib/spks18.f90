@@ -1,0 +1,391 @@
+!$Procedure SPKS18 ( S/P Kernel, subset, type 18 )
+
+      SUBROUTINE SPKS18 ( HANDLE, BADDR, EADDR, BEGIN, END )
+
+! $ Abstract
+!
+!     Extract a subset of the data in an SPK segment of type 18
+!     into a new segment.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     SPK
+!     DAF
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      IMPLICIT NONE
+
+      INCLUDE 'spk18.inc'
+
+      INTEGER               HANDLE
+      INTEGER               BADDR
+      INTEGER               EADDR
+      DOUBLE PRECISION      BEGIN
+      DOUBLE PRECISION      END
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     HANDLE     I   Handle of file containing source segment.
+!     BADDR      I   Beginning address in file of source segment.
+!     EADDR      I   Ending address in file of source segment.
+!     BEGIN      I   Beginning (initial epoch) of subset.
+!     END        I   End (final epoch) of subset.
+!
+! $ Detailed_Input
+!
+!     HANDLE,
+!     BADDR,
+!     EADDR    are the file handle assigned to an SPK file, and the
+!              beginning and ending addresses of a segment within
+!              that file. Together they determine a complete set of
+!              ephemeris data, from which a subset is to be
+!              extracted.
+!
+!     BEGIN,
+!     END      are the initial and final epochs (ephemeris time)
+!              of the subset.
+!
+!              The first epoch for which there will be ephemeris
+!              data in the new segment will be the greatest time
+!              in the source segment that is less than or equal
+!              to BEGIN.
+!
+!              The last epoch for which there will be ephemeris
+!              data in the new segment will be the smallest time
+!              in the source segment that is greater than or equal
+!              to END.
+!
+! $ Detailed_Output
+!
+!     See $Files section.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  This routine relies on the caller to ensure that the
+!         interval [BEGIN, END] is contained in the coverage
+!         interval of the segment.
+!
+!     2)  If BEGIN > END, no data are written to the target file.
+!
+!     3)  If an unexpected SPK type 18 subtype is found in the input
+!         segment, the error SPICE(INVALIDVALUE) is signaled.
+!
+! $ Files
+!
+!     Data are extracted from the file connected to the input
+!     handle, and written to the current DAF open for writing.
+!
+!     The segment descriptor and summary must already have been written
+!     prior to calling this routine. The segment must be ended
+!     external to this routine.
+!
+! $ Particulars
+!
+!     This routine is intended solely for use as a utility by the
+!     routine SPKSUB.
+!
+!     It transfers a subset of a type 18 SPK data segment to
+!     a properly initialized segment of a second SPK file.
+!
+!     The exact structure of a segment of data type 18 is described
+!     in the section on type 18 in the SPK Required Reading.
+!
+! $ Examples
+!
+!     This routine is intended only for use as a utility by SPKSUB.
+!     To use this routine successfully, you must:
+!
+!        Open the SPK file from which to extract data.
+!        Locate the segment from which data should be extracted.
+!
+!        Open the SPK file to which this data should be written.
+!        Begin a new segment (array).
+!        Write the summary information for the array.
+!
+!        Call this routine to extract the appropriate data from the
+!        SPK open for read.
+!
+!        End the array to which this routine writes data.
+!
+!     Much of this procedure is carried out by the routine SPKSUB. The
+!     examples of that routine illustrate more fully the process
+!     described above.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!     I.M. Underwood     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.0, 22-DEC-2012 (NJB)
+!
+!        Bug fix: code applicable to SPK type 9 for
+!        creating padding in the output segment was
+!        deleted.
+!
+!-    SPICELIB Version 1.0.0, 16-AUG-2002 (NJB) (WLT) (IMU)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     subset type_18 SPK segment
+!
+!-&
+
+
+! $ Revisions
+!
+!-    SPICELIB Version 1.1.0, 22-DEC-2012 (NJB)
+!
+!        Bug fix: code applicable to SPK type 9 for
+!        creating padding in the output segment was
+!        deleted.
+!
+!        The offending code was meant to ensure that
+!        the output segment's size is at least the
+!        window size corresponding to the segment's
+!        interpolation degree. This is correct behavior
+!        for SPK types 9 and 13; for these types,
+!        segments are not allowed to have sizes less
+!        than the nominal window size.
+!
+!        However, for type 18, segments can have as
+!        few as two data packets, regardless of their
+!        interpolation degree. The code that creates
+!        padding packets in this case reads from
+!        invalid locations.
+!
+!        Also, the variable WINSIZ was introduced, and
+!        comments indicating that the stored size
+!        parameter in the segment control area is the
+!        window size minus one were corrected.
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+      LOGICAL               RETURN
+
+!
+!     Local parameters
+!
+      INTEGER               MSIZE
+      PARAMETER           ( MSIZE  = 3 )
+
+!
+!     Local variables
+!
+      DOUBLE PRECISION      DATA     ( 12 )
+
+      INTEGER               I
+      INTEGER               NDIR
+      INTEGER               NREC
+      INTEGER               OFFE
+      INTEGER               OFFSET
+      INTEGER               PACKSZ
+      INTEGER               REC      ( 2 )
+      INTEGER               SUBTYP
+      INTEGER               WINSIZ
+      INTEGER               WNSZM1
+
+
+!
+!     Standard SPICE error handling.
+!
+      IF ( RETURN () ) THEN
+         RETURN
+      ELSE
+         CALL CHKIN ( 'SPKS18' )
+      END IF
+
+!
+!     See whether there's any work to do; return immediately if not.
+!
+      IF (  BEGIN  .GT.  END  ) THEN
+         CALL CHKOUT ( 'SPKS18' )
+         RETURN
+      END IF
+
+!
+!     Read the segment structure metadata.
+!
+!     Get the type 18 segment subtype.  Next get the quantity "window
+!     size." Also get the number of records in the segment.
+!
+      CALL DAFGDA ( HANDLE, EADDR-MSIZE+1, EADDR, DATA )
+
+      SUBTYP = NINT ( DATA(1) )
+      WINSIZ = NINT ( DATA(2) )
+      NREC   = NINT ( DATA(3) )
+
+!
+!     Set the packet size based on the subtype.
+!
+      IF ( SUBTYP .EQ. S18TP0 ) THEN
+
+         PACKSZ = S18PS0
+
+      ELSE IF ( SUBTYP .EQ. S18TP1 ) THEN
+
+         PACKSZ = S18PS1
+
+      ELSE
+
+         CALL SETMSG ( 'Unexpected SPK type 18 subtype found in ' // &
+                       'type 18 record.'                          )
+         CALL ERRINT ( '#',  SUBTYP                               )
+         CALL SIGERR ( 'SPICE(INVALIDVALUE)'                      )
+         CALL CHKOUT ( 'SPKS18'                                   )
+         RETURN
+
+      END IF
+
+!
+!     From the number of records, we can compute
+!
+!        NDIR      The number of directory epochs.
+!
+!        OFFE      The offset of the first epoch.
+!
+      NDIR = ( NREC - 1 ) / 100
+      OFFE = EADDR - NDIR - NREC - MSIZE
+
+!
+!     Examine the epochs in forward order, looking for the first
+!     epoch greater than or equal to END (or the final epoch,
+!     whichever comes first). This epoch corresponds to the last
+!     state to be transferred.
+!
+      REC(2) = 1
+      CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
+
+      DO WHILE  ( REC(2) .LT. NREC  .AND.  DATA(1) .LT. END )
+         REC(2) = REC(2) + 1
+         CALL DAFGDA ( HANDLE, OFFE+REC(2), OFFE+REC(2), DATA )
+      END DO
+
+!
+!     Let WNSZM1 be one less than the window size.
+!
+!     Make sure that there are WNSZM1/2 additional states to the right
+!     of the one having index REC(2), if possible.  If not, take as
+!     many states as we can.
+!
+      WNSZM1  =   WINSIZ - 1
+
+      REC(2)  =   MIN (  NREC,   REC(2) + WNSZM1/2   )
+
+!
+!     Now examine the epochs in reverse order, looking for the first
+!     epoch less than or equal to BEGIN (or the initial epoch,
+!     whichever comes first). This epoch corresponds to the first
+!     state to be transferred.
+!
+      REC(1) = NREC
+      CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
+
+      DO WHILE ( REC(1) .GT. 1  .AND.  DATA(1) .GT. BEGIN )
+         REC(1) = REC(1) - 1
+         CALL DAFGDA ( HANDLE, OFFE+REC(1), OFFE+REC(1), DATA )
+      END DO
+
+!
+!     Make sure that there are WNSZM1/2 additional states to the left
+!     of the one having index REC(1), if possible.  If not, take as
+!     many states as we can.
+!
+      REC(1)  =   MAX (  1,   REC(1) - WNSZM1/2   )
+
+!
+!     Copy states REC(1) through REC(2) to the output file.
+!
+      DO  I = REC(1), REC(2)
+         OFFSET = BADDR  -  1  +  (I - 1) * PACKSZ
+
+         CALL DAFGDA ( HANDLE, OFFSET+1, OFFSET+PACKSZ, DATA         )
+         CALL DAFADA (                                  DATA, PACKSZ )
+      END DO
+
+!
+!     Copy epochs REC(1) through REC(2) to the output file.
+!
+      DO  I = REC(1), REC(2)
+         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
+         CALL DAFADA (                         DATA, 1 )
+      END DO
+
+!
+!     Put every 100'th epoch into the directory, except the last
+!     epoch, if that epoch's index would be a multiple of 100.
+!
+      DO  I = REC(1)+99, REC(2)-1, 100
+         CALL DAFGDA ( HANDLE, OFFE+I, OFFE+I, DATA    )
+         CALL DAFADA (                         DATA, 1 )
+      END DO
+
+!
+!     Store subtype, the window size, and the number of
+!     records to end the segment.
+!
+      CALL DAFADA ( DBLE ( SUBTYP ),                  1 )
+      CALL DAFADA ( DBLE ( WINSIZ ),                  1 )
+      CALL DAFADA ( DBLE ( REC(2) - REC(1) + 1 ),     1 )
+
+      CALL CHKOUT ( 'SPKS18' )
+      RETURN
+      END

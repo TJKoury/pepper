@@ -1,148 +1,148 @@
-C$ Disclaimer
-C
-C     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
-C     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
-C     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
-C     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
-C     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
-C     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
-C     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
-C     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
-C     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
-C     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
-C
-C     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
-C     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
-C     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
-C     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
-C     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
-C     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
-C
-C     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
-C     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
-C     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
-C     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
-C
-C
-C     Include Section:  EK Query Limit Parameters
-C
-C        ekqlimit.inc  Version 3    16-NOV-1995 (NJB)
-C
-C           Parameter MAXCON increased to 1000.
-C
-C        ekqlimit.inc  Version 2    01-AUG-1995 (NJB)
-C
-C           Updated to support SELECT clause.
-C
-C
-C        ekqlimit.inc  Version 1    07-FEB-1995 (NJB)
-C
-C
-C     These limits apply to character string queries input to the
-C     EK scanner.  This limits are part of the EK system's user
-C     interface:  the values should be advertised in the EK required
-C     reading document.
-C
-C
-C     Maximum length of an input query:  MAXQRY.  This value is
-C     currently set to twenty-five 80-character lines.
-C
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+!
+!     Include Section:  EK Query Limit Parameters
+!
+!        ekqlimit.inc  Version 3    16-NOV-1995 (NJB)
+!
+!           Parameter MAXCON increased to 1000.
+!
+!        ekqlimit.inc  Version 2    01-AUG-1995 (NJB)
+!
+!           Updated to support SELECT clause.
+!
+!
+!        ekqlimit.inc  Version 1    07-FEB-1995 (NJB)
+!
+!
+!     These limits apply to character string queries input to the
+!     EK scanner.  This limits are part of the EK system's user
+!     interface:  the values should be advertised in the EK required
+!     reading document.
+!
+!
+!     Maximum length of an input query:  MAXQRY.  This value is
+!     currently set to twenty-five 80-character lines.
+!
       INTEGER               MAXQRY
       PARAMETER           ( MAXQRY = 2000 )
- 
-C
-C     Maximum number of columns that may be listed in the
-C     `order-by clause' of a query:  MAXSEL.  MAXSEL = 50.
-C
+
+!
+!     Maximum number of columns that may be listed in the
+!     `order-by clause' of a query:  MAXSEL.  MAXSEL = 50.
+!
       INTEGER               MAXSEL
       PARAMETER           ( MAXSEL = 50 )
- 
-C
-C     Maximum number of tables that may be listed in the `FROM
-C     clause' of a query: MAXTAB.
-C
+
+!
+!     Maximum number of tables that may be listed in the `FROM
+!     clause' of a query: MAXTAB.
+!
       INTEGER               MAXTAB
       PARAMETER           ( MAXTAB = 10 )
- 
-C
-C     Maximum number of relational expressions that may be listed
-C     in the `constraint clause' of a query: MAXCON.
-C
-C     This limit applies to a query when it is represented in
-C     `normalized form': that is, the constraints have been
-C     expressed as a disjunction of conjunctions of relational
-C     expressions. The number of relational expressions in a query
-C     that has been expanded in this fashion may be greater than
-C     the number of relations in the query as orginally written.
-C     For example, the expression
-C
-C             ( ( A LT 1 ) OR ( B GT 2 ) )
-C        AND
-C             ( ( C NE 3 ) OR ( D EQ 4 ) )
-C
-C     which contains 4 relational expressions, expands to the
-C     equivalent normalized constraint
-C
-C             (  ( A LT 1 ) AND ( C NE 3 )  )
-C        OR
-C             (  ( A LT 1 ) AND ( D EQ 4 )  )
-C        OR
-C             (  ( B GT 2 ) AND ( C NE 3 )  )
-C        OR
-C             (  ( B GT 2 ) AND ( D EQ 4 )  )
-C
-C     which contains eight relational expressions.
-C
-C
+
+!
+!     Maximum number of relational expressions that may be listed
+!     in the `constraint clause' of a query: MAXCON.
+!
+!     This limit applies to a query when it is represented in
+!     `normalized form': that is, the constraints have been
+!     expressed as a disjunction of conjunctions of relational
+!     expressions. The number of relational expressions in a query
+!     that has been expanded in this fashion may be greater than
+!     the number of relations in the query as orginally written.
+!     For example, the expression
+!
+!             ( ( A LT 1 ) OR ( B GT 2 ) )
+!        AND
+!             ( ( C NE 3 ) OR ( D EQ 4 ) )
+!
+!     which contains 4 relational expressions, expands to the
+!     equivalent normalized constraint
+!
+!             (  ( A LT 1 ) AND ( C NE 3 )  )
+!        OR
+!             (  ( A LT 1 ) AND ( D EQ 4 )  )
+!        OR
+!             (  ( B GT 2 ) AND ( C NE 3 )  )
+!        OR
+!             (  ( B GT 2 ) AND ( D EQ 4 )  )
+!
+!     which contains eight relational expressions.
+!
+!
       INTEGER               MAXCON
       PARAMETER           ( MAXCON = 1000 )
- 
-C
-C     MXJOIN is the maximum number of tables that can be joined.
-C
+
+!
+!     MXJOIN is the maximum number of tables that can be joined.
+!
       INTEGER               MXJOIN
       PARAMETER           ( MXJOIN = 10 )
- 
-C
-C     MXJCON is the maximum number of join constraints allowed.
-C
+
+!
+!     MXJCON is the maximum number of join constraints allowed.
+!
       INTEGER               MXJCON
       PARAMETER           ( MXJCON = 100 )
- 
-C
-C     Maximum number of order-by columns that may be used in the
-C     `order-by clause' of a query: MAXORD. MAXORD = 10.
-C
+
+!
+!     Maximum number of order-by columns that may be used in the
+!     `order-by clause' of a query: MAXORD. MAXORD = 10.
+!
       INTEGER               MAXORD
       PARAMETER           ( MAXORD = 10 )
- 
-C
-C     Maximum number of tokens in a query: 500. Tokens are reserved
-C     words, column names, parentheses, and values. Literal strings
-C     and time values count as single tokens.
-C
+
+!
+!     Maximum number of tokens in a query: 500. Tokens are reserved
+!     words, column names, parentheses, and values. Literal strings
+!     and time values count as single tokens.
+!
       INTEGER               MAXTOK
       PARAMETER           ( MAXTOK = 500 )
- 
-C
-C     Maximum number of numeric tokens in a query:
-C
+
+!
+!     Maximum number of numeric tokens in a query:
+!
       INTEGER               MAXQNM
       PARAMETER           ( MAXQNM = 100 )
- 
-C
-C     Maximum total length of character tokens in a query:
-C
+
+!
+!     Maximum total length of character tokens in a query:
+!
       INTEGER               MAXCLN
       PARAMETER           ( MAXCLN = MAXQRY )
- 
-C
-C     Maximum length of literal string values allowed in queries:
-C     MAXSTR.
-C
+
+!
+!     Maximum length of literal string values allowed in queries:
+!     MAXSTR.
+!
       INTEGER               MAXSTR
       PARAMETER           ( MAXSTR = 1024 )
- 
-C
-C     End Include Section:  EK Query Limit Parameters
-C
+
+!
+!     End Include Section:  EK Query Limit Parameters
+!

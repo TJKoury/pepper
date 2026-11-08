@@ -47,7 +47,11 @@ Usage:
     python tools/import_naif.py [spicelib] [tspice] [--version N0067]
                                 [--force-download]
 
-With no product arguments, both are imported (spicelib first). Requires
+With no product arguments, both are imported (spicelib first).
+
+The imported sources are NAIF's original fixed-form code (.f/.F). To get the
+free-form sources used in this repository, run tools/fixed2free.py
+afterwards. Requires
 ``tar`` on the PATH (to read the ``.tar.Z`` archives; both GNU tar and
 bsdtar, including Windows' tar.exe, handle them).
 """
@@ -395,6 +399,17 @@ def preprocess(text: str, defined: set) -> str:
 # Product import
 # --------------------------------------------------------------------------
 
+def same_as_spicelib(spicelib: bytes, fixed: bytes) -> bool:
+    """True if a (fixed-form) include file is the same as SPICELIB's copy,
+    which may already have been converted to free form."""
+    if spicelib is None:
+        return False
+    if spicelib == fixed:
+        return True
+    from fixed2free import convert_text   # lazy: fixed2free imports us
+    return convert_text(fixed.decode("ascii")).encode("ascii") == spicelib
+
+
 def import_product(name: str, cfg: dict, version: str, force: bool) -> bool:
     print(f"=== {name} ({version})")
     platforms = list(cfg["platforms"])
@@ -446,7 +461,8 @@ def import_product(name: str, cfg: dict, version: str, force: bool) -> bool:
         for fname in all_names:
             versions = {p: src[p][fname] for p in platforms}
             identical = len(set(versions.values())) == 1
-            if fname.endswith(".inc") and identical and spicelib_inc.get(fname) == versions[fallback]:
+            if fname.endswith(".inc") and identical and same_as_spicelib(
+                    spicelib_inc.get(fname), versions[fallback]):
                 deduped.append(fname)
                 continue
             if identical and fname != cfg["guard_file"]:

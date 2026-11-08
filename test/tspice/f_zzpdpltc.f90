@@ -1,0 +1,1439 @@
+!$Procedure F_ZZPDPLTC ( ZZPDPLTC tests )
+
+      SUBROUTINE F_ZZPDPLTC ( OK )
+
+! $ Abstract
+!
+!     Exercise the private SPICELIB geometry routine ZZPDPLTC.
+!
+! $ Disclaimer
+!
+!     THIS SOFTWARE AND ANY RELATED MATERIALS WERE CREATED BY THE
+!     CALIFORNIA INSTITUTE OF TECHNOLOGY (CALTECH) UNDER A U.S.
+!     GOVERNMENT CONTRACT WITH THE NATIONAL AERONAUTICS AND SPACE
+!     ADMINISTRATION (NASA). THE SOFTWARE IS TECHNOLOGY AND SOFTWARE
+!     PUBLICLY AVAILABLE UNDER U.S. EXPORT LAWS AND IS PROVIDED "AS-IS"
+!     TO THE RECIPIENT WITHOUT WARRANTY OF ANY KIND, INCLUDING ANY
+!     WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A
+!     PARTICULAR USE OR PURPOSE (AS SET FORTH IN UNITED STATES UCC
+!     SECTIONS 2312-2313) OR FOR ANY PURPOSE WHATSOEVER, FOR THE
+!     SOFTWARE AND RELATED MATERIALS, HOWEVER USED.
+!
+!     IN NO EVENT SHALL CALTECH, ITS JET PROPULSION LABORATORY, OR NASA
+!     BE LIABLE FOR ANY DAMAGES AND/OR COSTS, INCLUDING, BUT NOT
+!     LIMITED TO, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+!     INCLUDING ECONOMIC DAMAGE OR INJURY TO PROPERTY AND LOST PROFITS,
+!     REGARDLESS OF WHETHER CALTECH, JPL, OR NASA BE ADVISED, HAVE
+!     REASON TO KNOW, OR, IN FACT, SHALL KNOW OF THE POSSIBILITY.
+!
+!     RECIPIENT BEARS ALL RISK RELATING TO QUALITY AND PERFORMANCE OF
+!     THE SOFTWARE AND ANY RELATED MATERIALS, AND AGREES TO INDEMNIFY
+!     CALTECH AND NASA FOR ALL THIRD-PARTY CLAIMS RESULTING FROM THE
+!     ACTIONS OF RECIPIENT IN THE USE OF THE SOFTWARE.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     TEST FAMILY
+!
+! $ Declarations
+
+      IMPLICIT NONE
+
+      LOGICAL               OK
+
+! $ Brief_I/O
+!
+!     VARIABLE  I/O  DESCRIPTION
+!     --------  ---  --------------------------------------------------
+!     OK         O   logical indicating test status.
+!
+! $ Detailed_Input
+!
+!     None.
+!
+! $ Detailed_Output
+!
+!     OK         is a logical that indicates the test status to the
+!                caller.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     This routine does not generate any errors. Routines in its
+!     call tree may generate errors that are either intentional and
+!     trapped or unintentional and need reporting.  The test family
+!     utilities manage this.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine tests the private SPICELIB
+!     geometry routine ZZPDPLTC.
+!
+! $ Examples
+!
+!     None.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman     (JPL)
+!
+! $ Version
+!
+!-    TSPICE Version 1.0.0, 18-FEB-2017 (NJB)
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+      DOUBLE PRECISION      PI
+
+      LOGICAL               ZZPDPLTC
+
+!
+!     Local Parameters
+!
+
+!
+!     This value must match that in ZZPDPLTC.
+!
+      DOUBLE PRECISION      LIMIT
+      PARAMETER           ( LIMIT = 1.D-2 )
+
+!
+!     Local Variables
+!
+!
+      DOUBLE PRECISION      F
+      DOUBLE PRECISION      LAT
+      DOUBLE PRECISION      P     ( 3 )
+      DOUBLE PRECISION      RE
+      DOUBLE PRECISION      RP
+      DOUBLE PRECISION      S
+      DOUBLE PRECISION      XXPT
+      DOUBLE PRECISION      XYPT
+
+      LOGICAL               ISON
+      LOGICAL               XISON
+
+!
+!     Saved values
+!
+!     Initial values
+!
+
+
+!
+!     Open the test family.
+!
+      CALL TOPEN ( 'F_ZZPDPLTC' )
+
+
+
+
+!***********************************************************************
+!
+!     Error cases
+!
+!**********************************************************************
+
+!
+! --- Case: ------------------------------------------------------
+!
+      CALL TCASE ( 'RE is zero.' )
+
+
+      RE    = 0.D0
+      F     = 0.D0
+      LAT   = 0.D0
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+      CALL TCASE ( 'RE is negative.' )
+
+
+      RE    = -1.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+      CALL TCASE ( 'F > 1.' )
+
+
+      RE    = 3.D0
+      RP    = 2.D0
+      F     = 2.D0
+      LAT   = PI()/4
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
+
+
+
+
+
+
+!***********************************************************************
+!
+!     Oblate tests
+!
+!**********************************************************************
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = PI/4; P(3) > 0' )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -PI/4; P(3) > 0' )
+
+
+      LAT   = -PI()/4
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .FALSE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) > 0' )
+
+
+      LAT   = 0.D0
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = PI/4; P(3) < 0' )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .FALSE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -PI/4; P(3) < 0' )
+
+
+      LAT   = -PI()/4
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) < 0' )
+
+
+      LAT   = 0.D0
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = PI/4; P(3) = 0' )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  =  0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -PI/4; P(3) = 0' )
+
+
+      LAT   = -PI()/4
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) = 0' )
+
+
+      LAT   = 0.D0
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = LIMIT/2; P(3) > 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = LIMIT/2; P(3) > 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     The point is accepted on the basis of its Z component
+!     having the correct sign.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = LIMIT/2; P(3) < 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = LIMIT/2; P(3) < 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .FALSE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = LIMIT/2; P(3) = 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = LIMIT/2; P(3) = 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     The point is accepted because its Z component is zero.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -LIMIT/2; P(3) = 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -LIMIT/2; P(3) = 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     The point is accepted because its Z component is zero.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) = 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0.D0; P(3) = 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -LIMIT/2; P(3) > 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -LIMIT/2; P(3) > 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .FALSE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -LIMIT/2; P(3) < 0, ' &
+      //           'radius > XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = -LIMIT/2; P(3) < 0, ' &
+      //           'radius < XXPT.'                          )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -LIMIT / 2
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     The point is accepted on the basis of the sign of its Z
+!     component.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) > 0, ' &
+      //           'radius > XXPT.'                  )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) > 0, ' &
+      //           'radius < XXPT.'                   )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) < 0, ' &
+      //           'radius > XXPT.'                   )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) < 0, ' &
+      //           'radius < XXPT.'                   )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) = 0, ' &
+      //           'radius > XXPT.'                   )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT * 2
+      P(2)  = S * XXPT * 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Oblate case; LAT = 0; P(3) = 0, ' &
+      //           'radius < XXPT.'                   )
+
+
+      RE    = 4.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      CALL ZZELNAXX ( RE, F, LAT, XXPT, XYPT )
+
+      S     = SQRT( 2.D0 ) / 2
+
+      P(1)  = S * XXPT / 2
+      P(2)  = S * XXPT / 2
+      P(3)  = 0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+
+
+!***********************************************************************
+!
+!     Prolate tests
+!
+!***********************************************************************
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = PI/4; P(3) > 0' )
+
+
+      RE    = 2.D0
+      RP    = 4.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = -PI/4; P(3) > 0' )
+
+      LAT   = -PI()/4
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Note: the prolate case ALWAYS returns .TRUE.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = 0; P(3) > 0' )
+
+      LAT   = 0.D0
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = PI/4; P(3) < 0' )
+
+
+      LAT   = PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = -PI/4; P(3) < 0' )
+
+
+      LAT   = -PI()/4
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Note: the prolate case ALWAYS returns .TRUE.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = 0; P(3) < 0' )
+
+      LAT   = 0.D0
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = PI/4; P(3) = 0' )
+
+
+      LAT   = PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  =  0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = -PI/4; P(3) = 0' )
+
+
+      LAT   = -PI()/4
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Note: the prolate case ALWAYS returns .TRUE.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Prolate case; LAT = 0; P(3) = 0' )
+
+
+      LAT   = 0.D0
+
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+
+!***********************************************************************
+!
+!     Sphere tests
+!
+!***********************************************************************
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = PI/4; P(3) > 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = -PI/4; P(3) > 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -PI()/4
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Note: the prolate case ALWAYS returns .TRUE.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = 0; P(3) > 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      P(1)  = 1.D0
+      P(2)  = 1.D0
+      P(3)  = 1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = PI/4; P(3) < 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = -PI/4; P(3) < 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Note: the prolate case ALWAYS returns .TRUE.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = 0; P(3) < 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  = -1.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = PI/4; P(3) = 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  =  0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = -PI/4; P(3) = 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = -PI()/4
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  =  0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+!
+!     Note: the prolate case ALWAYS returns .TRUE.
+!
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+      CALL TCASE ( 'Sphere case; LAT = 0; P(3) = 0' )
+
+
+      RE    = 2.D0
+      RP    = 2.D0
+      F     = ( RE - RP ) / RE
+      LAT   = 0.D0
+
+      P(1)  =  1.D0
+      P(2)  =  1.D0
+      P(3)  =  0.D0
+
+      ISON  = ZZPDPLTC ( RE, F, P, LAT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      XISON = .TRUE.
+
+      CALL CHCKSL ( 'ISON', ISON, XISON, OK )
+
+
+
+!
+! --- Case: ------------------------------------------------------
+!
+
+
+!
+!     Close out the test family.
+!
+      CALL T_SUCCESS ( OK )
+      RETURN
+      END
+
+
