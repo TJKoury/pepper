@@ -11,12 +11,13 @@ module pepper_strings
    private
 
    public :: astrip, bedec, beint, benum, beuns, cmprss, cpos, cposr, dpstr,&
-      eqstr, esrchc, fndnwd, frstnb, frstnp, frstpc, intstr, kxtrct,&
+      eqchr, eqstr, esrchc, fndnwd, frstnb, frstnp, frstpc, intstr, kxtrct,&
       lastnb, lastpc, lbuild, lcase, ljucrs, ljust, lparse, lparsm, ltrim,&
-      lxqstr, matchw, nblen, nbwid, ncpos, ncposr, nextwd, nthwd, parsqs,&
-      pcwid, pos, posr, prefix, quote, replch, replwd, repmc, rjust, rtrim,&
-      samch, samsub, scanrj, shiftl, shiftr, sigdgt, suffix, ucase, wdcnt,&
-      wdindx, zzinssub, zzrepsub
+      lx4uns, lxqstr, matchi, matchw, nblen, nbwid, ncpos, ncposr, nechr,&
+      nextwd, nparsd, nparsi, nthwd, parsqs, pcwid, pos, posr, prefix,&
+      quote, replch, replwd, repmc, rjust, rtrim, samch, samchi, samsbi,&
+      samsub, scanrj, shiftl, shiftr, sigdgt, suffix, ucase, wdcnt, wdindx,&
+      zzinssub, zzrepsub
 
 contains
 
@@ -13618,5 +13619,2794 @@ contains
       return
 
       end subroutine dpstr
+
+!$Procedure EQCHR (Equivalent characters)
+
+      !> Return .TRUE. if two given characters are equivalent when the
+      !> case of the characters is ignored.
+      !>
+      !> The function returns .TRUE. if the characters are equivalent
+      elemental logical function eqchr ( a, b )
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Return .TRUE. if two given characters are equivalent when the
+!     case of the characters is ignored.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CHARACTER
+!
+! $ Declarations
+
+      implicit none
+
+      character(1), intent(in) :: a  !! one of the characters to check
+      character(1), intent(in) :: b  !! the other character to check
+
+! $ Detailed_Input
+!
+!     A,
+!     B        are two characters that are to be compared to see
+!              if they are the same letter (although possibly
+!              having different case such as 'a' and 'A')
+!
+! $ Detailed_Output
+!
+!     The function returns the value .TRUE. if the two input characters
+!     are the same or can be made the same by converting both to
+!     upper or lower case.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility routine for comparing two characters to
+!     see if they are the same when converted to upper case. It
+!     is particularly useful when writing string analysis routines
+!     that should be case insensitive. Instead of writing the
+!     expression
+!
+!        A .EQ. B
+!
+!     use the expression
+!
+!        EQCHR ( A, B )
+!
+!     in all tests of equivalence for characters.
+!
+! $ Examples
+!
+!     Suppose you want to determine whether or not two strings
+!     are the same if differences in the case of letters are ignored.
+!     The following code fragment shows how you can use this routine
+!     to check for the equivalence of character strings.
+!
+!        MORE  = .TRUE.
+!        SAME  = .TRUE.
+!        L1    =  LEN(STR1)
+!        L2    =  LEN(STR2)
+!        CHECK = MIN ( L1, L2 )
+!
+!        DO WHILE ( SAME .AND. MORE )
+!
+!           SAME = EQCHR( STR1(I:I), STR2(I:I) )
+!           I    = I + 1
+!           MORE = I .LT. CHECK
+!
+!        END DO
+!
+!        IF ( .NOT. SAME ) THEN
+!
+!           There's nothing to do, we already know the strings
+!           are not the same.
+!
+!        ELSE IF ( L1 .LT. L2 ) THEN
+!
+!           The only way the strings can be regarded as being equal
+!           is if the extra unchecked characters in STR2 are all blank.
+!
+!           SAME = STR2(I:) .EQ. ' '
+!
+!        ELSE
+!
+!           Same test as previous one but with STR1 this time.
+!
+!           SAME = STR1(I:) .EQ. ' '
+!
+!        END IF
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 2.0.0, 17-SEP-1998 (EDW)
+!
+!        Replace the UVALUE data statement with a loop to fill
+!        UVALUE. The Absoft Mac compiler failed to compile the
+!        data statement correctly, and so this function failed
+!        to work properly in all situations on the Mac. The
+!        corrects the problem and functions on all platforms.
+!
+!-    SPICELIB Version 1.0.0, 16-MAY-1995 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     Check two characters for case insensitive equality
+!
+!-&
+
+
+!
+!     Entry points.
+!
+!
+!     Range of characters
+!
+      integer(ip)           lstchr
+      parameter           ( lstchr = 255 )
+!
+!     Local Variables
+!
+!     The array UVALUE contains the ICHAR values for the upper case
+!     version of each character.
+!
+      integer(ip)           i
+      integer(ip)           j
+!
+!     Uppercase character codes (SPICELIB filled the table on the first
+!     call).
+!
+      integer(ip), parameter :: uvalue ( 0 : lstchr ) = &
+         [ ( merge( i - ( iachar('a') - iachar('A') ), i, &
+                    i >= iachar('a') .and. i <= iachar('z') ), i = 0, lstchr ) ]
+
+
+
+
+!
+!     The first time through the loop we set the upper case values
+!     for each of the lower case letters.
+!
+
+      i     = ichar(a)
+      j     = ichar(b)
+
+      if ( i > lstchr .or. j > lstchr ) then
+         eqchr = i == j
+      else
+         eqchr = uvalue(i) == uvalue(j)
+      end if
+
+      return
+      end function eqchr
+
+!$Procedure NECHR (Not Equivalent characters)
+
+      !> Return .TRUE. if two given characters are not equivalent if the
+      !> case of the characters is ignored.
+      !>
+      !> The function returns .TRUE. if the characters are not equivalent
+      elemental logical function nechr ( a, b )
+
+! $ Abstract
+!
+!     Return .TRUE. if two given characters are not equivalent if the
+!     case of the characters is ignored.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CHARACTER
+!
+! $ Declarations
+!
+!     IMPLICIT NONE
+!
+!     CHARACTER*(1)         A
+!     CHARACTER*(1)         B
+!
+! $ Detailed_Input
+!
+!     A,
+!     B        are two characters that are to be compared to see
+!              if they are different letters. Letters that have
+!              the same value when converted to uppercase are
+!              considered to be equivalent.
+!
+! $ Detailed_Output
+!
+!     The function returns the value .FALSE. if the two input characters
+!     are the same or can be made the same by converting both to
+!     upper or lower case. Otherwise it returns .TRUE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine simply determines the truth value of .NOT. EQCHR.
+!     See the entry point EQCHR for a discussion of that function.
+!
+! $ Examples
+!
+!     Suppose you want to determine whether or not two strings
+!     are the same up to differences in case. The following
+!     code fragment shows how you can use this routine to check
+!     for the equivalence of character strings.
+!
+!        MORE  = .TRUE.
+!        SAME  = .TRUE.
+!        L1    =  LEN(STR1)
+!        L2    =  LEN(STR2)
+!        CHECK = MIN ( L1, L2 )
+!
+!        DO WHILE ( SAME .AND. MORE )
+!
+!           IF ( NECHR(STR1(I:I),STR2(I:I) ) THEN
+!              SAME = .FALSE.
+!           END IF
+!
+!           I    = I + 1
+!           MORE = I .LT. CHECK
+!
+!        END DO
+!
+!        IF ( .NOT. SAME ) THEN
+!
+!           There's nothing to do, we already know the strings
+!           are not the same.
+!
+!        ELSE IF ( L1 .LT. L2 ) THEN
+!
+!           The only way the strings can be regarded as being equal
+!           is if the extra unchecked characters in STR2 are all blank.
+!
+!           SAME = STR2(I:) .EQ. ' '
+!
+!        ELSE
+!
+!           Same test as previous one but with STR1 this time.
+!
+!           SAME = STR1(I:) .EQ. ' '
+!
+!        END IF
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 17-SEP-1998 (EDW)
+!
+!        Replace the UVALUE data statement with a loop to fill
+!        UVALUE. The Absoft Mac compiler failed to compile the
+!        data statement correctly, and so this function failed
+!        to work properly in all situations on the Mac. The
+!        corrects the problem and functions on all platforms.
+!
+!-    SPICELIB Version 1.0.0, 16-MAY-1995 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     Check two characters for case insensitive not equal
+!
+!-&
+
+
+      use pepper_kinds, only: ip
+      implicit none
+      character(1), intent(in) :: a  !! one of the characters to check
+      character(1), intent(in) :: b  !! the other character to check
+      integer(ip)           lstchr
+      parameter           ( lstchr = 255 )
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip), parameter :: uvalue ( 0 : lstchr ) = &
+         [ ( merge( i - ( iachar('a') - iachar('A') ), i, &
+                    i >= iachar('a') .and. i <= iachar('z') ), i = 0, lstchr ) ]
+
+
+      i     = ichar(a)
+      j     = ichar(b)
+
+      if ( i > lstchr .or. j > lstchr ) then
+         nechr = i /= j
+      else
+         nechr = uvalue(i) /= uvalue(j)
+      end if
+
+      return
+
+
+      end function nechr
+
+!$Procedure SAMCHI ( Same character --- case insensitive )
+
+      !> Determine if two characters from different strings are the
+      !> same when the case of the characters is ignored.
+      !>
+      !> The function returns .TRUE. if the two characters are the
+      !> same up to case.
+      elemental logical function samchi ( str1, l1, str2, l2 )
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Determine if two characters from different strings are the
+!     same when the case of the characters is ignored.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: str1  !! A character string
+      integer(ip), intent(in) :: l1  !! The location (index) of a character in STR1
+      character(*), intent(in) :: str2  !! A character string
+      integer(ip), intent(in) :: l2  !! The location (index) of a character in STR2
+
+! $ Detailed_Input
+!
+!     STR1     is a character string
+!
+!     L1       is the location (index) of a character in STR1
+!
+!     STR2     is a character string
+!
+!     L2       is the location (index) of a character in STR2
+!
+! $ Detailed_Output
+!
+!     The function returns .TRUE. if the characters STR1(L1:L1) and
+!     STR2(L2:L2) are the same when the case of the characters is
+!     ignored.
+!
+!     If the characters are different or L1 or L2 is out of range the
+!     function returns .FALSE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If either L1 or L2 is out of range the function returns
+!         .FALSE.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility function for determining whether or not
+!     two characters in different strings are the same up to case.
+!     This function is intended for situation in which you need
+!     to search two strings for a match (or mismatch).
+!
+! $ Examples
+!
+!     Often you need to scan through two string comparing
+!     character by character until a case insensitive mismatch
+!     occurs. The usual way to code this is
+!
+!        DO WHILE (        L1 .LE. LEN(STR1)
+!                    .AND. L2 .LE. LEN(STR2)
+!                    .AND. EQCHR( STR1(L1:L1),STR2(L2:L2) ) )
+!
+!           L1 = L1 + 1
+!           L2 = L2 + 1
+!
+!        END DO
+!
+!        Check L1, L2 to make sure we are still in range, etc.
+!
+!     The problem with this loop is that even though the check to make
+!     sure that L1 and L2 are in range is performed, FORTRAN may
+!     go ahead and compute the equality condition even though one of the
+!     first two steps failed. This can lead to out of range errors
+!     and possible halting of your program depending upon how
+!     the routine is compiled. An alternative way to code this is
+!
+!        IF ( L1 .LE. LEN(STR1) .AND. L2 .LE. LEN(STR2) ) THEN
+!           ALIKE = EQCHR( STR1(L1:L1),STR2(L2:L2) )
+!        ELSE
+!           ALIKE = .FALSE.
+!        END IF
+!
+!        DO WHILE ( ALIKE )
+!
+!           L1 = L1 + 1
+!           L2 = L2 + 1
+!
+!           IF ( L1 .LE. LEN(STR1) .AND. L2 .LE. LEN(STR2) ) THEN
+!              ALIKE = EQCHR( STR1(L1:L1), STR2(L2:L2) )
+!           ELSE
+!              ALIKE = .FALSE.
+!           END IF
+!        END DO
+!
+!     However this is a much more complicated section of code. This
+!     routine allows you to code the above loops as:
+!
+!
+!        DO WHILE ( SAMCHI ( STR1,L1, STR2,L2 )  )
+!           L1 = L1 + 1
+!           L2 = L2 + 1
+!        END DO
+!
+!     The boundary checks are automatically performed and out
+!     of range errors are avoided.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 31-MAR-1995 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     Check two character substrings for case insensitive equal
+!
+!-&
+
+
+!
+!     Spicelib Functions
+!
+
+
+      if (      l1 < 1 &
+           .or. l2 < 1 &
+           .or. l1 > len(str1) &
+           .or. l2 > len(str2)  ) then
+
+         samchi = .false.
+         return
+      end if
+
+      samchi = eqchr( str1(l1:l1), str2(l2:l2) )
+      return
+
+      end function samchi
+
+!$Procedure SAMSBI (Same substrings, case insensitive)
+
+      !> Determine whether or not two substrings are the same up to
+      !> case.
+      !>
+      !> The function returns .TRUE. if the substrings are identical
+      !> up to case.
+      elemental logical function samsbi ( str1, b1, e1,  str2, b2, e2 )
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Determine whether or not two substrings are the same up to
+!     case.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: str1  !! A string
+      integer(ip), intent(in) :: b1  !! Beginning of a substring in STR1
+      integer(ip), intent(in) :: e1  !! End of s substring in STR1
+      character(*), intent(in) :: str2  !! A second string
+      integer(ip), intent(in) :: b2  !! The beginning of a substring in STR2
+      integer(ip), intent(in) :: e2  !! The end  of s substring in STR2
+
+! $ Detailed_Input
+!
+!     STR1     is a character string
+!
+!     B1       are integers giving the beginning and ending of a
+!     E1       substring in STR1
+!
+!     STR2     is a character string
+!
+!     B2       are integers giving the beginning and ending of a
+!     E2       substring in STR2
+!
+! $ Detailed_Output
+!
+!     The function returns .TRUE. if the two substrings STR(B1:E1) and
+!     STR(B2:E2) have the same length and the same characters up to
+!     case.
+!
+!     If any of the indices B1, E1, B2, E2 are out of range or out
+!     of order the function returns .FALSE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If any of the B1, E1, B2, E2 are out of range or if an
+!         ending substring index is before a beginning substring
+!         index, the function returns false.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine is a macro for comparing two substrings of
+!     strings and handles all of the bounds checking to avoid
+!     out of range errors with string indices.
+!
+! $ Examples
+!
+!     Suppose a string contains a number of occurrences of some
+!     particular substring in sequence and that you need to locate
+!     the first character that is out of this sequence or the
+!     end of the string.
+!
+!     If one ignores boundary constraints this can easily be
+!     coded as shown here: We assume the particular substring is
+!
+!     '/beg'
+!
+!        B = 1
+!        E = B + LEN('/beg' )
+!
+!        DO WHILE (       E           .LE. LEN(STR)
+!                   .AND. STRING(B:E) .EQ. '/beg' )
+!
+!           B = B + LEN('/beg')
+!           E = E + LEN('/beg')
+!
+!        END DO
+!
+!        IF ( B .LT. LEN(STR) ) THEN
+!
+!           we've found the start of a substring of interest
+!
+!        ELSE
+!
+!           there is no substring to find.
+!
+!        END IF
+!
+!     Unfortunately, you can't rely upon FORTRAN to check the boundary
+!     condition: E .LE. LEN(STR) and skip the second test if the first
+!     condition if false. As a result you can get an out of range
+!     error.
+!
+!     Instead you could code:
+!
+!     B = 1
+!     E = B + LEN('/beg')
+!
+!     IF ( E .LE. LEN(STR) ) THEN
+!        ALIKE = STRINB(B:E) .EQ. '/beg'
+!     ELSE
+!        ALIKE = .FALSE.
+!     END IF
+!
+!     DO WHILE ( ALIKE )
+!
+!           B = B + LEN('/beg')
+!           E = E + LEN('/beg')
+!
+!        IF ( E .LE. LEN(STR) ) THEN
+!           ALIKE = STRINB(B:E) .EQ. '/beg'
+!        ELSE
+!           ALIKE = .FALSE.
+!        END IF
+!
+!     END DO
+!
+!
+!     However, this is code is far more effort. Using this routine
+!     you can make a much simpler block of code.
+!
+!     B = 1
+!     E = B + LEN('/beg' )
+!
+!     DO WHILE ( SAMSBI(STR,B,E, '/beg',1,4 ) )
+!
+!        B = B + LEN('/beg')
+!        E = E + LEN('/beg')
+!
+!     END DO
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 03-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 31-MAR-1995 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     Check case insensitive equality of two substrings.
+!
+!-&
+
+
+
+      integer(ip)           i
+      integer(ip)           j
+
+
+
+      if (      ( e1      < b1           ) &
+           .or. ( e2      < b2           ) &
+           .or. ( b1      < 1            ) &
+           .or. ( b2      < 1            ) &
+           .or. ( e1      > len(str1)    ) &
+           .or. ( e2      > len(str2)    ) &
+           .or. ( e1 - b1 /= e2 - b2      )  ) then
+
+         samsbi = .false.
+         return
+
+      end if
+
+      j      =  b2
+      samsbi = .false.
+
+      do i = b1, e1
+         if ( nechr( str1(i:i), str2(j:j) ) ) return
+         j = j + 1
+      end do
+
+      samsbi = .true.
+
+      return
+      end function samsbi
+
+!$Procedure MATCHI ( Match string against wildcard template )
+
+      !> Determine whether a string is matched by a template containing
+      !> wild cards. This routine is case-insensitive.
+      !>
+      !> The function returns .TRUE. if STRING matches TEMPL and otherwise
+      !> returns .FALSE.
+      elemental logical function  matchi ( string, templ, wstr, wchr )
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Determine whether a string is matched by a template containing
+!     wild cards. This routine is case-insensitive.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CHARACTER
+!     COMPARE
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: string  !! String to be tested.
+      character(*), intent(in) :: templ  !! Template (with wild cards) to test against STRING.
+      character(1), intent(in) :: wstr  !! Wild string token.
+      character(1), intent(in) :: wchr  !! Wild character token.
+
+! $ Detailed_Input
+!
+!     STRING   is the input character string to be tested for a match
+!              against the input template. Leading and trailing blanks
+!              are ignored.
+!
+!     TEMPL    is the input template to be tested for a match against
+!              the input string. TEMPL may contain wild cards. Leading
+!              and trailing blanks are ignored.
+!
+!     WSTR     is the wild string token used in the input template. The
+!              wild string token may represent from zero to any number
+!              of characters.
+!
+!     WCHR     is the wild character token used in the input template.
+!              The wild character token represents exactly one
+!              character.
+!
+! $ Detailed_Output
+!
+!     The function returns .TRUE. when the input string matches the
+!     input template, and .FALSE. otherwise. The string and template
+!     match whenever the template can expand (through replacement of its
+!     wild cards) to become the input string.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     MATCHI ignores leading and trailing blanks in both the string
+!     and the template. All of the following are equivalent (they
+!     all return .TRUE.).
+!
+!        MATCHI ( 'ALCATRAZ',     'A*Z',      '*', '%' )
+!        MATCHI ( '  ALCATRAZ  ', 'A*Z',      '*', '%' )
+!        MATCHI ( 'ALCATRAZ',     '  A*Z  ',  '*', '%' )
+!        MATCHI ( '  ALCATRAZ  ', '  A*Z  ',  '*', '%' )
+!
+!     MATCHI is case-insensitive:  uppercase characters match
+!     lowercase characters, and vice versa. Wild characters match
+!     characters of both cases.
+!
+! $ Examples
+!
+!     Let
+!
+!        STRING  = '  ABCDEFGHIJKLMNOPQRSTUVWXYZ  '
+!        WSTR    = '*'
+!        WCHR    = '%'
+!
+!     Then
+!
+!        if TEMPL is  '*A*'        MATCHI is   T
+!                     'A%D*'                     F
+!                     'A%C*'                   T
+!                     '%A*'                      F
+!                     '%%CD*Z'                 T
+!                     '%%CD'                     F
+!                     'A*MN*Y*Z'               T
+!                     'A*MN*Y*%Z'                F
+!                     '*BCD*Z*'                T
+!                     '*bdc*z*'                  F
+!                     ' *bcD*Z*  '             T
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.4.0, 17-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.3.1, 11-NOV-2005 (NJB)
+!
+!        Corrected example calls in header; made other minor
+!        edits to header.
+!
+!-    SPICELIB Version 1.1.0, 08-JUN-1999 (WLT)
+!
+!         Fixed comments in detailed output and example sections.
+!
+!-    SPICELIB Version 1.0.0, 01-DEC-1995 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     match string against wildcard template
+!     test whether a string matches a wildcard template
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local Variables
+!
+      integer(ip)           sfirst
+      integer(ip)           tfirst
+      integer(ip)           slast
+      integer(ip)           tlast
+
+      integer(ip)           slen
+      integer(ip)           tlen
+
+      integer(ip)           scur
+      integer(ip)           tcur
+
+      integer(ip)           left
+      integer(ip)           right
+
+      integer(ip)           i
+      integer(ip)           j
+
+      logical               nosubm
+
+!
+!     Give the function an initial value of .FALSE.
+!
+      matchi = .false.
+
+!
+!     First let's get everybody's measurements.
+!
+      sfirst = frstnb ( string )
+      slast  = lastnb ( string )
+      tfirst = frstnb ( templ  )
+      tlast  = lastnb ( templ  )
+
+      tlen   = tlast - tfirst + 1
+      slen   = slast - sfirst + 1
+
+      scur   = max ( 1, sfirst )
+      tcur   = tfirst
+
+
+!
+!     A blank template matches a blank string, and nothing else.
+!
+      if ( ( tlast == 0 ) .and. ( slast == 0 ) ) then
+
+         matchi = .true.
+         return
+
+      else if ( tlast == 0 ) then
+
+         matchi = .false.
+         return
+
+      end if
+
+
+!
+!     The beginning of the string and template must be identical
+!     up to the first occurrence of a wild string.
+!
+
+      do while (       ( tcur             <= tlast ) &
+                 .and. ( scur             <= slast ) &
+                 .and. ( .not. samch( templ,tcur, wstr,1) ) )
+
+         if ( nechr ( templ(tcur:tcur) ,    string(scur:scur) ) &
+              .and. ( templ(tcur:tcur) /= wchr              ) ) then
+
+            matchi = .false.
+            return
+
+         else
+
+            tcur = tcur + 1
+            scur = scur + 1
+
+         end if
+
+      end do
+
+!
+!     There are a three ways we could have finished the loop above
+!     without hitting a wild string.
+!
+!     Case 1.  Both the string and template ran out of characters at
+!     the same time without running into a wild string in the template.
+!
+      if (       ( tcur > tlast ) &
+           .and. ( scur > slast ) ) then
+
+         matchi = .true.
+         return
+
+      end if
+
+!
+!     Case 2. The template ran out of characters while there were still
+!     characters remaining in the in the string.  No match.
+!
+      if (       ( tcur > tlast ) &
+           .and. ( scur <= slast ) ) then
+
+         matchi = .false.
+         return
+
+      end if
+
+!
+!     Case 3. The string ran out of characters while non-wild characters
+!     remain in the template.
+!
+!     We have to check to see if any non-wild-string characters
+!     remain.  If so, we DO NOT have a match.  On the other hand if
+!     only wild string characters remain we DO have a match.
+!
+      if (       ( tcur <= tlast ) &
+           .and. ( scur > slast ) ) then
+
+         matchi = .true.
+
+         do i = tcur, tlast
+            matchi = matchi .and. ( templ(i:i) == wstr )
+         end do
+
+         return
+
+      end if
+
+!
+!     OK. There is only one way that you can get to this point.
+!     It must be the case that characters remain in both the template
+!     (TCUR .LE. TLAST) and the string (SCUR .LE. SLAST).  Moreover,
+!     to get out of the first loop you had to hit a wild string
+!     character.  Find the first non-wild-string character in the
+!     template. (If there isn't one, we have a match.)
+!
+
+      do while (       ( tcur             <= tlast ) &
+                 .and. ( samch ( templ,tcur, wstr,1 )  ) )
+
+         tcur = tcur + 1
+
+      end do
+
+      if ( tcur > tlast ) then
+
+         matchi = .true.
+         return
+
+      end if
+
+!
+!     Still here? Ok. We have a non-wild-string character at TCUR. Call
+!     this position left and look for the right end of the maximum
+!     length substring of TEMPL (starting at left) that does not have
+!     a wild string character.
+!
+      left = tcur
+
+      do while (       ( tcur             <=   tlast   ) &
+                 .and. ( .not. samch(templ,tcur, wstr,1) ) )
+
+         tcur = tcur + 1
+
+      end do
+
+      right = tcur - 1
+
+
+      do while ( left <= tlast )
+
+!
+!        First see if there is enough room left in the string to
+!        match TEMPL(LEFT:RIGHT)
+!
+         if ( slast - scur < right - left ) then
+
+            matchi = .false.
+            return
+
+         end if
+
+!
+!        The substring TEMPL(LEFT:RIGHT) might be the end of the
+!        string.  In such a case the ends of STRING must match
+!        exactly with the end of TEMPL.
+!
+         if ( right == tlast ) then
+
+            i = slast
+            j = tlast
+
+            do while ( j >= left )
+
+               if (      samch (templ,j, wchr,  1 ) &
+                    .or. samchi(templ,j, string,i )  ) then
+
+                  j = j - 1
+                  i = i - 1
+
+               else
+
+                  matchi = .false.
+                  return
+
+               end if
+
+            end do
+
+!
+!           If we made it through the loop, we've got a match.
+!
+            matchi = .true.
+            return
+         else
+
+!
+!           In this case TEMPL(LEFT:RIGHT) is in between wild string
+!           characters.  Try to find a substring at or to the right
+!           of SCUR in STRING that matches TEMPL(LEFT:RIGHT)
+!
+            nosubm = .true.
+
+            do while ( nosubm )
+
+               i = scur
+               j = left
+
+               do while (     ( j           <= right           ) &
+                         .and.(      samchi( string,i, templ,j ) &
+                                .or. samch ( wchr,  1, templ,j ) ) )
+
+                  i = i + 1
+                  j = j + 1
+
+               end do
+
+!
+!              If J made it past RIGHT, we have a substring match
+!
+               if ( j > right ) then
+
+                  scur   = i
+                  nosubm = .false.
+
+!
+!              Otherwise, try the substring starting 1 to the right
+!              of where our last try began.
+!
+               else
+
+                  scur = scur + 1
+
+!
+!                 Make sure there's room to even attempt a match.
+!
+                  if ( slast - scur < right - left ) then
+
+                     matchi = .false.
+                     return
+
+                  end if
+
+               end if
+            end do
+
+         end if
+
+!
+!        If you have reached this point there must be something left
+!        in the template and that something must begin with a wild
+!        string character.  Hunt for the next substring that doesn't
+!        contain a wild string character.
+!
+         do while (       ( tcur             <= tlast ) &
+                    .and.   samch ( templ,tcur,  wstr,1) )
+
+            tcur = tcur + 1
+
+         end do
+
+         if ( tcur > tlast ) then
+
+!
+!           All that was left was wild string characters.  We've
+!           got a match.
+!
+            matchi = .true.
+            return
+
+         end if
+
+!
+!        Still here? Ok. We have a non-wild-string character at TCUR.
+!        Call this position left and look for the right end of the
+!        maximum length substring of TEMPL (starting at left) that
+!        does not have a wild string character.
+!
+         left = tcur
+
+         do while (       ( tcur             <= tlast ) &
+                    .and. ( .not. samch( templ,tcur, wstr,1 ) ) )
+
+            tcur = tcur + 1
+
+         end do
+
+         right = tcur - 1
+
+      end do
+
+      end function matchi
+
+!$Procedure NPARSD ( Double Precision parsing of a string )
+
+      !> Parse a character string that represents a number and return
+      !> a double precision value.
+      elemental subroutine nparsd ( string, x, error, ptr )
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: dpmax, pi
+
+! $ Abstract
+!
+!     Parse a character string that represents a number and return
+!     a double precision value.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     ALPHANUMERIC
+!     CONVERSION
+!     PARSING
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: string  !! Character string representing a numeric value.
+      real(wp), intent(out) :: x  !! Double precision value parsed from STRING.
+      character(*), intent(out) :: error  !! Message indicating whether errors have occurred.
+      integer(ip), intent(out) :: ptr  !! Position in string where an error occurred.
+
+! $ Detailed_Input
+!
+!     STRING   is a character string that represents a numeric value.
+!              Commas and spaces may be used in this string for
+!              ease of reading and writing the number. They
+!              are treated as insignificant but non-error-producing
+!              characters.
+!
+!              For exponential representation the characters
+!              'E','D','e','d' may be used.
+!
+!              The following are legitimate numeric expressions
+!
+!               +12.2 e-1
+!               -3. 1415 9276
+!               1e12
+!               E10
+!
+!              The program also recognizes the following  mnemonics
+!              'PI', 'pi', 'Pi', 'pI'
+!              '+PI', '+pi', '+Pi', '+pI'
+!              '-PI', '-pi', '-Pi', '-pI'
+!              and returns the value
+!              ( + OR - ) 3.1415 9265 3589 7932 3846 2600 D0 as
+!              appropriate.
+!
+! $ Detailed_Output
+!
+!     X        double precision parsed value of input string. If an
+!              error is encountered, X is not changed.
+!
+!     ERROR    is a message indicating that the string could
+!              not be parsed due to use of an unexpected or misplaced
+!              character or due to a string representing a number
+!              too large for double precision. If the number was
+!              successfully parsed, ERROR will be returned as a blank.
+!
+!              In particular, blank strings, or strings that do not
+!              contain either a digit or exponent character will
+!              be regarded as errors.
+!
+!     PTR      this indicates which character was being used when
+!              the error occurred. If no error occurs, PTR is
+!              returned as 0.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If the string is non-numeric, PTR indicates the location in
+!         the string where the error occurred, and ERROR contains a
+!         descriptive error message.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine parses an input character string that represents a
+!     number, checks for overflow, unexpected or misplaced
+!     characters. It returns the double precision number or an error
+!     message.
+!
+! $ Examples
+!
+!     Let   LINE = 'DELTA_T_A       =   32.184'
+!
+!     The following code fragment parses the line and obtains the
+!     double precision value.
+!
+!
+!        CALL NEXTWD ( LINE,  FIRST,  REST )
+!        CALL NEXTWD ( REST, SECOND,  REST )
+!        CALL NEXTWD ( REST,  THIRD,  REST )
+!
+!        CALL NPARSD (  THIRD,  VALUE, ERROR, PTR    )
+!
+! $ Restrictions
+!
+!     1)  Due to rounding errors this routine may not be able to parse
+!         the decimal character string representation of the largest
+!         and smallest double precision numbers.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     H.A. Neilan        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.6.0, 12-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Removed
+!        unnecessary $Revisions section.
+!
+!-    SPICELIB Version 3.5.0, 15-AUG-2002 (WLT)
+!
+!        Replaced the call to INSSUB with a call to ZZINSSUB so
+!        that this routine can legitimately call itself Error Free
+!
+!-    SPICELIB Version 3.4.0, 03-DEC-2001 (NJB)
+!
+!        Added an extra check to make sure that ICHAR of any character
+!        of the input string is positive.
+!
+!-    SPICELIB Version 3.3.0, 29-FEB-1996 (KRG)
+!
+!        The declaration for the SPICELIB function PI is now
+!        preceded by an EXTERNAL statement declaring PI to be an
+!        external function. This removes a conflict with any
+!        compilers that have a PI intrinsic function.
+!
+!        Removed the error message and storage for the unexpected
+!        comma error message. This variable was set but never used,
+!        and according to the spec for this routine a comma is a valid
+!        delimiter, treated like a space, within numbers.
+!
+!-    SPICELIB Version 3.2.0, 10-JAN-1995 (WLT)
+!
+!        Changed error strings from parameters to assignments to
+!        compensate for shortcomings of the Absoft FORTRAN compiler
+!        on the NeXT.
+!
+!-    SPICELIB Version 3.1.0, 12-JUL-1994 (WLT)
+!
+!        The previous version of the routine assumed that the range
+!        of values of ICHAR was 0 to 128. That turns out not to be
+!        true on some machines. If a character whose ICHAR value is
+!        outside this range is detected, it is now handled properly
+!        as an unexpected character.
+!
+!-    SPICELIB Version 3.0.0, 24-FEB-1993 (WLT)
+!
+!        The previous version of the algorithm interpreted P or p as 1.
+!        This was not the intent of the routine and was corrected.
+!
+!-    SPICELIB Version 2.0.0, 28-AUG-1992 (WLT) (KRG)
+!
+!        The basic algorithm was completely re-written. As a result
+!        the routine now runs an order of magnitude faster than
+!        it did before. In addition, strings that do not contain
+!        enough information to assign a value to the string are now
+!        regarded as errors. These include blank strings or strings
+!        that contain only a sign characters, blanks and commas.
+!
+!        In addition the error diagnosis and checking for overflow
+!        was greatly enhanced.
+!
+!        Note: strings may now parse with slightly different values
+!        from the previous version of NPARSD. The current
+!        implementation is more accurate in converting strings to
+!        double precision numbers.
+!
+!-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.1.0, 17-APR-1990 (WLT)
+!
+!        Bug fix. The subscript used to reference individual characters
+!        of the input string could sometimes step out of bounds. This
+!        went unnoticed until NAIF began compiling with the CHECK=BOUNDS
+!        option of the DEC Fortran compiler.
+!
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (HAN) (NJB)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     parse a character_string to a d.p. number
+!
+!-&
+
+
+!
+!     SPICELIB functions.
+!
+
+
+!
+!     Local Parameters.
+!
+
+      real(wp)              base
+      parameter           ( base   = 10.0_wp )
+
+      integer(ip)           digit
+      parameter           ( digit  = 1   )
+
+      integer(ip)           dpoint
+      parameter           ( dpoint = 2   )
+
+      integer(ip)           expont
+      parameter           ( expont = 3   )
+
+      integer(ip)           ignore
+      parameter           ( ignore = 4   )
+
+      integer(ip)           bpistr
+      parameter           ( bpistr = 5   )
+
+      integer(ip)           epistr
+      parameter           ( epistr = 6   )
+
+      integer(ip)           sign
+      parameter           ( sign   = 7   )
+
+      integer(ip)           ibase
+      parameter           ( ibase  = 10  )
+
+      integer(ip)           nknown
+      parameter           ( nknown = 128 )
+
+      integer(ip)           test
+      parameter           ( test = 16 )
+
+      integer(ip)           errsiz
+      parameter           ( errsiz = 160 )
+
+      character(errsiz)     blnkst
+      character(errsiz)     toobig
+      character(errsiz)     unrcst
+      character(errsiz)     unxpch
+      character(errsiz)     unxppt
+      character(errsiz)     unxpsn
+
+      real(wp)              decval
+      real(wp)              divisr
+      real(wp)              dpsign (     2     )
+      real(wp)              ecount
+      real(wp)              expval
+      real(wp)              factor
+      real(wp)              intbnd
+      real(wp)              intval
+      real(wp), parameter :: lookup ( 0 : ibase ) = &
+         [ 1.0_wp, 10.0_wp, 100.0_wp, 1000.0_wp, 10000.0_wp, &
+           100000.0_wp, 1000000.0_wp, 10000000.0_wp, 100000000.0_wp, &
+           1000000000.0_wp, 10000000000.0_wp ]
+      real(wp)              maxexp
+      real(wp)              minexp
+      real(wp)              next
+      real(wp)              smlbnd
+      real(wp)              value
+      real(wp)              values (     nknown )
+
+      integer(ip)           class  ( 0 : nknown )
+      integer(ip)           exp
+      integer(ip)           i
+      integer(ip)           id
+      integer(ip)           signdx
+
+      integer(ip)           b
+      integer(ip)           blank
+      integer(ip)           l
+      integer(ip)           m
+      integer(ip)           nl
+      integer(ip)           nexti
+      integer(ip)           thisi
+
+
+      logical               dodec
+      logical               expok
+      logical               doexp
+      logical               doint
+      logical               mantsa
+      logical               bpiok
+      logical               epiok
+      logical               pntok
+      logical               roundi
+      logical               roundd
+      logical               sigchr
+      logical               signok
+      logical               zeroi
+!
+!     Save everything.  It's easier than tracking down every
+!     little variable that might need to be saved.
+!
+
+
+
+
+
+
+!
+!     PEPPER: SPICELIB computed these tables and limits on the first call
+!     only (saved); they are computed on every call now.
+!
+      values = 0.0_wp
+      class  = 0
+
+!
+!        Set up the error messages
+!
+      toobig = 'The number represented by the input string is ' &
+      //       'too large to be stored as a double precision ' &
+      //       'number. '
+
+
+      unxpch = 'An unexpected character was found while ' &
+      //       'attempting to parse the input string. '
+
+
+      unxppt = 'An unexpected decimal point was found in the ' &
+      //       'input string. '
+
+
+      unxpsn = 'An unexpected sign character was found in the ' &
+      //       'input string. '
+
+
+      blnkst = 'The input string is blank. Blank strings are ' &
+      //       'not considered to be numbers. '
+
+
+      unrcst = 'The input string could not be recognized as a ' &
+      //       'number. '
+
+      blank = ichar ( ' ' )
+
+      values( ichar ( '0' ) ) =  0.0_wp
+      values( ichar ( '1' ) ) =  1.0_wp
+      values( ichar ( '2' ) ) =  2.0_wp
+      values( ichar ( '3' ) ) =  3.0_wp
+      values( ichar ( '4' ) ) =  4.0_wp
+      values( ichar ( '5' ) ) =  5.0_wp
+      values( ichar ( '6' ) ) =  6.0_wp
+      values( ichar ( '7' ) ) =  7.0_wp
+      values( ichar ( '8' ) ) =  8.0_wp
+      values( ichar ( '9' ) ) =  9.0_wp
+      values( ichar ( '-' ) ) = -1.0_wp
+      values( ichar ( '+' ) ) =  1.0_wp
+
+      class( ichar(' ') ) = ignore
+      class( ichar(',') ) = ignore
+
+      class( ichar('.') ) = dpoint
+
+      class( ichar('E') ) = expont
+      class( ichar('D') ) = expont
+      class( ichar('e') ) = expont
+      class( ichar('d') ) = expont
+
+      class( ichar('+') ) = sign
+      class( ichar('-') ) = sign
+
+      class( ichar('1') ) = digit
+      class( ichar('2') ) = digit
+      class( ichar('3') ) = digit
+      class( ichar('4') ) = digit
+      class( ichar('5') ) = digit
+      class( ichar('6') ) = digit
+      class( ichar('7') ) = digit
+      class( ichar('8') ) = digit
+      class( ichar('9') ) = digit
+      class( ichar('0') ) = digit
+
+      class( ichar('p') ) = bpistr
+      class( ichar('P') ) = bpistr
+      class( ichar('i') ) = epistr
+      class( ichar('I') ) = epistr
+!
+!        Finally create the numbers that will be used for checking
+!        for floating point overflow.
+!
+!        NOTE: The value for MINEXP may be too small by one, but it
+!              really doesn't make any difference, as you're going to
+!              underflow anyway, and dividing zero by a number (BASE)
+!              still gives you zero.
+!
+      maxexp = dint ( dlog10( dpmax ) )
+      minexp =-( maxexp + 1 )
+      smlbnd = dpmax/lookup(ibase)
+
+      intbnd = base
+      next   = intbnd + 1.0_wp
+
+      do while ( intbnd /= next )
+
+         intbnd = intbnd *  base
+         next   = intbnd +  1.0_wp
+
+      end do
+
+      intbnd = intbnd / base
+!
+!        That takes care of the first pass initializations.
+!
+!
+!     Here's what's true right now.
+!
+!     There are no errors.
+!     The error pointer doesn't need to point anywhere.
+!     It's ok for the next token to be a decimal point.
+!     It's ok for the next token to be a sign character.
+!     It's ok for the next token to be an exponent marker.
+!     It's ok for the next character to be the start of pi.
+!
+!     We expect to be constructing the integer part of the
+!     numeric string.
+!
+      error     = ' '
+      ptr       = 0
+
+      pntok     = .true.
+      signok    = .true.
+      expok     = .true.
+      bpiok     = .true.
+      doint     = .true.
+      roundd    = .true.
+      roundi    = .true.
+!
+!     Here's some other facts.
+!
+!     We are not parsing the decimal part of the string.
+!     We are not parsing the exponent part of the string.
+!     We have not encountered any digits in the mantissa.
+!     We have not encountered any significant characters.
+!     It's not ok for the next character to be the end of pi (i).
+!
+      dodec     = .false.
+      doexp     = .false.
+      mantsa    = .false.
+      sigchr    = .false.
+      epiok     = .false.
+!
+!     So far there is no integer, decimal or exponent part to this
+!     string.
+!
+      intval    = 0.0_wp
+      decval    = 0.0_wp
+      expval    = 0.0_wp
+      divisr    = 1.0_wp
+      factor    = 1.0_wp
+      ecount    = 0.0_wp
+!
+!     Right now if we encounter a sign, it's part of the mantissa.
+!     And until we know better the sign of both the mantissa and
+!     exponent are +1 (as opposed to -1).
+!
+      signdx    = 1
+      dpsign(1) = 1.0_wp
+      dpsign(2) = 1.0_wp
+!
+!     Before doing anything else we determine whether or not
+!     the input string is empty.
+!
+      if ( string == ' ' ) then
+
+         error = blnkst
+         ptr   = 1
+         return
+
+      end if
+
+!
+!     We need to find the last non-blank character of the input
+!     string.  We shall use the idea of binary searching to locate
+!     this character.  At first this may appear to be a bit convoluted
+!     when compared to the obvious thing to do (start at the end of
+!     the string and step backward until a non-blank character is
+!     located).  However, on every machine we've looked at this method
+!     locates the last non-blank character much more quickly on average
+!     than the obvious method.
+!
+!     L and B denote the last and beginning characters
+!     of the substring we are searching.  NL is the next to last
+!     character that we are concerned with and M is the middle of
+!     the current search interval ( from B to NL ).
+!
+      l     =  len(string)
+      b     =  1
+      nl    =  l - 1
+
+!
+!     We want M to be ( B + NL ) / 2   but right now that's L/2
+!
+      m     =  l / 2
+
+      do while ( l-b > test )
+!
+!        What is true right now?  The string from L+1 on out
+!        is blank.  L > B; L-1 = NL >= B;  M = (B + NL) / 2;
+!        and M >= B,  B is at least one and if greater than 1
+!        there must be a non-blank character between B and the
+!        end of the string.
+!
+         if ( ichar(string(l:l)) /= blank ) then
+
+            b = l
+
+         else if ( string(m:nl) == ' ' ) then
+
+!
+!           If you got here, the STRING(L:L) is a blank.
+!           The string from L+1 on out is blank.
+!           The string from M to NL (=L-1) is blank.  Thus the
+!           string from M out is blank.
+!
+!           M is greater than or equal to B.
+!           If M  is less than B + 2, then L will become
+!           B or less and there will not be a
+!           next pass through the loop.  That means that
+!           we will never get to this point again and don't
+!           have to worry about the reference STRING(M:NL)
+!           giving us an access violation.
+!
+            l  = m - 1
+!
+!           With the new value of L, we now know that STRING(L+1:)
+!           is blank.
+!
+         else
+!
+!           If you get to this point all of the string from
+!           L out is blank and L is greater than M.
+!           There is a non-blank character between M and NL.
+!           If L should get within 16 of B, then the loop
+!           will not be executed again.  That means again that
+!           we don't have to worry about STRING(M:NL) being
+!           an ill formed string.
+!
+            l  =  nl
+            b  =  m
+!
+!           With the new value of L, we now know that STRING(L+1:)
+!           is blank.
+!
+         end if
+
+
+!
+!        Finally compute NL,the index of the character that precedes
+!        L and the new midpoint of the stuff from B to NL.
+!
+         nl =  l - 1
+         m  = (b + nl) / 2
+
+!
+!        What's true now?  The string from L+1 on out is blank.
+!
+      end do
+
+!
+!     L is now within 16 characters of the last non-blank character
+!     of the input string.  We simply search backward from L to
+!     locate this last non-blank.
+!
+      do while ( ichar(string(l:l)) == blank )
+         l = l - 1
+      end do
+
+
+!
+!     Begin to collect the number in its various parts: an integer
+!     portion, a fractional portion, and an exponent.
+!
+      do i = 1, l
+
+
+
+         id    = ichar(string(i:i))
+
+         if ( id > nknown .or. id < 0 ) then
+
+!
+!           This is definitely not expected.  Set the error message
+!           and return.
+!
+            nexti = i + 1
+            thisi = i
+
+            call zzinssub ( string, ']', nexti, error )
+            call zzinssub ( error,  '[', thisi, error )
+            call prefix ( unxpch,  1,         error )
+
+            ptr   = i
+            return
+
+!
+!        The action taken depends upon the class of the token.
+!
+         else if ( class(id) == digit ) then
+!
+!           Once a digit has been encountered, we can no longer
+!           allow the string 'PI' or a sign until an exponent
+!           character is hit and resets the SIGNOK flag.
+!
+            bpiok  = .false.
+            epiok  = .false.
+            signok = .false.
+            sigchr = .true.
+!
+!           If we are constructing the integer part ...
+!
+            if ( doint  ) then
+
+               mantsa = .true.
+!
+!              Check the current value of the integer part to
+!              make sure we don't overflow.
+!
+               if ( intval < intbnd ) then
+
+                  intval = intval * base + values(id)
+
+               else
+!
+!                 Once the integer exceeds a given bound,
+!                 we add the rest on as fractional part and
+!                 keep track of the factor we will need to
+!                 multiply the decimal part by to scale things
+!                 appropriately.  We also keep track of the number
+!                 we will need to add to the exponent part.
+!
+                  ecount = ecount + 1
+                  factor = factor / base
+
+                  if ( roundi ) then
+
+                     roundi = .false.
+
+                     if ( values(id) > 0.5_wp*base ) then
+                        intval = intval + 1.0_wp
+                     end if
+
+                  end if
+
+               end if
+!
+!           ... or the decimal part ...
+!
+            else if ( dodec ) then
+
+               mantsa = .true.
+!
+!              There are two cases to consider.  The case in which
+!              the integer portion of the string has value 0...
+!
+               if ( zeroi ) then
+!
+!                 We can just keep accumulating the decimal part
+!                 as an integer.  But we keep track of how many
+!                 places past the decimal point the first non-zero
+!                 digit occurs.  Note that once the decimal part
+!                 exceeds the integer bound, we don't need to do
+!                 anything.  The remaining digits cannot contribute
+!                 to the value of the decimal part.
+!
+                  if  ( decval < intbnd ) then
+
+                     decval = decval * base + values(id)
+                     ecount = ecount - 1
+
+                  else if ( roundd ) then
+
+                     roundd = .false.
+
+                     if ( values(id) >= 0.5_wp*base ) then
+                        decval =  decval + 1.0_wp
+                     end if
+
+                  end if
+!
+!              ...and the case in which the integer portion is not
+!              zero.
+!
+               else
+!
+!                 In this case, we know there is at least _something_
+!                 to the integer part of this string.  We can
+!                 stop accumulating the decimal part when the divisor
+!                 portion exceeds the integer barrier.  After that
+!                 the extra digits can't make any contribution to
+!                 the double precision value given to the string.
+!
+                  if ( divisr < intbnd ) then
+
+                     decval = decval * base + values(id)
+                     divisr = divisr * base
+
+                  end if
+
+               end if
+!
+!           ...or the exponent part of the string.
+!
+            else if ( doexp  ) then
+
+               if ( expval + ecount > maxexp ) then
+!
+!                 This number is too big to put into a double
+!                 precision number. The marginal case where
+!                 EXPVAL + ECOUNT .EQ. MAXEXP will be dealt
+!                 with when the integer and fractional parts
+!                 of the double precision number are built
+!                 at the end of this routine.
+!
+                  error = toobig
+                  ptr   = i
+                  return
+
+               else if ( expval + ecount < minexp ) then
+!
+!                 This number is going to underflow, we can
+!                 just stop accumulating exponent. But we don't
+!                 stop parsing the string yet. There might be
+!                 a bad character lurking somewhere later in the
+!                 string.
+!
+!                 NOTE: It is also possible to underflow when the
+!                       value of EXPVAL + ECOUNT is equal to MINEXP,
+!                       since an entire 'BASE' scale is not supported
+!                       for this particular exponent.
+!
+               else
+!
+!                 This is the case we expect.  Just add on the
+!                 next part of the exponent.
+!
+                  expval = expval*base + dpsign(2)*values(id)
+
+               end if
+!
+!           Even though this character is a digit, its not expected
+!           for some reason.  Set the error flag and return.
+!
+            else
+
+               nexti = i + 1
+               thisi = i
+
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
+
+               ptr   = i
+               return
+
+            end if
+
+         else if ( class(id) == dpoint ) then
+
+            if ( pntok ) then
+
+               bpiok  = .false.
+               epiok  = .false.
+               pntok  = .false.
+               signok = .false.
+               dodec  = .true.
+               doint  = .false.
+               doexp  = .false.
+               zeroi  = intval == 0.0_wp
+
+            else
+
+               nexti = i + 1
+               thisi = i
+
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxppt,  1,         error )
+
+               ptr    = i
+               return
+
+            end if
+
+         else if ( class(id) == expont ) then
+
+            sigchr = .true.
+
+            if ( expok ) then
+
+               bpiok  = .false.
+               epiok  = .false.
+               expok  = .false.
+               pntok  = .false.
+               dodec  = .false.
+               doint  = .false.
+               doexp  = .true.
+               signok = .true.
+               signdx =  2
+
+            else
+
+               nexti = i + 1
+               thisi = i
+
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
+
+               ptr   =  i
+               return
+
+            end if
+
+         else if ( class(id) == sign ) then
+
+            if ( signok ) then
+
+               dpsign(signdx) = values(id)
+               signok         = .false.
+
+            else
+
+               nexti = i + 1
+               thisi = i
+
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpsn,  1,         error )
+
+               ptr   = i
+               return
+
+            end if
+
+         else if ( class(id) == bpistr ) then
+
+            sigchr = .true.
+
+            if ( bpiok ) then
+
+               doint  = .false.
+               dodec  = .false.
+               doexp  = .false.
+               expok  = .false.
+               pntok  = .false.
+               bpiok  = .false.
+               signok = .false.
+               epiok  = .true.
+
+            else
+
+               nexti = i + 1
+               thisi = i
+
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
+
+               ptr   = i
+               return
+
+            end if
+
+         else if ( class(id) == epistr ) then
+
+            if ( epiok ) then
+
+               doint  = .false.
+               dodec  = .false.
+               doexp  = .false.
+               expok  = .false.
+               pntok  = .false.
+               bpiok  = .false.
+               signok = .false.
+               epiok  = .false.
+               mantsa = .true.
+
+               intval = pi
+
+            else
+
+               nexti = i + 1
+               thisi = i
+
+               call zzinssub ( string, ']', nexti, error )
+               call zzinssub ( error,  '[', thisi, error )
+               call prefix ( unxpch,  1,         error )
+
+               ptr   = i
+               return
+
+            end if
+
+         else if ( class(id) == ignore ) then
+
+!
+!           We don't do anything.
+!
+
+         else
+
+!
+!           This is definitely not expected.  Set the error message
+!           and return.
+!
+            nexti = i + 1
+            thisi = i
+
+            call zzinssub ( string, ']', nexti, error )
+            call zzinssub ( error,  '[', thisi, error )
+            call prefix ( unxpch,  1,         error )
+
+            ptr   = i
+            return
+
+         end if
+
+      end do
+
+
+!
+!     If we got through the loop and it's OK to end PI, then we started
+!     it but never finished.  This is an error.
+!
+      if ( epiok ) then
+         error = unrcst
+         ptr   = l
+         return
+      end if
+
+!
+!     Put together the portion that does not involve an exponent.
+!
+!     If
+!        (1) MANTSA = .TRUE., then we had some explicit part of a
+!            number, an  integer part, a fractional part, or both.
+!
+!        (2) SIGCHR = .TRUE, then we had either:
+!
+!            (a) MANTSA = .TRUE.
+!
+!         or
+!
+!            (b) there was an implicit value associated with the input
+!                string. For example, an exponent character followed
+!                by an optional exponent would produce a valid number:
+!                E+10 --> 1.0d+10. This is due to the fact that this
+!                routine emulates an RPN calculator of popular repute,
+!                not because it is inherently a good idea.
+!
+      if ( mantsa ) then
+!
+!        We had an integer part of the number, a fractional part, or
+!        both, so we need to put them together in an appropriate
+!        fashion.
+!
+         value = intval + ( decval / divisr ) * factor
+
+      else if ( sigchr ) then
+!
+!        We do not have a mantissa, so we had an  implicit mantissa,
+!        see above, so we need to set the value to one.
+!
+         value = 1.0_wp
+
+      else
+!
+!        We have an error. There were no significant characters in the
+!        input character string, and hence we could not parse it into
+!        a number. An example of such a string would be: '+  ,,.,,'.
+!        So, we will set an appropriate error message and return.
+!
+         error = unrcst
+         ptr   = len(string) + 1
+         return
+
+      end if
+!
+!     Adjust the entered part of the exponent by the amount
+!     we "shifted" the decimal point when we were computing
+!     the integer and decimal values.
+!
+      expval = expval + ecount
+!
+!     Now take care of the exponent contribution to the answer.
+!
+!     If the exponent is negative ...
+!
+      if ( expval < 0 ) then
+
+         do while ( expval < -base )
+
+            value  = value  / lookup(ibase)
+            expval = expval + base
+
+         end do
+
+         value  = value / lookup( -int(expval) )
+!
+!     If the exponent is positive ...
+!
+      else if ( expval > 0 ) then
+
+         do while ( expval > base )
+!
+!           Make sure that a multiply isn't going to create
+!           a number that overflows.
+!
+            if ( value >= smlbnd ) then
+
+               error = toobig
+               ptr   = len(string)+1
+               return
+
+            else
+
+               value  = value  * lookup(ibase)
+               expval = expval - base
+
+            end if
+
+         end do
+
+
+
+         exp = nint(expval)
+!
+!        Again, make sure that a floating point overflow isn't
+!        going to happen.
+!
+         if ( value < dpmax/lookup(exp) ) then
+
+            value = value * lookup(exp)
+
+         else
+
+               error = toobig
+               ptr   = len(string)+1
+               return
+
+         end if
+
+      end if
+
+      x = dpsign(1)*value
+
+      return
+      end subroutine nparsd
+
+!$Procedure NPARSI ( Integer parsing of a character string)
+
+      !> Parse a character string that represents a number and return
+      !> the FORTRAN-truncated integer value.
+      elemental subroutine nparsi (  string,  n, error, pnter)
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: intmax, intmin
+
+! $ Abstract
+!
+!     Parse a character string that represents a number and return
+!     the FORTRAN-truncated integer value.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     ALPHANUMERIC
+!     CONVERSION
+!     PARSING
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: string  !! Character string representing a numeric value.
+      integer(ip), intent(out) :: n  !! Translated integer value of STRING.
+      character(*), intent(out) :: error  !! Message indicating what errors have occurred.
+      integer(ip), intent(out) :: pnter  !! Position in character string where an error occurred.
+
+! $ Detailed_Input
+!
+!     STRING   is a character string that represents a numeric value.
+!              Commas and spaces may be used in this string for
+!              ease of reading and writing the number. They
+!              are treated as insignificant but non-error-producing
+!              characters.
+!
+!              For exponential representation and of the characters
+!              'E','D','e','d' may be used.
+!
+!              The following are legitimate numeric expressions
+!
+!               +12.2 e-1
+!               -3. 1415 9276
+!               1e12
+!               E10
+!
+!              The program also recognizes the following  mnemonics
+!              'PI', 'pi', 'Pi', 'pI'
+!              '+PI', '+pi', '+Pi', '+pI'
+!              '-PI', '-pi', '-Pi', '-pI'
+!              and returns the value ( + OR - ) 3 as appropriate.
+!
+! $ Detailed_Output
+!
+!     N        integer parsed value of input string  ( with
+!              the implied limits on precision).  If an error is
+!              encountered, N is not changed from whatever the
+!              input value was. If the input string has a fractional
+!              part, the fractional part will be truncated. Thus
+!              3.18 is interpreted as 3.  -4.98 is interpreted as -4.
+!
+!     ERROR    this is a message indicating that the string could
+!              not be parsed due to ambiguous use of symbols or
+!              due to a string representing a number too large for
+!              VAX double precision or integer variables. If no
+!              error occurred, ERROR is blank.
+!
+!              In particular, blank strings, or strings that do not
+!              contain either a digit or exponent character will
+!              be regarded as errors.
+!
+!     PNTER    this indicates which character was being used when
+!              the error occurred. If no error occurred, PNTER is 0.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If the string is non-numeric, PNTER indicates the location in
+!         the string where the error occurred, and ERROR contains a
+!         descriptive error message.
+!
+!     2)  If the string is blank, ERROR is returned with a message
+!         indicating the problem and PNTER will have a non-zero value.
+!
+!     3)  If the string represents a number that is outside the range of
+!         representable integers, as defined by INTMIN() and INTMAX(),
+!         ERROR is returned with a message and PNTER is set to the value
+!         1, as the entire numeric string is at fault.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     Basically, all this routine does is pass the input string to
+!     NPARSD which does the parsing in double precision. If nothing
+!     goes wrong in the double precision parsing of the number, the
+!     returned value is checked to determine whether or not it will fit
+!     into a VAX integer. If it doesn't, an error message is returned.
+!
+! $ Examples
+!
+!     Let   LINE = 'DELTA_T_A       =   32'
+!
+!     The following code fragment parses the line and obtains the
+!     integer value.
+!
+!
+!        CALL NEXTWD ( LINE,  FIRST,  REST )
+!        CALL NEXTWD ( REST, SECOND,  REST )
+!        CALL NEXTWD ( REST,  THIRD,  REST )
+!
+!        CALL NPARSI (  THIRD,  VALUE, ERROR, POINTR )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     H.A. Neilan        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.2.0, 12-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Removed
+!        unnecessary $Revisions section.
+!
+!-    SPICELIB Version 2.1.0, 29-APR-1996 (KRG)
+!
+!        This subroutine was modified to return a non-zero value of
+!        PNTER when the value returned by NPARSD is not a representable
+!        integer, as defined by INTMIN() and INTMAX(). The value
+!        returned is one (1), since the entire input string was not
+!        correct.
+!
+!        The test for an error from NPARSD was also changed. It now
+!        uses the integer PNTER returned from NPARSD rather then the
+!        character string ERROR. This should pose no problems because
+!        PNTER is non-zero if and only if there was an error and an
+!        error message was assigned to ERROR.
+!
+!        Some extra, and unnecessary, assignments were deleted. The
+!        assignments were:
+!
+!           X = DBLE ( N )
+!
+!           ERROR = ' '
+!
+!        which converted the input argument into a double before
+!        calling NPARSD with X and initialized the error message
+!        to be blank. NPARSD sets the value for X, ERROR, and PNTER
+!        unless an error occurs, in which case X is not changed.
+!        So, it is not necessary to initialize ERROR, PNTER, or X.
+!
+!        Finally, the values of INTMIN and INTMAX are only set on the
+!        first call to the routine. They are now SAVEd.
+!
+!-    SPICELIB Version 2.0.0, 15-OCT-1992 (WLT)
+!
+!        The abstract of this routine was modified to reflect what
+!        the routine actually does---truncate the value to an
+!        integer.
+!
+!        In addition, a blank string is no longer considered to be
+!        valid input.
+!
+!        Finally the instances of DFLOAT in the previous version were
+!        replaced by the standard intrinsic function DBLE and the
+!        function DINT was replaced by IDINT in one place to make types
+!        match up on both sides of an assignment.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (HAN)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     parse a character_string to an integer
+!
+!-&
+
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local Variables
+!
+      real(wp)              x
+
+!
+!     Saved Variables
+!
+!
+!     Initial values
+!
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: xmxint = real( intmax, wp )
+      real(wp), parameter :: xmnint = real( intmin, wp )
+!
+!     If this is the first time NPARSI has been called, initialize
+!     bounds for the range of integers.
+!
+!
+!     NPARSD will define ERROR and PNTER if there is an error,
+!     so we do not need to initialize them here.
+!
+      call nparsd ( string, x, error, pnter )
+
+      if ( pnter == 0 ) then
+
+         if (     ( dint(x) < xmnint ) &
+             .or. ( dint(x) > xmxint ) ) then
+
+            pnter = 1
+            error = 'NPARSI: Value entered is beyond the bounds of '// &
+                    'representable integers.'
+
+         else
+
+            n = idint(x)
+
+         end if
+
+      end if
+
+      return
+      end subroutine nparsi
+
+!$Procedure LX4UNS (Scan for unsigned integer)
+
+      !> Scan a string from a specified starting position for the
+      !> end of an unsigned integer.
+      elemental subroutine lx4uns ( string, first, last, nchar )
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Scan a string from a specified starting position for the
+!     end of an unsigned integer.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     PARSING
+!
+! $ Declarations
+
+      implicit none
+
+      character(*), intent(in) :: string  !! any character string
+      integer(ip), intent(in) :: first  !! first character to scan from in STRING
+      integer(ip), intent(out) :: last  !! last character that is part of an unsigned integer
+      integer(ip), intent(out) :: nchar  !! number of characters in the unsigned integer.
+
+! $ Detailed_Input
+!
+!     STRING   is any character string.
+!
+!     FIRST    is the location in the string to beginning scanning
+!              for an unsigned integer. It is assumed that the
+!              unsigned integer begins at FIRST.
+!
+! $ Detailed_Output
+!
+!     LAST     is the last character at or after FIRST such that
+!              the substring STRING(FIRST:LAST) is an unsigned
+!              integer. If there is no such substring, LAST
+!              will be returned with the value FIRST-1.
+!
+!     NCHAR    is the number of characters in the unsigned integer
+!              that begins at FIRST and ends at last. If there
+!              is no such string NCHAR will be given the value 0.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     1)  If FIRST is beyond either end of the string, then LAST will be
+!         returned with the value FIRST-1 and NCHAR will be returned
+!         with the value 0.
+!
+!     2)  If STRING(FIRST:FIRST) is not part of an unsigned integer then
+!         LAST will be returned with the value FIRST-1 and NCHAR will be
+!         returned with the value 0.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine allows you to scan forward in a string to locate
+!     an unsigned integer that begins on the input character FIRST.
+!
+! $ Examples
+!
+!     Suppose you believe that a string has the form
+!
+!        X%Y%Z
+!
+!     where X, Y, and Z are unsigned integers of some unknown
+!     length and % stands for some non-digit character. You could
+!     use this routine to locate the unsigned integers in the
+!     string as shown below. We'll keep track of the beginning and
+!     ending of the unsigned integers in the integer arrays B and E.
+!
+!     FIRST = 1
+!     I     = 0
+!
+!     DO WHILE ( FIRST .LT. LEN(STRING) )
+!
+!        CALL LX4UNS ( STRING, FIRST, LAST, NCHAR )
+!
+!        IF ( NCHAR .GT. 0 ) THEN
+!
+!           I     = I    + 1
+!           B(I)  = FIRST
+!           E(I)  = LAST
+!           FIRST = LAST + 2
+!
+!        ELSE
+!
+!           FIRST = FIRST + 1
+!
+!        END IF
+!
+!     END DO
+!
+! $ Restrictions
+!
+!     1)  Assumes ICHAR returns values in the range [-128, 255].
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.2.0, 04-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Fixed return value for LAST in $Exceptions section entry #1.
+!
+!-    SPICELIB Version 1.1.0, 03-DEC-2001 (NJB)
+!
+!        Updated to work if non-printing characters are present in
+!        the input string. Updated $Restrictions section.
+!
+!-    SPICELIB Version 1.0.0, 12-JUL-1994 (WLT)
+!
+!-&
+
+
+! $ Index_Entries
+!
+!     Scan a string for an unsigned integer.
+!
+!-&
+
+
+!
+!     Local parameters
+!
+      integer(ip)           maxc
+      parameter           ( maxc    =   255 )
+
+      integer(ip)           minc
+      parameter           ( minc    =  -128 )
+
+!
+!     Local variables
+!
+      integer(ip)           i
+      integer(ip)           l
+!
+!     The digits (SPICELIB filled this table on the first call).
+!
+      logical, parameter :: digit ( minc : maxc ) = &
+         [ ( i >= iachar('0') .and. i <= iachar('9'), i = minc, maxc ) ]
+
+
+!
+!     Saved variables
+!
+
+!
+!     Initial values
+!
+
+!
+!     First we perform some initializations that are needed on
+!     each pass through this routine.
+!
+
+
+      last  = first - 1
+      l     = len ( string )
+
+!
+!     If start is beyond the ends of the string, we  can quit now.
+!
+      if ( first < 1 .or. first > l ) then
+         nchar = 0
+         return
+      end if
+
+!
+!     Now for the real work of the routine. Examine characters one
+!     at a time...
+!
+      do i = first, l
+
+!
+!        If this character is a digit, move the LAST pointer one
+!        further down on the string.  Otherwise set NCHAR and return.
+!
+         if ( digit(ichar(string(i:i))) ) then
+            last  = last + 1
+         else
+            nchar = last + 1 - first
+            return
+         end if
+      end do
+
+      nchar = last + 1 - first
+
+      return
+      end subroutine lx4uns
 
 end module pepper_strings

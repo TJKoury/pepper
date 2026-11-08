@@ -30,9 +30,17 @@ For each MODULE (a key of modules.CONTEXT_MODULES, e.g. pepper_cells):
   legacy_context().
 - The routines' files in src/spicelib are deleted.
 
+Umbrella routines (modules.UMBRELLAS; see tools/umbrella.py): each entry
+point (and the umbrella routine itself, unless it only signals BOGUSENTRY)
+becomes a module procedure. The saved variables listed as state become the
+components of a type in a generated module src/pepper_state_<name>.f90,
+held in pepper_spice (or pepper_context) as an allocatable component, and
+the procedures access them through ASSOCIATE.
+
 A routine may call only: the error routines, routines of earlier (or the
 same) context modules, and routines of the stateless modules. Anything else
-is an error, so the module assignment has to follow the call graph.
+(including ENTRY points of routines still in src/spicelib) is an error, so
+the module assignment has to follow the call graph.
 """
 
 import argparse
@@ -44,7 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lowercase_code import map_code  # noqa: E402
 from modularize import (Routine, SRC, SPICELIB, parse_decl, split_top,  # noqa: E402
                         entity_name, remove_entities, module_of, _wrap)
-from modules import MODULES, CONSTANTS, CONTEXT_MODULES  # noqa: E402
+from modules import MODULES, CONSTANTS, CONTEXT_MODULES, UMBRELLAS  # noqa: E402
 from add_intents import table as io_table  # noqa: E402
 from document_procedures import abstract, descriptions, leftover_text  # noqa: E402
 
@@ -67,15 +75,56 @@ DOCS = {
     "pepper_text": "String operations that check their inputs (signal errors): "
                    "replacing markers with numbers, inserting and removing "
                    "substrings, conversions, ...",
+    "pepper_pool": "The kernel pool: variables loaded from text kernels or set by the "
+                   "program (ldpool, gdpool, pdpool, ...), reading text kernels, and "
+                   "the watchers that tell subsystems when variables change.",
 }
 
 
+def entry_names(name: str) -> list:
+    """The procedure names of a context-module item: the routine, or the
+    entry points of an umbrella (from its source, or from UMBRELLAS once it
+    has moved)."""
+    if name not in UMBRELLAS:
+        return [name]
+    if list(SPICELIB.glob(name + ".[fF]90")):
+        return [e.name for e in make_umbrella(name).entries]
+    return UMBRELLAS[name]["entries"]
+
+
+def make_umbrella(name: str):
+    from umbrella import Umbrella
+    cfg = UMBRELLAS[name]
+    functions = set(module_of()) | set(CONSTANTS) | set(ERROR_FUNCS) | set(ERROR_CALLS)
+    functions |= {r for rs in CONTEXT_MODULES.values() for r in rs}
+    return Umbrella(name, cfg["state"], cfg["component"], cfg.get("where", "instance"), functions,
+                    cfg.get("docs"))
+
+
 def where_ctx() -> dict:
-    return {r: m for m, rs in CONTEXT_MODULES.items() for r in rs}
+    return {e: m for m, rs in CONTEXT_MODULES.items() for r in rs for e in entry_names(r)}
 
 
-def check_calls(r: Routine, mod: str, ctx_where: dict, stateless: dict) -> None:
-    legacy = {p.stem.lower() for p in SPICELIB.glob("*.[fF]90")}
+_LEGACY = None
+
+
+def legacy_names() -> set:
+    """Names of the procedures still in src/spicelib: the files' routines and
+    their ENTRY points."""
+    global _LEGACY
+    if _LEGACY is None:
+        _LEGACY = {}
+        for p in SPICELIB.glob("*.[fF]90"):
+            names = {p.stem.lower()}
+            for m in re.finditer(r"^\s*entry\s+(\w+)", p.read_text(encoding="ascii"), re.M | re.I):
+                names.add(m.group(1).lower())
+            _LEGACY[p.stem.lower()] = names
+    return _LEGACY
+
+
+def check_calls(r, mod: str, ctx_where: dict, stateless: dict) -> None:
+    moving = set(CONTEXT_MODULES[mod])
+    legacy = {n for f, ns in legacy_names().items() if f not in moving for n in ns}
     for n in sorted(r.references()):
         if n in ctx_where:
             if ORDER.index(ctx_where[n]) > ORDER.index(mod):
@@ -139,8 +188,7 @@ def module_procedure(r: Routine, ctx_where: dict, stateless: dict) -> str:
         lines[i] = None
     uses = [s for s in r.spec if re.match(r"\s*use\b", s.text, re.I)]
     after = uses[-1].last if uses else first.last
-    new_uses = [f"{indent}use {m}, only: {', '.join(sorted(set(ns)))}"
-                for m, ns in sorted(imports.items(), key=lambda kv: list(MODULES).index(kv[0]))]
+    new_uses = use_lines(imports, indent)
     lines[r.end.first] = re.sub(r"(?i)\bend\s*$", f"end procedure {r.name}", lines[r.end.first])
     out = []
     for i, line in enumerate(lines):
@@ -151,7 +199,15 @@ def module_procedure(r: Routine, ctx_where: dict, stateless: dict) -> str:
     out = drop_section(out, "Brief_I/O")
     while out and not out[-1].strip():
         out.pop()
-    return "\n".join(out)
+    from umbrella import dedupe_uses
+    return dedupe_uses("\n".join(out))
+
+
+def use_lines(imports: dict, indent: str) -> list:
+    from modules import HANDWRITTEN
+    order = list(MODULES) + list(HANDWRITTEN)
+    return [f"{indent}use {m}, only: {', '.join(sorted(set(ns)))}"
+            for m, ns in sorted(imports.items(), key=lambda kv: order.index(kv[0]))]
 
 
 def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> list:
@@ -207,8 +263,8 @@ def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> lis
     return out
 
 
-def interface(r: Routine) -> str:
-    body = r.lines
+def interface(r) -> str:
+    body = getattr(r, "doc_lines", r.lines)
     intents = io_table(body)
     missing = [a for a in r.args if a not in intents]
     if missing:
@@ -228,12 +284,17 @@ def interface(r: Routine) -> str:
     return "\n".join(lines)
 
 
-def wrapper(r: Routine) -> str:
-    docs = descriptions(r.lines)
-    out = [f"      !> {t}" for t in abstract(r.lines)]
+def wrapper(r) -> str:
+    doc_lines = getattr(r, "doc_lines", r.lines)
+    docs = descriptions(doc_lines)
+    out = [f"      !> {t}" for t in abstract(doc_lines)]
     target = f"zz routine {r.name}" if r.name.startswith("zz") else f"ctx%{r.name}"
     out += ["      !>", f"      !> Legacy interface: calls {target} with the legacy context."]
-    out += [r.lines[i] for i in range(r.stmts[0].first, r.stmts[0].last + 1)]
+    if hasattr(r, "umbrella"):
+        prefix = (r.prefix + " ") if r.prefix else ""
+        out.append(f"      {prefix}{r.kind} {r.name} ( {', '.join(r.args)} )")
+    else:
+        out += [r.lines[i] for i in range(r.stmts[0].first, r.stmts[0].last + 1)]
     if r.name.startswith("zz"):
         out.append(f"      use pepper_instance, only: pepper_context, pepper_{r.name} => {r.name}")
     else:
@@ -287,17 +348,44 @@ LEGACY_HEADER = """\
 """
 
 
+def entry_procedure(e, ctx_where: dict, stateless: dict) -> str:
+    refs = e.references()
+    ctx_names = {n for n in refs if n in ctx_where and n != e.name}
+    consts = refs & set(CONSTANTS)
+    imports = {}
+    for n in sorted(refs):
+        if n in stateless:
+            imports.setdefault(stateless[n], []).append(n)
+    if consts:
+        imports.setdefault("pepper_constants", []).extend(sorted(consts))
+    drop = set(ctx_where) | set(stateless) | set(CONSTANTS) | set(ERROR_FUNCS)
+    return e.umbrella.procedure(e, drop, use_lines(imports, "      "),
+                                lambda s: rewrite_code(s, ctx_names, consts))
+
+
 def generate(mod: str, dry_run: bool) -> list:
+    from umbrella import Umbrella
     stateless = module_of()
     ctx_where = where_ctx()
-    routines = [Routine(n, preprocessed_ok=True) for n in CONTEXT_MODULES[mod]]
+    routines, umbrellas, sources = [], [], []
+    for n in CONTEXT_MODULES[mod]:
+        if n in UMBRELLAS:
+            u = make_umbrella(n)
+            umbrellas.append(u)
+            routines += u.entries
+            sources.append(u.path)
+        else:
+            r = Routine(n, preprocessed_ok=True)
+            routines.append(r)
+            sources.append(r.path)
     for r in routines:
         if "ctx" in {entity_name(e) for s in r.spec if parse_decl(s.text)
                      for e in parse_decl(s.text)[2]} | set(r.args):
             raise SystemExit(f"modularize_ctx: {r.name} already has a variable named ctx")
         check_calls(r, mod, ctx_where, stateless)
-    procs = [module_procedure(r, ctx_where, stateless) for r in routines]
-    ext = ".F90" if any(r.path.suffix == ".F90" for r in routines) else ".f90"
+    procs = [entry_procedure(r, ctx_where, stateless) if hasattr(r, "umbrella")
+             else module_procedure(r, ctx_where, stateless) for r in routines]
+    ext = ".F90" if any(p.suffix == ".F90" for p in sources) else ".f90"
     sub = SRC / f"{mod}{ext}"
     body = (f"!> {DOCS[mod]}\n!>\n"
             "!> The procedures keep SPICELIB's names and documentation; the context is\n"
@@ -316,6 +404,18 @@ def generate(mod: str, dry_run: bool) -> list:
         ifaces = "   public :: " + "&\n      ".join(_wrap(", ".join(publics), 70)) + "\n\n" + ifaces
     text = replace_region(text, "bindings", mod, binds)
     text = replace_region(text, "interfaces", mod, ifaces)
+    with_state = [u for u in umbrellas if u.state]
+    if with_state:
+        text = replace_region(text, "state modules", mod, "\n".join(
+            f"   use pepper_state_{u.name}, only: {u.name}_state, init_{u.name}_state"
+            for u in with_state))
+        for where, region in (("instance", "state components"),
+                              ("context", "context state components")):
+            us = [u for u in with_state if u.where == where]
+            if us:
+                text = replace_region(text, region, mod, "\n".join(
+                    f"      type({u.name}_state), allocatable :: {u.component}  !! "
+                    f"state of {u.name.upper()}" for u in us))
     legacy = SRC / "legacy" / legacy_name(mod)
     wrappers = LEGACY_HEADER.format(mod=mod, src=f"src/{sub.name}") + "\n" + \
         "\n\n".join(wrapper(r) for r in routines) + "\n"
@@ -323,9 +423,11 @@ def generate(mod: str, dry_run: bool) -> list:
         sub.write_text(body, encoding="ascii")
         INSTANCE.write_text(text, encoding="ascii")
         legacy.write_text(wrappers, encoding="ascii")
-        for r in routines:
-            r.path.unlink()
-    return [sub, INSTANCE, legacy]
+        for u in with_state:
+            (SRC / f"pepper_state_{u.name}.f90").write_text(u.state_module(), encoding="ascii")
+        for p in sources:
+            p.unlink()
+    return [sub, INSTANCE, legacy] + [SRC / f"pepper_state_{u.name}.f90" for u in with_state]
 
 
 def legacy_name(mod: str) -> str:

@@ -14,7 +14,9 @@ read into, and never passed as an argument (a call could change it). Then
     save       power                  ->      [ 1.0_wp, 10.0_wp, 100.0_wp, 1000.0_wp ]
     data       power / 1.0_wp, ... /
 
-Variables that do not qualify are reported and left alone. Character
+Variables that do not qualify are reported and left alone. A variable that
+is passed to procedures but only read (checked by hand) can be converted
+with --force NAME. Character
 values keep their declared length (``[character(n) :: ...]``).
 """
 
@@ -67,7 +69,7 @@ def modified(stmts, name: str) -> bool:
     return False
 
 
-def convert(path: Path) -> list:
+def convert(path: Path, force=()) -> list:
     text = path.read_text(encoding="ascii")
     lines = text.split("\n")
     stmts = raw_statements(text)
@@ -91,7 +93,7 @@ def convert(path: Path) -> list:
                 ok = False
                 break
             n = names[0].lower()
-            if n not in decls or modified(stmts, n):
+            if n not in decls or (n not in force and modified(stmts, n)):
                 ok = False
                 break
             ds, spec, ent = decls[n]
@@ -154,9 +156,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("files", nargs="+", type=Path)
+    ap.add_argument("--force", action="append", default=[], metavar="NAME",
+                    help="convert NAME although it is passed to procedures (checked by hand "
+                         "to be read-only); repeatable")
     args = ap.parse_args()
     for p in args.files:
-        for n in convert(p):
+        for n in convert(p, {f.lower() for f in args.force}):
             print(n)
     return 0
 

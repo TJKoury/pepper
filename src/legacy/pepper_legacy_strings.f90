@@ -849,3 +849,126 @@
            '40' ]
       call pepper_dpstr ( x, sigdig, string )
       end subroutine dpstr
+
+      !> Return .TRUE. if two given characters are equivalent when the
+      !> case of the characters is ignored.
+      !>
+      !> Legacy interface: calls eqchr of module pepper_strings.
+      logical function eqchr ( a, b )
+      use pepper_strings, only: pepper_eqchr => eqchr
+      use pepper_kinds, only: ip
+      implicit none
+      character(1)          a  !! one of the characters to check
+      character(1)          b  !! the other character to check
+      integer(ip)           lstchr
+      parameter           ( lstchr = 255 )
+      eqchr = pepper_eqchr ( a, b )
+      end function eqchr
+
+      !> Return .TRUE. if two given characters are not equivalent if the
+      !> case of the characters is ignored.
+      !>
+      !> Legacy interface: calls nechr of module pepper_strings.
+      logical function nechr ( a, b )
+      use pepper_strings, only: pepper_nechr => nechr
+      use pepper_kinds, only: ip
+      implicit none
+      character(1)          a  !! one of the characters to check
+      character(1)          b  !! the other character to check
+      integer(ip)           lstchr
+      parameter           ( lstchr = 255 )
+      nechr = pepper_nechr ( a, b )
+      end function nechr
+
+      !> Determine if two characters from different strings are the
+      !> same when the case of the characters is ignored.
+      !>
+      !> Legacy interface: calls samchi of module pepper_strings.
+      logical function samchi ( str1, l1, str2, l2 )
+      use pepper_strings, only: pepper_samchi => samchi
+      use pepper_kinds, only: ip
+      implicit none
+      character(*)          str1  !! A character string
+      integer(ip)           l1  !! The location (index) of a character in STR1
+      character(*)          str2  !! A character string
+      integer(ip)           l2  !! The location (index) of a character in STR2
+      samchi = pepper_samchi ( str1, l1, str2, l2 )
+      end function samchi
+
+      !> Determine whether or not two substrings are the same up to
+      !> case.
+      !>
+      !> Legacy interface: calls samsbi of module pepper_strings.
+      logical function samsbi ( str1, b1, e1,  str2, b2, e2 )
+      use pepper_strings, only: pepper_samsbi => samsbi
+      use pepper_kinds, only: ip
+      implicit none
+      character(*)          str1  !! A string
+      integer(ip)           b1  !! Beginning of a substring in STR1
+      integer(ip)           e1  !! End of s substring in STR1
+      character(*)          str2  !! A second string
+      integer(ip)           b2  !! The beginning of a substring in STR2
+      integer(ip)           e2  !! The end  of s substring in STR2
+      samsbi = pepper_samsbi ( str1, b1, e1, str2, b2, e2 )
+      end function samsbi
+
+      !> Determine whether a string is matched by a template containing
+      !> wild cards. This routine is case-insensitive.
+      !>
+      !> Legacy interface: calls matchi of module pepper_strings.
+      logical function  matchi ( string, templ, wstr, wchr )
+      use pepper_strings, only: pepper_matchi => matchi
+      use pepper_kinds, only: ip
+      implicit none
+      character(*)     string  !! String to be tested.
+      character(*)     templ  !! Template (with wild cards) to test against STRING.
+      character(1)     wstr  !! Wild string token.
+      character(1)     wchr  !! Wild character token.
+      matchi = pepper_matchi ( string, templ, wstr, wchr )
+      end function matchi
+
+      !> Parse a character string that represents a number and return
+      !> a double precision value.
+      !>
+      !> Legacy interface: calls nparsd of module pepper_strings.
+      subroutine nparsd ( string, x, error, ptr )
+      use pepper_strings, only: pepper_nparsd => nparsd
+      use pepper_kinds, only: ip, wp
+      implicit none
+      character(*)     string  !! Character string representing a numeric value.
+      real(wp) x  !! Double precision value parsed from STRING.
+      character(*)     error  !! Message indicating whether errors have occurred.
+      integer(ip)      ptr  !! Position in string where an error occurred.
+      call pepper_nparsd ( string, x, error, ptr )
+      end subroutine nparsd
+
+      !> Parse a character string that represents a number and return
+      !> the FORTRAN-truncated integer value.
+      !>
+      !> Legacy interface: calls nparsi of module pepper_strings.
+      subroutine nparsi (  string,  n, error, pnter)
+      use pepper_strings, only: pepper_nparsi => nparsi
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: intmax, intmin
+      implicit none
+      character(*)     string  !! Character string representing a numeric value.
+      integer(ip)      n  !! Translated integer value of STRING.
+      character(*)     error  !! Message indicating what errors have occurred.
+      integer(ip)      pnter  !! Position in character string where an error occurred.
+      call pepper_nparsi ( string, n, error, pnter )
+      end subroutine nparsi
+
+      !> Scan a string from a specified starting position for the
+      !> end of an unsigned integer.
+      !>
+      !> Legacy interface: calls lx4uns of module pepper_strings.
+      subroutine lx4uns ( string, first, last, nchar )
+      use pepper_strings, only: pepper_lx4uns => lx4uns
+      use pepper_kinds, only: ip
+      implicit none
+      character(*)          string  !! any character string
+      integer(ip)           first  !! first character to scan from in STRING
+      integer(ip)           last  !! last character that is part of an unsigned integer
+      integer(ip)           nchar  !! number of characters in the unsigned integer.
+      call pepper_lx4uns ( string, first, last, nchar )
+      end subroutine lx4uns

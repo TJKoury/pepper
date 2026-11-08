@@ -30,6 +30,17 @@ module pepper_instance
    use, intrinsic :: iso_fortran_env, only: error_unit
    use pepper_kinds, only: ip, wp
    use pepper_errors, only: expln
+   ! The state types of the subsystems (generated modules pepper_state_*).
+   ! >>> generated state modules (tools/modularize_ctx.py)
+   ! --- pepper_pool
+   use pepper_state_rdtext, only: rdtext_state, init_rdtext_state
+   use pepper_state_rdker, only: rdker_state, init_rdker_state
+   use pepper_state_tcheck, only: tcheck_state, init_tcheck_state
+   use pepper_state_texpyr, only: texpyr_state, init_texpyr_state
+   use pepper_state_zztime, only: zztime_state, init_zztime_state
+   use pepper_state_pool, only: pool_state, init_pool_state
+   ! --- end pepper_pool
+   ! <<< generated state modules
 
    implicit none
 
@@ -53,6 +64,16 @@ module pepper_instance
       !> Incremented by every change of the loaded kernels or the kernel
       !> pool; caches in contexts are valid while it is unchanged.
       integer(ip) :: generation = 0
+      ! The state of the subsystems (allocated when first used).
+      ! >>> generated state components (tools/modularize_ctx.py)
+      ! --- pepper_pool
+      type(rdtext_state), allocatable :: rdtext  !! state of RDTEXT
+      type(rdker_state), allocatable :: rdker  !! state of RDKER
+      type(tcheck_state), allocatable :: tcheck  !! state of TCHECK
+      type(texpyr_state), allocatable :: texpyr  !! state of TEXPYR
+      type(pool_state), allocatable :: pool  !! state of POOL
+      ! --- end pepper_pool
+      ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
    end type pepper_spice
@@ -68,6 +89,12 @@ module pepper_instance
       integer :: action = action_return  !! error action (index in action_names)
       character(short_message_length) :: short = ' '  !! short error message
       character(long_message_length) :: long = ' '  !! long error message
+      ! Per-context state of the subsystems (allocated when first used).
+      ! >>> generated context state components (tools/modularize_ctx.py)
+      ! --- pepper_pool
+      type(zztime_state), allocatable :: zztime  !! state of ZZTIME
+      ! --- end pepper_pool
+      ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
       procedure, non_overridable :: is_legacy
@@ -247,6 +274,40 @@ module pepper_instance
       procedure, non_overridable :: locati
       procedure, non_overridable :: locln
       ! --- end pepper_text
+      ! --- pepper_pool
+      procedure, non_overridable :: ioerr
+      procedure, non_overridable :: rdtext
+      procedure, non_overridable :: cltext
+      procedure, non_overridable :: rdknew
+      procedure, non_overridable :: rdkdat
+      procedure, non_overridable :: rdklin
+      procedure, non_overridable :: tcheck
+      procedure, non_overridable :: tparch
+      procedure, non_overridable :: tchckd
+      procedure, non_overridable :: texpyr
+      procedure, non_overridable :: tsetyr
+      procedure, non_overridable :: tpartv
+      procedure, non_overridable :: tparse
+      procedure, non_overridable :: clpool
+      procedure, non_overridable :: ldpool
+      procedure, non_overridable :: rtpool
+      procedure, non_overridable :: expool
+      procedure, non_overridable :: wrpool
+      procedure, non_overridable :: swpool
+      procedure, non_overridable :: cvpool
+      procedure, non_overridable :: gcpool
+      procedure, non_overridable :: gdpool
+      procedure, non_overridable :: gipool
+      procedure, non_overridable :: dtpool
+      procedure, non_overridable :: pcpool
+      procedure, non_overridable :: pdpool
+      procedure, non_overridable :: pipool
+      procedure, non_overridable :: lmpool
+      procedure, non_overridable :: szpool
+      procedure, non_overridable :: dvpool
+      procedure, non_overridable :: gnpool
+      procedure, non_overridable :: dwpool
+      ! --- end pepper_pool
       ! <<< generated bindings
    end type pepper_context
 
@@ -2015,6 +2076,746 @@ module pepper_instance
 
    end interface
    ! --- end pepper_text
+   ! --- pepper_pool
+   public :: zzctruin, zzctrsin, zzctrinc, zzctrchk, zzcln, zztknerr, zzmkpc,&
+      zzrept, zztpats, zzcmbt, zzgrep, zzispt, zzist, zznote, zzremt,&
+      zzsubt, zztokns, zzunpck, zzvalt, zzpini, zzrvar, zzrvbf, zzgapool,&
+      zzgpnm, zznwpool, zzvupool, zzpctrck
+
+   interface
+
+      !> Set counter array to the initial values for the user routines.
+      !>
+      !> CTRSIZ     P   Counter array size.
+      module subroutine zzctruin ( ctx, oldctr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include                'zzctr.inc'
+         integer(ip), intent(out) :: oldctr ( ctrsiz )  !! Counter array to be set to initial user
+                                                        !! values.
+      end subroutine zzctruin
+
+      !> Set counter array to the initial values for the subsystem
+      !> routines.
+      !>
+      !> CTRSIZ     P   Counter array size.
+      module subroutine zzctrsin ( ctx, oldctr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include                'zzctr.inc'
+         integer(ip), intent(out) :: oldctr ( ctrsiz )  !! Counter array to be set to initial
+                                                        !! subsystem values
+      end subroutine zzctrsin
+
+      !> Increment counter array.
+      !>
+      !> CTRSIZ     P   Counter array size.
+      module subroutine zzctrinc ( ctx, oldctr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include                'zzctr.inc'
+         integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Counter array to be incremented.
+      end subroutine zzctrinc
+
+      !> Check and update, if needed, counter array.
+      !>
+      !> CTRSIZ     P   Counter array size.
+      module subroutine zzctrchk ( ctx, newctr, oldctr, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include                'zzctr.inc'
+         integer(ip), intent(in) :: newctr ( ctrsiz )  !! New counter value.
+         integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Old counter value.
+         logical, intent(out) :: update  !! Update flag.
+      end subroutine zzctrchk
+
+      !> Set the long error message equal to a standard I/O error message
+      !> composed from an action, the name of a file, and a value of
+      !> IOSTAT.
+      module subroutine ioerr ( ctx, action, file, iostat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: action  !! Action which caused the error.
+         character(*), intent(in) :: file  !! The name of the file involved.
+         integer(ip), intent(in) :: iostat  !! The value of IOSTAT returned by ACTION.
+      end subroutine ioerr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzcln ( ctx, lookat, nameat, namlst, datlst, nmpool, chpool, dppool )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         integer(ip), intent(in) :: lookat  !! The hash value of some name.
+         integer(ip), intent(in) :: nameat  !! The actual node where the name was stored
+         integer(ip), intent(inout) :: namlst ( * )  !! The array of heads of name lists.
+         integer(ip), intent(inout) :: datlst ( * )  !! The array of heads of lists of values
+         integer(ip), intent(inout) :: nmpool ( 2, lbpool:* )  !! The linked list pool of variable
+                                                               !! names.
+         integer(ip), intent(inout) :: chpool ( 2, lbpool:* )  !! The linked list pool of variable
+                                                               !! d.p. values.
+         integer(ip), intent(inout) :: dppool ( 2, lbpool:* )  !! The linked list pool of variable
+                                                               !! string values.
+      end subroutine zzcln
+
+      !> Read the next line of text from a text file.
+      !>
+      !> MAXOPN     P   Maximum number of open files.
+      !> MAXLEN     P   Maximum file name length.
+      module subroutine rdtext ( ctx, file, line, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! Name of text file.
+         character(*), intent(out) :: line  !! Next line from the text file.
+         logical, intent(out) :: eof  !! End-of-file indicator.
+      end subroutine rdtext
+
+      !> Close a text file currently opened by RDTEXT.
+      module subroutine cltext ( ctx, file )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! Text file to be closed.
+      end subroutine cltext
+
+      !> Open and initialize a SPICE ASCII kernel file.
+      module subroutine rdknew ( ctx, kernel )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: kernel  !! Kernel file.
+      end subroutine rdknew
+
+      !> Read the next line of data from a SPICE ASCII kernel file.
+      module subroutine rdkdat ( ctx, line, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(out) :: line  !! Next line of kernel data.
+         logical, intent(out) :: eof  !! End of file indicator.
+      end subroutine rdkdat
+
+      !> Return the name of file and line number of the last line read by
+      !> the entry point RDKDAT.
+      module subroutine rdklin ( ctx, kernel, number )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(out) :: kernel  !! The name of the current file that is being read.
+         integer(ip), intent(out) :: number  !! The line number of the last line read in the file.
+      end subroutine rdklin
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zztknerr ( ctx, templt, string, token, error, status )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: templt  !! Error message template
+         character(*), intent(in) :: string  !! First string to be substituted
+         character(*), intent(in) :: token  !! Second string to be substituted
+         character(*), intent(out) :: error  !! Complete error message
+         logical, intent(out) :: status  !! Status flag
+      end subroutine zztknerr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzmkpc ( ctx, pictur, b, e, mark, pattrn )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(inout) :: pictur  !! A partially constructed time format picture
+         integer(ip), intent(in) :: b  !! Beginning of substring to place a mark
+         integer(ip), intent(in) :: e  !! End of substring to place a mark
+         character(*), intent(in) :: mark  !! Initial portion of a mark
+         character(*), intent(in) :: pattrn  !! Decimal pattern
+      end subroutine zzmkpc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE if a replacement is performed
+      module logical function zzrept ( ctx, sub, replac, l2r )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: sub  !! is the substring to perform replacements on
+         character(*), intent(in) :: replac  !! is the replacement string
+         logical, intent(in) :: l2r  !! use left to right scanning if L2R is TRUE.
+      end function zzrept
+
+      !> Determine whether the components of a time vector are in the
+      !> "usual" range for the components, if component checking is
+      !> enabled.
+      module subroutine tcheck ( ctx, tvec, type, mods, modify, ok, error )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: tvec   ( * )  !! A vector of time components
+         character(*), intent(in) :: type  !! The type of time vector.
+         logical, intent(in) :: mods  !! A logical indicating the presence of modifiers
+         character(*), intent(in) :: modify ( * )  !! The values of the modifiers
+         logical, intent(out) :: ok  !! Indicates success or failure of component checks.
+         character(*), intent(out) :: error  !! Diagnostic message if .NOT. OK.
+      end subroutine tcheck
+
+      !> Restrict the set of strings that are recognized by SPICE time
+      !> parsing routines to those that have standard values for all time
+      !> components.
+      module subroutine tparch ( ctx, type )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: type  !! String: Use 'YES' to restrict time inputs.
+      end subroutine tparch
+
+      !> Determine whether component checking is enabled for time strings.
+      module subroutine tchckd ( ctx, type )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(out) :: type  !! Answer to the question: "Is checking enabled?"
+      end subroutine tchckd
+
+      !> Expand an abbreviated year to a full year specification.
+      module subroutine texpyr ( ctx, year )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(inout) :: year  !! The year of some epoch abbreviated/expanded.
+      end subroutine texpyr
+
+      !> Set the lower bound on the 100 year range.
+      module subroutine tsetyr ( ctx, year )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: year  !! Lower bound on the 100 year interval of expansion
+      end subroutine tsetyr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> COUNT      P   The number of patterns built in to this routine.
+      !> The function returns .TRUE. if the initialization is successful.
+      module logical function zztpats ( ctx, room, nknown, known, meanng )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: room  !! The declared space available for patterns
+         integer(ip), intent(out) :: nknown  !! The number of patterns returned.
+         character(*), intent(out) :: known  ( * )  !! The patterns that are automatically
+                                                    !! recognized
+         character(*), intent(out) :: meanng ( * )  !! The meaning associated with the patterns.
+      end function zztpats
+
+      !> Parse the components of a time string and return a vector of the
+      !> components of that string. Also return an array of any modifiers
+      !> present in the input string; these may alter the interpretation
+      !> of the components.
+      !>
+      !> The function returns
+      module subroutine tpartv ( ctx, string, tvec, ntvec, type, modify, mods, yabbrv, succes, pictur, error )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! A string to be parsed as a time
+         real(wp), intent(out) :: tvec   ( * )  !! A vector giving the components of the time.
+         integer(ip), intent(out) :: ntvec  !! The number of components supplied for TVEC
+         character(*), intent(out) :: type  !! The type of the "time vector" TVEC
+         character(*), intent(out) :: modify ( * )  !! A list of modifiers present in STRING.
+         logical, intent(out) :: mods  !! A logical indicating the presence of a modifier
+         logical, intent(out) :: yabbrv  !! A logical indicating that a year was abbreviated
+         logical, intent(out) :: succes  !! A logical indicating whether STRING was parsed.
+         character(*), intent(out) :: pictur  !! A time format picture associated with STRING
+         character(*), intent(out) :: error  !! A diagnostic message if STRING couldn't be parsed
+      end subroutine tpartv
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE is a combination was performed.
+      module logical function zzcmbt ( ctx, string, letter, l2r )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! A sequence of tokens to be combined.
+         character(1), intent(in) :: letter  !! The replacement token for the combination
+         logical, intent(in) :: l2r  !! If TRUE scan left to right, else scan right to left
+      end function zzcmbt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module logical function zzgrep ( ctx, string )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(out) :: string  !! The current representation of tokenized time
+      end function zzgrep
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE if a pair is found.
+      module logical function zzispt ( ctx, string, b, e )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! a list of tokens to search for.
+         integer(ip), intent(out) :: b  !! the beginning of the first matching token
+         integer(ip), intent(out) :: e  !! the ending of the last matching token.
+      end function zzispt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LETTER     I
+      !>
+      !> The function returns
+      module logical function zzist ( ctx, letter )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(1), intent(in) :: letter
+      end function zzist
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE if the token is located.
+      module logical function zznote ( ctx, letter, b, e )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(1), intent(in) :: letter  !! a token to look for in the internal representation
+         integer(ip), intent(out) :: b  !! is the beginning of the token
+         integer(ip), intent(out) :: e  !! is the end of the token.
+      end function zznote
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE if any tokens are removed.
+      module logical function zzremt ( ctx, letter )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(1), intent(in) :: letter  !! token to remove from the internal representation.
+      end function zzremt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE is a substitution is performed.
+      module logical function zzsubt ( ctx, string, transl, l2r )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! token pattern to look for.
+         character(*), intent(in) :: transl  !! token replacement pattern.
+         logical, intent(in) :: l2r  !! direction to scan internal representation.
+      end function zzsubt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE is STRING can be tokenized.
+      module logical function zztokns ( ctx, string, error )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! A time string to be tokenized and internalized.
+         character(*), intent(out) :: error  !! A diagnostic message
+      end function zztokns
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE if the string was unpacked completely.
+      module logical function zzunpck ( ctx, string, yabbrv, tvec, e, transl, pic, error )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! is a time string that has been tokenized.
+         character(*), intent(out) :: transl  !! is the type TVEC ( YMD or YD )
+         character(*), intent(out) :: error  !! a diagnostic of any problems
+         character(*), intent(out) :: pic  !! is a picture of the format used for the time string
+         real(wp), intent(out) :: tvec  ( * )  !! is a vector of time components
+         integer(ip), intent(out) :: e  !! is the actual number of components present
+         logical, intent(in) :: yabbrv  !! has the year been abbreviated.
+      end function zzunpck
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE if any substitutions are performed.
+      module logical function zzvalt ( ctx, string, b, e, letter )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! Original time string.
+         character(1), intent(in) :: letter  !! New token if integer is within range.
+         integer(ip), intent(in) :: b  !! Lower bound of value range
+         integer(ip), intent(in) :: e  !! Upper bound of value range
+      end function zzvalt
+
+      !> Parse a time string and return seconds past the J2000 epoch
+      !> on a formal calendar.
+      module subroutine tparse ( ctx, string, sp2000, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! Input time string, UTC.
+         real(wp), intent(out) :: sp2000  !! Equivalent UTC seconds past J2000.
+         character(*), intent(out) :: errmsg  !! Descriptive error message.
+      end subroutine tparse
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzpini ( ctx, first, maxvar, maxval, maxlin, begdat, begtxt, nmpool, dppool, chpool, namlst, datlst, maxagt, mxnote, wtvars, wtptrs, wtpool, wtagnt, agents, active, notify, subctr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         integer(ip) :: lbcell
+         parameter ( lbcell = -5 )
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         logical, intent(inout) :: first  !! Used to determine if this is the first pass
+         integer(ip), intent(in) :: maxvar  !! Maximum number of variables in the pool
+         integer(ip), intent(in) :: maxval  !! Maximum number of d.p. values in the pool
+         integer(ip), intent(in) :: maxlin  !! Maximum number of string values in the pool
+         character(*), intent(out) :: begdat  !! Marker used to begin data section of a kernel
+         character(*), intent(out) :: begtxt  !! Marker used to begin text section of a kernel
+         integer(ip), intent(out) :: nmpool ( 2,  lbpool : maxvar )  !! Linked list for resolving
+                                                                     !! hash collisions of names
+         integer(ip), intent(out) :: dppool ( 2,  lbpool : maxval )  !! Linked list for maintaining
+                                                                     !! d.p. values.
+         integer(ip), intent(out) :: chpool ( 2,  lbpool : maxlin )  !! Linked list for maintaining
+                                                                     !! string values
+         integer(ip), intent(out) :: namlst (              maxvar )  !! Heads of collision
+                                                                     !! resolution lists
+         integer(ip), intent(out) :: datlst (              maxvar )  !! Heads of data values lists
+         integer(ip), intent(in) :: maxagt  !! Maximum number of agents that can be supported
+         integer(ip), intent(in) :: mxnote  !! Maximum number of agents that can be notified
+         character(*), intent(out) :: wtvars ( lbcell : maxvar )  !! Name array (watched variables)
+                                                                  !! of the watcher symbol table
+         integer(ip), intent(out) :: wtptrs ( maxvar )  !! Pointer array of the watcher symbol table
+         integer(ip), intent(out) :: wtpool ( 2, lbpool:mxnote )  !! Linked list pool of the watcher
+                                                                  !! symbol table
+         character(*), intent(out) :: wtagnt ( mxnote )  !! Values array (agents) of the watcher
+                                                         !! symbol table
+         character(*), intent(out) :: agents ( lbcell : * )  !! Set of agents
+         character(*), intent(out) :: active ( lbcell : * )  !! Watchers that are active.
+         character(*), intent(out) :: notify ( lbcell : * )  !! Agents to notify
+         integer(ip), intent(out) :: subctr ( ctrsiz )  !! POOL state counter.
+      end subroutine zzpini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzrvar ( ctx, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         integer(ip), intent(inout) :: namlst     (           * )  !! array of collision resolution
+                                                                   !! list heads.
+         integer(ip), intent(inout) :: nmpool     ( 2, lbpool:* )  !! linked list pool of collision
+                                                                   !! resolution lists.
+         character(*), intent(inout) :: names      (           * )  !! array of names of kernel pool
+                                                                    !! variables.
+         integer(ip), intent(inout) :: datlst     (           * )  !! array of heads of lists of
+                                                                   !! variable values.
+         integer(ip), intent(inout) :: dppool     ( 2, lbpool:* )  !! linked list pool of pointer
+                                                                   !! lists to d.p. values.
+         real(wp), intent(inout) :: dpvals     (           * )  !! array of d.p. kernel pool values.
+         integer(ip), intent(inout) :: chpool     ( 2, lbpool:* )  !! linked list pool of pointer
+                                                                   !! lists to string values.
+         character(*), intent(inout) :: chvals     (           * )  !! array of string kernel pool
+                                                                    !! values.
+         character(*), intent(out) :: varnam  !! name of variable parsed.
+         logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
+      end subroutine zzrvar
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzrvbf ( ctx, buffer, bsize, linnum, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         character(*), intent(in) :: buffer     (  * )  !! Array of text to be read and parsed.
+         integer(ip), intent(in) :: bsize  !! Number of lines in text buffer.
+         integer(ip), intent(inout) :: linnum  !! line number to begin reading buffer
+         integer(ip), intent(inout) :: namlst     (           * )  !! array of collision resolution
+                                                                   !! list heads
+         integer(ip), intent(inout) :: nmpool     ( 2, lbpool:* )  !! linked list pool of collision
+                                                                   !! resolution lists
+         character(*), intent(inout) :: names      (           * )  !! array of names of kernel pool
+                                                                    !! variables
+         integer(ip), intent(inout) :: datlst     (           * )  !! array of heads of lists of
+                                                                   !! variable values
+         integer(ip), intent(inout) :: dppool     ( 2, lbpool:* )  !! linked list pool of pointer
+                                                                   !! lists to d.p. values
+         real(wp), intent(inout) :: dpvals     (           * )  !! array of d.p. kernel pool values
+         integer(ip), intent(inout) :: chpool     ( 2, lbpool:* )  !! linked list pool of pointer
+                                                                   !! lists to string values
+         character(*), intent(inout) :: chvals     (           * )  !! array of string kernel pool
+                                                                    !! values
+         character(*), intent(out) :: varnam  !! name of variable parsed
+         logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
+      end subroutine zzrvbf
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzgapool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, agtset )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip) :: lbcell
+         parameter ( lbcell = -5 )
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         character(*), intent(in) :: varnam  !! Kernel variable name.
+         character(*), intent(in) :: wtvars ( lbcell : * )  !! Watched kernel variable set.
+         integer(ip), intent(in) :: wtptrs ( * )  !! Pointers from variables into the watch pool.
+         integer(ip), intent(in) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent
+                                                              !! names.
+         character(*), intent(in) :: wtagnt ( * )  !! Array of agent names.
+         character(*), intent(out) :: agtset ( lbcell : * )  !! Set of agents for VARNAM.
+      end subroutine zzgapool
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgpnm ( ctx, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, found, lookat, nameat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         integer(ip), intent(inout) :: namlst     (           * )  !! array of collision resolution
+                                                                   !! list heads
+         integer(ip), intent(inout) :: nmpool     ( 2, lbpool:* )  !! linked list pool of collision
+                                                                   !! resolution lists
+         character(*), intent(inout) :: names      (           * )  !! array of names of kernel pool
+                                                                    !! variables
+         integer(ip), intent(inout) :: datlst     (           * )  !! array of heads of lists of
+                                                                   !! variable values
+         integer(ip), intent(inout) :: dppool     ( 2, lbpool:* )  !! linked list pool of pointer
+                                                                   !! lists to d.p. values
+         real(wp), intent(inout) :: dpvals     (           * )  !! array of d.p. kernel pool values
+         integer(ip), intent(inout) :: chpool     ( 2, lbpool:* )  !! linked list pool of pointer
+                                                                   !! lists to string values
+         character(*), intent(inout) :: chvals     (           * )  !! array of string kernel pool
+                                                                    !! values
+         character(*), intent(in) :: varnam  !! A name to find/put into the kernel pool name list.
+         logical, intent(out) :: found  !! TRUE if VARNAM is already in the list of names
+         integer(ip), intent(out) :: lookat  !! The value ZZHASH(VARNAM).
+         integer(ip), intent(out) :: nameat  !! The location where VARNAM is to be located.
+      end subroutine zzgpnm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zznwpool ( ctx, varnam, wtvars, wtptrs, wtpool, wtagnt, agtwrk, notify, agents )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip) :: lbcell
+         parameter ( lbcell = -5 )
+         integer(ip) :: lbpool
+         parameter ( lbpool = -5 )
+         character(*), intent(in) :: varnam  !! Kernel variable name.
+         character(*), intent(in) :: wtvars ( lbcell : * )  !! Watched kernel variable set.
+         integer(ip), intent(in) :: wtptrs ( * )  !! Pointers from variables into the watch pool.
+         integer(ip), intent(in) :: wtpool ( 2, lbpool : * )  !! Watch pool used for managing agent
+                                                              !! names.
+         character(*), intent(in) :: wtagnt ( * )  !! Array of agent names.
+         character(*), intent(inout) :: agtwrk ( lbcell : * )  !! Agent workspace cell.
+         character(*), intent(inout) :: notify ( lbcell : * )  !! Another agent workspace cell.
+         character(*), intent(inout) :: agents ( lbcell : * )  !! Set of agents to be notified of
+                                                               !! updates.
+      end subroutine zznwpool
+
+      !> Remove all kernel variables from the kernel pool. Watches
+      !> on kernel variables are retained.
+      !>
+      !> None.
+      module subroutine clpool ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+      end subroutine clpool
+
+      !> Load the variables contained in a NAIF ASCII kernel file into the
+      !> kernel pool.
+      module subroutine ldpool ( ctx, fname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: fname  !! Name of the text kernel file.
+      end subroutine ldpool
+
+      !> Return the value of a kernel variable from the kernel pool.
+      module subroutine rtpool ( ctx, name, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+         integer(ip), intent(out) :: n  !! Number of values associated with NAME.
+         real(wp), intent(out) :: values    ( * )  !! Values associated with NAME.
+         logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+      end subroutine rtpool
+
+      !> Confirm the existence of a numeric kernel variable in the kernel
+      !> pool.
+      module subroutine expool ( ctx, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of a numeric kernel variable.
+         logical, intent(out) :: found  !! .TRUE. when the variable is in the pool.
+      end subroutine expool
+
+      !> Write to a specified unit a set of "keyword = value" assignments
+      !> for all currently defined kernel variables. The assignments
+      !> constitute a text kernel from which the current state of the
+      !> kernel pool can be restored.
+      module subroutine wrpool ( ctx, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         integer(ip), intent(in) :: unit  !! Logical unit to which the variables in the pool will be
+                                          !! written.
+      end subroutine wrpool
+
+      !> Add a name to the list of agents to notify whenever a member of
+      !> a list of kernel variables is updated.
+      module subroutine swpool ( ctx, agent, nnames, names )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: names     ( * )  !! Variable names whose update causes the
+                                                      !! notice.
+         integer(ip), intent(in) :: nnames  !! The number of variables to associate with AGENT.
+         character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
+      end subroutine swpool
+
+      !> Indicate whether or not any watched kernel variables that have a
+      !> specified agent on their notification list have been updated.
+      module subroutine cvpool ( ctx, agent, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: agent  !! Name of the agent to check for notices.
+         logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated.
+      end subroutine cvpool
+
+      !> Return the character value of a kernel variable from the
+      !> kernel pool.
+      module subroutine gcpool ( ctx, name, start, room, n, cvals, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+         integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+         logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+         integer(ip), intent(in) :: start  !! Which component to start retrieving for NAME
+         integer(ip), intent(in) :: room  !! The largest number of values to return.
+         character(*), intent(out) :: cvals     ( * )  !! Values associated with NAME.
+      end subroutine gcpool
+
+      !> Return the d.p. value of a kernel variable from the kernel pool.
+      module subroutine gdpool ( ctx, name, start, room, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+         integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+         real(wp), intent(out) :: values    ( * )  !! Values associated with NAME.
+         logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+         integer(ip), intent(in) :: start  !! Which component to start retrieving for NAME
+         integer(ip), intent(in) :: room  !! The largest number of values to return.
+      end subroutine gdpool
+
+      !> Return the integer value of a kernel variable from the
+      !> kernel pool.
+      module subroutine gipool ( ctx, name, start, room, n, ivals, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+         integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+         logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+         integer(ip), intent(in) :: start  !! Which component to start retrieving for NAME
+         integer(ip), intent(in) :: room  !! The largest number of values to return.
+         integer(ip), intent(out) :: ivals     ( * )  !! Values associated with NAME.
+      end subroutine gipool
+
+      !> Return the data about a kernel pool variable.
+      module subroutine dtpool ( ctx, name, found, n, type )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+         integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+         logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+         character(*), intent(out) :: type  !! Type of the variable 'C', 'N', 'X'
+      end subroutine dtpool
+
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting character data into the kernel pool.
+      module subroutine pcpool ( ctx, name, n, cvals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! The kernel pool name to associate with CVALS.
+         integer(ip), intent(in) :: n  !! The number of values to insert.
+         character(*), intent(in) :: cvals     ( * )  !! An array of strings to insert into the
+                                                      !! kernel pool.
+      end subroutine pcpool
+
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting double precision data into the kernel pool.
+      module subroutine pdpool ( ctx, name, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! The kernel pool name to associate with VALUES.
+         integer(ip), intent(in) :: n  !! The number of values to insert.
+         real(wp), intent(in) :: values    ( * )  !! An array of values to insert into the kernel
+                                                  !! pool.
+      end subroutine pdpool
+
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting integer data into the kernel pool.
+      module subroutine pipool ( ctx, name, n, ivals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! The kernel pool name to associate with IVALS.
+         integer(ip), intent(in) :: n  !! The number of values to insert.
+         integer(ip), intent(in) :: ivals     ( * )  !! An array of integers to insert into the
+                                                     !! pool.
+      end subroutine pipool
+
+      !> Load the variables contained in an internal buffer into the
+      !> kernel pool.
+      module subroutine lmpool ( ctx, cvals, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         integer(ip), intent(in) :: n  !! The number of entries in CVALS.
+         character(*), intent(in) :: cvals     ( * )  !! An array that contains a SPICE text kernel
+      end subroutine lmpool
+
+      !> Return the kernel pool size limitations.
+      module subroutine szpool ( ctx, name, n, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the parameter to be returned.
+         integer(ip), intent(out) :: n  !! Value of parameter specified by NAME.
+         logical, intent(out) :: found  !! .TRUE. if NAME is recognized.
+      end subroutine szpool
+
+      !> Delete a variable from the kernel pool.
+      module subroutine dvpool ( ctx, name )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Name of the variable to be deleted.
+      end subroutine dvpool
+
+      !> Return names of kernel variables matching a specified template.
+      module subroutine gnpool ( ctx, name, start, room, n, cvals, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: name  !! Template that names should match.
+         integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+         logical, intent(out) :: found  !! .TRUE. if there is at least one match.
+         integer(ip), intent(in) :: start  !! Index of first matching name to retrieve.
+         integer(ip), intent(in) :: room  !! The largest number of values to return.
+         character(*), intent(out) :: cvals     ( * )  !! Kernel pool variables whose names match
+                                                       !! NAME.
+      end subroutine gnpool
+
+      !> Delete a name from the list of agents to notify whenever a member
+      !> of a list of kernel variables is updated.
+      module subroutine dwpool ( ctx, agent )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
+      end subroutine dwpool
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzvupool ( ctx, uwvars, uwptrs, uwpool, uwagnt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         integer(ip) :: lbcell
+         parameter ( lbcell = -5 )
+         character(*), intent(out) :: uwvars    ( lbcell : * )  !! Watched kernel variable set.
+         integer(ip), intent(out) :: uwptrs    ( * )  !! Pointers from variables into the watch
+                                                      !! pool.
+         integer(ip), intent(out) :: uwpool    ( 2, lbcell : * )  !! Watch pool used for managing
+                                                                  !! agent names.
+         character(*), intent(out) :: uwagnt    ( * )  !! Array of agent names.
+      end subroutine zzvupool
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> CTRSIZ     P   Dimension of the counter array
+      module subroutine zzpctrck ( ctx, usrctr, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         logical, intent(out) :: update  !! Flag indicating if input counter was updated
+         integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the
+                                                             !! caller
+      end subroutine zzpctrck
+
+   end interface
+   ! --- end pepper_pool
    ! <<< generated interfaces
 
 contains

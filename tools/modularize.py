@@ -218,7 +218,11 @@ class Routine:
 # Generation
 
 def module_of() -> dict:
-    return {r: m for m, rs in MODULES.items() for r in rs}
+    """Procedure name -> stateless module (generated and hand-written)."""
+    from modules import HANDWRITTEN
+    out = {r: m for m, rs in MODULES.items() for r in rs}
+    out.update({r: m for m, rs in HANDWRITTEN.items() for r in rs})
+    return out
 
 
 def remove_entities(r: Routine, drop: set, out_lines: list) -> None:
@@ -258,6 +262,11 @@ def remove_entities(r: Routine, drop: set, out_lines: list) -> None:
 
 def module_procedure(r: Routine, mod: str, where: dict) -> str:
     refs = r.references()
+    from modules import CONTEXT_MODULES
+    needs_ctx = refs & {n for rs in CONTEXT_MODULES.values() for n in rs}
+    if needs_ctx:
+        raise SystemExit(f"modularize: {r.name} calls {', '.join(sorted(needs_ctx))}, which "
+                         "need the context (move it with modularize_ctx.py instead)")
     own = set(MODULES[mod])
     consts = sorted(refs & set(CONSTANTS))
     calls = sorted(n for n in refs if n in where and n != r.name)
@@ -303,12 +312,27 @@ def module_procedure(r: Routine, mod: str, where: dict) -> str:
 def wrapper(r: Routine, mod: str) -> str:
     """External procedure with the routine's original interface."""
     keep = set(r.args) | {r.name}
-    params = set()
+    # The parameters that the argument declarations need (directly or
+    # through other parameters).
+    values = {}
     for s in r.spec:
         if re.search(r"\bparameter\b", s.low):
             m = re.match(r"\s*parameter\s*\((.*)\)\s*$", s.text, re.I | re.S)
             body = m.group(1) if m else s.text.split("::", 1)[-1]
-            params.update(entity_name(e) for e in split_top(body))
+            for e in split_top(body):
+                values[entity_name(e)] = set(re.findall(r"[a-z_]\w*", e.split("=", 1)[-1].lower()))
+    need = set()
+    for s in r.spec:
+        decl = parse_decl(s.text)
+        if decl and any(entity_name(e) in keep for e in decl[2]):
+            need |= set(re.findall(r"[a-z_]\w*", (decl[0] + " " + " ".join(
+                e for e in decl[2] if entity_name(e) in keep)).lower()))
+    params, todo = set(), [n for n in need if n in values]
+    while todo:
+        n = todo.pop()
+        if n not in params:
+            params.add(n)
+            todo.extend(v for v in values[n] if v in values)
     keep |= params
     out = [r.lines[i] for i in range(r.stmts[0].first, r.stmts[0].last + 1)]
     indent = "      "
@@ -318,7 +342,10 @@ def wrapper(r: Routine, mod: str) -> str:
         if re.match(r"\s*(use|implicit|include)\b", s.text, re.I):
             out.append(text)
         elif re.match(r"\s*parameter\b", s.text, re.I):
-            out.append(text)
+            m = re.match(r"\s*parameter\s*\((.*)\)\s*$", s.text, re.I | re.S)
+            ents = [e for e in split_top(m.group(1)) if entity_name(e) in params]
+            if ents:
+                out.append(f"{indent}parameter ( {', '.join(ents)} )")
         elif re.match(r"\s*(external|intrinsic)\b", s.text, re.I):
             kw = re.match(r"\s*(\w+)", s.text).group(1)
             ents = [e for e in split_top(s.text[len(kw) + s.text.index(kw):])
