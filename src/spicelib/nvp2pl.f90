@@ -1,6 +1,7 @@
 !$Procedure NVP2PL ( Normal vector and point to plane )
 
       subroutine nvp2pl ( normal, point, plane )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-      double precision      normal (    3 )
-      double precision      point  (    3 )
-      double precision      plane  ( ubpl )
+      real(wp)              normal (    3 )
+      real(wp)              point  (    3 )
+      real(wp)              plane  ( ubpl )
 
 ! $ Brief_I/O
 !
@@ -157,7 +158,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
       logical               return
       logical               vzero
@@ -183,16 +184,16 @@
 !
 !
 
-      integer               nmlpos
+      integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer               conpos
+      integer(ip)           conpos
       parameter           ( conpos = 4 )
 
 !
 !     Local variables
 !
-      double precision      tmpvec ( 3 )
+      real(wp)              tmpvec ( 3 )
 
 
 !
@@ -224,7 +225,7 @@
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      if ( plane(conpos) .lt. 0.d0 ) then
+      if ( plane(conpos) .lt. 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
          call vminus     (  plane(nmlpos), tmpvec        )

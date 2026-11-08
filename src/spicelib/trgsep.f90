@@ -1,9 +1,10 @@
 !$Procedure TRGSEP ( Separation quantity from observer )
 
-      double precision function trgsep ( et, &
+      real(wp) function trgsep ( et, &
                                          targ1,  shape1, frame1, &
                                          targ2,  shape2, frame2, &
                                          obsrvr, abcorr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
       include 'zzabcorr.inc'
       include 'zzdyn.inc'
 
-      double precision      et
+      real(wp)              et
       character*(*)         targ1
       character*(*)         shape1
       character*(*)         frame1
@@ -443,23 +444,23 @@
 !
       logical               return
       logical               failed
-      double precision      zzsepq
+      real(wp)              zzsepq
 
 !
 !     Local Variables
 !
       character*(5)         ref
 
-      double precision      rad    (2)
+      real(wp)              rad    (2)
 
-      integer               bod    (2)
-      integer               frames (2)
-      integer               obs
+      integer(ip)           bod    (2)
+      integer(ip)           frames (2)
+      integer(ip)           obs
 
 !
 !     Set an initial value to return in case of error.
 !
-      trgsep = 0.d0
+      trgsep = 0.0_wp
       ref    = 'J2000'
 
 !
@@ -480,7 +481,7 @@
                     bod,    frames, rad, obs )
 
       if ( failed () ) then
-         trgsep = 0.d0
+         trgsep = 0.0_wp
          call chkout ('TRGSEP')
          return
       end if
@@ -494,7 +495,7 @@
                         obs,    abcorr, ref )
 
       if ( failed () ) then
-         trgsep = 0.d0
+         trgsep = 0.0_wp
          call chkout ('TRGSEP')
          return
       end if

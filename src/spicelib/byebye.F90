@@ -1,6 +1,7 @@
 !$Procedure BYEBYE ( Exit a program indicating an error status )
 
       subroutine byebye ( status )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -251,17 +252,17 @@
 !     Define the maximum length for the usable portion of a status
 !     string.
 !
-      integer               stlen
+      integer(ip)           stlen
       parameter           ( stlen = 7 )
 !
 !     Define the notion of 'SUCCESS' and 'FAILURE'.
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 #else
-      integer               failur
+      integer(ip)           failur
       parameter           ( failur = 1 )
 
-      integer               succes
+      integer(ip)           succes
       parameter           ( succes = 0 )
 #endif
 

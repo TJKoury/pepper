@@ -1,6 +1,7 @@
 !$Procedure SUFFIX (Suffix a character string)
 
       subroutine suffix ( suff, spaces, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)    suff
-      integer          spaces
+      integer(ip)      spaces
       character*(*)    string
 
 ! $ Brief_I/O
@@ -134,14 +135,14 @@
 !
 !     SPICELIB functions
 !
-      integer          lastnb
+      integer(ip)      lastnb
 
 !
 !     Local variables
 !
-      integer          l
-      integer          slen
-      integer          end
+      integer(ip)      l
+      integer(ip)      slen
+      integer(ip)      end
 
 
 

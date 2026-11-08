@@ -1,6 +1,7 @@
 !$Procedure SHELLD ( Shell sort a double precision array )
 
       subroutine shelld ( ndim, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer            ndim
-      double precision   array ( * )
+      integer(ip)        ndim
+      real(wp)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -124,10 +125,10 @@
 !
 !     Local variables
 !
-      integer          gap
-      integer          i
-      integer          j
-      integer          jg
+      integer(ip)      gap
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      jg
 
 
 

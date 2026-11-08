@@ -1,6 +1,7 @@
 !$Procedure DRDSPH ( Derivative of rectangular w.r.t. spherical )
 
       subroutine drdsph ( r, colat, slon, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      r
-      double precision      colat
-      double precision      slon
-      double precision      jacobi ( 3, 3 )
+      real(wp)              r
+      real(wp)              colat
+      real(wp)              slon
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -350,32 +351,32 @@
 !
 !     Local parameters
 !
-      integer               dx
+      integer(ip)           dx
       parameter           ( dx     = 1 )
 
-      integer               dy
+      integer(ip)           dy
       parameter           ( dy     = 2 )
 
-      integer               dz
+      integer(ip)           dz
       parameter           ( dz     = 3 )
 
-      integer               dr
+      integer(ip)           dr
       parameter           ( dr     = 1 )
 
-      integer               dcolat
+      integer(ip)           dcolat
       parameter           ( dcolat = 2 )
 
-      integer               dlon
+      integer(ip)           dlon
       parameter           ( dlon   = 3 )
 
 
 !
 !     Local variables
 !
-      double precision      ccolat
-      double precision      clong
-      double precision      scolat
-      double precision      slong
+      real(wp)              ccolat
+      real(wp)              clong
+      real(wp)              scolat
+      real(wp)              slong
 
 
 
@@ -396,7 +397,7 @@
 
       jacobi (dx,dlon)   = -r * slong * scolat
       jacobi (dy,dlon)   =  r * clong * scolat
-      jacobi (dz,dlon)   =  0.0d0
+      jacobi (dz,dlon)   =  0.0_wp
 
       return
       end

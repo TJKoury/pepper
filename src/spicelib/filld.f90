@@ -1,6 +1,7 @@
 !$Procedure FILLD ( Fill a double precision array )
 
       subroutine filld ( value, ndim, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      value
-      integer               ndim
-      double precision      array ( * )
+      real(wp)              value
+      integer(ip)           ndim
+      real(wp)              array ( * )
 
 ! $ Brief_I/O
 !
@@ -163,7 +164,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim

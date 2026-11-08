@@ -1,6 +1,7 @@
 !$Procedure DASADC ( DAS, add data, character )
 
       subroutine dasadc ( handle, n, bpos, epos, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               handle
-      integer               n
-      integer               bpos
-      integer               epos
+      integer(ip)           handle
+      integer(ip)           n
+      integer(ip)           bpos
+      integer(ip)           epos
       character*(*)         data   ( * )
 
 ! $ Brief_I/O
@@ -425,10 +426,10 @@
 !
 !     Local parameters
 !
-      integer               char
+      integer(ip)           char
       parameter           ( char   =  1  )
 
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc    = 1024 )
 
 !
@@ -436,26 +437,26 @@
 !
       character*(nwc)       record
 
-      integer               chr
-      integer               clbase
-      integer               clsize
-      integer               elt
-      integer               free
-      integer               lastc
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               ncomc
-      integer               ncomr
-      integer               nmove
-      integer               nmoved
-      integer               nresvc
-      integer               nresvr
-      integer               numchr
-      integer               nwritn
-      integer               rcpos
-      integer               recno
-      integer               wordno
+      integer(ip)           chr
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           elt
+      integer(ip)           free
+      integer(ip)           lastc
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nmove
+      integer(ip)           nmoved
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           numchr
+      integer(ip)           nwritn
+      integer(ip)           rcpos
+      integer(ip)           recno
+      integer(ip)           wordno
 
 !
 !     Saved variables

@@ -1,6 +1,7 @@
 !$Procedure HRMESP ( Hermite polynomial interpolation, equal spacing )
 
       subroutine hrmesp ( n,  first,  step,  yvals,  x,  work,  f,  df )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,14 +22,14 @@
 
       implicit none
 
-      integer               n
-      double precision      first
-      double precision      step
-      double precision      yvals ( 2*n )
-      double precision      x
-      double precision      work  ( 2*n, 2 )
-      double precision      f
-      double precision      df
+      integer(ip)           n
+      real(wp)              first
+      real(wp)              step
+      real(wp)              yvals ( 2*n )
+      real(wp)              x
+      real(wp)              work  ( 2*n, 2 )
+      real(wp)              f
+      real(wp)              df
 
 ! $ Brief_I/O
 !
@@ -259,19 +260,19 @@
 !
 !     Local variables
 !
-      double precision      c1
-      double precision      c2
-      double precision      denom
-      double precision      newx
-      double precision      temp
-      double precision      xi
-      double precision      xij
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              denom
+      real(wp)              newx
+      real(wp)              temp
+      real(wp)              xi
+      real(wp)              xij
 
-      integer               i
-      integer               j
-      integer               next
-      integer               prev
-      integer               this
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           next
+      integer(ip)           prev
+      integer(ip)           this
 
 
 !
@@ -299,7 +300,7 @@
 !
 !     The step size must be non-zero.
 !
-      if ( step .eq. 0.d0 ) then
+      if ( step .eq. 0.0_wp ) then
 
          call chkin  ( 'HRMESP'                 )
          call setmsg ( 'Step size was zero.'    )
@@ -315,7 +316,7 @@
 !     and are separated by a unit step. All we need to do here is
 !     shift and scale X.
 !
-      newx  =  (  ( x - first ) / step  )  +  1.d0
+      newx  =  (  ( x - first ) / step  )  +  1.0_wp
 
 !
 !     For consistency with our scaled horizontal axis, we'll have
@@ -348,8 +349,8 @@
 
       do i = 1, n-1
 
-         c1     = dble( (i+1) )  - newx
-         c2     =  newx  - dble(i)
+         c1     = real( (i+1), wp )  - newx
+         c2     =  newx  - real(i, wp)
 
 !
 !        The second column of WORK contains interpolated derivative
@@ -376,7 +377,7 @@
 !        The odd-indexed entries are the linear Taylor polynomials,
 !        each input abscissa value, evaluated at NEWX.
 !
-         temp  = work(this, 1) * ( newx - dble(i) )  +  work(prev, 1)
+         temp  = work(this, 1) * ( newx - real(i, wp) )  +  work(prev, 1)
 
 
          work( this, 1 ) = (   c1 * work( prev, 1 ) &
@@ -410,8 +411,8 @@
 !           are used to pick the correct abscissa values out of this
 !           sequence of 2*N values.
 !
-            xi       =   dble( ( i     + 1 ) / 2 )
-            xij      =   dble( ( i + j + 1 ) / 2 )
+            xi       =   real( ( i     + 1 ) / 2, wp )
+            xij      =   real( ( i + j + 1 ) / 2, wp )
 
             c1       =     xij   -  newx
             c2       =     newx  -  xi

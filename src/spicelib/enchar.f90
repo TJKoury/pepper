@@ -1,6 +1,7 @@
 !$Procedure ENCHAR ( Encode a character string )
 
       subroutine enchar ( number, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer            number
+      integer(ip)        number
       character*(*)      string
 
-      integer            minlen
+      integer(ip)        minlen
       parameter        ( minlen = 5 )
 
 ! $ Brief_I/O
@@ -161,16 +162,16 @@
 !
 !     SPICELIB functions
 !
-      integer            chbase
+      integer(ip)        chbase
       logical            return
 
 !
 !     Local variables
 !
-      integer            base
-      integer            num
-      integer            remain
-      integer            i
+      integer(ip)        base
+      integer(ip)        num
+      integer(ip)        remain
+      integer(ip)        i
 
 !
 !     Standard SPICE error handling.

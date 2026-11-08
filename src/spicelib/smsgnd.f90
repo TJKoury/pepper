@@ -1,6 +1,7 @@
 !$Procedure SMSGND  ( Same Sign Double Precision Numbers )
 
       logical function smsgnd ( x, y )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   x
-      double precision   y
+      real(wp)           x
+      real(wp)           y
 
 ! $ Brief_I/O
 !

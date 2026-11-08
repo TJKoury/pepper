@@ -1,6 +1,7 @@
 !$Procedure ZZDYNRT0 ( Dynamic position transformation evaluation )
 
       subroutine zzdynrt0 ( infram, center, et, rotate, basfrm )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -30,11 +31,11 @@
       include 'zzabcorr.inc'
       include 'zzdyn.inc'
 
-      integer               infram
-      integer               center
-      double precision      et
-      double precision      rotate ( 3, 3 )
-      integer               basfrm
+      integer(ip)           infram
+      integer(ip)           center
+      real(wp)              et
+      real(wp)              rotate ( 3, 3 )
+      integer(ip)           basfrm
 
 ! $ Brief_I/O
 !
@@ -320,9 +321,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      vsep
+      real(wp)              vsep
 
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               eqstr
       logical               failed
@@ -335,10 +336,10 @@
       parameter           ( rname  = 'ZZDYNRT0' )
 
 
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen = 50 )
 
-      integer               vnamln
+      integer(ip)           vnamln
       parameter           ( vnamln = 4 )
 
 !
@@ -384,64 +385,64 @@
       character*(vnamln)    vname  ( 2 )
 
 
-      double precision      alt
-      double precision      angles ( 2 )
-      double precision      coeffs ( maxcof, 3 )
-      double precision      ctrpos ( 3 )
-      double precision      dec
-      double precision      delta
-      double precision      dirvec ( 3 )
-      double precision      dmob
-      double precision      epoch
-      double precision      eulang ( 3 )
-      double precision      fet
-      double precision      lat
-      double precision      lon
-      double precision      lt
-      double precision      minsep
-      double precision      mob
-      double precision      nutxf  ( 6, 6 )
-      double precision      oblr   ( 3, 3 )
-      double precision      pnear  ( 3 )
-      double precision      pobs   ( 3 )
-      double precision      poly   ( 0 : 1 )
-      double precision      precxf ( 6, 6 )
-      double precision      ptemp  ( 3 )
-      double precision      r2000  ( 3, 3 )
-      double precision      ra
-      double precision      radii  ( 3 )
-      double precision      rinv   ( 3, 3 )
-      double precision      rnut   ( 3, 3 )
-      double precision      rout   ( 3, 3 )
-      double precision      rprec  ( 3, 3 )
-      double precision      rtemp  ( 3, 3 )
-      double precision      sep
-      double precision      stemp  ( 6 )
-      double precision      stobs  ( 6 )
-      double precision      tipm   ( 3, 3 )
-      double precision      t0
-      double precision      v2     ( 3, 2 )
-      double precision      vet
-      double precision      vflt
+      real(wp)              alt
+      real(wp)              angles ( 2 )
+      real(wp)              coeffs ( maxcof, 3 )
+      real(wp)              ctrpos ( 3 )
+      real(wp)              dec
+      real(wp)              delta
+      real(wp)              dirvec ( 3 )
+      real(wp)              dmob
+      real(wp)              epoch
+      real(wp)              eulang ( 3 )
+      real(wp)              fet
+      real(wp)              lat
+      real(wp)              lon
+      real(wp)              lt
+      real(wp)              minsep
+      real(wp)              mob
+      real(wp)              nutxf  ( 6, 6 )
+      real(wp)              oblr   ( 3, 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              pobs   ( 3 )
+      real(wp)              poly   ( 0 : 1 )
+      real(wp)              precxf ( 6, 6 )
+      real(wp)              ptemp  ( 3 )
+      real(wp)              r2000  ( 3, 3 )
+      real(wp)              ra
+      real(wp)              radii  ( 3 )
+      real(wp)              rinv   ( 3, 3 )
+      real(wp)              rnut   ( 3, 3 )
+      real(wp)              rout   ( 3, 3 )
+      real(wp)              rprec  ( 3, 3 )
+      real(wp)              rtemp  ( 3, 3 )
+      real(wp)              sep
+      real(wp)              stemp  ( 6 )
+      real(wp)              stobs  ( 6 )
+      real(wp)              tipm   ( 3, 3 )
+      real(wp)              t0
+      real(wp)              v2     ( 3, 2 )
+      real(wp)              vet
+      real(wp)              vflt
 
-      integer               axis   ( 2 )
-      integer               cfrmid
-      integer               cvobs
-      integer               degs   ( 3 )
-      integer               earth
-      integer               frcls
-      integer               frctr
-      integer               frcid
-      integer               frid
-      integer               fromid
-      integer               i
-      integer               iaxes  ( 3 )
-      integer               j2000
-      integer               m
-      integer               n
-      integer               obs
-      integer               targ
-      integer               toid
+      integer(ip)           axis   ( 2 )
+      integer(ip)           cfrmid
+      integer(ip)           cvobs
+      integer(ip)           degs   ( 3 )
+      integer(ip)           earth
+      integer(ip)           frcls
+      integer(ip)           frctr
+      integer(ip)           frcid
+      integer(ip)           frid
+      integer(ip)           fromid
+      integer(ip)           i
+      integer(ip)           iaxes  ( 3 )
+      integer(ip)           j2000
+      integer(ip)           m
+      integer(ip)           n
+      integer(ip)           obs
+      integer(ip)           targ
+      integer(ip)           toid
 
       logical               corblk ( nabcor )
       logical               first
@@ -591,9 +592,9 @@
       call cleard (  9, rinv   )
       call cleard (  9, tipm   )
 
-      mob    = 0.d0
-      dmob   = 0.d0
-      t0     = 0.d0
+      mob    = 0.0_wp
+      dmob   = 0.0_wp
+      t0     = 0.0_wp
       frozen = .false.
 
 !
@@ -1012,7 +1013,7 @@
 !                 zero; the axes are arbitrary, as long as the
 !                 middle axis is distinct from the other two.
 !
-                  call eul2m ( 0.d0, 0.d0, mob, 1, 3, 1, oblr )
+                  call eul2m ( 0.0_wp, 0.0_wp, mob, 1, 3, 1, oblr )
 
 !
 !                 Find the rotation from the J2000 to the
@@ -1688,7 +1689,7 @@
 !
 !                    Now  produce a direction vector.
 !
-                     call latrec ( 1.d0, angles(1), angles(2), dirvec )
+                     call latrec ( 1.0_wp, angles(1), angles(2), dirvec )
 
 
                   else
@@ -1906,7 +1907,7 @@
 !           Initialize EPOCH so subtraction doesn't overflow if EPOCH
 !           is invalid due to a lookup error.
 !
-            epoch = 0.d0
+            epoch = 0.0_wp
 
             call zzdynvad ( inname, infram, kwepoc, 1, n, epoch )
 

@@ -3,6 +3,7 @@
       subroutine pck03b ( handle, &
                           segid,  body,  frame, &
                           first,  last,  chbdeg  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,13 +24,13 @@
 
       include 'sgparam.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         segid
-      integer               body
+      integer(ip)           body
       character*(*)         frame
-      double precision      first
-      double precision      last
-      integer               chbdeg
+      real(wp)              first
+      real(wp)              last
+      integer(ip)           chbdeg
 
 ! $ Brief_I/O
 !
@@ -358,39 +359,39 @@
 !
 !     DAF ND and NI values for PCK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 5 )
 !
 !     Length of an PCK descriptor.
 !
-      integer               ndescr
+      integer(ip)           ndescr
       parameter           ( ndescr =  nd + (ni+1)/2 )
 !
 !     Number of Euler angles.
 !
-      integer               neangs
+      integer(ip)           neangs
       parameter           ( neangs = 6 )
 !
 !     The type of this segment.
 !
-      integer               type
+      integer(ip)           type
       parameter           ( type = 03 )
 !
 !     The number of constants.
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 1 )
 !
 !     Local variables
 !
-      double precision      descr ( ndescr )
-      double precision      dcoeff
+      real(wp)              descr ( ndescr )
+      real(wp)              dcoeff
 
-      integer               ncoeff
-      integer               pktsiz
+      integer(ip)           ncoeff
+      integer(ip)           pktsiz
 !
 !     Standard SPICELIB error handling.
 !
@@ -433,7 +434,7 @@
 !
       ncoeff = chbdeg + 1
       pktsiz = neangs * ncoeff + 2
-      dcoeff = dble ( ncoeff )
+      dcoeff = real( ncoeff, wp )
 !
 !     For this data type, we want to use an explicit reference value
 !     index where the reference epochs are in increasing order. We also

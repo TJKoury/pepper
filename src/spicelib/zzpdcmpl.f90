@@ -1,6 +1,7 @@
 !$Procedure ZZPDCMPL (Planetodetic coordinates, compare latitudes )
 
       subroutine zzpdcmpl ( re, f, p, lat, rel )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,19 +29,19 @@
 
       implicit none
 
-      double precision      re
-      double precision      f
-      double precision      p   ( 3 )
-      double precision      lat
-      integer               rel
+      real(wp)              re
+      real(wp)              f
+      real(wp)              p   ( 3 )
+      real(wp)              lat
+      integer(ip)           rel
 
-      integer               lt
+      integer(ip)           lt
       parameter           ( lt = -1 )
 
-      integer               eq
+      integer(ip)           eq
       parameter           ( eq =  0 )
 
-      integer               gt
+      integer(ip)           gt
       parameter           ( gt =  1 )
 
 ! $ Brief_I/O
@@ -160,7 +161,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
+      real(wp)              halfpi
 
       logical               failed
       logical               return
@@ -168,14 +169,14 @@
 !
 !     Local variables
 !
-      double precision      apex   ( 3 )
-      double precision      lon
-      double precision      offpcl
-      double precision      offset ( 3 )
-      double precision      r
-      double precision      rp
-      double precision      xincpt
-      double precision      yincpt
+      real(wp)              apex   ( 3 )
+      real(wp)              lon
+      real(wp)              offpcl
+      real(wp)              offset ( 3 )
+      real(wp)              r
+      real(wp)              rp
+      real(wp)              xincpt
+      real(wp)              yincpt
 
 !
 !     Saved variables
@@ -185,7 +186,7 @@
 !
 !     Initial values
 !
-      data                  apex / 3  *  0.d0       /
+      data                  apex / 3  *  0.0_wp       /
 
 
       if ( return() ) then
@@ -200,9 +201,9 @@
 !     round-off errors that will lead to false results for
 !     this case.
 !
-      if (  ( p(1) .eq. 0.d0 ) .and. ( p(2) .eq. 0.d0 )  ) then
+      if (  ( p(1) .eq. 0.0_wp ) .and. ( p(2) .eq. 0.0_wp )  ) then
 
-         if ( p(3) .gt. 0.d0 ) then
+         if ( p(3) .gt. 0.0_wp ) then
 
             if ( lat .eq. halfpi() ) then
 
@@ -211,15 +212,15 @@
                rel = gt
             end if
 
-         else if ( p(3) .eq. 0.d0 ) then
+         else if ( p(3) .eq. 0.0_wp ) then
 !
 !           We consider the latitude of P to be zero.
 !
-            if ( lat .gt. 0.d0 ) then
+            if ( lat .gt. 0.0_wp ) then
 
                rel = lt
 
-            else if ( lat .eq. 0.d0 ) then
+            else if ( lat .eq. 0.0_wp ) then
 
                rel = eq
             else
@@ -248,7 +249,7 @@
 !     Latitude zero is a special case. The planetodetic latitude of the
 !     input point has the same sign as the Z component of the point.
 !
-      rp = re * ( 1.d0 - f )
+      rp = re * ( 1.0_wp - f )
 !
 !     Get the y-intercept of the latitude cone for LAT. Note that a
 !     result is defined for LAT = +/- pi/2.
@@ -264,13 +265,13 @@
 !     Ideally YINCPT is zero if and only if LAT is zero.
 !     We'll group these conditions together.
 !
-      if (  ( lat .eq. 0.d0 ) .or. ( yincpt .eq. 0.d0 )  ) then
+      if (  ( lat .eq. 0.0_wp ) .or. ( yincpt .eq. 0.0_wp )  ) then
 
-         if ( p(3) .gt. 0.d0 ) then
+         if ( p(3) .gt. 0.0_wp ) then
 
             rel = gt
 
-         else if ( p(3) .eq. 0.d0 ) then
+         else if ( p(3) .eq. 0.0_wp ) then
 
             rel = eq
          else
@@ -298,7 +299,7 @@
       call reclat ( offset, r, lon, offpcl )
 
 
-      if ( lat .gt. 0.d0 ) then
+      if ( lat .gt. 0.0_wp ) then
 
          if ( yincpt .gt. 0 ) then
 !
@@ -325,7 +326,7 @@
 !           the input point is above the X-Y plane in order for the
 !           GT or EQ relations to hold.
 !
-            if ( p(3) .gt. 0.d0 ) then
+            if ( p(3) .gt. 0.0_wp ) then
 
                if ( offpcl .gt. lat ) then
 
@@ -354,7 +355,7 @@
 !
 !        LAT < 0, since the case LAT = 0 has already been handled.
 !
-         if ( yincpt .lt. 0.d0 ) then
+         if ( yincpt .lt. 0.0_wp ) then
 !
 !           This is the prolate case.
 !
@@ -376,7 +377,7 @@
 !
 !           This is the oblate case.
 !
-            if ( p(3) .lt. 0.d0 ) then
+            if ( p(3) .lt. 0.0_wp ) then
 
                if ( offpcl .gt. lat ) then
 

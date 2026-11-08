@@ -1,6 +1,7 @@
 !$Procedure      ZZELVUPY ( Is ellipse in polygonal field of view? )
 
       subroutine zzelvupy ( ellips, vertex, axis, n, bounds, found )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -24,20 +25,20 @@
 
       include 'errhnd.inc'
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
-      integer               maxfov
+      integer(ip)           maxfov
       parameter           ( maxfov = 10000 )
 
-      double precision      ellips ( ubel )
-      double precision      vertex ( 3 )
-      double precision      axis   ( 3 )
-      integer               n
-      double precision      bounds ( 3, n )
+      real(wp)              ellips ( ubel )
+      real(wp)              vertex ( 3 )
+      real(wp)              axis   ( 3 )
+      integer(ip)           n
+      real(wp)              bounds ( 3, n )
       logical               found
 
 ! $ Brief_I/O
@@ -281,13 +282,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      pi
-      double precision      vdist
-      double precision      vdot
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              pi
+      real(wp)              vdist
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              vsep
 
-      integer               zzwind
+      integer(ip)           zzwind
 
       logical               return
       logical               vzero
@@ -301,47 +302,47 @@
 !
       character*(lmsgln)    errmsg
 
-      double precision      a
-      double precision      apex   ( 3 )
-      double precision      asep
-      double precision      b
-      double precision      center ( 3 )
-      double precision      consep
-      double precision      cp     ( 3 )
-      double precision      ctrvec ( 3 )
-      double precision      d
-      double precision      easize
-      double precision      ebsctr ( 3 )
-      double precision      edge1  ( 3 )
-      double precision      edge2  ( 3 )
-      double precision      ellscl ( ubel )
-      double precision      eplane ( ubpl )
-      double precision      fovpln ( ubpl )
-      double precision      gv1    ( 3 )
-      double precision      gv2    ( 3 )
-      double precision      hafedg
-      double precision      hafsec
-      double precision      offset ( 3 )
-      double precision      origin ( 3 )
-      double precision      pasize
-      double precision      plane  ( ubpl )
-      double precision      scale
-      double precision      smajor ( 3 )
-      double precision      sminor ( 3 )
-      double precision      vbsctr ( 3 )
-      double precision      vtemp  ( 3 )
-      double precision      vxpt1  ( 3 )
-      double precision      vxpt2  ( 3 )
-      double precision      work   ( 3, maxfov )
-      double precision      x
-      double precision      xpt    ( 3 )
-      double precision      xpt1   ( 3 )
-      double precision      xpt2   ( 3 )
-      double precision      y
+      real(wp)              a
+      real(wp)              apex   ( 3 )
+      real(wp)              asep
+      real(wp)              b
+      real(wp)              center ( 3 )
+      real(wp)              consep
+      real(wp)              cp     ( 3 )
+      real(wp)              ctrvec ( 3 )
+      real(wp)              d
+      real(wp)              easize
+      real(wp)              ebsctr ( 3 )
+      real(wp)              edge1  ( 3 )
+      real(wp)              edge2  ( 3 )
+      real(wp)              ellscl ( ubel )
+      real(wp)              eplane ( ubpl )
+      real(wp)              fovpln ( ubpl )
+      real(wp)              gv1    ( 3 )
+      real(wp)              gv2    ( 3 )
+      real(wp)              hafedg
+      real(wp)              hafsec
+      real(wp)              offset ( 3 )
+      real(wp)              origin ( 3 )
+      real(wp)              pasize
+      real(wp)              plane  ( ubpl )
+      real(wp)              scale
+      real(wp)              smajor ( 3 )
+      real(wp)              sminor ( 3 )
+      real(wp)              vbsctr ( 3 )
+      real(wp)              vtemp  ( 3 )
+      real(wp)              vxpt1  ( 3 )
+      real(wp)              vxpt2  ( 3 )
+      real(wp)              work   ( 3, maxfov )
+      real(wp)              x
+      real(wp)              xpt    ( 3 )
+      real(wp)              xpt1   ( 3 )
+      real(wp)              xpt2   ( 3 )
+      real(wp)              y
 
-      integer               i
-      integer               j
-      integer               nxpts
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           nxpts
 
 
 !
@@ -353,7 +354,7 @@
 !
 !     Initial values
 !
-      data                 origin /  3 * 0.d0 /
+      data                 origin /  3 * 0.0_wp /
 
 
       if ( return() ) then
@@ -420,7 +421,7 @@
 !     Scale the vectors defining the ellipse and the vertex of the
 !     pyramid so that the largest of these vectors has unit length.
 !
-      scale = 1.d0 / max ( vnorm(center), vnorm(smajor), vnorm(vertex) )
+      scale = 1.0_wp / max ( vnorm(center), vnorm(smajor), vnorm(vertex) )
 
       do i = 1, 3
 
@@ -445,7 +446,7 @@
       a = vnorm ( smajor )
       b = vnorm ( sminor )
 
-      if ( b .eq. 0.d0 ) then
+      if ( b .eq. 0.0_wp ) then
 
          call setmsg ( 'Scaled ellipse''s semi-minor axis length = 0.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
@@ -513,7 +514,7 @@
 !     we're at it, check the angular separation of the boundary
 !     vectors from the central axis and from each other.
 !
-      pasize = 0.d0
+      pasize = 0.0_wp
 
       do i = 1, n
 !
@@ -623,7 +624,7 @@
 !
          consep = vsep ( ctrvec, axis )  -  ( easize + pasize )
 
-         if ( consep .gt. 0.d0 ) then
+         if ( consep .gt. 0.0_wp ) then
 
             call chkout ( 'ZZELVUPY' )
             return
@@ -646,7 +647,7 @@
 !     The center of the ellipse must lie in the correct half-space
 !     for this test to be applicable.
 !
-      if (  vdot( axis, ctrvec ) .gt. 0.d0 ) then
+      if (  vdot( axis, ctrvec ) .gt. 0.0_wp ) then
 !
 !        Construct the plane and find the polygon.
 !
@@ -750,7 +751,7 @@
          x  =  vdot  ( offset, smajor ) / a
          y  =  vdot  ( offset, sminor ) / b
 
-         if (  ( (x/a)**2.d0  +  (y/b)**2.d0 ) .le.  1.d0  ) then
+         if (  ( (x/a)**2.0_wp  +  (y/b)**2.0_wp ) .le.  1.0_wp  ) then
 !
 !           The boundary-vector-plane intercept lies in the
 !           topologically closed region bounded by the ellipse.
@@ -816,12 +817,12 @@
 !           Let EBSCTR ("pyramid edge bisector") be a bisector of the
 !           sector bounded by EDGE1 and EDGE2.
 !
-            call vlcom ( 0.5d0, edge1, 0.5d0, edge2, ebsctr )
+            call vlcom ( 0.5_wp, edge1, 0.5_wp, edge2, ebsctr )
 
 !
 !           Let HAFEDG be half of the angular measure of this sector.
 !
-            hafedg = vsep ( edge1, edge2 ) / 2.d0
+            hafedg = vsep ( edge1, edge2 ) / 2.0_wp
 
 !
 !           Let VXPT1 and VXPT2 be the unit vectors pointing from the
@@ -853,13 +854,13 @@
 !           Let VBSCTR ("VXPT bisector") be a bisector of the sector
 !           bounded by VXPT1 and VXPT2.
 !
-            call vlcom ( 0.5d0, vxpt1, 0.5d0, vxpt2, vbsctr )
+            call vlcom ( 0.5_wp, vxpt1, 0.5_wp, vxpt2, vbsctr )
 
 !
 !           Let HAFSEC be half of the angular measure of the sector
 !           bounded by VXPT1 and VXPT2.
 !
-            hafsec = vsep ( vxpt1, vxpt2 ) / 2.d0
+            hafsec = vsep ( vxpt1, vxpt2 ) / 2.0_wp
 
 !
 !           EDGE1, EDGE2, VXPT1, and VXPT2 are four co-planar vectors

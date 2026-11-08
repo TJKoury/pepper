@@ -1,6 +1,7 @@
 !$Procedure DASECU ( DAS extract comments to a logical unit )
 
       subroutine dasecu ( handle, comlun, comnts )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer               handle
-      integer               comlun
+      integer(ip)           handle
+      integer(ip)           comlun
       logical               comnts
 
 ! $ Brief_I/O
@@ -144,19 +145,19 @@
 !
 !     Set the value for the maximum length of a text line.
 !
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 255 )
 !
 !     Set the size of the comment buffer.
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 22 )
 !
 !     Local variables
 !
       character*(linlen)    combuf(bufsiz)
 
-      integer               numcom
+      integer(ip)           numcom
 
       logical               eoc
       logical               gotsom

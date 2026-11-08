@@ -1,6 +1,7 @@
 !$Procedure ZZINLAT ( DSK, in latitudinal element? )
 
       subroutine zzinlat ( p, bounds, margin, exclud, inside )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,26 +31,26 @@
 
       include 'dsktol.inc'
 
-      double precision      p      ( 3 )
-      double precision      bounds ( 2, 3 )
-      double precision      margin
-      integer               exclud
+      real(wp)              p      ( 3 )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              margin
+      integer(ip)           exclud
       logical               inside
 
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
-      integer               lonidx
+      integer(ip)           lonidx
       parameter           ( lonidx = 1 )
 
-      integer               latidx
+      integer(ip)           latidx
       parameter           ( latidx = 2 )
 
-      integer               radidx
+      integer(ip)           radidx
       parameter           ( radidx = 3 )
 
-      double precision      latmrg
-      parameter           ( latmrg = 1.d-8 )
+      real(wp)              latmrg
+      parameter           ( latmrg = 1.0e-8_wp )
 
 
 ! $ Brief_I/O
@@ -264,8 +265,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      twopi
+      real(wp)              halfpi
+      real(wp)              twopi
 
       logical               return
 
@@ -276,49 +277,49 @@
 !
 !     Element boundary indices:
 !
-      integer               west
+      integer(ip)           west
       parameter           ( west   = 1 )
 
-      integer               east
+      integer(ip)           east
       parameter           ( east   = 2 )
 
-      integer               south
+      integer(ip)           south
       parameter           ( south  = 1 )
 
-      integer               north
+      integer(ip)           north
       parameter           ( north  = 2 )
 
-      integer               inner
+      integer(ip)           inner
       parameter           ( inner  = 1 )
 
-      integer               outer
+      integer(ip)           outer
       parameter           ( outer  = 2 )
 
 
 !
 !     Local variables
 !
-      double precision      amaxr
-      double precision      aminr
-      double precision      amaxlt
-      double precision      aminlt
-      double precision      amaxlo
-      double precision      aminlo
-      double precision      dlon
-      double precision      hpi
-      double precision      lat
-      double precision      lon
-      double precision      lonmrg
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxr
-      double precision      minlat
-      double precision      minlon
-      double precision      minr
-      double precision      pi2
-      double precision      r
-      double precision      smax
-      double precision      smin
+      real(wp)              amaxr
+      real(wp)              aminr
+      real(wp)              amaxlt
+      real(wp)              aminlt
+      real(wp)              amaxlo
+      real(wp)              aminlo
+      real(wp)              dlon
+      real(wp)              hpi
+      real(wp)              lat
+      real(wp)              lon
+      real(wp)              lonmrg
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxr
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              minr
+      real(wp)              pi2
+      real(wp)              r
+      real(wp)              smax
+      real(wp)              smin
 
       logical               first
 
@@ -328,8 +329,8 @@
       save                  hpi
 
       data                  first / .true. /
-      data                  pi2   / -1.d0  /
-      data                  hpi   / -1.d0  /
+      data                  pi2   / -1.0_wp  /
+      data                  hpi   / -1.0_wp  /
 
 !
 !     Use discovery check-in.
@@ -356,13 +357,13 @@
 !
 !     Handle the simpler zero-margin case separately.
 !
-      if ( margin .eq. 0.d0 ) then
+      if ( margin .eq. 0.0_wp ) then
 
          call zzinlat0 ( r, lon, lat, bounds, exclud, inside )
 
          return
 
-      else if ( margin .lt. 0.d0 ) then
+      else if ( margin .lt. 0.0_wp ) then
 
          call chkin  ( 'ZZINLAT'                                )
          call setmsg ( 'Margin must be non-negative but was #.' )
@@ -428,10 +429,10 @@
 !
 !        Create adjusted radius bounds.
 !
-         smax  = 1.d0 + margin
-         smin  = 1.d0 - margin
+         smax  = 1.0_wp + margin
+         smin  = 1.0_wp - margin
 
-         aminr = max( 0.d0,  minr*smin )
+         aminr = max( 0.0_wp,  minr*smin )
          amaxr = maxr * smax
 
          if ( ( r .lt. aminr ) .or. ( r .gt. amaxr ) ) then

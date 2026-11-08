@@ -1,6 +1,7 @@
 !$Procedure QXQ (Quaternion times quaternion)
 
       subroutine qxq ( q1, q2, qout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      q1   ( 0 : 3 )
-      double precision      q2   ( 0 : 3 )
-      double precision      qout ( 0 : 3 )
+      real(wp)              q1   ( 0 : 3 )
+      real(wp)              q2   ( 0 : 3 )
+      real(wp)              qout ( 0 : 3 )
 
 ! $ Brief_I/O
 !
@@ -559,12 +560,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
 !
 !     Local variables
 !
-      double precision      cross ( 3 )
+      real(wp)              cross ( 3 )
 
 
 !
@@ -580,7 +581,7 @@
 
       call vlcom3 ( q1(0),  q2(1), &
                     q2(0),  q1(1), &
-                    1.d0,   cross,  qout(1) )
+                    1.0_wp,   cross,  qout(1) )
 
       return
       end

@@ -1,6 +1,7 @@
 !$Procedure SYDIMI ( Return the dimension of a symbol )
 
-      integer function sydimi ( name, tabsym, tabptr, tabval )
+      integer(ip) function sydimi ( name, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      integer               tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      integer(ip)           tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -161,15 +162,15 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
+      integer(ip)           bsrchc
+      integer(ip)           cardc
       logical               return
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               locsym
+      integer(ip)           nsym
+      integer(ip)           locsym
 
 
 

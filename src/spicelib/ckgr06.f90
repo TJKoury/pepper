@@ -1,6 +1,7 @@
 !$Procedure CKGR06 ( C-kernel, get record, type 06 )
 
       subroutine ckgr06 ( handle, descr, msno, recno, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       include 'ck06.inc'
 
-      integer               handle
-      double precision      descr  ( * )
-      integer               msno
-      integer               recno
-      double precision      record ( * )
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      integer(ip)           msno
+      integer(ip)           recno
+      real(wp)              record ( * )
 
 ! $ Brief_I/O
 !
@@ -553,53 +554,53 @@
 !                   operates on.
 !
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype  = 6 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 2 )
 
 !
 !     Mini-segment control area size:
 !
-      integer               mctlsz
+      integer(ip)           mctlsz
       parameter           ( mctlsz = 4 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = mctlsz )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
 !
 !     Local variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      dc     ( nd )
-      double precision      dpdata ( 1  )
-      double precision      rate
+      real(wp)              buffer ( bufsiz )
+      real(wp)              dc     ( nd )
+      real(wp)              dpdata ( 1  )
+      real(wp)              rate
 
-      integer               baddr
-      integer               bufbas
-      integer               eaddr
-      integer               epaddr
-      integer               epcbas
-      integer               ic     ( ni )
-      integer               minib
-      integer               minie
-      integer               nepdir
-      integer               nintvl
-      integer               nrec
-      integer               pktsiz
-      integer               pktszs ( 0 : 3 )
-      integer               ptrbas
-      integer               subtyp
+      integer(ip)           baddr
+      integer(ip)           bufbas
+      integer(ip)           eaddr
+      integer(ip)           epaddr
+      integer(ip)           epcbas
+      integer(ip)           ic     ( ni )
+      integer(ip)           minib
+      integer(ip)           minie
+      integer(ip)           nepdir
+      integer(ip)           nintvl
+      integer(ip)           nrec
+      integer(ip)           pktsiz
+      integer(ip)           pktszs ( 0 : 3 )
+      integer(ip)           ptrbas
+      integer(ip)           subtyp
 
 !
 !     Saved variables
@@ -780,7 +781,7 @@
 !
 !     Transfer the subtype and rate to the output record.
 !
-      record(2) = dble ( subtyp )
+      record(2) = real( subtyp, wp )
       record(3) = rate
 
 !

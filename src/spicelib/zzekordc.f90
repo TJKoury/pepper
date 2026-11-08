@@ -1,6 +1,7 @@
 !$Procedure      ZZEKORDC ( Order of a character EK column )
 
       subroutine zzekordc ( cvals, nullok, nlflgs, nvals, iorder )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
       character*(*)         cvals  ( * )
       logical               nullok
       logical               nlflgs ( * )
-      integer               nvals
-      integer               iorder ( * )
+      integer(ip)           nvals
+      integer(ip)           iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -171,12 +172,12 @@
 !
 !     Local variables
 !
-      integer               gap
-      integer               i
-      integer               i1
-      integer               i2
-      integer               j
-      integer               jg
+      integer(ip)           gap
+      integer(ip)           i
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           j
+      integer(ip)           jg
 
       logical               eq1
       logical               le1

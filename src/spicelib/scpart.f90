@@ -1,6 +1,7 @@
 !$Procedure SCPART ( Spacecraft Clock Partition Information )
 
       subroutine scpart ( sc, nparts, pstart, pstop )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       include               'sclk.inc'
       include               'zzctr.inc'
 
-      integer               sc
-      integer               nparts
-      double precision      pstart  ( * )
-      double precision      pstop   ( * )
+      integer(ip)           sc
+      integer(ip)           nparts
+      real(wp)              pstart  ( * )
+      real(wp)              pstop   ( * )
 
 ! $ Brief_I/O
 !

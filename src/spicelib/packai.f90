@@ -3,6 +3,7 @@
       subroutine packai ( in, &
                           pack,   npack, &
                           maxout, nout,   out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,13 +25,13 @@
 
       implicit none
 
-      integer          in      ( * )
-      integer          pack    ( * )
-      integer          npack
-      integer          maxout
+      integer(ip)      in      ( * )
+      integer(ip)      pack    ( * )
+      integer(ip)      npack
+      integer(ip)      maxout
 
-      integer          nout
-      integer          out     ( * )
+      integer(ip)      nout
+      integer(ip)      out     ( * )
 
 ! $ Brief_I/O
 !
@@ -199,7 +200,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

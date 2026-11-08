@@ -1,6 +1,7 @@
 !$Procedure CYCLAC ( Cycle the elements of a character array )
 
       subroutine cyclac ( array, nelt, dir, ncycle, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
       implicit none
 
       character*(*)         array    ( * )
-      integer               nelt
+      integer(ip)           nelt
       character*1           dir
-      integer               ncycle
+      integer(ip)           ncycle
       character*(*)         out      ( * )
 
 ! $ Brief_I/O
@@ -181,26 +182,26 @@
 !     SPICELIB functions
 !
       logical          return
-      integer          gcd
-      integer          nbwid
+      integer(ip)      gcd
+      integer(ip)      nbwid
 
 !
 !     Local variables
 !
-      integer          outlen
-      integer          widest
-      integer          limit
+      integer(ip)      outlen
+      integer(ip)      widest
+      integer(ip)      limit
 
       character*1      last
       character*1      temp
 
-      integer          c
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
+      integer(ip)      c
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
 
 
 

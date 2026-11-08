@@ -1,6 +1,7 @@
 !$Procedure ELLTOF ( Elliptic time of flight )
 
       subroutine elltof ( ma, ecc, e )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      ma
-      double precision      ecc
-      double precision      e
+      real(wp)              ma
+      real(wp)              ecc
+      real(wp)              e
 
 ! $ Brief_I/O
 !
@@ -142,37 +143,37 @@
 !     SPICELIB functions
 !
       logical               return
-      double precision      dcbrt
-      double precision      halfpi
+      real(wp)              dcbrt
+      real(wp)              halfpi
       external              pi
-      double precision      pi
-      double precision      twopi
+      real(wp)              pi
+      real(wp)              twopi
 
 !
 !     Local parameters
 !
-      double precision      tol
-      parameter           ( tol = 1.d-15 )
+      real(wp)              tol
+      parameter           ( tol = 1.0e-15_wp )
 
 !
 !     Local variables
 !
-      double precision      m
-      double precision      mprime
-      integer               n
+      real(wp)              m
+      real(wp)              mprime
+      integer(ip)           n
 
-      double precision      m0
-      double precision      a
-      double precision      b
-      double precision      q
-      double precision      r
-      double precision      qr
-      double precision      y
+      real(wp)              m0
+      real(wp)              a
+      real(wp)              b
+      real(wp)              q
+      real(wp)              r
+      real(wp)              qr
+      real(wp)              y
 
-      double precision      fn
-      double precision      deriv
-      double precision      deriv2
-      double precision      change
+      real(wp)              fn
+      real(wp)              deriv
+      real(wp)              deriv2
+      real(wp)              change
 
 
 
@@ -185,7 +186,7 @@
          call chkin ( 'ELLTOF' )
       end if
 
-      if ( ecc .lt. 0.d0  .or.  ecc .ge. 1.d0 ) then
+      if ( ecc .lt. 0.0_wp  .or.  ecc .ge. 1.0_wp ) then
          call sigerr ( 'SPICE(WRONGCONIC)' )
          call chkout ( 'ELLTOF'            )
          return
@@ -253,7 +254,7 @@
          a = pi() - m
          b = pi() - m0
 
-         y = 1.d0 - (1.d0 - a/b)**2 * (1.d0 + 2.d0*a/b - a/(1.d0+ecc))
+         y = 1.0_wp - (1.0_wp - a/b)**2 * (1.0_wp + 2.0_wp*a/b - a/(1.0_wp+ecc))
          e = ecc * sin(ecc*y + m) + m
 
 !
@@ -286,25 +287,25 @@
 !     provides a reasonable estimate of E directly.
 !
 !
-      else if ( ecc .le. 0.7d0 ) then
+      else if ( ecc .le. 0.7_wp ) then
 
-         y = 1.d0 - (1.d0 - m/m0)**2 * (1.d0 + 2.d0*m/m0 - m/(1.d0-ecc))
+         y = 1.0_wp - (1.0_wp - m/m0)**2 * (1.0_wp + 2.0_wp*m/m0 - m/(1.0_wp-ecc))
          e = ecc * sin(ecc*y + m) + m
 
-      else if ( ecc .le. 0.85d0 ) then
+      else if ( ecc .le. 0.85_wp ) then
 
-         y = 1.d0 - (1.d0 - m/m0)**4
+         y = 1.0_wp - (1.0_wp - m/m0)**4
          e = ecc * sin(ecc*y + m) + m
 
-      else if ( ecc .le. 0.96d0 .or. m .gt. 0.05d0 ) then
+      else if ( ecc .le. 0.96_wp .or. m .gt. 0.05_wp ) then
 
-         y = 1.d0 - (1.d0 - m/m0)**8
+         y = 1.0_wp - (1.0_wp - m/m0)**8
          e = ecc * sin(ecc*y + m) + m
 
       else
 
-         q  = (2.d0/ecc) * (1.d0 - ecc)
-         r  = 3.d0 * (m/ecc)
+         q  = (2.0_wp/ecc) * (1.0_wp - ecc)
+         r  = 3.0_wp * (m/ecc)
          qr = sqrt ( q**3 + r**2 )
 
          e  = dcbrt ( r + qr ) + dcbrt ( r - qr )
@@ -325,15 +326,15 @@
 !          f'  = 1 - e cos(E)
 !          f'' =     e sin(E)
 !
-      change = 1.d0
+      change = 1.0_wp
 
       do while ( abs ( change ) .gt. tol )
 
          fn     = e    - ecc * sin(e) - m
-         deriv  = 1.d0 - ecc * cos(e)
+         deriv  = 1.0_wp - ecc * cos(e)
          deriv2 =        ecc * sin(e)
 
-         change = (fn/deriv) * ( 1.d0 + (fn*deriv2) / (2.d0*deriv**2) )
+         change = (fn/deriv) * ( 1.0_wp + (fn*deriv2) / (2.0_wp*deriv**2) )
          e      = e - change
 
       end do

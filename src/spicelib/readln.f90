@@ -1,6 +1,7 @@
 !$Procedure READLN ( Read a text line from a logical unit )
 
       subroutine readln ( unit, line, eof )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 !
 ! $ Declarations
 !
-      integer            unit
+      integer(ip)        unit
       character*(*)      line
       logical            eof
 !
@@ -126,7 +127,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 !
 !     Standard SPICE error handling.
 !

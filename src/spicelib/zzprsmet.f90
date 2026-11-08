@@ -2,6 +2,7 @@
 
       subroutine zzprsmet ( bodyid, method, mxnsrf, shape,  subtyp, &
                             pri,    nsurf,  srflst, pntdef, trmtyp )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,14 +30,14 @@
 
       implicit none
 
-      integer               bodyid
+      integer(ip)           bodyid
       character*(*)         method
-      integer               mxnsrf
+      integer(ip)           mxnsrf
       character*(*)         shape
       character*(*)         subtyp
       logical               pri
-      integer               nsurf
-      integer               srflst ( * )
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
       character*(*)         pntdef
       character*(*)         trmtyp
 
@@ -335,10 +336,10 @@
       character*(*)         slash
       parameter           ( slash  = '/' )
 
-      integer               nmax
+      integer(ip)           nmax
       parameter           ( nmax   = 100 )
 
-      integer               metlen
+      integer(ip)           metlen
       parameter           ( metlen = 1000 )
 
 !
@@ -347,17 +348,17 @@
       character*(1)         chr
       character*(metlen)    locmth
 
-      integer               begs ( nmax + 2 )
-      integer               code
-      integer               ends ( nmax + 2 )
-      integer               i
-      integer               n
-      integer               npri
-      integer               nshape
-      integer               nlmbtp
-      integer               nsubtp
-      integer               nsrfls
-      integer               ntrmtp
+      integer(ip)           begs ( nmax + 2 )
+      integer(ip)           code
+      integer(ip)           ends ( nmax + 2 )
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           npri
+      integer(ip)           nshape
+      integer(ip)           nlmbtp
+      integer(ip)           nsubtp
+      integer(ip)           nsrfls
+      integer(ip)           ntrmtp
 
       logical               done
       logical               fnd

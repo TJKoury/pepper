@@ -1,6 +1,7 @@
 !$Procedure NPARSI ( Integer parsing of a character string)
 
       subroutine nparsi (  string,  n, error, pnter)
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
       implicit none
 
       character*(*)    string
-      integer          n
+      integer(ip)      n
       character*(*)    error
-      integer          pnter
+      integer(ip)      pnter
 
 ! $ Brief_I/O
 !
@@ -217,15 +218,15 @@
 !     SPICELIB functions
 !
 
-      integer               intmax
-      integer               intmin
+      integer(ip)           intmax
+      integer(ip)           intmin
 
 !
 !     Local Variables
 !
-      double precision      xmnint
-      double precision      xmxint
-      double precision      x
+      real(wp)              xmnint
+      real(wp)              xmxint
+      real(wp)              x
 
       logical               first
 !
@@ -245,8 +246,8 @@
       if ( first ) then
 
          first  = .false.
-         xmxint =  dble ( intmax () )
-         xmnint =  dble ( intmin () )
+         xmxint =  real( intmax (), wp )
+         xmnint =  real( intmin (), wp )
 
       end if
 !

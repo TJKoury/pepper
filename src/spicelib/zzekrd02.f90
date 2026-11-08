@@ -2,6 +2,7 @@
 
       subroutine zzekrd02 (  handle,  segdsc,  coldsc, &
                              recptr,  dval,    isnull  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,11 +29,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      double precision      dval
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      real(wp)              dval
       logical               isnull
 
 ! $ Brief_I/O
@@ -127,16 +128,16 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               colidx
-      integer               datptr
-      integer               ncols
-      integer               ptrloc
-      integer               recno
+      integer(ip)           colidx
+      integer(ip)           datptr
+      integer(ip)           ncols
+      integer(ip)           ptrloc
+      integer(ip)           recno
 
 !
 !     Use discovery check-in.

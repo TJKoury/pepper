@@ -4,6 +4,7 @@
                             vertex, raydir, point,  xpt, handle, &
                             dladsc, dskdsc, dc,     ic,  found, &
                             normal                              )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,22 +33,22 @@
       include 'dskdsc.inc'
       include 'zzctr.inc'
 
-      integer               bodyid
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      et
-      integer               fixfid
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      point  ( 3 )
-      double precision      xpt    ( 3 )
-      integer               handle
-      integer               dladsc ( * )
-      double precision      dskdsc ( * )
-      double precision      dc     ( * )
-      integer               ic     ( * )
+      integer(ip)           bodyid
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              et
+      integer(ip)           fixfid
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              point  ( 3 )
+      real(wp)              xpt    ( 3 )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      real(wp)              dskdsc ( * )
+      real(wp)              dc     ( * )
+      integer(ip)           ic     ( * )
       logical               found
-      double precision      normal ( 3 )
+      real(wp)              normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -191,7 +192,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -204,17 +205,17 @@
 !     Sizes of source info arrays returned by
 !     ZZDSKBUX:
 !
-      integer               maxdc
+      integer(ip)           maxdc
       parameter           ( maxdc  = 1 )
 
-      integer               maxic
+      integer(ip)           maxic
       parameter           ( maxic  = 1 )
 
 
-      integer               stsize
+      integer(ip)           stsize
       parameter           ( stsize = 10000 )
 
-      integer               btsize
+      integer(ip)           btsize
       parameter           ( btsize = 10 )
 
 !
@@ -234,34 +235,34 @@
 !                segment table for the Ith body.
 !
 !
-      integer               btnbod
-      integer               btbody ( btsize )
-      integer               btsegp ( btsize )
-      integer               btstsz ( btsize )
+      integer(ip)           btnbod
+      integer(ip)           btbody ( btsize )
+      integer(ip)           btsegp ( btsize )
+      integer(ip)           btstsz ( btsize )
 
 !
 !     Segment table variables
 !
-      integer               sthan  ( stsize )
-      double precision      stdscr ( dskdsz, stsize )
-      integer               stdlad ( dladsz, stsize )
-      integer               stfree
-      double precision      stoff  ( 3,      stsize )
-      double precision      stctr  ( 3,      stsize )
-      double precision      strad  ( stsize )
+      integer(ip)           sthan  ( stsize )
+      real(wp)              stdscr ( dskdsz, stsize )
+      integer(ip)           stdlad ( dladsz, stsize )
+      integer(ip)           stfree
+      real(wp)              stoff  ( 3,      stsize )
+      real(wp)              stctr  ( 3,      stsize )
+      real(wp)              strad  ( stsize )
 
 
 !
 !     Local variables
 !
-      double precision      locdc  ( maxdc )
+      real(wp)              locdc  ( maxdc )
 
-      integer               bix
-      integer               bsrctr ( ctrsiz )
-      integer               j
-      integer               locic  ( maxic )
-      integer               nseg
-      integer               segidx
+      integer(ip)           bix
+      integer(ip)           bsrctr ( ctrsiz )
+      integer(ip)           j
+      integer(ip)           locic  ( maxic )
+      integer(ip)           nseg
+      integer(ip)           segidx
 
       logical               first
       logical               update

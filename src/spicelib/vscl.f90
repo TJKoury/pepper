@@ -1,6 +1,7 @@
 !$Procedure VSCL ( Vector scaling, 3 dimensions )
 
       subroutine vscl ( s, v1, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision   s
-      double precision   v1   ( 3 )
-      double precision   vout ( 3 )
+      real(wp)           s
+      real(wp)           v1   ( 3 )
+      real(wp)           vout ( 3 )
 
 ! $ Brief_I/O
 !

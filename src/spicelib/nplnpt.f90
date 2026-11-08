@@ -1,6 +1,7 @@
 !$Procedure NPLNPT ( Nearest point on line to point )
 
       subroutine nplnpt ( linpt, lindir, point, pnear, dist )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      linpt  ( 3 )
-      double precision      lindir ( 3 )
-      double precision      point  ( 3 )
+      real(wp)              linpt  ( 3 )
+      real(wp)              lindir ( 3 )
+      real(wp)              point  ( 3 )
 
-      double precision      pnear  ( 3 )
-      double precision      dist
+      real(wp)              pnear  ( 3 )
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -158,7 +159,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdist
+      real(wp)              vdist
 
       logical               return
       logical               vzero
@@ -166,8 +167,8 @@
 !
 !     Local variables
 !
-      double precision      proj  ( 3 )
-      double precision      trans ( 3 )
+      real(wp)              proj  ( 3 )
+      real(wp)              trans ( 3 )
 
 
 !

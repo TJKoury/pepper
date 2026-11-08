@@ -1,6 +1,7 @@
 !$Procedure UCASE ( Convert to uppercase )
 
       subroutine ucase ( in, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -126,14 +127,14 @@
 !
 !     Local variables
 !
-      integer          i
-      integer          ich
+      integer(ip)      i
+      integer(ip)      ich
 !
 !     Saved variables
 !
-      integer          shift
-      integer          lowa
-      integer          lowz
+      integer(ip)      shift
+      integer(ip)      lowa
+      integer(ip)      lowz
 
       logical          first
 

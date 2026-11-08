@@ -1,6 +1,7 @@
 !$Procedure  ZZNOFCON ( Create frame connection long error message )
 
       subroutine zznofcon ( et, frame1, endp1, frame2, endp2, errmsg )
+      use pepper_kinds, only: ip, wp
 
       implicit none
 
@@ -28,11 +29,11 @@
 
       include 'frmtyp.inc'
 
-      double precision      et
-      integer               frame1
-      integer               endp1
-      integer               frame2
-      integer               endp2
+      real(wp)              et
+      integer(ip)           frame1
+      integer(ip)           endp1
+      integer(ip)           frame2
+      integer(ip)           endp2
       character*(*)         errmsg
 
 ! $ Brief_I/O
@@ -277,13 +278,13 @@
 !
 !     Local parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen = 35 )
 
-      integer               phrsln
+      integer(ip)           phrsln
       parameter           ( phrsln = 600 )
 
 !
@@ -294,13 +295,13 @@
       character*(phrsln)    phrase
       character*(timlen)    timstr
 
-      integer               endps  ( 2 )
-      integer               center
-      integer               class
-      integer               clssid
-      integer               frames ( 2 )
-      integer               i
-      integer               sclkid
+      integer(ip)           endps  ( 2 )
+      integer(ip)           center
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           frames ( 2 )
+      integer(ip)           i
+      integer(ip)           sclkid
 
       logical               ckmiss
       logical               found

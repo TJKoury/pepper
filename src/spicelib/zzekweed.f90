@@ -1,6 +1,7 @@
 !$Procedure  ZZEKWEED ( Private: EK, weed out redundant row vectors )
 
       subroutine zzekweed ( njrs, bases, nrows )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,9 +26,9 @@
       include 'ekjrs.inc'
       include 'ekqlimit.inc'
 
-      integer               njrs
-      integer               bases ( * )
-      integer               nrows
+      integer(ip)           njrs
+      integer(ip)           bases ( * )
+      integer(ip)           nrows
 
 ! $ Brief_I/O
 !
@@ -148,35 +149,35 @@
 !
 !     Local variables
 !
-      integer               i
-      integer               base
-      integer               cand
-      integer               candsv ( maxtab )
-      integer               crv
-      integer               crwbas
-      integer               crwvec ( maxtab + 1 )
-      integer               csgbas
-      integer               csv
-      integer               j
-      integer               loc
-      integer               ncndrv
-      integer               ncndsv
-      integer               ndel
-      integer               nprdrv
-      integer               nprdsv
-      integer               nr
-      integer               nrloc
-      integer               nsvloc
-      integer               ntab
-      integer               pred
-      integer               predsv ( maxtab )
-      integer               prv
-      integer               prwbas
-      integer               prwvec ( maxtab + 1 )
-      integer               psgbas
-      integer               psv
-      integer               rvsize
-      integer               svsize
+      integer(ip)           i
+      integer(ip)           base
+      integer(ip)           cand
+      integer(ip)           candsv ( maxtab )
+      integer(ip)           crv
+      integer(ip)           crwbas
+      integer(ip)           crwvec ( maxtab + 1 )
+      integer(ip)           csgbas
+      integer(ip)           csv
+      integer(ip)           j
+      integer(ip)           loc
+      integer(ip)           ncndrv
+      integer(ip)           ncndsv
+      integer(ip)           ndel
+      integer(ip)           nprdrv
+      integer(ip)           nprdsv
+      integer(ip)           nr
+      integer(ip)           nrloc
+      integer(ip)           nsvloc
+      integer(ip)           ntab
+      integer(ip)           pred
+      integer(ip)           predsv ( maxtab )
+      integer(ip)           prv
+      integer(ip)           prwbas
+      integer(ip)           prwvec ( maxtab + 1 )
+      integer(ip)           psgbas
+      integer(ip)           psv
+      integer(ip)           rvsize
+      integer(ip)           svsize
 
       logical               hit
 

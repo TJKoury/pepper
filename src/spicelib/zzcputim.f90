@@ -1,6 +1,7 @@
 !$Procedure ZZCPUTIM ( CPU Time )
 
       subroutine zzcputim ( tvec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 !
 ! $ Declarations
 
-      double precision      tvec ( 6 )
+      real(wp)              tvec ( 6 )
 
 ! $ Brief_I/O
 !
@@ -405,7 +406,7 @@
 !
 !     Local variables
 !
-      integer               dtime (8)
+      integer(ip)           dtime (8)
       character*(12)        rclock(3)
 
 !
@@ -422,12 +423,12 @@
 !     Let's pack all this information into our double precision TVEC
 !     array.
 !
-      tvec ( 1 ) = dble( dtime(1) )
-      tvec ( 2 ) = dble( dtime(2) )
-      tvec ( 3 ) = dble( dtime(3) )
-      tvec ( 4 ) = dble( dtime(5) )
-      tvec ( 5 ) = dble( dtime(6) )
-      tvec ( 6 ) = dble( dtime(7) ) + dble( dtime(8) )/1000.d0
+      tvec ( 1 ) = real( dtime(1), wp )
+      tvec ( 2 ) = real( dtime(2), wp )
+      tvec ( 3 ) = real( dtime(3), wp )
+      tvec ( 4 ) = real( dtime(5), wp )
+      tvec ( 5 ) = real( dtime(6), wp )
+      tvec ( 6 ) = real( dtime(7), wp ) + real( dtime(8), wp )/1000.0_wp
 
 !
 !     That's it.

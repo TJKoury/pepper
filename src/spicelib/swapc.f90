@@ -1,6 +1,7 @@
 !$Procedure SWAPC ( Swap character values )
 
       subroutine swapc ( a, b )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -117,12 +118,12 @@
 !
 !     Local variables
 !
-      integer          alen
-      integer          blen
-      integer          short
+      integer(ip)      alen
+      integer(ip)      blen
+      integer(ip)      short
 
       character*1      temp
-      integer          i
+      integer(ip)      i
 
 
 !

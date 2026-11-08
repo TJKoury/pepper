@@ -1,6 +1,7 @@
 !$Procedure SPKR13 ( Read SPK record from segment, type 13 )
 
       subroutine spkr13 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,13 +19,13 @@
 
       implicit none
 
-      integer               maxrec
+      integer(ip)           maxrec
       parameter           ( maxrec  = 129 )
 
-      integer               handle
-      double precision      descr    ( * )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( * )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !

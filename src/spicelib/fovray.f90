@@ -2,6 +2,7 @@
 
       subroutine fovray ( inst,   raydir, rframe, abcorr, &
                           obsrvr, et,     visibl        )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -32,11 +33,11 @@
       include               'gf.inc'
 
       character*(*)         inst
-      double precision      raydir ( 3 )
+      real(wp)              raydir ( 3 )
       character*(*)         rframe
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      et
+      real(wp)              et
       logical               visibl
 
 ! $ Brief_I/O

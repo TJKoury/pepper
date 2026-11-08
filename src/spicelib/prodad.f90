@@ -1,6 +1,7 @@
 !$Procedure PRODAD ( Product of a double precision array )
 
-      double precision function  prodad ( array, n )
+      real(wp) function  prodad ( array, n )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision   array ( * )
-      integer            n
+      real(wp)           array ( * )
+      integer(ip)        n
 
 ! $ Brief_I/O
 !
@@ -126,14 +127,14 @@
 !
 !     Local variables
 !
-      double precision prod
-      integer          i
+      real(wp) prod
+      integer(ip)      i
 
 
 !
 !     Begin at one.
 !
-      prod = 1.d0
+      prod = 1.0_wp
 
 !
 !     Multiply the elements. If N is zero or negative, nothing happens.

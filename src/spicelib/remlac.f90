@@ -1,6 +1,7 @@
 !$Procedure REMLAC ( Remove elements from a character array )
 
       subroutine remlac ( ne, loc, array, na )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer          ne
-      integer          loc
+      integer(ip)      ne
+      integer(ip)      loc
       character*(*)    array ( * )
-      integer          na
+      integer(ip)      na
 
 ! $ Brief_I/O
 !
@@ -184,7 +185,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

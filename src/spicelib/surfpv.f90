@@ -1,6 +1,7 @@
 !$Procedure SURFPV ( Surface point and velocity )
 
       subroutine surfpv ( stvrtx, stdir, a, b, c, stx, found )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      double precision      stvrtx ( 6 )
-      double precision      stdir  ( 6 )
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      stx    ( 6 )
+      real(wp)              stvrtx ( 6 )
+      real(wp)              stdir  ( 6 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              stx    ( 6 )
       logical               found
 
 ! $ Brief_I/O
@@ -459,35 +460,35 @@
       logical               failed
       logical               return
 
-      double precision      dpmax
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              dpmax
+      real(wp)              vdot
+      real(wp)              vnorm
 
 !
 !     Local parameters
 !
-      double precision      margin
-      parameter           ( margin = 10.d0 )
+      real(wp)              margin
+      parameter           ( margin = 10.0_wp )
 
 !
 !     Local variables
 !
 
-      double precision      dsnum
-      double precision      du     ( 3 )
-      double precision      dv     ( 3 )
-      double precision      level
-      double precision      m
-      double precision      n      ( 3 )
-      double precision      r
-      double precision      second ( 3 )
-      double precision      stdhat ( 6 )
-      double precision      third  ( 3 )
-      double precision      u      ( 3 )
-      double precision      udn
-      double precision      v      ( 3 )
-      double precision      vmx    ( 3 )
-      double precision      x      ( 3 )
+      real(wp)              dsnum
+      real(wp)              du     ( 3 )
+      real(wp)              dv     ( 3 )
+      real(wp)              level
+      real(wp)              m
+      real(wp)              n      ( 3 )
+      real(wp)              r
+      real(wp)              second ( 3 )
+      real(wp)              stdhat ( 6 )
+      real(wp)              third  ( 3 )
+      real(wp)              u      ( 3 )
+      real(wp)              udn
+      real(wp)              v      ( 3 )
+      real(wp)              vmx    ( 3 )
+      real(wp)              x      ( 3 )
 !
 !     Standard SPICE error handling.
 !
@@ -566,7 +567,7 @@
 !
       level =  ( v(1)/a )**2  +  ( v(2)/b )**2  +  ( v(3)/c )**2
 
-      if ( level .eq. 1.d0 ) then
+      if ( level .eq. 1.0_wp ) then
 
          call setmsg ( 'Ray''s vertex (# # #) has ' &
          //            'level surface parameter #. Vertex ' &
@@ -591,7 +592,7 @@
 !
       udn = vdot( u, n )
 
-      if ( udn .eq. 0.d0 ) then
+      if ( udn .eq. 0.0_wp ) then
 !
 !        The intercept point is on the limb, so its velocity
 !        is not defined. This means we can't "find" the state
@@ -619,7 +620,7 @@
 !
 !     We'll use the following test.
 !
-      m = max (  vnorm( second ),  vnorm( third ),  1.0d0  )
+      m = max (  vnorm( second ),  vnorm( third ),  1.0_wp  )
 
 !
 !     If
@@ -656,9 +657,9 @@
 !        DX =  DV  -  SECOND / < U,N >  -  THIRD / < U,N >
 !
 !
-      r = 1.0d0 / udn
+      r = 1.0_wp / udn
 
-      call vlcom3( 1.0d0, dv, -r, second, -(r**2), third, stx(4) )
+      call vlcom3( 1.0_wp, dv, -r, second, -(r**2), third, stx(4) )
 
 !
 !     Since we could compute the velocity, we can assign the

@@ -1,6 +1,7 @@
 !$Procedure     ZZEKIXDL ( EK, delete record from index )
 
       subroutine zzekixdl ( handle, segdsc, coldsc, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,10 +25,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
 
 ! $ Brief_I/O
 !
@@ -114,15 +115,15 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               idx
-      integer               idxtyp
-      integer               recno
-      integer               tree
+      integer(ip)           idx
+      integer(ip)           idxtyp
+      integer(ip)           recno
+      integer(ip)           tree
 
 !
 !     Standard SPICE error handling.

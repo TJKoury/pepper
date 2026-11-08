@@ -1,6 +1,7 @@
 !$Procedure DSKTOL ( DSK, tolerance umbrella )
 
       subroutine dsktol ( keywrd, dpval )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,8 +25,8 @@
 
       include 'dsktol.inc'
 
-      integer               keywrd
-      double precision      dpval
+      integer(ip)           keywrd
+      real(wp)              dpval
 
 ! $ Brief_I/O
 !
@@ -138,10 +139,10 @@
 !
 !     Local parameters
 !
-      integer               ndspar
+      integer(ip)           ndspar
       parameter           ( ndspar = 6 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 6 )
 
 !
@@ -149,7 +150,7 @@
 !
       character*(namlen)    names  ( ndspar )
 
-      double precision      dppars ( ndspar )
+      real(wp)              dppars ( ndspar )
 
       logical               isfixd ( ndspar )
 

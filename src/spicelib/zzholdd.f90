@@ -1,6 +1,7 @@
 !$Procedure ZZHOLDD ( Private --- hold a scalar DP )
 
       subroutine zzholdd ( op, id, ok, value )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,10 +26,10 @@
 
       include               'zzholdd.inc'
 
-      integer               op
-      integer               id
+      integer(ip)           op
+      integer(ip)           id
       logical               ok
-      double precision      value
+      real(wp)              value
 
 ! $ Brief_I/O
 !
@@ -240,7 +241,7 @@
 !
 !     SPICELIB functions
 !
-      integer               brckti
+      integer(ip)           brckti
 
       logical               return
 
@@ -248,10 +249,10 @@
 !     Local variables.
 !
 
-      double precision      svalue  (nid)
+      real(wp)              svalue  (nid)
       logical               init
       logical               first   (nid)
-      integer               i
+      integer(ip)           i
 
       save                  svalue
       save                  first
@@ -263,7 +264,7 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) then
-         value = 0.d0
+         value = 0.0_wp
          ok    = .false.
          return
       end if
@@ -274,7 +275,7 @@
 !
       if ( brckti(id, 1, nid) .ne. id ) then
 
-         value = 0.d0
+         value = 0.0_wp
          ok    = .false.
 
          call chkin  ( 'ZZHOLDD'                               )
@@ -322,7 +323,7 @@
 
          if ( first( id ) ) then
 
-            value = 0.d0
+            value = 0.0_wp
             ok    = .false.
 
          else
@@ -362,7 +363,7 @@
 !
 !        Unknown value for 'OP'. Signal an error.
 !
-         value = 0.d0
+         value = 0.0_wp
          ok    = .false.
 
          call chkin  ( 'ZZHOLDD'                          )

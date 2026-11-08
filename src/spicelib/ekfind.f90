@@ -1,6 +1,7 @@
 !$Procedure EKFIND ( EK, find data )
 
       subroutine ekfind ( query, nmrows, error, errmsg )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,7 +28,7 @@
       include 'ekcnamsz.inc'
 
       character*(*)         query
-      integer               nmrows
+      integer(ip)           nmrows
       logical               error
       character*(*)         errmsg
 
@@ -708,13 +709,13 @@
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
 !
 !     Storage limits:
 !
-      integer               maxcol
+      integer(ip)           maxcol
       parameter           ( maxcol = 100 )
 
 
@@ -724,18 +725,18 @@
       character*(maxcln)    chrbuf
       character*(maxcln)    eqryc
 
-      double precision      eqryd  ( maxqnm )
-      double precision      numvls ( maxqnm )
+      real(wp)              eqryd  ( maxqnm )
+      real(wp)              numvls ( maxqnm )
 
-      integer               chbegs ( maxtok )
-      integer               chends ( maxtok )
-      integer               eqryi  ( lbcell : eqimin )
-      integer               errptr
-      integer               lxbegs ( maxtok )
-      integer               lxends ( maxtok )
-      integer               ntoken
-      integer               tokens ( maxtok )
-      integer               values ( maxtok )
+      integer(ip)           chbegs ( maxtok )
+      integer(ip)           chends ( maxtok )
+      integer(ip)           eqryi  ( lbcell : eqimin )
+      integer(ip)           errptr
+      integer(ip)           lxbegs ( maxtok )
+      integer(ip)           lxends ( maxtok )
+      integer(ip)           ntoken
+      integer(ip)           tokens ( maxtok )
+      integer(ip)           values ( maxtok )
 
 
 !

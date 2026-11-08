@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSTYP ( EK, determine segment type )
 
-      integer function zzekstyp ( ncols, cdscrs )
+      integer(ip) function zzekstyp ( ncols, cdscrs )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
       include 'ekcoldsc.inc'
       include 'ekglimit.inc'
 
-      integer               ncols
-      integer               cdscrs ( cdscsz, * )
+      integer(ip)           ncols
+      integer(ip)           cdscrs ( cdscsz, * )
 
 ! $ Brief_I/O
 !
@@ -109,7 +110,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
       logical               fixed
       logical               var

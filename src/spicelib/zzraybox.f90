@@ -1,6 +1,7 @@
 !$Procedure ZZRAYBOX ( Ray-box intercept )
 
       subroutine zzraybox ( vertex, raydir, boxori, extent, xpt, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,11 +25,11 @@
 
       implicit none
 
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      boxori ( 3 )
-      double precision      extent ( 3 )
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              boxori ( 3 )
+      real(wp)              extent ( 3 )
+      real(wp)              xpt    ( 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -124,7 +125,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
       logical               return
       logical               vzero
@@ -132,34 +133,34 @@
 !
 !     Local parameters
 !
-      integer               left
+      integer(ip)           left
       parameter           ( left   = 1 )
 
-      integer               middle
+      integer(ip)           middle
       parameter           ( middle = 2 )
 
-      integer               right
+      integer(ip)           right
       parameter           ( right  = 3 )
 
 !
 !     Local variables
 !
-      double precision      center ( 3 )
-      double precision      limit
-      double precision      maxt
-      double precision      near   ( 3 )
-      double precision      offset ( 3 )
-      double precision      plndst ( 3 )
-      double precision      r
-      double precision      sphxpt ( 3 )
-      double precision      sphvtx ( 3 )
-      double precision      t      ( 3 )
-      double precision      udir   ( 3 )
-      double precision      vtemp  ( 3 )
+      real(wp)              center ( 3 )
+      real(wp)              limit
+      real(wp)              maxt
+      real(wp)              near   ( 3 )
+      real(wp)              offset ( 3 )
+      real(wp)              plndst ( 3 )
+      real(wp)              r
+      real(wp)              sphxpt ( 3 )
+      real(wp)              sphvtx ( 3 )
+      real(wp)              t      ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              vtemp  ( 3 )
 
-      integer               sector ( 3 )
-      integer               i
-      integer               maxidx
+      integer(ip)           sector ( 3 )
+      integer(ip)           i
+      integer(ip)           maxidx
 
       logical               sphfnd
 
@@ -195,7 +196,7 @@
 !
 !     Check the box extents.
 !
-      if (  min( extent(1), extent(2), extent(3) ) .le. 0.d0 ) then
+      if (  min( extent(1), extent(2), extent(3) ) .le. 0.0_wp ) then
 
          call chkin  ( 'ZZRAYBOX'                                    )
          call setmsg ( 'All box extents should be strictly positive ' &
@@ -237,7 +238,7 @@
 !     Compute the intercept of the ray on the surface of a bounding
 !     sphere that contains the box. Let R be the radius of this sphere.
 !
-      r = 0.5d0 * (1.d0 + 1.d-3) * vnorm( extent )
+      r = 0.5_wp * (1.0_wp + 1.0e-3_wp) * vnorm( extent )
 
       if ( vnorm(offset) .lt. r ) then
 !
@@ -277,10 +278,10 @@
 !
       do i = 1, 3
 
-         if ( sphvtx(i) .lt. 0.d0 ) then
+         if ( sphvtx(i) .lt. 0.0_wp ) then
 
             sector(i) = left
-            near(i)   = 0.d0
+            near(i)   = 0.0_wp
 
          else if ( sphvtx(i) .gt. extent(i) ) then
 
@@ -289,7 +290,7 @@
 
          else
             sector(i) = middle
-            near(i)   = 0.d0
+            near(i)   = 0.0_wp
          end if
 
       end do
@@ -316,12 +317,12 @@
 !     corresponding to the maximum value of T.
 !
       maxidx =  1
-      maxt   = -1.d0
+      maxt   = -1.0_wp
 
 
       do i = 1, 3
 
-         t(i) = -1.d0
+         t(i) = -1.0_wp
 
          if ( sector(i) .ne. middle ) then
 
@@ -346,7 +347,7 @@
 !
             t(i) = plndst(i) / udir(i)
 
-            if ( t(i) .lt. 0.d0 ) then
+            if ( t(i) .lt. 0.0_wp ) then
 !
 !              This component of the ray is going in the wrong
 !              direction. No intersection is possible.
@@ -370,7 +371,7 @@
 !     We should have a positive value of T for at least one
 !     coordinate. However, if we don't, there's no intersection.
 !
-      if ( maxt .lt. 0.d0 ) then
+      if ( maxt .lt. 0.0_wp ) then
          return
       end if
 
@@ -378,7 +379,7 @@
 !     Compute the candidate intercept. Note that we're now working
 !     in a frame centered at the box origin.
 !
-      call vlcom ( 1.d0, sphvtx, maxt, udir, xpt )
+      call vlcom ( 1.0_wp, sphvtx, maxt, udir, xpt )
 
 !
 !     Decide whether XPT is actually on the surface of the box.
@@ -402,7 +403,7 @@
 !              Ith component of XPT is outside these bounds,
 !              the ray misses the box.
 !
-               if (      ( xpt(i) .lt. 0.d0      ) &
+               if (      ( xpt(i) .lt. 0.0_wp      ) &
                     .or. ( xpt(i) .gt. extent(i) ) ) then
 
                   return
@@ -423,7 +424,7 @@
 !
 !                 Sharpen the Ith component of XPT.
 !
-                  xpt(i) = max( xpt(i), 0.d0 )
+                  xpt(i) = max( xpt(i), 0.0_wp )
 
                   if ( xpt(i) .gt. extent(i) ) then
 !
@@ -443,7 +444,7 @@
 !
                   xpt(i) = min( xpt(i), extent(i) )
 
-                  if ( xpt(i) .lt. 0.d0 ) then
+                  if ( xpt(i) .lt. 0.0_wp ) then
 !
 !                    The ray hits the MAXIDX face too far away from
 !                    SPHVTX(I). There's no intersection with the box.

@@ -1,6 +1,7 @@
 !$Procedure      ZZCK4I2D ( Pack set of integers into a single DP )
 
       subroutine zzck4i2d ( i, nsets, parcod, dpcoef )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,10 +29,10 @@
 
       implicit none
 
-      integer                 i      ( * )
-      integer                 nsets
-      double precision        parcod
-      double precision        dpcoef
+      integer(ip)             i      ( * )
+      integer(ip)             nsets
+      real(wp)                parcod
+      real(wp)                dpcoef
 
 ! $ Brief_I/O
 !
@@ -119,13 +120,13 @@
 !
 !     Local variables
 !
-      double precision        x
-      integer                 k
+      real(wp)                x
+      integer(ip)             k
 
 !
 !     Let's pack it!
 !
-      dpcoef = 0.d0
+      dpcoef = 0.0_wp
 
       x = 1
 

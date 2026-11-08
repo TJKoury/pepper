@@ -1,6 +1,7 @@
 !$Procedure CYLSPH ( Cylindrical to spherical )
 
       subroutine cylsph ( r, clon, z,  radius, colat, slon )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision    r
-      double precision    clon
-      double precision    z
-      double precision    radius
-      double precision    colat
-      double precision    slon
+      real(wp)            r
+      real(wp)            clon
+      real(wp)            z
+      real(wp)            radius
+      real(wp)            colat
+      real(wp)            slon
 
 ! $ Brief_I/O
 !
@@ -406,22 +407,22 @@
 !
 !     Local variables
 !
-      double precision big
-      double precision x
-      double precision y
+      real(wp) big
+      real(wp) x
+      real(wp) y
 
-      double precision rh
-      double precision th
+      real(wp) rh
+      real(wp) th
 
 !
 !     Convert to spherical, storing in temporary variables
 !
       big = max( dabs(r), dabs(z) )
 
-      if ( big .eq. 0.0d0 ) then
+      if ( big .eq. 0.0_wp ) then
 
-         th = 0.0d0
-         rh = 0.0d0
+         th = 0.0_wp
+         rh = 0.0_wp
 
       else
 

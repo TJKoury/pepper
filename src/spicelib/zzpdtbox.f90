@@ -2,6 +2,7 @@
 
       subroutine zzpdtbox ( bounds, corpar, center, &
                             lr,     lt,     lz,     radius )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -26,13 +27,13 @@
       include 'dskdsc.inc'
       include 'dsktol.inc'
 
-      double precision      bounds ( 2, 3 )
-      double precision      corpar ( * )
-      double precision      center ( 3 )
-      double precision      lr
-      double precision      lt
-      double precision      lz
-      double precision      radius
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              corpar ( * )
+      real(wp)              center ( 3 )
+      real(wp)              lr
+      real(wp)              lt
+      real(wp)              lz
+      real(wp)              radius
 
 ! $ Brief_I/O
 !
@@ -158,9 +159,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      twopi
-      double precision      vnorm
+      real(wp)              halfpi
+      real(wp)              twopi
+      real(wp)              vnorm
 
       logical               return
 
@@ -171,27 +172,27 @@
 !
 !     Local variables
 !
-      double precision      botv   ( 3 )
-      double precision      diag   ( 3 )
-      double precision      f
-      double precision      hdlon
-      double precision      inrad
-      double precision      maxabs
-      double precision      maxalt
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxv   ( 3 )
-      double precision      maxz
-      double precision      midlon
-      double precision      midr
-      double precision      minalt
-      double precision      minlat
-      double precision      minlon
-      double precision      minv   ( 3 )
-      double precision      minz
-      double precision      outrad
-      double precision      re
-      double precision      topv   ( 3 )
+      real(wp)              botv   ( 3 )
+      real(wp)              diag   ( 3 )
+      real(wp)              f
+      real(wp)              hdlon
+      real(wp)              inrad
+      real(wp)              maxabs
+      real(wp)              maxalt
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxv   ( 3 )
+      real(wp)              maxz
+      real(wp)              midlon
+      real(wp)              midr
+      real(wp)              minalt
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              minv   ( 3 )
+      real(wp)              minz
+      real(wp)              outrad
+      real(wp)              re
+      real(wp)              topv   ( 3 )
 
 !
 !     This routine uses discovery check-in. We check RETURN in order to
@@ -208,7 +209,7 @@
 !
 !     The equatorial radius must be greater than zero.
 !
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
 
          call chkin  ( 'ZZPDTBOX'                                   )
          call setmsg ( 'Equatorial radius from CORPAR array was #.' )
@@ -225,7 +226,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1.d0 ) then
+      if ( f .ge. 1.0_wp ) then
 
          call chkin  ( 'ZZPDTBOX'                            )
          call setmsg ( 'Flattening coefficient from CORPAR ' &
@@ -323,24 +324,24 @@
 !     surface of minimum altitude for which the absolute value of the
 !     latitude is maximum.
 !
-      if ( minlat .ge. 0.d0 ) then
+      if ( minlat .ge. 0.0_wp ) then
 
-         call georec ( 0.d0, minlat, maxalt, re, f, maxv )
-         call georec ( 0.d0, maxlat, minalt, re, f, minv )
+         call georec ( 0.0_wp, minlat, maxalt, re, f, maxv )
+         call georec ( 0.0_wp, maxlat, minalt, re, f, minv )
 
-         maxv(3) = 0.d0
-         minv(3) = 0.d0
+         maxv(3) = 0.0_wp
+         minv(3) = 0.0_wp
 
          outrad  = vnorm( maxv )
          inrad   = vnorm( minv )
 
-      else if ( maxlat .le. 0.d0 ) then
+      else if ( maxlat .le. 0.0_wp ) then
 
-         call georec ( 0.d0, maxlat, maxalt, re, f, maxv )
-         call georec ( 0.d0, minlat, minalt, re, f, minv )
+         call georec ( 0.0_wp, maxlat, maxalt, re, f, maxv )
+         call georec ( 0.0_wp, minlat, minalt, re, f, minv )
 
-         maxv(3) = 0.d0
-         minv(3) = 0.d0
+         maxv(3) = 0.0_wp
+         minv(3) = 0.0_wp
 
          outrad  = vnorm( maxv )
          inrad   = vnorm( minv )
@@ -351,9 +352,9 @@
 
          maxabs  = max( abs(maxlat), abs(minlat) )
 
-         call georec ( 0.d0, maxabs, minalt, re, f, minv )
+         call georec ( 0.0_wp, maxabs, minalt, re, f, minv )
 
-         minv(3) = 0.d0
+         minv(3) = 0.0_wp
 
          inrad   = vnorm( minv )
 
@@ -377,7 +378,7 @@
 
       else
 
-         lr = ( 1.d0 - cos(hdlon) ) * outrad
+         lr = ( 1.0_wp - cos(hdlon) ) * outrad
 
       end if
 
@@ -388,29 +389,29 @@
 !
       if ( hdlon .gt. halfpi() ) then
 
-         lt = 2.d0 * outrad
+         lt = 2.0_wp * outrad
       else
-         lt = 2.d0 * outrad * sin( hdlon )
+         lt = 2.0_wp * outrad * sin( hdlon )
       end if
 
 !
 !     The height bounds are derived from the lowest and highest points
 !     on the element.
 !
-      if ( minlat .ge. 0.d0 ) then
+      if ( minlat .ge. 0.0_wp ) then
 
-         call georec ( 0.d0, maxlat, maxalt, re, f, topv )
-         call georec ( 0.d0, minlat, minalt, re, f, botv )
+         call georec ( 0.0_wp, maxlat, maxalt, re, f, topv )
+         call georec ( 0.0_wp, minlat, minalt, re, f, botv )
 
-      else if ( maxlat .lt. 0.d0 ) then
+      else if ( maxlat .lt. 0.0_wp ) then
 
-         call georec ( 0.d0, maxlat, minalt, re, f, topv )
-         call georec ( 0.d0, minlat, maxalt, re, f, botv )
+         call georec ( 0.0_wp, maxlat, minalt, re, f, topv )
+         call georec ( 0.0_wp, minlat, maxalt, re, f, botv )
 
       else
 
-         call georec ( 0.d0, maxlat, maxalt, re, f, topv )
-         call georec ( 0.d0, minlat, maxalt, re, f, botv )
+         call georec ( 0.0_wp, maxlat, maxalt, re, f, topv )
+         call georec ( 0.0_wp, minlat, maxalt, re, f, botv )
 
       end if
 
@@ -422,9 +423,9 @@
 !
 !     Make sure all dimensions are non-negative.
 !
-      lr = max( 0.d0, lr )
-      lt = max( 0.d0, lt )
-      lz = max( 0.d0, lz )
+      lr = max( 0.0_wp, lr )
+      lt = max( 0.0_wp, lt )
+      lz = max( 0.0_wp, lz )
 
 !
 !     Compute the coordinates of the center of the box.

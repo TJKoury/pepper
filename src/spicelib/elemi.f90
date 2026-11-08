@@ -1,6 +1,7 @@
 !$Procedure ELEMI ( Element of an integer set )
 
       logical function elemi ( item, a )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer          lbcell
+      integer(ip)      lbcell
       parameter      ( lbcell = -5 )
 
-      integer          item
-      integer          a      ( lbcell:* )
+      integer(ip)      item
+      integer(ip)      a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -211,8 +212,8 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchi
-      integer               cardi
+      integer(ip)           bsrchi
+      integer(ip)           cardi
       logical               return
 
 

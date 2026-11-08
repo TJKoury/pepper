@@ -2,6 +2,7 @@
 
       subroutine ckcov ( ckfnm, idcode, needav, level, &
                          tol,   timsys, cover          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,16 +27,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         ckfnm
-      integer               idcode
+      integer(ip)           idcode
       logical               needav
       character*(*)         level
-      double precision      tol
+      real(wp)              tol
       character*(*)         timsys
-      double precision      cover ( lbcell : * )
+      real(wp)              cover ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -721,13 +722,13 @@
       parameter           ( kwseg  = 'SEGMENT' )
 
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
 !
@@ -736,18 +737,18 @@
       character*(lnsize)    arch
       character*(lnsize)    kertyp
 
-      double precision      dc     ( nd )
-      double precision      dctol  ( nd )
-      double precision      descr  ( nd + (ni+1)/2 )
-      double precision      et
+      real(wp)              dc     ( nd )
+      real(wp)              dctol  ( nd )
+      real(wp)              descr  ( nd + (ni+1)/2 )
+      real(wp)              et
 
-      integer               clkid
-      integer               dtype
-      integer               handle
-      integer               i
-      integer               ic     ( ni )
-      integer               segbeg
-      integer               segend
+      integer(ip)           clkid
+      integer(ip)           dtype
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           segbeg
+      integer(ip)           segend
 
       logical               avok
       logical               found
@@ -766,7 +767,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -958,7 +959,7 @@
 !              Insert the coverage bounds into the coverage window.
 !              Adjust the interval using the tolerance.
 !
-               dctol(1)  =  max (  dc(1) - tol,  0.d0  )
+               dctol(1)  =  max (  dc(1) - tol,  0.0_wp  )
                dctol(2)  =         dc(2) + tol
 
 !

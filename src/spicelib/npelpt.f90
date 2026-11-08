@@ -1,6 +1,7 @@
 !$Procedure NPELPT  ( Nearest point on ellipse to point )
 
       subroutine npelpt ( point, ellips, pnear, dist )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,13 +24,13 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel    =   9 )
 
-      double precision      ellips ( ubel )
-      double precision      point  (    3 )
-      double precision      pnear  (    3 )
-      double precision      dist
+      real(wp)              ellips ( ubel )
+      real(wp)              point  (    3 )
+      real(wp)              pnear  (    3 )
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -176,24 +177,24 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
-      double precision      vdist
+      real(wp)              vnorm
+      real(wp)              vdist
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      center ( 3 )
-      double precision      majlen
-      double precision      minlen
-      double precision      rotate ( 3, 3 )
-      double precision      scale
-      double precision      smajor ( 3 )
-      double precision      sminor ( 3 )
-      double precision      tempv  ( 3 )
-      double precision      tmppnt ( 3 )
-      double precision      prjpnt ( 3 )
+      real(wp)              center ( 3 )
+      real(wp)              majlen
+      real(wp)              minlen
+      real(wp)              rotate ( 3, 3 )
+      real(wp)              scale
+      real(wp)              smajor ( 3 )
+      real(wp)              sminor ( 3 )
+      real(wp)              tempv  ( 3 )
+      real(wp)              tmppnt ( 3 )
+      real(wp)              prjpnt ( 3 )
 
 
 
@@ -260,7 +261,7 @@
       minlen = vnorm (sminor)
       majlen = vnorm (smajor)
 
-      if (   min ( majlen, minlen )  .eq.  0.d0  ) then
+      if (   min ( majlen, minlen )  .eq.  0.0_wp  ) then
 
          call setmsg ( 'Semi-axis lengths: # #. ' )
          call errdp  ( '#', majlen                )
@@ -272,7 +273,7 @@
       end if
 
 
-      scale = 1.d0 / majlen
+      scale = 1.0_wp / majlen
 
       call vsclip ( scale, smajor )
       call vsclip ( scale, sminor )
@@ -310,7 +311,7 @@
 !     we'll call this projection PRJPNT.
 !
 !
-      call vpack ( tmppnt(1),  tmppnt(2),  0.d0,  prjpnt )
+      call vpack ( tmppnt(1),  tmppnt(2),  0.0_wp,  prjpnt )
 
 !
 !     Now we're ready to find the distance between and a triaxial
@@ -325,7 +326,7 @@
 !
 !     Find the nearest point to PRJPNT on the ellipsoid, PNEAR.
 !
-      call nearpt ( prjpnt, 1.d0, minlen/majlen, 2.d0, pnear, dist )
+      call nearpt ( prjpnt, 1.0_wp, minlen/majlen, 2.0_wp, pnear, dist )
 
 !
 !     Scale the near point coordinates back to the original scale.

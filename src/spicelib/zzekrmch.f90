@@ -14,6 +14,7 @@
                                   cends, &
                                   dvals, &
                                   ivals  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -39,23 +40,23 @@
       include 'ekwild.inc'
       include 'ekqlimit.inc'
 
-      integer               maxcol
+      integer(ip)           maxcol
       parameter           ( maxcol = 10 )
 
-      integer               ncnstr
+      integer(ip)           ncnstr
       logical               active ( * )
-      integer               handle
-      integer               segdsc ( * )
-      integer               cdscrs ( cdscsz, * )
-      integer               row
-      integer               elts   ( * )
-      integer               ops    ( * )
-      integer               vtypes ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           cdscrs ( cdscsz, * )
+      integer(ip)           row
+      integer(ip)           elts   ( * )
+      integer(ip)           ops    ( * )
+      integer(ip)           vtypes ( * )
       character*(*)         chrbuf
-      integer               cbegs  ( * )
-      integer               cends  ( * )
-      double precision      dvals  ( * )
-      integer               ivals  ( * )
+      integer(ip)           cbegs  ( * )
+      integer(ip)           cends  ( * )
+      real(wp)              dvals  ( * )
+      integer(ip)           ivals  ( * )
 
 ! $ Brief_I/O
 !
@@ -247,7 +248,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Use discovery check-in.

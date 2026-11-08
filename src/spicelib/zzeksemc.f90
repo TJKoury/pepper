@@ -1,6 +1,7 @@
 !$Procedure  ZZEKSEMC ( Private: EK, semantically check encoded query )
 
       subroutine zzeksemc ( query, eqryi, eqryc, error, errmsg, errptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -30,15 +31,15 @@
       include 'ektnamsz.inc'
       include 'ektype.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
       logical               error
       character*(*)         errmsg
-      integer               errptr
+      integer(ip)           errptr
 
 ! $ Brief_I/O
 !
@@ -181,7 +182,7 @@
 !
 !     Local parameters
 !
-      integer               short
+      integer(ip)           short
       parameter           ( short  = 32 )
 
 !
@@ -195,25 +196,25 @@
       character*(tnamsz)    rhstab
       character*(short)     typstr ( 4 )
 
-      integer               attdsc ( adscsz )
-      integer               base
-      integer               cnstyp
-      integer               colidx
-      integer               i
-      integer               irsolv
-      integer               lhssiz
-      integer               lhstyp
-      integer               lxb    ( 2 )
-      integer               lxe    ( 2 )
-      integer               ncnj
-      integer               ncns
-      integer               nord
-      integer               ntab
-      integer               opcode
-      integer               rhssiz
-      integer               rhstyp
-      integer               tabidx
-      integer               trsolv
+      integer(ip)           attdsc ( adscsz )
+      integer(ip)           base
+      integer(ip)           cnstyp
+      integer(ip)           colidx
+      integer(ip)           i
+      integer(ip)           irsolv
+      integer(ip)           lhssiz
+      integer(ip)           lhstyp
+      integer(ip)           lxb    ( 2 )
+      integer(ip)           lxe    ( 2 )
+      integer(ip)           ncnj
+      integer(ip)           ncns
+      integer(ip)           nord
+      integer(ip)           ntab
+      integer(ip)           opcode
+      integer(ip)           rhssiz
+      integer(ip)           rhstyp
+      integer(ip)           tabidx
+      integer(ip)           trsolv
 
       logical               likeop
       logical               nulval

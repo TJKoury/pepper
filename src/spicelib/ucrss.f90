@@ -1,6 +1,7 @@
 !$Procedure UCRSS ( Unitized cross product, 3x3 )
 
       subroutine ucrss ( v1, v2, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision   v1   ( 3 )
-      double precision   v2   ( 3 )
-      double precision   vout ( 3 )
+      real(wp)           v1   ( 3 )
+      real(wp)           v2   ( 3 )
+      real(wp)           vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -204,19 +205,19 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
 !
 !     Local variables
 !
-      double precision      vcross(3)
-      double precision      vmag
+      real(wp)              vcross(3)
+      real(wp)              vmag
 
-      double precision      maxv1
-      double precision      maxv2
+      real(wp)              maxv1
+      real(wp)              maxv2
 
-      double precision      tv1 ( 3 )
-      double precision      tv2 ( 3 )
+      real(wp)              tv1 ( 3 )
+      real(wp)              tv2 ( 3 )
 
 !
 !     Get the biggest component of each of the two vectors.
@@ -232,9 +233,9 @@
          tv1(2) = v1(2)/maxv1
          tv1(3) = v1(3)/maxv1
       else
-         tv1(1) = 0.0d0
-         tv1(2) = 0.0d0
-         tv1(3) = 0.0d0
+         tv1(1) = 0.0_wp
+         tv1(2) = 0.0_wp
+         tv1(3) = 0.0_wp
       end if
 
       if ( maxv2 .ne. 0 ) then
@@ -242,9 +243,9 @@
          tv2(2) = v2(2)/maxv2
          tv2(3) = v2(3)/maxv2
       else
-         tv2(1) = 0.0d0
-         tv2(2) = 0.0d0
-         tv2(3) = 0.0d0
+         tv2(1) = 0.0_wp
+         tv2(2) = 0.0_wp
+         tv2(3) = 0.0_wp
       end if
 
 !
@@ -259,14 +260,14 @@
 !
       vmag = vnorm(vcross)
 
-      if (vmag.gt.0.d0) then
+      if (vmag.gt.0.0_wp) then
          vout(1) = vcross(1) / vmag
          vout(2) = vcross(2) / vmag
          vout(3) = vcross(3) / vmag
       else
-         vout(1) = 0.d0
-         vout(2) = 0.d0
-         vout(3) = 0.d0
+         vout(1) = 0.0_wp
+         vout(2) = 0.0_wp
+         vout(3) = 0.0_wp
       end if
 
       return

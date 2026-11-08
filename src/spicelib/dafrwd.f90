@@ -9,6 +9,7 @@
                           found, &
                           reads, &
                           reqs     )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,17 +28,17 @@
 
       implicit none
 
-      integer               handle
-      integer               recno
-      integer               begin
-      integer               end
-      double precision      drec     ( 128 )
-      double precision      data     (  *  )
+      integer(ip)           handle
+      integer(ip)           recno
+      integer(ip)           begin
+      integer(ip)           end
+      real(wp)              drec     ( 128 )
+      real(wp)              data     (  *  )
       logical               found
-      integer               reads
-      integer               reqs
+      integer(ip)           reads
+      integer(ip)           reqs
 
-      integer               rbsize
+      integer(ip)           rbsize
       parameter           ( rbsize = 100 )
 
 ! $ Brief_I/O
@@ -278,7 +279,7 @@
 !
 !     SPICELIB functions
 !
-      integer               intmax
+      integer(ip)           intmax
 
       logical               return
       logical               failed
@@ -286,30 +287,30 @@
 !
 !     Local variables
 !
-      integer               rdsize
+      integer(ip)           rdsize
       parameter           ( rdsize = 128 * rbsize )
 
-      integer               unit
-      integer               iostat
+      integer(ip)           unit
+      integer(ip)           iostat
 
-      integer               bufloc
+      integer(ip)           bufloc
       logical               done
       logical               stored
 
-      integer               b
-      integer               count
-      integer               e
-      integer               rbhan    (      rbsize )
-      integer               rbrec    (      rbsize )
-      integer               rbreq    (      rbsize )
-      double precision      rbdat    ( 128, rbsize )
-      integer               rbnbr
-      integer               nread
-      integer               nreq
-      integer               minval
+      integer(ip)           b
+      integer(ip)           count
+      integer(ip)           e
+      integer(ip)           rbhan    (      rbsize )
+      integer(ip)           rbrec    (      rbsize )
+      integer(ip)           rbreq    (      rbsize )
+      real(wp)              rbdat    ( 128, rbsize )
+      integer(ip)           rbnbr
+      integer(ip)           nread
+      integer(ip)           nreq
+      integer(ip)           minval
 
-      integer               nd
-      integer               ni
+      integer(ip)           nd
+      integer(ip)           ni
 
       logical               locfnd
       logical               native
@@ -332,7 +333,7 @@
       data                  rbhan   / rbsize * 0    /
       data                  rbrec   / rbsize * 0    /
       data                  rbreq   / rbsize * 0    /
-      data                  rbdat   / rdsize * 0.d0 /
+      data                  rbdat   / rdsize * 0.0_wp /
       data                  rbnbr   /          1    /
 
       data                  nread   /          0    /

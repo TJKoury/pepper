@@ -1,6 +1,7 @@
 !$Procedure MTXMG ( Matrix transpose times matrix, general dimension )
 
       subroutine mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer            nc1
-      integer            nr1r2
-      integer            nc2
-      double precision   m1   ( nr1r2,nc1 )
-      double precision   m2   ( nr1r2,nc2 )
-      double precision   mout ( nc1,  nc2 )
+      integer(ip)        nc1
+      integer(ip)        nr1r2
+      integer(ip)        nc2
+      real(wp)           m1   ( nr1r2,nc1 )
+      real(wp)           m2   ( nr1r2,nc2 )
+      real(wp)           mout ( nc1,  nc2 )
 
 ! $ Brief_I/O
 !
@@ -216,9 +217,9 @@
 !
 !     Local variables
 !
-      integer               i
-      integer               j
-      integer               k
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
 
 !
 !  Perform the matrix multiplication
@@ -226,7 +227,7 @@
       do i = 1, nc1
          do j = 1, nc2
 
-            mout(i,j) = 0.d0
+            mout(i,j) = 0.0_wp
             do k = 1, nr1r2
                mout(i,j) = mout(i,j) + m1(k,i)*m2(k,j)
             end do

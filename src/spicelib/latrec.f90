@@ -1,6 +1,7 @@
 !$Procedure LATREC ( Latitudinal to rectangular coordinates )
 
       subroutine latrec ( radius, lon, lat, rectan )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision   radius
-      double precision   lon
-      double precision   lat
-      double precision   rectan ( 3 )
+      real(wp)           radius
+      real(wp)           lon
+      real(wp)           lat
+      real(wp)           rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -387,9 +388,9 @@
 !
 !     Local variables
 !
-      double precision   x
-      double precision   y
-      double precision   z
+      real(wp)           x
+      real(wp)           y
+      real(wp)           z
 
 !
 !     Convert to rectangular coordinates, storing the results in

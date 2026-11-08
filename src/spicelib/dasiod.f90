@@ -1,6 +1,7 @@
 !$Procedure DASIOD ( DAS, Fortran I/O, double precision )
 
       subroutine dasiod ( action, unit, recno, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,13 +22,13 @@
 
       implicit none
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd = 128 )
 
       character*(*)         action
-      integer               unit
-      integer               recno
-      double precision      record ( nwd )
+      integer(ip)           unit
+      integer(ip)           recno
+      real(wp)              record ( nwd )
 
 ! $ Brief_I/O
 !
@@ -203,7 +204,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure ZZDDHGSD ( Private --- DDH Get String Definitions )
 
       subroutine zzddhgsd ( class, id, label )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
       include              'zzddhman.inc'
 
       character*(*)         class
-      integer               id
+      integer(ip)           id
       character*(*)         label
 
 ! $ Brief_I/O
@@ -108,31 +109,31 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
 !
 !     Local Parameters
 !
-      integer               locsiz
+      integer(ip)           locsiz
       parameter           ( locsiz = 8 )
 
 !
 !     Number of classes of label/ID pairs of which this routine is
 !     aware.
 !
-      integer               numcls
+      integer(ip)           numcls
       parameter           ( numcls = 3 )
 
 !
 !     Integer codes for the currently supported classes.
 !
-      integer               method
+      integer(ip)           method
       parameter           ( method = 1 )
 
-      integer               arch
+      integer(ip)           arch
       parameter           ( arch   = method + 1 )
 
-      integer               bff
+      integer(ip)           bff
       parameter           ( bff    = arch   + 1 )
 
 !
@@ -144,7 +145,7 @@
       character*(strsiz)    strbff ( numbff )
       character*(locsiz)    tmpstr
 
-      integer               clsid
+      integer(ip)           clsid
 
 !
 !     Saved Variables

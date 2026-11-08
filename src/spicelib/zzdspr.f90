@@ -8,6 +8,7 @@
                            xh3,  xi2,   xi3,   xl2,   xl3,  xl4, &
                            zmol, zmos,  inclo, doinit, &
                            eccp, inclp, nodep, argpp, mp)
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,46 +31,46 @@
 
       include 'zzsgp4.inc'
 
-      integer               opmode
-      double precision      e3
-      double precision      ee2
-      double precision      peo
-      double precision      pgho
-      double precision      pho
-      double precision      pinco
-      double precision      plo
-      double precision      se2
-      double precision      se3
-      double precision      sgh2
-      double precision      sgh3
-      double precision      sgh4
-      double precision      sh2
-      double precision      sh3
-      double precision      si2
-      double precision      si3
-      double precision      sl2
-      double precision      sl3
-      double precision      sl4
-      double precision      t
-      double precision      xgh2
-      double precision      xgh3
-      double precision      xgh4
-      double precision      xh2
-      double precision      xh3
-      double precision      xi2
-      double precision      xi3
-      double precision      xl2
-      double precision      xl3
-      double precision      xl4
-      double precision      zmol
-      double precision      zmos
-      double precision      inclo
+      integer(ip)           opmode
+      real(wp)              e3
+      real(wp)              ee2
+      real(wp)              peo
+      real(wp)              pgho
+      real(wp)              pho
+      real(wp)              pinco
+      real(wp)              plo
+      real(wp)              se2
+      real(wp)              se3
+      real(wp)              sgh2
+      real(wp)              sgh3
+      real(wp)              sgh4
+      real(wp)              sh2
+      real(wp)              sh3
+      real(wp)              si2
+      real(wp)              si3
+      real(wp)              sl2
+      real(wp)              sl3
+      real(wp)              sl4
+      real(wp)              t
+      real(wp)              xgh2
+      real(wp)              xgh3
+      real(wp)              xgh4
+      real(wp)              xh2
+      real(wp)              xh3
+      real(wp)              xi2
+      real(wp)              xi3
+      real(wp)              xl2
+      real(wp)              xl3
+      real(wp)              xl4
+      real(wp)              zmol
+      real(wp)              zmos
+      real(wp)              inclo
       logical               doinit
-      double precision      eccp
-      double precision      inclp
-      double precision      nodep
-      double precision      argpp
-      double precision      mp
+      real(wp)              eccp
+      real(wp)              inclp
+      real(wp)              nodep
+      real(wp)              argpp
+      real(wp)              mp
 
 ! $ Brief_I/O
 !
@@ -252,47 +253,47 @@
 !
 !     Local Variables
 !
-      double precision      alfdp
-      double precision      betdp
-      double precision      cosip
-      double precision      cosop
-      double precision      dalf
-      double precision      dbet
-      double precision      dls
-      double precision      f2
-      double precision      f3
-      double precision      pe
-      double precision      pgh
-      double precision      ph
-      double precision      pinc
-      double precision      pl
-      double precision      sel
-      double precision      ses
-      double precision      sghl
-      double precision      sghs
-      double precision      shl
-      double precision      shs
-      double precision      sil
-      double precision      sinip
-      double precision      sinop
-      double precision      sinzf
-      double precision      sis
-      double precision      sll
-      double precision      sls
-      double precision      xls
-      double precision      xnoh
-      double precision      zel
-      double precision      zes
-      double precision      zf
-      double precision      zm
-      double precision      znl
-      double precision      zns
+      real(wp)              alfdp
+      real(wp)              betdp
+      real(wp)              cosip
+      real(wp)              cosop
+      real(wp)              dalf
+      real(wp)              dbet
+      real(wp)              dls
+      real(wp)              f2
+      real(wp)              f3
+      real(wp)              pe
+      real(wp)              pgh
+      real(wp)              ph
+      real(wp)              pinc
+      real(wp)              pl
+      real(wp)              sel
+      real(wp)              ses
+      real(wp)              sghl
+      real(wp)              sghs
+      real(wp)              shl
+      real(wp)              shs
+      real(wp)              sil
+      real(wp)              sinip
+      real(wp)              sinop
+      real(wp)              sinzf
+      real(wp)              sis
+      real(wp)              sll
+      real(wp)              sls
+      real(wp)              xls
+      real(wp)              xnoh
+      real(wp)              zel
+      real(wp)              zes
+      real(wp)              zf
+      real(wp)              zm
+      real(wp)              znl
+      real(wp)              zns
 
 !
 !     SPICELIB routines.
 !
-      double precision         twopi
-      double precision         pi
+      real(wp)                 twopi
+      real(wp)                 pi
       logical                  return
 
 !
@@ -307,10 +308,10 @@
 !
 !     Local constants.
 !
-      zes  = 0.01675d0
-      zel  = 0.05490d0
-      zns  = 1.19459d-5
-      znl  = 1.5835218d-4
+      zes  = 0.01675_wp
+      zel  = 0.05490_wp
+      zns  = 1.19459e-5_wp
+      znl  = 1.5835218e-4_wp
 
 !
 !     Calculate time varying periodics.
@@ -319,10 +320,10 @@
 
       if (doinit) zm = zmos
 
-      zf   = zm + 2.0d0*zes*dsin(zm)
+      zf   = zm + 2.0_wp*zes*dsin(zm)
       sinzf= dsin(zf)
-      f2   =  0.5d0*sinzf*sinzf - 0.25d0
-      f3   = -0.5d0*sinzf*dcos(zf)
+      f2   =  0.5_wp*sinzf*sinzf - 0.25_wp
+      f3   = -0.5_wp*sinzf*dcos(zf)
       ses  = se2*f2 + se3*f3
       sis  = si2*f2 + si3*f3
       sls  = sl2*f2 + sl3*f3 + sl4*sinzf
@@ -332,10 +333,10 @@
 
       if (doinit) zm = zmol
 
-      zf   = zm + 2.0d0*zel*dsin(zm)
+      zf   = zm + 2.0_wp*zel*dsin(zm)
       sinzf= dsin(zf)
-      f2   =  0.5d0*sinzf*sinzf - 0.25d0
-      f3   = -0.5d0*sinzf*dcos(zf)
+      f2   =  0.5_wp*sinzf*sinzf - 0.25_wp
+      f3   = -0.5_wp*sinzf*dcos(zf)
       sel  = ee2*f2 + e3*f3
       sil  = xi2*f2 + xi3*f3
       sll  = xl2*f2 + xl3*f3 + xl4*sinzf
@@ -380,7 +381,7 @@
 !
 !        use next line for gsfc version and perturbed inclination
 !
-         if (inclp.ge.0.2d0) then
+         if (inclp.ge.0.2_wp) then
 
             ph     = ph/sinip
             pgh    = pgh - cosip*ph
@@ -408,7 +409,7 @@
 !           NODEP used without a trigonometric function ahead
 !
 
-            if ( (nodep  .lt. 0.0d0)      .and. &
+            if ( (nodep  .lt. 0.0_wp)      .and. &
                  (opmode .eq. afspc)  )   then
                nodep = nodep + twopi()
             end if
@@ -424,7 +425,7 @@
 !           NODEP used without a trigonometric function ahead
 !
 
-            if ( (nodep .lt. 0.0d0)  .and. &
+            if ( (nodep .lt. 0.0_wp)  .and. &
                  (opmode .eq. afspc)  )  then
                nodep = nodep + twopi()
             end if

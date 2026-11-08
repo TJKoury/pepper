@@ -1,6 +1,7 @@
 !$Procedure CYADIP ( Cycle the elements of a DP array, in place )
 
       subroutine cyadip ( nelt, dir, ncycle, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               nelt
+      integer(ip)           nelt
       character*1           dir
-      integer               ncycle
-      double precision      array    ( * )
+      integer(ip)           ncycle
+      real(wp)              array    ( * )
 
 ! $ Brief_I/O
 !
@@ -145,21 +146,21 @@
 !
 !     SPICELIB functions
 !
-      integer          gcd
+      integer(ip)      gcd
       logical          return
 
 !
 !     Local variables
 !
-      double precision last
-      double precision temp
+      real(wp) last
+      real(wp) temp
 
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
 
 
 !

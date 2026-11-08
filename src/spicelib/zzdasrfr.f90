@@ -7,6 +7,7 @@
                             nresvc, &
                             ncomr, &
                             ncomc  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,13 +29,13 @@
 
       include 'zzddhman.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         idword
       character*(*)         ifname
-      integer               nresvr
-      integer               nresvc
-      integer               ncomr
-      integer               ncomc
+      integer(ip)           nresvr
+      integer(ip)           nresvc
+      integer(ip)           ncomr
+      integer(ip)           ncomc
 
 ! $ Brief_I/O
 !
@@ -178,13 +179,13 @@
 !
 !     Local parameters
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc    = 1024 )
 
 !
@@ -194,57 +195,57 @@
 !
 !     ID word begin and end:
 !
-      integer               begidw
+      integer(ip)           begidw
       parameter           ( begidw = 1 )
 
-      integer               endidw
+      integer(ip)           endidw
       parameter           ( endidw = 8 )
 
 
 !
 !     Internal file name begin and end:
 !
-      integer               begifn
+      integer(ip)           begifn
       parameter           ( begifn = 9 )
 
-      integer               endifn
+      integer(ip)           endifn
       parameter           ( endifn = 68 )
 
 !
 !     Reserved record count begin and end:
 !
-      integer               begnrr
+      integer(ip)           begnrr
       parameter           ( begnrr = 69 )
 
-      integer               endnrr
+      integer(ip)           endnrr
       parameter           ( endnrr = 72 )
 
 !
 !     Reserved record character count begin and end:
 !
-      integer               begnrc
+      integer(ip)           begnrc
       parameter           ( begnrc = 73 )
 
-      integer               endnrc
+      integer(ip)           endnrc
       parameter           ( endnrc = 76 )
 
 
 !
 !     Comment area record count begin and end:
 !
-      integer               begncr
+      integer(ip)           begncr
       parameter           ( begncr = 77 )
 
-      integer               endncr
+      integer(ip)           endncr
       parameter           ( endncr = 80 )
 
 !
 !     Comment area character count begin and end:
 !
-      integer               begncc
+      integer(ip)           begncc
       parameter           ( begncc = 81 )
 
-      integer               endncc
+      integer(ip)           endncc
       parameter           ( endncc = 84 )
 
 !
@@ -254,10 +255,10 @@
       character*(idwlen)    tmpidw
       character*(ifnlen)    tmpifn
 
-      integer               ibff
-      integer               iostat
-      integer               natbff
-      integer               unit
+      integer(ip)           ibff
+      integer(ip)           iostat
+      integer(ip)           natbff
+      integer(ip)           unit
 
       logical               first
 

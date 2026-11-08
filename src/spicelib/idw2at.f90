@@ -1,6 +1,7 @@
 !$Procedure IDW2AT ( Get file architecture and type from ID word )
 
       subroutine idw2at ( idword, arch, type )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -212,13 +213,13 @@
 !
 !     Spicelib Routines
 !
-      integer               pos
+      integer(ip)           pos
 
       logical               return
 !
 !     Set the length of a SPICE file ID word.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 !
 !     Local Variables
@@ -226,7 +227,7 @@
       character*(idwlen)     part1
       character*(idwlen)     part2
 
-      integer               slash
+      integer(ip)           slash
 !
 !     Standard obligatory error handling stuff.
 !

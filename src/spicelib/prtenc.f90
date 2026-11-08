@@ -1,6 +1,7 @@
 !$Procedure PRTENC ( Encode a character string, portably )
 
       subroutine prtenc ( number, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer            number
+      integer(ip)        number
       character*(*)      string
 
-      integer            minlen
+      integer(ip)        minlen
       parameter        ( minlen = 5 )
 
 ! $ Brief_I/O
@@ -142,16 +143,16 @@
 !
 !     Local parameters
 !
-      integer               chbase
+      integer(ip)           chbase
       parameter           ( chbase = 128 )
 
 !
 !     Local variables
 !
-      integer               base
-      integer               num
-      integer               remain
-      integer               i
+      integer(ip)           base
+      integer(ip)           num
+      integer(ip)           remain
+      integer(ip)           i
 
 !
 !     Standard SPICE error handling.

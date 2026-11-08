@@ -1,6 +1,7 @@
 !$Procedure ORDERI ( Order of an integer array )
 
       subroutine orderi ( array, ndim, iorder )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer          array  ( * )
-      integer          ndim
-      integer          iorder ( * )
+      integer(ip)      array  ( * )
+      integer(ip)      ndim
+      integer(ip)      iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -134,10 +135,10 @@
 !
 !     Local variables
 !
-      integer          gap
-      integer          i
-      integer          j
-      integer          jg
+      integer(ip)      gap
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      jg
 
 
 !

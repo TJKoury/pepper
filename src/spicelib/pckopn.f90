@@ -1,6 +1,7 @@
 !$Procedure PCKOPN ( PCK, open new file )
 
       subroutine pckopn ( name, ifname, ncomch, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       character*(*)         name
       character*(*)         ifname
-      integer               ncomch
-      integer               handle
+      integer(ip)           ncomch
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -282,21 +283,21 @@
 !
 !     DAF ND and NI values for PCK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 5 )
 !
 !     Length of a DAF comment record, in characters.
 !
-      integer               mxcrec
+      integer(ip)           mxcrec
       parameter           ( mxcrec = 1000 )
 
 !
 !     Local variables
 !
-      integer               ncomr
+      integer(ip)           ncomr
 
 !
 !     Standard SPICE error handling.

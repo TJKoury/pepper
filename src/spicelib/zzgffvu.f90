@@ -2,6 +2,7 @@
 
       subroutine zzgffvu ( inst,   tshape, raydir, target, &
                            tframe, abcorr, obsrvr, time,   vistat )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -39,20 +40,20 @@
       include 'zzocced.inc'
       include 'gf.inc'
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
       character*(*)         inst
       character*(*)         tshape
-      double precision      raydir ( 3 )
+      real(wp)              raydir ( 3 )
       character*(*)         target
       character*(*)         tframe
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      time
+      real(wp)              time
       logical               vistat
 
 ! $ Brief_I/O
@@ -224,14 +225,14 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpr
-      double precision      halfpi
-      double precision      vdot
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              dpr
+      real(wp)              halfpi
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              vsep
 
-      integer               zzocced
-      integer               zzwind2d
+      integer(ip)           zzocced
+      integer(ip)           zzwind2d
 
       logical               failed
       logical               return
@@ -246,16 +247,16 @@
 !     ATOL is a tolerance value for computing FOV angular radius.
 !     The angular radius must not exceed pi/2 - ATOL radians.
 !
-      double precision      atol
-      parameter           ( atol   = 1.d-6 )
+      real(wp)              atol
+      parameter           ( atol   = 1.0e-6_wp )
 
-      double precision      fvemax
-      parameter           ( fvemax = 1.d-5 )
+      real(wp)              fvemax
+      parameter           ( fvemax = 1.0e-5_wp )
 
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -269,62 +270,62 @@
       character*(shplen)    svtshp
       character*(corlen)    svcorr
 
-      double precision      bsite  ( 3 )
-      double precision      coord  ( 2 )
-      double precision      ctrext
-      double precision      dir    ( 3 )
-      double precision      ellrad ( 3 )
-      double precision      escale
-      double precision      ettarg
-      double precision      fovpt  ( 3 )
-      double precision      fvlimb ( ubel )
-      double precision      insmat ( 3, 3 )
-      double precision      l
-      double precision      limb   ( ubel )
-      double precision      lt
-      double precision      m1     ( 3, 3 )
-      double precision      m2     ( 3, 3 )
-      double precision      obspos ( 3 )
-      double precision      pnt2d  ( 3 )
-      double precision      pos    ( 3 )
-      double precision      semipt ( 3, 2 )
-      double precision      sep
-      double precision      stobs  ( 6 )
-      double precision      svarad
-      double precision      svbnds ( 3, maxvrt )
-      double precision      svedct ( 3 )
-      double precision      svfaxi ( 3 )
-      double precision      svfovm ( 3, 3 )
-      double precision      svfpol ( 2, maxvrt )
-      double precision      svfsmx ( 3, 3 )
-      double precision      svfvct ( 3 )
-      double precision      svorig ( 3 )
-      double precision      svplan ( ubpl )
-      double precision      svrdir ( 3 )
-      double precision      svsemi ( 3, 2 )
-      double precision      svtrad ( 3 )
-      double precision      svxmag ( 2 )
-      double precision      trgctr ( 3 )
-      double precision      trgsmx ( 3, 3 )
-      double precision      vtemp  ( 3 )
-      double precision      vtemp2 ( 3 )
-      double precision      x      ( 3 )
-      double precision      xpt    ( 3 )
-      double precision      y      ( 3 )
-      double precision      z      ( 3 )
+      real(wp)              bsite  ( 3 )
+      real(wp)              coord  ( 2 )
+      real(wp)              ctrext
+      real(wp)              dir    ( 3 )
+      real(wp)              ellrad ( 3 )
+      real(wp)              escale
+      real(wp)              ettarg
+      real(wp)              fovpt  ( 3 )
+      real(wp)              fvlimb ( ubel )
+      real(wp)              insmat ( 3, 3 )
+      real(wp)              l
+      real(wp)              limb   ( ubel )
+      real(wp)              lt
+      real(wp)              m1     ( 3, 3 )
+      real(wp)              m2     ( 3, 3 )
+      real(wp)              obspos ( 3 )
+      real(wp)              pnt2d  ( 3 )
+      real(wp)              pos    ( 3 )
+      real(wp)              semipt ( 3, 2 )
+      real(wp)              sep
+      real(wp)              stobs  ( 6 )
+      real(wp)              svarad
+      real(wp)              svbnds ( 3, maxvrt )
+      real(wp)              svedct ( 3 )
+      real(wp)              svfaxi ( 3 )
+      real(wp)              svfovm ( 3, 3 )
+      real(wp)              svfpol ( 2, maxvrt )
+      real(wp)              svfsmx ( 3, 3 )
+      real(wp)              svfvct ( 3 )
+      real(wp)              svorig ( 3 )
+      real(wp)              svplan ( ubpl )
+      real(wp)              svrdir ( 3 )
+      real(wp)              svsemi ( 3, 2 )
+      real(wp)              svtrad ( 3 )
+      real(wp)              svxmag ( 2 )
+      real(wp)              trgctr ( 3 )
+      real(wp)              trgsmx ( 3, 3 )
+      real(wp)              vtemp  ( 3 )
+      real(wp)              vtemp2 ( 3 )
+      real(wp)              x      ( 3 )
+      real(wp)              xpt    ( 3 )
+      real(wp)              y      ( 3 )
+      real(wp)              z      ( 3 )
 
-      integer               clssid
-      integer               framid
-      integer               frcent
-      integer               frclss
-      integer               i
-      integer               nxpts
-      integer               ocstat
-      integer               svinst
-      integer               svnvrt
-      integer               svobs
-      integer               svtarg
-      integer               w
+      integer(ip)           clssid
+      integer(ip)           framid
+      integer(ip)           frcent
+      integer(ip)           frclss
+      integer(ip)           i
+      integer(ip)           nxpts
+      integer(ip)           ocstat
+      integer(ip)           svinst
+      integer(ip)           svnvrt
+      integer(ip)           svobs
+      integer(ip)           svtarg
+      integer(ip)           w
 
       logical               attblk ( nabcor )
       logical               found
@@ -369,7 +370,7 @@
 !
 !     Initial values
 !
-      data                  svorig / 3 * 0.d0 /
+      data                  svorig / 3 * 0.0_wp /
 
 !
 !     Below we initialize the list of visibility types.
@@ -1226,7 +1227,7 @@
 !     the observer. This cone will be used for a preliminary FOV
 !     exclusion test.
 !
-      svarad = 0.d0
+      svarad = 0.0_wp
 
       do i = 1, svnvrt
          svarad = max (  svarad,  vsep( svbnds(1,i), svfaxi )  )
@@ -1265,7 +1266,7 @@
 !     the observer. The plane is normal to the FOV axis, at distance 1
 !     unit from the observer.
 !
-      call nvc2pl ( svfaxi, 1.d0, svplan )
+      call nvc2pl ( svfaxi, 1.0_wp, svplan )
 
 !
 !     Find the point on the plane closest to the origin. This is
@@ -1326,7 +1327,7 @@
 
             svxmag(i) = vnorm ( svsemi(1,i) )
 
-            if ( svxmag(i) .eq. 0.d0 ) then
+            if ( svxmag(i) .eq. 0.0_wp ) then
 
                call setmsg ( 'FOV semi-axis #* for @ ' &
                //            'has zero length.'        )
@@ -1377,7 +1378,7 @@
 !
 !        The ellipsoid's center is SVEDCT.
 !
-         call vscl ( 1.d0 + ctrext, svfvct, svedct )
+         call vscl ( 1.0_wp + ctrext, svfvct, svedct )
 
 !
 !        NOTE: in the code and discussion that follow, there are
@@ -1392,7 +1393,7 @@
 !        in the direction from SVFVCT toward SEMIPT(*,1) will have this
 !        length.
 !
-         ellrad(3) = svxmag(1) * sqrt ( 1.d0 + svxmag(1)**2.d0 )
+         ellrad(3) = svxmag(1) * sqrt ( 1.0_wp + svxmag(1)**2.0_wp )
          ellrad(1) = ellrad(3)
 
 !
@@ -1999,14 +2000,14 @@
                      coord(i) = vdot( fovpt, svsemi(1,i) )  /  svxmag(i)
                   end do
 
-                  l =   ( coord(1) / svxmag(1) )**2.d0 &
-                      + ( coord(2) / svxmag(2) )**2.d0
+                  l =   ( coord(1) / svxmag(1) )**2.0_wp &
+                      + ( coord(2) / svxmag(2) )**2.0_wp
 
 !
 !                 The target is visible if FOVPT is inside the FOV
 !                 ellipse; this condition is indicated by L <= 1.
 !
-                  vistat = l .le. 1.d0
+                  vistat = l .le. 1.0_wp
 
 
                else if ( svishp .eq. polfov ) then

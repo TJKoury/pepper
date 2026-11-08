@@ -1,6 +1,7 @@
 !$Procedure LATSPH ( Latitudinal to spherical coordinates )
 
       subroutine latsph ( radius, lon, lat,  rho, colat, slon )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision   radius
-      double precision   lon
-      double precision   lat
-      double precision   rho
-      double precision   colat
-      double precision   slon
+      real(wp)           radius
+      real(wp)           lon
+      real(wp)           lat
+      real(wp)           rho
+      real(wp)           colat
+      real(wp)           slon
 
 ! $ Brief_I/O
 !
@@ -423,13 +424,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
+      real(wp)              halfpi
 
 !
 !     Local Variables
 !
-      double precision th
-      double precision ph
+      real(wp) th
+      real(wp) ph
 
 !
 !     Convert to spherical coordinates, storing the results in

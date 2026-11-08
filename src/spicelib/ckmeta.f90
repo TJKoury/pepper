@@ -1,6 +1,7 @@
 !$Procedure CKMETA ( CK ID to associated SCLK )
 
       subroutine ckmeta ( ckid,  meta, idcode )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       include               'zzctr.inc'
 
-      integer               ckid
+      integer(ip)           ckid
       character*(*)         meta
-      integer               idcode
+      integer(ip)           idcode
 
 ! $ Brief_I/O
 !
@@ -309,7 +310,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               bschoi
+      integer(ip)           bschoi
 
       logical               failed
       logical               return
@@ -318,16 +319,16 @@
 !
 !     Local parameters
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      integer               nck
+      integer(ip)           nck
       parameter           ( nck = 30 )
 
-      integer               sclk
+      integer(ip)           sclk
       parameter           ( sclk   =          1 )
 
-      integer               spk
+      integer(ip)           spk
       parameter           ( spk    = sclk   + 1 )
 
 !
@@ -339,15 +340,15 @@
       character*(wdsize)    agent  (    nck )
 
 
-      integer               cks    (    nck )
-      integer               cksord (    nck )
-      integer               currnt
-      integer               last
-      integer               n
-      integer               sclks  (    nck )
-      integer               spks   (    nck )
-      integer               this
-      integer               usrctr ( ctrsiz, nck )
+      integer(ip)           cks    (    nck )
+      integer(ip)           cksord (    nck )
+      integer(ip)           currnt
+      integer(ip)           last
+      integer(ip)           n
+      integer(ip)           sclks  (    nck )
+      integer(ip)           spks   (    nck )
+      integer(ip)           this
+      integer(ip)           usrctr ( ctrsiz, nck )
 
       logical               first
       logical               found  (    2   )

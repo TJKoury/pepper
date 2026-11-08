@@ -1,6 +1,7 @@
 !$Procedure VCRSS ( Vector cross product, 3 dimensions )
 
       subroutine vcrss ( v1, v2, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision    v1   ( 3 )
-      double precision    v2   ( 3 )
-      double precision    vout ( 3 )
+      real(wp)            v1   ( 3 )
+      real(wp)            v2   ( 3 )
+      real(wp)            vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -199,7 +200,7 @@
 !
 !     Local variables
 !
-      double precision vtemp(3)
+      real(wp) vtemp(3)
 
 !
 !  Calculate the cross product of V1 and V2, store in VTEMP

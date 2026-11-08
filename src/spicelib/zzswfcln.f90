@@ -1,6 +1,7 @@
 !$Procedure ZZSWFCLN ( Private, switch frame clean up )
 
       subroutine zzswfcln ( hdfram, frpool, basbeg, framat )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,10 +29,10 @@
 
       include 'zzswtchf.inc'
 
-      integer               hdfram ( * )
-      integer               frpool ( lbsngl : * )
-      integer               basbeg ( * )
-      integer               framat
+      integer(ip)           hdfram ( * )
+      integer(ip)           frpool ( lbsngl : * )
+      integer(ip)           basbeg ( * )
+      integer(ip)           framat
 
 ! $ Brief_I/O
 !

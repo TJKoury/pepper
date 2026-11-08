@@ -1,6 +1,7 @@
 !$Procedure VHATG ( "V-Hat", unit vector along V, general dimension )
 
       subroutine vhatg ( v1, ndim, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer            ndim
-      double precision   v1   ( ndim )
-      double precision   vout ( ndim )
+      integer(ip)        ndim
+      real(wp)           v1   ( ndim )
+      real(wp)           vout ( ndim )
 
 ! $ Brief_I/O
 !
@@ -190,14 +191,14 @@
 !
 !     SPICELIB functions
 !
-      double precision vnormg
+      real(wp) vnormg
 
 !
 !     Local variables
 !
-      double precision vmag
+      real(wp) vmag
 
-      integer i
+      integer(ip) i
 
 !
 !  Obtain the magnitude of V1
@@ -211,13 +212,13 @@
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if (vmag.gt.0.d0) then
+      if (vmag.gt.0.0_wp) then
          do i = 1, ndim
             vout(i) = v1(i) / vmag
          end do
       else
          do i = 1, ndim
-            vout(i) = 0.d0
+            vout(i) = 0.0_wp
          end do
       end if
 !

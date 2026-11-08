@@ -3,6 +3,7 @@
       subroutine spk14b ( handle, segid, &
                           body,   center, frame, &
                           first,  last,   chbdeg  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,14 +24,14 @@
 
       include 'sgparam.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         segid
-      integer               body
-      integer               center
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
-      integer               chbdeg
+      real(wp)              first
+      real(wp)              last
+      integer(ip)           chbdeg
 
 ! $ Brief_I/O
 !
@@ -369,39 +370,39 @@
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 !
 !     Length of an SPK descriptor.
 !
-      integer               ndescr
+      integer(ip)           ndescr
       parameter           ( ndescr =  nd + (ni+1)/2 )
 !
 !     Length of a state.
 !
-      integer               nstate
+      integer(ip)           nstate
       parameter           ( nstate = 6 )
 !
 !     The type of this segment
 !
-      integer               type
+      integer(ip)           type
       parameter           ( type = 14 )
 !
 !     The number of constants:
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 1 )
 !
 !     Local variables
 !
-      double precision      dcoeff
-      double precision      descr(ndescr)
+      real(wp)              dcoeff
+      real(wp)              descr(ndescr)
 
-      integer               ncoeff
-      integer               pktsiz
+      integer(ip)           ncoeff
+      integer(ip)           pktsiz
 !
 !     Standard SPICELIB error handling.
 !
@@ -443,7 +444,7 @@
 !
       ncoeff = chbdeg + 1
       pktsiz = nstate * ncoeff + 2
-      dcoeff = dble ( ncoeff )
+      dcoeff = real( ncoeff, wp )
 !
 !     For this data type, we want to use an explicit reference value
 !     index where the reference epochs are in increasing order. We also

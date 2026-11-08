@@ -1,6 +1,7 @@
 !$Procedure SPCDC ( SPK and CK, delete comments )
 
       subroutine spcdc ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -170,7 +171,7 @@
 !
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60     )
 
 !
@@ -178,12 +179,12 @@
 !
       character*(ifnlen)    ifname
 
-      integer               bward
-      integer               free
-      integer               fward
-      integer               nd
-      integer               ni
-      integer               nrr
+      integer(ip)           bward
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nrr
 
 
 !

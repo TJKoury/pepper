@@ -2,6 +2,7 @@
 
       subroutine ckpfs ( handle, descr, sclkdp, tol,  needav, &
                          cmat,   av,    clkout, found         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,14 +23,14 @@
 
       include               'ckparam.inc'
 
-      integer               handle
-      double precision      descr  ( *    )
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      real(wp)              descr  ( *    )
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      cmat   ( 3, 3 )
-      double precision      av     ( 3    )
-      double precision      clkout
+      real(wp)              cmat   ( 3, 3 )
+      real(wp)              av     ( 3    )
+      real(wp)              clkout
       logical               found
 
 ! $ Brief_I/O
@@ -380,20 +381,20 @@
 !        NIC        is the number of integer components in an unpacked
 !                   C-kernel segment descriptor.
 !
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc    = 2  )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic    = 6  )
 
 !
 !     Local variables
 !
-      integer               icd    ( nic    )
-      integer               type
+      integer(ip)           icd    ( nic    )
+      integer(ip)           type
 
-      double precision      dcd    ( ndc    )
-      double precision      record ( ckmrsz )
+      real(wp)              dcd    ( ndc    )
+      real(wp)              record ( ckmrsz )
 
 !
 !     Standard SPICE error handling.

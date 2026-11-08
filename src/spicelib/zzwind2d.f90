@@ -1,6 +1,7 @@
 !$Procedure  ZZWIND2D ( Find winding number of polygon about point )
 
-      integer function zzwind2d ( n, vertcs, point )
+      integer(ip) function zzwind2d ( n, vertcs, point )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -24,9 +25,9 @@
 !
 ! $ Declarations
 
-      integer               n
-      double precision      vertcs ( 2, n )
-      double precision      point  ( 2 )
+      integer(ip)           n
+      real(wp)              vertcs ( 2, n )
+      real(wp)              point  ( 2 )
 
 ! $ Brief_I/O
 !
@@ -210,23 +211,23 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
-      double precision      vdotg
-      double precision      vsepg
+      real(wp)              twopi
+      real(wp)              vdotg
+      real(wp)              vsepg
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      atotal
-      double precision      rnext  ( 2 )
-      double precision      rperp  ( 2 )
-      double precision      rvec   ( 2 )
-      double precision      sep
+      real(wp)              atotal
+      real(wp)              rnext  ( 2 )
+      real(wp)              rperp  ( 2 )
+      real(wp)              rvec   ( 2 )
+      real(wp)              sep
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 !
 !     Initialize the function return value.
@@ -255,7 +256,7 @@
 !
 !     The total "wrap angle" starts at zero.
 !
-      atotal  = 0.d0
+      atotal  = 0.0_wp
 
       call vsubg ( vertcs(1,1), point, 2, rvec )
 
@@ -285,7 +286,7 @@
          rperp(2) =  rvec(1)
 
 
-         if (  vdotg( rnext, rperp, 2 )  .ge.  0.d0  ) then
+         if (  vdotg( rnext, rperp, 2 )  .ge.  0.0_wp  ) then
 !
 !           RNEXT is reached by counterclockwise rotation from
 !           RVEC.  Note that in the case of zero rotation, the

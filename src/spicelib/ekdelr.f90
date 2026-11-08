@@ -1,6 +1,7 @@
 !$Procedure EKDELR ( EK, delete record from segment )
 
       subroutine ekdelr ( handle, segno, recno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,9 +26,9 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           recno
 
 ! $ Brief_I/O
 !
@@ -177,27 +178,27 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
       character*(cnamsz)    column
 
-      integer               base
-      integer               class
-      integer               coldsc ( cdscsz )
-      integer               dscbas
-      integer               i
-      integer               mbase
-      integer               mp
-      integer               ncols
-      integer               nlinks
-      integer               nrec
-      integer               p
-      integer               recptr
-      integer               segdsc ( sdscsz )
-      integer               unit
+      integer(ip)           base
+      integer(ip)           class
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           dscbas
+      integer(ip)           i
+      integer(ip)           mbase
+      integer(ip)           mp
+      integer(ip)           ncols
+      integer(ip)           nlinks
+      integer(ip)           nrec
+      integer(ip)           p
+      integer(ip)           recptr
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           unit
 
 !
 !     Standard SPICE error handling.

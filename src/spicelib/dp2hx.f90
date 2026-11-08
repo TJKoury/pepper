@@ -1,6 +1,7 @@
 !$Procedure DP2HX ( D.p. number to hexadecimal string )
 
       subroutine dp2hx ( number, hxstr, hxssiz )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               strlen
+      integer(ip)           strlen
       parameter           ( strlen = 255 )
 
 
-      double precision      number
+      real(wp)              number
       character*(*)         hxstr
-      integer               hxssiz
+      integer(ip)           hxssiz
 
 ! $ Brief_I/O
 !
@@ -317,34 +318,34 @@
       character*(1)         expchr
       parameter           ( expchr = '^')
 
-      double precision      base
-      parameter           ( base = 16.0d0 )
+      real(wp)              base
+      parameter           ( base = 16.0_wp )
 
-      double precision      invbas
-      parameter           ( invbas = 1.0d0/base )
+      real(wp)              invbas
+      parameter           ( invbas = 1.0_wp/base )
 
-      integer               expinb
+      integer(ip)           expinb
       parameter           ( expinb = 1 )
 
-      double precision      factr1
-      parameter           ( factr1 = 4294967296.0d0 )
+      real(wp)              factr1
+      parameter           ( factr1 = 4294967296.0_wp )
 
-      double precision      invfc1
-      parameter           ( invfc1 = 1.0d0/factr1 )
+      real(wp)              invfc1
+      parameter           ( invfc1 = 1.0_wp/factr1 )
 
-      integer               expin1
+      integer(ip)           expin1
       parameter           ( expin1 = 8 )
 
-      double precision      factr2
-      parameter           ( factr2 = 65536.0d0 )
+      real(wp)              factr2
+      parameter           ( factr2 = 65536.0_wp )
 
-      double precision      invfc2
-      parameter           ( invfc2 = 1.0d0/factr2 )
+      real(wp)              invfc2
+      parameter           ( invfc2 = 1.0_wp/factr2 )
 
-      integer               expin2
+      integer(ip)           expin2
       parameter           ( expin2 = 4 )
 
-      integer               maxdig
+      integer(ip)           maxdig
       parameter           ( maxdig = 16 )
 
 !
@@ -354,13 +355,13 @@
       character*(strlen)    expstr
       character*(strlen)    tmpstr
 
-      double precision      remndr
-      double precision      tmpnum
+      real(wp)              remndr
+      real(wp)              tmpnum
 
-      integer               explen
-      integer               intexp
-      integer               positn
-      integer               result
+      integer(ip)           explen
+      integer(ip)           intexp
+      integer(ip)           positn
+      integer(ip)           result
 
       logical               negtiv
       logical               postiv
@@ -394,11 +395,11 @@
 !
 !     Set the appropriate logical flag for the sign of the input number.
 !
-      if ( tmpnum .lt. 0.0d0 ) then
+      if ( tmpnum .lt. 0.0_wp ) then
 
          negtiv = .true.
 
-      else if ( tmpnum .gt. 0.0d0 ) then
+      else if ( tmpnum .gt. 0.0_wp ) then
 
          postiv = .true.
 
@@ -420,11 +421,11 @@
       intexp = 0
       if ( negtiv ) then
 
-         if ( tmpnum .gt. -1.0d0 ) then
+         if ( tmpnum .gt. -1.0_wp ) then
 !
 !           ABS(TMPNUM) .LT. 1.0
 !
-            do while ( factr1 * tmpnum .gt. -1.0d0 )
+            do while ( factr1 * tmpnum .gt. -1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -433,7 +434,7 @@
 
             end do
 
-            do while ( factr2 * tmpnum .gt. -1.0d0 )
+            do while ( factr2 * tmpnum .gt. -1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -442,7 +443,7 @@
 
             end do
 
-            do while ( ( base * tmpnum ) .gt. -1.0d0 )
+            do while ( ( base * tmpnum ) .gt. -1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -457,7 +458,7 @@
 !
 !           ABS(TMPNUM) .GE. 1.0
 !
-            do while ( invfc1 * tmpnum .le. -1.0d0 )
+            do while ( invfc1 * tmpnum .le. -1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -466,7 +467,7 @@
 
             end do
 
-            do while ( invfc2 * tmpnum .le. -1.0d0 )
+            do while ( invfc2 * tmpnum .le. -1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -475,7 +476,7 @@
 
             end do
 
-            do while ( tmpnum .le. -1.0d0 )
+            do while ( tmpnum .le. -1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -490,11 +491,11 @@
 
       else if ( postiv ) then
 
-         if ( tmpnum .lt. 1.0d0 ) then
+         if ( tmpnum .lt. 1.0_wp ) then
 !
 !           ABS(TMPNUM) .LT. 1.0
 !
-            do while ( factr1 * tmpnum .lt. 1.0d0 )
+            do while ( factr1 * tmpnum .lt. 1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -503,7 +504,7 @@
 
             end do
 
-            do while ( factr2 * tmpnum .lt. 1.0d0 )
+            do while ( factr2 * tmpnum .lt. 1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -512,7 +513,7 @@
 
             end do
 
-            do while ( ( base * tmpnum ) .lt. 1.0d0 )
+            do while ( ( base * tmpnum ) .lt. 1.0_wp )
 !
 !              Scale the number and decrement the exponent.
 !
@@ -527,7 +528,7 @@
 !
 !           ABS(TMPNUM) .GE. 1.0
 !
-            do while ( invfc1 * tmpnum .ge. 1.0d0 )
+            do while ( invfc1 * tmpnum .ge. 1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -536,7 +537,7 @@
 
             end do
 
-            do while ( invfc2 * tmpnum .ge. 1.0d0 )
+            do while ( invfc2 * tmpnum .ge. 1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -545,7 +546,7 @@
 
             end do
 
-            do while ( tmpnum .ge. 1.0d0 )
+            do while ( tmpnum .ge. 1.0_wp )
 !
 !              Scale the number and increment the exponent.
 !
@@ -583,14 +584,14 @@
 !        This stopping test works because the base is a power of
 !        2 and the mantissa is composed of a sum of powers of 2.
 !
-         do while ( remndr .ne. 0.0d0 )
+         do while ( remndr .ne. 0.0_wp )
 !
 !           -1 < REMNDR <= -1/BASE
 !
             positn                 = positn + 1
             tmpnum                 = remndr * base
             result                 = int( tmpnum )
-            remndr                 = tmpnum - dble( result )
+            remndr                 = tmpnum - real( result, wp )
             tmpstr (positn:positn) = digits(-result)
 
          end do
@@ -618,14 +619,14 @@
 !        This stopping test works because the base is a power of
 !        2 and the mantissa is composed of a sum of powers of 2.
 !
-         do while ( remndr .ne. 0.0d0 )
+         do while ( remndr .ne. 0.0_wp )
 !
 !           1/BASE <= REMNDR < 1
 !
             positn                 = positn + 1
             tmpnum                 = remndr * base
             result                 = int( tmpnum )
-            remndr                 = tmpnum - dble( result )
+            remndr                 = tmpnum - real( result, wp )
             tmpstr (positn:positn) = digits(result)
 
          end do

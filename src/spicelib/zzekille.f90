@@ -1,7 +1,8 @@
 !$Procedure    ZZEKILLE ( EK, indirect, last elt less than or equal to )
 
-      integer function zzekille (  handle,  segdsc,  coldsc,  nrows, &
+      integer(ip) function zzekille (  handle,  segdsc,  coldsc,  nrows, &
                                    dtype,   cval,    dval,    ival    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,14 +31,14 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               nrows
-      integer               dtype
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           nrows
+      integer(ip)           dtype
       character*(*)         cval
-      double precision      dval
-      integer               ival
+      real(wp)              dval
+      integer(ip)           ival
 
 ! $ Brief_I/O
 !
@@ -154,11 +155,11 @@
 !
 !     Local variables
 !
-      double precision      dnum
+      real(wp)              dnum
 
-      integer               coltyp
-      integer               inum
-      integer               rec
+      integer(ip)           coltyp
+      integer(ip)           inum
+      integer(ip)           rec
 
 !
 !     Initialize the function's return value.

@@ -1,6 +1,7 @@
 !$Procedure SIZEC ( Size of a character cell )
 
-      integer function sizec ( cell )
+      integer(ip) function sizec ( cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)      cell   ( lbcell:* )
@@ -149,8 +150,8 @@
 !
 !     Local variables
 !
-      integer               size
-      integer               card
+      integer(ip)           size
+      integer(ip)           card
 
 
 

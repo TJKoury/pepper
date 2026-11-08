@@ -1,6 +1,7 @@
 !$Procedure REMLAD (Remove elements from a double precision array)
 
       subroutine remlad ( ne, loc, array, na )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer          ne
-      integer          loc
-      double precision array ( * )
-      integer          na
+      integer(ip)      ne
+      integer(ip)      loc
+      real(wp) array ( * )
+      integer(ip)      na
 
 ! $ Brief_I/O
 !
@@ -185,7 +186,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

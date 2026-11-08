@@ -3,6 +3,7 @@
       subroutine spkw09 (  handle,  body,    center,  frame, &
                            first,   last,    segid,   degree, &
                            n,       states,  epochs           )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,19 +25,19 @@
 
       implicit none
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               degree
-      integer               n
-      double precision      states ( 6, * )
-      double precision      epochs (    * )
+      integer(ip)           degree
+      integer(ip)           n
+      real(wp)              states ( 6, * )
+      real(wp)              epochs (    * )
 
-      integer               maxdeg
+      integer(ip)           maxdeg
       parameter           ( maxdeg = 27 )
 
 ! $ Brief_I/O
@@ -422,7 +423,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -452,44 +453,44 @@
 !     LPRINT is the integer value of the last printable ASCII character.
 !
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   9 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz  =   6 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz  = 100 )
 
 !
 !     Local variables
 !
-      double precision      dcd    ( nd )
-      double precision      descr  ( ns )
-      double precision      maxtim
+      real(wp)              dcd    ( nd )
+      real(wp)              descr  ( ns )
+      real(wp)              maxtim
 
-      integer               chrcod
-      integer               i
-      integer               icd    ( ni )
-      integer               refcod
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           icd    ( ni )
+      integer(ip)           refcod
 
 
 !
@@ -726,8 +727,8 @@
          call dafada (  epochs( dirsiz*i ),  1  )
       end do
 
-      call dafada ( dble(degree),   1 )
-      call dafada ( dble(n),        1 )
+      call dafada ( real(degree, wp),   1 )
+      call dafada ( real(n, wp),        1 )
 
 !
 !     As long as nothing went wrong, end the segment.

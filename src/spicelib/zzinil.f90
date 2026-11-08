@@ -5,6 +5,7 @@
                           ao,     con41,  con42,  cosio, &
                           cosio2, eccsq,  omeosq, posq, &
                           rp,     rteosq, sinio,  gsto )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,26 +27,26 @@
 
       include 'zzsgp4.inc'
 
-      double precision         geophs    ( 8 )
-      integer                  opmode
+      real(wp)                 geophs    ( 8 )
+      integer(ip)              opmode
 
-      double precision         ecco
-      double precision         epoch
-      double precision         inclo
-      double precision         no
-      double precision         ainv
-      double precision         ao
-      double precision         con41
-      double precision         con42
-      double precision         cosio
-      double precision         cosio2
-      double precision         eccsq
-      double precision         omeosq
-      double precision         posq
-      double precision         rp
-      double precision         rteosq
-      double precision         sinio
-      double precision         gsto
+      real(wp)                 ecco
+      real(wp)                 epoch
+      real(wp)                 inclo
+      real(wp)                 no
+      real(wp)                 ainv
+      real(wp)                 ao
+      real(wp)                 con41
+      real(wp)                 con42
+      real(wp)                 cosio
+      real(wp)                 cosio2
+      real(wp)                 eccsq
+      real(wp)                 omeosq
+      real(wp)                 posq
+      real(wp)                 rp
+      real(wp)                 rteosq
+      real(wp)                 sinio
+      real(wp)                 gsto
 
 ! $ Brief_I/O
 !
@@ -183,31 +184,31 @@
 !     Local Variables
 !
 
-      double precision         adel
-      double precision         ak
-      double precision         c1
-      double precision         c1p2p
-      double precision         d1
-      double precision         del
-      double precision         fk5r
-      double precision         j2
-      double precision         po
-      double precision         radday
-      double precision         temp
-      double precision         tfrac
-      double precision         thgr70
-      double precision         ts70
-      double precision         tut1
-      double precision         x2o3
-      double precision         xke
+      real(wp)                 adel
+      real(wp)                 ak
+      real(wp)                 c1
+      real(wp)                 c1p2p
+      real(wp)                 d1
+      real(wp)                 del
+      real(wp)                 fk5r
+      real(wp)                 j2
+      real(wp)                 po
+      real(wp)                 radday
+      real(wp)                 temp
+      real(wp)                 tfrac
+      real(wp)                 thgr70
+      real(wp)                 ts70
+      real(wp)                 tut1
+      real(wp)                 x2o3
+      real(wp)                 xke
 
-      integer                  ids70
+      integer(ip)              ids70
 
 
 !
 !     SPICELIB routines.
 !
-      double precision         twopi
+      real(wp)                 twopi
       logical                  return
 
 !
@@ -231,13 +232,13 @@
 !
       j2    = geophs(k_j2)
       xke   = geophs(k_ke)
-      x2o3  = 2.0d0/3.0d0
+      x2o3  = 2.0_wp/3.0_wp
 
 !
 !     Calculate auxillary epoch quantities
 !
       eccsq  = ecco*ecco
-      omeosq = 1.0d0 - eccsq
+      omeosq = 1.0_wp - eccsq
       rteosq = dsqrt(omeosq)
       cosio  = dcos(inclo)
       cosio2 = cosio*cosio
@@ -246,21 +247,21 @@
 !     Un-KOZAI the mean motion
 !
       ak   =  (xke/no)**x2o3
-      d1   =  0.75d0*j2* (3.0d0*cosio2-1.0d0) / (rteosq*omeosq)
+      d1   =  0.75_wp*j2* (3.0_wp*cosio2-1.0_wp) / (rteosq*omeosq)
       del  =  d1/(ak*ak)
-      adel =  ak * ( 1.0d0 - del*del - del* &
-                       (1.0d0/3.0d0 + 134.0d0*del*del / 81.0d0) )
+      adel =  ak * ( 1.0_wp - del*del - del* &
+                       (1.0_wp/3.0_wp + 134.0_wp*del*del / 81.0_wp) )
       del  =  d1/(adel*adel)
-      no   =  no/(1.0d0 + del)
+      no   =  no/(1.0_wp + del)
 
       ao   =  (xke/no)**x2o3
       sinio=  dsin(inclo)
       po   =  ao*omeosq
-      con42=  1.0d0-5.0d0*cosio2
+      con42=  1.0_wp-5.0_wp*cosio2
       con41=  -con42-cosio2-cosio2
-      ainv =  1.0d0/ao
+      ainv =  1.0_wp/ao
       posq =  po*po
-      rp   =  ao*(1.0d0-ecco)
+      rp   =  ao*(1.0_wp-ecco)
 
 !
 !     Calculate greenwich location at epoch
@@ -275,13 +276,13 @@
 !
 !        Radians per day, earth rotation, 6.30038809866574D0.
 !
-         radday = twopi() * 1.002737909350795d0
-         temp   = epoch + 2433281.5d0
-         tut1= ( dint(temp-0.5d0) + 0.5d0 - 2451545.0d0 ) / 36525.0d0
-         gsto= 1.75336855923327d0 + 628.331970688841d0*tut1 &
-                   + 6.77071394490334d-06*tut1*tut1 &
-                   - 4.50876723431868d-10*tut1*tut1*tut1 &
-                   + radday*( temp-0.5d0-dint(temp-0.5d0) )
+         radday = twopi() * 1.002737909350795_wp
+         temp   = epoch + 2433281.5_wp
+         tut1= ( dint(temp-0.5_wp) + 0.5_wp - 2451545.0_wp ) / 36525.0_wp
+         gsto= 1.75336855923327_wp + 628.331970688841_wp*tut1 &
+                   + 6.77071394490334e-06_wp*tut1*tut1 &
+                   - 4.50876723431868e-10_wp*tut1*tut1*tut1 &
+                   + radday*( temp-0.5_wp-dint(temp-0.5_wp) )
 
       else if (opmode .eq. afspc ) then
 
@@ -290,16 +291,16 @@
 !
 !        Count integer number of days from 0 jan 1970
 !
-         ts70  = epoch-7305.0d0
-         ids70 = int(ts70 + 1.0d-8)
+         ts70  = epoch-7305.0_wp
+         ids70 = int(ts70 + 1.0e-8_wp)
          tfrac = ts70-ids70
 
 !
 !        Find greenwich location at epoch
 !
-         c1     = 1.72027916940703639d-2
-         thgr70 = 1.7321343856509374d0
-         fk5r   = 5.07551419432269442d-15
+         c1     = 1.72027916940703639e-2_wp
+         thgr70 = 1.7321343856509374_wp
+         fk5r   = 5.07551419432269442e-15_wp
          c1p2p  = c1+twopi()
          gsto   = thgr70+c1*ids70+c1p2p*tfrac+ts70*ts70*fk5r
 
@@ -319,7 +320,7 @@
 !
       gsto = dmod( gsto,twopi() )
 
-      if ( gsto .lt. 0.0d0 ) then
+      if ( gsto .lt. 0.0_wp ) then
          gsto= gsto + twopi()
       end if
 

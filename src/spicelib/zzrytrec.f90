@@ -2,6 +2,7 @@
 
       subroutine zzrytrec ( vertex, raydir, bounds, &
                             margin, nxpts,  xpt    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,12 +31,12 @@
 
       implicit none
 
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      bounds ( 2, 3 )
-      double precision      margin
-      integer               nxpts
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              margin
+      integer(ip)           nxpts
+      real(wp)              xpt    ( 3 )
 
 
 ! $ Brief_I/O
@@ -160,27 +161,27 @@
 !
 !     Local parameters
 !
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
 !
 !     Element boundary indices:
 !
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower  = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper  = 2 )
 
 !
 !     Local variables
 !
-      double precision      boxori ( 3 )
-      double precision      extent ( 3 )
-      double precision      delta  ( 3 )
-      double precision      l      ( 3 )
+      real(wp)              boxori ( 3 )
+      real(wp)              extent ( 3 )
+      real(wp)              delta  ( 3 )
+      real(wp)              l      ( 3 )
 
-      integer               i
+      integer(ip)           i
 
       logical               found
       logical               inside
@@ -198,7 +199,7 @@
 
          l(i) = bounds(upper, i) - bounds(lower, i)
 
-         if ( l(i) .le. 0.d0 ) then
+         if ( l(i) .le. 0.0_wp ) then
 
             call chkin  ( 'ZZRYTREC'                               )
             call setmsg ( 'Coordinate # bounds were #:#; bounds ' &

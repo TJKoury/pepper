@@ -1,6 +1,7 @@
 !$Procedure COPYC ( Copy a character cell )
 
       subroutine copyc ( cell, copy )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)      cell     ( lbcell:* )
@@ -138,19 +139,19 @@
 !
 !     SPICELIB functions
 !
-      integer          sizec
-      integer          cardc
+      integer(ip)      sizec
+      integer(ip)      cardc
       logical          return
-      integer          lastpc
+      integer(ip)      lastpc
 !
 !     Local variables
 !
-      integer          size
-      integer          card
-      integer          moved
-      integer          i
+      integer(ip)      size
+      integer(ip)      card
+      integer(ip)      moved
+      integer(ip)      i
       logical          trunc
-      integer          reqlen
+      integer(ip)      reqlen
 
 
 !

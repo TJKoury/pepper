@@ -1,6 +1,7 @@
 !$Procedure ZZEDTMPT ( Ellipsoid terminator point in half-plane )
 
       subroutine zzedtmpt ( umbral, a, b, c, r, axis, plnvec, point )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,13 +28,13 @@
       implicit none
 
       logical               umbral
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      r
-      double precision      axis   ( 3 )
-      double precision      plnvec ( 3 )
-      double precision      point  ( 3 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              r
+      real(wp)              axis   ( 3 )
+      real(wp)              plnvec ( 3 )
+      real(wp)              point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -179,12 +180,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      dasine
-      double precision      halfpi
-      double precision      touchd
-      double precision      vdot
-      double precision      vdist
-      double precision      vnorm
+      real(wp)              dasine
+      real(wp)              halfpi
+      real(wp)              touchd
+      real(wp)              vdot
+      real(wp)              vdist
+      real(wp)              vnorm
 
       logical               failed
       logical               return
@@ -196,51 +197,51 @@
 !
 !     Tolerance used for arcsine arguments:
 !
-      double precision      atol
-      parameter           ( atol = 1.d-14 )
+      real(wp)              atol
+      parameter           ( atol = 1.0e-14_wp )
 
 !
 !     Angular error used to determine convergence:
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-15 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-15_wp )
 
 !
 !     Maximum number of iterations allowed for root finding:
 !
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 20 )
 
 !
 !     Local variables
 !
-      double precision      angerr
-      double precision      angle
-      double precision      const
-      double precision      d
-      double precision      h
-      double precision      hplnml ( 3 )
-      double precision      maxr
-      double precision      normal ( 3 )
-      double precision      proj   ( 3 )
-      double precision      s
-      double precision      sgnnml ( 3 )
-      double precision      srcpnt ( 3 )
-      double precision      ta
-      double precision      targpt ( 3 )
-      double precision      taxis  ( 3 )
-      double precision      tb
-      double precision      tc
-      double precision      theta
-      double precision      tmpvec ( 3 )
-      double precision      tplnvc ( 3 )
-      double precision      trans  ( 3, 3 )
-      double precision      utaxis ( 3 )
-      double precision      xa
-      double precision      xb
-      double precision      xc
+      real(wp)              angerr
+      real(wp)              angle
+      real(wp)              const
+      real(wp)              d
+      real(wp)              h
+      real(wp)              hplnml ( 3 )
+      real(wp)              maxr
+      real(wp)              normal ( 3 )
+      real(wp)              proj   ( 3 )
+      real(wp)              s
+      real(wp)              sgnnml ( 3 )
+      real(wp)              srcpnt ( 3 )
+      real(wp)              ta
+      real(wp)              targpt ( 3 )
+      real(wp)              taxis  ( 3 )
+      real(wp)              tb
+      real(wp)              tc
+      real(wp)              theta
+      real(wp)              tmpvec ( 3 )
+      real(wp)              tplnvc ( 3 )
+      real(wp)              trans  ( 3, 3 )
+      real(wp)              utaxis ( 3 )
+      real(wp)              xa
+      real(wp)              xb
+      real(wp)              xc
 
-      integer               nitr
+      integer(ip)           nitr
 
 
       if ( return() ) then
@@ -252,9 +253,9 @@
 !
 !     Check A, B, C, and R.
 !
-      if (      ( a .le. 0.d0 ) &
-           .or. ( b .le. 0.d0 ) &
-           .or. ( c .le. 0.d0 )  ) then
+      if (      ( a .le. 0.0_wp ) &
+           .or. ( b .le. 0.0_wp ) &
+           .or. ( c .le. 0.0_wp )  ) then
 
          call setmsg ( 'Target radii must be strictly positive ' &
          //            'but were #, #, #.'                      )
@@ -267,7 +268,7 @@
 
       end if
 
-      if ( r .le. 0.d0 ) then
+      if ( r .le. 0.0_wp ) then
 
          call setmsg ( 'Source radius must be strictly positive ' &
          //            'but was #.'                             )
@@ -325,9 +326,9 @@
 !
       call cleard ( 9, trans )
 
-      ta         = 1.d0 / a
-      tb         = 1.d0 / b
-      tc         = 1.d0 / c
+      ta         = 1.0_wp / a
+      tb         = 1.0_wp / b
+      tc         = 1.0_wp / c
 
       xa         = ta * r
       xb         = tb * r
@@ -379,7 +380,7 @@
 !        TPLNVC, and bounded by the line containing TNEGAX. The
 !        tangent ray does not cross the line containing TNEGAX.
 !
-         angle = dasine ( (maxr-1.d0) / d,  atol  )
+         angle = dasine ( (maxr-1.0_wp) / d,  atol  )
 
          if ( failed() ) then
             call chkout ( 'ZZEDTMPT' )
@@ -396,7 +397,7 @@
 !
 !        S is the sign applied to pi/2 - ANGLE.
 !
-         s = 1.d0
+         s = 1.0_wp
 
       else
 !
@@ -407,7 +408,7 @@
 !        The tangent line always slopes downward (toward AXIS)
 !        toward the light source.
 !
-         angle = dasine ( (maxr+1.d0) / d,  atol  )
+         angle = dasine ( (maxr+1.0_wp) / d,  atol  )
 
 
          if ( failed() ) then
@@ -422,7 +423,7 @@
 
          call vrotv ( utaxis, hplnml, theta, targpt )
 
-         s = -1.d0
+         s = -1.0_wp
 
       end if
 

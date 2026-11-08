@@ -1,6 +1,7 @@
 !$Procedure PI ( Value of pi )
 
-      double precision function pi ( )
+      real(wp) function pi ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -112,20 +113,20 @@
 !
 !     Local variables
 !
-      double precision      value
+      real(wp)              value
       save                  value
 
 !
 !     Initial values
 !
-      data                  value      / 0.d0 /
+      data                  value      / 0.0_wp /
 
 
 !
 !     What is there to say?
 !
-      if ( value .eq. 0.d0 ) then
-         value = acos ( -1.d0 )
+      if ( value .eq. 0.0_wp ) then
+         value = acos ( -1.0_wp )
       end if
 
       pi = value

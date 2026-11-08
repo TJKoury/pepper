@@ -1,6 +1,7 @@
 !$Procedure DAFRA ( DAF, Re-order arrays )
 
       subroutine dafra ( handle, iorder, n )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               handle
-      integer               iorder ( * )
-      integer               n
+      integer(ip)           handle
+      integer(ip)           iorder ( * )
+      integer(ip)           n
 
 ! $ Brief_I/O
 !
@@ -180,10 +181,10 @@
 !
 !     Local parameters
 !
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 1000 )
 
-      integer               sumlen
+      integer(ip)           sumlen
       parameter           ( sumlen =  128 )
 
 !
@@ -192,14 +193,14 @@
       character*(namlen)    holdn
       character*(namlen)    tempn
 
-      double precision      holds    ( sumlen )
-      double precision      temps    ( sumlen )
+      real(wp)              holds    ( sumlen )
+      real(wp)              temps    ( sumlen )
 
-      integer               hold
-      integer               i
-      integer               index
-      integer               start
-      integer               total
+      integer(ip)           hold
+      integer(ip)           i
+      integer(ip)           index
+      integer(ip)           start
+      integer(ip)           total
 
       logical               found
 

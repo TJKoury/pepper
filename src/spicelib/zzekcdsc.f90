@@ -1,6 +1,7 @@
 !$Procedure  ZZEKCDSC ( Private: EK, return column descriptor )
 
       subroutine zzekcdsc ( handle, segdsc, column, coldsc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
       include 'ekcoldsc.inc'
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
       character*(*)         column
-      integer               coldsc ( cdscsz )
+      integer(ip)           coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -116,11 +117,11 @@
 !
       character*(cnamsz)    cname
 
-      integer               dscbas
-      integer               i
-      integer               mbase
-      integer               nambas
-      integer               ncols
+      integer(ip)           dscbas
+      integer(ip)           i
+      integer(ip)           mbase
+      integer(ip)           nambas
+      integer(ip)           ncols
 
       logical               found
 

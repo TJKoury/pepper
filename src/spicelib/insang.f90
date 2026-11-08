@@ -1,6 +1,7 @@
 !$Procedure INSANG ( Inside Tetrahedral Angle )
 
       subroutine insang ( v, e1, e2, e3, found, scale )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      v     ( 3 )
-      double precision      e1    ( 3 )
-      double precision      e2    ( 3 )
-      double precision      e3    ( 3 )
+      real(wp)              v     ( 3 )
+      real(wp)              e1    ( 3 )
+      real(wp)              e2    ( 3 )
+      real(wp)              e3    ( 3 )
       logical               found
-      double precision      scale
+      real(wp)              scale
 
 ! $ Brief_I/O
 !
@@ -184,25 +185,25 @@
 !
 !     SPICELIB Functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
 
 !
 !     Local Variables
 !
-      double precision      denom
-      double precision      en
-      double precision      norm12 ( 3 )
-      double precision      norm23 ( 3 )
-      double precision      norm31 ( 3 )
-      double precision      vn12
-      double precision      vn23
-      double precision      vn31
+      real(wp)              denom
+      real(wp)              en
+      real(wp)              norm12 ( 3 )
+      real(wp)              norm23 ( 3 )
+      real(wp)              norm31 ( 3 )
+      real(wp)              vn12
+      real(wp)              vn23
+      real(wp)              vn31
 !
 !     Our initial value for SCALE is zero.  When we have better
 !     information, we'll change this.
 !
-      scale = 0.0d0
+      scale = 0.0_wp
 
 !
 !     First we construct a normal to the plane spanned by E1 and E2
@@ -223,7 +224,7 @@
 !     are perpendicular, E3 is a linear combination of E1 and E2.
 !     In this case set FOUND to FALSE and return.
 !
-      if ( en .eq. 0.0d0 ) then
+      if ( en .eq. 0.0_wp ) then
          found = .false.
          return
       end if
@@ -231,14 +232,14 @@
 !     Now check to see if V and E3 are in the same half space.  If
 !     not, we can stop and return the value FALSE.
 !
-      if (       en   .gt. 0.0d0 &
-           .and. vn12 .lt. 0.0d0 ) then
+      if (       en   .gt. 0.0_wp &
+           .and. vn12 .lt. 0.0_wp ) then
 
          found = .false.
          return
 
-      else if (       en   .lt. 0.0d0 &
-                .and. vn12 .gt. 0.0d0 ) then
+      else if (       en   .lt. 0.0_wp &
+                .and. vn12 .gt. 0.0_wp ) then
 
          found = .false.
          return
@@ -258,14 +259,14 @@
 !
 !     The following tests are the same as in the previous case.
 !
-      if (       en   .gt. 0.0d0 &
-           .and. vn23 .lt. 0.0d0 ) then
+      if (       en   .gt. 0.0_wp &
+           .and. vn23 .lt. 0.0_wp ) then
 
          found = .false.
          return
 
-      else if (       en   .lt. 0.0d0 &
-                .and. vn23 .gt. 0.0d0 ) then
+      else if (       en   .lt. 0.0_wp &
+                .and. vn23 .gt. 0.0_wp ) then
 
          found = .false.
          return
@@ -279,14 +280,14 @@
       call vcrss ( e3, e1, norm31 )
       vn31 = vdot  ( v,      norm31 )
 
-      if (       en   .gt. 0.0d0 &
-           .and. vn31 .lt. 0.0d0 ) then
+      if (       en   .gt. 0.0_wp &
+           .and. vn31 .lt. 0.0_wp ) then
 
          found = .false.
          return
 
-      else if (       en   .lt. 0.0d0 &
-                .and. vn31 .gt. 0.0d0 ) then
+      else if (       en   .lt. 0.0_wp &
+                .and. vn31 .gt. 0.0_wp ) then
 
          found = .false.
          return
@@ -336,7 +337,7 @@
 !
       denom = vn12 + vn23 + vn31
 
-      if ( denom .eq. 0.0d0 ) then
+      if ( denom .eq. 0.0_wp ) then
          found = .false.
       else
          found = .true.

@@ -4,6 +4,7 @@
                             maxbod, stsize, btbody, btnbod, btsegp, &
                             btstsz, sthan,  stdscr, stdlad, stfree, &
                             stoff,  stctr,  strad                   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,20 +33,20 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer               needed
-      integer               maxbod
-      integer               stsize
-      integer               btbody ( * )
-      integer               btnbod
-      integer               btsegp ( * )
-      integer               btstsz ( * )
-      integer               sthan  ( * )
-      double precision      stdscr ( dskdsz, * )
-      integer               stdlad ( dladsz, * )
-      integer               stfree
-      double precision      stoff  ( 3, * )
-      double precision      stctr  ( 3, * )
-      double precision      strad  ( * )
+      integer(ip)           needed
+      integer(ip)           maxbod
+      integer(ip)           stsize
+      integer(ip)           btbody ( * )
+      integer(ip)           btnbod
+      integer(ip)           btsegp ( * )
+      integer(ip)           btstsz ( * )
+      integer(ip)           sthan  ( * )
+      real(wp)              stdscr ( dskdsz, * )
+      integer(ip)           stdlad ( dladsz, * )
+      integer(ip)           stfree
+      real(wp)              stoff  ( 3, * )
+      real(wp)              stctr  ( 3, * )
+      real(wp)              strad  ( * )
 
 ! $ Brief_I/O
 !
@@ -261,11 +262,11 @@
 !
 !     Local variables
 !
-      integer               avail
-      integer               i
-      integer               j
-      integer               nbtdel
-      integer               nstdel
+      integer(ip)           avail
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           nbtdel
+      integer(ip)           nstdel
 
 
       if ( return() ) then

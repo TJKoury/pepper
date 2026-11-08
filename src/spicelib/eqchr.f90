@@ -1,6 +1,7 @@
 !$Procedure EQCHR (Equivalent characters)
 
       logical function eqchr ( a, b )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -160,7 +161,7 @@
 !
 !     Range of characters
 !
-      integer               lstchr
+      integer(ip)           lstchr
       parameter           ( lstchr = 255 )
 !
 !     Local Variables
@@ -168,9 +169,9 @@
 !     The array UVALUE contains the ICHAR values for the upper case
 !     version of each character.
 !
-      integer               uvalue ( 0 : lstchr )
-      integer               i
-      integer               j
+      integer(ip)           uvalue ( 0 : lstchr )
+      integer(ip)           i
+      integer(ip)           j
 
       logical               first
       save

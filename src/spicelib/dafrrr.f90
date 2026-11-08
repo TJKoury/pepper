@@ -1,6 +1,7 @@
 !$Procedure DAFRRR ( DAF, remove reserved records )
 
       subroutine dafrrr ( handle, resv )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer               handle
-      integer               resv
+      integer(ip)           handle
+      integer(ip)           resv
 
 ! $ Brief_I/O
 !
@@ -177,7 +178,7 @@
 !
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60       )
 
 !
@@ -185,7 +186,7 @@
 !                 numbers per record.  WPR stands for words
 !                 per record.
 !
-      integer               wpr
+      integer(ip)           wpr
       parameter           ( wpr    = 128      )
 
 !
@@ -193,13 +194,13 @@
 !     MAXI,       numbers, integers, and characters, respectively,
 !     MAXC        not including space reserved for control information.
 !
-      integer               maxd
+      integer(ip)           maxd
       parameter           ( maxd   = wpr  - 3 )
 
-      integer               maxi
+      integer(ip)           maxi
       parameter           ( maxi   = maxd * 2 )
 
-      integer               maxc
+      integer(ip)           maxc
       parameter           ( maxc   = maxd * 8 )
 
 !
@@ -208,23 +209,23 @@
       character*(maxc)      crec
       character*(ifnlen)    ifname
 
-      double precision      dc      ( maxd )
-      double precision      drec    ( wpr  )
-      double precision      sum     ( maxd )
+      real(wp)              dc      ( maxd )
+      real(wp)              drec    ( wpr  )
+      real(wp)              sum     ( maxd )
 
-      integer               begblk
-      integer               bward
-      integer               decr
-      integer               endblk
-      integer               free
-      integer               fward
-      integer               ic      ( maxi )
-      integer               nd
-      integer               next
-      integer               ni
-      integer               recno
-      integer               remove
-      integer               word
+      integer(ip)           begblk
+      integer(ip)           bward
+      integer(ip)           decr
+      integer(ip)           endblk
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           ic      ( maxi )
+      integer(ip)           nd
+      integer(ip)           next
+      integer(ip)           ni
+      integer(ip)           recno
+      integer(ip)           remove
+      integer(ip)           word
 
       logical               found
 
@@ -326,11 +327,11 @@
          end if
 
          if ( int ( drec(1) ) .gt. 0 ) then
-            drec(1) = drec(1) - dble ( remove )
+            drec(1) = drec(1) - real( remove, wp )
          end if
 
          if ( int ( drec(2) ) .gt. 0 ) then
-            drec(2) = drec(2) - dble ( remove )
+            drec(2) = drec(2) - real( remove, wp )
          end if
 
          call dafwdr ( handle, recno - remove, drec )

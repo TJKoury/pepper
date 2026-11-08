@@ -1,6 +1,7 @@
 !$Procedure      ZZEKPDEC ( EK, parse column declaration )
 
       subroutine zzekpdec ( decl, pardsc )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -24,7 +25,7 @@
       include 'ektype.inc'
 
       character*(*)         decl
-      integer               pardsc ( * )
+      integer(ip)           pardsc ( * )
 
 ! $ Brief_I/O
 !
@@ -283,38 +284,38 @@
 !
 !     Local parameters
 !
-      integer               nattr
+      integer(ip)           nattr
       parameter           ( nattr  =   5 )
 
-      integer               maxtok
+      integer(ip)           maxtok
       parameter           ( maxtok =  20 )
 
-      integer               toklen
+      integer(ip)           toklen
       parameter           ( toklen =  32 )
 
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 320 )
 
-      integer               nrkey
+      integer(ip)           nrkey
       parameter           ( nrkey  =   1 )
 
 !
 !     Parameters naming indices of keywords in the attribute list
 !     ATTKEY:
 !
-      integer               typpos
+      integer(ip)           typpos
       parameter           ( typpos =          1 )
 
-      integer               sizpos
+      integer(ip)           sizpos
       parameter           ( sizpos = typpos + 1 )
 
-      integer               idxpos
+      integer(ip)           idxpos
       parameter           ( idxpos = sizpos + 1 )
 
-      integer               nflpos
+      integer(ip)           nflpos
       parameter           ( nflpos = idxpos + 1 )
 
-      integer               fxcpos
+      integer(ip)           fxcpos
       parameter           ( fxcpos = nflpos + 1 )
 
 
@@ -325,13 +326,13 @@
       character*(msglen)    msg
       character*(toklen)    tokens ( maxtok )
 
-      integer               attloc ( cdscsz )
-      integer               i
-      integer               j
-      integer               n
-      integer               ptr
-      integer               reqkey ( nrkey  )
-      integer               tokloc
+      integer(ip)           attloc ( cdscsz )
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           n
+      integer(ip)           ptr
+      integer(ip)           reqkey ( nrkey  )
+      integer(ip)           tokloc
 
       logical               attfnd ( cdscsz )
       logical               found

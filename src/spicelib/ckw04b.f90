@@ -1,6 +1,7 @@
 !$Procedure CKW04B ( CK type 04: Begin a segment )
 
       subroutine ckw04b ( handle, begtim, inst, ref, avflag, segid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
       include               'sgparam.inc'
       include               'ckparam.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         segid
-      integer               inst
+      integer(ip)           inst
       logical               avflag
       character*(*)         ref
-      double precision      begtim
+      real(wp)              begtim
 
 ! $ Brief_I/O
 !
@@ -268,7 +269,7 @@
 !
 !     Spicelib functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
       logical               return
 
 !
@@ -278,49 +279,49 @@
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 
-      integer               ndescr
+      integer(ip)           ndescr
       parameter           ( ndescr =  nd + ( ni + 1 ) / 2 )
 
 !
 !     The number of generic segment constants in a type 4 CK segment.
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 0 )
 
 !
 !     The integer codes of the first and last printable ASCII
 !     characters.
 !
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint = 32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint = 126 )
 
 !
 !     The maximum number of characters allowed in a CK segment
 !     identifier.
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen = 40 )
 
 !
 !     Local variables
 !
-      double precision      dcd    ( nd )
-      double precision      dcoeff
-      double precision      descr  ( ndescr )
+      real(wp)              dcd    ( nd )
+      real(wp)              dcoeff
+      real(wp)              descr  ( ndescr )
 
-      integer               i
-      integer               icd    ( ni )
-      integer               refcod
-      integer               value
+      integer(ip)           i
+      integer(ip)           icd    ( ni )
+      integer(ip)           refcod
+      integer(ip)           value
 
 !
 !     Standard SPICELIB error handling.
@@ -336,7 +337,7 @@
 !     assign start and stop times.
 !
       dcd( 1 ) = begtim
-      dcd( 2 ) = 0.d0
+      dcd( 2 ) = 0.0_wp
 
 !
 !     Second, resolve reference frame ID code from its name and

@@ -7,6 +7,7 @@
                          gsto,  xfact, xlamo, no,      atime, eccm, &
                          argpm, inclm, xli,   mm,      xni,   nodem, &
                          dndt,  xn  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,44 +29,44 @@
 
       implicit none
 
-      integer                  irez
+      integer(ip)              irez
 
-      double precision         d2201
-      double precision         d2211
-      double precision         d3210
-      double precision         d3222
-      double precision         d4410
-      double precision         d4422
-      double precision         d5220
-      double precision         d5232
-      double precision         d5421
-      double precision         d5433
-      double precision         dedt
-      double precision         del1
-      double precision         del2
-      double precision         del3
-      double precision         didt
-      double precision         dmdt
-      double precision         dnodt
-      double precision         domdt
-      double precision         argpo
-      double precision         argpdot
-      double precision         t
-      double precision         tc
-      double precision         gsto
-      double precision         xfact
-      double precision         xlamo
-      double precision         no
-      double precision         atime
-      double precision         eccm
-      double precision         argpm
-      double precision         inclm
-      double precision         xli
-      double precision         mm
-      double precision         xni
-      double precision         nodem
-      double precision         dndt
-      double precision         xn
+      real(wp)                 d2201
+      real(wp)                 d2211
+      real(wp)                 d3210
+      real(wp)                 d3222
+      real(wp)                 d4410
+      real(wp)                 d4422
+      real(wp)                 d5220
+      real(wp)                 d5232
+      real(wp)                 d5421
+      real(wp)                 d5433
+      real(wp)                 dedt
+      real(wp)                 del1
+      real(wp)                 del2
+      real(wp)                 del3
+      real(wp)                 didt
+      real(wp)                 dmdt
+      real(wp)                 dnodt
+      real(wp)                 domdt
+      real(wp)                 argpo
+      real(wp)                 argpdot
+      real(wp)                 t
+      real(wp)                 tc
+      real(wp)                 gsto
+      real(wp)                 xfact
+      real(wp)                 xlamo
+      real(wp)                 no
+      real(wp)                 atime
+      real(wp)                 eccm
+      real(wp)                 argpm
+      real(wp)                 inclm
+      real(wp)                 xli
+      real(wp)                 mm
+      real(wp)                 xni
+      real(wp)                 nodem
+      real(wp)                 dndt
+      real(wp)                 xn
 
 ! $ Brief_I/O
 !
@@ -249,37 +250,37 @@
 !     Local Variables
 !
 
-      double precision         delt
-      double precision         fasx2
-      double precision         fasx4
-      double precision         fasx6
-      double precision         ft
-      double precision         g22
-      double precision         g32
-      double precision         g44
-      double precision         g52
-      double precision         g54
-      double precision         rptim
-      double precision         step2
-      double precision         stepn
-      double precision         stepp
-      double precision         theta
-      double precision         x2li
-      double precision         x2omi
-      double precision         xl
-      double precision         xldot
-      double precision         xnddt
-      double precision         xndt
-      double precision         xomi
+      real(wp)                 delt
+      real(wp)                 fasx2
+      real(wp)                 fasx4
+      real(wp)                 fasx6
+      real(wp)                 ft
+      real(wp)                 g22
+      real(wp)                 g32
+      real(wp)                 g44
+      real(wp)                 g52
+      real(wp)                 g54
+      real(wp)                 rptim
+      real(wp)                 step2
+      real(wp)                 stepn
+      real(wp)                 stepp
+      real(wp)                 theta
+      real(wp)                 x2li
+      real(wp)                 x2omi
+      real(wp)                 xl
+      real(wp)                 xldot
+      real(wp)                 xnddt
+      real(wp)                 xndt
+      real(wp)                 xomi
 
-      integer                  iret
-      integer                  iretn
+      integer(ip)              iret
+      integer(ip)              iretn
 
 
 !
 !     SPICELIB routines.
 !
-      double precision         twopi
+      real(wp)                 twopi
       logical                  return
 
 !
@@ -294,23 +295,23 @@
 !
 !     Constants
 !
-      fasx2 = 0.13130908d0
-      fasx4 = 2.8843198d0
-      fasx6 = 0.37448087d0
-      g22   = 5.7686396d0
-      g32   = 0.95240898d0
-      g44   = 1.8014998d0
-      g52   = 1.0508330d0
-      g54   = 4.4108898d0
-      rptim = 4.37526908801129966d-3
-      stepp =    720.0d0
-      stepn =   -720.0d0
-      step2 = 259200.0d0
+      fasx2 = 0.13130908_wp
+      fasx4 = 2.8843198_wp
+      fasx6 = 0.37448087_wp
+      g22   = 5.7686396_wp
+      g32   = 0.95240898_wp
+      g44   = 1.8014998_wp
+      g52   = 1.0508330_wp
+      g54   = 4.4108898_wp
+      rptim = 4.37526908801129966e-3_wp
+      stepp =    720.0_wp
+      stepn =   -720.0_wp
+      step2 = 259200.0_wp
 
 !
 !     Calculate deep space resonance effects.
 !
-      dndt  = 0.0d0
+      dndt  = 0.0_wp
       theta = dmod(gsto + tc*rptim,twopi())
       eccm  = eccm + dedt*t
 
@@ -343,7 +344,7 @@
 !
 !     Just in case - should be set in loops if used.
 !
-      ft    = 0.0d0
+      ft    = 0.0_wp
 
       if (irez .ne. 0) then
 
@@ -356,10 +357,10 @@
 !
 !        sgp4fix streamline check
 !
-         if ( (    atime .eq. 0.0d0) .or. &
-              (t * atime .le. 0.0d0) .or. &
+         if ( (    atime .eq. 0.0_wp) .or. &
+              (t * atime .le. 0.0_wp) .or. &
               (  dabs(t) .lt. dabs(atime))  ) then
-            atime  = 0.0d0
+            atime  = 0.0_wp
             xni    = no
             xli    = xlamo
          end if
@@ -367,7 +368,7 @@
 !
 !        sgp4fix move check outside loop
 !
-         if (t .gt. 0.0d0) then
+         if (t .gt. 0.0_wp) then
             delt = stepp
          else
             delt = stepn
@@ -393,12 +394,12 @@
             if (irez .ne. 2) then
 
                xndt  = del1*dsin(xli-fasx2) + &
-                        del2*dsin(2.0d0*(xli-fasx4)) + &
-                        del3*dsin(3.0d0*(xli-fasx6))
+                        del2*dsin(2.0_wp*(xli-fasx4)) + &
+                        del3*dsin(3.0_wp*(xli-fasx6))
                xldot = xni + xfact
                xnddt = del1*dcos(xli-fasx2) + &
-                  2.0d0*del2*dcos(2.0d0*(xli-fasx4)) + &
-                  3.0d0*del3*dcos(3.0d0*(xli-fasx6))
+                  2.0_wp*del2*dcos(2.0_wp*(xli-fasx4)) + &
+                  3.0_wp*del3*dcos(3.0_wp*(xli-fasx6))
                xnddt = xnddt*xldot
 
             else
@@ -427,7 +428,7 @@
                         d3222*dcos(-xomi+xli-g32) + &
                         d5220*dcos( xomi+xli-g52) + &
                         d5232*dcos(-xomi+xli-g52) + &
-                        2.0d0*(d4410*dcos(x2omi+x2li-g44) + &
+                        2.0_wp*(d4410*dcos(x2omi+x2li-g44) + &
                         d4422*dcos(x2li-g44) + &
                         d5421*dcos( xomi+x2li-g54) + &
                         d5433*dcos(-xomi+x2li-g54))
@@ -457,11 +458,11 @@
 
          end do
 
-         xn = xni + xndt*ft  + xnddt*ft*ft*0.5d0
-         xl = xli + xldot*ft + xndt*ft*ft*0.5d0
+         xn = xni + xndt*ft  + xnddt*ft*ft*0.5_wp
+         xl = xli + xldot*ft + xndt*ft*ft*0.5_wp
 
          if(irez .ne. 1) then
-            mm   = xl-2.0d0*nodem+2.0d0*theta
+            mm   = xl-2.0_wp*nodem+2.0_wp*theta
             dndt = xn-no
          else
             mm   = xl-nodem-argpm+theta

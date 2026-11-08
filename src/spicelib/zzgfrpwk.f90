@@ -2,6 +2,7 @@
 
       subroutine zzgfrpwk ( unit,   total, wait, &
                             tcheck, begin, end, incr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,13 +25,13 @@
 
       include               'zzgf.inc'
 
-      integer               unit
-      double precision      total
-      double precision      wait
-      integer               tcheck
+      integer(ip)           unit
+      real(wp)              total
+      real(wp)              wait
+      integer(ip)           tcheck
       character*(*)         begin
       character*(*)         end
-      double precision      incr
+      real(wp)              incr
 
 ! $ Brief_I/O
 !
@@ -191,8 +192,8 @@
 !
 !     SPICELIB Functions
 !
-      double precision      brcktd
-      integer               rtrim
+      real(wp)              brcktd
+      integer(ip)           rtrim
       logical               return
 
 !
@@ -203,20 +204,20 @@
       character*(mxbegm)    start
       character*(mxmsg)     messge
 
-      double precision      cursec
-      double precision      done
-      double precision      entire
-      double precision      fractn
-      double precision      svincr
-      double precision      lstsec
-      double precision      step
-      double precision      tvec ( 6 )
+      real(wp)              cursec
+      real(wp)              done
+      real(wp)              entire
+      real(wp)              fractn
+      real(wp)              svincr
+      real(wp)              lstsec
+      real(wp)              step
+      real(wp)              tvec ( 6 )
 
-      integer               calls
-      integer               check
-      integer               ls
-      integer               stdout
-      integer               svunit
+      integer(ip)           calls
+      integer(ip)           check
+      integer(ip)           ls
+      integer(ip)           stdout
+      integer(ip)           svunit
 
       logical               first
 
@@ -242,16 +243,16 @@
 !
       data                  calls  / 0       /
       data                  check  / 1       /
-      data                  done   / 0.d0    /
-      data                  entire / 0.d0    /
+      data                  done   / 0.0_wp    /
+      data                  entire / 0.0_wp    /
       data                  finish / ' '     /
       data                  first  / .true.  /
       data                  ls     / 1       /
-      data                  lstsec / 0.d0    /
+      data                  lstsec / 0.0_wp    /
       data                  start  / ' '     /
       data                  stdout / 6       /
-      data                  step   / 0.d0    /
-      data                  svincr / 0.d0    /
+      data                  step   / 0.0_wp    /
+      data                  svincr / 0.0_wp    /
       data                  svunit / 6       /
 
 
@@ -446,20 +447,20 @@
 !     Save the inputs and set the amount of work done to 0
 !
       entire = total
-      step   = min ( 3600.0d0, max( 0.0d0, wait ) )
+      step   = min ( 3600.0_wp, max( 0.0_wp, wait ) )
       check  = max ( 1, tcheck )
 
       start  = begin
       finish = end
 
-      done   = 0.0d0
+      done   = 0.0_wp
 
 !
 !     Set the timer.
 !
       call zzcputim ( tvec )
 
-      lstsec = tvec(4)*3600.0d0 + tvec(5)*60.0d0 + tvec(6)
+      lstsec = tvec(4)*3600.0_wp + tvec(5)*60.0_wp + tvec(6)
 
 !
 !     Set the increment counter
@@ -609,7 +610,7 @@
 
          call zzcputim ( tvec )
 
-         cursec = tvec(4)*3600.0d0 + tvec(5)*60.0d0 + tvec(6)
+         cursec = tvec(4)*3600.0_wp + tvec(5)*60.0_wp + tvec(6)
 
 
          if ( dabs( cursec - lstsec ) .ge. step ) then
@@ -618,7 +619,7 @@
 !
 !           Report how much work has been done.
 !
-            fractn = brcktd ( ( done/entire )*100.0d0,  0.d0,  100.d0 )
+            fractn = brcktd ( ( done/entire )*100.0_wp,  0.0_wp,  100.0_wp )
 
             call dpfmt ( fractn, 'xxx.xx', prcent )
 
@@ -811,7 +812,7 @@
 !
 !-&
 
-      step   = min  ( 3600.0d0,  max( 0.d0, wait ) )
+      step   = min  ( 3600.0_wp,  max( 0.0_wp, wait ) )
       check  = max  ( 1, tcheck )
       start  = begin
       finish = end

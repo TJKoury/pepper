@@ -1,6 +1,7 @@
 !$Procedure SSIZEI ( Set the size of an integer cell )
 
       subroutine ssizei ( size, cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer          size
-      integer          cell   ( lbcell:* )
+      integer(ip)      size
+      integer(ip)      cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -173,7 +174,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 
 

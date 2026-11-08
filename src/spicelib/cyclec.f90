@@ -1,6 +1,7 @@
 !$Procedure CYCLEC ( Cycle a character string )
 
       subroutine cyclec ( instr, dir, ncycle, outstr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       character*(*)      instr
       character*1        dir
-      integer            ncycle
+      integer(ip)        ncycle
       character*(*)      outstr
 
 ! $ Brief_I/O
@@ -153,7 +154,7 @@
 !     SPICELIB functions
 !
       logical          return
-      integer          gcd
+      integer(ip)      gcd
 
 !
 !     Local variables
@@ -161,14 +162,14 @@
       character*1      last
       character*1      temp
 
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
-      integer          n
-      integer          limit
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
+      integer(ip)      n
+      integer(ip)      limit
 
       if ( return() ) then
          return

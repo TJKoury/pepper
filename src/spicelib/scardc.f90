@@ -1,6 +1,7 @@
 !$Procedure SCARDC ( Set the cardinality of a character cell )
 
       subroutine scardc ( card, cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               card
+      integer(ip)           card
       character*(*)         cell   ( lbcell:* )
 
 ! $ Brief_I/O
@@ -173,7 +174,7 @@
 !
 !     Local variables
 !
-      integer               size
+      integer(ip)           size
 
 
 

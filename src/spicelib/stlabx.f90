@@ -1,6 +1,7 @@
 !$Procedure STLABX ( Stellar aberration, transmission case )
 
       subroutine stlabx ( pobj, vobs, corpos )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision   pobj   ( 3 )
-      double precision   vobs   ( 3 )
-      double precision   corpos ( 3 )
+      real(wp)           pobj   ( 3 )
+      real(wp)           vobs   ( 3 )
+      real(wp)           corpos ( 3 )
 
 ! $ Brief_I/O
 !
@@ -318,7 +319,7 @@
 !
 !     Local variables
 !
-      double precision      negvel ( 3 )
+      real(wp)              negvel ( 3 )
 
 !
 !     Standard SPICE error handling.

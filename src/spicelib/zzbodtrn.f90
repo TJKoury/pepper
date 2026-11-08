@@ -1,6 +1,7 @@
 !$Procedure ZZBODTRN ( Private --- Body name and code translation )
 
       subroutine zzbodtrn ( name, code, found, usrctr, update )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,9 +29,9 @@
       include               'zzctr.inc'
 
       character*(*)         name
-      integer               code
+      integer(ip)           code
       logical               found
-      integer               usrctr    ( ctrsiz )
+      integer(ip)           usrctr    ( ctrsiz )
       logical               update
 
 ! $ Brief_I/O
@@ -661,14 +662,14 @@
 !
 !     Length of watched POOL keywords.
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 !
 !     Lower bound of the built-in/BODDEF and kernel-defined hash
 !     collision list arrays.
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
 
@@ -683,8 +684,8 @@
 !
       character*(maxl)      defnam  ( maxe )
       character*(maxl)      defnor  ( maxe )
-      integer               defcod  ( maxe )
-      integer               defsiz
+      integer(ip)           defcod  ( maxe )
+      integer(ip)           defsiz
 
 !
 !     Name-based hash for built-in/BODDEF bodies. DNMLST, DNMPOL, and
@@ -692,10 +693,10 @@
 !     body name, normalized name, and ID in the arrays DEFNAM, DEFNOR,
 !     DEFCOD.
 !
-      integer               dnmlst  (          maxe )
-      integer               dnmpol  ( lbpool : maxe )
+      integer(ip)           dnmlst  (          maxe )
+      integer(ip)           dnmpol  ( lbpool : maxe )
       character*(maxl)      dnmnms  (          maxe )
-      integer               dnmidx  (          maxe )
+      integer(ip)           dnmidx  (          maxe )
 
 !
 !     ID-based hash for built-in/BODDEF bodies. DIDLST, DIDPOL, and
@@ -703,10 +704,10 @@
 !     body name, normalized name, and ID in the arrays DEFNAM, DEFNOR,
 !     DEFCOD.
 !
-      integer               didlst  (          maxe )
-      integer               didpol  ( lbpool : maxe )
-      integer               didids  (          maxe )
-      integer               dididx  (          maxe )
+      integer(ip)           didlst  (          maxe )
+      integer(ip)           didpol  ( lbpool : maxe )
+      integer(ip)           didids  (          maxe )
+      integer(ip)           dididx  (          maxe )
 
 !
 !     KERNAM, KERNOR, and KERCOD are the name, normalized name, and ID
@@ -715,8 +716,8 @@
 !
       character*(maxl)      kernam  ( nroom )
       character*(maxl)      kernor  ( nroom )
-      integer               kercod  ( nroom )
-      integer               kersiz
+      integer(ip)           kercod  ( nroom )
+      integer(ip)           kersiz
 
 !
 !     Name-based hash for kernel POOL bodies. KNMLST, KNMPOL, and
@@ -724,10 +725,10 @@
 !     body name, normalized name, and ID in the arrays KERNAM, KERNOR,
 !     KERCOD.
 !
-      integer               knmlst  (          nroom )
-      integer               knmpol  ( lbpool : nroom )
+      integer(ip)           knmlst  (          nroom )
+      integer(ip)           knmpol  ( lbpool : nroom )
       character*(maxl)      knmnms  (          nroom )
-      integer               knmidx  (          nroom )
+      integer(ip)           knmidx  (          nroom )
 
 !
 !     ID-based hash for kernel POOL bodies. KIDLST, KIDPOL, and KIDIDS
@@ -735,16 +736,16 @@
 !     name, normalized name, and ID in the arrays KERNAM, KERNOR,
 !     KERCOD.
 !
-      integer               kidlst  (          nroom )
-      integer               kidpol  ( lbpool : nroom )
-      integer               kidids  (          nroom )
-      integer               kididx  (          nroom )
+      integer(ip)           kidlst  (          nroom )
+      integer(ip)           kidpol  ( lbpool : nroom )
+      integer(ip)           kidids  (          nroom )
+      integer(ip)           kididx  (          nroom )
 
 !
 !     ZZBODTRN state counter and POOL state counter.
 !
-      integer               subctr ( ctrsiz )
-      integer               pulctr ( ctrsiz )
+      integer(ip)           subctr ( ctrsiz )
+      integer(ip)           pulctr ( ctrsiz )
 
 !
 !     Flag indicating whether the built-in list was altered by BODDEF
@@ -770,11 +771,11 @@
       character*(maxl)      tmpnam
       character*(wdsize)    wnames  ( 2 )
 
-      integer               codidx
-      integer               i
-      integer               index
-      integer               j
-      integer               nwatch
+      integer(ip)           codidx
+      integer(ip)           i
+      integer(ip)           index
+      integer(ip)           j
+      integer(ip)           nwatch
 
       logical               first
       logical               lupdte

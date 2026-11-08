@@ -1,6 +1,7 @@
 !$Procedure VHATIP ( "V-Hat", 3-d unit vector along V, in place )
 
       subroutine vhatip ( v )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      double precision   v ( 3 )
+      real(wp)           v ( 3 )
 
 ! $ Brief_I/O
 !
@@ -120,12 +121,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
 !
 !     Local variables
 !
-      double precision      vmag
+      real(wp)              vmag
 
 
 !
@@ -140,7 +141,7 @@
 !     small. In fact, the magnitude of any vector is never less than
 !     the magnitude of any component.
 !
-      if ( vmag .gt. 0.d0 ) then
+      if ( vmag .gt. 0.0_wp ) then
 
          v(1) = v(1) / vmag
          v(2) = v(2) / vmag
@@ -148,9 +149,9 @@
 
       else
 
-         v(1) = 0.d0
-         v(2) = 0.d0
-         v(3) = 0.d0
+         v(1) = 0.0_wp
+         v(2) = 0.0_wp
+         v(3) = 0.0_wp
 
       end if
 

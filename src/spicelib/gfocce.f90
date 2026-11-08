@@ -5,6 +5,7 @@
                           obsrvr,  tol,     udstep,  udrefn, &
                           rpt,     udrepi,  udrepu,  udrepf, &
                           bail,    udbail,  cnfine,  result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,7 +37,7 @@
       include 'gf.inc'
       include 'zzdsk.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         occtyp
@@ -48,7 +49,7 @@
       character*(*)         bframe
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      tol
+      real(wp)              tol
       external              udstep
       external              udrefn
       logical               rpt
@@ -58,8 +59,8 @@
       logical               bail
       logical               udbail
       external              udbail
-      double precision      cnfine ( lbcell : * )
-      double precision      result ( lbcell : * )
+      real(wp)              cnfine ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1194,8 +1195,8 @@
 !
 !     SPICELIB functions
 !
-      integer               wncard
-      integer               sized
+      integer(ip)           wncard
+      integer(ip)           sized
 
       logical               failed
       logical               return
@@ -1214,8 +1215,8 @@
 !     argument to ZZGFSOLV. The routine UDSTEP, which is passed to
 !     ZZGFSOLV, will be used by that routine to obtain the step size.
 !
-      double precision      step
-      parameter           ( step   = 1.d0 )
+      real(wp)              step
+      parameter           ( step   = 1.0_wp )
 
 !
 !     CSTEP indicates whether a constant step size, provided
@@ -1230,11 +1231,11 @@
       character*(mthlen)    lbshap
       character*(mthlen)    lfshap
 
-      double precision      finish
-      double precision      start
+      real(wp)              finish
+      real(wp)              start
 
-      integer               count
-      integer               i
+      integer(ip)           count
+      integer(ip)           i
 
 
 !
@@ -1268,7 +1269,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.d0 ) then
+      if ( tol .le. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )

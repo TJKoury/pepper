@@ -1,6 +1,7 @@
 !$Procedure SAMSBI (Same substrings, case insensitive)
 
       logical function samsbi ( str1, b1, e1,  str2, b2, e2 )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
       implicit none
 
       character*(*)         str1
-      integer               b1
-      integer               e1
+      integer(ip)           b1
+      integer(ip)           e1
       character*(*)         str2
-      integer               b2
-      integer               e2
+      integer(ip)           b2
+      integer(ip)           e2
 
 ! $ Brief_I/O
 !
@@ -192,8 +193,8 @@
 
       logical               nechr
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 

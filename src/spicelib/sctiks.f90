@@ -1,6 +1,7 @@
 !$Procedure SCTIKS ( Convert spacecraft clock string to ticks. )
 
       subroutine sctiks ( sc, clkstr, ticks )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               sc
+      integer(ip)           sc
       character*(*)         clkstr
-      double precision      ticks
+      real(wp)              ticks
 
 ! $ Brief_I/O
 !
@@ -293,14 +294,14 @@
 !
 !     SPICELIB functions
 !
-      integer               sctype
+      integer(ip)           sctype
       logical               return
 
 
 !
 !     Local variables
 !
-      integer               type
+      integer(ip)           type
 
 
 !

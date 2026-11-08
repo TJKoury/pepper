@@ -1,6 +1,7 @@
 !$Procedure BODDEF ( Body name/ID code definition )
 
       subroutine boddef ( name, code )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         name
-      integer               code
+      integer(ip)           code
 
 ! $ Brief_I/O
 !

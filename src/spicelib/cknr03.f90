@@ -1,6 +1,7 @@
 !$Procedure CKNR03 ( C-kernel, number of records, type 03 )
 
       subroutine cknr03 ( handle, descr, nrec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               nrec
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           nrec
 
 ! $ Brief_I/O
 !
@@ -342,22 +343,22 @@
 !                   operates on.
 !
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic = 6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype = 3 )
 
 !
 !     Local variables
 !
-      integer               icd    ( nic )
+      integer(ip)           icd    ( nic )
 
-      double precision      dcd    ( ndc )
-      double precision      npoint
+      real(wp)              dcd    ( ndc )
+      real(wp)              npoint
 
 
 

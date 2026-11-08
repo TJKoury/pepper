@@ -1,6 +1,7 @@
 !$Procedure CLIGHT ( C, Speed of light in a vacuum )
 
-      double precision function clight ( )
+      real(wp) function clight ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -125,7 +126,7 @@
 !
 !     Just like it says.
 !
-      clight = 299792.458d0
+      clight = 299792.458_wp
 
       return
       end

@@ -1,6 +1,7 @@
 !$Procedure LSTLEC ( Last character element less than or equal to. )
 
-      integer function  lstlec ( string, n, array )
+      integer(ip) function  lstlec ( string, n, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)    string
-      integer          n
+      integer(ip)      n
       character*(*)    array ( * )
 
 ! $ Brief_I/O
@@ -197,12 +198,12 @@
 !
 !     Local variables
 !
-      integer          j
+      integer(ip)      j
 
-      integer          begin
-      integer          end
-      integer          middle
-      integer          items
+      integer(ip)      begin
+      integer(ip)      end
+      integer(ip)      middle
+      integer(ip)      items
 
 
 

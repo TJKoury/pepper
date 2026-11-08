@@ -1,6 +1,7 @@
 !$Procedure TEXPYR ( Time --- Expand year )
 
       subroutine texpyr ( year )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               year
+      integer(ip)           year
 
 ! $ Brief_I/O
 !
@@ -239,8 +240,8 @@
 !-&
 
 
-      integer               centry
-      integer               lbound
+      integer(ip)           centry
+      integer(ip)           lbound
       save
 
       data                  centry  / 1900 /

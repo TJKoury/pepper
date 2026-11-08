@@ -7,6 +7,7 @@
                           bsight, &
                           n, &
                           bounds  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,12 +30,12 @@
       include              'zzctr.inc'
 
       character*(*)         inst
-      integer               room
+      integer(ip)           room
       character*(*)         shape
       character*(*)         frame
-      double precision      bsight ( 3    )
-      integer               n
-      double precision      bounds ( 3, * )
+      real(wp)              bsight ( 3    )
+      integer(ip)           n
+      real(wp)              bounds ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -664,22 +665,22 @@
 !
 !     Saved instrument name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 !
 !     Local variables
 !
-      double precision      instid
+      real(wp)              instid
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svinst
-      integer               svinid
+      integer(ip)           svinid
       logical               svfnd1
 
       logical               first

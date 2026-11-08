@@ -1,6 +1,7 @@
 !$Procedure RAXISA ( Rotation axis of a matrix )
 
       subroutine raxisa ( matrix, axis, angle )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision    matrix ( 3, 3 )
-      double precision    axis   (    3 )
-      double precision    angle
+      real(wp)            matrix ( 3, 3 )
+      real(wp)            axis   (    3 )
+      real(wp)            angle
 
 ! $ Brief_I/O
 !
@@ -412,18 +413,18 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
       logical               failed
       logical               return
       logical               vzero
 
       external              pi
-      double precision      pi
+      real(wp)              pi
 
 !
 !     Local Variables
 !
-      double precision      q ( 0: 3 )
+      real(wp)              q ( 0: 3 )
 
 !
 !     Standard SPICE error handling.
@@ -459,11 +460,11 @@
       if ( vzero(q(1)) ) then
 
          angle = 0
-         axis(1) = 0.0d0
-         axis(2) = 0.0d0
-         axis(3) = 1.0d0
+         axis(1) = 0.0_wp
+         axis(2) = 0.0_wp
+         axis(3) = 1.0_wp
 
-      else if ( q(0) .eq. 0.0d0 ) then
+      else if ( q(0) .eq. 0.0_wp ) then
 
          angle   = pi()
          axis(1) = q(1)
@@ -473,7 +474,7 @@
       else
 
          call vhat ( q(1), axis )
-         angle = 2.d0 * datan2 ( vnorm(q(1)), q(0) )
+         angle = 2.0_wp * datan2 ( vnorm(q(1)), q(0) )
 
       end if
 

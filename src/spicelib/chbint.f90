@@ -1,6 +1,7 @@
 !$Procedure CHBINT ( Interpolate a Chebyshev expansion )
 
       subroutine chbint ( cp, degp, x2s, x, p, dpdx )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
 
       implicit none
 
-      double precision      cp  ( * )
-      integer               degp
-      double precision      x2s ( 2 )
-      double precision      x
-      double precision      p
-      double precision      dpdx
+      real(wp)              cp  ( * )
+      integer(ip)           degp
+      real(wp)              x2s ( 2 )
+      real(wp)              x
+      real(wp)              p
+      real(wp)              dpdx
 
 ! $ Brief_I/O
 !
@@ -299,22 +300,22 @@
 !
 !     Local variables
 !
-      integer          j
-      double precision w (3)
-      double precision dw(3)
-      double precision s
-      double precision s2
+      integer(ip)      j
+      real(wp) w (3)
+      real(wp) dw(3)
+      real(wp) s
+      real(wp) s2
 
 !
 !     Transform X to S and initialize temporary variables.
 !
       s     = (x-x2s(1)) / x2s(2)
-      s2    = 2.0d0 * s
+      s2    = 2.0_wp * s
       j     = degp  + 1
-      w (1) = 0.d0
-      w (2) = 0.d0
-      dw(1) = 0.d0
-      dw(2) = 0.d0
+      w (1) = 0.0_wp
+      w (2) = 0.0_wp
+      dw(1) = 0.0_wp
+      dw(2) = 0.0_wp
 
 !
 !     Evaluate the polynomial and its derivative using recursion.
@@ -327,7 +328,7 @@
 
          dw(3) = dw(2)
          dw(2) = dw(1)
-         dw(1) = w(2)*2.0d0 + dw(2)*s2 - dw(3)
+         dw(1) = w(2)*2.0_wp + dw(2)*s2 - dw(3)
 
          j     = j - 1
 

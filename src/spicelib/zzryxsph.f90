@@ -1,6 +1,7 @@
 !$Procedure ZZRYXSPH ( Intersection of ray and sphere )
 
       subroutine zzryxsph ( vertex, udir, r, xpt, found )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
       implicit none
 
-      double precision      vertex ( 3 )
-      double precision      udir   ( 3 )
-      double precision      r
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              r
+      real(wp)              xpt    ( 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -119,17 +120,17 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
 !
 !     Local variables
 !
-      double precision      cpar
-      double precision      perp   ( 3 )
-      double precision      pmag2
-      double precision      r2
-      double precision      s
-      double precision      vmag2
+      real(wp)              cpar
+      real(wp)              perp   ( 3 )
+      real(wp)              pmag2
+      real(wp)              r2
+      real(wp)              s
+      real(wp)              vmag2
 
       found = .false.
 
@@ -139,7 +140,7 @@
 !
       cpar = vdot ( vertex, udir )
 
-      call vlcom ( 1.d0, vertex, -cpar, udir, perp )
+      call vlcom ( 1.0_wp, vertex, -cpar, udir, perp )
 
       pmag2 = vdot( perp, perp )
       r2    = r * r
@@ -152,7 +153,7 @@
          return
       end if
 
-      s     = sqrt (  max( 0.d0,  r2-pmag2 )  )
+      s     = sqrt (  max( 0.0_wp,  r2-pmag2 )  )
 
       vmag2 = vdot(vertex,vertex)
 
@@ -162,7 +163,7 @@
 !        outside the sphere. Above, we have compared squares of
 !        magnitudes for efficiency.
 !
-         if ( cpar .gt. 0.d0 ) then
+         if ( cpar .gt. 0.0_wp ) then
 !
 !           The ray points away from the sphere; there can be no
 !           intersection.

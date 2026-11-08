@@ -2,6 +2,7 @@
 
       subroutine zzedterm ( type,   a,      b,     c, &
                             srcrad, srcpos, npts,  trmpts )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,13 +28,13 @@
       implicit none
 
       character*(*)         type
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      srcrad
-      double precision      srcpos ( 3 )
-      integer               npts
-      double precision      trmpts ( 3, npts )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              srcrad
+      real(wp)              srcpos ( 3 )
+      integer(ip)           npts
+      real(wp)              trmpts ( 3, npts )
 
 ! $ Brief_I/O
 !
@@ -216,28 +217,28 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      touchd
-      double precision      twopi
-      double precision      vdot
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              halfpi
+      real(wp)              touchd
+      real(wp)              twopi
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              vsep
 
       logical               return
 
 !
 !     Local parameters
 !
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel   = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   = 4 )
 
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 10 )
 
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen = 50 )
 
 !
@@ -245,37 +246,37 @@
 !
       character*(typlen)    loctyp
 
-      double precision      angerr
-      double precision      angle
-      double precision      d
-      double precision      delta
-      double precision      dir    ( 3 )
-      double precision      e      ( 3 )
-      double precision      inang
-      double precision      lambda
-      double precision      maxrad
-      double precision      minrad
-      double precision      offset ( 3 )
-      double precision      outang
-      double precision      plane  ( ubpl )
-      double precision      plcons
-      double precision      prvang
-      double precision      prvdif
-      double precision      rmax
-      double precision      rmin
-      double precision      s
-      double precision      srcpt  ( 3 )
-      double precision      theta
-      double precision      trans  ( 3, 3 )
-      double precision      v      ( 3 )
-      double precision      vtemp  ( 3 )
-      double precision      vtx    ( 3 )
-      double precision      x      ( 3 )
-      double precision      y      ( 3 )
-      double precision      z      ( 3 )
+      real(wp)              angerr
+      real(wp)              angle
+      real(wp)              d
+      real(wp)              delta
+      real(wp)              dir    ( 3 )
+      real(wp)              e      ( 3 )
+      real(wp)              inang
+      real(wp)              lambda
+      real(wp)              maxrad
+      real(wp)              minrad
+      real(wp)              offset ( 3 )
+      real(wp)              outang
+      real(wp)              plane  ( ubpl )
+      real(wp)              plcons
+      real(wp)              prvang
+      real(wp)              prvdif
+      real(wp)              rmax
+      real(wp)              rmin
+      real(wp)              s
+      real(wp)              srcpt  ( 3 )
+      real(wp)              theta
+      real(wp)              trans  ( 3, 3 )
+      real(wp)              v      ( 3 )
+      real(wp)              vtemp  ( 3 )
+      real(wp)              vtx    ( 3 )
+      real(wp)              x      ( 3 )
+      real(wp)              y      ( 3 )
+      real(wp)              z      ( 3 )
 
-      integer               i
-      integer               nitr
+      integer(ip)           i
+      integer(ip)           nitr
 
       logical               umbral
 
@@ -331,9 +332,9 @@
 !
 !     The ellipsoid semi-axes must have positive length.
 !
-      if (       ( a .le. 0.d0 ) &
-           .or.  ( b .le. 0.d0 ) &
-           .or.  ( c .le. 0.d0 )   )   then
+      if (       ( a .le. 0.0_wp ) &
+           .or.  ( b .le. 0.0_wp ) &
+           .or.  ( c .le. 0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                      )
@@ -348,7 +349,7 @@
 !
 !     Check the input light source radius.
 !
-      if ( srcrad .le. 0.d0 ) then
+      if ( srcrad .le. 0.0_wp ) then
 
          call setmsg ( 'Light source must have positive radius; ' &
          //            'actual radius was #.'                    )
@@ -456,7 +457,7 @@
 !        the X-Y plane of the frame produced by FRAME
 !        and corresponding to the angle THETA.
 !
-         call latrec ( srcrad,  theta,  0.d0,  srcpt )
+         call latrec ( srcrad,  theta,  0.0_wp,  srcpt )
 
 !
 !        Now solve for the angle by which SRCPT must be rotated (toward
@@ -554,7 +555,7 @@
 
             call vpack ( a*dir(1), b*dir(2), c*dir(3), v )
 
-            lambda = 1.d0 / vnorm(v)
+            lambda = 1.0_wp / vnorm(v)
 
             call vpack ( a*v(1), b*v(2), c*v(3), e )
 
@@ -576,7 +577,7 @@
 !           Let S indicate the sign of the altitude error:  where
 !           S is positive, the plane is above E.
 !
-            s = sign ( 1.d0, vdot(e,dir) )
+            s = sign ( 1.0_wp, vdot(e,dir) )
 
             if ( umbral ) then
 !

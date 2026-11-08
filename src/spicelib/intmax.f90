@@ -1,6 +1,7 @@
 !$Procedure INTMAX ( Largest integer number )
 
-      integer function intmax ()
+      integer(ip) function intmax ()
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !

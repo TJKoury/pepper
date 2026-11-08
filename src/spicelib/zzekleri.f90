@@ -2,6 +2,7 @@
 
       subroutine zzekleri (  handle,  segdsc,  coldsc,  ikey, &
                              recptr,  null,    prvidx,  prvptr  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,14 +28,14 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               ikey
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           ikey
+      integer(ip)           recptr
       logical               null
-      integer               prvidx
-      integer               prvptr
+      integer(ip)           prvidx
+      integer(ip)           prvptr
 
 ! $ Brief_I/O
 !
@@ -172,8 +173,8 @@
 !
       character*(cnamsz)    column
 
-      integer               dtype
-      integer               itype
+      integer(ip)           dtype
+      integer(ip)           itype
 
       logical               indexd
 

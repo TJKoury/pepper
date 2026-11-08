@@ -1,6 +1,7 @@
 !$Procedure CKNR02 ( C-kernel, number of records, type 02 )
 
       subroutine cknr02 ( handle, descr, nrec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               nrec
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           nrec
 
 ! $ Brief_I/O
 !
@@ -372,24 +373,24 @@
 !        DTYPE      is the data type.
 !
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc   = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic   = 6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype = 2 )
 
 !
 !     Local variables
 !
-      integer               beg
-      integer               end
-      integer               arrsiz
-      integer               icd    ( nic )
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           arrsiz
+      integer(ip)           icd    ( nic )
 
-      double precision      dcd    ( ndc )
+      real(wp)              dcd    ( ndc )
 
 
 
@@ -479,7 +480,7 @@
 !
       arrsiz = end - beg + 1
 
-      nrec   = nint (  ( 100.d0 * (dble(arrsiz)) + 1.d0 ) / 1001.d0  )
+      nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
 
 
       call chkout ( 'CKNR02' )

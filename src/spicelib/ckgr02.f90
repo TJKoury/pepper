@@ -1,6 +1,7 @@
 !$Procedure CKGR02 ( C-kernel, get record, type 02 )
 
       subroutine ckgr02 ( handle, descr, recno, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               recno
-      double precision      record  ( * )
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           recno
+      real(wp)              record  ( * )
 
 ! $ Brief_I/O
 !
@@ -416,28 +417,28 @@
 !        DTYPE      is the data type.
 !
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc    = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic    = 6 )
 
-      integer               psiz
+      integer(ip)           psiz
       parameter           ( psiz   = 8 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype  = 2 )
 
 !
 !     Local variables
 !
-      integer               icd    ( nic )
-      integer               nrec
-      integer               beg
-      integer               addr
+      integer(ip)           icd    ( nic )
+      integer(ip)           nrec
+      integer(ip)           beg
+      integer(ip)           addr
 
-      double precision      dcd    ( ndc  )
-      double precision      prec   ( psiz )
+      real(wp)              dcd    ( ndc  )
+      real(wp)              prec   ( psiz )
 
 
 

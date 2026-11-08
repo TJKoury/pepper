@@ -4,6 +4,7 @@
                            udfunc, abcorr, decres, sep, &
                            xabcr,  xbod,   yref,   xref, &
                            xobs,   xrad,   xshp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -34,18 +35,18 @@
       character*(*)         from
       character*(*)         shape (2)
       character*(*)         frame (2)
-      double precision      et
+      real(wp)              et
       external              udfunc
       character*(*)         abcorr
       logical               decres
-      double precision      sep
+      real(wp)              sep
       character*(*)         xabcr
-      integer               xbod  (2)
+      integer(ip)           xbod  (2)
       character*(*)         yref
       character*(*)         xref  (2)
-      integer               xobs
-      double precision      xrad  (2)
-      integer               xshp  (2)
+      integer(ip)           xobs
+      real(wp)              xrad  (2)
+      integer(ip)           xshp  (2)
 
 ! $ Brief_I/O
 !
@@ -262,34 +263,34 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
       logical               failed
       logical               return
-      double precision      dvsep
-      double precision      dhfa
-      double precision      zzsepq
+      real(wp)              dvsep
+      real(wp)              dhfa
+      real(wp)              zzsepq
 
 !
 !     Local Variables
 !
-      double precision      axes1 (3)
-      double precision      axes2 (3)
+      real(wp)              axes1 (3)
+      real(wp)              axes2 (3)
 
-      double precision      pv1   (6)
-      double precision      pv2   (6)
+      real(wp)              pv1   (6)
+      real(wp)              pv2   (6)
 
-      double precision      dtheta
-      double precision      lt
+      real(wp)              dtheta
+      real(wp)              lt
 
       logical               attblk ( nabcor )
       logical               found
 
-      integer               fcode1
-      integer               fcode2
-      integer               class
-      integer               clssid
-      integer               ctr1
-      integer               ctr2
+      integer(ip)           fcode1
+      integer(ip)           fcode2
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           ctr1
+      integer(ip)           ctr2
 
 
 !
@@ -298,10 +299,10 @@
       character*(32)        svabcr
       save                  svabcr
 
-      integer               svbod1
+      integer(ip)           svbod1
       save                  svbod1
 
-      integer               svbod2
+      integer(ip)           svbod2
       save                  svbod2
 
       character*(32)        svref
@@ -313,19 +314,19 @@
       character*(32)        svref2
       save                  svref2
 
-      integer               svobs
+      integer(ip)           svobs
       save                  svobs
 
-      double precision      svrad1
+      real(wp)              svrad1
       save                  svrad1
 
-      double precision      svrad2
+      real(wp)              svrad2
       save                  svrad2
 
-      integer               svshp1
+      integer(ip)           svshp1
       save                  svshp1
 
-      integer               svshp2
+      integer(ip)           svshp2
       save                  svshp2
 
       character*(5)         ref
@@ -334,7 +335,7 @@
 !
 !     Below we initialize the list of shape names.
 !
-      integer               spshpn
+      integer(ip)           spshpn
       parameter           ( spshpn = 2 )
 
       character*(32)        svshap ( spshpn )
@@ -343,10 +344,10 @@
 !     Define integer ID parameters for the shape names in
 !     SVSHAP.
 !
-      integer               point
+      integer(ip)           point
       parameter           ( point = 1 )
 
-      integer               sphere
+      integer(ip)           sphere
       parameter           ( sphere = 2 )
 
       save                  svshap
@@ -715,7 +716,7 @@
 
       else if ( svshp1 .eq. point ) then
 
-         svrad1 = 0.d0
+         svrad1 = 0.0_wp
 
       else if ( svshp1 .eq. sphere ) then
 
@@ -764,7 +765,7 @@
 
       else if ( svshp2 .eq. point ) then
 
-         svrad2 = 0.d0
+         svrad2 = 0.0_wp
 
       else if ( svshp2 .eq. sphere ) then
 

@@ -1,6 +1,7 @@
 !$Procedure ZZGETVOX ( Coordinates of voxel containing a point )
 
       subroutine zzgetvox ( voxsiz, voxori, nvox, xyz, inbox, voxcor )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
 
       implicit none
 
-      double precision      voxsiz
-      double precision      voxori    ( 3 )
-      integer               nvox      ( 3 )
-      double precision      xyz       ( 3 )
+      real(wp)              voxsiz
+      real(wp)              voxori    ( 3 )
+      integer(ip)           nvox      ( 3 )
+      real(wp)              xyz       ( 3 )
       logical               inbox
-      integer               voxcor     ( 3 )
+      integer(ip)           voxcor     ( 3 )
 
 
 ! $ Brief_I/O
@@ -182,8 +183,8 @@
 !
 !     Local variables.
 !
-      double precision       term
-      integer                i
+      real(wp)               term
+      integer(ip)            i
 
 !
 !     Use discovery check-in.
@@ -192,7 +193,7 @@
          return
       end if
 
-      if ( voxsiz .le. 0.d0 ) then
+      if ( voxsiz .le. 0.0_wp ) then
 
          call chkin  ( 'ZZGETVOX'                            )
          call setmsg ( 'Voxel size was #; must be positive.' )
@@ -233,7 +234,7 @@
 !
 !        If the point is outside of the grid, return now.
 !
-         if ( ( term .lt. 0.d0 ) .or. ( term .gt. nvox(i) ) ) then
+         if ( ( term .lt. 0.0_wp ) .or. ( term .gt. nvox(i) ) ) then
 
             return
 

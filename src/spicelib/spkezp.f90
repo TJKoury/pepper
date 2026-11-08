@@ -1,6 +1,7 @@
 !$Procedure SPKEZP ( S/P Kernel, easy position )
 
       subroutine spkezp ( targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,13 +28,13 @@
       include               'zzctr.inc'
 
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      integer               obs
-      double precision      ptarg    ( 3 )
-      double precision      lt
+      integer(ip)           obs
+      real(wp)              ptarg    ( 3 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -814,7 +815,7 @@
 !
 !     SPICELIB functions
 !
-      integer               ltrim
+      integer(ip)           ltrim
 
       logical               eqchr
       logical               eqstr
@@ -830,25 +831,25 @@
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      double precision      ltcent
-      double precision      sobs     ( 6    )
-      double precision      postn    ( 3    )
-      double precision      temp     ( 3    )
-      double precision      xform    ( 3, 3 )
+      real(wp)              ltcent
+      real(wp)              sobs     ( 6    )
+      real(wp)              postn    ( 3    )
+      real(wp)              temp     ( 3    )
+      real(wp)              xform    ( 3, 3 )
 
-      integer               center
-      integer               fj2000
-      integer               i
-      integer               reqfrm
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           fj2000
+      integer(ip)           i
+      integer(ip)           reqfrm
+      integer(ip)           type
+      integer(ip)           typeid
 
       logical               first
       logical               found
@@ -857,9 +858,9 @@
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svref
-      integer               svreqf
+      integer(ip)           svreqf
 
 !
 !     Saved variables
@@ -991,7 +992,7 @@
          end if
 
          if ( center .eq. obs ) then
-            ltcent = 0.0d0
+            ltcent = 0.0_wp
          else if ( center .eq. targ ) then
             ltcent = lt
          else

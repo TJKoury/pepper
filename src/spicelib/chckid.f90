@@ -1,6 +1,7 @@
 !$Procedure CHCKID ( Check ID string )
 
       subroutine chckid ( class, maxlen, id )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         class
-      integer               maxlen
+      integer(ip)           maxlen
       character*(*)         id
 
 ! $ Brief_I/O
@@ -164,16 +165,16 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnp
-      integer               lastnb
+      integer(ip)           frstnp
+      integer(ip)           lastnb
       logical               return
 
 !
 !     Local variables
 !
-      integer               chrcod
-      integer               i
-      integer               l
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           l
 
 !
 !     Standard SPICE error handling.

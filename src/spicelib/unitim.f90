@@ -1,6 +1,7 @@
 !$Procedure UNITIM ( Uniform time scale transformation )
 
-      double precision function unitim ( epoch, insys, outsys )
+      real(wp) function unitim ( epoch, insys, outsys )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       include               'zzctr.inc'
 
-      double precision      epoch
+      real(wp)              epoch
       character*(*)         insys
       character*(*)         outsys
 
@@ -198,8 +199,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      j2000
-      double precision      spd
+      real(wp)              j2000
+      real(wp)              spd
 
       logical               elemc
       logical               failed
@@ -214,61 +215,61 @@
 !
 !     LBCELL is the bottom slot of a cell.
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 !
 !     NEEDED is the number of kernel pool variables needed by this
 !     routine.
 !
-      integer               needed
+      integer(ip)           needed
       parameter           ( needed = 4 )
 
 !
 !     LNGVAR is the length of the longest kernel pool variable name
 !     that is used by this routine.
 !
-      integer               lngvar
+      integer(ip)           lngvar
       parameter           ( lngvar = 16 )
 
 !
 !     MISLEN is the length required by the MISSED array of strings
 !     used for error messages.
 !
-      integer               mislen
+      integer(ip)           mislen
       parameter           ( mislen = 20 )
 !
 !     TYPLEN is the maximum length allowed for names of uniform
 !     time types.
 !
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen = 8 )
 
 !
 !     NTDT is the number of time types based on terrestrial dynamical
 !     time (TDT).
 !
-      integer               ntdt
+      integer(ip)           ntdt
       parameter           ( ntdt   = 5 )
 
 !
 !     NTDB is the number of time types base on barycentric dynamical
 !     time (TDB).
 !
-      integer               ntdb
+      integer(ip)           ntdb
       parameter           ( ntdb   = 4 )
 
 
 !
 !     NRECOG is the total number of recognized types.
 !
-      integer               nrecog
+      integer(ip)           nrecog
       parameter           ( nrecog = ntdb + ntdt )
 
 !
 !     Constant shift between GPS time system and TAI time system.
 !
-      double precision      gpstai
-      parameter           ( gpstai = 19.d0 )
+      real(wp)              gpstai
+      parameter           ( gpstai = 19.0_wp )
 
 
 !
@@ -284,19 +285,19 @@
       character*(typlen)    typtdb ( lbcell : ntdb      )
       character*(typlen)    typtdt ( lbcell : ntdt      )
 
-      double precision      dta
-      double precision      eb
-      double precision      jd2000
-      double precision      k
-      double precision      m     ( 0:1 )
-      double precision      mytime
-      double precision      secspd
-      double precision      tdb
-      double precision      tdt
+      real(wp)              dta
+      real(wp)              eb
+      real(wp)              jd2000
+      real(wp)              k
+      real(wp)              m     ( 0:1 )
+      real(wp)              mytime
+      real(wp)              secspd
+      real(wp)              tdb
+      real(wp)              tdt
 
-      integer               i
-      integer               n
-      integer               usrctr ( ctrsiz )
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           usrctr ( ctrsiz )
 
       logical               first
       logical               found    ( needed )
@@ -348,7 +349,7 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) then
-         unitim = 0.0d0
+         unitim = 0.0_wp
          return
       end if
 
@@ -421,7 +422,7 @@
          if ( failed() ) then
 
             nodata = .true.
-            unitim = 0.d0
+            unitim = 0.0_wp
 
             call chkout ( 'UNITIM' )
             return

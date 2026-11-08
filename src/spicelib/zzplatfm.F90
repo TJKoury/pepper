@@ -8,6 +8,7 @@
 !$Procedure ZZPLATFM ( Private --- Get platform attributes )
 
       subroutine zzplatfm ( key, value )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -248,7 +249,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
 !
 !     Local Parameters
@@ -259,55 +260,55 @@
 !
 !     SYSTEM Index.
 !
-      integer               idxsys
+      integer(ip)           idxsys
       parameter           ( idxsys = 1 )
 
 !
 !     O/S Index.
 !
-      integer               idxos
+      integer(ip)           idxos
       parameter           ( idxos  = idxsys + 1 )
 
 !
 !     Compiler Index.
 !
-      integer               idxcmp
+      integer(ip)           idxcmp
       parameter           ( idxcmp = idxos  + 1 )
 
 !
 !     Binary File Format Index.
 !
-      integer               idxfmt
+      integer(ip)           idxfmt
       parameter           ( idxfmt = idxcmp + 1 )
 
 !
 !     Text File Format Index
 !
-      integer               idxtfm
+      integer(ip)           idxtfm
       parameter           ( idxtfm = idxfmt + 1 )
 
 !
 !     Reads Binary File Format Index.
 !
-      integer               idxrbf
+      integer(ip)           idxrbf
       parameter           ( idxrbf = idxtfm + 1 )
 
 !
 !     Size of the buffer in which KEY is placed.
 !
-      integer               kysize
+      integer(ip)           kysize
       parameter           ( kysize = 64 )
 
 !
 !     Maximum Size of local string returned in VALUE
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 !
 !     Number of Platform Dependent values stored here.
 !
-      integer               nattr
+      integer(ip)           nattr
       parameter           ( nattr  =  6 )
 
 !
@@ -324,7 +325,7 @@
       character*(kysize)    keyval ( nattr )
       character*(wdsize)    attcpy ( 0 : nattr )
 
-      integer               index
+      integer(ip)           index
 
       logical               first
 

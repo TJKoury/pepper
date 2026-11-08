@@ -1,6 +1,7 @@
 !$Procedure TRACE ( Trace of a 3x3 matrix )
 
-      double precision function  trace ( matrix )
+      real(wp) function  trace ( matrix )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      double precision   matrix ( 3, 3 )
+      real(wp)           matrix ( 3, 3 )
 
 ! $ Brief_I/O
 !

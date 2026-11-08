@@ -1,6 +1,7 @@
 !$Procedure DAFRDA ( DAF, read data from address )
 
       subroutine dafrda ( handle, begin, end, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
       implicit none
 
-      integer               handle
-      integer               begin
-      integer               end
-      double precision      data     ( * )
+      integer(ip)           handle
+      integer(ip)           begin
+      integer(ip)           end
+      real(wp)              data     ( * )
 
 ! $ Brief_I/O
 !
@@ -206,18 +207,18 @@
 !
 !     Local variables
 !
-      integer               bsize
+      integer(ip)           bsize
       parameter           ( bsize = 128 )
 
-      integer               begr
-      integer               begw
-      integer               endr
-      integer               endw
+      integer(ip)           begr
+      integer(ip)           begw
+      integer(ip)           endr
+      integer(ip)           endw
 
-      integer               recno
-      integer               first
-      integer               last
-      integer               next
+      integer(ip)           recno
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           next
 
       logical               found
       logical               native

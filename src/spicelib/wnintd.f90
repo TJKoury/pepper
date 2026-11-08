@@ -1,6 +1,7 @@
 !$Procedure WNINTD ( Intersect two DP windows )
 
       subroutine wnintd ( a, b, c )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      a        ( lbcell:* )
-      double precision      b        ( lbcell:* )
-      double precision      c        ( lbcell:* )
+      real(wp)              a        ( lbcell:* )
+      real(wp)              b        ( lbcell:* )
+      real(wp)              c        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -145,22 +146,22 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
-      integer               sized
+      integer(ip)           cardd
+      integer(ip)           sized
       logical               return
 
 !
 !     Local variables
 !
-      integer               acard
-      integer               bcard
-      integer               csize
+      integer(ip)           acard
+      integer(ip)           bcard
+      integer(ip)           csize
 
-      integer               ap
-      integer               bp
-      integer               cp
+      integer(ip)           ap
+      integer(ip)           bp
+      integer(ip)           cp
       character*1           use
-      integer               over
+      integer(ip)           over
 
 
 

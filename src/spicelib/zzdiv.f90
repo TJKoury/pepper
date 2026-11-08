@@ -1,6 +1,7 @@
 !$Procedure ZZDIV ( Safer division )
 
-      double precision function zzdiv ( numr, denom )
+      real(wp) function zzdiv ( numr, denom )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision      numr
-      double precision      denom
+      real(wp)              numr
+      real(wp)              denom
 
 ! $ Brief_I/O
 !
@@ -284,19 +285,19 @@
 !
 
       logical               return
-      double precision      dpmax
+      real(wp)              dpmax
 
 !
 !     Local variables
 !
 
-      double precision      lognum
-      double precision      logden
+      real(wp)              lognum
+      real(wp)              logden
 
 !
 !     The bounds on the potential result of the calculation.
 !
-      double precision      expnt
+      real(wp)              expnt
 
 !
 !     First entry flag.
@@ -310,7 +311,7 @@
 !     Return on error.
 !
       if ( return() ) then
-         zzdiv = 0.d0
+         zzdiv = 0.0_wp
          return
       end if
 
@@ -333,7 +334,7 @@
 !
 !        A "floor" evaluation.
 !
-         expnt = dble( int( log10( dpmax() ) ) )
+         expnt = real( int( log10( dpmax() ) ), wp )
 
        end if
 
@@ -343,9 +344,9 @@
 !     This is equivalent to a signaling NaN (not-a-number) for
 !     the 0/0 case.
 !
-      if ( denom .eq. 0.d0 ) then
+      if ( denom .eq. 0.0_wp ) then
 
-         zzdiv = 0.d0
+         zzdiv = 0.0_wp
          call setmsg ( 'Numerical divide by zero event. ' &
                     // 'Numerator value #1.'             )
          call errdp  ( '#1', numr                        )
@@ -360,9 +361,9 @@
 !     If the numerator is zero, the division is zero. DENOM
 !     is known non-zero.
 !
-      if ( numr .eq. 0.d0 ) then
+      if ( numr .eq. 0.0_wp ) then
 
-         zzdiv = 0.d0
+         zzdiv = 0.0_wp
          call chkout ( 'ZZDIV' )
          return
 
@@ -387,7 +388,7 @@
 !
       if ( (lognum - logden) .gt. expnt ) then
 
-         zzdiv = 0.d0
+         zzdiv = 0.0_wp
          call setmsg ( 'Numerical overflow event. ' &
                     // 'Numerator value #1, denominator value #2.')
          call errdp  ( '#1', numr                                 )
@@ -402,9 +403,9 @@
 !     Local possible underflow check. Accept this may occur,
 !     return a zero.
 !
-      if ( (lognum - logden) .lt. -(expnt-1.d0) ) then
+      if ( (lognum - logden) .lt. -(expnt-1.0_wp) ) then
 
-         zzdiv = 0.d0
+         zzdiv = 0.0_wp
          call chkout ( 'ZZDIV' )
          return
 

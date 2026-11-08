@@ -1,6 +1,7 @@
 !$Procedure ZZEKESIZ ( EK, element entry size )
 
-      integer function zzekesiz ( handle, segdsc, coldsc, recptr )
+      integer(ip) function zzekesiz ( handle, segdsc, coldsc, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       include 'ekcnamsz.inc'
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               recptr
-      integer               coldsc ( cdscsz )
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           recptr
+      integer(ip)           coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -111,19 +112,19 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
-      integer               zzeksz04
-      integer               zzeksz05
-      integer               zzeksz06
+      integer(ip)           zzekrp2n
+      integer(ip)           zzeksz04
+      integer(ip)           zzeksz05
+      integer(ip)           zzeksz06
 
 !
 !     Local variables
 !
       character*(cnamsz)    column
 
-      integer               class
-      integer               recno
-      integer               segno
+      integer(ip)           class
+      integer(ip)           recno
+      integer(ip)           segno
 
 !
 !     Initialize the function's return value.

@@ -1,6 +1,7 @@
 !$Procedure FRSTPC ( First printable character )
 
-      integer function frstpc ( string )
+      integer(ip) function frstpc ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -138,7 +139,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

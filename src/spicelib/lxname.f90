@@ -2,6 +2,7 @@
 
       subroutine lxname ( hdchrs, tlchrs, string, first, last, idspec, &
                           nchar                                        )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,19 +24,19 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               mxspec
+      integer(ip)           mxspec
       parameter           ( mxspec = 512 )
 
       character*(*)         hdchrs
       character*(*)         tlchrs
       character*(*)         string
-      integer               first
-      integer               idspec ( lbcell : * )
-      integer               last
-      integer               nchar
+      integer(ip)           first
+      integer(ip)           idspec ( lbcell : * )
+      integer(ip)           last
+      integer(ip)           nchar
 
 ! $ Brief_I/O
 !
@@ -277,53 +278,53 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchi
-      integer               cardi
-      integer               rtrim
+      integer(ip)           bsrchi
+      integer(ip)           cardi
+      integer(ip)           rtrim
 
       logical               return
 
 !
 !     Local parameters
 !
-      integer               maxchr
+      integer(ip)           maxchr
       parameter           ( maxchr = 255 )
 
-      integer               blank
+      integer(ip)           blank
       parameter           ( blank  = 32  )
 
-      integer               minprt
+      integer(ip)           minprt
       parameter           ( minprt = 32 )
 
-      integer               maxprt
+      integer(ip)           maxprt
       parameter           ( maxprt = 126 )
 
 !
 !     IDSPEC parameters:
 !
-      integer               nhpos
+      integer(ip)           nhpos
       parameter           ( nhpos  = 1 )
 
-      integer               ntpos
+      integer(ip)           ntpos
       parameter           ( ntpos  = 2 )
 
-      integer               hcpos
+      integer(ip)           hcpos
       parameter           ( hcpos  = 3 )
 
 
 !
 !     Local variables
 !
-      integer               c
-      integer               headc  ( lbcell : maxchr )
-      integer               hl
-      integer               i
-      integer               l
-      integer               nhead
-      integer               ntail
-      integer               tailc  ( lbcell : maxchr )
-      integer               tcpos
-      integer               tl
+      integer(ip)           c
+      integer(ip)           headc  ( lbcell : maxchr )
+      integer(ip)           hl
+      integer(ip)           i
+      integer(ip)           l
+      integer(ip)           nhead
+      integer(ip)           ntail
+      integer(ip)           tailc  ( lbcell : maxchr )
+      integer(ip)           tcpos
+      integer(ip)           tl
 
 !
 !     Standard SPICE error handling.

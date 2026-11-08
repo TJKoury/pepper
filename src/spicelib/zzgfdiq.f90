@@ -1,6 +1,7 @@
 !$Procedure      ZZGFDIQ ( GF, return distance between objects )
 
       subroutine zzgfdiq ( targid, et, abcorr, obsid, dist )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,11 +30,11 @@
 
       implicit none
 
-      integer               targid
-      double precision      et
+      integer(ip)           targid
+      real(wp)              et
       character*(*)         abcorr
-      integer               obsid
-      double precision      dist
+      integer(ip)           obsid
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -146,7 +147,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
       logical               failed
       logical               return
@@ -154,8 +155,8 @@
 !
 !     Local Variables
 !
-      double precision      lt
-      double precision      pos   ( 3 )
+      real(wp)              lt
+      real(wp)              pos   ( 3 )
 
 !
 !     Standard SPICE error handling.

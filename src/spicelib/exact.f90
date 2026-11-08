@@ -1,6 +1,7 @@
 !$Procedure EXACT ( Round to exact value )
 
-      double precision function exact ( number, value, tol )
+      real(wp) function exact ( number, value, tol )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      number
-      double precision      value
-      double precision      tol
+      real(wp)              number
+      real(wp)              value
+      real(wp)              tol
 
 ! $ Brief_I/O
 !

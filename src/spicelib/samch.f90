@@ -1,6 +1,7 @@
 !$Procedure SAMCH ( Same character )
 
       logical function samch ( str1, l1, str2, l2 )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       implicit none
 
       character*(*)         str1
-      integer               l1
+      integer(ip)           l1
       character*(*)         str2
-      integer               l2
+      integer(ip)           l2
 
 ! $ Brief_I/O
 !

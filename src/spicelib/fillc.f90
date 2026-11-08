@@ -1,6 +1,7 @@
 !$Procedure FILLC ( Fill a character array )
 
       subroutine fillc ( value, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       character*(*)    value
-      integer          ndim
+      integer(ip)      ndim
       character*(*)    array ( * )
 
 ! $ Brief_I/O
@@ -115,7 +116,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
 

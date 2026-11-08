@@ -2,6 +2,7 @@
 
       subroutine zzekac08 (  handle,  segdsc,  coldsc, &
                              dvals,   nlflgs,  wkindx  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,12 +28,12 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
-      double precision      dvals  ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
+      real(wp)              dvals  ( * )
       logical               nlflgs ( * )
-      integer               wkindx ( * )
+      integer(ip)           wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -161,25 +162,25 @@
 !
       character*(cnamsz)    column
 
-      double precision      page   ( pgsizd )
+      real(wp)              page   ( pgsizd )
 
-      integer               class
-      integer               cmbase
-      integer               colidx
-      integer               datbas
-      integer               dscbas
-      integer               from
-      integer               idxbas
-      integer               idxpag
-      integer               idxtyp
-      integer               p
-      integer               mbase
-      integer               nflbas
-      integer               nflpag
-      integer               npage
-      integer               nrows
-      integer               nulptr
-      integer               to
+      integer(ip)           class
+      integer(ip)           cmbase
+      integer(ip)           colidx
+      integer(ip)           datbas
+      integer(ip)           dscbas
+      integer(ip)           from
+      integer(ip)           idxbas
+      integer(ip)           idxpag
+      integer(ip)           idxtyp
+      integer(ip)           p
+      integer(ip)           mbase
+      integer(ip)           nflbas
+      integer(ip)           nflpag
+      integer(ip)           npage
+      integer(ip)           nrows
+      integer(ip)           nulptr
+      integer(ip)           to
 
       logical               indexd
       logical               nullok

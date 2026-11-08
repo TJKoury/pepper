@@ -1,6 +1,7 @@
 !$Procedure DSKV02 ( DSK, fetch type 2 vertex data )
 
       subroutine dskv02 ( handle, dladsc, start, room, n, vrtces )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,12 +26,12 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               start
-      integer               room
-      integer               n
-      double precision      vrtces ( 3, * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           start
+      integer(ip)           room
+      integer(ip)           n
+      real(wp)              vrtces ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -396,13 +397,13 @@
 !
 !     Local variables
 !
-      double precision      dskdsc ( dskdsz )
+      real(wp)              dskdsc ( dskdsz )
 
-      integer               lcroom
-      integer               lcstrt
-      integer               np
-      integer               nv
-      integer               unit
+      integer(ip)           lcroom
+      integer(ip)           lcstrt
+      integer(ip)           np
+      integer(ip)           nv
+      integer(ip)           unit
 
       if ( return() ) then
          return

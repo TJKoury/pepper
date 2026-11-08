@@ -1,6 +1,7 @@
 !$Procedure SGMETA ( Generic segments: Fetch meta data value )
 
       subroutine sgmeta ( handle, descr, mnemon, value )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      integer               mnemon
-      integer               value
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      integer(ip)           mnemon
+      integer(ip)           value
 
 ! $ Brief_I/O
 !
@@ -246,27 +247,27 @@
 !
 !     Local Variables
 !
-      integer               ametas
-      integer               begin
-      integer               begmta
-      integer               begm1
-      integer               end
-      integer               endmta
-      integer               i
-      integer               ioffst
-      integer               lstbeg
-      integer               lsthan
-      integer               meta   ( mxmeta )
-      integer               metasz
-      integer               nd
-      integer               ni
-      integer               niovr2
+      integer(ip)           ametas
+      integer(ip)           begin
+      integer(ip)           begmta
+      integer(ip)           begm1
+      integer(ip)           end
+      integer(ip)           endmta
+      integer(ip)           i
+      integer(ip)           ioffst
+      integer(ip)           lstbeg
+      integer(ip)           lsthan
+      integer(ip)           meta   ( mxmeta )
+      integer(ip)           metasz
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           niovr2
 
-      double precision      dmtasz
-      double precision      xmeta  ( mxmeta )
+      real(wp)              dmtasz
+      real(wp)              xmeta  ( mxmeta )
 
-      double precision      dtemp  (      2 )
-      integer               itemp  (      4 )
+      real(wp)              dtemp  (      2 )
+      integer(ip)           itemp  (      4 )
 
       equivalence         ( dtemp, itemp )
 

@@ -1,6 +1,7 @@
 !$Procedure OSCELT ( Determine conic elements from state )
 
       subroutine oscelt ( state, et, mu, elts )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      state  ( 6 )
-      double precision      et
-      double precision      mu
-      double precision      elts   ( 8 )
+      real(wp)              state  ( 6 )
+      real(wp)              et
+      real(wp)              mu
+      real(wp)              elts   ( 8 )
 
 ! $ Brief_I/O
 !
@@ -579,13 +580,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      dacosh
-      double precision      exact
-      double precision      pi
-      double precision      twopi
-      double precision      vnorm
-      double precision      vdot
-      double precision      vsep
+      real(wp)              dacosh
+      real(wp)              exact
+      real(wp)              pi
+      real(wp)              twopi
+      real(wp)              vnorm
+      real(wp)              vdot
+      real(wp)              vsep
 
       logical               return
       logical               vzero
@@ -593,35 +594,35 @@
 !
 !     Local parameters
 !
-      double precision      close
-      parameter           ( close = 1.d-10 )
+      real(wp)              close
+      parameter           ( close = 1.0e-10_wp )
 
 !
 !     Local variables
 !
-      double precision      argp
-      double precision      cosea
-      double precision      coshf
-      double precision      e      ( 3 )
-      double precision      ea
-      double precision      ecc
-      double precision      h      ( 3 )
-      double precision      inc
-      double precision      lnode
-      double precision      m0
-      double precision      n      ( 3 )
-      double precision      nu
-      double precision      p
-      double precision      perix  ( 3 )
-      double precision      periy  ( 3 )
-      double precision      r      ( 3 )
-      double precision      rmag
-      double precision      rp
-      double precision      sinea
-      double precision      v      ( 3 )
-      double precision      vmag
-      double precision      xprod  ( 3 )
-      double precision      zvec   ( 3 )
+      real(wp)              argp
+      real(wp)              cosea
+      real(wp)              coshf
+      real(wp)              e      ( 3 )
+      real(wp)              ea
+      real(wp)              ecc
+      real(wp)              h      ( 3 )
+      real(wp)              inc
+      real(wp)              lnode
+      real(wp)              m0
+      real(wp)              n      ( 3 )
+      real(wp)              nu
+      real(wp)              p
+      real(wp)              perix  ( 3 )
+      real(wp)              periy  ( 3 )
+      real(wp)              r      ( 3 )
+      real(wp)              rmag
+      real(wp)              rp
+      real(wp)              sinea
+      real(wp)              v      ( 3 )
+      real(wp)              vmag
+      real(wp)              xprod  ( 3 )
+      real(wp)              zvec   ( 3 )
 
 !
 !     Saved variables
@@ -631,7 +632,7 @@
 !
 !     Initial values
 !
-      data                  zvec / 0.d0, 0.d0, 1.d0 /
+      data                  zvec / 0.0_wp, 0.0_wp, 1.0_wp /
 
 !
 !     Standard SPICE error handling.
@@ -643,7 +644,7 @@
       end if
 
 
-      if ( mu .le. 0.0d0 ) then
+      if ( mu .le. 0.0_wp ) then
 
          call setmsg ( 'MU = #; non-positive gravitational parameter' )
          call errdp  ( '#',  mu                                       )
@@ -729,10 +730,10 @@
       end if
 
 
-      call vpack  ( -h(2), h(1), 0.d0, n )
+      call vpack  ( -h(2), h(1), 0.0_wp, n )
 
       call vlcom  ( vmag**2 - mu/rmag,  r,  -vdot(r,v),  v,  e )
-      call vsclip ( 1.d0/mu, e )
+      call vsclip ( 1.0_wp/mu, e )
 
 
 !
@@ -747,10 +748,10 @@
 !     specific angular momentum of the orbiting object.
 !
 
-      ecc = exact ( vnorm ( e ), 1.d0, close )
+      ecc = exact ( vnorm ( e ), 1.0_wp, close )
 
       p   = vdot  ( h,h ) / mu
-      rp  = p / (1.d0 + ecc)
+      rp  = p / (1.0_wp + ecc)
 
 !
 !     Next, the orientation of the orbit.
@@ -765,13 +766,13 @@
 
       inc = vsep ( h, zvec )
 
-      if ( abs ( inc - 0.d0 ) .lt. close ) then
-         inc = 0.d0
-         call vpack ( 1.d0, 0.d0, 0.d0, n )
+      if ( abs ( inc - 0.0_wp ) .lt. close ) then
+         inc = 0.0_wp
+         call vpack ( 1.0_wp, 0.0_wp, 0.0_wp, n )
 
       else if ( abs ( inc - pi() ) .lt. close ) then
          inc = pi()
-         call vpack ( 1.d0, 0.d0, 0.d0, n )
+         call vpack ( 1.0_wp, 0.0_wp, 0.0_wp, n )
       end if
 
 !
@@ -782,7 +783,7 @@
 !
       lnode = atan2 ( n(2), n(1) )
 
-      if ( lnode .lt. 0.d0 ) then
+      if ( lnode .lt. 0.0_wp ) then
          lnode = lnode + twopi()
       end if
 
@@ -793,9 +794,9 @@
 !     circular orbits.
 !
 !
-      if ( ecc .eq. 0.d0 ) then
+      if ( ecc .eq. 0.0_wp ) then
 
-         argp = 0.d0
+         argp = 0.0_wp
 
       else
 
@@ -805,22 +806,22 @@
          argp = vsep ( n, e )
 
 
-         if ( argp .ne. 0.d0 ) then
+         if ( argp .ne. 0.0_wp ) then
 
-            if (  ( inc .eq. 0.d0 ) .or. ( inc .eq. pi() )  ) then
+            if (  ( inc .eq. 0.0_wp ) .or. ( inc .eq. pi() )  ) then
 !
 !              The quadrant of ARGP is determined by the component of E
 !              in the direction H x N.
 !
                call ucrss ( h, n, xprod )
 
-               if (  vdot( e, xprod ) .lt. 0.d0 ) then
+               if (  vdot( e, xprod ) .lt. 0.0_wp ) then
 
                   argp = twopi() - argp
 
                end if
 
-            else if ( e(3) .lt. 0.d0 ) then
+            else if ( e(3) .lt. 0.0_wp ) then
 !
 !              The periapsis is below the reference plane;  the argument
 !              of periapsis must be greater than 180 degrees.
@@ -844,7 +845,7 @@
 !     We express the position in the perifocal frame in order to
 !     extract nu.
 !
-      if ( ecc .eq. 0.d0 ) then
+      if ( ecc .eq. 0.0_wp ) then
 !
 !        In this case, the argument of periapse is set to zero,
 !        so the nu is measured from N.
@@ -888,13 +889,13 @@
 !     For elliptic orbits, the mean anomaly should be in [0,2*pi].
 !
 
-      if ( ecc .lt. 1.d0 ) then
+      if ( ecc .lt. 1.0_wp ) then
 !
 !        For improved numerical performance, we compute both the
 !        sine and cosine of the eccentric anomaly, then let ATAN2
 !        find the eccentric anomaly.
 !
-         cosea  = ( ecc + cos(nu) )  /  ( 1.d0 + ecc*cos(nu) )
+         cosea  = ( ecc + cos(nu) )  /  ( 1.0_wp + ecc*cos(nu) )
 
 !
 !        Here we use the relationships (here b is the length
@@ -907,32 +908,32 @@
 !                    = (r/rp) \/ (1-e) / (1+e)  sin(nu)
 !
 !
-         sinea  = (rmag/rp) * sqrt( (1.d0-ecc) / (1.d0+ecc) ) * sin(nu)
+         sinea  = (rmag/rp) * sqrt( (1.0_wp-ecc) / (1.0_wp+ecc) ) * sin(nu)
 
          ea     =  atan2 ( sinea, cosea )
 
          m0     =  sign ( ea - ecc*sin(ea),  nu )
 
-         if ( m0 .lt. 0.d0 ) then
+         if ( m0 .lt. 0.0_wp ) then
 
             m0 = m0 + twopi()
 
          end if
 
 
-      else if ( ecc .gt. 1.d0 ) then
+      else if ( ecc .gt. 1.0_wp ) then
 
-         coshf = (ecc + cos(nu)) / (1.d0 + ecc*cos(nu))
+         coshf = (ecc + cos(nu)) / (1.0_wp + ecc*cos(nu))
 
-         ea    =  dacosh (  max ( 1.d0, coshf )  )
+         ea    =  dacosh (  max ( 1.0_wp, coshf )  )
 
          m0    =  sign( ecc*sinh(ea) - ea,  nu )
 
 
       else
 
-         ea = tan(nu/2.d0)
-         m0 = sign ( ea + ea**3/3.d0,  nu )
+         ea = tan(nu/2.0_wp)
+         m0 = sign ( ea + ea**3/3.0_wp,  nu )
 
       end if
 

@@ -2,6 +2,7 @@
 
       subroutine zzekerc1 (  handle,  segdsc,  coldsc,  ckey, &
                              recptr,  null,    prvidx,  prvptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,14 +27,14 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
       character*(*)         ckey
-      integer               recptr
+      integer(ip)           recptr
       logical               null
-      integer               prvidx
-      integer               prvptr
+      integer(ip)           prvidx
+      integer(ip)           prvptr
 
 ! $ Brief_I/O
 !
@@ -172,22 +173,22 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrsz
+      integer(ip)           zzektrsz
 
       logical               zzekscmp
 
 !
 !     Local variables
 !
-      integer               begin
-      integer               begptr
-      integer               end
-      integer               endptr
-      integer               middle
-      integer               midptr
-      integer               nrec
-      integer               tree
-      integer               tsize
+      integer(ip)           begin
+      integer(ip)           begptr
+      integer(ip)           end
+      integer(ip)           endptr
+      integer(ip)           middle
+      integer(ip)           midptr
+      integer(ip)           nrec
+      integer(ip)           tree
+      integer(ip)           tsize
 
       logical               leq
 
@@ -249,7 +250,7 @@
 !
       if  (  zzekscmp ( gt,      handle,  segdsc,  coldsc, &
                         begptr,  1,       chr,     ckey, &
-                        0.d0,    0,       null            )  ) then
+                        0.0_wp,    0,       null            )  ) then
 !
 !        The smallest entry of the column is greater than
 !        the input value, so none of the entries
@@ -262,7 +263,7 @@
 
       else if  (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                              begptr,  1,       chr,     ckey, &
-                             0.d0,    0,       null            ) &
+                             0.0_wp,    0,       null            ) &
 
                 .and.      (  recptr  .lt.  begptr )             ) then
 !
@@ -285,7 +286,7 @@
 !
       if (  zzekscmp ( lt,      handle,  segdsc,   coldsc, &
                        endptr,  1,       chr,      ckey, &
-                       0.d0,    0,       null             )  ) then
+                       0.0_wp,    0,       null             )  ) then
 !
 !        The last element of the column is less than the
 !        input value.
@@ -299,7 +300,7 @@
 
       else if (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                             endptr,  1,       chr,     ckey, &
-                            0.d0,    0,       null             ) &
+                            0.0_wp,    0,       null             ) &
 
                .and.      (  endptr  .le.  recptr )       ) then
 !
@@ -337,7 +338,7 @@
 !
          if (  zzekscmp ( lt,      handle,  segdsc,  coldsc, &
                           midptr,  1,       chr,     ckey, &
-                          0.d0,    0,       null            )  ) then
+                          0.0_wp,    0,       null            )  ) then
 !
 !           The column element at record MIDPTR is less than
 !           or equal to CKEY, based on data values.
@@ -347,7 +348,7 @@
 
          else if ( zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                               midptr,  1,       chr,     ckey, &
-                              0.d0,    0,       null           ) ) then
+                              0.0_wp,    0,       null           ) ) then
 !
 !           The column entry's value matches CKEY.  We must
 !           compare record pointers at this point.

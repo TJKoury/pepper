@@ -1,6 +1,7 @@
 !$Procedure SPKE08 ( S/P Kernel, evaluate, type 8 )
 
       subroutine spke08 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       include 'spkrec.inc'
 
-      double precision      et
-      double precision      record ( * )
-      double precision      state  ( 6 )
+      real(wp)              et
+      real(wp)              record ( * )
+      real(wp)              state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -187,7 +188,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      lgresp
+      real(wp)              lgresp
       logical               return
 
 !
@@ -196,7 +197,7 @@
 !
 !     Size of a state vector:
 !
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz = 6 )
 
 !
@@ -207,27 +208,27 @@
 !        -- step size
 !        -- start of state information
 !
-      integer               sizidx
+      integer(ip)           sizidx
       parameter           ( sizidx = 1 )
 
-      integer               begidx
+      integer(ip)           begidx
       parameter           ( begidx = 2 )
 
-      integer               stpidx
+      integer(ip)           stpidx
       parameter           ( stpidx = 3 )
 
-      integer               staidx
+      integer(ip)           staidx
       parameter           ( staidx = 4 )
 
 !
 !     Local variables
 !
-      double precision      locrec ( maxrec )
-      double precision      work   ( maxrec )
+      real(wp)              locrec ( maxrec )
+      real(wp)              work   ( maxrec )
 
-      integer               i
-      integer               n
-      integer               ystart
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           ystart
 
 !
 !     Saved values
@@ -244,7 +245,7 @@
 !
 !     Initialize the workspace array to suppress compiler warnings.
 !
-      data                  work / maxrec * 0.d0 /
+      data                  work / maxrec * 0.0_wp /
 
 !
 !     Use discovery check-in.

@@ -1,6 +1,7 @@
 !$Procedure QDERIV ( Quadratic derivative )
 
       subroutine qderiv ( ndim, f0, f2, delta, dfdt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       implicit none
 
-      integer               ndim
-      double precision      f0    ( ndim )
-      double precision      f2    ( ndim )
-      double precision      delta
-      double precision      dfdt  ( ndim )
+      integer(ip)           ndim
+      real(wp)              f0    ( ndim )
+      real(wp)              f2    ( ndim )
+      real(wp)              delta
+      real(wp)              dfdt  ( ndim )
 
 ! $ Brief_I/O
 !
@@ -194,7 +195,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( delta .eq. 0.d0 ) then
+      if ( delta .eq. 0.0_wp ) then
 
          call chkin  ( 'QDERIV'                                    )
          call setmsg ( 'Delta abscissa value is zero; a non-zero ' // &
@@ -218,7 +219,7 @@
 !        =    (0.5/DELTA) * F(X2)  +  (-0.5/DELTA) * F(X0)
 !
 !
-      call vlcomg (  ndim, 0.5d0/delta, f2, -0.5d0/delta, f0, dfdt )
+      call vlcomg (  ndim, 0.5_wp/delta, f2, -0.5_wp/delta, f0, dfdt )
 
       return
       end

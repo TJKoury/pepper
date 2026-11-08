@@ -1,6 +1,7 @@
 !$Procedure ZZDASGRD ( DAS, get record, double precision )
 
       subroutine zzdasgrd ( handle, recno, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,9 +27,9 @@
 
       include 'das.inc'
 
-      integer               handle
-      integer               recno
-      double precision      record ( nwd )
+      integer(ip)           handle
+      integer(ip)           recno
+      real(wp)              record ( nwd )
 
 ! $ Brief_I/O
 !
@@ -121,7 +122,7 @@
 !
 !     Local parameters
 !
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 
 !
@@ -130,12 +131,12 @@
       character*(nwc)       chrrec
       character*(filsiz)    fname
 
-      integer               intamh
-      integer               intarc
-      integer               intbff
-      integer               iostat
-      integer               natbff
-      integer               unit
+      integer(ip)           intamh
+      integer(ip)           intarc
+      integer(ip)           intbff
+      integer(ip)           iostat
+      integer(ip)           natbff
+      integer(ip)           unit
 
       logical               first
       logical               found

@@ -2,6 +2,7 @@
 
       subroutine dasrfr ( handle, idword, ifname, nresvr, &
                           nresvc, ncomr,  ncomc          )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,13 +23,13 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         idword
       character*(*)         ifname
-      integer               nresvr
-      integer               nresvc
-      integer               ncomr
-      integer               ncomc
+      integer(ip)           nresvr
+      integer(ip)           nresvc
+      integer(ip)           ncomr
+      integer(ip)           ncomc
 
 ! $ Brief_I/O
 !

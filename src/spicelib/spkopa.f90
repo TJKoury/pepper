@@ -1,6 +1,7 @@
 !$Procedure SPKOPA ( SPK open for addition )
 
       subroutine spkopa ( file, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
       implicit none
 
       character*(*)         file
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -296,7 +297,7 @@
 !
 !     Local parameters
 !
-      integer               smwdsz
+      integer(ip)           smwdsz
       parameter           ( smwdsz = 8 )
 
 !

@@ -1,6 +1,7 @@
 !$Procedure ZZEKSZ04 ( EK, element entry size, class 4 )
 
-      integer function zzeksz04 ( handle, segdsc, coldsc, recptr )
+      integer(ip) function zzeksz04 ( handle, segdsc, coldsc, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,10 +25,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               recptr
-      integer               coldsc ( cdscsz )
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           recptr
+      integer(ip)           coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !
@@ -116,11 +117,11 @@
 !
 !     Local variables
 !
-      integer               colidx
-      integer               datptr
-      integer               ncols
-      integer               nrec
-      integer               ptrloc
+      integer(ip)           colidx
+      integer(ip)           datptr
+      integer(ip)           ncols
+      integer(ip)           nrec
+      integer(ip)           ptrloc
 
 !
 !     Use discovery check-in.

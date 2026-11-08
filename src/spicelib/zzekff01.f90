@@ -1,6 +1,7 @@
 !$Procedure      ZZEKFF01 ( EK, finish fast load, segment type 1 )
 
       subroutine zzekff01 ( handle, segno, rcptrs )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
-      integer               rcptrs ( * )
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -126,40 +127,40 @@
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      integer               addrss
-      integer               adrbuf ( bufsiz )
-      integer               base
-      integer               col
-      integer               colidx
-      integer               colord ( mxclsg )
-      integer               i
-      integer               ipage  ( pgsizi )
-      integer               j
-      integer               loc
-      integer               mbase
-      integer               ncols
-      integer               npage
-      integer               nr
-      integer               nrows
-      integer               nrp
-      integer               p
-      integer               pagloc
-      integer               pbase
-      integer               recno
-      integer               remain
-      integer               row
-      integer               rpsize
-      integer               segdsc ( sdscsz )
-      integer               stkbas
-      integer               stkhan
-      integer               stkseg
-      integer               tree
+      integer(ip)           addrss
+      integer(ip)           adrbuf ( bufsiz )
+      integer(ip)           base
+      integer(ip)           col
+      integer(ip)           colidx
+      integer(ip)           colord ( mxclsg )
+      integer(ip)           i
+      integer(ip)           ipage  ( pgsizi )
+      integer(ip)           j
+      integer(ip)           loc
+      integer(ip)           mbase
+      integer(ip)           ncols
+      integer(ip)           npage
+      integer(ip)           nr
+      integer(ip)           nrows
+      integer(ip)           nrp
+      integer(ip)           p
+      integer(ip)           pagloc
+      integer(ip)           pbase
+      integer(ip)           recno
+      integer(ip)           remain
+      integer(ip)           row
+      integer(ip)           rpsize
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           stkbas
+      integer(ip)           stkhan
+      integer(ip)           stkseg
+      integer(ip)           tree
 
 !
 !     Standard SPICE error handling.

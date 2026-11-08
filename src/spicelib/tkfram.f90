@@ -1,6 +1,7 @@
 !$Procedure TKFRAM ( TK frame, find position rotation )
 
       subroutine tkfram ( frcode, rot, frame, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               frcode
-      double precision      rot   ( 3, 3 )
-      integer               frame
+      integer(ip)           frcode
+      real(wp)              rot   ( 3, 3 )
+      integer(ip)           frame
       logical               found
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 200 )
 
 ! $ Brief_I/O
@@ -360,11 +361,11 @@
 !
 !     Spicelib Functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
-      integer               lnknfn
-      integer               lnktl
-      integer               rtrim
+      integer(ip)           lnknfn
+      integer(ip)           lnktl
+      integer(ip)           rtrim
 
       logical               badkpv
       logical               failed
@@ -374,28 +375,28 @@
 !     Local Parameters
 !
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      integer               nitems
+      integer(ip)           nitems
       parameter           ( nitems = 14 )
 
-      integer               nvars
+      integer(ip)           nvars
       parameter           ( nvars = 14 )
 
-      integer               ndps
+      integer(ip)           ndps
       parameter           ( ndps  =  9 )
 
-      integer               dbufsz
+      integer(ip)           dbufsz
       parameter           ( dbufsz = ndps * bufsiz )
 
-      integer               nints
+      integer(ip)           nints
       parameter           ( nints =  1 )
 
-      integer               ibufsz
+      integer(ip)           ibufsz
       parameter           ( ibufsz = nints * bufsiz )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
 
@@ -414,25 +415,25 @@
       character*(1)         type
       character*(wdsize)    units
 
-      double precision      angles ( 3 )
-      double precision      buffd  ( ndps, bufsiz )
-      double precision      matrix ( 3,    3      )
-      double precision      quatrn ( 0:3 )
-      double precision      qtmp   ( 0:3 )
-      double precision      tempd
+      real(wp)              angles ( 3 )
+      real(wp)              buffd  ( ndps, bufsiz )
+      real(wp)              matrix ( 3,    3      )
+      real(wp)              quatrn ( 0:3 )
+      real(wp)              qtmp   ( 0:3 )
+      real(wp)              tempd
 
-      integer               ar
-      integer               at
-      integer               axes   ( 3 )
-      integer               buffi  ( nints,     bufsiz )
-      integer               i
-      integer               idents ( 1,         bufsiz )
-      integer               idnt   ( 1 )
-      integer               n
-      integer               oldid
-      integer               pool   ( 2, lbpool: bufsiz )
-      integer               r
-      integer               tail
+      integer(ip)           ar
+      integer(ip)           at
+      integer(ip)           axes   ( 3 )
+      integer(ip)           buffi  ( nints,     bufsiz )
+      integer(ip)           i
+      integer(ip)           idents ( 1,         bufsiz )
+      integer(ip)           idnt   ( 1 )
+      integer(ip)           n
+      integer(ip)           oldid
+      integer(ip)           pool   ( 2, lbpool: bufsiz )
+      integer(ip)           r
+      integer(ip)           tail
 
       logical               buffrd
       logical               first
@@ -451,7 +452,7 @@
 !     Initial values
 !
       data                  at     /  0            /
-      data                  buffd  / dbufsz * 0.d0 /
+      data                  buffd  / dbufsz * 0.0_wp /
       data                  buffi  / ibufsz * 0    /
       data                  first  / .true.        /
       data                  idents / bufsiz * 0    /
@@ -833,12 +834,12 @@
 !           The matrix might not be right-handed, so correct
 !           the sense of the second and third columns if necessary.
 !
-            if ( vdot( rot(1,2), matrix(1,2) ) .lt. 0.0d0 ) then
-               call vsclip ( -1.0d0, rot(1,2) )
+            if ( vdot( rot(1,2), matrix(1,2) ) .lt. 0.0_wp ) then
+               call vsclip ( -1.0_wp, rot(1,2) )
             end if
 
-            if ( vdot( rot(1,3), matrix(1,3) ) .lt. 0.0d0 ) then
-               call vsclip ( -1.0d0, rot(1,3) )
+            if ( vdot( rot(1,3), matrix(1,3) ) .lt. 0.0_wp ) then
+               call vsclip ( -1.0_wp, rot(1,3) )
             end if
 
 

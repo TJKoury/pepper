@@ -1,6 +1,7 @@
 !$Procedure ZZGFPAQ ( Private --- GF, phase angle between bodies )
 
       subroutine zzgfpaq ( et, targ, illmn, obs, abcorr, value )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,12 +27,12 @@
 
       implicit none
 
-      double precision      et
-      integer               targ
-      integer               illmn
-      integer               obs
+      real(wp)              et
+      integer(ip)           targ
+      integer(ip)           illmn
+      integer(ip)           obs
       character*(*)         abcorr
-      double precision      value
+      real(wp)              value
 
 ! $ Brief_I/O
 !
@@ -146,16 +147,16 @@
       logical               return
       logical               eqstr
 
-      double precision      vsep
-      double precision      pi
+      real(wp)              vsep
+      real(wp)              pi
 
 !
 !     Local Variables.
 !
-      double precision      lt
-      double precision      sep
-      double precision      pv1    ( 3 )
-      double precision      pv2    ( 3 )
+      real(wp)              lt
+      real(wp)              sep
+      real(wp)              pv1    ( 3 )
+      real(wp)              pv2    ( 3 )
 
       character*(5)         ref
 

@@ -1,6 +1,7 @@
 !$Procedure ZZSTELAB ( Private --- stellar aberration correction )
 
       subroutine zzstelab ( xmit, accobs, vobs, starg, scorr, dscorr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,11 +26,11 @@
       implicit none
 
       logical               xmit
-      double precision      accobs ( 3 )
-      double precision      vobs   ( 3 )
-      double precision      starg  ( 6 )
-      double precision      scorr  ( 3 )
-      double precision      dscorr ( 3 )
+      real(wp)              accobs ( 3 )
+      real(wp)              vobs   ( 3 )
+      real(wp)              starg  ( 6 )
+      real(wp)              scorr  ( 3 )
+      real(wp)              dscorr ( 3 )
 
 ! $ Brief_I/O
 !
@@ -176,9 +177,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               return
       logical               vzero
@@ -193,47 +194,47 @@
 !     computed analytically. When sin(PHI) is less than SEPLIM, the
 !     velocity must be computed numerically.
 !
-      double precision      seplim
-      parameter           ( seplim = 1.d-6 )
+      real(wp)              seplim
+      parameter           ( seplim = 1.0e-6_wp )
 
 !
 !     Let TDELTA be the time interval, measured in seconds,
 !     used for numerical differentiation of the stellar
 !     aberration correction, when this is necessary.
 !
-      double precision      tdelta
-      parameter           ( tdelta = 1.d0 )
+      real(wp)              tdelta
+      parameter           ( tdelta = 1.0_wp )
 
 !
 !     Local variables
 !
-      double precision      c
-      double precision      dphi
-      double precision      dptmag
-      double precision      drhat  ( 3 )
-      double precision      dvp    ( 3 )
-      double precision      dvphat ( 3 )
-      double precision      eptarg ( 3 )
-      double precision      evobs  ( 3 )
-      double precision      lcacc  ( 3 )
-      double precision      lcvobs ( 3 )
-      double precision      ptarg  ( 3 )
-      double precision      ptgmag
-      double precision      rhat   ( 3 )
-      double precision      s
-      double precision      saoff  ( 3, 2 )
-      double precision      sgn
-      double precision      srhat  ( 6 )
-      double precision      svp    ( 6 )
-      double precision      svphat ( 6 )
-      double precision      term1  ( 3 )
-      double precision      term2  ( 3 )
-      double precision      term3  ( 3 )
-      double precision      vp     ( 3 )
-      double precision      vphat  ( 3 )
-      double precision      vtarg  ( 3 )
+      real(wp)              c
+      real(wp)              dphi
+      real(wp)              dptmag
+      real(wp)              drhat  ( 3 )
+      real(wp)              dvp    ( 3 )
+      real(wp)              dvphat ( 3 )
+      real(wp)              eptarg ( 3 )
+      real(wp)              evobs  ( 3 )
+      real(wp)              lcacc  ( 3 )
+      real(wp)              lcvobs ( 3 )
+      real(wp)              ptarg  ( 3 )
+      real(wp)              ptgmag
+      real(wp)              rhat   ( 3 )
+      real(wp)              s
+      real(wp)              saoff  ( 3, 2 )
+      real(wp)              sgn
+      real(wp)              srhat  ( 6 )
+      real(wp)              svp    ( 6 )
+      real(wp)              svphat ( 6 )
+      real(wp)              term1  ( 3 )
+      real(wp)              term2  ( 3 )
+      real(wp)              term3  ( 3 )
+      real(wp)              vp     ( 3 )
+      real(wp)              vphat  ( 3 )
+      real(wp)              vtarg  ( 3 )
 
-      integer               i
+      integer(ip)           i
 
 !
 !     Use discovery check-in.
@@ -387,9 +388,9 @@
 !
       s = vnorm(vp) / clight()
 
-      c = sqrt (  max( 0.d0,  1 - s*s )  )
+      c = sqrt (  max( 0.0_wp,  1 - s*s )  )
 
-      if ( c .eq. 0.d0 ) then
+      if ( c .eq. 0.0_wp ) then
 !
 !        C will be used as a divisor later (in the computation
 !        of DPHI), so we'll put a stop to the problem here.
@@ -431,7 +432,7 @@
       ptgmag = vnorm( ptarg )
 
       call vlcom ( ptgmag * s,           vphat, &
-                   ptgmag * (c - 1.d0),  rhat,   scorr )
+                   ptgmag * (c - 1.0_wp),  rhat,   scorr )
 
 
 !
@@ -454,7 +455,7 @@
 !            = ACCOBS - (  ( <VOBS,DRHAT> + <ACCOBS, RHAT> )*RHAT
 !                        +   <VOBS,RHAT>  * DRHAT                 )
 !
-         call vlcom3 ( 1.d0,                                      lcacc, &
+         call vlcom3 ( 1.0_wp,                                      lcacc, &
                        -vdot(lcvobs, drhat) - vdot(lcacc, rhat),  rhat, &
                        -vdot(lcvobs, rhat ),                      drhat, &
                        dvp                                             )
@@ -476,7 +477,7 @@
 !           d(phi)/dt = (1/cos(phi)) * (1/c) * <DVP, VPHAT>
 !
 !
-         dphi = ( 1.d0 / ( c * clight() ) ) * vdot( dvp, vphat )
+         dphi = ( 1.0_wp / ( c * clight() ) ) * vdot( dvp, vphat )
 
 !
 !        At long last we've assembled all of the "ingredients" required
@@ -498,14 +499,14 @@
          call vlcom  ( s,             dvphat, &
                        c * dphi,      vphat,  term1 )
 
-         call vlcom  ( c - 1.d0,      drhat, &
+         call vlcom  ( c - 1.0_wp,      drhat, &
                        (-s) * dphi,   rhat,   term2 )
 
          call vadd   ( term1,  term2, term3 )
 
          call vlcom3 ( ptgmag,                term3, &
                        dptmag * s,            vphat, &
-                       dptmag * (c - 1.d0),   rhat,    dscorr )
+                       dptmag * (c - 1.0_wp),   rhat,    dscorr )
 
 
       else
@@ -519,9 +520,9 @@
 !           Set the sign of the time offset.
 !
             if ( i .eq. 1 ) then
-               sgn = -1.d0
+               sgn = -1.0_wp
             else
-               sgn =  1.d0
+               sgn =  1.0_wp
             end if
 
 !
@@ -530,14 +531,14 @@
 !           the local copies of the input velocity and acceleration
 !           to make a linear estimate.
 !
-            call vlcom ( 1.d0,        lcvobs, &
+            call vlcom ( 1.0_wp,        lcvobs, &
                          sgn*tdelta,  lcacc,     evobs )
 
 !
 !           Estimate the observer-target vector. We use the
 !           observer-target state velocity to make a linear estimate.
 !
-            call vlcom ( 1.d0,        starg, &
+            call vlcom ( 1.0_wp,        starg, &
                          sgn*tdelta,  starg(4),  eptarg )
 
 !
@@ -562,7 +563,7 @@
 !
             s = vnorm(vp) / clight()
 
-            c = sqrt (  max( 0.d0,  1 - s*s )  )
+            c = sqrt (  max( 0.0_wp,  1 - s*s )  )
 
 !
 !           Compute the vector offset of the correction.
@@ -570,7 +571,7 @@
             ptgmag = vnorm( eptarg )
 
             call vlcom ( ptgmag * s,           vphat, &
-                         ptgmag * (c - 1.d0),  rhat,   saoff(1,i) )
+                         ptgmag * (c - 1.0_wp),  rhat,   saoff(1,i) )
          end do
 
 !

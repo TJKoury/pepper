@@ -1,6 +1,7 @@
 !$Procedure SIZEI ( Size of an integer cell )
 
-      integer function sizei ( cell )
+      integer(ip) function sizei ( cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               cell  ( lbcell: * )
+      integer(ip)           cell  ( lbcell: * )
 
 ! $ Brief_I/O
 !

@@ -1,6 +1,7 @@
 !$Procedure XPOSEG ( Transpose a matrix, general )
 
       subroutine xposeg ( matrix, nrow, ncol, xposem )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision   matrix ( 0:* )
-      integer            nrow
-      integer            ncol
-      double precision   xposem ( 0:* )
+      real(wp)           matrix ( 0:* )
+      integer(ip)        nrow
+      integer(ip)        ncol
+      real(wp)           xposem ( 0:* )
 
 ! $ Brief_I/O
 !
@@ -201,18 +202,18 @@
 !
 !     Local Variables
 !
-      double precision temp
-      double precision source
+      real(wp) temp
+      real(wp) source
 
-      integer          dest
-      integer          moved
-      integer          start
+      integer(ip)      dest
+      integer(ip)      moved
+      integer(ip)      start
 
-      integer          k
-      integer          nmoves
-      integer          r
-      integer          m
-      integer          n
+      integer(ip)      k
+      integer(ip)      nmoves
+      integer(ip)      r
+      integer(ip)      m
+      integer(ip)      n
 
 
 

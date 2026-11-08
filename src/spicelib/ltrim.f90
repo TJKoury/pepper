@@ -1,6 +1,7 @@
 !$Procedure LTRIM ( Left trim )
 
-      integer function ltrim ( string )
+      integer(ip) function ltrim ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -133,7 +134,7 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
+      integer(ip)           frstnb
 
 !
 !     `Just do it'.

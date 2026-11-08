@@ -1,6 +1,7 @@
 !$Procedure DASLLA ( DAS, last logical addresses )
 
       subroutine daslla ( handle, lastc, lastd, lasti )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
 
-      integer               handle
-      integer               lastc
-      integer               lastd
-      integer               lasti
+      integer(ip)           handle
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
 
 ! $ Brief_I/O
 !
@@ -207,26 +208,26 @@
 !
 !     Local parameters.
 !
-      integer               chr
+      integer(ip)           chr
       parameter           ( chr    =  1  )
 
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =  2  )
 
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
 !
 !     Local variables
 !
-      integer               free
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
+      integer(ip)           free
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
 
 
 !

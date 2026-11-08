@@ -6,6 +6,7 @@
                             substr, &
                             length, &
                             bkpres  )
+      use pepper_kinds, only: ip
 ! $ Abstract
 !
 !    Extract from a string the last instance of a substring bracketed
@@ -29,7 +30,7 @@
       character*(*)         lftend
       character*(*)         rgtend
       character*(*)         substr
-      integer               length
+      integer(ip)           length
       logical               bkpres
 
 ! $ Brief_I/O
@@ -157,16 +158,16 @@
 !
 !     SPICELIB Functions
 !
-      integer               posr
+      integer(ip)           posr
 
 !
 !     Local Variables
 !
-      integer               bsize
-      integer               lindex
-      integer               lsize
-      integer               rindex
-      integer               rsize
+      integer(ip)           bsize
+      integer(ip)           lindex
+      integer(ip)           lsize
+      integer(ip)           rindex
+      integer(ip)           rsize
 
 !
 !     Compute the sizes of the bracketing substrings and the text

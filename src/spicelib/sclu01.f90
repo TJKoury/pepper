@@ -1,6 +1,7 @@
 !$Procedure SCLU01 ( SCLK look up, type 1 )
 
       subroutine sclu01 (  name,  sc,  maxnv,  n,  ival,  dval )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
       include               'sclk.inc'
 
       character*(*)         name
-      integer               sc
-      integer               maxnv
-      integer               n
-      integer               ival ( * )
-      double precision      dval ( * )
+      integer(ip)           sc
+      integer(ip)           maxnv
+      integer(ip)           n
+      integer(ip)           ival ( * )
+      real(wp)              dval ( * )
 
 ! $ Brief_I/O
 !
@@ -200,7 +201,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               return
@@ -208,46 +209,46 @@
 !
 !     Local parameters
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen =        320 )
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln =         32 )
 
 !
 !     MXCOFA is the maximum size of the coefficient array.
 !
-      integer               mxcofa
+      integer(ip)           mxcofa
       parameter           ( mxcofa = 3 * mxcoef )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen =         80 )
 
-      integer               nkitem
+      integer(ip)           nkitem
       parameter           ( nkitem =          9 )
 
 !
 !     COFIDX is the index of the coefficient name in NAMLST.
 !
-      integer               cofidx
+      integer(ip)           cofidx
       parameter           ( cofidx =  1 )
 
 !
 !     NFLIDX is the index of the SCLK field count in NAMLST.
 !
-      integer               nflidx
+      integer(ip)           nflidx
       parameter           ( nflidx =  4 )
 
 !
 !     OFFIDX is the index of the SCLK offsets in NAMLST.
 !
-      integer               offidx
+      integer(ip)           offidx
       parameter           ( offidx =  5 )
 
 !
 !     MODIDX is the index of the SCLK moduli in NAMLST.
 !
-      integer               modidx
+      integer(ip)           modidx
       parameter           ( modidx =  6 )
 
 !
@@ -255,13 +256,13 @@
 !     the declaration of NAMLST or assignment of values to NAMLST
 !     changes, this parameter value may have to change.
 !
-      integer               delidx
+      integer(ip)           delidx
       parameter           ( delidx =  7 )
 
 !
 !     SYSIDX is the index of the time system in NAMLST.
 !
-      integer               sysidx
+      integer(ip)           sysidx
       parameter           ( sysidx =  9 )
 
 
@@ -277,11 +278,11 @@
       character*(namlen)    tmpnam
       character*(1)         type
 
-      integer               i
-      integer               lb     ( nkitem )
-      integer               nf
-      integer               nfield
-      integer               ub     ( nkitem )
+      integer(ip)           i
+      integer(ip)           lb     ( nkitem )
+      integer(ip)           nf
+      integer(ip)           nfield
+      integer(ip)           ub     ( nkitem )
 
       logical               found
 
@@ -1222,7 +1223,7 @@
 
          do i = 1, n
 
-            if ( dval(i) .lt. 1.d0 ) then
+            if ( dval(i) .lt. 1.0_wp ) then
                call repmc  (  bvlmsg, '#', tmpnam,      errmsg )
                call repmd  (  errmsg, '#', dval(i), 14, errmsg )
                call setmsg (  errmsg                           )

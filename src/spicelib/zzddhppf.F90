@@ -1,6 +1,7 @@
 !$Procedure ZZDDHPPF ( Private --- DDH Prepare Preexisting File )
 
       subroutine zzddhppf ( unit, arch, bff )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,9 +27,9 @@
       include              'zzddhman.inc'
       include              'zzftprms.inc'
 
-      integer               unit
-      integer               arch
-      integer               bff
+      integer(ip)           unit
+      integer(ip)           arch
+      integer(ip)           bff
 
 ! $ Brief_I/O
 !
@@ -317,8 +318,8 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
-      integer               pos
+      integer(ip)           isrchc
+      integer(ip)           pos
 
       logical               return
 
@@ -327,73 +328,73 @@
 !
 !     Number of characters to be read in from a record.
 !
-      integer               numchr
+      integer(ip)           numchr
       parameter           ( numchr = 1000 )
 
 !
 !     Bounding indices for the window that brackets the FTP
 !     error detection string in the file record.
 !
-      integer               ftpstr
+      integer(ip)           ftpstr
       parameter           ( ftpstr = 500 )
 
-      integer               ftpend
+      integer(ip)           ftpend
       parameter           ( ftpend = 1000 )
 
 !
 !     Index of the start of the binary file format identification
 !     string in DAF binaries.
 !
-      integer               dafbff
+      integer(ip)           dafbff
       parameter           ( dafbff = 89 )
 
 !
 !     Index of the start of the binary file format identification
 !     string in DAS binaries.
 !
-      integer               dasbff
+      integer(ip)           dasbff
       parameter           ( dasbff = 85 )
 
 !
 !     Size of the binary format identification string.
 !
-      integer               bffsiz
+      integer(ip)           bffsiz
       parameter           ( bffsiz = 8 )
 
 !
 !     Index of the first byte of NI in the DAF file record.
 !
-      integer               nipos
+      integer(ip)           nipos
       parameter           ( nipos = 13 )
 
 !
 !     Index of the first byte of NSUM in the DAF descriptor record.
 !
-      integer               nsmpos
+      integer(ip)           nsmpos
       parameter           ( nsmpos = 17 )
 
 !
 !     Index of the first byte of FDREC in the DAF file record.
 !
-      integer               fdrpos
+      integer(ip)           fdrpos
       parameter           ( fdrpos = 77 )
 
 !
 !     Integer code such that CHAR(INTNUL) produces the NULL character.
 !
-      integer               intnul
+      integer(ip)           intnul
       parameter           ( intnul = 0 )
 
 !
 !     IDW2AT Output Argument Lengths.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 4 )
 
 !
 !     NULLID is the index of the extended STRBFF "NULL" string ID.
 !
-      integer               nullid
+      integer(ip)           nullid
       parameter           ( nullid = numbff+1 )
 
 !
@@ -412,11 +413,11 @@
       character*(strsiz)    strarc ( numarc )
       character*(strsiz)    strbff ( nullid )
 
-      integer               fdrec
-      integer               ftppos
-      integer               i
-      integer               iostat
-      integer               tstarc
+      integer(ip)           fdrec
+      integer(ip)           ftppos
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           tstarc
 
       logical               first
       logical               found
@@ -425,7 +426,7 @@
 !
 !     Statement Functions
 !
-      integer               zzichr
+      integer(ip)           zzichr
 
 !
 !     Saved Variables

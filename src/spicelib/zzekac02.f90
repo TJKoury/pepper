@@ -2,6 +2,7 @@
 
       subroutine zzekac02 (  handle,  segdsc,  coldsc,  dvals, &
                              nlflgs,  rcptrs,  wkindx         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,13 +28,13 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
-      double precision      dvals  ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
+      real(wp)              dvals  ( * )
       logical               nlflgs ( * )
-      integer               rcptrs ( * )
-      integer               wkindx ( * )
+      integer(ip)           rcptrs ( * )
+      integer(ip)           wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -186,7 +187,7 @@
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dpsize )
 
 !
@@ -194,28 +195,28 @@
 !
       character*(cnamsz)    column
 
-      double precision      page   ( pgsizd )
+      real(wp)              page   ( pgsizd )
 
-      integer               adrbuf ( bufsiz )
-      integer               bufptr
-      integer               class
-      integer               colidx
-      integer               dscbas
-      integer               from
-      integer               i
-      integer               idxtyp
-      integer               p
-      integer               pbase
-      integer               mbase
-      integer               n
-      integer               ndata
-      integer               nnull
-      integer               nrows
-      integer               nulptr
-      integer               nwrite
-      integer               remain
-      integer               to
-      integer               tree
+      integer(ip)           adrbuf ( bufsiz )
+      integer(ip)           bufptr
+      integer(ip)           class
+      integer(ip)           colidx
+      integer(ip)           dscbas
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           idxtyp
+      integer(ip)           p
+      integer(ip)           pbase
+      integer(ip)           mbase
+      integer(ip)           n
+      integer(ip)           ndata
+      integer(ip)           nnull
+      integer(ip)           nrows
+      integer(ip)           nulptr
+      integer(ip)           nwrite
+      integer(ip)           remain
+      integer(ip)           to
+      integer(ip)           tree
 
       logical               indexd
       logical               nullok

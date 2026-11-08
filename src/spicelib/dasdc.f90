@@ -1,6 +1,7 @@
 !$Procedure DASDC    ( DAS delete comments )
 
       subroutine dasdc ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -139,12 +140,12 @@
 !
 !     Length of a DAS file ID word.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 !
 !     Length of a DAS file internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     Local variables
@@ -152,10 +153,10 @@
       character*(idwlen)    idword
       character*(ifnlen)    ifname
 
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
 
 
 

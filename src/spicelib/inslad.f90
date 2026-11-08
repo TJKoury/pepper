@@ -1,6 +1,7 @@
 !$Procedure INSLAD (Insert at location in double precision array)
 
       subroutine inslad ( elts, ne, loc, array, na )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      double precision      elts  ( * )
-      integer               ne
-      integer               loc
-      double precision      array ( * )
-      integer               na
+      real(wp)              elts  ( * )
+      integer(ip)           ne
+      integer(ip)           loc
+      real(wp)              array ( * )
+      integer(ip)           na
 
 ! $ Brief_I/O
 !
@@ -188,13 +189,13 @@
 !
 !     Other functions
 !
-      integer          max
+      integer(ip)      max
 
 !
 !     Local variables
 !
-      integer          size
-      integer          i
+      integer(ip)      size
+      integer(ip)      i
 
 
 

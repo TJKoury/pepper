@@ -1,6 +1,7 @@
 !$Procedure INTMIN ( Smallest integer number )
 
-      integer function intmin ()
+      integer(ip) function intmin ()
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !

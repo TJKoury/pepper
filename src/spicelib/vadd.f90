@@ -1,6 +1,7 @@
 !$Procedure VADD ( Vector addition, 3 dimensional )
 
       subroutine vadd ( v1, v2, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision   v1   ( 3 )
-      double precision   v2   ( 3 )
-      double precision   vout ( 3 )
+      real(wp)           v1   ( 3 )
+      real(wp)           v2   ( 3 )
+      real(wp)           vout ( 3 )
 
 ! $ Brief_I/O
 !

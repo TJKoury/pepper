@@ -1,6 +1,7 @@
 !$Procedure DASAC ( DAS add comments )
 
       subroutine dasac ( handle, n, buffer )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      integer               handle
-      integer               n
+      integer(ip)           handle
+      integer(ip)           n
       character*(*)         buffer(*)
 
 ! $ Brief_I/O
@@ -170,7 +171,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -179,31 +180,31 @@
 !
 !     Length of a DAS character record, in characters.
 !
-      integer               mxcrec
+      integer(ip)           mxcrec
       parameter           ( mxcrec = 1024 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer               maxpch
+      integer(ip)           maxpch
       parameter           ( maxpch = 126 )
 
-      integer               minpch
+      integer(ip)           minpch
       parameter           ( minpch = 32 )
 !
 !     Decimal value for the DAS comment area end-of-line (EOL) marker.
 !
-      integer               inteol
+      integer(ip)           inteol
       parameter           ( inteol = 0 )
 !
 !     Length of a DAS file ID word.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 !
 !     Length of a DAS file internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     Local variables
@@ -213,20 +214,20 @@
       character*(idwlen)    idword
       character*(ifnlen)    ifname
 
-      integer               curpos
-      integer               daslun
-      integer               i
-      integer               j
-      integer               length
-      integer               nchars
-      integer               ncomc
-      integer               ncomr
-      integer               newrec
-      integer               nresvc
-      integer               nresvr
-      integer               recno
-      integer               rinuse
-      integer               space
+      integer(ip)           curpos
+      integer(ip)           daslun
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           length
+      integer(ip)           nchars
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           newrec
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           recno
+      integer(ip)           rinuse
+      integer(ip)           space
 
       logical               first
 !

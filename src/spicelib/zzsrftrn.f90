@@ -2,6 +2,7 @@
 
       subroutine zzsrftrn ( bodyid, srfnam, surfid, &
                             usrctr, found,  update )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -33,10 +34,10 @@
       include 'zzctr.inc'
       include 'zzsrftrn.inc'
 
-      integer               bodyid
+      integer(ip)           bodyid
       character*(*)         srfnam
-      integer               surfid
-      integer               usrctr ( 2 )
+      integer(ip)           surfid
+      integer(ip)           usrctr ( 2 )
       logical               found
       logical               update
 
@@ -155,8 +156,8 @@
 !
 !     SPICELIB functions
 !
-      integer               zzhash2
-      integer               zzhashi
+      integer(ip)           zzhash2
+      integer(ip)           zzhashi
 
       logical               failed
       logical               return
@@ -167,10 +168,10 @@
 !
 !     Hash control area items.
 !
-      integer               sizidx
+      integer(ip)           sizidx
       parameter           ( sizidx =   0 )
 
-      integer               freidx
+      integer(ip)           freidx
       parameter           ( freidx =  -1 )
 
 !
@@ -353,10 +354,10 @@
 !        Input surface IDs:           KERSID
 !        Input body IDs:              KERBID
 !
-      integer               kersid ( mxnsrf )
-      integer               kerbid ( mxnsrf )
+      integer(ip)           kersid ( mxnsrf )
+      integer(ip)           kerbid ( mxnsrf )
       character*(sfnmln)    kernam ( mxnsrf )
-      integer               nkvar
+      integer(ip)           nkvar
 !
 !        Normalized names:            NRMNAM
 !
@@ -376,9 +377,9 @@
 !        Surface ID name pointers:    SIDIDX
 !
 !
-      integer               sidhls ( nroom )
-      integer               sidpol ( lbsngl : nroom )
-      integer               sididx ( nroom )
+      integer(ip)           sidhls ( nroom )
+      integer(ip)           sidpol ( lbsngl : nroom )
+      integer(ip)           sididx ( nroom )
 
 
 !        Surface Name table
@@ -389,9 +390,9 @@
 !        Surface name ID pointers:    SNMIDP
 !
 !
-      integer               snmhls ( nroom )
-      integer               snmpol ( lbsngl : nroom )
-      integer               snmidx ( nroom )
+      integer(ip)           snmhls ( nroom )
+      integer(ip)           snmpol ( lbsngl : nroom )
+      integer(ip)           snmidx ( nroom )
 
 
 !
@@ -400,17 +401,17 @@
       character*(sfnmln)    nsrfnm
       character*(sfnmln)    sqshnm
 
-      integer               itemat
-      integer               lookat
-      integer               node
+      integer(ip)           itemat
+      integer(ip)           lookat
+      integer(ip)           node
 
 !
 !     POLCTR tracks the state of the kernel pool.
 !     SRFCTR tracks the state of the surface mapping
 !     kernel variables.
 !
-      integer               polctr ( ctrsiz )
-      integer               srfctr ( ctrsiz )
+      integer(ip)           polctr ( ctrsiz )
+      integer(ip)           srfctr ( ctrsiz )
 
       logical               extker
       logical               pass1

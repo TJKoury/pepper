@@ -2,6 +2,7 @@
 
       subroutine zzptpl02 ( handle, dladsc, dskdsc, point, &
                             plid,   plate,  verts,  found )
+      use pepper_kinds, only: ip, wp
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -37,13 +38,13 @@
       include 'dsk02.inc'
       include 'dsktol.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      double precision      dskdsc ( * )
-      double precision      point  ( 3 )
-      integer               plid
-      integer               plate  ( 3 )
-      double precision      verts  ( 3, 3 )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      real(wp)              dskdsc ( * )
+      real(wp)              point  ( 3 )
+      integer(ip)           plid
+      integer(ip)           plate  ( 3 )
+      real(wp)              verts  ( 3, 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -234,11 +235,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      vdot
+      real(wp)              dpmax
+      real(wp)              vdot
 
-      integer               brckti
-      integer               zzvox2id
+      integer(ip)           brckti
+      integer(ip)           zzvox2id
 
       logical               dlassg
       logical               failed
@@ -247,54 +248,54 @@
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 1000 )
 
 !
 !     Local variables
 !
-      double precision      boxctr ( 3 )
-      double precision      dist
-      double precision      dmin
-      double precision      limit
-      double precision      offset ( 3 )
-      double precision      maxr
-      double precision      normal ( 3 )
-      double precision      pnear  ( 3 )
-      double precision      pntoff ( 3 )
-      double precision      ptsrfm
-      double precision      voxori ( 3 )
-      double precision      voxsiz
-      double precision      vrttmp ( 3, 3 )
-      double precision      xpdfrc
-      double precision      xverts ( 3, 3 )
+      real(wp)              boxctr ( 3 )
+      real(wp)              dist
+      real(wp)              dmin
+      real(wp)              limit
+      real(wp)              offset ( 3 )
+      real(wp)              maxr
+      real(wp)              normal ( 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              pntoff ( 3 )
+      real(wp)              ptsrfm
+      real(wp)              voxori ( 3 )
+      real(wp)              voxsiz
+      real(wp)              vrttmp ( 3, 3 )
+      real(wp)              xpdfrc
+      real(wp)              xverts ( 3, 3 )
 
-      integer               cgrcor ( 3 )
-      integer               cgrext ( 3 )
-      integer               cgroff ( 3 )
-      integer               cgrptr
-      integer               cgrscl
-      integer               corsys
-      integer               cgrvid
-      integer               i
-      integer               j
-      integer               k
-      integer               n
-      integer               nplate
-      integer               nread
-      integer               pidtmp
-      integer               pltbuf ( bufsiz )
-      integer               pltptr
-      integer               plttmp ( 3 )
-      integer               ptrloc
-      integer               prvdsc ( dladsz )
-      integer               prvhan
-      integer               ptroff
-      integer               remain
-      integer               start
-      integer               vgrcor ( 3 )
-      integer               vgrext ( 3 )
-      integer               vid
+      integer(ip)           cgrcor ( 3 )
+      integer(ip)           cgrext ( 3 )
+      integer(ip)           cgroff ( 3 )
+      integer(ip)           cgrptr
+      integer(ip)           cgrscl
+      integer(ip)           corsys
+      integer(ip)           cgrvid
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           n
+      integer(ip)           nplate
+      integer(ip)           nread
+      integer(ip)           pidtmp
+      integer(ip)           pltbuf ( bufsiz )
+      integer(ip)           pltptr
+      integer(ip)           plttmp ( 3 )
+      integer(ip)           ptrloc
+      integer(ip)           prvdsc ( dladsz )
+      integer(ip)           prvhan
+      integer(ip)           ptroff
+      integer(ip)           remain
+      integer(ip)           start
+      integer(ip)           vgrcor ( 3 )
+      integer(ip)           vgrext ( 3 )
+      integer(ip)           vid
 
       logical               inside
       logical               pass1
@@ -316,7 +317,7 @@
 !
 !     Initial values
 !
-      data                  limit  / -1.d0      /
+      data                  limit  / -1.0_wp      /
       data                  pass1  / .true.     /
       data                  prvdsc / dladsz * 0 /
       data                  prvhan / 0          /
@@ -355,7 +356,7 @@
          end if
 
 
-         if ( voxsiz .eq. 0.d0 ) then
+         if ( voxsiz .eq. 0.0_wp ) then
 
             call setmsg ( 'Voxel edge length is zero; length ' &
             //            'must be positive.'                  )

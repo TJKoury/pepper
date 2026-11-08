@@ -2,6 +2,7 @@
 
       subroutine zzspkfat ( trgsub, et,    ref, abcorr, &
                             obs,    starg, lt,  dlt    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,13 +31,13 @@
       include 'zzabcorr.inc'
 
       external              trgsub
-      double precision      et
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      integer               obs
-      double precision      starg    ( 6 )
-      double precision      lt
-      double precision      dlt
+      integer(ip)           obs
+      real(wp)              starg    ( 6 )
+      real(wp)              lt
+      real(wp)              dlt
 
 ! $ Brief_I/O
 !
@@ -355,10 +356,10 @@
       character*(*)         rname
       parameter           ( rname = 'ZZSPKFAT' )
 
-      double precision      delta
-      parameter           ( delta = 1.d0 )
+      real(wp)              delta
+      parameter           ( delta = 1.0_wp )
 
-      integer               ssb
+      integer(ip)           ssb
       parameter           ( ssb    = 0 )
 
 !
@@ -366,15 +367,15 @@
 !
       character*(corlen)    prvcor
 
-      double precision      acc    ( 3 )
-      double precision      ltssb
-      double precision      ssblt
-      double precision      ssbobs ( 6 )
-      double precision      stobs  ( 6, 2 )
-      double precision      t
+      real(wp)              acc    ( 3 )
+      real(wp)              ltssb
+      real(wp)              ssblt
+      real(wp)              ssbobs ( 6 )
+      real(wp)              stobs  ( 6, 2 )
+      real(wp)              t
 
-      integer               i
-      integer               refid
+      integer(ip)           i
+      integer(ip)           refid
 
       logical               attblk ( nabcor )
       logical               pass1

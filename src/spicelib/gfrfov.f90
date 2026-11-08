@@ -2,6 +2,7 @@
 
       subroutine gfrfov ( inst,   raydir, rframe, abcorr, &
                           obsrvr, step,   cnfine, result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -37,17 +38,17 @@
       include               'gf.inc'
       include               'zzholdd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         inst
-      double precision      raydir ( 3 )
+      real(wp)              raydir ( 3 )
       character*(*)         rframe
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      step
-      double precision      cnfine ( lbcell : * )
-      double precision      result ( lbcell : * )
+      real(wp)              step
+      real(wp)              cnfine ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -866,7 +867,7 @@
 !
 !     SPICELIB functions
 !
-      integer               sized
+      integer(ip)           sized
 
       logical               return
 
@@ -908,7 +909,7 @@
 !
 !     Local variables
 !
-      double precision      tol
+      real(wp)              tol
       logical               ok
 
 !

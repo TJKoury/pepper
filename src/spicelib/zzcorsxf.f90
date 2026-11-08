@@ -1,6 +1,7 @@
 !$Procedure ZZCORSXF ( Correct state transformation matrix )
 
       subroutine zzcorsxf ( xmit, dlt, xform, corxfm )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,9 +26,9 @@
       implicit none
 
       logical               xmit
-      double precision      dlt
-      double precision      xform  ( 6, 6 )
-      double precision      corxfm ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              xform  ( 6, 6 )
+      real(wp)              corxfm ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -381,19 +382,19 @@
 !
 !     Local variables
 !
-      double precision      ltsign
-      double precision      scale
+      real(wp)              ltsign
+      real(wp)              scale
 
-      integer               col
+      integer(ip)           col
 
 !
 !     Determine the sign of the light time correction.
 !
       if ( xmit ) then
 
-         ltsign =  1.d0
+         ltsign =  1.0_wp
       else
-         ltsign = -1.d0
+         ltsign = -1.0_wp
       end if
 
 !
@@ -411,7 +412,7 @@
 !        1 + LTSIGN*DLT
 !
 !
-      scale = 1.d0 + ltsign*dlt
+      scale = 1.0_wp + ltsign*dlt
 
 
       do col = 1, 3

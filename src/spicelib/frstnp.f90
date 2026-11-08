@@ -1,6 +1,7 @@
 !$Procedure FRSTNP ( First non-printable character )
 
-      integer function frstnp ( string )
+      integer(ip) function frstnp ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -161,7 +162,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 !
 !     Look for the first character outside the range [32,126], and

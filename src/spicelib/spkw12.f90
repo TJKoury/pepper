@@ -3,6 +3,7 @@
       subroutine spkw12 (  handle,  body,    center,  frame, &
                            first,   last,    segid,   degree, &
                            n,       states,  begtim,  step     )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,18 +27,18 @@
 
       include 'spk12.inc'
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               degree
-      integer               n
-      double precision      states ( 6, * )
-      double precision      begtim
-      double precision      step
+      integer(ip)           degree
+      integer(ip)           n
+      real(wp)              states ( 6, * )
+      real(wp)              begtim
+      real(wp)              step
 
 ! $ Brief_I/O
 !
@@ -384,25 +385,25 @@
 !     LPRINT is the integer value of the last printable ASCII character.
 !
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =  12 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz  =   6 )
 
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen  =  40 )
 
 !
@@ -410,15 +411,15 @@
 !
       character*(timlen)    etstr
 
-      double precision      descr  ( ns )
-      double precision      ltime
-      double precision      tol
+      real(wp)              descr  ( ns )
+      real(wp)              ltime
+      real(wp)              tol
 
-      integer               chrcod
-      integer               i
-      integer               lastnb
-      integer               refcod
-      integer               winsiz
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           lastnb
+      integer(ip)           refcod
+      integer(ip)           winsiz
 
 !
 !     Standard SPICE error handling.
@@ -549,7 +550,7 @@
 !
 !     The step size must be positive.
 !
-      if ( step .le. 0.d0 ) then
+      if ( step .le. 0.0_wp ) then
 
          call setmsg ( 'The step size must be > 0 but was #. ' )
          call errdp  ( '#', step                               )
@@ -656,8 +657,8 @@
       call dafada ( states,              n*statsz )
       call dafada ( begtim,              1        )
       call dafada ( step,                1        )
-      call dafada ( dble( winsiz - 1 ),  1        )
-      call dafada ( dble( n          ),  1        )
+      call dafada ( real( winsiz - 1, wp ),  1        )
+      call dafada ( real( n, wp          ),  1        )
 
 !
 !     As long as nothing went wrong, end the segment.

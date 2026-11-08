@@ -1,6 +1,7 @@
 !$Procedure ISRCHD  ( Search in a double precision array )
 
-      integer function  isrchd ( value, ndim, array )
+      integer(ip) function  isrchd ( value, ndim, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision   value
-      integer            ndim
-      double precision   array ( * )
+      real(wp)           value
+      integer(ip)        ndim
+      real(wp)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -125,7 +126,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       isrchd = 0

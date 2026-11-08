@@ -2,6 +2,7 @@
 
       subroutine zzdafgfr ( handle, idword, nd,   ni,   ifname, &
                             fward,  bward,  free, found         )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,14 +26,14 @@
 
       include              'zzddhman.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         idword
-      integer               nd
-      integer               ni
+      integer(ip)           nd
+      integer(ip)           ni
       character*(*)         ifname
-      integer               fward
-      integer               bward
-      integer               free
+      integer(ip)           fward
+      integer(ip)           bward
+      integer(ip)           free
       logical               found
 
 ! $ Brief_I/O
@@ -159,7 +160,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               return
@@ -169,32 +170,32 @@
 !
 !     Record Number of the file record in a DAF.
 !
-      integer               frlocr
+      integer(ip)           frlocr
       parameter           ( frlocr =  1 )
 
 !
 !     Length of the IDWORD string.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
 !
 !     Length of the internal filename string.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
 !
 !     Starting location in bytes of the internal filename in the
 !     file record.
 !
-      integer               ifnstr
+      integer(ip)           ifnstr
       parameter           ( ifnstr = 17 )
 
 !
 !     Size of an integer in bytes.
 !
-      integer               inlen
+      integer(ip)           inlen
       parameter           ( inlen  =  4 )
 
 !
@@ -207,19 +208,19 @@
       character*(strsiz)    strbff ( numbff )
       character*(strsiz)    tmpstr
 
-      integer               cindex
-      integer               i
-      integer               iamh
-      integer               iarch
-      integer               ibff
-      integer               iostat
-      integer               locbwd
-      integer               locfre
-      integer               locfwd
-      integer               locnd
-      integer               locni
-      integer               lun
-      integer               natbff
+      integer(ip)           cindex
+      integer(ip)           i
+      integer(ip)           iamh
+      integer(ip)           iarch
+      integer(ip)           ibff
+      integer(ip)           iostat
+      integer(ip)           locbwd
+      integer(ip)           locfre
+      integer(ip)           locfwd
+      integer(ip)           locnd
+      integer(ip)           locni
+      integer(ip)           lun
+      integer(ip)           natbff
 
       logical               first
       logical               locfnd

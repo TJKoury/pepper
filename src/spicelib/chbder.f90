@@ -1,6 +1,7 @@
 !$Procedure CHBDER ( Derivatives of a Chebyshev expansion )
 
       subroutine chbder ( cp, degp, x2s, x, nderiv, partdp, dpdxs )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,13 +23,13 @@
 
       implicit none
 
-      double precision      cp     (      * )
-      integer               degp
-      double precision      x2s    (      2 )
-      double precision      x
-      integer               nderiv
-      double precision      partdp ( 3, 0:* )
-      double precision      dpdxs  (    0:* )
+      real(wp)              cp     (      * )
+      integer(ip)           degp
+      real(wp)              x2s    (      2 )
+      real(wp)              x
+      integer(ip)           nderiv
+      real(wp)              partdp ( 3, 0:* )
+      real(wp)              dpdxs  (    0:* )
 
 ! $ Brief_I/O
 !
@@ -353,23 +354,23 @@
 !
 !     Local variables
 !
-      double precision scale
-      double precision s
-      double precision s2
+      real(wp) scale
+      real(wp) s
+      real(wp) s2
 
-      integer          i
-      integer          j
+      integer(ip)      i
+      integer(ip)      j
 
 !
 !     Transform X to S and initialize temporary variables.
 !
       s     = (x-x2s(1)) / x2s(2)
-      s2    = 2.0d0 * s
+      s2    = 2.0_wp * s
       j     = degp  + 1
 
       do i = 0,nderiv
-         partdp (1,i) = 0.d0
-         partdp (2,i) = 0.d0
+         partdp (1,i) = 0.0_wp
+         partdp (2,i) = 0.0_wp
       end do
 
 !
@@ -384,7 +385,7 @@
 !
 !        ... and its derivatives using recursion.
 !
-         scale = 2.0d0
+         scale = 2.0_wp
 
          do i = 1, nderiv
 
@@ -395,7 +396,7 @@
                            + partdp(2,i  )*s2 &
                            - partdp(3,i  )
 
-            scale        =   scale + 2.0d0
+            scale        =   scale + 2.0_wp
          end do
 
          j        = j - 1
@@ -404,7 +405,7 @@
 
       dpdxs(0) = cp(1) + ( s*partdp(1,0)  - partdp(2,0)  )
 
-      scale    = 1.0d0
+      scale    = 1.0_wp
 
       do i = 1, nderiv
          dpdxs(i)  =   partdp(1,i-1)*scale &

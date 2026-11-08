@@ -1,6 +1,7 @@
 !$Procedure LGRINT ( Lagrange polynomial interpolation )
 
-      double precision function lgrint ( n, xvals, yvals, work, x )
+      real(wp) function lgrint ( n, xvals, yvals, work, x )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               n
-      double precision      xvals ( * )
-      double precision      yvals ( * )
-      double precision      work  ( * )
-      double precision      x
+      integer(ip)           n
+      real(wp)              xvals ( * )
+      real(wp)              yvals ( * )
+      real(wp)              work  ( * )
+      real(wp)              x
 
 ! $ Brief_I/O
 !
@@ -232,19 +233,19 @@
 !
 !     Local variables
 !
-      double precision      c1
-      double precision      c2
-      double precision      denom
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              denom
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 !
 !     Check in only if an error is detected.
 !
       if ( return() ) then
-         lgrint = 0.d0
+         lgrint = 0.0_wp
          return
       end if
 
@@ -253,7 +254,7 @@
 !
       if ( n .lt. 1 ) then
 
-         lgrint = 0.d0
+         lgrint = 0.0_wp
 
          call chkin  ( 'LGRINT'                              )
          call setmsg ( 'Array size must be positive; was #.' )
@@ -367,9 +368,9 @@
 
             denom    =     xvals(i)  -  xvals(i+j)
 
-            if ( denom .eq. 0.d0 ) then
+            if ( denom .eq. 0.0_wp ) then
 
-               lgrint = 0.d0
+               lgrint = 0.0_wp
                call chkin ( 'LGRINT'                   )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )
                call errint ( '#',   i                  )

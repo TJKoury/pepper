@@ -1,6 +1,7 @@
 !$Procedure B1950 ( Besselian Date 1950.0 )
 
-      double precision function b1950 ( )
+      real(wp) function b1950 ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -114,6 +115,6 @@
 !-&
 
 
-      b1950 = 2433282.42345905d0
+      b1950 = 2433282.42345905_wp
       return
       end

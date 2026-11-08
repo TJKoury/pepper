@@ -1,6 +1,7 @@
 !$Procedure ZZEKRPLK ( EK, look up record pointer )
 
       subroutine zzekrplk ( handle, segdsc, n, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       include 'ekpage.inc'
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               n
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           n
+      integer(ip)           recptr
 
 ! $ Brief_I/O
 !
@@ -106,8 +107,8 @@
 !
 !     Local variables
 !
-      integer               stype
-      integer               tree
+      integer(ip)           stype
+      integer(ip)           tree
 
 !
 !     Use discovery check-in.

@@ -3,6 +3,7 @@
       subroutine sgseqw ( handle, descr,  segid,  nconst, const, &
                           npkts,  pktsiz, pktdat, nrefs, refdat, &
                           idxtyp                                 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,17 +24,17 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
+      integer(ip)           handle
+      real(wp)              descr  ( * )
       character*(*)         segid
-      integer               nconst
-      double precision      const  ( * )
-      integer               npkts
-      integer               pktsiz ( * )
-      double precision      pktdat ( * )
-      integer               nrefs
-      double precision      refdat ( * )
-      integer               idxtyp
+      integer(ip)           nconst
+      real(wp)              const  ( * )
+      integer(ip)           npkts
+      integer(ip)           pktsiz ( * )
+      real(wp)              pktdat ( * )
+      integer(ip)           nrefs
+      real(wp)              refdat ( * )
+      integer(ip)           idxtyp
 
 ! $ Brief_I/O
 !
@@ -1196,8 +1197,8 @@
 !
 !     SPICELIB Functions
 !
-      integer               lastnb
-      integer               isrchi
+      integer(ip)           lastnb
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -1209,27 +1210,27 @@
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint = 126 )
 !
 !     The number of reference values it takes to get a reference
 !     directory value.
 !
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 !
 !     The length of a DAF internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     The file table size. This needs to be the same as the file table
 !     size in DAFAH.
 !
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize = 20 )
 !
 !     Include the mnemonic values for the generic segment declarations
@@ -1245,30 +1246,30 @@
 !
       character*(ifnlen)    dummy1
 
-      double precision      xmeta  ( mxmeta )
-      double precision      myref
-      double precision      myaddr
-      double precision      mysize
-      double precision      dpksiz
+      real(wp)              xmeta  ( mxmeta )
+      real(wp)              myref
+      real(wp)              myaddr
+      real(wp)              mysize
+      real(wp)              dpksiz
 
-      integer               begadr
-      integer               dummy2
-      integer               dummy3
-      integer               i
-      integer               ich
-      integer               index
-      integer               lsthan
-      integer               meta   ( mxmeta )
-      integer               nc
-      integer               nd
-      integer               ni
-      integer               numfxd
-      integer               numvar
-      integer               pktadr
-      integer               pktpos
-      integer               refadr
-      integer               sidlen
-      integer               size
+      integer(ip)           begadr
+      integer(ip)           dummy2
+      integer(ip)           dummy3
+      integer(ip)           i
+      integer(ip)           ich
+      integer(ip)           index
+      integer(ip)           lsthan
+      integer(ip)           meta   ( mxmeta )
+      integer(ip)           nc
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           numfxd
+      integer(ip)           numvar
+      integer(ip)           pktadr
+      integer(ip)           pktpos
+      integer(ip)           refadr
+      integer(ip)           sidlen
+      integer(ip)           size
 
       logical               explct
       logical               fxdseg
@@ -1277,20 +1278,20 @@
 !     the vital statistics for each of the generic segments being
 !     written.
 !
-      double precision      ftrefs ( 2, ftsize )
+      real(wp)              ftrefs ( 2, ftsize )
 
-      integer               ftbadr ( ftsize )
-      integer               fthan  ( ftsize )
-      integer               ftityp ( ftsize )
-      integer               ftmxsz ( ftsize )
-      integer               ftncon ( ftsize )
-      integer               ftnpkt ( ftsize )
-      integer               ftnref ( ftsize )
-      integer               ftnres ( ftsize )
-      integer               ftoff  ( ftsize )
-      integer               ftpksz ( ftsize )
+      integer(ip)           ftbadr ( ftsize )
+      integer(ip)           fthan  ( ftsize )
+      integer(ip)           ftityp ( ftsize )
+      integer(ip)           ftmxsz ( ftsize )
+      integer(ip)           ftncon ( ftsize )
+      integer(ip)           ftnpkt ( ftsize )
+      integer(ip)           ftnref ( ftsize )
+      integer(ip)           ftnres ( ftsize )
+      integer(ip)           ftoff  ( ftsize )
+      integer(ip)           ftpksz ( ftsize )
 
-      integer               nft
+      integer(ip)           nft
 
       logical               ftfixd ( ftsize )
       logical               ftexpl ( ftsize )
@@ -1762,8 +1763,8 @@
       fthan  ( nft )   = handle
       ftbadr ( nft )   = begadr
 
-      ftrefs( 1, nft ) = 0.0d0
-      ftrefs( 2, nft ) = 0.0d0
+      ftrefs( 1, nft ) = 0.0_wp
+      ftrefs( 2, nft ) = 0.0_wp
 
       if ( explct ) then
          ftoff(nft) = 1
@@ -2174,8 +2175,8 @@
       fthan  ( nft )   = handle
       ftbadr ( nft )   = begadr
 
-      ftrefs( 1, nft ) = 0.0d0
-      ftrefs( 2, nft ) = 0.0d0
+      ftrefs( 1, nft ) = 0.0_wp
+      ftrefs( 2, nft ) = 0.0_wp
 
       if ( explct ) then
          ftoff(nft) = 2
@@ -3155,7 +3156,7 @@
 
          do i = 1, npkts
 
-            dpksiz = dble( pktsiz(i) )
+            dpksiz = real( pktsiz(i), wp )
 
             call dafada ( refdat(i), 1              )
             call dafada ( dpksiz,    1              )
@@ -3237,7 +3238,7 @@
 
          do i = 1, npkts
 
-            dpksiz = dble ( pktsiz(i) )
+            dpksiz = real( pktsiz(i), wp )
 
             call dafada ( dpksiz, 1                 )
             call dafada ( pktdat(pktpos), pktsiz(i) )
@@ -3571,7 +3572,7 @@
 !              packet.
 !
             pktadr = ftbadr(index) + ftncon(index) + ftoff(index)
-            myaddr = dble ( ftoff(index) + 1 )
+            myaddr = real( ftoff(index) + 1, wp )
 !
 !           2) Create a packet directory. The packet directory consists
 !              of the beginning addresses for each of the packets and a
@@ -3591,14 +3592,14 @@
 
                size   = int ( mysize )
                pktadr = pktadr +        size + ftoff(index)
-               myaddr = myaddr + dble ( size + ftoff(index) )
+               myaddr = myaddr + real( size + ftoff(index), wp )
 
             end do
 !
 !           Put in the fake beginning for an extra packet. PKTADR should
 !           contain the proper value.
 !
-            myaddr = dble ( myaddr )
+            myaddr = real( myaddr, wp )
 
             call dafada ( myaddr, 1 )
 
@@ -3737,7 +3738,7 @@
 !              packet.
 !
             pktadr = ftbadr(index) + ftncon(index) + ftoff(index)
-            myaddr = dble ( ftoff(index) + 1 )
+            myaddr = real( ftoff(index) + 1, wp )
 !
 !           2) Create a packet directory. The packet directory consists
 !              of the beginning addresses for each of the packets and a
@@ -3756,14 +3757,14 @@
 
                size   = int ( mysize )
                pktadr = pktadr +        size + ftoff(index)
-               myaddr = myaddr + dble ( size + ftoff(index) )
+               myaddr = myaddr + real( size + ftoff(index), wp )
 
             end do
 !
 !           Put in the fake beginning for an extra packet. PKTADR should
 !           contain the proper value.
 !
-            myaddr = dble ( pktadr - ftbadr(index) )
+            myaddr = real( pktadr - ftbadr(index), wp )
 
             call dafada ( myaddr, 1 )
 
@@ -3800,7 +3801,7 @@
 !     Write the meta data to the segment and end the segment.
 !
       do i = 1, mxmeta
-         xmeta(i) = dble ( meta(i) )
+         xmeta(i) = real( meta(i), wp )
       end do
 
       call dafada ( xmeta, mxmeta )

@@ -1,6 +1,7 @@
 !$Procedure STR2ET ( String to ET )
 
       subroutine str2et ( timstr, et )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         timstr
-      double precision      et
+      real(wp)              et
 
 ! $ Brief_I/O
 !
@@ -702,28 +703,28 @@
 !
 !     Local (in-line) Functions
 !
-      integer               smwdsz
+      integer(ip)           smwdsz
       parameter           ( smwdsz = 16 )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               msgsiz
+      integer(ip)           msgsiz
       parameter           ( msgsiz = 400 )
 
-      integer               era
+      integer(ip)           era
       parameter           ( era    = 1 )
 
-      integer               wkday
+      integer(ip)           wkday
       parameter           ( wkday  = era    + 1 )
 
-      integer               zone
+      integer(ip)           zone
       parameter           ( zone   = wkday  + 1 )
 
-      integer               ampm
+      integer(ip)           ampm
       parameter           ( ampm   = zone   + 1 )
 
-      integer               system
+      integer(ip)           system
       parameter           ( system = ampm   + 1 )
 
       character*(lnsize)    pictur
@@ -745,42 +746,42 @@
 
       character*(smwdsz)    mname  ( 12 )
 
-      double precision      dhoff
-      double precision      dmoff
-      double precision      extra
-      double precision      frac
-      double precision      hoff
-      double precision      hour
-      double precision      mdy    ( 2 )
-      double precision      minute
-      double precision      moff
-      double precision      mon    ( 2 )
-      double precision      secs
-      double precision      tvec   ( 8 )
-      double precision      tvecm  ( 8 )
+      real(wp)              dhoff
+      real(wp)              dmoff
+      real(wp)              extra
+      real(wp)              frac
+      real(wp)              hoff
+      real(wp)              hour
+      real(wp)              mdy    ( 2 )
+      real(wp)              minute
+      real(wp)              moff
+      real(wp)              mon    ( 2 )
+      real(wp)              secs
+      real(wp)              tvec   ( 8 )
+      real(wp)              tvecm  ( 8 )
 
-      integer               cyear
-      integer               gyear
+      integer(ip)           cyear
+      integer(ip)           gyear
 
-      integer               day
-      integer               doy
-      integer               i
-      integer               last
-      integer               month
-      integer               ntvec
-      integer               orgnyr
-      integer               year
+      integer(ip)           day
+      integer(ip)           doy
+      integer(ip)           i
+      integer(ip)           last
+      integer(ip)           month
+      integer(ip)           ntvec
+      integer(ip)           orgnyr
+      integer(ip)           year
 
 !
 !     The following integers are pointers to the
 !     locations of various components in a time vector.
 !
-      integer               dy
-      integer               hr
-      integer               mm
-      integer               mn
-      integer               sc
-      integer               yr
+      integer(ip)           dy
+      integer(ip)           hr
+      integer(ip)           mm
+      integer(ip)           mn
+      integer(ip)           sc
+      integer(ip)           yr
 
       logical               adjust
       logical               dojul
@@ -805,8 +806,8 @@
       data                  mixed   / 'MIXED'     /
       data                  juln    / 'JULIAN'    /
       data                  gregrn  / 'GREGORIAN' /
-      data                  dhoff   /  0.0d0      /
-      data                  dmoff   /  0.0d0      /
+      data                  dhoff   /  0.0_wp      /
+      data                  dmoff   /  0.0_wp      /
 
       data                  mname   /   'January',   'February', &
                                         'March',     'April', &
@@ -835,8 +836,8 @@
          call prefix  ( '::', 0, defzon )
          call zzutcpm ( defzon, 1, dhoff, dmoff, last, succes )
       else
-         dhoff = 0.0d0
-         dmoff = 0.0d0
+         dhoff = 0.0_wp
+         dmoff = 0.0_wp
       end if
 
 !
@@ -974,11 +975,11 @@
 
       if ( zoned .or.  calndr .ne. gregrn ) then
 
-         if (       tvec(sc) .ge. 60.0d0 &
-              .and. tvec(sc) .lt. 61.0d0 ) then
+         if (       tvec(sc) .ge. 60.0_wp &
+              .and. tvec(sc) .lt. 61.0_wp ) then
 
             adjust   = .true.
-            tvec(sc) = tvec(sc) - 1.0d0
+            tvec(sc) = tvec(sc) - 1.0_wp
 
          end if
 
@@ -1001,11 +1002,11 @@
 !        have a problem we call TCHECK twice and .OR. the results
 !        of the checks to see if we have a legitimate time vector.
 !
-         if ( tvec(yr) .lt. 1580.0d0 ) then
+         if ( tvec(yr) .lt. 1580.0_wp ) then
 
             call moved  ( tvec, 6, tvecm )
 
-            tvecm(1) = tvecm(1) + 4.0d0
+            tvecm(1) = tvecm(1) + 4.0_wp
 
             call tcheck ( tvecm, type, mods, modify, ok1, error )
             call tcheck ( tvec,  type, mods, modify, ok2, error )
@@ -1026,7 +1027,7 @@
 !
          call moved  ( tvec, 6, tvecm )
 
-         tvecm(1) = tvecm(1) + 4.0d0
+         tvecm(1) = tvecm(1) + 4.0_wp
 
          call tcheck ( tvecm, type, mods, modify, ok1, error )
          call tcheck ( tvec,  type, mods, modify, ok2, error )
@@ -1062,7 +1063,7 @@
 !     Reset TVEC(SC) if it was adjusted earlier.
 !
       if ( adjust ) then
-         tvec(sc) = tvec(sc) + 1.0d0
+         tvec(sc) = tvec(sc) + 1.0_wp
       end if
 
 !
@@ -1072,7 +1073,7 @@
       if (      modify(system) .eq. 'TDT' &
            .or. modify(system) .eq. 'TDB' ) then
 
-         if ( tvec(sc) .ge. 60.0d0 ) then
+         if ( tvec(sc) .ge. 60.0_wp ) then
 
             call setmsg ( 'The seconds component of time must ' &
             //            'be less than 60 for any ' &
@@ -1103,7 +1104,7 @@
 !     If the era is B.C. we need to reset the year.
 !
       if ( modify(era) .eq. 'B.C.' ) then
-         tvec(yr) = 1.0d0 - tvec(yr)
+         tvec(yr) = 1.0_wp - tvec(yr)
       end if
 
 !
@@ -1112,14 +1113,14 @@
 !
       if     ( modify(ampm) .eq. 'P.M.'   ) then
 
-         if ( tvec(hr) .lt. 12.0d0 ) then
-            tvec(hr) = tvec(hr) + 12.0d0
+         if ( tvec(hr) .lt. 12.0_wp ) then
+            tvec(hr) = tvec(hr) + 12.0_wp
          end if
 
       else if ( modify(ampm) .eq. 'A.M.' ) then
 
-         if ( tvec(hr) .ge. 12.0d0 ) then
-            tvec(hr) = tvec(hr) - 12.0d0
+         if ( tvec(hr) .ge. 12.0_wp ) then
+            tvec(hr) = tvec(hr) - 12.0_wp
          end if
 
       end if
@@ -1135,13 +1136,13 @@
       if ( yabbrv ) then
 
          call       texpyr ( year )
-         tvec(yr) = dble   ( year )
+         tvec(yr) = real( year, wp )
 
       else if (       year        .lt. 100 &
                 .and. modify(era) .eq. ' ' ) then
 
          call       texpyr ( year )
-         tvec(yr) = dble   ( year )
+         tvec(yr) = real( year, wp )
 
       end if
 
@@ -1156,18 +1157,18 @@
 !
          if ( type .eq. 'YD' ) then
 
-            dojul =            tvec(yr) .lt. 1582.0d0 &
-                   .or. (      tvec(yr) .eq. 1582.0d0 &
-                         .and. tvec(dy) .lt.  279.0d0 )
+            dojul =            tvec(yr) .lt. 1582.0_wp &
+                   .or. (      tvec(yr) .eq. 1582.0_wp &
+                         .and. tvec(dy) .lt.  279.0_wp )
 
          else
 
-            dojul =             tvec(yr) .lt. 1582.0d0 &
-                   .or. (       tvec(yr) .le. 1582.0d0 &
-                          .and. tvec(mm) .lt.   10.0d0 ) &
-                   .or. (       tvec(yr) .le. 1582.0d0 &
-                          .and. tvec(mm) .le.   10.0d0 &
-                          .and. tvec(dy) .lt.    6.0d0 )
+            dojul =             tvec(yr) .lt. 1582.0_wp &
+                   .or. (       tvec(yr) .le. 1582.0_wp &
+                          .and. tvec(mm) .lt.   10.0_wp ) &
+                   .or. (       tvec(yr) .le. 1582.0_wp &
+                          .and. tvec(mm) .le.   10.0_wp &
+                          .and. tvec(dy) .lt.    6.0_wp )
 
          end if
 
@@ -1193,27 +1194,27 @@
             year   = dint( tvec(yr) )
             month  = 1
             day    = dint( tvec(dy) )
-            frac   = tvec(dy) - dble(day)
+            frac   = tvec(dy) - real(day, wp)
             orgnyr = year
 
             call jul2gr ( year, month, day, doy )
 
-            tvec(yr) = dble(year)
-            tvec(dy) = dble(doy ) + frac
+            tvec(yr) = real(year, wp)
+            tvec(dy) = real(doy, wp ) + frac
 
          else
 
             year   = dint ( tvec(yr) )
             month  = dint ( tvec(mm) )
             day    = dint ( tvec(dy) )
-            frac   = tvec(dy) - dble(day)
+            frac   = tvec(dy) - real(day, wp)
             orgnyr = year
 
             call jul2gr ( year, month, day, doy )
 
-            tvec(yr) = dble(year)
-            tvec(mm) = dble(month)
-            tvec(dy) = dble(day) + frac
+            tvec(yr) = real(year, wp)
+            tvec(mm) = real(month, wp)
+            tvec(dy) = real(day, wp) + frac
 
          end if
 
@@ -1258,7 +1259,7 @@
          tvec(hr) = tvec(hr) - hoff
          tvec(mn) = tvec(mn) - moff
          secs     = tvec(sc)
-         tvec(sc) = 0.0d0
+         tvec(sc) = 0.0_wp
 
          call ttrans ( forml, forml, tvec )
 
@@ -1354,11 +1355,11 @@
 !
       call repmi ( error , '#', orgnyr, error  )
 
-      mon(1) =  6.0d0
-      mon(2) = 12.0d0
+      mon(1) =  6.0_wp
+      mon(2) = 12.0_wp
 
-      mdy(1) = 30.0d0
-      mdy(2) = 31.0d0
+      mdy(1) = 30.0_wp
+      mdy(2) = 31.0_wp
 !
 !     Next Fill in the hours and minutes. Recall that leapseconds
 !     occur during the last second of the 59'th minute of the 23'rd
@@ -1366,20 +1367,20 @@
 !     minute of the 23'rd + HOFF hour of the time zone.  We adjust
 !     these to account for hour roll over and day roll over.
 !
-      minute = 59.0d0 + moff
+      minute = 59.0_wp + moff
 
-      if ( minute .gt. 59.0d0 ) then
-         minute = minute - 60.0d0
-         extra  = 1.0d0
-      else if ( minute .lt. 0.0d0 ) then
-         minute = minute + 60.0d0
-         extra  = -1.0d0
+      if ( minute .gt. 59.0_wp ) then
+         minute = minute - 60.0_wp
+         extra  = 1.0_wp
+      else if ( minute .lt. 0.0_wp ) then
+         minute = minute + 60.0_wp
+         extra  = -1.0_wp
       else
-         extra  = 0.0d0
+         extra  = 0.0_wp
       end if
 
 
-      hour = 23.0d0 + hoff + extra
+      hour = 23.0_wp + hoff + extra
 
       if ( hour .gt. 23 ) then
          hour = hour - 24
@@ -1418,12 +1419,12 @@
 
          do i = 1, 2
 
-            tvec(1) = dble(gyear)
+            tvec(1) = real(gyear, wp)
             tvec(2) = mon(i)
             tvec(3) = mdy(i)
-            tvec(4) = 23.0d0 + hoff
-            tvec(5) = 59.0d0 + moff
-            tvec(6) = 0.0d0
+            tvec(4) = 23.0_wp + hoff
+            tvec(5) = 59.0_wp + moff
+            tvec(6) = 0.0_wp
 !
 !           Normalize the time vector.
 !

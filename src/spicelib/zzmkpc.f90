@@ -1,6 +1,7 @@
 !$Procedure      ZZMKPC ( Make a time format picture mark )
 
       subroutine zzmkpc ( pictur, b, e, mark, pattrn )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,8 +24,8 @@
 
       implicit none
       character*(*)         pictur
-      integer               b
-      integer               e
+      integer(ip)           b
+      integer(ip)           e
       character*(*)         mark
       character*(*)         pattrn
 
@@ -103,22 +104,22 @@
 !
 !
 !-&
-      integer               lastnb
+      integer(ip)           lastnb
 
-      integer               maxplc
+      integer(ip)           maxplc
       parameter           ( maxplc = 14 )
 
-      integer               maxsiz
+      integer(ip)           maxsiz
       parameter           ( maxsiz = maxplc + 12 )
 
       character*(maxplc)    places
       character*(maxsiz)    mymark
 
-      integer               lpat
-      integer               lmrk
-      integer               point
-      integer               use
-      integer               last
+      integer(ip)           lpat
+      integer(ip)           lmrk
+      integer(ip)           point
+      integer(ip)           use
+      integer(ip)           last
 
 
       places = '##############'

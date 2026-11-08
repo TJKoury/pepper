@@ -2,6 +2,7 @@
 
       subroutine zzektres ( query,  eqryi,  eqryc,   eqryd, &
                                     error,  errmsg,  errptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,16 +32,16 @@
       include 'ektnamsz.inc'
       include 'ektype.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               eqryi  ( lbcell : * )
+      integer(ip)           eqryi  ( lbcell : * )
       character*(*)         eqryc
-      double precision      eqryd  ( * )
+      real(wp)              eqryd  ( * )
       logical               error
       character*(*)         errmsg
-      integer               errptr
+      integer(ip)           errptr
 
 ! $ Brief_I/O
 !
@@ -174,7 +175,7 @@
 !
 !     Local parameters
 !
-      integer               short
+      integer(ip)           short
       parameter           ( short  = 32 )
 
 !
@@ -186,24 +187,24 @@
       character*(short)     timstr
       character*(1)         touchc
 
-      double precision      et
+      real(wp)              et
 
-      integer               attdsc ( adscsz )
-      integer               base
-      integer               cnstyp
-      integer               colidx
-      integer               descr  ( eqvdsz )
-      integer               dtype
-      integer               i
-      integer               irsolv
-      integer               lxb
-      integer               lxe
-      integer               ncns
-      integer               ntab
-      integer               opcode
-      integer               sb
-      integer               se
-      integer               tabidx
+      integer(ip)           attdsc ( adscsz )
+      integer(ip)           base
+      integer(ip)           cnstyp
+      integer(ip)           colidx
+      integer(ip)           descr  ( eqvdsz )
+      integer(ip)           dtype
+      integer(ip)           i
+      integer(ip)           irsolv
+      integer(ip)           lxb
+      integer(ip)           lxe
+      integer(ip)           ncns
+      integer(ip)           ntab
+      integer(ip)           opcode
+      integer(ip)           sb
+      integer(ip)           se
+      integer(ip)           tabidx
 
 !
 !     No error to start with.

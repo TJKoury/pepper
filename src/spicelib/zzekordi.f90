@@ -1,6 +1,7 @@
 !$Procedure      ZZEKORDI ( Order of an integer EK column )
 
       subroutine zzekordi ( ivals, nullok, nlflgs, nvals, iorder )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 !
 ! $ Declarations
 
-      integer               ivals  ( * )
+      integer(ip)           ivals  ( * )
       logical               nullok
       logical               nlflgs ( * )
-      integer               nvals
-      integer               iorder ( * )
+      integer(ip)           nvals
+      integer(ip)           iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -168,15 +169,15 @@
 !
 !     Local variables
 !
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               i4
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           i4
 
-      integer               gap
-      integer               i
-      integer               j
-      integer               jg
+      integer(ip)           gap
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           jg
 
       logical               n1
       logical               n2

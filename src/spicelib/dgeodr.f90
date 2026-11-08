@@ -1,6 +1,7 @@
 !$Procedure DGEODR ( Derivative of geodetic w.r.t. rectangular )
 
       subroutine dgeodr ( x, y, z, re, f, jacobi )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      x
-      double precision      y
-      double precision      z
-      double precision      re
-      double precision      f
-      double precision      jacobi ( 3, 3 )
+      real(wp)              x
+      real(wp)              y
+      real(wp)              z
+      real(wp)              re
+      real(wp)              f
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -397,11 +398,11 @@
 !
 !     Local variables
 !
-      double precision      rectan  ( 3 )
-      double precision      long
-      double precision      lat
-      double precision      alt
-      double precision      injacb  ( 3, 3 )
+      real(wp)              rectan  ( 3 )
+      real(wp)              long
+      real(wp)              lat
+      real(wp)              alt
+      real(wp)              injacb  ( 3, 3 )
 
 
 !
@@ -419,7 +420,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1.0d0 ) then
+      if ( f .ge. 1.0_wp ) then
 
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
@@ -429,7 +430,7 @@
 
       end if
 
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
 
           call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
           call errdp  ( '*', re                              )

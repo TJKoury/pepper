@@ -2,6 +2,7 @@
 
       subroutine gftfov ( inst,   target, tshape, tframe, &
                           abcorr, obsrvr, step,   cnfine, result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -37,7 +38,7 @@
       include               'gf.inc'
       include               'zzholdd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         inst
@@ -46,9 +47,9 @@
       character*(*)         tframe
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      step
-      double precision      cnfine ( lbcell : * )
-      double precision      result ( lbcell : * )
+      real(wp)              step
+      real(wp)              cnfine ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -858,7 +859,7 @@
 !
 !     SPICELIB functions
 !
-      integer               sized
+      integer(ip)           sized
 
       logical               eqstr
       logical               return
@@ -900,7 +901,7 @@
 !
 !     Local variables
 !
-      double precision      tol
+      real(wp)              tol
       logical               ok
 
 !
@@ -909,7 +910,7 @@
 !     the target is an ephemeris object. We initialize the
 !     ray to prevent portability problems.
 !
-      double precision      raydir ( 3 )
+      real(wp)              raydir ( 3 )
 
 !
 !     Saved variables
@@ -919,7 +920,7 @@
 !
 !     Initial values
 !
-      data                  raydir / 3 * 0.d0 /
+      data                  raydir / 3 * 0.0_wp /
 
 !
 !     Standard SPICE error handling.

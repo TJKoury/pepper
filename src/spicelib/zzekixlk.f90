@@ -1,6 +1,7 @@
 !$Procedure ZZEKIXLK ( EK, look up record pointer in EK index )
 
       subroutine zzekixlk ( handle, coldsc, key, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       include 'ekdatpag.inc'
       include 'ekpage.inc'
 
-      integer               handle
-      integer               coldsc ( cdscsz )
-      integer               key
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           key
+      integer(ip)           recptr
 
 ! $ Brief_I/O
 !
@@ -108,12 +109,12 @@
 !
 !     Local variables
 !
-      integer               addrss
-      integer               base
-      integer               itype
-      integer               q
-      integer               r
-      integer               tree
+      integer(ip)           addrss
+      integer(ip)           base
+      integer(ip)           itype
+      integer(ip)           q
+      integer(ip)           r
+      integer(ip)           tree
 
 !
 !     Use discovery check-in.

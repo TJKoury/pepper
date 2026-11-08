@@ -6,6 +6,7 @@
                             udrefn, rpt,    udrepi, udrepu, udrepf, &
                             bail,   udbail, mw,     nw,     work, &
                             cnfine, result                          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,11 +33,11 @@
       include               'gf.inc'
       include               'zzgf.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      cntrct
-      parameter           ( cntrct = 1.0d0 )
+      real(wp)              cntrct
+      parameter           ( cntrct = 1.0_wp )
 
       character*(*)         vecdef
       character*(*)         method
@@ -45,13 +46,13 @@
       character*(*)         abcorr
       character*(*)         obsrvr
       character*(*)         dref
-      double precision      dvec   ( 3 )
+      real(wp)              dvec   ( 3 )
       character*(*)         crdsys
       character*(*)         crdnam
       character*(*)         relate
-      double precision      refval
-      double precision      tol
-      double precision      adjust
+      real(wp)              refval
+      real(wp)              tol
+      real(wp)              adjust
       external              udstep
       external              udrefn
       logical               rpt
@@ -61,11 +62,11 @@
       logical               bail
       external              udbail
       logical               udbail
-      integer               mw
-      integer               nw
-      double precision      work   ( lbcell : mw, nw )
-      double precision      cnfine ( lbcell : * )
-      double precision      result ( lbcell : * )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work   ( lbcell : mw, nw )
+      real(wp)              cnfine ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -764,8 +765,8 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
-      integer               wncard
+      integer(ip)           isrchc
+      integer(ip)           wncard
 
       logical               failed
       logical               return
@@ -778,26 +779,26 @@
 !
 !     Local parameters
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               mxpass
+      integer(ip)           mxpass
       parameter           ( mxpass  = 3 )
 
-      integer               xpass
+      integer(ip)           xpass
       parameter           ( xpass  = 3 )
 
 !
 !     Number of supported comparison operators:
 !
-      integer               nc
+      integer(ip)           nc
       parameter           ( nc     = 7 )
 
 !
 !     MAXOP is the maximum string length for comparison operators.
 !     MAXOP may grow if new comparisons are added.
 !
-      integer               maxop
+      integer(ip)           maxop
       parameter           ( maxop = 6 )
 
 
@@ -812,13 +813,13 @@
       character*(mxendm)    rptsuf ( mxpass )
       character*(maxop)     uop
 
-      double precision      excon
-      double precision      finish
-      double precision      start
+      real(wp)              excon
+      real(wp)              finish
+      real(wp)              start
 
-      integer               i
-      integer               loc
-      integer               npass
+      integer(ip)           i
+      integer(ip)           loc
+      integer(ip)           npass
 
       logical               localx
       logical               noadjx
@@ -892,7 +893,7 @@
 !
 !     Make sure ADJUST is non-negative.
 !
-      if ( adjust .lt. 0.d0 ) then
+      if ( adjust .lt. 0.0_wp ) then
 
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
@@ -905,7 +906,7 @@
 !
 !     Make sure TOL is positive.
 !
-      if ( tol .le. 0.d0 ) then
+      if ( tol .le. 0.0_wp ) then
 
          call setmsg ( 'TOL was #; must be positive.' )
          call errdp  ( '#',  tol                      )
@@ -1009,7 +1010,7 @@
             call wnfetd ( cnfine, i, start, finish )
 
             call zzgfsolvx( udf,    zzgfcoex,  udstep,   udrefn, &
-                            bail,   udbail,    .false.,  0.d0, &
+                            bail,   udbail,    .false.,  0.0_wp, &
                             start,  finish,    tol,      rpt, &
                             udrepu, work(lbcell,exwidx)      )
 
@@ -1070,7 +1071,7 @@
 !
          localx =   ( uop .eq. 'LOCMIN' ) .or. ( uop .eq. 'LOCMAX' )
 
-         noadjx =  ( adjust .eq.  0.d0    ) .and. &
+         noadjx =  ( adjust .eq.  0.0_wp    ) .and. &
                  ( ( uop    .eq. 'ABSMIN' ) .or. ( uop .eq. 'ABSMAX' ) )
 
 

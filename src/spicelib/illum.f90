@@ -2,6 +2,7 @@
 
       subroutine illum ( target,  et,     abcorr,  obsrvr, &
                          spoint,  phase,  solar,   emissn )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,13 +32,13 @@
       include               'zzctr.inc'
 
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
-      double precision      phase
-      double precision      solar
-      double precision      emissn
+      real(wp)              spoint ( 3 )
+      real(wp)              phase
+      real(wp)              solar
+      real(wp)              emissn
 
 ! $ Brief_I/O
 !
@@ -632,7 +633,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vsep
+      real(wp)              vsep
 
       logical               eqstr
       logical               failed
@@ -641,16 +642,16 @@
 !
 !     Local parameters
 !
-      integer               sun
+      integer(ip)           sun
       parameter           ( sun    =  10 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln =  80 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 
@@ -659,35 +660,35 @@
 !
       character*(frnmln)    frname
 
-      double precision      lt
-      double precision      lts
-      double precision      normal ( 3 )
-      double precision      obsvec ( 3 )
-      double precision      offobs ( 3 )
-      double precision      offsun ( 3 )
-      double precision      radii  ( 3 )
-      double precision      sstate ( 6 )
-      double precision      sunvec ( 3 )
-      double precision      tepoch
-      double precision      tstate ( 6 )
+      real(wp)              lt
+      real(wp)              lts
+      real(wp)              normal ( 3 )
+      real(wp)              obsvec ( 3 )
+      real(wp)              offobs ( 3 )
+      real(wp)              offsun ( 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              sstate ( 6 )
+      real(wp)              sunvec ( 3 )
+      real(wp)              tepoch
+      real(wp)              tstate ( 6 )
 
-      integer               frcode
-      integer               obscde
-      integer               trgcde
+      integer(ip)           frcode
+      integer(ip)           obscde
+      integer(ip)           trgcde
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
       logical               first

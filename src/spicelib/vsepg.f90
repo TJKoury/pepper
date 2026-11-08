@@ -1,6 +1,7 @@
 !$Procedure VSEPG ( Angular separation of vectors, general dimension )
 
-      double precision function vsepg ( v1, v2, ndim )
+      real(wp) function vsepg ( v1, v2, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision   v1 ( * )
-      double precision   v2 ( * )
-      integer            ndim
+      real(wp)           v1 ( * )
+      real(wp)           v2 ( * )
+      integer(ip)        ndim
 
 ! $ Brief_I/O
 !
@@ -253,9 +254,9 @@
 !     SPICELIB functions
 !
       external              pi
-      double precision      pi
-      double precision      vnormg
-      double precision      vdotg
+      real(wp)              pi
+      real(wp)              vnormg
+      real(wp)              vdotg
 
 !
 !     Local Variables
@@ -266,58 +267,58 @@
 !        Magnitude of either of the difference vectors: V1-V2 or
 !           V1-(-V2)
 !
-      double precision      dmag1
-      double precision      dmag2
-      double precision      r1
-      double precision      r2
-      double precision      magdif
+      real(wp)              dmag1
+      real(wp)              dmag2
+      real(wp)              r1
+      real(wp)              r2
+      real(wp)              magdif
 
-      integer               i
+      integer(ip)           i
 
 !
 !     Calculate the magnitudes of V1 and V2; if either is 0, VSEPG = 0
 !
       dmag1 = vnormg ( v1, ndim )
-      if ( dmag1 .eq. 0.d0 ) then
-         vsepg = 0.d0
+      if ( dmag1 .eq. 0.0_wp ) then
+         vsepg = 0.0_wp
          return
       end if
 
       dmag2 = vnormg ( v2, ndim )
-      if ( dmag2 .eq. 0.d0 ) then
-         vsepg = 0.d0
+      if ( dmag2 .eq. 0.0_wp ) then
+         vsepg = 0.0_wp
          return
       end if
 
 
       if      ( vdotg (v1, v2, ndim) .gt. 0 ) then
 
-         r1 = 1.0d0/dmag1
-         r2 = 1.0d0/dmag2
+         r1 = 1.0_wp/dmag1
+         r2 = 1.0_wp/dmag2
 
-         magdif = 0.0d0
+         magdif = 0.0_wp
          do i = 1, ndim
             magdif = magdif + ( v1(i)*r1 - v2(i)*r2 )**2
          end do
          magdif = dsqrt(magdif)
 
-         vsepg = 2.0d0 * asin (0.5d0 * magdif)
+         vsepg = 2.0_wp * asin (0.5_wp * magdif)
 
       else if ( vdotg (v1, v2, ndim) .lt. 0 ) then
 
-         r1 = 1.0d0/dmag1
-         r2 = 1.0d0/dmag2
+         r1 = 1.0_wp/dmag1
+         r2 = 1.0_wp/dmag2
 
-         magdif = 0.0d0
+         magdif = 0.0_wp
          do i = 1, ndim
             magdif = magdif + ( v1(i)*r1 + v2(i)*r2 )**2
          end do
          magdif = dsqrt(magdif)
 
-         vsepg = pi() - 2.0d0 * asin (0.5d0 * magdif)
+         vsepg = pi() - 2.0_wp * asin (0.5_wp * magdif)
 
       else
-         vsepg = pi() / 2.0d0
+         vsepg = pi() / 2.0_wp
       end if
 
       return

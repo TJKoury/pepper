@@ -1,6 +1,7 @@
 !$Procedure      ZZEKORDD ( Order of a double precision EK column )
 
       subroutine zzekordd ( dvals, nullok, nlflgs, nvals, iorder )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 !
 ! $ Declarations
 
-      double precision      dvals  ( * )
+      real(wp)              dvals  ( * )
       logical               nullok
       logical               nlflgs ( * )
-      integer               nvals
-      integer               iorder ( * )
+      integer(ip)           nvals
+      integer(ip)           iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -165,15 +166,15 @@
 !
 !     Local variables
 !
-      double precision      d1
-      double precision      d2
+      real(wp)              d1
+      real(wp)              d2
 
-      integer               gap
-      integer               i
-      integer               i1
-      integer               i2
-      integer               j
-      integer               jg
+      integer(ip)           gap
+      integer(ip)           i
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           j
+      integer(ip)           jg
 
       logical               n1
       logical               n2

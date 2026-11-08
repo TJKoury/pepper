@@ -1,6 +1,7 @@
 !$Procedure FNDLUN ( Find a free logical unit )
 
       subroutine fndlun ( unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,12 +19,12 @@
 
       implicit none
 
-      integer          unit
+      integer(ip)      unit
 
-      integer          minlun
+      integer(ip)      minlun
       parameter      ( minlun =  1 )
 
-      integer          maxlun
+      integer(ip)      maxlun
 #if defined(SPICE_OS_MACOS) && defined(SPICE_COMPILER_INTEL)
       parameter      ( maxlun = 63 )
 #else
@@ -482,16 +483,16 @@
 !
 !     Parameters
 !
-      integer               nresv
+      integer(ip)           nresv
       parameter           ( nresv = 3 )
 
 !
 !     Local variables
 !
-      integer               i
-      integer               iostat
-      integer               last
-      integer               resnum  ( nresv )
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           last
+      integer(ip)           resnum  ( nresv )
 
       logical               first
       logical               opened

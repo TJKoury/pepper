@@ -1,6 +1,7 @@
 !$Procedure   ZZFOVAXI ( Generate an axis vector for polygonal FOV )
 
       subroutine zzfovaxi ( inst, n, bounds, axis )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,13 +31,13 @@
 
       implicit none
 
-      double precision      margin
-      parameter           ( margin = 1.d-12 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e-12_wp )
 
       character*(*)         inst
-      integer               n
-      double precision      bounds ( 3, n )
-      double precision      axis   ( 3 )
+      integer(ip)           n
+      real(wp)              bounds ( 3, n )
+      real(wp)              axis   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -216,8 +217,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      vsep
+      real(wp)              halfpi
+      real(wp)              vsep
 
       logical               failed
       logical               return
@@ -230,14 +231,14 @@
 !
 !     Local variables
 !
-      double precision      cp     ( 3 )
-      double precision      limit
-      double precision      sep
-      double precision      v      ( 3 )
-      double precision      uvec   ( 3 )
+      real(wp)              cp     ( 3 )
+      real(wp)              limit
+      real(wp)              sep
+      real(wp)              v      ( 3 )
+      real(wp)              uvec   ( 3 )
 
-      integer               i
-      integer               next
+      integer(ip)           i
+      integer(ip)           next
 
       logical               ok
 
@@ -324,7 +325,7 @@
 
       end do
 
-      call vsclip ( 1.d0/n, axis )
+      call vsclip ( 1.0_wp/n, axis )
 
 !
 !     If each boundary vector has sufficiently small

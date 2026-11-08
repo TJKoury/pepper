@@ -1,6 +1,7 @@
 !$Procedure XF2RAV ( Transform to rotation and angular velocity)
 
       subroutine xf2rav ( xform, rot, av )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      xform  ( 6, 6 )
-      double precision      rot    ( 3, 3 )
-      double precision      av     ( 3    )
+      real(wp)              xform  ( 6, 6 )
+      real(wp)              rot    ( 3, 3 )
+      real(wp)              av     ( 3    )
 
 ! $ Brief_I/O
 !
@@ -243,11 +244,11 @@
 !-&
 
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
-      double precision      drdt  ( 3, 3 )
-      double precision      omega ( 3, 3 )
+      real(wp)              drdt  ( 3, 3 )
+      real(wp)              omega ( 3, 3 )
 
 
 !

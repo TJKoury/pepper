@@ -3,6 +3,7 @@
       subroutine spkw03 (  handle,  body,    center,  frame, &
                            first,   last,    segid,   intlen, &
                            n,       polydg,  cdata,   btime )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,18 +25,18 @@
 
       include 'spk03.inc'
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      intlen
-      integer               n
-      integer               polydg
-      double precision      cdata (*)
-      double precision      btime
+      real(wp)              intlen
+      integer(ip)           n
+      integer(ip)           polydg
+      real(wp)              cdata (*)
+      real(wp)              btime
 
 ! $ Brief_I/O
 !
@@ -446,30 +447,30 @@
 !
 !     DTYPE is the SPK data type.
 !
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   3 )
 !
 !     ND is the number of double precision components in an SPK
 !     segment descriptor. SPK uses ND = 2.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 !
 !     NI is the number of integer components in an SPK segment
 !     descriptor. SPK uses NI = 6.
 !
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   6 )
 !
 !     NS is the size of a packed SPK segment descriptor.
 !
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
 !
@@ -478,20 +479,20 @@
       character*(sidlen)    etstr
       character*(sidlen)    netstr
 
-      double precision      dcd   ( nd )
-      double precision      descr ( ns )
-      double precision      ltime
-      double precision      mid
-      double precision      numrec
-      double precision      radius
-      double precision      rsize
-      double precision      tol
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              mid
+      real(wp)              numrec
+      real(wp)              radius
+      real(wp)              rsize
+      real(wp)              tol
 
-      integer               i
-      integer               icd   ( ni )
-      integer               k
-      integer               ninrec
-      integer               refcod
+      integer(ip)           i
+      integer(ip)           icd   ( ni )
+      integer(ip)           k
+      integer(ip)           ninrec
+      integer(ip)           refcod
 
 !
 !     Standard SPICE error handling.

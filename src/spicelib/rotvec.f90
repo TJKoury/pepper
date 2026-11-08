@@ -1,6 +1,7 @@
 !$Procedure ROTVEC ( Transform a vector via a rotation )
 
       subroutine rotvec ( v1, angle, iaxis, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision   v1    ( 3 )
-      double precision   angle
-      integer            iaxis
-      double precision   vout  ( 3 )
+      real(wp)           v1    ( 3 )
+      real(wp)           angle
+      integer(ip)        iaxis
+      real(wp)           vout  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -237,16 +238,16 @@
 !
 !     Local variables
 !
-      double precision      s
-      double precision      c
+      real(wp)              s
+      real(wp)              c
 
-      integer               tmp
-      integer               i1
-      integer               i2
-      integer               i3
+      integer(ip)           tmp
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
 
-      double precision      temp   (3)
-      integer               indexs (5)
+      real(wp)              temp   (3)
+      integer(ip)           indexs (5)
       save                  indexs
 
       data                  indexs  / 3, 1, 2, 3, 1 /

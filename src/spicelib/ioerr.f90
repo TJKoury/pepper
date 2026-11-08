@@ -1,6 +1,7 @@
 !$Procedure IOERR ( I/O error message writer )
 
       subroutine ioerr ( action, file, iostat )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       character*(*)    action
       character*(*)    file
-      integer          iostat
+      integer(ip)      iostat
 
 ! $ Brief_I/O
 !
@@ -189,7 +190,7 @@
 !
       character*10          iochar
 
-      integer               longln
+      integer(ip)           longln
       parameter           ( longln = 320 )
       character*(longln)    error
 

@@ -2,6 +2,7 @@
 
       subroutine zzekrd09 (  handle,  segdsc,  coldsc, &
                              recno,   cvlen,   cval,    isnull  )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -31,11 +32,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recno
-      integer               cvlen
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recno
+      integer(ip)           cvlen
       character*(*)         cval
       logical               isnull
 
@@ -175,18 +176,18 @@
       character*(1)         cflag
       character*(cnamsz)    column
 
-      integer               addrss
-      integer               colidx
-      integer               datbas
-      integer               l
-      integer               mdat   ( mdsz09 )
-      integer               metloc
-      integer               ncols
-      integer               nflbas
-      integer               offset
-      integer               q
-      integer               r
-      integer               spp
+      integer(ip)           addrss
+      integer(ip)           colidx
+      integer(ip)           datbas
+      integer(ip)           l
+      integer(ip)           mdat   ( mdsz09 )
+      integer(ip)           metloc
+      integer(ip)           ncols
+      integer(ip)           nflbas
+      integer(ip)           offset
+      integer(ip)           q
+      integer(ip)           r
+      integer(ip)           spp
 
       logical               nullok
 

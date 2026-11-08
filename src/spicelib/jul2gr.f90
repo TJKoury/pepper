@@ -1,6 +1,7 @@
 !$Procedure JUL2GR (Julian to Gregorian Calendar)
 
       subroutine jul2gr (  year, month, day, doy )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               year
-      integer               month
-      integer               day
-      integer               doy
+      integer(ip)           year
+      integer(ip)           month
+      integer(ip)           day
+      integer(ip)           doy
 
 ! $ Brief_I/O
 !
@@ -218,20 +219,20 @@
 !
 !     Spicelib Functions
 !
-      integer               lstlti
+      integer(ip)           lstlti
 
 !
 !     Local (in-line) Functions
 !
-      integer               divble
-      integer               gdoy
-      integer               gdp001
-      integer               gldays
-      integer               gydays
-      integer               jdoy
-      integer               jdp001
-      integer               jldays
-      integer               jydays
+      integer(ip)           divble
+      integer(ip)           gdoy
+      integer(ip)           gdp001
+      integer(ip)           gldays
+      integer(ip)           gydays
+      integer(ip)           jdoy
+      integer(ip)           jdp001
+      integer(ip)           jldays
+      integer(ip)           jydays
 
 !
 !     Local parameters
@@ -239,16 +240,16 @@
 !     We declare the variables that contain the number of days in
 !     400 years (Gregorian), 100 years (Gregorian), 4 years and 1 year.
 !
-      integer               dp400y
+      integer(ip)           dp400y
       parameter           ( dp400y = 365*400 + 97 )
 
-      integer               dp100y
+      integer(ip)           dp100y
       parameter           ( dp100y = 365*100 + 24 )
 
-      integer               dp4y
+      integer(ip)           dp4y
       parameter           ( dp4y   = 365*4   + 1  )
 
-      integer               dp1y
+      integer(ip)           dp1y
       parameter           ( dp1y   = 365 )
 
 
@@ -256,158 +257,158 @@
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      integer               jan
+      integer(ip)           jan
       parameter           ( jan = 31 )
 
-      integer               feb
+      integer(ip)           feb
       parameter           ( feb = 28 )
 
-      integer               mar
+      integer(ip)           mar
       parameter           ( mar = 31 )
 
-      integer               apr
+      integer(ip)           apr
       parameter           ( apr = 30 )
 
-      integer               may
+      integer(ip)           may
       parameter           ( may = 31 )
 
-      integer               jun
+      integer(ip)           jun
       parameter           ( jun = 30 )
 
-      integer               jul
+      integer(ip)           jul
       parameter           ( jul = 31 )
 
-      integer               aug
+      integer(ip)           aug
       parameter           ( aug = 31 )
 
-      integer               sep
+      integer(ip)           sep
       parameter           ( sep = 30 )
 
-      integer               oct
+      integer(ip)           oct
       parameter           ( oct = 31 )
 
-      integer               nov
+      integer(ip)           nov
       parameter           ( nov = 30 )
 
-      integer               dec
+      integer(ip)           dec
       parameter           ( dec = 31 )
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      integer               jan0
+      integer(ip)           jan0
       parameter           ( jan0 = 0  )
 
-      integer               feb0
+      integer(ip)           feb0
       parameter           ( feb0 = jan + jan0 )
 
-      integer               mar0
+      integer(ip)           mar0
       parameter           ( mar0 = feb + feb0 )
 
-      integer               apr0
+      integer(ip)           apr0
       parameter           ( apr0 = mar + mar0 )
 
-      integer               may0
+      integer(ip)           may0
       parameter           ( may0 = apr + apr0 )
 
-      integer               jun0
+      integer(ip)           jun0
       parameter           ( jun0 = may + may0 )
 
-      integer               jul0
+      integer(ip)           jul0
       parameter           ( jul0 = jun + jun0 )
 
-      integer               aug0
+      integer(ip)           aug0
       parameter           ( aug0 = jul + jul0 )
 
-      integer               sep0
+      integer(ip)           sep0
       parameter           ( sep0 = aug + aug0 )
 
-      integer               oct0
+      integer(ip)           oct0
       parameter           ( oct0 = sep + sep0 )
 
-      integer               nov0
+      integer(ip)           nov0
       parameter           ( nov0 = oct + oct0 )
 
-      integer               dec0
+      integer(ip)           dec0
       parameter           ( dec0 = nov + nov0 )
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      integer               janl0
+      integer(ip)           janl0
       parameter           ( janl0 = jan0  )
 
-      integer               febl0
+      integer(ip)           febl0
       parameter           ( febl0 = feb0 )
 
-      integer               marl0
+      integer(ip)           marl0
       parameter           ( marl0 = mar0 + 1 )
 
-      integer               aprl0
+      integer(ip)           aprl0
       parameter           ( aprl0 = apr0 + 1 )
 
-      integer               mayl0
+      integer(ip)           mayl0
       parameter           ( mayl0 = may0 + 1 )
 
-      integer               junl0
+      integer(ip)           junl0
       parameter           ( junl0 = jun0 + 1 )
 
-      integer               jull0
+      integer(ip)           jull0
       parameter           ( jull0 = jul0 + 1 )
 
-      integer               augl0
+      integer(ip)           augl0
       parameter           ( augl0 = aug0 + 1 )
 
-      integer               sepl0
+      integer(ip)           sepl0
       parameter           ( sepl0 = sep0 + 1 )
 
-      integer               octl0
+      integer(ip)           octl0
       parameter           ( octl0 = oct0 + 1 )
 
-      integer               novl0
+      integer(ip)           novl0
       parameter           ( novl0 = nov0 + 1 )
 
-      integer               decl0
+      integer(ip)           decl0
       parameter           ( decl0 = dec0 + 1 )
 
 
 !
 !     Local variables
 !
-      integer               dayg
-      integer               dayj
-      integer               dofyr
-      integer               dy
-      integer               m
-      integer               m100
-      integer               m4
-      integer               m400
-      integer               mon
-      integer               offset
-      integer               offstg
-      integer               offstj
-      integer               rdayg
-      integer               rdayj
-      integer               tmpday
-      integer               tmpyr
-      integer               yr
-      integer               yroff
+      integer(ip)           dayg
+      integer(ip)           dayj
+      integer(ip)           dofyr
+      integer(ip)           dy
+      integer(ip)           m
+      integer(ip)           m100
+      integer(ip)           m4
+      integer(ip)           m400
+      integer(ip)           mon
+      integer(ip)           offset
+      integer(ip)           offstg
+      integer(ip)           offstj
+      integer(ip)           rdayg
+      integer(ip)           rdayj
+      integer(ip)           tmpday
+      integer(ip)           tmpyr
+      integer(ip)           yr
+      integer(ip)           yroff
 
 !
 !     The array EXTRA contains the number of additional days that
 !     appear before the first of a month during a leap year (as opposed
 !     to a non-leap year).
 !
-      integer               extra  ( 12 )
-      integer               dpbegl ( 12 )
+      integer(ip)           extra  ( 12 )
+      integer(ip)           dpbegl ( 12 )
 
 !
 !     DPJAN0(I) gives the number of days that occur before the I'th
 !     month of a normal year.
 !
-      integer               dpjan0 ( 12 )
+      integer(ip)           dpjan0 ( 12 )
 
       logical               first
 

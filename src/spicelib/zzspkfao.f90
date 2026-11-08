@@ -2,6 +2,7 @@
 
       subroutine zzspkfao ( targ,   et,    ref, abcorr, &
                             obssub, starg, lt,  dlt    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,14 +30,14 @@
 
       include 'zzabcorr.inc'
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
       external              obssub
-      double precision      starg    ( 6 )
-      double precision      lt
-      double precision      dlt
+      real(wp)              starg    ( 6 )
+      real(wp)              lt
+      real(wp)              dlt
 
 ! $ Brief_I/O
 !
@@ -356,24 +357,24 @@
       character*(*)         rname
       parameter           ( rname = 'ZZSPKFAO' )
 
-      double precision      delta
-      parameter           ( delta = 1.d0 )
+      real(wp)              delta
+      parameter           ( delta = 1.0_wp )
 
 !
 !     Local variables
 !
       character*(corlen)    prvcor
 
-      double precision      acc    ( 3 )
-      double precision      ssbobs ( 6 )
-      double precision      stctr  ( 6 )
-      double precision      stctro ( 6 )
-      double precision      stobs  ( 6, 2 )
-      double precision      t
+      real(wp)              acc    ( 3 )
+      real(wp)              ssbobs ( 6 )
+      real(wp)              stctr  ( 6 )
+      real(wp)              stctro ( 6 )
+      real(wp)              stobs  ( 6, 2 )
+      real(wp)              t
 
-      integer               i
-      integer               obsctr
-      integer               refid
+      integer(ip)           i
+      integer(ip)           obsctr
+      integer(ip)           refid
 
       logical               attblk ( nabcor )
       logical               pass1

@@ -1,6 +1,7 @@
 !$Procedure BSRCHI ( Binary search for an integer value )
 
-      integer function bsrchi ( value, ndim, array )
+      integer(ip) function bsrchi ( value, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer          value
-      integer          ndim
-      integer          array ( * )
+      integer(ip)      value
+      integer(ip)      ndim
+      integer(ip)      array ( * )
 
 ! $ Brief_I/O
 !
@@ -138,9 +139,9 @@
 !
 !     Local variables
 !
-      integer          left
-      integer          right
-      integer          i
+      integer(ip)      left
+      integer(ip)      right
+      integer(ip)      i
 
 
 

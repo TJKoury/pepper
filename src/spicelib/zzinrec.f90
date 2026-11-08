@@ -1,6 +1,7 @@
 !$Procedure ZZINREC ( DSK, in rectangular element? )
 
       subroutine zzinrec ( p, bounds, margin, exclud, inside )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,13 +29,13 @@
 
       implicit none
 
-      double precision      p      ( 3 )
-      double precision      bounds ( 2, 3 )
-      double precision      margin
-      integer               exclud
+      real(wp)              p      ( 3 )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              margin
+      integer(ip)           exclud
       logical               inside
 
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
 ! $ Brief_I/O
@@ -177,23 +178,23 @@
 !
 !     Element boundary indices:
 !
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower  = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper  = 2 )
 
 !
 !     Local variables
 !
-      double precision      amncor ( 3 )
-      double precision      amxcor ( 3 )
-      double precision      delta  ( 3 )
-      double precision      maxcor ( 3 )
-      double precision      mincor ( 3 )
-      double precision      l      ( 3 )
+      real(wp)              amncor ( 3 )
+      real(wp)              amxcor ( 3 )
+      real(wp)              delta  ( 3 )
+      real(wp)              maxcor ( 3 )
+      real(wp)              mincor ( 3 )
+      real(wp)              l      ( 3 )
 
-      integer               i
+      integer(ip)           i
 
 
 !
@@ -214,7 +215,7 @@
 !
 !     Reject negative margins.
 !
-      if ( margin .lt. 0.d0 ) then
+      if ( margin .lt. 0.0_wp ) then
 
          call chkin  ( 'ZZINREC'                                )
          call setmsg ( 'Margin must be non-negative but was #.' )
@@ -248,7 +249,7 @@
          maxcor(i) = bounds( upper, i)
          l     (i) = maxcor(i) - mincor(i)
 
-         if ( l(i) .lt. 0.d0 ) then
+         if ( l(i) .lt. 0.0_wp ) then
 
             call chkin  ( 'ZZINREC'                              )
             call setmsg ( 'Bounds are out of order for index #; ' &

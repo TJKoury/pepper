@@ -2,6 +2,7 @@
 
       subroutine zzekue05 (  handle,  segdsc,  coldsc, &
                              recptr,  nvals,   dvals,  isnull  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      integer               nvals
-      double precision      dvals
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      integer(ip)           nvals
+      real(wp)              dvals
       logical               isnull
 
 ! $ Brief_I/O

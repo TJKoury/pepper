@@ -1,6 +1,7 @@
 !$Procedure LJUCRS ( Left-justify, Uppercase, Compress )
 
       subroutine ljucrs ( n, input, output )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      integer             n
+      integer(ip)         n
       character*(*)       input
       character*(*)       output
 
@@ -114,21 +115,21 @@
 !
 !     Local Variables
 !
-      integer               i
-      integer               j
-      integer               count
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           count
 
-      integer               inlen
-      integer               outlen
+      integer(ip)           inlen
+      integer(ip)           outlen
 
-      integer               ich
+      integer(ip)           ich
 
 !
 !     Saved variables
 !
-      integer               shift
-      integer               lowa
-      integer               lowz
+      integer(ip)           shift
+      integer(ip)           lowa
+      integer(ip)           lowz
 
       logical               first
 

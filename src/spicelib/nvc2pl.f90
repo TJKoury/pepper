@@ -1,6 +1,7 @@
 !$Procedure NVC2PL ( Normal vector and constant to plane )
 
       subroutine nvc2pl ( normal, konst, plane )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-      double precision      normal (    3 )
-      double precision      konst
-      double precision      plane  ( ubpl )
+      real(wp)              normal (    3 )
+      real(wp)              konst
+      real(wp)              plane  ( ubpl )
 
 ! $ Brief_I/O
 !
@@ -354,17 +355,17 @@
 !        closest point in the plane to the origin.
 !
 !
-      integer               nmlpos
+      integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer               conpos
+      integer(ip)           conpos
       parameter           ( conpos = 4 )
 
 !
 !     Local variables
 !
-      double precision      mag
-      double precision      tmpvec ( 3 )
+      real(wp)              mag
+      real(wp)              tmpvec ( 3 )
 
 !
 !     This routine checks in only if an error is discovered.
@@ -406,7 +407,7 @@
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      if ( plane(conpos) .lt. 0.d0 ) then
+      if ( plane(conpos) .lt. 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
          call vminus     (  plane(nmlpos), tmpvec        )

@@ -1,6 +1,7 @@
 !$Procedure WRLINE ( Write Output Line to a Device )
 
       subroutine wrline ( device, line )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
       character*(*)          device
       character*(*)          line
 
-      integer                filen
+      integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter            ( filen = 128 )
 #else
@@ -524,8 +525,8 @@
 !
 !     SPICELIB functions
 !
-      integer               ltrim
-      integer               rtrim
+      integer(ip)           ltrim
+      integer(ip)           rtrim
 
 !
 !     Local variables
@@ -534,8 +535,8 @@
       character*11          errstr
       character*(filen)     tmpnam
 
-      integer               iostat
-      integer               unit
+      integer(ip)           iostat
+      integer(ip)           unit
 
       logical               exists
       logical               opened

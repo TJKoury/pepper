@@ -2,6 +2,7 @@
 
       subroutine zzspkflt ( trgsub, et,    ref, abcorr, &
                             stobs,  starg, lt,  dlt     )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,13 +31,13 @@
       include 'zzabcorr.inc'
 
       external              trgsub
-      double precision      et
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      double precision      stobs  ( 6 )
-      double precision      starg  ( 6 )
-      double precision      lt
-      double precision      dlt
+      real(wp)              stobs  ( 6 )
+      real(wp)              starg  ( 6 )
+      real(wp)              lt
+      real(wp)              dlt
 
 ! $ Brief_I/O
 !
@@ -344,10 +345,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      touchd
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              touchd
+      real(wp)              vdot
+      real(wp)              vnorm
 
 
       logical               failed
@@ -363,20 +364,20 @@
 !     TOL is the tolerance used for a division-by-zero test
 !     performed prior to computation of DLT.
 !
-      double precision      tol
-      parameter           ( tol    = 1.d-10 )
+      real(wp)              tol
+      parameter           ( tol    = 1.0e-10_wp )
 
 !
 !     Convergence limit:
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-17 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-17_wp )
 
 !
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 5 )
 
 !
@@ -384,22 +385,22 @@
 !
       character*(corlen)    prvcor
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      ctrssb ( 6 )
-      double precision      dist
-      double precision      epoch
-      double precision      prvlt
-      double precision      lterr
-      double precision      ssbtrg ( 6 )
-      double precision      sttctr ( 6 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              ctrssb ( 6 )
+      real(wp)              dist
+      real(wp)              epoch
+      real(wp)              prvlt
+      real(wp)              lterr
+      real(wp)              ssbtrg ( 6 )
+      real(wp)              sttctr ( 6 )
 
-      integer               i
-      integer               ltsign
-      integer               numitr
-      integer               refid
-      integer               trgctr
+      integer(ip)           i
+      integer(ip)           ltsign
+      integer(ip)           numitr
+      integer(ip)           refid
+      integer(ip)           trgctr
 
       logical               attblk ( nabcor )
       logical               pass1
@@ -510,7 +511,7 @@
       dist = vnorm(starg)
       lt   = dist / clight()
 
-      if ( lt .eq. 0.d0 ) then
+      if ( lt .eq. 0.0_wp ) then
 !
 !        This can happen only if the observer and target are at the
 !        same position. We don't consider this an error, but we're not
@@ -566,7 +567,7 @@
       end if
 
       i      = 0
-      lterr  = 1.d0
+      lterr  = 1.0_wp
 
       do while (        ( i     .lt. numitr ) &
                   .and. ( lterr .gt. cnvlim )  )
@@ -596,7 +597,7 @@
 !        the previous light time corrected epoch.
 !
          lterr = touchd(    abs ( lt  - prvlt      ) &
-                          / max ( 1.d0, abs(epoch) )  )
+                          / max ( 1.0_wp, abs(epoch) )  )
          i     = i + 1
 
       end do
@@ -684,7 +685,7 @@
 !
 !
 !
-      a   =  1.d0 / ( clight()*vnorm(starg) )
+      a   =  1.0_wp / ( clight()*vnorm(starg) )
 
       b   =  vdot ( starg, starg(4)  )
 
@@ -694,7 +695,7 @@
 !     For physically realistic target velocities, S*C*A cannot equal 1.
 !     We'll check for this case anyway.
 !
-      if (  ltsign*c*a  .gt.  1.d0-tol ) then
+      if (  ltsign*c*a  .gt.  1.0_wp-tol ) then
 
          call setmsg ( 'Target range rate magnitude is ' &
       //               'approximately the speed of light. The ' &
@@ -709,14 +710,14 @@
 !
 !     Compute DLT: the rate of change of light time.
 !
-      dlt = (a*b)/( 1.d0 - ltsign*c*a )
+      dlt = (a*b)/( 1.0_wp - ltsign*c*a )
 
 !
 !     Overwrite the velocity portion of the output state
 !     with the light-time corrected velocity.
 !
-      call vlcom ( 1.d0 + ltsign*dlt, ssbtrg(4), &
-                  -1.d0,              stobs(4),   starg(4) )
+      call vlcom ( 1.0_wp + ltsign*dlt, ssbtrg(4), &
+                  -1.0_wp,              stobs(4),   starg(4) )
 
 
       call chkout ( rname )

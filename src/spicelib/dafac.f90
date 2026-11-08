@@ -1,6 +1,7 @@
 !$Procedure DAFAC ( DAF add comments )
 
       subroutine dafac ( handle, n, buffer )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      integer               handle
-      integer               n
+      integer(ip)           handle
+      integer(ip)           n
       character*(*)         buffer(*)
 
 ! $ Brief_I/O
@@ -352,9 +353,9 @@
 !
 !     SPICELIB functions
 !
-      integer               cpos
-      integer               lastnb
-      integer               ncpos
+      integer(ip)           cpos
+      integer(ip)           lastnb
+      integer(ip)           ncpos
 
       logical               failed
       logical               return
@@ -363,32 +364,32 @@
 !
 !     Length of a DAF file internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     Decimal value for the DAF comment area end-of-comment (EOC)
 !     marker.
 !
-      integer               inteoc
+      integer(ip)           inteoc
       parameter           ( inteoc = 4 )
 !
 !     Decimal value for the DAF comment area end-of-line (EOL) marker.
 !
-      integer               inteol
+      integer(ip)           inteol
       parameter           ( inteol = 0 )
 !
 !     Length of a DAF character record, in characters.
 !
-      integer               mxcrec
+      integer(ip)           mxcrec
       parameter           ( mxcrec = 1000 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer               maxpch
+      integer(ip)           maxpch
       parameter           ( maxpch = 126 )
 
-      integer               minpch
+      integer(ip)           minpch
       parameter           ( minpch = 32 )
 !
 !     Local variables
@@ -398,28 +399,28 @@
       character*(1)         eolmrk
       character*(ifnlen)    ifname
 
-      integer               curpos
-      integer               daflun
-      integer               eocpos
-      integer               i
-      integer               j
-      integer               length
-      integer               nchars
-      integer               ncomc
-      integer               ncomr
-      integer               nelpos
-      integer               newrec
-      integer               notusd
-      integer               recno
-      integer               rinuse
-      integer               space
+      integer(ip)           curpos
+      integer(ip)           daflun
+      integer(ip)           eocpos
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           length
+      integer(ip)           nchars
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nelpos
+      integer(ip)           newrec
+      integer(ip)           notusd
+      integer(ip)           recno
+      integer(ip)           rinuse
+      integer(ip)           space
 
-      integer               iostat
-      integer               bward
-      integer               fward
-      integer               free
-      integer               nd
-      integer               ni
+      integer(ip)           iostat
+      integer(ip)           bward
+      integer(ip)           fward
+      integer(ip)           free
+      integer(ip)           nd
+      integer(ip)           ni
 
       logical               empty
       logical               first

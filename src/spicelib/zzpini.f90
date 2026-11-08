@@ -8,6 +8,7 @@
                           maxagt, mxnote, wtvars, &
                           wtptrs, wtpool, wtagnt, &
                           agents, active, notify, subctr  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -33,33 +34,33 @@
 
       include              'zzctr.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
       logical               first
-      integer               maxvar
-      integer               maxval
-      integer               maxlin
+      integer(ip)           maxvar
+      integer(ip)           maxval
+      integer(ip)           maxlin
       character*(*)         begdat
       character*(*)         begtxt
-      integer               nmpool ( 2,  lbpool : maxvar )
-      integer               dppool ( 2,  lbpool : maxval )
-      integer               chpool ( 2,  lbpool : maxlin )
-      integer               namlst (              maxvar )
-      integer               datlst (              maxvar )
-      integer               maxagt
-      integer               mxnote
+      integer(ip)           nmpool ( 2,  lbpool : maxvar )
+      integer(ip)           dppool ( 2,  lbpool : maxval )
+      integer(ip)           chpool ( 2,  lbpool : maxlin )
+      integer(ip)           namlst (              maxvar )
+      integer(ip)           datlst (              maxvar )
+      integer(ip)           maxagt
+      integer(ip)           mxnote
       character*(*)         wtvars ( lbcell : maxvar )
-      integer               wtptrs ( maxvar )
-      integer               wtpool ( 2, lbpool:mxnote )
+      integer(ip)           wtptrs ( maxvar )
+      integer(ip)           wtpool ( 2, lbpool:mxnote )
       character*(*)         wtagnt ( mxnote )
       character*(*)         agents ( lbcell : * )
       character*(*)         active ( lbcell : * )
       character*(*)         notify ( lbcell : * )
-      integer               subctr ( ctrsiz )
+      integer(ip)           subctr ( ctrsiz )
 
 ! $ Brief_I/O
 !
@@ -244,18 +245,18 @@
 !
 !     SPICELIB Functions.
 !
-      integer               touchi
-      integer               zzshsh
+      integer(ip)           touchi
+      integer(ip)           zzshsh
 
       logical               failed
 
 !
 !     Local parameters
 !
-      integer               shrtln
+      integer(ip)           shrtln
       parameter           ( shrtln =  9 )
 
-      integer               bslash
+      integer(ip)           bslash
       parameter           ( bslash = 92 )
 
       character*(shrtln)    dat
@@ -268,8 +269,8 @@
 !     Local variables
 !
 
-      integer               dummy
-      integer               i
+      integer(ip)           dummy
+      integer(ip)           i
 
 
       if ( first ) then

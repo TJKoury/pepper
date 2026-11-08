@@ -1,6 +1,7 @@
 !$Procedure ZZSPKFZT ( SPK function, easy reader, target )
 
       subroutine zzspkfzt ( trgsub, et, ref, abcorr, obs, starg, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,12 +33,12 @@
       include              'zzabcorr.inc'
 
       external              trgsub
-      double precision      et
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      integer               obs
-      double precision      starg    ( 6 )
-      double precision      lt
+      integer(ip)           obs
+      real(wp)              starg    ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -747,8 +748,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              vnorm
 
       logical               failed
       logical               return
@@ -764,23 +765,23 @@
 !
       character*(corlen)    prvcor
 
-      double precision      corxfm   ( 6, 6 )
-      double precision      dlt
-      double precision      dltctr
-      double precision      ltcent
-      double precision      state    ( 6    )
-      double precision      stemp    ( 6    )
-      double precision      stobs    ( 6    )
-      double precision      sttctr   ( 6    )
-      double precision      xform    ( 6, 6 )
+      real(wp)              corxfm   ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              dltctr
+      real(wp)              ltcent
+      real(wp)              state    ( 6    )
+      real(wp)              stemp    ( 6    )
+      real(wp)              stobs    ( 6    )
+      real(wp)              sttctr   ( 6    )
+      real(wp)              xform    ( 6, 6 )
 
-      integer               center
-      integer               fj2000
-      integer               ltsign
-      integer               reqfrm
-      integer               trgctr
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           fj2000
+      integer(ip)           ltsign
+      integer(ip)           reqfrm
+      integer(ip)           trgctr
+      integer(ip)           type
+      integer(ip)           typeid
 
       logical               attblk ( nabcor )
       logical               first
@@ -951,8 +952,8 @@
 !
          if ( center .eq. obs ) then
 
-            ltcent = 0.0d0
-            dltctr = 0.0d0
+            ltcent = 0.0_wp
+            dltctr = 0.0_wp
 
          else
 

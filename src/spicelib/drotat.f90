@@ -1,6 +1,7 @@
 !$Procedure DROTAT ( Derivative of a rotation matrix )
 
       subroutine drotat ( angle, iaxis, dmout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 
       implicit none
 
-      double precision   angle
-      integer            iaxis
-      double precision   dmout  ( 3,3 )
+      real(wp)           angle
+      integer(ip)        iaxis
+      real(wp)           dmout  ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -167,13 +168,13 @@
 !-&
 
 
-      double precision      s
-      double precision      c
+      real(wp)              s
+      real(wp)              c
 
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               indexs ( 5 )
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           indexs ( 5 )
       save                  indexs
 
       data                  indexs  / 1, 2, 3, 1, 2 /
@@ -213,13 +214,13 @@
 !
 !  Construct the rotation matrix
 !
-      dmout(i1,i1) =  0.d0
-      dmout(i2,i1) =  0.d0
-      dmout(i3,i1) =  0.d0
-      dmout(i1,i2) =  0.d0
+      dmout(i1,i1) =  0.0_wp
+      dmout(i2,i1) =  0.0_wp
+      dmout(i3,i1) =  0.0_wp
+      dmout(i1,i2) =  0.0_wp
       dmout(i2,i2) = -s
       dmout(i3,i2) = -c
-      dmout(i1,i3) =  0.d0
+      dmout(i1,i3) =  0.0_wp
       dmout(i2,i3) =  c
       dmout(i3,i3) = -s
 !

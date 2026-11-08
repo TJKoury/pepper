@@ -1,6 +1,7 @@
 !$Procedure XFMSTA ( Transform state between coordinate systems )
 
       subroutine xfmsta ( istate, icosys, ocosys, body, ostate )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       include               'zzctr.inc'
 
-      double precision      istate(6)
+      real(wp)              istate(6)
       character*(*)         icosys
       character*(*)         ocosys
       character*(*)         body
-      double precision      ostate(6)
+      real(wp)              ostate(6)
 
 ! $ Brief_I/O
 !
@@ -569,8 +570,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      integer               isrchc
+      real(wp)              dpmax
+      integer(ip)           isrchc
       logical               failed
       logical               return
 
@@ -580,49 +581,49 @@
 !     Potentially large numbers produced by transforming the
 !     velocity using the Jacobian must not exceed DPMAX()/MARGIN:
 !
-      double precision      margin
-      parameter           ( margin = 1.d2 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e2_wp )
 
 !
 !     The size of each coordinate system name must not exceed
 !     CHSIZ characters.
 !
-      integer               chsiz
+      integer(ip)           chsiz
       parameter           ( chsiz  = 40 )
 
 !
 !     NCOSYS is the number of coordinate systems supported by
 !     this routine.
 !
-      integer               ncosys
+      integer(ip)           ncosys
       parameter           ( ncosys = 6 )
 
 !
 !     The following integer parameters represent the coordinate
 !     systems supported by this routine.
 !
-      integer               rectan
+      integer(ip)           rectan
       parameter           ( rectan = 1 )
 
-      integer               cyl
+      integer(ip)           cyl
       parameter           ( cyl    = 2 )
 
-      integer               latnl
+      integer(ip)           latnl
       parameter           ( latnl  = 3 )
 
-      integer               sphcl
+      integer(ip)           sphcl
       parameter           ( sphcl  = 4 )
 
-      integer               geodet
+      integer(ip)           geodet
       parameter           ( geodet = 5 )
 
-      integer               plntgr
+      integer(ip)           plntgr
       parameter           ( plntgr = 6 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 
@@ -642,8 +643,8 @@
 !     IPOS and IVEL are the input position and velocity translated
 !     into rectangular.
 !
-      double precision      ipos   ( 3 )
-      double precision      ivel   ( 3 )
+      real(wp)              ipos   ( 3 )
+      real(wp)              ivel   ( 3 )
 
 !
 !     For transformations including either geodetic or planetographic
@@ -651,52 +652,52 @@
 !     associated with the input body. These values will be loaded
 !     from the kernel pool.
 !
-      double precision      radii  ( 3 )
+      real(wp)              radii  ( 3 )
 
 !
 !     JACOBI is the Jacobian matrix that converts the velocity
 !     coordinates between systems.
 !
-      double precision      jacobi ( 3, 3 )
+      real(wp)              jacobi ( 3, 3 )
 
 !
 !     The flattening coefficient, F, is calculated when either
 !     geodetic or planetographic coordinate systems are included
 !     in the transformation.
 !
-      double precision      f
+      real(wp)              f
 
 !
 !     SQTMP and TOOBIG are used to check for possible numeric
 !     overflow situations.
 !
-      double precision      sqtmp
-      double precision      toobig
+      real(wp)              sqtmp
+      real(wp)              toobig
 
 !
 !     BODYID is only used when the input or output coordinate
 !     systems are geodetic or planetographic. The BODYID is the NAID ID
 !     associated with the input body name.
 !
-      integer               bodyid
+      integer(ip)           bodyid
 
 !
 !     ISYS and OSYS are the integer codes corresponding to the
 !     input and output coordinate systems. I and J are iterators.
 !
-      integer               i
-      integer               isys
-      integer               j
-      integer               osys
+      integer(ip)           i
+      integer(ip)           isys
+      integer(ip)           j
+      integer(ip)           osys
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svbody
-      integer               svbdid
+      integer(ip)           svbdid
       logical               svfnd1
 
       logical               first
@@ -1123,9 +1124,9 @@
 !        From rectangular for the case when the input position is along
 !        the z-axis ...
 !
-         if ( ( abs(ipos(1)) + abs(ipos(2)) ) .eq. 0.d0) then
+         if ( ( abs(ipos(1)) + abs(ipos(2)) ) .eq. 0.0_wp) then
 
-            if ( ( abs(ivel(1)) + abs(ivel(2)) ) .eq. 0.d0 ) then
+            if ( ( abs(ivel(1)) + abs(ivel(2)) ) .eq. 0.0_wp ) then
 !
 !              If the velocity is along the z-axis, then the velocity
 !              can be computed in the output coordinate frame even
@@ -1136,7 +1137,7 @@
 !
 !                  ... to cylindrical
 !
-                  call vpack  ( 0.d0, 0.d0, ivel(3), ostate(4) )
+                  call vpack  ( 0.0_wp, 0.0_wp, ivel(3), ostate(4) )
 
                   call reccyl ( ipos(1),  ostate(1), ostate(2), &
                                 ostate(3) )
@@ -1147,7 +1148,7 @@
 !
 !                  ... to latitudinal
 !
-                  call vpack  ( ivel(3), 0.d0, 0.d0, ostate(4) )
+                  call vpack  ( ivel(3), 0.0_wp, 0.0_wp, ostate(4) )
 
                   call reclat ( ipos(1), ostate(1),  ostate(2), &
                                 ostate(3) )
@@ -1158,7 +1159,7 @@
 !
 !                  ... to spherical
 !
-                  call vpack  ( ivel(3), 0.d0, 0.d0, ostate(4) )
+                  call vpack  ( ivel(3), 0.0_wp, 0.0_wp, ostate(4) )
 
                   call recsph ( ipos(1), ostate(1),  ostate(2), &
                                 ostate(3) )
@@ -1169,7 +1170,7 @@
 !
 !                  ... to geodetic
 !
-                  call vpack  ( 0.d0, 0.d0, ivel(3),  ostate(4) )
+                  call vpack  ( 0.0_wp, 0.0_wp, ivel(3),  ostate(4) )
 
                   call recgeo ( ipos(1), radii(1), f, ostate(1), &
                                 ostate(2), ostate(3) )
@@ -1180,7 +1181,7 @@
 !
 !                  ... to planetographic
 !
-                  call vpack  ( 0.d0, 0.d0, ivel(3), ostate(4) )
+                  call vpack  ( 0.0_wp, 0.0_wp, ivel(3), ostate(4) )
 
                   call recpgr ( body, ipos(1), radii(1), f, ostate(1), &
                                 ostate(2), ostate(3) )

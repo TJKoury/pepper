@@ -3,6 +3,7 @@
       subroutine zzbodker ( names,  nornam, codes,  nvals,  extker, &
                             bnmlst, bnmpol, bnmnms, bnmidx, &
                             bidlst, bidpol, bidids, bididx  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,22 +29,22 @@
 
       include               'zzbodtrn.inc'
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
       character*(maxl)      names  (          nroom )
       character*(maxl)      nornam (          nroom )
-      integer               codes  (          nroom )
-      integer               nvals
+      integer(ip)           codes  (          nroom )
+      integer(ip)           nvals
       logical               extker
-      integer               bnmlst (          nroom )
-      integer               bnmpol ( lbpool : nroom )
+      integer(ip)           bnmlst (          nroom )
+      integer(ip)           bnmpol ( lbpool : nroom )
       character*(maxl)      bnmnms (          nroom )
-      integer               bnmidx (          nroom )
-      integer               bidlst (          nroom )
-      integer               bidpol ( lbpool : nroom )
-      integer               bidids (          nroom )
-      integer               bididx (          nroom )
+      integer(ip)           bnmidx (          nroom )
+      integer(ip)           bidlst (          nroom )
+      integer(ip)           bidpol ( lbpool : nroom )
+      integer(ip)           bidids (          nroom )
+      integer(ip)           bididx (          nroom )
 
 ! $ Brief_I/O
 !
@@ -224,7 +225,7 @@
 !
 !     Local Parameters
 !
-      integer               keylen
+      integer(ip)           keylen
       parameter           ( keylen = 32 )
 
 !
@@ -234,9 +235,9 @@
       character*(keylen)    nbn
       character*(1)         type   ( 2 )
 
-      integer               i
-      integer               nsiz   ( 2 )
-      integer               num    ( 2 )
+      integer(ip)           i
+      integer(ip)           nsiz   ( 2 )
+      integer(ip)           num    ( 2 )
 
       logical               found
       logical               plfind ( 2 )

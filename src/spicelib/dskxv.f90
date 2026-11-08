@@ -3,6 +3,7 @@
       subroutine dskxv ( pri,    target, nsurf, &
                          srflst, et,     fixref, nrays, &
                          vtxarr, dirarr, xptarr, fndarr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -34,14 +35,14 @@
 
       logical               pri
       character*(*)         target
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      et
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              et
       character*(*)         fixref
-      integer               nrays
-      double precision      vtxarr ( 3, * )
-      double precision      dirarr ( 3, * )
-      double precision      xptarr ( 3, * )
+      integer(ip)           nrays
+      real(wp)              vtxarr ( 3, * )
+      real(wp)              dirarr ( 3, * )
+      real(wp)              xptarr ( 3, * )
       logical               fndarr ( * )
 
 ! $ Brief_I/O
@@ -816,10 +817,10 @@
 !
 !     Local parameters
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -828,16 +829,16 @@
       character*(frnmln)    prvfrm
       character*(bdnmln)    svtnam
 
-      integer               fixfid
-      integer               frmctr ( ctrsiz )
-      integer               fxcent
-      integer               fxclss
-      integer               fxtpid
-      integer               i
-      integer               prvtcd
-      integer               svtcde
-      integer               trgcde
-      integer               trgctr ( ctrsiz )
+      integer(ip)           fixfid
+      integer(ip)           frmctr ( ctrsiz )
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxtpid
+      integer(ip)           i
+      integer(ip)           prvtcd
+      integer(ip)           svtcde
+      integer(ip)           trgcde
+      integer(ip)           trgctr ( ctrsiz )
 
       logical               first
       logical               frmfnd

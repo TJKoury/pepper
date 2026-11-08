@@ -1,6 +1,7 @@
 !$Procedure FN2LUN ( Map name of open file to its logical unit. )
 
       subroutine fn2lun ( filnam, lunit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
       implicit none
 
       character*(*)    filnam
-      integer          lunit
+      integer(ip)      lunit
 
 ! $ Brief_I/O
 !
@@ -120,7 +121,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
       logical               exists
       logical               opened

@@ -1,6 +1,7 @@
 !$Procedure DASSDR ( DAS, segregate data records )
 
       subroutine dassdr ( handle )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -205,7 +206,7 @@
 !
 !     SPICELIB functions
 !
-      integer               sumai
+      integer(ip)           sumai
 
       logical               failed
       logical               return
@@ -213,50 +214,50 @@
 !
 !     Local parameters
 !
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc   = 1024 )
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd   =  128 )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi   =  256 )
 
 !
 !     Data type parameters
 !
-      integer               char
+      integer(ip)           char
       parameter           ( char   =  1  )
 
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =  2  )
 
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
-      integer               dir
+      integer(ip)           dir
       parameter           ( dir    =  4  )
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      integer               bwdloc
+      integer(ip)           bwdloc
       parameter           ( bwdloc = 1 )
 
-      integer               fwdloc
+      integer(ip)           fwdloc
       parameter           ( fwdloc = 2 )
 
 !
 !     Directory address range location base
 !
-      integer               rngbas
+      integer(ip)           rngbas
       parameter           ( rngbas  =  2  )
 
 
 !
 !     Location of first type descriptor
 !
-      integer               begdsc
+      integer(ip)           begdsc
       parameter           ( begdsc = 9 )
 
 !
@@ -265,42 +266,42 @@
       character*(nwc)       crec
       character*(nwc)       savec
 
-      double precision      drec   ( nwd )
-      double precision      saved  ( nwd )
+      real(wp)              drec   ( nwd )
+      real(wp)              saved  ( nwd )
 
-      integer               base
-      integer               count  ( 4 )
-      integer               dest
-      integer               drbase
-      integer               free
-      integer               i
-      integer               irec   ( nwi    )
-      integer               j
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               loc
-      integer               lrec
-      integer               ltype
-      integer               lword
-      integer               maxadr
-      integer               minadr
-      integer               n
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
-      integer               offset
-      integer               pos
-      integer               prvtyp
-      integer               recno
-      integer               savei  ( nwi    )
-      integer               savtyp
-      integer               scrhan
-      integer               start
-      integer               total
-      integer               type
-      integer               unit
+      integer(ip)           base
+      integer(ip)           count  ( 4 )
+      integer(ip)           dest
+      integer(ip)           drbase
+      integer(ip)           free
+      integer(ip)           i
+      integer(ip)           irec   ( nwi    )
+      integer(ip)           j
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           loc
+      integer(ip)           lrec
+      integer(ip)           ltype
+      integer(ip)           lword
+      integer(ip)           maxadr
+      integer(ip)           minadr
+      integer(ip)           n
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           offset
+      integer(ip)           pos
+      integer(ip)           prvtyp
+      integer(ip)           recno
+      integer(ip)           savei  ( nwi    )
+      integer(ip)           savtyp
+      integer(ip)           scrhan
+      integer(ip)           start
+      integer(ip)           total
+      integer(ip)           type
+      integer(ip)           unit
 
       logical               more
 
@@ -314,10 +315,10 @@
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      integer               next   ( 3 )
+      integer(ip)           next   ( 3 )
       save                  next
 
-      integer               prev   ( 3 )
+      integer(ip)           prev   ( 3 )
       save                  prev
 
 !

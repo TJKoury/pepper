@@ -1,6 +1,7 @@
 !$Procedure      ZZREFCH0 (Reference frame Change)
 
       subroutine zzrefch0 ( frame1, frame2, et, rotate )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       include              'errhnd.inc'
       include              'frmtyp.inc'
 
-      integer               frame1
-      integer               frame2
-      double precision      et
-      double precision      rotate ( 3, 3 )
+      integer(ip)           frame1
+      integer(ip)           frame2
+      real(wp)              et
+      real(wp)              rotate ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -145,7 +146,7 @@
 !
 !     SPICE functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -153,16 +154,16 @@
 !
 !     Local Parameters
 !
-      integer               maxnod
+      integer(ip)           maxnod
       parameter           ( maxnod = 10 )
 
-      integer               maxxfm
+      integer(ip)           maxxfm
       parameter           ( maxxfm = maxnod + 4 )
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      integer               rootf
+      integer(ip)           rootf
       parameter           ( rootf = 1 )
 
 !
@@ -177,37 +178,37 @@
 !     plan to add rotations beyond the obvious chain from
 !     FRAME1 to a root node.
 !
-      double precision      rot ( 3, 3, maxxfm )
+      real(wp)              rot ( 3, 3, maxxfm )
 
 !
 !     ROT2 is used to store intermediate rotation from
 !     FRAME2 to some node in the chain from FRAME1 to PCK or
 !     INERTL frames.
 !
-      double precision      rot2  ( 3, 3, 2     )
-      double precision      tmprot( 3, 3        )
+      real(wp)              rot2  ( 3, 3, 2     )
+      real(wp)              tmprot( 3, 3        )
 
-      integer               cent
-      integer               class
-      integer               clssid
-      integer               cmnode
-      integer               get
+      integer(ip)           cent
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           cmnode
+      integer(ip)           get
 !
 !     FRAME contains the frames we transform from in going from
 !     FRAME1 to FRAME2.  FRAME(1) = FRAME1 by  construction.
 !
-      integer               frame ( maxnod )
-      integer               i
-      integer               inc
-      integer               j
+      integer(ip)           frame ( maxnod )
+      integer(ip)           i
+      integer(ip)           inc
+      integer(ip)           j
 !
 !     NODE counts the number of rotations needed to go
 !     from FRAME1 to FRAME2.
 !
-      integer               node
-      integer               put
-      integer               relto
-      integer               this
+      integer(ip)           node
+      integer(ip)           put
+      integer(ip)           relto
+      integer(ip)           this
 
       logical               done
       logical               found

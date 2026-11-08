@@ -2,6 +2,7 @@
 
       subroutine ckr03 ( handle, descr, sclkdp, tol, needav, &
                          record, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      record ( * )
+      real(wp)              record ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -352,10 +353,10 @@
       logical               return
       logical               failed
 
-      integer               lstltd
-      integer               lstled
+      integer(ip)           lstltd
+      integer(ip)           lstled
 
-      double precision      dpmax
+      real(wp)              dpmax
 
 !
 !     Local parameters
@@ -383,62 +384,62 @@
 !                   operates on.
 !
 !
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               qsiz
+      integer(ip)           qsiz
       parameter           ( qsiz   = 4 )
 
-      integer               qavsiz
+      integer(ip)           qavsiz
       parameter           ( qavsiz = 7 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype =  3 )
 
 !
 !     Local variables
 !
-      integer               icd    ( ni )
-      integer               beg
-      integer               end
-      integer               lbeg
-      integer               lend
-      integer               lhand
-      integer               numrec
-      integer               numint
-      integer               nrdir
-      integer               nidir
-      integer               group
-      integer               dirloc
-      integer               remain
-      integer               skip
-      integer               grpadd
-      integer               addr
-      integer               laddr
-      integer               raddr
-      integer               psiz
-      integer               i
-      integer               n
+      integer(ip)           icd    ( ni )
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           lbeg
+      integer(ip)           lend
+      integer(ip)           lhand
+      integer(ip)           numrec
+      integer(ip)           numint
+      integer(ip)           nrdir
+      integer(ip)           nidir
+      integer(ip)           group
+      integer(ip)           dirloc
+      integer(ip)           remain
+      integer(ip)           skip
+      integer(ip)           grpadd
+      integer(ip)           addr
+      integer(ip)           laddr
+      integer(ip)           raddr
+      integer(ip)           psiz
+      integer(ip)           i
+      integer(ip)           n
 
-      double precision      dcd    ( nd     )
-      double precision      buffer ( bufsiz )
-      double precision      lsclk
-      double precision      rsclk
-      double precision      rdiff
-      double precision      ldiff
-      double precision      start
-      double precision      nstart
-      double precision      prevs
-      double precision      prevn
+      real(wp)              dcd    ( nd     )
+      real(wp)              buffer ( bufsiz )
+      real(wp)              lsclk
+      real(wp)              rsclk
+      real(wp)              rdiff
+      real(wp)              ldiff
+      real(wp)              start
+      real(wp)              nstart
+      real(wp)              prevs
+      real(wp)              prevn
 
       logical               fnd
 
@@ -457,9 +458,9 @@
 !
 !     Initial values.
 !
-      data    prevs   / -1.d0 /
+      data    prevs   / -1.0_wp /
 
-      data    prevn   / -1.d0 /
+      data    prevn   / -1.0_wp /
 
       data    lhand   / 0     /
 

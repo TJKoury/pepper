@@ -1,6 +1,7 @@
 !$Procedure SHIFTL ( Shift left )
 
       subroutine shiftl ( in, nshift, fillc, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
       implicit none
 
       character*(*)      in
-      integer            nshift
+      integer(ip)        nshift
       character*1        fillc
       character*(*)      out
 
@@ -165,14 +166,14 @@
 !
 !     Local variables
 !
-      integer          inlen
-      integer          outlen
+      integer(ip)      inlen
+      integer(ip)      outlen
 
-      integer          n
-      integer          nsave
-      integer          nfill
-      integer          i
-      integer          s
+      integer(ip)      n
+      integer(ip)      nsave
+      integer(ip)      nfill
+      integer(ip)      i
+      integer(ip)      s
 
 !
 !     Get the length of the input, output strings.

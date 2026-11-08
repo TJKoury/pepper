@@ -1,6 +1,7 @@
 !$Procedure SPKE21 ( S/P Kernel, evaluate, type 21 )
 
       subroutine spke21 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 
       include 'spk21.inc'
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -164,33 +165,33 @@
 !     roughly to the original memos written by Fred Krogh to explain
 !     how all this stuff really works.
 !
-      double precision      tl
-      double precision      g        ( maxtrm )
+      real(wp)              tl
+      real(wp)              g        ( maxtrm )
 
-      double precision      refpos   (    3 )
-      double precision      refvel   (    3 )
+      real(wp)              refpos   (    3 )
+      real(wp)              refvel   (    3 )
 
-      double precision      dt       ( maxtrm, 3 )
-      integer               kqmax1
-      integer               kq       (    3 )
+      real(wp)              dt       ( maxtrm, 3 )
+      integer(ip)           kqmax1
+      integer(ip)           kq       (    3 )
 
-      double precision      fc       ( maxtrm )
+      real(wp)              fc       ( maxtrm )
 
 
-      double precision      sum
-      double precision      delta
-      double precision      tp
-      double precision      wc       ( maxtrm-1 )
-      double precision      w        ( maxtrm+2 )
+      real(wp)              sum
+      real(wp)              delta
+      real(wp)              tp
+      real(wp)              wc       ( maxtrm-1 )
+      real(wp)              w        ( maxtrm+2 )
 
-      integer               maxdim
-      integer               mq2
-      integer               ks1
-      integer               ks
-      integer               kqq
-      integer               i
-      integer               j
-      integer               jx
+      integer(ip)           maxdim
+      integer(ip)           mq2
+      integer(ip)           ks1
+      integer(ip)           ks
+      integer(ip)           kqq
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           jx
 
 !
 !     Save everything between calls.
@@ -200,7 +201,7 @@
 !
 !     Initial values
 !
-      data                  fc (  1 )    / 1.d0 /
+      data                  fc (  1 )    / 1.0_wp /
 
 !
 !     Use discovery check-in.
@@ -302,7 +303,7 @@
 !
 !        Make sure we're not about to attempt division by zero.
 !
-         if ( g(j) .eq. 0.d0 ) then
+         if ( g(j) .eq. 0.0_wp ) then
 
             call chkin  ( 'SPKE21'                             )
             call setmsg ( 'A  value of zero was found at ' &
@@ -324,7 +325,7 @@
 !     Collect KQMAX1 reciprocals.
 !
       do j = 1, kqmax1
-         w(j) = 1.0d0/dble(j)
+         w(j) = 1.0_wp/real(j, wp)
       end do
 
 !
@@ -356,7 +357,7 @@
       do  i = 1, 3
 
          kqq = kq(i)
-         sum = 0.0d0
+         sum = 0.0_wp
 
          do j = kqq, 1, -1
             sum = sum + dt(j,i)*w(j+ks)
@@ -383,7 +384,7 @@
       do  i = 1, 3
 
          kqq = kq(i)
-         sum = 0.0d0
+         sum = 0.0_wp
 
          do j = kqq, 1, -1
             sum = sum + dt(j,i)*w(j+ks)

@@ -1,6 +1,7 @@
 !$Procedure PROP2B ( Propagate a two-body solution )
 
       subroutine prop2b ( gm, pvinit, dt, pvprop )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
 
-      double precision      gm
-      double precision      pvinit ( 6 )
-      double precision      dt
-      double precision      pvprop ( 6 )
+      real(wp)              gm
+      real(wp)              pvinit ( 6 )
+      real(wp)              dt
+      real(wp)              pvprop ( 6 )
 
 ! $ Brief_I/O
 !
@@ -280,12 +281,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      dpmax
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              brcktd
+      real(wp)              dpmax
+      real(wp)              vdot
+      real(wp)              vnorm
 
-      integer               brckti
+      integer(ip)           brckti
 
       logical               return
       logical               vzero
@@ -293,10 +294,10 @@
 !
 !     Local Parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 3 )
 
-      integer               maxbit
+      integer(ip)           maxbit
       parameter           ( maxbit = 64 )
 
 !
@@ -307,76 +308,76 @@
 !     equation and in the propagation of the input state.  They are
 !     described as they are introduced in the code below.
 !
-      double precision      b
-      double precision      b2rv
-      double precision      bq
-      double precision      br
-      double precision      br0
-      double precision      c0
-      double precision      c1
-      double precision      c2
-      double precision      c3
-      double precision      e
-      double precision      eqvec  ( 3 )
-      double precision      f
-      double precision      fx2
-      double precision      h2
-      double precision      hvec   ( 3 )
-      double precision      kfun
-      double precision      kfunl
-      double precision      kfunu
-      double precision      logbnd
-      double precision      lower
-      double precision      oldx
-      double precision      pc
-      double precision      pcdot
-      double precision      pos    ( 3 )
-      double precision      q
-      double precision      qovr0
-      double precision      r0
-      double precision      rv
-      double precision      tmpvec ( 3 )
-      double precision      upper
-      double precision      vc
-      double precision      vcdot
-      double precision      vel    ( 3 )
-      double precision      x
-      double precision      x2
-      double precision      x3
+      real(wp)              b
+      real(wp)              b2rv
+      real(wp)              bq
+      real(wp)              br
+      real(wp)              br0
+      real(wp)              c0
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              c3
+      real(wp)              e
+      real(wp)              eqvec  ( 3 )
+      real(wp)              f
+      real(wp)              fx2
+      real(wp)              h2
+      real(wp)              hvec   ( 3 )
+      real(wp)              kfun
+      real(wp)              kfunl
+      real(wp)              kfunu
+      real(wp)              logbnd
+      real(wp)              lower
+      real(wp)              oldx
+      real(wp)              pc
+      real(wp)              pcdot
+      real(wp)              pos    ( 3 )
+      real(wp)              q
+      real(wp)              qovr0
+      real(wp)              r0
+      real(wp)              rv
+      real(wp)              tmpvec ( 3 )
+      real(wp)              upper
+      real(wp)              vc
+      real(wp)              vcdot
+      real(wp)              vel    ( 3 )
+      real(wp)              x
+      real(wp)              x2
+      real(wp)              x3
 
 !
 !     The variables below store intermediate results that can be
 !     reused if PVINIT is supplied more than once to this routine.
 !     In this way, the number of redundant computations can be reduced.
 !
-      double precision      savepv ( 6, bufsiz )
-      double precision      savegm (    bufsiz )
-      double precision      sbound (    bufsiz )
-      double precision      sb2rv  (    bufsiz )
-      double precision      sbq    (    bufsiz )
-      double precision      sbr0   (    bufsiz )
-      double precision      sf     (    bufsiz )
-      double precision      sqovr0 (    bufsiz )
+      real(wp)              savepv ( 6, bufsiz )
+      real(wp)              savegm (    bufsiz )
+      real(wp)              sbound (    bufsiz )
+      real(wp)              sb2rv  (    bufsiz )
+      real(wp)              sbq    (    bufsiz )
+      real(wp)              sbr0   (    bufsiz )
+      real(wp)              sf     (    bufsiz )
+      real(wp)              sqovr0 (    bufsiz )
 
-      integer               newest (    bufsiz )
-      integer               nsaved
+      integer(ip)           newest (    bufsiz )
+      integer(ip)           nsaved
 
 !
 !     Variables used to bracket X in our solution of Kepler's equation.
 !
-      double precision      bound
-      double precision      fixed
-      double precision      logdpm
-      double precision      logf
-      double precision      logmxc
-      double precision      maxc
-      double precision      rootf
+      real(wp)              bound
+      real(wp)              fixed
+      real(wp)              logdpm
+      real(wp)              logf
+      real(wp)              logmxc
+      real(wp)              maxc
+      real(wp)              rootf
 
-      integer               bumped
-      integer               i
-      integer               k
-      integer               mostc
-      integer               lcount
+      integer(ip)           bumped
+      integer(ip)           i
+      integer(ip)           k
+      integer(ip)           mostc
+      integer(ip)           lcount
 
       logical               new
 
@@ -488,7 +489,7 @@
 !        only states, GMs and intermediate values that are "good.")
 !        First check for nonpositive mass.
 !
-         if ( gm .le. 0.0d0 ) then
+         if ( gm .le. 0.0_wp ) then
             call sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
             call chkout ( 'PROP2B'                   )
             return
@@ -570,7 +571,7 @@
 !
 !
          call vcrss ( vel,       hvec,                      tmpvec  )
-         call vlcom ( 1.0d0/gm,  tmpvec,  -1.0d0/r0,  pos,  eqvec   )
+         call vlcom ( 1.0_wp/gm,  tmpvec,  -1.0_wp/r0,  pos,  eqvec   )
 
          e  = vnorm ( eqvec )
 
@@ -622,7 +623,7 @@
 !        at a time DT past the epoch of the state POS and VEL.
 !        Evidently we will need the constants:
 !
-         f      = 1.0d0 - e
+         f      = 1.0_wp - e
          b      = dsqrt ( q / gm )
          br0    = b*r0
          b2rv   = b*b*rv
@@ -850,7 +851,7 @@
 !        for n = 3).
 !
 !
-         maxc   = max   ( 1.0d0, dabs(br0), &
+         maxc   = max   ( 1.0_wp, dabs(br0), &
                                  dabs(b2rv), &
                                  dabs(bq), &
                                  dabs(qovr0/bq) )
@@ -858,7 +859,7 @@
          if ( f .lt. 0 ) then
 
             logmxc = log   ( maxc            )
-            logdpm = log   ( dpmax() / 2.0d0 )
+            logdpm = log   ( dpmax() / 2.0_wp )
 
             fixed  = logdpm  - logmxc
 
@@ -866,7 +867,7 @@
             logf   = log   ( - f             )
 
             bound  = min (  (fixed              )/rootf, &
-                            (fixed + 1.5d0*logf )/rootf )
+                            (fixed + 1.5_wp*logf )/rootf )
 
 !
 !           Note that in the above, we can always perform the division
@@ -910,8 +911,8 @@
 !
 !           (We'll use logarithms to compute the upper bound for |X|.)
 !
-            logbnd =      ( dlog(1.5d0) + dlog(dpmax()) - dlog(maxc) ) &
-                     /      3.0d0
+            logbnd =      ( dlog(1.5_wp) + dlog(dpmax()) - dlog(maxc) ) &
+                     /      3.0_wp
 
             bound  = dexp ( logbnd )
 
@@ -1034,7 +1035,7 @@
          do while ( kfun .gt. dt )
 
             upper = lower
-            lower = lower * 2.0d0
+            lower = lower * 2.0_wp
             oldx  = x
             x     = brcktd ( lower, -bound, bound )
 
@@ -1085,7 +1086,7 @@
          do while ( kfun .lt. dt )
 
             lower = upper
-            upper = upper * 2.0d0
+            upper = upper * 2.0_wp
             oldx  = x
             x     = brcktd ( upper, -bound, bound )
 !
@@ -1144,7 +1145,7 @@
 !     loop fails to terminate.  With the loop counter we force
 !     termination of the loop.
 !
-      x    = min ( upper, max ( lower, (lower + upper)/2.0d0) )
+      x    = min ( upper, max ( lower, (lower + upper)/2.0_wp) )
       fx2  = f*x*x
 
       call stmp03 ( fx2, c0, c1, c2, c3 )
@@ -1171,14 +1172,14 @@
 !
          if ( mostc .gt. maxbit ) then
 
-            if ( upper .ne. 0.0d0 .and. lower .ne. 0.0d0 ) then
+            if ( upper .ne. 0.0_wp .and. lower .ne. 0.0_wp ) then
                mostc   = maxbit
                lcount = 0
             end if
 
          end if
 
-         x    = min ( upper, max ( lower, (lower + upper)/2.0d0 ) )
+         x    = min ( upper, max ( lower, (lower + upper)/2.0_wp ) )
          fx2  = f*x*x
 
          call stmp03 ( fx2, c0, c1, c2, c3 )
@@ -1199,10 +1200,10 @@
       br    = br0*c0 + x*( b2rv*c1  + x*(bq*c2) )
 
 
-      pc    = 1.0d0     -      qovr0        * x2 * c2
+      pc    = 1.0_wp     -      qovr0        * x2 * c2
       vc    = dt        -      bq           * x3 * c3
       pcdot =           -     (qovr0 / br ) * x  * c1
-      vcdot = 1.0d0     -     (bq    / br ) * x2 * c2
+      vcdot = 1.0_wp     -     (bq    / br ) * x2 * c2
 
 
 !

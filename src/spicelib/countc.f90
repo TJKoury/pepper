@@ -1,6 +1,7 @@
 !$Procedure COUNTC ( Count characters in a text file )
 
-      integer function countc ( unit, bline, eline, line )
+      integer(ip) function countc ( unit, bline, eline, line )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               unit
-      integer               bline
-      integer               eline
+      integer(ip)           unit
+      integer(ip)           bline
+      integer(ip)           eline
       character*(*)         line
 
 ! $ Brief_I/O
@@ -162,16 +163,16 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               return
 
 !
 !     Local variables
 !
-      integer               chars
-      integer               iostat
-      integer               linect
+      integer(ip)           chars
+      integer(ip)           iostat
+      integer(ip)           linect
 
       logical               done
 

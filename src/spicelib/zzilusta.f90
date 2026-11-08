@@ -3,6 +3,7 @@
       subroutine zzilusta ( method, target, illum,  et, &
                             fixref, abcorr, obsrvr, spoint, &
                             normal, phssta, incsta, emista  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -36,15 +37,15 @@
       character*(*)         method
       character*(*)         target
       character*(*)         illum
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
-      double precision      normal ( 3 )
-      double precision      phssta ( 2 )
-      double precision      incsta ( 2 )
-      double precision      emista ( 2 )
+      real(wp)              spoint ( 3 )
+      real(wp)              normal ( 3 )
+      real(wp)              phssta ( 2 )
+      real(wp)              incsta ( 2 )
+      real(wp)              emista ( 2 )
 
 ! $ Brief_I/O
 !
@@ -188,10 +189,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      dvsep
-      double precision      vdot
-      double precision      vsep
+      real(wp)              clight
+      real(wp)              dvsep
+      real(wp)              vdot
+      real(wp)              vsep
 
       logical               eqstr
       logical               failed
@@ -207,18 +208,18 @@
 !
 !     Local variables
 !
-      double precision      dlt
-      double precision      etsurf
-      double precision      fxnsta ( 6 )
-      double precision      lt
-      double precision      ltsrc
-      double precision      nrmsta ( 6 )
-      double precision      obssta ( 6 )
-      double precision      srcsta ( 6 )
-      double precision      starg  ( 6 )
-      double precision      tmpxfm ( 6, 6 )
-      double precision      uvec   ( 3 )
-      double precision      xform  ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              etsurf
+      real(wp)              fxnsta ( 6 )
+      real(wp)              lt
+      real(wp)              ltsrc
+      real(wp)              nrmsta ( 6 )
+      real(wp)              obssta ( 6 )
+      real(wp)              srcsta ( 6 )
+      real(wp)              starg  ( 6 )
+      real(wp)              tmpxfm ( 6, 6 )
+      real(wp)              uvec   ( 3 )
+      real(wp)              xform  ( 6, 6 )
 
       logical               attblk ( abatsz )
       logical               uselt
@@ -367,7 +368,7 @@
 !
 !        d(ETSURF) / d(ET) = ( 1 - DLT )
 !
-         call vsclip ( 1.d0 - dlt,  srcsta(4) )
+         call vsclip ( 1.0_wp - dlt,  srcsta(4) )
 
       end if
 

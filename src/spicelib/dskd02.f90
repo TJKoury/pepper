@@ -1,6 +1,7 @@
 !$Procedure DSKD02 ( DSK, fetch d.p. type 2 data )
 
       subroutine dskd02 ( handle, dladsc, item, start, room, n, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,13 +26,13 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               item
-      integer               start
-      integer               room
-      integer               n
-      double precision      values ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           item
+      integer(ip)           start
+      integer(ip)           room
+      integer(ip)           n
+      real(wp)              values ( * )
 
 ! $ Brief_I/O
 !
@@ -450,14 +451,14 @@
 !
 !     Local variables
 !
-      integer               b
-      integer               dbase
-      integer               e
-      integer               ibase
-      integer               nv
-      integer               prvhan
-      integer               prvbas
-      integer               size
+      integer(ip)           b
+      integer(ip)           dbase
+      integer(ip)           e
+      integer(ip)           ibase
+      integer(ip)           nv
+      integer(ip)           prvhan
+      integer(ip)           prvbas
+      integer(ip)           size
 
       logical               first
 

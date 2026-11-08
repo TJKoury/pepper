@@ -1,6 +1,7 @@
 !$Procedure PRODAI ( Product of an integer array )
 
-      integer function  prodai ( array, n )
+      integer(ip) function  prodai ( array, n )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer          array  ( * )
-      integer          n
+      integer(ip)      array  ( * )
+      integer(ip)      n
 
 ! $ Brief_I/O
 !
@@ -127,8 +128,8 @@
 !
 !     Local variables
 !
-      integer          prod
-      integer          i
+      integer(ip)      prod
+      integer(ip)      i
 
 
 !

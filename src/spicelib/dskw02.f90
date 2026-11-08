@@ -5,6 +5,7 @@
                           corpar, mncor1, mxcor1, mncor2, mxcor2, &
                           mncor3, mxcor3, first,  last,   nv, &
                           vrtces, np,     plates, spaixd, spaixi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,27 +32,27 @@
       include  'dsktol.inc'
       include  'dsk02.inc'
 
-      integer               handle
-      integer               center
-      integer               surfid
-      integer               dclass
+      integer(ip)           handle
+      integer(ip)           center
+      integer(ip)           surfid
+      integer(ip)           dclass
       character*(*)         frame
-      integer               corsys
-      double precision      corpar ( * )
-      double precision      mncor1
-      double precision      mxcor1
-      double precision      mncor2
-      double precision      mxcor2
-      double precision      mncor3
-      double precision      mxcor3
-      double precision      first
-      double precision      last
-      integer               nv
-      double precision      vrtces ( 3, nv )
-      integer               np
-      integer               plates ( 3, np )
-      double precision      spaixd ( * )
-      integer               spaixi ( * )
+      integer(ip)           corsys
+      real(wp)              corpar ( * )
+      real(wp)              mncor1
+      real(wp)              mxcor1
+      real(wp)              mncor2
+      real(wp)              mxcor2
+      real(wp)              mncor3
+      real(wp)              mxcor3
+      real(wp)              first
+      real(wp)              last
+      integer(ip)           nv
+      real(wp)              vrtces ( 3, nv )
+      integer(ip)           np
+      integer(ip)           plates ( 3, np )
+      real(wp)              spaixd ( * )
+      integer(ip)           spaixi ( * )
 
 ! $ Brief_I/O
 !
@@ -915,9 +916,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpr
-      double precision      halfpi
-      double precision      twopi
+      real(wp)              dpr
+      real(wp)              halfpi
+      real(wp)              twopi
 
       logical               failed
       logical               return
@@ -930,32 +931,32 @@
 !
 !     Local variables
 !
-      double precision      a
-      double precision      altlim
-      double precision      b
-      double precision      descr  ( dskdsz )
-      double precision      r
-      double precision      segbds ( 2, 2 )
-      double precision      voxori ( 3 )
-      double precision      voxsiz
-      double precision      vtxbds ( 2, 3 )
+      real(wp)              a
+      real(wp)              altlim
+      real(wp)              b
+      real(wp)              descr  ( dskdsz )
+      real(wp)              r
+      real(wp)              segbds ( 2, 2 )
+      real(wp)              voxori ( 3 )
+      real(wp)              voxsiz
+      real(wp)              vtxbds ( 2, 3 )
 
-      integer               cgrscl
-      integer               frmcde
-      integer               i
-      integer               j
-      integer               k
-      integer               ncgr
-      integer               nvxtot
-      integer               pvoxpl
-      integer               pvoxpt
-      integer               pvtxpl
-      integer               pvtxpt
-      integer               q
-      integer               vgrext ( 3 )
-      integer               voxnpt
-      integer               voxnpl
-      integer               vtxnpl
+      integer(ip)           cgrscl
+      integer(ip)           frmcde
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           ncgr
+      integer(ip)           nvxtot
+      integer(ip)           pvoxpl
+      integer(ip)           pvoxpt
+      integer(ip)           pvtxpl
+      integer(ip)           pvtxpt
+      integer(ip)           q
+      integer(ip)           vgrext ( 3 )
+      integer(ip)           voxnpt
+      integer(ip)           voxnpl
+      integer(ip)           vtxnpl
 
 
       if ( return() ) then
@@ -1204,7 +1205,7 @@
 !           The coordinate system is latitudinal. Check radius
 !           bounds.
 !
-            if ( mncor3 .lt. 0.d0 ) then
+            if ( mncor3 .lt. 0.0_wp ) then
 
                call setmsg ( 'Radius lower bound must be ' &
                //            'non-negative but was #.'     )
@@ -1215,7 +1216,7 @@
 
             end if
 
-            if ( mxcor3 .le. 0.d0 ) then
+            if ( mxcor3 .le. 0.0_wp ) then
 
                call setmsg ( 'Radius upper bound must be ' &
                //            'strictly positive but was #.'  )
@@ -1234,7 +1235,7 @@
 !           The coordinate system is planetodetic. Check the coordinate
 !           parameters as well.
 !
-            if ( corpar(1) .le. 0.d0 ) then
+            if ( corpar(1) .le. 0.0_wp ) then
 
                call setmsg ( 'Equatorial radius was #; this radius ' &
                //            'must be strictly positive.'            )
@@ -1246,7 +1247,7 @@
             end if
 
 
-            if ( corpar(2) .ge. 1.d0 ) then
+            if ( corpar(2) .ge. 1.0_wp ) then
 
                call setmsg ( 'Flattening coefficient was #; this ' &
                //            'value must be strictly less than 1.' )
@@ -1596,7 +1597,7 @@
 !     cube must not exceed the fine voxel count.
 !
       if (      ( cgrscl .lt. 1                ) &
-           .or. ( cgrscl .gt. nvxtot**(1.d0/3) )  ) then
+           .or. ( cgrscl .gt. nvxtot**(1.0_wp/3) )  ) then
 
          call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be in the range 1:NVXTOT**3, where ' &

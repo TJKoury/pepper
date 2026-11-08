@@ -1,6 +1,7 @@
 !$Procedure SPKE18 ( S/P Kernel, evaluate, type 18 )
 
       subroutine spke18 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
       include 'spk18.inc'
       include 'spkrec.inc'
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -170,7 +171,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      lgrint
+      real(wp)              lgrint
       logical               return
 
 !
@@ -180,44 +181,44 @@
 !
 !     Index of subtype code in record:
 !
-      integer               sbtidx
+      integer(ip)           sbtidx
       parameter           ( sbtidx = 1 )
 
 !
 !     Index of packet count in record:
 !
-      integer               cntidx
+      integer(ip)           cntidx
       parameter           ( cntidx = 2 )
 
 !
 !     Index at which packets start:
 !
-      integer               pktidx
+      integer(ip)           pktidx
       parameter           ( pktidx = 3 )
 
 !
 !     Maximum polynomial degree:
 !
-      integer               maxdeg
+      integer(ip)           maxdeg
       parameter           ( maxdeg = 15 )
 
 
 !
 !     Local variables
 !
-      double precision      locrec ( maxrec )
-      double precision      work   ( maxrec * 2,  2 )
-      double precision      vbuff  ( 6 )
+      real(wp)              locrec ( maxrec )
+      real(wp)              work   ( maxrec * 2,  2 )
+      real(wp)              vbuff  ( 6 )
 
-      integer               from
-      integer               i
-      integer               j
-      integer               n
-      integer               packsz
-      integer               subtyp
-      integer               to
-      integer               xstart
-      integer               ystart
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           n
+      integer(ip)           packsz
+      integer(ip)           subtyp
+      integer(ip)           to
+      integer(ip)           xstart
+      integer(ip)           ystart
 
 
 !

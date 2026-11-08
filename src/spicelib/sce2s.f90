@@ -1,6 +1,7 @@
 !$Procedure SCE2S ( ET to SCLK string )
 
       subroutine sce2s ( sc, et, sclkch )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
 
       implicit none
 
-      integer               sc
-      double precision      et
+      integer(ip)           sc
+      real(wp)              et
       character*(*)         sclkch
 
 ! $ Brief_I/O
@@ -304,7 +305,7 @@
 !
 !     Local variables
 !
-      double precision      sclkdp
+      real(wp)              sclkdp
 
 
 !

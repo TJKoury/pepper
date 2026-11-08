@@ -1,6 +1,7 @@
 !$Procedure DAFT2B ( DAF, text to binary )
 
       subroutine daft2b ( text, binary, resv )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       implicit none
 
-      integer               text
+      integer(ip)           text
       character*(*)         binary
-      integer               resv
+      integer(ip)           resv
 
-      integer               bsize
+      integer(ip)           bsize
       parameter           ( bsize = 1024 )
 
 ! $ Brief_I/O
@@ -305,7 +306,7 @@
 !
 !     Local Parameters
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 
 !
@@ -317,20 +318,20 @@
       character*(idwlen)    tarch
       character*(idwlen)    ttype
 
-      double precision      buffer   ( bsize )
-      double precision      dc       ( 125 )
-      double precision      sum      ( 125 )
+      real(wp)              buffer   ( bsize )
+      real(wp)              dc       ( 125 )
+      real(wp)              sum      ( 125 )
 
-      integer               chunk
-      integer               handle
-      integer               i
-      integer               ic       ( 250 )
-      integer               iostat
-      integer               isize
-      integer               lsize
-      integer               more
-      integer               nd
-      integer               ni
+      integer(ip)           chunk
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           ic       ( 250 )
+      integer(ip)           iostat
+      integer(ip)           isize
+      integer(ip)           lsize
+      integer(ip)           more
+      integer(ip)           nd
+      integer(ip)           ni
 
 !
 !     Standard SPICE error handling.

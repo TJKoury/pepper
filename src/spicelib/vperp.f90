@@ -1,6 +1,7 @@
 !$Procedure VPERP ( Perpendicular component of a 3-vector )
 
       subroutine vperp ( a, b, p )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision   a ( 3 )
-      double precision   b ( 3 )
-      double precision   p ( 3 )
+      real(wp)           a ( 3 )
+      real(wp)           b ( 3 )
+      real(wp)           p ( 3 )
 
 ! $ Brief_I/O
 !
@@ -138,11 +139,11 @@
 !
 !     Local variables
 !
-      double precision      biga
-      double precision      bigb
-      double precision      r(3)
-      double precision      t(3)
-      double precision      v(3)
+      real(wp)              biga
+      real(wp)              bigb
+      real(wp)              r(3)
+      real(wp)              t(3)
+      real(wp)              v(3)
 
 
 !
@@ -154,11 +155,11 @@
 !
 !     If A is the zero vector, just set P to zero and return.
 !
-      if ( biga .eq. 0.0d0 ) then
+      if ( biga .eq. 0.0_wp ) then
 
-         p(1) = 0.0d0
-         p(2) = 0.0d0
-         p(3) = 0.0d0
+         p(1) = 0.0_wp
+         p(2) = 0.0_wp
+         p(3) = 0.0_wp
          return
 
       end if
@@ -166,7 +167,7 @@
 !
 !     If B is the zero vector, then set P equal to A.
 !
-      if ( bigb .eq. 0.0d0 ) then
+      if ( bigb .eq. 0.0_wp ) then
 
          p(1) = a(1)
          p(2) = a(2)

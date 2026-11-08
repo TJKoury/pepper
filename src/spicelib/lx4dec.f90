@@ -1,6 +1,7 @@
 !$Procedure LX4DEC (Scan for signed integer)
 
       subroutine lx4dec ( string, first, last, nchar )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       implicit none
 
       character*(*)         string
-      integer               first
-      integer               last
-      integer               nchar
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           nchar
 
 ! $ Brief_I/O
 !
@@ -166,12 +167,12 @@
 !-&
 
 
-      integer               f
-      integer               i
-      integer               j
-      integer               l
-      integer               n
-      integer               next
+      integer(ip)           f
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           l
+      integer(ip)           n
+      integer(ip)           next
 
       last  = first - 1
       next  = first + 1

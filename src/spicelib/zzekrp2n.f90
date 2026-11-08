@@ -1,6 +1,7 @@
 !$Procedure      ZZEKRP2N ( EK, record pointer to number )
 
-      integer function zzekrp2n ( handle, segno, recptr )
+      integer(ip) function zzekrp2n ( handle, segno, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               segno
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           recptr
 
 ! $ Brief_I/O
 !
@@ -114,14 +115,14 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrls
+      integer(ip)           zzektrls
       logical               failed
 
 !
 !     Local variables
 !
-      integer               segdsc ( sdscsz )
-      integer               stype
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           stype
 
 !
 !     Use discovery check-in.

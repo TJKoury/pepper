@@ -1,6 +1,7 @@
 !$Procedure ZZPLTCHK ( Private --- Platform Check )
 
       subroutine zzpltchk ( ok )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -95,7 +96,7 @@
 !
 !     Local Parameters
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 !
@@ -105,7 +106,7 @@
       character*(wdsize)    value
       character*(wdsize)    rtebff
 
-      integer               bff
+      integer(ip)           bff
 
 !
 !     Standard SPICE error handling

@@ -1,6 +1,7 @@
 !$Procedure DAFDC ( DAF delete comments )
 
       subroutine dafdc ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -260,19 +261,19 @@
 !
 !     Length of a DAF file internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     Local variables
 !
       character*(ifnlen)    ifname
 
-      integer               bward
-      integer               free
-      integer               fward
-      integer               ncomr
-      integer               nd
-      integer               ni
+      integer(ip)           bward
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           ncomr
+      integer(ip)           nd
+      integer(ip)           ni
 
 !
 !     Standard SPICE error handling.

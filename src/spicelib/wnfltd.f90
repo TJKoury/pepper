@@ -1,6 +1,7 @@
 !$Procedure WNFLTD ( Filter small intervals from a DP window )
 
       subroutine wnfltd ( smlint, window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      smlint
-      double precision      window  ( lbcell:* )
+      real(wp)              smlint
+      real(wp)              window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -260,15 +261,15 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
+      integer(ip)           cardd
       logical               return
 
 !
 !     Local variables
 !
-      integer               card
-      integer               i
-      integer               j
+      integer(ip)           card
+      integer(ip)           i
+      integer(ip)           j
 
 !
 !     Standard SPICE error handling.

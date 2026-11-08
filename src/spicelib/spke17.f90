@@ -1,6 +1,7 @@
 !$Procedure SPKE17 ( Evaluate a type 17 SPK data record)
 
       subroutine spke17 ( et, recin, state )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      recin  ( * )
-      double precision      state  ( 6 )
+      real(wp)              et
+      real(wp)              recin  ( * )
+      real(wp)              state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -197,13 +198,13 @@
 !
 !     Local Variables
 !
-      double precision      a
-      double precision      rapole
-      double precision      decpol
-      double precision      h
-      double precision      k
-      double precision      ecc
-      double precision      epoch
+      real(wp)              a
+      real(wp)              rapole
+      real(wp)              decpol
+      real(wp)              h
+      real(wp)              k
+      real(wp)              ecc
+      real(wp)              epoch
 
 !
 !     Standard SPICE error handling.
@@ -244,7 +245,7 @@
          call chkout ( 'SPKE17'                )
          return
 
-      else if ( ecc .gt. 0.9d0 ) then
+      else if ( ecc .gt. 0.9_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 17 ' &
          //            'segment is greater than 0.9.  It must be ' &

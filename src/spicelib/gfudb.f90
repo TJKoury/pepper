@@ -1,6 +1,7 @@
 !$Procedure GFUDB ( GF, user defined boolean )
 
       subroutine gfudb ( udfuns, udfunb, step, cnfine, result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,14 +28,14 @@
       include               'zzgf.inc'
       include               'zzholdd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       external              udfuns
       external              udfunb
-      double precision      step
-      double precision      cnfine ( lbcell : * )
-      double precision      result ( lbcell : * )
+      real(wp)              step
+      real(wp)              cnfine ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -952,7 +953,7 @@
 !
       logical               odd
       logical               return
-      integer               sized
+      integer(ip)           sized
 
 
 !
@@ -964,7 +965,7 @@
       external              gfrepu
       external              gfstep
 
-      double precision      tol
+      real(wp)              tol
       logical               ok
 
       logical               gfbail

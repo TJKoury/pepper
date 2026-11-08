@@ -2,6 +2,7 @@
 
       subroutine spkcpo ( target, et,     outref, refloc, abcorr, &
                           obspos, obsctr, obsref, state,  lt     )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -28,15 +29,15 @@
       include               'zzabcorr.inc'
 
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         outref
       character*(*)         refloc
       character*(*)         abcorr
-      double precision      obspos ( 3 )
+      real(wp)              obspos ( 3 )
       character*(*)         obsctr
       character*(*)         obsref
-      double precision      state  ( 6 )
-      double precision      lt
+      real(wp)              state  ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -1346,8 +1347,8 @@
 !
 !     Local variables
 !
-      double precision      obsepc
-      double precision      obssta ( 6 )
+      real(wp)              obsepc
+      real(wp)              obssta ( 6 )
 
 !
 !     Standard SPICE error handling.
@@ -1369,7 +1370,7 @@
 !     Set the observation epoch; the value is arbitrary, since
 !     the observer's velocity is zero.
 !
-      obsepc = 0.0d0
+      obsepc = 0.0_wp
 
 !
 !     Compute the observer-target state vector.

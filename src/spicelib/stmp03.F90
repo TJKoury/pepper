@@ -1,6 +1,7 @@
 !$Procedure STMP03 ( Stumpff functions 0 through 3 )
 
       subroutine stmp03 ( x, c0, c1, c2, c3 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,14 +22,14 @@
 
       implicit none
 
-      double precision      x
-      double precision      c0
-      double precision      c1
-      double precision      c2
-      double precision      c3
+      real(wp)              x
+      real(wp)              c0
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              c3
 
 
-      integer               trunc
+      integer(ip)           trunc
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter           ( trunc = 10   )
 #else
@@ -436,17 +437,17 @@
 !
 !     SPICELIB Functions
 !
-      double precision      dpmax
+      real(wp)              dpmax
 
 !
 !     Local Parameters
 !
 
-      double precision      half
-      parameter           ( half  = 1.0d0 / 2.0d0 )
+      real(wp)              half
+      parameter           ( half  = 1.0_wp / 2.0_wp )
 
-      double precision      eighth
-      parameter           ( eighth = 1.0d0 / 8.0d0 )
+      real(wp)              eighth
+      parameter           ( eighth = 1.0_wp / 8.0_wp )
 
 !
 !     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
@@ -502,25 +503,25 @@
 !     (counting 1/(1*2) as the first) will be the last one needed in
 !     the evaluation of C_2 and C_3.
 !
-      integer               npairs
+      integer(ip)           npairs
       parameter           ( npairs = 2*trunc - 2 )
 
-      integer               lpair3
+      integer(ip)           lpair3
       parameter           ( lpair3 = npairs      )
 
-      integer               lpair2
+      integer(ip)           lpair2
       parameter           ( lpair2 = npairs - 1  )
 
 
 !
 !     Local variables
 !
-      double precision      lbound
-      double precision      pairs  ( npairs )
-      double precision      y
-      double precision      z
+      real(wp)              lbound
+      real(wp)              pairs  ( npairs )
+      real(wp)              y
+      real(wp)              z
 
-      integer               i
+      integer(ip)           i
 
       logical               first
 
@@ -580,10 +581,10 @@
          first  = .false.
 
          do i = 1, npairs
-            pairs(i) = 1.0d0 / (dble(i)*dble(i+1))
+            pairs(i) = 1.0_wp / (real(i, wp)*real(i+1, wp))
          end do
 
-         y      =   dlog(2.0d0) + dlog( dpmax() )
+         y      =   dlog(2.0_wp) + dlog( dpmax() )
          lbound = - y*y
 
       end if
@@ -672,7 +673,7 @@
 !                                                  8
 !
 !
-       if ( x .lt. -1.d0 ) then
+       if ( x .lt. -1.0_wp ) then
 
          z  = sqrt(-x)
          c0 = cosh(z)
@@ -683,7 +684,7 @@
 
       end if
 
-      if ( x .gt. 1.d0 ) then
+      if ( x .gt. 1.0_wp ) then
 
          z  = sqrt(x)
          c0 = cos(z)
@@ -721,10 +722,10 @@
 !     LPAIR3 will be 18.
 !
 
-      c3    = 1.0d0
+      c3    = 1.0_wp
 
       do i  = lpair3, 4, -2
-         c3 = 1.0d0 - x*pairs(i)*c3
+         c3 = 1.0_wp - x*pairs(i)*c3
       end do
 
       c3    =           pairs(2)*c3
@@ -752,10 +753,10 @@
 !     Assuming that we don't need to go beyond  the term with 1/18!,
 !     LPAIR2 will be 17.
 !
-      c2    = 1.0d0
+      c2    = 1.0_wp
 
       do i  = lpair2, 3, -2
-         c2 = 1.0d0 - x*pairs(i)*c2
+         c2 = 1.0_wp - x*pairs(i)*c2
       end do
 
       c2    =           pairs(1)*c2
@@ -767,8 +768,8 @@
 !          x*C_k+2(y) =  ---  -  C_k(x)
 !                         k!
 !
-      c1 =  1.0d0 - x*c3
-      c0 =  1.0d0 - x*c2
+      c1 =  1.0_wp - x*c3
+      c0 =  1.0_wp - x*c2
 
       return
       end

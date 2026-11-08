@@ -1,6 +1,7 @@
 !$Procedure WNCOMD ( Complement a DP window )
 
       subroutine wncomd ( left, right, window, result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,13 +20,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      left
-      double precision      right
-      double precision      window   ( lbcell:* )
-      double precision      result   ( lbcell:* )
+      real(wp)              left
+      real(wp)              right
+      real(wp)              window   ( lbcell:* )
+      real(wp)              result   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -175,15 +176,15 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
+      integer(ip)           cardd
       logical               return
       logical               failed
 
 !
 !     Local variables
 !
-      integer               card
-      integer               i
+      integer(ip)           card
+      integer(ip)           i
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure ETCAL ( Convert ET to Calendar format )
 
       subroutine etcal ( et, calstr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      double precision      et
+      real(wp)              et
       character*(*)         calstr
 
 ! $ Brief_I/O
@@ -228,10 +229,10 @@
 !
 !     SPICELIB Functions.
 !
-      double precision      spd
-      integer               intmax
-      integer               intmin
-      integer               lstlti
+      real(wp)              spd
+      integer(ip)           intmax
+      integer(ip)           intmin
+      integer(ip)           lstlti
 
 
 
@@ -239,16 +240,16 @@
 !     We declare the variables that contain the number of days in
 !     400 years, 100 years, 4 years and 1 year.
 !
-      integer               dp400y
+      integer(ip)           dp400y
       parameter           ( dp400y = 365*400 + 97 )
 
-      integer               dp100y
+      integer(ip)           dp100y
       parameter           ( dp100y = 365*100 + 24 )
 
-      integer               dp4y
+      integer(ip)           dp4y
       parameter           ( dp4y   = 365*4   + 1  )
 
-      integer               dp1y
+      integer(ip)           dp1y
       parameter           ( dp1y   = 365 )
 
 
@@ -256,126 +257,126 @@
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      integer               jan
+      integer(ip)           jan
       parameter           ( jan = 31 )
 
-      integer               feb
+      integer(ip)           feb
       parameter           ( feb = 28 )
 
-      integer               mar
+      integer(ip)           mar
       parameter           ( mar = 31 )
 
-      integer               apr
+      integer(ip)           apr
       parameter           ( apr = 30 )
 
-      integer               may
+      integer(ip)           may
       parameter           ( may = 31 )
 
-      integer               jun
+      integer(ip)           jun
       parameter           ( jun = 30 )
 
-      integer               jul
+      integer(ip)           jul
       parameter           ( jul = 31 )
 
-      integer               aug
+      integer(ip)           aug
       parameter           ( aug = 31 )
 
-      integer               sep
+      integer(ip)           sep
       parameter           ( sep = 30 )
 
-      integer               oct
+      integer(ip)           oct
       parameter           ( oct = 31 )
 
-      integer               nov
+      integer(ip)           nov
       parameter           ( nov = 30 )
 
-      integer               dec
+      integer(ip)           dec
       parameter           ( dec = 31 )
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      integer               jan0
+      integer(ip)           jan0
       parameter           ( jan0 = 0  )
 
-      integer               feb0
+      integer(ip)           feb0
       parameter           ( feb0 = jan + jan0 )
 
-      integer               mar0
+      integer(ip)           mar0
       parameter           ( mar0 = feb + feb0 )
 
-      integer               apr0
+      integer(ip)           apr0
       parameter           ( apr0 = mar + mar0 )
 
-      integer               may0
+      integer(ip)           may0
       parameter           ( may0 = apr + apr0 )
 
-      integer               jun0
+      integer(ip)           jun0
       parameter           ( jun0 = may + may0 )
 
-      integer               jul0
+      integer(ip)           jul0
       parameter           ( jul0 = jun + jun0 )
 
-      integer               aug0
+      integer(ip)           aug0
       parameter           ( aug0 = jul + jul0 )
 
-      integer               sep0
+      integer(ip)           sep0
       parameter           ( sep0 = aug + aug0 )
 
-      integer               oct0
+      integer(ip)           oct0
       parameter           ( oct0 = sep + sep0 )
 
-      integer               nov0
+      integer(ip)           nov0
       parameter           ( nov0 = oct + oct0 )
 
-      integer               dec0
+      integer(ip)           dec0
       parameter           ( dec0 = nov + nov0 )
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      integer               janl0
+      integer(ip)           janl0
       parameter           ( janl0 = jan0  )
 
-      integer               febl0
+      integer(ip)           febl0
       parameter           ( febl0 = feb0 )
 
-      integer               marl0
+      integer(ip)           marl0
       parameter           ( marl0 = mar0 + 1 )
 
-      integer               aprl0
+      integer(ip)           aprl0
       parameter           ( aprl0 = apr0 + 1 )
 
-      integer               mayl0
+      integer(ip)           mayl0
       parameter           ( mayl0 = may0 + 1 )
 
-      integer               junl0
+      integer(ip)           junl0
       parameter           ( junl0 = jun0 + 1 )
 
-      integer               jull0
+      integer(ip)           jull0
       parameter           ( jull0 = jul0 + 1 )
 
-      integer               augl0
+      integer(ip)           augl0
       parameter           ( augl0 = aug0 + 1 )
 
-      integer               sepl0
+      integer(ip)           sepl0
       parameter           ( sepl0 = sep0 + 1 )
 
-      integer               octl0
+      integer(ip)           octl0
       parameter           ( octl0 = oct0 + 1 )
 
-      integer               novl0
+      integer(ip)           novl0
       parameter           ( novl0 = nov0 + 1 )
 
-      integer               decl0
+      integer(ip)           decl0
       parameter           ( decl0 = dec0 + 1 )
 
-      integer               strsiz
+      integer(ip)           strsiz
       parameter           ( strsiz = 16 )
 
-      integer               lngsiz
+      integer(ip)           lngsiz
       parameter           ( lngsiz = 180 )
 
 
@@ -403,40 +404,40 @@
 !
       character*(3)         months ( 12 )
 
-      double precision      dmnint
-      double precision      dmxint
-      double precision      dp2000
-      double precision      frac
-      double precision      halfd
-      double precision      mydnom
-      double precision      mynum
-      double precision      q
-      double precision      remd
-      double precision      secs
-      double precision      secspd
+      real(wp)              dmnint
+      real(wp)              dmxint
+      real(wp)              dp2000
+      real(wp)              frac
+      real(wp)              halfd
+      real(wp)              mydnom
+      real(wp)              mynum
+      real(wp)              q
+      real(wp)              remd
+      real(wp)              secs
+      real(wp)              secspd
 
-      integer               bh
-      integer               bm
-      integer               day
-      integer               daynum
-      integer               dn2000
-      integer               dofyr
-      integer               doy
-      integer               dp0001
-      integer               hours
-      integer               iq
-      integer               ldays
-      integer               mins
-      integer               month
-      integer               offset
-      integer               rem
-      integer               tsecs
-      integer               ydays
-      integer               year
-      integer               yr1
-      integer               yr100
-      integer               yr4
-      integer               yr400
+      integer(ip)           bh
+      integer(ip)           bm
+      integer(ip)           day
+      integer(ip)           daynum
+      integer(ip)           dn2000
+      integer(ip)           dofyr
+      integer(ip)           doy
+      integer(ip)           dp0001
+      integer(ip)           hours
+      integer(ip)           iq
+      integer(ip)           ldays
+      integer(ip)           mins
+      integer(ip)           month
+      integer(ip)           offset
+      integer(ip)           rem
+      integer(ip)           tsecs
+      integer(ip)           ydays
+      integer(ip)           year
+      integer(ip)           yr1
+      integer(ip)           yr100
+      integer(ip)           yr4
+      integer(ip)           yr400
 
       logical               first
       logical               adjust
@@ -447,14 +448,14 @@
 !     to a non-leap year).
 !
 
-      integer               extra  ( 12 )
-      integer               dpbegl ( 12 )
+      integer(ip)           extra  ( 12 )
+      integer(ip)           dpbegl ( 12 )
 
 !
 !     DPJAN0(I) gives the number of days that occur before the I'th
 !     month of a normal year.
 !
-      integer               dpjan0 ( 12 )
+      integer(ip)           dpjan0 ( 12 )
 
       save
 
@@ -525,7 +526,7 @@
       if ( first ) then
 
          first  = .false.
-         halfd  = spd()/2.0d0
+         halfd  = spd()/2.0_wp
          secspd = spd()
          dn2000 = dp0001 ( 2000, 1, 1 )
          dmxint = intmax()
@@ -552,8 +553,8 @@
       q    = dint ( mynum / mydnom )
       remd = mynum -    q * mydnom
 
-      if ( remd .lt. 0.0d0 ) then
-         q    = q   - 1.0d0
+      if ( remd .lt. 0.0_wp ) then
+         q    = q   - 1.0_wp
          remd = remd + mydnom
       end if
 
@@ -568,13 +569,13 @@
 
          dp2000 = dmnint - dn2000 + 1
          messge = 'Epoch before '
-         secs   = 0.0d0
+         secs   = 0.0_wp
 
       else if ( dp2000 + dn2000 .gt. dmxint - 1 ) then
 
          dp2000 = dmxint - dn2000 - 1
          messge = 'Epoch after '
-         secs   = 0.0d0
+         secs   = 0.0_wp
 
       else
 
@@ -587,7 +588,7 @@
 !     From the tests in the previous IF-ELSE IF-ELSE block this
 !     addition is guaranteed not to overflow.
 !
-      daynum = int( dp2000 + dble(dn2000) )
+      daynum = int( dp2000 + real(dn2000, wp) )
 
 !
 !     If the number of days is negative, we need to do a little
@@ -690,8 +691,8 @@
 !     or equal to zero so we'll have no problems with HOURS, MINS
 !     or SECS becoming negative.)
 !
-      tsecs  = int(secs*1000.0d0)
-      frac   = secs - dble(tsecs)
+      tsecs  = int(secs*1000.0_wp)
+      frac   = secs - real(tsecs, wp)
 
       hours  = tsecs / 3600000
       tsecs  = tsecs - 3600000 * hours
@@ -699,13 +700,13 @@
       mins   = tsecs / 60000
       tsecs  = tsecs - 60000 * mins
 
-      secs   = dble ( tsecs ) / 1000.0d0
+      secs   = real( tsecs, wp ) / 1000.0_wp
 !
 !     We round seconds if we can do so without getting seconds to be
 !     bigger than 60.
 !
-      if ( secs + 0.0005d0 .lt. 60.0d0 ) then
-         secs = secs + 0.0005d0
+      if ( secs + 0.0005_wp .lt. 60.0_wp ) then
+         secs = secs + 0.0005_wp
       end if
 
 !
@@ -743,7 +744,7 @@
 !     Now construct the string components for hours, minutes and
 !     seconds.
 !
-      secs = int(secs*1000.0d0) / 1000.0d0
+      secs = int(secs*1000.0_wp) / 1000.0_wp
 
       call intstr ( hours,         hstr(bh:) )
       call intstr ( mins,          mstr(bm:) )

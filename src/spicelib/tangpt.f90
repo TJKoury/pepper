@@ -3,6 +3,7 @@
       subroutine tangpt ( method, target, et,    fixref, abcorr, &
                           corloc, obsrvr, dref,  dvec,   tanpt, &
                           alt,    range,  srfpt, trgepc, srfvec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -43,19 +44,19 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         corloc
       character*(*)         obsrvr
       character*(*)         dref
-      double precision      dvec   ( 3 )
-      double precision      tanpt  ( 3 )
-      double precision      alt
-      double precision      range
-      double precision      srfpt  ( 3 )
-      double precision      trgepc
-      double precision      srfvec ( 3 )
+      real(wp)              dvec   ( 3 )
+      real(wp)              tanpt  ( 3 )
+      real(wp)              alt
+      real(wp)              range
+      real(wp)              srfpt  ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec ( 3 )
 
 ! $ Brief_I/O
 !
@@ -1930,12 +1931,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      touchd
-      double precision      vdist
-      double precision      vdot
-      double precision      vnorm
-      double precision      vrel
+      real(wp)              clight
+      real(wp)              touchd
+      real(wp)              vdist
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              vrel
 
       logical               eqstr
       logical               failed
@@ -1967,43 +1968,43 @@
 !     which is dependent on the choice of aberration correction, is
 !     reached.
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-16 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-16_wp )
 
 !
 !     Upper bound on converged solution iterations.
 !
-      integer               mxcvit
+      integer(ip)           mxcvit
       parameter           ( mxcvit = 10 )
 
 !
 !     Upper bound on non-converged solution iterations.
 !
-      integer               mxncit
+      integer(ip)           mxncit
       parameter           ( mxncit =  3 )
 
 !
 !     Saved body name length.
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
 !     Locus string length.
 !
-      integer               loclen
+      integer(ip)           loclen
       parameter           ( loclen = 15 )
 
 !
 !     Code for the frame J2000.
 !
-      integer               j2code
+      integer(ip)           j2code
       parameter           ( j2code = 1 )
 
 !
@@ -2013,51 +2014,51 @@
       character*(corlen)    prvcor
       character*(loclen)    prvloc
 
-      double precision      ctrpos ( 3 )
-      double precision      dist
-      double precision      dval
-      double precision      epcdif
-      double precision      fixdir ( 3 )
-      double precision      fixobs ( 3 )
-      double precision      j2dir  ( 3 )
-      double precision      j2fixm ( 3, 3 )
-      double precision      j2lcus ( 3 )
-      double precision      j2lpos ( 3 )
-      double precision      j2opos ( 3 )
-      double precision      j2tpos ( 3 )
-      double precision      lt
-      double precision      ltcent
-      double precision      ltdiff
-      double precision      p      ( 3 )
-      double precision      prevlt
-      double precision      prvepc
-      double precision      prvsrf ( 3 )
-      double precision      prvtan ( 3 )
-      double precision      r2jmat ( 3, 3 )
-      double precision      refepc
-      double precision      s
-      double precision      ssbost ( 6 )
-      double precision      ssbtst ( 6 )
-      double precision      stlfix ( 3 )
-      double precision      stlloc ( 3 )
-      double precision      stlobs ( 3 )
-      double precision      stloff ( 3 )
-      double precision      tanoff ( 3 )
-      double precision      tpos   ( 3 )
-      double precision      trgpos ( 3 )
+      real(wp)              ctrpos ( 3 )
+      real(wp)              dist
+      real(wp)              dval
+      real(wp)              epcdif
+      real(wp)              fixdir ( 3 )
+      real(wp)              fixobs ( 3 )
+      real(wp)              j2dir  ( 3 )
+      real(wp)              j2fixm ( 3, 3 )
+      real(wp)              j2lcus ( 3 )
+      real(wp)              j2lpos ( 3 )
+      real(wp)              j2opos ( 3 )
+      real(wp)              j2tpos ( 3 )
+      real(wp)              lt
+      real(wp)              ltcent
+      real(wp)              ltdiff
+      real(wp)              p      ( 3 )
+      real(wp)              prevlt
+      real(wp)              prvepc
+      real(wp)              prvsrf ( 3 )
+      real(wp)              prvtan ( 3 )
+      real(wp)              r2jmat ( 3, 3 )
+      real(wp)              refepc
+      real(wp)              s
+      real(wp)              ssbost ( 6 )
+      real(wp)              ssbtst ( 6 )
+      real(wp)              stlfix ( 3 )
+      real(wp)              stlloc ( 3 )
+      real(wp)              stlobs ( 3 )
+      real(wp)              stloff ( 3 )
+      real(wp)              tanoff ( 3 )
+      real(wp)              tpos   ( 3 )
+      real(wp)              trgpos ( 3 )
 
-      integer               dcentr
-      integer               dclass
-      integer               dfrcde
-      integer               dtypid
-      integer               fxcent
-      integer               fxclss
-      integer               fxfcde
-      integer               fxtyid
-      integer               i
-      integer               nitr
-      integer               obscde
-      integer               trgcde
+      integer(ip)           dcentr
+      integer(ip)           dclass
+      integer(ip)           dfrcde
+      integer(ip)           dtypid
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxfcde
+      integer(ip)           fxtyid
+      integer(ip)           i
+      integer(ip)           nitr
+      integer(ip)           obscde
+      integer(ip)           trgcde
 
       logical               attblk ( nabcor )
       logical               first
@@ -2073,34 +2074,34 @@
 !
 !     Saved body name/ID item declarations.
 !
-      integer               prvtcd
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           prvtcd
+      integer(ip)           svctr1 ( ctrsiz )
       character*(bdnmln)    svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(bdnmln)    svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfxfc
+      integer(ip)           svfxfc
 
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
       character*(frnmln)    svdref
-      integer               svdfrc
+      integer(ip)           svdfrc
 
 !
 !     Saved target radii declarations.
 !
-      integer               svctr5 ( ctrsiz )
-      double precision      svradi ( 3 )
-      integer               svnrad
+      integer(ip)           svctr5 ( ctrsiz )
+      real(wp)              svradi ( 3 )
+      integer(ip)           svnrad
 
 
 !
@@ -2260,13 +2261,13 @@
       if ( uselt ) then
 
          if ( xmit ) then
-            s   =  1.d0
+            s   =  1.0_wp
          else
-            s   = -1.d0
+            s   = -1.0_wp
          end if
 
       else
-         s = 0.d0
+         s = 0.0_wp
       end if
 
 !
@@ -2717,12 +2718,12 @@
 !
          call vsub ( tanpt, fixobs, tanoff )
 
-         if ( vdot( tanoff, fixdir ) .le. 0.d0 ) then
+         if ( vdot( tanoff, fixdir ) .le. 0.0_wp ) then
 !
 !           TANPT is on or behind the ray's vertex.
 !
             call vequ ( fixobs, tanpt )
-            range = 0.d0
+            range = 0.0_wp
 
             call nearpt ( fixobs, svradi(1), svradi(2), svradi(3), &
                           srfpt,  alt                             )
@@ -2740,7 +2741,7 @@
 !
 !           The tangent point lies ahead of the observer.
 !
-            if ( alt .eq. 0.d0 ) then
+            if ( alt .eq. 0.0_wp ) then
 !
 !              This is the geometric intercept case. ALT, SRFPT, TANPT,
 !              and SRFVEC are already set. To eliminate any error in
@@ -2821,12 +2822,12 @@
       lt     =  dist / clight()
       trgepc =  et  +  s * lt
 
-      prevlt = 0.d0
+      prevlt = 0.0_wp
       prvepc = trgepc
 
       i      = 0
-      ltdiff = 1.d0
-      epcdif = 1.d0
+      ltdiff = 1.0_wp
+      epcdif = 1.0_wp
 
 !
 !     Initialize STLCNV, the flag that indicates whether stellar
@@ -3012,7 +3013,7 @@
 !        We retain the altitude found by NPEDLN, since the following
 !        call can introduce round-off error in the intercept case.
 !
-         if ( alt .ne. 0.d0 ) then
+         if ( alt .ne. 0.0_wp ) then
             call nplnpt ( stlobs, fixdir, srfpt, tanpt, dval )
          else
             call vequ ( srfpt, tanpt )
@@ -3030,13 +3031,13 @@
 !
          call vsub ( tanpt, stlobs, tanoff )
 
-         if ( vdot( tanoff, fixdir ) .le. 0.d0 ) then
+         if ( vdot( tanoff, fixdir ) .le. 0.0_wp ) then
 !
 !           TANPT is on or behind the ray's vertex. Reset TANPT to be
 !           the vertex.
 !
             call vequ ( stlobs, tanpt )
-            range = 0.d0
+            range = 0.0_wp
 
 !
 !           In this case, the surface point is considered to be the
@@ -3060,7 +3061,7 @@
 !
             if ( tanloc ) then
 
-               lt     = 0.d0
+               lt     = 0.0_wp
                trgepc = et
 
             else
@@ -3115,7 +3116,7 @@
          i       =   i + 1
 
          ltcnv  =        (  ltdiff .lt. ( cnvlim * abs(lt) )  ) &
-                   .or.  (  epcdif .eq.   0.d0                )
+                   .or.  (  epcdif .eq.   0.0_wp                )
 
          if ( usestl ) then
 

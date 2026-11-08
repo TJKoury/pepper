@@ -1,6 +1,7 @@
 !$Procedure INVSTM ( Inverse of state transformation matrix )
 
       subroutine invstm ( mat, invmat )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision      mat    ( 6, 6 )
-      double precision      invmat ( 6, 6 )
+      real(wp)              mat    ( 6, 6 )
+      real(wp)              invmat ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -267,13 +268,13 @@
 !
 !     Local parameters
 !
-      integer               nrows
+      integer(ip)           nrows
       parameter           ( nrows = 6 )
 
-      integer               ncols
+      integer(ip)           ncols
       parameter           ( ncols = 6 )
 
-      integer               block
+      integer(ip)           block
       parameter           ( block = 3 )
 
 

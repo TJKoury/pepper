@@ -1,6 +1,7 @@
 !$Procedure INSRTD ( Insert an item into a double precision set )
 
       subroutine insrtd ( item, a )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      item
-      double precision      a     ( lbcell:* )
+      real(wp)              item
+      real(wp)              a     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -228,19 +229,19 @@
 !
 !     SPICELIB functions
 !
-      integer             cardd
-      integer             lstled
-      integer             sized
+      integer(ip)         cardd
+      integer(ip)         lstled
+      integer(ip)         sized
 
       logical             return
 
 !
 !     Local variables
 !
-      integer             card
-      integer             i
-      integer             last
-      integer             size
+      integer(ip)         card
+      integer(ip)         i
+      integer(ip)         last
+      integer(ip)         size
 
       logical             in
 

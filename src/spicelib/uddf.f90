@@ -1,6 +1,7 @@
 !$Procedure UDDF ( First derivative of a function, df(x)/dx )
 
       subroutine uddf ( udfunc, x, dx, deriv )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 
       external              udfunc
 
-      double precision      x
-      double precision      dx
-      double precision      deriv
+      real(wp)              x
+      real(wp)              dx
+      real(wp)              deriv
 
 ! $ Brief_I/O
 !
@@ -297,9 +298,9 @@
 !
 !     Local Variables
 !
-      integer               n
-      double precision      dfdx  (1)
-      double precision      udval (2)
+      integer(ip)           n
+      real(wp)              dfdx  (1)
+      real(wp)              udval (2)
 
 
       if ( return () ) then

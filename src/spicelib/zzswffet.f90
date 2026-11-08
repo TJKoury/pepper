@@ -3,6 +3,7 @@
       subroutine zzswffet ( framid, hdfram, frpool, fidlst, basbeg, &
                             free,   bascnt, usetim, binary, clsses, &
                             clsids, baslst, starts, stops,  framat )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,21 +31,21 @@
 
       include              'zzswtchf.inc'
 
-      integer               framid
-      integer               hdfram ( * )
-      integer               frpool ( lbsngl : * )
-      integer               fidlst ( * )
-      integer               basbeg ( * )
-      integer               free
-      integer               bascnt ( * )
+      integer(ip)           framid
+      integer(ip)           hdfram ( * )
+      integer(ip)           frpool ( lbsngl : * )
+      integer(ip)           fidlst ( * )
+      integer(ip)           basbeg ( * )
+      integer(ip)           free
+      integer(ip)           bascnt ( * )
       logical               usetim ( * )
       logical               binary ( * )
-      integer               clsses ( * )
-      integer               clsids ( * )
-      integer               baslst ( * )
-      double precision      starts ( * )
-      double precision      stops ( * )
-      integer               framat
+      integer(ip)           clsses ( * )
+      integer(ip)           clsids ( * )
+      integer(ip)           baslst ( * )
+      real(wp)              starts ( * )
+      real(wp)              stops ( * )
+      integer(ip)           framat
 
 ! $ Brief_I/O
 !
@@ -378,44 +379,44 @@
 !
 !     Other parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen = 80 )
 
 !
 !     Indices of items in the arrays of kernel variables:
 !
-      integer               ixfnam
+      integer(ip)           ixfnam
       parameter           ( ixfnam = 1 )
 
-      integer               ixid
+      integer(ip)           ixid
       parameter           ( ixid   = ixfnam + 1 )
 
-      integer               ixcent
+      integer(ip)           ixcent
       parameter           ( ixcent = ixid    + 1 )
 
-      integer               ixclas
+      integer(ip)           ixclas
       parameter           ( ixclas = ixcent + 1 )
 
-      integer               ixclid
+      integer(ip)           ixclid
       parameter           ( ixclid = ixclas + 1 )
 
-      integer               ixalgn
+      integer(ip)           ixalgn
       parameter           ( ixalgn = ixclid + 1 )
 
-      integer               ixstrt
+      integer(ip)           ixstrt
       parameter           ( ixstrt = ixalgn + 1 )
 
-      integer               ixstop
+      integer(ip)           ixstop
       parameter           ( ixstop = ixstrt + 1 )
 
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln = 32 )
 
-      integer               nkv
+      integer(ip)           nkv
       parameter           ( nkv    = 8 )
 
 !
@@ -437,19 +438,19 @@
       character*(1)         strtyp
       character*(timlen)    timstr
 
-      integer               center
-      integer               fid
-      integer               frcent
-      integer               frclas
-      integer               frclid
-      integer               i
-      integer               j
-      integer               n
-      integer               nbases
-      integer               nfravl
-      integer               nstart
-      integer               nstop
-      integer               room
+      integer(ip)           center
+      integer(ip)           fid
+      integer(ip)           frcent
+      integer(ip)           frclas
+      integer(ip)           frclid
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           n
+      integer(ip)           nbases
+      integer(ip)           nfravl
+      integer(ip)           nstart
+      integer(ip)           nstop
+      integer(ip)           room
 
 !
 !     KVFND(*) indicates whether a specified kernel variable was found.

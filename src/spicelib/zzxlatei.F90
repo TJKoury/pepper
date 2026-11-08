@@ -1,6 +1,7 @@
 !$Procedure ZZXLATEI ( Private --- Translate Integers )
 
       subroutine zzxlatei ( inbff, input, space, output )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,10 +25,10 @@
 
       include              'zzddhman.inc'
 
-      integer               inbff
+      integer(ip)           inbff
       character*(*)         input
-      integer               space
-      integer               output ( * )
+      integer(ip)           space
+      integer(ip)           output ( * )
 
 
 ! $ Brief_I/O
@@ -259,8 +260,8 @@
 !
 !     SPICELIB Functions
 !
-      integer               intmin
-      integer               isrchc
+      integer(ip)           intmin
+      integer(ip)           isrchc
 
       logical               return
 
@@ -270,13 +271,13 @@
 !
 !     These parameters are used for arithmetic shifting.
 !
-      integer               shft8
+      integer(ip)           shft8
       parameter           ( shft8  = 2**8  )
 
-      integer               shft16
+      integer(ip)           shft16
       parameter           ( shft16 = 2**16 )
 
-      integer               shft24
+      integer(ip)           shft24
       parameter           ( shft24 = 2**24 )
 
 !
@@ -286,22 +287,22 @@
       character*(strsiz)    strbff ( numbff )
       character*(strsiz)    tmpstr
 
-      integer               bigint
-      integer               i
-      integer               j
-      integer               lenipt
-      integer               natbff
-      integer               numint
-      integer               osign
-      integer               smlint
-      integer               value
+      integer(ip)           bigint
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           lenipt
+      integer(ip)           natbff
+      integer(ip)           numint
+      integer(ip)           osign
+      integer(ip)           smlint
+      integer(ip)           value
 
       logical               first
 
 !
 !     Statement Functions
 !
-      integer               zzichr
+      integer(ip)           zzichr
 
 !
 !     Saved Variables

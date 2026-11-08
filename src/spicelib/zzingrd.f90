@@ -1,6 +1,7 @@
 !$Procedure  ZZINGRD  ( is a voxel inside the grid? )
 
        logical function zzingrd ( nvox, voxel )
+       use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,8 +24,8 @@
 
       implicit              none
 
-      integer               nvox  ( 3 )
-      integer               voxel ( 3 )
+      integer(ip)           nvox  ( 3 )
+      integer(ip)           voxel ( 3 )
 
 ! $ Brief_I/O
 !
@@ -96,7 +97,7 @@
 !-&
 
 
-      integer               i
+      integer(ip)           i
 
 
       zzingrd = .false.

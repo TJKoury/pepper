@@ -1,6 +1,7 @@
 !$Procedure REMOVI ( Remove an item from an integer set )
 
       subroutine removi ( item, a )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               item
-      integer               a        ( lbcell:* )
+      integer(ip)           item
+      integer(ip)           a        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -220,17 +221,17 @@
 !
 !     SPICELIB functions
 !
-      integer               cardi
-      integer               bsrchi
+      integer(ip)           cardi
+      integer(ip)           bsrchi
       logical               return
 
 !
 !     Local variables
 !
-      integer               card
-      integer               loc
+      integer(ip)           card
+      integer(ip)           loc
       logical               in
-      integer               i
+      integer(ip)           i
 
 
 !

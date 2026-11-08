@@ -1,6 +1,7 @@
 !$Procedure RECLAT ( Rectangular to latitudinal coordinates )
 
       subroutine reclat ( rectan, radius, lon, lat )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision   rectan ( 3 )
-      double precision   radius
-      double precision   lon
-      double precision   lat
+      real(wp)           rectan ( 3 )
+      real(wp)           radius
+      real(wp)           lon
+      real(wp)           lat
 
 ! $ Brief_I/O
 !
@@ -381,10 +382,10 @@
 !
 !     Local variables.
 !
-      double precision x
-      double precision y
-      double precision z
-      double precision big
+      real(wp) x
+      real(wp) y
+      real(wp) z
+      real(wp) big
 
 !
 !     Store rectangular coordinates in temporary variables
@@ -404,16 +405,16 @@
          x      = rectan(1)
          y      = rectan(2)
 
-         if (x.eq.0.d0 .and. y.eq.0.d0) then
-            lon = 0.d0
+         if (x.eq.0.0_wp .and. y.eq.0.0_wp) then
+            lon = 0.0_wp
          else
             lon = datan2 (y,x)
          end if
 
       else
-         radius = 0.0d0
-         lat    = 0.d0
-         lon   = 0.d0
+         radius = 0.0_wp
+         lat    = 0.0_wp
+         lon   = 0.0_wp
       end if
 
       return

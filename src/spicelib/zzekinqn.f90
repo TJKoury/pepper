@@ -2,6 +2,7 @@
 
       subroutine zzekinqn ( value, type,  lexbeg, lexend, &
                             eqryi, eqryd, descr           )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,16 +28,16 @@
       include 'ektype.inc'
       include 'ekbool.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      value
-      integer               type
-      integer               lexbeg
-      integer               lexend
-      integer               eqryi  ( lbcell : * )
-      double precision      eqryd  ( * )
-      integer               descr  ( * )
+      real(wp)              value
+      integer(ip)           type
+      integer(ip)           lexbeg
+      integer(ip)           lexend
+      integer(ip)           eqryi  ( lbcell : * )
+      real(wp)              eqryd  ( * )
+      integer(ip)           descr  ( * )
 
 ! $ Brief_I/O
 !
@@ -136,10 +137,10 @@
 !
 !     Local variables
 !
-      integer               free
-      integer               init
-      integer               room
-      integer               size
+      integer(ip)           free
+      integer(ip)           init
+      integer(ip)           room
+      integer(ip)           size
 
 !
 !     Use discovery check-in.

@@ -1,6 +1,7 @@
 !$Procedure TXTOPR ( Text file, open for read )
 
       subroutine txtopr ( fname, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       character*(*)         fname
-      integer               unit
+      integer(ip)           unit
 
 ! $ Brief_I/O
 !
@@ -338,7 +339,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
 !
 !     Standard SPICE error handling.

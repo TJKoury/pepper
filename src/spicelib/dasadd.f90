@@ -1,6 +1,7 @@
 !$Procedure DASADD ( DAS, add data, double precision )
 
       subroutine dasadd ( handle, n, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               handle
-      integer               n
-      double precision      data   ( * )
+      integer(ip)           handle
+      integer(ip)           n
+      real(wp)              data   ( * )
 
 ! $ Brief_I/O
 !
@@ -335,32 +336,32 @@
 !
 !     Local parameters
 !
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =  2  )
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd    = 128 )
 
 !
 !     Local variables
 !
-      double precision      record ( nwd )
+      real(wp)              record ( nwd )
 
-      integer               clbase
-      integer               clsize
-      integer               free
-      integer               lastd
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
-      integer               numdp
-      integer               nwritn
-      integer               recno
-      integer               wordno
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           free
+      integer(ip)           lastd
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           numdp
+      integer(ip)           nwritn
+      integer(ip)           recno
+      integer(ip)           wordno
 
 
 !
@@ -371,7 +372,7 @@
 !
 !     Initial values
 !
-      data                  record / nwd * 0.d0 /
+      data                  record / nwd * 0.0_wp /
 
 !
 !     Standard SPICE error handling.

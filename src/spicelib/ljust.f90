@@ -1,6 +1,7 @@
 !$Procedure LJUST ( Left justify a character string )
 
       subroutine ljust ( input, output )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -117,11 +118,11 @@
 !
 !     Local variables
 !
-      integer               li
-      integer               lo
-      integer               i
-      integer               j
-      integer               pos
+      integer(ip)           li
+      integer(ip)           lo
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           pos
 
 
 !

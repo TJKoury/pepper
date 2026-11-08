@@ -1,6 +1,7 @@
 !$Procedure REMLAI ( Remove elements from an integer array )
 
       subroutine remlai ( ne, loc, array, na )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer          ne
-      integer          loc
-      integer          array ( * )
-      integer          na
+      integer(ip)      ne
+      integer(ip)      loc
+      integer(ip)      array ( * )
+      integer(ip)      na
 
 ! $ Brief_I/O
 !
@@ -185,7 +186,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

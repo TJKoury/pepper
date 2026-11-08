@@ -2,6 +2,7 @@
 
 
       subroutine zzmsxf ( matrix, n, output )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 ! $ Declarations
 
       implicit none
-      double precision      matrix ( 6, 6, * )
-      integer               n
-      double precision      output ( 6, 6    )
+      real(wp)              matrix ( 6, 6, * )
+      integer(ip)           n
+      real(wp)              output ( 6, 6    )
 
 ! $ Brief_I/O
 !
@@ -153,17 +154,17 @@
 !
 !-&
 
-      integer               i
-      integer               j
-      integer               k
-      integer               l
-      integer               m
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           l
+      integer(ip)           m
 
-      integer               get
-      integer               put
-      integer               incr
+      integer(ip)           get
+      integer(ip)           put
+      integer(ip)           incr
 
-      double precision      temp ( 6, 6, 2 )
+      real(wp)              temp ( 6, 6, 2 )
 
 !
 !    If we have more than 2 matrices to deal with we will need to
@@ -203,7 +204,7 @@
 
          do j = 1,3
             do k = 4,6
-               output(j,k) = 0.0d0
+               output(j,k) = 0.0_wp
             end do
          end do
 
@@ -346,7 +347,7 @@
 !
          do j = 1,3
             do k = 4,6
-               output(j,k) = 0.0d0
+               output(j,k) = 0.0_wp
             end do
          end do
 
@@ -382,11 +383,11 @@
 
          do j = 1, 6
 
-            output(j,j) = 1.0d0
+            output(j,j) = 1.0_wp
 
             do k = j+1,6
-               output(j,k) = 0.0d0
-               output(k,j) = 0.0d0
+               output(j,k) = 0.0_wp
+               output(k,j) = 0.0_wp
             end do
          end do
 

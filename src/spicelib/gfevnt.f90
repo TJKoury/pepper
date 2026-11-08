@@ -6,6 +6,7 @@
                           adjust,   cnfine,   rpt,      udrepi, &
                           udrepu,   udrepf,   mw,       nw, &
                           work,     bail,     udbail,   result   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -35,37 +36,37 @@
       include 'zzgf.inc'
       include 'zzabcorr.inc'
 
-      integer               maxpar
+      integer(ip)           maxpar
       parameter           ( maxpar = 10 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       external              udstep
       external              udrefn
       character*(*)         gquant
-      integer               qnpars
+      integer(ip)           qnpars
       character*(*)         qpnams ( * )
       character*(*)         qcpars ( * )
-      double precision      qdpars ( * )
-      integer               qipars ( * )
+      real(wp)              qdpars ( * )
+      integer(ip)           qipars ( * )
       logical               qlpars ( * )
       character*(*)         op
-      double precision      refval
-      double precision      tol
-      double precision      adjust
-      double precision      cnfine ( lbcell : * )
+      real(wp)              refval
+      real(wp)              tol
+      real(wp)              adjust
+      real(wp)              cnfine ( lbcell : * )
       logical               rpt
       external              udrepi
       external              udrepu
       external              udrepf
-      integer               mw
-      integer               nw
-      double precision      work   ( lbcell : mw, nw )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work   ( lbcell : mw, nw )
       logical               bail
       logical               udbail
       external              udbail
-      double precision      result ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1575,7 +1576,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
       logical               return
 
       external              zzgfudlt
@@ -1615,41 +1616,41 @@
 !
 !     Event quantity codes:
 !
-      integer               sep
+      integer(ip)           sep
       parameter           ( sep    = 1 )
 
-      integer               dist
+      integer(ip)           dist
       parameter           ( dist   = 2 )
 
-      integer               coord
+      integer(ip)           coord
       parameter           ( coord  = 3 )
 
-      integer               rngrat
+      integer(ip)           rngrat
       parameter           ( rngrat = 4 )
 
-      integer               phase
+      integer(ip)           phase
       parameter           ( phase  = 5 )
 
-      integer               iluang
+      integer(ip)           iluang
       parameter           ( iluang = 6 )
 
-      integer               angspd
+      integer(ip)           angspd
       parameter           ( angspd = 7 )
 
-      integer               apdiam
+      integer(ip)           apdiam
       parameter           ( apdiam = 8 )
 
 
 !
 !     Number of supported quantities:
 !
-      integer               nq
+      integer(ip)           nq
       parameter           ( nq     = 8 )
 
 !
 !     Number of supported comparison operators:
 !
-      integer               nc
+      integer(ip)           nc
       parameter           ( nc     = 7 )
 
 !
@@ -1660,14 +1661,14 @@
 !     MAXOP is the maximum string length for comparison operators.
 !     MAXOP may grow if new comparisons are added.
 !
-      integer               maxop
+      integer(ip)           maxop
       parameter           ( maxop = 6 )
 
 !
 !     MAXCLN is the maximum character string length of the quantity
 !     parameter names and character quantity parameters.
 !
-      integer               maxcln
+      integer(ip)           maxcln
       parameter           ( maxcln = 80 )
 
 
@@ -1699,19 +1700,19 @@
       character*(mxbegm)    srcpre ( 2, nq )
       character*(mxendm)    srcsuf ( 2, nq )
 
-      double precision      dt
+      real(wp)              dt
 
-      integer               i
-      integer               loc
-      integer               npass
-      integer               qtnum
+      integer(ip)           i
+      integer(ip)           loc
+      integer(ip)           npass
+      integer(ip)           qtnum
 
       logical               first
       logical               localx
       logical               noadjx
 
-      double precision      dvec   ( 3 )
-      double precision      spoint ( 3 )
+      real(wp)              dvec   ( 3 )
+      real(wp)              spoint ( 3 )
 
 !
 !     Saved variables
@@ -2275,7 +2276,7 @@
 !
          localx = ( uop .eq. 'LOCMIN' ) .or. ( uop .eq. 'LOCMAX' )
 
-         noadjx =  ( adjust .eq.  0.d0    ) .and. &
+         noadjx =  ( adjust .eq.  0.0_wp    ) .and. &
                  ( ( uop    .eq. 'ABSMIN' ) .or. ( uop .eq. 'ABSMAX' ) )
 
          if ( localx .or. noadjx ) then
@@ -2372,7 +2373,7 @@
 !        TDB second. This should have a function interface to
 !        reset.
 !
-         dt = 1.d0
+         dt = 1.0_wp
 
          call zzgfrrin ( target, abcorr, obsrvr, dt )
 

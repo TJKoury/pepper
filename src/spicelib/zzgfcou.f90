@@ -3,6 +3,7 @@
       subroutine zzgfcou ( vecdef, method, target, et,     ref, &
                            abcorr, obsrvr, dref,   dvec,   crdsys, &
                            crdnam, decres, crdval, crdfnd, udfunc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -41,16 +42,16 @@
       character*(*)         vecdef
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
       character*(*)         obsrvr
       character*(*)         dref
-      double precision      dvec   ( 3 )
+      real(wp)              dvec   ( 3 )
       character*(*)         crdsys
       character*(*)         crdnam
       logical               decres
-      double precision      crdval
+      real(wp)              crdval
       logical               crdfnd
 
 ! $ Brief_I/O
@@ -244,9 +245,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      pi
+      real(wp)              pi
 
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               bodfnd
       logical               failed
@@ -260,55 +261,55 @@
 !
 !     Length of an aberration correction name string.
 !
-      integer               abclen
+      integer(ip)           abclen
       parameter           ( abclen = 20 )
 
 !
 !     Length of a reference frame name.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
 !     Length of a body name.
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
 !
 !     Length of a coordinate system name.
 !
-      integer               syslen
+      integer(ip)           syslen
       parameter           ( syslen = 32 )
 
 !
 !     Length of a vector definition name.
 !
-      integer               vdflen
+      integer(ip)           vdflen
       parameter           ( vdflen = 32 )
 
 !
 !     Number of recognized coordinate systems.
 !
-      integer               nsys
+      integer(ip)           nsys
       parameter           ( nsys   = 7 )
 
 !
 !     Maximum length of a coordinate name.
 !
-      integer               crdlen
+      integer(ip)           crdlen
       parameter           ( crdlen = 32 )
 
 !
 !     Maximum length of computation method name.
 !
-      integer               metlen
+      integer(ip)           metlen
       parameter           ( metlen = 200 )
 
 !
 !     Time string length.
 !
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen = 40 )
 
 !
@@ -326,29 +327,29 @@
       character*(syslen)    sysnms ( nsys )
       character*(timlen)    timstr
 
-      double precision      alt
-      double precision      coords ( 3 )
-      double precision      lat
-      double precision      lon
-      double precision      state  ( 6 )
-      double precision      svdvec ( 3 )
-      double precision      svf
-      double precision      svradi ( 3 )
-      double precision      svre
-      double precision      value
-      double precision      y      ( 3 )
+      real(wp)              alt
+      real(wp)              coords ( 3 )
+      real(wp)              lat
+      real(wp)              lon
+      real(wp)              state  ( 6 )
+      real(wp)              svdvec ( 3 )
+      real(wp)              svf
+      real(wp)              svradi ( 3 )
+      real(wp)              svre
+      real(wp)              value
+      real(wp)              y      ( 3 )
 
-      integer               cdsign ( 3 )
-      integer               class
-      integer               clssid
-      integer               frcode
-      integer               svcidx
-      integer               svdctr
-      integer               svobs
-      integer               svrctr
-      integer               svsens
-      integer               svtarg
-      integer               sysidx
+      integer(ip)           cdsign ( 3 )
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           frcode
+      integer(ip)           svcidx
+      integer(ip)           svdctr
+      integer(ip)           svobs
+      integer(ip)           svrctr
+      integer(ip)           svsens
+      integer(ip)           svtarg
+      integer(ip)           sysidx
 
       logical               attblk ( abatsz )
       logical               found
@@ -417,7 +418,7 @@
                                       loncrd,   latcrd,   altcrd  /
 
 
-      data                  y      /  0.d0, 1.d0, 0.d0 /
+      data                  y      /  0.0_wp, 1.0_wp, 0.0_wp /
 
 
 !
@@ -1139,8 +1140,8 @@
 
          else
 
-            svre = 0.d0
-            svf  = 0.d0
+            svre = 0.0_wp
+            svf  = 0.0_wp
 
          end if
 
@@ -2253,7 +2254,7 @@
 !
 !     The derivative of the coordinate is negative if the "sign" is -1.
 !
-      decres  =  ( - sin(value) * cdsign(svcidx) )  .lt.  0.d0
+      decres  =  ( - sin(value) * cdsign(svcidx) )  .lt.  0.0_wp
 
 
       call chkout  ( 'ZZGFCOCD' )
@@ -2508,7 +2509,7 @@
 !
 !     The derivative of the coordinate is negative if the "sign" is -1.
 !
-      decres  =  ( cos(value) * cdsign(svcidx) )  .lt.  0.d0
+      decres  =  ( cos(value) * cdsign(svcidx) )  .lt.  0.0_wp
 
       call chkout  ( 'ZZGFCOSD' )
       return

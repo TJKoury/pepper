@@ -3,6 +3,7 @@
       subroutine pckw02 (  handle,  clssid,  frame,   first, &
                            last,    segid,   intlen,  n, &
                            polydg,  cdata,   btime          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,17 +25,17 @@
 
       implicit none
 
-      integer               handle
-      integer               clssid
+      integer(ip)           handle
+      integer(ip)           clssid
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      intlen
-      integer               n
-      integer               polydg
-      double precision      cdata (*)
-      double precision      btime
+      real(wp)              intlen
+      integer(ip)           n
+      integer(ip)           polydg
+      real(wp)              cdata (*)
+      real(wp)              btime
 
 ! $ Brief_I/O
 !
@@ -360,30 +361,30 @@
 !
 !     DTYPE is the PCK data type.
 !
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   2 )
 !
 !     NS is the size of a packed PCK segment descriptor.
 !
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 !
 !     ND is the number of double precision components in an PCK
 !     segment descriptor. PCK uses ND = 2.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 !
 !     NI is the number of integer components in an PCK segment
 !     descriptor. PCK uses NI = 5.
 !
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   5 )
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     PCK segment identifier.
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
 !
@@ -392,19 +393,19 @@
       character*(sidlen)    etstr
       character*(sidlen)    netstr
 
-      double precision      dcd   ( nd )
-      double precision      descr ( ns )
-      double precision      ltime
-      double precision      mid
-      double precision      numrec
-      double precision      radius
-      double precision      rsize
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              mid
+      real(wp)              numrec
+      real(wp)              radius
+      real(wp)              rsize
 
-      integer               i
-      integer               icd   ( ni )
-      integer               k
-      integer               ninrec
-      integer               refcod
+      integer(ip)           i
+      integer(ip)           icd   ( ni )
+      integer(ip)           k
+      integer(ip)           ninrec
+      integer(ip)           refcod
 
 
 !

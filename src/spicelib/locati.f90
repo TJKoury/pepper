@@ -1,6 +1,7 @@
 !$Procedure LOCATI ( Locate an identifier in a list )
 
       subroutine locati ( id, idsz, list, pool, at, presnt )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,14 +22,14 @@
 
       implicit none
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               id   (            * )
-      integer               idsz
-      integer               list ( idsz,      * )
-      integer               pool ( 2, lbpool: * )
-      integer               at
+      integer(ip)           id   (            * )
+      integer(ip)           idsz
+      integer(ip)           list ( idsz,      * )
+      integer(ip)           pool ( 2, lbpool: * )
+      integer(ip)           at
       logical               presnt
 
 ! $ Brief_I/O
@@ -296,28 +297,28 @@
 !     Spicelib functions
 !
 
-      integer               lnknfn
-      integer               lnksiz
+      integer(ip)           lnknfn
+      integer(ip)           lnksiz
 
 !
 !     Linked list parameters
 !
-      integer               next
+      integer(ip)           next
       parameter           ( next = 1 )
 
-      integer               prev
+      integer(ip)           prev
       parameter           ( prev = 2 )
 
 !
 !     Local Variables.
 !
 
-      integer               last
-      integer               nfree
-      integer               psize
-      integer               i
-      integer               head
-      integer               new
+      integer(ip)           last
+      integer(ip)           nfree
+      integer(ip)           psize
+      integer(ip)           i
+      integer(ip)           head
+      integer(ip)           new
 
       logical               more
       logical               same

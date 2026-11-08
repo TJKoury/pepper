@@ -1,6 +1,7 @@
 !$Procedure SURFPT ( Surface point on an ellipsoid )
 
       subroutine surfpt ( positn, u, a, b, c, point, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      double precision    positn ( 3 )
-      double precision    u      ( 3 )
-      double precision    a
-      double precision    b
-      double precision    c
-      double precision    point  ( 3 )
+      real(wp)            positn ( 3 )
+      real(wp)            u      ( 3 )
+      real(wp)            a
+      real(wp)            b
+      real(wp)            c
+      real(wp)            point  ( 3 )
       logical             found
 
 ! $ Brief_I/O
@@ -248,8 +249,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               return
       logical               vzero
@@ -257,10 +258,10 @@
 !
 !     Local parameters
 !
-      integer               msgdim
+      integer(ip)           msgdim
       parameter           ( msgdim = 7 )
 
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 32 )
 
 !
@@ -268,17 +269,17 @@
 !
       character*(msglen)    mssg  ( msgdim )
 
-      double precision      p     ( 3 )
-      double precision      pmag
-      double precision      scale
-      double precision      sign
-      double precision      ux    ( 3 )
-      double precision      x     ( 3 )
-      double precision      y     ( 3 )
-      double precision      ymag
-      double precision      yproj ( 3 )
+      real(wp)              p     ( 3 )
+      real(wp)              pmag
+      real(wp)              scale
+      real(wp)              sign
+      real(wp)              ux    ( 3 )
+      real(wp)              x     ( 3 )
+      real(wp)              y     ( 3 )
+      real(wp)              ymag
+      real(wp)              yproj ( 3 )
 
-      integer               bad
+      integer(ip)           bad
 
 !
 !     Saved variables
@@ -405,7 +406,7 @@
 !
 !        If P is outside of the sphere, there can be no intersection.
 !
-         if ( pmag .gt. 1.d0 ) then
+         if ( pmag .gt. 1.0_wp ) then
             return
          end if
 
@@ -414,14 +415,14 @@
 !        is pointing away from the sphere, and there is no
 !        intersection.
 !
-         if (  vdot(yproj, x) .gt. 0.d0 ) then
+         if (  vdot(yproj, x) .gt. 0.0_wp ) then
             return
          end if
 
 !
 !        At this point we know there's an intersection.
 !
-         if ( pmag .eq. 1.d0 ) then
+         if ( pmag .eq. 1.0_wp ) then
 !
 !           The vector P we've found is the singleton point of
 !           intersection.  All we have to do is transform P by
@@ -444,7 +445,7 @@
 !        In this case the coefficient of UX has negative sign because
 !        the vector we're adding to P points toward Y.
 !
-         sign = -1.d0
+         sign = -1.0_wp
 
 
       else if ( ymag .eq. 1 ) then
@@ -463,7 +464,7 @@
 !        In this case, the intercept is obtained by adding a positive
 !        multiple of UX to P.
 !
-         sign =  1.d0
+         sign =  1.0_wp
 
       end if
 
@@ -478,12 +479,12 @@
 !           \/ 1 - PMAG**2
 !
 !
-      scale = sqrt (  max ( 0.d0, 1-pmag*pmag )  )
+      scale = sqrt (  max ( 0.0_wp, 1-pmag*pmag )  )
 
 !
 !     Find the intercept point on the unit sphere.
 !
-      call vlcom (  1.d0,  p,  sign * scale,  ux,  point  )
+      call vlcom (  1.0_wp,  p,  sign * scale,  ux,  point  )
 
 !
 !     Undo our linear transformation.

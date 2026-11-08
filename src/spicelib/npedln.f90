@@ -1,6 +1,7 @@
 !$Procedure NPEDLN ( Nearest point on ellipsoid to line )
 
       subroutine npedln ( a, b, c, linept, linedr, pnear, dist )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,19 +22,19 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      linept ( 3 )
-      double precision      linedr ( 3 )
-      double precision      pnear  ( 3 )
-      double precision      dist
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              linept ( 3 )
+      real(wp)              linedr ( 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -312,24 +313,24 @@
 !
 !     Local variables
 !
-      double precision      candpl ( ubpl )
-      double precision      cand   ( ubel )
-      double precision      oppdir (    3 )
-      double precision      prjpl  ( ubpl )
-      double precision      mag
-      double precision      normal (    3 )
-      double precision      prjel  ( ubel )
-      double precision      prjpt  (    3 )
-      double precision      prjnpt (    3 )
-      double precision      pt     ( 3, 2 )
-      double precision      scale
-      double precision      scla
-      double precision      sclb
-      double precision      sclc
-      double precision      sclpt  (    3 )
-      double precision      udir   (    3 )
+      real(wp)              candpl ( ubpl )
+      real(wp)              cand   ( ubel )
+      real(wp)              oppdir (    3 )
+      real(wp)              prjpl  ( ubpl )
+      real(wp)              mag
+      real(wp)              normal (    3 )
+      real(wp)              prjel  ( ubel )
+      real(wp)              prjpt  (    3 )
+      real(wp)              prjnpt (    3 )
+      real(wp)              pt     ( 3, 2 )
+      real(wp)              scale
+      real(wp)              scla
+      real(wp)              sclb
+      real(wp)              sclc
+      real(wp)              sclpt  (    3 )
+      real(wp)              udir   (    3 )
 
-      integer               i
+      integer(ip)           i
 
       logical               found  (    2 )
       logical               ifound
@@ -442,9 +443,9 @@
 !
 !     The ellipsoid's semi-axes must have positive length.
 !
-      else if (         ( a .le. 0.d0 ) &
-                 .or.   ( b .le. 0.d0 ) &
-                 .or.   ( c .le. 0.d0 )   )   then
+      else if (         ( a .le. 0.0_wp ) &
+                 .or.   ( b .le. 0.0_wp ) &
+                 .or.   ( c .le. 0.0_wp )   )   then
 
          call setmsg ( 'Semi-axes: A = #,  B = #,  C = #.'  )
          call errdp  ( '#', a                               )
@@ -468,9 +469,9 @@
       sclb   =  b / scale
       sclc   =  c / scale
 
-      if (       ( scla**2.d0  .eq.  0.d0 ) &
-           .or.  ( sclb**2.d0  .eq.  0.d0 ) &
-           .or.  ( sclc**2.d0  .eq.  0.d0 )   )   then
+      if (       ( scla**2.0_wp  .eq.  0.0_wp ) &
+           .or.  ( sclb**2.0_wp  .eq.  0.0_wp ) &
+           .or.  ( sclc**2.0_wp  .eq.  0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                        )
@@ -504,7 +505,7 @@
 
          if ( found(i) ) then
 
-            dist  =  0.0d0
+            dist  =  0.0_wp
 
             call vscl   ( scale,    pt(1,i),  pnear )
             call chkout ( 'NPEDLN'                  )
@@ -528,7 +529,7 @@
       normal(2)  =  udir(2) / sclb**2
       normal(3)  =  udir(3) / sclc**2
 
-      call nvc2pl ( normal, 0.d0, candpl )
+      call nvc2pl ( normal, 0.0_wp, candpl )
 
       call inedpl ( scla, sclb, sclc, candpl, cand, xfound )
 
@@ -543,7 +544,7 @@
 !     Project the candidate ellipse onto a plane orthogonal to the
 !     line.  We'll call the plane PRJPL and the projected ellipse PRJEL.
 !
-      call nvc2pl ( udir,  0.d0,   prjpl )
+      call nvc2pl ( udir,  0.0_wp,   prjpl )
       call pjelpl ( cand,  prjpl,  prjel )
 
 !

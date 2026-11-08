@@ -1,6 +1,7 @@
 !$Procedure  ZZEKNRES ( Private: EK, resolve names in encoded query )
 
       subroutine zzeknres ( query, eqryi, eqryc, error, errmsg, errptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,15 +28,15 @@
       include 'ekquery.inc'
       include 'ektnamsz.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
       logical               error
       character*(*)         errmsg
-      integer               errptr
+      integer(ip)           errptr
 
 ! $ Brief_I/O
 !
@@ -157,14 +158,14 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
 
 !
 !     Local parameters
 !
-      integer               short
+      integer(ip)           short
       parameter           ( short  = 32 )
 
 !
@@ -174,20 +175,20 @@
       character*(tnamsz)    ltable
       character*(tnamsz)    table  ( maxtab )
 
-      integer               base
-      integer               cc     ( maxtab )
-      integer               cnstyp
-      integer               i
-      integer               iparse
-      integer               j
-      integer               lxb
-      integer               lxe
-      integer               ncnj
-      integer               ncns
-      integer               nload
-      integer               nord
-      integer               nsel
-      integer               ntab
+      integer(ip)           base
+      integer(ip)           cc     ( maxtab )
+      integer(ip)           cnstyp
+      integer(ip)           i
+      integer(ip)           iparse
+      integer(ip)           j
+      integer(ip)           lxb
+      integer(ip)           lxe
+      integer(ip)           ncnj
+      integer(ip)           ncns
+      integer(ip)           nload
+      integer(ip)           nord
+      integer(ip)           nsel
+      integer(ip)           ntab
 
       logical               fnd
 

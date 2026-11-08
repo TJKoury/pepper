@@ -1,6 +1,7 @@
 !$Procedure DAFFA ( DAF, find array )
 
       subroutine daffa ( handle, sum, name, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       include              'zzddhman.inc'
 
-      integer               tbsize
+      integer(ip)           tbsize
       parameter           ( tbsize = ftsize )
 
-      integer               handle
-      double precision      sum    ( * )
+      integer(ip)           handle
+      real(wp)              sum    ( * )
       character*(*)         name
       logical               found
 
@@ -1100,25 +1101,25 @@
 !
 !     Local parameters
 !
-      integer               crlen
+      integer(ip)           crlen
       parameter           ( crlen  = 1000 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen =   60 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell =   -5 )
 
-      integer               maxndc
+      integer(ip)           maxndc
       parameter           ( maxndc =  124 )
 
-      integer               dprsiz
+      integer(ip)           dprsiz
       parameter           ( dprsiz =  128 )
 
-      integer               maxnic
+      integer(ip)           maxnic
       parameter           ( maxnic =  250 )
 
-      integer               nil
+      integer(ip)           nil
       parameter           ( nil    =   -1 )
 
 
@@ -1155,15 +1156,15 @@
 !     These variables are maintained in a table of parallel arrays;
 !     the size of the table is TBSIZE.
 !
-      integer               stfh   (         tbsize )
-      integer               stprev (         tbsize )
-      integer               stthis (         tbsize )
-      integer               stnext (         tbsize )
-      integer               stnseg (         tbsize )
-      integer               stcurr (         tbsize )
+      integer(ip)           stfh   (         tbsize )
+      integer(ip)           stprev (         tbsize )
+      integer(ip)           stthis (         tbsize )
+      integer(ip)           stnext (         tbsize )
+      integer(ip)           stnseg (         tbsize )
+      integer(ip)           stcurr (         tbsize )
       character*(crlen)     stnr   (         tbsize )
       logical               sthvnr (         tbsize )
-      double precision      stsr   ( dprsiz, tbsize )
+      real(wp)              stsr   ( dprsiz, tbsize )
 
 !
 !     The table of state variables is indexed by a singly linked list
@@ -1178,9 +1179,9 @@
 !     STFPTR (`state table free pointer'), respectively. Every node in
 !     the pool is on exactly one of these lists.
 !
-      integer               stpool ( tbsize )
-      integer               sthead
-      integer               stfptr
+      integer(ip)           stpool ( tbsize )
+      integer(ip)           sthead
+      integer(ip)           stfptr
 
 !
 !     The pool starts out with all of the nodes on the free list. The
@@ -1213,28 +1214,28 @@
       character*(filen)     dafnam
       character*(ifnlen)    ifname
 
-      double precision      exdc   ( maxndc )
-      double precision      exsum  ( maxndc )
-      double precision      newdc  ( maxndc )
+      real(wp)              exdc   ( maxndc )
+      real(wp)              exsum  ( maxndc )
+      real(wp)              newdc  ( maxndc )
 
-      integer               bward
-      integer               exic   ( maxnic )
-      integer               free
-      integer               fward
-      integer               i
-      integer               namsiz
-      integer               nd
-      integer               newic  ( maxnic )
-      integer               nextp
-      integer               ni
-      integer               opnset ( lbcell : ftsize )
-      integer               p
-      integer               prev
-      integer               sumsiz
+      integer(ip)           bward
+      integer(ip)           exic   ( maxnic )
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           i
+      integer(ip)           namsiz
+      integer(ip)           nd
+      integer(ip)           newic  ( maxnic )
+      integer(ip)           nextp
+      integer(ip)           ni
+      integer(ip)           opnset ( lbcell : ftsize )
+      integer(ip)           p
+      integer(ip)           prev
+      integer(ip)           sumsiz
 
       logical               first
       logical               fnd
-      integer               offset
+      integer(ip)           offset
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure   ZZMOBLIQ   ( Mean obliquity of date )
 
       subroutine zzmobliq ( et, mob, dmob )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 ! $ Declarations
 
       implicit none
-      double precision      et
-      double precision      mob
-      double precision      dmob
+      real(wp)              et
+      real(wp)              mob
+      real(wp)              dmob
 
 ! $ Brief_I/O
 !
@@ -125,8 +126,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      jyear
-      double precision      rpd
+      real(wp)              jyear
+      real(wp)              rpd
 
 !
 !     Local parameters
@@ -134,25 +135,25 @@
 !
 !     Coefficients for the mean obliquity:
 !
-      double precision      c0
-      parameter           ( c0 = 84381.448d0 )
+      real(wp)              c0
+      parameter           ( c0 = 84381.448_wp )
 
-      double precision      c1
-      parameter           ( c1 = -46.8150d0 )
+      real(wp)              c1
+      parameter           ( c1 = -46.8150_wp )
 
-      double precision      c2
-      parameter           ( c2 = -0.00059d0 )
+      real(wp)              c2
+      parameter           ( c2 = -0.00059_wp )
 
-      double precision      c3
-      parameter           ( c3 = 0.001813d0 )
+      real(wp)              c3
+      parameter           ( c3 = 0.001813_wp )
 
 !
 !     Local variables
 !
-      double precision      t
-      double precision      rad
-      double precision      year
-      double precision      persec
+      real(wp)              t
+      real(wp)              rad
+      real(wp)              year
+      real(wp)              persec
 
       logical               first
       save
@@ -164,21 +165,21 @@
          first  = .false.
          year   = jyear()
          rad    = rpd  ()
-         persec = 1.0d0 / ( year * 100.0d0 )
+         persec = 1.0_wp / ( year * 100.0_wp )
 
       end if
 
 !
 !     Convert the input epoch to Julian centuries past J2000:
 !
-      t  =  ( et / year )  / 100.d0
+      t  =  ( et / year )  / 100.0_wp
 
 !
 !     Compute the obliquity at epoch.  The polynomial yields arcseconds;
 !     convert the units to radians.
 !
-      mob  = ( rad / 3.6d3 ) * (  c0 + t*( c1   + t*( c2 + t*c3 ) )  )
+      mob  = ( rad / 3.6e3_wp ) * (  c0 + t*( c1   + t*( c2 + t*c3 ) )  )
 
-      dmob = ( rad / 3.6d3 ) * (  c1 + t*( 2*c2 + t*3*c3 )  ) * persec
+      dmob = ( rad / 3.6e3_wp ) * (  c1 + t*( 2*c2 + t*3*c3 )  ) * persec
 
       end

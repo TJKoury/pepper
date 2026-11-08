@@ -3,6 +3,7 @@
       subroutine zzekscan (  query,  maxntk, maxnum, ntoken, tokens, &
                              lxbegs, lxends, values, numvls, chrbuf, &
                              chbegs, chends, scnerr, errmsg         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,17 +26,17 @@
       include 'ekqlimit.inc'
 
       character*(*)         query
-      integer               maxntk
-      integer               maxnum
-      integer               ntoken
-      integer               tokens ( * )
-      integer               lxbegs ( * )
-      integer               lxends ( * )
-      integer               values ( * )
-      double precision      numvls ( * )
+      integer(ip)           maxntk
+      integer(ip)           maxnum
+      integer(ip)           ntoken
+      integer(ip)           tokens ( * )
+      integer(ip)           lxbegs ( * )
+      integer(ip)           lxends ( * )
+      integer(ip)           values ( * )
+      real(wp)              numvls ( * )
       character*(*)         chrbuf
-      integer               chbegs ( * )
-      integer               chends ( * )
+      integer(ip)           chbegs ( * )
+      integer(ip)           chends ( * )
       logical               scnerr
       character*(*)         errmsg
 
@@ -288,10 +289,10 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               frstpc
-      integer               isrchc
-      integer               rtrim
+      integer(ip)           bsrchc
+      integer(ip)           frstpc
+      integer(ip)           isrchc
+      integer(ip)           rtrim
 
       logical               beint
       logical               return
@@ -306,49 +307,49 @@
       character*(*)         squote
       parameter           ( squote  = '''' )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize =   80 )
 
-      integer               nxttok
+      integer(ip)           nxttok
       parameter           ( nxttok = 1 )
 
-      integer               newtok
+      integer(ip)           newtok
       parameter           ( newtok = nxttok + 1 )
 
-      integer               term
+      integer(ip)           term
       parameter           ( term   = newtok + 1 )
 
-      integer               qstr
+      integer(ip)           qstr
       parameter           ( qstr   = term   + 1 )
 
-      integer               dot
+      integer(ip)           dot
       parameter           ( dot    = qstr   + 1 )
 
-      integer               number
+      integer(ip)           number
       parameter           ( number = dot    + 1 )
 
-      integer               ident
+      integer(ip)           ident
       parameter           ( ident  = number + 1 )
 
-      integer               spcial
+      integer(ip)           spcial
       parameter           ( spcial = ident + 1 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               mxspec
+      integer(ip)           mxspec
       parameter           ( mxspec = 512 )
 
 !
 !     Number of tokens made up of special characters:
 !
-      integer               nspec
+      integer(ip)           nspec
       parameter           ( nspec  = 13 )
 
 !
 !     Max length of any such token:
 !
-      integer               spclen
+      integer(ip)           spclen
       parameter           ( spclen = 2 )
 
 !
@@ -361,23 +362,23 @@
       character*(lnsize)    tlchrs
       character*(maxqry)    tquery
 
-      integer               chcard
-      integer               cptr
-      integer               i
-      integer               idspec ( lbcell : mxspec )
-      integer               j
-      integer               kwvals ( nkeywd )
-      integer               l
-      integer               last
-      integer               length
-      integer               nchars
-      integer               nnums
-      integer               nstrs
-      integer               ptr
-      integer               room
-      integer               state
-      integer               spctok ( nspec )
-      integer               spcval ( nspec )
+      integer(ip)           chcard
+      integer(ip)           cptr
+      integer(ip)           i
+      integer(ip)           idspec ( lbcell : mxspec )
+      integer(ip)           j
+      integer(ip)           kwvals ( nkeywd )
+      integer(ip)           l
+      integer(ip)           last
+      integer(ip)           length
+      integer(ip)           nchars
+      integer(ip)           nnums
+      integer(ip)           nstrs
+      integer(ip)           ptr
+      integer(ip)           room
+      integer(ip)           state
+      integer(ip)           spctok ( nspec )
+      integer(ip)           spcval ( nspec )
 
       logical               pass1
 

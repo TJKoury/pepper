@@ -1,6 +1,7 @@
 !$Procedure STCL01 ( STAR catalog type 1, load catalog file )
 
       subroutine stcl01 ( catfnm, tabnam, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       character*(*)         catfnm
       character*(*)         tabnam
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !

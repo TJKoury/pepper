@@ -1,6 +1,7 @@
 !$Procedure  ZZWIND ( Find winding number of polygon about point )
 
-      integer function zzwind ( plane, n, vertcs, point )
+      integer(ip) function zzwind ( plane, n, vertcs, point )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -24,13 +25,13 @@
 !
 ! $ Declarations
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   = 4 )
 
-      double precision      plane  ( ubpl )
-      integer               n
-      double precision      vertcs ( 3, * )
-      double precision      point  ( 3 )
+      real(wp)              plane  ( ubpl )
+      integer(ip)           n
+      real(wp)              vertcs ( 3, * )
+      real(wp)              point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -236,9 +237,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
-      double precision      vdot
-      double precision      vsep
+      real(wp)              twopi
+      real(wp)              vdot
+      real(wp)              vsep
 
       logical               return
       logical               vzero
@@ -246,17 +247,17 @@
 !
 !     Local variables
 !
-      double precision      atotal
-      double precision      cons
-      double precision      normal ( 3 )
-      double precision      rnext  ( 3 )
-      double precision      rperp  ( 3 )
-      double precision      rvec   ( 3 )
-      double precision      sep
-      double precision      vtemp  ( 3 )
+      real(wp)              atotal
+      real(wp)              cons
+      real(wp)              normal ( 3 )
+      real(wp)              rnext  ( 3 )
+      real(wp)              rperp  ( 3 )
+      real(wp)              rvec   ( 3 )
+      real(wp)              sep
+      real(wp)              vtemp  ( 3 )
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 !
 !     Initialize the function return value.
@@ -305,7 +306,7 @@
 !     if necessary to make this true.  We don't touch CONS because
 !     it's not used later, but in principle it should be negated.
 !
-      if (  vdot( normal, vertcs(1,1) )  .lt.  0.d0  ) then
+      if (  vdot( normal, vertcs(1,1) )  .lt.  0.0_wp  ) then
 
          call vminus ( normal, vtemp  )
          call vequ   ( vtemp,  normal )
@@ -328,7 +329,7 @@
 !
 !     The total "wrap angle" starts at zero.
 !
-      atotal  = 0.d0
+      atotal  = 0.0_wp
 
       do i = 2, n+1
 
@@ -355,7 +356,7 @@
 !
          call ucrss ( normal, rvec, rperp )
 
-         if (  vdot( rnext, rperp )  .ge.  0.d0  ) then
+         if (  vdot( rnext, rperp )  .ge.  0.0_wp  ) then
 !
 !           RNEXT is reached by counterclockwise rotation from
 !           RVEC.  Note that in the case of zero rotation, the

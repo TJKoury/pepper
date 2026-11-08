@@ -1,6 +1,7 @@
 !$Procedure ZZDDHMNM ( Return unique enough DP number for a file )
 
-      double precision function zzddhmnm ( unit )
+      real(wp) function zzddhmnm ( unit )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,12 +26,12 @@
 
       include              'zzddhman.inc'
 
-      integer               unit
+      integer(ip)           unit
 
-      integer               idlen
+      integer(ip)           idlen
       parameter           ( idlen  = 8 )
 
-      integer               nints
+      integer(ip)           nints
       parameter           ( nints  = 20 )
 
 ! $ Brief_I/O
@@ -143,7 +144,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -154,17 +155,17 @@
 !     Character buffer size consistent with the number of integers
 !     that will be read from the file.
 !
-      integer               nchars
+      integer(ip)           nchars
       parameter           ( nchars = nints * 4 )
 
 !
 !     Minimum and maximum values for the range of ASCII printing
 !     characters.
 !
-      integer               minpch
+      integer(ip)           minpch
       parameter           ( minpch = 32 )
 
-      integer               maxpch
+      integer(ip)           maxpch
       parameter           ( maxpch = 126 )
 
 !
@@ -179,17 +180,17 @@
       character*(strsiz)    strarc ( numarc )
       character*(strsiz)    strbff ( numbff )
 
-      double precision      mnm
+      real(wp)              mnm
 
-      integer               bff
-      integer               i
-      integer               intarr ( nints )
-      integer               iostat
+      integer(ip)           bff
+      integer(ip)           i
+      integer(ip)           intarr ( nints )
+      integer(ip)           iostat
 
-      integer               natbff
-      integer               supbff ( numbff )
-      integer               numsup
-      integer               supidx
+      integer(ip)           natbff
+      integer(ip)           supbff ( numbff )
+      integer(ip)           numsup
+      integer(ip)           supidx
 
       logical               first
 
@@ -211,8 +212,8 @@
 !
 !     Set default output value to zero.
 !
-      mnm      = 0.d0
-      zzddhmnm = 0.d0
+      mnm      = 0.0_wp
+      zzddhmnm = 0.0_wp
 
 !
 !     Standard SPICE error handling.

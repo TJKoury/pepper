@@ -2,6 +2,7 @@
 
       subroutine dskx02 ( handle, dladsc, vertex, &
                           raydir, plid,   xpt,    found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,12 +29,12 @@
       include              'dsktol.inc'
 
 
-      integer               handle
-      integer               dladsc   ( * )
-      double precision      vertex   ( 3 )
-      double precision      raydir   ( 3 )
-      integer               plid
-      double precision      xpt      ( 3 )
+      integer(ip)           handle
+      integer(ip)           dladsc   ( * )
+      real(wp)              vertex   ( 3 )
+      real(wp)              raydir   ( 3 )
+      integer(ip)           plid
+      real(wp)              xpt      ( 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -839,8 +840,8 @@
 !
 !     SPICELIB Functions
 !
-      double precision      dpmax
-      double precision      vdot
+      real(wp)              dpmax
+      real(wp)              vdot
 
       logical               return
       logical               failed
@@ -849,7 +850,7 @@
 !
 !     Statement function type declarations
 !
-      integer               vox2id
+      integer(ip)           vox2id
 
 
 !
@@ -860,124 +861,124 @@
 !
 !     Tolerance used for vertex-voxel grid distance test:
 !
-      double precision      vtxtol
-      parameter           ( vtxtol = 1.d-12 )
+      real(wp)              vtxtol
+      parameter           ( vtxtol = 1.0e-12_wp )
 
 !
 !     Maximum number of voxels we can accept for
 !     one XDDA call.
 !
-      integer               nvxlst
+      integer(ip)           nvxlst
       parameter           ( nvxlst = 50000 )
 
 !
 !     Maximum number of plates we work with
 !     at any time.
 !
-      integer               maxpl
+      integer(ip)           maxpl
       parameter           ( maxpl  =  maxplt/125 )
 
 !
 !     Parameter indicating no coordinates are to be excluded
 !     in the test for a point being within segment boundaries.
 !
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
 !
 !     Local Variables
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 200 )
 
 
-      double precision      coord  ( 3 )
-      double precision      edges  ( 3, 3 )
-      double precision      dskdsc ( dskdsz )
-      double precision      grdext ( 3 )
-      double precision      grdtol
-      double precision      greedm
-      double precision      hitcor ( 3 )
-      double precision      near
-      double precision      normal ( 3 )
-      double precision      obsmat ( 3, 3 )
-      double precision      points ( 3, 3 )
-      double precision      scale
-      double precision      udir   ( 3 )
-      double precision      vbuff  ( 3, bufsiz )
-      double precision      voxori ( 3 )
-      double precision      voxsiz
-      double precision      vtx2   ( 3 )
-      double precision      vtxbds ( 2, 3 )
-      double precision      vtxoff ( 3 )
-      double precision      xpdfrc
-      double precision      xpnts  ( 3, 3 )
-      double precision      xpt2   ( 3 )
-      double precision      xtol
+      real(wp)              coord  ( 3 )
+      real(wp)              edges  ( 3, 3 )
+      real(wp)              dskdsc ( dskdsz )
+      real(wp)              grdext ( 3 )
+      real(wp)              grdtol
+      real(wp)              greedm
+      real(wp)              hitcor ( 3 )
+      real(wp)              near
+      real(wp)              normal ( 3 )
+      real(wp)              obsmat ( 3, 3 )
+      real(wp)              points ( 3, 3 )
+      real(wp)              scale
+      real(wp)              udir   ( 3 )
+      real(wp)              vbuff  ( 3, bufsiz )
+      real(wp)              voxori ( 3 )
+      real(wp)              voxsiz
+      real(wp)              vtx2   ( 3 )
+      real(wp)              vtxbds ( 2, 3 )
+      real(wp)              vtxoff ( 3 )
+      real(wp)              xpdfrc
+      real(wp)              xpnts  ( 3, 3 )
+      real(wp)              xpt2   ( 3 )
+      real(wp)              xtol
 
-      integer               cgrext ( 3 )
-      integer               cgrptr ( maxcgr )
-      integer               cgscal
-      integer               cgscl2
-      integer               cgxyz  ( 3 )
-      integer               corsys
-      integer               cvid
-      integer               dim
-      integer               dim1
-      integer               dim2
-      integer               final
-      integer               fx
-      integer               fy
-      integer               fz
-      integer               group
-      integer               grpbeg
-      integer               grpend
-      integer               grpsiz
-      integer               i
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               j
-      integer               k
-      integer               minidx
-      integer               ncgr
-      integer               ngroup
-      integer               np
-      integer               nplate
-      integer               nv
-      integer               nvbuf
-      integer               nvxout
-      integer               nvxtot
-      integer               offset
-      integer               ordvec ( maxpl )
-      integer               platid ( maxpl )
-      integer               plroom
-      integer               pntr
-      integer               prvdsc ( dladsz )
-      integer               prvhan
-      integer               source ( maxpl )
-      integer               start
-      integer               to
-      integer               totplt
-      integer               vgrext ( 3 )
-      integer               vi
-      integer               vids   ( 3 )
-      integer               vidxs  (    bufsiz )
-      integer               vloc
-      integer               voxlst ( 3, nvxlst )
-      integer               voxnpl
-      integer               voxnpt
-      integer               voxptr
-      integer               vtxnpl
-      integer               vxc1
-      integer               vxc2
-      integer               vxc3
-      integer               vxlcg  ( 3, nvxlst )
-      integer               vxlout ( nvxlst )
-      integer               vxlstr ( nvxlst )
-      integer               w
+      integer(ip)           cgrext ( 3 )
+      integer(ip)           cgrptr ( maxcgr )
+      integer(ip)           cgscal
+      integer(ip)           cgscl2
+      integer(ip)           cgxyz  ( 3 )
+      integer(ip)           corsys
+      integer(ip)           cvid
+      integer(ip)           dim
+      integer(ip)           dim1
+      integer(ip)           dim2
+      integer(ip)           final
+      integer(ip)           fx
+      integer(ip)           fy
+      integer(ip)           fz
+      integer(ip)           group
+      integer(ip)           grpbeg
+      integer(ip)           grpend
+      integer(ip)           grpsiz
+      integer(ip)           i
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           minidx
+      integer(ip)           ncgr
+      integer(ip)           ngroup
+      integer(ip)           np
+      integer(ip)           nplate
+      integer(ip)           nv
+      integer(ip)           nvbuf
+      integer(ip)           nvxout
+      integer(ip)           nvxtot
+      integer(ip)           offset
+      integer(ip)           ordvec ( maxpl )
+      integer(ip)           platid ( maxpl )
+      integer(ip)           plroom
+      integer(ip)           pntr
+      integer(ip)           prvdsc ( dladsz )
+      integer(ip)           prvhan
+      integer(ip)           source ( maxpl )
+      integer(ip)           start
+      integer(ip)           to
+      integer(ip)           totplt
+      integer(ip)           vgrext ( 3 )
+      integer(ip)           vi
+      integer(ip)           vids   ( 3 )
+      integer(ip)           vidxs  (    bufsiz )
+      integer(ip)           vloc
+      integer(ip)           voxlst ( 3, nvxlst )
+      integer(ip)           voxnpl
+      integer(ip)           voxnpt
+      integer(ip)           voxptr
+      integer(ip)           vtxnpl
+      integer(ip)           vxc1
+      integer(ip)           vxc2
+      integer(ip)           vxc3
+      integer(ip)           vxlcg  ( 3, nvxlst )
+      integer(ip)           vxlout ( nvxlst )
+      integer(ip)           vxlstr ( nvxlst )
+      integer(ip)           w
 
       logical               boxhit
       logical               extra
@@ -1025,7 +1026,7 @@
 !
 !     Initial values
 !
-      data                  grdext  / 3 * -1.d0 /
+      data                  grdext  / 3 * -1.0_wp /
       data                  prvhan  / 0 /
       data                  prvdsc  / dladsz * 0 /
 
@@ -1271,8 +1272,8 @@
 !        margin. Move the ray-grid intercept away from the grid to
 !        improve numeric performance.
 !
-         call vlcom3 (  1.d0, voxori, voxsiz, coord, &
-                       -1.d0, udir,   vtx2           )
+         call vlcom3 (  1.0_wp, voxori, voxsiz, coord, &
+                       -1.0_wp, udir,   vtx2           )
 
       end if
 
@@ -1560,7 +1561,7 @@
 !
          extra  = .false.
          final  = 0
-         near   = 0.d0
+         near   = 0.0_wp
 
          i      = 1
 
@@ -1687,7 +1688,7 @@
                      call pltnrm ( points(1,1), points(1,2), &
                                    points(1,3), normal      )
 
-                     hits = vdot( udir, normal ) .le. 0.d0
+                     hits = vdot( udir, normal ) .le. 0.0_wp
 
                   end if
 
@@ -1714,7 +1715,7 @@
 !                          ___    ____   __________
 !                          XPT2 = VTX2 + SCALE*UDIR
 !
-                        call vlcom ( 1.d0, vtx2, scale, udir, xpt2 )
+                        call vlcom ( 1.0_wp, vtx2, scale, udir, xpt2 )
 
 !
 !                       Compute the voxel grid coordinates of the

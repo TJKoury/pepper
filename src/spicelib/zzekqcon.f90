@@ -7,6 +7,7 @@
                             rtname,  rtidx,   rcname,  rcidx, &
                             dtype, &
                             cbeg,    cend,    dval,    ival   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -35,28 +36,28 @@
       include 'ekopcd.inc'
       include 'ektype.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
-      double precision      eqryd ( * )
-      integer               n
-      integer               cnstyp
+      real(wp)              eqryd ( * )
+      integer(ip)           n
+      integer(ip)           cnstyp
       character*(*)         ltname
-      integer               ltidx
+      integer(ip)           ltidx
       character*(*)         lcname
-      integer               lcidx
-      integer               opcode
+      integer(ip)           lcidx
+      integer(ip)           opcode
       character*(*)         rtname
-      integer               rtidx
+      integer(ip)           rtidx
       character*(*)         rcname
-      integer               rcidx
-      integer               dtype
-      integer               cbeg
-      integer               cend
-      double precision      dval
-      integer               ival
+      integer(ip)           rcidx
+      integer(ip)           dtype
+      integer(ip)           cbeg
+      integer(ip)           cend
+      real(wp)              dval
+      integer(ip)           ival
 
 
 ! $ Brief_I/O
@@ -230,15 +231,15 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               cb
-      integer               ce
-      integer               icheck
-      integer               ncns
-      integer               ntab
-      integer               ptr
-      integer               tb
-      integer               te
+      integer(ip)           base
+      integer(ip)           cb
+      integer(ip)           ce
+      integer(ip)           icheck
+      integer(ip)           ncns
+      integer(ip)           ntab
+      integer(ip)           ptr
+      integer(ip)           tb
+      integer(ip)           te
 
 !
 !     Use discovery check-in.
@@ -338,7 +339,7 @@
 !
          cbeg   =  1
          cend   =  1
-         dval   =  0.d0
+         dval   =  0.0_wp
          ival   =  0
 
 
@@ -354,7 +355,7 @@
 !
             cbeg = 1
             cend = 1
-            dval = 0.d0
+            dval = 0.0_wp
             ival = 0
 
          else
@@ -368,14 +369,14 @@
 
                cbeg   =  eqryi ( base + eqbval - 1 + eqbstr )
                cend   =  eqryi ( base + eqbval - 1 + eqestr )
-               dval   =  0.d0
+               dval   =  0.0_wp
                ival   =  0
 
             else if ( dtype .eq. int ) then
 
                ptr    =  eqryi ( base + eqbval - 1 + eqvptr )
                ival   =  nint  ( eqryd(ptr) )
-               dval   =  0.d0
+               dval   =  0.0_wp
                cbeg   =  1
                cend   =  1
 

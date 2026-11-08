@@ -1,6 +1,7 @@
 !$Procedure INRYPL ( Intersection of ray and plane )
 
       subroutine inrypl ( vertex, dir, plane, nxpts, xpt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,14 +19,14 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-      double precision      vertex (    3 )
-      double precision      dir    (    3 )
-      double precision      plane  ( ubpl )
-      integer               nxpts
-      double precision      xpt    (    3 )
+      real(wp)              vertex (    3 )
+      real(wp)              dir    (    3 )
+      real(wp)              plane  ( ubpl )
+      integer(ip)           nxpts
+      real(wp)              xpt    (    3 )
 
 ! $ Brief_I/O
 !
@@ -531,9 +532,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              dpmax
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               return
       logical               smsgnd
@@ -542,23 +543,23 @@
 !
 !     Local parameters
 !
-      double precision      margin
-      parameter           ( margin = 3.d0 )
+      real(wp)              margin
+      parameter           ( margin = 3.0_wp )
 
 !
 !     Local variables
 !
-      double precision      const
-      double precision      prjdif
-      double precision      prjdir
-      double precision      prjvn
-      double precision      mscale
-      double precision      normal ( 3 )
-      double precision      scale
-      double precision      sclcon
-      double precision      sclvtx ( 3 )
-      double precision      toobig
-      double precision      udir   ( 3 )
+      real(wp)              const
+      real(wp)              prjdif
+      real(wp)              prjdir
+      real(wp)              prjvn
+      real(wp)              mscale
+      real(wp)              normal ( 3 )
+      real(wp)              scale
+      real(wp)              sclcon
+      real(wp)              sclvtx ( 3 )
+      real(wp)              toobig
+      real(wp)              udir   ( 3 )
 
 
 !
@@ -627,9 +628,9 @@
 !
       mscale = max ( const, vnorm(vertex) )
 
-      if ( mscale .ne. 0.d0 ) then
+      if ( mscale .ne. 0.0_wp ) then
 
-         call vscl ( 1.d0 / mscale, vertex, sclvtx )
+         call vscl ( 1.0_wp / mscale, vertex, sclvtx )
          sclcon  =  const / mscale
 
       else
@@ -639,7 +640,7 @@
 
       end if
 
-      if ( mscale .gt. 1.d0 ) then
+      if ( mscale .gt. 1.0_wp ) then
          toobig = toobig / mscale
       end if
 
@@ -660,13 +661,13 @@
 !
       prjdif  =  sclcon - prjvn
 
-      if ( prjdif .eq. 0.d0 ) then
+      if ( prjdif .eq. 0.0_wp ) then
 !
 !        XPT is the original, unscaled vertex.
 !
          call vequ ( vertex, xpt )
 
-         if (  vdot ( normal, udir )  .eq.  0.d0  )  then
+         if (  vdot ( normal, udir )  .eq.  0.0_wp  )  then
 !
 !           The ray's in the plane.
 !
@@ -786,7 +787,7 @@
       nxpts    =   1
       scale    =   abs (prjdif)  /   abs (prjdir)
 
-      call vlcom ( 1.0d0, sclvtx, scale, udir, xpt )
+      call vlcom ( 1.0_wp, sclvtx, scale, udir, xpt )
 
 !
 !     Re-scale XPT.  This is safe, since TOOBIG has already been

@@ -2,6 +2,7 @@
 
       subroutine spkcvo ( target, et,     outref, refloc, abcorr, &
                           obssta, obsepc, obsctr, obsref, state,  lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,16 +30,16 @@
       include               'zzctr.inc'
 
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         outref
       character*(*)         refloc
       character*(*)         abcorr
-      double precision      obssta ( 6 )
-      double precision      obsepc
+      real(wp)              obssta ( 6 )
+      real(wp)              obsepc
       character*(*)         obsctr
       character*(*)         obsref
-      double precision      state  ( 6 )
-      double precision      lt
+      real(wp)              state  ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -1382,7 +1383,7 @@
 !
 !     SPICELIB functions
 !
-      integer               esrchc
+      integer(ip)           esrchc
 
       logical               failed
       logical               return
@@ -1392,35 +1393,35 @@
 !
 !     Local parameters
 !
-      integer               nevflg
+      integer(ip)           nevflg
       parameter           ( nevflg = 3 )
 
-      integer               evlfln
+      integer(ip)           evlfln
       parameter           ( evlfln = 25 )
 
 !
 !     Codes for evaluation type flags. These codes are
 !     indices of the flags within the EVLFLG array.
 !
-      integer               evlobs
+      integer(ip)           evlobs
       parameter           ( evlobs = 1 )
 
-      integer               evltrg
+      integer(ip)           evltrg
       parameter           ( evltrg = 2 )
 
-      integer               evlctr
+      integer(ip)           evlctr
       parameter           ( evlctr = 3 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 
@@ -1432,17 +1433,17 @@
       character*(corlen)    prvcor
       character*(evlfln)    evlflg ( nevflg )
 
-      double precision      dlt
-      double precision      j2stat ( 6 )
-      double precision      s
-      double precision      tmpxfm ( 6, 6 )
-      double precision      xtrans ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              j2stat ( 6 )
+      real(wp)              s
+      real(wp)              tmpxfm ( 6, 6 )
+      real(wp)              xtrans ( 6, 6 )
 
-      integer               ctrcde
-      integer               evltyp
-      integer               j2code
-      integer               orfcde
-      integer               trgcde
+      integer(ip)           ctrcde
+      integer(ip)           evltyp
+      integer(ip)           j2code
+      integer(ip)           orfcde
+      integer(ip)           trgcde
 
       logical               attblk ( abatsz )
       logical               found
@@ -1453,22 +1454,22 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svoctr
-      integer               svccde
+      integer(ip)           svccde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svoref
-      integer               svorfc
+      integer(ip)           svorfc
 
 
 !
@@ -1733,13 +1734,13 @@
 !
 !           We're doing transmission corrections.
 !
-            s =  1.d0
+            s =  1.0_wp
 
          else
 !
 !           We're doing reception corrections.
 !
-            s = -1.d0
+            s = -1.0_wp
 
          end if
 

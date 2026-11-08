@@ -1,6 +1,7 @@
 !$Procedure DAFGDA ( DAF, read data from address )
 
       subroutine dafgda ( handle, baddr, eaddr, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      data     ( * )
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              data     ( * )
 
 ! $ Brief_I/O
 !
@@ -253,18 +254,18 @@
 !
 !     Local variables
 !
-      integer               bsize
+      integer(ip)           bsize
       parameter           ( bsize = 128 )
 
-      integer               begr
-      integer               begw
-      integer               endr
-      integer               endw
+      integer(ip)           begr
+      integer(ip)           begw
+      integer(ip)           endr
+      integer(ip)           endw
 
-      integer               recno
-      integer               first
-      integer               last
-      integer               next
+      integer(ip)           recno
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           next
 
       logical               found
 

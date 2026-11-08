@@ -5,6 +5,7 @@
                           tabsym, tabptr, tabval, &
                           value, &
                           found                               )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,13 +24,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
-      integer               nth
+      integer(ip)           nth
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
       character*(*)         tabval     ( lbcell:* )
       character*(*)         value
       logical               found
@@ -169,18 +170,18 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
+      integer(ip)           bsrchc
+      integer(ip)           cardc
       logical               return
-      integer               sumai
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
+      integer(ip)           nsym
 
-      integer               locsym
-      integer               locval
+      integer(ip)           locsym
+      integer(ip)           locval
 
 
 

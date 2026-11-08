@@ -1,6 +1,7 @@
 !$Procedure HX2INT  ( Signed hexadecimal string to integer )
 
       subroutine hx2int ( string, number, error, errmsg )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 ! $ Declarations
 !
       character*(*)         string
-      integer               number
+      integer(ip)           number
       logical               error
       character*(*)         errmsg
 !
@@ -292,35 +293,35 @@
 !
 !     SPICELIB functions
 !
-      integer               intmax
-      integer               intmin
+      integer(ip)           intmax
+      integer(ip)           intmin
 !
 !     Local Parameters
 !
-      integer               base
+      integer(ip)           base
       parameter           ( base = 16  )
 !
 !     Local variables
 !
-      integer               digbeg
-      integer               digend
-      integer               idigit
-      integer               iminus
-      integer               iplus
-      integer               ispace
-      integer               lccbeg
-      integer               lccend
-      integer               letter
-      integer               maxi
-      integer               maxmod
-      integer               mini
-      integer               minmod
-      integer               pos
-      integer               strbeg
-      integer               strend
-      integer               tmpnum
-      integer               uccbeg
-      integer               uccend
+      integer(ip)           digbeg
+      integer(ip)           digend
+      integer(ip)           idigit
+      integer(ip)           iminus
+      integer(ip)           iplus
+      integer(ip)           ispace
+      integer(ip)           lccbeg
+      integer(ip)           lccend
+      integer(ip)           letter
+      integer(ip)           maxi
+      integer(ip)           maxmod
+      integer(ip)           mini
+      integer(ip)           minmod
+      integer(ip)           pos
+      integer(ip)           strbeg
+      integer(ip)           strend
+      integer(ip)           tmpnum
+      integer(ip)           uccbeg
+      integer(ip)           uccend
 
       logical               first
       logical               more

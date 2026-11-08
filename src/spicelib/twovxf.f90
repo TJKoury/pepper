@@ -1,6 +1,7 @@
 !$Procedure TWOVXF ( Two states defining a frame transformation )
 
       subroutine twovxf ( axdef, indexa, plndef, indexp, xform )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,11 +25,11 @@
 
       implicit none
 
-      double precision   axdef  ( 6 )
-      integer            indexa
-      double precision   plndef ( 6 )
-      integer            indexp
-      double precision   xform  ( 6, 6 )
+      real(wp)           axdef  ( 6 )
+      integer(ip)        indexa
+      real(wp)           plndef ( 6 )
+      integer(ip)        indexp
+      real(wp)           xform  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -466,7 +467,7 @@
 !
 !     Local Variables
 !
-      double precision      xi     ( 6, 6 )
+      real(wp)              xi     ( 6, 6 )
 
 
 !

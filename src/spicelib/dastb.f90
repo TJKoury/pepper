@@ -1,6 +1,7 @@
 !$Procedure DASTB ( DAS, convert transfer file to binary file )
 
       subroutine dastb ( xfrlun, binfil )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      integer               xfrlun
+      integer(ip)           xfrlun
       character*(*)         binfil
 
 ! $ Brief_I/O
@@ -289,31 +290,31 @@
       character*(*)         tiblks
       parameter           ( tiblks = 'TOTAL_INTEGER_BLOCKS'   )
 
-      integer               cbflen
+      integer(ip)           cbflen
       parameter           ( cbflen = 4                        )
 
-      integer               crlen
+      integer(ip)           crlen
       parameter           ( crlen  = 1024                     )
 
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 255                      )
 
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen = 320                      )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8                        )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60                       )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 1024                     )
 
-      integer               bcbpos
+      integer(ip)           bcbpos
       parameter           ( bcbpos = 1                        )
 
-      integer               ecbpos
+      integer(ip)           ecbpos
       parameter           ( ecbpos = cbflen                   )
 !
 !     Local variables
@@ -329,31 +330,31 @@
       character*(idwlen)    ttype
       character*(linlen)    word
 
-      double precision      dbuffr(bufsiz)
+      real(wp)              dbuffr(bufsiz)
 
-      integer               bcount
-      integer               bindex
-      integer               blkcnt
-      integer               daslun
-      integer               dtacnt
-      integer               ecount
-      integer               eindex
-      integer               errptr
-      integer               handle
-      integer               ibuffr(bufsiz)
-      integer               iostat
-      integer               ncdata
-      integer               ncomc
-      integer               ncomr
-      integer               nddata
-      integer               nidata
-      integer               nresvc
-      integer               nresvr
-      integer               numblk
-      integer               numdta
-      integer               numlft
-      integer               recno
-      integer               tcount
+      integer(ip)           bcount
+      integer(ip)           bindex
+      integer(ip)           blkcnt
+      integer(ip)           daslun
+      integer(ip)           dtacnt
+      integer(ip)           ecount
+      integer(ip)           eindex
+      integer(ip)           errptr
+      integer(ip)           handle
+      integer(ip)           ibuffr(bufsiz)
+      integer(ip)           iostat
+      integer(ip)           ncdata
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nddata
+      integer(ip)           nidata
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           numblk
+      integer(ip)           numdta
+      integer(ip)           numlft
+      integer(ip)           recno
+      integer(ip)           tcount
 
       logical               inblk
       logical               more

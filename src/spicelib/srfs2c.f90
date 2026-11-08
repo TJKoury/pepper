@@ -1,6 +1,7 @@
 !$Procedure SRFS2C ( Surface and body strings to surface ID code )
 
       subroutine srfs2c ( srfstr, bodstr, code, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,7 +29,7 @@
 
       character*(*)         srfstr
       character*(*)         bodstr
-      integer               code
+      integer(ip)           code
       logical               found
 
 ! $ Brief_I/O
@@ -371,7 +372,7 @@
 !
 !     Local parameters
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 80 )
 
 !
@@ -379,8 +380,8 @@
 !
       character*(msglen)    errmsg
 
-      integer               bodyid
-      integer               ptr
+      integer(ip)           bodyid
+      integer(ip)           ptr
 
 
 

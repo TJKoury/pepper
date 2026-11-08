@@ -2,6 +2,7 @@
 
       subroutine framex ( cname,  frname, frcode, cent, &
                           frclss, clssid, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,10 +29,10 @@
 
       character*(*)         cname
       character*(*)         frname
-      integer               frcode
-      integer               cent
-      integer               frclss
-      integer               clssid
+      integer(ip)           frcode
+      integer(ip)           cent
+      integer(ip)           frclss
+      integer(ip)           clssid
       logical               found
 
 ! $ Brief_I/O
@@ -276,7 +277,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               bschoi
+      integer(ip)           bschoi
 
       logical               failed
       logical               return
@@ -284,16 +285,16 @@
 !
 !     Local parameters
 !
-      integer               non
+      integer(ip)           non
       parameter           ( non    = nninrt )
 
-      integer               ncount
+      integer(ip)           ncount
       parameter           ( ncount = ninert + non )
 
-      integer               room
+      integer(ip)           room
       parameter           ( room   = 8 )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
 !
@@ -304,25 +305,25 @@
 !
 !     Current value of MAXL = 36.
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
 !
 !     Frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
 !     Kernel variable name length.
 !
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln = 32 )
 
 !
 !     Kernel variable buffer size.
 !
-      integer               kvbsz
+      integer(ip)           kvbsz
       parameter           ( kvbsz  = 100 )
 
 !
@@ -342,19 +343,19 @@
 
       character*(lnsize)    line   ( room )
 
-      integer               center ( ncount )
-      integer               centrd ( ncount )
-      integer               i
-      integer               id
-      integer               idcode ( ncount )
-      integer               item
-      integer               kvclid
-      integer               kvclss
-      integer               n
-      integer               start
-      integer               type   ( ncount )
-      integer               typeid ( ncount )
-      integer               values ( room )
+      integer(ip)           center ( ncount )
+      integer(ip)           centrd ( ncount )
+      integer(ip)           i
+      integer(ip)           id
+      integer(ip)           idcode ( ncount )
+      integer(ip)           item
+      integer(ip)           kvclid
+      integer(ip)           kvclss
+      integer(ip)           n
+      integer(ip)           start
+      integer(ip)           type   ( ncount )
+      integer(ip)           typeid ( ncount )
+      integer(ip)           values ( room )
 
       logical               first
       logical               fnd
@@ -363,12 +364,12 @@
 !
 !     POOL state counter.
 !
-      integer               pulctr ( ctrsiz )
+      integer(ip)           pulctr ( ctrsiz )
 
 !
 !     Lower bound of collision lists in hashes.
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -381,7 +382,7 @@
 !
 !     For the current POOL MAXVAR set to 26003, such number is 5209.
 !
-      integer               maxkfr
+      integer(ip)           maxkfr
       parameter           ( maxkfr = 5209 )
 
 !
@@ -389,10 +390,10 @@
 !     KNMNMS provide an index in the frame ID array KNMIDS at which the
 !     ID for the frame with a given name is stored.
 !
-      integer               knmlst  (          maxkfr )
-      integer               knmpol  ( lbpool : maxkfr )
+      integer(ip)           knmlst  (          maxkfr )
+      integer(ip)           knmpol  ( lbpool : maxkfr )
       character*(frnmln)    knmnms  (          maxkfr )
-      integer               knmids  (          maxkfr )
+      integer(ip)           knmids  (          maxkfr )
 
 !
 !     ID-based hash for kernel pool frames. KIDLST, KIDPOL, and KIDIDS
@@ -400,14 +401,14 @@
 !     KCENT, KCLASS, and KCLSID at which the attributes of the frame
 !     with a given ID are stored.
 !
-      integer               kidlst  (          maxkfr )
-      integer               kidpol  ( lbpool : maxkfr )
-      integer               kidids  (          maxkfr )
+      integer(ip)           kidlst  (          maxkfr )
+      integer(ip)           kidpol  ( lbpool : maxkfr )
+      integer(ip)           kidids  (          maxkfr )
 
       character*(frnmln)    kname   (          maxkfr )
-      integer               kcent   (          maxkfr )
-      integer               kclass  (          maxkfr )
-      integer               kclsid  (          maxkfr )
+      integer(ip)           kcent   (          maxkfr )
+      integer(ip)           kclass  (          maxkfr )
+      integer(ip)           kclsid  (          maxkfr )
 
       logical               lupdte
       logical               lnew
@@ -424,7 +425,7 @@
 !     For the current N0067 NCOUNT equal to 145 (21 inertial + 124
 !     non-inertial), such number is 149.
 !
-      integer               maxbfr
+      integer(ip)           maxbfr
       parameter           ( maxbfr = 149 )
 
 !
@@ -433,10 +434,10 @@
 !     attributes in the built-in frame attributes arrays IDCODE, NAME,
 !     CENTER, TYPE, and TYPEID.
 !
-      integer               bnmlst  (          maxbfr )
-      integer               bnmpol  ( lbpool : maxbfr )
+      integer(ip)           bnmlst  (          maxbfr )
+      integer(ip)           bnmpol  ( lbpool : maxbfr )
       character*(frnmln)    bnmnms  (          maxbfr )
-      integer               bnmidx  (          maxbfr )
+      integer(ip)           bnmidx  (          maxbfr )
 
 !
 !     ID-based hash for built-in frames. BIDLST, BIDPOL, and BIDIDS
@@ -444,10 +445,10 @@
 !     attributes in the built-in frame attributes arrays IDCODE, NAME,
 !     CENTER, TYPE, and TYPEID.
 !
-      integer               bidlst  (          maxbfr )
-      integer               bidpol  ( lbpool : maxbfr )
-      integer               bidids  (          maxbfr )
-      integer               bididx  (          maxbfr )
+      integer(ip)           bidlst  (          maxbfr )
+      integer(ip)           bidpol  ( lbpool : maxbfr )
+      integer(ip)           bidids  (          maxbfr )
+      integer(ip)           bididx  (          maxbfr )
 
 !
 !     Saved variables

@@ -1,7 +1,8 @@
 !$Procedure LGRESP ( Lagrange interpolation on equally spaced points )
 
-      double precision function lgresp (  n,      first,  step, &
+      real(wp) function lgresp (  n,      first,  step, &
                                           yvals,  work,   x      )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
 
       implicit none
 
-      integer               n
-      double precision      first
-      double precision      step
-      double precision      yvals ( * )
-      double precision      work  ( * )
-      double precision      x
+      integer(ip)           n
+      real(wp)              first
+      real(wp)              step
+      real(wp)              yvals ( * )
+      real(wp)              work  ( * )
+      real(wp)              x
 
 ! $ Brief_I/O
 !
@@ -295,19 +296,19 @@
 !
 !     Local variables
 !
-      double precision      c1
-      double precision      c2
-      double precision      newx
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              newx
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 !
 !     Check in only if an error is detected.
 !
       if ( return() ) then
-         lgresp = 0.d0
+         lgresp = 0.0_wp
          return
       end if
 
@@ -316,7 +317,7 @@
 !
       if ( n .lt. 1 ) then
 
-         lgresp = 0.d0
+         lgresp = 0.0_wp
 
          call chkin  ( 'LGRESP'                              )
          call setmsg ( 'Array size must be positive; was #.' )
@@ -331,9 +332,9 @@
 !
 !     The step size must be non-zero.
 !
-      if ( step .eq. 0.d0 ) then
+      if ( step .eq. 0.0_wp ) then
 
-         lgresp = 0.d0
+         lgresp = 0.0_wp
 
          call chkin  ( 'LGRESP'                 )
          call setmsg ( 'Step size was zero.'    )
@@ -349,7 +350,7 @@
 !     and are separated by a unit step.  All we need to do is
 !     shift and scale X.
 !
-      newx  =  (  ( x - first ) / step  )  +  1.d0
+      newx  =  (  ( x - first ) / step  )  +  1.0_wp
 
 !
 !     We're going to compute the value of our interpolating polynomial
@@ -452,10 +453,10 @@
 
          do i = 1, n-j
 
-            c1       =   dble(i+j)   -   newx
-            c2       =   newx        -   dble(i)
+            c1       =   real(i+j, wp)   -   newx
+            c2       =   newx        -   real(i, wp)
 
-            work(i)  =  (  c1 * work(i)  +  c2 * work(i+1)  )  / dble(j)
+            work(i)  =  (  c1 * work(i)  +  c2 * work(i+1)  )  / real(j, wp)
 
          end do
 

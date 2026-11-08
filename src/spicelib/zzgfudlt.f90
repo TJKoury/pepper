@@ -1,6 +1,7 @@
 !$Procedure ZZGFUDLT ( Private --- GF, scalar function < ref value )
 
       subroutine zzgfudlt ( udfunc, et, isless )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -28,7 +29,7 @@
 
       external              udfunc
 
-      double precision      et
+      real(wp)              et
       logical               isless
 
 ! $ Brief_I/O
@@ -137,8 +138,8 @@
 !
 !     Local Variables
 !
-      double precision      udval
-      double precision      refval
+      real(wp)              udval
+      real(wp)              refval
 
       logical               ok
 

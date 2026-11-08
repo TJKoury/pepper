@@ -1,6 +1,7 @@
 !$Procedure NEARPT ( Nearest point on an ellipsoid )
 
       subroutine nearpt ( positn, a, b, c, npoint, alt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
 
       implicit none
 
-      double precision      positn ( 3 )
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      npoint ( 3 )
-      double precision      alt
+      real(wp)              positn ( 3 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              npoint ( 3 )
+      real(wp)              alt
 
 ! $ Brief_I/O
 !
@@ -395,11 +396,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      dpmax
-      double precision      touchd
-      double precision      vdist
-      double precision      vnorm
+      real(wp)              brcktd
+      real(wp)              dpmax
+      real(wp)              touchd
+      real(wp)              vdist
+      real(wp)              vnorm
 
       logical               approx
       logical               return
@@ -414,16 +415,16 @@
 !     hasn't converged to length zero.  This situation can occur when
 !     the root is extremely close to zero.
 !
-      double precision      cnvtol
-      parameter           ( cnvtol = 1.d-16 )
+      real(wp)              cnvtol
+      parameter           ( cnvtol = 1.0e-16_wp )
 
 
 !
 !     Various potentially large numbers we'll compute must not
 !     exceed DPMAX()/MARGIN:
 !
-      double precision      margin
-      parameter           ( margin = 1.d2 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e2_wp )
 
 !
 !     The parameter MAXSOL determines the maximum number of
@@ -431,7 +432,7 @@
 !     near point.  This must be at least 3.  To get strong
 !     robustness in the routine, MAXSOL should be at least 4.
 !
-      integer               maxsol
+      integer(ip)           maxsol
       parameter           ( maxsol  = 6 )
 
 !
@@ -447,13 +448,13 @@
 !     The value selected is based on the range of exponents for IEEE
 !     double precision floating point numbers.
 !
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr  = 2048 )
 
 !
 !     Length of lines in message buffer.
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 80 )
 
 !
@@ -461,46 +462,46 @@
 !
       character*(msglen)    mssg   ( 7 )
 
-      double precision      axis   ( 3 )
-      double precision      axisqr ( 3 )
-      double precision      bestht
-      double precision      bestpt ( 3 )
-      double precision      copy   ( 3 )
-      double precision      denom
-      double precision      denom2
-      double precision      denom3
-      double precision      epoint ( 3 )
-      double precision      err    ( 3 )
-      double precision      errp   ( 3 )
-      double precision      factor
-      double precision      height
-      double precision      lambda
-      double precision      lower
-      double precision      newerr
-      double precision      normal ( 3 )
-      double precision      olderr
-      double precision      orignl ( 3 )
-      double precision      pnorm
-      double precision      point  ( 3 )
-      double precision      prodct
-      double precision      q
-      double precision      qlower
-      double precision      qupper
-      double precision      scale
-      double precision      sign
-      double precision      spoint ( 3 )
-      double precision      temp
-      double precision      term   ( 3 )
-      double precision      toobig
-      double precision      tlambd ( 3 )
-      double precision      upper
+      real(wp)              axis   ( 3 )
+      real(wp)              axisqr ( 3 )
+      real(wp)              bestht
+      real(wp)              bestpt ( 3 )
+      real(wp)              copy   ( 3 )
+      real(wp)              denom
+      real(wp)              denom2
+      real(wp)              denom3
+      real(wp)              epoint ( 3 )
+      real(wp)              err    ( 3 )
+      real(wp)              errp   ( 3 )
+      real(wp)              factor
+      real(wp)              height
+      real(wp)              lambda
+      real(wp)              lower
+      real(wp)              newerr
+      real(wp)              normal ( 3 )
+      real(wp)              olderr
+      real(wp)              orignl ( 3 )
+      real(wp)              pnorm
+      real(wp)              point  ( 3 )
+      real(wp)              prodct
+      real(wp)              q
+      real(wp)              qlower
+      real(wp)              qupper
+      real(wp)              scale
+      real(wp)              sign
+      real(wp)              spoint ( 3 )
+      real(wp)              temp
+      real(wp)              term   ( 3 )
+      real(wp)              toobig
+      real(wp)              tlambd ( 3 )
+      real(wp)              upper
 
-      integer               bad
-      integer               i
-      integer               iorder ( 3 )
-      integer               itr
-      integer               snglpt
-      integer               solutn
+      integer(ip)           bad
+      integer(ip)           i
+      integer(ip)           iorder ( 3 )
+      integer(ip)           itr
+      integer(ip)           snglpt
+      integer(ip)           solutn
 
       logical               extra
       logical               inside
@@ -567,15 +568,15 @@
 !
       bad = 0
 
-      if ( a .le. 0.0d0 ) then
+      if ( a .le. 0.0_wp ) then
          bad = bad + 1
       end if
 
-      if ( b .le. 0.0d0 ) then
+      if ( b .le. 0.0_wp ) then
          bad = bad + 2
       end if
 
-      if ( c .le. 0.0d0 ) then
+      if ( c .le. 0.0_wp ) then
          bad = bad + 4
       end if
 
@@ -874,7 +875,7 @@
 !
 !     Be sure that this is UNDONE at the end of the routine.
 !
-      scale = 1.0d0/axis(1)
+      scale = 1.0_wp/axis(1)
 
       call vsclip ( scale, axis   )
       call vsclip ( scale, point  )
@@ -931,7 +932,7 @@
                           'of POSITN is > *; these values '          // &
                           'may cause numeric overflow.'              )
             call errint ( '*', iorder(i)                             )
-            call errdp  ( '*', toobig**2.d0                          )
+            call errdp  ( '*', toobig**2.0_wp                          )
             call sigerr ( 'SPICE(INPUTSTOOLARGE)'                    )
             call chkout ( 'NEARPT'                                   )
             return
@@ -987,10 +988,10 @@
 
          do i = 1, 3
 
-            if (      ( (0.5d0*point(i) + axis(i)) .eq.  axis(i) ) &
-                 .or. ( (0.5d0*point(i) - axis(i)) .eq. -axis(i) ) ) &
+            if (      ( (0.5_wp*point(i) + axis(i)) .eq.  axis(i) ) &
+                 .or. ( (0.5_wp*point(i) - axis(i)) .eq. -axis(i) ) ) &
             then
-               point(i) = 0.0d0
+               point(i) = 0.0_wp
             end if
 
          end do
@@ -1026,7 +1027,7 @@
          q = (point(1)/axis(1))**2 &
            + (point(2)/axis(2))**2 &
            + (point(3)/axis(3))**2 &
-           - 1.0d0
+           - 1.0_wp
 
 !
 !        On the first solution pass, we will determine the sign of
@@ -1035,9 +1036,9 @@
          if ( solutn .eq. 1 ) then
 
             if       ( q .ge. 0 ) then
-               sign =  1.0d0
+               sign =  1.0_wp
             else
-               sign = -1.0d0
+               sign = -1.0_wp
             end if
 
          end if
@@ -1070,23 +1071,23 @@
 !        strictly inside the interior of the ellipsoid.  Points on the
 !        surface are not considered to be inside.
 !
-         if ( q .eq. 0.0d0 ) then
+         if ( q .eq. 0.0_wp ) then
 !
 !           In this case the point is already on the ellipsoid
 !           (pretty lucky eh?)  We simply set our bracketing values,
 !           QLOWER and QUPPER, to zero so that that bisection
 !           loop won't ever get executed.
 !
-            qlower = 0.0d0
-            qupper = 0.0d0
-            lower  = 0.0d0
-            upper  = 0.0d0
-            lambda = 0.0d0
+            qlower = 0.0_wp
+            qupper = 0.0_wp
+            lower  = 0.0_wp
+            upper  = 0.0_wp
+            lambda = 0.0_wp
 
             inside = .false.
 
 
-         else if ( q .gt. 0.0d0 ) then
+         else if ( q .gt. 0.0_wp ) then
 !
 !           The input point is outside the ellipsoid (we expect that
 !           this is the usual case).  We want to choose our lower
@@ -1095,16 +1096,16 @@
 !           term of the expression for Q isn't bigger than 4.
 !
             do i = 1, 3
-               tlambd(i) = ( 0.5d0*dabs(point(i)) - axis(i) ) * axis(i)
+               tlambd(i) = ( 0.5_wp*dabs(point(i)) - axis(i) ) * axis(i)
             end do
 
-            lower = max ( 0.0d0, tlambd(1), tlambd(2), tlambd(3) )
+            lower = max ( 0.0_wp, tlambd(1), tlambd(2), tlambd(3) )
 
 !
 !           Choose the next value of lambda so that the largest term
 !           of Q will be no more than 1/4. (?)
 !
-            upper  = 2.0d0 * max ( dabs( axis(1)*point(1) ), &
+            upper  = 2.0_wp * max ( dabs( axis(1)*point(1) ), &
                                    dabs( axis(2)*point(2) ), &
                                    dabs( axis(3)*point(3) ) )
             lambda = upper
@@ -1166,7 +1167,7 @@
                   if ( point(i) .eq. 0 ) then
                      tlambd(i) = -axisqr(3)
                   else
-                     tlambd(i) = axis(i) * (   0.5d0*dabs(point(i)) &
+                     tlambd(i) = axis(i) * (   0.5_wp*dabs(point(i)) &
                                              - axis(i)              )
                   end if
 
@@ -1174,7 +1175,7 @@
 
                lambda = max ( tlambd(1), tlambd(2), tlambd(3) )
                lower  = lambda
-               upper  = max ( lower, 0.0d0 )
+               upper  = max ( lower, 0.0_wp )
 
 
             else
@@ -1202,13 +1203,13 @@
                   copy(1)  =  axis(1)
                end if
 
-               copy(2) = 0.0d0
-               copy(3) = 0.0d0
+               copy(2) = 0.0_wp
+               copy(3) = 0.0_wp
 
-               upper   = 0.0d0
-               lower   = 0.0d0
-               lambda  = 0.0d0
-               q       = 0.0d0
+               upper   = 0.0_wp
+               lower   = 0.0_wp
+               lambda  = 0.0_wp
+               q       = 0.0_wp
 
                inside  = .false.
 
@@ -1225,7 +1226,7 @@
 
             if ( point(i) .eq. 0 ) then
 
-               term(i) = 0.0d0
+               term(i) = 0.0_wp
 
             else
 !
@@ -1241,18 +1242,18 @@
 
                denom = axis(i) + lambda/axis(i)
 
-               trim  = 0.5d0 * dabs( point(i) )   .gt.   denom
+               trim  = 0.5_wp * dabs( point(i) )   .gt.   denom
 
                if ( inside .and. trim ) then
 
-                 factor = 2.0d0
+                 factor = 2.0_wp
 
                else
 !
 !                 We don't expect DENOM to be zero here, but we'll
 !                 check anyway.
 !
-                  if ( denom .eq. 0.d0 ) then
+                  if ( denom .eq. 0.0_wp ) then
 
                      call setmsg ( 'AXIS(#) + LAMBDA/AXIS(#) is zero.' )
                      call errint ( '#',  i                             )
@@ -1276,17 +1277,17 @@
 
          if ( .not. inside ) then
             qlower = q
-            qupper = term(1) + term(2) + term(3) - 1.0d0
+            qupper = term(1) + term(2) + term(3) - 1.0_wp
          else
             qupper = q
-            qlower = term(1) + term(2) + term(3) - 1.0d0
+            qlower = term(1) + term(2) + term(3) - 1.0_wp
          end if
 
 !
 !        Bracket QLOWER and QUPPER.
 !
-         qlower = max ( 0.d0,  qlower )
-         qupper = min ( 0.d0,  qupper )
+         qlower = max ( 0.0_wp,  qlower )
+         qupper = min ( 0.0_wp,  qupper )
 
 
          lambda = upper
@@ -1304,7 +1305,7 @@
 !        that may be caused by extended precision register usage by
 !        some compilers.
 !
-         do while ( touchd(upper-lower) .gt. 0.d0 )
+         do while ( touchd(upper-lower) .gt. 0.0_wp )
 
             itr = itr + 1
 
@@ -1335,8 +1336,8 @@
 !           Bracket LOWER, QLOWER, and QUPPER.
 !
             lower  = min ( lower, upper  )
-            qlower = max ( 0.d0,  qlower )
-            qupper = min ( 0.d0,  qupper )
+            qlower = max ( 0.0_wp,  qlower )
+            qupper = min ( 0.0_wp,  qupper )
 
 !
 !           Depending upon how Q compares with Q at the
@@ -1352,7 +1353,7 @@
 
             else
 
-               if ( q .lt. 0.d0 ) then
+               if ( q .lt. 0.0_wp ) then
 
                   upper  = lambda
                   qupper = q
@@ -1368,7 +1369,7 @@
 !
 !              Update LAMBDA.
 !
-               lambda = 0.5d0*lower + 0.5d0*upper
+               lambda = 0.5_wp*lower + 0.5_wp*upper
 
 !
 !              It's quite possible as we get close to the root for Q
@@ -1423,24 +1424,24 @@
 
                   if ( point(i) .eq. 0 ) then
 
-                     term(i) = 0.0d0
+                     term(i) = 0.0_wp
 
                   else
 
                      denom =  axis(i) + lambda/axis(i)
 
-                     trim  =  0.5d0 * dabs( point(i) )   .gt.   denom
+                     trim  =  0.5_wp * dabs( point(i) )   .gt.   denom
 
                      if ( inside .and. trim ) then
 
-                        factor = 2.0d0
+                        factor = 2.0_wp
 
                      else
 !
 !                       We don't expect DENOM to be zero here, but we'll
 !                       check anyway.
 !
-                        if ( denom .eq. 0.d0 ) then
+                        if ( denom .eq. 0.0_wp ) then
 
                            call setmsg ( 'AXIS(#) + LAMBDA/AXIS(#) ' // &
                                          'is zero.'                  )
@@ -1462,7 +1463,7 @@
 
                end do
 
-               q  =  touchd( term(1) + term(2) + term(3) - 1.0d0 )
+               q  =  touchd( term(1) + term(2) + term(3) - 1.0_wp )
 
             end if
 !
@@ -1482,18 +1483,18 @@
 
         do i = 1, 3
 
-           if ( point(i) .eq. 0.0d0 ) then
+           if ( point(i) .eq. 0.0_wp ) then
 
-              spoint(i) = 0.0d0
+              spoint(i) = 0.0_wp
 
            else
 
-              denom = 1.0d0 +  lambda/axisqr(i)
+              denom = 1.0_wp +  lambda/axisqr(i)
 !
 !             We don't expect that DENOM will be non-positive, but we
 !             check for this case anyway.
 !
-              if ( denom .le. 0.d0 ) then
+              if ( denom .le. 0.0_wp ) then
 
                  call setmsg ( 'Denominator in expression for ' // &
                                'SPOINT(#) is #.'                )
@@ -1672,11 +1673,11 @@
 !                This is the prolate case; we need to compute the
 !                z component of the solution.
 !
-                 denom3 = 1.0d0 - axisqr(1)/axisqr(3)
+                 denom3 = 1.0_wp - axisqr(1)/axisqr(3)
 
-                 if ( denom3 .gt. 0.d0 ) then
+                 if ( denom3 .gt. 0.0_wp ) then
 
-                    epoint(2) = 0.d0
+                    epoint(2) = 0.0_wp
 !
 !                   Concerning the safety of the following division:
 !
@@ -1699,14 +1700,14 @@
 !                   See if these components can even be on the
 !                   ellipsoid...
 !
-                    temp      = 1.0d0  - ( epoint(2) / axis(2) )**2 &
+                    temp      = 1.0_wp  - ( epoint(2) / axis(2) )**2 &
                                        - ( epoint(3) / axis(3) )**2
 
                     if ( temp .gt. 0 ) then
 !
 !                      ...and compute the x component of the point.
 !
-                       epoint(1) = axis(1) * dsqrt( max(0.d0,temp) )
+                       epoint(1) = axis(1) * dsqrt( max(0.0_wp,temp) )
                        extra     = .true.
 
                     end if
@@ -1720,16 +1721,16 @@
 !                Compute the y and z components (2 and 3) of the extra
 !                point.
 !
-                 denom2 = 1.0d0 - (axisqr(1)/axisqr(2))
-                 denom3 = 1.0d0 - (axisqr(1)/axisqr(3))
+                 denom2 = 1.0_wp - (axisqr(1)/axisqr(2))
+                 denom3 = 1.0_wp - (axisqr(1)/axisqr(3))
 
 !
 !                We expect DENOM2 and DENOM3 will always be positive.
 !                Nonetheless, we check to make sure this is the case.
 !                If not, we don't compute the extra point.
 !
-                 if (       ( denom2 .gt. 0.d0 ) &
-                      .and. ( denom3 .gt. 0.d0 ) ) then
+                 if (       ( denom2 .gt. 0.0_wp ) &
+                      .and. ( denom3 .gt. 0.0_wp ) ) then
 
 !
 !                   Concerning the safety of the following divisions:
@@ -1753,7 +1754,7 @@
 !                   See if these components can even be on the
 !                   ellipsoid...
 !
-                    temp      = 1.0d0  - ( epoint(2) / axis(2) )**2 &
+                    temp      = 1.0_wp  - ( epoint(2) / axis(2) )**2 &
                                        - ( epoint(3) / axis(3) )**2
 
                     if ( temp .gt. 0 ) then
@@ -1886,12 +1887,12 @@
 !           The sign of the original point's altitude tells
 !           us whether the point is outside the ellipsoid.
 !
-            if ( sign .ge. 0.d0 ) then
+            if ( sign .ge. 0.0_wp ) then
 !
 !              Scale the transverse component down to the local radius
 !              of the surface point.
 !
-               if ( pnorm .eq. 0.d0 ) then
+               if ( pnorm .eq. 0.0_wp ) then
 !
 !                 Since the point is outside of the scaled ellipsoid,
 !                 we don't expect to arrive here. This is a backstop
@@ -1984,7 +1985,7 @@
 !
             if ( vzero(err) ) then
                solvng = .false.
-               newerr = 0.d0
+               newerr = 0.0_wp
             else
 
 !              Determine the magnitude of the error due to our
@@ -2034,12 +2035,12 @@
 !                 The sign of the original point's altitude tells
 !                 us whether the point is outside the ellipsoid.
 !
-                  if ( sign .ge. 0.d0 ) then
+                  if ( sign .ge. 0.0_wp ) then
 !
 !                    Scale the transverse component down to the local
 !                    radius of the surface point.
 !
-                     if ( pnorm .eq. 0.d0 ) then
+                     if ( pnorm .eq. 0.0_wp ) then
 !
 !                       Since the point is outside of the scaled
 !                       ellipsoid, we don't expect to arrive here.
@@ -2104,7 +2105,7 @@
 !     Re-scale and re-order the components of our solution point. Scale
 !     and copy the value of BESTHT into the output argument.
 !
-      call vsclip( 1.0d0/scale, bestpt )
+      call vsclip( 1.0_wp/scale, bestpt )
 
       do i = 1,3
          npoint( iorder(i) ) = bestpt(i)

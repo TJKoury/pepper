@@ -1,6 +1,7 @@
 !$Procedure QUOTE ( Enclose in quotes )
 
       subroutine quote ( in, left, right, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -134,8 +135,8 @@
 !
 !     SPICELIB functions
 !
-      integer          frstnb
-      integer          lastnb
+      integer(ip)      frstnb
+      integer(ip)      lastnb
 
 
 

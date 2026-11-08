@@ -1,6 +1,7 @@
 !$Procedure PJELPL ( Project ellipse onto plane )
 
       subroutine pjelpl ( elin, plane, elout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,15 +22,15 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel    =  9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl    =  4 )
 
-      double precision      elin  ( ubel )
-      double precision      plane ( ubpl )
-      double precision      elout ( ubel )
+      real(wp)              elin  ( ubel )
+      real(wp)              plane ( ubpl )
+      real(wp)              elout ( ubel )
 
 ! $ Brief_I/O
 !
@@ -265,14 +266,14 @@
 !
 !     Local variables
 !
-      double precision      center ( 3 )
-      double precision      const
-      double precision      normal ( 3 )
-      double precision      prjctr ( 3 )
-      double precision      prjvc1 ( 3 )
-      double precision      prjvc2 ( 3 )
-      double precision      smajor ( 3 )
-      double precision      sminor ( 3 )
+      real(wp)              center ( 3 )
+      real(wp)              const
+      real(wp)              normal ( 3 )
+      real(wp)              prjctr ( 3 )
+      real(wp)              prjvc1 ( 3 )
+      real(wp)              prjvc2 ( 3 )
+      real(wp)              smajor ( 3 )
+      real(wp)              sminor ( 3 )
 
 
 !

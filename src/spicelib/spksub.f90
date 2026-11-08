@@ -1,6 +1,7 @@
 !$Procedure SPKSUB ( S/P Kernel, subset )
 
       subroutine spksub ( handle, descr, ident, begin, end, newh )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
       character*(*)         ident
-      double precision      begin
-      double precision      end
-      integer               newh
+      real(wp)              begin
+      real(wp)              end
+      integer(ip)           newh
 
 ! $ Brief_I/O
 !
@@ -223,15 +224,15 @@
 !
 !     Local variables
 !
-      double precision      alpha
-      double precision      dc       ( 2 )
-      double precision      ndscr    ( 5 )
-      double precision      omega
+      real(wp)              alpha
+      real(wp)              dc       ( 2 )
+      real(wp)              ndscr    ( 5 )
+      real(wp)              omega
 
-      integer               baddr
-      integer               eaddr
-      integer               ic       ( 6 )
-      integer               type
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      integer(ip)           ic       ( 6 )
+      integer(ip)           type
 
       logical               okay
 

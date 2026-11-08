@@ -1,6 +1,7 @@
 !$Procedure GEOREC ( Geodetic to rectangular coordinates )
 
       subroutine georec ( lon, lat, alt,  re, f,  rectan )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision   lon
-      double precision   lat
-      double precision   alt
-      double precision   re
-      double precision   f
-      double precision   rectan ( 3 )
+      real(wp)           lon
+      real(wp)           lat
+      real(wp)           alt
+      real(wp)           re
+      real(wp)           f
+      real(wp)           rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -405,20 +406,20 @@
 !
 !     Local variables
 !
-      double precision height
+      real(wp) height
 
-      double precision rp
-      double precision clmbda
-      double precision slmbda
-      double precision cphi
-      double precision sphi
-      double precision big
-      double precision x
-      double precision y
-      double precision scale
+      real(wp) rp
+      real(wp) clmbda
+      real(wp) slmbda
+      real(wp) cphi
+      real(wp) sphi
+      real(wp) big
+      real(wp) x
+      real(wp) y
+      real(wp) scale
 
-      double precision base   (3)
-      double precision normal (3)
+      real(wp) base   (3)
+      real(wp) normal (3)
 
 
 
@@ -437,7 +438,7 @@
 !
 !     The equatorial radius must be greater than zero.
 !
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
@@ -486,7 +487,7 @@
       x      = re*cphi / big
       y      = rp*sphi / big
 
-      scale  = 1.0d0   / (big * dsqrt(x*x + y*y) )
+      scale  = 1.0_wp   / (big * dsqrt(x*x + y*y) )
 
 !
 !     Compute the rectangular coordinates of the point with zero
@@ -504,7 +505,7 @@
 !
 !     Move along the normal to the input point.
 !
-      call vlcom ( 1.0d0, base, height, normal, rectan )
+      call vlcom ( 1.0_wp, base, height, normal, rectan )
 
 
 

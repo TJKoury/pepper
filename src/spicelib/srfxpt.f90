@@ -3,6 +3,7 @@
       subroutine srfxpt ( method,  target,  et,      abcorr, &
                           obsrvr,  dref,    dvec,    spoint, &
                           dist,    trgepc,  obspos,  found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,15 +37,15 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         abcorr
       character*(*)         obsrvr
       character*(*)         dref
-      double precision      dvec   ( 3 )
-      double precision      spoint ( 3 )
-      double precision      dist
-      double precision      trgepc
-      double precision      obspos ( 3 )
+      real(wp)              dvec   ( 3 )
+      real(wp)              spoint ( 3 )
+      real(wp)              dist
+      real(wp)              trgepc
+      real(wp)              obspos ( 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -1001,12 +1002,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      dasine
-      double precision      touchd
-      double precision      vdist
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              clight
+      real(wp)              dasine
+      real(wp)              touchd
+      real(wp)              vdist
+      real(wp)              vnorm
+      real(wp)              vsep
 
       logical               eqchr
       logical               eqstr
@@ -1021,40 +1022,40 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-17 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-17_wp )
 
 !
 !     Round-off error limit for arc sine input:
 !
-      double precision      rndtol
-      parameter           ( rndtol = 1.d-14 )
+      real(wp)              rndtol
+      parameter           ( rndtol = 1.0e-14_wp )
 
 !
 !     Fraction of planetary angular radius used to define
 !     region outside of which rays are immediately rejected
 !     as non-intersecting.
 !
-      double precision      margin
-      parameter           ( margin = 1.001d0 )
+      real(wp)              margin
+      parameter           ( margin = 1.001_wp )
 
 
-      integer               abclen
+      integer(ip)           abclen
       parameter           ( abclen =  15 )
 
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr =  10 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 
@@ -1064,45 +1065,45 @@
       character*(frnmln)    frname
       character*(abclen)    loccor
 
-      double precision      etdiff
-      double precision      j2dir  ( 3 )
-      double precision      j2est  ( 3 )
-      double precision      j2pos  ( 3 )
-      double precision      j2tmat ( 3, 3 )
-      double precision      lt
-      double precision      ltcent
-      double precision      ltdiff
-      double precision      maxrad
-      double precision      negpos ( 3 )
-      double precision      pnear  ( 3 )
-      double precision      prevet
-      double precision      prevlt
-      double precision      r2jmat ( 3, 3 )
-      double precision      radii  ( 3 )
-      double precision      range
-      double precision      rayalt
-      double precision      refepc
-      double precision      reject
-      double precision      rpos   ( 3 )
-      double precision      s
-      double precision      ssbost ( 6 )
-      double precision      ssbtst ( 6 )
-      double precision      stldir ( 3 )
-      double precision      stlerr ( 3 )
-      double precision      stltmp ( 3 )
-      double precision      tpos   ( 3 )
-      double precision      trgdir ( 3 )
-      double precision      xform  ( 3, 3 )
+      real(wp)              etdiff
+      real(wp)              j2dir  ( 3 )
+      real(wp)              j2est  ( 3 )
+      real(wp)              j2pos  ( 3 )
+      real(wp)              j2tmat ( 3, 3 )
+      real(wp)              lt
+      real(wp)              ltcent
+      real(wp)              ltdiff
+      real(wp)              maxrad
+      real(wp)              negpos ( 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              prevet
+      real(wp)              prevlt
+      real(wp)              r2jmat ( 3, 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              range
+      real(wp)              rayalt
+      real(wp)              refepc
+      real(wp)              reject
+      real(wp)              rpos   ( 3 )
+      real(wp)              s
+      real(wp)              ssbost ( 6 )
+      real(wp)              ssbtst ( 6 )
+      real(wp)              stldir ( 3 )
+      real(wp)              stlerr ( 3 )
+      real(wp)              stltmp ( 3 )
+      real(wp)              tpos   ( 3 )
+      real(wp)              trgdir ( 3 )
+      real(wp)              xform  ( 3, 3 )
 
-      integer               center
-      integer               frcode
-      integer               i
-      integer               nitr
-      integer               obscde
-      integer               refcde
-      integer               trgcde
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           frcode
+      integer(ip)           i
+      integer(ip)           nitr
+      integer(ip)           obscde
+      integer(ip)           refcde
+      integer(ip)           trgcde
+      integer(ip)           type
+      integer(ip)           typeid
 
       logical               fnd
       logical               usecn
@@ -1113,14 +1114,14 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
       logical               first
@@ -1128,9 +1129,9 @@
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svdref
-      integer               svrefc
+      integer(ip)           svrefc
 
 
 !
@@ -1289,13 +1290,13 @@
       if ( uselt ) then
 
          if ( xmit ) then
-            s   =  1.d0
+            s   =  1.0_wp
          else
-            s   = -1.d0
+            s   = -1.0_wp
          end if
 
       else
-         s = 0.d0
+         s = 0.0_wp
       end if
 
 !
@@ -1610,7 +1611,7 @@
 
          range  = vnorm(obspos)
 
-         if ( range .eq. 0.d0 ) then
+         if ( range .eq. 0.0_wp ) then
 !
 !           We've already ensured that observer and target are
 !           distinct, so this should be a very unusual occurrence.
@@ -1794,16 +1795,16 @@
          lt     =  dist / clight()
          trgepc =  et  +  s * lt
 
-         prevlt = 0.d0
+         prevlt = 0.0_wp
          prevet = trgepc
 
          i      = 0
-         ltdiff = 1.d0
-         etdiff = 1.d0
+         ltdiff = 1.0_wp
+         etdiff = 1.0_wp
 
          do while (       ( i      .lt.   nitr                ) &
                     .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
-                    .and. ( etdiff .gt.   0.d0                )  )
+                    .and. ( etdiff .gt.   0.0_wp                )  )
 
 !
 !           Get the J2000-relative state of the target relative to

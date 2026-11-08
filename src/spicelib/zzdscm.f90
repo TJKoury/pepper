@@ -16,6 +16,7 @@
                           xl4,    xn,    z1,      z2,     z3,   z11, &
                           z12,    z13,   z21,     z22,    z23,  z31, &
                           z32,    z33,   zmol,    zmos )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -37,94 +38,94 @@
 
       implicit none
 
-      double precision         epoch
-      double precision         eccp
-      double precision         argpp
-      double precision         tc
-      double precision         inclp
-      double precision         nodep
-      double precision         np
-      double precision         snodm
-      double precision         cnodm
-      double precision         sinim
-      double precision         cosim
-      double precision         sinomm
-      double precision         cosomm
-      double precision         day
-      double precision         e3
-      double precision         ee2
-      double precision         eccm
-      double precision         emsq
-      double precision         gam
-      double precision         rtemsq
-      double precision         se2
-      double precision         peo
-      double precision         pgho
-      double precision         pho
-      double precision         pinco
-      double precision         plo
-      double precision         se3
-      double precision         sgh2
-      double precision         sgh3
-      double precision         sgh4
-      double precision         sh2
-      double precision         sh3
-      double precision         si2
-      double precision         si3
-      double precision         sl2
-      double precision         sl3
-      double precision         sl4
-      double precision         s1
-      double precision         s2
-      double precision         s3
-      double precision         s4
-      double precision         s5
-      double precision         s6
-      double precision         s7
-      double precision         ss1
-      double precision         ss2
-      double precision         ss3
-      double precision         ss4
-      double precision         ss5
-      double precision         ss6
-      double precision         ss7
-      double precision         sz1
-      double precision         sz2
-      double precision         sz3
-      double precision         sz11
-      double precision         sz12
-      double precision         sz13
-      double precision         sz21
-      double precision         sz22
-      double precision         sz23
-      double precision         sz31
-      double precision         sz32
-      double precision         sz33
-      double precision         xgh2
-      double precision         xgh3
-      double precision         xgh4
-      double precision         xh2
-      double precision         xh3
-      double precision         xi2
-      double precision         xi3
-      double precision         xl2
-      double precision         xl3
-      double precision         xl4
-      double precision         xn
-      double precision         z1
-      double precision         z2
-      double precision         z3
-      double precision         z11
-      double precision         z12
-      double precision         z13
-      double precision         z21
-      double precision         z22
-      double precision         z23
-      double precision         z31
-      double precision         z32
-      double precision         z33
-      double precision         zmol
-      double precision         zmos
+      real(wp)                 epoch
+      real(wp)                 eccp
+      real(wp)                 argpp
+      real(wp)                 tc
+      real(wp)                 inclp
+      real(wp)                 nodep
+      real(wp)                 np
+      real(wp)                 snodm
+      real(wp)                 cnodm
+      real(wp)                 sinim
+      real(wp)                 cosim
+      real(wp)                 sinomm
+      real(wp)                 cosomm
+      real(wp)                 day
+      real(wp)                 e3
+      real(wp)                 ee2
+      real(wp)                 eccm
+      real(wp)                 emsq
+      real(wp)                 gam
+      real(wp)                 rtemsq
+      real(wp)                 se2
+      real(wp)                 peo
+      real(wp)                 pgho
+      real(wp)                 pho
+      real(wp)                 pinco
+      real(wp)                 plo
+      real(wp)                 se3
+      real(wp)                 sgh2
+      real(wp)                 sgh3
+      real(wp)                 sgh4
+      real(wp)                 sh2
+      real(wp)                 sh3
+      real(wp)                 si2
+      real(wp)                 si3
+      real(wp)                 sl2
+      real(wp)                 sl3
+      real(wp)                 sl4
+      real(wp)                 s1
+      real(wp)                 s2
+      real(wp)                 s3
+      real(wp)                 s4
+      real(wp)                 s5
+      real(wp)                 s6
+      real(wp)                 s7
+      real(wp)                 ss1
+      real(wp)                 ss2
+      real(wp)                 ss3
+      real(wp)                 ss4
+      real(wp)                 ss5
+      real(wp)                 ss6
+      real(wp)                 ss7
+      real(wp)                 sz1
+      real(wp)                 sz2
+      real(wp)                 sz3
+      real(wp)                 sz11
+      real(wp)                 sz12
+      real(wp)                 sz13
+      real(wp)                 sz21
+      real(wp)                 sz22
+      real(wp)                 sz23
+      real(wp)                 sz31
+      real(wp)                 sz32
+      real(wp)                 sz33
+      real(wp)                 xgh2
+      real(wp)                 xgh3
+      real(wp)                 xgh4
+      real(wp)                 xh2
+      real(wp)                 xh3
+      real(wp)                 xi2
+      real(wp)                 xi3
+      real(wp)                 xl2
+      real(wp)                 xl3
+      real(wp)                 xl4
+      real(wp)                 xn
+      real(wp)                 z1
+      real(wp)                 z2
+      real(wp)                 z3
+      real(wp)                 z11
+      real(wp)                 z12
+      real(wp)                 z13
+      real(wp)                 z21
+      real(wp)                 z22
+      real(wp)                 z23
+      real(wp)                 z31
+      real(wp)                 z32
+      real(wp)                 z33
+      real(wp)                 zmol
+      real(wp)                 zmos
 
 ! $ Brief_I/O
 !
@@ -390,59 +391,59 @@
 !
 !     Local Variables
 !
-      double precision         zes
-      double precision         a1
-      double precision         a10
-      double precision         a2
-      double precision         a3
-      double precision         a4
-      double precision         a5
-      double precision         a6
-      double precision         a7
-      double precision         a8
-      double precision         a9
-      double precision         betasq
-      double precision         c1l
-      double precision         c1ss
-      double precision         cc
-      double precision         ctem
-      double precision         stem
-      double precision         x1
-      double precision         x2
-      double precision         x3
-      double precision         x4
-      double precision         x5
-      double precision         x6
-      double precision         x7
-      double precision         x8
-      double precision         xnodce
-      double precision         xnoi
-      double precision         zcosg
-      double precision         zcosgl
-      double precision         zcosgs
-      double precision         zcosh
-      double precision         zcoshl
-      double precision         zcosi
-      double precision         zcosil
-      double precision         zcosis
-      double precision         zel
-      double precision         zsing
-      double precision         zsingl
-      double precision         zsings
-      double precision         zsinh
-      double precision         zsinhl
-      double precision         zsini
-      double precision         zsinil
-      double precision         zsinis
-      double precision         zx
-      double precision         zy
+      real(wp)                 zes
+      real(wp)                 a1
+      real(wp)                 a10
+      real(wp)                 a2
+      real(wp)                 a3
+      real(wp)                 a4
+      real(wp)                 a5
+      real(wp)                 a6
+      real(wp)                 a7
+      real(wp)                 a8
+      real(wp)                 a9
+      real(wp)                 betasq
+      real(wp)                 c1l
+      real(wp)                 c1ss
+      real(wp)                 cc
+      real(wp)                 ctem
+      real(wp)                 stem
+      real(wp)                 x1
+      real(wp)                 x2
+      real(wp)                 x3
+      real(wp)                 x4
+      real(wp)                 x5
+      real(wp)                 x6
+      real(wp)                 x7
+      real(wp)                 x8
+      real(wp)                 xnodce
+      real(wp)                 xnoi
+      real(wp)                 zcosg
+      real(wp)                 zcosgl
+      real(wp)                 zcosgs
+      real(wp)                 zcosh
+      real(wp)                 zcoshl
+      real(wp)                 zcosi
+      real(wp)                 zcosil
+      real(wp)                 zcosis
+      real(wp)                 zel
+      real(wp)                 zsing
+      real(wp)                 zsingl
+      real(wp)                 zsings
+      real(wp)                 zsinh
+      real(wp)                 zsinhl
+      real(wp)                 zsini
+      real(wp)                 zsinil
+      real(wp)                 zsinis
+      real(wp)                 zx
+      real(wp)                 zy
 
-      integer                  lsflg
+      integer(ip)              lsflg
 
 !
 !     SPICELIB routines.
 !
-      double precision         twopi
+      real(wp)                 twopi
       logical                  return
 
 !
@@ -457,14 +458,14 @@
 !
 !     Constants
 !
-      zes    =  0.01675d0
-      zel    =  0.05490d0
-      c1ss   =  2.9864797d-6
-      c1l    =  4.7968065d-7
-      zsinis =  0.39785416d0
-      zcosis =  0.91744867d0
-      zcosgs =  0.1945905d0
-      zsings = -0.98088458d0
+      zes    =  0.01675_wp
+      zel    =  0.05490_wp
+      c1ss   =  2.9864797e-6_wp
+      c1l    =  4.7968065e-7_wp
+      zsinis =  0.39785416_wp
+      zcosis =  0.91744867_wp
+      zcosgs =  0.1945905_wp
+      zsings = -0.98088458_wp
 
 !
 !     DEEP SPACE PERIODICS INITIALIZATION
@@ -478,7 +479,7 @@
       sinim  = dsin(inclp)
       cosim  = dcos(inclp)
       emsq   = eccm*eccm
-      betasq = 1.0d0-emsq
+      betasq = 1.0_wp-emsq
       rtemsq = dsqrt(betasq)
 
 !
@@ -487,22 +488,22 @@
 !     Note, EPOCH + 18261.5D0 corresponds to JD days since
 !     1899-12-31 12:00:00.
 !
-      peo    = 0.0d0
-      pinco  = 0.0d0
-      plo    = 0.0d0
-      pgho   = 0.0d0
-      pho    = 0.0d0
-      day    = epoch + 18261.5d0 + tc/1440.0d0
-      xnodce = dmod(4.5236020d0 - 9.2422029d-4*day,twopi())
+      peo    = 0.0_wp
+      pinco  = 0.0_wp
+      plo    = 0.0_wp
+      pgho   = 0.0_wp
+      pho    = 0.0_wp
+      day    = epoch + 18261.5_wp + tc/1440.0_wp
+      xnodce = dmod(4.5236020_wp - 9.2422029e-4_wp*day,twopi())
       stem   = dsin(xnodce)
       ctem   = dcos(xnodce)
-      zcosil = 0.91375164d0 - 0.03568096d0*ctem
-      zsinil = dsqrt(1.0d0 - zcosil*zcosil)
-      zsinhl = 0.089683511d0*stem / zsinil
-      zcoshl = dsqrt(1.0d0 - zsinhl*zsinhl)
-      gam    = 5.8351514d0 + 0.0019443680d0*day
-      zx     = 0.39785416d0*stem/zsinil
-      zy     = zcoshl*ctem + 0.91744867d0*zsinhl*stem
+      zcosil = 0.91375164_wp - 0.03568096_wp*ctem
+      zsinil = dsqrt(1.0_wp - zcosil*zcosil)
+      zsinhl = 0.089683511_wp*stem / zsinil
+      zcoshl = dsqrt(1.0_wp - zsinhl*zsinhl)
+      gam    = 5.8351514_wp + 0.0019443680_wp*day
+      zx     = 0.39785416_wp*stem/zsinil
+      zy     = zcoshl*ctem + 0.91744867_wp*zsinhl*stem
       zx     = datan2(zx,zy)
       zx     = gam + zx - xnodce
       zcosgl = dcos(zx)
@@ -518,7 +519,7 @@
       zcosh = cnodm
       zsinh = snodm
       cc    = c1ss
-      xnoi  = 1.0d0 / xn
+      xnoi  = 1.0_wp / xn
 
 !
 !     Loop over the lunar and solar term flags.
@@ -545,27 +546,27 @@
          x7 =  a5*cosomm
          x8 =  a6*cosomm
 
-         z31= 12.0d0*x1*x1 - 3.0d0*x3*x3
-         z32= 24.0d0*x1*x2 - 6.0d0*x3*x4
-         z33= 12.0d0*x2*x2 - 3.0d0*x4*x4
-         z1 =  3.0d0* (a1*a1 + a2*a2) + z31*emsq
-         z2 =  6.0d0* (a1*a3 + a2*a4) + z32*emsq
-         z3 =  3.0d0* (a3*a3 + a4*a4) + z33*emsq
-         z11= -6.0d0*a1*a5 + emsq* (-24.0d0*x1*x7-6.0d0*x3*x5)
-         z12= -6.0d0* (a1*a6 + a3*a5) + emsq* &
-                 ( -24.0d0*(x2*x7+x1*x8) - 6.0d0*(x3*x6+x4*x5) )
-         z13= -6.0d0*a3*a6 + emsq*(-24.0d0*x2*x8 - 6.0d0*x4*x6)
-         z21=  6.0d0*a2*a5 + emsq*(24.0d0*x1*x5-6.0d0*x3*x7)
-         z22=  6.0d0* (a4*a5 + a2*a6) + emsq* &
-                 (  24.0d0*(x2*x5+x1*x6) - 6.0d0*(x4*x7+x3*x8) )
-         z23=  6.0d0*a4*a6 + emsq*(24.0d0*x2*x6 - 6.0d0*x4*x8)
+         z31= 12.0_wp*x1*x1 - 3.0_wp*x3*x3
+         z32= 24.0_wp*x1*x2 - 6.0_wp*x3*x4
+         z33= 12.0_wp*x2*x2 - 3.0_wp*x4*x4
+         z1 =  3.0_wp* (a1*a1 + a2*a2) + z31*emsq
+         z2 =  6.0_wp* (a1*a3 + a2*a4) + z32*emsq
+         z3 =  3.0_wp* (a3*a3 + a4*a4) + z33*emsq
+         z11= -6.0_wp*a1*a5 + emsq* (-24.0_wp*x1*x7-6.0_wp*x3*x5)
+         z12= -6.0_wp* (a1*a6 + a3*a5) + emsq* &
+                 ( -24.0_wp*(x2*x7+x1*x8) - 6.0_wp*(x3*x6+x4*x5) )
+         z13= -6.0_wp*a3*a6 + emsq*(-24.0_wp*x2*x8 - 6.0_wp*x4*x6)
+         z21=  6.0_wp*a2*a5 + emsq*(24.0_wp*x1*x5-6.0_wp*x3*x7)
+         z22=  6.0_wp* (a4*a5 + a2*a6) + emsq* &
+                 (  24.0_wp*(x2*x5+x1*x6) - 6.0_wp*(x4*x7+x3*x8) )
+         z23=  6.0_wp*a4*a6 + emsq*(24.0_wp*x2*x6 - 6.0_wp*x4*x8)
          z1 = z1 + z1 + betasq*z31
          z2 = z2 + z2 + betasq*z32
          z3 = z3 + z3 + betasq*z33
          s3 = cc*xnoi
-         s2 = -0.5d0*s3 / rtemsq
+         s2 = -0.5_wp*s3 / rtemsq
          s4 = s3*rtemsq
-         s1 = -15.0d0*eccm*s4
+         s1 = -15.0_wp*eccm*s4
          s5 = x1*x3 + x2*x4
          s6 = x2*x3 + x1*x4
          s7 = x2*x4 - x1*x3
@@ -604,40 +605,40 @@
 
       end do
 
-      zmol  = dmod( 4.7199672d0 + 0.22997150d0*day-gam, twopi() )
-      zmos  = dmod( 6.2565837d0 + 0.017201977d0*day,    twopi() )
+      zmol  = dmod( 4.7199672_wp + 0.22997150_wp*day-gam, twopi() )
+      zmos  = dmod( 6.2565837_wp + 0.017201977_wp*day,    twopi() )
 
 !
 !     DO SOLAR TERMS
 !
-      se2 =   2.0d0*ss1*ss6
-      se3 =   2.0d0*ss1*ss7
-      si2 =   2.0d0*ss2*sz12
-      si3 =   2.0d0*ss2*(sz13-sz11)
-      sl2 =  -2.0d0*ss3*sz2
-      sl3 =  -2.0d0*ss3*(sz3-sz1)
-      sl4 =  -2.0d0*ss3*(-21.0d0-9.0d0*emsq)*zes
-      sgh2=   2.0d0*ss4*sz32
-      sgh3=   2.0d0*ss4*(sz33-sz31)
-      sgh4= -18.0d0*ss4*zes
-      sh2 =  -2.0d0*ss2*sz22
-      sh3 =  -2.0d0*ss2*(sz23-sz21)
+      se2 =   2.0_wp*ss1*ss6
+      se3 =   2.0_wp*ss1*ss7
+      si2 =   2.0_wp*ss2*sz12
+      si3 =   2.0_wp*ss2*(sz13-sz11)
+      sl2 =  -2.0_wp*ss3*sz2
+      sl3 =  -2.0_wp*ss3*(sz3-sz1)
+      sl4 =  -2.0_wp*ss3*(-21.0_wp-9.0_wp*emsq)*zes
+      sgh2=   2.0_wp*ss4*sz32
+      sgh3=   2.0_wp*ss4*(sz33-sz31)
+      sgh4= -18.0_wp*ss4*zes
+      sh2 =  -2.0_wp*ss2*sz22
+      sh3 =  -2.0_wp*ss2*(sz23-sz21)
 
 !
 !     DO LUNAR TERMS
 !
-      ee2 =   2.0d0*s1*s6
-      e3  =   2.0d0*s1*s7
-      xi2 =   2.0d0*s2*z12
-      xi3 =   2.0d0*s2*(z13-z11)
-      xl2 =  -2.0d0*s3*z2
-      xl3 =  -2.0d0*s3*(z3-z1)
-      xl4 =  -2.0d0*s3*(-21.0d0-9.0d0*emsq)*zel
-      xgh2=   2.0d0*s4*z32
-      xgh3=   2.0d0*s4*(z33-z31)
-      xgh4= -18.0d0*s4*zel
-      xh2 =  -2.0d0*s2*z22
-      xh3 =  -2.0d0*s2*(z23-z21)
+      ee2 =   2.0_wp*s1*s6
+      e3  =   2.0_wp*s1*s7
+      xi2 =   2.0_wp*s2*z12
+      xi3 =   2.0_wp*s2*(z13-z11)
+      xl2 =  -2.0_wp*s3*z2
+      xl3 =  -2.0_wp*s3*(z3-z1)
+      xl4 =  -2.0_wp*s3*(-21.0_wp-9.0_wp*emsq)*zel
+      xgh2=   2.0_wp*s4*z32
+      xgh3=   2.0_wp*s4*(z33-z31)
+      xgh4= -18.0_wp*s4*zel
+      xh2 =  -2.0_wp*s2*z22
+      xh3 =  -2.0_wp*s2*(z23-z21)
 
       call chkout ( 'ZZDSCM' )
 

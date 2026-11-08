@@ -4,6 +4,7 @@
                                   bodyid, dclass, corsys, corpar, &
                                   cor1,   cor2,   framid, pos, &
                                   et,     handle, dladsc, dskdsc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -35,21 +36,21 @@
       include 'dsk.inc'
       include 'dskdsc.inc'
 
-      integer               surfid
-      integer               nsurf
-      integer               srflst ( * )
-      integer               bodyid
-      integer               dclass
-      integer               corsys
-      double precision      corpar ( * )
-      double precision      cor1
-      double precision      cor2
-      integer               framid
-      double precision      pos    ( 3 )
-      double precision      et
-      integer               handle
-      integer               dladsc ( * )
-      double precision      dskdsc ( * )
+      integer(ip)           surfid
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      integer(ip)           bodyid
+      integer(ip)           dclass
+      integer(ip)           corsys
+      real(wp)              corpar ( * )
+      real(wp)              cor1
+      real(wp)              cor2
+      integer(ip)           framid
+      real(wp)              pos    ( 3 )
+      real(wp)              et
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      real(wp)              dskdsc ( * )
 
 ! $ Brief_I/O
 !
@@ -240,10 +241,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
+      real(wp)              twopi
 
-      integer               bsrchi
-      integer               touchi
+      integer(ip)           bsrchi
+      integer(ip)           touchi
 
       logical               zzdskbdc
       logical               zzdskcit
@@ -260,44 +261,44 @@
 !
 !     Local parameters
 !
-      double precision      margin
-      parameter           ( margin = 1.d-12 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e-12_wp )
 
 !
 !     Local variables
 !
-      double precision      alt
-      double precision      co1max
-      double precision      co1min
-      double precision      co2max
-      double precision      co2min
-      double precision      f
-      double precision      lat
-      double precision      loccor ( 1 )
-      double precision      locpos ( 3 )
-      double precision      lon
-      double precision      pi2
-      double precision      r
-      double precision      re
-      double precision      rmat   ( 3, 3 )
-      double precision      savco1
-      double precision      savco2
-      double precision      savet
-      double precision      savpar ( nsypar )
-      double precision      savpos ( 3 )
-      double precision      scale
+      real(wp)              alt
+      real(wp)              co1max
+      real(wp)              co1min
+      real(wp)              co2max
+      real(wp)              co2min
+      real(wp)              f
+      real(wp)              lat
+      real(wp)              loccor ( 1 )
+      real(wp)              locpos ( 3 )
+      real(wp)              lon
+      real(wp)              pi2
+      real(wp)              r
+      real(wp)              re
+      real(wp)              rmat   ( 3, 3 )
+      real(wp)              savco1
+      real(wp)              savco2
+      real(wp)              savet
+      real(wp)              savpar ( nsypar )
+      real(wp)              savpos ( 3 )
+      real(wp)              scale
 
-      integer               i
-      integer               savbid
-      integer               savcls
-      integer               savfid
-      integer               savnsf
-      integer               savsrf ( maxsrf )
-      integer               savsys
-      integer               savtrg
-      integer               segfid
-      integer               segsys
-      integer               surf
+      integer(ip)           i
+      integer(ip)           savbid
+      integer(ip)           savcls
+      integer(ip)           savfid
+      integer(ip)           savnsf
+      integer(ip)           savsrf ( maxsrf )
+      integer(ip)           savsys
+      integer(ip)           savtrg
+      integer(ip)           segfid
+      integer(ip)           segsys
+      integer(ip)           surf
 
       logical               first
 
@@ -1317,7 +1318,7 @@
 
             else
 
-               scale  = ( 1.d0 + margin )
+               scale  = ( 1.0_wp + margin )
 
                co1min = dskdsc( mn1idx ) - scale * abs( dskdsc(mn1idx) )
                co1max = dskdsc( mx1idx ) + scale * abs( dskdsc(mx1idx) )
@@ -1762,7 +1763,7 @@
 
          else
 
-            scale  = ( 1.d0 + margin )
+            scale  = ( 1.0_wp + margin )
 
             co1min = dskdsc( mn1idx ) - scale * abs( dskdsc(mn1idx) )
             co1max = dskdsc( mx1idx ) + scale * abs( dskdsc(mx1idx) )

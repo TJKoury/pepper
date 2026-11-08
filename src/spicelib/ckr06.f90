@@ -2,6 +2,7 @@
 
       subroutine ckr06 ( handle, descr, sclkdp, tol, needav, &
                          record, found                       )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
       include 'ckparam.inc'
       include 'ck06.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      record   ( * )
+      real(wp)              record   ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -272,10 +273,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
+      real(wp)              brcktd
 
-      integer               lstled
-      integer               lstltd
+      integer(ip)           lstled
+      integer(ip)           lstltd
 
       logical               failed
       logical               odd
@@ -285,104 +286,104 @@
 !
 !     Local parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dirsiz + 1 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 4 )
 
-      integer               nsgpar
+      integer(ip)           nsgpar
       parameter           ( nsgpar = 2 )
 
 
 !
 !     Maximum window sizes, based on subtypes:
 !
-      integer               c06mw0
+      integer(ip)           c06mw0
       parameter           ( c06mw0 =  ( maxdeg + 1 )/2  )
 
-      integer               c06mw1
+      integer(ip)           c06mw1
       parameter           ( c06mw1 =  ( maxdeg + 1 )    )
 
-      integer               c06mw2
+      integer(ip)           c06mw2
       parameter           ( c06mw2 =  ( maxdeg + 1 )/2  )
 
-      integer               c06mw3
+      integer(ip)           c06mw3
       parameter           ( c06mw3 =  ( maxdeg + 1 )    )
 
 !
 !     Local variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      contrl ( ctrlsz )
-      double precision      dc     ( nd )
-      double precision      gap
-      double precision      lstepc
-      double precision      mintim ( 2 )
-      double precision      rate
-      double precision      svbtim
-      double precision      svetim
-      double precision      svrate
-      double precision      t
+      real(wp)              buffer ( bufsiz )
+      real(wp)              contrl ( ctrlsz )
+      real(wp)              dc     ( nd )
+      real(wp)              gap
+      real(wp)              lstepc
+      real(wp)              mintim ( 2 )
+      real(wp)              rate
+      real(wp)              svbtim
+      real(wp)              svetim
+      real(wp)              svrate
+      real(wp)              t
 
-      integer               baddr
-      integer               begidx
-      integer               bufbas
-      integer               dirbas
-      integer               eaddr
-      integer               endidx
-      integer               first
-      integer               group
-      integer               high
-      integer               i
-      integer               ic     ( ni )
-      integer               isel
-      integer               ivbas
-      integer               ivbix
-      integer               iveix
-      integer               last
-      integer               low
-      integer               lsize
-      integer               maxwnd
-      integer               minib
-      integer               minie
-      integer               miniix
-      integer               mxwnsz ( 0 : c06nst-1 )
-      integer               n
-      integer               ndir
-      integer               npkdir
-      integer               npkt
-      integer               nrcpkt
-      integer               nread
-      integer               pkdbas
-      integer               pktsiz
-      integer               pktszs ( 0 : c06nst-1 )
-      integer               remain
-      integer               rsize
-      integer               subtyp
-      integer               svbeg
-      integer               svhan
-      integer               svmiix
-      integer               svminb
-      integer               svn
-      integer               svnpkt
-      integer               svpkdb
-      integer               svpknd
-      integer               svpksz
-      integer               svstyp
-      integer               svwnsz
-      integer               timbas
-      integer               type
-      integer               wndsiz
+      integer(ip)           baddr
+      integer(ip)           begidx
+      integer(ip)           bufbas
+      integer(ip)           dirbas
+      integer(ip)           eaddr
+      integer(ip)           endidx
+      integer(ip)           first
+      integer(ip)           group
+      integer(ip)           high
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           isel
+      integer(ip)           ivbas
+      integer(ip)           ivbix
+      integer(ip)           iveix
+      integer(ip)           last
+      integer(ip)           low
+      integer(ip)           lsize
+      integer(ip)           maxwnd
+      integer(ip)           minib
+      integer(ip)           minie
+      integer(ip)           miniix
+      integer(ip)           mxwnsz ( 0 : c06nst-1 )
+      integer(ip)           n
+      integer(ip)           ndir
+      integer(ip)           npkdir
+      integer(ip)           npkt
+      integer(ip)           nrcpkt
+      integer(ip)           nread
+      integer(ip)           pkdbas
+      integer(ip)           pktsiz
+      integer(ip)           pktszs ( 0 : c06nst-1 )
+      integer(ip)           remain
+      integer(ip)           rsize
+      integer(ip)           subtyp
+      integer(ip)           svbeg
+      integer(ip)           svhan
+      integer(ip)           svmiix
+      integer(ip)           svminb
+      integer(ip)           svn
+      integer(ip)           svnpkt
+      integer(ip)           svpkdb
+      integer(ip)           svpknd
+      integer(ip)           svpksz
+      integer(ip)           svstyp
+      integer(ip)           svwnsz
+      integer(ip)           timbas
+      integer(ip)           type
+      integer(ip)           wndsiz
 
       logical               avflag
       logical               ivlsel
@@ -424,8 +425,8 @@
       data                  pass1   /  .true.  /
       data                  pktszs  /  c06ps0, c06ps1, c06ps2, c06ps3 /
       data                  svbeg   /  -1      /
-      data                  svbtim  /   0.d0   /
-      data                  svetim  /  -1.d0   /
+      data                  svbtim  /   0.0_wp   /
+      data                  svetim  /  -1.0_wp   /
       data                  svfnd   /  .false. /
       data                  svhan   /   0      /
       data                  svlast  /  .false. /
@@ -436,7 +437,7 @@
       data                  svpkdb  /  -1      /
       data                  svpknd  /  -1      /
       data                  svpksz  /  -1      /
-      data                  svrate  /  -1.d0   /
+      data                  svrate  /  -1.0_wp   /
       data                  svstyp  /  -1      /
       data                  svwnsz  /  -1      /
 
@@ -526,7 +527,7 @@
 !
 !     Check the tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg( 'Tolerance must be non-negative but ' &
          //           'was actually *.'                      )
@@ -1216,7 +1217,7 @@
 !           find data for this request, if the lookup tolerance
 !           is positive.
 !
-            if ( tol .eq. 0.d0 ) then
+            if ( tol .eq. 0.0_wp ) then
 !
 !              We're out of luck. We can't find pointing for this
 !              request. FOUND is already .FALSE., so just return.

@@ -1,6 +1,7 @@
 !$Procedure GFSTOL ( GF, set a tolerance value for GF )
 
       subroutine gfstol ( value )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       include               'zzholdd.inc'
 
-      double precision      value
+      real(wp)              value
 
 ! $ Brief_I/O
 !
@@ -327,7 +328,7 @@
 !     Check tolerance value.
 !
 
-      if ( value .le. 0.d0 ) then
+      if ( value .le. 0.0_wp ) then
 
          call chkin  ( 'GFSTOL'                              )
          call setmsg ( 'Convergence tolerance must be ' &

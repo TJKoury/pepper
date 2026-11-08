@@ -1,6 +1,7 @@
 !$Procedure SPKS10 ( S/P Kernel, subset, type 10 )
 
       subroutine spks10 ( srchan, srcdsc, dsthan, dstdsc, dstsid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
       implicit none
 
       include              'sgparam.inc'
-      integer               srchan
-      double precision      srcdsc(*)
-      integer               dsthan
-      double precision      dstdsc(*)
+      integer(ip)           srchan
+      real(wp)              srcdsc(*)
+      integer(ip)           dsthan
+      real(wp)              dstdsc(*)
       character*(*)         dstsid
 
 ! $ Brief_I/O
@@ -121,32 +122,32 @@
 !
 !     Local Parameters
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 40 )
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 
 !
 !     The number of geophysical constants:
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 8 )
 !
 !     The number of elements per two-line set:
 !
-      integer               nelems
+      integer(ip)           nelems
       parameter           ( nelems = 10 )
 
-      integer               nangs
+      integer(ip)           nangs
       parameter           ( nangs  =  4 )
 
-      integer               pktsiz
+      integer(ip)           pktsiz
       parameter           ( pktsiz = nelems + nangs )
 
 !
@@ -154,19 +155,19 @@
 !
       character*(wdsize)    time
 
-      double precision      begtim
-      double precision      consts ( nconst )
-      double precision      dtemp  ( nd     )
-      double precision      endtim
-      double precision      myref
-      double precision      packet ( pktsiz )
+      real(wp)              begtim
+      real(wp)              consts ( nconst )
+      real(wp)              dtemp  ( nd     )
+      real(wp)              endtim
+      real(wp)              myref
+      real(wp)              packet ( pktsiz )
 
-      integer               begidx
-      integer               dummy
-      integer               endidx
-      integer               i
-      integer               itemp  ( ni )
-      integer               nepoch
+      integer(ip)           begidx
+      integer(ip)           dummy
+      integer(ip)           endidx
+      integer(ip)           i
+      integer(ip)           itemp  ( ni )
+      integer(ip)           nepoch
 
       logical               found
 

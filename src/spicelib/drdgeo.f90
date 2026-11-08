@@ -1,6 +1,7 @@
 !$Procedure DRDGEO ( Derivative of rectangular w.r.t. geodetic )
 
       subroutine drdgeo ( lon, lat, alt, re, f, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      lon
-      double precision      lat
-      double precision      alt
-      double precision      re
-      double precision      f
-      double precision      jacobi ( 3, 3 )
+      real(wp)              lon
+      real(wp)              lat
+      real(wp)              alt
+      real(wp)              re
+      real(wp)              f
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -414,37 +415,37 @@
 !
 !     Local parameters
 !
-      integer               dx
+      integer(ip)           dx
       parameter           ( dx     = 1 )
 
-      integer               dy
+      integer(ip)           dy
       parameter           ( dy     = 2 )
 
-      integer               dz
+      integer(ip)           dz
       parameter           ( dz     = 3 )
 
-      integer               dlon
+      integer(ip)           dlon
       parameter           ( dlon   = 1 )
 
-      integer               dlat
+      integer(ip)           dlat
       parameter           ( dlat   = 2 )
 
-      integer               dalt
+      integer(ip)           dalt
       parameter           ( dalt   = 3 )
 
 !
 !     Local variables
 !
-      double precision      clat
-      double precision      clon
-      double precision      dgdlat
-      double precision      g
-      double precision      slat
-      double precision      slon
+      real(wp)              clat
+      real(wp)              clon
+      real(wp)              dgdlat
+      real(wp)              g
+      real(wp)              slat
+      real(wp)              slon
 
-      double precision      flat
-      double precision      flat2
-      double precision      g2
+      real(wp)              flat
+      real(wp)              flat2
+      real(wp)              g2
 
 !
 !     Standard SPICE error handling.
@@ -461,7 +462,7 @@
 !     polar radius is zero. Either case is a problem, so signal an
 !     error and check out.
 !
-      if ( f .ge. 1.0d0 ) then
+      if ( f .ge. 1.0_wp ) then
 
           call setmsg ( 'Flattening coefficient was *.'  )
           call errdp  ( '*', f                           )
@@ -471,7 +472,7 @@
 
       end if
 
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
 
           call setmsg ( 'Equatorial Radius <= 0.0D0. RE = *' )
           call errdp  ( '*', re                              )
@@ -640,12 +641,12 @@
 !
 !     Referring to the G given in the header we have...
 !
-      flat              = 1.d0 - f
+      flat              = 1.0_wp - f
       flat2             = flat * flat
 
       g                 = dsqrt( clat*clat   +   flat2 * slat*slat )
       g2                = g * g
-      dgdlat            = ( -1.0d0  +  flat2 ) * slat * clat / g
+      dgdlat            = ( -1.0_wp  +  flat2 ) * slat * clat / g
 
 !
 !     Now simply take the partial derivatives of the x,y,z w.r.t.
@@ -653,7 +654,7 @@
 !
       jacobi (dx,dlon)  =  - ( alt + re/g ) * slon * clat
       jacobi (dy,dlon)  =    ( alt + re/g ) * clon * clat
-      jacobi (dz,dlon)  =    0.0d0
+      jacobi (dz,dlon)  =    0.0_wp
 
 
       jacobi (dx,dlat)  =    (      -  re*dgdlat / g2 ) * clon * clat &

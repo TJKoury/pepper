@@ -1,6 +1,7 @@
 !$Procedure     ZZEKWPAI ( EK, write paged array, integer )
 
       subroutine zzekwpai ( handle, segdsc, nvals, ivals, p, base )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               nvals
-      integer               ivals  ( * )
-      integer               p
-      integer               base
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           nvals
+      integer(ip)           ivals  ( * )
+      integer(ip)           p
+      integer(ip)           base
 
 ! $ Brief_I/O
 !
@@ -129,10 +130,10 @@
 !
 !     Local variables
 !
-      integer               from
-      integer               npage
-      integer               page   ( pgsizi )
-      integer               to
+      integer(ip)           from
+      integer(ip)           npage
+      integer(ip)           page   ( pgsizi )
+      integer(ip)           to
 
 !
 !     Standard SPICE error handling.

@@ -1,7 +1,8 @@
 !$Procedure      ZZOCCED ( Occultation of ellipsoidal bodies )
 
-      integer function zzocced ( viewpt, &
+      integer(ip) function zzocced ( viewpt, &
                                  centr1, semax1, centr2, semax2 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,17 +24,17 @@
 
       include 'zzocced.inc'
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel   = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   = 4 )
 
-      double precision      viewpt ( 3 )
-      double precision      centr1 ( 3 )
-      double precision      semax1 ( 3, 3 )
-      double precision      centr2 ( 3 )
-      double precision      semax2 ( 3, 3 )
+      real(wp)              viewpt ( 3 )
+      real(wp)              centr1 ( 3 )
+      real(wp)              semax1 ( 3, 3 )
+      real(wp)              centr2 ( 3 )
+      real(wp)              semax2 ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -296,13 +297,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      dasine
-      double precision      det
-      double precision      halfpi
-      double precision      pi
-      double precision      vdist
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              dasine
+      real(wp)              det
+      real(wp)              halfpi
+      real(wp)              pi
+      real(wp)              vdist
+      real(wp)              vnorm
+      real(wp)              vsep
 
       logical               failed
       logical               isrot
@@ -315,90 +316,90 @@
 !     Tolerance value for determinant of a rotation matrix.  The
 !     determinant must differ from 1 by no more than DTOL.
 !
-      double precision      dtol
-      parameter           ( dtol  = 1.d-12 )
+      real(wp)              dtol
+      parameter           ( dtol  = 1.0e-12_wp )
 
 !
 !     Tolerance value for norms of columns of a rotation matrix.  The
 !     norms must differ from 1 by no more than NTOL.
 !
-      double precision      ntol
-      parameter           ( ntol  = 1.d-14 )
+      real(wp)              ntol
+      parameter           ( ntol  = 1.0e-14_wp )
 
 !
 !     Tolerance value for argument of arcsine.  The argument should
 !     have absolute value no greater than 1 + ATOL.
 !
-      double precision      atol
-      parameter           ( atol  = 1.d-12 )
+      real(wp)              atol
+      parameter           ( atol  = 1.0e-12_wp )
 
 !
 !     Local variables
 !
-      double precision      angcmp
-      double precision      bigctr ( 3 )
-      double precision      bigr
-      double precision      ctrs   ( 3, 2 )
-      double precision      dist   ( 2 )
-      double precision      invray ( 3 )
-      double precision      level
-      double precision      limb   ( ubel )
-      double precision      lmbctr ( 3 )
-      double precision      lmbmaj ( 3 )
-      double precision      lmbmin ( 3 )
-      double precision      lplane ( ubpl )
-      double precision      lnorml ( 3 )
-      double precision      majlen
-      double precision      maxang ( 2 )
-      double precision      maxpt  ( 3 )
-      double precision      maxrad ( 2 )
-      double precision      maxsep
-      double precision      minang ( 2 )
-      double precision      minlen
-      double precision      minpt  ( 3 )
-      double precision      minrad ( 2 )
-      double precision      minsep
-      double precision      minvec ( 3 )
-      double precision      r      ( 3, 2 )
-      double precision      raydir ( 3 )
-      double precision      rmat   ( 3, 3, 2 )
-      double precision      sclmat ( 3, 3 )
-      double precision      sclrot ( 3, 3 )
-      double precision      smlctr ( 3 )
-      double precision      smldir ( 3 )
-      double precision      smlmaj ( 3 )
-      double precision      smlmat ( 3, 3 )
-      double precision      smlmin ( 3 )
-      double precision      smlvu  ( 3 )
-      double precision      t12pos ( 3 )
-      double precision      t1opos ( 3 )
-      double precision      t2sep
-      double precision      tilt
-      double precision      tmpctr ( 3 )
-      double precision      tmpmaj ( 3 )
-      double precision      tmpmin ( 3 )
-      double precision      tpos   ( 3, 2 )
-      double precision      trgsep
-      double precision      ttdist
-      double precision      uasize
-      double precision      ubdist
-      double precision      view   ( 3 )
-      double precision      vph
-      double precision      vpproj ( 3 )
-      double precision      xasep
-      double precision      xdist  ( 2 )
-      double precision      xlimb  ( ubel )
-      double precision      xr     ( 3, 3 )
-      double precision      xsmlvu ( 3 )
-      double precision      xtpos  ( 3, 2 )
-      double precision      xview  ( 3 )
-      double precision      xvwtrg ( 3 )
+      real(wp)              angcmp
+      real(wp)              bigctr ( 3 )
+      real(wp)              bigr
+      real(wp)              ctrs   ( 3, 2 )
+      real(wp)              dist   ( 2 )
+      real(wp)              invray ( 3 )
+      real(wp)              level
+      real(wp)              limb   ( ubel )
+      real(wp)              lmbctr ( 3 )
+      real(wp)              lmbmaj ( 3 )
+      real(wp)              lmbmin ( 3 )
+      real(wp)              lplane ( ubpl )
+      real(wp)              lnorml ( 3 )
+      real(wp)              majlen
+      real(wp)              maxang ( 2 )
+      real(wp)              maxpt  ( 3 )
+      real(wp)              maxrad ( 2 )
+      real(wp)              maxsep
+      real(wp)              minang ( 2 )
+      real(wp)              minlen
+      real(wp)              minpt  ( 3 )
+      real(wp)              minrad ( 2 )
+      real(wp)              minsep
+      real(wp)              minvec ( 3 )
+      real(wp)              r      ( 3, 2 )
+      real(wp)              raydir ( 3 )
+      real(wp)              rmat   ( 3, 3, 2 )
+      real(wp)              sclmat ( 3, 3 )
+      real(wp)              sclrot ( 3, 3 )
+      real(wp)              smlctr ( 3 )
+      real(wp)              smldir ( 3 )
+      real(wp)              smlmaj ( 3 )
+      real(wp)              smlmat ( 3, 3 )
+      real(wp)              smlmin ( 3 )
+      real(wp)              smlvu  ( 3 )
+      real(wp)              t12pos ( 3 )
+      real(wp)              t1opos ( 3 )
+      real(wp)              t2sep
+      real(wp)              tilt
+      real(wp)              tmpctr ( 3 )
+      real(wp)              tmpmaj ( 3 )
+      real(wp)              tmpmin ( 3 )
+      real(wp)              tpos   ( 3, 2 )
+      real(wp)              trgsep
+      real(wp)              ttdist
+      real(wp)              uasize
+      real(wp)              ubdist
+      real(wp)              view   ( 3 )
+      real(wp)              vph
+      real(wp)              vpproj ( 3 )
+      real(wp)              xasep
+      real(wp)              xdist  ( 2 )
+      real(wp)              xlimb  ( ubel )
+      real(wp)              xr     ( 3, 3 )
+      real(wp)              xsmlvu ( 3 )
+      real(wp)              xtpos  ( 3, 2 )
+      real(wp)              xview  ( 3 )
+      real(wp)              xvwtrg ( 3 )
 
-      integer               bigidx
-      integer               frtidx
-      integer               i
-      integer               s
-      integer               smlidx
+      integer(ip)           bigidx
+      integer(ip)           frtidx
+      integer(ip)           i
+      integer(ip)           s
+      integer(ip)           smlidx
       logical               sfront
 
 !
@@ -577,7 +578,7 @@
 !     a more stringent test later, but we must prevent divide-by-zero
 !     errors at this point.
 !
-      if (  ( minrad(1) .le. 0.d0 ) .or. ( minrad(2) .le. 0.d0 )  ) then
+      if (  ( minrad(1) .le. 0.0_wp ) .or. ( minrad(2) .le. 0.0_wp )  ) then
 
          call setmsg ( 'Minimum radii of bodies 1 and 2 are #, #. ' // &
                        'Target radii must be positive.'             )
@@ -603,7 +604,7 @@
          dist(i) = vnorm( tpos(1,i) )
 
 
-         if ( dist(i) .eq. 0.d0 ) then
+         if ( dist(i) .eq. 0.0_wp ) then
 
             call setmsg ( 'Center of object # coincides with ' // &
                           'the viewing point.'                 )
@@ -679,7 +680,7 @@
                  +  ( xtpos(2,i) / r(2,i) )**2 &
                  +  ( xtpos(3,i) / r(3,i) )**2
 
-         if ( level .lt. 1.d0 ) then
+         if ( level .lt. 1.0_wp ) then
 
             call setmsg ( 'Viewpoint is inside target #; level ' // &
                           'surface parameter = #.'               )
@@ -1035,9 +1036,9 @@
 !
       call cleard ( 9, sclmat )
 
-      sclmat(1,1) = 1.d0 / r(1,bigidx)
-      sclmat(2,2) = 1.d0 / r(2,bigidx)
-      sclmat(3,3) = 1.d0 / r(3,bigidx)
+      sclmat(1,1) = 1.0_wp / r(1,bigidx)
+      sclmat(2,2) = 1.0_wp / r(2,bigidx)
+      sclmat(3,3) = 1.0_wp / r(3,bigidx)
 
 !
 !     Compose the row-scaling matrix SCLMAT with the frame
@@ -1110,7 +1111,7 @@
 !     greater than or equal to 1, we'll use a safe arcsine
 !     computation.
 !
-      uasize = dasine ( 1.d0/bigr, atol )
+      uasize = dasine ( 1.0_wp/bigr, atol )
 
       if ( failed() ) then
          call chkout ( 'ZZOCCED' )

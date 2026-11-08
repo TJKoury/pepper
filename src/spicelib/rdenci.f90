@@ -1,6 +1,7 @@
 !$Procedure RDENCI  ( Read encoded integers from text file )
 
       subroutine rdenci ( unit, n, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               unit
-      integer               n
-      integer               data(*)
+      integer(ip)           unit
+      integer(ip)           n
+      integer(ip)           data(*)
 
 ! $ Brief_I/O
 !
@@ -158,13 +159,13 @@
 !
 !     Local parameters
 !
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen = 80 )
 
-      integer               maxenc
+      integer(ip)           maxenc
       parameter           ( maxenc = 64 )
 
-      integer               wrksiz
+      integer(ip)           wrksiz
       parameter           ( wrksiz = 64 )
 !
 !     Local variables
@@ -172,10 +173,10 @@
       character*(errlen)    errmsg
       character*(maxenc)    work(wrksiz)
 
-      integer               i
-      integer               iostat
-      integer               itmbeg
-      integer               nitms
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           itmbeg
+      integer(ip)           nitms
 
       logical               error
 

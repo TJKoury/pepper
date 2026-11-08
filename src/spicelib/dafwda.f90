@@ -1,6 +1,7 @@
 !$Procedure DAFWDA ( DAF, write data to address )
 
       subroutine dafwda ( handle, begin, end, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      integer               begin
-      integer               end
-      double precision      data     ( * )
+      integer(ip)           handle
+      integer(ip)           begin
+      integer(ip)           end
+      real(wp)              data     ( * )
 
 ! $ Brief_I/O
 !
@@ -160,19 +161,19 @@
 !
 !     Local variables
 !
-      integer               bsize
+      integer(ip)           bsize
       parameter           ( bsize = 128 )
 
-      integer               begr
-      integer               begw
-      integer               endr
-      integer               endw
+      integer(ip)           begr
+      integer(ip)           begw
+      integer(ip)           endr
+      integer(ip)           endw
 
-      integer               recno
-      double precision      buffer   ( bsize )
-      integer               first
-      integer               n
-      integer               next
+      integer(ip)           recno
+      real(wp)              buffer   ( bsize )
+      integer(ip)           first
+      integer(ip)           n
+      integer(ip)           next
       logical               found
 
 !
@@ -183,7 +184,7 @@
 !
 !     Initial values
 !
-      data                  buffer / bsize * 0.d0 /
+      data                  buffer / bsize * 0.0_wp /
 
 !
 !     Standard SPICE error handling.

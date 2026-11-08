@@ -1,6 +1,7 @@
 !$Procedure DLATDR ( Derivative of latitudinal w.r.t. rectangular )
 
       subroutine dlatdr ( x, y, z, jacobi )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      x
-      double precision      y
-      double precision      z
-      double precision      jacobi ( 3, 3 )
+      real(wp)              x
+      real(wp)              y
+      real(wp)              z
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -345,11 +346,11 @@
 !
 !     Local variables
 !
-      double precision      rectan  ( 3 )
-      double precision      r
-      double precision      long
-      double precision      lat
-      double precision      injacb  ( 3, 3 )
+      real(wp)              rectan  ( 3 )
+      real(wp)              r
+      real(wp)              long
+      real(wp)              lat
+      real(wp)              injacb  ( 3, 3 )
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure DASEC  ( DAS extract comments )
 
       subroutine dasec ( handle, bufsiz, n, buffer, done )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       include 'das.inc'
 
-      integer               handle
-      integer               bufsiz
-      integer               n
+      integer(ip)           handle
+      integer(ip)           bufsiz
+      integer(ip)           n
       character*(*)         buffer(*)
       logical               done
 
@@ -344,7 +345,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -355,36 +356,36 @@
 !
 !     Length of a DAS character record, in characters.
 !
-      integer               mxcrec
+      integer(ip)           mxcrec
       parameter           ( mxcrec = 1024 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer               maxpch
+      integer(ip)           maxpch
       parameter           ( maxpch = 126 )
 
-      integer               minpch
+      integer(ip)           minpch
       parameter           ( minpch = 32 )
 !
 !     Decimal value for the DAS comment area end-of-line (EOL) marker.
 !
-      integer               inteol
+      integer(ip)           inteol
       parameter           ( inteol = 0 )
 !
 !     Maximum length of a filename.
 !
-      integer               fnmlen
+      integer(ip)           fnmlen
       parameter           ( fnmlen = 128 )
 !
 !     Length of a DAS file ID word.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 !
 !     Length of a DAS file internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     Local variables
@@ -394,31 +395,31 @@
       character*(idwlen)    idword
       character*(ifnlen)    ifname
 
-      integer               curpos
-      integer               daslun
-      integer               i
-      integer               index
-      integer               j
-      integer               k
-      integer               linlen
-      integer               nchars
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
-      integer               numcom
-      integer               recno
+      integer(ip)           curpos
+      integer(ip)           daslun
+      integer(ip)           i
+      integer(ip)           index
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           linlen
+      integer(ip)           nchars
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           numcom
+      integer(ip)           recno
 !
 !     The file table declarations for keeping track of which files
 !     are currently in the process of having comments extracted.
 !
-      integer               filcnt(ftsize)
-      integer               filchr(ftsize)
-      integer               filhan(ftsize)
-      integer               lsthan
-      integer               lstpos(ftsize)
-      integer               lstrec(ftsize)
-      integer               nfiles
+      integer(ip)           filcnt(ftsize)
+      integer(ip)           filchr(ftsize)
+      integer(ip)           filhan(ftsize)
+      integer(ip)           lsthan
+      integer(ip)           lstpos(ftsize)
+      integer(ip)           lstrec(ftsize)
+      integer(ip)           nfiles
 
       logical               eol
       logical               first

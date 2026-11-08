@@ -1,6 +1,7 @@
 !$Procedure CLEARI ( Clear an integer array )
 
       subroutine cleari ( ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer   ndim
-      integer   array ( * )
+      integer(ip)   ndim
+      integer(ip)   array ( * )
 
 ! $ Brief_I/O
 !
@@ -162,7 +163,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim

@@ -9,6 +9,7 @@
                             dladsc, &
                             dskdsc, &
                             found   )
+      use pepper_kinds, only: ip, wp
 
       implicit none
 
@@ -33,27 +34,27 @@
       include 'zzctr.inc'
 
       character*(*)         fname
-      integer               bodyid
-      integer               handle
+      integer(ip)           bodyid
+      integer(ip)           handle
       logical               cmpfun
       external              cmpfun
-      integer               usrctr ( * )
+      integer(ip)           usrctr ( * )
       logical               update
-      integer               dladsc ( * )
-      double precision      dskdsc ( * )
+      integer(ip)           dladsc ( * )
+      real(wp)              dskdsc ( * )
       logical               found
 
 
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize =  5000 )
 
-      integer               btsize
+      integer(ip)           btsize
       parameter           ( btsize =  100 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool =   -5 )
 
-      integer               stsize
+      integer(ip)           stsize
       parameter           ( stsize = 10000 )
 
 ! $ Brief_I/O
@@ -255,11 +256,11 @@
 !
 !     SPICELIB functions
 !
-      integer               intmax
-      integer               isrchi
-      integer               lnknfn
-      integer               lnknxt
-      integer               lnkprv
+      integer(ip)           intmax
+      integer(ip)           isrchi
+      integer(ip)           lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           lnkprv
 
       logical               failed
       logical               return
@@ -268,13 +269,13 @@
 !     Local parameters
 
 
-      integer               slen
+      integer(ip)           slen
       parameter           ( slen   = 40 )
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      integer               forwrd
+      integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
 !
@@ -284,7 +285,7 @@
 !
 !     DSK loaded kernel set state change counter:
 !
-      integer               dskctr ( ctrsiz )
+      integer(ip)           dskctr ( ctrsiz )
 
 !
 !     The file table contains the handle and file number of each file
@@ -312,11 +313,11 @@
 !     removed, succeeding files are moved forward to take up the
 !     slack. This keeps the table ordered by file number.
 !
-      integer               nft
-      integer               fthan    ( ftsize )
-      integer               ftnum    ( ftsize )
-      integer               next
-      integer               findex
+      integer(ip)           nft
+      integer(ip)           fthan    ( ftsize )
+      integer(ip)           ftnum    ( ftsize )
+      integer(ip)           next
+      integer(ip)           findex
 
 !
 !     The body table contains the beginning of the list of the stored
@@ -342,13 +343,13 @@
 !     are removed, the last body is moved forward to take up the
 !     slack. This keeps the entries in the table contiguous.
 !
-      integer               bindex
-      integer               btbeg    ( btsize )
-      integer               btexp    ( btsize )
-      integer               bthfs    ( btsize )
-      integer               btbod    ( btsize )
-      integer               btlfs    ( btsize )
-      integer               nbt
+      integer(ip)           bindex
+      integer(ip)           btbeg    ( btsize )
+      integer(ip)           btexp    ( btsize )
+      integer(ip)           bthfs    ( btsize )
+      integer(ip)           btbod    ( btsize )
+      integer(ip)           btlfs    ( btsize )
+      integer(ip)           nbt
 
 !
 !     The segment table contains the handle, descriptor, and identifier
@@ -374,11 +375,11 @@
 !     entry point ZZDSKSNS.
 !
 
-      double precision      stdskd  ( dskdsz,     stsize )
+      real(wp)              stdskd  ( dskdsz,     stsize )
 
-      integer               sthan   (             stsize )
-      integer               stdlad  ( dladsz,     stsize )
-      integer               stpool ( 2,  lbpool : stsize )
+      integer(ip)           sthan   (             stsize )
+      integer(ip)           stdlad  ( dladsz,     stsize )
+      integer(ip)           stpool ( 2,  lbpool : stsize )
 
 !
 !     Other local variables
@@ -388,27 +389,27 @@
       character*(slen)      status
       character*(slen)      urgent
 
-      double precision      dsklds ( dskdsz )
+      real(wp)              dsklds ( dskdsz )
 
 
-      integer               cheap
-      integer               cost
-      integer               dlalds ( dladsz )
-      integer               dlanxt ( dladsz )
-      integer               dlaprv ( dladsz )
-      integer               head
-      integer               i
-      integer               j
-      integer               minexp
-      integer               new
-      integer               node
-      integer               nxtseg
-      integer               p
-      integer               prvnod
-      integer               savep
-      integer               svbody
-      integer               tail
-      integer               top
+      integer(ip)           cheap
+      integer(ip)           cost
+      integer(ip)           dlalds ( dladsz )
+      integer(ip)           dlanxt ( dladsz )
+      integer(ip)           dlaprv ( dladsz )
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           minexp
+      integer(ip)           new
+      integer(ip)           node
+      integer(ip)           nxtseg
+      integer(ip)           p
+      integer(ip)           prvnod
+      integer(ip)           savep
+      integer(ip)           svbody
+      integer(ip)           tail
+      integer(ip)           top
       logical               begsch
       logical               fnd
       logical               pass1

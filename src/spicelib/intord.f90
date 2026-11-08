@@ -1,6 +1,7 @@
 !$Procedure INTORD ( Convert an integer to ordinal text )
 
       subroutine intord ( n, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
       implicit none
 
-      integer               maxord
+      integer(ip)           maxord
       parameter           ( maxord = 148 )
 
-      integer               n
+      integer(ip)           n
       character*(*)         string
 
 ! $ Brief_I/O
@@ -144,13 +145,13 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
 !
-      integer               i
-      integer               last
+      integer(ip)           i
+      integer(ip)           last
       character*(maxord)    mystr
 
 !

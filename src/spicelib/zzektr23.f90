@@ -2,6 +2,7 @@
 
       subroutine zzektr23 ( handle,  tree,   left,   right, &
                             parent,  pkidx,  overfl        )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
       include 'ekpage.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
-      integer               left
-      integer               right
-      integer               parent
-      integer               pkidx
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           left
+      integer(ip)           right
+      integer(ip)           parent
+      integer(ip)           pkidx
       logical               overfl
 
 ! $ Brief_I/O
@@ -228,40 +229,40 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrbs
+      integer(ip)           zzektrbs
 
 !
 !     Local variables
 !
-      integer               base
-      integer               c1page ( pgsizi )
-      integer               c2page ( pgsizi )
-      integer               c3page ( pgsizi )
-      integer               datbas
-      integer               i
-      integer               keybas
-      integer               kidbas
-      integer               ldelta
-      integer               lnmove
-      integer               lshift
-      integer               lsib
-      integer               lsize
-      integer               ltrsiz
-      integer               msize
-      integer               new
-      integer               nlkeys
-      integer               nnode
-      integer               npkeys
-      integer               nrkeys
-      integer               ppage ( pgsizi )
-      integer               rbase
-      integer               rdelta
-      integer               rnmove
-      integer               root
-      integer               rshift
-      integer               rsib
-      integer               rsize
-      integer               sum
+      integer(ip)           base
+      integer(ip)           c1page ( pgsizi )
+      integer(ip)           c2page ( pgsizi )
+      integer(ip)           c3page ( pgsizi )
+      integer(ip)           datbas
+      integer(ip)           i
+      integer(ip)           keybas
+      integer(ip)           kidbas
+      integer(ip)           ldelta
+      integer(ip)           lnmove
+      integer(ip)           lshift
+      integer(ip)           lsib
+      integer(ip)           lsize
+      integer(ip)           ltrsiz
+      integer(ip)           msize
+      integer(ip)           new
+      integer(ip)           nlkeys
+      integer(ip)           nnode
+      integer(ip)           npkeys
+      integer(ip)           nrkeys
+      integer(ip)           ppage ( pgsizi )
+      integer(ip)           rbase
+      integer(ip)           rdelta
+      integer(ip)           rnmove
+      integer(ip)           root
+      integer(ip)           rshift
+      integer(ip)           rsib
+      integer(ip)           rsize
+      integer(ip)           sum
 
 
 !

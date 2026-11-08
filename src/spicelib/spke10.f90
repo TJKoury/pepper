@@ -1,6 +1,7 @@
 !$Procedure SPKE10 ( Evaluate SPK record, type 10 )
 
       subroutine spke10 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 
       include 'zzsgp4.inc'
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -226,7 +227,7 @@
 !     SPICELIB functions
 !
 
-      double precision      pi
+      real(wp)              pi
       logical               failed
       logical               return
 
@@ -235,47 +236,47 @@
 !     follow the elements.  So we've got four angles/angle rates
 !     following the elements
 !
-      integer               nangs
+      integer(ip)           nangs
       parameter           ( nangs = 4 )
 
 !
 !     The locations of the epochs and the starts of the element
 !     sets are given below.
 !
-      integer               time1
+      integer(ip)           time1
       parameter           ( time1  = ngeo + kepoch )
 
-      integer               time2
+      integer(ip)           time2
       parameter           ( time2  = nelems + nangs + time1  )
 
-      integer               model1
+      integer(ip)           model1
       parameter           ( model1 = ngeo + 1      )
 
-      integer               angs1
+      integer(ip)           angs1
       parameter           ( angs1 = model1 + nelems )
 
-      integer               model2
+      integer(ip)           model2
       parameter           ( model2 = angs1 + nangs )
 
 
 !
 !     Local variables
 !
-      double precision      j2tm     ( 6, 6 )
-      double precision      tm2j     ( 6, 6 )
-      double precision      s1       ( 6 )
-      double precision      s2       ( 6 )
-      double precision      tmpsta   ( 6 )
-      double precision      vcomp    ( 3 )
-      double precision      arg
-      double precision      dargdt
-      double precision      denom
-      double precision      dwdt
-      double precision      mypi
-      double precision      numer
-      double precision      t1
-      double precision      t2
-      double precision      w
+      real(wp)              j2tm     ( 6, 6 )
+      real(wp)              tm2j     ( 6, 6 )
+      real(wp)              s1       ( 6 )
+      real(wp)              s2       ( 6 )
+      real(wp)              tmpsta   ( 6 )
+      real(wp)              vcomp    ( 3 )
+      real(wp)              arg
+      real(wp)              dargdt
+      real(wp)              denom
+      real(wp)              dwdt
+      real(wp)              mypi
+      real(wp)              numer
+      real(wp)              t1
+      real(wp)              t2
+      real(wp)              w
 
       logical               first
       save
@@ -351,7 +352,7 @@
 !
 !        Time from epoch of set 1 in minutes.
 !
-         call xxsgp4e ( (et - t1)/60.d0, s1 )
+         call xxsgp4e ( (et - t1)/60.0_wp, s1 )
 
          if ( failed() ) then
             call chkout ( 'SPKE10' )
@@ -371,7 +372,7 @@
 !
 !        Time from epoch of set 2 in minutes.
 !
-         call xxsgp4e ( (et - t2)/60.d0, s2 )
+         call xxsgp4e ( (et - t2)/60.0_wp, s2 )
 
          if ( failed() ) then
             call chkout ( 'SPKE10' )
@@ -387,13 +388,13 @@
          arg    = numer*mypi/denom
          dargdt =       mypi/denom
 
-         w      =  0.5d0 + 0.5d0 * dcos( arg )
-         dwdt   =        - 0.5d0 * dsin( arg ) * dargdt
+         w      =  0.5_wp + 0.5_wp * dcos( arg )
+         dwdt   =        - 0.5_wp * dsin( arg ) * dargdt
 
 !
 !        Now compute the weighted average of the two states.
 !
-         call vlcomg ( 6,  w,    s1,       1.d0-w, s2,     state     )
+         call vlcomg ( 6,  w,    s1,       1.0_wp-w, s2,     state     )
          call vlcom  (     dwdt, s1,       -dwdt,  s2,     vcomp     )
          call vadd   (           state(4),         vcomp,  tmpsta(4) )
          call vequ   (           tmpsta(4),                state(4)  )
@@ -413,7 +414,7 @@
 !
 !        Time from epoch of set 1 in minutes.
 !
-         call xxsgp4e ( (et - t1)/60.d0, state )
+         call xxsgp4e ( (et - t1)/60.0_wp, state )
 
          if ( failed() ) then
             call chkout ( 'SPKE10' )

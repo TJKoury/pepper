@@ -1,6 +1,7 @@
 !$Procedure TOSTDO ( To Standard Output)
 
       subroutine tostdo ( line )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -100,7 +101,7 @@
 !-&
 
 
-      integer               stdout
+      integer(ip)           stdout
       logical               first
       save
 

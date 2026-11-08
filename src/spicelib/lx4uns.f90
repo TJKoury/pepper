@@ -1,6 +1,7 @@
 !$Procedure LX4UNS (Scan for unsigned integer)
 
       subroutine lx4uns ( string, first, last, nchar )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       implicit none
 
       character*(*)         string
-      integer               first
-      integer               last
-      integer               nchar
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           nchar
 
 ! $ Brief_I/O
 !
@@ -155,17 +156,17 @@
 !
 !     Local parameters
 !
-      integer               maxc
+      integer(ip)           maxc
       parameter           ( maxc    =   255 )
 
-      integer               minc
+      integer(ip)           minc
       parameter           ( minc    =  -128 )
 
 !
 !     Local variables
 !
-      integer               i
-      integer               l
+      integer(ip)           i
+      integer(ip)           l
 
       logical               digit ( minc : maxc )
       logical               doinit

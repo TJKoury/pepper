@@ -1,6 +1,7 @@
 !$Procedure ZZNAMFRM ( Frame name to ID translation, with bypass )
 
       subroutine zznamfrm ( usrctr, savnam, savcde, frname, frcode )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,11 +29,11 @@
 
       include              'zzctr.inc'
 
-      integer               usrctr    ( ctrsiz )
+      integer(ip)           usrctr    ( ctrsiz )
       character*(*)         savnam
-      integer               savcde
+      integer(ip)           savcde
       character*(*)         frname
-      integer               frcode
+      integer(ip)           frcode
 
 ! $ Brief_I/O
 !

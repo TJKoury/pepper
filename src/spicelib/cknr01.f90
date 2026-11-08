@@ -1,6 +1,7 @@
 !$Procedure CKNR01 ( C-kernel, number of records, type 01 )
 
       subroutine cknr01 ( handle, descr, nrec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               nrec
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           nrec
 
 ! $ Brief_I/O
 !
@@ -246,19 +247,19 @@
 !        NIC        is the number of integer components in an unpacked
 !                   C-kernel descriptor.
 !
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic = 6 )
 
 !
 !     Local variables
 !
-      integer               icd  ( nic )
+      integer(ip)           icd  ( nic )
 
-      double precision      dcd  ( ndc )
-      double precision      n
+      real(wp)              dcd  ( ndc )
+      real(wp)              n
 
 
 

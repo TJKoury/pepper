@@ -1,6 +1,7 @@
 !$Procedure SYORDC ( Order the components of a single symbol )
 
       subroutine syordc ( name, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
       character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
@@ -147,19 +148,19 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
+      integer(ip)           bsrchc
+      integer(ip)           cardc
       logical               return
-      integer               sumai
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
+      integer(ip)           nsym
 
-      integer               locsym
-      integer               locval
-      integer               n
+      integer(ip)           locsym
+      integer(ip)           locval
+      integer(ip)           n
 
 
 

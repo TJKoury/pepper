@@ -1,6 +1,7 @@
 !$Procedure MXMG ( Matrix times matrix, general dimension )
 
       subroutine mxmg ( m1, m2, nr1, nc1r2, nc2, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,12 +19,12 @@
 
       implicit none
 
-      integer             nr1
-      integer             nc1r2
-      integer             nc2
-      double precision    m1   ( nr1,   nc1r2 )
-      double precision    m2   ( nc1r2, nc2   )
-      double precision    mout ( nr1,   nc2   )
+      integer(ip)         nr1
+      integer(ip)         nc1r2
+      integer(ip)         nc2
+      real(wp)            m1   ( nr1,   nc1r2 )
+      real(wp)            m2   ( nc1r2, nc2   )
+      real(wp)            mout ( nr1,   nc2   )
 
 ! $ Brief_I/O
 !
@@ -200,18 +201,18 @@
 !
 !     Local variables
 !
-      double precision      sum
+      real(wp)              sum
 
-      integer               i
-      integer               j
-      integer               k
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
 
 !
 !  Perform the matrix multiplication
 !
       do i = 1, nr1
          do j = 1, nc2
-            sum = 0.d0
+            sum = 0.0_wp
             do k = 1, nc1r2
                sum = sum + m1(i,k)*m2(k,j)
             end do

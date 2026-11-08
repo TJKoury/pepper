@@ -3,6 +3,7 @@
       subroutine zzsrfker ( kernam, nornam, kersid, kerbid, &
                             extker, nkvar,  snmhls, snmpol, &
                             snmidx, sidhls, sidpol, sididx )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -31,16 +32,16 @@
 
       character*(sfnmln)    kernam (          * )
       character*(sfnmln)    nornam (          * )
-      integer               kersid (          * )
-      integer               kerbid (          * )
+      integer(ip)           kersid (          * )
+      integer(ip)           kerbid (          * )
       logical               extker
-      integer               nkvar
-      integer               snmhls (          * )
-      integer               snmpol ( lbsngl : * )
-      integer               snmidx (          * )
-      integer               sidhls (          * )
-      integer               sidpol ( lbsngl : * )
-      integer               sididx (          * )
+      integer(ip)           nkvar
+      integer(ip)           snmhls (          * )
+      integer(ip)           snmpol ( lbsngl : * )
+      integer(ip)           snmidx (          * )
+      integer(ip)           sidhls (          * )
+      integer(ip)           sidpol ( lbsngl : * )
+      integer(ip)           sididx (          * )
 
 ! $ Brief_I/O
 !
@@ -226,10 +227,10 @@
       character*(*)         kvsfnm
       parameter           ( kvsfnm = 'NAIF_SURFACE_NAME' )
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln = 32 )
 
-      integer               nnames
+      integer(ip)           nnames
       parameter           ( nnames = 3 )
 
 !
@@ -240,10 +241,10 @@
       character*(1)         ndtype
       character*(kvnmln)    names  ( nnames )
 
-      integer               i
-      integer               nbody
-      integer               ncode
-      integer               nname
+      integer(ip)           i
+      integer(ip)           nbody
+      integer(ip)           ncode
+      integer(ip)           nname
 
       logical               pass1
       logical               fndbod

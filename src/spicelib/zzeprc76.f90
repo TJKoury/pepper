@@ -1,6 +1,7 @@
 !$Procedure   ZZEPRC76   ( Earth precession, 1976 IAU model )
 
       subroutine zzeprc76 ( et, precxf )
+      use pepper_kinds, only: wp
       implicit none
 
 ! $ Abstract
@@ -26,8 +27,8 @@
 !
 ! $ Declarations
 
-      double precision      et
-      double precision      precxf ( 6, 6 )
+      real(wp)              et
+      real(wp)              precxf ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -151,53 +152,53 @@
 !
 !     SPICELIB functions
 !
-      double precision      jyear
-      double precision      rpd
+      real(wp)              jyear
+      real(wp)              rpd
 
 !
 !     Local parameters
 !
-      double precision      zeta1
-      parameter           ( zeta1  = 2306.2181d0 )
+      real(wp)              zeta1
+      parameter           ( zeta1  = 2306.2181_wp )
 
-      double precision      zeta2
-      parameter           ( zeta2  = 0.30188d0   )
+      real(wp)              zeta2
+      parameter           ( zeta2  = 0.30188_wp   )
 
-      double precision      zeta3
-      parameter           ( zeta3  = 0.017998d0  )
+      real(wp)              zeta3
+      parameter           ( zeta3  = 0.017998_wp  )
 
-      double precision      z1
-      parameter           ( z1     = 2306.2181d0 )
+      real(wp)              z1
+      parameter           ( z1     = 2306.2181_wp )
 
-      double precision      z2
-      parameter           ( z2     = 1.09468d0   )
+      real(wp)              z2
+      parameter           ( z2     = 1.09468_wp   )
 
-      double precision      z3
-      parameter           ( z3     = 0.018203d0  )
+      real(wp)              z3
+      parameter           ( z3     = 0.018203_wp  )
 
-      double precision      theta1
-      parameter           ( theta1 = 2004.3109d0 )
+      real(wp)              theta1
+      parameter           ( theta1 = 2004.3109_wp )
 
-      double precision      theta2
-      parameter           ( theta2 = -0.42665d0 )
+      real(wp)              theta2
+      parameter           ( theta2 = -0.42665_wp )
 
-      double precision      theta3
-      parameter           ( theta3 = -0.041833d0 )
+      real(wp)              theta3
+      parameter           ( theta3 = -0.041833_wp )
 
 !
 !     Local variables
 !
-      double precision      cent
-      double precision      dtheta
-      double precision      dz
-      double precision      dzeta
-      double precision      eulang ( 6 )
-      double precision      scale
-      double precision      t
-      double precision      theta
-      double precision      ts
-      double precision      z
-      double precision      zeta
+      real(wp)              cent
+      real(wp)              dtheta
+      real(wp)              dz
+      real(wp)              dzeta
+      real(wp)              eulang ( 6 )
+      real(wp)              scale
+      real(wp)              t
+      real(wp)              theta
+      real(wp)              ts
+      real(wp)              z
+      real(wp)              zeta
 
 
 !
@@ -210,15 +211,15 @@
 !     angles in units of arcseconds prior to scaling.  After scaling,
 !     the angles are in units of radians.
 !
-      cent    =  jyear() * 100.d0
+      cent    =  jyear() * 100.0_wp
       t       =  et    / cent
-      scale   =  rpd() / 3600.d0
+      scale   =  rpd() / 3600.0_wp
 
       zeta    =  t  * (  zeta1  + t*(   zeta2  +   t*zeta3  )  ) * scale
       z       =  t  * (  z1     + t*(   z2     +   t*z3     )  ) * scale
       theta   =  t  * (  theta1 + t*(   theta2 +   t*theta3 )  ) * scale
 
-      ts      =  1.d0 / cent
+      ts      =  1.0_wp / cent
       dzeta   =  ts * (  zeta1  + t*( 2*zeta2  + 3*t*zeta3  )  ) * scale
       dz      =  ts * (  z1     + t*( 2*z2     + 3*t*z3     )  ) * scale
       dtheta  =  ts * (  theta1 + t*( 2*theta2 + 3*t*theta3 )  ) * scale

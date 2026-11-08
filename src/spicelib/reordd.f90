@@ -1,6 +1,7 @@
 !$Procedure REORDD ( Reorder a double precision array )
 
       subroutine reordd ( iorder, ndim, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      integer            iorder ( * )
-      integer            ndim
-      double precision   array  ( * )
+      integer(ip)        iorder ( * )
+      integer(ip)        ndim
+      real(wp)           array  ( * )
 
 ! $ Brief_I/O
 !
@@ -231,11 +232,11 @@
 !
 !     Local variables
 !
-      integer          start
-      integer          index
-      integer          hold
+      integer(ip)      start
+      integer(ip)      index
+      integer(ip)      hold
 
-      double precision temp
+      real(wp) temp
 
 
 !

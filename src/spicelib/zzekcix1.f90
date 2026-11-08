@@ -1,6 +1,7 @@
 !$Procedure      ZZEKCIX1 ( EK, create index, type 1 )
 
       subroutine zzekcix1 ( handle, coldsc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       include 'ekcoldsc.inc'
 
-      integer               handle
-      integer               coldsc ( cdscsz )
+      integer(ip)           handle
+      integer(ip)           coldsc ( cdscsz )
 
 ! $ Brief_I/O
 !

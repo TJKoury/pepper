@@ -1,6 +1,7 @@
 !$Procedure RMDUPC ( Remove duplicates from a character array )
 
       subroutine rmdupc ( nelt, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer          nelt
+      integer(ip)      nelt
       character*(*)    array   (*)
 
 ! $ Brief_I/O
@@ -131,8 +132,8 @@
 !
 !     Local variables
 !
-      integer          i
-      integer          j
+      integer(ip)      i
+      integer(ip)      j
 
 
 

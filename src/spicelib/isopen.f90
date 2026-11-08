@@ -1,6 +1,7 @@
 !$Procedure ISOPEN ( Is a file currently open? )
 
       logical function isopen ( file )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -118,7 +119,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
       logical               exists
       logical               myopen

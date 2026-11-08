@@ -1,6 +1,7 @@
 !$Procedure ZZEKIID1 ( EK, insert into index, d.p., type 1 )
 
       subroutine zzekiid1 ( handle, segdsc, coldsc, dkey, recptr, null )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      double precision      dkey
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      real(wp)              dkey
+      integer(ip)           recptr
       logical               null
 
 ! $ Brief_I/O
@@ -153,11 +154,11 @@
 !
       character*(cnamsz)    column
 
-      integer               dtype
-      integer               itype
-      integer               prvidx
-      integer               prvptr
-      integer               tree
+      integer(ip)           dtype
+      integer(ip)           itype
+      integer(ip)           prvidx
+      integer(ip)           prvptr
+      integer(ip)           tree
 
       logical               indexd
 

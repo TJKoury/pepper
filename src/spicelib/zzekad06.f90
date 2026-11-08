@@ -2,6 +2,7 @@
 
       subroutine zzekad06 (  handle,  segdsc,  coldsc, &
                              recptr,  nvals,   cvals,  isnull  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
-      integer               recptr
-      integer               nvals
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
+      integer(ip)           recptr
+      integer(ip)           nvals
       character*(*)         cvals  ( * )
       logical               isnull
 
@@ -173,12 +174,12 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local parameters
 !
-      integer               maxpad
+      integer(ip)           maxpad
       parameter           ( maxpad = 100 )
 
 !
@@ -186,32 +187,32 @@
 !
       character*(maxpad)    padbuf
 
-      integer               colidx
-      integer               cvlen
-      integer               datptr
-      integer               eltidx
-      integer               lastw
-      integer               mbase
-      integer               mnroom
-      integer               n
-      integer               nchrs
-      integer               ncols
-      integer               nlinks
-      integer               np
-      integer               npad
-      integer               nrec
-      integer               nwrite
-      integer               p
-      integer               p2
-      integer               padlen
-      integer               pbase
-      integer               pos
-      integer               ptrloc
-      integer               recno
-      integer               remain
-      integer               room
-      integer               strlen
-      integer               wp
+      integer(ip)           colidx
+      integer(ip)           cvlen
+      integer(ip)           datptr
+      integer(ip)           eltidx
+      integer(ip)           lastw
+      integer(ip)           mbase
+      integer(ip)           mnroom
+      integer(ip)           n
+      integer(ip)           nchrs
+      integer(ip)           ncols
+      integer(ip)           nlinks
+      integer(ip)           np
+      integer(ip)           npad
+      integer(ip)           nrec
+      integer(ip)           nwrite
+      integer(ip)           p
+      integer(ip)           p2
+      integer(ip)           padlen
+      integer(ip)           pbase
+      integer(ip)           pos
+      integer(ip)           ptrloc
+      integer(ip)           recno
+      integer(ip)           remain
+      integer(ip)           room
+      integer(ip)           strlen
+      integer(ip)           wpad
 
       logical               first
       logical               fstpag
@@ -450,17 +451,17 @@
 
                         do while ( np .gt. 0 )
 
-                           wp  =  min ( np, maxpad )
+                           wpad  =  min ( np, maxpad )
 
                            call dasudc ( handle, &
                                          datptr, &
-                                         datptr + wp - 1, &
+                                         datptr + wpad - 1, &
                                          1, &
-                                         wp, &
+                                         wpad, &
                                          padbuf          )
 
-                           np      =  np     - wp
-                           datptr  =  datptr + wp
+                           np      =  np     - wpad
+                           datptr  =  datptr + wpad
 
                         end do
 

@@ -4,6 +4,7 @@
                              tokens,  values,  numvls,  chrbuf, &
                              chbegs,  chends,  eqryi,   eqryc, &
                              eqryd,   error,   prserr          )
+      use pepper_kinds, only: ip, wp
 
       implicit none
 
@@ -31,22 +32,22 @@
       include 'ekquery.inc'
       include 'ekqlimit.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               ntoken
-      integer               lxbegs ( * )
-      integer               lxends ( * )
-      integer               tokens ( * )
-      integer               values ( * )
-      double precision      numvls ( * )
+      integer(ip)           ntoken
+      integer(ip)           lxbegs ( * )
+      integer(ip)           lxends ( * )
+      integer(ip)           tokens ( * )
+      integer(ip)           values ( * )
+      real(wp)              numvls ( * )
       character*(*)         chrbuf
-      integer               chbegs ( * )
-      integer               chends ( * )
-      integer               eqryi  ( lbcell : * )
+      integer(ip)           chbegs ( * )
+      integer(ip)           chends ( * )
+      integer(ip)           eqryi  ( lbcell : * )
       character*(*)         eqryc
-      double precision      eqryd  ( * )
+      real(wp)              eqryd  ( * )
       logical               error
       character*(*)         prserr
 
@@ -268,7 +269,7 @@
 !
 !     SPICELIB functions
 !
-      integer               cardi
+      integer(ip)           cardi
 
       logical               failed
       logical               return
@@ -281,67 +282,67 @@
 !
 !     State parameters
 !
-      integer               from
+      integer(ip)           from
       parameter           ( from    =            0 )
 
-      integer               frmtab
+      integer(ip)           frmtab
       parameter           ( frmtab  =   from   + 1 )
 
-      integer               frmcnt
+      integer(ip)           frmcnt
       parameter           ( frmcnt  =   frmtab + 1 )
 
-      integer               frmals
+      integer(ip)           frmals
       parameter           ( frmals  =   frmcnt + 1 )
 
-      integer               where
+      integer(ip)           where
       parameter           ( where   =   frmals + 1 )
 
-      integer               order
+      integer(ip)           order
       parameter           ( order   =   where  + 1 )
 
-      integer               ordrby
+      integer(ip)           ordrby
       parameter           ( ordrby  =   order  + 1 )
 
-      integer               ordtab
+      integer(ip)           ordtab
       parameter           ( ordtab  =   ordrby + 1 )
 
-      integer               ordnam
+      integer(ip)           ordnam
       parameter           ( ordnam  =   ordtab + 1 )
 
-      integer               ordcol
+      integer(ip)           ordcol
       parameter           ( ordcol  =   ordnam + 1 )
 
-      integer               ordsns
+      integer(ip)           ordsns
       parameter           ( ordsns  =   ordcol + 1 )
 
-      integer               selkey
+      integer(ip)           selkey
       parameter           ( selkey  =   ordsns + 1 )
 
-      integer               select
+      integer(ip)           select
       parameter           ( select  =   selkey + 1 )
 
-      integer               seltab
+      integer(ip)           seltab
       parameter           ( seltab  =   select + 1 )
 
-      integer               selnam
+      integer(ip)           selnam
       parameter           ( selnam  =   seltab + 1 )
 
-      integer               selcol
+      integer(ip)           selcol
       parameter           ( selcol  =   selnam + 1 )
 
-      integer               term
+      integer(ip)           term
       parameter           ( term    =   selcol + 1 )
 
 !
 !     Other local parameters
 !
-      integer               maxrel
+      integer(ip)           maxrel
       parameter           ( maxrel =  200 )
 
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen =   32 )
 
-      integer               keylen
+      integer(ip)           keylen
       parameter           ( keylen =   32 )
 
 !
@@ -350,25 +351,25 @@
       character*(typlen)    errtyp
       character*(keylen)    expkey
 
-      integer               alsdsc ( eqvdsz )
-      integer               b
-      integer               coldsc ( eqvdsz )
-      integer               e
-      integer               i
-      integer               j
-      integer               l
-      integer               lxb
-      integer               lxe
-      integer               namdsc ( eqvdsz )
-      integer               ncnstr
-      integer               norder
-      integer               nsel
-      integer               ntabs
-      integer               state
-      integer               tabdsc ( eqvdsz )
-      integer               token
-      integer               toknum
-      integer               valdsc ( eqvdsz )
+      integer(ip)           alsdsc ( eqvdsz )
+      integer(ip)           b
+      integer(ip)           coldsc ( eqvdsz )
+      integer(ip)           e
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           l
+      integer(ip)           lxb
+      integer(ip)           lxe
+      integer(ip)           namdsc ( eqvdsz )
+      integer(ip)           ncnstr
+      integer(ip)           norder
+      integer(ip)           nsel
+      integer(ip)           ntabs
+      integer(ip)           state
+      integer(ip)           tabdsc ( eqvdsz )
+      integer(ip)           token
+      integer(ip)           toknum
+      integer(ip)           valdsc ( eqvdsz )
 
       logical               fnd
 

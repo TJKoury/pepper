@@ -1,6 +1,7 @@
 !$Procedure SPCAC ( SPK and CK, add comments )
 
       subroutine spcac ( handle, unit, bmark, emark )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer               handle
-      integer               unit
+      integer(ip)           handle
+      integer(ip)           unit
       character*(*)         bmark
       character*(*)         emark
 
@@ -305,8 +306,8 @@
 !
 !     SPICELIB functions
 !
-      integer               countc
-      integer               lastnb
+      integer(ip)           countc
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -319,10 +320,10 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60     )
 
-      integer               maxcpr
+      integer(ip)           maxcpr
       parameter           ( maxcpr = 1000   )
 
 !
@@ -335,30 +336,30 @@
       character*(1)         null
       character*(maxcpr)    record
 
-      integer               bline
-      integer               bward
-      integer               c
-      integer               chars
-      integer               dafu
-      integer               eol
-      integer               eline
-      integer               free
-      integer               fward
-      integer               i
-      integer               iostat
-      integer               l
-      integer               lastrr
-      integer               lines
-      integer               nd
-      integer               ni
-      integer               nr
-      integer               nrr
-      integer               pos
-      integer               poseot
-      integer               rec
-      integer               space
-      integer               start
-      integer               total
+      integer(ip)           bline
+      integer(ip)           bward
+      integer(ip)           c
+      integer(ip)           chars
+      integer(ip)           dafu
+      integer(ip)           eol
+      integer(ip)           eline
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           l
+      integer(ip)           lastrr
+      integer(ip)           lines
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nr
+      integer(ip)           nrr
+      integer(ip)           pos
+      integer(ip)           poseot
+      integer(ip)           rec
+      integer(ip)           space
+      integer(ip)           start
+      integer(ip)           total
 
       logical               found
 

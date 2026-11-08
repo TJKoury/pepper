@@ -1,6 +1,7 @@
 !$Procedure REPMD  ( Replace marker with double precision number )
 
       subroutine repmd ( in, marker, value, sigdig, out )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       character*(*)         in
       character*(*)         marker
-      double precision      value
-      integer               sigdig
+      real(wp)              value
+      integer(ip)           sigdig
       character*(*)         out
 
-      integer               maxldp
+      integer(ip)           maxldp
       parameter           ( maxldp = 23 )
 
 ! $ Brief_I/O
@@ -287,8 +288,8 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
@@ -296,14 +297,14 @@
 !
       character*(maxldp)    substr
 
-      integer               mrknbf
-      integer               mrknbl
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
 
-      integer               mrkpsb
-      integer               mrkpse
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
 
-      integer               subnbf
-      integer               subnbl
+      integer(ip)           subnbf
+      integer(ip)           subnbl
 
 !
 !     If MARKER is blank, no substitution is possible.

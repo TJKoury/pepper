@@ -1,6 +1,7 @@
 !$Procedure BENUM  ( Be a number? )
 
       logical function benum  ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -152,17 +153,17 @@
 !
 !     SPICELIB functions
 !
-      integer               cpos
+      integer(ip)           cpos
       logical               beint
       logical               bedec
 
 !
 !     Local Variables
 !
-      integer               d
-      integer               e
-      integer               f
-      integer               l
+      integer(ip)           d
+      integer(ip)           e
+      integer(ip)           f
+      integer(ip)           l
 
 
 

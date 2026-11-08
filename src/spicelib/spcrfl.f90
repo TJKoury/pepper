@@ -1,6 +1,7 @@
 !$Procedure SPCRFL ( SPK and CK, read first line of comments )
 
       subroutine spcrfl ( handle, line, eoc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         line
       logical               eoc
 
@@ -214,7 +215,7 @@
 !
 !     SPICELIB functions
 !
-      integer               pos
+      integer(ip)           pos
 
       logical               failed
       logical               return
@@ -227,10 +228,10 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
-      integer               maxcpr
+      integer(ip)           maxcpr
       parameter           ( maxcpr = 1000   )
 
 !
@@ -242,20 +243,20 @@
       character*(maxcpr)    record
       character*(maxcpr)    temp
 
-      integer               bol
-      integer               bward
-      integer               dafu
-      integer               eol
-      integer               free
-      integer               fward
-      integer               hanbuf
-      integer               iostat
-      integer               nd
-      integer               ni
-      integer               nrr
-      integer               posnul
-      integer               rec
-      integer               tmplen
+      integer(ip)           bol
+      integer(ip)           bward
+      integer(ip)           dafu
+      integer(ip)           eol
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           hanbuf
+      integer(ip)           iostat
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nrr
+      integer(ip)           posnul
+      integer(ip)           rec
+      integer(ip)           tmplen
 
       logical               called
       logical               eocsav

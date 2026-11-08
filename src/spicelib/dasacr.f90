@@ -1,6 +1,7 @@
 !$Procedure DASACR ( DAS, add comment records )
 
       subroutine dasacr ( handle, n )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      integer               handle
-      integer               n
+      integer(ip)           handle
+      integer(ip)           n
 
 ! $ Brief_I/O
 !
@@ -183,37 +184,37 @@
 !
 !     Words per data record, for each data type:
 !
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc    = 1024 )
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd    =  128 )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi    =  256 )
 
 !
 !     Data type parameters
 !
-      integer               char
+      integer(ip)           char
       parameter           ( char   =   1  )
 
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =   2  )
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      integer               bwdloc
+      integer(ip)           bwdloc
       parameter           ( bwdloc =   1  )
 
-      integer               fwdloc
+      integer(ip)           fwdloc
       parameter           ( fwdloc =   2  )
 
 !
 !     Location of first type descriptor
 !
-      integer               begdsc
+      integer(ip)           begdsc
       parameter           ( begdsc = 9 )
 
 
@@ -222,30 +223,30 @@
 !
       character*(nwc)       recc
 
-      double precision      recd   ( nwd )
+      real(wp)              recd   ( nwd )
 
-      integer               base
-      integer               dirrec ( nwi )
-      integer               free
-      integer               i
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               loc
-      integer               lrec
-      integer               lindex
-      integer               lword
-      integer               ncomc
-      integer               ncomr
-      integer               nrec
-      integer               nresvc
-      integer               nresvr
-      integer               nxttyp
-      integer               pos
-      integer               prec
-      integer               reci   ( nwi    )
-      integer               type
-      integer               unit
+      integer(ip)           base
+      integer(ip)           dirrec ( nwi )
+      integer(ip)           free
+      integer(ip)           i
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           loc
+      integer(ip)           lrec
+      integer(ip)           lindex
+      integer(ip)           lword
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nrec
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           nxttyp
+      integer(ip)           pos
+      integer(ip)           prec
+      integer(ip)           reci   ( nwi    )
+      integer(ip)           type
+      integer(ip)           unit
 
 
 !
@@ -256,10 +257,10 @@
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      integer               next   ( 3 )
+      integer(ip)           next   ( 3 )
       save                  next
 
-      integer               prev   ( 3 )
+      integer(ip)           prev   ( 3 )
       save                  prev
 
 !

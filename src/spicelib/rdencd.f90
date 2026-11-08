@@ -1,6 +1,7 @@
 !$Procedure RDENCD  ( Read encoded d.p. numbers from file )
 
       subroutine rdencd ( unit, n, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               unit
-      integer               n
-      double precision      data(*)
+      integer(ip)           unit
+      integer(ip)           n
+      real(wp)              data(*)
 
 ! $ Brief_I/O
 !
@@ -170,13 +171,13 @@
 !
 !     Local parameters
 !
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen = 80 )
 
-      integer               maxenc
+      integer(ip)           maxenc
       parameter           ( maxenc = 64 )
 
-      integer               wrksiz
+      integer(ip)           wrksiz
       parameter           ( wrksiz = 64 )
 !
 !     Local variables
@@ -184,10 +185,10 @@
       character*(errlen)    errmsg
       character*(maxenc)    work(wrksiz)
 
-      integer               i
-      integer               itmbeg
-      integer               nitms
-      integer               iostat
+      integer(ip)           i
+      integer(ip)           itmbeg
+      integer(ip)           nitms
+      integer(ip)           iostat
 
       logical               error
 

@@ -2,6 +2,7 @@
 
       subroutine zzinrypl ( vertex, udir, uplnml, &
                             const,  maxd, nxpts,  xpt )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -23,13 +24,13 @@
 !
 ! $ Declarations
 
-      double precision      vertex ( 3 )
-      double precision      udir   ( 3 )
-      double precision      uplnml ( 3 )
-      double precision      const
-      double precision      maxd
-      integer               nxpts
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              uplnml ( 3 )
+      real(wp)              const
+      real(wp)              maxd
+      integer(ip)           nxpts
+      real(wp)              xpt    ( 3 )
 
 ! $ Brief_I/O
 !
@@ -152,16 +153,16 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
 !
 !     Local variables
 !
-      double precision      dircon
-      double precision      h
-      double precision      lpar
-      double precision      s
-      double precision      vtxcon
+      real(wp)              dircon
+      real(wp)              h
+      real(wp)              lpar
+      real(wp)              s
+      real(wp)              vtxcon
 
 !
 !     Start out indicating no intersection.
@@ -183,11 +184,11 @@
 !     lying in the plane is considered a non-intersection case,
 !     by the way.)
 !
-      if ( ( vtxcon .gt. const ) .and. ( dircon .gt. 0.d0 ) ) then
+      if ( ( vtxcon .gt. const ) .and. ( dircon .gt. 0.0_wp ) ) then
          return
       end if
 
-      if ( ( vtxcon .lt. const ) .and. ( dircon .lt. 0.d0 ) ) then
+      if ( ( vtxcon .lt. const ) .and. ( dircon .lt. 0.0_wp ) ) then
          return
       end if
 
@@ -196,7 +197,7 @@
 !
 !        The ray's vertex lies in the plane.
 !
-         if ( dircon .ne. 0.d0 ) then
+         if ( dircon .ne. 0.0_wp ) then
 !
 !           The ray does not lie in the plane. The
 !           intercept is the ray's vertex.
@@ -238,7 +239,7 @@
 !
 !     For safety, return if we could have a divide-by-zero error.
 !
-      if ( lpar .eq. 0.d0 ) then
+      if ( lpar .eq. 0.0_wp ) then
          return
       end if
 

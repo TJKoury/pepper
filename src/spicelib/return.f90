@@ -1,6 +1,7 @@
 !$Procedure RETURN ( Immediate Return Indicator )
 
       logical function return ()
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -239,13 +240,13 @@
 !
 !     Define the mnemonic for the return action.
 !
-      integer               iretrn
+      integer(ip)           iretrn
       parameter           ( iretrn = 3 )
 
 !
 !     Local Variables
 !
-      integer               action
+      integer(ip)           action
 
 !
 !     Immediate return is indicated only in 'RETURN' mode,

@@ -1,6 +1,7 @@
 !$Procedure REPLCH ( Replace characters in a string )
 
       subroutine replch ( instr, old, new, outstr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -130,7 +131,7 @@
 !
 !   Local Variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

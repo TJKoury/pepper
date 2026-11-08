@@ -1,6 +1,7 @@
 !$Procedure DCBRT ( Double precision cube root )
 
-      double precision function  dcbrt ( x )
+      real(wp) function  dcbrt ( x )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      double precision   x
+      real(wp)           x
 
 ! $ Brief_I/O
 !
@@ -110,8 +111,8 @@
 !-&
 
 
-      double precision third
-      parameter (third = 1.d0/3.d0)
+      real(wp) third
+      parameter (third = 1.0_wp/3.0_wp)
 !
       dcbrt = dsign (dabs(x)**third, x)
 !

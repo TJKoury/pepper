@@ -1,6 +1,7 @@
 !$Procedure QDQ2AV (Quaternion and quaternion derivative to a.v.)
 
       subroutine qdq2av ( q, dq, av )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision      q    ( 0 : 3 )
-      double precision      dq   ( 0 : 3 )
-      double precision      av   ( 3 )
+      real(wp)              q    ( 0 : 3 )
+      real(wp)              dq   ( 0 : 3 )
+      real(wp)              av   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -699,9 +700,9 @@
 !
 !     Local variables
 !
-      double precision      qhat  ( 0 : 3 )
-      double precision      qstar ( 0 : 3 )
-      double precision      qtemp ( 0 : 3 )
+      real(wp)              qhat  ( 0 : 3 )
+      real(wp)              qstar ( 0 : 3 )
+      real(wp)              qtemp ( 0 : 3 )
 
 
 !
@@ -723,7 +724,7 @@
 !
 
       call qxq    ( qstar,  dq,        qtemp )
-      call vscl   ( -2.d0,  qtemp(1),  av    )
+      call vscl   ( -2.0_wp,  qtemp(1),  av    )
 
       return
       end

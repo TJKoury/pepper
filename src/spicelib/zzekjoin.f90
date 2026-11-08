@@ -5,6 +5,7 @@
                             cpidx2,  clidx2,  elts2,   sthan, &
                             stsdsc,  stdtpt,  dtpool,  dtdscs, &
                             jbase3,  nrows                             )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,27 +29,27 @@
       include 'ekqlimit.inc'
       include 'eksegdsc.inc'
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               jbase1
-      integer               jbase2
-      integer               njcnst
+      integer(ip)           jbase1
+      integer(ip)           jbase2
+      integer(ip)           njcnst
       logical               active ( * )
-      integer               cpidx1 ( * )
-      integer               clidx1 ( * )
-      integer               elts1  ( * )
-      integer               ops    ( * )
-      integer               cpidx2 ( * )
-      integer               clidx2 ( * )
-      integer               elts2  ( * )
-      integer               sthan  ( * )
-      integer               stsdsc ( sdscsz, * )
-      integer               stdtpt ( * )
-      integer               dtpool ( 2,      lbpool : * )
-      integer               dtdscs ( cdscsz,          * )
-      integer               jbase3
-      integer               nrows
+      integer(ip)           cpidx1 ( * )
+      integer(ip)           clidx1 ( * )
+      integer(ip)           elts1  ( * )
+      integer(ip)           ops    ( * )
+      integer(ip)           cpidx2 ( * )
+      integer(ip)           clidx2 ( * )
+      integer(ip)           elts2  ( * )
+      integer(ip)           sthan  ( * )
+      integer(ip)           stsdsc ( sdscsz, * )
+      integer(ip)           stdtpt ( * )
+      integer(ip)           dtpool ( 2,      lbpool : * )
+      integer(ip)           dtdscs ( cdscsz,          * )
+      integer(ip)           jbase3
+      integer(ip)           nrows
 
 ! $ Brief_I/O
 !
@@ -284,28 +285,28 @@
 !
 !     Local variables
 !
-      integer               i
-      integer               offset
-      integer               nr1
-      integer               nr2
-      integer               nr3
-      integer               nresv
-      integer               nsv1
-      integer               nsv2
-      integer               nsv3
-      integer               nt1
-      integer               nt2
-      integer               nt3
-      integer               rb1
-      integer               rb2
-      integer               rb3
-      integer               rowvec ( mxjoin + 1 )
-      integer               s1
-      integer               s2
-      integer               s3
-      integer               segvec ( mxjoin )
-      integer               sgvbas
-      integer               top
+      integer(ip)           i
+      integer(ip)           offset
+      integer(ip)           nr1
+      integer(ip)           nr2
+      integer(ip)           nr3
+      integer(ip)           nresv
+      integer(ip)           nsv1
+      integer(ip)           nsv2
+      integer(ip)           nsv3
+      integer(ip)           nt1
+      integer(ip)           nt2
+      integer(ip)           nt3
+      integer(ip)           rb1
+      integer(ip)           rb2
+      integer(ip)           rb3
+      integer(ip)           rowvec ( mxjoin + 1 )
+      integer(ip)           s1
+      integer(ip)           s2
+      integer(ip)           s3
+      integer(ip)           segvec ( mxjoin )
+      integer(ip)           sgvbas
+      integer(ip)           top
 
       logical               found
 

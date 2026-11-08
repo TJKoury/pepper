@@ -2,6 +2,7 @@
 
       subroutine zzekqsel ( eqryi,  eqryc,   n,       lxbeg,  lxend, &
                             table,  tabidx,  column,  colidx        )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,18 +27,18 @@
       include 'ekquery.inc'
       include 'ekbool.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
-      integer               n
-      integer               lxbeg
-      integer               lxend
+      integer(ip)           n
+      integer(ip)           lxbeg
+      integer(ip)           lxend
       character*(*)         table
-      integer               tabidx
+      integer(ip)           tabidx
       character*(*)         column
-      integer               colidx
+      integer(ip)           colidx
 
 ! $ Brief_I/O
 !
@@ -155,19 +156,19 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               buflen
-      integer               cb
-      integer               ce
-      integer               iparse
-      integer               ncnj
-      integer               ncns
-      integer               nord
-      integer               nsel
-      integer               ntab
-      integer               resolv
-      integer               tb
-      integer               te
+      integer(ip)           base
+      integer(ip)           buflen
+      integer(ip)           cb
+      integer(ip)           ce
+      integer(ip)           iparse
+      integer(ip)           ncnj
+      integer(ip)           ncns
+      integer(ip)           nord
+      integer(ip)           nsel
+      integer(ip)           ntab
+      integer(ip)           resolv
+      integer(ip)           tb
+      integer(ip)           te
 
 
 !

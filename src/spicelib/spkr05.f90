@@ -1,6 +1,7 @@
 !$Procedure SPKR05 ( Read SPK record from segment, type 5 )
 
       subroutine spkr05 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -180,50 +181,50 @@
 !
 !     Local parameters
 !
-      integer               size
+      integer(ip)           size
       parameter           ( size    = 100 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz  = size )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz  = size )
 
-      integer               stasiz
+      integer(ip)           stasiz
       parameter           ( stasiz =    6 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd =        2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni =        6 )
 
 !
 !     SPICELIB functions
 !
-      integer               lstltd
+      integer(ip)           lstltd
       logical               return
 
 !
 !     Local variables
 !
-      double precision      dc       (   nd )
-      double precision      data     ( size )
+      real(wp)              dc       (   nd )
+      real(wp)              data     ( size )
 
-      integer               ic       (   ni )
-      integer               begin
-      integer               end
-      integer               type
-      integer               nrec
-      integer               ndir
-      integer               group
-      integer               dirloc
-      integer               remain
-      integer               skip
-      integer               grpadd
-      integer               addrss
-      integer               i
-      integer               n
+      integer(ip)           ic       (   ni )
+      integer(ip)           begin
+      integer(ip)           end
+      integer(ip)           type
+      integer(ip)           nrec
+      integer(ip)           ndir
+      integer(ip)           group
+      integer(ip)           dirloc
+      integer(ip)           remain
+      integer(ip)           skip
+      integer(ip)           grpadd
+      integer(ip)           addrss
+      integer(ip)           i
+      integer(ip)           n
 
       logical               fnd
 

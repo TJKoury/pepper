@@ -1,6 +1,7 @@
 !$Procedure WRKVAR ( Write a variable to a kernel file )
 
       subroutine wrkvar ( unit, name, dirctv, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,15 +21,15 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               unit
+      integer(ip)           unit
       character*(*)         name
       character*(*)         dirctv
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      double precision      tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      real(wp)              tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -161,7 +162,7 @@
 !
 !     SPICELIB functions
 !
-      integer               sydimd
+      integer(ip)           sydimd
       logical               return
 
 !
@@ -179,16 +180,16 @@
       character*2           comma
       parameter           ( comma  = ','   )
 
-      integer               varlen
-      integer               margin
-      integer               vardim
+      integer(ip)           varlen
+      integer(ip)           margin
+      integer(ip)           vardim
 
       character*132         line
-      double precision      dvalue
+      real(wp)              dvalue
 
       logical               found
-      integer               iostat
-      integer               i
+      integer(ip)           iostat
+      integer(ip)           i
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure SPHCYL ( Spherical to cylindrical coordinates )
 
       subroutine sphcyl ( radius, colat, slon, r, clon, z )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision   radius
-      double precision   colat
-      double precision   slon
-      double precision   r
-      double precision   clon
-      double precision   z
+      real(wp)           radius
+      real(wp)           colat
+      real(wp)           slon
+      real(wp)           r
+      real(wp)           clon
+      real(wp)           z
 
 ! $ Brief_I/O
 !
@@ -468,8 +469,8 @@
 !
 !     Local Variables
 !
-      double precision rr
-      double precision zz
+      real(wp) rr
+      real(wp) zz
 
 !
 !     Convert to cylindrical coordinates, storing the results in

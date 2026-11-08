@@ -3,6 +3,7 @@
       subroutine spkuds ( descr, &
                           body,  center, frame,  type, &
                           first, last,   baddrs, eaddrs )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,15 +21,15 @@
 
       implicit none
 
-      double precision      descr ( * )
-      integer               body
-      integer               center
-      integer               frame
-      integer               type
-      double precision      first
-      double precision      last
-      integer               baddrs
-      integer               eaddrs
+      real(wp)              descr ( * )
+      integer(ip)           body
+      integer(ip)           center
+      integer(ip)           frame
+      integer(ip)           type
+      real(wp)              first
+      real(wp)              last
+      integer(ip)           baddrs
+      integer(ip)           eaddrs
 
 ! $ Brief_I/O
 !
@@ -166,18 +167,18 @@
 !
 !     Values of ND and NI for SPK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 
 !
 !     Local Variables
 !
-      double precision      dppart ( nd )
+      real(wp)              dppart ( nd )
 
-      integer               ipart  ( ni )
+      integer(ip)           ipart  ( ni )
 
 !
 !     Standard introductory error handling preparations.

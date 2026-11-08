@@ -1,6 +1,7 @@
 !$Procedure VPRJPI ( Vector projection onto plane, inverted )
 
       subroutine vprjpi ( vin, projpl, invpl, vout, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,13 +23,13 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   =    4 )
 
-      double precision      vin    (    3 )
-      double precision      projpl ( ubpl )
-      double precision      invpl  ( ubpl )
-      double precision      vout   (    3 )
+      real(wp)              vin    (    3 )
+      real(wp)              projpl ( ubpl )
+      real(wp)              invpl  ( ubpl )
+      real(wp)              vout   (    3 )
       logical               found
 
 ! $ Brief_I/O
@@ -225,9 +226,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              dpmax
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               approx
       logical               return
@@ -247,27 +248,27 @@
 !
 !     BOUND is chosen somewhat arbitrarily....
 !
-      double precision      bound
-      parameter           ( bound = 10.d0 )
+      real(wp)              bound
+      parameter           ( bound = 10.0_wp )
 
 !
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      double precision      magtol
-      parameter           ( magtol = 1.d-14 )
+      real(wp)              magtol
+      parameter           ( magtol = 1.0e-14_wp )
 
 !
 !     Local variables
 !
-      double precision      denom
-      double precision      invc
-      double precision      invn  ( 3 )
-      double precision      limit
-      double precision      mult
-      double precision      numer
-      double precision      projc
-      double precision      projn ( 3 )
+      real(wp)              denom
+      real(wp)              invc
+      real(wp)              invn  ( 3 )
+      real(wp)              limit
+      real(wp)              mult
+      real(wp)              numer
+      real(wp)              projc
+      real(wp)              projn ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -287,28 +288,28 @@
 !
 !     Each normal vector returned by PL2NVC should be a unit vector.
 !
-      if (  .not.  approx( vnorm(projn), 1.d0, magtol )  ) then
+      if (  .not.  approx( vnorm(projn), 1.0_wp, magtol )  ) then
 
          call chkin  ( 'VPRJPI' )
          call setmsg ( 'Normal vector of plane containing input ' &
          //            'point does not have unit length; the ' &
          //            'difference of the length from 1 is #. ' &
          //            'The input plane is invalid. '             )
-         call errdp  ( '#',  vnorm(projn) - 1.d0                  )
+         call errdp  ( '#',  vnorm(projn) - 1.0_wp                  )
          call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
          call chkout ( 'VPRJPI' )
          return
 
       end if
 
-      if (  .not.  approx( vnorm(invn), 1.d0, magtol )  ) then
+      if (  .not.  approx( vnorm(invn), 1.0_wp, magtol )  ) then
 
          call chkin  ( 'VPRJPI' )
          call setmsg ( 'Normal vector of plane containing output ' &
          //            'point does not have unit length; the ' &
          //            'difference of the length from 1 is #. ' &
          //            'The output plane is invalid. '            )
-         call errdp  ( '#',  vnorm(invn) - 1.d0                   )
+         call errdp  ( '#',  vnorm(invn) - 1.0_wp                   )
          call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
          call chkout ( 'VPRJPI' )
          return
@@ -381,7 +382,7 @@
 !     the computation using NUMER causes underflow to be signaled
 !     on some systems.
 !
-      if ( abs(numer) .lt. 1.d0 ) then
+      if ( abs(numer) .lt. 1.0_wp ) then
          limit  =           bound / dpmax()
       else
          limit  =  abs (  ( bound / dpmax() ) * numer  )
@@ -393,7 +394,7 @@
 !
          mult = numer / denom
 
-         call vlcom ( 1.0d0, vin, mult, projn, vout )
+         call vlcom ( 1.0_wp, vin, mult, projn, vout )
 
          found = .true.
 

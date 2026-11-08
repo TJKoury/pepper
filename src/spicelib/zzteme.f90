@@ -1,6 +1,7 @@
 !$Procedure ZZTEME ( J2000 to TEME at epoch )
 
       subroutine zzteme( et, j2tm, tm2j )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      j2tm    ( 6, 6 )
-      double precision      tm2j    ( 6, 6 )
+      real(wp)              et
+      real(wp)              j2tm    ( 6, 6 )
+      real(wp)              tm2j    ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -105,13 +106,13 @@
 !
 !     Local variables
 !
-      double precision      m1     ( 6, 6 )
-      double precision      m1inv  ( 6, 6 )
-      double precision      m2     ( 6, 6 )
-      double precision      m2inv  ( 6, 6 )
-      double precision      xj2000 ( 6 )
-      double precision      z      ( 6 )
-      double precision      zj2000 ( 6 )
+      real(wp)              m1     ( 6, 6 )
+      real(wp)              m1inv  ( 6, 6 )
+      real(wp)              m2     ( 6, 6 )
+      real(wp)              m2inv  ( 6, 6 )
+      real(wp)              xj2000 ( 6 )
+      real(wp)              z      ( 6 )
+      real(wp)              zj2000 ( 6 )
 
       if ( return() ) then
          return

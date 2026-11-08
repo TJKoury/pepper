@@ -1,6 +1,7 @@
 !$Procedure REPMOT  ( Replace marker with ordinal text )
 
       subroutine repmot ( in, marker, value, rtcase, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       character*(*)         in
       character*(*)         marker
-      integer               value
+      integer(ip)           value
       character*1           rtcase
       character*(*)         out
 
-      integer               maxlon
+      integer(ip)           maxlon
       parameter           ( maxlon = 147 )
 
 ! $ Brief_I/O
@@ -290,8 +291,8 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
       logical               return
 
 !
@@ -300,11 +301,11 @@
       character*(maxlon)    ord
       character*(1)         tmpcas
 
-      integer               mrknbf
-      integer               mrknbl
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
 
-      integer               mrkpsb
-      integer               mrkpse
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
 
 
 !

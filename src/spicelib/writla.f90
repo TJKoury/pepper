@@ -1,6 +1,7 @@
 !$Procedure WRITLA ( Write array of lines to a logical unit )
 
       subroutine writla ( numlin, array, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      integer               numlin
+      integer(ip)           numlin
       character*(*)         array(*)
-      integer               unit
+      integer(ip)           unit
 
 ! $ Brief_I/O
 !
@@ -168,7 +169,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Standard SPICE error handling.

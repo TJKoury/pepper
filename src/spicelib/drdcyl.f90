@@ -1,6 +1,7 @@
 !$Procedure DRDCYL (Derivative of rectangular w.r.t. cylindrical)
 
       subroutine drdcyl ( r, clon, z, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      r
-      double precision      clon
-      double precision      z
-      double precision      jacobi ( 3, 3 )
+      real(wp)              r
+      real(wp)              clon
+      real(wp)              z
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -352,34 +353,34 @@
 !
 !     Local parameters
 !
-      integer               dx
+      integer(ip)           dx
       parameter           ( dx     = 1 )
 
-      integer               dy
+      integer(ip)           dy
       parameter           ( dy     = 2 )
 
-      integer               dz
+      integer(ip)           dz
       parameter           ( dz     = 3 )
 
-      integer               dr
+      integer(ip)           dr
       parameter           ( dr     = 1 )
 
-      integer               dlon
+      integer(ip)           dlon
       parameter           ( dlon   = 2 )
 
 
 
       jacobi (dx,dr)     =  dcos( clon )
       jacobi (dy,dr)     =  dsin( clon )
-      jacobi (dz,dr)     =  0.0d0
+      jacobi (dz,dr)     =  0.0_wp
 
       jacobi (dx,dlon)   = -dsin( clon ) * r
       jacobi (dy,dlon)   =  dcos( clon ) * r
-      jacobi (dz,dlon)   =  0.0d0
+      jacobi (dz,dlon)   =  0.0_wp
 
-      jacobi (dx,dz)     =  0.0d0
-      jacobi (dy,dz)     =  0.0d0
-      jacobi (dz,dz)     =  1.0d0
+      jacobi (dx,dz)     =  0.0_wp
+      jacobi (dy,dz)     =  0.0_wp
+      jacobi (dz,dz)     =  1.0_wp
 
       return
       end

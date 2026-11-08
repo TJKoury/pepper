@@ -1,6 +1,7 @@
 !$Procedure DSKOBJ ( DSK, get object IDs )
 
       subroutine dskobj ( dskfnm, bodids )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         dskfnm
-      integer               bodids ( lbcell : * )
+      integer(ip)           bodids ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -241,8 +242,8 @@
 !
 !     SPICELIB functions
 !
-      integer               cardi
-      integer               sizei
+      integer(ip)           cardi
+      integer(ip)           sizei
 
       logical               failed
       logical               return
@@ -250,7 +251,7 @@
 !
 !     Local parameters
 !
-      integer               toklen
+      integer(ip)           toklen
       parameter           ( toklen = 4 )
 
 !
@@ -259,12 +260,12 @@
       character*(toklen)    arch
       character*(toklen)    kertyp
 
-      double precision      dskdsc ( dskdsz )
+      real(wp)              dskdsc ( dskdsz )
 
-      integer               bid
-      integer               dladsc ( dladsz )
-      integer               handle
-      integer               nxtdsc ( dladsz )
+      integer(ip)           bid
+      integer(ip)           dladsc ( dladsz )
+      integer(ip)           handle
+      integer(ip)           nxtdsc ( dladsz )
 
       logical               found
 

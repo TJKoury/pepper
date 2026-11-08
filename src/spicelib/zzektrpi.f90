@@ -2,6 +2,7 @@
 
       subroutine zzektrpi ( handle, tree,  key,  parent, pkey,  poffst, &
                             lpidx,  lpkey, lsib, rpidx,  rpkey, rsib   )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,18 +25,18 @@
       include 'ektree.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               parent
-      integer               pkey
-      integer               poffst
-      integer               lpidx
-      integer               lpkey
-      integer               lsib
-      integer               rpidx
-      integer               rpkey
-      integer               rsib
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           parent
+      integer(ip)           pkey
+      integer(ip)           poffst
+      integer(ip)           lpidx
+      integer(ip)           lpkey
+      integer(ip)           lsib
+      integer(ip)           rpidx
+      integer(ip)           rpkey
+      integer(ip)           rsib
 
 ! $ Brief_I/O
 !
@@ -178,20 +179,20 @@
 !
 !     SPICELIB functions
 !
-      integer               lstlei
+      integer(ip)           lstlei
 
 !
 !     Local variables
 !
-      integer               child
-      integer               lkey
-      integer               maxkey
-      integer               newkey
-      integer               offset
-      integer               page   ( pgsizi )
-      integer               prev
-      integer               prvkey
-      integer               totkey
+      integer(ip)           child
+      integer(ip)           lkey
+      integer(ip)           maxkey
+      integer(ip)           newkey
+      integer(ip)           offset
+      integer(ip)           page   ( pgsizi )
+      integer(ip)           prev
+      integer(ip)           prvkey
+      integer(ip)           totkey
 
       logical               found
 

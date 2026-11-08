@@ -1,6 +1,7 @@
 !$Procedure DAFB2T ( DAF, binary to text )
 
       subroutine dafb2t ( binary, text )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
       implicit none
 
       character*(*)         binary
-      integer               text
+      integer(ip)           text
 
 ! $ Brief_I/O
 !
@@ -280,10 +281,10 @@
 !
 !     Local parameters
 !
-      integer               bsize
+      integer(ip)           bsize
       parameter           ( bsize = 100 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
       character*(*)         quote
@@ -296,26 +297,26 @@
       character*(60)        ifname
       character*(1000)      name
 
-      double precision      buffer   ( bsize )
-      double precision      dc       ( 125 )
-      double precision      sum      ( 125 )
+      real(wp)              buffer   ( bsize )
+      real(wp)              dc       ( 125 )
+      real(wp)              sum      ( 125 )
 
-      integer               begin
-      integer               bward
-      integer               chunk
-      integer               csize
-      integer               daflun
-      integer               end
-      integer               free
-      integer               fward
-      integer               handle
-      integer               i
-      integer               ic       ( 250 )
-      integer               iostat
-      integer               isize
-      integer               lsize
-      integer               nd
-      integer               ni
+      integer(ip)           begin
+      integer(ip)           bward
+      integer(ip)           chunk
+      integer(ip)           csize
+      integer(ip)           daflun
+      integer(ip)           end
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           ic       ( 250 )
+      integer(ip)           iostat
+      integer(ip)           isize
+      integer(ip)           lsize
+      integer(ip)           nd
+      integer(ip)           ni
 
       logical               found
 

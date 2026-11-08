@@ -1,6 +1,7 @@
 !$Procedure ZZBODVCD ( Get d.p. kernel variable for body, with bypass )
 
       subroutine zzbodvcd ( bodyid, item, maxn, varctr, n, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,12 +29,12 @@
       implicit none
       include 'zzctr.inc'
 
-      integer               bodyid
+      integer(ip)           bodyid
       character*(*)         item
-      integer               maxn
-      integer               varctr ( ctrsiz )
-      integer               n
-      double precision      values ( * )
+      integer(ip)           maxn
+      integer(ip)           varctr ( ctrsiz )
+      integer(ip)           n
+      real(wp)              values ( * )
 
 ! $ Brief_I/O
 !

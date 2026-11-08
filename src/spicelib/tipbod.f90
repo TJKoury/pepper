@@ -1,6 +1,7 @@
 !$Procedure TIPBOD ( Transformation, inertial position to bodyfixed )
 
       subroutine tipbod ( ref, body, et, tipm )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,9 +27,9 @@
       implicit none
 
       character*(*)         ref
-      integer               body
-      double precision      et
-      double precision      tipm   ( 3, 3 )
+      integer(ip)           body
+      real(wp)              et
+      real(wp)              tipm   ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -426,10 +427,10 @@
 !
 !     Local variables
 !
-      double precision      tsipm   ( 6, 6 )
+      real(wp)              tsipm   ( 6, 6 )
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 !
 !     Standard SPICE Error handling.

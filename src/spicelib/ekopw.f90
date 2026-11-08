@@ -1,6 +1,7 @@
 !$Procedure EKOPW ( EK, open file for writing )
 
       subroutine ekopw ( fname, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         fname
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !

@@ -3,6 +3,7 @@
       subroutine zzsecprt ( isynfl, dg   , del   , xni  , &
                             omegao, atime, omgdot, xli  , &
                             xfact , xldot, xndot , xnddt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,17 +22,17 @@
 
       implicit none
 
-      integer               isynfl
+      integer(ip)           isynfl
 
-      double precision      omegao
-      double precision      atime
-      double precision      omgdot
-      double precision      xli
-      double precision      dg     ( 10 )
-      double precision      xfact
-      double precision      xldot
-      double precision      xni
-      double precision      del    (  3 )
+      real(wp)              omegao
+      real(wp)              atime
+      real(wp)              omgdot
+      real(wp)              xli
+      real(wp)              dg     ( 10 )
+      real(wp)              xfact
+      real(wp)              xldot
+      real(wp)              xni
+      real(wp)              del    (  3 )
 
 ! $ Brief_I/O
 !
@@ -150,35 +151,35 @@
 !
 !     Local variables.
 !
-      double precision      x2li
-      double precision      x2omi
-      double precision      xnddt
-      double precision      xndot
-      double precision      xomi
+      real(wp)              x2li
+      real(wp)              x2omi
+      real(wp)              xnddt
+      real(wp)              xndot
+      real(wp)              xomi
 
-      double precision      g22
-      parameter           ( g22    = 5.7686396d0  )
+      real(wp)              g22
+      parameter           ( g22    = 5.7686396_wp  )
 
-      double precision      g32
-      parameter           ( g32    = 0.95240898d0 )
+      real(wp)              g32
+      parameter           ( g32    = 0.95240898_wp )
 
-      double precision      g44
-      parameter           ( g44    = 1.8014998d0  )
+      real(wp)              g44
+      parameter           ( g44    = 1.8014998_wp  )
 
-      double precision      g52
-      parameter           ( g52    = 1.0508330d0  )
+      real(wp)              g52
+      parameter           ( g52    = 1.0508330_wp  )
 
-      double precision      g54
-      parameter           ( g54    = 4.4108898d0  )
+      real(wp)              g54
+      parameter           ( g54    = 4.4108898_wp  )
 
-      double precision      fasx2
-      parameter           ( fasx2  = 0.13130908d0 )
+      real(wp)              fasx2
+      parameter           ( fasx2  = 0.13130908_wp )
 
-      double precision      fasx4
-      parameter           ( fasx4  = 2.8843198d0  )
+      real(wp)              fasx4
+      parameter           ( fasx4  = 2.8843198_wp  )
 
-      double precision      fasx6
-      parameter           ( fasx6  = 0.37448087d0 )
+      real(wp)              fasx6
+      parameter           ( fasx6  = 0.37448087_wp )
 
 
 
@@ -214,7 +215,7 @@
                 + dg( 4  )*dcos(-xomi  + xli  - g32 ) &
                 + dg( 7  )*dcos( xomi  + xli  - g52 ) &
                 + dg( 8  )*dcos(-xomi  + xli  - g52 ) &
-         +2.d0*(  dg( 5  )*dcos( x2omi + x2li - g44 ) &
+         +2.0_wp*(  dg( 5  )*dcos( x2omi + x2li - g44 ) &
                 + dg( 6  )*dcos( x2li         - g44 ) &
                 + dg( 9  )*dcos( xomi  + x2li - g54 ) &
                 + dg( 10 )*dcos( xomi  + x2li - g54 ))
@@ -226,12 +227,12 @@
 !
 
          xndot =  del(1)*dsin(        xli - fasx2   ) &
-                + del(2)*dsin( 2.d0*( xli - fasx4 ) ) &
-                + del(3)*dsin( 3.d0*( xli - fasx6 ) )
+                + del(2)*dsin( 2.0_wp*( xli - fasx4 ) ) &
+                + del(3)*dsin( 3.0_wp*( xli - fasx6 ) )
 
          xnddt =      del(1)*dcos(        xli - fasx2   ) &
-               + 2.d0*del(2)*dcos( 2.d0*( xli - fasx4 ) ) &
-               + 3.d0*del(3)*dcos( 3.d0*( xli - fasx6 ) )
+               + 2.0_wp*del(2)*dcos( 2.0_wp*( xli - fasx4 ) ) &
+               + 3.0_wp*del(3)*dcos( 3.0_wp*( xli - fasx6 ) )
 
       end if
 

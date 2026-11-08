@@ -2,6 +2,7 @@
 
       subroutine stcf01 ( catnam, westra, eastra, sthdec, nthdec, &
                           nstars)
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
       implicit none
 
       character*(*)         catnam
-      double precision      westra
-      double precision      eastra
-      double precision      sthdec
-      double precision      nthdec
-      integer               nstars
+      real(wp)              westra
+      real(wp)              eastra
+      real(wp)              sthdec
+      real(wp)              nthdec
+      integer(ip)           nstars
 
 ! $ Brief_I/O
 !
@@ -228,15 +229,15 @@
 !     SPICELIB functions
 !
       logical               return
-      double precision      dpr
+      real(wp)              dpr
 
 !
 !     Local parameters.
 !
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen = 512 )
 
-      integer               qrylen
+      integer(ip)           qrylen
       parameter           ( qrylen = 512 )
 
 !
@@ -247,10 +248,10 @@
       character*(qrylen)    qrytm1
       character*(qrylen)    qrytm2
 
-      double precision      ramin
-      double precision      ramax
-      double precision      decmin
-      double precision      decmax
+      real(wp)              ramin
+      real(wp)              ramax
+      real(wp)              decmin
+      real(wp)              decmax
 
       logical               error
 

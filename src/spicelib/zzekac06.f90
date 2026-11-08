@@ -2,6 +2,7 @@
 
       subroutine zzekac06 (  handle,  segdsc,  coldsc, &
                              cvals,   entszs,  nlflgs )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
       character*(*)         cvals  ( * )
-      integer               entszs ( * )
+      integer(ip)           entszs ( * )
       logical               nlflgs ( * )
 
 ! $ Brief_I/O
@@ -202,7 +203,7 @@
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = cpsize )
 
 !
@@ -211,35 +212,35 @@
       character*(cnamsz)    column
       character*(pgsizc)    page
 
-      integer               adrbuf ( bufsiz )
-      integer               bufptr
-      integer               class
-      integer               colidx
-      integer               cp
-      integer               curchr
-      integer               cursiz
-      integer               cvlen
-      integer               from
-      integer               i
-      integer               l
-      integer               n
-      integer               nchars
-      integer               ndata
-      integer               nlink
-      integer               nrows
-      integer               nulptr
-      integer               nw
-      integer               nwrite
-      integer               p
-      integer               p2
-      integer               padlen
-      integer               pbase
-      integer               remain
-      integer               room
-      integer               row
-      integer               size
-      integer               strlen
-      integer               to
+      integer(ip)           adrbuf ( bufsiz )
+      integer(ip)           bufptr
+      integer(ip)           class
+      integer(ip)           colidx
+      integer(ip)           cp
+      integer(ip)           curchr
+      integer(ip)           cursiz
+      integer(ip)           cvlen
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           l
+      integer(ip)           n
+      integer(ip)           nchars
+      integer(ip)           ndata
+      integer(ip)           nlink
+      integer(ip)           nrows
+      integer(ip)           nulptr
+      integer(ip)           nw
+      integer(ip)           nwrite
+      integer(ip)           p
+      integer(ip)           p2
+      integer(ip)           padlen
+      integer(ip)           pbase
+      integer(ip)           remain
+      integer(ip)           room
+      integer(ip)           row
+      integer(ip)           size
+      integer(ip)           strlen
+      integer(ip)           to
 
       logical               cntinu
       logical               fixsiz

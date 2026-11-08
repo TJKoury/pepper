@@ -1,6 +1,7 @@
 !$Procedure VALIDI ( Validate an integer set )
 
       subroutine validi ( size, n, a )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer            size
-      integer            n
-      integer            a       ( lbcell:* )
+      integer(ip)        size
+      integer(ip)        n
+      integer(ip)        a       ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -180,7 +181,7 @@
 !
 !     Local variables
 !
-      integer               card
+      integer(ip)           card
 
 
 

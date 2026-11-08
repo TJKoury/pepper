@@ -1,6 +1,7 @@
 !$Procedure ZZDDHNFC ( DDH, return native BFF format code )
 
       subroutine zzddhnfc ( natbff )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,7 +28,7 @@
       implicit none
       include 'zzddhman.inc'
 
-      integer               natbff
+      integer(ip)           natbff
 
 ! $ Brief_I/O
 !
@@ -99,7 +100,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
       logical               return
 
 !
@@ -108,8 +109,8 @@
       character*(strsiz)    strbff ( numbff )
       character*(strsiz)    tmpstr
 
-      integer               i
-      integer               savbff
+      integer(ip)           i
+      integer(ip)           savbff
 
       logical               first
 

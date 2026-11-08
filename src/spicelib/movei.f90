@@ -1,6 +1,7 @@
 !$Procedure MOVEI  ( Move a integer array to another )
 
       subroutine movei ( arrfrm, ndim, arrto )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer         arrfrm ( * )
-      integer         ndim
-      integer         arrto  ( * )
+      integer(ip)     arrfrm ( * )
+      integer(ip)     ndim
+      integer(ip)     arrto  ( * )
 
 ! $ Brief_I/O
 !
@@ -138,7 +139,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim

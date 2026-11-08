@@ -1,6 +1,7 @@
 !$Procedure SPKS17 ( S/P Kernel, subset, type 17 )
 
       subroutine spks17 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -150,10 +151,10 @@
 !
 !     Local variables
 !
-      integer               nitems
+      integer(ip)           nitems
       parameter           ( nitems = 12 )
 
-      double precision      data     ( nitems )
+      real(wp)              data     ( nitems )
 
 
 

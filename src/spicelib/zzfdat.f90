@@ -4,6 +4,7 @@
                           center, type,   typid,  centrd, &
                           bnmlst, bnmpol, bnmnms, bnmidx, &
                           bidlst, bidpol, bidids, bididx )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -31,25 +32,25 @@
       include              'ninert.inc'
       include              'nninrt.inc'
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               ncount
-      integer               maxbfr
+      integer(ip)           ncount
+      integer(ip)           maxbfr
       character*(*)         name   (          * )
-      integer               idcode (          * )
-      integer               center (          * )
-      integer               type   (          * )
-      integer               typid  (          * )
-      integer               centrd (          * )
-      integer               bnmlst (          * )
-      integer               bnmpol ( lbpool : * )
+      integer(ip)           idcode (          * )
+      integer(ip)           center (          * )
+      integer(ip)           type   (          * )
+      integer(ip)           typid  (          * )
+      integer(ip)           centrd (          * )
+      integer(ip)           bnmlst (          * )
+      integer(ip)           bnmpol ( lbpool : * )
       character*(*)         bnmnms (          * )
-      integer               bnmidx (          * )
-      integer               bidlst (          * )
-      integer               bidpol ( lbpool : * )
-      integer               bidids (          * )
-      integer               bididx (          * )
+      integer(ip)           bnmidx (          * )
+      integer(ip)           bidlst (          * )
+      integer(ip)           bidpol ( lbpool : * )
+      integer(ip)           bidids (          * )
+      integer(ip)           bididx (          * )
 
 ! $ Brief_I/O
 !
@@ -342,10 +343,10 @@
 !-&
 
 
-      integer               non
+      integer(ip)           non
       parameter           ( non    = nninrt )
 
-      integer               nnames
+      integer(ip)           nnames
       parameter           ( nnames = ninert + non )
 
 !
@@ -399,8 +400,8 @@
 !     Local variables.
 !
 
-      integer               i
-      integer               item
+      integer(ip)           i
+      integer(ip)           item
 
       logical               new
 

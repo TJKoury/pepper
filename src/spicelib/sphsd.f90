@@ -1,7 +1,8 @@
 !$Procedure SPHSD ( Spherical surface distance )
 
-      double precision function sphsd ( radius, lon1, lat1, &
+      real(wp) function sphsd ( radius, lon1, lat1, &
                                                 lon2, lat2  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      double precision      radius
-      double precision      lon1
-      double precision      lat1
-      double precision      lon2
-      double precision      lat2
+      real(wp)              radius
+      real(wp)              lon1
+      real(wp)              lat1
+      real(wp)              lon2
+      real(wp)              lat2
 
 ! $ Brief_I/O
 !
@@ -199,22 +200,22 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
+      real(wp)              brcktd
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      sl1sl2
-      double precision      cosang
+      real(wp)              sl1sl2
+      real(wp)              cosang
 
 
 !
 !     Check RETURN but do not check in unless an error is detected.
 !
       if ( return() ) then
-         sphsd = 0.0d0
+         sphsd = 0.0_wp
          return
       end if
 
@@ -223,7 +224,7 @@
 !
       if ( radius .lt. 0 ) then
 
-         sphsd = 0.d0
+         sphsd = 0.0_wp
 
          call chkin  ( 'SPHSD'                  )
          call setmsg ( 'Radius was #.'          )
@@ -264,7 +265,7 @@
                  * ( cos ( lat1 - lat2 )  -  sl1sl2 ) &
                  +   sl1sl2
 
-      sphsd   =      radius * acos ( brcktd ( cosang, -1.d0, 1.d0 ) )
+      sphsd   =      radius * acos ( brcktd ( cosang, -1.0_wp, 1.0_wp ) )
 
       return
       end

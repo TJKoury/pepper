@@ -1,6 +1,7 @@
 !$Procedure EVEN  ( Is an integer even? )
 
       logical function even ( ival )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer          ival
+      integer(ip)      ival
 
 ! $ Brief_I/O
 !

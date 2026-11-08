@@ -2,6 +2,7 @@
 
       subroutine zzekue02 (  handle,  segdsc,  coldsc, &
                              recptr,  dval,    isnull  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,11 +27,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      double precision      dval
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      real(wp)              dval
       logical               isnull
 
 ! $ Brief_I/O
@@ -145,18 +146,18 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               datptr
-      integer               idxtyp
-      integer               nlinks
-      integer               p
-      integer               pbase
-      integer               ptrloc
-      integer               recno
+      integer(ip)           datptr
+      integer(ip)           idxtyp
+      integer(ip)           nlinks
+      integer(ip)           p
+      integer(ip)           pbase
+      integer(ip)           ptrloc
+      integer(ip)           recno
 
 !
 !     Standard SPICE error handling.

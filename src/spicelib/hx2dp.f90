@@ -1,6 +1,7 @@
 !$Procedure HX2DP ( Hexadecimal string to d.p. number )
 
       subroutine hx2dp ( string, number, error, errmsg )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      integer               maxman
+      integer(ip)           maxman
       parameter           ( maxman = 31 )
 
 
       character*(*)         string
-      double precision      number
+      real(wp)              number
       logical               error
       character*(*)         errmsg
 
@@ -398,51 +399,51 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmin
-      double precision      dpmax
+      real(wp)              dpmin
+      real(wp)              dpmax
 !
 !     Local Parameters
 !
       character*(1)         expchr
       parameter           ( expchr = '^' )
 
-      double precision      base
-      parameter           ( base = 16.0d0 )
+      real(wp)              base
+      parameter           ( base = 16.0_wp )
 
-      double precision      invbas
-      parameter           ( invbas = 1.0d0/base )
+      real(wp)              invbas
+      parameter           ( invbas = 1.0_wp/base )
 
-      integer               maxdig
+      integer(ip)           maxdig
       parameter           ( maxdig = 16 )
 
 
 !
 !     Local variables
 !
-      double precision      dpval(0:maxdig-1)
-      double precision      maxdp
-      double precision      mindp
-      double precision      scales(maxman)
-      double precision      tmpnum
+      real(wp)              dpval(0:maxdig-1)
+      real(wp)              maxdp
+      real(wp)              mindp
+      real(wp)              scales(maxman)
+      real(wp)              tmpnum
 
-      integer               digbeg
-      integer               digend
-      integer               i
-      integer               iexpch
-      integer               iexpon
-      integer               iminus
-      integer               iplus
-      integer               ispace
-      integer               ival(maxman+1)
-      integer               lccbeg
-      integer               lccend
-      integer               letter
-      integer               ndigit
-      integer               positn
-      integer               strbeg
-      integer               strend
-      integer               uccbeg
-      integer               uccend
+      integer(ip)           digbeg
+      integer(ip)           digend
+      integer(ip)           i
+      integer(ip)           iexpch
+      integer(ip)           iexpon
+      integer(ip)           iminus
+      integer(ip)           iplus
+      integer(ip)           ispace
+      integer(ip)           ival(maxman+1)
+      integer(ip)           lccbeg
+      integer(ip)           lccend
+      integer(ip)           letter
+      integer(ip)           ndigit
+      integer(ip)           positn
+      integer(ip)           strbeg
+      integer(ip)           strend
+      integer(ip)           uccbeg
+      integer(ip)           uccend
 
       logical               first
       logical               more
@@ -472,10 +473,10 @@
 !     Initial values
 !
       data                  dpval   / &
-                                       0.0d0,  1.0d0,  2.0d0,  3.0d0, &
-                                       4.0d0,  5.0d0,  6.0d0,  7.0d0, &
-                                       8.0d0,  9.0d0, 10.0d0, 11.0d0, &
-                                      12.0d0, 13.0d0, 14.0d0, 15.0d0 &
+                                       0.0_wp,  1.0_wp,  2.0_wp,  3.0_wp, &
+                                       4.0_wp,  5.0_wp,  6.0_wp,  7.0_wp, &
+                                       8.0_wp,  9.0_wp, 10.0_wp, 11.0_wp, &
+                                      12.0_wp, 13.0_wp, 14.0_wp, 15.0_wp &
                                     /
 
       data                  first   / .true. /
@@ -580,7 +581,7 @@
 !     Initialize a few other things.
 !
       errmsg = ' '
-      tmpnum = 0.0d0
+      tmpnum = 0.0_wp
 !
 !     Assume that the number is nonnegative.
 !

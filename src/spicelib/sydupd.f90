@@ -1,6 +1,7 @@
 !$Procedure SYDUPD ( Create a duplicate of a symbol )
 
       subroutine sydupd ( name, copy, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,14 +21,14 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         copy
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      double precision      tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      real(wp)              tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -169,30 +170,30 @@
 !     SPICELIB functions
 !
 
-      integer               cardc
-      integer               cardd
-      integer               cardi
-      integer               lstlec
+      integer(ip)           cardc
+      integer(ip)           cardd
+      integer(ip)           cardi
+      integer(ip)           lstlec
       logical               return
-      integer               sizec
-      integer               sized
-      integer               sizei
-      integer               sumai
+      integer(ip)           sizec
+      integer(ip)           sized
+      integer(ip)           sizei
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               nptr
-      integer               nval
+      integer(ip)           nsym
+      integer(ip)           nptr
+      integer(ip)           nval
 
-      integer               locsym  ( 2 )
-      integer               locval  ( 2 )
-      integer               dimval  ( 2 )
+      integer(ip)           locsym  ( 2 )
+      integer(ip)           locval  ( 2 )
+      integer(ip)           dimval  ( 2 )
       logical               oldsym  ( 2 )
-      integer               newsym
-      integer               newval
-      integer               i
+      integer(ip)           newsym
+      integer(ip)           newval
+      integer(ip)           i
 
 
 !

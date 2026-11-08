@@ -2,6 +2,7 @@
 
       subroutine zzektrrk ( handle,  tree,   left,  right, &
                             parent,  pkidx,  nrot         )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,13 +23,13 @@
       include 'ektree.inc'
       include 'ekpage.inc'
 
-      integer               handle
-      integer               tree
-      integer               left
-      integer               right
-      integer               parent
-      integer               pkidx
-      integer               nrot
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           left
+      integer(ip)           right
+      integer(ip)           parent
+      integer(ip)           pkidx
+      integer(ip)           nrot
 
 ! $ Brief_I/O
 !
@@ -179,27 +180,27 @@
 !
 !     Local variables
 !
-      integer               datbas
-      integer               dpar
-      integer               drotat
-      integer               dshift
-      integer               futrpk
-      integer               i
-      integer               keybas
-      integer               kidbas
-      integer               lnkeys
-      integer               lnsize
-      integer               lpage  ( pgsizi )
-      integer               lsib
-      integer               nvopar
-      integer               ppage  ( pgsizi )
-      integer               remain
-      integer               rnkeys
-      integer               root
-      integer               rpage  ( pgsizi )
-      integer               rsib
-      integer               schlep
-      integer               subsiz
+      integer(ip)           datbas
+      integer(ip)           dpar
+      integer(ip)           drotat
+      integer(ip)           dshift
+      integer(ip)           futrpk
+      integer(ip)           i
+      integer(ip)           keybas
+      integer(ip)           kidbas
+      integer(ip)           lnkeys
+      integer(ip)           lnsize
+      integer(ip)           lpage  ( pgsizi )
+      integer(ip)           lsib
+      integer(ip)           nvopar
+      integer(ip)           ppage  ( pgsizi )
+      integer(ip)           remain
+      integer(ip)           rnkeys
+      integer(ip)           root
+      integer(ip)           rpage  ( pgsizi )
+      integer(ip)           rsib
+      integer(ip)           schlep
+      integer(ip)           subsiz
 
 
 !

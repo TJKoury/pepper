@@ -1,6 +1,7 @@
 !$Procedure MATCHW ( Match string against wildcard template )
 
       logical function matchw ( string, templ, wstr, wchr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -190,30 +191,30 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
       logical               samch
 
 
 !
 !     Local Variables
 !
-      integer               sfirst
-      integer               tfirst
-      integer               slast
-      integer               tlast
+      integer(ip)           sfirst
+      integer(ip)           tfirst
+      integer(ip)           slast
+      integer(ip)           tlast
 
-      integer               slen
-      integer               tlen
+      integer(ip)           slen
+      integer(ip)           tlen
 
-      integer               scur
-      integer               tcur
+      integer(ip)           scur
+      integer(ip)           tcur
 
-      integer               left
-      integer               right
+      integer(ip)           left
+      integer(ip)           right
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
       logical               nosubm
 

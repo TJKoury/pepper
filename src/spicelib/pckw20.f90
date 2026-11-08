@@ -4,6 +4,7 @@
                            last,    segid,   intlen,  n, &
                            polydg,  cdata,   ascale,  tscale, &
                            initjd,  initfr                   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,20 +28,20 @@
 
       include 'spk20.inc'
 
-      integer               handle
-      integer               clssid
+      integer(ip)           handle
+      integer(ip)           clssid
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      intlen
-      integer               n
-      integer               polydg
-      double precision      cdata  ( * )
-      double precision      ascale
-      double precision      tscale
-      double precision      initjd
-      double precision      initfr
+      real(wp)              intlen
+      integer(ip)           n
+      integer(ip)           polydg
+      real(wp)              cdata  ( * )
+      real(wp)              ascale
+      real(wp)              tscale
+      real(wp)              initjd
+      real(wp)              initfr
 
 ! $ Brief_I/O
 !
@@ -417,8 +418,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      j2000
-      double precision      spd
+      real(wp)              j2000
+      real(wp)              spd
 
       logical               failed
       logical               return
@@ -430,34 +431,34 @@
 !
 !     DTYPE is the PCK data type.
 !
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   20 )
 
 !
 !     ND is the number of double precision components in a PCK
 !     segment descriptor. PCK uses ND = 2.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
 !
 !     NI is the number of integer components in a PCK segment
 !     descriptor. PCK uses NI = 5.
 !
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   5 )
 
 !
 !     NS is the size of a packed PCK segment descriptor.
 !
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     PCK segment identifier.
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
 !
@@ -466,16 +467,16 @@
       character*(sidlen)    etstr
       character*(sidlen)    netstr
 
-      double precision      btime
-      double precision      dcd   ( nd )
-      double precision      descr ( ns )
-      double precision      ltime
-      double precision      numrec
-      double precision      tol
+      real(wp)              btime
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              numrec
+      real(wp)              tol
 
-      integer               icd   ( ni )
-      integer               ninrec
-      integer               refcod
+      integer(ip)           icd   ( ni )
+      integer(ip)           ninrec
+      integer(ip)           refcod
 
 !
 !
@@ -569,7 +570,7 @@
 !
 !     The angle and time scales must be positive.
 !
-      if ( ascale .le. 0.d0 ) then
+      if ( ascale .le. 0.0_wp ) then
 
          call setmsg ( 'The angle scale is not positive.'  // &
                        'ASCALE = #'                           )
@@ -580,7 +581,7 @@
 
       end if
 
-      if ( tscale .le. 0.d0 ) then
+      if ( tscale .le. 0.0_wp ) then
 
          call setmsg ( 'The time scale is not positive.'     // &
                        'TSCALE = #'                           )
@@ -742,7 +743,7 @@
 !     record of the same degree, since the record coverage midpoint
 !     and radius are not stored.
 !
-      call dafada ( dble( ninrec ), 1 )
+      call dafada ( real( ninrec, wp ), 1 )
 
 !
 !     Store the number of records contained in the segment.

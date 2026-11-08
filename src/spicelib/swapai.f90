@@ -1,6 +1,7 @@
 !$Procedure SWAPAI ( Swap elements within an integer array )
 
       subroutine swapai ( n, locn, m, locm, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               n
-      integer               locn
-      integer               m
-      integer               locm
-      integer               array  ( * )
+      integer(ip)           n
+      integer(ip)           locn
+      integer(ip)           m
+      integer(ip)           locm
+      integer(ip)           array  ( * )
 
 ! $ Brief_I/O
 !
@@ -241,19 +242,19 @@
 !
 !     Local variables
 !
-      integer               nn
-      integer               ln
-      integer               nm
-      integer               lm
+      integer(ip)           nn
+      integer(ip)           ln
+      integer(ip)           nm
+      integer(ip)           lm
 
-      integer               direct
-      integer               extra
+      integer(ip)           direct
+      integer(ip)           extra
 
       character*1           dir
-      integer               begsub
-      integer               nsub
+      integer(ip)           begsub
+      integer(ip)           nsub
 
-      integer               i
+      integer(ip)           i
 
 
 

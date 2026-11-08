@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSFWD ( EK, set forward pointer for data page )
 
       subroutine zzeksfwd ( handle, type, p, fward )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               type
-      integer               p
-      integer               fward
+      integer(ip)           handle
+      integer(ip)           type
+      integer(ip)           p
+      integer(ip)           fward
 
 ! $ Brief_I/O
 !
@@ -110,8 +111,8 @@
 !
 !     Local variables
 !
-      double precision      dpptr
-      integer               base
+      real(wp)              dpptr
+      integer(ip)           base
 
 !
 !     Use discovery check-in.

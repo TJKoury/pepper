@@ -1,6 +1,7 @@
 !$Procedure      ZZINSSUB ( Insert a substring )
 
       subroutine zzinssub ( in, sub, loc, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
 
       character*(*)    in
       character*(*)    sub
-      integer          loc
+      integer(ip)      loc
       character*(*)    out
 
 ! $ Brief_I/O
@@ -176,15 +177,15 @@
 !
       character*(1)         chr
 
-      integer               from
-      integer               i
-      integer               inlen
-      integer               myloc
-      integer               nmove
-      integer               outlen
-      integer               subend
-      integer               sublen
-      integer               to
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           inlen
+      integer(ip)           myloc
+      integer(ip)           nmove
+      integer(ip)           outlen
+      integer(ip)           subend
+      integer(ip)           sublen
+      integer(ip)           to
 
       logical               same
 

@@ -1,6 +1,7 @@
 !$Procedure VPRJP ( Vector projection onto plane )
 
       subroutine vprjp ( vin, plane, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
 
-      double precision      vin   (    3 )
-      double precision      plane ( ubpl )
-      double precision      vout  (    3 )
+      real(wp)              vin   (    3 )
+      real(wp)              plane ( ubpl )
+      real(wp)              vout  (    3 )
 
 ! $ Brief_I/O
 !
@@ -207,8 +208,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               approx
       logical               return
@@ -219,14 +220,14 @@
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      double precision      magtol
-      parameter           ( magtol = 1.d-14 )
+      real(wp)              magtol
+      parameter           ( magtol = 1.0e-14_wp )
 
 !
 !     Local variables
 !
-      double precision      const
-      double precision      normal ( 3 )
+      real(wp)              const
+      real(wp)              normal ( 3 )
 
 !
 !     Check RETURN but use discovery check-in.
@@ -244,14 +245,14 @@
 !
 !     The normal vector returned by PL2NVC should be a unit vector.
 !
-      if (  .not.  approx( vnorm(normal), 1.d0, magtol )  ) then
+      if (  .not.  approx( vnorm(normal), 1.0_wp, magtol )  ) then
 
          call chkin  ( 'VPRJP' )
          call setmsg ( 'Normal vector returned by PL2NVC does not ' &
          //            'have unit length; the difference of the ' &
          //            'length from 1 is #. The input plane is ' &
          //            'invalid. '                                )
-         call errdp  ( '#',  vnorm(normal) - 1.d0                 )
+         call errdp  ( '#',  vnorm(normal) - 1.0_wp                 )
          call sigerr ( 'SPICE(NONUNITNORMAL)'                     )
          call chkout ( 'VPRJP' )
          return
@@ -275,7 +276,7 @@
 !
 !     Subtracting this multiple of NORMAL from VIN yields VOUT.
 !
-      call vlcom (  1.0d0, &
+      call vlcom (  1.0_wp, &
                     vin, &
                     const - vdot ( vin, normal ), &
                     normal, &

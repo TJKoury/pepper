@@ -3,6 +3,7 @@
       subroutine zzdskbun ( bodyid, nsurf,  srflst, et,     fixfid, &
                             nseg,   hanbuf, dlabuf, dskbuf, offbuf, &
                             ctrbuf, radbuf, point,  normal         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -42,20 +43,20 @@
       include 'dsktol.inc'
       include 'zzctr.inc'
 
-      integer               bodyid
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      et
-      integer               fixfid
-      integer               nseg
-      integer               hanbuf ( * )
-      integer               dlabuf ( dladsz, * )
-      double precision      dskbuf ( dskdsz, * )
-      double precision      offbuf ( 3,      * )
-      double precision      ctrbuf ( 3,      * )
-      double precision      radbuf ( * )
-      double precision      point  ( 3 )
-      double precision      normal ( 3 )
+      integer(ip)           bodyid
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              et
+      integer(ip)           fixfid
+      integer(ip)           nseg
+      integer(ip)           hanbuf ( * )
+      integer(ip)           dlabuf ( dladsz, * )
+      real(wp)              dskbuf ( dskdsz, * )
+      real(wp)              offbuf ( 3,      * )
+      real(wp)              ctrbuf ( 3,      * )
+      real(wp)              radbuf ( * )
+      real(wp)              point  ( 3 )
+      real(wp)              normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -238,9 +239,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdist
+      real(wp)              vdist
 
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -248,33 +249,33 @@
 !
 !     Local parameters
 !
-      integer               maxhit
+      integer(ip)           maxhit
       parameter           ( maxhit = 1000 )
 
 
 !
 !     Local variables
 !
-      double precision      dist
-      double precision      segpt  ( 3 )
-      double precision      sgmarg
-      double precision      sgxbuf ( 3, 3, maxhit )
-      double precision      verts  ( 3, 3 )
-      double precision      vtemp  ( 3 )
-      double precision      xform  ( 3, 3 )
+      real(wp)              dist
+      real(wp)              segpt  ( 3 )
+      real(wp)              sgmarg
+      real(wp)              sgxbuf ( 3, 3, maxhit )
+      real(wp)              verts  ( 3, 3 )
+      real(wp)              vtemp  ( 3 )
+      real(wp)              xform  ( 3, 3 )
 
-      integer               corsys
-      integer               dtype
-      integer               i
-      integer               j
-      integer               nhit
-      integer               plate  ( 3 )
-      integer               plid
-      integer               prvfrm
-      integer               segfid
-      integer               sghit  ( maxhit )
-      integer               surfce
-      integer               winner
+      integer(ip)           corsys
+      integer(ip)           dtype
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           nhit
+      integer(ip)           plate  ( 3 )
+      integer(ip)           plid
+      integer(ip)           prvfrm
+      integer(ip)           segfid
+      integer(ip)           sghit  ( maxhit )
+      integer(ip)           surfce
+      integer(ip)           winner
 
       logical               bodyok
       logical               done

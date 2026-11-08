@@ -1,6 +1,7 @@
 !$Procedure SWAPD ( Swap double precision values )
 
       subroutine swapd ( a, b )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      double precision   a
-      double precision   b
+      real(wp)           a
+      real(wp)           b
 
 ! $ Brief_I/O
 !
@@ -113,7 +114,7 @@
 !
 !     Local variables
 !
-      double precision temp
+      real(wp) temp
 
 
 

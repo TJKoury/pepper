@@ -1,6 +1,7 @@
 !$Procedure SCARDD ( Set the cardinality of a double precision cell )
 
       subroutine scardd ( card, cell )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer          card
-      double precision cell   ( lbcell:* )
+      integer(ip)      card
+      real(wp) cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -194,7 +195,7 @@
 !
 !     Not much to this.
 !
-      cell(0) = dble ( card )
+      cell(0) = real( card, wp )
 
       call chkout ( 'SCARDD' )
       return

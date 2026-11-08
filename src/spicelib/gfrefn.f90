@@ -1,6 +1,7 @@
 !$Procedure GFREFN ( GF, default refinement estimator )
 
       subroutine gfrefn ( t1, t2, s1, s2, t )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      double precision      t1
-      double precision      t2
+      real(wp)              t1
+      real(wp)              t2
       logical               s1
       logical               s2
-      double precision      t
+      real(wp)              t
 
 ! $ Brief_I/O
 !
@@ -142,15 +143,15 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
+      real(wp)              brcktd
 
 !
 !     Local variables.
 !
-      double precision      x
+      real(wp)              x
 
 
-      x = ( t1 * 0.5d0 ) + ( t2 * 0.5d0 )
+      x = ( t1 * 0.5_wp ) + ( t2 * 0.5_wp )
 
       t = brcktd ( x, t1, t2 )
 

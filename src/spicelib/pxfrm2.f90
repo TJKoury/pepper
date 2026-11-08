@@ -1,6 +1,7 @@
 !$Procedure PXFRM2 ( Position Transform Matrix, Different Epochs )
 
       subroutine pxfrm2 ( from, to, etfrom, etto, rotate  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,9 +26,9 @@
 
       character*(*)         from
       character*(*)         to
-      double precision      etfrom
-      double precision      etto
-      double precision      rotate  ( 3, 3 )
+      real(wp)              etfrom
+      real(wp)              etto
+      real(wp)              rotate  ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -581,34 +582,34 @@
 !     The J2000 frame has a NAIF ID of 1. Any inertial reference
 !     frame could have been used for this program instead of J2000.
 !
-      integer               jcode
+      integer(ip)           jcode
       parameter           ( jcode = 1 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
 !     Local variables
 !
-      integer               fcode
-      integer               tcode
+      integer(ip)           fcode
+      integer(ip)           tcode
 
-      double precision      jf ( 3, 3 )
-      double precision      tj ( 3, 3 )
+      real(wp)              jf ( 3, 3 )
+      real(wp)              tj ( 3, 3 )
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svfrom
-      integer               svfcod
+      integer(ip)           svfcod
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(frnmln)    svto
-      integer               svtcde
+      integer(ip)           svtcde
 
       logical               first
 

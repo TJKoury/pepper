@@ -1,6 +1,7 @@
 !$Procedure ORDI ( The ordinal position of an element in a set )
 
-      integer function ordi ( item, set )
+      integer(ip) function ordi ( item, set )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
 
-      integer               item
-      integer               set ( lbcell:* )
+      integer(ip)           item
+      integer(ip)           set ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -182,8 +183,8 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchi
-      integer               cardi
+      integer(ip)           bsrchi
+      integer(ip)           cardi
       logical               return
 !
 !     Standard error handling:

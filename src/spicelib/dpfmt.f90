@@ -1,6 +1,7 @@
 !$Procedure DPFMT ( Format a double precision number )
 
       subroutine dpfmt ( x, pictur, str )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       implicit none
 
-      double precision      x
+      real(wp)              x
       character*(*)         pictur
       character*(*)         str
 
@@ -264,11 +265,11 @@
 !
 !     SPICELIB functions
 !
-      integer               pos
-      integer               ncpos
+      integer(ip)           pos
+      integer(ip)           ncpos
 
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 
@@ -276,21 +277,21 @@
       character*(1)         sign
       character*(wdsize)    mystr
 
-      double precision      y
+      real(wp)              y
 
-      integer               declen
-      integer               dpat
-      integer               exp
-      integer               expsiz
-      integer               frstch
-      integer               i
-      integer               intlen
-      integer               lastch
-      integer               firstb
-      integer               sgnlen
-      integer               sigdig
-      integer               sprsiz
-      integer               start
+      integer(ip)           declen
+      integer(ip)           dpat
+      integer(ip)           exp
+      integer(ip)           expsiz
+      integer(ip)           frstch
+      integer(ip)           i
+      integer(ip)           intlen
+      integer(ip)           lastch
+      integer(ip)           firstb
+      integer(ip)           sgnlen
+      integer(ip)           sigdig
+      integer(ip)           sprsiz
+      integer(ip)           start
 
 
       logical               needsn
@@ -532,7 +533,7 @@
 !
 
 
-      if ( exp .ge. intlen .and. y .ne. 0.0d0 ) then
+      if ( exp .ge. intlen .and. y .ne. 0.0_wp ) then
 !
 !        See if we have room to print an exponential form.
 !        First we need the number of characters for the

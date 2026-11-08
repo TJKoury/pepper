@@ -1,6 +1,7 @@
 !$Procedure INSLAC ( Insert at location in a character array )
 
       subroutine inslac ( elts, ne, loc, array, na )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       implicit none
 
       character*(*)    elts  ( * )
-      integer          ne
-      integer          loc
+      integer(ip)      ne
+      integer(ip)      loc
       character*(*)    array ( * )
-      integer          na
+      integer(ip)      na
 
 ! $ Brief_I/O
 !
@@ -190,13 +191,13 @@
 !
 !     Other functions
 !
-      integer          max
+      integer(ip)      max
 
 !
 !     Local variables
 !
-      integer          size
-      integer          i
+      integer(ip)      size
+      integer(ip)      i
 
 
 

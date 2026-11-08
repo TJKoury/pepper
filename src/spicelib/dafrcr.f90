@@ -1,6 +1,7 @@
 !$Procedure DAFRCR ( DAF, read character record )
 
       subroutine dafrcr ( handle, recno, crec )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      integer               handle
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           recno
       character*(*)         crec
 
 ! $ Brief_I/O
@@ -162,8 +163,8 @@
 !
 !     Local variables
 !
-      integer               unit
-      integer               iostat
+      integer(ip)           unit
+      integer(ip)           iostat
 
 !
 !     Standard SPICE error handling.

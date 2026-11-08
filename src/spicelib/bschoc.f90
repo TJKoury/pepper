@@ -1,6 +1,7 @@
 !$Procedure BSCHOC ( Binary search with order vector, character )
 
-      integer function bschoc ( value, ndim, array, order )
+      integer(ip) function bschoc ( value, ndim, array, order )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
       implicit none
 
       character*(*)    value
-      integer          ndim
+      integer(ip)      ndim
       character*(*)    array ( * )
-      integer          order ( * )
+      integer(ip)      order ( * )
 
 ! $ Brief_I/O
 !
@@ -231,9 +232,9 @@
 !
 !     Local variables
 !
-      integer          left
-      integer          right
-      integer          i
+      integer(ip)      left
+      integer(ip)      right
+      integer(ip)      i
 
 
 !

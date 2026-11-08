@@ -3,6 +3,7 @@
       subroutine ckw03 ( handle, begtim, endtim, inst,  ref,  avflag, &
                          segid,  nrec,   sclkdp, quats, avvs, nints, &
                          starts                                      )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,19 +25,19 @@
 
       implicit none
 
-      integer               handle
-      double precision      begtim
-      double precision      endtim
-      integer               inst
+      integer(ip)           handle
+      real(wp)              begtim
+      real(wp)              endtim
+      integer(ip)           inst
       character*(*)         ref
       logical               avflag
       character*(*)         segid
-      integer               nrec
-      double precision      sclkdp (      * )
-      double precision      quats  ( 0:3, * )
-      double precision      avvs   (   3, * )
-      integer               nints
-      double precision      starts (      * )
+      integer(ip)           nrec
+      real(wp)              sclkdp (      * )
+      real(wp)              quats  ( 0:3, * )
+      real(wp)              avvs   (   3, * )
+      integer(ip)           nints
+      real(wp)              starts (      * )
 
 ! $ Brief_I/O
 !
@@ -734,7 +735,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               return
       logical               failed
@@ -764,42 +765,42 @@
 !              character.
 !
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc     =   5 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   3 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 
 !
 !     Local variables
 !
-      double precision      dcd    ( nd    )
-      double precision      descr  ( ndc   )
+      real(wp)              dcd    ( nd    )
+      real(wp)              descr  ( ndc   )
 
 
-      integer               i
-      integer               icd    ( ni    )
-      integer               index
-      integer               nrdir
-      integer               nidir
-      integer               refcod
-      integer               value
+      integer(ip)           i
+      integer(ip)           icd    ( ni    )
+      integer(ip)           index
+      integer(ip)           nrdir
+      integer(ip)           nidir
+      integer(ip)           refcod
+      integer(ip)           value
 
       logical               match
 
@@ -966,7 +967,7 @@
 !
 !     Check that the first time is nonnegative.
 !
-      if ( sclkdp(1) .lt. 0.d0 ) then
+      if ( sclkdp(1) .lt. 0.0_wp ) then
 
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
@@ -1170,8 +1171,8 @@
 !
 !     Finally, the number of intervals and records.
 !
-      call dafada ( dble(nints), 1 )
-      call dafada ( dble(nrec),  1 )
+      call dafada ( real(nints, wp), 1 )
+      call dafada ( real(nrec, wp),  1 )
 
 !
 !     End the segment.

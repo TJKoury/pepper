@@ -1,6 +1,7 @@
 !$Procedure VDIST ( Vector distance )
 
-      double precision function  vdist ( v1, v2 )
+      real(wp) function  vdist ( v1, v2 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      double precision      v1 ( 3 )
-      double precision      v2 ( 3 )
+      real(wp)              v1 ( 3 )
+      real(wp)              v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -157,12 +158,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
 !
 !     Local variables
 !
-      double precision      diff ( 3 )
+      real(wp)              diff ( 3 )
 
 
 !

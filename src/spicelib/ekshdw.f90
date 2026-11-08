@@ -1,6 +1,7 @@
 !$Procedure EKSHDW ( EK, return shadowing status <STUB> )
 
       subroutine ekshdw ( handle, isshad )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
       logical               isshad
 
 ! $ Brief_I/O
@@ -102,7 +103,7 @@
 !-&
 
 
-      integer                i
+      integer(ip)            i
 
       i      =  handle
       isshad = .false.

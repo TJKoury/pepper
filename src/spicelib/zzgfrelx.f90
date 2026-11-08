@@ -6,6 +6,7 @@
                             nw,       work,    rpt,     udrepi, &
                             udrepu,   udrepf,  rptpre,  rptsuf, &
                             bail,     udbail,  result           )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -40,10 +41,10 @@
 
       include               'gf.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               nwreq
+      integer(ip)           nwreq
       parameter           ( nwreq  = 5 )
 
       external              udstep
@@ -52,13 +53,13 @@
       external              udcond
       external              udfunc
       character*(*)         relate
-      double precision      refval
-      double precision      tol
-      double precision      adjust
-      double precision      cnfine ( lbcell : * )
-      integer               mw
-      integer               nw
-      double precision      work ( lbcell : mw, nw )
+      real(wp)              refval
+      real(wp)              tol
+      real(wp)              adjust
+      real(wp)              cnfine ( lbcell : * )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work ( lbcell : mw, nw )
       logical               rpt
       external              udrepi
       external              udrepu
@@ -68,7 +69,7 @@
       logical               udbail
       logical               bail
       external              udbail
-      double precision      result ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -505,10 +506,10 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
-      integer               isrchc
-      integer               sized
-      integer               wncard
+      integer(ip)           cardd
+      integer(ip)           isrchc
+      integer(ip)           sized
+      integer(ip)           wncard
 
       logical               failed
       logical               return
@@ -516,50 +517,50 @@
 !
 !     Local parameters
 !
-      integer               left
+      integer(ip)           left
       parameter           ( left   = 1 )
 
-      integer               right
+      integer(ip)           right
       parameter           ( right  = 2 )
 
-      integer               maxcln
+      integer(ip)           maxcln
       parameter           ( maxcln = 80 )
 
 !
 !     Workspace window indices:
 !
-      integer               confin
+      integer(ip)           confin
       parameter           ( confin = 3 )
 
-      integer               copy
+      integer(ip)           copy
       parameter           ( copy   = 4 )
 
-      integer               decres
+      integer(ip)           decres
       parameter           ( decres = 2 )
 
-      integer               incres
+      integer(ip)           incres
       parameter           ( incres = 1 )
 
-      integer               tempw
+      integer(ip)           tempw
       parameter           ( tempw  = 5 )
 
 
 !
 !     Number of supported comparison operators.
 !
-      integer               nc
+      integer(ip)           nc
       parameter           ( nc     = 7 )
 
 !     One-letter alias for LBCELL to make references to the workspace
 !     array tolerable:
 !
-      integer               b
+      integer(ip)           b
       parameter           ( b      = lbcell )
 
 !
 !     Context string length:
 !
-      integer               ctxlen
+      integer(ip)           ctxlen
       parameter           ( ctxlen = 500 )
 
 !
@@ -570,26 +571,26 @@
       character*(ctxlen)    contxt
       character*(maxcln)    locrel
 
-      double precision      addl
-      double precision      addr
-      double precision      endpt  (  2 )
-      double precision      extrem
-      double precision      finish
-      double precision      refer2
-      double precision      start
-      double precision      step
-      double precision      value
+      real(wp)              addl
+      real(wp)              addr
+      real(wp)              endpt  (  2 )
+      real(wp)              extrem
+      real(wp)              finish
+      real(wp)              refer2
+      real(wp)              start
+      real(wp)              step
+      real(wp)              value
 
-      integer               case
-      integer               count
-      integer               i
-      integer               maxat
-      integer               minat
-      integer               name    (  2 )
-      integer               pass
-      integer               qcnum
-      integer               want
-      integer               winsiz
+      integer(ip)           case
+      integer(ip)           count
+      integer(ip)           i
+      integer(ip)           maxat
+      integer(ip)           minat
+      integer(ip)           name    (  2 )
+      integer(ip)           pass
+      integer(ip)           qcnum
+      integer(ip)           want
+      integer(ip)           winsiz
 
       logical               cstep
       logical               need
@@ -699,7 +700,7 @@
 !
 !     Confirm ADJUST is non-negative.
 !
-      if ( adjust .lt. 0.d0 ) then
+      if ( adjust .lt. 0.0_wp ) then
 
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
@@ -715,7 +716,7 @@
 !
       if(  (locrel .ne. 'ABSMIN')  .and. (locrel .ne. 'ABSMAX' ) ) then
 
-         if ( adjust .ne. 0.d0 ) then
+         if ( adjust .ne. 0.0_wp ) then
 
             call setmsg ( 'ADJUST should have value zero for all '  // &
                           'comparison operators except ABSMAX and ' // &
@@ -771,8 +772,8 @@
          addl = addwin
          addr = addwin
       else
-         addl = 0.0d0
-         addr = 0.0d0
+         addl = 0.0_wp
+         addr = 0.0_wp
       end if
 
       call copyd  ( cnfine,     work(b,confin) )
@@ -1000,7 +1001,7 @@
 !
                if ( locrel .eq. 'ABSMIN' ) then
 
-                  if (       ( adjust .eq. 0.0d0  ) &
+                  if (       ( adjust .eq. 0.0_wp  ) &
                        .and. ( value  .le. extrem )  ) then
 !
 !                    Let's save the epoch in case it's that of the
@@ -1022,7 +1023,7 @@
 
                else
 
-                  if (       ( adjust .eq. 0.0d0  ) &
+                  if (       ( adjust .eq. 0.0_wp  ) &
                        .and. ( value  .ge. extrem )  ) then
 !
 !                    Let's save the epoch in case it's that of the
@@ -1061,7 +1062,7 @@
 !
 !        If the adjustment is zero, we're done.
 !
-         if ( adjust .eq. 0.0d0 ) then
+         if ( adjust .eq. 0.0_wp ) then
 
             call chkout (  'ZZGFRELX' )
             return

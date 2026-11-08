@@ -1,6 +1,7 @@
 !$Procedure DASIOI ( DAS, Fortran I/O, integer )
 
       subroutine dasioi ( action, unit, recno, record )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,13 +23,13 @@
 
       implicit none
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi = 256 )
 
       character*(*)         action
-      integer               unit
-      integer               recno
-      integer               record ( nwi )
+      integer(ip)           unit
+      integer(ip)           recno
+      integer(ip)           record ( nwi )
 
 ! $ Brief_I/O
 !
@@ -202,7 +203,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKAPS ( EK, allocate page for segment )
 
       subroutine zzekaps ( handle, segdsc, type, new, p, base  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               type
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           type
       logical               new
-      integer               p
-      integer               base
+      integer(ip)           p
+      integer(ip)           base
 
 ! $ Brief_I/O
 !
@@ -133,8 +134,8 @@
 !
 !     Local variables
 !
-      integer               idx
-      integer               tree
+      integer(ip)           idx
+      integer(ip)           tree
 
 
 !

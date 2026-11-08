@@ -1,6 +1,7 @@
 !$Procedure ZZSGP4 ( SGP4 wrapper )
 
       subroutine zzsgp4 ( geophs, elems, opmode, t, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       include 'zzsgp4.inc'
 
-      double precision         geophs    ( 8 )
-      double precision         elems     ( 10 )
-      integer                  opmode
-      double precision         t
-      double precision         state     ( 6 )
+      real(wp)                 geophs    ( 8 )
+      real(wp)                 elems     ( 10 )
+      integer(ip)              opmode
+      real(wp)                 t
+      real(wp)                 state     ( 6 )
 
 ! $ Brief_I/O
 !
@@ -431,268 +432,268 @@
 !     Local Variables
 !
 
-      double precision         a
-      double precision         alta
-      double precision         altp
-      double precision         argpdot
-      double precision         aycof
-      double precision         cc1
-      double precision         cc4
-      double precision         cc5
-      double precision         con41
-      double precision         eta
-      double precision         inclo
-      double precision         mdot
-      double precision         nodedot
-      double precision         omgcof
-      double precision         sinmao
-      double precision         t2cof
-      double precision         t3cof
-      double precision         t4cof
-      double precision         t5cof
-      double precision         x1mth2
-      double precision         x7thm1
-      double precision         xlcof
-      double precision         xmcof
-      double precision         xnodcf
+      real(wp)                 a
+      real(wp)                 alta
+      real(wp)                 altp
+      real(wp)                 argpdot
+      real(wp)                 aycof
+      real(wp)                 cc1
+      real(wp)                 cc4
+      real(wp)                 cc5
+      real(wp)                 con41
+      real(wp)                 eta
+      real(wp)                 inclo
+      real(wp)                 mdot
+      real(wp)                 nodedot
+      real(wp)                 omgcof
+      real(wp)                 sinmao
+      real(wp)                 t2cof
+      real(wp)                 t3cof
+      real(wp)                 t4cof
+      real(wp)                 t5cof
+      real(wp)                 x1mth2
+      real(wp)                 x7thm1
+      real(wp)                 xlcof
+      real(wp)                 xmcof
+      real(wp)                 xnodcf
 
 !
 !     DS values
 !
 
-      double precision         e3
-      double precision         ee2
-      double precision         peo
-      double precision         pgho
-      double precision         pho
-      double precision         pinco
-      double precision         plo
-      double precision         gsto
-      double precision         xfact
-      double precision         xgh2
-      double precision         xgh3
-      double precision         xgh4
-      double precision         xh2
-      double precision         xh3
-      double precision         xi2
-      double precision         xi3
-      double precision         xl2
-      double precision         xl3
-      double precision         xl4
-      double precision         xlamo
-      double precision         zmol
-      double precision         zmos
-      double precision         atime
-      double precision         xli
-      double precision         xni
+      real(wp)                 e3
+      real(wp)                 ee2
+      real(wp)                 peo
+      real(wp)                 pgho
+      real(wp)                 pho
+      real(wp)                 pinco
+      real(wp)                 plo
+      real(wp)                 gsto
+      real(wp)                 xfact
+      real(wp)                 xgh2
+      real(wp)                 xgh3
+      real(wp)                 xgh4
+      real(wp)                 xh2
+      real(wp)                 xh3
+      real(wp)                 xi2
+      real(wp)                 xi3
+      real(wp)                 xl2
+      real(wp)                 xl3
+      real(wp)                 xl4
+      real(wp)                 xlamo
+      real(wp)                 zmol
+      real(wp)                 zmos
+      real(wp)                 atime
+      real(wp)                 xli
+      real(wp)                 xni
 
-      double precision         ainv
-      double precision         am
-      double precision         ao
-      double precision         argpm
-      double precision         argpo
-      double precision         argpp
-      double precision         axnl
-      double precision         aynl
-      double precision         betal
-      double precision         bstar
-      double precision         cc1sq
-      double precision         cc2
-      double precision         cc3
-      double precision         cnod
-      double precision         cnodm
-      double precision         coef
-      double precision         coef1
-      double precision         con42
-      double precision         cos2u
-      double precision         coseo1
-      double precision         cosi
-      double precision         cosim
-      double precision         cosio
-      double precision         cosio2
-      double precision         cosio4
-      double precision         cosip
-      double precision         cosisq
-      double precision         cosomm
-      double precision         cossu
-      double precision         cosu
-      double precision         d2
-      double precision         d2201
-      double precision         d2211
-      double precision         d3
-      double precision         d3210
-      double precision         d3222
-      double precision         d4
-      double precision         d4410
-      double precision         d4422
-      double precision         d5220
-      double precision         d5232
-      double precision         d5421
-      double precision         d5433
-      double precision         day
-      double precision         dedt
-      double precision         del1
-      double precision         del2
-      double precision         del3
-      double precision         delm
-      double precision         delmo
-      double precision         delomg
-      double precision         didt
-      double precision         dmdt
-      double precision         dndt
-      double precision         dnodt
-      double precision         domdt
-      double precision         eccm
-      double precision         ecco
-      double precision         eccp
-      double precision         eccsq
-      double precision         ecose
-      double precision         eeta
-      double precision         el2
-      double precision         emsq
-      double precision         eo1
-      double precision         epoch
-      double precision         er
-      double precision         esine
-      double precision         etasq
-      double precision         gam
-      double precision         inclm
-      double precision         j2
-      double precision         j3
-      double precision         j3oj2
-      double precision         j4
-      double precision         kps
-      double precision         mm
-      double precision         mo
-      double precision         mp
-      double precision         mr
-      double precision         mv
-      double precision         no
-      double precision         nodem
-      double precision         nodeo
-      double precision         nodep
-      double precision         omeosq
-      double precision         omgadf
-      double precision         perige
-      double precision         pinvsq
-      double precision         pl
-      double precision         posq
-      double precision         psisq
-      double precision         qzms24
-      double precision         qzms2t
-      double precision         rdotl
-      double precision         rl
-      double precision         rp
-      double precision         rtemsq
-      double precision         rteosq
-      double precision         rvdot
-      double precision         rvdotl
-      double precision         s1
-      double precision         s2
-      double precision         s3
-      double precision         s4
-      double precision         s5
-      double precision         s6
-      double precision         s7
-      double precision         se2
-      double precision         se3
-      double precision         sfour
-      double precision         sgh2
-      double precision         sgh3
-      double precision         sgh4
-      double precision         sh2
-      double precision         sh3
-      double precision         si2
-      double precision         si3
-      double precision         sin2u
-      double precision         sineo1
-      double precision         sini
-      double precision         sinim
-      double precision         sinio
-      double precision         sinip
-      double precision         sinomm
-      double precision         sinsu
-      double precision         sinu
-      double precision         sl2
-      double precision         sl3
-      double precision         sl4
-      double precision         snod
-      double precision         snodm
-      double precision         ss
-      double precision         ss1
-      double precision         ss2
-      double precision         ss3
-      double precision         ss4
-      double precision         ss5
-      double precision         ss6
-      double precision         ss7
-      double precision         su
-      double precision         sz1
-      double precision         sz11
-      double precision         sz12
-      double precision         sz13
-      double precision         sz2
-      double precision         sz21
-      double precision         sz22
-      double precision         sz23
-      double precision         sz3
-      double precision         sz31
-      double precision         sz32
-      double precision         sz33
-      double precision         t2
-      double precision         t3
-      double precision         t4
-      double precision         tc
-      double precision         tem5
-      double precision         temp
-      double precision         temp1
-      double precision         temp2
-      double precision         temp3
-      double precision         temp4
-      double precision         tempa
-      double precision         tempe
-      double precision         templ
-      double precision         tsi
-      double precision         tumin
-      double precision         tvec   ( 8 )
-      double precision         tzero
-      double precision         u
-      double precision         ux
-      double precision         uy
-      double precision         uz
-      double precision         vx
-      double precision         vy
-      double precision         vz
-      double precision         x2o3
-      double precision         xhdot1
-      double precision         xinc
-      double precision         xincp
-      double precision         xke
-      double precision         xl
-      double precision         xlm
-      double precision         xmdf
-      double precision         xmx
-      double precision         xmy
-      double precision         xn
-      double precision         xnoddf
-      double precision         xnode
-      double precision         xpidot
-      double precision         z1
-      double precision         z11
-      double precision         z12
-      double precision         z13
-      double precision         z2
-      double precision         z21
-      double precision         z22
-      double precision         z23
-      double precision         z3
-      double precision         z31
-      double precision         z32
-      double precision         z33
+      real(wp)                 ainv
+      real(wp)                 am
+      real(wp)                 ao
+      real(wp)                 argpm
+      real(wp)                 argpo
+      real(wp)                 argpp
+      real(wp)                 axnl
+      real(wp)                 aynl
+      real(wp)                 betal
+      real(wp)                 bstar
+      real(wp)                 cc1sq
+      real(wp)                 cc2
+      real(wp)                 cc3
+      real(wp)                 cnod
+      real(wp)                 cnodm
+      real(wp)                 coef
+      real(wp)                 coef1
+      real(wp)                 con42
+      real(wp)                 cos2u
+      real(wp)                 coseo1
+      real(wp)                 cosi
+      real(wp)                 cosim
+      real(wp)                 cosio
+      real(wp)                 cosio2
+      real(wp)                 cosio4
+      real(wp)                 cosip
+      real(wp)                 cosisq
+      real(wp)                 cosomm
+      real(wp)                 cossu
+      real(wp)                 cosu
+      real(wp)                 d2
+      real(wp)                 d2201
+      real(wp)                 d2211
+      real(wp)                 d3
+      real(wp)                 d3210
+      real(wp)                 d3222
+      real(wp)                 d4
+      real(wp)                 d4410
+      real(wp)                 d4422
+      real(wp)                 d5220
+      real(wp)                 d5232
+      real(wp)                 d5421
+      real(wp)                 d5433
+      real(wp)                 day
+      real(wp)                 dedt
+      real(wp)                 del1
+      real(wp)                 del2
+      real(wp)                 del3
+      real(wp)                 delm
+      real(wp)                 delmo
+      real(wp)                 delomg
+      real(wp)                 didt
+      real(wp)                 dmdt
+      real(wp)                 dndt
+      real(wp)                 dnodt
+      real(wp)                 domdt
+      real(wp)                 eccm
+      real(wp)                 ecco
+      real(wp)                 eccp
+      real(wp)                 eccsq
+      real(wp)                 ecose
+      real(wp)                 eeta
+      real(wp)                 el2
+      real(wp)                 emsq
+      real(wp)                 eo1
+      real(wp)                 epoch
+      real(wp)                 er
+      real(wp)                 esine
+      real(wp)                 etasq
+      real(wp)                 gam
+      real(wp)                 inclm
+      real(wp)                 j2
+      real(wp)                 j3
+      real(wp)                 j3oj2
+      real(wp)                 j4
+      real(wp)                 kps
+      real(wp)                 mm
+      real(wp)                 mo
+      real(wp)                 mp
+      real(wp)                 mr
+      real(wp)                 mv
+      real(wp)                 no
+      real(wp)                 nodem
+      real(wp)                 nodeo
+      real(wp)                 nodep
+      real(wp)                 omeosq
+      real(wp)                 omgadf
+      real(wp)                 perige
+      real(wp)                 pinvsq
+      real(wp)                 pl
+      real(wp)                 posq
+      real(wp)                 psisq
+      real(wp)                 qzms24
+      real(wp)                 qzms2t
+      real(wp)                 rdotl
+      real(wp)                 rl
+      real(wp)                 rp
+      real(wp)                 rtemsq
+      real(wp)                 rteosq
+      real(wp)                 rvdot
+      real(wp)                 rvdotl
+      real(wp)                 s1
+      real(wp)                 s2
+      real(wp)                 s3
+      real(wp)                 s4
+      real(wp)                 s5
+      real(wp)                 s6
+      real(wp)                 s7
+      real(wp)                 se2
+      real(wp)                 se3
+      real(wp)                 sfour
+      real(wp)                 sgh2
+      real(wp)                 sgh3
+      real(wp)                 sgh4
+      real(wp)                 sh2
+      real(wp)                 sh3
+      real(wp)                 si2
+      real(wp)                 si3
+      real(wp)                 sin2u
+      real(wp)                 sineo1
+      real(wp)                 sini
+      real(wp)                 sinim
+      real(wp)                 sinio
+      real(wp)                 sinip
+      real(wp)                 sinomm
+      real(wp)                 sinsu
+      real(wp)                 sinu
+      real(wp)                 sl2
+      real(wp)                 sl3
+      real(wp)                 sl4
+      real(wp)                 snod
+      real(wp)                 snodm
+      real(wp)                 ss
+      real(wp)                 ss1
+      real(wp)                 ss2
+      real(wp)                 ss3
+      real(wp)                 ss4
+      real(wp)                 ss5
+      real(wp)                 ss6
+      real(wp)                 ss7
+      real(wp)                 su
+      real(wp)                 sz1
+      real(wp)                 sz11
+      real(wp)                 sz12
+      real(wp)                 sz13
+      real(wp)                 sz2
+      real(wp)                 sz21
+      real(wp)                 sz22
+      real(wp)                 sz23
+      real(wp)                 sz3
+      real(wp)                 sz31
+      real(wp)                 sz32
+      real(wp)                 sz33
+      real(wp)                 t2
+      real(wp)                 t3
+      real(wp)                 t4
+      real(wp)                 tc
+      real(wp)                 tem5
+      real(wp)                 temp
+      real(wp)                 temp1
+      real(wp)                 temp2
+      real(wp)                 temp3
+      real(wp)                 temp4
+      real(wp)                 tempa
+      real(wp)                 tempe
+      real(wp)                 templ
+      real(wp)                 tsi
+      real(wp)                 tumin
+      real(wp)                 tvec   ( 8 )
+      real(wp)                 tzero
+      real(wp)                 u
+      real(wp)                 ux
+      real(wp)                 uy
+      real(wp)                 uz
+      real(wp)                 vx
+      real(wp)                 vy
+      real(wp)                 vz
+      real(wp)                 x2o3
+      real(wp)                 xhdot1
+      real(wp)                 xinc
+      real(wp)                 xincp
+      real(wp)                 xke
+      real(wp)                 xl
+      real(wp)                 xlm
+      real(wp)                 xmdf
+      real(wp)                 xmx
+      real(wp)                 xmy
+      real(wp)                 xn
+      real(wp)                 xnoddf
+      real(wp)                 xnode
+      real(wp)                 xpidot
+      real(wp)                 z1
+      real(wp)                 z11
+      real(wp)                 z12
+      real(wp)                 z13
+      real(wp)                 z2
+      real(wp)                 z21
+      real(wp)                 z22
+      real(wp)                 z23
+      real(wp)                 z3
+      real(wp)                 z31
+      real(wp)                 z32
+      real(wp)                 z33
 
-      integer                  iter
-      integer                  svmode
-      integer                  irez
+      integer(ip)              iter
+      integer(ip)              svmode
+      integer(ip)              irez
 
       logical                  doinit
       logical                  dosimp
@@ -702,8 +703,8 @@
 !     SPICELIB routines.
 !
 
-      double precision         pi
-      double precision         twopi
+      real(wp)                 pi
+      real(wp)                 twopi
 
       logical                  failed
       logical                  return
@@ -1097,7 +1098,7 @@
 
       tvec(1) = elems ( kepoch )
       call ttrans ( 'TDB', 'JDUTC', tvec )
-      epoch = tvec(1) - 2433281.5d0
+      epoch = tvec(1) - 2433281.5_wp
 
       if ( failed() ) then
          call chkout ( 'XXSGP4I' )
@@ -1116,26 +1117,26 @@
       j4    = geophs(k_j4)
       er    = geophs(k_er)
       xke   = geophs(k_ke)
-      tumin = 1.d0/geophs(k_ke)
+      tumin = 1.0_wp/geophs(k_ke)
       j3oj2 = j3/j2
 
 !
 !     The following assignment and IF block is taken
 !     from TWOLINE2RVSGP4.
 !
-      a = (no*tumin)**(-2.0d0/3.0d0)
+      a = (no*tumin)**(-2.0_wp/3.0_wp)
 
-      if (dabs(ecco-1.0d0) .gt. 0.000001d0) then
-         altp= (a*(1.0d0-ecco))-1.0d0
-         alta= (a*(1.0d0+ecco))-1.0d0
+      if (dabs(ecco-1.0_wp) .gt. 0.000001_wp) then
+         altp= (a*(1.0_wp-ecco))-1.0_wp
+         alta= (a*(1.0_wp+ecco))-1.0_wp
       else
-         alta= 999999.9d0
-         altp= 2.0d0* (4.0d0/(no*no)**(1.0d0/3.0d0))
+         alta= 999999.9_wp
+         altp= 2.0_wp* (4.0_wp/(no*no)**(1.0_wp/3.0_wp))
       end if
 
-      ss     = 78.0d0/er + 1.0d0
-      qzms2t = ((120.0d0-78.0d0)/er) ** 4
-      x2o3   =  2.0d0 / 3.0d0
+      ss     = 78.0_wp/er + 1.0_wp
+      qzms2t = ((120.0_wp-78.0_wp)/er) ** 4
+      x2o3   =  2.0_wp / 3.0_wp
 
 !
 !     sgp4fix divisor for divide by zero check on inclination
@@ -1143,8 +1144,8 @@
 !     it to 1.5D-12, so the threshold was changed to 1.5D-12 for
 !     consistency.
 !
-        temp4 =   1.5d-12
-        tzero = 0.0d0
+        temp4 =   1.5e-12_wp
+        tzero = 0.0_wp
         doinit= .true.
 
         call zzinil( geophs, opmode, ecco,  epoch, inclo,  no, &
@@ -1162,7 +1163,7 @@
 !       Check RP for a reasonable value. The propagator may not
 !       calculate correct state values for RP < 1.
 !
-        if (rp .lt. 1.0d0) then
+        if (rp .lt. 1.0_wp) then
 
            call setmsg ( 'TLE elements suborbital.'     )
            call sigerr ( 'SPICE(SUBORBITAL)'            )
@@ -1174,107 +1175,107 @@
 !
 !       If nodeo and No are gtr 0
 !
-        if( (omeosq .ge. 0.0d0) .or. (no .ge. 0.0d0) ) then
+        if( (omeosq .ge. 0.0_wp) .or. (no .ge. 0.0_wp) ) then
 
             dosimp = .false.
 
-            if (rp .lt. (220.0d0/er+1.0d0)) then
+            if (rp .lt. (220.0_wp/er+1.0_wp)) then
                 dosimp = .true.
             end if
 
             sfour  = ss
             qzms24 = qzms2t
-            perige = (rp-1.0d0)*er
+            perige = (rp-1.0_wp)*er
 
 !
 !           For perigees below 156 km, S and Qoms2t are altered.
 !
-            if(perige .lt. 156.0d0) then
-                sfour = perige-78.0d0
+            if(perige .lt. 156.0_wp) then
+                sfour = perige-78.0_wp
 
-                if(perige .le. 98.0d0) then
-                    sfour = 20.0d0
+                if(perige .le. 98.0_wp) then
+                    sfour = 20.0_wp
                 end if
 
-                qzms24 = ( (120.0d0-sfour)/er )**4
-                sfour  = sfour/er + 1.0d0
+                qzms24 = ( (120.0_wp-sfour)/er )**4
+                sfour  = sfour/er + 1.0_wp
 
             end if
 
-            pinvsq = 1.0d0/posq
+            pinvsq = 1.0_wp/posq
 
-            tsi    = 1.0d0/(ao-sfour)
+            tsi    = 1.0_wp/(ao-sfour)
             eta    = ao*ecco*tsi
             etasq  = eta*eta
             eeta   = ecco*eta
-            psisq  = dabs(1.0d0-etasq)
+            psisq  = dabs(1.0_wp-etasq)
             coef   = qzms24*tsi**4
-            coef1  = coef/psisq**3.5d0
-            cc2    = coef1*no* (ao* (1.0d0+1.5d0*etasq+eeta* &
-                     (4.0d0+etasq) )+0.375d0* &
-               j2*tsi/psisq*con41*(8.0d0+3.0d0*etasq*(8.0d0+etasq)))
+            coef1  = coef/psisq**3.5_wp
+            cc2    = coef1*no* (ao* (1.0_wp+1.5_wp*etasq+eeta* &
+                     (4.0_wp+etasq) )+0.375_wp* &
+               j2*tsi/psisq*con41*(8.0_wp+3.0_wp*etasq*(8.0_wp+etasq)))
             cc1    = bstar*cc2
-            cc3    = 0.0d0
+            cc3    = 0.0_wp
 
-            if(ecco .gt. 1.0d-4) then
-                cc3 = -2.0d0*coef*tsi*j3oj2*no*sinio/ecco
+            if(ecco .gt. 1.0e-4_wp) then
+                cc3 = -2.0_wp*coef*tsi*j3oj2*no*sinio/ecco
             end if
 
-            x1mth2 = 1.0d0-cosio2
-            cc4    = 2.0d0*no*coef1*ao*omeosq*(eta*(2.0d0+0.5d0*etasq) &
-                    +ecco*(0.5d0 + 2.0d0*etasq) - j2*tsi / (ao*psisq)* &
-                    (-3.0d0*con41*(1.0d0-2.0d0* &
-             eeta+etasq*(1.5d0-0.5d0*eeta))+0.75d0*x1mth2*(2.0d0*etasq &
-             -eeta*(1.0d0+etasq))*dcos(2.0d0*argpo)))
-            cc5    = 2.0d0*coef1*ao*omeosq* (1.0d0 + 2.75d0* &
+            x1mth2 = 1.0_wp-cosio2
+            cc4    = 2.0_wp*no*coef1*ao*omeosq*(eta*(2.0_wp+0.5_wp*etasq) &
+                    +ecco*(0.5_wp + 2.0_wp*etasq) - j2*tsi / (ao*psisq)* &
+                    (-3.0_wp*con41*(1.0_wp-2.0_wp* &
+             eeta+etasq*(1.5_wp-0.5_wp*eeta))+0.75_wp*x1mth2*(2.0_wp*etasq &
+             -eeta*(1.0_wp+etasq))*dcos(2.0_wp*argpo)))
+            cc5    = 2.0_wp*coef1*ao*omeosq* (1.0_wp + 2.75_wp* &
                      (etasq + eeta) + eeta*etasq )
             cosio4 = cosio2*cosio2
-            temp1  = 1.5d0*j2*pinvsq*no
-            temp2  = 0.5d0*temp1*j2*pinvsq
-            temp3  = -0.46875d0*j4*pinvsq*pinvsq*no
-            mdot   = no + 0.5d0*temp1*rteosq*con41 + 0.0625d0*temp2* &
-                     rteosq*(13.0d0 - 78.0d0*cosio2 + 137.0d0*cosio4)
-            argpdot= -0.5d0*temp1*con42 + 0.0625d0*temp2* &
-                     (7.0d0 - 114.0d0*cosio2 + &
-              395.0d0*cosio4)+temp3*(3.0d0-36.0d0*cosio2+49.0d0*cosio4)
+            temp1  = 1.5_wp*j2*pinvsq*no
+            temp2  = 0.5_wp*temp1*j2*pinvsq
+            temp3  = -0.46875_wp*j4*pinvsq*pinvsq*no
+            mdot   = no + 0.5_wp*temp1*rteosq*con41 + 0.0625_wp*temp2* &
+                     rteosq*(13.0_wp - 78.0_wp*cosio2 + 137.0_wp*cosio4)
+            argpdot= -0.5_wp*temp1*con42 + 0.0625_wp*temp2* &
+                     (7.0_wp - 114.0_wp*cosio2 + &
+              395.0_wp*cosio4)+temp3*(3.0_wp-36.0_wp*cosio2+49.0_wp*cosio4)
             xhdot1 = -temp1*cosio
-            nodedot = xhdot1+(0.5d0*temp2*(4.0d0-19.0d0*cosio2)+ &
-                       2.0d0*temp3*(3.0d0 - 7.0d0*cosio2))*cosio
+            nodedot = xhdot1+(0.5_wp*temp2*(4.0_wp-19.0_wp*cosio2)+ &
+                       2.0_wp*temp3*(3.0_wp - 7.0_wp*cosio2))*cosio
             xpidot = argpdot+nodedot
             omgcof = bstar*cc3*dcos(argpo)
-            xmcof  = 0.0d0
+            xmcof  = 0.0_wp
 
-            if(ecco .gt. 1.0d-4) then
+            if(ecco .gt. 1.0e-4_wp) then
                 xmcof = -x2o3*coef*bstar/eeta
             end if
 
-            xnodcf = 3.5d0*omeosq*xhdot1*cc1
-            t2cof  = 1.5d0*cc1
+            xnodcf = 3.5_wp*omeosq*xhdot1*cc1
+            t2cof  = 1.5_wp*cc1
 
 !
 !           sgp4fix for divide by zero with xinco = 180 deg.
 !
-            if (dabs(cosio+1.d0).gt. 1.5d-12) then
-                xlcof  = -0.25d0*j3oj2*sinio* &
-                         (3.0d0+5.0d0*cosio)/(1.0d0+cosio)
+            if (dabs(cosio+1.0_wp).gt. 1.5e-12_wp) then
+                xlcof  = -0.25_wp*j3oj2*sinio* &
+                         (3.0_wp+5.0_wp*cosio)/(1.0_wp+cosio)
             else
-                xlcof  = -0.25d0*j3oj2*sinio* &
-                         (3.0d0+5.0d0*cosio)/temp4
+                xlcof  = -0.25_wp*j3oj2*sinio* &
+                         (3.0_wp+5.0_wp*cosio)/temp4
             end if
 
-            aycof  = -0.5d0*j3oj2*sinio
-            delmo  = (1.0d0+eta*dcos(mo))**3
+            aycof  = -0.5_wp*j3oj2*sinio
+            delmo  = (1.0_wp+eta*dcos(mo))**3
             sinmao = dsin(mo)
-            x7thm1 = 7.0d0*cosio2-1.0d0
+            x7thm1 = 7.0_wp*cosio2-1.0_wp
 
 !
 !           Deep Space Initialization
 !
-            if ((twopi()/no) .ge. 225.0d0) then
+            if ((twopi()/no) .ge. 225.0_wp) then
 
                 dodeep = .true.
                 dosimp = .true.
-                tc     = 0.0d0
+                tc     = 0.0_wp
                 inclm  = inclo
 
 !
@@ -1309,9 +1310,9 @@
                         zmol, zmos,  inclm, doinit, &
                         ecco, inclo, nodeo, argpo, mo )
 
-                argpm  = 0.0d0
-                nodem  = 0.0d0
-                mm     = 0.0d0
+                argpm  = 0.0_wp
+                nodem  = 0.0_wp
+                mm     = 0.0_wp
 
 !
 !               Initialization
@@ -1338,15 +1339,15 @@
 !
             if ( .not. dosimp ) then
                cc1sq = cc1*cc1
-               d2    = 4.0d0*ao*tsi*cc1sq
-               temp  = d2*tsi*cc1 / 3.0d0
-               d3    = (17.0d0*ao + sfour) * temp
-               d4    = 0.5d0*temp*ao*tsi* &
-                        (221.0d0*ao + 31.0d0*sfour)*cc1
-               t3cof = d2 + 2.0d0*cc1sq
-               t4cof = 0.25d0* (3.0d0*d3+cc1*(12.0d0*d2+10.0d0*cc1sq) )
-               t5cof = 0.2d0* (3.0d0*d4 + 12.0d0*cc1*d3 + 6.0d0*d2*d2 + &
-                        15.0d0*cc1sq* (2.0d0*d2 + cc1sq) )
+               d2    = 4.0_wp*ao*tsi*cc1sq
+               temp  = d2*tsi*cc1 / 3.0_wp
+               d3    = (17.0_wp*ao + sfour) * temp
+               d4    = 0.5_wp*temp*ao*tsi* &
+                        (221.0_wp*ao + 31.0_wp*sfour)*cc1
+               t3cof = d2 + 2.0_wp*cc1sq
+               t4cof = 0.25_wp* (3.0_wp*d3+cc1*(12.0_wp*d2+10.0_wp*cc1sq) )
+               t5cof = 0.2_wp* (3.0_wp*d4 + 12.0_wp*cc1*d3 + 6.0_wp*d2*d2 + &
+                        15.0_wp*cc1sq* (2.0_wp*d2 + cc1sq) )
 
             end if
 
@@ -1532,10 +1533,10 @@
 !     Local constants. Keep compiler ok for warnings on
 !     uninitialized variables
 !
-      x2o3   = 2.0d0/3.0d0
-      mr     = 0.0d0
-      coseo1 = 1.0d0
-      sineo1 = 0.0d0
+      x2o3   = 2.0_wp/3.0_wp
+      mr     = 0.0_wp
+      coseo1 = 1.0_wp
+      sineo1 = 0.0_wp
 
 !
 !     Set mathematical constants.
@@ -1554,8 +1555,8 @@
 !     the old check used 1.0D0 + cos(pi-1.0D-9), but then compared it to
 !     1.5D-12, so the threshold was changed to 1.5D-12 for consistency.
 !
-      temp4 =  1.5d-12
-      kps   =  er * xke/60.0d0
+      temp4 =  1.5e-12_wp
+      kps   =  er * xke/60.0_wp
 
 !
 !     UPDATE FOR SECULAR GRAVITY AND ATMOSPHERIC DRAG
@@ -1567,7 +1568,7 @@
       mm     = xmdf
       t2     = t*t
       nodem  = xnoddf + xnodcf*t2
-      tempa  = 1.0d0 - cc1*t
+      tempa  = 1.0_wp - cc1*t
       tempe  = bstar*cc4*t
       templ  = t2cof*t2
 
@@ -1575,7 +1576,7 @@
       if ( .not. dosimp ) then
 
          delomg = omgcof*t
-         delm   = xmcof*(( 1.0d0+eta*dcos(xmdf) )**3-delmo)
+         delm   = xmcof*(( 1.0_wp+eta*dcos(xmdf) )**3-delmo)
          temp   = delomg + delm
          mm     = xmdf + temp
          argpm  = omgadf - temp
@@ -1607,7 +1608,7 @@
 !
 !     Mean motion less than 0.0.
 !
-      if(xn .le. 0.0d0) then
+      if(xn .le. 0.0_wp) then
 
          call setmsg ( 'Mean motion less-than zero. ' &
           //           'This error may indicate a bad TLE set.'     )
@@ -1618,7 +1619,7 @@
       end if
 
       am   = (xke/xn)**x2o3*tempa**2
-      xn   = xke/am**1.5d0
+      xn   = xke/am**1.5_wp
       eccm = eccm-tempe
 
 !
@@ -1626,7 +1627,7 @@
 !     a lower limit of -0.001. This value apparently prevents
 !     an error signal due to roundoff error.
 !
-      if (eccm .ge. 1.0d0 .or. eccm .lt. -0.001d0) then
+      if (eccm .ge. 1.0_wp .or. eccm .lt. -0.001_wp) then
 
          call setmsg ( 'Mean eccentricity value, #, beyond ' &
           //           'allowed bounds [-0.001,1.0). This ' &
@@ -1638,7 +1639,7 @@
 
       end if
 
-      if ( am .lt. 0.95d0 ) then
+      if ( am .lt. 0.95_wp ) then
 
          call setmsg ( 'Mean semi-major axis value, #, below allowed ' &
           //           'minimum of 0.95. This error may indicate ' &
@@ -1654,12 +1655,12 @@
 !
 !     sgp4fix change test condition for eccentricity
 !
-      if (eccm .lt. 1.0d-6) eccm = 1.0d-6
+      if (eccm .lt. 1.0e-6_wp) eccm = 1.0e-6_wp
 
       mm     = mm+no*templ
       xlm    = mm+argpm+nodem
       emsq   = eccm*eccm
-      temp   = 1.0d0 - emsq
+      temp   = 1.0_wp - emsq
       nodem  = dmod( nodem, twopi())
       argpm  = dmod( argpm, twopi())
       xlm    = dmod( xlm,   twopi())
@@ -1696,14 +1697,14 @@
                        zmol, zmos,  inclo, .false., &
                        eccp, xincp, nodep, argpp, mp )
 
-         if(xincp .lt. 0.0d0) then
+         if(xincp .lt. 0.0_wp) then
             xincp  = -xincp
             nodep  = nodep + pi()
             argpp  = argpp - pi()
          end if
 
-         if ( (eccp .lt. 0.0d0) .or. &
-              (eccp .gt. 1.0d0) ) then
+         if ( (eccp .lt. 0.0_wp) .or. &
+              (eccp .gt. 1.0_wp) ) then
 
             call setmsg ( 'Perturbed eccentricity value, #, beyond ' &
              //           'allowed bounds [0,1]. This error may ' &
@@ -1725,24 +1726,24 @@
 
           sinip =  dsin(xincp)
           cosip =  dcos(xincp)
-          aycof = -0.5d0*j3oj2*sinip
+          aycof = -0.5_wp*j3oj2*sinip
 
 !
 !         sgp4fix for divide by zero with xincp = 180 deg
 !
 
-          if (dabs(cosip+1.d0).gt. 1.5d-12) then
-             xlcof  = -0.25d0*j3oj2*sinip* &
-                       (3.0d0+5.0d0*cosip)/(1.0d0+cosip)
+          if (dabs(cosip+1.0_wp).gt. 1.5e-12_wp) then
+             xlcof  = -0.25_wp*j3oj2*sinip* &
+                       (3.0_wp+5.0_wp*cosip)/(1.0_wp+cosip)
           else
-             xlcof  = -0.25d0*j3oj2*sinip* &
-                       (3.0d0+5.0d0*cosip)/temp4
+             xlcof  = -0.25_wp*j3oj2*sinip* &
+                       (3.0_wp+5.0_wp*cosip)/temp4
           end if
 
       end if
 
       axnl = eccp*dcos(argpp)
-      temp = 1.0d0 / (am*(1.0d0-eccp*eccp))
+      temp = 1.0_wp / (am*(1.0_wp-eccp*eccp))
       aynl = eccp*dsin(argpp) + temp*aycof
       xl   = mp + argpp + nodep + temp*xlcof*axnl
 
@@ -1758,21 +1759,21 @@
 !     better limits on corrections
 !
 
-      temp = 9999.9d0
+      temp = 9999.9_wp
 
-      do while ((temp.ge.1.0d-12).and.(iter.lt.10))
+      do while ((temp.ge.1.0e-12_wp).and.(iter.lt.10))
 
          iter  = iter+1
          sineo1= dsin(eo1)
          coseo1= dcos(eo1)
-         tem5  = 1.0d0 - coseo1*axnl - sineo1*aynl
+         tem5  = 1.0_wp - coseo1*axnl - sineo1*aynl
          tem5  = (u - aynl*coseo1 + axnl*sineo1 - eo1) / tem5
          temp  = dabs(tem5)
 
 !
 !        Stop excessive correction.
 !
-         if(temp.gt.1.0d0) tem5=tem5/temp
+         if(temp.gt.1.0_wp) tem5=tem5/temp
 
          eo1   = eo1+tem5
 
@@ -1784,12 +1785,12 @@
       ecose = axnl*coseo1+aynl*sineo1
       esine = axnl*sineo1-aynl*coseo1
       el2   = axnl*axnl+aynl*aynl
-      pl    = am*(1.0d0-el2)
+      pl    = am*(1.0_wp-el2)
 
 !
 !     Error check for semi-latus rectum < 0.0
 !
-      if ( pl .lt. 0.0d0 ) then
+      if ( pl .lt. 0.0_wp ) then
 
          call setmsg ( 'Semi-latus rectum less-than zero.'          )
          call sigerr ( 'SPICE(BADSEMILATUS)'                        )
@@ -1798,18 +1799,18 @@
 
       end if
 
-      rl    = am*(1.0d0-ecose)
+      rl    = am*(1.0_wp-ecose)
       rdotl = dsqrt(am)*esine/rl
       rvdotl= dsqrt(pl)/rl
-      betal = dsqrt(1.0d0-el2)
-      temp  = esine/(1.0d0+betal)
+      betal = dsqrt(1.0_wp-el2)
+      temp  = esine/(1.0_wp+betal)
       sinu  = am/rl*(sineo1-aynl-axnl*temp)
       cosu  = am/rl*(coseo1-axnl+aynl*temp)
       su    = datan2(sinu,cosu)
       sin2u = (cosu+cosu)*sinu
-      cos2u = 1.0d0-2.0d0*sinu*sinu
-      temp  = 1.0d0/pl
-      temp1 = 0.5d0*j2*temp
+      cos2u = 1.0_wp-2.0_wp*sinu*sinu
+      temp  = 1.0_wp/pl
+      temp1 = 0.5_wp*j2*temp
       temp2 = temp1*temp
 
 !
@@ -1817,18 +1818,18 @@
 !
       if (dodeep) then
           cosisq = cosip*cosip
-          con41  = 3.0d0*cosisq - 1.0d0
-          x1mth2 = 1.0d0 - cosisq
-          x7thm1 = 7.0d0*cosisq - 1.0d0
+          con41  = 3.0_wp*cosisq - 1.0_wp
+          x1mth2 = 1.0_wp - cosisq
+          x7thm1 = 7.0_wp*cosisq - 1.0_wp
       end if
 
-      mr    = rl*(1.0d0 - 1.5d0*temp2*betal*con41) + &
-                 0.5d0*temp1*x1mth2*cos2u
-      su    = su - 0.25d0*temp2*x7thm1*sin2u
-      xnode = nodep + 1.5d0*temp2*cosip*sin2u
-      xinc  = xincp + 1.5d0*temp2*cosip*sinip*cos2u
+      mr    = rl*(1.0_wp - 1.5_wp*temp2*betal*con41) + &
+                 0.5_wp*temp1*x1mth2*cos2u
+      su    = su - 0.25_wp*temp2*x7thm1*sin2u
+      xnode = nodep + 1.5_wp*temp2*cosip*sin2u
+      xinc  = xincp + 1.5_wp*temp2*cosip*sinip*cos2u
       mv    = rdotl - xn*temp1*x1mth2*sin2u / xke
-      rvdot = rvdotl + xn*temp1* (x1mth2*cos2u+1.5d0*con41) / xke
+      rvdot = rvdotl + xn*temp1* (x1mth2*cos2u+1.5_wp*con41) / xke
 
 !
 !     Orientation vectors.
@@ -1866,7 +1867,7 @@
 !     Place this test here to ensure evaluation of STATE.
 !     The result may be physically invalid.
 !
-      if (mr .lt. 1.0d0) then
+      if (mr .lt. 1.0_wp) then
 
          call setmsg ( 'Satellite has decayed.' )
          call sigerr ( 'SPICE(ORBITDECAY)'      )

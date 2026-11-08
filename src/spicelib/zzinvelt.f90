@@ -2,6 +2,7 @@
 
       subroutine zzinvelt ( p,      corsys, corpar, bounds, &
                             margin, exclud, inside         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,12 +34,12 @@
       include 'dskdsc.inc'
 
 
-      double precision      p      ( 3 )
-      integer               corsys
-      double precision      corpar ( * )
-      double precision      bounds ( 2, 3 )
-      double precision      margin
-      integer               exclud
+      real(wp)              p      ( 3 )
+      integer(ip)           corsys
+      real(wp)              corpar ( * )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              margin
+      integer(ip)           exclud
       logical               inside
 
 ! $ Brief_I/O
@@ -248,7 +249,7 @@
       call chkin ( 'ZZINVELT' )
 
 
-      if ( margin .lt. 0.d0 ) then
+      if ( margin .lt. 0.0_wp ) then
 
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )

@@ -1,6 +1,7 @@
 !$Procedure VSCLG ( Vector scaling, general dimension )
 
       subroutine vsclg ( s, v1, ndim, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer            ndim
-      double precision   s
-      double precision   v1   ( ndim )
-      double precision   vout ( ndim )
+      integer(ip)        ndim
+      real(wp)           s
+      real(wp)           v1   ( ndim )
+      real(wp)           vout ( ndim )
 
 ! $ Brief_I/O
 !
@@ -197,7 +198,7 @@
 !
 !     Local variables
 !
-      integer            i
+      integer(ip)        i
 
       do i=1,ndim
          vout(i) = s * v1(i)

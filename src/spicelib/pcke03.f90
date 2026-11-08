@@ -1,6 +1,7 @@
 !$Procedure PCKE03 ( PCK, evaluate data record from type 3 segment )
 
       subroutine pcke03 ( et, record, rotmat )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      record   ( *    )
-      double precision      rotmat   ( 6, 6 )
+      real(wp)              et
+      real(wp)              record   ( *    )
+      real(wp)              rotmat   ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -172,23 +173,23 @@
 !
 !     SPICELIB Functions
 !
-      double precision      halfpi
-      double precision      rpd
+      real(wp)              halfpi
+      real(wp)              rpd
 
       logical               return
 !
 !     Local variables
 !
-      double precision      eulang ( 6    )
-      double precision      mav    ( 3    )
-      double precision      rot    ( 3, 3 )
-      double precision      drotdt ( 3, 3 )
+      real(wp)              eulang ( 6    )
+      real(wp)              mav    ( 3    )
+      real(wp)              rot    ( 3, 3 )
+      real(wp)              drotdt ( 3, 3 )
 
-      integer               ncoeff
-      integer               degree
-      integer               cofloc
-      integer               i
-      integer               j
+      integer(ip)           ncoeff
+      integer(ip)           degree
+      integer(ip)           cofloc
+      integer(ip)           i
+      integer(ip)           j
 !
 !     Standard SPICE error handling.
 !
@@ -344,7 +345,7 @@
          do j = 1, 3
             rotmat(i,  j  ) = rot   (i,j)
             rotmat(i+3,j  ) = drotdt(i,j)
-            rotmat(i,  j+3) = 0.0d0
+            rotmat(i,  j+3) = 0.0_wp
             rotmat(i+3,j+3) = rot   (i,j)
          end do
       end do

@@ -1,6 +1,7 @@
 !$Procedure DASRDD ( DAS, read data, double precision )
 
       subroutine dasrdd ( handle, first, last, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               handle
-      integer               first
-      integer               last
-      double precision      data   ( * )
+      integer(ip)           handle
+      integer(ip)           first
+      integer(ip)           last
+      real(wp)              data   ( * )
 
 ! $ Brief_I/O
 !
@@ -296,23 +297,23 @@
 !
 !     Local parameters
 !
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd   =  128 )
 
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =  2  )
 
 
 !
 !     Local variables
 !
-      integer               clbase
-      integer               clsize
-      integer               n
-      integer               nread
-      integer               numdp
-      integer               recno
-      integer               wordno
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           n
+      integer(ip)           nread
+      integer(ip)           numdp
+      integer(ip)           recno
+      integer(ip)           wordno
 
 
 

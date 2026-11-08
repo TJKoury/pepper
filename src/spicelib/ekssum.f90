@@ -3,6 +3,7 @@
       subroutine ekssum (  handle,  segno,   tabnam,  nrows, &
                            ncols,   cnames,  dtypes,  sizes, &
                            strlns,  indexd,  nullok          )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,15 +29,15 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
+      integer(ip)           handle
+      integer(ip)           segno
       character*(*)         tabnam
-      integer               nrows
-      integer               ncols
+      integer(ip)           nrows
+      integer(ip)           ncols
       character*(*)         cnames ( * )
       character*(*)         dtypes ( * )
-      integer               sizes  ( * )
-      integer               strlns ( * )
+      integer(ip)           sizes  ( * )
+      integer(ip)           strlns ( * )
       logical               indexd ( * )
       logical               nullok ( * )
 
@@ -288,10 +289,10 @@
 !
 !     Local parameters
 !
-      integer               ntypes
+      integer(ip)           ntypes
       parameter           ( ntypes = 4 )
 
-      integer               short
+      integer(ip)           short
       parameter           ( short  = 4 )
 
 !
@@ -299,9 +300,9 @@
 !
       character*(short)     typstr ( ntypes )
 
-      integer               cdscrs ( cdscsz, mxclsg )
-      integer               i
-      integer               segdsc ( sdscsz )
+      integer(ip)           cdscrs ( cdscsz, mxclsg )
+      integer(ip)           i
+      integer(ip)           segdsc ( sdscsz )
 
 !
 !     Saved variables

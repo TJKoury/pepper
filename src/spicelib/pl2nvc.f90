@@ -1,6 +1,7 @@
 !$Procedure PL2NVC ( Plane to normal vector and constant )
 
       subroutine pl2nvc ( plane, normal, konst )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-      double precision      plane  ( ubpl )
-      double precision      normal (    3 )
-      double precision      konst
+      real(wp)              plane  ( ubpl )
+      real(wp)              normal (    3 )
+      real(wp)              konst
 
 ! $ Brief_I/O
 !
@@ -370,10 +371,10 @@
 !        closest point in the plane to the origin.
 !
 !
-      integer               nmlpos
+      integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer               conpos
+      integer(ip)           conpos
       parameter           ( conpos = 4 )
 
 !

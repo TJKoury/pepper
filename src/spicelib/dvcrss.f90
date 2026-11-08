@@ -1,6 +1,7 @@
 !$Procedure DVCRSS ( Derivative of Vector cross product )
 
       subroutine dvcrss ( s1, s2, sout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision    s1   ( 6 )
-      double precision    s2   ( 6 )
-      double precision    sout ( 6 )
+      real(wp)            s1   ( 6 )
+      real(wp)            s2   ( 6 )
+      real(wp)            sout ( 6 )
 
 ! $ Brief_I/O
 !
@@ -371,9 +372,9 @@
 !
 !     Local Variables
 !
-      double precision      vtemp  ( 3 )
-      double precision      dvtmp1 ( 3 )
-      double precision      dvtmp2 ( 3 )
+      real(wp)              vtemp  ( 3 )
+      real(wp)              dvtmp1 ( 3 )
+      real(wp)              dvtmp2 ( 3 )
 
 !
 !     Calculate the cross product of S1 and S2, store it in VTEMP.

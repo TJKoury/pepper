@@ -1,6 +1,7 @@
 !$Procedure      ZZEKDE02 ( EK, delete column entry, class 2 )
 
       subroutine zzekde02 ( handle, segdsc, coldsc, recptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
 
 ! $ Brief_I/O
 !
@@ -134,18 +135,18 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               base
-      integer               datptr
-      integer               idxtyp
-      integer               nlinks
-      integer               p
-      integer               ptrloc
-      integer               recno
+      integer(ip)           base
+      integer(ip)           datptr
+      integer(ip)           idxtyp
+      integer(ip)           nlinks
+      integer(ip)           p
+      integer(ip)           ptrloc
+      integer(ip)           recno
 
 !
 !     Standard SPICE error handling.

@@ -1,6 +1,7 @@
 !$Procedure SPKR18 ( Read SPK record from segment, type 18 )
 
       subroutine spkr18 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       include 'spk18.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -198,7 +199,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lstltd
+      integer(ip)           lstltd
 
       logical               odd
       logical               failed
@@ -207,60 +208,60 @@
 !
 !     Local parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dirsiz + 1 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 3 )
 
 !
 !     Maximum polynomial degree:
 !
-      integer               maxdeg
+      integer(ip)           maxdeg
       parameter           ( maxdeg = 15 )
 
 !
 !     Local variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      contrl ( ctrlsz )
-      double precision      dc     ( nd )
+      real(wp)              buffer ( bufsiz )
+      real(wp)              contrl ( ctrlsz )
+      real(wp)              dc     ( nd )
 
-      integer               begidx
-      integer               begin
-      integer               bufbas
-      integer               dirbas
-      integer               end
-      integer               endidx
-      integer               first
-      integer               group
-      integer               high
-      integer               i
-      integer               ic     ( ni )
-      integer               last
-      integer               lsize
-      integer               low
-      integer               maxwnd
-      integer               n
-      integer               ndir
-      integer               nread
-      integer               packsz
-      integer               remain
-      integer               rsize
-      integer               start
-      integer               subtyp
-      integer               timbas
-      integer               type
-      integer               wndsiz
+      integer(ip)           begidx
+      integer(ip)           begin
+      integer(ip)           bufbas
+      integer(ip)           dirbas
+      integer(ip)           end
+      integer(ip)           endidx
+      integer(ip)           first
+      integer(ip)           group
+      integer(ip)           high
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           last
+      integer(ip)           lsize
+      integer(ip)           low
+      integer(ip)           maxwnd
+      integer(ip)           n
+      integer(ip)           ndir
+      integer(ip)           nread
+      integer(ip)           packsz
+      integer(ip)           remain
+      integer(ip)           rsize
+      integer(ip)           start
+      integer(ip)           subtyp
+      integer(ip)           timbas
+      integer(ip)           type
+      integer(ip)           wndsiz
 
 
       if ( return () ) then

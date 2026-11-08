@@ -2,6 +2,7 @@
 
       subroutine ckr01 ( handle, descr, sclkdp, tol, needav, &
                          record, found                       )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      record ( * )
+      real(wp)              record ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -345,8 +346,8 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               lstled
-      integer               lstcld
+      integer(ip)           lstled
+      integer(ip)           lstcld
 
 !
 !     Local parameters
@@ -370,43 +371,43 @@
 !                   operates on.
 !
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc    = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic    = 6 )
 
-      integer               qsiz
+      integer(ip)           qsiz
       parameter           ( qsiz   = 4 )
 
-      integer               qavsiz
+      integer(ip)           qavsiz
       parameter           ( qavsiz = 7 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype =  1 )
 
 !
 !     Local variables
 !
-      integer               icd    ( nic )
-      integer               beg
-      integer               end
-      integer               nrec
-      integer               ndir
-      integer               psiz
-      integer               group
-      integer               dirloc
-      integer               remain
-      integer               skip
-      integer               grpndx
-      integer               i
-      integer               n
+      integer(ip)           icd    ( nic )
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           nrec
+      integer(ip)           ndir
+      integer(ip)           psiz
+      integer(ip)           group
+      integer(ip)           dirloc
+      integer(ip)           remain
+      integer(ip)           skip
+      integer(ip)           grpndx
+      integer(ip)           i
+      integer(ip)           n
 
-      double precision      dcd    ( ndc )
-      double precision      buffer ( dirsiz )
+      real(wp)              dcd    ( ndc )
+      real(wp)              buffer ( dirsiz )
 
       logical               fnd
 

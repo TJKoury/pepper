@@ -6,6 +6,7 @@
                             udrefn, rpt,    udrepi, udrepu, udrepf, &
                             bail,   udbail, mw,     nw,     work, &
                             cnfine, result                          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -38,7 +39,7 @@
       include               'gf.inc'
       include               'zzgf.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         vecdef
@@ -48,13 +49,13 @@
       character*(*)         abcorr
       character*(*)         obsrvr
       character*(*)         dref
-      double precision      dvec   ( 3 )
+      real(wp)              dvec   ( 3 )
       character*(*)         crdsys
       character*(*)         crdnam
       character*(*)         relate
-      double precision      refval
-      double precision      tol
-      double precision      adjust
+      real(wp)              refval
+      real(wp)              tol
+      real(wp)              adjust
       external              udstep
       external              udrefn
       logical               rpt
@@ -64,11 +65,11 @@
       logical               bail
       external              udbail
       logical               udbail
-      integer               mw
-      integer               nw
-      double precision      work   ( lbcell : mw, nw )
-      double precision      cnfine ( lbcell : * )
-      double precision      result ( lbcell : * )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work   ( lbcell : mw, nw )
+      real(wp)              cnfine ( lbcell : * )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -854,13 +855,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      pi
-      double precision      twopi
+      real(wp)              pi
+      real(wp)              twopi
 
-      integer               cardd
-      integer               isrchc
-      integer               lnknxt
-      integer               wncard
+      integer(ip)           cardd
+      integer(ip)           isrchc
+      integer(ip)           lnknxt
+      integer(ip)           wncard
 
       logical               elemi
 
@@ -902,28 +903,28 @@
 !
 !     Margin for branch cut avoidance. Units are radians:
 !
-      double precision      bcamrg
-      parameter           ( bcamrg = 1.d-11 )
+      real(wp)              bcamrg
+      parameter           ( bcamrg = 1.0e-11_wp )
 
 !
 !     Margin for local extrema search. Units are radians:
 !
-      double precision      lcxmrg
-      parameter           ( lcxmrg = 1.d-12 )
+      real(wp)              lcxmrg
+      parameter           ( lcxmrg = 1.0e-12_wp )
 
 !
 !     Short alias for LBCELL:
 !
-      integer               lb
+      integer(ip)           lb
       parameter           ( lb     = lbcell )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = lbcell )
 
 !
 !     Number of supported comparison operators:
 !
-      integer               nc
+      integer(ip)           nc
       parameter           ( nc     = 7 )
 
 !
@@ -931,45 +932,45 @@
 !
 !     Maximum body name length:
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
 !
 !     NAMLEN is the maximum length of both a frame name and of
 !     any kernel pool variable name.
 !
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 32 )
 
 !
 !     OPLEN is the maximum string length for comparison operators.
 !     OPLEN may grow if new comparisons are added.
 !
-      integer               oplen
+      integer(ip)           oplen
       parameter           ( oplen = 6 )
 
 !
 !     FUNLEN is the length of the function name string.
 !
-      integer               funlen
+      integer(ip)           funlen
       parameter           ( funlen = 50 )
 
 !
 !     CRDLEN is the maximum length of a coordinate name.
 !
-      integer               crdlen
+      integer(ip)           crdlen
       parameter           ( crdlen = 32 )
 
 !
 !     SYSLEN is the maximum length of a coordinate system name.
 !
-      integer               syslen
+      integer(ip)           syslen
       parameter           ( syslen = 32 )
 
 !
 !     RPTLEN is the maximum length of a progress reporter message.
 !
-      integer               rptlen
+      integer(ip)           rptlen
       parameter           ( rptlen = 80 )
 !
 !     Local variables
@@ -988,55 +989,55 @@
       character*(oplen)     uop
       character*(oplen)     prxrel
 
-      double precision      alt
-      double precision      cmpval
-      double precision      cv
-      double precision      et
-      double precision      extval
-      double precision      lat
-      double precision      locref
-      double precision      loctol
-      double precision      lon
-      double precision      prxval
-      double precision      r2ovr2
-      double precision      start
-      double precision      sv
-      double precision      value
-      double precision      xrfval
-      double precision      y      ( 3 )
+      real(wp)              alt
+      real(wp)              cmpval
+      real(wp)              cv
+      real(wp)              et
+      real(wp)              extval
+      real(wp)              lat
+      real(wp)              locref
+      real(wp)              loctol
+      real(wp)              lon
+      real(wp)              prxval
+      real(wp)              r2ovr2
+      real(wp)              start
+      real(wp)              sv
+      real(wp)              value
+      real(wp)              xrfval
+      real(wp)              y      ( 3 )
 
-      integer               bot
-      integer               class
-      integer               clssid
-      integer               compl
-      integer               f1
-      integer               f2
-      integer               frcode
-      integer               head
-      integer               i
-      integer               left
-      integer               n
-      integer               needwn ( lbcell : nwlong )
-      integer               next
-      integer               nl
-      integer               node
-      integer               q1
-      integer               q2
-      integer               q3
-      integer               q4
-      integer               quad
-      integer               refctr
-      integer               region ( 3 )
-      integer               res
-      integer               res1
-      integer               res2
-      integer               right
-      integer               s
-      integer               top
-      integer               total
-      integer               wh
-      integer               wix    (             nwlong )
-      integer               wwpool ( 2, lbpool : nwlong )
+      integer(ip)           bot
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           compl
+      integer(ip)           f1
+      integer(ip)           f2
+      integer(ip)           frcode
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           left
+      integer(ip)           n
+      integer(ip)           needwn ( lbcell : nwlong )
+      integer(ip)           next
+      integer(ip)           nl
+      integer(ip)           node
+      integer(ip)           q1
+      integer(ip)           q2
+      integer(ip)           q3
+      integer(ip)           q4
+      integer(ip)           quad
+      integer(ip)           refctr
+      integer(ip)           region ( 3 )
+      integer(ip)           res
+      integer(ip)           res1
+      integer(ip)           res2
+      integer(ip)           right
+      integer(ip)           s
+      integer(ip)           top
+      integer(ip)           total
+      integer(ip)           wh
+      integer(ip)           wix    (             nwlong )
+      integer(ip)           wwpool ( 2, lbpool : nwlong )
 
       logical               flip
       logical               found
@@ -1058,7 +1059,7 @@
                                   'LOCMAX', &
                                   'ABSMAX'  /
 
-      data                  y   / 0.d0, 1.d0, 0.d0 /
+      data                  y   / 0.0_wp, 1.0_wp, 0.0_wp /
 
 
 !
@@ -1311,7 +1312,7 @@
 !
 !     Make sure TOL is positive.
 !
-      if ( tol .le. 0.d0 ) then
+      if ( tol .le. 0.0_wp ) then
 
          call setmsg ( 'TOL was #; must be positive.' )
          call errdp  ( '#',  tol                      )
@@ -1326,12 +1327,12 @@
 !     This will allow us to keep the total round-off error within
 !     the desired tolerance.
 !
-      loctol = max ( 1.d-7,  tol / 10.d0 )
+      loctol = max ( 1.0e-7_wp,  tol / 10.0_wp )
 
 !
 !     Make sure ADJUST is non-negative.
 !
-      if ( adjust .lt. 0.d0 ) then
+      if ( adjust .lt. 0.0_wp ) then
 
          call setmsg ( 'ADJUST was #; must be non-negative.' )
          call errdp  ( '#',  adjust                          )
@@ -1347,7 +1348,7 @@
 !
       if(  (uop .ne. 'ABSMIN')  .and. (uop .ne. 'ABSMAX' ) ) then
 
-         if ( adjust .ne. 0.d0 ) then
+         if ( adjust .ne. 0.0_wp ) then
 
             call setmsg ( 'ADJUST should have value zero for all '  // &
                           'comparison operators except ABSMAX and ' // &
@@ -1414,7 +1415,7 @@
            .or. ( nrmsys .eq. pgrsys ) &
            .or. ( nrmsys .eq. radsys )  ) then
 
-         if ( cos(refval) .eq. 1.d0 ) then
+         if ( cos(refval) .eq. 1.0_wp ) then
 !
 !           The reference value lies on the branch cut at 0.
 !
@@ -1449,7 +1450,7 @@
                 .or. ( nrmsys .eq. latsys ) &
                 .or. ( nrmsys .eq. sphsys )  ) then
 
-         if ( cos(refval) .eq. -1.d0 ) then
+         if ( cos(refval) .eq. -1.0_wp ) then
 !
 !           The reference value lies on the branch cut at pi.
 !
@@ -1571,7 +1572,7 @@
 !        equatorial radius and flattening factor: 1 and 0,
 !        respectively, are just fine.
 !
-         call recpgr ( rctrnm, y, 1.d0, 0.d0, lon, lat, alt )
+         call recpgr ( rctrnm, y, 1.0_wp, 0.0_wp, lon, lat, alt )
 
 !
 !        Planetographic longitude ranges from 0 to 2*pi, so
@@ -1658,7 +1659,7 @@
 !     We use the constant 0.5 * 2**0.5 quite a bit.  Create a
 !     "macro" variable for it.
 !
-      r2ovr2 = sqrt(2.d0) / 2.d0
+      r2ovr2 = sqrt(2.0_wp) / 2.0_wp
 
 !
 !     Set the progress report suffix strings.
@@ -1748,7 +1749,7 @@
             call zzgfrelx( udstep,       udrefn,          zzgfcosd, &
                            zzgfudlt,     zzgfcosg, &
                            '=',          prxval,          loctol, &
-                           0.d0,         cnfine,          mw, &
+                           0.0_wp,         cnfine,          mw, &
                            nw,           work,            rpt, &
                            udrepi,       udrepu,          udrepf, &
                            rptpre,       rptsuf,          bail, &
@@ -1763,7 +1764,7 @@
             call zzgfrelx( udstep,       udrefn,          zzgfcocd, &
                            zzgfudlt,     zzgfcocg, &
                            '=',          prxval,          loctol, &
-                           0.d0,         cnfine,          mw, &
+                           0.0_wp,         cnfine,          mw, &
                            nw,           work,            rpt, &
                            udrepi,       udrepu,          udrepf, &
                            rptpre,       rptsuf,          bail, &
@@ -1871,7 +1872,7 @@
          call zzgfrelx ( udstep,    udrefn,              zzgfcocd, &
                          zzgfudlt,  zzgfcocg, &
                          prxrel,    prxval,              loctol, &
-                         0.d0,      cnfine,              mw, &
+                         0.0_wp,      cnfine,              mw, &
                          nw,        work,                rpt, &
                          udrepi,    udrepu,              udrepf, &
                          rptpre,    rptsuf,              bail, &
@@ -1914,7 +1915,7 @@
          call zzgfrelx ( udstep,    udrefn,              zzgfcocd, &
                          zzgfudlt,  zzgfcocg, &
                          prxrel,    prxval,              loctol, &
-                         0.d0,      work(lb,left),       mw, &
+                         0.0_wp,      work(lb,left),       mw, &
                          nw,        work,                rpt, &
                          udrepi,    udrepu,              udrepf, &
                          rptpre,    rptsuf,              bail, &
@@ -1981,8 +1982,8 @@
 
             call zzgfrelx ( udstep,    udrefn,              zzgfcodc, &
                             zzgfudlt,  zzgfcog, &
-                            uop,       0.d0,                loctol, &
-                            0.d0,      work(lb,s),          mw, &
+                            uop,       0.0_wp,                loctol, &
+                            0.0_wp,      work(lb,s),          mw, &
                             nw,        work,                rpt, &
                             udrepi,    udrepu,              udrepf, &
                             rptpre,    rptsuf,              bail, &
@@ -2082,7 +2083,7 @@
       call zzgfrelx( udstep,       udrefn,          zzgfcosd, &
                      zzgfudlt,     zzgfcosg, &
                      '>',          prxval,          loctol, &
-                     0.d0,         cnfine,          mw, &
+                     0.0_wp,         cnfine,          mw, &
                      nw,           work,            rpt, &
                      udrepi,       udrepu,          udrepf, &
                      rptpre,       rptsuf,          bail, &
@@ -2128,7 +2129,7 @@
       call zzgfrelx( udstep,       udrefn,          zzgfcosd, &
                      zzgfudlt,     zzgfcosg, &
                      '<',          prxval,          loctol, &
-                     0.d0,         cnfine,          mw, &
+                     0.0_wp,         cnfine,          mw, &
                      nw,           work,            rpt, &
                      udrepi,       udrepu,          udrepf, &
                      rptpre,       rptsuf,          bail, &
@@ -2174,8 +2175,8 @@
 
       call zzgfrelx( udstep,       udrefn,          zzgfcocd, &
                      zzgfudlt,     zzgfcocg, &
-                     '>',          0.d0,            loctol, &
-                     0.d0,         cnfine,          mw, &
+                     '>',          0.0_wp,            loctol, &
+                     0.0_wp,         cnfine,          mw, &
                      nw,           work,            rpt, &
                      udrepi,       udrepu,          udrepf, &
                      rptpre,       rptsuf,          bail, &
@@ -2340,8 +2341,8 @@
 
             call zzgfrelx( udstep,    udrefn,              zzgfcodc, &
                            zzgfudlt,  zzgfcocg, &
-                           uop,       0.d0,                loctol, &
-                           0.d0,      work(lb,region(i)),  mw, &
+                           uop,       0.0_wp,                loctol, &
+                           0.0_wp,      work(lb,region(i)),  mw, &
                            nw,        work,                rpt, &
                            udrepi,    udrepu,              udrepf, &
                            rptpre,    rptsuf,              bail, &
@@ -2379,7 +2380,7 @@
          end do
 
 
-         if ( adjust .eq. 0.d0 ) then
+         if ( adjust .eq. 0.0_wp ) then
 !
 !           The result we have is the final result.
 !
@@ -2413,7 +2414,7 @@
 
                xrfval = max( extval - adjust,  -pi() )
             else
-               xrfval = max( extval - adjust,   0.d0 )
+               xrfval = max( extval - adjust,   0.0_wp )
             end if
 
             uop    = '>'
@@ -2468,7 +2469,7 @@
 
          if ( locref .lt. -pi()/2 ) then
             quad = 3
-         else if ( locref .lt. 0.d0 ) then
+         else if ( locref .lt. 0.0_wp ) then
             quad = 4
          else if ( locref .lt. pi()/2 ) then
             quad = 1
@@ -2632,7 +2633,7 @@
 
             prxval = datan2 ( sv, cv )
 
-            if ( prxval .lt. 0.d0 ) then
+            if ( prxval .lt. 0.0_wp ) then
                prxval = prxval + twopi()
             end if
 
@@ -2793,7 +2794,7 @@
             call zzgfrelx ( udstep,    udrefn,     zzgfcodc, &
                             zzgfudlt,  zzgfcog, &
                             '<',       prxval,      loctol, &
-                            0.d0,      work(lb,s),  mw, &
+                            0.0_wp,      work(lb,s),  mw, &
                             nw,        work,        rpt, &
                             udrepi,    udrepu,      udrepf, &
                             rptpre,    rptsuf,      bail, &
@@ -2812,7 +2813,7 @@
             call zzgfrelx ( udstep,    udrefn,      zzgfcodc, &
                             zzgfudlt,  zzgfcog, &
                             '<',       prxval,      loctol, &
-                            0.d0,      work(lb,s),  mw, &
+                            0.0_wp,      work(lb,s),  mw, &
                             nw,        work,        rpt, &
                             udrepi,    udrepu,      udrepf, &
                             rptpre,    rptsuf,      bail, &

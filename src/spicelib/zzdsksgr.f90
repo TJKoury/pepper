@@ -1,6 +1,7 @@
 !$Procedure ZZDSKSGR ( DSK, return segment bounding radius )
 
-      double precision function zzdsksgr ( dskdsc )
+      real(wp) function zzdsksgr ( dskdsc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,7 +31,7 @@
 
       include 'dskdsc.inc'
 
-      double precision      dskdsc ( * )
+      real(wp)              dskdsc ( * )
 
 
 ! $ Brief_I/O
@@ -183,22 +184,22 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
 !
 !     Local variables
 !
-      double precision      bds    ( 2, 3 )
-      double precision      f
-      double precision      mag    ( 3 )
-      double precision      minr
-      double precision      re
-      double precision      rp
+      real(wp)              bds    ( 2, 3 )
+      real(wp)              f
+      real(wp)              mag    ( 3 )
+      real(wp)              minr
+      real(wp)              re
+      real(wp)              rp
 
-      integer               b
-      integer               corsys
-      integer               i
-      integer               j
+      integer(ip)           b
+      integer(ip)           corsys
+      integer(ip)           i
+      integer(ip)           j
 
 
 !
@@ -208,7 +209,7 @@
 !
 !     Set an initial return value.
 !
-      zzdsksgr = -1.d0
+      zzdsksgr = -1.0_wp
 
 
 !
@@ -222,7 +223,7 @@
 !
          minr = dskdsc(mn3idx)
 
-         if ( minr .le. 0.d0 ) then
+         if ( minr .le. 0.0_wp ) then
 
             call chkin  ( 'ZZDSKSGR'                )
             call setmsg ( 'Minimum radius was *.'   )
@@ -246,7 +247,7 @@
 !
          re = dskdsc(paridx)
 
-         if ( re .le. 0.d0 ) then
+         if ( re .le. 0.0_wp ) then
 
             call chkin  ( 'ZZDSKSGR'                  )
             call setmsg ( 'Equatorial radius was *.'  )
@@ -262,7 +263,7 @@
 !
          f = dskdsc(paridx+1)
 
-         if ( ( f .ge. 0.d0 ) .and. ( f .lt. 1.d0 ) ) then
+         if ( ( f .ge. 0.0_wp ) .and. ( f .lt. 1.0_wp ) ) then
 !
 !           This is the oblate case.
 !
@@ -272,7 +273,7 @@
             zzdsksgr = dskdsc(mx3idx) +  re
 
 
-         else if ( f .lt. 0.d0 ) then
+         else if ( f .lt. 0.0_wp ) then
 !
 !           This is the prolate case.
 !
@@ -280,7 +281,7 @@
 !           occurs on the poles at the maximum height.
 !
             re       = dskdsc(paridx)
-            rp       = re  * ( 1.d0 - f )
+            rp       = re  * ( 1.0_wp - f )
             zzdsksgr = dskdsc(mx3idx) +  rp
 
          else

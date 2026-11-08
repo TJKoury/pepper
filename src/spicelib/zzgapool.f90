@@ -2,6 +2,7 @@
 
       subroutine zzgapool ( varnam, wtvars, wtptrs, &
                             wtpool, wtagnt, agtset )
+      use pepper_kinds, only: ip
 
 
 ! $ Abstract
@@ -27,16 +28,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
       character*(*)         varnam
       character*(*)         wtvars ( lbcell : * )
-      integer               wtptrs ( * )
-      integer               wtpool ( 2, lbpool : * )
+      integer(ip)           wtptrs ( * )
+      integer(ip)           wtpool ( 2, lbpool : * )
       character*(*)         wtagnt ( * )
       character*(*)         agtset ( lbcell : * )
 
@@ -138,19 +139,19 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
-      integer               lnknxt
-      integer               sizec
+      integer(ip)           bsrchc
+      integer(ip)           cardc
+      integer(ip)           lnknxt
+      integer(ip)           sizec
 
       logical               return
 
 !
 !     Local variables
 !
-      integer               loc
-      integer               nfetch
-      integer               node
+      integer(ip)           loc
+      integer(ip)           nfetch
+      integer(ip)           node
 
 
       if ( return() ) then

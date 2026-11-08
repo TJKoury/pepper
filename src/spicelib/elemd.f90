@@ -1,6 +1,7 @@
 !$Procedure ELEMD ( Element of a double precision set )
 
       logical function elemd ( item, a )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer                   lbcell
+      integer(ip)               lbcell
       parameter               ( lbcell = -5 )
 
-      double precision item
-      double precision a      ( lbcell:* )
+      real(wp) item
+      real(wp) a      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -215,8 +216,8 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchd
-      integer               cardd
+      integer(ip)           bsrchd
+      integer(ip)           cardd
       logical               return
 
 

@@ -1,6 +1,7 @@
 !$Procedure DASUDI ( DAS, update data, integer )
 
       subroutine dasudi ( handle, first, last, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
 
-      integer               handle
-      integer               first
-      integer               last
-      integer               data   ( * )
+      integer(ip)           handle
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           data   ( * )
 
 ! $ Brief_I/O
 !
@@ -316,10 +317,10 @@
 !
 !     Local parameters
 !
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi    = 256 )
 
 
@@ -327,16 +328,16 @@
 !
 !     Local variables
 !
-      integer               clbase
-      integer               clsize
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               n
-      integer               numint
-      integer               nwritn
-      integer               recno
-      integer               wordno
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           n
+      integer(ip)           numint
+      integer(ip)           nwritn
+      integer(ip)           recno
+      integer(ip)           wordno
 
 
 

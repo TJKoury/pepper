@@ -1,6 +1,7 @@
 !$Procedure CHBVAL ( Value of a Chebyshev polynomial expansion )
 
       subroutine chbval ( cp, degp, x2s, x, p )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      double precision   cp  ( * )
-      integer            degp
-      double precision   x2s ( 2 )
-      double precision   x
-      double precision   p
+      real(wp)           cp  ( * )
+      integer(ip)        degp
+      real(wp)           x2s ( 2 )
+      real(wp)           x
+      real(wp)           p
 
 ! $ Brief_I/O
 !
@@ -274,19 +275,19 @@
 !
 !     Local variables
 !
-      integer          j
-      double precision w(3)
-      double precision s
-      double precision s2
+      integer(ip)      j
+      real(wp) w(3)
+      real(wp) s
+      real(wp) s2
 
 !
 !     Transform X to S and initialize temporary variables.
 !
       s     = (x-x2s(1)) / x2s(2)
-      s2    = 2.0d0 * s
+      s2    = 2.0_wp * s
       j     = degp  + 1
-      w(1)  = 0.d0
-      w(2)  = 0.d0
+      w(1)  = 0.0_wp
+      w(2)  = 0.0_wp
 
 !
 !     Evaluate the polynomial using recursion.

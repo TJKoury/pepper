@@ -1,6 +1,7 @@
 !$Procedure SPKE20 ( SPK, evaluate Chebyshev polynomials, type 20 )
 
       subroutine spke20 ( et, record, xyzdot )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      xyzdot   ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              xyzdot   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -196,13 +197,13 @@
 !
 !     Local variables
 !
-      double precision      intgrl ( 3 )
+      real(wp)              intgrl ( 3 )
 
-      integer               degp
-      integer               i
-      integer               j
-      integer               ncof
-      integer               posloc
+      integer(ip)           degp
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           ncof
+      integer(ip)           posloc
 
 !
 !     Standard SPICE error handling.

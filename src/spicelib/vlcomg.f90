@@ -1,6 +1,7 @@
 !$Procedure VLCOMG ( Vector linear combination, general dimension )
 
       subroutine vlcomg ( n, a, v1, b, v2, sum )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer            n
-      double precision   a
-      double precision   v1  ( n )
-      double precision   b
-      double precision   v2  ( n )
-      double precision   sum ( n )
+      integer(ip)        n
+      real(wp)           a
+      real(wp)           v1  ( n )
+      real(wp)           b
+      real(wp)           v2  ( n )
+      real(wp)           sum ( n )
 
 ! $ Brief_I/O
 !
@@ -202,7 +203,7 @@
 !
 !     Local variables
 !
-      integer        i
+      integer(ip)    i
 
       do i = 1,n
          sum(i) = a*v1(i) + b*v2(i)

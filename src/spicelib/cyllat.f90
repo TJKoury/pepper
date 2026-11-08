@@ -1,6 +1,7 @@
 !$Procedure CYLLAT ( Cylindrical to latitudinal )
 
       subroutine cyllat ( r, clon, z,  radius, lon, lat )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision    r
-      double precision    clon
-      double precision    z
-      double precision    radius
-      double precision    lon
-      double precision    lat
+      real(wp)            r
+      real(wp)            clon
+      real(wp)            z
+      real(wp)            radius
+      real(wp)            lon
+      real(wp)            lat
 
 ! $ Brief_I/O
 !
@@ -405,12 +406,12 @@
 !
 !     Local Variables
 !
-      double precision big
-      double precision x
-      double precision y
+      real(wp) big
+      real(wp) x
+      real(wp) y
 
-      double precision rho
-      double precision lattud
+      real(wp) rho
+      real(wp) lattud
 
 !
 !     Convert the input cylindrical coordinates to latitudinal
@@ -423,12 +424,12 @@
          y   = z/big
          rho = big * dsqrt( x*x + y*y )
       else
-         rho = 0.0d0
+         rho = 0.0_wp
       end if
 
 
-      if (rho.eq.0.d0) then
-         lattud = 0.d0
+      if (rho.eq.0.0_wp) then
+         lattud = 0.0_wp
       else
          lattud = datan2 (z,r)
       end if

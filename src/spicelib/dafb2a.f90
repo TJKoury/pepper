@@ -1,6 +1,7 @@
 !$Procedure DAFB2A ( DAF, binary to ASCII )
 
       subroutine dafb2a ( binary, ascii )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -184,7 +185,7 @@
 !
 !     Local variables
 !
-      integer               unit
+      integer(ip)           unit
 
 !
 !     Standard SPICE error handling.

@@ -1,6 +1,7 @@
 !$Procedure STCC01 ( STAR catalog type 1, check whether type 1 )
 
       subroutine stcc01 ( catfnm, tabnam, istyp1, errmsg )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -164,15 +165,15 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               eknseg
-      integer               nblen
-      integer               isrchc
+      integer(ip)           eknseg
+      integer(ip)           nblen
+      integer(ip)           isrchc
 
 
 !
 !     Local parameters.
 !
-      integer               cat1nc
+      integer(ip)           cat1nc
       parameter           ( cat1nc = 7 )
 
 !
@@ -186,14 +187,14 @@
       character*(tnamsz)    tmptnm
       character*(tnamsz)    tnmprv
 
-      integer               i
-      integer               j
-      integer               ncols
-      integer               nrows
-      integer               numseg
-      integer               sizes  ( mxclsg )
-      integer               strlns ( mxclsg )
-      integer               tmphnd
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           ncols
+      integer(ip)           nrows
+      integer(ip)           numseg
+      integer(ip)           sizes  ( mxclsg )
+      integer(ip)           strlns ( mxclsg )
+      integer(ip)           tmphnd
 
       logical               found
       logical               indexd ( mxclsg )

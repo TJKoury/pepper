@@ -1,6 +1,7 @@
 !$Procedure ZZGETBFF ( Private --- Get Binary File Format )
 
       subroutine zzgetbff ( bffid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
 
       include              'zzddhman.inc'
 
-      integer               bffid
+      integer(ip)           bffid
 
 ! $ Brief_I/O
 !
@@ -143,21 +144,21 @@
 !
 !     Local Parameters
 !
-      double precision      dpvalu
-      parameter           ( dpvalu = 7.0d0 )
+      real(wp)              dpvalu
+      parameter           ( dpvalu = 7.0_wp )
 
 !
 !     Local Variables
 !
-      integer               i
+      integer(ip)           i
 
-      double precision      dequiv
-      integer               iequiv ( 2 )
+      real(wp)              dequiv
+      integer(ip)           iequiv ( 2 )
 
       equivalence         ( dequiv, iequiv )
 
-      integer               int1st ( numbff )
-      integer               int2nd ( numbff )
+      integer(ip)           int1st ( numbff )
+      integer(ip)           int2nd ( numbff )
 
       data                  int1st(bigi3e)  / 1075576832 /
       data                  int2nd(bigi3e)  / 0          /

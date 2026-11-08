@@ -2,6 +2,7 @@
 
       subroutine ekacei (  handle,  segno,  recno,  column, &
                            nvals,   ivals,  isnull          )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,12 +26,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           recno
       character*(*)         column
-      integer               nvals
-      integer               ivals  ( * )
+      integer(ip)           nvals
+      integer(ip)           ivals  ( * )
       logical               isnull
 
 ! $ Brief_I/O
@@ -717,11 +718,11 @@
 !
 !     Local variables
 !
-      integer               coldsc ( cdscsz )
-      integer               class
-      integer               dtype
-      integer               recptr
-      integer               segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           class
+      integer(ip)           dtype
+      integer(ip)           recptr
+      integer(ip)           segdsc ( sdscsz )
 
 !
 !     Use discovery check-in.

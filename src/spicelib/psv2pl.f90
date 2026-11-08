@@ -1,6 +1,7 @@
 !$Procedure PSV2PL ( Point and spanning vectors to plane )
 
       subroutine psv2pl ( point, span1, span2, plane )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
 
-      double precision      point (    3 )
-      double precision      span1 (    3 )
-      double precision      span2 (    3 )
-      double precision      plane ( ubpl )
+      real(wp)              point (    3 )
+      real(wp)              span1 (    3 )
+      real(wp)              span2 (    3 )
+      real(wp)              plane ( ubpl )
 
 ! $ Brief_I/O
 !
@@ -166,7 +167,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
       logical               return
       logical               vzero
@@ -191,16 +192,16 @@
 !        closest point in the plane to the origin.
 !
 !
-      integer               nmlpos
+      integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer               conpos
+      integer(ip)           conpos
       parameter           ( conpos = 4 )
 
 !
 !     Local variables
 !
-      double precision      tmpvec ( 3 )
+      real(wp)              tmpvec ( 3 )
 
 
 !
@@ -235,7 +236,7 @@
 !     origin.  If the constant is negative, negate both it and the
 !     normal vector.
 !
-      if ( plane(conpos) .lt. 0.d0 ) then
+      if ( plane(conpos) .lt. 0.0_wp ) then
 
          plane(conpos) =   -plane(conpos)
          call vminus     (  plane(nmlpos), tmpvec        )

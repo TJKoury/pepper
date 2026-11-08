@@ -1,6 +1,7 @@
 !$Procedure SPCEC ( SPK and CK, extract comments )
 
       subroutine spcec ( handle, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer               handle
-      integer               unit
+      integer(ip)           handle
+      integer(ip)           unit
 
 ! $ Brief_I/O
 !
@@ -200,10 +201,10 @@
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
-      integer               maxcpr
+      integer(ip)           maxcpr
       parameter           ( maxcpr = 1000   )
 
 !
@@ -215,17 +216,17 @@
       character*(1)         eot
       character*(1)         null
 
-      integer               bward
-      integer               c
-      integer               dafu
-      integer               free
-      integer               fward
-      integer               iostat
-      integer               nd
-      integer               ni
-      integer               nrr
-      integer               pos
-      integer               rec
+      integer(ip)           bward
+      integer(ip)           c
+      integer(ip)           dafu
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           iostat
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nrr
+      integer(ip)           pos
+      integer(ip)           rec
 
 !
 !     Standard SPICE error handling.

@@ -2,6 +2,7 @@
 
       subroutine zzrytlat ( vertex, raydir, bounds, &
                             margin, nxpts,  xpt    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,20 +33,20 @@
 
       include 'dsktol.inc'
 
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      bounds ( 2, 3 )
-      double precision      margin
-      integer               nxpts
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              margin
+      integer(ip)           nxpts
+      real(wp)              xpt    ( 3 )
 
-      integer               lonidx
+      integer(ip)           lonidx
       parameter           ( lonidx = 1 )
 
-      integer               latidx
+      integer(ip)           latidx
       parameter           ( latidx = 2 )
 
-      integer               radidx
+      integer(ip)           radidx
       parameter           ( radidx = 3 )
 
 ! $ Brief_I/O
@@ -191,11 +192,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      halfpi
-      double precision      vdist
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              dpmax
+      real(wp)              halfpi
+      real(wp)              vdist
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               failed
 
@@ -206,62 +207,62 @@
 !
 !     Radius expansion factor:
 !
-      double precision      radfac
-      parameter           ( radfac = 1.1d0 )
+      real(wp)              radfac
+      parameter           ( radfac = 1.1_wp )
 
 
 !
 !     Element boundary indices:
 !
-      integer               west
+      integer(ip)           west
       parameter           ( west   = 1 )
 
-      integer               east
+      integer(ip)           east
       parameter           ( east   = 2 )
 
-      integer               south
+      integer(ip)           south
       parameter           ( south  = 1 )
 
-      integer               north
+      integer(ip)           north
       parameter           ( north  = 2 )
 
-      integer               inner
+      integer(ip)           inner
       parameter           ( inner  = 1 )
 
-      integer               outer
+      integer(ip)           outer
       parameter           ( outer  = 2 )
 
 
 !
 !     Local variables
 !
-      double precision      angle
-      double precision      dist
-      double precision      eastb  ( 3 )
-      double precision      eback  ( 3 )
-      double precision      endpt2 ( 3 )
-      double precision      loncov
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxr
-      double precision      minlat
-      double precision      minlon
-      double precision      minr
-      double precision      mndist
-      double precision      negdir ( 3 )
-      double precision      origin ( 3 )
-      double precision      s
-      double precision      srfx   ( 3 )
-      double precision      udir   ( 3 )
-      double precision      vlat
-      double precision      vlon
-      double precision      vr
-      double precision      wback  ( 3 )
-      double precision      westb  ( 3 )
-      double precision      xpt2   ( 3 )
-      double precision      z      ( 3 )
+      real(wp)              angle
+      real(wp)              dist
+      real(wp)              eastb  ( 3 )
+      real(wp)              eback  ( 3 )
+      real(wp)              endpt2 ( 3 )
+      real(wp)              loncov
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxr
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              minr
+      real(wp)              mndist
+      real(wp)              negdir ( 3 )
+      real(wp)              origin ( 3 )
+      real(wp)              s
+      real(wp)              srfx   ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              vlat
+      real(wp)              vlon
+      real(wp)              vr
+      real(wp)              wback  ( 3 )
+      real(wp)              westb  ( 3 )
+      real(wp)              xpt2   ( 3 )
+      real(wp)              z      ( 3 )
 
-      integer               nx
+      integer(ip)           nx
 
       logical               found
       logical               inside
@@ -276,8 +277,8 @@
 !
 !     Initial values
 !
-      data                  origin / 3 *   0.d0 /
-      data                  z      / 0.d0, 0.d0, 1.d0 /
+      data                  origin / 3 *   0.0_wp /
+      data                  z      / 0.0_wp, 0.0_wp, 1.0_wp /
 
 
 !
@@ -416,7 +417,7 @@
 !
       s = vnorm(vertex) + radfac * maxr
 
-      call vlcom ( 1.d0, vertex, s, udir, endpt2 )
+      call vlcom ( 1.0_wp, vertex, s, udir, endpt2 )
 
 !
 !     Now try the upper latitude bound. We can skip this test
@@ -428,7 +429,7 @@
 !        MAXLAT and the +Z axis. Note that the surface might be the
 !        lower nappe of the cone.
 !
-         angle = max ( 0.d0,  halfpi() - maxlat )
+         angle = max ( 0.0_wp,  halfpi() - maxlat )
 
          call incnsg ( origin, z,  angle, vertex, &
                        endpt2, nx, srfx,  xpt2    )
@@ -628,7 +629,7 @@
 !
       loncov = maxlon - minlon
 
-      if ( cos(loncov) .lt. 1.d0 ) then
+      if ( cos(loncov) .lt. 1.0_wp ) then
 !
 !        We have distinct longitude boundaries. Go to work.
 !
@@ -639,13 +640,13 @@
 !        The vector WESTB is an outward-facing vector normal to
 !        the west boundary.
 !
-         call vpack ( sin(minlon), -cos(minlon), 0.d0, westb )
+         call vpack ( sin(minlon), -cos(minlon), 0.0_wp, westb )
 
 
          s = radfac * ( vnorm(vertex) + maxr )
 
 
-         call zzinrypl ( vertex, udir, westb, 0.d0, s, nx, srfx )
+         call zzinrypl ( vertex, udir, westb, 0.0_wp, s, nx, srfx )
 
          if ( nx .eq. 1 ) then
 !
@@ -701,9 +702,9 @@
 !        The vector EASTB is an outward-facing vector normal to
 !        the east boundary.
 
-         call vpack ( -sin(maxlon), cos(maxlon), 0.d0, eastb )
+         call vpack ( -sin(maxlon), cos(maxlon), 0.0_wp, eastb )
 
-         call zzinrypl ( vertex, udir, eastb, 0.d0, s, nx, srfx )
+         call zzinrypl ( vertex, udir, eastb, 0.0_wp, s, nx, srfx )
 
          if ( nx .eq. 1 ) then
 !
@@ -757,7 +758,7 @@
 !     Find the intersection of the ray and inner bounding
 !     sphere, if possible.
 !
-      if ( minr .gt. 0.d0 ) then
+      if ( minr .gt. 0.0_wp ) then
 
          call zzryxsph ( vertex, udir, minr, srfx, found )
 

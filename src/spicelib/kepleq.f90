@@ -1,6 +1,7 @@
 !$Procedure KEPLEQ ( Solve Kepler's Equation --- Equinoctial Form )
 
-      double precision function kepleq (ml,h,k)
+      real(wp) function kepleq (ml,h,k)
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision  ml
-      double precision  h
-      double precision  k
+      real(wp)          ml
+      real(wp)          h
+      real(wp)          k
 
 ! $ Brief_I/O
 !
@@ -129,22 +130,22 @@
 !
 !     SPICELIB Functions
 !
-      double precision      kpsolv
+      real(wp)              kpsolv
 
 !
 !     Local variables
 !
-      double precision      evec ( 2 )
-      double precision      e2
+      real(wp)              evec ( 2 )
+      real(wp)              e2
 
 !
 !     Make sure that H and K are in the expected range.
 !
       e2 = h*h + k*k
 
-      if ( e2 .ge. 0.81d0 ) then
+      if ( e2 .ge. 0.81_wp ) then
 
-         kepleq = 0.0d0
+         kepleq = 0.0_wp
          call chkin  ( 'KEPLEQ' )
          call setmsg ( 'The values of H and K supplied to KEPLEQ ' &
          //            'must satisfy the inequality H*H + K*K < ' &

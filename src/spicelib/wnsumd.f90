@@ -3,6 +3,7 @@
       subroutine wnsumd ( window, &
                           meas,   avg,   stddev, &
                           idxsml, idxlon         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,15 +21,15 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      window    ( lbcell:* )
-      double precision      meas
-      double precision      avg
-      double precision      stddev
-      integer               idxsml
-      integer               idxlon
+      real(wp)              window    ( lbcell:* )
+      real(wp)              meas
+      real(wp)              avg
+      real(wp)              stddev
+      integer(ip)           idxsml
+      integer(ip)           idxlon
 
 ! $ Brief_I/O
 !
@@ -331,7 +332,7 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
+      integer(ip)           cardd
       logical               return
       logical               even
 
@@ -339,14 +340,14 @@
 !
 !     Local variables
 !
-      double precision      m
-      double precision      sum
-      double precision      sumsqr
-      double precision      mshort
-      double precision      mlong
+      real(wp)              m
+      real(wp)              sum
+      real(wp)              sumsqr
+      real(wp)              mshort
+      real(wp)              mlong
 
-      integer               i
-      integer               card
+      integer(ip)           i
+      integer(ip)           card
 
 
 !
@@ -381,9 +382,9 @@
 !
       if ( card .eq. 0 ) then
 
-         meas   = 0.d0
-         avg    = 0.d0
-         stddev = 0.d0
+         meas   = 0.0_wp
+         avg    = 0.0_wp
+         stddev = 0.0_wp
          idxsml  = 0
          idxlon   = 0
 
@@ -394,8 +395,8 @@
 !
       else
 
-         sum    = 0.d0
-         sumsqr = 0.d0
+         sum    = 0.0_wp
+         sumsqr = 0.0_wp
 
          idxsml  = 1
          mshort = window(2) - window(1)
@@ -425,8 +426,8 @@
 !        The envelope please?
 !
          meas   = sum
-         avg    = meas * 2.d0 / dble ( card )
-         stddev = dsqrt ( ( sumsqr * 2.d0 / dble ( card ) ) - avg*avg )
+         avg    = meas * 2.0_wp / real( card, wp )
+         stddev = dsqrt ( ( sumsqr * 2.0_wp / real( card, wp ) ) - avg*avg )
 
       end if
 

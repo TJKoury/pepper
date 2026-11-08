@@ -1,6 +1,7 @@
 !$Procedure PLTEXP ( Plate expander )
 
       subroutine pltexp ( iverts, delta, overts )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 
       implicit none
 
-      double precision      iverts ( 3, 3 )
-      double precision      delta
-      double precision      overts ( 3, 3 )
+      real(wp)              iverts ( 3, 3 )
+      real(wp)              delta
+      real(wp)              overts ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -215,9 +216,9 @@
 !
 !     Local variables
 !
-      double precision      sclctr ( 3 )
-      double precision      d
-      double precision      s
+      real(wp)              sclctr ( 3 )
+      real(wp)              d
+      real(wp)              s
 
 !
 !     Compute the centroid of the input vertices. Scale the centroid
@@ -225,7 +226,7 @@
 !
 !     Unroll all loops to avoid loop overhead.
 !
-      d = delta / 3.d0
+      d = delta / 3.0_wp
 
       sclctr(1) = d * ( iverts(1,1) + iverts(1,2) + iverts(1,3) )
       sclctr(2) = d * ( iverts(2,1) + iverts(2,2) + iverts(2,3) )
@@ -247,7 +248,7 @@
 !
 !
 !
-      s = 1.d0 + delta
+      s = 1.0_wp + delta
 
 
       overts(1,1) = ( s * iverts(1,1) ) - sclctr(1)

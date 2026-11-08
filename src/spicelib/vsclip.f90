@@ -1,6 +1,7 @@
 !$Procedure VSCLIP ( Vector scaling, 3 dimensions, in place )
 
       subroutine vsclip ( s, v )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   s
-      double precision   v ( 3 )
+      real(wp)           s
+      real(wp)           v ( 3 )
 
 ! $ Brief_I/O
 !

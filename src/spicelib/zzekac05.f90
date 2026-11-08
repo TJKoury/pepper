@@ -2,6 +2,7 @@
 
       subroutine zzekac05 (  handle,  segdsc,  coldsc, &
                              dvals,   entszs,  nlflgs  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
-      double precision      dvals  ( * )
-      integer               entszs ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
+      real(wp)              dvals  ( * )
+      integer(ip)           entszs ( * )
       logical               nlflgs ( * )
 
 ! $ Brief_I/O
@@ -203,7 +204,7 @@
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dpsize )
 
 !
@@ -211,28 +212,28 @@
 !
       character*(cnamsz)    column
 
-      double precision      page   ( pgsizd )
+      real(wp)              page   ( pgsizd )
 
-      integer               adrbuf ( bufsiz )
-      integer               bufptr
-      integer               class
-      integer               colidx
-      integer               cursiz
-      integer               from
-      integer               i
-      integer               n
-      integer               ndata
-      integer               nelt
-      integer               nlink
-      integer               nrows
-      integer               nulptr
-      integer               p
-      integer               p2
-      integer               pbase
-      integer               remain
-      integer               row
-      integer               size
-      integer               to
+      integer(ip)           adrbuf ( bufsiz )
+      integer(ip)           bufptr
+      integer(ip)           class
+      integer(ip)           colidx
+      integer(ip)           cursiz
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           ndata
+      integer(ip)           nelt
+      integer(ip)           nlink
+      integer(ip)           nrows
+      integer(ip)           nulptr
+      integer(ip)           p
+      integer(ip)           p2
+      integer(ip)           pbase
+      integer(ip)           remain
+      integer(ip)           row
+      integer(ip)           size
+      integer(ip)           to
 
       logical               cntinu
       logical               fixsiz

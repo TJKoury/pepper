@@ -1,6 +1,7 @@
 !$Procedure PLNSNS ( Planetographic Longitude Sense )
 
-      integer function plnsns ( bodid )
+      integer(ip) function plnsns ( bodid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               bodid
+      integer(ip)           bodid
 
 ! $ Brief_I/O
 !
@@ -163,16 +164,16 @@
 !-&
 
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
       character*(1)         type
       character*(wdsize)    item
 
-      double precision      rate
+      real(wp)              rate
 
-      integer               n
-      integer               value
+      integer(ip)           n
+      integer(ip)           value
 
       logical               found
 
@@ -211,7 +212,7 @@
 !        the planetocentric and planetographic longitude are the
 !        same...
 !
-         if ( rate .lt. 0.0d0 ) then
+         if ( rate .lt. 0.0_wp ) then
 
             value = 1
 

@@ -1,6 +1,7 @@
 !$Procedure DAFRWA ( DAF, record/word to address )
 
       subroutine dafrwa ( recno, wordno, addr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      integer               recno
-      integer               wordno
-      integer               addr
+      integer(ip)           recno
+      integer(ip)           wordno
+      integer(ip)           addr
 
 ! $ Brief_I/O
 !

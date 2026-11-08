@@ -1,6 +1,7 @@
 !$Procedure SGFCON ( Generic Segments: Fetch constants )
 
       subroutine sgfcon ( handle, descr, first, last, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      integer               first
-      integer               last
-      double precision      values ( * )
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      integer(ip)           first
+      integer(ip)           last
+      real(wp)              values ( * )
 
 ! $ Brief_I/O
 !
@@ -157,10 +158,10 @@
 !
 !     Local Variables
 !
-      integer               b
-      integer               base
-      integer               e
-      integer               myncon
+      integer(ip)           b
+      integer(ip)           base
+      integer(ip)           e
+      integer(ip)           myncon
 !
 !     Standard SPICE error handling.
 !

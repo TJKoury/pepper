@@ -3,6 +3,7 @@
       subroutine zzgfilu ( method, angtyp, target, illum, fixref, &
                            abcorr, obsrvr, spoint, et,    udfunc, &
                            decres, angle                          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -40,11 +41,11 @@
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
-      double precision      et
+      real(wp)              spoint ( 3 )
+      real(wp)              et
       external              udfunc
       logical               decres
-      double precision      angle
+      real(wp)              angle
 
 ! $ Brief_I/O
 !
@@ -175,7 +176,7 @@
 !
 !     SPICELIB functions
 !
-      integer               esrchc
+      integer(ip)           esrchc
 
       logical               failed
       logical               return
@@ -183,29 +184,29 @@
 !
 !     Local parameters
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               mthlen
+      integer(ip)           mthlen
       parameter           ( mthlen = 200 )
 
 !
 !     Indices of illumination angles in the ANGLES
 !     array:
 !
-      integer               phsidx
+      integer(ip)           phsidx
       parameter           ( phsidx = 1 )
 
-      integer               incidx
+      integer(ip)           incidx
       parameter           ( incidx = 2 )
 
-      integer               emtidx
+      integer(ip)           emtidx
       parameter           ( emtidx = 3 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 50 )
 
 !
@@ -219,27 +220,27 @@
       character*(frnmln)    svref
       character*(bdnmln)    svtnam
 
-      double precision      angles ( 3 )
-      double precision      emista ( 2 )
-      double precision      ettarg
-      double precision      incsta ( 2 )
-      double precision      normal ( 3 )
-      double precision      phssta ( 2 )
-      double precision      radii  ( 3 )
-      double precision      rate
-      double precision      srfvec ( 3 )
-      double precision      svnrml ( 3 )
-      double precision      svsspt ( 3 )
+      real(wp)              angles ( 3 )
+      real(wp)              emista ( 2 )
+      real(wp)              ettarg
+      real(wp)              incsta ( 2 )
+      real(wp)              normal ( 3 )
+      real(wp)              phssta ( 2 )
+      real(wp)              radii  ( 3 )
+      real(wp)              rate
+      real(wp)              srfvec ( 3 )
+      real(wp)              svnrml ( 3 )
+      real(wp)              svsspt ( 3 )
 
-      integer               n
-      integer               fxfcde
-      integer               fxclss
-      integer               fxtyid
-      integer               fxcent
-      integer               svaidx
-      integer               svobs
-      integer               svilum
-      integer               svtarg
+      integer(ip)           n
+      integer(ip)           fxfcde
+      integer(ip)           fxclss
+      integer(ip)           fxtyid
+      integer(ip)           fxcent
+      integer(ip)           svaidx
+      integer(ip)           svobs
+      integer(ip)           svilum
+      integer(ip)           svtarg
 
       logical               found
       logical               svablk ( nabcor )
@@ -955,7 +956,7 @@
 !     The observer-target illumination angle is decreasing if and only
 !     the derivative of the angle with respect to time is negative.
 !
-      decres  =  rate  .lt.  0.d0
+      decres  =  rate  .lt.  0.0_wp
 
       call chkout ( 'ZZGFILDC' )
       return

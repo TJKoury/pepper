@@ -1,6 +1,7 @@
 !$Procedure NPARSD ( Double Precision parsing of a string )
 
       subroutine nparsd ( string, x, error, ptr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
       implicit none
 
       character*(*)    string
-      double precision x
+      real(wp) x
       character*(*)    error
-      integer          ptr
+      integer(ip)      ptr
 
 ! $ Brief_I/O
 !
@@ -231,48 +232,48 @@
 !     SPICELIB functions.
 !
 
-      double precision      dpmax
+      real(wp)              dpmax
       external              pi
-      double precision      pi
+      real(wp)              pi
 
 !
 !     Local Parameters.
 !
 
-      double precision      base
-      parameter           ( base   = 10.0d0 )
+      real(wp)              base
+      parameter           ( base   = 10.0_wp )
 
-      integer               digit
+      integer(ip)           digit
       parameter           ( digit  = 1   )
 
-      integer               dpoint
+      integer(ip)           dpoint
       parameter           ( dpoint = 2   )
 
-      integer               expont
+      integer(ip)           expont
       parameter           ( expont = 3   )
 
-      integer               ignore
+      integer(ip)           ignore
       parameter           ( ignore = 4   )
 
-      integer               bpistr
+      integer(ip)           bpistr
       parameter           ( bpistr = 5   )
 
-      integer               epistr
+      integer(ip)           epistr
       parameter           ( epistr = 6   )
 
-      integer               sign
+      integer(ip)           sign
       parameter           ( sign   = 7   )
 
-      integer               ibase
+      integer(ip)           ibase
       parameter           ( ibase  = 10  )
 
-      integer               nknown
+      integer(ip)           nknown
       parameter           ( nknown = 128 )
 
-      integer               test
+      integer(ip)           test
       parameter           ( test = 16 )
 
-      integer               errsiz
+      integer(ip)           errsiz
       parameter           ( errsiz = 160 )
 
       character*(errsiz)    blnkst
@@ -282,35 +283,35 @@
       character*(errsiz)    unxppt
       character*(errsiz)    unxpsn
 
-      double precision      decval
-      double precision      divisr
-      double precision      dpsign (     2     )
-      double precision      ecount
-      double precision      expval
-      double precision      factor
-      double precision      intbnd
-      double precision      intval
-      double precision      lookup ( 0 : ibase )
-      double precision      maxexp
-      double precision      minexp
-      double precision      next
-      double precision      smlbnd
-      double precision      value
-      double precision      values (     nknown )
+      real(wp)              decval
+      real(wp)              divisr
+      real(wp)              dpsign (     2     )
+      real(wp)              ecount
+      real(wp)              expval
+      real(wp)              factor
+      real(wp)              intbnd
+      real(wp)              intval
+      real(wp)              lookup ( 0 : ibase )
+      real(wp)              maxexp
+      real(wp)              minexp
+      real(wp)              next
+      real(wp)              smlbnd
+      real(wp)              value
+      real(wp)              values (     nknown )
 
-      integer               class  ( 0 : nknown )
-      integer               exp
-      integer               i
-      integer               id
-      integer               signdx
+      integer(ip)           class  ( 0 : nknown )
+      integer(ip)           exp
+      integer(ip)           i
+      integer(ip)           id
+      integer(ip)           signdx
 
-      integer               b
-      integer               blank
-      integer               l
-      integer               m
-      integer               nl
-      integer               nexti
-      integer               thisi
+      integer(ip)           b
+      integer(ip)           blank
+      integer(ip)           l
+      integer(ip)           m
+      integer(ip)           nl
+      integer(ip)           nexti
+      integer(ip)           thisi
 
 
       logical               dodec
@@ -333,21 +334,21 @@
 !
       save
 
-      data                  lookup  /               1.0d0, &
-                                                   10.0d0, &
-                                                  100.0d0, &
-                                                 1000.0d0, &
-                                                10000.0d0, &
-                                               100000.0d0, &
-                                              1000000.0d0, &
-                                             10000000.0d0, &
-                                            100000000.0d0, &
-                                           1000000000.0d0, &
-                                          10000000000.0d0  /
+      data                  lookup  /               1.0_wp, &
+                                                   10.0_wp, &
+                                                  100.0_wp, &
+                                                 1000.0_wp, &
+                                                10000.0_wp, &
+                                               100000.0_wp, &
+                                              1000000.0_wp, &
+                                             10000000.0_wp, &
+                                            100000000.0_wp, &
+                                           1000000000.0_wp, &
+                                          10000000000.0_wp  /
 
       data                  first  / .true. /
 
-      data                  values  / nknown * 0.0d0 /
+      data                  values  / nknown * 0.0_wp /
 
       data                  class   / 0, nknown * 0 /
 
@@ -384,18 +385,18 @@
 
          blank = ichar ( ' ' )
 
-         values( ichar ( '0' ) ) =  0.0d0
-         values( ichar ( '1' ) ) =  1.0d0
-         values( ichar ( '2' ) ) =  2.0d0
-         values( ichar ( '3' ) ) =  3.0d0
-         values( ichar ( '4' ) ) =  4.0d0
-         values( ichar ( '5' ) ) =  5.0d0
-         values( ichar ( '6' ) ) =  6.0d0
-         values( ichar ( '7' ) ) =  7.0d0
-         values( ichar ( '8' ) ) =  8.0d0
-         values( ichar ( '9' ) ) =  9.0d0
-         values( ichar ( '-' ) ) = -1.0d0
-         values( ichar ( '+' ) ) =  1.0d0
+         values( ichar ( '0' ) ) =  0.0_wp
+         values( ichar ( '1' ) ) =  1.0_wp
+         values( ichar ( '2' ) ) =  2.0_wp
+         values( ichar ( '3' ) ) =  3.0_wp
+         values( ichar ( '4' ) ) =  4.0_wp
+         values( ichar ( '5' ) ) =  5.0_wp
+         values( ichar ( '6' ) ) =  6.0_wp
+         values( ichar ( '7' ) ) =  7.0_wp
+         values( ichar ( '8' ) ) =  8.0_wp
+         values( ichar ( '9' ) ) =  9.0_wp
+         values( ichar ( '-' ) ) = -1.0_wp
+         values( ichar ( '+' ) ) =  1.0_wp
 
          class( ichar(' ') ) = ignore
          class( ichar(',') ) = ignore
@@ -439,12 +440,12 @@
          smlbnd = dpmax()/lookup(ibase)
 
          intbnd = base
-         next   = intbnd + 1.0d0
+         next   = intbnd + 1.0_wp
 
          do while ( intbnd .ne. next )
 
             intbnd = intbnd *  base
-            next   = intbnd +  1.0d0
+            next   = intbnd +  1.0_wp
 
          end do
 
@@ -494,20 +495,20 @@
 !     So far there is no integer, decimal or exponent part to this
 !     string.
 !
-      intval    = 0.0d0
-      decval    = 0.0d0
-      expval    = 0.0d0
-      divisr    = 1.0d0
-      factor    = 1.0d0
-      ecount    = 0.0d0
+      intval    = 0.0_wp
+      decval    = 0.0_wp
+      expval    = 0.0_wp
+      divisr    = 1.0_wp
+      factor    = 1.0_wp
+      ecount    = 0.0_wp
 !
 !     Right now if we encounter a sign, it's part of the mantissa.
 !     And until we know better the sign of both the mantissa and
 !     exponent are +1 (as opposed to -1).
 !
       signdx    = 1
-      dpsign(1) = 1.0d0
-      dpsign(2) = 1.0d0
+      dpsign(1) = 1.0_wp
+      dpsign(2) = 1.0_wp
 !
 !     Before doing anything else we determine whether or not
 !     the input string is empty.
@@ -687,8 +688,8 @@
 
                      roundi = .false.
 
-                     if ( values(id) .gt. 0.5d0*base ) then
-                        intval = intval + 1.0d0
+                     if ( values(id) .gt. 0.5_wp*base ) then
+                        intval = intval + 1.0_wp
                      end if
 
                   end if
@@ -723,8 +724,8 @@
 
                      roundd = .false.
 
-                     if ( values(id) .ge. 0.5d0*base ) then
-                        decval =  decval + 1.0d0
+                     if ( values(id) .ge. 0.5_wp*base ) then
+                        decval =  decval + 1.0_wp
                      end if
 
                   end if
@@ -817,7 +818,7 @@
                dodec  = .true.
                doint  = .false.
                doexp  = .false.
-               zeroi  = intval .eq. 0.0d0
+               zeroi  = intval .eq. 0.0_wp
 
             else
 
@@ -1013,7 +1014,7 @@
 !        We do not have a mantissa, so we had an  implicit mantissa,
 !        see above, so we need to set the value to one.
 !
-         value = 1.0d0
+         value = 1.0_wp
 
       else
 !

@@ -1,6 +1,7 @@
 !$Procedure SPKPVN ( S/P Kernel, position and velocity in native frame )
 
       subroutine spkpvn ( handle, descr, et, ref, state, center )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
 
       include 'spkrec.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      integer               ref
-      double precision      state    ( 6 )
-      integer               center
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      integer(ip)           ref
+      real(wp)              state    ( 6 )
+      integer(ip)           center
 
 ! $ Brief_I/O
 !
@@ -253,17 +254,17 @@
 !
 
 
-      double precision      record   ( maxrec )
+      real(wp)              record   ( maxrec )
 
-      double precision      dc       (      2 )
-      integer               ic       (      6 )
-      integer               recsiz
-      integer               type
+      real(wp)              dc       (      2 )
+      integer(ip)           ic       (      6 )
+      integer(ip)           recsiz
+      integer(ip)           type
 
 !
 !     Local Parameters
 !
-      integer               nstate
+      integer(ip)           nstate
       parameter           ( nstate = 6 )
 
 !

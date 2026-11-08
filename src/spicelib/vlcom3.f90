@@ -1,6 +1,7 @@
 !$Procedure VLCOM3 ( Vector linear combination, 3 dimensions )
 
       subroutine vlcom3 ( a, v1, b, v2, c, v3, sum )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,13 +20,13 @@
 
       implicit none
 
-      double precision   a
-      double precision   v1  ( 3 )
-      double precision   b
-      double precision   v2  ( 3 )
-      double precision   c
-      double precision   v3  ( 3 )
-      double precision   sum ( 3 )
+      real(wp)           a
+      real(wp)           v1  ( 3 )
+      real(wp)           b
+      real(wp)           v2  ( 3 )
+      real(wp)           c
+      real(wp)           v3  ( 3 )
+      real(wp)           sum ( 3 )
 
 ! $ Brief_I/O
 !

@@ -3,6 +3,7 @@
       subroutine dskb02 ( handle, dladsc, nv,     np,     nvxtot, &
                           vtxbds, voxsiz, voxori, vgrext, &
                           cgscal, vtxnpl, voxnpt, voxnpl          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,19 +28,19 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               nv
-      integer               np
-      integer               nvxtot
-      double precision      vtxbds ( 2, 3 )
-      double precision      voxsiz
-      double precision      voxori ( 3 )
-      integer               vgrext ( 3 )
-      integer               cgscal
-      integer               vtxnpl
-      integer               voxnpt
-      integer               voxnpl
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           nv
+      integer(ip)           np
+      integer(ip)           nvxtot
+      real(wp)              vtxbds ( 2, 3 )
+      real(wp)              voxsiz
+      real(wp)              voxori ( 3 )
+      integer(ip)           vgrext ( 3 )
+      integer(ip)           cgscal
+      integer(ip)           vtxnpl
+      integer(ip)           voxnpt
+      integer(ip)           voxnpl
 
 ! $ Brief_I/O
 !
@@ -342,25 +343,25 @@
 !
 !     Local parameters
 !
-      integer               dbfsiz
+      integer(ip)           dbfsiz
       parameter           ( dbfsiz = 10 )
 
-      integer               ibfsiz
+      integer(ip)           ibfsiz
       parameter           ( ibfsiz = 10 )
 
-      integer               vtbsiz
+      integer(ip)           vtbsiz
       parameter           ( vtbsiz = 6 )
 
 !
 !     Local variables
 !
-      double precision      dbuff  ( dbfsiz )
+      real(wp)              dbuff  ( dbfsiz )
 
-      integer               b
-      integer               e
-      integer               dpbase
-      integer               ibase
-      integer               ibuff  ( ibfsiz )
+      integer(ip)           b
+      integer(ip)           e
+      integer(ip)           dpbase
+      integer(ip)           ibase
+      integer(ip)           ibuff  ( ibfsiz )
 
 
       if ( return() ) then

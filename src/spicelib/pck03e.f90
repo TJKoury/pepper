@@ -1,6 +1,7 @@
 !$Procedure PCK03E ( PCK, end a type 3 segment )
 
       subroutine pck03e ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !

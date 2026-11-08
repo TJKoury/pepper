@@ -1,6 +1,7 @@
 !$Procedure OSCLTX ( Extended osculating elements from state )
 
       subroutine oscltx ( state, et, mu, elts )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -25,10 +26,10 @@
 
       include 'oscltx.inc'
 
-      double precision      state  ( 6 )
-      double precision      et
-      double precision      mu
-      double precision      elts   ( *  )
+      real(wp)              state  ( 6 )
+      real(wp)              et
+      real(wp)              mu
+      real(wp)              elts   ( *  )
 
 ! $ Brief_I/O
 !
@@ -530,11 +531,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      exact
-      double precision      twopi
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              dpmax
+      real(wp)              exact
+      real(wp)              twopi
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               failed
       logical               return
@@ -542,35 +543,35 @@
 !
 !     Local parameters
 !
-      double precision      small
-      parameter           ( small  = 1.d-10 )
+      real(wp)              small
+      parameter           ( small  = 1.0e-10_wp )
 
-      double precision      margin
-      parameter           ( margin = 2.d2 )
+      real(wp)              margin
+      parameter           ( margin = 2.0e2_wp )
 
 !
 !     Local variables
 !
-      double precision      a
-      double precision      b
-      double precision      c1
-      double precision      c2
-      double precision      dec
-      double precision      e
-      double precision      ecc
-      double precision      eccvec ( 3 )
-      double precision      limit
-      double precision      mucubr
-      double precision      nu
-      double precision      pole   ( 3 )
-      double precision      range
-      double precision      rhat   ( 3 )
-      double precision      rmag
-      double precision      rperi  ( 3 )
-      double precision      tau
-      double precision      vel    ( 3 )
-      double precision      vmag
-      double precision      xmat   ( 3, 3 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              dec
+      real(wp)              e
+      real(wp)              ecc
+      real(wp)              eccvec ( 3 )
+      real(wp)              limit
+      real(wp)              mucubr
+      real(wp)              nu
+      real(wp)              pole   ( 3 )
+      real(wp)              range
+      real(wp)              rhat   ( 3 )
+      real(wp)              rmag
+      real(wp)              rperi  ( 3 )
+      real(wp)              tau
+      real(wp)              vel    ( 3 )
+      real(wp)              vmag
+      real(wp)              xmat   ( 3, 3 )
 
       logical               cmptau
       logical               pass1
@@ -579,7 +580,7 @@
       save                  pass1
 
       data                  pass1 / .true. /
-      data                  limit / 0.d0   /
+      data                  limit / 0.0_wp   /
 
 
       if ( return() ) then
@@ -601,9 +602,9 @@
 !     cannot be computed.
 !
       call cleard ( oscxsz-8, elts(9) )
-      nu  = 0.d0
-      tau = 0.d0
-      a   = 0.d0
+      nu  = 0.0_wp
+      tau = 0.0_wp
+      a   = 0.0_wp
 
 !
 !     Compute osculating elements using OSCELT. Take advantage
@@ -650,19 +651,19 @@
 
       vmag = vnorm( vel )
 
-      ecc  = exact ( elts(2), 0.d0, small )
+      ecc  = exact ( elts(2), 0.0_wp, small )
 
 
-      if ( ecc .ne. 0.d0 ) then
+      if ( ecc .ne. 0.0_wp ) then
 !                                 _   _
 !        C1 is the coefficient of r/||r|| in (1) above:
 !
-         c1 =    (1.d0/mu) * ( ( rmag * vmag**2 ) - mu )
+         c1 =    (1.0_wp/mu) * ( ( rmag * vmag**2 ) - mu )
 
 !                                 _
 !        C2 is the coefficient of v in (1) above:
 !
-         c2 =  - (1.d0/mu) * vdot( state, vel )
+         c2 =  - (1.0_wp/mu) * vdot( state, vel )
 
 !
 !        ECCVEC is the eccentricity vector:
@@ -744,7 +745,7 @@
 !        mu/LIMIT < r
 !
 !
-      if ( elts(2) .eq. 1.d0 ) then
+      if ( elts(2) .eq. 1.0_wp ) then
 !
 !        This is the parabolic case.
 !
@@ -768,7 +769,7 @@
 !
 !     We assume V and MU are small enough not to cause overflow.
 !
-      e = ( 0.5d0 * vmag**2 ) - ( mu / rmag )
+      e = ( 0.5_wp * vmag**2 ) - ( mu / rmag )
 
 
       if (  abs(e)  .lt.  ( abs(mu)/limit )  ) then
@@ -792,7 +793,7 @@
 !
       ecc = elts(2)
 
-      if ( ecc .lt. 1.d0 ) then
+      if ( ecc .lt. 1.0_wp ) then
 !
 !        The period is given by the formula
 !
@@ -819,12 +820,12 @@
 !        Note that the case of non-positive MU has already
 !        been ruled out.
 !
-         b      = ( limit / twopi() )**(2.d0/3.d0)
+         b      = ( limit / twopi() )**(2.0_wp/3.0_wp)
 
-         mucubr = mu ** (1.d0/3.d0 )
+         mucubr = mu ** (1.0_wp/3.0_wp )
 
 
-         if ( mu .ge. 1.d0 ) then
+         if ( mu .ge. 1.0_wp ) then
 
             cmptau =  (  a / mucubr  )  .lt.    b
          else
@@ -833,7 +834,7 @@
 
          if ( cmptau ) then
 
-            tau = twopi() * ( (a/mucubr)**(3.d0/2.d0) )
+            tau = twopi() * ( (a/mucubr)**(3.0_wp/2.0_wp) )
 
          end if
 

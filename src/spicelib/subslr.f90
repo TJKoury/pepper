@@ -2,6 +2,7 @@
 
       subroutine subslr ( method, target, et,     fixref, &
                           abcorr, obsrvr, spoint, trgepc, srfvec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -40,13 +41,13 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
-      double precision      trgepc
-      double precision      srfvec ( 3 )
+      real(wp)              spoint ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec ( 3 )
 
 ! $ Brief_I/O
 !
@@ -1155,9 +1156,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      touchd
-      double precision      vdist
+      real(wp)              clight
+      real(wp)              touchd
+      real(wp)              vdist
 
       logical               eqstr
       logical               failed
@@ -1174,26 +1175,26 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-17 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-17_wp )
 
 
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 10 )
 
-      integer               sun
+      integer(ip)           sun
       parameter           ( sun    = 10 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -1206,39 +1207,39 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmstr
 
-      double precision      altsun
-      double precision      dvec   ( 3 )
-      double precision      etdiff
-      double precision      j2pos  ( 3 )
-      double precision      lt
-      double precision      ltdiff
-      double precision      obspos ( 3 )
-      double precision      obsrng
-      double precision      prevet
-      double precision      prevlt
-      double precision      radii  ( 3 )
-      double precision      s
-      double precision      slt
-      double precision      spos   ( 3 )
-      double precision      ssbost ( 6 )
-      double precision      ssbtst ( 6 )
-      double precision      sslrlt
-      double precision      sslrst ( 6 )
-      double precision      sunst  ( 6 )
-      double precision      tpos   ( 3 )
-      double precision      xform  ( 3, 3 )
+      real(wp)              altsun
+      real(wp)              dvec   ( 3 )
+      real(wp)              etdiff
+      real(wp)              j2pos  ( 3 )
+      real(wp)              lt
+      real(wp)              ltdiff
+      real(wp)              obspos ( 3 )
+      real(wp)              obsrng
+      real(wp)              prevet
+      real(wp)              prevlt
+      real(wp)              radii  ( 3 )
+      real(wp)              s
+      real(wp)              slt
+      real(wp)              spos   ( 3 )
+      real(wp)              ssbost ( 6 )
+      real(wp)              ssbtst ( 6 )
+      real(wp)              sslrlt
+      real(wp)              sslrst ( 6 )
+      real(wp)              sunst  ( 6 )
+      real(wp)              tpos   ( 3 )
+      real(wp)              xform  ( 3, 3 )
 
-      integer               fixcid
-      integer               fixcls
-      integer               fixctr
-      integer               fixfid
-      integer               i
-      integer               nitr
-      integer               nsurf
-      integer               obscde
-      integer               shape
-      integer               srflst ( maxsrf )
-      integer               trgcde
+      integer(ip)           fixcid
+      integer(ip)           fixcls
+      integer(ip)           fixctr
+      integer(ip)           fixfid
+      integer(ip)           i
+      integer(ip)           nitr
+      integer(ip)           nsurf
+      integer(ip)           obscde
+      integer(ip)           shape
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           trgcde
 
       logical               attblk ( nabcor )
       logical               first
@@ -1254,27 +1255,27 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svrefc
+      integer(ip)           svrefc
 
 !
 !     Saved surface name/ID item declarations.
 !
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
 
 !
 !     Saved variables
@@ -1654,9 +1655,9 @@
 !     allows us to seamlessly set TRGEPC equal to ET.
 !
       if ( uselt ) then
-         s = -1.d0
+         s = -1.0_wp
       else
-         s =  0.d0
+         s =  0.0_wp
       end if
 
 !
@@ -1926,14 +1927,14 @@
 !     loop termination condition.
 !
       i      = 0
-      ltdiff = 1.d0
-      etdiff = 1.d0
+      ltdiff = 1.0_wp
+      etdiff = 1.0_wp
       prevlt = lt
       prevet = trgepc
 
       do while (       ( i      .lt.   nitr                ) &
                  .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
-                 .and. ( etdiff .gt.   0.d0                )  )
+                 .and. ( etdiff .gt.   0.0_wp                )  )
 !
 !        Get the J2000-relative state of the target relative to
 !        the solar system barycenter at the target epoch.

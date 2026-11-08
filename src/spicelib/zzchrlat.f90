@@ -1,6 +1,7 @@
 !$Procedure ZZCHRLAT ( Chord latitude  )
 
       subroutine zzchrlat ( midlat, dlon, eptlat )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       include 'dsktol.inc'
 
-      double precision      midlat
-      double precision      dlon
-      double precision      eptlat
+      real(wp)              midlat
+      real(wp)              dlon
+      real(wp)              eptlat
 
 ! $ Brief_I/O
 !
@@ -219,16 +220,16 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      halfpi
-      double precision      pi
+      real(wp)              brcktd
+      real(wp)              halfpi
+      real(wp)              pi
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      mlat
+      real(wp)              mlat
 
 !
 !     Use discovery check-in.
@@ -237,7 +238,7 @@
          return
       end if
 
-      if ( ( dlon .lt. 0.d0 ) .or. ( dlon .ge. pi() ) )  then
+      if ( ( dlon .lt. 0.0_wp ) .or. ( dlon .ge. pi() ) )  then
 
          call chkin  ( 'ZZCHRLAT'                          )
          call setmsg ( 'The input longitude extent was #; ' &

@@ -1,6 +1,7 @@
 !$Procedure DAFTB ( DAF, convert transfer file to binary file )
 
       subroutine daftb ( xfrlun, binfil )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      integer               xfrlun
+      integer(ip)           xfrlun
       character*(*)         binfil
 
 ! $ Brief_I/O
@@ -249,25 +250,25 @@
       character*(*)         totarr
       parameter           ( totarr = 'TOTAL_ARRAYS' )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 1024 )
 
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 255 )
 
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen = 320 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8    )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60   )
 
-      integer               crecl
+      integer(ip)           crecl
       parameter           ( crecl  = 1000 )
 
-      integer               resrec
+      integer(ip)           resrec
       parameter           ( resrec = 0 )
 !
 !     Local variables
@@ -282,27 +283,27 @@
       character*(idwlen)    ttype
       character*(linlen)    word
 
-      double precision      buffer( bufsiz )
-      double precision      dsumry( 125    )
-      double precision      summry( 125    )
+      real(wp)              buffer( bufsiz )
+      real(wp)              dsumry( 125    )
+      real(wp)              summry( 125    )
 
-      integer               arrcnt
-      integer               barr
-      integer               bcnt
-      integer               binhdl
-      integer               dtacnt
-      integer               earr
-      integer               ecnt
-      integer               errptr
-      integer               iostat
-      integer               isumry( 250    )
-      integer               lftovr
-      integer               nd
-      integer               ni
-      integer               numarr
-      integer               numdta
-      integer               numlft
-      integer               snmlen
+      integer(ip)           arrcnt
+      integer(ip)           barr
+      integer(ip)           bcnt
+      integer(ip)           binhdl
+      integer(ip)           dtacnt
+      integer(ip)           earr
+      integer(ip)           ecnt
+      integer(ip)           errptr
+      integer(ip)           iostat
+      integer(ip)           isumry( 250    )
+      integer(ip)           lftovr
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           numarr
+      integer(ip)           numdta
+      integer(ip)           numlft
+      integer(ip)           snmlen
 
       logical               inarr
       logical               more

@@ -1,7 +1,8 @@
 !$Procedure PHASEQ ( Phase angle quantity between bodies centers )
 
-      double precision function phaseq ( et,     target, illmn, &
+      real(wp) function phaseq ( et,     target, illmn, &
                                          obsrvr, abcorr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
       include               'zzabcorr.inc'
       include               'zzctr.inc'
 
-      double precision      et
+      real(wp)              et
       character*(*)         target
       character*(*)         illmn
       character*(*)         obsrvr
@@ -518,7 +519,7 @@
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 
@@ -526,9 +527,9 @@
 !
 !     Local Variables.
 !
-      integer               targ
-      integer               illum
-      integer               obs
+      integer(ip)           targ
+      integer(ip)           illum
+      integer(ip)           obs
 
       logical               attblk ( nabcor )
       logical               fnd
@@ -538,19 +539,19 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtgid
+      integer(ip)           svtgid
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svilmn
-      integer               svicde
+      integer(ip)           svicde
       logical               svfnd2
 
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsn
+      integer(ip)           svobsn
       logical               svfnd3
 
       logical               first
@@ -581,7 +582,7 @@
       data                  first   / .true. /
 
 
-      phaseq = 0.d0
+      phaseq = 0.0_wp
 
 !
 !     Standard SPICE error handling.

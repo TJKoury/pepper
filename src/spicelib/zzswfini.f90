@@ -2,6 +2,7 @@
 
       subroutine zzswfini ( hdfram, frpool, fidlst, basbeg, &
                             free,   prvat,  prvfrm, samfrm  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -31,13 +32,13 @@
 
       include 'zzswtchf.inc'
 
-      integer               hdfram ( * )
-      integer               frpool ( lbsngl : * )
-      integer               fidlst ( * )
-      integer               basbeg ( * )
-      integer               free
-      integer               prvat
-      integer               prvfrm
+      integer(ip)           hdfram ( * )
+      integer(ip)           frpool ( lbsngl : * )
+      integer(ip)           fidlst ( * )
+      integer(ip)           basbeg ( * )
+      integer(ip)           free
+      integer(ip)           prvat
+      integer(ip)           prvfrm
       logical               samfrm
 
 ! $ Brief_I/O

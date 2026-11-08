@@ -1,6 +1,7 @@
 !$Procedure ZZDDHGTU ( Private --- DDH Get Unit )
 
       subroutine zzddhgtu ( utcst, uthan, utlck, utlun, nut, uindex )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,13 +26,13 @@
 
       include              'zzddhman.inc'
 
-      integer               utcst  ( * )
-      integer               uthan  ( * )
+      integer(ip)           utcst  ( * )
+      integer(ip)           uthan  ( * )
       logical               utlck  ( * )
-      integer               utlun  ( * )
-      integer               nut
+      integer(ip)           utlun  ( * )
+      integer(ip)           nut
 
-      integer               uindex
+      integer(ip)           uindex
 
 ! $ Brief_I/O
 !
@@ -130,8 +131,8 @@
 !
 !     Local Variables
 !
-      integer               i
-      integer               orderv ( utsize )
+      integer(ip)           i
+      integer(ip)           orderv ( utsize )
 
       logical               done
 

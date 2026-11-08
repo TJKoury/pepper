@@ -1,6 +1,7 @@
 !$Procedure      ZZEKGRCP ( EK, get record companion pointer )
 
       subroutine zzekgrcp ( handle, recptr, ptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       include 'eksegdsc.inc'
       include 'ekrecptr.inc'
 
-      integer               handle
-      integer               recptr
-      integer               ptr
+      integer(ip)           handle
+      integer(ip)           recptr
+      integer(ip)           ptr
 
 ! $ Brief_I/O
 !
@@ -101,7 +102,7 @@
 !
 !     Local variables
 !
-      integer               loc
+      integer(ip)           loc
 
 !
 !     Use discovery check-in.

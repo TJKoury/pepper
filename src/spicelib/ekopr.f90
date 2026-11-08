@@ -1,6 +1,7 @@
 !$Procedure EKOPR ( EK, open file for reading )
 
       subroutine ekopr ( fname, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         fname
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !

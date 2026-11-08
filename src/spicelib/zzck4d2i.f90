@@ -1,6 +1,7 @@
 !$Procedure ZZCK4D2I ( Unpack a set of integers from DP number )
 
       subroutine zzck4d2i ( dpcoef, nsets, parcod, i )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,10 +29,10 @@
 
       implicit none
 
-      double precision        dpcoef
-      integer                 nsets
-      double precision        parcod
-      integer                 i      ( * )
+      real(wp)                dpcoef
+      integer(ip)             nsets
+      real(wp)                parcod
+      integer(ip)             i      ( * )
 
 
 ! $ Brief_I/O
@@ -112,8 +113,8 @@
 !
 !     Local variables.
 !
-      double precision        x
-      integer                 k
+      real(wp)                x
+      integer(ip)             k
 
 !
 !     Let's unpack it!

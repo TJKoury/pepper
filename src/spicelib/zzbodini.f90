@@ -3,6 +3,7 @@
       subroutine zzbodini (  names,  nornam, codes,  nvals, maxval, &
                              bnmlst, bnmpol, bnmnms, bnmidx, &
                              bidlst, bidpol, bidids, bididx  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,22 +29,22 @@
 
       include              'zzbodtrn.inc'
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
       character*(maxl)      names  (          * )
       character*(maxl)      nornam (          * )
-      integer               codes  (          * )
-      integer               nvals
-      integer               maxval
-      integer               bnmlst (          * )
-      integer               bnmpol ( lbpool : * )
+      integer(ip)           codes  (          * )
+      integer(ip)           nvals
+      integer(ip)           maxval
+      integer(ip)           bnmlst (          * )
+      integer(ip)           bnmpol ( lbpool : * )
       character*(maxl)      bnmnms (          * )
-      integer               bnmidx (          * )
-      integer               bidlst (          * )
-      integer               bidpol ( lbpool : * )
-      integer               bidids (          * )
-      integer               bididx (          * )
+      integer(ip)           bnmidx (          * )
+      integer(ip)           bidlst (          * )
+      integer(ip)           bidpol ( lbpool : * )
+      integer(ip)           bidids (          * )
+      integer(ip)           bididx (          * )
 
 ! $ Brief_I/O
 !
@@ -236,8 +237,8 @@
 !
 !     Local Variables
 !
-      integer               i
-      integer               item
+      integer(ip)           i
+      integer(ip)           item
 
       logical               new
 

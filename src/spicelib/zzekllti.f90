@@ -2,6 +2,7 @@
 
       subroutine zzekllti (  handle,  segdsc,  coldsc, &
                              ikey,    prvloc,  prvptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,12 +28,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               ikey
-      integer               prvloc
-      integer               prvptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           ikey
+      integer(ip)           prvloc
+      integer(ip)           prvptr
 
 ! $ Brief_I/O
 !
@@ -151,14 +152,14 @@
 !
       character*(cnamsz)    column
 
-      integer               begin
-      integer               begptr
-      integer               dtype
-      integer               end
-      integer               endptr
-      integer               middle
-      integer               midptr
-      integer               nrows
+      integer(ip)           begin
+      integer(ip)           begptr
+      integer(ip)           dtype
+      integer(ip)           end
+      integer(ip)           endptr
+      integer(ip)           middle
+      integer(ip)           midptr
+      integer(ip)           nrows
 
       logical               indexd
 
@@ -231,7 +232,7 @@
 
       if  (  zzekscmp ( ge,      handle,  segdsc, &
                         coldsc,  begptr,  1,       int, &
-                        ' ',     0.0d0,   ikey,   .false. )  ) then
+                        ' ',     0.0_wp,   ikey,   .false. )  ) then
 !
 !        The smallest entry of the column is greater than or equal to
 !        the input value of the same data type, so none of the entries
@@ -243,7 +244,7 @@
 
       else if (  zzekscmp ( lt,      handle,  segdsc, &
                             coldsc,  endptr,  1,      int, &
-                            ' ',     0.0d0,   ikey,  .false. )  ) then
+                            ' ',     0.0_wp,   ikey,  .false. )  ) then
 !
 !        The last element of the array is less than the input value of
 !        the same data type, so it's the last item less than the input
@@ -272,7 +273,7 @@
 
             if (  zzekscmp ( lt,      handle,  segdsc, &
                              coldsc,  midptr,  1,       int, &
-                             ' ',     0.0d0,   ikey,   .false. )  ) then
+                             ' ',     0.0_wp,   ikey,   .false. )  ) then
 !
 !              The middle value is less than the input value of the
 !              same data type.

@@ -1,6 +1,7 @@
 !$Procedure WNRELD ( Compare two DP windows )
 
       logical function  wnreld ( a, op, b )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,12 +19,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      a        ( lbcell:* )
+      real(wp)              a        ( lbcell:* )
       character*(*)         op
-      double precision      b        ( lbcell:* )
+      real(wp)              b        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -259,17 +260,17 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               cardd
+      integer(ip)           cardd
       logical               wnincd
 
 !
 !     Local variables
 !
-      integer               acard
-      integer               bcard
+      integer(ip)           acard
+      integer(ip)           bcard
       logical               equal
       logical               subset
-      integer               i
+      integer(ip)           i
 
 
 

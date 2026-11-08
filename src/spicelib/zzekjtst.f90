@@ -5,6 +5,7 @@
                             active,  cpidx1,  clidx1,  elts1,   ops, &
                             cpidx2,  clidx2,  elts2,   sthan,   stsdsc, &
                             stdtpt,  dtpool,  dtdscs,  found,   rowvec )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -33,34 +34,34 @@
       include 'ekquery.inc'
       include 'eksegdsc.inc'
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               segvec ( * )
-      integer               jbase1
-      integer               nt1
-      integer               rb1
-      integer               nr1
-      integer               jbase2
-      integer               nt2
-      integer               rb2
-      integer               nr2
-      integer               njcnst
+      integer(ip)           segvec ( * )
+      integer(ip)           jbase1
+      integer(ip)           nt1
+      integer(ip)           rb1
+      integer(ip)           nr1
+      integer(ip)           jbase2
+      integer(ip)           nt2
+      integer(ip)           rb2
+      integer(ip)           nr2
+      integer(ip)           njcnst
       logical               active ( * )
-      integer               cpidx1 ( * )
-      integer               clidx1 ( * )
-      integer               elts1  ( * )
-      integer               ops    ( * )
-      integer               cpidx2 ( * )
-      integer               clidx2 ( * )
-      integer               elts2  ( * )
-      integer               sthan  ( * )
-      integer               stsdsc ( sdscsz,          * )
-      integer               stdtpt ( * )
-      integer               dtpool ( 2,      lbpool : * )
-      integer               dtdscs ( cdscsz,          * )
+      integer(ip)           cpidx1 ( * )
+      integer(ip)           clidx1 ( * )
+      integer(ip)           elts1  ( * )
+      integer(ip)           ops    ( * )
+      integer(ip)           cpidx2 ( * )
+      integer(ip)           clidx2 ( * )
+      integer(ip)           elts2  ( * )
+      integer(ip)           sthan  ( * )
+      integer(ip)           stsdsc ( sdscsz,          * )
+      integer(ip)           stdtpt ( * )
+      integer(ip)           dtpool ( 2,      lbpool : * )
+      integer(ip)           dtdscs ( cdscsz,          * )
       logical               found
-      integer               rowvec ( * )
+      integer(ip)           rowvec ( * )
 
 ! $ Brief_I/O
 !
@@ -173,7 +174,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lnknxt
+      integer(ip)           lnknxt
       logical               return
 
 !
@@ -185,80 +186,80 @@
 !
 !     Local parameters
 !
-      integer               equi
+      integer(ip)           equi
       parameter           ( equi   = 1 )
 
-      integer               noneq
+      integer(ip)           noneq
       parameter           ( noneq  = 2 )
 
-      integer               noluck
+      integer(ip)           noluck
       parameter           ( noluck = 3 )
 
-      integer               empty
+      integer(ip)           empty
       parameter           ( empty  = 4 )
 
 !
 !     Local variables
 !
-      integer               addrss
-      integer               base
-      integer               case
-      integer               cnstr
-      integer               dtptr
-      integer               i
-      integer               j
-      integer               jbase
-      integer               k
-      integer               lbase
-      integer               lcol
-      integer               lcur
-      integer               ldscrs ( cdscsz, mxjcon )
-      integer               lelt
-      integer               lelts  (         mxjcon )
-      integer               lhans  (         mxjcon )
+      integer(ip)           addrss
+      integer(ip)           base
+      integer(ip)           case
+      integer(ip)           cnstr
+      integer(ip)           dtptr
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           jbase
+      integer(ip)           k
+      integer(ip)           lbase
+      integer(ip)           lcol
+      integer(ip)           lcur
+      integer(ip)           ldscrs ( cdscsz, mxjcon )
+      integer(ip)           lelt
+      integer(ip)           lelts  (         mxjcon )
+      integer(ip)           lhans  (         mxjcon )
       logical               locact (         mxjcon )
-      integer               lovbas
-      integer               lptr
-      integer               lrow
-      integer               lrows  (         mxjcon )
-      integer               lrvidx
-      integer               lsdsc  ( sdscsz, mxjcon )
-      integer               lseg
-      integer               ltab
-      integer               minirv ( 2 )
-      integer               offset
-      integer               nr
-      integer               nt
-      integer               nt3
-      integer               rb
-      integer               rbase
-      integer               rcol
-      integer               rdscrs ( cdscsz, mxjcon )
-      integer               relt
-      integer               relts  (         mxjcon )
-      integer               rhans  (         mxjcon )
-      integer               rovbas
-      integer               rptr
-      integer               rrow
-      integer               rrows  (         mxjcon )
-      integer               rrvidx
-      integer               rsdsc  ( sdscsz, mxjcon )
-      integer               rseg
-      integer               rtab
-      integer               svbas1
-      integer               svbas2
-      integer               svcp1  ( mxjcon )
-      integer               svcp2  ( mxjcon )
-      integer               svops  ( mxjcon )
-      integer               svncon
-      integer               svnr1
-      integer               svnr2
-      integer               svnt1
-      integer               svnt2
-      integer               svrb1
-      integer               svrb2
-      integer               tab
-      integer               top
+      integer(ip)           lovbas
+      integer(ip)           lptr
+      integer(ip)           lrow
+      integer(ip)           lrows  (         mxjcon )
+      integer(ip)           lrvidx
+      integer(ip)           lsdsc  ( sdscsz, mxjcon )
+      integer(ip)           lseg
+      integer(ip)           ltab
+      integer(ip)           minirv ( 2 )
+      integer(ip)           offset
+      integer(ip)           nr
+      integer(ip)           nt
+      integer(ip)           nt3
+      integer(ip)           rb
+      integer(ip)           rbase
+      integer(ip)           rcol
+      integer(ip)           rdscrs ( cdscsz, mxjcon )
+      integer(ip)           relt
+      integer(ip)           relts  (         mxjcon )
+      integer(ip)           rhans  (         mxjcon )
+      integer(ip)           rovbas
+      integer(ip)           rptr
+      integer(ip)           rrow
+      integer(ip)           rrows  (         mxjcon )
+      integer(ip)           rrvidx
+      integer(ip)           rsdsc  ( sdscsz, mxjcon )
+      integer(ip)           rseg
+      integer(ip)           rtab
+      integer(ip)           svbas1
+      integer(ip)           svbas2
+      integer(ip)           svcp1  ( mxjcon )
+      integer(ip)           svcp2  ( mxjcon )
+      integer(ip)           svops  ( mxjcon )
+      integer(ip)           svncon
+      integer(ip)           svnr1
+      integer(ip)           svnr2
+      integer(ip)           svnt1
+      integer(ip)           svnt2
+      integer(ip)           svrb1
+      integer(ip)           svrb2
+      integer(ip)           tab
+      integer(ip)           top
 
       logical               done
       logical               fnd

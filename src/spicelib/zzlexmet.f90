@@ -1,6 +1,7 @@
 !$Procedure ZZLEXMET ( Scan method string )
 
       subroutine zzlexmet ( method, maxn, n, begs, ends )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,10 +29,10 @@
       implicit none
 
       character*(*)         method
-      integer               maxn
-      integer               n
-      integer               begs   ( * )
-      integer               ends   ( * )
+      integer(ip)           maxn
+      integer(ip)           n
+      integer(ip)           begs   ( * )
+      integer(ip)           ends   ( * )
 
 ! $ Brief_I/O
 !
@@ -173,9 +174,9 @@
 !
 !     SPICELIB functions
 !
-      integer               cpos
-      integer               ltrim
-      integer               rtrim
+      integer(ip)           cpos
+      integer(ip)           ltrim
+      integer(ip)           rtrim
 
       logical               return
 
@@ -195,16 +196,16 @@
 !
 !     Local variables
 !
-      integer               b
-      integer               e
-      integer               eq
-      integer               i
-      integer               loc
-      integer               nchar
-      integer               qpos
-      integer               r
-      integer               room
-      integer               tke
+      integer(ip)           b
+      integer(ip)           e
+      integer(ip)           eq
+      integer(ip)           i
+      integer(ip)           loc
+      integer(ip)           nchar
+      integer(ip)           qpos
+      integer(ip)           r
+      integer(ip)           room
+      integer(ip)           tke
 
       if ( return() ) then
          return

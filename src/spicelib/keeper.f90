@@ -3,6 +3,7 @@
       subroutine keeper ( which,  kind, &
                           file,   count, filtyp,  handle, &
                           srcfil, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,26 +23,26 @@
 
       implicit none
 
-      integer               which
+      integer(ip)           which
       character*(*)         kind
       character*(*)         file
-      integer               count
+      integer(ip)           count
       character*(*)         filtyp
-      integer               handle
+      integer(ip)           handle
       character*(*)         srcfil
       logical               found
 
 
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize = 5000 )
 
-      integer               maxtxt
+      integer(ip)           maxtxt
       parameter           ( maxtxt = 300 )
 
-      integer               maxfil
+      integer(ip)           maxfil
       parameter           ( maxfil = ftsize + maxtxt )
 
 ! $ Brief_I/O
@@ -572,9 +573,9 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
-      integer               pos
-      integer               rtrim
+      integer(ip)           isrchc
+      integer(ip)           pos
+      integer(ip)           rtrim
 
       logical               eqstr
       logical               failed
@@ -594,7 +595,7 @@
 !     HANDLS.  If the file is a text kernel it will be assigned the
 !     handle 0.
 !
-      integer               handls( maxfil )
+      integer(ip)           handls( maxfil )
       save                  handls
 !
 !     The source of each file specified will be stored in the integer
@@ -603,13 +604,13 @@
 !     in a text kernel, the index of the source file in FILES will
 !     be stored in SRCES.
 !
-      integer               srces ( maxfil )
+      integer(ip)           srces ( maxfil )
       save                  srces
 !
 !     The file type of every loaded kernel will be stored in the array
 !     TYPES.
 !
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen = 8 )
 
       character*(typlen)    types ( maxfil )
@@ -619,20 +620,20 @@
 !     The number of files loaded through this interfaces is kept in the
 !     integer LOADED.
 !
-      integer               loaded
+      integer(ip)           loaded
       save                  loaded
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 
-      integer               nknown
+      integer(ip)           nknown
       parameter           ( nknown = 3 )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               msgsiz
+      integer(ip)           msgsiz
       parameter           ( msgsiz = 500 )
 
       character*(1)         norc
@@ -649,32 +650,32 @@
 
       character*(typlen)    thstyp
 
-      integer               b
-      integer               cursrc
-      integer               d
-      integer               dollar
-      integer               e
-      integer               fidx
-      integer               filnum
-      integer               fnmlen
-      integer               hits
-      integer               i
-      integer               j
-      integer               k
-      integer               lidx
-      integer               myhand
-      integer               n
-      integer               n1
-      integer               n2
-      integer               n3
-      integer               nmult
-      integer               npaths
-      integer               npvals
-      integer               r
-      integer               size
-      integer               src
-      integer               start
-      integer               use
+      integer(ip)           b
+      integer(ip)           cursrc
+      integer(ip)           d
+      integer(ip)           dollar
+      integer(ip)           e
+      integer(ip)           fidx
+      integer(ip)           filnum
+      integer(ip)           fnmlen
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lidx
+      integer(ip)           myhand
+      integer(ip)           n
+      integer(ip)           n1
+      integer(ip)           n2
+      integer(ip)           n3
+      integer(ip)           nmult
+      integer(ip)           npaths
+      integer(ip)           npvals
+      integer(ip)           r
+      integer(ip)           size
+      integer(ip)           src
+      integer(ip)           start
+      integer(ip)           use
 
       logical               add
       logical               didck

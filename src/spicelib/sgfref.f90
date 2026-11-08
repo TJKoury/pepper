@@ -1,6 +1,7 @@
 !$Procedure SGFREF ( Generic Segments: Fetch references )
 
       subroutine sgfref ( handle, descr, first, last, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      integer               first
-      integer               last
-      double precision      values ( * )
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      integer(ip)           first
+      integer(ip)           last
+      real(wp)              values ( * )
 
 ! $ Brief_I/O
 !
@@ -156,14 +157,14 @@
 !
 !     Local Variables
 !
-      double precision      buffer ( 2 )
+      real(wp)              buffer ( 2 )
 
-      integer               b
-      integer               base
-      integer               e
-      integer               i
-      integer               mynref
-      integer               myreft
+      integer(ip)           b
+      integer(ip)           base
+      integer(ip)           e
+      integer(ip)           i
+      integer(ip)           mynref
+      integer(ip)           myreft
 
       if ( return() ) then
          return
@@ -240,7 +241,7 @@
 !
          do i = first, last
 
-            values(i) = buffer(1) + dint ( dble(i-1) * buffer(2) )
+            values(i) = buffer(1) + dint ( real(i-1, wp) * buffer(2) )
 
          end do
 
@@ -266,7 +267,7 @@
 !
          do i = first, last
 
-            values(i) = buffer(1) + dint ( dble(i-1) * buffer(2) )
+            values(i) = buffer(1) + dint ( real(i-1, wp) * buffer(2) )
 
          end do
 

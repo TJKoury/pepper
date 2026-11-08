@@ -1,6 +1,7 @@
 !$Procedure IRFTRN ( Inertial reference frame transformation )
 
       subroutine irftrn ( refa, refb, rotab )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
 
       character*(*)         refa
       character*(*)         refb
-      double precision      rotab ( 3, 3 )
+      real(wp)              rotab ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -169,8 +170,8 @@
 !
 !     Local variables
 !
-      integer               codea
-      integer               codeb
+      integer(ip)           codea
+      integer(ip)           codeb
 
 
 !

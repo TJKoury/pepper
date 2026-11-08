@@ -1,6 +1,7 @@
 !$Procedure INSRTI ( Insert an item into an integer set )
 
       subroutine insrti ( item, a )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               item
-      integer               a        ( lbcell:* )
+      integer(ip)           item
+      integer(ip)           a        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -231,20 +232,20 @@
 !
 !     SPICELIB functions
 !
-      integer             sizei
-      integer             cardi
-      integer             lstlei
+      integer(ip)         sizei
+      integer(ip)         cardi
+      integer(ip)         lstlei
       logical             return
 
 !
 !     Local variables
 !
 
-      integer             size
-      integer             card
-      integer             last
+      integer(ip)         size
+      integer(ip)         card
+      integer(ip)         last
       logical             in
-      integer             i
+      integer(ip)         i
 
 !
 !     Set up the error processing.

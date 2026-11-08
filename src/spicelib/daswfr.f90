@@ -7,6 +7,7 @@
                           nresvc, &
                           ncomr, &
                           ncomc  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,13 +27,13 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         idword
       character*(*)         ifname
-      integer               nresvr
-      integer               nresvc
-      integer               ncomr
-      integer               ncomc
+      integer(ip)           nresvr
+      integer(ip)           nresvc
+      integer(ip)           ncomr
+      integer(ip)           ncomc
 
 ! $ Brief_I/O
 !
@@ -258,13 +259,13 @@
 !
 !     Local Parameters
 !
-      integer               fmtlen
+      integer(ip)           fmtlen
       parameter           ( fmtlen =  8 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
 !
@@ -298,7 +299,7 @@
 !     1 byte characters, and a DAS record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      integer               tailen
+      integer(ip)           tailen
       parameter           ( tailen = 932 )
 
 !
@@ -310,20 +311,20 @@
       character*(ifnlen)    ifn
       character*(tailen)    tail
 
-      integer               free
-      integer               iostat
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               locncc
-      integer               locncr
-      integer               locnvc
-      integer               locnvr
-      integer               oldrrc
-      integer               oldrch
-      integer               oldcrc
-      integer               oldcch
-      integer               unit
+      integer(ip)           free
+      integer(ip)           iostat
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           locncc
+      integer(ip)           locncr
+      integer(ip)           locnvc
+      integer(ip)           locnvr
+      integer(ip)           oldrrc
+      integer(ip)           oldrch
+      integer(ip)           oldcrc
+      integer(ip)           oldcch
+      integer(ip)           unit
 
 !
 !     Standard SPICE error handling.

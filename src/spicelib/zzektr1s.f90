@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTR1S ( EK tree, one-shot load )
 
       subroutine zzektr1s ( handle, tree, size, values )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,10 +25,10 @@
       include 'ektree.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
-      integer               size
-      integer               values  ( * )
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           size
+      integer(ip)           values  ( * )
 
 ! $ Brief_I/O
 !
@@ -142,46 +143,46 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrbs
-      integer               zzektrsz
+      integer(ip)           zzektrbs
+      integer(ip)           zzektrsz
 
 !
 !     Local variables
 !
-      integer               base
-      integer               basidx
-      integer               bigsiz
-      integer               child
-      integer               d
-      integer               div
-      integer               i
-      integer               key
-      integer               kidbas
-      integer               level
-      integer               maxsiz
-      integer               n
-      integer               nbig
-      integer               next
-      integer               nkeys
-      integer               nkids
-      integer               nnodes
-      integer               node
-      integer               npred
-      integer               nsmall
-      integer               page  ( pgsizi )
-      integer               q
-      integer               reqsiz
-      integer               s
-      integer               stlsiz ( trmxdp )
-      integer               stnbig ( trmxdp )
-      integer               stnext ( trmxdp )
-      integer               stnkey ( trmxdp )
-      integer               stnode ( trmxdp )
-      integer               stnbas ( trmxdp )
-      integer               subd
-      integer               subsiz
-      integer               totnod
-      integer               tsize
+      integer(ip)           base
+      integer(ip)           basidx
+      integer(ip)           bigsiz
+      integer(ip)           child
+      integer(ip)           d
+      integer(ip)           div
+      integer(ip)           i
+      integer(ip)           key
+      integer(ip)           kidbas
+      integer(ip)           level
+      integer(ip)           maxsiz
+      integer(ip)           n
+      integer(ip)           nbig
+      integer(ip)           next
+      integer(ip)           nkeys
+      integer(ip)           nkids
+      integer(ip)           nnodes
+      integer(ip)           node
+      integer(ip)           npred
+      integer(ip)           nsmall
+      integer(ip)           page  ( pgsizi )
+      integer(ip)           q
+      integer(ip)           reqsiz
+      integer(ip)           s
+      integer(ip)           stlsiz ( trmxdp )
+      integer(ip)           stnbig ( trmxdp )
+      integer(ip)           stnext ( trmxdp )
+      integer(ip)           stnkey ( trmxdp )
+      integer(ip)           stnode ( trmxdp )
+      integer(ip)           stnbas ( trmxdp )
+      integer(ip)           subd
+      integer(ip)           subsiz
+      integer(ip)           totnod
+      integer(ip)           tsize
 
 !
 !     Standard SPICE error handling.

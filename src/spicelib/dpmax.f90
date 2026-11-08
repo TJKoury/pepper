@@ -1,6 +1,7 @@
 !$Procedure DPMAX ( Largest DP number )
 
-      double precision function dpmax ( )
+      real(wp) function dpmax ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -416,7 +417,7 @@
 !     HP-UX 9000/750, FORTRAN/9000 Series 700 computers
 !     PC/Linux, Fort77
 !
-      dpmax = 1.79769313486231d+308
+      dpmax = 1.79769313486231e308_wp
 
       return
       end

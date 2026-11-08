@@ -1,6 +1,7 @@
 !$Procedure VDOT ( Vector dot product, 3 dimensions )
 
-      double precision function vdot ( v1, v2 )
+      real(wp) function vdot ( v1, v2 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   v1 ( 3 )
-      double precision   v2 ( 3 )
+      real(wp)           v1 ( 3 )
+      real(wp)           v2 ( 3 )
 
 ! $ Brief_I/O
 !

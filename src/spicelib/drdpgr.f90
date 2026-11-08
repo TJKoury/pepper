@@ -1,6 +1,7 @@
 !$Procedure DRDPGR ( Derivative of rectangular w.r.t. planetographic )
 
       subroutine drdpgr ( body, lon, lat, alt, re, f, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,12 +25,12 @@
       include               'zzctr.inc'
 
       character*(*)         body
-      double precision      lon
-      double precision      lat
-      double precision      alt
-      double precision      re
-      double precision      f
-      double precision      jacobi ( 3, 3 )
+      real(wp)              lon
+      real(wp)              lat
+      real(wp)              alt
+      real(wp)              re
+      real(wp)              f
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -530,7 +531,7 @@
 !
 !     SPICELIB functions
 !
-      integer               plnsns
+      integer(ip)           plnsns
 
       logical               return
 
@@ -544,28 +545,28 @@
       parameter           ( ovrtmp = 'BODY#_PGR_POSITIVE_LON' )
 
 
-      integer               earth
+      integer(ip)           earth
       parameter           ( earth  = 399 )
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln = 32  )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80  )
 
-      integer               moon
+      integer(ip)           moon
       parameter           ( moon   = 301 )
 
-      integer               sensln
+      integer(ip)           sensln
       parameter           ( sensln = 4 )
 
-      integer               sun
+      integer(ip)           sun
       parameter           ( sun    = 10  )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 
@@ -577,21 +578,21 @@
       character*(kvnmln)    pmkvar
       character*(sensln)    pgrlon
 
-      double precision      geolon
+      real(wp)              geolon
 
-      integer               bodyid
-      integer               i
-      integer               n
-      integer               sense
+      integer(ip)           bodyid
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           sense
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svbody
-      integer               svbdid
+      integer(ip)           svbdid
       logical               svfnd1
 
       logical               first
@@ -659,7 +660,7 @@
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
 
          call setmsg ( 'Equatorial radius was #.' )
          call errdp  ( '#', re                    )
@@ -674,7 +675,7 @@
 !     is negative. If F is equal to 1, the polar radius is zero. Either
 !     case is a problem, so signal an error and check out.
 !
-      if ( f .ge. 1.d0 ) then
+      if ( f .ge. 1.0_wp ) then
 
          call setmsg ( 'Flattening coefficient was #.'  )
          call errdp  ( '#', f                           )

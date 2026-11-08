@@ -1,6 +1,7 @@
 !$Procedure SPK14E ( SPK type 14: End a segment. )
 
       subroutine spk14e ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !

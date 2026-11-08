@@ -1,6 +1,7 @@
 !$Procedure MINAC  ( Minimum element of array, character )
 
       subroutine minac ( array, ndim, minval, loc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       implicit none
 
       character*(*)   array ( * )
-      integer         ndim
+      integer(ip)     ndim
       character*(*)   minval
-      integer         loc
+      integer(ip)     loc
 
 ! $ Brief_I/O
 !
@@ -135,7 +136,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       if (ndim .le. 0) then

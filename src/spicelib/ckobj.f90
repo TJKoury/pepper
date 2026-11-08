@@ -1,6 +1,7 @@
 !$Procedure CKOBJ ( CK objects )
 
       subroutine ckobj ( ckfnm, ids )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         ckfnm
-      integer               ids ( lbcell : * )
+      integer(ip)           ids ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -366,13 +367,13 @@
 !
 !     Local parameters
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
 !
@@ -381,11 +382,11 @@
       character*(lnsize)    arch
       character*(lnsize)    kertyp
 
-      double precision      dc     ( nd )
-      double precision      descr  ( nd + ni/2 )
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( nd + ni/2 )
 
-      integer               handle
-      integer               ic     ( ni )
+      integer(ip)           handle
+      integer(ip)           ic     ( ni )
 
       logical               found
 

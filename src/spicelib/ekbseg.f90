@@ -1,6 +1,7 @@
 !$Procedure EKBSEG ( EK, start new segment )
 
       subroutine ekbseg ( handle, tabnam, ncols, cnames, decls, segno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -30,12 +31,12 @@
       include 'ektnamsz.inc'
       include 'ektype.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         tabnam
-      integer               ncols
+      integer(ip)           ncols
       character*(*)         cnames ( * )
       character*(*)         decls  ( * )
-      integer               segno
+      integer(ip)           segno
 
 ! $ Brief_I/O
 !
@@ -447,7 +448,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -455,29 +456,29 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekstyp
+      integer(ip)           zzekstyp
 
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               mxspec
+      integer(ip)           mxspec
       parameter           ( mxspec = 512 )
 
-      integer               namlim
+      integer(ip)           namlim
       parameter           ( namlim = 32 )
 
 !
 !     Local variables
 !
-      integer               cdscrs ( cdscsz, mxclsg )
-      integer               i
-      integer               idend
-      integer               idspec ( lbcell : mxspec )
-      integer               nchars
-      integer               stype
+      integer(ip)           cdscrs ( cdscsz, mxclsg )
+      integer(ip)           i
+      integer(ip)           idend
+      integer(ip)           idspec ( lbcell : mxspec )
+      integer(ip)           nchars
+      integer(ip)           stype
 
       logical               first
 

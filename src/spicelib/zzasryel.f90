@@ -1,6 +1,7 @@
 !$Procedure      ZZASRYEL ( Angular separation of ray and ellipse )
 
       subroutine zzasryel ( extrem, ellips, vertex, dir, angle, extpt )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -21,18 +22,18 @@
 !
 ! $ Declarations
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel   = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   = 4 )
 
       character*(*)         extrem
-      double precision      ellips ( ubel )
-      double precision      vertex ( 3 )
-      double precision      dir    ( 3 )
-      double precision      angle
-      double precision      extpt  ( 3 )
+      real(wp)              ellips ( ubel )
+      real(wp)              vertex ( 3 )
+      real(wp)              dir    ( 3 )
+      real(wp)              angle
+      real(wp)              extpt  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -401,12 +402,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      touchd
-      double precision      twopi
-      double precision      vdist
-      double precision      vdot
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              touchd
+      real(wp)              twopi
+      real(wp)              vdist
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              vsep
 
       logical               failed
       logical               return
@@ -420,8 +421,8 @@
 !     Tolerance used for loop convergence.  This tolerance applies
 !     to the angular parameter used to specify points on the ellipse.
 !
-      double precision      tol
-      parameter           ( tol   = 1.d-9 )
+      real(wp)              tol
+      parameter           ( tol   = 1.0e-9_wp )
 
 !
 !     Number of steps used to search the ellipse for region containing
@@ -429,28 +430,28 @@
 !     values:  one for the outer minimum case, which is mathematically
 !     well behaved, and one for the other cases.
 !
-      integer               smlnpt
+      integer(ip)           smlnpt
       parameter           ( smlnpt =  320 )
 
-      integer               bignpt
+      integer(ip)           bignpt
       parameter           ( bignpt =  400 )
 
 !
 !     Maximum number of loop iterations allowed for extremum search.
 !
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 100 )
 
 !
 !     Code returned in INRYPL indicating ray lies in plane.
 !
-      integer               inf
+      integer(ip)           inf
       parameter           ( inf    = -1 )
 
 !
 !     String length for extremum specifier.
 !
-      integer               extlen
+      integer(ip)           extlen
       parameter           ( extlen = 3 )
 
 !
@@ -458,41 +459,41 @@
 !
       character*(extlen)    exttyp
 
-      double precision      a
-      double precision      acomp
-      double precision      asign
-      double precision      b
-      double precision      bcomp
-      double precision      btween
-      double precision      btwprx
-      double precision      center ( 3 )
-      double precision      delta
-      double precision      diff   ( 3 )
-      double precision      eplane ( ubpl )
-      double precision      extprx
-      double precision      gr
-      double precision      level
-      double precision      lower
-      double precision      lpt    ( 3 )
-      double precision      newpt
-      double precision      p2
-      double precision      proxy
-      double precision      smajor ( 3 )
-      double precision      sminor ( 3 )
-      double precision      theta
-      double precision      udiff  ( 3 )
-      double precision      udir   ( 3 )
-      double precision      upper
-      double precision      v2     ( 3 )
-      double precision      vprj   ( 3 )
-      double precision      xoff   ( 3 )
-      double precision      xpt    ( 3 )
+      real(wp)              a
+      real(wp)              acomp
+      real(wp)              asign
+      real(wp)              b
+      real(wp)              bcomp
+      real(wp)              btween
+      real(wp)              btwprx
+      real(wp)              center ( 3 )
+      real(wp)              delta
+      real(wp)              diff   ( 3 )
+      real(wp)              eplane ( ubpl )
+      real(wp)              extprx
+      real(wp)              gr
+      real(wp)              level
+      real(wp)              lower
+      real(wp)              lpt    ( 3 )
+      real(wp)              newpt
+      real(wp)              p2
+      real(wp)              proxy
+      real(wp)              smajor ( 3 )
+      real(wp)              sminor ( 3 )
+      real(wp)              theta
+      real(wp)              udiff  ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              upper
+      real(wp)              v2     ( 3 )
+      real(wp)              vprj   ( 3 )
+      real(wp)              xoff   ( 3 )
+      real(wp)              xpt    ( 3 )
 
-      integer               i
-      integer               extidx
-      integer               nitr
-      integer               npt
-      integer               nxpts
+      integer(ip)           i
+      integer(ip)           extidx
+      integer(ip)           nitr
+      integer(ip)           npt
+      integer(ip)           nxpts
 
       logical               domin
 
@@ -580,7 +581,7 @@
 !
       call vprjp ( vertex, eplane, vprj )
 
-      if ( vdist(vertex, vprj) .eq. 0.d0  )  then
+      if ( vdist(vertex, vprj) .eq. 0.0_wp  )  then
 
          call setmsg ( 'Viewing point is in the plane of the ellipse.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
@@ -621,7 +622,7 @@
 !
 !        The ray does not intersect the plane.
 !
-         asign = 1.d0
+         asign = 1.0_wp
 
       else
 !
@@ -643,16 +644,16 @@
 !
          level =  acomp**2 / a**2   +   bcomp**2 / b**2
 
-         if ( level .le. 1.d0 ) then
+         if ( level .le. 1.0_wp ) then
 !
 !           The ray-plane intersection is on the ellipse or inside the
 !           plane region bounded by the ellipse.
 !
-            asign = -1.d0
+            asign = -1.0_wp
 
          else
 
-            asign =  1.d0
+            asign =  1.0_wp
 
             if ( domin ) then
 !
@@ -704,9 +705,9 @@
       call vsub ( vertex, center, v2 )
 
       if ( domin ) then
-         extprx = 2.d0
+         extprx = 2.0_wp
       else
-         extprx = 0.d0
+         extprx = 0.0_wp
       end if
 
       extidx = 0
@@ -721,7 +722,7 @@
 
          theta  =  i * delta
 
-         call vlcom3 (  -1.d0,        v2, &
+         call vlcom3 (  -1.0_wp,        v2, &
                         cos(theta),   smajor, &
                         sin(theta),   sminor,   diff  )
 
@@ -777,7 +778,7 @@
 !                          UPPER  - LOWER                        2
 !
 !
-      gr     =  (  3.d0 -  sqrt(5.d0)  )  /  2.d0
+      gr     =  (  3.0_wp -  sqrt(5.0_wp)  )  /  2.0_wp
 
       lower  =  ( p2 / npt )  *  ( extidx - 1 )
       upper  =  ( p2 / npt )  *  ( extidx + 1 )
@@ -816,7 +817,7 @@
       btween  =  btween + p2
 
       nitr    = 0
-      proxy   = 3.d0
+      proxy   = 3.0_wp
 
       do while (        (  nitr                .le. maxitr ) &
                  .and.  (  touchd(upper-lower) .gt. tol    )  )
@@ -849,7 +850,7 @@
 !        BTWPRX.  To do this, we need the proxy function value at
 !        NEWPT.
 !
-         call vlcom3 (  -1.d0,        v2, &
+         call vlcom3 (  -1.0_wp,        v2, &
                         cos(newpt),   smajor, &
                         sin(newpt),   sminor,   diff  )
 

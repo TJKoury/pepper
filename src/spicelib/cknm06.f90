@@ -1,6 +1,7 @@
 !$Procedure CKNM06 ( C-kernel, number of mini-segments, type 06 )
 
       subroutine cknm06 ( handle, descr, nmini )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               nmini
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           nmini
 
 ! $ Brief_I/O
 !
@@ -459,22 +460,22 @@
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype  = 6 )
 
 !
 !     Local variables
 !
-      double precision      dc     ( nd )
-      double precision      dpdata ( 1  )
+      real(wp)              dc     ( nd )
+      real(wp)              dpdata ( 1  )
 
-      integer               ic     ( ni )
+      integer(ip)           ic     ( ni )
 
 
 !

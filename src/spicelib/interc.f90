@@ -1,6 +1,7 @@
 !$Procedure INTERC ( Intersect two character sets )
 
       subroutine interc ( a, b, c )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)      a      ( lbcell:* )
@@ -165,23 +166,23 @@
 !
 !     SPICELIB functions
 !
-      integer             cardc
-      integer             sizec
+      integer(ip)         cardc
+      integer(ip)         sizec
       logical             return
 
 !
 !     Local variables
 !
 
-      integer             apoint
-      integer             bpoint
+      integer(ip)         apoint
+      integer(ip)         bpoint
 
-      integer             csize
-      integer             acard
-      integer             bcard
-      integer             ccard
+      integer(ip)         csize
+      integer(ip)         acard
+      integer(ip)         bcard
+      integer(ip)         ccard
 
-      integer             over
+      integer(ip)         over
 
 
 

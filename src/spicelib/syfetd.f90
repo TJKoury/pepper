@@ -1,6 +1,7 @@
 !$Procedure SYFETD ( Fetch the Nth symbol in the table )
 
       subroutine syfetd ( nth, tabsym, tabptr, tabval, name, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,13 +19,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               nth
+      integer(ip)           nth
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      double precision      tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      real(wp)              tabval     ( lbcell:* )
       character*(*)         name
       logical               found
 
@@ -156,13 +157,13 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
+      integer(ip)           cardc
       logical               return
 
 !
 !     Local variables
 !
-      integer               nsym
+      integer(ip)           nsym
 
 
 

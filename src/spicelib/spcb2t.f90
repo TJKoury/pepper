@@ -1,6 +1,7 @@
 !$Procedure SPCB2T ( SPK and CK, binary to text )
 
       subroutine spcb2t ( binary, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         binary
-      integer               unit
+      integer(ip)           unit
 
 ! $ Brief_I/O
 !
@@ -193,8 +194,8 @@
 !
 !     Local variables
 !
-      integer               handle
-      integer               iostat
+      integer(ip)           handle
+      integer(ip)           iostat
 
 !
 !     Standard SPICE error handling.

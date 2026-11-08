@@ -1,6 +1,7 @@
 !$Procedure ORDC ( The ordinal position of an element in a set )
 
-      integer function ordc ( item, set )
+      integer(ip) function ordc ( item, set )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
 
       character*(*)         item
@@ -185,8 +186,8 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
+      integer(ip)           bsrchc
+      integer(ip)           cardc
       logical               return
 
 

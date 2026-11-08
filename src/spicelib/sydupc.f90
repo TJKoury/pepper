@@ -1,6 +1,7 @@
 !$Procedure SYDUPC ( Create a duplicate of a symbol )
 
       subroutine sydupc ( name, copy, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         copy
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
       character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
@@ -167,28 +168,28 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
-      integer               cardi
-      integer               lstlec
+      integer(ip)           cardc
+      integer(ip)           cardi
+      integer(ip)           lstlec
       logical               return
-      integer               sizec
-      integer               sizei
-      integer               sumai
+      integer(ip)           sizec
+      integer(ip)           sizei
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               nptr
-      integer               nval
+      integer(ip)           nsym
+      integer(ip)           nptr
+      integer(ip)           nval
 
-      integer               locsym  ( 2 )
-      integer               locval  ( 2 )
-      integer               dimval  ( 2 )
+      integer(ip)           locsym  ( 2 )
+      integer(ip)           locval  ( 2 )
+      integer(ip)           dimval  ( 2 )
       logical               oldsym  ( 2 )
-      integer               newsym
-      integer               newval
-      integer               i
+      integer(ip)           newsym
+      integer(ip)           newval
+      integer(ip)           i
 
 
 

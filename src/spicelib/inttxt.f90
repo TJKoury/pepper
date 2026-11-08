@@ -1,6 +1,7 @@
 !$Procedure INTTXT ( Convert an integer to text )
 
       subroutine inttxt ( n, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       implicit none
 
-      integer               n
+      integer(ip)           n
       character*(*)         string
 
 ! $ Brief_I/O
@@ -146,18 +147,18 @@
 !
 !     Local variables
 !
-      integer               lngest
+      integer(ip)           lngest
       parameter           ( lngest = 9 )
 
       character*(lngest)    number (19)
       character*(lngest)    suff
       character*(lngest)    tens   ( 9)
 
-      integer               num
-      integer               pad
-      integer               space
-      integer               x
-      integer               y
+      integer(ip)           num
+      integer(ip)           pad
+      integer(ip)           space
+      integer(ip)           x
+      integer(ip)           y
 
 !
 !     Saved variables

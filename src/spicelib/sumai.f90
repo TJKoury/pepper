@@ -1,6 +1,7 @@
 !$Procedure SUMAI ( Sum of an integer array )
 
-      integer function sumai ( array, n )
+      integer(ip) function sumai ( array, n )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer          array  ( * )
-      integer          n
+      integer(ip)      array  ( * )
+      integer(ip)      n
 
 ! $ Brief_I/O
 !
@@ -126,8 +127,8 @@
 !
 !     Local variables
 !
-      integer          sum
-      integer          i
+      integer(ip)      sum
+      integer(ip)      i
 
 
 !

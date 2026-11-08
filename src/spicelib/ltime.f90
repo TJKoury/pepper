@@ -1,6 +1,7 @@
 !$Procedure LTIME ( Light Time )
 
       subroutine ltime ( etobs, obs, dir, targ, ettarg, elapsd )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      etobs
-      integer               obs
+      real(wp)              etobs
+      integer(ip)           obs
       character*(2)         dir
-      integer               targ
-      double precision      ettarg
-      double precision      elapsd
+      integer(ip)           targ
+      real(wp)              ettarg
+      real(wp)              elapsd
 
 ! $ Brief_I/O
 !
@@ -254,22 +255,22 @@
 !
 !     SPICELIB Functions
 !
-      double precision      clight
-      double precision      vdist
-      integer               rtrim
+      real(wp)              clight
+      real(wp)              vdist
+      integer(ip)           rtrim
       logical               failed
       logical               return
 !
 !     Local Variables
 !
-      double precision      c
-      double precision      lt
-      double precision      myet
-      double precision      sobs  ( 6 )
-      double precision      starg ( 6 )
+      real(wp)              c
+      real(wp)              lt
+      real(wp)              myet
+      real(wp)              sobs  ( 6 )
+      real(wp)              starg ( 6 )
 
-      integer               bcentr
-      integer               r
+      integer(ip)           bcentr
+      integer(ip)           r
 
       if ( return() )then
          return
@@ -362,7 +363,7 @@
 
       if ( failed() ) then
          ettarg = myet
-         elapsd = 0.0d0
+         elapsd = 0.0_wp
       end if
 
       call chkout ( 'LTIME' )

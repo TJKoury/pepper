@@ -1,6 +1,7 @@
 !$Procedure DSKI02 ( DSK, fetch integer type 2 data )
 
       subroutine dski02 ( handle, dladsc, item, start, room, n, values )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,13 +27,13 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               item
-      integer               start
-      integer               room
-      integer               n
-      integer               values ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           item
+      integer(ip)           start
+      integer(ip)           room
+      integer(ip)           n
+      integer(ip)           values ( * )
 
 ! $ Brief_I/O
 !
@@ -500,27 +501,27 @@
 !     IBFSIZ is the size of an integer buffer used to
 !     read parameters from the segment.
 !
-      integer               ibfsiz
+      integer(ip)           ibfsiz
       parameter           ( ibfsiz = 10 )
 
 !
 !     Local variables
 !
-      integer               b
-      integer               cgscal
-      integer               e
-      integer               ibase
-      integer               ibuff  ( ibfsiz )
-      integer               ncgr
-      integer               np
-      integer               nv
-      integer               nvxtot
-      integer               prvbas
-      integer               prvhan
-      integer               size
-      integer               voxnpl
-      integer               voxnpt
-      integer               vtxnpl
+      integer(ip)           b
+      integer(ip)           cgscal
+      integer(ip)           e
+      integer(ip)           ibase
+      integer(ip)           ibuff  ( ibfsiz )
+      integer(ip)           ncgr
+      integer(ip)           np
+      integer(ip)           nv
+      integer(ip)           nvxtot
+      integer(ip)           prvbas
+      integer(ip)           prvhan
+      integer(ip)           size
+      integer(ip)           voxnpl
+      integer(ip)           voxnpt
+      integer(ip)           vtxnpl
 
       logical               first
 

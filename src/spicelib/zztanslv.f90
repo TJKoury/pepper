@@ -3,6 +3,7 @@
       subroutine zztanslv ( udcond, udstep, udrefn, &
                             cstep,  step,   start,  finish, &
                             tol,    result, points, endflg  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,19 +29,19 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       external              udcond
       external              udstep
       external              udrefn
       logical               cstep
-      double precision      step
-      double precision      start
-      double precision      finish
-      double precision      tol
-      double precision      result ( lbcell : * )
-      double precision      points ( 3, * )
+      real(wp)              step
+      real(wp)              start
+      real(wp)              finish
+      real(wp)              tol
+      real(wp)              result ( lbcell : * )
+      real(wp)              points ( 3, * )
       logical               endflg ( 2 )
 
 ! $ Brief_I/O
@@ -378,10 +379,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      touchd
+      real(wp)              brcktd
+      real(wp)              touchd
 
-      integer               sized
+      integer(ip)           sized
 
       logical               failed
       logical               return
@@ -391,21 +392,21 @@
 !
       character*(256)       contxt
 
-      double precision      begin
-      double precision      curx
-      double precision      maxmag
-      double precision      prvpnt ( 3 )
-      double precision      svdx
-      double precision      t
-      double precision      x1
-      double precision      x2
-      double precision      xstep
-      double precision      trnstn
-      double precision      xpoint ( 3 )
+      real(wp)              begin
+      real(wp)              curx
+      real(wp)              maxmag
+      real(wp)              prvpnt ( 3 )
+      real(wp)              svdx
+      real(wp)              t
+      real(wp)              x1
+      real(wp)              x2
+      real(wp)              xstep
+      real(wp)              trnstn
+      real(wp)              xpoint ( 3 )
 
-      integer               nloop
-      integer               room
-      integer               to
+      integer(ip)           nloop
+      integer(ip)           room
+      integer(ip)           to
 
       logical               cursta
       logical               instat
@@ -426,7 +427,7 @@
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      integer               mxloop
+      integer(ip)           mxloop
       parameter           ( mxloop = 1000 )
 
 !
@@ -442,7 +443,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.d0 ) then
+      if ( tol .le. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
@@ -515,7 +516,7 @@
 !
       if ( cstep ) then
 
-         if ( step .le. 0.d0 ) then
+         if ( step .le. 0.0_wp ) then
 
             call setmsg ( 'STEP has value #1. The search step ' &
             //            'must be positive.'                 )
@@ -889,7 +890,7 @@
 !           abscissa value as marking the transition from STATE1 to
 !           STATE2.
 !
-            trnstn = brcktd( (x1 + x2)*0.5d0, x1, x2 )
+            trnstn = brcktd( (x1 + x2)*0.5_wp, x1, x2 )
 
 !
 !           In state-of-interest or not? INSTAT indicates that STATE1

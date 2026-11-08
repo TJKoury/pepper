@@ -2,6 +2,7 @@
 
       subroutine m2eul (  r,  axis3,   axis2,   axis1, &
                               angle3,  angle2,  angle1  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,15 +24,15 @@
 
       implicit none
 
-      double precision      r      ( 3, 3 )
+      real(wp)              r      ( 3, 3 )
 
-      integer               axis3
-      integer               axis2
-      integer               axis1
+      integer(ip)           axis3
+      integer(ip)           axis2
+      integer(ip)           axis1
 
-      double precision      angle3
-      double precision      angle2
-      double precision      angle1
+      real(wp)              angle3
+      real(wp)              angle2
+      real(wp)              angle1
 
 ! $ Brief_I/O
 !
@@ -669,24 +670,24 @@
 !     columns are the unitized columns of R.
 !
 !
-      double precision      ntol
-      parameter           ( ntol = 0.1d0 )
+      real(wp)              ntol
+      parameter           ( ntol = 0.1_wp )
 
-      double precision      dtol
-      parameter           ( dtol = 0.1d0 )
+      real(wp)              dtol
+      parameter           ( dtol = 0.1_wp )
 
 
 !
 !     Local variables
 !
-      double precision      change ( 3, 3 )
-      double precision      sign
-      double precision      tmpmat ( 3, 3 )
-      double precision      tmprot ( 3, 3 )
+      real(wp)              change ( 3, 3 )
+      real(wp)              sign
+      real(wp)              tmpmat ( 3, 3 )
+      real(wp)              tmprot ( 3, 3 )
 
-      integer               c
-      integer               i
-      integer               next   ( 3 )
+      integer(ip)           c
+      integer(ip)           i
+      integer(ip)           next   ( 3 )
 
       logical               degen
 
@@ -840,9 +841,9 @@
 !        1.
 !
          if ( axis2 .eq. next(axis3) ) then
-            sign =  1.d0
+            sign =  1.0_wp
          else
-            sign = -1.d0
+            sign = -1.0_wp
          end if
 
 !
@@ -855,9 +856,9 @@
 !
          call cleard ( 9, change )
 
-         change ( axis3, 3 ) =         1.d0
-         change ( axis2, 1 ) =         1.d0
-         change ( c,     2 ) =  sign * 1.d0
+         change ( axis3, 3 ) =         1.0_wp
+         change ( axis2, 1 ) =         1.0_wp
+         change ( c,     2 ) =  sign * 1.0_wp
 
 !
 !        Transform TMPROT.
@@ -913,11 +914,11 @@
 !        simultaneously because of round-off:
 !
 !
-         degen =      (        (       tmprot(1,3)    .eq. 0.d0  ) &
-                         .and. (       tmprot(2,3)    .eq. 0.d0  )  ) &
-                 .or. (        (       tmprot(3,1)    .eq. 0.d0  ) &
-                         .and. (       tmprot(3,2)    .eq. 0.d0  )  ) &
-                 .or. (           abs( tmprot(3,3) )  .eq. 1.d0     )
+         degen =      (        (       tmprot(1,3)    .eq. 0.0_wp  ) &
+                         .and. (       tmprot(2,3)    .eq. 0.0_wp  )  ) &
+                 .or. (        (       tmprot(3,1)    .eq. 0.0_wp  ) &
+                         .and. (       tmprot(3,2)    .eq. 0.0_wp  )  ) &
+                 .or. (           abs( tmprot(3,3) )  .eq. 1.0_wp     )
 
 
 !
@@ -929,7 +930,7 @@
 !
          if ( degen ) then
 
-            angle3 = 0.d0
+            angle3 = 0.0_wp
             angle2 = acos  (  tmprot(3,3)                 )
             angle1 = atan2 (  tmprot(1,2),   tmprot(1,1)  )
 
@@ -975,9 +976,9 @@
 !        little mapping that takes 1 to 2, 2 to 3, and 3 to 1.
 !
          if ( axis2 .eq. next(axis3) ) then
-            sign =  1.d0
+            sign =  1.0_wp
          else
-            sign = -1.d0
+            sign = -1.0_wp
          end if
 
 !
@@ -985,9 +986,9 @@
 !
          call cleard ( 9, change )
 
-         change ( axis3, 1 ) =         1.d0
-         change ( axis2, 2 ) =         1.d0
-         change ( axis1, 3 ) =  sign * 1.d0
+         change ( axis3, 1 ) =         1.0_wp
+         change ( axis2, 2 ) =         1.0_wp
+         change ( axis1, 3 ) =  sign * 1.0_wp
 
 !
 !        Transform TMPROT.
@@ -1045,11 +1046,11 @@
 !        simultaneously because of round-off:
 !
 !
-         degen =      (        (       tmprot(1,1)    .eq. 0.d0  ) &
-                         .and. (       tmprot(1,2)    .eq. 0.d0  )  ) &
-                 .or. (        (       tmprot(2,3)    .eq. 0.d0  ) &
-                         .and. (       tmprot(3,3)    .eq. 0.d0  )  ) &
-                 .or. (           abs( tmprot(1,3) )  .eq. 1.d0     )
+         degen =      (        (       tmprot(1,1)    .eq. 0.0_wp  ) &
+                         .and. (       tmprot(1,2)    .eq. 0.0_wp  )  ) &
+                 .or. (        (       tmprot(2,3)    .eq. 0.0_wp  ) &
+                         .and. (       tmprot(3,3)    .eq. 0.0_wp  )  ) &
+                 .or. (           abs( tmprot(1,3) )  .eq. 1.0_wp     )
 
 
 !
@@ -1061,7 +1062,7 @@
 !
          if ( degen ) then
 
-            angle3 =          0.d0
+            angle3 =          0.0_wp
             angle2 =          asin  ( -tmprot(1,3)                 )
             angle1 = sign  *  atan2 ( -tmprot(2,1),   tmprot(2,2)  )
 

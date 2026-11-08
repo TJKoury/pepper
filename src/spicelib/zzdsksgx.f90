@@ -2,6 +2,7 @@
 
       subroutine zzdsksgx ( handle, dladsc, dtype, et, vertex, &
                             raydir, xpt,    dc,    ic, found   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,15 +30,15 @@
 
       implicit none
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               dtype
-      double precision      et
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      xpt    ( 3 )
-      double precision      dc     ( * )
-      integer               ic     ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           dtype
+      real(wp)              et
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              xpt    ( 3 )
+      real(wp)              dc     ( * )
+      integer(ip)           ic     ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -176,16 +177,16 @@
 !
 !     SPICELIB functions
 !
-      double precision      touchd
+      real(wp)              touchd
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      retval
+      real(wp)              retval
 
-      integer               plid
+      integer(ip)           plid
 
 
       if ( return() ) then

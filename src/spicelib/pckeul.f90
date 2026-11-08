@@ -1,6 +1,7 @@
 !$Procedure PCKEUL ( PCK, get Euler angles at time from PCK file )
 
       subroutine pckeul ( body, et, found, ref, eulang )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
 
       implicit none
 
-      integer              body
-      double precision     et
+      integer(ip)          body
+      real(wp)             et
       logical              found
       character*(*)        ref
-      double precision     eulang   ( 6 )
+      real(wp)             eulang   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -170,22 +171,22 @@
 !     NT    component number of data type in integer portion
 !           of descriptor
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     =    5 )
 
-      integer               nr
+      integer(ip)           nr
       parameter           ( nr      =   2 )
 
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
-      integer               nt
+      integer(ip)           nt
       parameter           ( nt      =   3 )
 
-      integer               filen
+      integer(ip)           filen
       parameter           ( filen   = 128 )
 
 !
@@ -194,14 +195,14 @@
 
       character*(40)  ident
 
-      double precision      dcd     ( nd )
-      double precision      descr   ( ns )
-      double precision      record  ( 130 )
+      real(wp)              dcd     ( nd )
+      real(wp)              descr   ( ns )
+      real(wp)              record  ( 130 )
 
-      integer     type
-      integer     handle
-      integer     icd ( ni )
-      integer     iref
+      integer(ip) type
+      integer(ip) handle
+      integer(ip) icd ( ni )
+      integer(ip) iref
 
 !
 !     Standard SPICE Error handling.

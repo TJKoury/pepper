@@ -1,6 +1,7 @@
 !$Procedure NEXTWD ( Next word in a character string )
 
       subroutine nextwd ( string, next, rest )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -218,15 +219,15 @@
 !
 !     Local Parameters
 !
-      integer               ispace
+      integer(ip)           ispace
       parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      integer               begin
-      integer               end
-      integer               i
+      integer(ip)           begin
+      integer(ip)           end
+      integer(ip)           i
 
       logical               inword
 

@@ -1,6 +1,7 @@
 !$Procedure SPKPV ( S/P Kernel, position and velocity )
 
       subroutine spkpv ( handle, descr, et, ref, state, center )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       include               'zzctr.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
       character*(*)         ref
-      double precision      state    ( 6 )
-      integer               center
+      real(wp)              state    ( 6 )
+      integer(ip)           center
 
 ! $ Brief_I/O
 !
@@ -211,26 +212,26 @@
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
 !     Some local space is needed in which to return records, and
 !     into which to unpack the segment descriptor.
 !
-      integer               irf
-      integer               irfreq
-      integer               ic         (    6 )
-      double precision      dc         (    2 )
-      double precision      xform      ( 6, 6 )
-      double precision      tstate     ( 6    )
+      integer(ip)           irf
+      integer(ip)           irfreq
+      integer(ip)           ic         (    6 )
+      real(wp)              dc         (    2 )
+      real(wp)              xform      ( 6, 6 )
+      real(wp)              tstate     ( 6    )
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svref
-      integer               svirfr
+      integer(ip)           svirfr
 
       logical               first
 

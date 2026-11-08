@@ -3,6 +3,7 @@
       subroutine packad ( in, &
                           pack,   npack, &
                           maxout, nout,   out )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,13 +25,13 @@
 
       implicit none
 
-      double precision   in      ( * )
-      integer            pack    ( * )
-      integer            npack
-      integer            maxout
+      real(wp)           in      ( * )
+      integer(ip)        pack    ( * )
+      integer(ip)        npack
+      integer(ip)        maxout
 
-      integer            nout
-      double precision   out     ( * )
+      integer(ip)        nout
+      real(wp)           out     ( * )
 
 ! $ Brief_I/O
 !
@@ -198,7 +199,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

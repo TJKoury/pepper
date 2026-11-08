@@ -2,6 +2,7 @@
 
       subroutine zzckcv01 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,16 +27,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               handle
-      integer               arrbeg
-      integer               arrend
-      integer               sclkid
-      double precision      tol
+      integer(ip)           handle
+      integer(ip)           arrbeg
+      integer(ip)           arrend
+      integer(ip)           sclkid
+      real(wp)              tol
       character*(*)         timsys
-      double precision      schedl ( lbcell:* )
+      real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -172,33 +173,33 @@
 !
 !     Local Parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
-      integer               qavsiz
+      integer(ip)           qavsiz
       parameter           ( qavsiz = 7 )
 
-      integer               qsiz
+      integer(ip)           qsiz
       parameter           ( qsiz   = 4 )
 
 !
 !     Local Variables
 !
-      double precision      begin
-      double precision      buffer ( bufsiz )
-      double precision      et
-      double precision      finish
+      real(wp)              begin
+      real(wp)              buffer ( bufsiz )
+      real(wp)              et
+      real(wp)              finish
 
-      integer               i
-      integer               n
-      integer               nrec
-      integer               offset
-      integer               psiz
-      integer               remain
-      integer               tbase
-      integer               navsln
-      integer               avsln
-      integer               seglen
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           nrec
+      integer(ip)           offset
+      integer(ip)           psiz
+      integer(ip)           remain
+      integer(ip)           tbase
+      integer(ip)           navsln
+      integer(ip)           avsln
+      integer(ip)           seglen
 
       logical               istdb
 
@@ -214,7 +215,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -335,11 +336,11 @@
             finish  =  buffer(i)
 
 
-            if ( tol .gt. 0.d0 ) then
+            if ( tol .gt. 0.0_wp ) then
 !
 !              Adjust the interval using the tolerance.
 !
-               begin   =  max( begin  - tol, 0.d0 )
+               begin   =  max( begin  - tol, 0.0_wp )
                finish  =       finish + tol
 
             end if

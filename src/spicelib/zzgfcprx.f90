@@ -1,6 +1,7 @@
 !$Procedure ZZGFCPRX ( GF, coordinate derivative proxy )
 
       subroutine zzgfcprx ( state, corsys, re, f, sense, cdsign )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,12 +27,12 @@
       implicit none
       include 'zzgf.inc'
 
-      double precision      state  ( 6 )
+      real(wp)              state  ( 6 )
       character*(*)         corsys
-      double precision      re
-      double precision      f
-      integer               sense
-      integer               cdsign ( 3 )
+      real(wp)              re
+      real(wp)              f
+      integer(ip)           sense
+      integer(ip)           cdsign ( 3 )
 
 
 ! $ Brief_I/O
@@ -277,7 +278,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
       logical               failed
       logical               return
@@ -286,13 +287,13 @@
 !
 !     Local parameters
 !
-      integer               upidx
+      integer(ip)           upidx
       parameter           ( upidx  = 1 )
 
-      integer               estidx
+      integer(ip)           estidx
       parameter           ( estidx = 2 )
 
-      integer               noridx
+      integer(ip)           noridx
       parameter           ( noridx = 3 )
 
 
@@ -303,18 +304,18 @@
 !     descriptive names EAST for the "tangential"
 !     direction and NORTH for the "normal" direction.
 !
-      double precision      alt
-      double precision      dp
-      double precision      lat
-      double precision      lon
-      double precision      normal ( 3 )
-      double precision      rtnvel ( 3 )
-      double precision      vel    ( 3 )
-      double precision      xmat   ( 3, 3 )
+      real(wp)              alt
+      real(wp)              dp
+      real(wp)              lat
+      real(wp)              lon
+      real(wp)              normal ( 3 )
+      real(wp)              rtnvel ( 3 )
+      real(wp)              vel    ( 3 )
+      real(wp)              xmat   ( 3, 3 )
 
-      integer               dpsign
-      integer               i
-      integer               rtnsgn ( 3 )
+      integer(ip)           dpsign
+      integer(ip)           i
+      integer(ip)           rtnsgn ( 3 )
 
 
 !
@@ -375,7 +376,7 @@
 !
          do i = 1, 3
 
-            if ( vel(i) .eq. 0.d0 ) then
+            if ( vel(i) .eq. 0.0_wp ) then
 
                cdsign(i) = 0
 
@@ -387,7 +388,7 @@
 !              is positive or negative. See reference [1] for a
 !              discussion of this Fortran intrinsic function.
 !
-               cdsign(i) = nint(  sign( 1.d0, vel(i) )  )
+               cdsign(i) = nint(  sign( 1.0_wp, vel(i) )  )
 
             end if
 
@@ -404,8 +405,8 @@
 !     There's quite a bit of common logic for the "on Z-axis" case;
 !     take care of it here.
 !
-      if (       ( state(1) .eq. 0.d0 ) &
-           .and. ( state(2) .eq. 0.d0 ) ) then
+      if (       ( state(1) .eq. 0.0_wp ) &
+           .and. ( state(2) .eq. 0.0_wp ) ) then
 !
 !        The position lies on the Z-axis.
 !
@@ -439,7 +440,7 @@
 !        Cylindrical coordinates are a special case which we treat
 !        separately.
 !
-         if ( state(3) .ne. 0.d0 ) then
+         if ( state(3) .ne. 0.0_wp ) then
 !
 !           The position is on the Z-axis but not at the origin.
 !
@@ -448,11 +449,11 @@
 !
             dp = vdot ( state, vel )
 
-            if ( dp .eq. 0.d0 ) then
+            if ( dp .eq. 0.0_wp ) then
 
                dpsign = 0
             else
-               dpsign = nint(  sign( 1.d0, dp )  )
+               dpsign = nint(  sign( 1.0_wp, dp )  )
             end if
 
          else
@@ -548,10 +549,10 @@
 !           For cylindrical coordinates, the derivative of Z with
 !           respect to time is already present in VEL.
 !
-            if ( vel(3) .eq. 0.d0 ) then
+            if ( vel(3) .eq. 0.0_wp ) then
                cdsign(3) = 0
             else
-               cdsign(3) = nint(  sign( 1.d0, vel(3) )  )
+               cdsign(3) = nint(  sign( 1.0_wp, vel(3) )  )
             end if
 
 
@@ -598,7 +599,7 @@
             return
          end if
 
-         call latrec ( 1.d0,  lon, lat, normal )
+         call latrec ( 1.0_wp,  lon, lat, normal )
 
 
       else if ( corsys .eq. cylsys ) then
@@ -606,7 +607,7 @@
 !        The normal vector is aligned with the local radial
 !        direction; this vector is parallel to the X-Y plane.
 !
-         call vpack  ( state(1), state(2), 0.d0, normal )
+         call vpack  ( state(1), state(2), 0.0_wp, normal )
          call vhatip ( normal )
 
       else
@@ -631,11 +632,11 @@
 !
       do i = 1, 3
 
-         if ( rtnvel(i) .eq. 0.d0 ) then
+         if ( rtnvel(i) .eq. 0.0_wp ) then
 
             rtnsgn(i) = 0
          else
-            rtnsgn(i) = nint(  sign( 1.d0, rtnvel(i) )  )
+            rtnsgn(i) = nint(  sign( 1.0_wp, rtnvel(i) )  )
          end if
 
       end do

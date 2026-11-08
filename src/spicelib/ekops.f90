@@ -1,6 +1,7 @@
 !$Procedure EKOPS ( EK, open scratch file )
 
       subroutine ekops ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
       include 'ektype.inc'
       include 'ekfilpar.inc'
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -459,8 +460,8 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               p
+      integer(ip)           base
+      integer(ip)           p
 
 !
 !     Standard SPICE error handling.

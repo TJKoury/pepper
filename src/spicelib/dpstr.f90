@@ -1,6 +1,7 @@
 !$Procedure DPSTR ( Double Precision Number to Character )
 
       subroutine dpstr ( x, sigdig, string )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision x
-      integer          sigdig
+      real(wp) x
+      integer(ip)      sigdig
       character*(*)    string
 
 ! $ Brief_I/O
@@ -261,38 +262,38 @@
 !
 !     Maximum number of allowed significant digits.
 !
-      integer               mostdg
+      integer(ip)           mostdg
       parameter           ( mostdg = 14 )
 
 !
 !     Local variables
 !
-      integer               maxpow
+      integer(ip)           maxpow
       parameter           ( maxpow = 17 )
 
-      double precision      power (0:maxpow)
-      double precision      ipower(0:maxpow)
+      real(wp)              power (0:maxpow)
+      real(wp)              ipower(0:maxpow)
 
       character*(1)         digits(0:9)
-      double precision      values(0:9)
+      real(wp)              values(0:9)
 
-      integer               maxexp
+      integer(ip)           maxexp
       parameter           ( maxexp = 40 )
 
       character*(2)         vaxexp(0:40)
 
 
 
-      double precision      copy
-      integer               postn
-      integer               expont
-      integer               maxsig
+      real(wp)              copy
+      integer(ip)           postn
+      integer(ip)           expont
+      integer(ip)           maxsig
 
-      double precision      exp10
+      real(wp)              exp10
 
-      integer               i
-      integer               k
-      integer               last
+      integer(ip)           i
+      integer(ip)           k
+      integer(ip)           last
 
       character*(20)        expc
       character*(28)        zero
@@ -306,27 +307,27 @@
       save                  values
       save                  vaxexp
 
-      data             power        /  1.0d0, &
-                                       1.0d1,  1.0d2,  1.0d3,  1.0d4, &
-                                       1.0d5,  1.0d6,  1.0d7,  1.0d8, &
-                                       1.0d9,  1.0d10, 1.0d11, 1.0d12, &
-                                       1.0d13, 1.0d14, 1.0d15, 1.0d16, &
-                                       1.0d17                          /
+      data             power        /  1.0_wp, &
+                                       1.0e1_wp,  1.0e2_wp,  1.0e3_wp,  1.0e4_wp, &
+                                       1.0e5_wp,  1.0e6_wp,  1.0e7_wp,  1.0e8_wp, &
+                                       1.0e9_wp,  1.0e10_wp, 1.0e11_wp, 1.0e12_wp, &
+                                       1.0e13_wp, 1.0e14_wp, 1.0e15_wp, 1.0e16_wp, &
+                                       1.0e17_wp                          /
 
-      data             ipower       /1.0d0, &
-                                     1.0d-1,  1.0d-2,  1.0d-3,  1.0d-4, &
-                                     1.0d-5,  1.0d-6,  1.0d-7,  1.0d-8, &
-                                     1.0d-9,  1.0d-10, 1.0d-11, 1.0d-12, &
-                                     1.0d-13, 1.0d-14, 1.0d-15, 1.0d-16, &
-                                     1.0d-17                          /
+      data             ipower       /1.0_wp, &
+                                     1.0e-1_wp,  1.0e-2_wp,  1.0e-3_wp,  1.0e-4_wp, &
+                                     1.0e-5_wp,  1.0e-6_wp,  1.0e-7_wp,  1.0e-8_wp, &
+                                     1.0e-9_wp,  1.0e-10_wp, 1.0e-11_wp, 1.0e-12_wp, &
+                                     1.0e-13_wp, 1.0e-14_wp, 1.0e-15_wp, 1.0e-16_wp, &
+                                     1.0e-17_wp                          /
 
       data             digits       /  '0', '1', '2', '3', '4', &
                                        '5', '6', '7', '8', '9'    /
 
-      data             values       /   0.0d0 ,  1.0d0 ,  2.0d0 , &
-                                        3.0d0 ,  4.0d0 ,  5.0d0 , &
-                                        6.0d0 ,  7.0d0 ,  8.0d0 , &
-                                        9.0d0                     /
+      data             values       /   0.0_wp ,  1.0_wp ,  2.0_wp , &
+                                        3.0_wp ,  4.0_wp ,  5.0_wp , &
+                                        6.0_wp ,  7.0_wp ,  8.0_wp , &
+                                        9.0_wp                     /
 
       data             vaxexp       / '00', '01', '02', '03', '04', &
                                       '05', '06', '07', '08', '09', &
@@ -405,7 +406,7 @@
          k      = -expont
 
          do while ( k .gt. 16 )
-            copy = copy * 1.0d16
+            copy = copy * 1.0e16_wp
             k    = k - 16
          end do
 
@@ -420,7 +421,7 @@
          k      = expont
 
          do while ( k .gt. 16 )
-            copy = copy * 1.0d-16
+            copy = copy * 1.0e-16_wp
             k    = k - 16
          end do
 
@@ -436,7 +437,7 @@
 !
 !     Round off the last significant digit.
 !
-      copy   = (dnint( copy*power(maxsig-1)) + 0.125d0 ) &
+      copy   = (dnint( copy*power(maxsig-1)) + 0.125_wp ) &
              * ipower(maxsig-1)
 
 !
@@ -444,8 +445,8 @@
 !     round off process.  If we did we need to divide by 10 and add 1
 !     to the exponent value.  (COPY must always remain between 0 and 10)
 !
-      if ( copy .ge. 10.0d0 ) then
-         copy   = copy * 1.0d-1
+      if ( copy .ge. 10.0_wp ) then
+         copy   = copy * 1.0e-1_wp
          expont = expont + 1
       end if
 !
@@ -454,7 +455,7 @@
       i                   = int ( copy )
       numstr(postn:postn) = digits(i)
 
-      copy                = ( copy - values(i) ) * 10.0d0
+      copy                = ( copy - values(i) ) * 10.0_wp
 
 !
 !     Set the string pointer to the next position and compute the
@@ -471,7 +472,7 @@
 
          i                   = int ( copy )
          numstr(postn:postn) = digits(i)
-         copy                = ( copy - values(i) ) * 10.0d0
+         copy                = ( copy - values(i) ) * 10.0_wp
          postn               = postn + 1
 
       end do

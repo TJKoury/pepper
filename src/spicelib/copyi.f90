@@ -1,6 +1,7 @@
 !$Procedure COPYI ( Copy an integer cell )
 
       subroutine copyi ( cell, copy )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer            cell     ( lbcell:* )
-      integer            copy     ( lbcell:* )
+      integer(ip)        cell     ( lbcell:* )
+      integer(ip)        copy     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -131,17 +132,17 @@
 !
 !     SPICELIB functions
 !
-      integer          sizei
-      integer          cardi
+      integer(ip)      sizei
+      integer(ip)      cardi
       logical          return
 
 !
 !     Local variables
 !
-      integer          size
-      integer          card
-      integer          moved
-      integer          i
+      integer(ip)      size
+      integer(ip)      card
+      integer(ip)      moved
+      integer(ip)      i
 
 
 !

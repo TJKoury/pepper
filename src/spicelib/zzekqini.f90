@@ -1,6 +1,7 @@
 !$Procedure   ZZEKQINI ( Private: EK, initialize encoded query )
 
       subroutine zzekqini ( isize, dsize, eqryi, eqryc, eqryd )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,14 +26,14 @@
       include 'ekqlimit.inc'
       include 'ekbool.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               isize
-      integer               dsize
-      integer               eqryi ( lbcell : * )
+      integer(ip)           isize
+      integer(ip)           dsize
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
-      double precision      eqryd ( * )
+      real(wp)              eqryd ( * )
 
 ! $ Brief_I/O
 !
@@ -142,7 +143,7 @@
 !
 !     Minimum upper bound for the integer cell of an encoded query:
 !
-      integer               mnisiz
+      integer(ip)           mnisiz
       parameter           ( mnisiz =     eqvbas &
                                       +  maxtab * eqvdsz * 2 &
                                       +  maxcon * eqcdsz &
@@ -153,7 +154,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 
 !

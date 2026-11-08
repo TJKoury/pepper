@@ -1,6 +1,7 @@
 !$Procedure   ZZEKPGCH ( EK, paging system access check )
 
       subroutine zzekpgch ( handle, access )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
       include 'ekarch.inc'
       include 'ektype.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         access
 
 ! $ Brief_I/O
@@ -127,16 +128,16 @@
 !
 !     Local variables
 !
-      integer               id
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               npc
-      integer               npd
-      integer               npi
-      integer               topc
-      integer               topd
-      integer               topi
+      integer(ip)           id
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           npc
+      integer(ip)           npd
+      integer(ip)           npi
+      integer(ip)           topc
+      integer(ip)           topd
+      integer(ip)           topi
 
 
 

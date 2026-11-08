@@ -1,6 +1,7 @@
 !$Procedure SRFCSS ( Surface ID and body string to surface string )
 
       subroutine srfcss ( code, bodstr, srfstr, isname )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
 
       implicit none
 
-      integer               code
+      integer(ip)           code
       character*(*)         bodstr
       character*(*)         srfstr
       logical               isname
@@ -352,7 +353,7 @@
 !
 !     Local variables
 !
-      integer               bodyid
+      integer(ip)           bodyid
 
 
       if ( return() ) then

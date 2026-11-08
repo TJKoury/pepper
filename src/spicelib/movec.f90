@@ -1,6 +1,7 @@
 !$Procedure MOVEC  ( Move a character array to another )
 
       subroutine movec ( arrfrm, ndim, arrto )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       character*(*)   arrfrm ( * )
-      integer         ndim
+      integer(ip)     ndim
       character*(*)   arrto  ( * )
 
 ! $ Brief_I/O
@@ -138,7 +139,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim

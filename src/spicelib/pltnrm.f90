@@ -1,6 +1,7 @@
 !$Procedure PLTNRM ( DSK, compute outward normal of plate )
 
       subroutine pltnrm ( v1, v2, v3, normal )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      v1     ( 3 )
-      double precision      v2     ( 3 )
-      double precision      v3     ( 3 )
-      double precision      normal ( 3 )
+      real(wp)              v1     ( 3 )
+      real(wp)              v2     ( 3 )
+      real(wp)              v3     ( 3 )
+      real(wp)              normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -153,8 +154,8 @@
 !
 !     Local variables
 !
-      double precision      edge1  ( 3 )
-      double precision      edge2  ( 3 )
+      real(wp)              edge1  ( 3 )
+      real(wp)              edge2  ( 3 )
 
 !
 !     This routine is error-free.

@@ -1,6 +1,7 @@
 !$Procedure CHBIGR ( Chebyshev expansion integral )
 
       subroutine chbigr ( degp, cp, x2s, x, p, itgrlp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,12 +25,12 @@
 
       implicit none
 
-      integer               degp
-      double precision      cp     ( * )
-      double precision      x2s    ( 2 )
-      double precision      x
-      double precision      p
-      double precision      itgrlp
+      integer(ip)           degp
+      real(wp)              cp     ( * )
+      real(wp)              x2s    ( 2 )
+      real(wp)              x
+      real(wp)              p
+      real(wp)              itgrlp
 
 ! $ Brief_I/O
 !
@@ -346,19 +347,19 @@
 !
 !     Local variables
 !
-      double precision      a2
-      double precision      adegp1
-      double precision      adegp2
-      double precision      ai
-      double precision      c0
-      double precision      f      ( 3 )
-      double precision      s
-      double precision      s2
-      double precision      w      ( 3 )
-      double precision      z      ( 3 )
+      real(wp)              a2
+      real(wp)              adegp1
+      real(wp)              adegp2
+      real(wp)              ai
+      real(wp)              c0
+      real(wp)              f      ( 3 )
+      real(wp)              s
+      real(wp)              s2
+      real(wp)              w      ( 3 )
+      real(wp)              z      ( 3 )
 
-      integer               i
-      integer               nterms
+      integer(ip)           i
+      integer(ip)           nterms
 
 !
 !     Test RETURN but don't check in. Use discovery check-in.
@@ -385,7 +386,7 @@
 !
 !     Check the radius of the domain interval.
 !
-      if ( x2s(2) .le. 0.d0 )  then
+      if ( x2s(2) .le. 0.0_wp )  then
 
          call chkin  ( 'CHBIGR'                            )
          call setmsg ( 'Interval radius must be positive ' &
@@ -591,7 +592,7 @@
 !     Note we've already checked that X2S(2) is positive.
 !
       s     = (x-x2s(1)) / x2s(2)
-      s2    = 2.0d0 * s
+      s2    = 2.0_wp * s
 
 !
 !     Pre-compute the coefficients of the integral expansion
@@ -605,7 +606,7 @@
 !
       if ( nterms .ge. 3 ) then
 
-         a2 = cp(1) - 0.5d0*cp(3)
+         a2 = cp(1) - 0.5_wp*cp(3)
       else
          a2 = cp(1)
       end if
@@ -614,18 +615,18 @@
 !     Initialize the two highest-indexed coefficients of
 !     the integral expansion.
 !
-      adegp1 = 0.d0
-      adegp2 = 0.d0
+      adegp1 = 0.0_wp
+      adegp2 = 0.0_wp
 
       if ( degp .ge. 2 ) then
 
-         adegp1 = 0.5d0 * cp(degp) / degp
+         adegp1 = 0.5_wp * cp(degp) / degp
 
       end if
 
       if ( degp .ge. 1 ) then
 
-         adegp2 = 0.5d0 * cp(degp+1) / (degp+1)
+         adegp2 = 0.5_wp * cp(degp+1) / (degp+1)
 
       end if
 
@@ -642,8 +643,8 @@
 !     the start of the loop, after the first loop pass, F would have
 !     the contents assigned below.
 !
-      f(3) = 0.d0
-      f(2) = 0.d0
+      f(3) = 0.0_wp
+      f(2) = 0.0_wp
 !
 !     The initial value of F(1) is the highest-order coefficient of
 !     the integral's expansion.
@@ -658,14 +659,14 @@
 !     make the integral 0 at x = 0. We'll use the terms
 !     Z(*) to evaluate the expansion of the integral at x = 0.
 !
-      z(3) = 0.d0
-      z(2) = 0.d0
+      z(3) = 0.0_wp
+      z(2) = 0.0_wp
       z(1) = f(1)
 !
 !     We'll use the terms W(*) to evaluate the input expansion.
 !
-      w(1) = 0.d0
-      w(2) = 0.d0
+      w(1) = 0.0_wp
+      w(2) = 0.0_wp
 
 !
 !     NTERMS is DEGP+1.
@@ -687,7 +688,7 @@
 !           AI is A ; I >= 3; DEGP >= 3.
 !                  I
 !
-            ai = 0.5d0 * ( cp(i-1) - cp(i+1) ) / (i-1)
+            ai = 0.5_wp * ( cp(i-1) - cp(i+1) ) / (i-1)
 
          else
 !

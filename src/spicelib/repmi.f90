@@ -1,6 +1,7 @@
 !$Procedure REPMI  ( Replace marker with integer )
 
       subroutine repmi ( in, marker, value, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       character*(*)         in
       character*(*)         marker
-      integer               value
+      integer(ip)           value
       character*(*)         out
 
-      integer               maxli
+      integer(ip)           maxli
       parameter           ( maxli = 11 )
 
 ! $ Brief_I/O
@@ -246,19 +247,19 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
 !
       character*(maxli)     substr
 
-      integer               mrknbf
-      integer               mrknbl
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
 
-      integer               mrkpsb
-      integer               mrkpse
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
 
 
 !

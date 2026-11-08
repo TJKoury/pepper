@@ -1,6 +1,7 @@
 !$Procedure ZZSEGBOX (Bounding box for DSK segment volume element)
 
       subroutine zzsegbox ( dskdsc, boxctr, maxr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       include 'dskdsc.inc'
 
-      double precision      dskdsc ( * )
-      double precision      boxctr ( 3 )
-      double precision      maxr
+      real(wp)              dskdsc ( * )
+      real(wp)              boxctr ( 3 )
+      real(wp)              maxr
 
 ! $ Brief_I/O
 !
@@ -122,11 +123,11 @@
 !
 !     Local variables
 !
-      double precision      l1
-      double precision      l2
-      double precision      l3
+      real(wp)              l1
+      real(wp)              l2
+      real(wp)              l3
 
-      integer               corsys
+      integer(ip)           corsys
 
 
       if ( return() ) then

@@ -1,6 +1,7 @@
 !$Procedure VDOTG ( Vector dot product, general dimension )
 
-      double precision function vdotg ( v1, v2, ndim )
+      real(wp) function vdotg ( v1, v2, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision   v1  ( * )
-      double precision   v2  ( * )
-      integer            ndim
+      real(wp)           v1  ( * )
+      real(wp)           v2  ( * )
+      integer(ip)        ndim
 
 ! $ Brief_I/O
 !
@@ -214,9 +215,9 @@
 !-&
 
 
-      integer i
+      integer(ip) i
 !
-      vdotg = 0.d0
+      vdotg = 0.0_wp
       do i = 1, ndim
          vdotg = vdotg + v1(i)*v2(i)
       end do

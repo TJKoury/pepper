@@ -1,6 +1,7 @@
 !$Procedure SPKE02 ( SPK, evaluate record, type 2 )
 
       subroutine spke02 ( et, record, xyzdot )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 !
 ! $ Declarations
 !
-      double precision      et
-      double precision      record   ( * )
-      double precision      xyzdot   ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              xyzdot   ( 6 )
 !
 ! $ Brief_I/O
 !
@@ -208,10 +209,10 @@
 !
 !     Local variables
 !
-      integer               cofloc
-      integer               degp
-      integer               i
-      integer               ncof
+      integer(ip)           cofloc
+      integer(ip)           degp
+      integer(ip)           i
+      integer(ip)           ncof
 
 !
 !     Use discovery check-in.
@@ -244,7 +245,7 @@
 !
 !     Check the radius of the domain interval.
 !
-      if ( record(3) .le. 0.d0 )  then
+      if ( record(3) .le. 0.0_wp )  then
 
          call chkin  ( 'SPKE02'                            )
          call setmsg ( 'Interval radius must be positive ' &

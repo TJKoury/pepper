@@ -1,6 +1,7 @@
 !$Procedure VSEP  ( Angular separation of vectors, 3 dimensions )
 
-      double precision function vsep ( v1, v2 )
+      real(wp) function vsep ( v1, v2 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision  v1 ( 3 )
-      double precision  v2 ( 3 )
+      real(wp)          v1 ( 3 )
+      real(wp)          v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -242,9 +243,9 @@
 !     SPICELIB functions
 !
       external              pi
-      double precision      pi
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              pi
+      real(wp)              vdot
+      real(wp)              vnorm
 
 !
 !     Local Variables
@@ -254,24 +255,24 @@
 !        Either of the difference vectors: V1-V2 or V1-(-V2)
 !        Unit vectors parallel to V1 and V2
 !
-      double precision      dmag1
-      double precision      dmag2
-      double precision      vtemp(3)
-      double precision      u1(3)
-      double precision      u2(3)
+      real(wp)              dmag1
+      real(wp)              dmag2
+      real(wp)              vtemp(3)
+      real(wp)              u1(3)
+      real(wp)              u2(3)
 
 !
 !  Calculate the magnitudes of V1 and V2; if either is 0, VSEP = 0
 !
       call unorm ( v1, u1, dmag1 )
-      if ( dmag1 .eq. 0.d0 ) then
-         vsep = 0.d0
+      if ( dmag1 .eq. 0.0_wp ) then
+         vsep = 0.0_wp
          return
       end if
 
       call unorm ( v2, u2, dmag2 )
-      if ( dmag2 .eq. 0.d0 ) then
-         vsep = 0.d0
+      if ( dmag2 .eq. 0.0_wp ) then
+         vsep = 0.0_wp
          return
       end if
 
@@ -280,17 +281,17 @@
          vtemp(2) = u1(2) - u2(2)
          vtemp(3) = u1(3) - u2(3)
 
-         vsep = 2.0d0 * asin (0.5d0 * vnorm(vtemp))
+         vsep = 2.0_wp * asin (0.5_wp * vnorm(vtemp))
 
       else if ( vdot(u1,u2) .lt. 0 ) then
          vtemp(1) = u1(1) + u2(1)
          vtemp(2) = u1(2) + u2(2)
          vtemp(3) = u1(3) + u2(3)
 
-         vsep = pi() - 2.0d0 * asin (0.5d0 * vnorm(vtemp))
+         vsep = pi() - 2.0_wp * asin (0.5_wp * vnorm(vtemp))
 
       else
-         vsep = pi() / 2.0d0
+         vsep = pi() / 2.0_wp
       end if
 
       return

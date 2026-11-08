@@ -3,6 +3,7 @@
       subroutine edterm ( trmtyp, source, target, et, &
                           fixref, abcorr, obsrvr, npts, &
                           trgepc, obspos, trmpts        )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,14 +33,14 @@
       character*(*)         trmtyp
       character*(*)         source
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
-      integer               npts
-      double precision      trgepc
-      double precision      obspos ( 3 )
-      double precision      trmpts ( 3, npts )
+      integer(ip)           npts
+      real(wp)              trgepc
+      real(wp)              obspos ( 3 )
+      real(wp)              trmpts ( 3, npts )
 
 ! $ Brief_I/O
 !
@@ -780,53 +781,53 @@
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 
 !
 !     Local variables
 !
-      double precision      ltsrc
-      double precision      lttarg
-      double precision      r
-      double precision      srcpos ( 3 )
-      double precision      srcrad ( 3 )
-      double precision      trgpos ( 3 )
-      double precision      trgrad ( 3 )
+      real(wp)              ltsrc
+      real(wp)              lttarg
+      real(wp)              r
+      real(wp)              srcpos ( 3 )
+      real(wp)              srcrad ( 3 )
+      real(wp)              trgpos ( 3 )
+      real(wp)              trgrad ( 3 )
 
-      integer               center
-      integer               clssid
-      integer               frclas
-      integer               frcode
-      integer               obsid
-      integer               srcid
-      integer               trgid
+      integer(ip)           center
+      integer(ip)           clssid
+      integer(ip)           frclas
+      integer(ip)           frcode
+      integer(ip)           obsid
+      integer(ip)           srcid
+      integer(ip)           trgid
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtgid
+      integer(ip)           svtgid
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svscre
-      integer               svsrci
+      integer(ip)           svsrci
       logical               svfnd2
 
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsi
+      integer(ip)           svobsi
       logical               svfnd3
 
       logical               first
@@ -834,9 +835,9 @@
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfrcd
+      integer(ip)           svfrcd
 
 
 !

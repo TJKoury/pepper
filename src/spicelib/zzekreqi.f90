@@ -1,6 +1,7 @@
 !$Procedure   ZZEKREQI ( Private: EK, read from encoded query, integer )
 
       subroutine zzekreqi ( eqryi, name, value )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
 
       include 'ekquery.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         name
-      integer               value
+      integer(ip)           value
 
 ! $ Brief_I/O
 !
@@ -97,15 +98,15 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
 !
 !     Local parameters
 !
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 32 )
 
-      integer               maxnam
+      integer(ip)           maxnam
       parameter           ( maxnam = 15 )
 !
 !     Local variables
@@ -113,8 +114,8 @@
       character*(namlen)    namlst ( maxnam )
       character*(namlen)    tmpnam
 
-      integer               i
-      integer               namidx ( maxnam )
+      integer(ip)           i
+      integer(ip)           namidx ( maxnam )
 
 !
 !     Saved variables

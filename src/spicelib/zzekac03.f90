@@ -2,6 +2,7 @@
 
       subroutine zzekac03 (  handle,  segdsc,  coldsc,  cvals, &
                              nlflgs,  rcptrs,  wkindx  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,13 +28,13 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
       character*(*)         cvals  ( * )
       logical               nlflgs ( * )
-      integer               rcptrs ( * )
-      integer               wkindx ( * )
+      integer(ip)           rcptrs ( * )
+      integer(ip)           wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -161,14 +162,14 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
       logical               return
 
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = cpsize )
 
 !
@@ -177,33 +178,33 @@
       character*(cnamsz)    column
       character*(pgsizc)    page
 
-      integer               adrbuf ( bufsiz )
-      integer               bufptr
-      integer               class
-      integer               colidx
-      integer               colwid
-      integer               dscbas
-      integer               from
-      integer               i
-      integer               idxtyp
-      integer               p
-      integer               p2
-      integer               pbase
-      integer               pos
-      integer               mbase
-      integer               n
-      integer               nchars
-      integer               ndata
-      integer               nlinks
-      integer               nnull
-      integer               nrows
-      integer               nulptr
-      integer               nwrite
-      integer               remain
-      integer               room
-      integer               strlen
-      integer               to
-      integer               tree
+      integer(ip)           adrbuf ( bufsiz )
+      integer(ip)           bufptr
+      integer(ip)           class
+      integer(ip)           colidx
+      integer(ip)           colwid
+      integer(ip)           dscbas
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           idxtyp
+      integer(ip)           p
+      integer(ip)           p2
+      integer(ip)           pbase
+      integer(ip)           pos
+      integer(ip)           mbase
+      integer(ip)           n
+      integer(ip)           nchars
+      integer(ip)           ndata
+      integer(ip)           nlinks
+      integer(ip)           nnull
+      integer(ip)           nrows
+      integer(ip)           nulptr
+      integer(ip)           nwrite
+      integer(ip)           remain
+      integer(ip)           room
+      integer(ip)           strlen
+      integer(ip)           to
+      integer(ip)           tree
 
       logical               fixlen
       logical               indexd

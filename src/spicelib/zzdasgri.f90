@@ -1,6 +1,7 @@
 !$Procedure ZZDASGRI ( DAS, get record, integer )
 
       subroutine zzdasgri ( handle, recno, record )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,9 +27,9 @@
 
       include 'das.inc'
 
-      integer               handle
-      integer               recno
-      integer               record ( nwi )
+      integer(ip)           handle
+      integer(ip)           recno
+      integer(ip)           record ( nwi )
 
 ! $ Brief_I/O
 !
@@ -121,7 +122,7 @@
 !
 !     Local parameters
 !
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 
 !
@@ -130,12 +131,12 @@
       character*(nwc)       chrrec
       character*(filsiz)    fname
 
-      integer               intamh
-      integer               intarc
-      integer               intbff
-      integer               iostat
-      integer               natbff
-      integer               unit
+      integer(ip)           intamh
+      integer(ip)           intarc
+      integer(ip)           intbff
+      integer(ip)           iostat
+      integer(ip)           natbff
+      integer(ip)           unit
 
       logical               first
       logical               found

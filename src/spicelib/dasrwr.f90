@@ -10,6 +10,7 @@
                           datad, &
                           datai, &
                           datac   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,33 +30,33 @@
 
       implicit none
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd    =  128 )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi    =  256 )
 
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc    = 1024 )
 
-      integer               handle
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           recno
       character*(*)         recc
-      double precision      recd    ( nwd )
-      integer               reci    ( nwi )
-      integer               first
-      integer               last
-      double precision      datad   ( * )
-      integer               datai   ( * )
+      real(wp)              recd    ( nwd )
+      integer(ip)           reci    ( nwi )
+      integer(ip)           first
+      integer(ip)           last
+      real(wp)              datad   ( * )
+      integer(ip)           datai   ( * )
       character*(*)         datac
 
-      integer               bufszd
+      integer(ip)           bufszd
       parameter           ( bufszd = 10 )
 
-      integer               bufszi
+      integer(ip)           bufszi
       parameter           ( bufszi = 10 )
 
-      integer               bufszc
+      integer(ip)           bufszc
       parameter           ( bufszc = 10 )
 
 ! $ Brief_I/O
@@ -271,7 +272,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lnktl
+      integer(ip)           lnktl
 
       logical               failed
       logical               return
@@ -279,16 +280,16 @@
 !
 !     Local parameters
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool  =   -5 )
 
-      integer               forwrd
+      integer(ip)           forwrd
       parameter           ( forwrd  =    1 )
 
-      integer               bufnvd
+      integer(ip)           bufnvd
       parameter           ( bufnvd  = bufszd * nwd )
 
-      integer               bufnvi
+      integer(ip)           bufnvi
       parameter           ( bufnvi  = bufszi * nwi )
 
 !
@@ -334,40 +335,40 @@
 !
 !
       character*(nwc)       rcbufc (      bufszc )
-      double precision      rcbufd ( nwd, bufszd )
-      integer               rcbufi ( nwi, bufszi )
+      real(wp)              rcbufd ( nwd, bufszd )
+      integer(ip)           rcbufi ( nwi, bufszi )
 
-      integer               rnbufc (      bufszc )
-      integer               rnbufd (      bufszd )
-      integer               rnbufi (      bufszi )
+      integer(ip)           rnbufc (      bufszc )
+      integer(ip)           rnbufd (      bufszd )
+      integer(ip)           rnbufi (      bufszi )
 
-      integer               hnbufc (      bufszc )
-      integer               hnbufd (      bufszd )
-      integer               hnbufi (      bufszi )
+      integer(ip)           hnbufc (      bufszc )
+      integer(ip)           hnbufd (      bufszd )
+      integer(ip)           hnbufi (      bufszi )
 
       logical               upbufc (      bufszc )
       logical               upbufd (      bufszd )
       logical               upbufi (      bufszi )
 
-      integer               poolc  ( 2, lbpool : bufszc )
-      integer               poold  ( 2, lbpool : bufszd )
-      integer               pooli  ( 2, lbpool : bufszi )
+      integer(ip)           poolc  ( 2, lbpool : bufszc )
+      integer(ip)           poold  ( 2, lbpool : bufszd )
+      integer(ip)           pooli  ( 2, lbpool : bufszi )
 
-      integer               headc
-      integer               headd
-      integer               headi
+      integer(ip)           headc
+      integer(ip)           headd
+      integer(ip)           headi
 
-      integer               usedc
-      integer               usedd
-      integer               usedi
+      integer(ip)           usedc
+      integer(ip)           usedd
+      integer(ip)           usedi
 
 !
 !     Other local variables
 !
-      integer               next
-      integer               node
-      integer               unit
-      integer               wrunit
+      integer(ip)           next
+      integer(ip)           node
+      integer(ip)           unit
+      integer(ip)           wrunit
 
       logical               pass1
 
@@ -386,7 +387,7 @@
       data                  usedi   /  0               /
 
       data                  rcbufc  / bufszc * ' '     /
-      data                  rcbufd  / bufnvd * 0.d0    /
+      data                  rcbufd  / bufnvd * 0.0_wp    /
       data                  rcbufi  / bufnvi * 0       /
 
       data                  rnbufc  / bufszc * 0       /

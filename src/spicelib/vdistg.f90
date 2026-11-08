@@ -1,6 +1,7 @@
 !$Procedure VDISTG ( Vector distance, general dimension )
 
-      double precision function vdistg ( v1, v2, ndim )
+      real(wp) function vdistg ( v1, v2, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision      v1   ( * )
-      double precision      v2   ( * )
-      integer               ndim
+      real(wp)              v1   ( * )
+      real(wp)              v2   ( * )
+      integer(ip)           ndim
 
 ! $ Brief_I/O
 !
@@ -152,8 +153,8 @@
 !
 !     Local variables
 !
-      double precision      scale
-      integer               i
+      real(wp)              scale
+      integer(ip)           i
 
 !
 !     We find the norm of a scaled version of the difference vector,
@@ -168,21 +169,21 @@
 !
 !     Find the scale factor.
 !
-      scale = 0.d0
+      scale = 0.0_wp
 
       do i = 1, ndim
          scale = max (  scale,  dabs ( v1(i) - v2(i) )  )
       end do
 
 
-      if ( scale .eq. 0.d0 ) then
+      if ( scale .eq. 0.0_wp ) then
 
-         vdistg = 0.d0
+         vdistg = 0.0_wp
          return
 
       else
 
-         vdistg = 0.d0
+         vdistg = 0.0_wp
 
          do i = 1, ndim
             vdistg = vdistg  +  (  ( v1(i) - v2(i) ) / scale  ) ** 2

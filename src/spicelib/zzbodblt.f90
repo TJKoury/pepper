@@ -2,6 +2,7 @@
 
       subroutine zzbodblt ( room,  names,  nornam, codes, &
                             nvals, device, reqst          )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,11 +27,11 @@
 
       include              'zzbodtrn.inc'
 
-      integer               room
+      integer(ip)           room
       character*(*)         names  ( * )
       character*(*)         nornam ( * )
-      integer               codes  ( * )
-      integer               nvals
+      integer(ip)           codes  ( * )
+      integer(ip)           nvals
       character*(*)         device
       character*(*)         reqst
 
@@ -333,7 +334,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               eqstr
       logical               return
@@ -351,10 +352,10 @@
       character*(maxl)      zzint
       character*(2*maxl+3)  zzline
 
-      integer               bltcod ( nperm )
-      integer               i
-      integer               zzocod ( nperm )
-      integer               zzonam ( nperm )
+      integer(ip)           bltcod ( nperm )
+      integer(ip)           i
+      integer(ip)           zzocod ( nperm )
+      integer(ip)           zzonam ( nperm )
 
       logical               first
 

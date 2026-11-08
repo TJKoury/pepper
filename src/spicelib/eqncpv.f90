@@ -1,6 +1,7 @@
 !$Procedure EQNCPV (Equinoctial Elements to position and velocity)
 
       subroutine eqncpv ( et, epoch, eqel, rapol, decpol, state )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      double precision      et
-      double precision      epoch
-      double precision      eqel ( 9 )
-      double precision      rapol
-      double precision      decpol
-      double precision      state ( 6 )
+      real(wp)              et
+      real(wp)              epoch
+      real(wp)              eqel ( 9 )
+      real(wp)              rapol
+      real(wp)              decpol
+      real(wp)              state ( 6 )
 
 ! $ Brief_I/O
 !
@@ -276,8 +277,8 @@
 !
 !     SPICELIB Functions.
 !
-      double precision      twopi
-      double precision      kepleq
+      real(wp)              twopi
+      real(wp)              kepleq
       logical               return
 
       external              twopi
@@ -287,54 +288,54 @@
 !
 !     LOCAL VARIABLES
 !
-      double precision      a
-      double precision      b
-      double precision      can
-      double precision      cf
-      double precision      cn
-      double precision      dt
-      double precision      di
-      double precision      ecc
-      double precision      nodedt
-      double precision      node
-      double precision      dlpdt
-      double precision      dlp
-      double precision      mldt
+      real(wp)              a
+      real(wp)              b
+      real(wp)              can
+      real(wp)              cf
+      real(wp)              cn
+      real(wp)              dt
+      real(wp)              di
+      real(wp)              ecc
+      real(wp)              nodedt
+      real(wp)              node
+      real(wp)              dlpdt
+      real(wp)              dlp
+      real(wp)              mldt
 
-      double precision      trans(3,3)
-      double precision      sa
-      double precision      ca
-      double precision      sd
-      double precision      cd
+      real(wp)              trans(3,3)
+      real(wp)              sa
+      real(wp)              ca
+      real(wp)              sd
+      real(wp)              cd
 
-      double precision      dx
-      double precision      dx1
-      double precision      dy
-      double precision      dy1
-      double precision      p
+      real(wp)              dx
+      real(wp)              dx1
+      real(wp)              dy
+      real(wp)              dy1
+      real(wp)              p
 
 
-      double precision      q
-      double precision      r
-      double precision      ra
-      double precision      prate
-      double precision      rb
-      double precision      san
-      double precision      sf
-      double precision      sn
-      double precision      temp ( 3  )
+      real(wp)              q
+      real(wp)              r
+      real(wp)              ra
+      real(wp)              prate
+      real(wp)              rb
+      real(wp)              san
+      real(wp)              sf
+      real(wp)              sn
+      real(wp)              temp ( 3  )
 
-      double precision      x1,y1
-      double precision      h
-      double precision      k
+      real(wp)              x1,y1
+      real(wp)              h
+      real(wp)              k
 
-      double precision      l
-      double precision      ml
-      double precision      nfac
-      double precision      eecan
-      double precision      xhold(6)
-      double precision      vf   (3)
-      double precision      vg   (3)
+      real(wp)              l
+      real(wp)              ml
+      real(wp)              nfac
+      real(wp)              eecan
+      real(wp)              xhold(6)
+      real(wp)              vf   (3)
+      real(wp)              vg   (3)
 
 
       logical               first
@@ -343,7 +344,7 @@
 !
 !     Constants computed on first pass
 !
-      double precision      pi2
+      real(wp)              pi2
 
       save                  pi2
       save                  first
@@ -372,7 +373,7 @@
 !     Take care of the various errors that can arise with the
 !     input elements.
 !
-      if ( eqel(1) .le. 0.0d0 ) then
+      if ( eqel(1) .le. 0.0_wp ) then
 
          call setmsg ( 'The semi-major axis supplied to EQNCPV ' &
          //            'was non-positive. The value is required ' &
@@ -388,7 +389,7 @@
 
       ecc = dsqrt ( eqel(2)*eqel(2) + eqel(3)*eqel(3) )
 
-      if ( ecc .gt. 0.9d0 ) then
+      if ( ecc .gt. 0.9_wp ) then
 
          call setmsg ( 'The routine EQNCPV can reliably evaluate ' &
          //            'states from equinoctial elements if the ' &
@@ -428,7 +429,7 @@
       trans(2,2)  =  -sa*sd
       trans(2,3)  =   sa*cd
 
-      trans(3,1)  =   0.0d0
+      trans(3,1)  =   0.0_wp
       trans(3,2)  =   cd
       trans(3,3)  =   sd
 !
@@ -529,21 +530,21 @@
 !
 !     Form Broucke's beta parameter
 !
-      b     = dsqrt( 1.d0 - h*h - k*k )
-      b     = 1.d0/( 1.d0 + b )
+      b     = dsqrt( 1.0_wp - h*h - k*k )
+      b     = 1.0_wp/( 1.0_wp + b )
 
 !
 !     Construct the coordinate axes
 !
-      di     = 1.0d0/(1.d0 + p*p + q*q)
+      di     = 1.0_wp/(1.0_wp + p*p + q*q)
 
-      vf(1)  = (1.d0 - p*p + q*q) * di
-      vf(2)  =  2.d0 * p   * q    * di
-      vf(3)  = -2.d0 * p          * di
+      vf(1)  = (1.0_wp - p*p + q*q) * di
+      vf(2)  =  2.0_wp * p   * q    * di
+      vf(3)  = -2.0_wp * p          * di
 
-      vg(1)  =  2.d0 * p * q      * di
-      vg(2)  = (1.d0 + p*p - q*q) * di
-      vg(3)  =  2.d0 * q          * di
+      vg(1)  =  2.0_wp * p * q      * di
+      vg(2)  = (1.0_wp + p*p - q*q) * di
+      vg(3)  =  2.0_wp * q          * di
 
 !
 !     Compute the mean longitude
@@ -564,14 +565,14 @@
 !
 !     Position in the orbit plane
 !
-      x1 = a*( (1.d0-(b*h**2))*cf + (h*k*b*sf - k) )
-      y1 = a*( (1.d0-(b*k**2))*sf + (h*k*b*cf - h) )
+      x1 = a*( (1.0_wp-(b*h**2))*cf + (h*k*b*sf - k) )
+      y1 = a*( (1.0_wp-(b*k**2))*sf + (h*k*b*cf - h) )
 
 !
 !     Radial distance and functions of the radial distance
 !
       rb = h*sf + k*cf
-      r  = a*(1.0d0-rb)
+      r  = a*(1.0_wp-rb)
       ra = (mldt*a*a)/r
 !
 !
@@ -583,7 +584,7 @@
 !
 !     Correction factor for periapsis rate
 !
-      nfac = 1.0d0 - ( dlpdt/mldt )
+      nfac = 1.0_wp - ( dlpdt/mldt )
 
 !
 !     Include precession in velocity
@@ -601,9 +602,9 @@
 !
       temp (1) = -nodedt*xhold(2)
       temp (2) =  nodedt*xhold(1)
-      temp (3) =  0.0d0
+      temp (3) =  0.0_wp
 
-      call vlcom3 ( 1.0d0, temp, dx, vf, dy, vg, xhold(4) )
+      call vlcom3 ( 1.0_wp, temp, dx, vf, dy, vg, xhold(4) )
 
 !
 !     Transform to an inertial state vector

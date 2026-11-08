@@ -1,6 +1,7 @@
 !$Procedure SCENCD ( Encode spacecraft clock )
 
       subroutine scencd ( sc, sclkch, sclkdp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
 
       include               'sclk.inc'
 
-      integer               sc
+      integer(ip)           sc
       character*(*)         sclkch
-      double precision      sclkdp
+      real(wp)              sclkdp
 
 ! $ Brief_I/O
 !
@@ -491,21 +492,21 @@
 !
       logical               failed
       logical               return
-      integer               cpos
+      integer(ip)           cpos
 
 !
 !     Local variables
 !
-      integer               pos
-      integer               nparts
-      integer               pnter
-      integer               part
-      integer               i
+      integer(ip)           pos
+      integer(ip)           nparts
+      integer(ip)           pnter
+      integer(ip)           part
+      integer(ip)           i
 
-      double precision      ticks
-      double precision      pstart   ( mxpart )
-      double precision      pstop    ( mxpart )
-      double precision      ptotls   ( mxpart )
+      real(wp)              ticks
+      real(wp)              pstart   ( mxpart )
+      real(wp)              pstop    ( mxpart )
+      real(wp)              ptotls   ( mxpart )
 
       character*(25)        error
 

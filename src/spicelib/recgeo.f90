@@ -1,6 +1,7 @@
 !$Procedure RECGEO ( Rectangular to geodetic )
 
       subroutine recgeo ( rectan, re, f,  lon, lat, alt )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision   rectan ( 3 )
-      double precision   re
-      double precision   f
-      double precision   lon
-      double precision   lat
-      double precision   alt
+      real(wp)           rectan ( 3 )
+      real(wp)           re
+      real(wp)           f
+      real(wp)           lon
+      real(wp)           lat
+      real(wp)           alt
 
 ! $ Brief_I/O
 !
@@ -405,12 +406,12 @@
 !
 !     Local variables
 !
-      double precision a
-      double precision b
-      double precision c
-      double precision base   (3)
-      double precision normal (3)
-      double precision radius
+      real(wp) a
+      real(wp) b
+      real(wp) c
+      real(wp) base   (3)
+      real(wp) normal (3)
+      real(wp) radius
 
 !
 !     Standard SPICE error handling.
@@ -426,7 +427,7 @@
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      if ( re.le. 0.0d0 ) then
+      if ( re.le. 0.0_wp ) then
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
           call sigerr ( 'SPICE(VALUEOUTOFRANGE)'   )
@@ -470,10 +471,10 @@
 !
 !     Compute longitude directly rather than from the normal vector.
 !
-      if (       ( rectan(1) .eq.0.d0 ) &
-           .and. ( rectan(2) .eq.0.d0 ) ) then
+      if (       ( rectan(1) .eq.0.0_wp ) &
+           .and. ( rectan(2) .eq.0.0_wp ) ) then
 
-         lon = 0.d0
+         lon = 0.0_wp
       else
          lon = datan2 ( rectan(2), rectan(1) )
       end if

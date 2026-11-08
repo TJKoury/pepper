@@ -1,6 +1,7 @@
 !$Procedure DVNORM ( Derivative of vector norm )
 
-       double precision function dvnorm( state )
+       real(wp) function dvnorm( state )
+       use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      double precision      state ( 6 )
+      real(wp)              state ( 6 )
 
 ! $ Brief_I/O
 !
@@ -230,21 +231,21 @@
 !
 !     SPICELIB functions.
 !
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              vdot
+      real(wp)              vnorm
 
 !
 !     Local Variables.
 !
-      double precision      xhat ( 3 )
+      real(wp)              xhat ( 3 )
 
 !
 !     If "x" describes the zero vector, return zero as the derivative
 !     of the vector norm.
 !
-      if ( vnorm( state(1) ) .eq. 0.d0 ) then
+      if ( vnorm( state(1) ) .eq. 0.0_wp ) then
 
-         dvnorm = 0.d0
+         dvnorm = 0.0_wp
          return
 
       end if

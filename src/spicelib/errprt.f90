@@ -1,6 +1,7 @@
 !$Procedure ERRPRT ( Get/Set Error Output Items )
 
       subroutine errprt ( op, list )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -279,19 +280,19 @@
 !     Local Variables:
 !
 
-      integer               wrdlen
+      integer(ip)           wrdlen
       parameter           ( wrdlen = 9 )
 
-      integer               maxwrd
+      integer(ip)           maxwrd
       parameter           ( maxwrd = 10 )
 
       character*(wrdlen)    words ( maxwrd )
       character*(wrdlen)    upword
 
-      integer               numwrd
+      integer(ip)           numwrd
 
 
-      integer               i
+      integer(ip)           i
 
       logical               short
       logical               long
@@ -300,14 +301,14 @@
       logical               dfault
       logical               status
 
-      integer               oplen
+      integer(ip)           oplen
       parameter           ( oplen = 3 )
       character*(oplen)     upop
       character*(oplen)     locop
 
 
 
-      integer               lstlen
+      integer(ip)           lstlen
       parameter           ( lstlen = 100 )
 
 

@@ -1,6 +1,7 @@
 !$Procedure DLAFPS ( DLA, find previous segment )
 
       subroutine dlafps ( handle, dladsc, prvdsc, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       include 'dla.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               prvdsc ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           prvdsc ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -301,7 +302,7 @@
 !
 !     Local variables
 !
-      integer               bwd
+      integer(ip)           bwd
 
 !
 !     Standard SPICE error handling.

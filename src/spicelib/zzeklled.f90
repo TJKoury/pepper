@@ -2,6 +2,7 @@
 
       subroutine zzeklled (  handle,  segdsc,  coldsc, &
                              dkey,    prvloc,  prvptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,12 +28,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      double precision      dkey
-      integer               prvloc
-      integer               prvptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      real(wp)              dkey
+      integer(ip)           prvloc
+      integer(ip)           prvptr
 
 ! $ Brief_I/O
 !
@@ -155,14 +156,14 @@
 !
       character*(cnamsz)    column
 
-      integer               begin
-      integer               begptr
-      integer               dtype
-      integer               end
-      integer               endptr
-      integer               middle
-      integer               midptr
-      integer               nrows
+      integer(ip)           begin
+      integer(ip)           begptr
+      integer(ip)           dtype
+      integer(ip)           end
+      integer(ip)           endptr
+      integer(ip)           middle
+      integer(ip)           midptr
+      integer(ip)           nrows
 
       logical               indexd
 

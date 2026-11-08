@@ -1,6 +1,7 @@
 !$Procedure VZERO    ( Is a vector the zero vector? )
 
       logical function vzero ( v )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      double precision      v ( 3 )
+      real(wp)              v ( 3 )
 
 ! $ Brief_I/O
 !
@@ -146,9 +147,9 @@
 !     `Just do it'.
 !
 !
-      vzero   =        (  v(1) .eq. 0.d0  ) &
-                .and.  (  v(2) .eq. 0.d0  ) &
-                .and.  (  v(3) .eq. 0.d0  )
+      vzero   =        (  v(1) .eq. 0.0_wp  ) &
+                .and.  (  v(2) .eq. 0.0_wp  ) &
+                .and.  (  v(3) .eq. 0.0_wp  )
 
       return
       end

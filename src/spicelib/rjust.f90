@@ -1,6 +1,7 @@
 !$Procedure RJUST ( Right justify a character string )
 
       subroutine rjust ( input, output )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -126,17 +127,17 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
 !
-      integer               first
-      integer               i
-      integer               last
-      integer               loc
-      integer               start
+      integer(ip)           first
+      integer(ip)           i
+      integer(ip)           last
+      integer(ip)           loc
+      integer(ip)           start
 
 
 

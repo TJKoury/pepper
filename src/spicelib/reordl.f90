@@ -1,6 +1,7 @@
 !$Procedure REORDL ( Reorder a logical array )
 
       subroutine reordl ( iorder, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer               iorder ( * )
-      integer               ndim
+      integer(ip)           iorder ( * )
+      integer(ip)           ndim
       logical               array  ( * )
 
 ! $ Brief_I/O
@@ -226,9 +227,9 @@
 !
 !     Local variables
 !
-      integer               start
-      integer               index
-      integer               hold
+      integer(ip)           start
+      integer(ip)           index
+      integer(ip)           hold
 
       logical               temp
 

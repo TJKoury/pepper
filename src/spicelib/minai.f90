@@ -1,6 +1,7 @@
 !$Procedure MINAI  ( Minimum element of array, integer )
 
       subroutine minai ( array, ndim, minval, loc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               array ( * )
-      integer               ndim
-      integer               minval
-      integer               loc
+      integer(ip)           array ( * )
+      integer(ip)           ndim
+      integer(ip)           minval
+      integer(ip)           loc
 
 ! $ Brief_I/O
 !
@@ -128,7 +129,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       if (ndim .le. 0) then

@@ -1,6 +1,7 @@
 !$Procedure CPOS ( Character position )
 
-      integer function cpos ( str, chars, start )
+      integer(ip) function cpos ( str, chars, start )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
 
       character*(*)         str
       character*(*)         chars
-      integer               start
+      integer(ip)           start
 
 ! $ Brief_I/O
 !
@@ -184,8 +185,8 @@
 !
 
       logical               found
-      integer               lenstr
-      integer               b
+      integer(ip)           lenstr
+      integer(ip)           b
 
 
       lenstr = len ( str )

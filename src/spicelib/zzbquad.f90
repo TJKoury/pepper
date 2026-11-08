@@ -1,6 +1,7 @@
 !$Procedure  ZZBQUAD ( Solve quadratic equation with bounds )
 
       subroutine zzbquad ( a, b, c, ub, n, nx, r1, r2 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,14 +26,14 @@
 
       implicit none
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      ub
-      integer               n
-      integer               nx
-      double precision      r1
-      double precision      r2
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              ub
+      integer(ip)           n
+      integer(ip)           nx
+      real(wp)              r1
+      real(wp)              r2
 
 ! $ Brief_I/O
 !
@@ -167,20 +168,20 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      touchd
+      real(wp)              dpmax
+      real(wp)              touchd
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      big
-      double precision      denom
-      double precision      dscrim
-      double precision      num1
-      double precision      num2
-      double precision      sqdisc
+      real(wp)              big
+      real(wp)              denom
+      real(wp)              dscrim
+      real(wp)              num1
+      real(wp)              num2
+      real(wp)              sqdisc
 
       logical               first
 
@@ -193,7 +194,7 @@
 !
 !     Initial values
 !
-      data                  big   / 0.d0   /
+      data                  big   / 0.0_wp   /
       data                  first / .true. /
 
 !
@@ -215,8 +216,8 @@
 !
       n   = -3
       nx  = -3
-      r1  = 0.d0
-      r2  = 0.d0
+      r1  = 0.0_wp
+      r2  = 0.0_wp
 
 !
 !     Reject all large magnitude coefficients.
@@ -257,7 +258,7 @@
 !
 !     The upper bound must be positive.
 !
-      if ( ub .le. 0.d0 ) then
+      if ( ub .le. 0.0_wp ) then
 
          call chkin  ( 'ZZBQUAD'                                 )
          call setmsg ( 'Upper bound must be positive but was #.' )
@@ -271,15 +272,15 @@
 !
 !     Handle the degenerate cases first.
 !
-      if ( a .eq. 0.d0 ) then
+      if ( a .eq. 0.0_wp ) then
 
-         if ( b .eq. 0.d0 ) then
+         if ( b .eq. 0.0_wp ) then
 !
 !           The equation is of the form
 !
 !              C = 0
 !
-            if ( c .eq. 0.d0 ) then
+            if ( c .eq. 0.0_wp ) then
 !
 !              The equation is satisfied for all real numbers.
 !
@@ -332,14 +333,14 @@
 !
          dscrim = touchd(  ( b*b ) - ( 4*a*c )  )
 
-         if ( dscrim .lt. 0.d0 ) then
+         if ( dscrim .lt. 0.0_wp ) then
 !
 !           We have complex roots, so we're done.
 !
             n  = 0
             nx = 0
 
-         else if ( dscrim .eq. 0.d0 ) then
+         else if ( dscrim .eq. 0.0_wp ) then
 !
 !           We have a single real root of multiplicity 2.
 !
@@ -378,7 +379,7 @@
             denom  = 2 * a
             sqdisc = sqrt( dscrim )
 
-            if ( b .gt. 0.d0 ) then
+            if ( b .gt. 0.0_wp ) then
 
                num2 =  -b - sqdisc
                num1 =  -b + sqdisc
@@ -401,7 +402,7 @@
 !
                r2 = ( num2 / a ) / 2
 
-               if ( abs(r2) .gt. 0.d0 ) then
+               if ( abs(r2) .gt. 0.0_wp ) then
 !
 !                 Compute R1 using R2 and C; this avoids loss
 !                 of precision that may occur when NUM1 is computed.
@@ -421,7 +422,7 @@
 !                 doesn't leave many possible values for the root of
 !                 smaller magnitude.
 !
-                  r1 = 0.d0
+                  r1 = 0.0_wp
 
                end if
 

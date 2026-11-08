@@ -1,6 +1,7 @@
 !$Procedure MXMTG  ( Matrix times matrix transpose, general dimension )
 
       subroutine mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer            nr1
-      integer            nc1c2
-      integer            nr2
-      double precision   m1   ( nr1,nc1c2 )
-      double precision   m2   ( nr2,nc1c2 )
-      double precision   mout ( nr1,nr2   )
+      integer(ip)        nr1
+      integer(ip)        nc1c2
+      integer(ip)        nr2
+      real(wp)           m1   ( nr1,nc1c2 )
+      real(wp)           m2   ( nr2,nc1c2 )
+      real(wp)           mout ( nr1,nr2   )
 
 ! $ Brief_I/O
 !
@@ -212,10 +213,10 @@
 !
 !     Local variables
 !
-      double precision   sum
-      integer            i
-      integer            j
-      integer            k
+      real(wp)           sum
+      integer(ip)        i
+      integer(ip)        j
+      integer(ip)        k
 
 !
 !  Perform the matrix multiplication
@@ -223,7 +224,7 @@
       do i = 1, nr1
 
          do j = 1, nr2
-            sum = 0.d0
+            sum = 0.0_wp
 
             do k = 1, nc1c2
                sum = sum + m1(i,k)*m2(j,k)

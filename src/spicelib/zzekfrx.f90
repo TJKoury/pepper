@@ -1,6 +1,7 @@
 !$Procedure     ZZEKFRX ( EK, find record in index )
 
       subroutine zzekfrx ( handle, segdsc, coldsc, recptr, pos )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      integer               pos
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      integer(ip)           pos
 
 ! $ Brief_I/O
 !
@@ -128,21 +129,21 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
       character*(maxstr)    cval
 
-      double precision      dval
+      real(wp)              dval
 
-      integer               cmplen
-      integer               cvlen
-      integer               dtype
-      integer               ival
-      integer               prvptr
-      integer               recno
+      integer(ip)           cmplen
+      integer(ip)           cvlen
+      integer(ip)           dtype
+      integer(ip)           ival
+      integer(ip)           prvptr
+      integer(ip)           recno
 
       logical               found
       logical               isnull

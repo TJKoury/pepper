@@ -1,6 +1,7 @@
 !$Procedure SYRENC ( Rename an existing symbol )
 
       subroutine syrenc ( old, new, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,13 +19,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         old
       character*(*)         new
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
       character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
@@ -192,22 +193,22 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
-      integer               lstlec
+      integer(ip)           bsrchc
+      integer(ip)           cardc
+      integer(ip)           lstlec
       logical               return
-      integer               sumai
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
+      integer(ip)           nsym
 
-      integer               oldloc
-      integer               oldval
-      integer               olddim
-      integer               newloc
-      integer               newval
+      integer(ip)           oldloc
+      integer(ip)           oldval
+      integer(ip)           olddim
+      integer(ip)           newloc
+      integer(ip)           newval
 
 
 

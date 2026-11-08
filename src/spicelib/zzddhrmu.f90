@@ -2,6 +2,7 @@
 
       subroutine zzddhrmu ( uindex, nft,   utcst, uthan, &
                             utlck,  utlun, nut           )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,14 +26,14 @@
 
       include               'zzddhman.inc'
 
-      integer               uindex
-      integer               nft
+      integer(ip)           uindex
+      integer(ip)           nft
 
-      integer               utcst ( * )
-      integer               uthan ( * )
+      integer(ip)           utcst ( * )
+      integer(ip)           uthan ( * )
       logical               utlck ( * )
-      integer               utlun ( * )
-      integer               nut
+      integer(ip)           utlun ( * )
+      integer(ip)           nut
 
 ! $ Brief_I/O
 !
@@ -150,7 +151,7 @@
 !
 !     Local Variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     First check to see if NUT is 0.  If so, just return, as there

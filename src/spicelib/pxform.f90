@@ -1,6 +1,7 @@
 !$Procedure PXFORM ( Position Transformation Matrix )
 
       subroutine pxform ( from, to, et, rotate )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,8 +24,8 @@
 
       character*(*)         from
       character*(*)         to
-      double precision      et
-      double precision      rotate  ( 3, 3 )
+      real(wp)              et
+      real(wp)              rotate  ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -188,25 +189,25 @@
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
 !     Local Variables.
 !
-      integer               fcode
-      integer               tcode
+      integer(ip)           fcode
+      integer(ip)           tcode
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svfrom
-      integer               svfcod
+      integer(ip)           svfcod
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(frnmln)    svto
-      integer               svtcde
+      integer(ip)           svtcde
 
       logical               first
 

@@ -1,6 +1,7 @@
 !$Procedure MAXAI  ( Maximum element of array, integer )
 
       subroutine maxai ( array, ndim, maxval, loc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               array ( * )
-      integer               ndim
-      integer               maxval
-      integer               loc
+      integer(ip)           array ( * )
+      integer(ip)           ndim
+      integer(ip)           maxval
+      integer(ip)           loc
 
 ! $ Brief_I/O
 !
@@ -131,7 +132,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
       if (ndim .le. 0) then
          loc = 0

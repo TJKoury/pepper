@@ -1,6 +1,7 @@
 !$Procedure DLAFNS ( DLA, find next segment )
 
       subroutine dlafns ( handle, dladsc, nxtdsc, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       include 'dla.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               nxtdsc ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           nxtdsc ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -292,7 +293,7 @@
 !
 !     Local variables
 !
-      integer               fwd
+      integer(ip)           fwd
 
 !
 !     Standard SPICE error handling.

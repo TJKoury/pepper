@@ -1,6 +1,7 @@
 !$Procedure ZZEKACPS ( EK, allocate contiguous pages for segment )
 
       subroutine zzekacps ( handle, segdsc, type, n, p, base  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               type
-      integer               n
-      integer               p
-      integer               base
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           type
+      integer(ip)           n
+      integer(ip)           p
+      integer(ip)           base
 
 ! $ Brief_I/O
 !
@@ -140,11 +141,11 @@
 !
 !     Local variables
 !
-      integer               b
-      integer               i
-      integer               idx
-      integer               p2
-      integer               tree
+      integer(ip)           b
+      integer(ip)           i
+      integer(ip)           idx
+      integer(ip)           p2
+      integer(ip)           tree
 
 !
 !     Use discovery check-in.

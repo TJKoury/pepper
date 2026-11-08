@@ -44,8 +44,10 @@ platform.linux.flags = "-DSPICE_OS_LINUX"
 platform.windows.flags = "-DSPICE_OS_WINDOWS"
 platform.cygwin.flags = "-DSPICE_OS_CYGWIN"
 # gfortran >= 10 rejects SPICELIB's argument rank/type mismatches without
-# -fallow-argument-mismatch.
-platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -fallow-argument-mismatch"
+# -fallow-argument-mismatch. -frecursive puts all local variables that are not
+# saved on the stack (gfortran otherwise makes large local arrays static),
+# which is needed for reentrant, thread-safe code.
+platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -fallow-argument-mismatch -frecursive"
 platform.ifx.flags = "-DSPICE_COMPILER_INTEL"
 platform.ifort.flags = "-DSPICE_COMPILER_INTEL"
 platform.windows.ifx.flags = "/fpp"

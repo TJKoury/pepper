@@ -1,6 +1,7 @@
 !$Procedure LGRIND (Lagrange polynomial interpolation with derivative)
 
       subroutine lgrind ( n, xvals, yvals, work, x, p, dp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,13 +22,13 @@
 
       implicit none
 
-      integer               n
-      double precision      xvals ( n )
-      double precision      yvals ( n )
-      double precision      work  ( n, 2 )
-      double precision      x
-      double precision      p
-      double precision      dp
+      integer(ip)           n
+      real(wp)              xvals ( n )
+      real(wp)              yvals ( n )
+      real(wp)              work  ( n, 2 )
+      real(wp)              x
+      real(wp)              p
+      real(wp)              dp
 
 ! $ Brief_I/O
 !
@@ -243,12 +244,12 @@
 !
 !     Local variables
 !
-      double precision      c1
-      double precision      c2
-      double precision      denom
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              denom
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 !
@@ -369,7 +370,7 @@
       do i = 1, n
 
          work(i,1)  =  yvals(i)
-         work(i,2)  =  0.d0
+         work(i,2)  =  0.0_wp
 
       end do
 
@@ -383,7 +384,7 @@
 
             denom    =     xvals(i)  -  xvals(i+j)
 
-            if ( denom .eq. 0.d0 ) then
+            if ( denom .eq. 0.0_wp ) then
 
                call chkin  ( 'LGRIND'                  )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )

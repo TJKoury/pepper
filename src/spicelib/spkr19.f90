@@ -1,6 +1,7 @@
 !$Procedure SPKR19 ( SPK, read record from segment, type 19 )
 
       subroutine spkr19 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       include 'spk19.inc'
       include 'spkrec.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -195,8 +196,8 @@
 !
 !     SPICELIB functions
 !
-      integer               lstled
-      integer               lstltd
+      integer(ip)           lstled
+      integer(ip)           lstltd
 
       logical               odd
       logical               failed
@@ -205,92 +206,92 @@
 !
 !     Local parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dirsiz + 1 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 3 )
 
 !
 !     Maximum window sizes, based on subtypes:
 !
-      integer               s19mw0
+      integer(ip)           s19mw0
       parameter           ( s19mw0 =  ( maxdeg + 1 )/2  )
 
-      integer               s19mw1
+      integer(ip)           s19mw1
       parameter           ( s19mw1 =  ( maxdeg + 1 )    )
 
-      integer               s19mw2
+      integer(ip)           s19mw2
       parameter           ( s19mw2 =  ( maxdeg + 1 )    )
 
 !
 !     Local variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      contrl ( ctrlsz )
-      double precision      dc     ( nd )
-      double precision      mintim ( nd )
-      double precision      svbtim
-      double precision      svetim
+      real(wp)              buffer ( bufsiz )
+      real(wp)              contrl ( ctrlsz )
+      real(wp)              dc     ( nd )
+      real(wp)              mintim ( nd )
+      real(wp)              svbtim
+      real(wp)              svetim
 
-      integer               baddr
-      integer               begidx
-      integer               bufbas
-      integer               dirbas
-      integer               eaddr
-      integer               endidx
-      integer               first
-      integer               group
-      integer               high
-      integer               i
-      integer               ic     ( ni )
-      integer               isel
-      integer               ivbas
-      integer               ivbix
-      integer               iveix
-      integer               last
-      integer               low
-      integer               lsize
-      integer               maxwnd
-      integer               minib
-      integer               minie
-      integer               miniix
-      integer               mxwnsz ( 0 : s19nst-1 )
-      integer               n
-      integer               ndir
-      integer               npkdir
-      integer               npkt
-      integer               nrcpkt
-      integer               nread
-      integer               pkdbas
-      integer               pktsiz
-      integer               pktszs ( 0 : s19nst-1 )
-      integer               remain
-      integer               rsize
-      integer               subtyp
-      integer               svbeg
-      integer               svhan
-      integer               svmiix
-      integer               svminb
-      integer               svn
-      integer               svnpkt
-      integer               svpkdb
-      integer               svpknd
-      integer               svpksz
-      integer               svstyp
-      integer               svwnsz
-      integer               timbas
-      integer               type
-      integer               wndsiz
+      integer(ip)           baddr
+      integer(ip)           begidx
+      integer(ip)           bufbas
+      integer(ip)           dirbas
+      integer(ip)           eaddr
+      integer(ip)           endidx
+      integer(ip)           first
+      integer(ip)           group
+      integer(ip)           high
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           isel
+      integer(ip)           ivbas
+      integer(ip)           ivbix
+      integer(ip)           iveix
+      integer(ip)           last
+      integer(ip)           low
+      integer(ip)           lsize
+      integer(ip)           maxwnd
+      integer(ip)           minib
+      integer(ip)           minie
+      integer(ip)           miniix
+      integer(ip)           mxwnsz ( 0 : s19nst-1 )
+      integer(ip)           n
+      integer(ip)           ndir
+      integer(ip)           npkdir
+      integer(ip)           npkt
+      integer(ip)           nrcpkt
+      integer(ip)           nread
+      integer(ip)           pkdbas
+      integer(ip)           pktsiz
+      integer(ip)           pktszs ( 0 : s19nst-1 )
+      integer(ip)           remain
+      integer(ip)           rsize
+      integer(ip)           subtyp
+      integer(ip)           svbeg
+      integer(ip)           svhan
+      integer(ip)           svmiix
+      integer(ip)           svminb
+      integer(ip)           svn
+      integer(ip)           svnpkt
+      integer(ip)           svpkdb
+      integer(ip)           svpknd
+      integer(ip)           svpksz
+      integer(ip)           svstyp
+      integer(ip)           svwnsz
+      integer(ip)           timbas
+      integer(ip)           type
+      integer(ip)           wndsiz
 
       logical               ivlsel
       logical               pass1
@@ -330,8 +331,8 @@
       data                  pass1   /  .true.  /
       data                  pktszs  /  s19ps0, s19ps1, s19ps2 /
       data                  svbeg   /  -1      /
-      data                  svbtim  /   0.d0   /
-      data                  svetim  /  -1.d0   /
+      data                  svbtim  /   0.0_wp   /
+      data                  svetim  /  -1.0_wp   /
       data                  svhan   /   0      /
       data                  svlast  /  .false. /
       data                  svmiix  /  -1      /

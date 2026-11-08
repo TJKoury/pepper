@@ -1,6 +1,7 @@
 !$Procedure      ZZFRMCH0 (Frame Change)
 
       subroutine zzfrmch0 ( frame1, frame2, et, xform )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       include              'errhnd.inc'
       include              'frmtyp.inc'
 
-      integer               frame1
-      integer               frame2
-      double precision      et
-      double precision      xform ( 6, 6 )
+      integer(ip)           frame1
+      integer(ip)           frame2
+      real(wp)              et
+      real(wp)              xform ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -261,7 +262,7 @@
 !
 !     SPICE functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -269,16 +270,16 @@
 !
 !     Local Parameters
 !
-      integer               maxnod
+      integer(ip)           maxnod
       parameter           ( maxnod = 10 )
 
-      integer               maxxfm
+      integer(ip)           maxxfm
       parameter           ( maxxfm = maxnod + 4 )
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      integer               rootf
+      integer(ip)           rootf
       parameter           ( rootf = 1 )
 
 !
@@ -286,7 +287,7 @@
 !
       character*(lmsgln)    errmsg
 
-      double precision      tempxf( 6, 6 )
+      real(wp)              tempxf( 6, 6 )
 !
 !     TRANS contains the transformations from FRAME1 to FRAME2
 !     TRANS(1...6,1...6,I) has the transformation from FRAME(I)
@@ -294,41 +295,41 @@
 !     plan to add transformations beyond the obvious chain from
 !     FRAME1 to a root node.
 !
-      double precision      trans ( 6, 6, maxxfm )
+      real(wp)              trans ( 6, 6, maxxfm )
 
 !
 !     TRANS2 is used to store intermediate transformations from
 !     FRAME2 to some node in the chain from FRAME1 to PCK or
 !     INERTL frames.
 !
-      double precision      trans2( 6, 6, 2      )
+      real(wp)              trans2( 6, 6, 2      )
 
 
-      integer               cent
-      integer               class
-      integer               clssid
-      integer               cmnode
+      integer(ip)           cent
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           cmnode
 !
 !     FRAME contains the frames we transform from in going from
 !     FRAME1 to FRAME2.  FRAME(1) = FRAME1 by  construction.
 !
-      integer               frame ( maxnod )
-      integer               get
-      integer               i
-      integer               inc
-      integer               j
-      integer               k
-      integer               l
+      integer(ip)           frame ( maxnod )
+      integer(ip)           get
+      integer(ip)           i
+      integer(ip)           inc
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           l
 
 !
 !     NODE counts the number of transformations needed to go
 !     from FRAME1 to FRAME2.
 !
-      integer               node
+      integer(ip)           node
 
-      integer               put
-      integer               relto
-      integer               this
+      integer(ip)           put
+      integer(ip)           relto
+      integer(ip)           this
 
       logical               done
       logical               found
@@ -350,11 +351,11 @@
 
          do i = 1, 6
 
-            xform(i,i) = 1.0d0
+            xform(i,i) = 1.0_wp
 
             do j = 1, i-1
-               xform(i,j) = 0.0d0
-               xform(j,i) = 0.0d0
+               xform(i,j) = 0.0_wp
+               xform(j,i) = 0.0_wp
             end do
 
          end do
@@ -561,7 +562,7 @@
          do k = 1, 2
             do i=1,3
                do j = 4,6
-                  trans2(i,j,k) = 0.0d0
+                  trans2(i,j,k) = 0.0_wp
                end do
             end do
          end do

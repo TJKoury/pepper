@@ -1,6 +1,7 @@
 !$Procedure SCT2E ( SCLK ticks to ET )
 
       subroutine sct2e ( sc, sclkdp, et )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       implicit none
 
-      integer               sc
-      double precision      sclkdp
-      double precision      et
+      integer(ip)           sc
+      real(wp)              sclkdp
+      real(wp)              et
 
 ! $ Brief_I/O
 !
@@ -278,7 +279,7 @@
 !
 !     SPICELIB functions
 !
-      integer               sctype
+      integer(ip)           sctype
 
       logical               return
 

@@ -1,6 +1,7 @@
 !$Procedure REMSUB ( Remove a substring )
 
       subroutine remsub ( in, left, right, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
       implicit none
 
       character*(*)    in
-      integer          left
-      integer          right
+      integer(ip)      left
+      integer(ip)      right
       character*(*)    out
 
 ! $ Brief_I/O
@@ -147,25 +148,25 @@
 !
 !     SPICELIB functions
 !
-      integer          lastnb
+      integer(ip)      lastnb
       logical          return
 
 !
 !     Other functions
 !
-      integer          len
+      integer(ip)      len
 
 !
 !     Local variables
 !
-      integer          inlen
-      integer          outlen
+      integer(ip)      inlen
+      integer(ip)      outlen
 
-      integer          l
-      integer          r
+      integer(ip)      l
+      integer(ip)      r
 
-      integer          i
-      integer          j
+      integer(ip)      i
+      integer(ip)      j
 
 
 

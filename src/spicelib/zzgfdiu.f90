@@ -2,6 +2,7 @@
 
       subroutine zzgfdiu ( target, abcorr, obsrvr, &
                            udfunc, et,     decres, dist )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -35,9 +36,9 @@
       character*(*)         target
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      et
+      real(wp)              et
       logical               decres
-      double precision      dist
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -161,7 +162,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
       logical               failed
       logical               return
@@ -175,11 +176,11 @@
 !
       character*(corlen)    svcorr
 
-      double precision      lt
-      double precision      state  ( 6 )
+      real(wp)              lt
+      real(wp)              state  ( 6 )
 
-      integer               svobs
-      integer               svtarg
+      integer(ip)           svobs
+      integer(ip)           svtarg
 
       logical               attblk ( nabcor )
       logical               found
@@ -569,7 +570,7 @@
 !     if the dot product of the velocity and position is
 !     negative.
 !
-      decres  =  vdot( state, state(4) )  .lt.  0.d0
+      decres  =  vdot( state, state(4) )  .lt.  0.0_wp
 
       call chkout  ( 'ZZGFDIDC' )
       return

@@ -1,6 +1,7 @@
 !$Procedure DLASSG ( DLA, same segment? )
 
       logical function dlassg ( han1, han2, dsc1, dsc2 )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,10 +26,10 @@
 
       include 'dla.inc'
 
-      integer               han1
-      integer               han2
-      integer               dsc1 ( dladsz )
-      integer               dsc2 ( dladsz )
+      integer(ip)           han1
+      integer(ip)           han2
+      integer(ip)           dsc1 ( dladsz )
+      integer(ip)           dsc2 ( dladsz )
 
 ! $ Brief_I/O
 !
@@ -185,7 +186,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Give the function an initial value.

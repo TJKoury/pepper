@@ -1,6 +1,7 @@
 !$Procedure LXQSTR ( Lex quoted string )
 
       subroutine lxqstr ( string, qchar, first, last, nchar )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       character*(*)         string
       character*(1)         qchar
-      integer               first
-      integer               last
-      integer               nchar
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           nchar
 
 ! $ Brief_I/O
 !
@@ -215,9 +216,9 @@
 !
 !     Local variables
 !
-      integer               l
-      integer               loc
-      integer               pos
+      integer(ip)           l
+      integer(ip)           loc
+      integer(ip)           pos
 
       logical               even
 

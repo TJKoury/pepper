@@ -1,6 +1,7 @@
 !$Procedure DASCUD ( DAS, create or update directories )
 
       subroutine dascud ( handle, type, nwords )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,17 +22,17 @@
 
       implicit none
 
-      integer               handle
-      integer               type
-      integer               nwords
+      integer(ip)           handle
+      integer(ip)           type
+      integer(ip)           nwords
 
-      integer               char
+      integer(ip)           char
       parameter           ( char   =  1  )
 
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =  2  )
 
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
 ! $ Brief_I/O
@@ -265,40 +266,40 @@
 !
 !     Words per data record, for each data type:
 !
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc = 1024 )
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd =  128 )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi =  256 )
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      integer               bwdloc
+      integer(ip)           bwdloc
       parameter           ( bwdloc = 1 )
 
-      integer               fwdloc
+      integer(ip)           fwdloc
       parameter           ( fwdloc = 2 )
 
 !
 !     Directory address range locations
 !
-      integer               chrrng
+      integer(ip)           chrrng
       parameter           ( chrrng =          3 )
 
-      integer               dprng
+      integer(ip)           dprng
       parameter           ( dprng  = chrrng + 2 )
 
-      integer               intrng
+      integer(ip)           intrng
       parameter           ( intrng = dprng  + 2 )
 
 !
 !     Location of first type descriptor
 !
-      integer               begdsc
+      integer(ip)           begdsc
       parameter           ( begdsc = 9 )
 
 
@@ -307,30 +308,30 @@
 !
 !     Local variables
 !
-      integer               descr
-      integer               dirrec ( nwi )
-      integer               dscrec
-      integer               free
-      integer               i
-      integer               last
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               lrec
-      integer               loc
-      integer               ltype
-      integer               lword
-      integer               maxadr
-      integer               minadr
-      integer               ncomc
-      integer               ncomr
-      integer               needed
-      integer               nresvc
-      integer               nresvr
-      integer               nw
-      integer               recno
-      integer               rngloc
-      integer               room
+      integer(ip)           descr
+      integer(ip)           dirrec ( nwi )
+      integer(ip)           dscrec
+      integer(ip)           free
+      integer(ip)           i
+      integer(ip)           last
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           lrec
+      integer(ip)           loc
+      integer(ip)           ltype
+      integer(ip)           lword
+      integer(ip)           maxadr
+      integer(ip)           minadr
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           needed
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           nw
+      integer(ip)           recno
+      integer(ip)           rngloc
+      integer(ip)           room
 
 
 
@@ -342,7 +343,7 @@
 !
 !     NEXT maps the DAS data type codes to their successors.
 !
-      integer               next   ( 3 )
+      integer(ip)           next   ( 3 )
       save                  next
 
 !

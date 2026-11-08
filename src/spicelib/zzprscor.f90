@@ -1,6 +1,7 @@
 !$Procedure ZZPRSCOR ( Parse aberration correction )
 
       subroutine zzprscor ( abcorr, attblk )
+      use pepper_kinds, only: ip
       implicit none
 
 ! $ Abstract
@@ -162,7 +163,7 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
+      integer(ip)           bsrchc
       logical               return
 
 !
@@ -171,9 +172,9 @@
       character*(corlen)    corlst ( nabcor )
       character*(corlen)    tmpcor
 
-      integer               i
-      integer               loc
-      integer               ordvec ( nabcor )
+      integer(ip)           i
+      integer(ip)           loc
+      integer(ip)           ordvec ( nabcor )
 
       logical               conv   ( nabcor )
       logical               first

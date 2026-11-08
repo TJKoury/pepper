@@ -2,6 +2,7 @@
 
       subroutine parsqs ( string, qchar, value, length, error, errmsg, &
                           ptr                                          )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
       character*(*)         string
       character*(1)         qchar
       character*(*)         value
-      integer               length
+      integer(ip)           length
       logical               error
       character*(*)         errmsg
-      integer               ptr
+      integer(ip)           ptr
 
 ! $ Brief_I/O
 !
@@ -238,20 +239,20 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
 !
       character*(1)         chr
 
-      integer               first
-      integer               ipos
-      integer               inlen
-      integer               last
-      integer               outlen
-      integer               opos
+      integer(ip)           first
+      integer(ip)           ipos
+      integer(ip)           inlen
+      integer(ip)           last
+      integer(ip)           outlen
+      integer(ip)           opos
 
 
 !

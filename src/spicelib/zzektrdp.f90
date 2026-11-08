@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRDP ( EK tree, return data pointer )
 
       subroutine zzektrdp ( handle, tree, key, ptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 ! $ Declarations
 
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               ptr
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           ptr
 
 ! $ Brief_I/O
 !
@@ -112,10 +113,10 @@
 !
 !     Local variables
 !
-      integer               idx
-      integer               node
-      integer               noffst
-      integer               level
+      integer(ip)           idx
+      integer(ip)           node
+      integer(ip)           noffst
+      integer(ip)           level
 
 !
 !     Use discovery check-in in this puppy.

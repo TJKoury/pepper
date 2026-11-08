@@ -1,6 +1,7 @@
 !$Procedure VROTV ( Vector rotation about an axis )
 
       subroutine vrotv ( v, axis, theta, r )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      double precision   v    ( 3 )
-      double precision   axis ( 3 )
-      double precision   theta
-      double precision   r    ( 3 )
+      real(wp)           v    ( 3 )
+      real(wp)           axis ( 3 )
+      real(wp)           theta
+      real(wp)           r    ( 3 )
 
 ! $ Brief_I/O
 !
@@ -157,25 +158,25 @@
 !
 !     SPICELIB functions
 !
-      double precision vnorm
+      real(wp) vnorm
 
 !
 !     Local Variables
 !
-      double precision c
-      double precision s
-      double precision rplane (3)
-      double precision p      (3)
-      double precision v1     (3)
-      double precision v2     (3)
-      double precision x      (3)
+      real(wp) c
+      real(wp) s
+      real(wp) rplane (3)
+      real(wp) p      (3)
+      real(wp) v1     (3)
+      real(wp) v2     (3)
+      real(wp) x      (3)
 
 
 !
 !     Just in case the user tries to rotate about the zero vector -
 !     check, and if so return the input vector
 !
-      if ( vnorm( axis ) .eq. 0.d0 ) then
+      if ( vnorm( axis ) .eq. 0.0_wp ) then
          call moved (v,3,r)
          return
       end if

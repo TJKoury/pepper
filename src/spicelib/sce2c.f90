@@ -1,6 +1,7 @@
 !$Procedure SCE2C ( ET to continuous SCLK ticks )
 
       subroutine sce2c ( sc, et, sclkdp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       implicit none
 
-      integer               sc
-      double precision      et
-      double precision      sclkdp
+      integer(ip)           sc
+      real(wp)              et
+      real(wp)              sclkdp
 
 ! $ Brief_I/O
 !
@@ -247,7 +248,7 @@
 !
       logical               return
 
-      integer               sctype
+      integer(ip)           sctype
 
 
 !

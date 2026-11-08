@@ -1,6 +1,7 @@
 !$Procedure SCANRJ ( Scan --- reject tokens )
 
       subroutine scanrj ( ids, n, ntokns, ident, beg, end )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               ids  ( * )
-      integer               n
-      integer               ntokns
-      integer               ident  ( * )
-      integer               beg    ( * )
-      integer               end    ( * )
+      integer(ip)           ids  ( * )
+      integer(ip)           n
+      integer(ip)           ntokns
+      integer(ip)           ident  ( * )
+      integer(ip)           beg    ( * )
+      integer(ip)           end    ( * )
 
 ! $ Brief_I/O
 !
@@ -158,13 +159,13 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
 !
 !     Local variables
 !
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 !

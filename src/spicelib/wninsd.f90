@@ -1,6 +1,7 @@
 !$Procedure WNINSD ( Insert an interval into a DP window )
 
       subroutine wninsd ( left, right, window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,12 +19,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      left
-      double precision      right
-      double precision      window    ( lbcell:* )
+      real(wp)              left
+      real(wp)              right
+      real(wp)              window    ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -282,18 +283,18 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
-      integer               sized
+      integer(ip)           cardd
+      integer(ip)           sized
       logical               return
 
 !
 !     Local Variables
 !
-      integer               size
-      integer               card
+      integer(ip)           size
+      integer(ip)           card
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 

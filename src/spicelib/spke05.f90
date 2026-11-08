@@ -1,6 +1,7 @@
 !$Procedure SPKE05 ( Evaluate SPK record, type 5 )
 
       subroutine spke05 ( et, record, state )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -209,27 +210,27 @@
 !     SPICELIB functions
 !
       external              pi
-      double precision      pi
+      real(wp)              pi
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      arg
-      double precision      dargdt
-      double precision      denom
-      double precision      dwdt
-      double precision      gm
-      double precision      numer
-      double precision      pv       ( 6, 2 )
-      double precision      s1       ( 6 )
-      double precision      s2       ( 6 )
-      double precision      t1
-      double precision      t2
-      double precision      vcomp    ( 3 )
-      double precision      vel      ( 3 )
-      double precision      w
+      real(wp)              arg
+      real(wp)              dargdt
+      real(wp)              denom
+      real(wp)              dwdt
+      real(wp)              gm
+      real(wp)              numer
+      real(wp)              pv       ( 6, 2 )
+      real(wp)              s1       ( 6 )
+      real(wp)              s2       ( 6 )
+      real(wp)              t1
+      real(wp)              t2
+      real(wp)              vcomp    ( 3 )
+      real(wp)              vel      ( 3 )
+      real(wp)              w
 
 
 !
@@ -290,10 +291,10 @@
          arg    = numer*pi()/denom
          dargdt =       pi()/denom
 
-         w      =  0.5d0 + 0.5d0 * cos( arg )
-         dwdt   =        - 0.5d0 * sin( arg ) * dargdt
+         w      =  0.5_wp + 0.5_wp * cos( arg )
+         dwdt   =        - 0.5_wp * sin( arg ) * dargdt
 
-         call vlcomg ( 6,  w,    s1,       1.d0-w, s2,     state    )
+         call vlcomg ( 6,  w,    s1,       1.0_wp-w, s2,     state    )
          call vlcom  (     dwdt, s1,       -dwdt,  s2,     vcomp    )
          call vadd   (           state(4),         vcomp,  vel      )
          call vequ   (           vel,                      state(4) )

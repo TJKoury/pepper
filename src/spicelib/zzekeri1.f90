@@ -2,6 +2,7 @@
 
       subroutine zzekeri1 (  handle,  segdsc,  coldsc,  ikey, &
                              recptr,  null,    prvidx,  prvptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,14 +27,14 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               ikey
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           ikey
+      integer(ip)           recptr
       logical               null
-      integer               prvidx
-      integer               prvptr
+      integer(ip)           prvidx
+      integer(ip)           prvptr
 
 ! $ Brief_I/O
 !
@@ -172,22 +173,22 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrsz
+      integer(ip)           zzektrsz
 
       logical               zzekscmp
 
 !
 !     Local variables
 !
-      integer               begin
-      integer               begptr
-      integer               end
-      integer               endptr
-      integer               middle
-      integer               midptr
-      integer               nrec
-      integer               tree
-      integer               tsize
+      integer(ip)           begin
+      integer(ip)           begptr
+      integer(ip)           end
+      integer(ip)           endptr
+      integer(ip)           middle
+      integer(ip)           midptr
+      integer(ip)           nrec
+      integer(ip)           tree
+      integer(ip)           tsize
 
       logical               leq
 
@@ -249,7 +250,7 @@
 !
       if  (  zzekscmp ( gt,      handle,  segdsc,  coldsc, &
                         begptr,  1,       int,     ' ', &
-                        0.d0,    ikey,    null            )  ) then
+                        0.0_wp,    ikey,    null            )  ) then
 !
 !        The smallest entry of the column is greater than the input
 !        value, so none of the entries are less than or equal to the
@@ -263,7 +264,7 @@
 
       else if  (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                              begptr,  1,       int,     ' ', &
-                             0.d0,    ikey,    null            ) &
+                             0.0_wp,    ikey,    null            ) &
 
                 .and.      (  recptr  .lt.  begptr )             ) then
 !
@@ -286,7 +287,7 @@
 !
       if (  zzekscmp ( lt,      handle,  segdsc,   coldsc, &
                        endptr,  1,       int,      ' ', &
-                       0.d0,    ikey,    null             )  ) then
+                       0.0_wp,    ikey,    null             )  ) then
 !
 !        The last element of the column is less than the
 !        input value.
@@ -300,7 +301,7 @@
 
       else if (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                             endptr,  1,       int,     ' ', &
-                            0.d0,    ikey,    null             ) &
+                            0.0_wp,    ikey,    null             ) &
 
                .and.      (  endptr  .le.  recptr )       ) then
 !
@@ -338,7 +339,7 @@
 !
          if (  zzekscmp ( lt,      handle,  segdsc,  coldsc, &
                           midptr,  1,       int,     ' ' , &
-                          0.d0,    ikey,    null            )  ) then
+                          0.0_wp,    ikey,    null            )  ) then
 !
 !           The column element at record MIDPTR is strictly less than
 !           IKEY, based on data values.
@@ -348,7 +349,7 @@
 
          else if ( zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                               midptr,  1,       int,     ' ', &
-                              0.d0,    ikey,    null           ) ) then
+                              0.0_wp,    ikey,    null           ) ) then
 !
 !           The column entry's value matches IKEY.  We must
 !           compare record pointers at this point.

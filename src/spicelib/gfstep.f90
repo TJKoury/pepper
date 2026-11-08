@@ -1,6 +1,7 @@
 !$Procedure GFSTEP ( GF, step size )
 
       subroutine gfstep ( time, step )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision      time
-      double precision      step
+      real(wp)              time
+      real(wp)              step
 
 ! $ Brief_I/O
 !
@@ -152,7 +153,7 @@
 !
 !     Local variables
 !
-      double precision      svstep
+      real(wp)              svstep
 
       logical               svinit
 
@@ -166,7 +167,7 @@
 !     Initial values
 !
       data                  svinit / .false. /
-      data                  svstep / -1.0d0  /
+      data                  svstep / -1.0_wp  /
 
 
 !
@@ -298,7 +299,7 @@
 !
 !     Check the step size.
 !
-      if ( step .le. 0.d0 ) then
+      if ( step .le. 0.0_wp ) then
 
          call chkin  ( 'GFSSTP'                                       )
          call setmsg ( 'Step has value #; step size must be positive.')

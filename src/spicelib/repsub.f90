@@ -1,6 +1,7 @@
 !$Procedure REPSUB ( Replace one substring with another )
 
       subroutine repsub ( in, left, right, string, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
       implicit none
 
       character*(*)         in
-      integer               left
-      integer               right
+      integer(ip)           left
+      integer(ip)           right
       character*(*)         string
       character*(*)         out
 
@@ -178,21 +179,21 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               sumai
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               inlen
-      integer               strlen
-      integer               outlen
+      integer(ip)           inlen
+      integer(ip)           strlen
+      integer(ip)           outlen
 
-      integer               remain
-      integer               use         ( 3 )
+      integer(ip)           remain
+      integer(ip)           use         ( 3 )
 
-      integer               end
-      integer               next
-      integer               i
+      integer(ip)           end
+      integer(ip)           next
+      integer(ip)           i
 
 
 !

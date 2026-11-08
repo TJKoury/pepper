@@ -1,6 +1,7 @@
 !$Procedure SPKE14 ( S/P Kernel, evaluate, type 14 )
 
       subroutine spke14 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -149,10 +150,10 @@
 !
 !     Local variables
 !
-      integer               cofloc
-      integer               degree
-      integer               i
-      integer               ncoeff
+      integer(ip)           cofloc
+      integer(ip)           degree
+      integer(ip)           i
+      integer(ip)           ncoeff
 
 !
 !     Standard SPICE error handling.

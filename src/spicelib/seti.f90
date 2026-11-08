@@ -1,6 +1,7 @@
 !$Procedure SETI ( Compare integer sets )
 
       logical function seti ( a, op, b )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer                    lbcell
+      integer(ip)                lbcell
       parameter                ( lbcell = -5 )
 
-      integer           a      ( lbcell:* )
+      integer(ip)       a      ( lbcell:* )
       character*(*)     op
-      integer           b      ( lbcell:* )
+      integer(ip)       b      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -208,23 +209,23 @@
 !
 !     SPICELIB functions
 !
-      integer          cardi
+      integer(ip)      cardi
       logical          return
 
 !
 !     Local variables
 !
-      integer          carda
-      integer          cardb
-      integer          condlt
-      integer          condeq
-      integer          condgt
-      integer          condoa
-      integer          condob
-      integer          condab
-      integer          indexa
-      integer          indexb
-      integer          cond
+      integer(ip)      carda
+      integer(ip)      cardb
+      integer(ip)      condlt
+      integer(ip)      condeq
+      integer(ip)      condgt
+      integer(ip)      condoa
+      integer(ip)      condob
+      integer(ip)      condab
+      integer(ip)      indexa
+      integer(ip)      indexb
+      integer(ip)      cond
 
 
 

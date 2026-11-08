@@ -1,6 +1,7 @@
 !$Procedure ZZINPDT ( DSK, in planetodetic element? )
 
       subroutine zzinpdt ( p, bounds, corpar, margin, exclud, inside )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,28 +32,28 @@
 
       include 'dsktol.inc'
 
-      double precision      p      ( 3 )
-      double precision      bounds ( 2, 3 )
-      double precision      corpar ( * )
-      double precision      margin
-      integer               exclud
+      real(wp)              p      ( 3 )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              corpar ( * )
+      real(wp)              margin
+      integer(ip)           exclud
       logical               inside
 
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
-      integer               lonidx
+      integer(ip)           lonidx
       parameter           ( lonidx = 1 )
 
-      integer               latidx
+      integer(ip)           latidx
       parameter           ( latidx = 2 )
 
-      integer               altidx
+      integer(ip)           altidx
       parameter           ( altidx = 3 )
 
 
-      double precision      latmrg
-      parameter           ( latmrg = 1.d-8 )
+      real(wp)              latmrg
+      parameter           ( latmrg = 1.0e-8_wp )
 
 ! $ Brief_I/O
 !
@@ -275,9 +276,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      pi
-      double precision      twopi
+      real(wp)              halfpi
+      real(wp)              pi
+      real(wp)              twopi
 
       logical               failed
       logical               return
@@ -289,32 +290,32 @@
 !
 !     Element boundary indices:
 !
-      integer               west
+      integer(ip)           west
       parameter           ( west   = 1 )
 
-      integer               east
+      integer(ip)           east
       parameter           ( east   = 2 )
 
-      integer               south
+      integer(ip)           south
       parameter           ( south  = 1 )
 
-      integer               north
+      integer(ip)           north
       parameter           ( north  = 2 )
 
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower  = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper  = 2 )
 
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      integer               lt
+      integer(ip)           lt
       parameter           ( lt = -1 )
 
-      integer               gt
+      integer(ip)           gt
       parameter           ( gt =  1 )
 
 !
@@ -326,31 +327,31 @@
 !
 !     Local variables
 !
-      double precision      altbds ( 2, 3 )
-      double precision      amnalt
-      double precision      amnlat
-      double precision      amnlon
-      double precision      amxalt
-      double precision      amxlat
-      double precision      amxlon
-      double precision      dlon
-      double precision      f
-      double precision      hpi
-      double precision      lon
-      double precision      lonmrg
-      double precision      maxalt
-      double precision      maxlat
-      double precision      maxlon
-      double precision      minalt
-      double precision      minlat
-      double precision      minlon
-      double precision      pcnlat
-      double precision      pi2
-      double precision      r
-      double precision      re
+      real(wp)              altbds ( 2, 3 )
+      real(wp)              amnalt
+      real(wp)              amnlat
+      real(wp)              amnlon
+      real(wp)              amxalt
+      real(wp)              amxlat
+      real(wp)              amxlon
+      real(wp)              dlon
+      real(wp)              f
+      real(wp)              hpi
+      real(wp)              lon
+      real(wp)              lonmrg
+      real(wp)              maxalt
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              minalt
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              pcnlat
+      real(wp)              pi2
+      real(wp)              r
+      real(wp)              re
 
-      integer               relmin
-      integer               relmax
+      integer(ip)           relmin
+      integer(ip)           relmax
 
       logical               alpass
       logical               first
@@ -367,7 +368,7 @@
 !     Initial values
 !
       data                  first / .true. /
-      data                  hpi   / -1.d0  /
+      data                  hpi   / -1.0_wp  /
 
 
       if ( return() ) then
@@ -387,8 +388,8 @@
          altbds( north, latidx ) =    halfpi()
          altbds( west,  lonidx ) =  - pi()
          altbds( east,  lonidx ) =    pi()
-         altbds( lower, altidx ) =    0.d0
-         altbds( upper, altidx ) =    0.d0
+         altbds( lower, altidx ) =    0.0_wp
+         altbds( upper, altidx ) =    0.0_wp
 
          first = .false.
 
@@ -415,7 +416,7 @@
 !     RECLAT is error free, so we don't call FAILED() here.
 !
 
-      if ( margin .eq. 0.d0 ) then
+      if ( margin .eq. 0.0_wp ) then
 !
 !        ZZINPDT0 contains the logic required to determine whether
 !        the input point is contained in the element.
@@ -426,7 +427,7 @@
          call chkout ( 'ZZINPDT' )
          return
 
-      else if ( margin .lt. 0.d0 ) then
+      else if ( margin .lt. 0.0_wp ) then
 
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )

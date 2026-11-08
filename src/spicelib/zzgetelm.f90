@@ -1,6 +1,7 @@
 !$Procedure ZZGETELM ( Get the components from two-line elements)
 
       subroutine zzgetelm ( frstyr, lines, epoch, elems, ok, error )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer               frstyr
+      integer(ip)           frstyr
       character*(*)         lines ( 2 )
-      double precision      epoch
-      double precision      elems ( * )
+      real(wp)              epoch
+      real(wp)              elems ( * )
       logical               ok
       character*(*)         error
 
@@ -322,10 +323,10 @@
 !
 !     Spicelib functions
 !
-      double precision      rpd
-      double precision      twopi
+      real(wp)              rpd
+      real(wp)              twopi
       logical               return
-      integer               lastnb
+      integer(ip)           lastnb
 
 !
 !     An enumeration of the various components of the
@@ -342,74 +343,74 @@
 !        KNO
 !
 
-      integer               start
+      integer(ip)           start
       parameter           ( start = 0 )
 
-      integer               kndt20
+      integer(ip)           kndt20
       parameter           ( kndt20 = start  + 1 )
 
-      integer               kndd60
+      integer(ip)           kndd60
       parameter           ( kndd60 = kndt20 + 1 )
 
-      integer               kbstar
+      integer(ip)           kbstar
       parameter           ( kbstar = kndd60 + 1 )
 
-      integer               kincl
+      integer(ip)           kincl
       parameter           ( kincl  = kbstar + 1 )
 
-      integer               knode0
+      integer(ip)           knode0
       parameter           ( knode0 = kincl  + 1 )
 
-      integer               kecc
+      integer(ip)           kecc
       parameter           ( kecc   = knode0 + 1 )
 
-      integer               komega
+      integer(ip)           komega
       parameter           ( komega = kecc   + 1 )
 
-      integer               kmo
+      integer(ip)           kmo
       parameter           ( kmo    = komega + 1 )
 
-      integer               kno
+      integer(ip)           kno
       parameter           ( kno    = kmo    + 1 )
 
-      integer               kepoch
+      integer(ip)           kepoch
       parameter           ( kepoch = kno    + 1 )
 
-      integer               nelems
+      integer(ip)           nelems
       parameter           ( nelems = kepoch )
 
 !
 !     Character string lengths
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 160 )
 
 !
 !     Maximum exponent (base 10)
 !
-      integer               maxp
+      integer(ip)           maxp
       parameter           ( maxp =     37     )
 
-      integer               minp
+      integer(ip)           minp
       parameter           ( minp =  -maxp     )
 
 !
 !     Double precision constants.
 !
-      double precision      one
-      parameter           ( one  =      1.0d0 )
+      real(wp)              one
+      parameter           ( one  =      1.0_wp )
 
-      double precision      ten
-      parameter           ( ten  =     10.0d0 )
+      real(wp)              ten
+      parameter           ( ten  =     10.0_wp )
 
 !
 !     Minutes/day
 !
-      double precision      mnpday
-      parameter           ( mnpday = 1440.0d0 )
+      real(wp)              mnpday
+      parameter           ( mnpday = 1440.0_wp )
 
 !
 !     Local variables
@@ -431,31 +432,31 @@
       character*(wdsize)    cmo
       character*(wdsize)    cno
 
-      double precision      bstar
-      double precision      day
-      double precision      ecc
-      double precision      incl
-      double precision      mo
-      double precision      ndd60
-      double precision      ndt20
-      double precision      no
-      double precision      node0
-      double precision      omega
-      double precision      d2r
-      double precision      pi2
-      double precision      power  ( minp:maxp )
-      double precision      tvec   ( 8 )
+      real(wp)              bstar
+      real(wp)              day
+      real(wp)              ecc
+      real(wp)              incl
+      real(wp)              mo
+      real(wp)              ndd60
+      real(wp)              ndt20
+      real(wp)              no
+      real(wp)              node0
+      real(wp)              omega
+      real(wp)              d2r
+      real(wp)              pi2
+      real(wp)              power  ( minp:maxp )
+      real(wp)              tvec   ( 8 )
 
 
 
-      integer               bexp
-      integer               begyr
-      integer               i
-      integer               nexp
-      integer               ptr
-      integer               year
-      integer               yr
-      integer               k
+      integer(ip)           bexp
+      integer(ip)           begyr
+      integer(ip)           i
+      integer(ip)           nexp
+      integer(ip)           ptr
+      integer(ip)           year
+      integer(ip)           yr
+      integer(ip)           k
 
       logical               first
 
@@ -477,17 +478,17 @@
 !
       ok               = .true.
       error            = ' '
-      elems ( kndt20 ) = 0.d0
-      elems ( kndd60 ) = 0.d0
-      elems ( kbstar ) = 0.d0
-      elems ( kincl  ) = 0.d0
-      elems ( knode0 ) = 0.d0
-      elems ( kecc   ) = 0.d0
-      elems ( komega ) = 0.d0
-      elems ( kmo    ) = 0.d0
-      elems ( kno    ) = 0.d0
-      elems ( kepoch ) = 0.d0
-      epoch            = 0.d0
+      elems ( kndt20 ) = 0.0_wp
+      elems ( kndd60 ) = 0.0_wp
+      elems ( kbstar ) = 0.0_wp
+      elems ( kincl  ) = 0.0_wp
+      elems ( knode0 ) = 0.0_wp
+      elems ( kecc   ) = 0.0_wp
+      elems ( komega ) = 0.0_wp
+      elems ( kmo    ) = 0.0_wp
+      elems ( kno    ) = 0.0_wp
+      elems ( kepoch ) = 0.0_wp
+      epoch            = 0.0_wp
 
 
 !
@@ -719,7 +720,7 @@
 !
 !     NODE0 - right ascension of the ascending node, [0,360)
 !
-      if ( node0 .lt. 0.d0 .or. node0 .ge. 360.d0 ) then
+      if ( node0 .lt. 0.0_wp .or. node0 .ge. 360.0_wp ) then
 
             error = 'NODE0 (RA acend node) expected bounds [0,360). ' &
                     //'Actual value #1'
@@ -735,7 +736,7 @@
 !
 !     OMEAGA - argument of the periapsis, [0,360)
 !
-      if ( omega .lt. 0.d0 .or. omega .ge. 360.d0 ) then
+      if ( omega .lt. 0.0_wp .or. omega .ge. 360.0_wp ) then
 
             error = 'OMEGA (arg periap) expected bounds [0,360). ' &
                     //'Actual value #1'
@@ -750,7 +751,7 @@
 !
 !     MO - mean anomoly, [0,360)
 !
-      if ( mo .lt. 0.d0 .or. mo .ge. 360.d0 ) then
+      if ( mo .lt. 0.0_wp .or. mo .ge. 360.0_wp ) then
 
             error = 'MO (mean anomoly) expected bounds [0,360). ' &
                     //'Actual value #1'
@@ -765,7 +766,7 @@
 !
 !     INCL - inclination, [0,180]
 !
-      if ( incl .lt. 0.d0 .or. incl .gt. 180.d0 ) then
+      if ( incl .lt. 0.0_wp .or. incl .gt. 180.0_wp ) then
 
             error = 'INCL (inclination) expected bounds [0,180). ' &
                     //'Actual value #1'
@@ -781,7 +782,7 @@
 !
 !     NO - mean motion (0,20) (Earth orbiter).
 !
-      if ( no .gt. 20.d0 .or. no .lt. 0.d0 ) then
+      if ( no .gt. 20.0_wp .or. no .lt. 0.0_wp ) then
 
             error = 'NO (mean motion) expected bounds (0,20). ' &
                     //'Actual value #1'
@@ -833,7 +834,7 @@
 !
 !     Compute the epoch of the year and date.
 !
-      tvec(1) = dble(year)
+      tvec(1) = real(year, wp)
       tvec(2) = day
 
       call ttrans ( 'YD.D', 'TDB', tvec )

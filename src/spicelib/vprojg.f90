@@ -1,6 +1,7 @@
 !$Procedure VPROJG ( Vector projection, general dimension )
 
       subroutine vprojg ( a, b, ndim, p )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer            ndim
-      double precision   a ( ndim )
-      double precision   b ( ndim )
-      double precision   p ( ndim )
+      integer(ip)        ndim
+      real(wp)           a ( ndim )
+      real(wp)           b ( ndim )
+      real(wp)           p ( ndim )
 
 ! $ Brief_I/O
 !
@@ -227,21 +228,21 @@
 !
 !     SPICELIB functions
 !
-      double precision vdotg
+      real(wp) vdotg
 
 !
 !     Local variables
 !
-      double precision adotb
-      double precision bdotb
-      double precision scale
+      real(wp) adotb
+      real(wp) bdotb
+      real(wp) scale
 
 
       adotb  = vdotg (a,b,ndim)
       bdotb  = vdotg (b,b,ndim)
 
-      if ( bdotb .eq. 0.d0 ) then
-         scale = 0.d0
+      if ( bdotb .eq. 0.0_wp ) then
+         scale = 0.0_wp
       else
          scale = adotb/bdotb
       end if

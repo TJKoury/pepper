@@ -1,6 +1,7 @@
 !$Procedure SPKR21 ( Read SPK record from segment, type 21 )
 
       subroutine spkr21 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       include 'spk21.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -172,34 +173,34 @@
 !
 !     SPICELIB functions
 !
-      integer               lstltd
+      integer(ip)           lstltd
       logical               return
 
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      double precision      data   ( bufsiz )
-      double precision      dc     ( 2 )
+      real(wp)              data   ( bufsiz )
+      real(wp)              dc     ( 2 )
 
-      integer               begin
-      integer               dflsiz
-      integer               end
-      integer               i
-      integer               ic     ( 6 )
-      integer               maxdim
-      integer               ndir
-      integer               nrec
-      integer               off
-      integer               offd
-      integer               offe
-      integer               offr
-      integer               recno
+      integer(ip)           begin
+      integer(ip)           dflsiz
+      integer(ip)           end
+      integer(ip)           i
+      integer(ip)           ic     ( 6 )
+      integer(ip)           maxdim
+      integer(ip)           ndir
+      integer(ip)           nrec
+      integer(ip)           off
+      integer(ip)           offd
+      integer(ip)           offe
+      integer(ip)           offr
+      integer(ip)           recno
 
 !
 !     Standard SPICE error handling.

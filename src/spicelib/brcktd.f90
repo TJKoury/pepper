@@ -1,6 +1,7 @@
 !$Procedure BRCKTD ( Bracket a d.p. value within an interval )
 
-      double precision function brcktd ( number, end1, end2 )
+      real(wp) function brcktd ( number, end1, end2 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       implicit none
 
-      double precision   number
-      double precision   end1
-      double precision   end2
+      real(wp)           number
+      real(wp)           end1
+      real(wp)           end2
 
 ! $ Brief_I/O
 !

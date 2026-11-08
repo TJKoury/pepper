@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRDL ( EK tree, delete value )
 
       subroutine zzektrdl ( handle, tree, key )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       include 'ekpage.inc'
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
 
 ! $ Brief_I/O
 !
@@ -183,73 +184,73 @@
 !
 !     Other functions
 !
-      integer               zzektrnk
+      integer(ip)           zzektrnk
 
 !
 !     Local parameters
 !
-      integer               term
+      integer(ip)           term
       parameter           ( term   = 1 )
 
-      integer               lcheck
+      integer(ip)           lcheck
       parameter           ( lcheck = term   + 1 )
 
-      integer               rcheck
+      integer(ip)           rcheck
       parameter           ( rcheck = lcheck + 1 )
 
-      integer               balnce
+      integer(ip)           balnce
       parameter           ( balnce = rcheck + 1 )
 
-      integer               merg32
+      integer(ip)           merg32
       parameter           ( merg32 = balnce + 1 )
 
-      integer               merg31
+      integer(ip)           merg31
       parameter           ( merg31 = merg32 + 1 )
 
-      integer               llchck
+      integer(ip)           llchck
       parameter           ( llchck = merg31 + 1 )
 
-      integer               rrchck
+      integer(ip)           rrchck
       parameter           ( rrchck = llchck + 1 )
 
 !
 !     Local variables
 !
-      integer               idx
-      integer               left
-      integer               level
-      integer               lkey
-      integer               llkey
-      integer               llsib
-      integer               lnkey
-      integer               lnode
-      integer               lpidx
-      integer               lpkey
-      integer               lrkey
-      integer               lrsib
-      integer               lsib
-      integer               mnode
-      integer               nkeys
-      integer               node
-      integer               noffst
-      integer               parent
-      integer               pkey
-      integer               poffst
-      integer               ptr
-      integer               right
-      integer               rkey
-      integer               rlkey
-      integer               rlsib
-      integer               rnode
-      integer               root
-      integer               rpidx
-      integer               rpkey
-      integer               rrkey
-      integer               rrsib
-      integer               rsib
-      integer               state
-      integer               trgkey
-      integer               trust
+      integer(ip)           idx
+      integer(ip)           left
+      integer(ip)           level
+      integer(ip)           lkey
+      integer(ip)           llkey
+      integer(ip)           llsib
+      integer(ip)           lnkey
+      integer(ip)           lnode
+      integer(ip)           lpidx
+      integer(ip)           lpkey
+      integer(ip)           lrkey
+      integer(ip)           lrsib
+      integer(ip)           lsib
+      integer(ip)           mnode
+      integer(ip)           nkeys
+      integer(ip)           node
+      integer(ip)           noffst
+      integer(ip)           parent
+      integer(ip)           pkey
+      integer(ip)           poffst
+      integer(ip)           ptr
+      integer(ip)           right
+      integer(ip)           rkey
+      integer(ip)           rlkey
+      integer(ip)           rlsib
+      integer(ip)           rnode
+      integer(ip)           root
+      integer(ip)           rpidx
+      integer(ip)           rpkey
+      integer(ip)           rrkey
+      integer(ip)           rrsib
+      integer(ip)           rsib
+      integer(ip)           state
+      integer(ip)           trgkey
+      integer(ip)           trust
 
       logical               undrfl
 

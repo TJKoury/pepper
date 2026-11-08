@@ -1,6 +1,7 @@
 !$Procedure AXISAR ( Axis and angle to rotation )
 
       subroutine axisar ( axis, angle, r )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      axis  ( 3 )
-      double precision      angle
-      double precision      r     ( 3, 3 )
+      real(wp)              axis  ( 3 )
+      real(wp)              angle
+      real(wp)              r     ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -351,8 +352,8 @@
 !
 !     Local variables
 !
-      double precision      vtemp ( 3 )
-      integer               i
+      real(wp)              vtemp ( 3 )
+      integer(ip)           i
 
 !
 !     First, set R equal to the identity.

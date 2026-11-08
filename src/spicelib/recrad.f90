@@ -1,6 +1,7 @@
 !$Procedure RECRAD ( Rectangular coordinates to RA and DEC )
 
       subroutine recrad ( rectan, range, ra, dec )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      double precision   rectan ( 3 )
-      double precision   range
-      double precision   ra
-      double precision   dec
+      real(wp)           rectan ( 3 )
+      real(wp)           range
+      real(wp)           ra
+      real(wp)           dec
 
 ! $ Brief_I/O
 !
@@ -168,7 +169,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
+      real(wp)              twopi
 
 !
 !     Call the subroutine RECLAT to convert the rectangular coordinates

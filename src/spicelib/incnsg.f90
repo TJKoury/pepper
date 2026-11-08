@@ -2,6 +2,7 @@
 
       subroutine incnsg ( apex,   axis,  angle, endpt1, &
                           endpt2, nxpts, xpt1,  xpt2   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,14 +26,14 @@
 
       implicit none
 
-      double precision      apex   ( 3 )
-      double precision      axis   ( 3 )
-      double precision      angle
-      double precision      endpt1 ( 3 )
-      double precision      endpt2 ( 3 )
-      integer               nxpts
-      double precision      xpt1   ( 3 )
-      double precision      xpt2   ( 3 )
+      real(wp)              apex   ( 3 )
+      real(wp)              axis   ( 3 )
+      real(wp)              angle
+      real(wp)              endpt1 ( 3 )
+      real(wp)              endpt2 ( 3 )
+      integer(ip)           nxpts
+      real(wp)              xpt1   ( 3 )
+      real(wp)              xpt2   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -263,10 +264,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      pi
-      double precision      vdist
-      double precision      vdot
+      real(wp)              halfpi
+      real(wp)              pi
+      real(wp)              vdist
+      real(wp)              vdot
 
       logical               failed
       logical               return
@@ -274,68 +275,68 @@
 !
 !     Local parameters
 !
-      double precision      costol
-      parameter           ( costol = 1.d-10 )
+      real(wp)              costol
+      parameter           ( costol = 1.0e-10_wp )
 
-      double precision      hsptol
-      parameter           ( hsptol = 1.d-14 )
+      real(wp)              hsptol
+      parameter           ( hsptol = 1.0e-14_wp )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   = 4 )
 
 !
 !     Local variables
 !
-      double precision      a
-      double precision      axmag
-      double precision      b
-      double precision      c
-      double precision      ca2
-      double precision      colat
-      double precision      cosang
-      double precision      coserr
-      double precision      dir    ( 3 )
-      double precision      dmag
-      double precision      dp1
-      double precision      dp2
-      double precision      locang
-      double precision      maxlat
-      double precision      maxp   ( 3 )
-      double precision      minlat
-      double precision      minp   ( 3 )
-      double precision      nrmpln ( ubpl )
-      double precision      off1   ( 3 )
-      double precision      off2   ( 3 )
-      double precision      origin ( 3 )
-      double precision      plnx   ( 3 )
-      double precision      s1
-      double precision      s2
-      double precision      uaxis  ( 3 )
-      double precision      udir   ( 3 )
-      double precision      uoff1  ( 3 )
-      double precision      uoff2  ( 3 )
-      double precision      uuax
-      double precision      uv1    ( 3 )
-      double precision      uv2    ( 3 )
-      double precision      v1     ( 3 )
-      double precision      v1mag
-      double precision      v2     ( 3 )
-      double precision      v2mag
-      double precision      vtemp  ( 3 )
-      double precision      vtemp2 ( 3 )
-      double precision      w2
-      double precision      wu
-      double precision      wuax
-      double precision      x      ( 3 )
-      double precision      xoff1  ( 3 )
-      double precision      xoff2  ( 3 )
-      double precision      xform  ( 3, 3 )
-      double precision      y      ( 3 )
-      double precision      z      ( 3 )
+      real(wp)              a
+      real(wp)              axmag
+      real(wp)              b
+      real(wp)              c
+      real(wp)              ca2
+      real(wp)              colat
+      real(wp)              cosang
+      real(wp)              coserr
+      real(wp)              dir    ( 3 )
+      real(wp)              dmag
+      real(wp)              dp1
+      real(wp)              dp2
+      real(wp)              locang
+      real(wp)              maxlat
+      real(wp)              maxp   ( 3 )
+      real(wp)              minlat
+      real(wp)              minp   ( 3 )
+      real(wp)              nrmpln ( ubpl )
+      real(wp)              off1   ( 3 )
+      real(wp)              off2   ( 3 )
+      real(wp)              origin ( 3 )
+      real(wp)              plnx   ( 3 )
+      real(wp)              s1
+      real(wp)              s2
+      real(wp)              uaxis  ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              uoff1  ( 3 )
+      real(wp)              uoff2  ( 3 )
+      real(wp)              uuax
+      real(wp)              uv1    ( 3 )
+      real(wp)              uv2    ( 3 )
+      real(wp)              v1     ( 3 )
+      real(wp)              v1mag
+      real(wp)              v2     ( 3 )
+      real(wp)              v2mag
+      real(wp)              vtemp  ( 3 )
+      real(wp)              vtemp2 ( 3 )
+      real(wp)              w2
+      real(wp)              wu
+      real(wp)              wuax
+      real(wp)              x      ( 3 )
+      real(wp)              xoff1  ( 3 )
+      real(wp)              xoff2  ( 3 )
+      real(wp)              xform  ( 3, 3 )
+      real(wp)              y      ( 3 )
+      real(wp)              z      ( 3 )
 
-      integer               i
-      integer               n
-      integer               nplnx
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           nplnx
 
       logical               in1
       logical               in2
@@ -353,9 +354,9 @@
 !
 !     Initial values
 !
-      data                  origin / 3 * 0.d0         /
-      data                  y      / 0.d0, 1.d0, 0.d0 /
-      data                  z      / 0.d0, 0.d0, 1.d0 /
+      data                  origin / 3 * 0.0_wp         /
+      data                  y      / 0.0_wp, 1.0_wp, 0.0_wp /
+      data                  z      / 0.0_wp, 0.0_wp, 1.0_wp /
 
 !
 !     Use quasi-discovery check-in. We'll check in before
@@ -377,7 +378,7 @@
 !
       call unorm ( axis, uaxis, axmag )
 
-      if ( axmag .eq. 0.d0 ) then
+      if ( axmag .eq. 0.0_wp ) then
 
          call chkin  ( 'INCNSG'                                       )
          call setmsg ( 'The cone''s axis vector must be non-zero ' &
@@ -391,7 +392,7 @@
 !
 !     The cone's angular radius must be non-negative.
 !
-      if ( angle .lt. 0.d0 ) then
+      if ( angle .lt. 0.0_wp ) then
 
          call chkin  ( 'INCNSG'                             )
          call setmsg ( 'The cone''s angular radius must be ' &
@@ -411,7 +412,7 @@
 
       call unorm ( dir, udir, dmag )
 
-      if ( dmag .eq. 0.d0 ) then
+      if ( dmag .eq. 0.0_wp ) then
 
          call chkin  ( 'INCNSG'                              )
          call setmsg ( 'The distance between the segment''s ' &
@@ -437,7 +438,7 @@
 !     We'll work with a local axis that has angular separation of
 !     no more than pi/2 from the nappe.
 !
-      if ( cosang .lt. 0.d0 ) then
+      if ( cosang .lt. 0.0_wp ) then
 
          cosang   = - cosang
          locang   =   pi() - angle
@@ -477,8 +478,8 @@
 !     contains the apex and is orthogonal to the axis, there's no
 !     intersection.
 !
-      neg1 = dp1 .lt. 0.d0
-      neg2 = dp2 .lt. 0.d0
+      neg1 = dp1 .lt. 0.0_wp
+      neg2 = dp2 .lt. 0.0_wp
 
       if (      ( in1  .and. in2  ) &
            .or. ( neg1 .and. neg2 ) ) then
@@ -651,7 +652,7 @@
 !        Compute XPT1 and make sure it's on the correct nappe
 !        of the cone.
 !
-         if ( s1 .ge. 0.d0 ) then
+         if ( s1 .ge. 0.0_wp ) then
 
             xpt1(1) = endpt1(1) + s1*udir(1)
             xpt1(2) = endpt1(2) + s1*udir(2)
@@ -664,14 +665,14 @@
 !
             call unorm ( v1, uv1, v1mag )
 
-            if ( v1mag .gt. 0.d0 ) then
+            if ( v1mag .gt. 0.0_wp ) then
 
                coserr = abs( vdot(uv1,uaxis) - cosang )
             else
-               coserr = 0.d0
+               coserr = 0.0_wp
             end if
 
-            if (      ( v1mag  .eq. 0.d0   ) &
+            if (      ( v1mag  .eq. 0.0_wp   ) &
                  .or. ( coserr .lt. costol ) ) then
 !
 !              The root is on the cone (on the apex if V1MAG is zero).
@@ -690,7 +691,7 @@
 !
 !           Check the second root.
 !
-            if ( s2 .ge. 0.d0 ) then
+            if ( s2 .ge. 0.0_wp ) then
 
                xpt2(1) = endpt1(1) + s2*udir(1)
                xpt2(2) = endpt1(2) + s2*udir(2)
@@ -703,14 +704,14 @@
 !
                call unorm ( v2, uv2, v2mag )
 
-               if ( v2mag .gt. 0.d0 ) then
+               if ( v2mag .gt. 0.0_wp ) then
 
                   coserr = abs( vdot(uv2,uaxis) - cosang )
                else
-                  coserr = 0.d0
+                  coserr = 0.0_wp
                end if
 
-               if (      ( v2mag  .eq. 0.d0   ) &
+               if (      ( v2mag  .eq. 0.0_wp   ) &
                     .or. ( coserr .lt. costol ) ) then
 !
 !                 The root is on the cone (on the apex if V2MAG is

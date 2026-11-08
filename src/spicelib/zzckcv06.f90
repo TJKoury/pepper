@@ -2,6 +2,7 @@
 
       subroutine zzckcv06 ( handle, arrbeg, arrend, sclkid, &
                             dc,     tol,    timsys, schedl )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,17 +29,17 @@
 
       include              'ck06.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               handle
-      integer               arrbeg
-      integer               arrend
-      integer               sclkid
-      double precision      dc     ( 2 )
-      double precision      tol
+      integer(ip)           handle
+      integer(ip)           arrbeg
+      integer(ip)           arrend
+      integer(ip)           sclkid
+      real(wp)              dc     ( 2 )
+      real(wp)              tol
       character*(*)         timsys
-      double precision      schedl ( lbcell:* )
+      real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -200,46 +201,46 @@
 !     Number of elements in a type 6 mini-segment
 !     interval directory:
 !
-      integer               nvdsiz
+      integer(ip)           nvdsiz
       parameter           ( nvdsiz = 100 )
 
 !
 !     Mini-segment epoch directory size:
 !
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
 !
 !     Type 6 control area size:
 !
-      integer               nsgpar
+      integer(ip)           nsgpar
       parameter           ( nsgpar = 2 )
 
 !
 !     Type 6 mini-segment control area size:
 !
-      integer               mctlsz
+      integer(ip)           mctlsz
       parameter           ( mctlsz = 4 )
 
 !
 !     Local Variables
 !
-      double precision      begin
-      double precision      buffer ( mctlsz )
-      double precision      et
-      double precision      finish
-      double precision      ivlbds ( 2 )
-      double precision      lstepc
+      real(wp)              begin
+      real(wp)              buffer ( mctlsz )
+      real(wp)              et
+      real(wp)              finish
+      real(wp)              ivlbds ( 2 )
+      real(wp)              lstepc
 
-      integer               epaddr
-      integer               i
-      integer               ivlbas
-      integer               minie
-      integer               ndir
-      integer               nintvl
-      integer               nivdir
-      integer               nrec
-      integer               ptrbas
+      integer(ip)           epaddr
+      integer(ip)           i
+      integer(ip)           ivlbas
+      integer(ip)           minie
+      integer(ip)           ndir
+      integer(ip)           nintvl
+      integer(ip)           nivdir
+      integer(ip)           nrec
+      integer(ip)           ptrbas
 
       logical               istdb
 
@@ -255,7 +256,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -409,9 +410,9 @@
 !
          if ( begin .le. finish ) then
 
-            if ( tol .gt. 0.d0 ) then
+            if ( tol .gt. 0.0_wp ) then
 
-               begin   =  max( begin  - tol, 0.d0 )
+               begin   =  max( begin  - tol, 0.0_wp )
                finish  =       finish + tol
 
             end if

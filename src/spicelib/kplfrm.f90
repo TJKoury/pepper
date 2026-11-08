@@ -1,6 +1,7 @@
 !$Procedure KPLFRM ( Kernel pool frame IDs )
 
       subroutine kplfrm ( frmcls, idset )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,11 +30,11 @@
       include 'ninert.inc'
       include 'nninrt.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               frmcls
-      integer               idset  ( lbcell : * )
+      integer(ip)           frmcls
+      integer(ip)           idset  ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -395,19 +396,19 @@
 !
 !     SPICELIB functions
 !
-      integer               sizei
+      integer(ip)           sizei
       logical               return
 
 !
 !     Local parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln = 32 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
 !
@@ -421,15 +422,15 @@
       character*(kvnmln)    kvclas
       character*(frnmln)    tmpnam
 
-      integer               fclass
-      integer               i
-      integer               idcode
-      integer               l
-      integer               m
-      integer               n
-      integer               to
-      integer               total
-      integer               w
+      integer(ip)           fclass
+      integer(ip)           i
+      integer(ip)           idcode
+      integer(ip)           l
+      integer(ip)           m
+      integer(ip)           n
+      integer(ip)           to
+      integer(ip)           total
+      integer(ip)           w
 
       logical               found
 

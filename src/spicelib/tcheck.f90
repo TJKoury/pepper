@@ -1,6 +1,7 @@
 !$Procedure TCHECK ( Time Check )
 
       subroutine tcheck ( tvec, type, mods, modify, ok, error )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       implicit none
 
-      double precision      tvec   ( * )
+      real(wp)              tvec   ( * )
       character*(*)         type
       logical               mods
       character*(*)         modify ( * )
@@ -267,32 +268,32 @@
 !
 !     In-line Functions
 !
-      integer               divble
+      integer(ip)           divble
 
 
-      integer               era
+      integer(ip)           era
       parameter           ( era    =  1 )
 
-      integer               wday
+      integer(ip)           wday
       parameter           ( wday   = era    + 1 )
 
-      integer               zone
+      integer(ip)           zone
       parameter           ( zone   = wday   + 1 )
 
-      integer               ampm
+      integer(ip)           ampm
       parameter           ( ampm   = zone   + 1 )
 
-      integer               system
+      integer(ip)           system
       parameter           ( system = ampm   + 1 )
 
-      integer               nmods
+      integer(ip)           nmods
       parameter           ( nmods = system )
 
 
 !
 !     Local Variables
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 200 )
 
       character*(lnsize)    messge
@@ -300,26 +301,26 @@
       character*(10)        mnames ( 12 )
       character*(7)         cname  (  4 )
 
-      double precision      dinmon ( 12 )
+      real(wp)              dinmon ( 12 )
 
-      double precision      doy
-      double precision      dinyr
-      double precision      jun30
-      double precision      hubnd
-      double precision      hlbnd
+      real(wp)              doy
+      real(wp)              dinyr
+      real(wp)              jun30
+      real(wp)              hubnd
+      real(wp)              hlbnd
 
-      integer               comp
-      integer               day
-      integer               hour
-      integer               i
-      integer               j
-      integer               k
-      integer               leapdy
-      integer               minute
-      integer               month
-      integer               myear
-      integer               second
-      integer               year
+      integer(ip)           comp
+      integer(ip)           day
+      integer(ip)           hour
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           leapdy
+      integer(ip)           minute
+      integer(ip)           month
+      integer(ip)           myear
+      integer(ip)           second
+      integer(ip)           year
 
       logical               dochck
       logical               modtru
@@ -328,12 +329,12 @@
 
       data                  dochck / .false. /
 
-      data                  dinmon / 31.0d0,  28.0d0, &
-                                     31.0d0,  30.0d0, &
-                                     31.0d0,  30.0d0, &
-                                     31.0d0,  31.0d0, &
-                                     30.0d0,  31.0d0, &
-                                     30.0d0,  31.0d0  /
+      data                  dinmon / 31.0_wp,  28.0_wp, &
+                                     31.0_wp,  30.0_wp, &
+                                     31.0_wp,  30.0_wp, &
+                                     31.0_wp,  31.0_wp, &
+                                     30.0_wp,  31.0_wp, &
+                                     30.0_wp,  31.0_wp  /
 
       data                  mnames / 'January',    'February', &
                                      'March',      'April', &
@@ -378,9 +379,9 @@
                 -  divble( myear, 100 ) &
                 +  divble( myear, 400 )
 
-      dinmon(2) = 28.0d0  + dble(leapdy)
-      dinyr     = 365.0d0 + dble(leapdy)
-      jun30     = 181.0d0 + dble(leapdy)
+      dinmon(2) = 28.0_wp  + real(leapdy, wp)
+      dinyr     = 365.0_wp + real(leapdy, wp)
+      jun30     = 181.0_wp + real(leapdy, wp)
 !
 !     The error message that will be attached to an out of range
 !     problem for hours depends upon whether the AMPM modifier
@@ -394,8 +395,8 @@
 
       if ( modtru ) then
 
-         hubnd  = 13.0d0
-         hlbnd  =  1.0d0
+         hubnd  = 13.0_wp
+         hlbnd  =  1.0_wp
          messge = 'The hours component of the time specified was ' &
          //       '#. When either A.M. or P.M. is specified with ' &
          //       'the time the hours component must be at least ' &
@@ -403,8 +404,8 @@
 
       else
 
-         hubnd  = 24.0d0
-         hlbnd  =  0.0d0
+         hubnd  = 24.0_wp
+         hlbnd  =  0.0_wp
          messge = 'The hours component of the time specified was ' &
          //       '#.  The hours component must be greater than ' &
          //       'or equal to 0.0D0 and less than 24.0D0. '
@@ -428,7 +429,7 @@
 !
 !     First check.  The year must be an integer.
 !
-      if ( tvec(1) .ne. dble(year) ) then
+      if ( tvec(1) .ne. real(year, wp) ) then
          ok    = .false.
          error = 'The year value was #.  This must be an ' &
          //      'integral value. '
@@ -446,8 +447,8 @@
          second = 5
          doy    = tvec(2)
 
-         if (      tvec(2) .ge. dinyr + 1.0d0 &
-             .or.  tvec(2) .lt. 1.0d0       ) then
+         if (      tvec(2) .ge. dinyr + 1.0_wp &
+             .or.  tvec(2) .lt. 1.0_wp       ) then
 
             ok    = .false.
             error = 'Day # has been specified for the year #. ' &
@@ -469,9 +470,9 @@
          hour   = 4
          minute = 5
          second = 6
-         doy    = 0.0d0
+         doy    = 0.0_wp
 
-         if ( tvec(2) .ne. dble(month) ) then
+         if ( tvec(2) .ne. real(month, wp) ) then
 
             ok    = .false.
             error = 'The month specified, #, was not an integer. ' &
@@ -480,8 +481,8 @@
             call repmd ( error,  '#', tvec(2), 3, error )
             return
 
-         else if (      tvec(2) .lt.   1.0d0 &
-                   .or. tvec(2) .gt.  12.0d0 ) then
+         else if (      tvec(2) .lt.   1.0_wp &
+                   .or. tvec(2) .gt.  12.0_wp ) then
 
             ok    = .false.
             error = 'The month specified was #.  The month must ' &
@@ -490,8 +491,8 @@
             call repmi ( error, '#', month, error )
             return
 
-         else if (      tvec(3) .lt. 1.0d0 &
-                   .or. tvec(3) .ge. dinmon(month) + 1.0d0 ) then
+         else if (      tvec(3) .lt. 1.0_wp &
+                   .or. tvec(3) .ge. dinmon(month) + 1.0_wp ) then
 
             ok    = .false.
             error = 'The day of the month specified for the ' &
@@ -500,7 +501,7 @@
             call repmc ( error, '#', mnames(month), error )
             call repmd ( error, '#', tvec(3), 3,    error )
             call repmc ( error, '#', mnames(month), error )
-            call repmd ( error, '#', dinmon(month)+1.0d0, 2, error )
+            call repmd ( error, '#', dinmon(month)+1.0_wp, 2, error )
             return
 
          end if
@@ -526,8 +527,8 @@
          call repmd ( error,  '#', tvec(hour), 2, error )
          return
 
-      else if (     tvec(minute) .ge. 60.0d0 &
-               .or. tvec(minute) .lt.  0.0d0 ) then
+      else if (     tvec(minute) .ge. 60.0_wp &
+               .or. tvec(minute) .lt.  0.0_wp ) then
 
          ok    = .false.
          error = 'The minutes component of the time specified ' &
@@ -538,8 +539,8 @@
 
       end if
 
-      if (     tvec(second) .ge. 60.0d0 &
-          .or. tvec(second) .lt.  0.0d0 ) then
+      if (     tvec(second) .ge. 60.0_wp &
+          .or. tvec(second) .lt.  0.0_wp ) then
 !
 !        We allow for the possibility that we might have a leapsecond.
 !
@@ -548,18 +549,18 @@
             modtru = ( modify(ampm) .eq. 'P.M.')
          end if
 
-         if (        tvec(second) .lt. 61.0d0 &
-              .and.  tvec(second) .gt.  0.0d0 &
-              .and.  tvec(minute) .eq. 59.0d0 &
-              .and.  tvec(hour)   .eq. 23.0d0 &
+         if (        tvec(second) .lt. 61.0_wp &
+              .and.  tvec(second) .gt.  0.0_wp &
+              .and.  tvec(minute) .eq. 59.0_wp &
+              .and.  tvec(hour)   .eq. 23.0_wp &
               .and.( doy .eq. dinyr .or. doy .eq. jun30 ) ) then
 !
 !           Don't do anything.
 !
-         else if (        tvec(second) .lt. 61.0d0 &
-              .and.  tvec(second) .gt.  0.0d0 &
-              .and.  tvec(minute) .eq. 59.0d0 &
-              .and.  tvec(hour)   .eq. 11.0d0 &
+         else if (        tvec(second) .lt. 61.0_wp &
+              .and.  tvec(second) .gt.  0.0_wp &
+              .and.  tvec(minute) .eq. 59.0_wp &
+              .and.  tvec(hour)   .eq. 11.0_wp &
               .and.  modtru &
               .and.( doy .eq. dinyr .or. doy .eq. jun30 ) ) then
 !
@@ -596,7 +597,7 @@
 
                k = k+1
 
-               if ( tvec(j) .ne. 0.0d0 ) then
+               if ( tvec(j) .ne. 0.0_wp ) then
                   ok    = .false.
                   error = 'The ''#'' component of the date has a ' &
                   //      'fractional component.  This is ' &

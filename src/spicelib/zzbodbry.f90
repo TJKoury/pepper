@@ -1,6 +1,7 @@
 !$Procedure      ZZBODBRY ( Return barycenter code for a body )
 
-      integer function zzbodbry ( body )
+      integer(ip) function zzbodbry ( body )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 !
 ! $ Declarations
 
-      integer               body
+      integer(ip)           body
 
 ! $ Brief_I/O
 !

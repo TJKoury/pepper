@@ -1,6 +1,7 @@
 !$Procedure TOUCHD ( Touch a variable )
 
-      double precision function touchd ( dp )
+      real(wp) function touchd ( dp )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      double precision      dp
+      real(wp)              dp
 
 ! $ Brief_I/O
 !

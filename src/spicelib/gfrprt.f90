@@ -1,6 +1,7 @@
 !$Procedure GFRPRT ( GF, progress reporting package )
 
       subroutine gfrprt ( window, begmss, endmss, ivbeg, ivend, time )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,15 +23,15 @@
 
       include               'zzgf.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      window ( lbcell : * )
+      real(wp)              window ( lbcell : * )
       character*(*)         begmss
       character*(*)         endmss
-      double precision      ivbeg
-      double precision      ivend
-      double precision      time
+      real(wp)              ivbeg
+      real(wp)              ivend
+      real(wp)              time
 
 ! $ Brief_I/O
 !
@@ -488,8 +489,8 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
-      integer               lastnb
+      integer(ip)           cardd
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -497,10 +498,10 @@
 !
 !     Local parameters
 !
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 !
@@ -512,22 +513,22 @@
       character*(mxendm)    copye
       character*(mxendm)    end
 
-      double precision      ave
-      double precision      freq
-      double precision      incr
-      double precision      measur
-      double precision      remain
-      double precision      stddev
-      double precision      t0
-      double precision      total
+      real(wp)              ave
+      real(wp)              freq
+      real(wp)              incr
+      real(wp)              measur
+      real(wp)              remain
+      real(wp)              stddev
+      real(wp)              t0
+      real(wp)              total
 
-      integer               chrcod
-      integer               i
-      integer               long
-      integer               short
-      integer               stdout
-      integer               tcheck
-      integer               unit
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           long
+      integer(ip)           short
+      integer(ip)           stdout
+      integer(ip)           tcheck
+      integer(ip)           unit
 
       save                  copyb
       save                  copye
@@ -779,7 +780,7 @@
 !     reporter.
 !
       call wnsumd   ( window, measur, ave, stddev, short, long )
-      call zzgftswk ( measur, 1.0d0,  4,   begmss, endmss )
+      call zzgftswk ( measur, 1.0_wp,  4,   begmss, endmss )
 
       if ( failed() ) then
          call chkout ( 'GFREPI' )
@@ -799,7 +800,7 @@
 
       else
 
-         remain = 0.d0
+         remain = 0.0_wp
 
       end if
 
@@ -1139,8 +1140,8 @@
 
       call chkin  ( 'GFREPF' )
 
-      call zzgfwkad ( 0.0d0, 1, copyb, copye )
-      call zzgfwkin ( 0.0d0 )
+      call zzgfwkad ( 0.0_wp, 1, copyb, copye )
+      call zzgfwkin ( 0.0_wp )
 
 !
 !     Determine whether progress report output is currently

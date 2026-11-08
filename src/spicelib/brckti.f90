@@ -1,6 +1,7 @@
 !$Procedure BRCKTI ( Bracket an integer value within an interval )
 
-      integer  function brckti ( number, end1, end2 )
+      integer(ip)  function brckti ( number, end1, end2 )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       implicit none
 
-      integer   number
-      integer   end1
-      integer   end2
+      integer(ip)   number
+      integer(ip)   end1
+      integer(ip)   end2
 
 ! $ Brief_I/O
 !

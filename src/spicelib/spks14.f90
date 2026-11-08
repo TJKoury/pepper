@@ -1,6 +1,7 @@
 !$Procedure SPKS14 ( S/P Kernel, subset, type 14 )
 
       subroutine spks14 ( srchan, srcdsc, dsthan, dstdsc, dstsid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               srchan
-      double precision      srcdsc(*)
-      integer               dsthan
-      double precision      dstdsc(*)
+      integer(ip)           srchan
+      real(wp)              srcdsc(*)
+      integer(ip)           dsthan
+      real(wp)              dstdsc(*)
       character*(*)         dstsid
 
 ! $ Brief_I/O
@@ -125,47 +126,47 @@
 !     allows a 20th degree Chebyshev Polynomial, which should be more
 !     than sufficient. This should be the same as the value in SPKPV.
 !
-      integer               maxrec
+      integer(ip)           maxrec
       parameter           ( maxrec = 128 )
 !
 !     Reference frame name size. See CHGIRF.
 !
-      integer               frmsiz
+      integer(ip)           frmsiz
       parameter           ( frmsiz = 16 )
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 !
 !     Length of a state.
 !
-      integer               nstate
+      integer(ip)           nstate
       parameter           ( nstate = 6 )
 !
 !     Local Variables
 !
       character*(frmsiz)    myfram
 
-      double precision      begtim
-      double precision      dtemp  ( nd     )
-      double precision      endtim
-      double precision      myref
-      double precision      record ( maxrec )
+      real(wp)              begtim
+      real(wp)              dtemp  ( nd     )
+      real(wp)              endtim
+      real(wp)              myref
+      real(wp)              record ( maxrec )
 
-      integer               begidx
-      integer               body
-      integer               center
-      integer               chbdeg
-      integer               dummy
-      integer               endidx
-      integer               i
-      integer               iframe
-      integer               itemp  ( ni )
-      integer               recsiz
+      integer(ip)           begidx
+      integer(ip)           body
+      integer(ip)           center
+      integer(ip)           chbdeg
+      integer(ip)           dummy
+      integer(ip)           endidx
+      integer(ip)           i
+      integer(ip)           iframe
+      integer(ip)           itemp  ( ni )
+      integer(ip)           recsiz
 
       logical               found
 

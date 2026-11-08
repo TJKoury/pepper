@@ -3,6 +3,7 @@
       subroutine zztangnt ( curve,  srcrad, shape,  trgcde, nsurf, &
                             srflst, fixfid, et,     plnvec, axis, &
                             schstp, soltol, result, points        )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,23 +37,23 @@
 
       include 'zzdsk.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               curve
-      double precision      srcrad
-      integer               shape
-      integer               trgcde
-      integer               nsurf
-      integer               srflst ( * )
-      integer               fixfid
-      double precision      et
-      double precision      plnvec ( 3 )
-      double precision      axis   ( 3 )
-      double precision      schstp
-      double precision      soltol
-      double precision      result ( lbcell : * )
-      double precision      points ( 3, * )
+      integer(ip)           curve
+      real(wp)              srcrad
+      integer(ip)           shape
+      integer(ip)           trgcde
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      integer(ip)           fixfid
+      real(wp)              et
+      real(wp)              plnvec ( 3 )
+      real(wp)              axis   ( 3 )
+      real(wp)              schstp
+      real(wp)              soltol
+      real(wp)              result ( lbcell : * )
+      real(wp)              points ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -323,11 +324,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      dasine
-      double precision      pi
-      double precision      vnorm
+      real(wp)              dasine
+      real(wp)              pi
+      real(wp)              vnorm
 
-      integer               cardd
+      integer(ip)           cardd
 
       logical               failed
       logical               return
@@ -342,22 +343,22 @@
 !
 !     Local parameters
 !
-      double precision      margin
-      parameter           ( margin = 1.d-12 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e-12_wp )
 
 !
 !     Local variables
 !
-      double precision      alpha
-      double precision      start
-      double precision      finish
-      double precision      maxrad
-      double precision      mindst
-      double precision      r
-      double precision      refvec ( 3 )
+      real(wp)              alpha
+      real(wp)              start
+      real(wp)              finish
+      real(wp)              maxrad
+      real(wp)              mindst
+      real(wp)              r
+      real(wp)              refvec ( 3 )
 
-      integer               i
-      integer               n
+      integer(ip)           i
+      integer(ip)           n
 
       logical               cstep
       logical               endflg ( 2 )
@@ -405,14 +406,14 @@
 !
 !     Scale up MAXRAD slightly to ensure bracketing.
 !
-      maxrad = maxrad * 1.001d0
+      maxrad = maxrad * 1.001_wp
 
       if ( failed() ) then
          call chkout ( 'ZZTANGNT' )
          return
       end if
 
-      if ( maxrad .le. 0.d0 ) then
+      if ( maxrad .le. 0.0_wp ) then
 
          call setmsg ( 'Target maximum radius # is non-positive.' )
          call errdp  ( '#',  maxrad                               )
@@ -430,7 +431,7 @@
 !
 !        Set the initial ray-axis separation.
 !
-         start  = 0.d0
+         start  = 0.0_wp
 !
 !        If the vertex is outside of the bounding sphere,
 !        set the initial angle to the supplement of
@@ -438,7 +439,7 @@
 !        its maximum radius.
 !
          r      = vnorm( axis )
-         mindst = maxrad * ( 1.d0 + margin )
+         mindst = maxrad * ( 1.0_wp + margin )
 
          if ( r .gt. mindst ) then
 
@@ -460,7 +461,7 @@
 !
 !        For the terminator cases, check for an invalid source radius.
 !
-         if ( srcrad .le. 0.d0 ) then
+         if ( srcrad .le. 0.0_wp ) then
 
             call setmsg ( 'Source radius # is non-positive.' )
             call errdp  ( '#',  srcrad                       )

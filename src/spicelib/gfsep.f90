@@ -6,6 +6,7 @@
                          refval, adjust, step, &
                          cnfine, mw,     nw, &
                          work,   result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,7 +37,7 @@
       include               'zzabcorr.inc'
       include               'zzholdd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         targ1
@@ -48,14 +49,14 @@
       character*(*)         abcorr
       character*(*)         obsrvr
       character*(*)         relate
-      double precision      refval
-      double precision      adjust
-      double precision      step
-      double precision      cnfine ( lbcell : * )
-      integer               mw
-      integer               nw
-      double precision      work   ( lbcell : mw, nw )
-      double precision      result ( lbcell : * )
+      real(wp)              refval
+      real(wp)              adjust
+      real(wp)              step
+      real(wp)              cnfine ( lbcell : * )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work   ( lbcell : mw, nw )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1089,7 +1090,7 @@
 !
       logical               return
       logical               gfbail
-      integer               sized
+      integer(ip)           sized
       logical               even
 
 !
@@ -1107,16 +1108,16 @@
 !     Local parameters
 !
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               qnpars
+      integer(ip)           qnpars
       parameter           ( qnpars = 8 )
 
 !
 !     Local variables
 !
-      double precision      tol
+      real(wp)              tol
       logical               ok
 
 !
@@ -1125,9 +1126,9 @@
       character*(lnsize)    qcpars ( qnpars )
       character*(lnsize)    qpnams ( qnpars )
 
-      double precision      qdpars ( qnpars )
+      real(wp)              qdpars ( qnpars )
 
-      integer               qipars ( qnpars )
+      integer(ip)           qipars ( qnpars )
 
       logical               qlpars ( qnpars )
 

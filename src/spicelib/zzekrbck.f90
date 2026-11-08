@@ -1,6 +1,7 @@
 !$Procedure      ZZEKRBCK ( EK, record backup <STUB> )
 
       subroutine zzekrbck ( action, handle, segdsc, coldsc, recno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,10 +29,10 @@
       include 'ektype.inc'
 
       character*(*)         action
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recno
 
 ! $ Brief_I/O
 !
@@ -215,7 +216,7 @@
 !-&
 
       character*(1)         tmpchr
-      integer               i
+      integer(ip)           i
 
       tmpchr = action(1:1)
       i      = handle

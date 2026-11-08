@@ -1,6 +1,7 @@
 !$Procedure CHGIRF ( Change inertial reference frames )
 
       subroutine chgirf ( refa, refb, rotab, name, index )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
       implicit none
 
       include              'ninert.inc'
-      integer               refa
-      integer               refb
-      double precision      rotab    ( 3,3 )
+      integer(ip)           refa
+      integer(ip)           refb
+      real(wp)              rotab    ( 3,3 )
       character*(*)         name
-      integer               index
+      integer(ip)           index
 
 ! $ Brief_I/O
 !
@@ -211,9 +212,9 @@
 !
 !     SPICELIB functions
 !
-      integer               esrchc
-      integer               isrchc
-      integer               wdcnt
+      integer(ip)           esrchc
+      integer(ip)           isrchc
+      integer(ip)           wdcnt
 
       logical               eqstr
       logical               return
@@ -221,7 +222,7 @@
 !
 !     Local parameters
 !
-      integer               maxf
+      integer(ip)           maxf
       parameter           ( maxf = ninert )
 
 !
@@ -233,18 +234,18 @@
       character*16          frames (   maxf )
       character*25          word
 
-      double precision      angle
-      double precision      radang
-      double precision      tmpmat ( 3, 3    )
-      double precision      trans  ( 9, maxf )
+      real(wp)              angle
+      real(wp)              radang
+      real(wp)              tmpmat ( 3, 3    )
+      real(wp)              trans  ( 9, maxf )
 
-      integer               axis
-      integer               b
-      integer               dframe
-      integer               i
-      integer               j
-      integer               loc
-      integer               p
+      integer(ip)           axis
+      integer(ip)           b
+      integer(ip)           dframe
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           loc
+      integer(ip)           p
 
       logical               ready
 
@@ -877,7 +878,7 @@
 
          do i = 1, maxf
 
-            call rotate ( 0.d0, 1, trans(1,i) )
+            call rotate ( 0.0_wp, 1, trans(1,i) )
 
             do j = wdcnt ( defs(i) ), 2, -2
 
@@ -955,7 +956,7 @@
 
 
       else if ( refa .eq. refb ) then
-         call rotate ( 0.d0, 1, rotab )
+         call rotate ( 0.0_wp, 1, rotab )
 
       else
          call mxmt ( trans(1,refb), trans(1,refa), rotab )

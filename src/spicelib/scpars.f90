@@ -1,6 +1,7 @@
 !$Procedure SCPARS ( Parse a spacecraft clock string )
 
       subroutine scpars ( sc, sclkch, error, msg, sclkdp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       include               'sclk.inc'
 
-      integer               sc
+      integer(ip)           sc
       character*(*)         sclkch
       logical               error
       character*(*)         msg
-      double precision      sclkdp
+      real(wp)              sclkdp
 
 ! $ Brief_I/O
 !
@@ -427,8 +428,8 @@
 !
 !     SPICELIB functions
 !
-      integer               cpos
-      integer               sctype
+      integer(ip)           cpos
+      integer(ip)           sctype
 
       logical               failed
       logical               return
@@ -440,17 +441,17 @@
       character*(255)       psmsg
       character*(255)       strerr
 
-      double precision      pstart   ( mxpart )
-      double precision      pstop    ( mxpart )
-      double precision      ptotls   ( mxpart )
-      double precision      ticks
+      real(wp)              pstart   ( mxpart )
+      real(wp)              pstop    ( mxpart )
+      real(wp)              ptotls   ( mxpart )
+      real(wp)              ticks
 
-      integer               dtype
-      integer               i
-      integer               nparts
-      integer               part
-      integer               pos
-      integer               pnter
+      integer(ip)           dtype
+      integer(ip)           i
+      integer(ip)           nparts
+      integer(ip)           part
+      integer(ip)           pos
+      integer(ip)           pnter
 
       logical               pserr
 

@@ -1,6 +1,7 @@
 !$Procedure ZZXLATED ( Private --- Translate Double Precision Numbers )
 
       subroutine zzxlated ( inbff, input, space, output )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,10 +26,10 @@
 
       include              'zzddhman.inc'
 
-      integer               inbff
+      integer(ip)           inbff
       character*(*)         input
-      integer               space
-      double precision      output ( * )
+      integer(ip)           space
+      real(wp)              output ( * )
 
 
 ! $ Brief_I/O
@@ -252,8 +253,8 @@
 !
 !     SPICELIB Functions
 !
-      integer               intmin
-      integer               isrchc
+      integer(ip)           intmin
+      integer(ip)           isrchc
 
       logical               return
 
@@ -265,22 +266,22 @@
 !     Length of the double precision and integer buffers that
 !     are equivalenced.
 !
-      integer               dpblen
+      integer(ip)           dpblen
       parameter           ( dpblen = 128 )
 
-      integer               inblen
+      integer(ip)           inblen
       parameter           ( inblen = 2 * dpblen )
 
 !
 !     These parameters are used for arithmetic shifting.
 !
-      integer               shft8
+      integer(ip)           shft8
       parameter           ( shft8  = 2**8  )
 
-      integer               shft16
+      integer(ip)           shft16
       parameter           ( shft16 = 2**16 )
 
-      integer               shft24
+      integer(ip)           shft24
       parameter           ( shft24 = 2**24 )
 
 !
@@ -290,20 +291,20 @@
       character*(strsiz)    strbff ( numbff )
       character*(strsiz)    tmpstr
 
-      double precision      dpbufr ( dpblen )
+      real(wp)              dpbufr ( dpblen )
 
-      integer               bigint
-      integer               i
-      integer               inbufr ( inblen )
-      integer               j
-      integer               k
-      integer               lenipt
-      integer               natbff
-      integer               numdp
-      integer               osign
-      integer               outpos
-      integer               smlint
-      integer               value
+      integer(ip)           bigint
+      integer(ip)           i
+      integer(ip)           inbufr ( inblen )
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           lenipt
+      integer(ip)           natbff
+      integer(ip)           numdp
+      integer(ip)           osign
+      integer(ip)           outpos
+      integer(ip)           smlint
+      integer(ip)           value
 
       logical               first
 
@@ -315,7 +316,7 @@
 !
 !     Statement Functions
 !
-      integer               zzichr
+      integer(ip)           zzichr
 
 !
 !     Saved Variables

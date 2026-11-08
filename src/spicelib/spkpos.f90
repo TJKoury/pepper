@@ -1,6 +1,7 @@
 !$Procedure SPKPOS ( S/P Kernel, position )
 
       subroutine spkpos ( targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,12 +28,12 @@
       include               'zzctr.inc'
 
       character*(*)         targ
-      double precision      et
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
       character*(*)         obs
-      double precision      ptarg    ( 3 )
-      double precision      lt
+      real(wp)              ptarg    ( 3 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -473,28 +474,28 @@
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 !
 !     Local variables
 !
-      integer               targid
-      integer               obsid
+      integer(ip)           targid
+      integer(ip)           obsid
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtgid
+      integer(ip)           svtgid
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsn
-      integer               svobsi
+      integer(ip)           svobsi
       logical               svfnd2
 
       logical               first

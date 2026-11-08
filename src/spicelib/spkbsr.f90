@@ -7,6 +7,7 @@
                           descr, &
                           ident, &
                           found   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,23 +28,23 @@
       implicit none
 
       character*(*)         fname
-      integer               handle
-      integer               body
-      double precision      et
-      double precision      descr    ( * )
+      integer(ip)           handle
+      integer(ip)           body
+      real(wp)              et
+      real(wp)              descr    ( * )
       character*(*)         ident
       logical               found
 
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize =  5000 )
 
-      integer               btsize
+      integer(ip)           btsize
       parameter           ( btsize =  10000 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool =    -5 )
 
-      integer               stsize
+      integer(ip)           stsize
       parameter           ( stsize =  100000 )
 
 ! $ Brief_I/O
@@ -561,15 +562,15 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      dpmin
+      real(wp)              dpmax
+      real(wp)              dpmin
 
-      integer               intmax
-      integer               isrchi
-      integer               lnknfn
-      integer               lnknxt
-      integer               lnkprv
-      integer               lnktl
+      integer(ip)           intmax
+      integer(ip)           isrchi
+      integer(ip)           lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           lnkprv
+      integer(ip)           lnktl
 
       logical               failed
       logical               return
@@ -577,29 +578,29 @@
 !
 !     Local parameters
 !
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz = 5 )
 
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen = 40 )
 
-      integer               slen
+      integer(ip)           slen
       parameter           ( slen   = 15 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      integer               forwrd
+      integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
-      integer               bckwrd
+      integer(ip)           bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -632,11 +633,11 @@
 !     removed, succeeding files are moved forward to take up the
 !     slack. This keeps the table ordered by file number.
 !
-      integer               nft
-      integer               fthan    ( ftsize )
-      integer               ftnum    ( ftsize )
-      integer               next
-      integer               findex
+      integer(ip)           nft
+      integer(ip)           fthan    ( ftsize )
+      integer(ip)           ftnum    ( ftsize )
+      integer(ip)           next
+      integer(ip)           findex
 
 !
 !     The body table contains the beginning of the list of the stored
@@ -681,19 +682,19 @@
 !
       character*(sidlen)    btprvi   ( btsize )
 
-      double precision      btprvd   ( dscsiz, btsize )
-      double precision      btlb     ( btsize )
-      double precision      btub     ( btsize )
+      real(wp)              btprvd   ( dscsiz, btsize )
+      real(wp)              btlb     ( btsize )
+      real(wp)              btub     ( btsize )
 
-      integer               bindex
-      integer               btbeg    ( btsize )
-      integer               btbod    ( btsize )
-      integer               btexp    ( btsize )
-      integer               bthfs    ( btsize )
-      integer               btlfs    ( btsize )
-      integer               btprvh   ( btsize )
-      integer               btruex   ( btsize )
-      integer               nbt
+      integer(ip)           bindex
+      integer(ip)           btbeg    ( btsize )
+      integer(ip)           btbod    ( btsize )
+      integer(ip)           btexp    ( btsize )
+      integer(ip)           bthfs    ( btsize )
+      integer(ip)           btlfs    ( btsize )
+      integer(ip)           btprvh   ( btsize )
+      integer(ip)           btruex   ( btsize )
+      integer(ip)           nbt
 
       logical               btchkp   ( btsize )
 
@@ -719,9 +720,9 @@
 !     as appropriate, according to the rules spelled out under
 !     entry point SPKSFS.
 !
-      integer               stpool ( 2, lbpool : stsize )
-      integer               sthan  (             stsize )
-      double precision      stdes  ( dscsiz,     stsize )
+      integer(ip)           stpool ( 2, lbpool : stsize )
+      integer(ip)           sthan  (             stsize )
+      real(wp)              stdes  ( dscsiz,     stsize )
       character*(sidlen)    stidnt (             stsize )
 
 !
@@ -732,21 +733,21 @@
       character*(slen)      status
       character*(slen)      urgent
 
-      double precision      dcd      ( nd )
+      real(wp)              dcd      ( nd )
 
-      integer               cheap
-      integer               cost
-      integer               crflbg
-      integer               head
-      integer               i
-      integer               icd      ( ni )
-      integer               j
-      integer               minexp
-      integer               new
-      integer               nxtseg
-      integer               p
-      integer               tail
-      integer               top
+      integer(ip)           cheap
+      integer(ip)           cost
+      integer(ip)           crflbg
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           icd      ( ni )
+      integer(ip)           j
+      integer(ip)           minexp
+      integer(ip)           new
+      integer(ip)           nxtseg
+      integer(ip)           p
+      integer(ip)           tail
+      integer(ip)           top
 
       logical               fnd
       logical               fndhan

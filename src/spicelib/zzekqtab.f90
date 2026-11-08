@@ -1,6 +1,7 @@
 !$Procedure  ZZEKQTAB ( Private: EK, read table names from query )
 
       subroutine zzekqtab ( eqryi, eqryc, n, table, alias )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,12 +25,12 @@
       include 'ekquery.inc'
       include 'ekbool.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
-      integer               n
+      integer(ip)           n
       character*(*)         table
       character*(*)         alias
 
@@ -126,14 +127,14 @@
 !
 !     Local variables
 !
-      integer               ab
-      integer               ae
-      integer               base
-      integer               buflen
-      integer               iparse
-      integer               ntab
-      integer               tb
-      integer               te
+      integer(ip)           ab
+      integer(ip)           ae
+      integer(ip)           base
+      integer(ip)           buflen
+      integer(ip)           iparse
+      integer(ip)           ntab
+      integer(ip)           tb
+      integer(ip)           te
 
 !
 !     Use discovery check-in.

@@ -1,6 +1,7 @@
 !$Procedure DASACU ( DAS add comments from a logical unit )
 
       subroutine dasacu ( comlun, begmrk, endmrk, insbln, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               comlun
+      integer(ip)           comlun
       character*(*)         begmrk
       character*(*)         endmrk
       logical               insbln
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -377,7 +378,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -386,31 +387,31 @@
 !
 !     Set the value for the maximum length of a text line.
 !
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 255 )
 !
 !     Set the length of a DAS file ID word.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 !
 !     Set the length of a DAS file internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 !
 !     Set the size of the comment buffer.
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 22 )
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer               maxpch
+      integer(ip)           maxpch
       parameter           ( maxpch = 126 )
 
-      integer               minpch
+      integer(ip)           minpch
       parameter           ( minpch = 32 )
 !
 !     Local variables
@@ -420,17 +421,17 @@
       character*(ifnlen)    ifname
       character*(linlen)    line
 
-      integer               i
-      integer               intchr
-      integer               iostat
-      integer               j
-      integer               length
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
-      integer               numcom
-      integer               scrlun
+      integer(ip)           i
+      integer(ip)           intchr
+      integer(ip)           iostat
+      integer(ip)           j
+      integer(ip)           length
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           numcom
+      integer(ip)           scrlun
 
       logical               eof
       logical               more

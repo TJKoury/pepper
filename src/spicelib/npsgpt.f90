@@ -1,6 +1,7 @@
 !$Procedure NPSGPT ( Nearest point on line segment )
 
       subroutine npsgpt ( ep1, ep2, point, pnear, dist )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      double precision      ep1   ( 3 )
-      double precision      ep2   ( 3 )
-      double precision      point ( 3 )
-      double precision      pnear ( 3 )
-      double precision      dist
+      real(wp)              ep1   ( 3 )
+      real(wp)              ep2   ( 3 )
+      real(wp)              point ( 3 )
+      real(wp)              pnear ( 3 )
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -171,8 +172,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdist
-      double precision      vdot
+      real(wp)              vdist
+      real(wp)              vdot
 
       logical               failed
       logical               return
@@ -181,11 +182,11 @@
 !
 !     Local variables
 !
-      double precision      seg    ( 3 )
-      double precision      segdot
-      double precision      lnear  ( 3 )
-      double precision      offset ( 3 )
-      double precision      offdot
+      real(wp)              seg    ( 3 )
+      real(wp)              segdot
+      real(wp)              lnear  ( 3 )
+      real(wp)              offset ( 3 )
+      real(wp)              offdot
 
 !
 !     Use discovery check-in.
@@ -230,7 +231,7 @@
 
       offdot = vdot( offset, seg )
 
-      if ( offdot .lt. 0.d0 ) then
+      if ( offdot .lt. 0.0_wp ) then
 !
 !        The nearest point on the line precedes the first endpoint.
 !        The closest point on the segment is the first endpoint.

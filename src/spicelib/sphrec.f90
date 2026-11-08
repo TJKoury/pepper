@@ -1,6 +1,7 @@
 !$Procedure SPHREC ( Spherical to rectangular coordinates )
 
       subroutine sphrec ( r, colat, slon, rectan  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision   r
-      double precision   colat
-      double precision   slon
-      double precision   rectan ( 3 )
+      real(wp)           r
+      real(wp)           colat
+      real(wp)           slon
+      real(wp)           rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -384,9 +385,9 @@
 !
 !     Local Variables
 !
-      double precision x
-      double precision y
-      double precision z
+      real(wp) x
+      real(wp) y
+      real(wp) z
 
 !
 !     Convert to rectangular coordinates, storing in the results in

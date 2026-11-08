@@ -1,6 +1,7 @@
 !$Procedure CKW04E ( CK type 04: End a segment )
 
       subroutine ckw04e ( handle, endtim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer               handle
-      double precision      endtim
+      integer(ip)           handle
+      real(wp)              endtim
 
 ! $ Brief_I/O
 !
@@ -245,22 +246,22 @@
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 
-      integer               ndescr
+      integer(ip)           ndescr
       parameter           ( ndescr =  nd + ( ni + 1 ) / 2 )
 
 !
 !     Local variables.
 !
-      double precision      dcd    ( nd )
-      double precision      descr  ( ndescr )
+      real(wp)              dcd    ( nd )
+      real(wp)              descr  ( ndescr )
 
-      integer               icd    ( ni )
+      integer(ip)           icd    ( ni )
 
       logical               found
 

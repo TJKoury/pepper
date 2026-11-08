@@ -1,6 +1,7 @@
 !$Procedure CHBASE ( Character set base )
 
-      integer function chbase ()
+      integer(ip) function chbase ()
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !

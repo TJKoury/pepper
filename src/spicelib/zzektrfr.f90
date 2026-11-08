@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRFR ( EK tree, free )
 
       subroutine zzektrfr ( handle, tree )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -24,8 +25,8 @@
       include 'ektree.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
+      integer(ip)           handle
+      integer(ip)           tree
 
 ! $ Brief_I/O
 !
@@ -139,28 +140,28 @@
 !
 !     Local parameters
 !
-      integer               paridx
+      integer(ip)           paridx
       parameter           ( paridx =  1 )
 
-      integer               nkdidx
+      integer(ip)           nkdidx
       parameter           ( nkdidx =  2 )
 
-      integer               begidx
+      integer(ip)           begidx
       parameter           ( begidx =  3 )
 
 !
 !     Local variables
 !
-      integer               depth
-      integer               first
-      integer               kidbas
-      integer               level
-      integer               nkeys
-      integer               nkids
-      integer               node
-      integer               page  ( pgsizi )
-      integer               remain
-      integer               stack ( 3, trmxdp )
+      integer(ip)           depth
+      integer(ip)           first
+      integer(ip)           kidbas
+      integer(ip)           level
+      integer(ip)           nkeys
+      integer(ip)           nkids
+      integer(ip)           node
+      integer(ip)           page  ( pgsizi )
+      integer(ip)           remain
+      integer(ip)           stack ( 3, trmxdp )
 
 !
 !     Standard SPICE error handling.

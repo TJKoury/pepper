@@ -1,6 +1,7 @@
 !$Procedure DPSTRF ( Double Precision Number to Character )
 
       subroutine dpstrf ( x, sigdig, format, string )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision      x
-      integer               sigdig
+      real(wp)              x
+      integer(ip)           sigdig
       character*1           format
       character*(*)         string
 
@@ -239,15 +240,15 @@
 !
 !     Local variables
 !
-      double precision      y
+      real(wp)              y
 
-      integer               exp
-      integer               first
-      integer               last
-      integer               lastch
-      integer               maxdig
-      integer               i
-      integer               j
+      integer(ip)           exp
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           lastch
+      integer(ip)           maxdig
+      integer(ip)           i
+      integer(ip)           j
 
 
       logical               ovflow
@@ -271,7 +272,7 @@
 !     If we're still here, we have a decimal format requested.  Set
 !     the sign for the number.
 !
-      if ( x .lt. 0.0d0 ) then
+      if ( x .lt. 0.0_wp ) then
          string = '-'
       else
          string = ' '
@@ -280,7 +281,7 @@
 !     If X is zero, we can handle this without any regard to the
 !     exponent.
 !
-      if ( x .eq. 0.0d0 ) then
+      if ( x .eq. 0.0_wp ) then
 
          call zzvststr (  x, ' ', exp )
          call zzvsbstr ( -1, maxdig, .false., string(2:), ovflow )

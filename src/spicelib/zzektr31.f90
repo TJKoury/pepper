@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTR31 ( EK tree, 3-1 merge )
 
       subroutine zzektr31 ( handle, tree )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
       include 'ekpage.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
+      integer(ip)           handle
+      integer(ip)           tree
 
 ! $ Brief_I/O
 !
@@ -184,17 +185,17 @@
 !
 !     Local variables
 !
-      integer               c1page ( pgsizi )
-      integer               c2page ( pgsizi )
-      integer               child  ( 2 )
-      integer               delta
-      integer               i
-      integer               middle
-      integer               nlkeys
-      integer               nrkeys
-      integer               root
-      integer               rpage  ( pgsizi )
-      integer               sum
+      integer(ip)           c1page ( pgsizi )
+      integer(ip)           c2page ( pgsizi )
+      integer(ip)           child  ( 2 )
+      integer(ip)           delta
+      integer(ip)           i
+      integer(ip)           middle
+      integer(ip)           nlkeys
+      integer(ip)           nrkeys
+      integer(ip)           root
+      integer(ip)           rpage  ( pgsizi )
+      integer(ip)           sum
 
 !
 !     Use discovery check-in for speed.

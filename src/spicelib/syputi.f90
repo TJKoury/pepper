@@ -1,6 +1,7 @@
 !$Procedure SYPUTI ( Set the values associated with a symbol )
 
       subroutine syputi ( name, values, n, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,15 +21,15 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
-      integer               values     (        * )
-      integer               n
+      integer(ip)           values     (        * )
+      integer(ip)           n
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      integer               tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      integer(ip)           tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -204,27 +205,27 @@
 !     SPICELIB functions
 !
 
-      integer               cardc
-      integer               cardi
-      integer               lstlec
+      integer(ip)           cardc
+      integer(ip)           cardi
+      integer(ip)           lstlec
       logical               return
-      integer               sizec
-      integer               sizei
-      integer               sumai
+      integer(ip)           sizec
+      integer(ip)           sizei
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               nptr
-      integer               nval
+      integer(ip)           nsym
+      integer(ip)           nptr
+      integer(ip)           nval
 
-      integer               locsym
-      integer               locval
-      integer               dimval
+      integer(ip)           locsym
+      integer(ip)           locval
+      integer(ip)           dimval
       logical               oldsym
-      integer               newsym
-      integer               newval
+      integer(ip)           newsym
+      integer(ip)           newval
 
 
 

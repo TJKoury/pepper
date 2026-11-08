@@ -1,6 +1,7 @@
 !$Procedure WRENCI ( Write encoded integers to text file )
 
       subroutine wrenci ( unit, n, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      integer               unit
-      integer               n
-      integer               data(*)
+      integer(ip)           unit
+      integer(ip)           n
+      integer(ip)           data(*)
 
 ! $ Brief_I/O
 !
@@ -240,21 +241,21 @@
       character*(1)         quote
       parameter           ( quote = '''' )
 
-      integer               maxenc
+      integer(ip)           maxenc
       parameter           ( maxenc = 64 )
 
-      integer               wrksiz
+      integer(ip)           wrksiz
       parameter           ( wrksiz = 64 )
 !
 !     Local variables
 !
       character*(maxenc)    work(wrksiz)
 
-      integer               i
-      integer               iostat
-      integer               itmbeg
-      integer               length(wrksiz)
-      integer               nitms
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           itmbeg
+      integer(ip)           length(wrksiz)
+      integer(ip)           nitms
 
 
 !

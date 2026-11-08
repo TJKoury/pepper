@@ -1,6 +1,7 @@
 !$Procedure CKE06 ( C-Kernel, evaluate, type 6 )
 
       subroutine cke06 ( needav, record, cmat, av, clkout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
 
       logical               needav
-      double precision      record   ( * )
-      double precision      cmat     ( 3, 3 )
-      double precision      av       ( 3 )
-      double precision      clkout
+      real(wp)              record   ( * )
+      real(wp)              cmat     ( 3, 3 )
+      real(wp)              av       ( 3 )
+      real(wp)              clkout
 
 ! $ Brief_I/O
 !

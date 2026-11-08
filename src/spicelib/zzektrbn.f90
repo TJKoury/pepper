@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRBN ( EK tree, balance nodes )
 
       subroutine zzektrbn ( handle, tree, left, right, parent, pkidx )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       include  'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               left
-      integer               right
-      integer               parent
-      integer               pkidx
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           left
+      integer(ip)           right
+      integer(ip)           parent
+      integer(ip)           pkidx
 
 ! $ Brief_I/O
 !
@@ -165,16 +166,16 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrnk
+      integer(ip)           zzektrnk
 
 !
 !     Local variables
 !
-      integer               lnkeys
-      integer               rnkeys
-      integer               root
-      integer               schlep
-      integer               sum
+      integer(ip)           lnkeys
+      integer(ip)           rnkeys
+      integer(ip)           root
+      integer(ip)           schlep
+      integer(ip)           sum
 
 !
 !     Use discovery check-in for speed.

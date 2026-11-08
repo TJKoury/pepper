@@ -1,6 +1,7 @@
 !$Procedure EKOPN ( EK, open new file )
 
       subroutine ekopn ( fname, ifname, ncomch, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,8 +28,8 @@
 
       character*(*)         fname
       character*(*)         ifname
-      integer               ncomch
-      integer               handle
+      integer(ip)           ncomch
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -328,15 +329,15 @@
 !
 !     Local parameters
 !
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc    = 1024 )
 
 !
 !     Local variables
 !
-      integer               base
-      integer               ncr
-      integer               p
+      integer(ip)           base
+      integer(ip)           ncr
+      integer(ip)           p
 
 !
 !     Standard SPICE error handling.

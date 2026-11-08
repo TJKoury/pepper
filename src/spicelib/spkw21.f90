@@ -3,6 +3,7 @@
       subroutine spkw21 ( handle, body,   center, frame, &
                           first,  last,   segid,  n, &
                           dlsize, dlines, epochs        )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,17 +26,17 @@
 
       include 'spk21.inc'
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               n
-      integer               dlsize
-      double precision      dlines ( dlsize, * )
-      double precision      epochs (         * )
+      integer(ip)           n
+      integer(ip)           dlsize
+      real(wp)              dlines ( dlsize, * )
+      real(wp)              epochs (         * )
 
 ! $ Brief_I/O
 !
@@ -267,7 +268,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -275,49 +276,49 @@
 !
 !     Local parameters
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 !
 !     MINDSZ is the minimum MDA size; this is the size
 !     of type 1 MDAs.
 !
-      integer               mindsz
+      integer(ip)           mindsz
       parameter           ( mindsz =   71 )
 
 !
 !     Local variables
 !
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz  =   5 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =  21 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz  = 100 )
 
 
 !
 !     Local variables
 !
-      double precision      descr  ( dscsiz )
-      double precision      prvepc
+      real(wp)              descr  ( dscsiz )
+      real(wp)              prvepc
 
-      integer               chrcod
-      integer               i
-      integer               j
-      integer               kqmax1
-      integer               kqmloc
-      integer               maxdim
-      integer               maxdsz
-      integer               refcod
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           kqmax1
+      integer(ip)           kqmloc
+      integer(ip)           maxdim
+      integer(ip)           maxdsz
+      integer(ip)           refcod
 
 
 !
@@ -499,7 +500,7 @@
 
          do j = 2, kqmax1-1
 
-            if ( dlines(j,i) .eq. 0.d0 ) then
+            if ( dlines(j,i) .eq. 0.0_wp ) then
 
                call setmsg ( 'Step size was zero at step size vector ' &
                //            'index # within difference line #.'      )
@@ -571,8 +572,8 @@
          call dafada (  epochs( dirsiz*i ),  1  )
       end do
 
-      call dafada ( dble( maxdim ),  1 )
-      call dafada ( dble( n      ),  1 )
+      call dafada ( real( maxdim, wp ),  1 )
+      call dafada ( real( n, wp      ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.

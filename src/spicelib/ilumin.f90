@@ -3,6 +3,7 @@
       subroutine ilumin ( method, target, et,     fixref, &
                           abcorr, obsrvr, spoint, trgepc, &
                           srfvec, phase,  incdnc, emissn  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -32,16 +33,16 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
-      double precision      trgepc
-      double precision      srfvec ( 3 )
-      double precision      phase
-      double precision      incdnc
-      double precision      emissn
+      real(wp)              spoint ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec ( 3 )
+      real(wp)              phase
+      real(wp)              incdnc
+      real(wp)              emissn
 
 ! $ Brief_I/O
 !

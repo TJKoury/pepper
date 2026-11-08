@@ -2,6 +2,7 @@
 
       subroutine zzscin01 ( hdsclk, scpool, clklst, &
                             dpfree, ifree,  prvsc  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,12 +26,12 @@
 
       include 'zzsc01.inc'
 
-      integer               hdsclk ( * )
-      integer               scpool ( lbsngl : * )
-      integer               clklst ( * )
-      integer               dpfree
-      integer               ifree
-      integer               prvsc
+      integer(ip)           hdsclk ( * )
+      integer(ip)           scpool ( lbsngl : * )
+      integer(ip)           clklst ( * )
+      integer(ip)           dpfree
+      integer(ip)           ifree
+      integer(ip)           prvsc
 
 ! $ Brief_I/O
 !

@@ -1,6 +1,7 @@
 !$Procedure VPACK ( Pack three scalar components into a vector )
 
       subroutine vpack ( x, y, z, v )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      double precision x
-      double precision y
-      double precision z
-      double precision v ( 3 )
+      real(wp) x
+      real(wp) y
+      real(wp) z
+      real(wp) v ( 3 )
 
 ! $ Brief_I/O
 !

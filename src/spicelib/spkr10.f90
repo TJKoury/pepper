@@ -1,6 +1,7 @@
 !$Procedure SPKR10 ( SPK, read record from SPK type 10 segment )
 
       subroutine spkr10 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
       implicit none
 
       include               'sgparam.inc'
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -148,53 +149,53 @@
 !
 !     Local variables
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 8  )
 
-      integer               nelems
+      integer(ip)           nelems
       parameter           ( nelems = 10 )
 !
 !     We have 2 nutation/obliquity terms and their rates giving us
 !     four angle components for each packet.
 !
-      integer               nangs
+      integer(ip)           nangs
       parameter           ( nangs =   4 )
 !
 !     BEGEL1 is the location in the record where the first
 !     two-line element set will begin.
 !
-      integer               begel1
+      integer(ip)           begel1
       parameter           ( begel1 = nconst + 1      )
 !
 !     BEGEL2 is the location in the record where the second
 !     two-line element set will begin.
 !
-      integer               begel2
+      integer(ip)           begel2
       parameter           ( begel2 = begel1 + nelems + nangs )
 !
 !     ENSET1 and ENSET2 are the locations in the record where the
 !     last element of set 1 and set 2 will be located.
 !
-      integer               enset1
+      integer(ip)           enset1
       parameter           ( enset1 = begel1 + nelems - 1 )
 
-      integer               enset2
+      integer(ip)           enset2
       parameter           ( enset2 = begel2 + nelems - 1 )
 
 
-      double precision      value
+      real(wp)              value
 
 
-      integer               ends    ( 2 )
-      integer               from
-      integer               indx
-      integer               nepoch
-      integer               to
-      integer               putelm
-      integer               getelm
-      integer               i
-      integer               set1
-      integer               set2
+      integer(ip)           ends    ( 2 )
+      integer(ip)           from
+      integer(ip)           indx
+      integer(ip)           nepoch
+      integer(ip)           to
+      integer(ip)           putelm
+      integer(ip)           getelm
+      integer(ip)           i
+      integer(ip)           set1
+      integer(ip)           set2
 
       logical               found
 
@@ -267,8 +268,8 @@
          set2 = enset2 + 1
 
          do i = 1, nangs
-            record(set1) = 0.0d0
-            record(set2) = 0.0d0
+            record(set1) = 0.0_wp
+            record(set2) = 0.0_wp
             set1         = set1 + 1
             set2         = set2 + 1
          end do

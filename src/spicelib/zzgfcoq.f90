@@ -4,6 +4,7 @@
                            ref,    abcorr, obsid, dref, &
                            dvec,   crdsys, ctrid, re, &
                            f,      crdnam, value, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,19 +37,19 @@
 
       character*(*)         vecdef
       character*(*)         method
-      integer               trgid
-      double precision      et
+      integer(ip)           trgid
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      integer               obsid
+      integer(ip)           obsid
       character*(*)         dref
-      double precision      dvec   ( 3 )
+      real(wp)              dvec   ( 3 )
       character*(*)         crdsys
-      integer               ctrid
-      double precision      re
-      double precision      f
+      integer(ip)           ctrid
+      real(wp)              re
+      real(wp)              f
       character*(*)         crdnam
-      double precision      value
+      real(wp)              value
       logical               found
 
 ! $ Brief_I/O
@@ -407,7 +408,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               return
@@ -415,13 +416,13 @@
 !
 !     Local parameters
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               crdlen
+      integer(ip)           crdlen
       parameter           ( crdlen = 32 )
 
-      integer               nsys
+      integer(ip)           nsys
       parameter           ( nsys   = 7 )
 
 !
@@ -434,17 +435,17 @@
       character*(crdlen)    sysnam
       character*(bdnmln)    trgnam
 
-      double precision      coords ( 3 )
-      double precision      lt
-      double precision      pos    ( 3 )
-      double precision      trgepc
-      double precision      srfvec ( 3 )
+      real(wp)              coords ( 3 )
+      real(wp)              lt
+      real(wp)              pos    ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec ( 3 )
 
-      integer               crdidx
-      integer               prvctr
-      integer               prvobs
-      integer               prvtrg
-      integer               sysidx
+      integer(ip)           crdidx
+      integer(ip)           prvctr
+      integer(ip)           prvobs
+      integer(ip)           prvtrg
+      integer(ip)           sysidx
 
       logical               first
 

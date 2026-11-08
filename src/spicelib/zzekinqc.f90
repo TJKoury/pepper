@@ -2,6 +2,7 @@
 
       subroutine zzekinqc ( value, length, lexbeg, lexend, &
                             eqryi, eqryc,  descr           )
+      use pepper_kinds, only: ip
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -26,16 +27,16 @@
       include 'ektype.inc'
       include 'ekbool.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         value
-      integer               length
-      integer               lexbeg
-      integer               lexend
-      integer               eqryi  ( lbcell : * )
+      integer(ip)           length
+      integer(ip)           lexbeg
+      integer(ip)           lexend
+      integer(ip)           eqryi  ( lbcell : * )
       character*(*)         eqryc
-      integer               descr  ( * )
+      integer(ip)           descr  ( * )
 
 ! $ Brief_I/O
 !
@@ -140,11 +141,11 @@
 !
 !     Local variables
 !
-      integer               free
-      integer               init
-      integer               l
-      integer               room
-      integer               size
+      integer(ip)           free
+      integer(ip)           init
+      integer(ip)           l
+      integer(ip)           room
+      integer(ip)           size
 
 !
 !     Use discovery check-in.

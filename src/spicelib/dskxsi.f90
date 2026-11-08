@@ -4,6 +4,7 @@
                           fixref, vertex, raydir, maxd,   maxi, &
                           xpt,    handle, dladsc, dskdsc, dc, &
                           ic,     found                        )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -41,20 +42,20 @@
 
       logical               pri
       character*(*)         target
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      et
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              et
       character*(*)         fixref
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      integer               maxd
-      integer               maxi
-      double precision      xpt    ( 3 )
-      integer               handle
-      integer               dladsc ( * )
-      double precision      dskdsc ( * )
-      double precision      dc     ( * )
-      integer               ic     ( * )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      integer(ip)           maxd
+      integer(ip)           maxi
+      real(wp)              xpt    ( 3 )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      real(wp)              dskdsc ( * )
+      real(wp)              dc     ( * )
+      integer(ip)           ic     ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -829,10 +830,10 @@
 !
 !     Local parameters
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -841,15 +842,15 @@
       character*(frnmln)    prvfrm
       character*(bdnmln)    svtnam
 
-      integer               fixfid
-      integer               frmctr ( ctrsiz )
-      integer               fxcent
-      integer               fxclss
-      integer               fxtpid
-      integer               prvtcd
-      integer               svtcde
-      integer               trgcde
-      integer               trgctr ( ctrsiz )
+      integer(ip)           fixfid
+      integer(ip)           frmctr ( ctrsiz )
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxtpid
+      integer(ip)           prvtcd
+      integer(ip)           svtcde
+      integer(ip)           trgcde
+      integer(ip)           trgctr ( ctrsiz )
 
       logical               first
       logical               frmfnd

@@ -1,6 +1,7 @@
 !$Procedure DLAENS ( DLA, end new segment )
 
       subroutine dlaens ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       include 'dla.inc'
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -390,11 +391,11 @@
 !
 !     Local variables
 !
-      integer               descr  ( dladsz )
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               this
+      integer(ip)           descr  ( dladsz )
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           this
 
 !
 !     Standard SPICE error handling.

@@ -1,9 +1,10 @@
 !$Procedure ZZSEPQ ( Separation quantity from observer )
 
-      double precision function zzsepq ( et, &
+      real(wp) function zzsepq ( et, &
                                          bod1, bod2, &
                                          r1,   r2, &
                                          obs,  abcorr, ref )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
 
       implicit none
 
-      double precision      et
-      integer               bod1
-      integer               bod2
-      double precision      r1
-      double precision      r2
-      integer               obs
+      real(wp)              et
+      integer(ip)           bod1
+      integer(ip)           bod2
+      real(wp)              r1
+      real(wp)              r2
+      integer(ip)           obs
       character*(*)         abcorr
       character*(*)         ref
 
@@ -216,9 +217,9 @@
 !
 !     SPICELIB functions.
 !
-      double precision      dasine
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              dasine
+      real(wp)              vnorm
+      real(wp)              vsep
       logical               failed
       logical               return
 
@@ -226,26 +227,26 @@
 !
 !     Local Variables.
 !
-      double precision      ang1
-      double precision      ang2
-      double precision      pv1    ( 3 )
-      double precision      pv2    ( 3 )
-      double precision      range1
-      double precision      range2
-      double precision      theta
-      double precision      lt
+      real(wp)              ang1
+      real(wp)              ang2
+      real(wp)              pv1    ( 3 )
+      real(wp)              pv2    ( 3 )
+      real(wp)              range1
+      real(wp)              range2
+      real(wp)              theta
+      real(wp)              lt
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      double precision      atol
-      parameter           ( atol  = 1.d-12 )
+      real(wp)              atol
+      parameter           ( atol  = 1.0e-12_wp )
 
 !
 !     Set an initial value to return in case of error.
 !
-      zzsepq = 0.d0
+      zzsepq = 0.0_wp
 
 !
 !     Standard SPICE error handling.
@@ -259,7 +260,7 @@
 !
 !     First check for bad inputs.
 !
-      if ( (r1 .lt. 0.d0) .or. (r2 .lt. 0.d0) ) then
+      if ( (r1 .lt. 0.0_wp) .or. (r2 .lt. 0.0_wp) ) then
 
          call setmsg  ('A negative radius for a body was ' &
          //            'encountered. The radius for body #1 was given ' &

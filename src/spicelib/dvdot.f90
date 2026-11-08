@@ -1,6 +1,7 @@
 !$Procedure DVDOT  ( Derivative of Vector Dot Product, 3-D )
 
-      double precision function dvdot ( s1, s2 )
+      real(wp) function dvdot ( s1, s2 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision   s1 ( 6 )
-      double precision   s2 ( 6 )
+      real(wp)           s1 ( 6 )
+      real(wp)           s2 ( 6 )
 
 ! $ Brief_I/O
 !

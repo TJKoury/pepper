@@ -1,6 +1,7 @@
 !$Procedure CKW04A ( CK type 04: Add data to a segment )
 
       subroutine ckw04a ( handle, npkts, pktsiz, pktdat, sclkdp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       include               'ckparam.inc'
 
-      integer               handle
-      integer               npkts
-      integer               pktsiz( * )
-      double precision      pktdat( * )
-      double precision      sclkdp( * )
+      integer(ip)           handle
+      integer(ip)           npkts
+      integer(ip)           pktsiz( * )
+      real(wp)              pktdat( * )
+      real(wp)              sclkdp( * )
 
 ! $ Brief_I/O
 !
@@ -479,17 +480,17 @@
 !     have to be shifted to the left after numbers of coefficients
 !     were packed into a single integer.
 !
-      integer               shftad
+      integer(ip)           shftad
       parameter           ( shftad = 6 )
 
 !
 !     Local Variables.
 !
-      integer               k
-      integer               kk
-      integer               numcft ( qavsiz )
-      integer               displm
-      integer               dispm
+      integer(ip)           k
+      integer(ip)           kk
+      integer(ip)           numcft ( qavsiz )
+      integer(ip)           displm
+      integer(ip)           dispm
 
 !
 !     Standard SPICELIB error handling.

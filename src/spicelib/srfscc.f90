@@ -1,6 +1,7 @@
 !$Procedure SRFSCC (Surface string and body ID code to surface ID code)
 
       subroutine srfscc ( srfstr, bodyid, code, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,8 +28,8 @@
       implicit none
 
       character*(*)         srfstr
-      integer               bodyid
-      integer               code
+      integer(ip)           bodyid
+      integer(ip)           code
       logical               found
 
 ! $ Brief_I/O
@@ -347,7 +348,7 @@
 !
 !     Local parameters
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 80 )
 
 !
@@ -355,7 +356,7 @@
 !
       character*(msglen)    errmsg
 
-      integer               ptr
+      integer(ip)           ptr
 
 
 

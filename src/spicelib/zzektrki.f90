@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRKI ( EK tree, look up key by index )
 
       subroutine zzektrki ( handle, tree, nodkey, n, key )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               nodkey
-      integer               n
-      integer               key
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           nodkey
+      integer(ip)           n
+      integer(ip)           key
 
 ! $ Brief_I/O
 !
@@ -119,20 +120,20 @@
 !
 !     Functions
 !
-      integer               zzektrbs
-      integer               zzektrnk
+      integer(ip)           zzektrbs
+      integer(ip)           zzektrnk
 
 !
 !     Local variables
 !
-      integer               addrss
-      integer               base
-      integer               idx
-      integer               level
-      integer               node
-      integer               noffst
-      integer               ptr
-      integer               size
+      integer(ip)           addrss
+      integer(ip)           base
+      integer(ip)           idx
+      integer(ip)           level
+      integer(ip)           node
+      integer(ip)           noffst
+      integer(ip)           ptr
+      integer(ip)           size
 
 
 

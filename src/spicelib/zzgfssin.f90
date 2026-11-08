@@ -2,6 +2,7 @@
 
       subroutine zzgfssin ( method, trgid, et,   fixref, abcorr, obsid, &
                             dref,   dctr,  dvec, radii,  state,  found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -35,16 +36,16 @@
       include               'zzabcorr.inc'
 
       character*(*)         method
-      integer               trgid
-      double precision      et
+      integer(ip)           trgid
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
-      integer               obsid
+      integer(ip)           obsid
       character*(*)         dref
-      integer               dctr
-      double precision      dvec   ( 3 )
-      double precision      radii  ( 3 )
-      double precision      state  ( 6 )
+      integer(ip)           dctr
+      real(wp)              dvec   ( 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              state  ( 6 )
       logical               found
 
 ! $ Brief_I/O
@@ -344,8 +345,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      vdot
+      real(wp)              clight
+      real(wp)              vdot
 
       logical               eqstr
       logical               failed
@@ -354,10 +355,10 @@
 !
 !     Local parameters
 !
-      double precision      tdelta
-      parameter           ( tdelta = 1.d0 )
+      real(wp)              tdelta
+      parameter           ( tdelta = 1.0_wp )
 
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
 !
@@ -366,50 +367,50 @@
       character*(bdnmln)    svobs
       character*(bdnmln)    svtarg
 
-      double precision      acc    ( 3 )
-      double precision      corxfi ( 6, 6 )
-      double precision      corxfm ( 6, 6 )
-      double precision      ctrsta ( 6 )
-      double precision      dcorxf ( 6, 6 )
-      double precision      dlt
-      double precision      dltctr
-      double precision      drfepc
-      double precision      drxfrm ( 6, 6 )
-      double precision      fxdsta ( 6 )
-      double precision      fxosta ( 6 )
-      double precision      fxpsta ( 6 )
-      double precision      fxpvel ( 3 )
-      double precision      fxtsta ( 6 )
-      double precision      j2dsta ( 6 )
-      double precision      lt
-      double precision      ltctr
-      double precision      ltsign
-      double precision      obspnt ( 6 )
-      double precision      obssta ( 6, 2 )
-      double precision      obstrg ( 6 )
-      double precision      pntsta ( 6 )
-      double precision      sa     ( 3 )
-      double precision      sastat ( 6 )
-      double precision      savel  ( 3 )
-      double precision      scale
-      double precision      spoint ( 3 )
-      double precision      srfvec ( 3 )
-      double precision      ssbobs ( 6 )
-      double precision      ssbtg0 ( 6 )
-      double precision      ssbtrg ( 6 )
-      double precision      stemp  ( 6 )
-      double precision      t
-      double precision      trgepc
-      double precision      upos   ( 3 )
-      double precision      xform  ( 6, 6 )
+      real(wp)              acc    ( 3 )
+      real(wp)              corxfi ( 6, 6 )
+      real(wp)              corxfm ( 6, 6 )
+      real(wp)              ctrsta ( 6 )
+      real(wp)              dcorxf ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              dltctr
+      real(wp)              drfepc
+      real(wp)              drxfrm ( 6, 6 )
+      real(wp)              fxdsta ( 6 )
+      real(wp)              fxosta ( 6 )
+      real(wp)              fxpsta ( 6 )
+      real(wp)              fxpvel ( 3 )
+      real(wp)              fxtsta ( 6 )
+      real(wp)              j2dsta ( 6 )
+      real(wp)              lt
+      real(wp)              ltctr
+      real(wp)              ltsign
+      real(wp)              obspnt ( 6 )
+      real(wp)              obssta ( 6, 2 )
+      real(wp)              obstrg ( 6 )
+      real(wp)              pntsta ( 6 )
+      real(wp)              sa     ( 3 )
+      real(wp)              sastat ( 6 )
+      real(wp)              savel  ( 3 )
+      real(wp)              scale
+      real(wp)              spoint ( 3 )
+      real(wp)              srfvec ( 3 )
+      real(wp)              ssbobs ( 6 )
+      real(wp)              ssbtg0 ( 6 )
+      real(wp)              ssbtrg ( 6 )
+      real(wp)              stemp  ( 6 )
+      real(wp)              t
+      real(wp)              trgepc
+      real(wp)              upos   ( 3 )
+      real(wp)              xform  ( 6, 6 )
 
-      integer               center
-      integer               clssid
-      integer               frcode
-      integer               frclss
-      integer               i
-      integer               prvobs
-      integer               prvtrg
+      integer(ip)           center
+      integer(ip)           clssid
+      integer(ip)           frcode
+      integer(ip)           frclss
+      integer(ip)           i
+      integer(ip)           prvobs
+      integer(ip)           prvtrg
 
       logical               attblk ( abatsz )
       logical               first
@@ -494,9 +495,9 @@
 !     Set the sign associated with the light time correction.
 !
       if ( xmit ) then
-         ltsign =  1.d0
+         ltsign =  1.0_wp
       else
-         ltsign = -1.d0
+         ltsign = -1.0_wp
       end if
 
 !
@@ -811,7 +812,7 @@
 !        We'll also estimate the rate of change of light time
 !        as zero on the first pass.
 !
-         dlt = 0.d0
+         dlt = 0.0_wp
 
          do i = 1, 3
 !
@@ -819,9 +820,9 @@
 !           change of light time.
 !
             if ( xmit ) then
-               scale = 1.d0 + dlt
+               scale = 1.0_wp + dlt
             else
-               scale = 1.d0 - dlt
+               scale = 1.0_wp - dlt
             end if
 
 !

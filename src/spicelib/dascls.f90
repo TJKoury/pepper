@@ -1,6 +1,7 @@
 !$Procedure DASCLS ( DAS, close file )
 
       subroutine dascls ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       include 'das.inc'
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -393,7 +394,7 @@
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
 !
@@ -401,15 +402,15 @@
 !
       character*(10)        method
 
-      integer               iostat
-      integer               unit
+      integer(ip)           iostat
+      integer(ip)           unit
 
       logical               notscr
 
 !
 !     Saved variables
 !
-      integer               fhset ( lbcell : ftsize )
+      integer(ip)           fhset ( lbcell : ftsize )
       save                  fhset
 
       logical               pass1

@@ -1,6 +1,7 @@
 !$Procedure RDKVAR ( Read the next variable from a kernel file )
 
       subroutine rdkvar ( tabsym, tabptr, tabval, name, eof )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,16 +21,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      double precision      tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      real(wp)              tabval     ( lbcell:* )
       character*(*)         name
       logical               eof
 
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 80 )
 
 ! $ Brief_I/O
@@ -243,8 +244,8 @@
       character*6           status
 
       character*30          cvalue
-      double precision      dvalue
-      integer               i
+      real(wp)              dvalue
+      integer(ip)           i
 
       character*80          error
 

@@ -1,6 +1,7 @@
 !$Procedure POLYDS ( Compute a Polynomial and its Derivatives )
 
       subroutine polyds ( coeffs, deg, nderiv, t, p )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      double precision      coeffs ( 0:* )
-      integer               deg
-      integer               nderiv
-      double precision      t
-      double precision      p      ( 0:* )
+      real(wp)              coeffs ( 0:* )
+      integer(ip)           deg
+      integer(ip)           nderiv
+      real(wp)              t
+      real(wp)              p      ( 0:* )
 
 ! $ Brief_I/O
 !
@@ -244,9 +245,9 @@
 !
 !     Local variables
 !
-      integer          i
-      integer          k
-      double precision scale
+      integer(ip)      i
+      integer(ip)      k
+      real(wp) scale
 
 
       if ( nderiv .lt. 0 ) then
@@ -339,7 +340,7 @@
 !     zero.
 !
       do i = 0, nderiv
-         p(i) = 0.0d0
+         p(i) = 0.0_wp
       end do
 
 
@@ -349,7 +350,7 @@
 !
       k     = deg
       i     = nderiv
-      scale = dble ( nderiv )
+      scale = real( nderiv, wp )
 
       do while ( k .ge. 0 )
 
@@ -362,7 +363,7 @@
          p(0)  = t*p(0) + coeffs(k)
          k     = k - 1
          i     = nderiv
-         scale = dble( nderiv )
+         scale = real( nderiv, wp )
       end do
 
       return

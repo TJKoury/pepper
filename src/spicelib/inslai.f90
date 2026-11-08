@@ -1,6 +1,7 @@
 !$Procedure INSLAI (Insert at location in an integer array)
 
       subroutine inslai ( elts, ne, loc, array, na )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               elts  ( * )
-      integer               ne
-      integer               loc
-      integer               array ( * )
-      integer               na
+      integer(ip)           elts  ( * )
+      integer(ip)           ne
+      integer(ip)           loc
+      integer(ip)           array ( * )
+      integer(ip)           na
 
 ! $ Brief_I/O
 !
@@ -188,13 +189,13 @@
 !
 !     Other functions
 !
-      integer          max
+      integer(ip)      max
 
 !
 !     Local variables
 !
-      integer          size
-      integer          i
+      integer(ip)      size
+      integer(ip)      i
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure CYACIP ( Cycle the elements of a character array )
 
       subroutine cyacip ( nelt, dir, ncycle, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               nelt
+      integer(ip)           nelt
       character*1           dir
-      integer               ncycle
+      integer(ip)           ncycle
       character*(*)         array    ( * )
 
 ! $ Brief_I/O
@@ -146,25 +147,25 @@
 !     SPICELIB functions
 !
       logical          return
-      integer          gcd
-      integer          nbwid
+      integer(ip)      gcd
+      integer(ip)      nbwid
 
 !
 !     Local variables
 !
-      integer          outlen
-      integer          widest
+      integer(ip)      outlen
+      integer(ip)      widest
 
       character*1      last
       character*1      temp
 
-      integer          c
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
+      integer(ip)      c
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
 
 
 

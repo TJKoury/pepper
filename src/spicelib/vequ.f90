@@ -1,6 +1,7 @@
 !$Procedure VEQU ( Vector equality, 3 dimensions )
 
       subroutine vequ ( vin, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision  vin   ( 3 )
-      double precision  vout  ( 3 )
+      real(wp)          vin   ( 3 )
+      real(wp)          vout  ( 3 )
 
 ! $ Brief_I/O
 !

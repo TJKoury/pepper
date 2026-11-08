@@ -1,6 +1,7 @@
 !$Procedure ZZCOREPC ( Correct epoch for aberration )
 
       subroutine zzcorepc ( abcorr, et, lt, etcorr )
+      use pepper_kinds, only: wp
       implicit none
 
 ! $ Abstract
@@ -26,9 +27,9 @@
 ! $ Declarations
 
       character*(*)         abcorr
-      double precision      et
-      double precision      lt
-      double precision      etcorr
+      real(wp)              et
+      real(wp)              lt
+      real(wp)              etcorr
 
       include 'zzabcorr.inc'
 

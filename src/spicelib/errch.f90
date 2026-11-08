@@ -1,6 +1,7 @@
 !$Procedure ERRCH  ( Insert String into Error Message Text )
 
       subroutine errch ( marker, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -232,9 +233,9 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
-      integer               nblen
+      integer(ip)           frstnb
+      integer(ip)           lastnb
+      integer(ip)           nblen
       logical               allowd
 
 !
@@ -243,7 +244,7 @@
       character*(lmsgln)    lngmsg
       character*(lmsgln)    tmpmsg
 
-      integer               mrkpos
+      integer(ip)           mrkpos
 
 
 !

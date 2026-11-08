@@ -1,6 +1,7 @@
 !$Procedure PRSDP   ( Parse d.p. number with error checking )
 
       subroutine prsdp ( string, dpval )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         string
-      double precision      dpval
+      real(wp)              dpval
 
 ! $ Brief_I/O
 !
@@ -207,14 +208,14 @@
 !
 !     Local parameters
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 320 )
 
 !
 !     Local variables
 !
       character*(msglen)    errmsg
-      integer               ptr
+      integer(ip)           ptr
 
 
 !

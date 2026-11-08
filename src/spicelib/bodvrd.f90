@@ -1,6 +1,7 @@
 !$Procedure BODVRD ( Return d.p. values from the kernel pool )
 
       subroutine bodvrd ( bodynm, item, maxn, dim, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       character*(*)         bodynm
       character*(*)         item
-      integer               maxn
-      integer               dim
-      double precision      values  ( * )
+      integer(ip)           maxn
+      integer(ip)           dim
+      real(wp)              values  ( * )
 
 ! $ Brief_I/O
 !
@@ -348,16 +349,16 @@
 !
 !     Local parameters
 !
-      integer               cdelen
+      integer(ip)           cdelen
       parameter           ( cdelen = 16 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 32 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 
@@ -368,16 +369,16 @@
       character*1           type
       character*(namlen)    varnam
 
-      integer               bodyid
+      integer(ip)           bodyid
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svbdnm
-      integer               svbdid
+      integer(ip)           svbdid
       logical               svfnd1
 
       logical               first

@@ -1,6 +1,7 @@
 !$Procedure ZZTPATS (Private, Time --- Time Patterns)
 
       logical function zztpats ( room, nknown, known, meanng )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 ! $ Declarations
 
       implicit none
-      integer               room
-      integer               nknown
+      integer(ip)           room
+      integer(ip)           nknown
       character*(*)         known  ( * )
       character*(*)         meanng ( * )
 
-      integer               count
+      integer(ip)           count
       parameter           ( count = 231 )
 
 ! $ Brief_I/O
@@ -148,11 +149,11 @@
 !
 !-&
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      integer               i
-      integer               ordvec ( count )
+      integer(ip)           i
+      integer(ip)           ordvec ( count )
 
       character*(wdsize)    myknwn ( count )
       save                  myknwn

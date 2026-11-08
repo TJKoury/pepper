@@ -1,6 +1,7 @@
 !$Procedure AZLREC ( AZ/EL to rectangular coordinates )
 
       subroutine azlrec ( range, az, el, azccw, elplsz, rectan )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      double precision   range
-      double precision   az
-      double precision   el
+      real(wp)           range
+      real(wp)           az
+      real(wp)           el
       logical            azccw
       logical            elplsz
-      double precision   rectan ( 3 )
+      real(wp)           rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -583,8 +584,8 @@
 !
 !     Local variables
 !
-      double precision      azimut
-      double precision      elevat
+      real(wp)              azimut
+      real(wp)              elevat
 
 !
 !     Error free routine. No check-in.
@@ -614,7 +615,7 @@
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         if ( az .ne. 0.d0 ) then
+         if ( az .ne. 0.0_wp ) then
             azimut = -az
          end if
 
@@ -630,7 +631,7 @@
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         if ( el .ne. 0.d0 ) then
+         if ( el .ne. 0.0_wp ) then
             elevat = -el
          end if
 

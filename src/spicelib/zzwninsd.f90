@@ -1,6 +1,7 @@
 !$Procedure ZZWNINSD ( Insert an interval into a DP window )
 
       subroutine zzwninsd ( left, right, context, window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       include                'errhnd.inc'
 
-      integer                 lbcell
+      integer(ip)             lbcell
       parameter             ( lbcell = -5 )
 
-      double precision        left
-      double precision        right
+      real(wp)                left
+      real(wp)                right
       character*(*)           context
-      double precision        window    ( lbcell:* )
+      real(wp)                window    ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -147,19 +148,19 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
-      integer               sized
-      integer               lastnb
+      integer(ip)           cardd
+      integer(ip)           sized
+      integer(ip)           lastnb
       logical               return
 
 !
 !     Local Variables
 !
-      integer               size
-      integer               card
+      integer(ip)           size
+      integer(ip)           card
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 !
 !     Local parameters

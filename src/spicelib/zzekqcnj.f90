@@ -1,6 +1,7 @@
 !$Procedure  ZZEKQCNJ ( Private: EK, read conjunction sizes from query )
 
       subroutine zzekqcnj ( eqryi, n, size )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,12 +25,12 @@
       include 'ekquery.inc'
       include 'ekbool.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               eqryi ( lbcell : * )
-      integer               n
-      integer               size
+      integer(ip)           eqryi ( lbcell : * )
+      integer(ip)           n
+      integer(ip)           size
 
 ! $ Brief_I/O
 !
@@ -121,11 +122,11 @@
 !
 !     Local variables
 !
-      integer               iparse
-      integer               loc
-      integer               ncnj
-      integer               ncns
-      integer               ntab
+      integer(ip)           iparse
+      integer(ip)           loc
+      integer(ip)           ncnj
+      integer(ip)           ncns
+      integer(ip)           ntab
 
 !
 !     Use discovery check-in.

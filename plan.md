@@ -201,11 +201,13 @@ Plan: keep assumed-size dummies where needed at first (`(lbcell:*)` works with e
 
 Each phase ends with tspice green, the concurrency tests that apply passing, and a commit.
 
-0. **Preparation:**
+0. **Preparation (done):**
    - the state-inventory script (per routine: `save`/`data`/`entry`, classification, call graph) to drive and track the work;
    - reentrancy flags (`-frecursive`) in `fpm.toml`;
    - `pepper_kinds` and the scripted switch to `integer(ip)` / `real(wp)` (verified by identical objects).
-1. **Stateless core into modules:** constants (first-call `save`s become `parameter`s), vector/matrix math, strings, search/sort, cells/sets/windows logic. Mark `pure`/`elemental`; generate the first legacy wrappers. Low risk, and it builds the module, wrapper and test machinery.
+
+   *Result:* `tools/state_inventory.py` (`pixi run inventory`): 1415 files, 318 entry points; 344 files with own state (76 umbrellas, 255 with saved variables, 13 constants computed on the first call); by call graph 271 files are stateless, 14 depend only on such constants, 263 only on the error system (73 files) and 867 on other state. `src/pepper_kinds.f90` and `tools/convert_kinds.py`: 1400 files switched to `integer(ip)`, `real(wp)`, `_wp` literals and `real(x, wp)` (identical object files). gfortran builds with `-frecursive`. tspice passes.
+1. **Stateless core into modules:** constants (constant functions such as `pi()`, `dpr()`, `rpd()`, `halfpi()`, `twopi()`, `spd()`, `clight()`, `jyear()` become named constants `pi`, `dpr`, ... in `pepper_constants`, and callers use the constants directly; the functions remain only in the legacy layer; other first-call `save`s become `parameter`s too), vector/matrix math, strings, search/sort, cells/sets/windows logic. Mark `pure`/`elemental`; generate the first legacy wrappers. Low risk, and it builds the module, wrapper and test machinery.
 2. **Instance, context and errors:** `pepper_spice` (initially only an owner of contexts), `pepper_context`, the error/traceback system in the context, the default instance and context for the legacy layer. Establish the mechanical rewrite pattern (type-bound procedure or `ctx` argument, `ctx%failed()`, ...) used in all later phases.
 3. **Kernels:** kernel pool, kernel management (`furnsh`/`unload`/`kclear`), body and frame name tables (built-in tables as `parameter`s) into `pepper_spice`; the generation counter in place of watchers and `zzctr`.
 4. **File layer:** the DAF/DAS/DLA handle manager (in the instance) and record caches (per context), `pepper_daf_io` with strategy (a), `newunit`.

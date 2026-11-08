@@ -1,6 +1,7 @@
 !$Procedure REPMC  ( Replace marker with character string )
 
       subroutine repmc ( in, marker, value, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -245,17 +246,17 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
 !
-      integer               mrknbf
-      integer               mrknbl
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
 
-      integer               mrkpsb
-      integer               mrkpse
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
 
 
 !

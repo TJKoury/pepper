@@ -5,6 +5,7 @@
                            n,       table,   attdsc,  ccount,  found, &
                            nelt,    nmrows,  semerr,  errmsg,  cdata, &
                            ddata,   idata,   null                     )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,44 +37,44 @@
       include  'ektnamsz.inc'
       include  'ektype.inc'
 
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize =   20 )
 
-      integer               stsize
+      integer(ip)           stsize
       parameter           ( stsize =  200 )
 
-      integer               mxtbld
+      integer(ip)           mxtbld
       parameter           ( mxtbld =  100 )
 
-      integer               mxclld
+      integer(ip)           mxclld
       parameter           ( mxclld =  500 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
 
-      integer               cindex
-      integer               elment
+      integer(ip)           cindex
+      integer(ip)           elment
       character*(*)         eqryc
-      double precision      eqryd  ( * )
-      integer               eqryi  ( lbcell : * )
+      real(wp)              eqryd  ( * )
+      integer(ip)           eqryi  ( lbcell : * )
       character*(*)         fname
-      integer               row
-      integer               selidx
+      integer(ip)           row
+      integer(ip)           selidx
       character*(*)         column
-      integer               handle
-      integer               n
+      integer(ip)           handle
+      integer(ip)           n
       character*(*)         table
-      integer               attdsc ( adscsz )
-      integer               ccount
+      integer(ip)           attdsc ( adscsz )
+      integer(ip)           ccount
       logical               found
-      integer               nelt
-      integer               nmrows
+      integer(ip)           nelt
+      integer(ip)           nmrows
       logical               semerr
       character*(*)         errmsg
       character*(*)         cdata
-      double precision      ddata
-      integer               idata
+      real(wp)              ddata
+      integer(ip)           idata
       logical               null
 
 ! $ Brief_I/O
@@ -619,8 +620,8 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
-      integer               isrchc
+      integer(ip)           cardc
+      integer(ip)           isrchc
 
       logical               eqstr
       logical               failed
@@ -629,8 +630,8 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               eknseg
-      integer               zzekesiz
+      integer(ip)           eknseg
+      integer(ip)           zzekesiz
 
       logical               zzekrmch
       logical               zzekvmch
@@ -643,9 +644,9 @@
 !        Return number of free nodes
 !
 !
-      integer               lnknxt
-      integer               lnktl
-      integer               lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           lnktl
+      integer(ip)           lnknfn
 
 
 !
@@ -655,41 +656,41 @@
 !
 !     Maximum number of constraints allowed in a single query:
 !
-      integer               maxseg
+      integer(ip)           maxseg
       parameter           ( maxseg = stsize )
 
-      integer               ctsize
+      integer(ip)           ctsize
       parameter           ( ctsize = mxclld )
 
-      integer               dtsize
+      integer(ip)           dtsize
       parameter           ( dtsize = maxseg * mxclld / 10 )
 
 
 !
 !     Miscellaneous parameters
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               nil
+      integer(ip)           nil
       parameter           ( nil    =  0 )
 
 !
 !     Number of data types
 !
-      integer               ntypes
+      integer(ip)           ntypes
       parameter           ( ntypes = 4 )
 
 !
 !     Length of strings used for data type names.
 !
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen = 4 )
 
 !
 !     Length of status strings.
 !
-      integer               short
+      integer(ip)           short
       parameter           ( short = 80 )
 
 
@@ -716,9 +717,9 @@
 !
 !        FTHEAD is the head node of the file list.
 !
-      integer               ftpool ( 2,  lbpool : ftsize )
-      integer               fthan  (              ftsize )
-      integer               fthead
+      integer(ip)           ftpool ( 2,  lbpool : ftsize )
+      integer(ip)           fthan  (              ftsize )
+      integer(ip)           fthead
 
 
 !
@@ -759,14 +760,14 @@
 !        TBHEAD is the head node of the table list.
 !
 !
-      integer               tbpool ( 2,  lbpool : mxtbld )
-      integer               tbstpt (              mxtbld )
-      integer               tbncol (              mxtbld )
+      integer(ip)           tbpool ( 2,  lbpool : mxtbld )
+      integer(ip)           tbstpt (              mxtbld )
+      integer(ip)           tbncol (              mxtbld )
       character*(tnamsz)    tbnams (              mxtbld )
-      integer               tbctpt (              mxtbld )
-      integer               tbfils ( ftsize,      mxtbld )
-      integer               tbflsz (              mxtbld )
-      integer               tbhead
+      integer(ip)           tbctpt (              mxtbld )
+      integer(ip)           tbfils ( ftsize,      mxtbld )
+      integer(ip)           tbflsz (              mxtbld )
+      integer(ip)           tbhead
 
 
 !
@@ -805,13 +806,13 @@
 !
 !
 !
-      integer               stpool ( 2, lbpool : maxseg )
-      integer               sthan  (             maxseg )
-      integer               stsidx (             maxseg )
-      integer               stdscs ( sdscsz,     maxseg )
-      integer               stnrow (             maxseg )
-      integer               stncol (             maxseg )
-      integer               stdtpt (             maxseg )
+      integer(ip)           stpool ( 2, lbpool : maxseg )
+      integer(ip)           sthan  (             maxseg )
+      integer(ip)           stsidx (             maxseg )
+      integer(ip)           stdscs ( sdscsz,     maxseg )
+      integer(ip)           stnrow (             maxseg )
+      integer(ip)           stncol (             maxseg )
+      integer(ip)           stdtpt (             maxseg )
 
 !
 !     The column descriptor table contains a column descriptor for
@@ -825,8 +826,8 @@
 !
 !     The space in the table is organized as a doubly linked list.
 !
-      integer               dtpool ( 2,       lbpool:dtsize )
-      integer               dtdscs ( cdscsz,  dtsize        )
+      integer(ip)           dtpool ( 2,       lbpool:dtsize )
+      integer(ip)           dtdscs ( cdscsz,  dtsize        )
 
 !
 !     The column attribute table contains attribute information for
@@ -865,13 +866,13 @@
 !        columns they correspond to may contain null values.
 !
 !
-      integer               ctpool ( 2,       lbpool : ctsize )
+      integer(ip)           ctpool ( 2,       lbpool : ctsize )
       character*(cnamsz)    ctnams (                   ctsize )
-      integer               ctclas (                   ctsize )
-      integer               cttyps (                   ctsize )
-      integer               ctlens (                   ctsize )
+      integer(ip)           ctclas (                   ctsize )
+      integer(ip)           cttyps (                   ctsize )
+      integer(ip)           ctlens (                   ctsize )
       logical               ctfixd (                   ctsize )
-      integer               ctsizs (                   ctsize )
+      integer(ip)           ctsizs (                   ctsize )
       logical               ctindx (                   ctsize )
       logical               ctnull (                   ctsize )
 
@@ -895,91 +896,91 @@
       character*(tnamsz)    tabnam
       character*(tnamsz)    tabvec ( lbcell : maxtab )
 
-      double precision      dvals  ( maxcon )
+      real(wp)              dvals  ( maxcon )
 
-      integer               begidx
-      integer               cbegs  ( maxcon )
-      integer               cdscrs ( cdscsz,  mxclld )
-      integer               cends  ( maxcon )
-      integer               cjbeg
-      integer               cjend
-      integer               cjrows
-      integer               cjsize
-      integer               cnstyp ( maxcon )
-      integer               col
-      integer               colptr
-      integer               conj
-      integer               cvlen
-      integer               ctnew
-      integer               delseg
-      integer               dtnew
-      integer               dtype  ( maxcon )
-      integer               endidx
-      integer               i
-      integer               ivals  ( maxcon )
-      integer               j
-      integer               jbase1
-      integer               jbase2
-      integer               jsize
-      integer               k
-      integer               key
-      integer               keydsc ( cdscsz )
-      integer               l
-      integer               lcidx  ( maxcon )
-      integer               lelts  ( maxcon )
-      integer               ldscrs ( cdscsz, maxcon )
-      integer               ltbidx ( maxcon )
-      integer               lxbeg
-      integer               lxend
-      integer               nact
-      integer               ncols
-      integer               nconj
-      integer               new
-      integer               next
-      integer               nmatch
-      integer               norder
-      integer               npcol
-      integer               nseg
-      integer               nsel
-      integer               nsv
-      integer               ntab
-      integer               ocols  ( maxord )
-      integer               oelts  ( maxord )
-      integer               ops    ( maxcon )
-      integer               ordbas
-      integer               otabs  ( maxord )
-      integer               ptroff
-      integer               r
-      integer               rbas   ( mxjoin )
-      integer               rcidx  ( maxcon )
-      integer               rdscrs ( cdscsz, maxcon )
-      integer               relts  ( maxcon )
-      integer               resbas
-      integer               rowidx
-      integer               rowvec ( maxtab )
-      integer               rsize  ( mxjrs  )
-      integer               rtbidx ( maxcon )
-      integer               rtotal
-      integer               rwvbas
-      integer               selcol ( maxsel )
-      integer               selctp ( maxsel )
-      integer               seltab ( maxsel )
-      integer               seg
-      integer               segdsc ( sdscsz )
-      integer               segvec ( maxtab )
-      integer               sense  ( maxord )
-      integer               sgvbas
-      integer               sizes  ( maxcon )
-      integer               stnew
-      integer               t
-      integer               tab
-      integer               tabidx
-      integer               tbcurr
-      integer               top
-      integer               tptvec ( lbcell : maxtab )
-      integer               ubase  ( mxjrs )
-      integer               unrows
-      integer               usize
+      integer(ip)           begidx
+      integer(ip)           cbegs  ( maxcon )
+      integer(ip)           cdscrs ( cdscsz,  mxclld )
+      integer(ip)           cends  ( maxcon )
+      integer(ip)           cjbeg
+      integer(ip)           cjend
+      integer(ip)           cjrows
+      integer(ip)           cjsize
+      integer(ip)           cnstyp ( maxcon )
+      integer(ip)           col
+      integer(ip)           colptr
+      integer(ip)           conj
+      integer(ip)           cvlen
+      integer(ip)           ctnew
+      integer(ip)           delseg
+      integer(ip)           dtnew
+      integer(ip)           dtype  ( maxcon )
+      integer(ip)           endidx
+      integer(ip)           i
+      integer(ip)           ivals  ( maxcon )
+      integer(ip)           j
+      integer(ip)           jbase1
+      integer(ip)           jbase2
+      integer(ip)           jsize
+      integer(ip)           k
+      integer(ip)           key
+      integer(ip)           keydsc ( cdscsz )
+      integer(ip)           l
+      integer(ip)           lcidx  ( maxcon )
+      integer(ip)           lelts  ( maxcon )
+      integer(ip)           ldscrs ( cdscsz, maxcon )
+      integer(ip)           ltbidx ( maxcon )
+      integer(ip)           lxbeg
+      integer(ip)           lxend
+      integer(ip)           nact
+      integer(ip)           ncols
+      integer(ip)           nconj
+      integer(ip)           new
+      integer(ip)           next
+      integer(ip)           nmatch
+      integer(ip)           norder
+      integer(ip)           npcol
+      integer(ip)           nseg
+      integer(ip)           nsel
+      integer(ip)           nsv
+      integer(ip)           ntab
+      integer(ip)           ocols  ( maxord )
+      integer(ip)           oelts  ( maxord )
+      integer(ip)           ops    ( maxcon )
+      integer(ip)           ordbas
+      integer(ip)           otabs  ( maxord )
+      integer(ip)           ptroff
+      integer(ip)           r
+      integer(ip)           rbas   ( mxjoin )
+      integer(ip)           rcidx  ( maxcon )
+      integer(ip)           rdscrs ( cdscsz, maxcon )
+      integer(ip)           relts  ( maxcon )
+      integer(ip)           resbas
+      integer(ip)           rowidx
+      integer(ip)           rowvec ( maxtab )
+      integer(ip)           rsize  ( mxjrs  )
+      integer(ip)           rtbidx ( maxcon )
+      integer(ip)           rtotal
+      integer(ip)           rwvbas
+      integer(ip)           selcol ( maxsel )
+      integer(ip)           selctp ( maxsel )
+      integer(ip)           seltab ( maxsel )
+      integer(ip)           seg
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           segvec ( maxtab )
+      integer(ip)           sense  ( maxord )
+      integer(ip)           sgvbas
+      integer(ip)           sizes  ( maxcon )
+      integer(ip)           stnew
+      integer(ip)           t
+      integer(ip)           tab
+      integer(ip)           tabidx
+      integer(ip)           tbcurr
+      integer(ip)           top
+      integer(ip)           tptvec ( lbcell : maxtab )
+      integer(ip)           ubase  ( mxjrs )
+      integer(ip)           unrows
+      integer(ip)           usize
 
       logical               activc ( maxcon )
       logical               activv ( maxcon )

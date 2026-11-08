@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSDSC ( EK, get segment descriptor )
 
       subroutine zzeksdsc ( handle, segno, segdsc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               segno
-      integer               segdsc ( sdscsz )
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           segdsc ( sdscsz )
 
 ! $ Brief_I/O
 !
@@ -97,8 +98,8 @@
 !
 !     Local variables
 !
-      integer               mp
-      integer               mbase
+      integer(ip)           mp
+      integer(ip)           mbase
 
 !
 !     Use discovery check-in.

@@ -2,6 +2,7 @@
 
       subroutine ekaclc (  handle,  segno,   column,  cvals, &
                            entszs,  nlflgs,  rcptrs,  wkindx  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,14 +24,14 @@
       include  'eksegdsc.inc'
       include  'ektype.inc'
 
-      integer               handle
-      integer               segno
+      integer(ip)           handle
+      integer(ip)           segno
       character*(*)         column
       character*(*)         cvals  ( * )
-      integer               entszs ( * )
+      integer(ip)           entszs ( * )
       logical               nlflgs ( * )
-      integer               rcptrs ( * )
-      integer               wkindx ( * )
+      integer(ip)           rcptrs ( * )
+      integer(ip)           wkindx ( * )
 
 ! $ Brief_I/O
 !
@@ -469,10 +470,10 @@
 !
 !     Local variables
 !
-      integer               class
-      integer               coldsc ( cdscsz )
-      integer               dtype
-      integer               segdsc ( sdscsz )
+      integer(ip)           class
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           dtype
+      integer(ip)           segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.

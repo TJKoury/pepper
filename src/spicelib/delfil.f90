@@ -1,6 +1,7 @@
 !$Procedure DELFIL ( Delete a file  )
 
       subroutine delfil ( filnam )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -116,8 +117,8 @@
 !
 !     Local Variables
 !
-      integer               iostat
-      integer               lunit
+      integer(ip)           iostat
+      integer(ip)           lunit
 
       logical               exists
       logical               opened

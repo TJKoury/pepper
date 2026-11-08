@@ -1,6 +1,7 @@
 !$Procedure  ZZEKTCNV ( Private: EK, time conversion )
 
       subroutine zzektcnv ( timstr, et, error, errmsg )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -25,7 +26,7 @@
       include 'ektype.inc'
 
       character*(*)         timstr
-      double precision      et
+      real(wp)              et
       logical               error
       character*(*)         errmsg
 
@@ -152,8 +153,8 @@
 !
 !     SPICELIB functions
 !
-      integer               posr
-      integer               rtrim
+      integer(ip)           posr
+      integer(ip)           rtrim
 
       logical               failed
       logical               return
@@ -161,19 +162,19 @@
 !
 !     Local parameters
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 160 )
 
-      integer               ncomp
+      integer(ip)           ncomp
       parameter           ( ncomp  = 10 )
 
-      integer               maxmod
+      integer(ip)           maxmod
       parameter           ( maxmod = 10 )
 
-      integer               short
+      integer(ip)           short
       parameter           ( short  = 32 )
 
 !
@@ -185,12 +186,12 @@
       character*(msglen)    sclmsg
       character*(short)     type
 
-      double precision      sclkdp
-      double precision      tvec   ( ncomp )
+      real(wp)              sclkdp
+      real(wp)              tvec   ( ncomp )
 
-      integer               clkid
-      integer               loc
-      integer               ntvec
+      integer(ip)           clkid
+      integer(ip)           loc
+      integer(ip)           ntvec
 
       logical               fnd
       logical               mods

@@ -1,6 +1,7 @@
 !$Procedure ZZLDKER ( Load a kernel )
 
       subroutine zzldker ( file, nofile, filtyp, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
       character*(*)         file
       character*(*)         nofile
       character*(*)         filtyp
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -233,13 +234,13 @@
 !
 !     Local Variables.
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      integer               eoltsz
+      integer(ip)           eoltsz
       parameter           ( eoltsz = 5 )
 
-      integer               klinsz
+      integer(ip)           klinsz
       parameter           ( klinsz = 132 )
 
       character*(wdsize)    versn

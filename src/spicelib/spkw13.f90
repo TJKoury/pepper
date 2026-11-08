@@ -3,6 +3,7 @@
       subroutine spkw13 (  handle,  body,    center,  frame, &
                            first,   last,    segid,   degree, &
                            n,       states,  epochs           )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,19 +25,19 @@
 
       implicit none
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               degree
-      integer               n
-      double precision      states ( 6, * )
-      double precision      epochs (    * )
+      integer(ip)           degree
+      integer(ip)           n
+      real(wp)              states ( 6, * )
+      real(wp)              epochs (    * )
 
-      integer               maxdeg
+      integer(ip)           maxdeg
       parameter           ( maxdeg = 27 )
 
 ! $ Brief_I/O
@@ -409,7 +410,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               even
       logical               failed
@@ -418,40 +419,40 @@
 !
 !     Local parameters
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 !
 !     Local variables
 !
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz  =   5 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =  13 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz  = 100 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz  =   6 )
 
 !
 !     Local variables
 !
-      double precision      descr  ( dscsiz )
-      double precision      maxtim
+      real(wp)              descr  ( dscsiz )
+      real(wp)              maxtim
 
-      integer               chrcod
-      integer               i
-      integer               refcod
-      integer               winsiz
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           refcod
+      integer(ip)           winsiz
 
 !
 !     Standard SPICE error handling.
@@ -694,8 +695,8 @@
          call dafada (  epochs( dirsiz*i ),  1  )
       end do
 
-      call dafada ( dble( winsiz - 1),  1 )
-      call dafada ( dble( n         ),  1 )
+      call dafada ( real( winsiz - 1, wp),  1 )
+      call dafada ( real( n, wp         ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.

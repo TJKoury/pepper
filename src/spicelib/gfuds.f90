@@ -3,6 +3,7 @@
       subroutine gfuds ( udfuns, udqdec, relate, refval, &
                          adjust, step,   cnfine, &
                          mw,     nw,     work,   result  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,21 +31,21 @@
       include               'zzgf.inc'
       include               'zzholdd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       external              udqdec
       external              udfuns
 
       character*(*)         relate
-      double precision      refval
-      double precision      adjust
-      double precision      step
-      double precision      cnfine ( lbcell : * )
-      integer               mw
-      integer               nw
-      double precision      work   ( lbcell : mw, nw )
-      double precision      result ( lbcell : * )
+      real(wp)              refval
+      real(wp)              adjust
+      real(wp)              step
+      real(wp)              cnfine ( lbcell : * )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work   ( lbcell : mw, nw )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1027,7 +1028,7 @@
 
       logical               odd
       logical               return
-      integer               sized
+      integer(ip)           sized
 
 
 !
@@ -1040,7 +1041,7 @@
       external              gfstep
       external              zzgfudlt
 
-      double precision      tol
+      real(wp)              tol
       logical               ok
 
       logical               gfbail

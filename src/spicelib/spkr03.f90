@@ -1,6 +1,7 @@
 !$Procedure SPKR03 ( SPK, read record from segment, type 3 )
 
       subroutine spkr03 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -207,17 +208,17 @@
 !
 !     Local variables
 !
-      double precision      dc       (   2 )
-      double precision      init
-      double precision      intlen
+      real(wp)              dc       (   2 )
+      real(wp)              init
+      real(wp)              intlen
 
-      integer               ic       (   6 )
-      integer               begin
-      integer               end
-      integer               recsiz
-      integer               nrec
-      integer               recno
-      integer               recadr
+      integer(ip)           ic       (   6 )
+      integer(ip)           begin
+      integer(ip)           end
+      integer(ip)           recsiz
+      integer(ip)           nrec
+      integer(ip)           recno
+      integer(ip)           recadr
 
 
 !

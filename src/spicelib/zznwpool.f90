@@ -2,6 +2,7 @@
 
       subroutine zznwpool ( varnam, wtvars, wtptrs, wtpool, &
                             wtagnt, agtwrk, notify, agents )
+      use pepper_kinds, only: ip
 
 
 ! $ Abstract
@@ -28,16 +29,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
       character*(*)         varnam
       character*(*)         wtvars ( lbcell : * )
-      integer               wtptrs ( * )
-      integer               wtpool ( 2, lbpool : * )
+      integer(ip)           wtptrs ( * )
+      integer(ip)           wtpool ( 2, lbpool : * )
       character*(*)         wtagnt ( * )
       character*(*)         agtwrk ( lbcell : * )
       character*(*)         notify ( lbcell : * )

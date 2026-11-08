@@ -1,6 +1,7 @@
 !$Procedure TISBOD ( Transformation, inertial state to bodyfixed )
 
       subroutine tisbod ( ref, body, et, tsipm )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,9 +31,9 @@
       include               'zzctr.inc'
 
       character*(*)         ref
-      integer               body
-      double precision      et
-      double precision      tsipm   ( 6,6 )
+      integer(ip)           body
+      real(wp)              et
+      real(wp)              tsipm   ( 6,6 )
 
 ! $ Brief_I/O
 !
@@ -827,14 +828,14 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
-      double precision      halfpi
-      double precision      j2000
-      double precision      rpd
-      double precision      spd
-      double precision      vdotg
+      real(wp)              twopi
+      real(wp)              halfpi
+      real(wp)              j2000
+      real(wp)              rpd
+      real(wp)              spd
+      real(wp)              vdotg
 
-      integer               zzbodbry
+      integer(ip)           zzbodbry
 
       logical               bodfnd
       logical               failed
@@ -843,25 +844,25 @@
 !
 !     Local parameters
 !
-      integer               maxang
+      integer(ip)           maxang
       parameter           ( maxang = 200 )
 
 !
 !     Maximum number of coefficients per phase angle polynomial.
 !
-      integer               mxphas
+      integer(ip)           mxphas
       parameter           ( mxphas = 4 )
 
-      integer               mxpoly
+      integer(ip)           mxpoly
       parameter           ( mxpoly = 3 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 32 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen = 35 )
 
 !
@@ -874,63 +875,63 @@
       character*(namlen)    item2
       character*(timlen)    timstr
 
-      double precision      ac     (    maxang )
-      double precision      costh  (    maxang )
-      double precision      d
-      double precision      dc     (    maxang )
-      double precision      dcoef  ( 0:mxpoly-1 )
-      double precision      dcosth (    maxang )
-      double precision      ddec
-      double precision      ddelta
-      double precision      dec
-      double precision      delta
-      double precision      dphi
-      double precision      dpval
-      double precision      dra
-      double precision      dsinth (    maxang )
-      double precision      dtipm  (     3,  3 )
-      double precision      dtheta
-      double precision      dw
-      double precision      eulsta (     6     )
-      double precision      epoch
-      double precision      pckepc
-      double precision      phi
-      double precision      ra
-      double precision      rcoef  ( 0:mxpoly-1 )
-      double precision      req2pc (     3, 3  )
-      double precision      sinth  (    maxang )
-      double precision      t
-      double precision      tc
-      double precision      td
-      double precision      tcoef  ( mxphas * maxang )
-      double precision      tipm   (     3, 3  )
-      double precision      theta
-      double precision      tmpepc
-      double precision      w
-      double precision      wc     (    maxang )
-      double precision      wcoef  ( 0:mxpoly-1 )
-      double precision      xdtipm (     3, 3  )
-      double precision      xtipm  (     3, 3  )
+      real(wp)              ac     (    maxang )
+      real(wp)              costh  (    maxang )
+      real(wp)              d
+      real(wp)              dc     (    maxang )
+      real(wp)              dcoef  ( 0:mxpoly-1 )
+      real(wp)              dcosth (    maxang )
+      real(wp)              ddec
+      real(wp)              ddelta
+      real(wp)              dec
+      real(wp)              delta
+      real(wp)              dphi
+      real(wp)              dpval
+      real(wp)              dra
+      real(wp)              dsinth (    maxang )
+      real(wp)              dtipm  (     3,  3 )
+      real(wp)              dtheta
+      real(wp)              dw
+      real(wp)              eulsta (     6     )
+      real(wp)              epoch
+      real(wp)              pckepc
+      real(wp)              phi
+      real(wp)              ra
+      real(wp)              rcoef  ( 0:mxpoly-1 )
+      real(wp)              req2pc (     3, 3  )
+      real(wp)              sinth  (    maxang )
+      real(wp)              t
+      real(wp)              tc
+      real(wp)              td
+      real(wp)              tcoef  ( mxphas * maxang )
+      real(wp)              tipm   (     3, 3  )
+      real(wp)              theta
+      real(wp)              tmpepc
+      real(wp)              w
+      real(wp)              wc     (    maxang )
+      real(wp)              wcoef  ( 0:mxpoly-1 )
+      real(wp)              xdtipm (     3, 3  )
+      real(wp)              xtipm  (     3, 3  )
 
-      integer               cent
-      integer               deg
-      integer               dim
-      integer               frcode
-      integer               i
-      integer               j
-      integer               j2code
-      integer               k
-      integer               l
-      integer               m
-      integer               na
-      integer               nd
-      integer               nphase
-      integer               nphsco
-      integer               ntheta
-      integer               nw
-      integer               pcref
-      integer               refid
-      integer               reqref
+      integer(ip)           cent
+      integer(ip)           deg
+      integer(ip)           dim
+      integer(ip)           frcode
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           j2code
+      integer(ip)           k
+      integer(ip)           l
+      integer(ip)           m
+      integer(ip)           na
+      integer(ip)           nd
+      integer(ip)           nphase
+      integer(ip)           nphsco
+      integer(ip)           ntheta
+      integer(ip)           nw
+      integer(ip)           pcref
+      integer(ip)           refid
+      integer(ip)           reqref
 
       logical               first
       logical               found
@@ -939,7 +940,7 @@
 !
 !     POOL state counter.
 !
-      integer               pulctr ( ctrsiz )
+      integer(ip)           pulctr ( ctrsiz )
 
       logical               update
 
@@ -948,37 +949,37 @@
 !     provide the index in the body PCK data arrays at which the data
 !     of the body with a given ID are stored.
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               maxbod
+      integer(ip)           maxbod
       parameter           ( maxbod = 157 )
 
-      integer               bidlst (             maxbod )
-      integer               bidpol ( lbpool :    maxbod )
-      integer               bidids (             maxbod )
+      integer(ip)           bidlst (             maxbod )
+      integer(ip)           bidpol ( lbpool :    maxbod )
+      integer(ip)           bidids (             maxbod )
 
-      double precision      bac    (     maxang, maxbod )
-      double precision      bdc    (     maxang, maxbod )
-      double precision      bdcoef ( 0:mxpoly-1, maxbod )
-      double precision      bpckep (             maxbod )
-      double precision      brcoef ( 0:mxpoly-1, maxbod )
-      double precision      btcoef ( mxphas * maxang, maxbod )
-      double precision      bwc    (     maxang, maxbod )
-      double precision      bwcoef ( 0:mxpoly-1, maxbod )
+      real(wp)              bac    (     maxang, maxbod )
+      real(wp)              bdc    (     maxang, maxbod )
+      real(wp)              bdcoef ( 0:mxpoly-1, maxbod )
+      real(wp)              bpckep (             maxbod )
+      real(wp)              brcoef ( 0:mxpoly-1, maxbod )
+      real(wp)              btcoef ( mxphas * maxang, maxbod )
+      real(wp)              bwc    (     maxang, maxbod )
+      real(wp)              bwcoef ( 0:mxpoly-1, maxbod )
 
-      integer               bna    (             maxbod )
-      integer               bnd    (             maxbod )
-      integer               bnphas (             maxbod )
-      integer               bnphco (             maxbod )
-      integer               bnw    (             maxbod )
-      integer               bpcref (             maxbod )
+      integer(ip)           bna    (             maxbod )
+      integer(ip)           bnd    (             maxbod )
+      integer(ip)           bnphas (             maxbod )
+      integer(ip)           bnphco (             maxbod )
+      integer(ip)           bnw    (             maxbod )
+      integer(ip)           bpcref (             maxbod )
 
-      double precision      sintmp
-      double precision      costmp
+      real(wp)              sintmp
+      real(wp)              costmp
 
-      integer               at
-      integer               avail
+      integer(ip)           at
+      integer(ip)           avail
 
       logical               new
 
@@ -1031,7 +1032,7 @@
 !        Set seconds per day and per century.
 !
          d = spd()
-         t = d  *  36525.d0
+         t = d  *  36525.0_wp
 
          first = .false.
 
@@ -1483,9 +1484,9 @@
          dec = bdcoef(0,at) + tc * ( bdcoef(1,at) + tc * bdcoef(2,at) )
          w   = bwcoef(0,at) + td * ( bwcoef(1,at) + td * bwcoef(2,at) )
 
-         dra  = ( brcoef(1,at)  + 2.0d0*tc*brcoef(2,at) ) / t
-         ddec = ( bdcoef(1,at)  + 2.0d0*tc*bdcoef(2,at) ) / t
-         dw   = ( bwcoef(1,at)  + 2.0d0*td*bwcoef(2,at) ) / d
+         dra  = ( brcoef(1,at)  + 2.0_wp*tc*brcoef(2,at) ) / t
+         ddec = ( bdcoef(1,at)  + 2.0_wp*tc*bdcoef(2,at) ) / t
+         dw   = ( bwcoef(1,at)  + 2.0_wp*td*bwcoef(2,at) ) / d
 
 !
 !        Compute the nutations and librations (and their derivatives)
@@ -1510,7 +1511,7 @@
 !              THETA and DTHETA have higher-order terms; there are
 !              BNPHCO(AT) coefficients for each angle.
 !
-               theta = 0.d0
+               theta = 0.0_wp
 
                do j = 1, bnphco(at)
 !

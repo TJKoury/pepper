@@ -1,6 +1,7 @@
 !$Procedure DAFBT ( DAF, convert binary file to transfer file )
 
       subroutine dafbt ( binfil, xfrlun )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         binfil
-      integer               xfrlun
+      integer(ip)           xfrlun
 
 ! $ Brief_I/O
 !
@@ -237,7 +238,7 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
       logical               return
       logical               failed
@@ -262,19 +263,19 @@
       character*(*)         infoln
       parameter           ( infoln = 'NAIF DAF ENCODED TRANSFER FILE' )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 1024 )
 
-      integer               crecl
+      integer(ip)           crecl
       parameter           ( crecl  = 1000 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8    )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60   )
 
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 80   )
 !
 !     Local variables
@@ -284,25 +285,25 @@
       character*(linlen)    line
       character*(crecl)     name
 
-      double precision      buffer( bufsiz )
-      double precision      dsumry( 125    )
-      double precision      summry( 125    )
+      real(wp)              buffer( bufsiz )
+      real(wp)              dsumry( 125    )
+      real(wp)              summry( 125    )
 
-      integer               binhdl
-      integer               binlun
-      integer               bward
-      integer               dtabeg
-      integer               dtacnt
-      integer               free
-      integer               fward
-      integer               iostat
-      integer               isumry( 250    )
-      integer               nd
-      integer               ni
-      integer               numarr
-      integer               numdta
-      integer               numlft
-      integer               snmlen
+      integer(ip)           binhdl
+      integer(ip)           binlun
+      integer(ip)           bward
+      integer(ip)           dtabeg
+      integer(ip)           dtacnt
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           iostat
+      integer(ip)           isumry( 250    )
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           numarr
+      integer(ip)           numdta
+      integer(ip)           numlft
+      integer(ip)           snmlen
 
       logical               found
 

@@ -2,6 +2,7 @@
 
       subroutine zzekpcol ( qcol,    eqryi,   eqryc,   table,  alias, &
                             tabidx,  column,  colidx,  error,  errmsg )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,17 +34,17 @@
       include 'ektnamsz.inc'
       include 'ektokn.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         qcol
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
       character*(*)         table
       character*(*)         alias
-      integer               tabidx
+      integer(ip)           tabidx
       character*(*)         column
-      integer               colidx
+      integer(ip)           colidx
       logical               error
       character*(*)         errmsg
 
@@ -194,13 +195,13 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
       logical               failed
 
 !
 !     Local parameters
 !
-      integer               long
+      integer(ip)           long
       parameter           ( long   = 160 )
 
 !
@@ -212,22 +213,22 @@
       character*(cnamsz)    tmpcol
       character*(tnamsz)    tmptab
 
-      double precision      numvls ( 3 )
+      real(wp)              numvls ( 3 )
 
-      integer               attdsc ( adscsz )
-      integer               cc
-      integer               chbegs ( 3 )
-      integer               chends ( 3 )
-      integer               i
-      integer               icheck
-      integer               j
-      integer               lxbegs ( 3 )
-      integer               lxends ( 3 )
-      integer               nmatch
-      integer               ntab
-      integer               ntoken
-      integer               tokens ( 3 )
-      integer               values ( 3 )
+      integer(ip)           attdsc ( adscsz )
+      integer(ip)           cc
+      integer(ip)           chbegs ( 3 )
+      integer(ip)           chends ( 3 )
+      integer(ip)           i
+      integer(ip)           icheck
+      integer(ip)           j
+      integer(ip)           lxbegs ( 3 )
+      integer(ip)           lxends ( 3 )
+      integer(ip)           nmatch
+      integer(ip)           ntab
+      integer(ip)           ntoken
+      integer(ip)           tokens ( 3 )
+      integer(ip)           values ( 3 )
 
       logical               fnd
       logical               qual

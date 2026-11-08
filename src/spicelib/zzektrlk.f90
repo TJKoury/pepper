@@ -2,6 +2,7 @@
 
       subroutine zzektrlk ( handle, tree,   key,   idx, &
                             node,   noffst, level, value  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,14 +24,14 @@
       include 'ektree.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               idx
-      integer               node
-      integer               noffst
-      integer               level
-      integer               value
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           idx
+      integer(ip)           node
+      integer(ip)           noffst
+      integer(ip)           level
+      integer(ip)           value
 
 ! $ Brief_I/O
 !
@@ -154,12 +155,12 @@
 !
 !     SPICELIB functions
 !
-      integer               lstlei
+      integer(ip)           lstlei
 
 !
 !     Local parameters
 !
-      integer               acclen
+      integer(ip)           acclen
       parameter           ( acclen = 15 )
 
 !
@@ -167,25 +168,25 @@
 !
       character*(acclen)    access
 
-      integer               child
-      integer               datbas
-      integer               depth
-      integer               minus
-      integer               newkey
-      integer               oldhan
-      integer               oldidx
-      integer               oldlvl
-      integer               oldmax
-      integer               oldnod
-      integer               oldnof
-      integer               oldtre
-      integer               oldkey
-      integer               oldval
-      integer               page   ( pgsizi )
-      integer               plus
-      integer               prev
-      integer               prvkey
-      integer               totkey
+      integer(ip)           child
+      integer(ip)           datbas
+      integer(ip)           depth
+      integer(ip)           minus
+      integer(ip)           newkey
+      integer(ip)           oldhan
+      integer(ip)           oldidx
+      integer(ip)           oldlvl
+      integer(ip)           oldmax
+      integer(ip)           oldnod
+      integer(ip)           oldnof
+      integer(ip)           oldtre
+      integer(ip)           oldkey
+      integer(ip)           oldval
+      integer(ip)           page   ( pgsizi )
+      integer(ip)           plus
+      integer(ip)           prev
+      integer(ip)           prvkey
+      integer(ip)           totkey
 
       logical               first
       logical               found

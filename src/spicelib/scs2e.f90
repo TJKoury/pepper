@@ -1,6 +1,7 @@
 !$Procedure SCS2E ( SCLK string to ET )
 
       subroutine scs2e ( sc, sclkch, et )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       implicit none
 
-      integer               sc
+      integer(ip)           sc
       character*(*)         sclkch
-      double precision      et
+      real(wp)              et
 
 ! $ Brief_I/O
 !
@@ -255,7 +256,7 @@
 !
 !     Local variables
 !
-      double precision      sclkdp
+      real(wp)              sclkdp
 
 
 !

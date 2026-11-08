@@ -1,6 +1,7 @@
 !$Procedure CMPRSS ( Compress a character string )
 
       subroutine cmprss ( delim, n, input, output )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
       implicit none
 
       character*1         delim
-      integer             n
+      integer(ip)         n
       character*(*)       input
       character*(*)       output
 
@@ -138,12 +139,12 @@
 !
 !     Local Variables
 !
-      integer          i
-      integer          j
-      integer          count
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      count
 
-      integer          inlen
-      integer          outlen
+      integer(ip)      inlen
+      integer(ip)      outlen
 
 
 !

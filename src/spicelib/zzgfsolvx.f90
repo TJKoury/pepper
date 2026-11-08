@@ -4,6 +4,7 @@
                              udbail, cstep,  step,    start, &
                              finish, tol,    rpt,     udrepu, &
                              result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,7 +33,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       external              udfuns
@@ -43,13 +44,13 @@
       logical               bail
       external              udbail
       logical               cstep
-      double precision      step
+      real(wp)              step
       logical               rpt
       external              udrepu
-      double precision      start
-      double precision      finish
-      double precision      tol
-      double precision      result  ( lbcell : * )
+      real(wp)              start
+      real(wp)              finish
+      real(wp)              tol
+      real(wp)              result  ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -377,9 +378,9 @@
 !     SPICELIB functions
 !
 
-      double precision      brcktd
-      double precision      dpmax
-      double precision      touchd
+      real(wp)              brcktd
+      real(wp)              dpmax
+      real(wp)              touchd
 
       logical               failed
       logical               return
@@ -387,22 +388,22 @@
 !
 !     Local parameters
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 256 )
 
 !
 !     Local variables
 !
-      double precision      begin
-      double precision      curtim
-      double precision      diff
-      double precision      prvdif
-      double precision      svdtim
-      double precision      t
-      double precision      t1
-      double precision      t2
-      double precision      timest
-      double precision      trnstn
+      real(wp)              begin
+      real(wp)              curtim
+      real(wp)              diff
+      real(wp)              prvdif
+      real(wp)              svdtim
+      real(wp)              t
+      real(wp)              t1
+      real(wp)              t2
+      real(wp)              timest
+      real(wp)              trnstn
 
       logical               curste
       logical               instat
@@ -414,7 +415,7 @@
 
       character*(msglen)    contxt
 
-      integer               nloop
+      integer(ip)           nloop
 
 !
 !     The maximum number of search loop iterations to execute.
@@ -425,7 +426,7 @@
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      integer               mxloop
+      integer(ip)           mxloop
       parameter           ( mxloop = 1000 )
 
 !
@@ -440,7 +441,7 @@
 !
 !     Check the convergence tolerance.
 !
-      if ( tol .le. 0.d0 ) then
+      if ( tol .le. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be positive but was #.' )
          call errdp  ( '#',  tol                               )
@@ -807,7 +808,7 @@
 !           Let TRNSTN be the midpoint of [T1, T2].  Record this
 !           time as marking the transition from STATE1 to STATE2.
 !
-            trnstn = brcktd( (t1 + t2)*0.5d0, t1, t2 )
+            trnstn = brcktd( (t1 + t2)*0.5_wp, t1, t2 )
 
 !
 !           In state-of-interest or not?

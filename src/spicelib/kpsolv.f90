@@ -1,6 +1,7 @@
 !$Procedure KPSOLV ( Solve Kepler's Equation --- Vector Form )
 
-      double precision function kpsolv ( evec )
+      real(wp) function kpsolv ( evec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      double precision      evec ( 2 )
+      real(wp)              evec ( 2 )
 
 ! $ Brief_I/O
 !
@@ -133,40 +134,40 @@
 !     sufficient on computers have 64 bit double precision
 !     numbers.
 !
-      integer               mxnewt
+      integer(ip)           mxnewt
       parameter           ( mxnewt = 5 )
 
 
-      double precision      cosx
-      double precision      ecc
-      double precision      ecc2
-      double precision      h
-      double precision      k
-      double precision      sinx
-      double precision      x
-      double precision      xl
-      double precision      xm
-      double precision      xu
-      double precision      y0
-      double precision      ypx
-      double precision      yx
-      double precision      yxm
+      real(wp)              cosx
+      real(wp)              ecc
+      real(wp)              ecc2
+      real(wp)              h
+      real(wp)              k
+      real(wp)              sinx
+      real(wp)              x
+      real(wp)              xl
+      real(wp)              xm
+      real(wp)              xu
+      real(wp)              y0
+      real(wp)              ypx
+      real(wp)              yx
+      real(wp)              yxm
 
-      integer               i
-      integer               maxit
+      integer(ip)           i
+      integer(ip)           maxit
 
 !
 !     We give the function an initial value, just in case
 !     we exit without solving Kepler's equation.
 !
-      kpsolv = 0.0d0
+      kpsolv = 0.0_wp
 
       h      = evec(1)
       k      = evec(2)
 
       ecc2   = h*h + k*k
 
-      if ( ecc2 .ge. 1.0d0 ) then
+      if ( ecc2 .ge. 1.0_wp ) then
 
          call chkin  ( 'KPSOLV' )
          call setmsg ( 'The magnitude of the vector EVEC = ( #, ' &
@@ -203,22 +204,22 @@
 !
 
       y0  = -h
-      xm  =  0.0d0
+      xm  =  0.0_wp
       ecc =  dsqrt(ecc2)
 
-      if      ( y0 .gt. 0.0d0 ) then
+      if      ( y0 .gt. 0.0_wp ) then
 
-         xu  =  0.0d0
+         xu  =  0.0_wp
          xl  = -ecc
 
-      else if ( y0 .lt. 0.0d0 ) then
+      else if ( y0 .lt. 0.0_wp ) then
 
          xu =  ecc
-         xl =  0.0d0
+         xl =  0.0_wp
 
       else
 
-         kpsolv = 0.0d0
+         kpsolv = 0.0_wp
          return
 
       end if
@@ -227,7 +228,7 @@
 !     Newton's method will converge quickly.  The formula
 !     below was empirically determined to give good results.
 !
-      maxit = min(32, max( 1, nint(1.0d0/(1.0d0-ecc)) ) )
+      maxit = min(32, max( 1, nint(1.0_wp/(1.0_wp-ecc)) ) )
 
       do i = 1, maxit
 
@@ -236,7 +237,7 @@
 !        case some kind of strange rounding occurs in the computation
 !        of the midpoint.
 !
-         xm     = max( xl, min( xu, 0.5d0*(xl + xu) ) )
+         xm     = max( xl, min( xu, 0.5_wp*(xl + xu) ) )
 
 !
 !        Compute Y at the midpoint of XU and XL
@@ -245,7 +246,7 @@
 !
 !        Determine the new upper and lower bounds.
 !
-         if ( yxm .gt. 0.0d0 ) then
+         if ( yxm .gt. 0.0_wp ) then
             xu = xm
          else
             xl = xm
@@ -278,7 +279,7 @@
 !        time and we don't bother with it.
 !
          yx   = x     - h*cosx - k*sinx
-         ypx  = 1.0d0 + h*sinx - k*cosx
+         ypx  = 1.0_wp + h*sinx - k*cosx
          x    = x     - yx/ypx
 
       end do

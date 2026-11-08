@@ -1,6 +1,7 @@
 !$Procedure ZZLATBOX (Bounding box for latitudinal volume element)
 
       subroutine zzlatbox ( bounds, center, lr, lt, lz, radius )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,15 +23,15 @@
 
       implicit none
 
-      double precision      bounds ( 2, 3 )
-      double precision      center ( 3 )
-      double precision      lr
-      double precision      lt
-      double precision      lz
-      double precision      radius
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              center ( 3 )
+      real(wp)              lr
+      real(wp)              lt
+      real(wp)              lz
+      real(wp)              radius
 
-      double precision      margin
-      parameter           ( margin = 1.d-12 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e-12_wp )
 
 ! $ Brief_I/O
 !
@@ -137,9 +138,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      twopi
-      double precision      vnorm
+      real(wp)              halfpi
+      real(wp)              twopi
+      real(wp)              vnorm
 
       logical               return
 
@@ -150,20 +151,20 @@
 !
 !     Local variables
 !
-      double precision      diag   ( 3 )
-      double precision      hdlon
-      double precision      inrad
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxr
-      double precision      maxz
-      double precision      midlon
-      double precision      midr
-      double precision      minlat
-      double precision      minlon
-      double precision      minr
-      double precision      minz
-      double precision      outrad
+      real(wp)              diag   ( 3 )
+      real(wp)              hdlon
+      real(wp)              inrad
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxr
+      real(wp)              maxz
+      real(wp)              midlon
+      real(wp)              midr
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              minr
+      real(wp)              minz
+      real(wp)              outrad
 
 !
 !     This routine uses discovery check-in. We check RETURN in order to
@@ -258,12 +259,12 @@
 !     latitude circle on the inner bounding sphere for which the
 !     absolute value of the latitude is maximum.
 !
-      if ( minlat .ge. 0.d0 ) then
+      if ( minlat .ge. 0.0_wp ) then
 
          outrad = cos( minlat ) * maxr
          inrad  = cos( maxlat ) * minr
 
-      else if ( maxlat .le. 0.d0 ) then
+      else if ( maxlat .le. 0.0_wp ) then
 
          outrad = cos( maxlat ) * maxr
          inrad  = cos( minlat ) * minr
@@ -293,7 +294,7 @@
 
       else
 
-         lr = ( 1.d0 - cos(hdlon) ) * outrad
+         lr = ( 1.0_wp - cos(hdlon) ) * outrad
 
       end if
 
@@ -304,21 +305,21 @@
 !
       if ( hdlon .gt. halfpi() ) then
 
-         lt = 2.d0 * outrad
+         lt = 2.0_wp * outrad
       else
-         lt = 2.d0 * outrad * sin( hdlon )
+         lt = 2.0_wp * outrad * sin( hdlon )
       end if
 
 !
 !     The height bounds are derived from the lowest and highest points
 !     on the element.
 !
-      if ( minlat .ge. 0.d0 ) then
+      if ( minlat .ge. 0.0_wp ) then
 
          maxz = maxr * sin(maxlat)
          minz = minr * sin(minlat)
 
-      else if ( maxlat .le. 0.d0 ) then
+      else if ( maxlat .le. 0.0_wp ) then
 
          maxz = minr * sin(maxlat)
          minz = maxr * sin(minlat)
@@ -335,9 +336,9 @@
 !
 !     Make sure all dimensions are non-negative.
 !
-      lr = max( 0.d0, lr )
-      lt = max( 0.d0, lt )
-      lz = max( 0.d0, lz )
+      lr = max( 0.0_wp, lr )
+      lt = max( 0.0_wp, lt )
+      lz = max( 0.0_wp, lz )
 
 !
 !     Compute the coordinates of the center of the box.

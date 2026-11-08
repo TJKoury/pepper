@@ -4,6 +4,7 @@
                             fthan,  ftnam,  ftrtm, ftmnm, nft,   utcst, &
                             uthan,  utlck,  utlun, nut,   exists, &
                             opened, handle, found, mnm                 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,27 +30,27 @@
 
       character*(*)         fname
 
-      integer               ftabs ( * )
-      integer               ftamh ( * )
-      integer               ftarc ( * )
-      integer               ftbff ( * )
-      integer               fthan ( * )
+      integer(ip)           ftabs ( * )
+      integer(ip)           ftamh ( * )
+      integer(ip)           ftarc ( * )
+      integer(ip)           ftbff ( * )
+      integer(ip)           fthan ( * )
       character*(*)         ftnam ( * )
-      integer               ftrtm ( * )
-      double precision      ftmnm ( * )
-      integer               nft
+      integer(ip)           ftrtm ( * )
+      real(wp)              ftmnm ( * )
+      integer(ip)           nft
 
-      integer               utcst ( * )
-      integer               uthan ( * )
+      integer(ip)           utcst ( * )
+      integer(ip)           uthan ( * )
       logical               utlck ( * )
-      integer               utlun ( * )
-      integer               nut
+      integer(ip)           utlun ( * )
+      integer(ip)           nut
 
       logical               exists
       logical               opened
-      integer               handle
+      integer(ip)           handle
       logical               found
-      double precision      mnm
+      real(wp)              mnm
 
 ! $ Brief_I/O
 !
@@ -260,10 +261,10 @@
 !
 !     SPICELIB Functions
 !
-      double precision      zzddhmnm
+      real(wp)              zzddhmnm
 
-      integer               isrchi
-      integer               rtrim
+      integer(ip)           isrchi
+      integer(ip)           rtrim
 
       logical               failed
       logical               return
@@ -271,11 +272,11 @@
 !
 !     Local Variables
 !
-      integer               i
-      integer               iostat
-      integer               rchar
-      integer               uindex
-      integer               unit
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           rchar
+      integer(ip)           uindex
+      integer(ip)           unit
 
       logical               locexs
       logical               locopn
@@ -473,7 +474,7 @@
 !        and will skip INQUIRE. In all other cases we will do INQUIRE
 !        and check UNITs.
 !
-         if (   mnm .ne. 0.d0                               .and. &
+         if (   mnm .ne. 0.0_wp                               .and. &
               ( mnm .ne. ftmnm(i) .and. ftamh(i) .eq. read )     ) then
 
 !

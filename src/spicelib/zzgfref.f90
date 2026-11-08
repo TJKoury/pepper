@@ -1,6 +1,7 @@
 !$Procedure ZZGFREF ( Private --- GF, update REFVAL )
 
       subroutine zzgfref( refval )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
 
       include 'zzholdd.inc'
 
-      double precision      refval
+      real(wp)              refval
 
 ! $ Brief_I/O
 !

@@ -1,6 +1,7 @@
 !$Procedure RTRIM ( Right trim )
 
-      integer function rtrim ( string )
+      integer(ip) function rtrim ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -133,7 +134,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
 !
 !     `Just do it'.

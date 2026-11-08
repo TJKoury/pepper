@@ -1,6 +1,7 @@
 !$Procedure      ZZFRMGT1 ( Frame get transformation )
 
       subroutine zzfrmgt1 ( infrm, et, xform, outfrm, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       include              'frmtyp.inc'
 
-      integer               infrm
-      double precision      et
-      double precision      xform ( 6, 6 )
-      integer               outfrm
+      integer(ip)           infrm
+      real(wp)              et
+      real(wp)              xform ( 6, 6 )
+      integer(ip)           outfrm
       logical               found
 
 ! $ Brief_I/O
@@ -159,15 +160,15 @@
 !
       character*(6)         versn
 
-      integer               center
-      integer               i
-      integer               j
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           type
+      integer(ip)           typeid
 
-      double precision      idnt66 ( 6, 6 )
-      double precision      tsipm  ( 6, 6 )
-      double precision      rotate ( 3, 3 )
+      real(wp)              idnt66 ( 6, 6 )
+      real(wp)              tsipm  ( 6, 6 )
+      real(wp)              rotate ( 3, 3 )
 
       logical               pass1
 !
@@ -205,7 +206,7 @@
          call cleard( 36, idnt66 )
 
          do i = 1, 6
-            idnt66(i,i) = 1.d0
+            idnt66(i,i) = 1.0_wp
          end do
 
          pass1 = .false.
@@ -241,8 +242,8 @@
                do j = 1,3
                   xform(i,  j  ) = rotate(i,j)
                   xform(i+3,j+3) = rotate(i,j)
-                  xform(i+3,j  ) = 0.0d0
-                  xform(i,  j+3) = 0.0d0
+                  xform(i+3,j  ) = 0.0_wp
+                  xform(i,  j+3) = 0.0_wp
                end do
             end do
 
@@ -279,8 +280,8 @@
                do j = 1,3
                   xform(i,  j  ) = rotate(i,j)
                   xform(i+3,j+3) = rotate(i,j)
-                  xform(i+3,j  ) = 0.0d0
-                  xform(i,  j+3) = 0.0d0
+                  xform(i+3,j  ) = 0.0_wp
+                  xform(i,  j+3) = 0.0_wp
                end do
             end do
 

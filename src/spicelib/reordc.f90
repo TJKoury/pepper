@@ -1,6 +1,7 @@
 !$Procedure REORDC ( Reorder a character array )
 
       subroutine reordc ( iorder, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer          iorder ( * )
-      integer          ndim
+      integer(ip)      iorder ( * )
+      integer(ip)      ndim
       character*(*)    array  ( * )
 
 ! $ Brief_I/O
@@ -231,11 +232,11 @@
 !
 !     Local variables
 !
-      integer          start
-      integer          index
-      integer          hold
+      integer(ip)      start
+      integer(ip)      index
+      integer(ip)      hold
 
-      integer          c
+      integer(ip)      c
       character*1      temp
 
 

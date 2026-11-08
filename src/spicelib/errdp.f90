@@ -1,6 +1,7 @@
 !$Procedure ERRDP  ( Insert D.P. Number into Error Message Text )
 
       subroutine errdp ( marker, dpnum )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
       include 'errhnd.inc'
 
       character*(*)        marker
-      double precision     dpnum
+      real(wp)             dpnum
 
 ! $ Brief_I/O
 !
@@ -232,8 +233,8 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
-      integer               frstnb
+      integer(ip)           lastnb
+      integer(ip)           frstnb
       logical               allowd
 
 !
@@ -248,7 +249,7 @@
 !
       character*(21)        dpstrg
 
-      integer               strpos
+      integer(ip)           strpos
 
 
 !

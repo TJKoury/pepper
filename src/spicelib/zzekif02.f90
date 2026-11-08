@@ -1,6 +1,7 @@
 !$Procedure ZZEKIF02 ( EK, initialize type 2 segment for fast load )
 
       subroutine zzekif02 ( handle, segno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,8 +26,8 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
+      integer(ip)           handle
+      integer(ip)           segno
 
 ! $ Brief_I/O
 !
@@ -111,17 +112,17 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               class
-      integer               dscbas
-      integer               i
-      integer               mbase
-      integer               ncols
-      integer               nrows
-      integer               offset
-      integer               p
-      integer               page   ( pgsizi )
-      integer               segdsc ( sdscsz )
+      integer(ip)           base
+      integer(ip)           class
+      integer(ip)           dscbas
+      integer(ip)           i
+      integer(ip)           mbase
+      integer(ip)           ncols
+      integer(ip)           nrows
+      integer(ip)           offset
+      integer(ip)           p
+      integer(ip)           page   ( pgsizi )
+      integer(ip)           segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.

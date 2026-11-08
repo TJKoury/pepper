@@ -1,6 +1,7 @@
 !$Procedure DATANH  ( Double precision arc hyperbolic tangent )
 
-      double precision function  datanh ( x )
+      real(wp) function  datanh ( x )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      double precision   x
+      real(wp)           x
 
 ! $ Brief_I/O
 !
@@ -140,17 +141,17 @@
 !     Set up the error processing.
 !
       if ( return () ) then
-         datanh = 0.0d0
+         datanh = 0.0_wp
          return
       else
          call chkin ( 'DATANH' )
-         datanh = 0.0d0
+         datanh = 0.0_wp
       end if
 
 !
 !     Check that -1 < X < +1.
 !
-      if ( dabs(x) .ge. 1.0d0 ) then
+      if ( dabs(x) .ge. 1.0_wp ) then
 
          call setmsg ( 'DATANH: Argument out of range.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
@@ -159,7 +160,7 @@
          return
       end if
 
-      datanh = 0.5d0 * dlog ( (1.d0+x) / (1.d0-x) )
+      datanh = 0.5_wp * dlog ( (1.0_wp+x) / (1.0_wp-x) )
 
       call chkout ( 'DATANH' )
 

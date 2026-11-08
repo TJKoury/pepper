@@ -9,6 +9,7 @@
                          descr, &
                          segid, &
                          found   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,25 +30,25 @@
       implicit none
 
       character*(*)         fname
-      integer               handle
-      integer               inst
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      integer(ip)           inst
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      descr    ( * )
+      real(wp)              descr    ( * )
       character*(*)         segid
       logical               found
 
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize =  5000 )
 
-      integer               itsize
+      integer(ip)           itsize
       parameter           ( itsize =  5000 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool =   -5 )
 
-      integer               stsize
+      integer(ip)           stsize
       parameter           ( stsize = 100000 )
 
 ! $ Brief_I/O
@@ -810,15 +811,15 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      dpmin
+      real(wp)              dpmax
+      real(wp)              dpmin
 
-      integer               intmax
-      integer               isrchi
-      integer               lnknfn
-      integer               lnknxt
-      integer               lnkprv
-      integer               lnktl
+      integer(ip)           intmax
+      integer(ip)           isrchi
+      integer(ip)           lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           lnkprv
+      integer(ip)           lnktl
 
       logical               failed
       logical               return
@@ -839,31 +840,31 @@
 !                   components.
 !
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz = nd + (ni + 1)/2 )
 
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen = 40 )
 
-      integer               slen
+      integer(ip)           slen
       parameter           ( slen   = 40 )
 
 !
 !     Constants used in the doubly linked list structure:
 !
-      integer               forwrd
+      integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
-      integer               bckwrd
+      integer(ip)           bckwrd
       parameter           ( bckwrd  = 2 )
 
-      integer               free
+      integer(ip)           free
       parameter           ( free    = 0 )
 
 
@@ -897,11 +898,11 @@
 !     removed, succeeding files are moved forward to take up the
 !     slack. This keeps the table ordered by file number.
 !
-      integer               nft
-      integer               fthan    ( ftsize )
-      integer               ftnum    ( ftsize )
-      integer               next
-      integer               findex
+      integer(ip)           nft
+      integer(ip)           fthan    ( ftsize )
+      integer(ip)           ftnum    ( ftsize )
+      integer(ip)           next
+      integer(ip)           findex
 
 !
 !     The instrument table contains the beginning of the list of the
@@ -960,20 +961,20 @@
 !
       character*(sidlen)    itprvi   ( itsize )
 
-      double precision      itprvd   ( dscsiz, itsize )
-      double precision      itlb     ( itsize )
-      double precision      itub     ( itsize )
+      real(wp)              itprvd   ( dscsiz, itsize )
+      real(wp)              itlb     ( itsize )
+      real(wp)              itub     ( itsize )
 
-      integer               iindex
-      integer               itbeg    ( itsize )
-      integer               itexp    ( itsize )
-      integer               ithfs    ( itsize )
-      integer               itins    ( itsize )
-      integer               itlfs    ( itsize )
-      integer               itprvf   ( itsize )
-      integer               itprvh   ( itsize )
-      integer               itruex   ( itsize )
-      integer               nit
+      integer(ip)           iindex
+      integer(ip)           itbeg    ( itsize )
+      integer(ip)           itexp    ( itsize )
+      integer(ip)           ithfs    ( itsize )
+      integer(ip)           itins    ( itsize )
+      integer(ip)           itlfs    ( itsize )
+      integer(ip)           itprvf   ( itsize )
+      integer(ip)           itprvh   ( itsize )
+      integer(ip)           itruex   ( itsize )
+      integer(ip)           nit
 
       logical               itchkp   ( itsize )
 
@@ -1003,11 +1004,11 @@
 !
       character*(sidlen)    stidnt (              stsize )
 
-      double precision      stdcd  ( nd,          stsize )
+      real(wp)              stdcd  ( nd,          stsize )
 
-      integer               sthan  (              stsize )
-      integer               sticd  ( ni,          stsize )
-      integer               stpool ( 2,  lbpool : stsize )
+      integer(ip)           sthan  (              stsize )
+      integer(ip)           sticd  ( ni,          stsize )
+      integer(ip)           stpool ( 2,  lbpool : stsize )
 
 !
 !     Other local variables
@@ -1017,27 +1018,27 @@
       character*(slen)      status
       character*(slen)      urgent
 
-      double precision      alpha
-      double precision      dcd    ( nd )
-      double precision      omega
-      double precision      reqt
-      double precision      savtol
+      real(wp)              alpha
+      real(wp)              dcd    ( nd )
+      real(wp)              omega
+      real(wp)              reqt
+      real(wp)              savtol
 
-      integer               cheap
-      integer               cost
-      integer               head
-      integer               i
-      integer               icd   ( ni )
-      integer               j
-      integer               minexp
-      integer               new
-      integer               nxtseg
-      integer               p
-      integer               savep
-      integer               scinst
-      integer               slbeg
-      integer               tail
-      integer               top
+      integer(ip)           cheap
+      integer(ip)           cost
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           icd   ( ni )
+      integer(ip)           j
+      integer(ip)           minexp
+      integer(ip)           new
+      integer(ip)           nxtseg
+      integer(ip)           p
+      integer(ip)           savep
+      integer(ip)           scinst
+      integer(ip)           slbeg
+      integer(ip)           tail
+      integer(ip)           top
 
       logical               avneed
       logical               fnd
@@ -1095,7 +1096,7 @@
       data                  nit       / 0             /
       data                  next      / 0             /
       data                  savep     / 0             /
-      data                  savtol    / 0.d0          /
+      data                  savtol    / 0.0_wp          /
       data                  status    / 'BOGUS ENTRY' /
 
 

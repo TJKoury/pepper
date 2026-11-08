@@ -1,6 +1,7 @@
 !$Procedure FRSTNB ( First non-blank character )
 
-      integer function frstnb ( string )
+      integer(ip) function frstnb ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -118,13 +119,13 @@
 !
 !     Local parameters
 !
-      integer               ispace
+      integer(ip)           ispace
       parameter           ( ispace = 32 )
 
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 !
 !     Just like it says in the header.

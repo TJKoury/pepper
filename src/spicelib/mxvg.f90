@@ -1,6 +1,7 @@
 !$Procedure MXVG ( Matrix time vector, general dimension )
 
       subroutine mxvg ( m1, v2, nr1, nc1r2, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer            nr1
-      integer            nc1r2
-      double precision   m1   ( nr1,nc1r2 )
-      double precision   v2   (     nc1r2 )
-      double precision   vout ( nr1       )
+      integer(ip)        nr1
+      integer(ip)        nc1r2
+      real(wp)           m1   ( nr1,nc1r2 )
+      real(wp)           v2   (     nc1r2 )
+      real(wp)           vout ( nr1       )
 
 ! $ Brief_I/O
 !
@@ -178,16 +179,16 @@
 !
 !     Local variables
 !
-      double precision      sum
+      real(wp)              sum
 
-      integer               i
-      integer               k
+      integer(ip)           i
+      integer(ip)           k
 
 !
 !  Perform the matrix-vector multiplication
 !
       do i = 1, nr1
-         sum = 0.d0
+         sum = 0.0_wp
          do k = 1, nc1r2
             sum = sum + m1(i,k)*v2(k)
          end do

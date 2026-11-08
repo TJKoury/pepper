@@ -2,6 +2,7 @@
 
       subroutine zzekerd1 (  handle,  segdsc,  coldsc,  dkey, &
                              recptr,  null,    prvidx,  prvptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,14 +27,14 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      double precision      dkey
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      real(wp)              dkey
+      integer(ip)           recptr
       logical               null
-      integer               prvidx
-      integer               prvptr
+      integer(ip)           prvidx
+      integer(ip)           prvptr
 
 ! $ Brief_I/O
 !
@@ -172,21 +173,21 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrsz
+      integer(ip)           zzektrsz
       logical               zzekscmp
 
 !
 !     Local variables
 !
-      integer               begin
-      integer               begptr
-      integer               end
-      integer               endptr
-      integer               middle
-      integer               midptr
-      integer               nrec
-      integer               tree
-      integer               tsize
+      integer(ip)           begin
+      integer(ip)           begptr
+      integer(ip)           end
+      integer(ip)           endptr
+      integer(ip)           middle
+      integer(ip)           midptr
+      integer(ip)           nrec
+      integer(ip)           tree
+      integer(ip)           tsize
 
       logical               leq
 

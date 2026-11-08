@@ -1,6 +1,7 @@
 !$Procedure SYDIMD ( Return the dimension of a symbol )
 
-      integer function sydimd ( name, tabsym, tabptr, tabval )
+      integer(ip) function sydimd ( name, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      double precision      tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      real(wp)              tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -156,15 +157,15 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
+      integer(ip)           bsrchc
+      integer(ip)           cardc
       logical               return
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               locsym
+      integer(ip)           nsym
+      integer(ip)           locsym
 
 
 

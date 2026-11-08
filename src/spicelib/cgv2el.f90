@@ -1,6 +1,7 @@
 !$Procedure CGV2EL ( Center and generating vectors to ellipse )
 
       subroutine cgv2el ( center, vec1, vec2, ellips )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel    =   9 )
 
-      double precision      center (    3 )
-      double precision      vec1   (    3 )
-      double precision      vec2   (    3 )
-      double precision      ellips ( ubel )
+      real(wp)              center (    3 )
+      real(wp)              vec1   (    3 )
+      real(wp)              vec2   (    3 )
+      real(wp)              ellips ( ubel )
 
 ! $ Brief_I/O
 !
@@ -314,13 +315,13 @@
 !        MINPOS through MINPOS + 1
 !
 !
-      integer               ctrpos
+      integer(ip)           ctrpos
       parameter           ( ctrpos = 1 )
 
-      integer               majpos
+      integer(ip)           majpos
       parameter           ( majpos = 4 )
 
-      integer               minpos
+      integer(ip)           minpos
       parameter           ( minpos = 7 )
 
 

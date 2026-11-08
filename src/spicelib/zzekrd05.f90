@@ -2,6 +2,7 @@
 
       subroutine zzekrd05 ( handle,  segdsc,  coldsc,  recptr, &
                             beg,     end,     dvals,   isnull,  found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,13 +27,13 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      integer               beg
-      integer               end
-      double precision      dvals  ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      integer(ip)           beg
+      integer(ip)           end
+      real(wp)              dvals  ( * )
       logical               isnull
       logical               found
 
@@ -178,27 +179,27 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      double precision      dpnelt
+      real(wp)              dpnelt
 
-      integer               base
-      integer               colidx
-      integer               datptr
-      integer               maxidx
-      integer               minidx
-      integer               ncols
-      integer               nelt
-      integer               nread
-      integer               p
-      integer               ptemp
-      integer               ptrloc
-      integer               recno
-      integer               remain
-      integer               start
+      integer(ip)           base
+      integer(ip)           colidx
+      integer(ip)           datptr
+      integer(ip)           maxidx
+      integer(ip)           minidx
+      integer(ip)           ncols
+      integer(ip)           nelt
+      integer(ip)           nread
+      integer(ip)           p
+      integer(ip)           ptemp
+      integer(ip)           ptrloc
+      integer(ip)           recno
+      integer(ip)           remain
+      integer(ip)           start
 
 !
 !     Use discovery check-in.

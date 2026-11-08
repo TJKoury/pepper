@@ -1,6 +1,7 @@
 !$Procedure VMINUG ( Negate vector, "-V", general dimension )
 
       subroutine vminug ( vin, ndim, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      integer            ndim
-      double precision   vin   ( ndim )
-      double precision   vout  ( ndim )
+      integer(ip)        ndim
+      real(wp)           vin   ( ndim )
+      real(wp)           vout  ( ndim )
 
 ! $ Brief_I/O
 !
@@ -184,7 +185,7 @@
 !-&
 
 
-      integer i
+      integer(ip) i
 !
       do i = 1, ndim
          vout(i) = -vin(i)

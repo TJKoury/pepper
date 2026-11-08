@@ -1,6 +1,7 @@
 !$Procedure ZZRECBOX (Bounding box for rectangular volume element)
 
       subroutine zzrecbox ( bounds, center, lx, ly, lz, radius )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,12 +29,12 @@
 
       implicit none
 
-      double precision      bounds ( 2, 3 )
-      double precision      center ( 3 )
-      double precision      lx
-      double precision      ly
-      double precision      lz
-      double precision      radius
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              center ( 3 )
+      real(wp)              lx
+      real(wp)              ly
+      real(wp)              lz
+      real(wp)              radius
 
 ! $ Brief_I/O
 !
@@ -124,7 +125,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
 
       logical               return
 
@@ -134,21 +135,21 @@
 !
 !     Element boundary indices:
 !
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower  = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper  = 2 )
 
 !
 !     Local variables
 !
-      double precision      diag   ( 3 )
-      double precision      l      ( 3 )
-      double precision      maxcor ( 3 )
-      double precision      mincor ( 3 )
+      real(wp)              diag   ( 3 )
+      real(wp)              l      ( 3 )
+      real(wp)              maxcor ( 3 )
+      real(wp)              mincor ( 3 )
 
-      integer               i
+      integer(ip)           i
 
 !
 !     This routine uses discovery check-in. We check RETURN in order to
@@ -167,7 +168,7 @@
          maxcor(i) = bounds(upper,i)
          l(i)      = maxcor(i) - mincor(i)
 
-         if ( l(i) .le. 0.d0 ) then
+         if ( l(i) .le. 0.0_wp ) then
 
             call chkin  ( 'ZZRECBOX'                               )
             call setmsg ( 'Coordinate # bounds were #:#; bounds ' &

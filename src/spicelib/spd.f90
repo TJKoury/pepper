@@ -1,6 +1,7 @@
 !$Procedure SPD ( Seconds per day )
 
-      double precision function spd ( )
+      real(wp) function spd ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -96,7 +97,7 @@
 !
 !     Just like it says.
 !
-      spd = 86400.d0
+      spd = 86400.0_wp
 
       return
       end

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKMLOC ( EK, return integer metadata location )
 
       subroutine zzekmloc ( handle, segno, page, base )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       include 'ekfilpar.inc'
 
-      integer               handle
-      integer               segno
-      integer               page
-      integer               base
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           page
+      integer(ip)           base
 
 ! $ Brief_I/O
 !
@@ -135,19 +136,19 @@
 !
 !     SPICELIB functions
 !
-      integer               eknseg
+      integer(ip)           eknseg
 
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrbs
+      integer(ip)           zzektrbs
 
 !
 !     Local variables
 !
-      integer               nseg
-      integer               tbase
-      integer               tree
+      integer(ip)           nseg
+      integer(ip)           tbase
+      integer(ip)           tree
 
 
 !

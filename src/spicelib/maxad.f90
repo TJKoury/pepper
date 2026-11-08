@@ -1,6 +1,7 @@
 !$Procedure MAXAD  ( Maximum element of array, DP )
 
       subroutine maxad ( array, ndim, maxval, loc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision      array ( * )
-      integer               ndim
-      double precision      maxval
-      integer               loc
+      real(wp)              array ( * )
+      integer(ip)           ndim
+      real(wp)              maxval
+      integer(ip)           loc
 
 ! $ Brief_I/O
 !
@@ -131,7 +132,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       if (ndim .le. 0) then

@@ -1,6 +1,7 @@
 !$Procedure BODFND ( Find values from the kernel pool )
 
       logical function bodfnd ( body, item )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       implicit none
 
-      integer               body
+      integer(ip)           body
       character*(*)         item
 
 ! $ Brief_I/O
@@ -151,10 +152,10 @@
 !
 !     Local parameters
 !
-      integer               vnmlen
+      integer(ip)           vnmlen
       parameter           ( vnmlen = 32 )
 
-      integer               numlen
+      integer(ip)           numlen
       parameter           ( numlen = 16 )
 
 !
@@ -164,7 +165,7 @@
       character*(numlen)    code
       character*(vnmlen)    varnam
 
-      integer               n
+      integer(ip)           n
 
       logical               found
 

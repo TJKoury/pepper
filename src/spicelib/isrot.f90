@@ -1,6 +1,7 @@
 !$Procedure ISROT ( Indicate whether a matrix is a rotation matrix )
 
       logical function isrot ( m, ntol, dtol )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      m    ( 3, 3 )
-      double precision      ntol
-      double precision      dtol
+      real(wp)              m    ( 3, 3 )
+      real(wp)              ntol
+      real(wp)              dtol
 
 ! $ Brief_I/O
 !
@@ -200,19 +201,19 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      det
+      real(wp)              brcktd
+      real(wp)              det
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      d
-      double precision      n1
-      double precision      n2
-      double precision      n3
-      double precision      unit ( 3, 3 )
+      real(wp)              d
+      real(wp)              n1
+      real(wp)              n2
+      real(wp)              n3
+      real(wp)              unit ( 3, 3 )
 
       logical               detok
       logical               normok
@@ -231,7 +232,7 @@
 !
 !     Tolerances must be non-negative.
 !
-      if ( ntol .lt. 0.d0 ) then
+      if ( ntol .lt. 0.0_wp ) then
 
          isrot = .false.
 
@@ -241,7 +242,7 @@
          call chkout ( 'ISROT'                                 )
          return
 
-      else if ( dtol .lt. 0.d0 ) then
+      else if ( dtol .lt. 0.0_wp ) then
 
          isrot = .false.
 
@@ -269,11 +270,11 @@
       d      =  det ( unit )
 
 
-      normok =       ( n1 .eq. brcktd ( n1, 1.d0 - ntol, 1.d0 + ntol ) ) &
-               .and. ( n2 .eq. brcktd ( n2, 1.d0 - ntol, 1.d0 + ntol ) ) &
-               .and. ( n3 .eq. brcktd ( n3, 1.d0 - ntol, 1.d0 + ntol ) )
+      normok =       ( n1 .eq. brcktd ( n1, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
+               .and. ( n2 .eq. brcktd ( n2, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
+               .and. ( n3 .eq. brcktd ( n3, 1.0_wp - ntol, 1.0_wp + ntol ) )
 
-      detok  =         d  .eq. brcktd ( d,  1.d0 - dtol, 1.d0 + dtol )
+      detok  =         d  .eq. brcktd ( d,  1.0_wp - dtol, 1.0_wp + dtol )
 
 
       if ( normok .and. detok ) then

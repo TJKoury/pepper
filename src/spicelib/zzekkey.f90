@@ -4,6 +4,7 @@
                            dsclst,  ops,     dtypes,  chrbuf,  cbegs, &
                            cends,   dvals,   ivals,   active,  key, &
                            keydsc,  begidx,  endidx,  found          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,24 +29,24 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               nrows
-      integer               ncnstr
-      integer               clidxs ( * )
-      integer               dsclst ( cdscsz, * )
-      integer               ops    ( * )
-      integer               dtypes ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           nrows
+      integer(ip)           ncnstr
+      integer(ip)           clidxs ( * )
+      integer(ip)           dsclst ( cdscsz, * )
+      integer(ip)           ops    ( * )
+      integer(ip)           dtypes ( * )
       character*(*)         chrbuf
-      integer               cbegs  ( * )
-      integer               cends  ( * )
-      double precision      dvals  ( * )
-      integer               ivals  ( * )
+      integer(ip)           cbegs  ( * )
+      integer(ip)           cends  ( * )
+      real(wp)              dvals  ( * )
+      integer(ip)           ivals  ( * )
       logical               active ( * )
-      integer               key
-      integer               keydsc ( * )
-      integer               begidx
-      integer               endidx
+      integer(ip)           key
+      integer(ip)           keydsc ( * )
+      integer(ip)           begidx
+      integer(ip)           endidx
       logical               found
 
 ! $ Brief_I/O
@@ -303,8 +304,8 @@
 !
 !     SPICELIB functions
 !
-      integer               cardi
-      integer               ordi
+      integer(ip)           cardi
+      integer(ip)           ordi
 
       logical               failed
       logical               return
@@ -312,34 +313,34 @@
 !
 !     Other functions
 !
-      integer               zzekille
-      integer               zzekillt
+      integer(ip)           zzekille
+      integer(ip)           zzekillt
 
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
 
 !
 !     Local variables
 !
-      integer               b
-      integer               best
-      integer               col
-      integer               conmap ( maxcon )
-      integer               dtype
-      integer               e
-      integer               eltidx
-      integer               i
-      integer               idxset ( lbcell : maxcon )
-      integer               j
-      integer               lastle
-      integer               lastlt
-      integer               maxptr
-      integer               minptr
-      integer               nmatch
+      integer(ip)           b
+      integer(ip)           best
+      integer(ip)           col
+      integer(ip)           conmap ( maxcon )
+      integer(ip)           dtype
+      integer(ip)           e
+      integer(ip)           eltidx
+      integer(ip)           i
+      integer(ip)           idxset ( lbcell : maxcon )
+      integer(ip)           j
+      integer(ip)           lastle
+      integer(ip)           lastlt
+      integer(ip)           maxptr
+      integer(ip)           minptr
+      integer(ip)           nmatch
 
       logical               elim
       logical               fnd

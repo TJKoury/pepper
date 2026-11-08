@@ -3,6 +3,7 @@
       subroutine sincpt ( method,  target,  et,      fixref, &
                           abcorr,  obsrvr,  dref,    dvec, &
                           spoint,  trgepc,  srfvec,  found  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -45,15 +46,15 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
       character*(*)         dref
-      double precision      dvec   ( 3 )
-      double precision      spoint ( 3 )
-      double precision      trgepc
-      double precision      srfvec ( 3 )
+      real(wp)              dvec   ( 3 )
+      real(wp)              spoint ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec ( 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -1764,13 +1765,13 @@
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -1783,19 +1784,19 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmstr
 
-      integer               dcentr
-      integer               dclass
-      integer               dfrcde
-      integer               dtypid
-      integer               fxcent
-      integer               fxclss
-      integer               fxfcde
-      integer               fxtyid
-      integer               nsurf
-      integer               obscde
-      integer               shape
-      integer               srflst ( maxsrf )
-      integer               trgcde
+      integer(ip)           dcentr
+      integer(ip)           dclass
+      integer(ip)           dfrcde
+      integer(ip)           dtypid
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxfcde
+      integer(ip)           fxtyid
+      integer(ip)           nsurf
+      integer(ip)           obscde
+      integer(ip)           shape
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           trgcde
 
       logical               attblk ( nabcor )
       logical               first
@@ -1810,31 +1811,31 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfxfc
+      integer(ip)           svfxfc
 
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
       character*(frnmln)    svdref
-      integer               svdfrc
+      integer(ip)           svdfrc
 
 !
 !     Saved surface name/ID item declarations.
 !
-      integer               svctr5 ( ctrsiz )
+      integer(ip)           svctr5 ( ctrsiz )
 
 !
 !     Saved variables

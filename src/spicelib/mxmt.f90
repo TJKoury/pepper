@@ -1,6 +1,7 @@
 !$Procedure MXMT ( Matrix times matrix transpose, 3x3 )
 
       subroutine mxmt ( m1, m2, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      double precision   m1   ( 3,3 )
-      double precision   m2   ( 3,3 )
-      double precision   mout ( 3,3 )
+      real(wp)           m1   ( 3,3 )
+      real(wp)           m2   ( 3,3 )
+      real(wp)           mout ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -218,10 +219,10 @@
 !
 !     Local variables
 !
-      double precision      prodm ( 3, 3 )
+      real(wp)              prodm ( 3, 3 )
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 !
 !  Perform the matrix multiplication

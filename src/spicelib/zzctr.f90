@@ -1,6 +1,7 @@
 !$Procedure ZZCTR ( Manipulate Counter Array )
 
       subroutine zzctr ( newctr, oldctr, update )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       include                'zzctr.inc'
 
-      integer               newctr ( ctrsiz )
-      integer               oldctr ( ctrsiz )
+      integer(ip)           newctr ( ctrsiz )
+      integer(ip)           oldctr ( ctrsiz )
       logical               update
 
 ! $ Brief_I/O
@@ -224,16 +225,16 @@
 !
 !     SPICELIB functions
 !
-      integer               intmax
-      integer               intmin
+      integer(ip)           intmax
+      integer(ip)           intmin
 
       logical               return
 
 !
 !     Local variables.
 !
-      integer               ctrhgh
-      integer               ctrlow
+      integer(ip)           ctrhgh
+      integer(ip)           ctrlow
 
       logical               first
 

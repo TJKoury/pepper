@@ -1,6 +1,7 @@
 !$Procedure M2Q ( Matrix to quaternion )
 
       subroutine m2q ( r, q )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision      r ( 3,  3 )
-      double precision      q ( 0 : 3 )
+      real(wp)              r ( 3,  3 )
+      real(wp)              q ( 0 : 3 )
 
 ! $ Brief_I/O
 !
@@ -454,26 +455,26 @@
 !     columns are the unitized columns of R.
 !
 !
-      double precision      ntol
-      parameter           ( ntol = 0.1d0 )
+      real(wp)              ntol
+      parameter           ( ntol = 0.1_wp )
 
-      double precision      dtol
-      parameter           ( dtol = 0.1d0 )
+      real(wp)              dtol
+      parameter           ( dtol = 0.1_wp )
 
 !
 !     Local Variables
 !
-      double precision      c
-      double precision      cc4
-      double precision      factor
-      double precision      l2
-      double precision      mtrace
-      double precision      polish
-      double precision      s(3)
-      double precision      s114
-      double precision      s224
-      double precision      s334
-      double precision      trace
+      real(wp)              c
+      real(wp)              cc4
+      real(wp)              factor
+      real(wp)              l2
+      real(wp)              mtrace
+      real(wp)              polish
+      real(wp)              s(3)
+      real(wp)              s114
+      real(wp)              s224
+      real(wp)              s334
+      real(wp)              trace
 
 
 !
@@ -560,39 +561,39 @@
 !
 
       trace  = r(1,1) + r(2,2) + r(3,3)
-      mtrace = 1.0d0 - trace
+      mtrace = 1.0_wp - trace
 
-      cc4    = 1.0d0  + trace
-      s114   = mtrace + 2.0d0*r(1,1)
-      s224   = mtrace + 2.0d0*r(2,2)
-      s334   = mtrace + 2.0d0*r(3,3)
+      cc4    = 1.0_wp  + trace
+      s114   = mtrace + 2.0_wp*r(1,1)
+      s224   = mtrace + 2.0_wp*r(2,2)
+      s334   = mtrace + 2.0_wp*r(3,3)
 
 !
 !     Note that if you simply add CC4 + S114 + S224 + S334
 !     you get four. Thus at least one of the 4 terms is greater than 1.
 !
-      if ( 1.0d0 .le. cc4 ) then
-         c      =  dsqrt  ( cc4 * 0.25d0 )
-         factor =  1.0d0 /( c   * 4.0d0  )
+      if ( 1.0_wp .le. cc4 ) then
+         c      =  dsqrt  ( cc4 * 0.25_wp )
+         factor =  1.0_wp /( c   * 4.0_wp  )
 
          s(1)   = ( r(3,2) - r(2,3) )*factor
          s(2)   = ( r(1,3) - r(3,1) )*factor
          s(3)   = ( r(2,1) - r(1,2) )*factor
 
-      else if ( 1.0d0 .le. s114 ) then
+      else if ( 1.0_wp .le. s114 ) then
 
-         s(1)   = dsqrt  ( s114 * 0.25d0 )
-         factor = 1.0d0 /( s(1) * 4.0d0  )
+         s(1)   = dsqrt  ( s114 * 0.25_wp )
+         factor = 1.0_wp /( s(1) * 4.0_wp  )
 
          c      = ( r(3,2) - r(2,3) ) * factor
          s(2)   = ( r(1,2) + r(2,1) ) * factor
          s(3)   = ( r(1,3) + r(3,1) ) * factor
 
 
-      else if ( 1.0d0 .le. s224 ) then
+      else if ( 1.0_wp .le. s224 ) then
 
-         s(2)   = dsqrt  ( s224 * 0.25d0 )
-         factor = 1.0d0 /( s(2) * 4.0d0  )
+         s(2)   = dsqrt  ( s224 * 0.25_wp )
+         factor = 1.0_wp /( s(2) * 4.0_wp  )
 
          c      = ( r(1,3) - r(3,1) ) * factor
          s(1)   = ( r(1,2) + r(2,1) ) * factor
@@ -600,8 +601,8 @@
 
       else
 
-         s(3)   = dsqrt  ( s334 * 0.25d0 )
-         factor = 1.0d0 /( s(3) * 4.0d0  )
+         s(3)   = dsqrt  ( s334 * 0.25_wp )
+         factor = 1.0_wp /( s(3) * 4.0_wp  )
 
          c      = ( r(2,1) - r(1,2) ) * factor
          s(1)   = ( r(1,3) + r(3,1) ) * factor
@@ -614,15 +615,15 @@
 !
       l2 = c*c + s(1)*s(1) + s(2)*s(2) + s(3)*s(3)
 
-      if ( l2 .ne. 1.0d0 ) then
-         polish = 1.0d0/dsqrt(l2)
+      if ( l2 .ne. 1.0_wp ) then
+         polish = 1.0_wp/dsqrt(l2)
          c      =    c*polish
          s(1)   = s(1)*polish
          s(2)   = s(2)*polish
          s(3)   = s(3)*polish
       end if
 
-      if ( c .gt. 0.0d0 ) then
+      if ( c .gt. 0.0_wp ) then
          q(0) = c
          q(1) = s(1)
          q(2) = s(2)

@@ -1,6 +1,7 @@
 !$Procedure ZZCVSTAT ( Constant velocity state )
 
       subroutine zzcvstat ( et, ref, center, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
       implicit none
 
-      double precision      et
+      real(wp)              et
       character*(*)         ref
-      integer               center
-      double precision      state ( 6 )
+      integer(ip)           center
+      real(wp)              state ( 6 )
 
 ! $ Brief_I/O
 !
@@ -114,7 +115,7 @@
 !
 !     Local parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -122,13 +123,13 @@
 !
       character*(frnmln)    svref
 
-      double precision      delta
-      double precision      svet
-      double precision      svstat ( 6 )
-      double precision      xstate ( 6 )
-      double precision      xf     ( 6, 6 )
+      real(wp)              delta
+      real(wp)              svet
+      real(wp)              svstat ( 6 )
+      real(wp)              xstate ( 6 )
+      real(wp)              xf     ( 6, 6 )
 
-      integer               svctr
+      integer(ip)           svctr
 
 !
 !     Saved variables
@@ -313,7 +314,7 @@
 !
       delta = et - svet
 
-      call vlcom ( 1.d0, svstat(1), delta, svstat(4), xstate )
+      call vlcom ( 1.0_wp, svstat(1), delta, svstat(4), xstate )
 
       call vequ  ( svstat(4), xstate(4) )
 

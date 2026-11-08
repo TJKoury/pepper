@@ -1,6 +1,7 @@
 !$Procedure OPSGNI  ( Opposite Sign Integers )
 
       logical function opsgni  ( x, y )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      integer          x
-      integer          y
+      integer(ip)      x
+      integer(ip)      y
 
 ! $ Brief_I/O
 !

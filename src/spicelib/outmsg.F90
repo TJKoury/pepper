@@ -1,6 +1,7 @@
 !$Procedure OUTMSG ( Output Error Messages )
 
       subroutine outmsg ( list )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,21 +23,21 @@
 
       character*(*)           list
 
-      integer                filen
+      integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter            ( filen  = 128 )
 #else
       parameter            ( filen  = 255 )
 #endif
 
-      integer                ll
+      integer(ip)            ll
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter            ( ll     =  78 )
 #else
       parameter            ( ll     =  80 )
 #endif
 
-      integer                namlen
+      integer(ip)            namlen
       parameter            ( namlen = 32 )
 
 ! $ Brief_I/O
@@ -478,9 +479,9 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
-      integer               rtrim
-      integer               wdcnt
+      integer(ip)           lastnb
+      integer(ip)           rtrim
+      integer(ip)           wdcnt
 
       logical               msgsel
 
@@ -494,28 +495,28 @@
       character*(*)         borchr
       parameter           ( borchr = '=' )
 
-      integer               deflen
+      integer(ip)           deflen
       parameter           ( deflen =   4 )
 
-      integer               endlen
+      integer(ip)           endlen
       parameter           ( endlen =   1 )
 
-      integer               maxwrd
+      integer(ip)           maxwrd
       parameter           ( maxwrd =   5 )
 
-      integer               wordln
+      integer(ip)           wordln
       parameter           ( wordln =   9 )
 
-      integer               strlen
+      integer(ip)           strlen
       parameter           ( strlen =   3 )
 
-      integer               verlen
+      integer(ip)           verlen
       parameter           ( verlen =  80 )
 
-      integer               xlen
+      integer(ip)           xlen
       parameter           ( xlen   =  80 )
 
-      integer               tmplen
+      integer(ip)           tmplen
       parameter           ( tmplen = smsgln + xlen )
 !
 !     Local variables
@@ -534,14 +535,14 @@
       character*(wordln)    words  ( maxwrd )
       character*(xlen)      xmsg
 
-      integer               depth
-      integer               i
-      integer               index
-      integer               length
-      integer               numwrd
-      integer               remain
-      integer               start
-      integer               wrdlen
+      integer(ip)           depth
+      integer(ip)           i
+      integer(ip)           index
+      integer(ip)           length
+      integer(ip)           numwrd
+      integer(ip)           remain
+      integer(ip)           start
+      integer(ip)           wrdlen
 
       logical               dfault
       logical               expl

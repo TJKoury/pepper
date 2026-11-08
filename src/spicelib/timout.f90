@@ -1,6 +1,7 @@
 !$Procedure TIMOUT ( Time Output )
 
       subroutine  timout ( et, pictur, output )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      double precision      et
+      real(wp)              et
       character*(*)         pictur
       character*(*)         output
 
@@ -749,17 +750,17 @@
 !
 !     SPICELIB functions
 !
-      integer               brckti
-      integer               bsrchc
-      integer               isrchi
-      integer               rtrim
+      integer(ip)           brckti
+      integer(ip)           bsrchc
+      integer(ip)           isrchi
+      integer(ip)           rtrim
       external              scan
 
-      double precision      brcktd
-      double precision      unitim
-      double precision      spd
-      double precision      j2000
-      double precision      j1950
+      real(wp)              brcktd
+      real(wp)              unitim
+      real(wp)              spd
+      real(wp)              j2000
+      real(wp)              j1950
 
       logical               return
 
@@ -771,199 +772,199 @@
 !     of the various kinds of components we will be looking at in the
 !     input time string.
 !
-      integer               currnt
+      integer(ip)           currnt
       parameter           ( currnt = 1 )
 
-      integer               begin
+      integer(ip)           begin
       parameter           ( begin  = currnt )
 
-      integer               noname
+      integer(ip)           noname
       parameter           ( noname = currnt  + 1 )
 
-      integer               year
+      integer(ip)           year
       parameter           ( year   = noname + 1 )
 
-      integer               yr
+      integer(ip)           yr
       parameter           ( yr     = year   + 1 )
 
-      integer               umon
+      integer(ip)           umon
       parameter           ( umon   = yr     + 1 )
 
-      integer               mmon
+      integer(ip)           mmon
       parameter           ( mmon   = umon   + 1 )
 
-      integer               lmon
+      integer(ip)           lmon
       parameter           ( lmon   = mmon   + 1 )
 
-      integer               umnth
+      integer(ip)           umnth
       parameter           ( umnth  = lmon   + 1 )
 
-      integer               mmnth
+      integer(ip)           mmnth
       parameter           ( mmnth  = umnth  + 1 )
 
-      integer               lmnth
+      integer(ip)           lmnth
       parameter           ( lmnth  = mmnth  + 1 )
 
-      integer               month
+      integer(ip)           month
       parameter           ( month  = lmnth  + 1 )
 
-      integer               doy
+      integer(ip)           doy
       parameter           ( doy    = month  + 1 )
 
-      integer               uwkd
+      integer(ip)           uwkd
       parameter           ( uwkd   = doy    + 1 )
 
-      integer               mwkd
+      integer(ip)           mwkd
       parameter           ( mwkd   = uwkd   + 1 )
 
-      integer               lwkd
+      integer(ip)           lwkd
       parameter           ( lwkd   = mwkd   + 1 )
 
-      integer               uweekd
+      integer(ip)           uweekd
       parameter           ( uweekd = lwkd   + 1 )
 
-      integer               mweekd
+      integer(ip)           mweekd
       parameter           ( mweekd = uweekd + 1 )
 
-      integer               lweekd
+      integer(ip)           lweekd
       parameter           ( lweekd = mweekd + 1 )
 
-      integer               day
+      integer(ip)           day
       parameter           ( day    = lweekd + 1 )
 
-      integer               minute
+      integer(ip)           minute
       parameter           ( minute = day    + 1 )
 
-      integer               hour
+      integer(ip)           hour
       parameter           ( hour   = minute + 1 )
 
-      integer               sec
+      integer(ip)           sec
       parameter           ( sec    = hour   + 1 )
 
-      integer               point
+      integer(ip)           point
       parameter           ( point  = sec    + 1 )
 
-      integer               place
+      integer(ip)           place
       parameter           ( place  = point  + 1 )
 
-      integer               julian
+      integer(ip)           julian
       parameter           ( julian = place  + 1 )
 
-      integer               utc
+      integer(ip)           utc
       parameter           ( utc    = julian + 1 )
 
-      integer               tdb
+      integer(ip)           tdb
       parameter           ( tdb    = utc    + 1 )
 
-      integer               tdt
+      integer(ip)           tdt
       parameter           ( tdt    = tdb    + 1 )
 
-      integer               tt
+      integer(ip)           tt
       parameter           ( tt     = tdt    + 1 )
 
-      integer               sp2000
+      integer(ip)           sp2000
       parameter           ( sp2000 = tt     + 1 )
 
-      integer               sp1950
+      integer(ip)           sp1950
       parameter           ( sp1950 = sp2000 + 1 )
 
-      integer               round
+      integer(ip)           round
       parameter           ( round  = sp1950 + 1 )
 
-      integer               trunc
+      integer(ip)           trunc
       parameter           ( trunc  = round  + 1 )
 
-      integer               uera
+      integer(ip)           uera
       parameter           ( uera   = trunc  + 1 )
 
-      integer               lera
+      integer(ip)           lera
       parameter           ( lera   = uera   + 1 )
 
-      integer               uerax
+      integer(ip)           uerax
       parameter           ( uerax  = lera + 1 )
 
-      integer               lerax
+      integer(ip)           lerax
       parameter           ( lerax  = uerax + 1 )
 
-      integer               uampm
+      integer(ip)           uampm
       parameter           ( uampm  = lerax   + 1 )
 
-      integer               lampm
+      integer(ip)           lampm
       parameter           ( lampm  = uampm  + 1 )
 
-      integer               utcp
+      integer(ip)           utcp
       parameter           ( utcp   = lampm  + 1 )
 
-      integer               utcm
+      integer(ip)           utcm
       parameter           ( utcm   = utcp   + 1 )
 
-      integer               jcal
+      integer(ip)           jcal
       parameter           ( jcal   = utcm   + 1 )
 
-      integer               gcal
+      integer(ip)           gcal
       parameter           ( gcal   = jcal   + 1 )
 
-      integer               mcal
+      integer(ip)           mcal
       parameter           ( mcal   = gcal   + 1 )
 
-      integer               timsys
+      integer(ip)           timsys
       parameter           ( timsys = mcal   + 1 )
 
-      integer               calndr
+      integer(ip)           calndr
       parameter           ( calndr = timsys + 1 )
 
-      integer               ampm
+      integer(ip)           ampm
       parameter           ( ampm   = calndr + 1 )
 
-      integer               mon
+      integer(ip)           mon
       parameter           ( mon    = ampm   + 1 )
 
-      integer               wkday
+      integer(ip)           wkday
       parameter           ( wkday  = mon    + 1 )
 
-      integer               era
+      integer(ip)           era
       parameter           ( era    = wkday  + 1 )
 
-      integer               noon
+      integer(ip)           noon
       parameter           ( noon   = era    + 1 )
 
-      integer               rlyear
+      integer(ip)           rlyear
       parameter           ( rlyear = noon   + 1 )
 
-      integer               finish
+      integer(ip)           finish
       parameter           ( finish = rlyear      )
 
 !
 !     The following parameters serve as an enumeration of the various
 !     time formats that are recognized.
 !
-      integer               ymd
+      integer(ip)           ymd
       parameter           ( ymd    = 1 )
 
-      integer               contin
+      integer(ip)           contin
       parameter           ( contin = ymd + 1 )
 
 !
 !     The parameters below are used to declare the space needed for
 !     scanning the input format string.
 !
-      integer               maxmrk
+      integer(ip)           maxmrk
       parameter           ( maxmrk = 43  )
 
-      integer               room
+      integer(ip)           room
       parameter           ( room   = 100 )
 
 !
 !     The length of the local string that we will use for copying
 !     the format string.
 !
-      integer               maxlen
+      integer(ip)           maxlen
       parameter           ( maxlen = 256 )
 
-      integer               mrksiz
+      integer(ip)           mrksiz
       parameter           ( mrksiz = 8 )
 
-      integer               loclen
+      integer(ip)           loclen
       parameter           ( loclen = 32 )
 
 !
@@ -976,16 +977,16 @@
 !     arrays used for scanning the format string.
 !
       character*(mrksiz)    marks  (     maxmrk )
-      integer               class  ( 0 : maxmrk )
-      integer               nmarks
-      integer               mrklen (     maxmrk )
-      integer               pntrs  (     100    )
+      integer(ip)           class  ( 0 : maxmrk )
+      integer(ip)           nmarks
+      integer(ip)           mrklen (     maxmrk )
+      integer(ip)           pntrs  (     100    )
 
-      integer               dump   (     11     )
-      integer               ndump
-      integer               timfmt
-      integer               type
-      integer               numtyp
+      integer(ip)           dump   (     11     )
+      integer(ip)           ndump
+      integer(ip)           timfmt
+      integer(ip)           type
+      integer(ip)           numtyp
 
 !
 !     The variables below are used to hold, base formats, values of
@@ -994,10 +995,10 @@
 !     components have already been computed.
 !
       character*(32)        orignl ( begin : finish )
-      double precision      values ( begin : finish )
-      double precision      pad    ( begin : finish )
-      integer               length ( begin : finish )
-      integer               id     ( begin : finish )
+      real(wp)              values ( begin : finish )
+      real(wp)              pad    ( begin : finish )
+      integer(ip)           length ( begin : finish )
+      integer(ip)           id     ( begin : finish )
       logical               have   ( begin : finish )
 
 !
@@ -1005,7 +1006,7 @@
 !     associated with the three different times of time vectors
 !     that we will be using YMD, YD, CONTIN.
 !
-      integer               compnt ( 8, contin )
+      integer(ip)           compnt ( 8, contin )
 
 !
 !     We will be making a local copy of the input format string
@@ -1015,22 +1016,22 @@
       character*(maxlen)    substr
       character*(maxlen)    string
 
-      double precision      myet
+      real(wp)              myet
 
 !
 !     The integers below are used to mark substring boundaries.
 !
-      integer               b
-      integer               e
-      integer               start
-      integer               ntokns
-      integer               ident  (  room   )
-      integer               beg    (  room   )
-      integer               end    (  room   )
+      integer(ip)           b
+      integer(ip)           e
+      integer(ip)           start
+      integer(ip)           ntokns
+      integer(ip)           ident  (  room   )
+      integer(ip)           beg    (  room   )
+      integer(ip)           end    (  room   )
 
       character*(loclen)    fmt
-      integer               width
-      integer               appnd
+      integer(ip)           width
+      integer(ip)           appnd
 
 !
 !     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
@@ -1039,7 +1040,7 @@
 !     types.  The one used based upon the input PICTUR is stored
 !     in BASTYP.
 !
-      integer               timtyp
+      integer(ip)           timtyp
       character*(8)         ymdfmt
       character*(8)         ywfmt
       character*(16)        bastyp
@@ -1048,10 +1049,10 @@
       character*(16)        cal
       character*(32)        zon
 
-      double precision      hoff
-      double precision      moff
-      integer               caltyp
-      integer               last
+      real(wp)              hoff
+      real(wp)              moff
+      integer(ip)           caltyp
+      integer(ip)           last
 
       logical               ok
       logical               doera
@@ -1060,45 +1061,45 @@
 !
 !     Loop counters and delimiters
 !
-      integer               i
-      integer               j
-      integer               part
-      integer               stopat
-      integer               trncat
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           part
+      integer(ip)           stopat
+      integer(ip)           trncat
 
 !
 !     Utility double precision numbers
 !
-      double precision      delta
-      double precision      factor
-      double precision      frac
-      double precision      incr
-      double precision      intmed
-      double precision      ntvec  ( 8 )
-      double precision      ptvec  ( 8 )
-      double precision      tempd
-      double precision      timpad
-      double precision      tvec   ( 8 )
-      double precision      value
+      real(wp)              delta
+      real(wp)              factor
+      real(wp)              frac
+      real(wp)              incr
+      real(wp)              intmed
+      real(wp)              ntvec  ( 8 )
+      real(wp)              ptvec  ( 8 )
+      real(wp)              tempd
+      real(wp)              timpad
+      real(wp)              tvec   ( 8 )
+      real(wp)              value
 
 !
 !     The array power is used to assist in the truncation of double
 !     precision values.
 !
-      double precision      power  ( 0 : 14 )
-      double precision      x
+      real(wp)              power  ( 0 : 14 )
+      real(wp)              x
 
 !
 !     calendar variables.
 !
-      integer               jyear
-      integer               jmonth
-      integer               jday
-      integer               jdoy
-      integer               gyear
-      integer               gmonth
-      integer               gday
-      integer               gdoy
+      integer(ip)           jyear
+      integer(ip)           jmonth
+      integer(ip)           jday
+      integer(ip)           jdoy
+      integer(ip)           gyear
+      integer(ip)           gmonth
+      integer(ip)           gday
+      integer(ip)           gdoy
       logical               go2jul
 
 !
@@ -1106,15 +1107,15 @@
 !
       character*(9)         months ( 12 )
       character*(9)         mymon
-      integer               mylen
-      integer               montyp
-      integer               mlen   ( 12 )
+      integer(ip)           mylen
+      integer(ip)           montyp
+      integer(ip)           mlen   ( 12 )
       character*(9)         wkdays (  7 )
       character*(9)         mywkd
-      integer               wklen  (  7 )
-      integer               wktyp
+      integer(ip)           wklen  (  7 )
+      integer(ip)           wktyp
 
-      integer               indx
+      integer(ip)           indx
 
       logical               unknwn
       logical               making
@@ -1157,10 +1158,10 @@
 
       data                 first   / .true. /
 
-      data                 power   / 1.0d0,  1.0d1,  1.0d2,  1.0d3, &
-                                     1.0d4,  1.0d5,  1.0d6,  1.0d7, &
-                                     1.0d8,  1.0d9,  1.0d10, 1.0d11, &
-                                     1.0d12, 1.0d13, 1.0d14         /
+      data                 power   / 1.0_wp,  1.0e1_wp,  1.0e2_wp,  1.0e3_wp, &
+                                     1.0e4_wp,  1.0e5_wp,  1.0e6_wp,  1.0e7_wp, &
+                                     1.0e8_wp,  1.0e9_wp,  1.0e10_wp, 1.0e11_wp, &
+                                     1.0e12_wp, 1.0e13_wp, 1.0e14_wp         /
 
       if ( return() ) then
          return
@@ -1325,18 +1326,18 @@
          class ( id(ampm)    ) =  ampm
 
          do i = begin, finish
-            pad (i) = 0.0d0
+            pad (i) = 0.0_wp
          end do
 
-         pad  ( sec    )     =   0.5d0
-         pad  ( minute )     =  60.0d0 * pad(sec)
-         pad  ( hour   )     =  60.0d0 * pad(minute)
-         pad  ( day    )     =  24.0d0 * pad(hour)
-         pad  ( month  )     =  30.0d0 * pad(day)
+         pad  ( sec    )     =   0.5_wp
+         pad  ( minute )     =  60.0_wp * pad(sec)
+         pad  ( hour   )     =  60.0_wp * pad(minute)
+         pad  ( day    )     =  24.0_wp * pad(hour)
+         pad  ( month  )     =  30.0_wp * pad(day)
          pad  ( doy    )     =           pad(day)
          pad  ( mon    )     =           pad(month)
-         pad  ( year   )     = 365.0d0 * pad(day)
-         pad  ( yr     )     = 365.0d0 * pad(day)
+         pad  ( year   )     = 365.0_wp * pad(day)
+         pad  ( yr     )     = 365.0_wp * pad(day)
          pad  ( julian )     =           pad(day)
          pad  ( sp2000 )     =           pad(sec)
          pad  ( sp1950 )     =           pad(sec)
@@ -1444,8 +1445,8 @@
       go2jul = .false.
       dozone = .false.
       i      = 1
-      hoff   = 0.0d0
-      moff   = 0.0d0
+      hoff   = 0.0_wp
+      moff   = 0.0_wp
 
 !
 !     Get the default time type from TIMDEF
@@ -1596,7 +1597,7 @@
 !     in either case we are going to pad the input time.  For now
 !     we pad it by zero.
 !
-      timpad = 0.0d0
+      timpad = 0.0_wp
 
       if ( pumpup ) then
 
@@ -1630,7 +1631,7 @@
 !
 !              Look up the amount we should pad our time by.
 !
-               factor = 1.0d0
+               factor = 1.0_wp
                incr   = pad ( type )
 
 !
@@ -1643,7 +1644,7 @@
 
                if ( type .eq. point ) then
 
-                  factor = factor * 0.1d0
+                  factor = factor * 0.1_wp
                   i      = i + 1
 
 !
@@ -1651,7 +1652,7 @@
 !                 holders
 !
                   do while ( ident(i) .eq. id(place) )
-                     factor = factor * 0.1d0
+                     factor = factor * 0.1_wp
                      i      = i + 1
                   end do
 
@@ -1663,7 +1664,7 @@
 !
                incr = incr * factor
 
-               if ( timpad .ne. 0.0d0 ) then
+               if ( timpad .ne. 0.0_wp ) then
                   timpad = min ( timpad, incr )
                else
                   timpad = incr
@@ -1788,14 +1789,14 @@
                frac   = value - dint(value )
 
                if ( frac .lt. 0 ) then
-                  value = value - 1.0d0
-                  frac  = frac  + 1.0d0
+                  value = value - 1.0_wp
+                  frac  = frac  + 1.0_wp
                end if
 
-               intmed = ( dint( frac * power(trncat) ) - 0.125d0 ) &
+               intmed = ( dint( frac * power(trncat) ) - 0.125_wp ) &
                                       / power(trncat)
 
-               frac   = brcktd( intmed,      0.0d0,      1.0d0 )
+               frac   = brcktd( intmed,      0.0_wp,      1.0_wp )
 
                value  = dint(value) + frac
 
@@ -1905,8 +1906,8 @@
                call ttrans( intyp, bastyp, ptvec  )
                call ttrans( intyp, bastyp, ntvec  )
 
-               delta = max(1.0d0, ntvec(1) - ptvec(1) )
-               frac  = brcktd( 0.0d0, 1.0d0, (myet - ptvec(1)) / delta )
+               delta = max(1.0_wp, ntvec(1) - ptvec(1) )
+               frac  = brcktd( 0.0_wp, 1.0_wp, (myet - ptvec(1)) / delta )
 
                value = value + frac
 
@@ -1966,7 +1967,7 @@
 
                      tvec(4) = tvec(4) + hoff
                      tvec(5) = tvec(5) + moff
-                     tvec(6) = 0.0d0
+                     tvec(6) = 0.0_wp
 
                      call ttrans ( 'YMDF', 'YMDF', tvec )
 
@@ -1979,10 +1980,10 @@
                   values(hour)   = tvec(4)
                   values(minute) = tvec(5)
 
-                  if ( values(hour) .eq. 0.0d0 ) then
-                     values(ampm) =  12.0d0
-                  else if ( values(hour) .gt. 12.0d0 ) then
-                     values(ampm) = values(hour) - 12.0d0
+                  if ( values(hour) .eq. 0.0_wp ) then
+                     values(ampm) =  12.0_wp
+                  else if ( values(hour) .gt. 12.0_wp ) then
+                     values(ampm) = values(hour) - 12.0_wp
                   else
                      values(ampm) = values(hour)
                   end if
@@ -2005,18 +2006,18 @@
 
                   if      ( caltyp .eq. id(gcal) ) then
 
-                     values(year)  = dble(gyear)
-                     values(month) = dble(gmonth)
-                     values(day)   = dble(gday)
-                     values(doy)   = dble(gdoy)
+                     values(year)  = real(gyear, wp)
+                     values(month) = real(gmonth, wp)
+                     values(day)   = real(gday, wp)
+                     values(doy)   = real(gdoy, wp)
                      go2jul        = .false.
 
                   else if ( caltyp .eq. id(jcal) ) then
 
-                     values(year)  = dble(jyear)
-                     values(month) = dble(jmonth)
-                     values(day)   = dble(jday)
-                     values(doy)   = dble(jdoy)
+                     values(year)  = real(jyear, wp)
+                     values(month) = real(jmonth, wp)
+                     values(day)   = real(jday, wp)
+                     values(doy)   = real(jdoy, wp)
                      go2jul        = .true.
 
                   else if ( caltyp .eq. id(mcal) ) then
@@ -2037,15 +2038,15 @@
                      end if
 
                      if ( go2jul ) then
-                        values(year)  = dble(jyear)
-                        values(month) = dble(jmonth)
-                        values(day)   = dble(jday)
-                        values(doy)   = dble(jdoy)
+                        values(year)  = real(jyear, wp)
+                        values(month) = real(jmonth, wp)
+                        values(day)   = real(jday, wp)
+                        values(doy)   = real(jdoy, wp)
                      else
-                        values(year)  = dble(gyear)
-                        values(month) = dble(gmonth)
-                        values(day)   = dble(gday)
-                        values(doy)   = dble(gdoy)
+                        values(year)  = real(gyear, wp)
+                        values(month) = real(gmonth, wp)
+                        values(day)   = real(gday, wp)
+                        values(doy)   = real(gdoy, wp)
                      end if
 
                   end if
@@ -2064,20 +2065,20 @@
                   if ( doera ) then
 
                      if ( values(year) .lt. 1 ) then
-                        values(year) = 1.0d0 - values(year)
-                        values(era)  = 1.0d0
+                        values(year) = 1.0_wp - values(year)
+                        values(era)  = 1.0_wp
                      else
-                        values(era)  = 2.0d0
+                        values(era)  = 2.0_wp
                      end if
 
-                     vanish = values(year) .ge. 1000.0d0
+                     vanish = values(year) .ge. 1000.0_wp
 
                   end if
 
 !
 !                 Fetch the last two digits of the year.
 !
-                  call rmaind ( values(year), 100.0d0, x, tempd )
+                  call rmaind ( values(year), 100.0_wp, x, tempd )
                   values(yr) = tempd
 
                   have  (year)   = .true.
@@ -2107,7 +2108,7 @@
 
                      tvec(5) = tvec(5) + hoff
                      tvec(6) = tvec(6) + moff
-                     tvec(7) = 0.0d0
+                     tvec(7) = 0.0_wp
 
                      call ttrans ( 'YMWDF', 'YMWDF', tvec )
 
@@ -2237,18 +2238,18 @@
 
             else if ( type .eq. era ) then
 
-               if      (         values(era)    .eq. 2.0d0 &
+               if      (         values(era)    .eq. 2.0_wp &
                          .and. (      ident(i) .eq. id(uera) &
                                  .or. ident(i) .eq. id(uerax) ) ) then
 
                   string(appnd:) = ' A.D.'
 
-               else if (         values(era)   .eq. 2.0d0 &
+               else if (         values(era)   .eq. 2.0_wp &
                          .and. (      ident(i) .eq. id(lera) &
                                  .or. ident(i) .eq. id(lerax) ) ) then
                    string(appnd:) = ' a.d.'
 
-               else if  (         values(era)  .eq. 1.0d0 &
+               else if  (         values(era)  .eq. 1.0_wp &
                          .and. (      ident(i) .eq. id(uera) &
                                  .or. ident(i) .eq. id(uerax) ) ) then
 
@@ -2286,17 +2287,17 @@
 
 
                if      (       ident(i)   .eq. id(uampm) &
-                         .and. values(hour) .ge. 12.0d0    ) then
+                         .and. values(hour) .ge. 12.0_wp    ) then
 
                   string(appnd:) = 'P.M.'
 
                else if (       ident(i)    .eq. id(uampm) &
-                         .and. values(hour) .lt. 12.0d0    ) then
+                         .and. values(hour) .lt. 12.0_wp    ) then
 
                   string(appnd:) = 'A.M.'
 
                else if (       ident(i)    .eq. id(lampm) &
-                         .and. values(hour) .ge. 12.0d0    ) then
+                         .and. values(hour) .ge. 12.0_wp    ) then
 
                   string(appnd:) = 'p.m.'
 
@@ -2349,8 +2350,8 @@
 !              portions.
 !
                do j = 1, 7
-                  ptvec(j) = 0.0d0
-                  ntvec(j) = 0.0d0
+                  ptvec(j) = 0.0_wp
+                  ntvec(j) = 0.0_wp
                end do
 
 
@@ -2359,21 +2360,21 @@
                   stopat = 1
                   timfmt = ymd
                   intyp  = ymdfmt
-                  incr   = 1.0d0
+                  incr   = 1.0_wp
 
                else if ( type .eq. month) then
 
                   stopat = 2
                   timfmt = ymd
                   intyp  = ymdfmt
-                  incr   = 1.0d0
+                  incr   = 1.0_wp
 
                else if ( type .eq. day .or. type .eq. doy ) then
 
                   stopat = 3
                   timfmt = ymd
                   intyp  = ymdfmt
-                  incr   = 1.0d0
+                  incr   = 1.0_wp
 
 
                else if ( type .eq. hour .or. type .eq. ampm ) then
@@ -2388,7 +2389,7 @@
                   stopat = 4
                   timfmt = ymd
                   intyp  = ymdfmt
-                  incr   = 1.0d0
+                  incr   = 1.0_wp
 
                else if ( type .eq. minute  ) then
 
@@ -2396,21 +2397,21 @@
                   timfmt = ymd
                   intyp  = ymdfmt
 
-                  incr   = 1.0d0
+                  incr   = 1.0_wp
 
                else if ( type .eq. sec  ) then
 
                   stopat = 6
                   timfmt = ymd
                   intyp  = ymdfmt
-                  incr   = 0.0d0
+                  incr   = 0.0_wp
 
 
                else if ( type .eq. julian ) then
 
                   stopat = 1
                   timfmt = contin
-                  incr   = 0.0d0
+                  incr   = 0.0_wp
 
                   if      ( (timtyp .eq. id(tdt)) .or. &
                             (timtyp .eq. id(tt))) then
@@ -2430,7 +2431,7 @@
 !
                   stopat = 1
                   timfmt = contin
-                  incr   = 0.0d0
+                  incr   = 0.0_wp
                   intyp  = bastyp
 
 
@@ -2454,13 +2455,13 @@
 !              the previous year.
 !
                if ( type .eq. year  .or. type .eq. yr ) then
-                  ptvec(2) = 1.0d0
-                  ntvec(2) = 1.0d0
-                  ptvec(3) = 1.0d0
-                  ntvec(3) = 1.0d0
+                  ptvec(2) = 1.0_wp
+                  ntvec(2) = 1.0_wp
+                  ptvec(3) = 1.0_wp
+                  ntvec(3) = 1.0_wp
                else if ( type .eq. month ) then
-                  ptvec(3) = 1.0d0
-                  ntvec(3) = 1.0d0
+                  ptvec(3) = 1.0_wp
+                  ntvec(3) = 1.0_wp
                end if
 
                if ( go2jul .and. timfmt .ne. contin ) then
@@ -2475,9 +2476,9 @@
 
                   call jul2gr ( jyear, jmonth, jday, jdoy )
 
-                  ptvec(1) = dble(jyear)
-                  ptvec(2) = dble(jmonth)
-                  ptvec(3) = dble(jday)
+                  ptvec(1) = real(jyear, wp)
+                  ptvec(2) = real(jmonth, wp)
+                  ptvec(3) = real(jday, wp)
 
                   jyear  = nint(ntvec(1))
                   jmonth = nint(ntvec(2))
@@ -2485,9 +2486,9 @@
 
                   call jul2gr ( jyear, jmonth, jday, jdoy )
 
-                  ntvec(1) = dble(jyear)
-                  ntvec(2) = dble(jmonth)
-                  ntvec(3) = dble(jday)
+                  ntvec(1) = real(jyear, wp)
+                  ntvec(2) = real(jmonth, wp)
+                  ntvec(3) = real(jday, wp)
 
                end if
 
@@ -2502,8 +2503,8 @@
                   ptvec(5) = ptvec(5) - moff
                   ntvec(5) = ntvec(5) - moff
 
-                  ptvec(6) = 0.0d0
-                  ntvec(6) = 0.0d0
+                  ptvec(6) = 0.0_wp
+                  ntvec(6) = 0.0_wp
 
                   call ttrans ( 'YMDF', 'YMDF', ptvec )
                   call ttrans ( 'YMDF', 'YMDF', ntvec )

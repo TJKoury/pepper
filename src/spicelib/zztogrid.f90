@@ -1,6 +1,7 @@
 !$Procedure ZZTOGRID ( Model coordinates to voxel grid coordinates )
 
        subroutine zztogrid ( modxyz, voxori, voxsiz, grdxyz )
+       use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
 
       implicit none
 
-      double precision      voxsiz
-      double precision      modxyz  ( 3 )
-      double precision      voxori  ( 3 )
-      double precision      grdxyz  ( 3 )
+      real(wp)              voxsiz
+      real(wp)              modxyz  ( 3 )
+      real(wp)              voxori  ( 3 )
+      real(wp)              grdxyz  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -153,7 +154,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Use discovery check-in.
@@ -162,7 +163,7 @@
          return
       end if
 
-      if ( voxsiz .le. 0.d0 ) then
+      if ( voxsiz .le. 0.0_wp ) then
 
          call chkin  ( 'ZZTOGRID'                            )
          call setmsg ( 'Voxel size was #; must be positive.' )

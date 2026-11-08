@@ -1,6 +1,7 @@
 !$Procedure MTXV ( Matrix transpose times vector, 3x3 )
 
       subroutine mtxv ( m, vin, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision  m      ( 3,3 )
-      double precision  vin    (   3 )
-      double precision  vout   (   3 )
+      real(wp)          m      ( 3,3 )
+      real(wp)          vin    (   3 )
+      real(wp)          vout   (   3 )
 
 ! $ Brief_I/O
 !
@@ -200,8 +201,8 @@
 !
 !     Local variables
 !
-      double precision  prodv  ( 3 )
-      integer           i
+      real(wp)          prodv  ( 3 )
+      integer(ip)       i
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRSZ ( EK, tree size )
 
-      integer function zzektrsz ( handle, tree )
+      integer(ip) function zzektrsz ( handle, tree )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
+      integer(ip)           handle
+      integer(ip)           tree
 
 ! $ Brief_I/O
 !
@@ -94,12 +95,12 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrbs
+      integer(ip)           zzektrbs
 
 !
 !     Local variables
 !
-      integer               addrss
+      integer(ip)           addrss
 
 !
 !     Go straight to the address at which the key count is stored.

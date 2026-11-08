@@ -1,6 +1,7 @@
 !$Procedure SPKS05 ( S/P Kernel, subset, type 5 )
 
       subroutine spks05 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -160,15 +161,15 @@
 !
 !     Local variables
 !
-      double precision      data     ( 6 )
-      double precision      gm
+      real(wp)              data     ( 6 )
+      real(wp)              gm
 
-      integer               i
-      integer               ndir
-      integer               nrec
-      integer               offe
-      integer               offset
-      integer               rec      ( 2 )
+      integer(ip)           i
+      integer(ip)           ndir
+      integer(ip)           nrec
+      integer(ip)           offe
+      integer(ip)           offset
+      integer(ip)           rec      ( 2 )
 
 
 !
@@ -259,7 +260,7 @@
 !     to end the segment.
 !
       call dafada ( gm,                           1 )
-      call dafada ( dble ( rec(2) - rec(1) + 1 ), 1 )
+      call dafada ( real( rec(2) - rec(1) + 1, wp ), 1 )
 
       call chkout ( 'SPKS05' )
       return

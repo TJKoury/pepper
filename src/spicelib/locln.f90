@@ -1,6 +1,7 @@
 !$Procedure LOCLN ( Locate lines in a text file )
 
       subroutine locln ( unit, bmark, emark, line, bline, eline, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               unit
+      integer(ip)           unit
       character*(*)         bmark
       character*(*)         emark
       character*(*)         line
-      integer               bline
-      integer               eline
+      integer(ip)           bline
+      integer(ip)           eline
       logical               found
 
 ! $ Brief_I/O
@@ -413,15 +414,15 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               ltrim
+      integer(ip)           ltrim
 
 !
 !     Local variables
 !
 
-      integer               bltemp
-      integer               eltemp
-      integer               iostat
+      integer(ip)           bltemp
+      integer(ip)           eltemp
+      integer(ip)           iostat
 
       logical               bfound
       logical               efound

@@ -1,6 +1,7 @@
 !$Procedure SPKR01 ( Read SPK record from segment, type 1 )
 
       subroutine spkr01 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -155,28 +156,28 @@
 !
 !     SPICELIB functions
 !
-      integer               lstltd
+      integer(ip)           lstltd
       logical               return
 
 !
 !     Local variables
 !
 
-      double precision      dc       (   2 )
-      integer               ic       (   6 )
-      integer               begin
-      integer               end
+      real(wp)              dc       (   2 )
+      integer(ip)           ic       (   6 )
+      integer(ip)           begin
+      integer(ip)           end
 
-      double precision      data     ( 100 )
-      integer               nrec
-      integer               ndir
-      integer               offd
-      integer               offe
-      integer               off
+      real(wp)              data     ( 100 )
+      integer(ip)           nrec
+      integer(ip)           ndir
+      integer(ip)           offd
+      integer(ip)           offe
+      integer(ip)           off
 
-      integer               recno
-      integer               offr
-      integer               i
+      integer(ip)           recno
+      integer(ip)           offr
+      integer(ip)           i
 
 
 

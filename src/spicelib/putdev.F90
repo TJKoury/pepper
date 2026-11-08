@@ -1,6 +1,7 @@
 !$Procedure PUTDEV ( Store Error Output Device Specification )
 
       subroutine putdev ( device )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
 
       character*(*)          device
 
-      integer                filen
+      integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter            ( filen = 128 )
 #else

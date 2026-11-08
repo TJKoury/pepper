@@ -1,6 +1,7 @@
 !$Procedure EXISTS ( Does the file exist? )
 
       logical function  exists ( fname )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -226,13 +227,13 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               rtrim
+      integer(ip)           rtrim
 
 !
 !     Local variables
 !
-      integer               iostat
-      integer               r
+      integer(ip)           iostat
+      integer(ip)           r
 
       logical               myexst
 

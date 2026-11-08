@@ -1,6 +1,7 @@
 !$Procedure      ZZCKSPK ( SPK or CK )
 
       subroutine zzckspk ( handle, ckspk )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
 ! $ Declarations
 
       implicit none
-      integer               handle
+      integer(ip)           handle
       character*(*)         ckspk
 
 ! $ Brief_I/O
@@ -98,65 +99,65 @@
 !     integer portion of the DAF descriptor where the values are
 !     located.
 !
-      integer               bodid
+      integer(ip)           bodid
       parameter           ( bodid  =  1 )
 
-      integer               cenid
+      integer(ip)           cenid
       parameter           ( cenid  = bodid  + 1 )
 
-      integer               spkfrm
+      integer(ip)           spkfrm
       parameter           ( spkfrm = cenid  + 1 )
 
-      integer               spktyp
+      integer(ip)           spktyp
       parameter           ( spktyp = spkfrm + 1 )
 
-      integer               start
+      integer(ip)           start
       parameter           ( start  = spktyp + 1 )
 
-      integer               finish
+      integer(ip)           finish
       parameter           ( finish = start  + 1 )
 
-      integer               ckrate
+      integer(ip)           ckrate
       parameter           ( ckrate = spktyp     )
 
-      integer               cktype
+      integer(ip)           cktype
       parameter           ( cktype = spkfrm )
 
 !
 !     These parameters give the number of integer and double precision
 !     components of the descriptor for SPK and CK files.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 !
 !     The size of a summary.
 !
-      integer               sumsiz
+      integer(ip)           sumsiz
       parameter           ( sumsiz = nd + ((ni+1)/2) )
 
 
-      double precision      chcktm
-      double precision      dc    ( nd )
-      double precision      lastdp
-      double precision      frsttm
-      double precision      sum   ( sumsiz )
-      double precision      times ( 2 )
+      real(wp)              chcktm
+      real(wp)              dc    ( nd )
+      real(wp)              lastdp
+      real(wp)              frsttm
+      real(wp)              sum   ( sumsiz )
+      real(wp)              times ( 2 )
 
-      integer               angvel
-      integer               first
-      integer               from
-      integer               ic    ( ni )
-      integer               last
-      integer               nck2
-      integer               nspk
-      integer               size
-      integer               thisnd
-      integer               thisni
-      integer               to
-      integer               type
+      integer(ip)           angvel
+      integer(ip)           first
+      integer(ip)           from
+      integer(ip)           ic    ( ni )
+      integer(ip)           last
+      integer(ip)           nck2
+      integer(ip)           nspk
+      integer(ip)           size
+      integer(ip)           thisnd
+      integer(ip)           thisni
+      integer(ip)           to
+      integer(ip)           type
 
       logical               ck2ok
       logical               found
@@ -273,7 +274,7 @@
 !     See if the last number in the file is the allowed number of
 !     MDA records.  If not, this must be a CK segment.
 !
-      if ( lastdp .ne. dble(nspk) ) then
+      if ( lastdp .ne. real(nspk, wp) ) then
          ckspk   = 'CK'
          call chkout ( 'ZZCKSPK' )
          return

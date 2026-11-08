@@ -1,6 +1,7 @@
 !$Procedure Q2M ( Quaternion to matrix )
 
       subroutine q2m ( q, r )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision      q ( 0 : 3 )
-      double precision      r ( 3,  3 )
+      real(wp)              q ( 0 : 3 )
+      real(wp)              r ( 3,  3 )
 
 ! $ Brief_I/O
 !
@@ -449,18 +450,18 @@
 !
 !     Local variables
 !
-      double precision      q01
-      double precision      q02
-      double precision      q03
-      double precision      q12
-      double precision      q13
-      double precision      q23
-      double precision      q1s
-      double precision      q2s
-      double precision      q3s
+      real(wp)              q01
+      real(wp)              q02
+      real(wp)              q03
+      real(wp)              q12
+      real(wp)              q13
+      real(wp)              q23
+      real(wp)              q1s
+      real(wp)              q2s
+      real(wp)              q3s
 
-      double precision      l2
-      double precision      sharpn
+      real(wp)              l2
+      real(wp)              sharpn
 
 
 !
@@ -571,9 +572,9 @@
 !
       l2   =  q(0) * q(0) + q1s + q2s + q3s
 
-      if ( l2 .ne. 1.0d0 .and. l2 .ne. 0.0d0 ) then
+      if ( l2 .ne. 1.0_wp .and. l2 .ne. 0.0_wp ) then
 
-         sharpn = 1.0d0 / l2
+         sharpn = 1.0_wp / l2
 
          q01    = q01 * sharpn
          q02    = q02 * sharpn
@@ -592,17 +593,17 @@
 
 
 
-      r(1,1) =  1.d0  -  2.d0 * ( q2s + q3s )
-      r(2,1) =           2.d0 * ( q12 + q03 )
-      r(3,1) =           2.d0 * ( q13 - q02 )
+      r(1,1) =  1.0_wp  -  2.0_wp * ( q2s + q3s )
+      r(2,1) =           2.0_wp * ( q12 + q03 )
+      r(3,1) =           2.0_wp * ( q13 - q02 )
 
-      r(1,2) =           2.d0 * ( q12 - q03 )
-      r(2,2) =  1.d0  -  2.d0 * ( q1s + q3s )
-      r(3,2) =           2.d0 * ( q23 + q01 )
+      r(1,2) =           2.0_wp * ( q12 - q03 )
+      r(2,2) =  1.0_wp  -  2.0_wp * ( q1s + q3s )
+      r(3,2) =           2.0_wp * ( q23 + q01 )
 
-      r(1,3) =           2.d0 * ( q13 + q02 )
-      r(2,3) =           2.d0 * ( q23 - q01 )
-      r(3,3) =  1.d0  -  2.d0 * ( q1s + q2s )
+      r(1,3) =           2.0_wp * ( q13 + q02 )
+      r(2,3) =           2.0_wp * ( q23 - q01 )
+      r(3,3) =  1.0_wp  -  2.0_wp * ( q1s + q2s )
 
       return
       end

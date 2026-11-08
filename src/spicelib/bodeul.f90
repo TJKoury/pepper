@@ -1,6 +1,7 @@
 !$Procedure BODEUL ( Return Euler angles for a body )
 
       subroutine bodeul ( body, et, ra, dec, w, lambda )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,12 +25,12 @@
 
       implicit none
 
-      integer               body
-      double precision      et
-      double precision      ra
-      double precision      dec
-      double precision      w
-      double precision      lambda
+      integer(ip)           body
+      real(wp)              et
+      real(wp)              ra
+      real(wp)              dec
+      real(wp)              w
+      real(wp)              lambda
 
 ! $ Brief_I/O
 !
@@ -409,31 +410,31 @@
       logical               failed
       logical               return
 
-      double precision      halfpi
-      double precision      j2000
-      double precision      rpd
-      double precision      spd
-      double precision      twopi
-      double precision      vdotg
+      real(wp)              halfpi
+      real(wp)              j2000
+      real(wp)              rpd
+      real(wp)              spd
+      real(wp)              twopi
+      real(wp)              vdotg
 
-      integer               zzbodbry
+      integer(ip)           zzbodbry
 
 !
 !     Local parameters
 !
-      integer               maxang
+      integer(ip)           maxang
       parameter           ( maxang = 200 )
 
 !
 !     Maximum number of coefficients per phase angle polynomial.
 !
-      integer               mxphas
+      integer(ip)           mxphas
       parameter           ( mxphas = 4 )
 
-      integer               mxpoly
+      integer(ip)           mxpoly
       parameter           ( mxpoly = 3 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 32 )
 
 !
@@ -444,44 +445,44 @@
       character*(namlen)    item
       character*(namlen)    item2
 
-      double precision      ac     ( maxang )
-      double precision      conepc
-      double precision      costh  ( maxang )
-      double precision      d
-      double precision      dc     ( maxang   )
-      double precision      dcoef  ( 0:mxpoly-1 )
-      double precision      delta
-      double precision      dpval
-      double precision      epoch
-      double precision      eulang (   6    )
-      double precision      j2bfx  ( 3, 3   )
-      double precision      j2ref  ( 3, 3   )
-      double precision      phi
-      double precision      rcoef  ( 0:mxpoly-1 )
-      double precision      rf2bfx ( 3, 3     )
-      double precision      sinth  ( maxang )
-      double precision      t
-      double precision      tcoef  ( mxphas * maxang )
-      double precision      theta
-      double precision      wc     ( maxang )
-      double precision      wcoef  ( 0:mxpoly-1 )
+      real(wp)              ac     ( maxang )
+      real(wp)              conepc
+      real(wp)              costh  ( maxang )
+      real(wp)              d
+      real(wp)              dc     ( maxang   )
+      real(wp)              dcoef  ( 0:mxpoly-1 )
+      real(wp)              delta
+      real(wp)              dpval
+      real(wp)              epoch
+      real(wp)              eulang (   6    )
+      real(wp)              j2bfx  ( 3, 3   )
+      real(wp)              j2ref  ( 3, 3   )
+      real(wp)              phi
+      real(wp)              rcoef  ( 0:mxpoly-1 )
+      real(wp)              rf2bfx ( 3, 3     )
+      real(wp)              sinth  ( maxang )
+      real(wp)              t
+      real(wp)              tcoef  ( mxphas * maxang )
+      real(wp)              theta
+      real(wp)              wc     ( maxang )
+      real(wp)              wcoef  ( 0:mxpoly-1 )
 
-      integer               deg
-      integer               dim
-      integer               i
-      integer               j
-      integer               j2code
-      integer               k
-      integer               m
-      integer               na
-      integer               nd
-      integer               nl
-      integer               nphase
-      integer               nphsco
-      integer               ntheta
-      integer               nw
-      integer               ref
-      integer               refid
+      integer(ip)           deg
+      integer(ip)           dim
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           j2code
+      integer(ip)           k
+      integer(ip)           m
+      integer(ip)           na
+      integer(ip)           nd
+      integer(ip)           nl
+      integer(ip)           nphase
+      integer(ip)           nphsco
+      integer(ip)           ntheta
+      integer(ip)           nw
+      integer(ip)           ref
+      integer(ip)           refid
 
       logical               first
       logical               found
@@ -820,7 +821,7 @@
 !        Evaluate the time polynomials at EPOCH.
 !
          d   = epoch / spd()
-         t   = d     / 36525.d0
+         t   = d     / 36525.0_wp
 
          ra  = rcoef(0)  +  t * ( rcoef(1) + t * rcoef(2) )
          dec = dcoef(0)  +  t * ( dcoef(1) + t * dcoef(2) )
@@ -847,7 +848,7 @@
 !              THETA and DTHETA have higher-order terms; there are
 !              NPHSCO coefficients for each angle.
 !
-               theta = 0.d0
+               theta = 0.0_wp
 
                do j = 1, nphsco
 !

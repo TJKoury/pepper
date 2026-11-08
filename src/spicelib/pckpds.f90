@@ -1,6 +1,7 @@
 !$Procedure PCKPDS ( PCK, pack descriptor )
 
       subroutine pckpds ( body, frame, type, first, last, descr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               body
+      integer(ip)           body
       character*(*)         frame
-      integer               type
-      double precision      first
-      double precision      last
-      double precision      descr ( * )
+      integer(ip)           type
+      real(wp)              first
+      real(wp)              last
+      real(wp)              descr ( * )
 
 ! $ Brief_I/O
 !
@@ -151,15 +152,15 @@
 !
 !     ND and NI values for a PCK file.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 5 )
 !
 !     Length of a calender string.
 !
-      integer               calsiz
+      integer(ip)           calsiz
       parameter           ( calsiz = 40 )
 !
 !     Local Variables
@@ -167,10 +168,10 @@
       character*(calsiz)    calfst
       character*(calsiz)    callst
 
-      double precision      dppart ( nd )
+      real(wp)              dppart ( nd )
 
-      integer               ipart  ( ni )
-      integer               refcod
+      integer(ip)           ipart  ( ni )
+      integer(ip)           refcod
 
 !
 !     Standard SPICELIB error handling.

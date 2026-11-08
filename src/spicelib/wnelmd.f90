@@ -1,6 +1,7 @@
 !$Procedure WNELMD ( Element of a DP window )
 
       logical function wnelmd ( point, window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      point
-      double precision      window      ( lbcell:* )
+      real(wp)              point
+      real(wp)              window      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -143,14 +144,14 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
+      integer(ip)           cardd
       logical               return
 
 !
 !     Local variables
 !
-      integer               card
-      integer               i
+      integer(ip)           card
+      integer(ip)           i
 
 
 

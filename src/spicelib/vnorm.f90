@@ -1,6 +1,7 @@
 !$Procedure VNORM ( Vector norm, 3 dimensions )
 
-      double precision function vnorm ( v1 )
+      real(wp) function vnorm ( v1 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      double precision  v1 ( 3 )
+      real(wp)          v1 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -176,7 +177,7 @@
 !-&
 
 
-      double precision v1max
+      real(wp) v1max
 
 !
 !  Determine the maximum component of the vector.
@@ -189,8 +190,8 @@
 !  or underflow.  In the cases where such is not a problem it not worth
 !  it to optimize further.
 !
-      if (v1max.eq.0.d0) then
-         vnorm = 0.d0
+      if (v1max.eq.0.0_wp) then
+         vnorm = 0.0_wp
       else
          vnorm = v1max * dsqrt (  (v1(1)/v1max)**2 &
                                 + (v1(2)/v1max)**2 &

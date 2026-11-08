@@ -1,6 +1,7 @@
 !$Procedure SPHLAT ( Spherical to latitudinal coordinates )
 
       subroutine sphlat ( r, colat, slon, radius, lon, lat )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision r
-      double precision colat
-      double precision slon
-      double precision radius
-      double precision lon
-      double precision lat
+      real(wp) r
+      real(wp) colat
+      real(wp) slon
+      real(wp) radius
+      real(wp) lon
+      real(wp) lat
 
 ! $ Brief_I/O
 !
@@ -421,13 +422,13 @@
 !
 !     SPICELIB functions
 !
-      double precision halfpi
+      real(wp) halfpi
 
 !
 !     Local Variables
 !
-      double precision rr
-      double precision lattud
+      real(wp) rr
+      real(wp) lattud
 
 !
 !     Convert to latitudinal coordinates, storing the results in

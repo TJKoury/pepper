@@ -1,6 +1,7 @@
 !$Procedure RMDUPI ( Remove duplicates from an integer array )
 
       subroutine rmdupi ( nelt, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      integer          nelt
-      integer          array   (*)
+      integer(ip)      nelt
+      integer(ip)      array   (*)
 
 ! $ Brief_I/O
 !
@@ -131,8 +132,8 @@
 !
 !     Local variables
 !
-      integer          i
-      integer          j
+      integer(ip)      i
+      integer(ip)      j
 
 
 

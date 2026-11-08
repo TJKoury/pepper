@@ -1,6 +1,7 @@
 !$Procedure SPKEZ ( S/P Kernel, easy reader )
 
       subroutine spkez ( targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,13 +29,13 @@
       include               'zzctr.inc'
 
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      integer               obs
-      double precision      starg    ( 6 )
-      double precision      lt
+      integer(ip)           obs
+      real(wp)              starg    ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -1021,7 +1022,7 @@
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -1029,21 +1030,21 @@
 !
       character*(corlen)    prvcor
 
-      double precision      dlt
-      double precision      dltctr
-      double precision      ltcent
-      double precision      state    ( 6    )
-      double precision      stobs    ( 6    )
-      double precision      temp     ( 6    )
-      double precision      xform    ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              dltctr
+      real(wp)              ltcent
+      real(wp)              state    ( 6    )
+      real(wp)              stobs    ( 6    )
+      real(wp)              temp     ( 6    )
+      real(wp)              xform    ( 6, 6 )
 
-      integer               center
-      integer               fj2000
-      integer               i
-      integer               ltsign
-      integer               reqfrm
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           fj2000
+      integer(ip)           i
+      integer(ip)           ltsign
+      integer(ip)           reqfrm
+      integer(ip)           type
+      integer(ip)           typeid
 
       logical               attblk ( nabcor )
       logical               found
@@ -1053,9 +1054,9 @@
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svref
-      integer               svreqf
+      integer(ip)           svreqf
 
       logical               first
 
@@ -1230,8 +1231,8 @@
 
          if ( center .eq. obs ) then
 
-            ltcent = 0.0d0
-            dltctr = 0.0d0
+            ltcent = 0.0_wp
+            dltctr = 0.0_wp
 
          else if ( center .eq. targ ) then
 
@@ -1303,7 +1304,7 @@
 !
          do i = 1, 3
 
-            call vsclip ( 1.d0 + ltsign*dltctr, xform(4,i))
+            call vsclip ( 1.0_wp + ltsign*dltctr, xform(4,i))
 
          end do
 

@@ -1,6 +1,7 @@
 !$Procedure ZZCVPOOL ( Private---Check variable update, with counter )
 
       subroutine zzcvpool ( agent, usrctr, update )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,7 +30,7 @@
       include              'zzctr.inc'
 
       character*(*)         agent
-      integer               usrctr    ( ctrsiz )
+      integer(ip)           usrctr    ( ctrsiz )
       logical               update
 
 ! $ Brief_I/O

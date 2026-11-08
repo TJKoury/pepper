@@ -4,6 +4,7 @@
                                   lhans,  lsdscs, lcdscs, lrows, lelts, &
                                   ops, &
                                   rhans,  rsdscs, rcdscs, rrows, relts )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -31,19 +32,19 @@
       include 'ekqlimit.inc'
 
 
-      integer               ncnstr
+      integer(ip)           ncnstr
       logical               active ( * )
-      integer               lhans  ( * )
-      integer               lsdscs ( sdscsz, * )
-      integer               lcdscs ( cdscsz, * )
-      integer               lrows  ( * )
-      integer               lelts  ( * )
-      integer               ops    ( * )
-      integer               rhans  ( * )
-      integer               rsdscs ( sdscsz, * )
-      integer               rcdscs ( cdscsz, * )
-      integer               rrows  ( * )
-      integer               relts  ( * )
+      integer(ip)           lhans  ( * )
+      integer(ip)           lsdscs ( sdscsz, * )
+      integer(ip)           lcdscs ( cdscsz, * )
+      integer(ip)           lrows  ( * )
+      integer(ip)           lelts  ( * )
+      integer(ip)           ops    ( * )
+      integer(ip)           rhans  ( * )
+      integer(ip)           rsdscs ( sdscsz, * )
+      integer(ip)           rcdscs ( cdscsz, * )
+      integer(ip)           rrows  ( * )
+      integer(ip)           relts  ( * )
 
 ! $ Brief_I/O
 !
@@ -268,23 +269,23 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekecmp
+      integer(ip)           zzekecmp
 
 !
 !     Local variables
 !
       character*(maxstr)    cval   ( 2 )
 
-      integer               cldscs ( cdscsz, 2 )
-      integer               cmplen ( 2 )
-      integer               cvlen  ( 2 )
-      integer               elts   ( 2 )
-      integer               hans   ( 2 )
-      integer               i
-      integer               n
-      integer               rel
-      integer               rows   ( 2 )
-      integer               sgdscs ( sdscsz, 2 )
+      integer(ip)           cldscs ( cdscsz, 2 )
+      integer(ip)           cmplen ( 2 )
+      integer(ip)           cvlen  ( 2 )
+      integer(ip)           elts   ( 2 )
+      integer(ip)           hans   ( 2 )
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           rel
+      integer(ip)           rows   ( 2 )
+      integer(ip)           sgdscs ( sdscsz, 2 )
 
       logical               found
       logical               null   ( 2 )

@@ -1,6 +1,7 @@
 !$Procedure ORDD ( The ordinal position of an element in a set )
 
-      integer function ordd ( item, set )
+      integer(ip) function ordd ( item, set )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
 
-      double precision      item
-      double precision      set ( lbcell:* )
+      real(wp)              item
+      real(wp)              set ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -182,8 +183,8 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchd
-      integer               cardd
+      integer(ip)           bsrchd
+      integer(ip)           cardd
       logical               return
 
 

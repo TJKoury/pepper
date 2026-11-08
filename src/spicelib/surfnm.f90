@@ -1,6 +1,7 @@
 !$Procedure SURFNM ( Surface normal vector on an ellipsoid )
 
       subroutine surfnm ( a, b, c, point, normal )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      double precision   a
-      double precision   b
-      double precision   c
-      double precision   point  ( 3 )
-      double precision   normal ( 3 )
+      real(wp)           a
+      real(wp)           b
+      real(wp)           c
+      real(wp)           point  ( 3 )
+      real(wp)           normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -168,13 +169,13 @@
 !
 !     Local Variables
 !
-      double precision      m
-      double precision      a1
-      double precision      b1
-      double precision      c1
+      real(wp)              m
+      real(wp)              a1
+      real(wp)              b1
+      real(wp)              c1
 
       character*32          mssg ( 7 )
-      integer               bad
+      integer(ip)           bad
       save
 
 !

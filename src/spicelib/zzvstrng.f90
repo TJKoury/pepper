@@ -1,6 +1,7 @@
 !$Procedure       ZZVSTRNG ( Virtual String )
 
       subroutine zzvstrng( x, fill, from, to, rnd, expont, substr, did )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 ! $ Declarations
 
       implicit none
-      double precision      x
+      real(wp)              x
       character*(1)         fill
-      integer               from
-      integer               to
+      integer(ip)           from
+      integer(ip)           to
       logical               rnd
-      integer               expont
+      integer(ip)           expont
       character*(*)         substr
       logical               did
 
@@ -180,19 +181,19 @@
 !
 
 
-      integer               maxsig
+      integer(ip)           maxsig
       parameter           ( maxsig = 14 )
 
-      integer               esgn
+      integer(ip)           esgn
       parameter           ( esgn   = maxsig + 4 )
 
-      integer               efst
+      integer(ip)           efst
       parameter           ( efst   = esgn + 1 )
 
-      integer               escd
+      integer(ip)           escd
       parameter           ( escd   = efst + 1 )
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = maxsig + 16 )
 
       logical               yes
@@ -207,15 +208,15 @@
       character*(1)         myfill
       character*(1)         letter
 
-      integer               blank
-      integer               code
-      integer               code0
-      integer               exp
-      integer               i
-      integer               j
-      integer               lsub
-      integer               slot
-      integer               value
+      integer(ip)           blank
+      integer(ip)           code
+      integer(ip)           code0
+      integer(ip)           exp
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           lsub
+      integer(ip)           slot
+      integer(ip)           value
 
       logical               minus
       logical               incr

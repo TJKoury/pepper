@@ -1,6 +1,7 @@
 !$Procedure CKE04 ( C-kernel, evaluate pointing record, type 4 )
 
       subroutine cke04 ( needav, record, cmat, av, clkout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
       include               'ckparam.inc'
 
       logical               needav
-      double precision      record ( * )
-      double precision      cmat   ( 3, 3 )
-      double precision      av     ( 3 )
-      double precision      clkout
+      real(wp)              record ( * )
+      real(wp)              cmat   ( 3, 3 )
+      real(wp)              av     ( 3 )
+      real(wp)              clkout
 
 ! $ Brief_I/O
 !
@@ -330,19 +331,19 @@
 !
 !     Local variables
 !
-      double precision        q      ( 4 )
-      double precision        qout   ( 4 )
+      real(wp)                q      ( 4 )
+      real(wp)                qout   ( 4 )
 
-      integer                 basadd
-      integer                 i
-      integer                 ideg   ( qavsiz )
+      integer(ip)             basadd
+      integer(ip)             i
+      integer(ip)             ideg   ( qavsiz )
 
 !
 !     Initial values.
 !
-      av( 1 ) = 0.d0
-      av( 2 ) = 0.d0
-      av( 3 ) = 0.d0
+      av( 1 ) = 0.0_wp
+      av( 2 ) = 0.0_wp
+      av( 3 ) = 0.0_wp
 
 !
 !     Read numbers of polynomial coefficients from input record to

@@ -3,6 +3,7 @@
       subroutine zzgfcost ( vecdef, method, trgid, et, &
                             ref,    abcorr, obsid, dref, &
                             dctr,   dvec,   radii, state, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -36,16 +37,16 @@
 
       character*(*)         vecdef
       character*(*)         method
-      integer               trgid
-      double precision      et
+      integer(ip)           trgid
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      integer               obsid
+      integer(ip)           obsid
       character*(*)         dref
-      integer               dctr
-      double precision      dvec   ( 3 )
-      double precision      radii  ( 3 )
-      double precision      state  ( 6 )
+      integer(ip)           dctr
+      real(wp)              dvec   ( 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              state  ( 6 )
       logical               found
 
 ! $ Brief_I/O
@@ -368,7 +369,7 @@
 !
 !     Local variables
 !
-      double precision      lt
+      real(wp)              lt
 
 !
 !     Standard SPICE error handling.

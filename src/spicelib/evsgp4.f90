@@ -1,6 +1,7 @@
 !$Procedure EVSGP4 ( Evaluate "two-line" element data )
 
       subroutine evsgp4 ( et, geophs, elems, state )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -24,10 +25,10 @@
 
       include 'zzsgp4.inc'
 
-      double precision      et
-      double precision      geophs (  8 )
-      double precision      elems  ( 10 )
-      double precision      state  (  6 )
+      real(wp)              et
+      real(wp)              geophs (  8 )
+      real(wp)              elems  ( 10 )
+      real(wp)              state  (  6 )
 
 ! $ Brief_I/O
 !
@@ -363,7 +364,7 @@
 !-&
 
 
-      double precision      t1
+      real(wp)              t1
 
       logical               failed
       logical               return
@@ -396,7 +397,7 @@
 !     Calculate time from epoch in minutes.
 !
       t1 = elems ( kepoch )
-      t1 = (et - t1)/60.d0
+      t1 = (et - t1)/60.0_wp
 
 !
 !     Compute state.

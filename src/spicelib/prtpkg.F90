@@ -1,6 +1,7 @@
 !$Procedure PRTPKG ( Declare Arguments for Error Message Routines )
 
       logical function prtpkg ( short, long, expl, trace, dfault, type )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
       logical               dfault
       character*(*)         type
 
-       integer               filen
+       integer(ip)           filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
        parameter           ( filen = 128 )
 #else

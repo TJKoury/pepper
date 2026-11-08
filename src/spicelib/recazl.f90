@@ -1,6 +1,7 @@
 !$Procedure RECAZL ( Rectangular coordinates to AZ/EL )
 
       subroutine recazl ( rectan, azccw, elplsz, range, az, el )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      double precision   rectan ( 3 )
+      real(wp)           rectan ( 3 )
       logical            azccw
       logical            elplsz
-      double precision   range
-      double precision   az
-      double precision   el
+      real(wp)           range
+      real(wp)           az
+      real(wp)           el
 
 ! $ Brief_I/O
 !
@@ -540,7 +541,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
+      real(wp)              twopi
 
 !
 !     Call the subroutine RECRAD to convert the rectangular coordinates
@@ -571,7 +572,7 @@
 !        zero to 2*pi. The value of AZ returned from RECRAD is never
 !        negative, but it may be zero.
 !
-         if ( az .gt. 0.d0 ) then
+         if ( az .gt. 0.0_wp ) then
 !
 !            Replace AZ with its 2*pi complement.
 !
@@ -582,7 +583,7 @@
 !            Although we expect the result to always be non-negative,
 !            we take no chances.
 !
-             az = max( twopi() - az, 0.d0 )
+             az = max( twopi() - az, 0.0_wp )
 
          end if
 
@@ -598,7 +599,7 @@
 !        -0.D0 values, which affect printed outputs generated
 !        by example programs.
 !
-         if ( el .ne. 0.d0 ) then
+         if ( el .ne. 0.0_wp ) then
             el = -el
          end if
 

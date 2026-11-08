@@ -1,6 +1,7 @@
 !$Procedure CLEARC ( Clear an array of strings )
 
       subroutine clearc ( ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer             ndim
+      integer(ip)         ndim
       character*(*)       array ( * )
 
 ! $ Brief_I/O
@@ -185,7 +186,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim

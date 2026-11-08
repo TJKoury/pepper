@@ -3,6 +3,7 @@
       subroutine scanit ( string, start,  room, &
                           nmarks, marks,  mrklen, pnters, &
                           ntokns, ident,  beg,    end     )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,16 +25,16 @@
       implicit none
 
       character*(*)         string
-      integer               room
-      integer               nmarks
+      integer(ip)           room
+      integer(ip)           nmarks
       character*(*)         marks   ( * )
-      integer               mrklen  ( * )
-      integer               pnters  ( * )
-      integer               start
-      integer               ntokns
-      integer               beg     ( * )
-      integer               end     ( * )
-      integer               ident   ( * )
+      integer(ip)           mrklen  ( * )
+      integer(ip)           pnters  ( * )
+      integer(ip)           start
+      integer(ip)           ntokns
+      integer(ip)           beg     ( * )
+      integer(ip)           end     ( * )
+      integer(ip)           ident   ( * )
 
 ! $ Brief_I/O
 !
@@ -386,8 +387,8 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               rtrim
-      integer               ncpos
+      integer(ip)           rtrim
+      integer(ip)           ncpos
 
 
 !
@@ -395,26 +396,26 @@
 !
       character*(1)         letter
 
-      integer               backup
-      integer               eblock
-      integer               fchar
-      integer               finish
-      integer               i
-      integer               intval
-      integer               j
-      integer               jump
-      integer               l
-      integer               last
-      integer               last1
-      integer               lbound
-      integer               lchar
-      integer               n
-      integer               offset
-      integer               slot
-      integer               stop
-      integer               test
-      integer               this1
-      integer               ubound
+      integer(ip)           backup
+      integer(ip)           eblock
+      integer(ip)           fchar
+      integer(ip)           finish
+      integer(ip)           i
+      integer(ip)           intval
+      integer(ip)           j
+      integer(ip)           jump
+      integer(ip)           l
+      integer(ip)           last
+      integer(ip)           last1
+      integer(ip)           lbound
+      integer(ip)           lchar
+      integer(ip)           n
+      integer(ip)           offset
+      integer(ip)           slot
+      integer(ip)           stop
+      integer(ip)           test
+      integer(ip)           this1
+      integer(ip)           ubound
 
       logical               equal
       logical               known

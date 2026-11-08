@@ -2,6 +2,7 @@
 
       subroutine zzscad01 ( sc,     hdsclk, scpool, clklst, dpfree, &
                             dpbuff, ifree,  intbuf, scbase, sclkat )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,16 +28,16 @@
       include 'errhnd.inc'
       include 'zzsc01.inc'
 
-      integer               sc
-      integer               hdsclk ( * )
-      integer               scpool ( lbsngl : * )
-      integer               clklst ( * )
-      integer               dpfree
-      double precision      dpbuff ( * )
-      integer               ifree
-      integer               intbuf ( * )
-      integer               scbase ( * )
-      integer               sclkat
+      integer(ip)           sc
+      integer(ip)           hdsclk ( * )
+      integer(ip)           scpool ( lbsngl : * )
+      integer(ip)           clklst ( * )
+      integer(ip)           dpfree
+      real(wp)              dpbuff ( * )
+      integer(ip)           ifree
+      integer(ip)           intbuf ( * )
+      integer(ip)           scbase ( * )
+      integer(ip)           sclkat
 
 ! $ Brief_I/O
 !
@@ -232,7 +233,7 @@
 !
 !     Local parameters
 !
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen =     60 )
 
 !
@@ -242,40 +243,40 @@
 !
 !     NOTE: indices for the d.p. variables must be listed first.
 !
-      integer               cofidx
+      integer(ip)           cofidx
       parameter           ( cofidx =          1 )
 
-      integer               prsidx
+      integer(ip)           prsidx
       parameter           ( prsidx = cofidx + 1 )
 
-      integer               preidx
+      integer(ip)           preidx
       parameter           ( preidx = prsidx + 1 )
 
-      integer               offidx
+      integer(ip)           offidx
       parameter           ( offidx = preidx + 1 )
 
-      integer               modidx
+      integer(ip)           modidx
       parameter           ( modidx = offidx + 1 )
 
-      integer               nflidx
+      integer(ip)           nflidx
       parameter           ( nflidx = modidx + 1 )
 
-      integer               delidx
+      integer(ip)           delidx
       parameter           ( delidx = nflidx + 1 )
 
-      integer               sysidx
+      integer(ip)           sysidx
       parameter           ( sysidx = delidx + 1 )
 
-      integer               nkitem
+      integer(ip)           nkitem
       parameter           ( nkitem = sysidx )
 
-      integer               ndp
+      integer(ip)           ndp
       parameter           ( ndp    = modidx )
 
 !
 !     Maximum number of elements in coefficient array:
 !
-      integer               mxcfsz
+      integer(ip)           mxcfsz
       parameter           ( mxcfsz =  3 * mxcoef )
 
 !
@@ -286,25 +287,25 @@
       character*(namlen)    namlst ( nkitem )
       character*(smsgln)    shrtms
 
-      integer               dpbase
-      integer               dproom
-      integer               i
-      integer               ibase
-      integer               ibix   ( nkitem )
-      integer               iroom
-      integer               kvmaxn ( nkitem )
-      integer               kvsize ( nkitem )
-      integer               n
-      integer               ncoeff
-      integer               ndpval
-      integer               nmod
-      integer               noff
-      integer               npart
-      integer               npartb
-      integer               nparte
-      integer               nscavl
-      integer               nsys
-      integer               prvsc
+      integer(ip)           dpbase
+      integer(ip)           dproom
+      integer(ip)           i
+      integer(ip)           ibase
+      integer(ip)           ibix   ( nkitem )
+      integer(ip)           iroom
+      integer(ip)           kvmaxn ( nkitem )
+      integer(ip)           kvsize ( nkitem )
+      integer(ip)           n
+      integer(ip)           ncoeff
+      integer(ip)           ndpval
+      integer(ip)           nmod
+      integer(ip)           noff
+      integer(ip)           npart
+      integer(ip)           npartb
+      integer(ip)           nparte
+      integer(ip)           nscavl
+      integer(ip)           nsys
+      integer(ip)           prvsc
 
       logical               found
       logical               new

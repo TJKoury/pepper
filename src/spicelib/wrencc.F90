@@ -1,6 +1,7 @@
 !$Procedure WRENCC ( Write characters to text file encoded )
 
       subroutine wrencc ( unit, n, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer               unit
-      integer               n
+      integer(ip)           unit
+      integer(ip)           n
       character*(*)         data ( * )
 
 ! $ Brief_I/O
@@ -466,10 +467,10 @@
       character*(1)         chrlpc
       parameter           ( chrlpc = '~')
 
-      integer               maxenc
+      integer(ip)           maxenc
       parameter           ( maxenc = 64 )
 
-      integer               hexbas
+      integer(ip)           hexbas
       parameter           ( hexbas = 16 )
 
 !
@@ -481,28 +482,28 @@
       character*(1)         hexdig(0:15)
       character*(2)         lftovr
 
-      integer               dtalen
-      integer               dtalin
-      integer               dtapos
-      integer               encpos
-      integer               hibits
-      integer               intch
-      integer               intesc
-      integer               intfpc
-      integer               intlpc
-      integer               intquo
-      integer               iostat
-      integer               lobits
-      integer               nchars
-      integer               nchout
-      integer               room
+      integer(ip)           dtalen
+      integer(ip)           dtalin
+      integer(ip)           dtapos
+      integer(ip)           encpos
+      integer(ip)           hibits
+      integer(ip)           intch
+      integer(ip)           intesc
+      integer(ip)           intfpc
+      integer(ip)           intlpc
+      integer(ip)           intquo
+      integer(ip)           iostat
+      integer(ip)           lobits
+      integer(ip)           nchars
+      integer(ip)           nchout
+      integer(ip)           room
 
       logical               first
 
 !
 !     Statement Functions
 !
-      integer               zzichr
+      integer(ip)           zzichr
 
 !
 !     Saved variables

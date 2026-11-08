@@ -1,6 +1,7 @@
 !$Procedure ZZDNPT ( Derivative of ellipsoid near point )
 
       subroutine zzdnpt ( state, nearp, a, b, c, dnear, dalt, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 ! $ Declarations
 
       implicit none
-      double precision      state ( 6 )
-      double precision      nearp ( 3 )
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      dnear ( 3 )
-      double precision      dalt
+      real(wp)              state ( 6 )
+      real(wp)              nearp ( 3 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              dnear ( 3 )
+      real(wp)              dalt
       logical               found
 
 ! $ Brief_I/O
@@ -172,27 +173,27 @@
 !
       logical               return
 
-      double precision      vdot
-      double precision      vtmv
+      real(wp)              vdot
+      real(wp)              vtmv
 
 !
 !     Local Variables
 !
-      double precision      denom
-      double precision      dterm  ( 3 )
-      double precision      grad   ( 3 )
-      double precision      l
-      double precision      length
-      double precision      lprime
-      double precision      norml  ( 3 )
-      double precision      temp   ( 3 )
-      double precision      zenith ( 3 )
+      real(wp)              denom
+      real(wp)              dterm  ( 3 )
+      real(wp)              grad   ( 3 )
+      real(wp)              l
+      real(wp)              length
+      real(wp)              lprime
+      real(wp)              norml  ( 3 )
+      real(wp)              temp   ( 3 )
+      real(wp)              zenith ( 3 )
 
 
-      double precision      gradm  ( 3, 3 )
-      double precision      m      ( 3, 3 )
+      real(wp)              gradm  ( 3, 3 )
+      real(wp)              m      ( 3, 3 )
 
-      integer               i
+      integer(ip)           i
 !
 !     Saved Variables
 !
@@ -202,13 +203,13 @@
 !
 !     Initial Values
 !
-      data   gradm / 1.0d0, 0.0d0, 0.0d0, &
-                     0.0d0, 1.0d0, 0.0d0, &
-                     0.0d0, 0.0d0, 1.0d0  /
+      data   gradm / 1.0_wp, 0.0_wp, 0.0_wp, &
+                     0.0_wp, 1.0_wp, 0.0_wp, &
+                     0.0_wp, 0.0_wp, 1.0_wp  /
 
-      data   m     / 1.0d0, 0.0d0, 0.0d0, &
-                     0.0d0, 1.0d0, 0.0d0, &
-                     0.0d0, 0.0d0, 1.0d0  /
+      data   m     / 1.0_wp, 0.0_wp, 0.0_wp, &
+                     0.0_wp, 1.0_wp, 0.0_wp, &
+                     0.0_wp, 0.0_wp, 1.0_wp  /
 !
 !     Standard SPICE error handling.
 !
@@ -290,9 +291,9 @@
 !     following the declaration section of this routine.
 !
 
-      gradm(1,1) = 1.0d0/(a*a)
-      gradm(2,2) = 1.0d0/(b*b)
-      gradm(3,3) = 1.0d0/(c*c)
+      gradm(1,1) = 1.0_wp/(a*a)
+      gradm(2,2) = 1.0_wp/(b*b)
+      gradm(3,3) = 1.0_wp/(c*c)
 
       call vsub  ( state,  nearp, zenith )
 
@@ -356,13 +357,13 @@
 !
 
       do i = 1, 3
-         dterm(i) = 1.0d0 + l*gradm(i,i)
+         dterm(i) = 1.0_wp + l*gradm(i,i)
       end do
 
       do i = 1, 3
 
-         if ( dterm(i) .ne. 0.0d0 ) then
-            m(i,i) = 1.0d0 / dterm(i)
+         if ( dterm(i) .ne. 0.0_wp ) then
+            m(i,i) = 1.0_wp / dterm(i)
          else
             found = .false.
             call chkout ( 'ZZDNPT' )
@@ -373,7 +374,7 @@
 
       denom = vtmv ( grad, m, grad )
 
-      if ( denom .eq. 0.0d0 ) then
+      if ( denom .eq. 0.0_wp ) then
          found = .false.
          call chkout ( 'ZZDNPT' )
          return
@@ -387,7 +388,7 @@
 !
 !        N'  = M * ( P' - L'*GRAD )
 !
-      call vlcom ( 1.0d0, state(4), -lprime, grad, temp     )
+      call vlcom ( 1.0_wp, state(4), -lprime, grad, temp     )
       call mxv   ( m,     temp,                    dnear )
 
 

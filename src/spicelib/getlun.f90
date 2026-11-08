@@ -1,6 +1,7 @@
 !$Procedure GETLUN ( Get a free logical unit )
 
       subroutine getlun ( unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer          unit
+      integer(ip)      unit
 
 ! $ Brief_I/O
 !

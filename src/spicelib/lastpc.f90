@@ -1,6 +1,7 @@
 !$Procedure LASTPC ( Last printable character )
 
-      integer function  lastpc ( string )
+      integer(ip) function  lastpc ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -138,7 +139,7 @@
 !
 !     Local variables
 !
-      integer          i
+      integer(ip)      i
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure TTRANS ( Time transformation )
 
       subroutine ttrans ( from, to, tvec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
 
       include               'zzctr.inc'
 
-      integer               mxcomp
+      integer(ip)           mxcomp
       parameter           ( mxcomp = 10 )
 
       character*(*)         from
       character*(*)         to
-      double precision      tvec ( mxcomp )
+      real(wp)              tvec ( mxcomp )
 
 ! $ Brief_I/O
 !
@@ -455,14 +456,14 @@
 !
       logical               return
 
-      integer               bsrchc
-      integer               lstlei
-      integer               lstled
-      integer               lstlti
+      integer(ip)           bsrchc
+      integer(ip)           lstlei
+      integer(ip)           lstled
+      integer(ip)           lstlti
 
-      double precision      j2000
-      double precision      spd
-      double precision      unitim
+      real(wp)              j2000
+      real(wp)              spd
+      real(wp)              unitim
 
       logical               odd
       logical               elemc
@@ -471,13 +472,13 @@
 !
 !     Local (in-line) functions
 !
-      integer               divble
-      integer               doy
-      integer               dp0001
-      integer               ldays
-      integer               ydays
+      integer(ip)           divble
+      integer(ip)           doy
+      integer(ip)           dp0001
+      integer(ip)           ldays
+      integer(ip)           ydays
 
-      double precision      hmssec
+      real(wp)              hmssec
 
 !
 !     Local parameters
@@ -488,16 +489,16 @@
 !     We declare the variables that contain the number of days in
 !     400 years, 100 years, 4 years and 1 year.
 !
-      integer               dp400y
+      integer(ip)           dp400y
       parameter           ( dp400y = 365*400 + 97 )
 
-      integer               dp100y
+      integer(ip)           dp100y
       parameter           ( dp100y = 365*100 + 24 )
 
-      integer               dp4y
+      integer(ip)           dp4y
       parameter           ( dp4y   = 365*4   + 1  )
 
-      integer               dp1y
+      integer(ip)           dp1y
       parameter           ( dp1y   = 365 )
 
 
@@ -505,120 +506,120 @@
 !     The following integers give the number of days during the
 !     associated month of a non-leap year.
 !
-      integer               jan
+      integer(ip)           jan
       parameter           ( jan = 31 )
 
-      integer               feb
+      integer(ip)           feb
       parameter           ( feb = 28 )
 
-      integer               mar
+      integer(ip)           mar
       parameter           ( mar = 31 )
 
-      integer               apr
+      integer(ip)           apr
       parameter           ( apr = 30 )
 
-      integer               may
+      integer(ip)           may
       parameter           ( may = 31 )
 
-      integer               jun
+      integer(ip)           jun
       parameter           ( jun = 30 )
 
-      integer               jul
+      integer(ip)           jul
       parameter           ( jul = 31 )
 
-      integer               aug
+      integer(ip)           aug
       parameter           ( aug = 31 )
 
-      integer               sep
+      integer(ip)           sep
       parameter           ( sep = 30 )
 
-      integer               oct
+      integer(ip)           oct
       parameter           ( oct = 31 )
 
-      integer               nov
+      integer(ip)           nov
       parameter           ( nov = 30 )
 
-      integer               dec
+      integer(ip)           dec
       parameter           ( dec = 31 )
 
 !
 !     The integers that follow give the number of days in a normal
 !     year that precede the first of the month.
 !
-      integer               jan0
+      integer(ip)           jan0
       parameter           ( jan0 = 0  )
 
-      integer               feb0
+      integer(ip)           feb0
       parameter           ( feb0 = jan + jan0 )
 
-      integer               mar0
+      integer(ip)           mar0
       parameter           ( mar0 = feb + feb0 )
 
-      integer               apr0
+      integer(ip)           apr0
       parameter           ( apr0 = mar + mar0 )
 
-      integer               may0
+      integer(ip)           may0
       parameter           ( may0 = apr + apr0 )
 
-      integer               jun0
+      integer(ip)           jun0
       parameter           ( jun0 = may + may0 )
 
-      integer               jul0
+      integer(ip)           jul0
       parameter           ( jul0 = jun + jun0 )
 
-      integer               aug0
+      integer(ip)           aug0
       parameter           ( aug0 = jul + jul0 )
 
-      integer               sep0
+      integer(ip)           sep0
       parameter           ( sep0 = aug + aug0 )
 
-      integer               oct0
+      integer(ip)           oct0
       parameter           ( oct0 = sep + sep0 )
 
-      integer               nov0
+      integer(ip)           nov0
       parameter           ( nov0 = oct + oct0 )
 
-      integer               dec0
+      integer(ip)           dec0
       parameter           ( dec0 = nov + nov0 )
 
 !
 !     The integers that follow give the number of days in a leap
 !     year that precede the first of the month.
 !
-      integer               janl0
+      integer(ip)           janl0
       parameter           ( janl0 = jan0  )
 
-      integer               febl0
+      integer(ip)           febl0
       parameter           ( febl0 = feb0 )
 
-      integer               marl0
+      integer(ip)           marl0
       parameter           ( marl0 = mar0 + 1 )
 
-      integer               aprl0
+      integer(ip)           aprl0
       parameter           ( aprl0 = apr0 + 1 )
 
-      integer               mayl0
+      integer(ip)           mayl0
       parameter           ( mayl0 = may0 + 1 )
 
-      integer               junl0
+      integer(ip)           junl0
       parameter           ( junl0 = jun0 + 1 )
 
-      integer               jull0
+      integer(ip)           jull0
       parameter           ( jull0 = jul0 + 1 )
 
-      integer               augl0
+      integer(ip)           augl0
       parameter           ( augl0 = aug0 + 1 )
 
-      integer               sepl0
+      integer(ip)           sepl0
       parameter           ( sepl0 = sep0 + 1 )
 
-      integer               octl0
+      integer(ip)           octl0
       parameter           ( octl0 = oct0 + 1 )
 
-      integer               novl0
+      integer(ip)           novl0
       parameter           ( novl0 = nov0 + 1 )
 
-      integer               decl0
+      integer(ip)           decl0
       parameter           ( decl0 = dec0 + 1 )
 
 !
@@ -626,14 +627,14 @@
 !     stored internally.   The value of 140 should be sufficient
 !     to store leap seconds through the year 2100.
 !
-      integer               maxlp
+      integer(ip)           maxlp
       parameter           ( maxlp = 140 )
 
 !
 !     MAXVAR is the number of kernel pool variables required by this
 !     routine.
 !
-      integer               maxvar
+      integer(ip)           maxvar
       parameter           ( maxvar = 1 )
 
 !
@@ -664,70 +665,70 @@
 !     YWDF
 !
 
-      integer               daysec
+      integer(ip)           daysec
       parameter           ( daysec = 1 )
 
-      integer               dayp2
+      integer(ip)           dayp2
       parameter           ( dayp2 = daysec + 1 )
 
-      integer               et
+      integer(ip)           et
       parameter           ( et     = dayp2 + 1 )
 
-      integer               frml
+      integer(ip)           frml
       parameter           ( frml = et     + 1 )
 
-      integer               jdtdb
+      integer(ip)           jdtdb
       parameter           ( jdtdb  = frml + 1 )
 
-      integer               jdtdt
+      integer(ip)           jdtdt
       parameter           ( jdtdt  = jdtdb  + 1 )
 
-      integer               jdutc
+      integer(ip)           jdutc
       parameter           ( jdutc  = jdtdt  + 1 )
 
-      integer               jed
+      integer(ip)           jed
       parameter           ( jed    = jdutc  + 1 )
 
-      integer               ttai
+      integer(ip)           ttai
       parameter           ( ttai   = jed    + 1 )
 
-      integer               tdb
+      integer(ip)           tdb
       parameter           ( tdb    = ttai   + 1 )
 
-      integer               tdt
+      integer(ip)           tdt
       parameter           ( tdt    = tdb    + 1 )
 
-      integer               yd
+      integer(ip)           yd
       parameter           ( yd     = tdt    + 1 )
 
-      integer               ydd
+      integer(ip)           ydd
       parameter           ( ydd    = yd     + 1 )
 
-      integer               yddf
+      integer(ip)           yddf
       parameter           ( yddf   = ydd    + 1 )
 
-      integer               ydf
+      integer(ip)           ydf
       parameter           ( ydf    = yddf   + 1 )
 
-      integer               ymd
+      integer(ip)           ymd
       parameter           ( ymd    = ydf    + 1 )
 
-      integer               ymdf
+      integer(ip)           ymdf
       parameter           ( ymdf   = ymd    + 1 )
 
-      integer               ymwd
+      integer(ip)           ymwd
       parameter           ( ymwd   = ymdf   + 1 )
 
-      integer               ymwdf
+      integer(ip)           ymwdf
       parameter           ( ymwdf  = ymwd   + 1 )
 
-      integer               ywd
+      integer(ip)           ywd
       parameter           ( ywd    = ymwdf  + 1 )
 
-      integer               ywdf
+      integer(ip)           ywdf
       parameter           ( ywdf   = ywd    + 1 )
 
-      integer               nrec
+      integer(ip)           nrec
       parameter           ( nrec   = ywdf )
 !
 !     The following parameters just make the code seem a bit
@@ -742,77 +743,77 @@
 !
 !     Local variables
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
 
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen =  8 )
 
       character*(typlen)    unifrm (lbcell : nrec )
 
       character*(typlen)    recog   ( nrec )
-      integer               parsed  ( nrec )
+      integer(ip)           parsed  ( nrec )
       logical               needy   ( nrec )
       logical               forml   ( nrec )
-      integer               ordvec  ( nrec )
+      integer(ip)           ordvec  ( nrec )
 
       character*(32)        rest
       character*(32)        myfrom
       character*(32)        myto
       character*(32)        vars   ( maxvar )
 
-      double precision      daydp
-      double precision      daylen
-      double precision      dp2000
-      double precision      dt
-      double precision      exsecs
-      double precision      formal
-      double precision      frac
-      double precision      halfd
-      double precision      hours
-      double precision      jd1101
-      double precision      jdsecs
-      double precision      lastdt
-      double precision      mins
-      double precision      secs
-      double precision      secspd
-      double precision      tai
-      double precision      taitab ( 2*maxlp )
-      double precision      tempd
-      double precision      tsecs
+      real(wp)              daydp
+      real(wp)              daylen
+      real(wp)              dp2000
+      real(wp)              dt
+      real(wp)              exsecs
+      real(wp)              formal
+      real(wp)              frac
+      real(wp)              halfd
+      real(wp)              hours
+      real(wp)              jd1101
+      real(wp)              jdsecs
+      real(wp)              lastdt
+      real(wp)              mins
+      real(wp)              secs
+      real(wp)              secspd
+      real(wp)              tai
+      real(wp)              taitab ( 2*maxlp )
+      real(wp)              tempd
+      real(wp)              tsecs
 
-      integer               day
-      integer               daynum
-      integer               dayptr
-      integer               daytab ( 2*maxlp )
-      integer               dn2000
-      integer               doffst
-      integer               dofyr
-      integer               dpsun
-      integer               dyear
-      integer               fmday
-      integer               fyrday
-      integer               i
-      integer               month
-      integer               nref
-      integer               offset
-      integer               pfrom
-      integer               pto
-      integer               qint
-      integer               refptr
-      integer               rem
-      integer               sunday
-      integer               taiptr
-      integer               tempi
-      integer               usrctr ( ctrsiz )
-      integer               week
-      integer               wkday
-      integer               year
-      integer               yr1
-      integer               yr100
-      integer               yr4
-      integer               yr400
+      integer(ip)           day
+      integer(ip)           daynum
+      integer(ip)           dayptr
+      integer(ip)           daytab ( 2*maxlp )
+      integer(ip)           dn2000
+      integer(ip)           doffst
+      integer(ip)           dofyr
+      integer(ip)           dpsun
+      integer(ip)           dyear
+      integer(ip)           fmday
+      integer(ip)           fyrday
+      integer(ip)           i
+      integer(ip)           month
+      integer(ip)           nref
+      integer(ip)           offset
+      integer(ip)           pfrom
+      integer(ip)           pto
+      integer(ip)           qint
+      integer(ip)           refptr
+      integer(ip)           rem
+      integer(ip)           sunday
+      integer(ip)           taiptr
+      integer(ip)           tempi
+      integer(ip)           usrctr ( ctrsiz )
+      integer(ip)           week
+      integer(ip)           wkday
+      integer(ip)           year
+      integer(ip)           yr1
+      integer(ip)           yr100
+      integer(ip)           yr4
+      integer(ip)           yr400
 
       logical               first
       logical               found
@@ -824,15 +825,15 @@
 !     appear before the first of a month during a leap year (as opposed
 !     to a non-leap year).
 !
-      integer               extra  ( 12 )
+      integer(ip)           extra  ( 12 )
 
-      integer               dpbegl ( 12 )
+      integer(ip)           dpbegl ( 12 )
 
 !
 !     DPJAN0(I) gives the number of days that occur before the I'th
 !     month of a normal year.
 !
-      integer               dpjan0 ( 12 )
+      integer(ip)           dpjan0 ( 12 )
 
 !
 !     Saved variables
@@ -909,8 +910,8 @@
 !     The number of seconds represented by HOURS hours MINS minutes
 !     and SECS seconds.
 !
-      hmssec ( hours, mins, secs ) = hours * 3600.0d0 &
-                                   + mins  *   60.0d0 &
+      hmssec ( hours, mins, secs ) = hours * 3600.0_wp &
+                                   + mins  *   60.0_wp &
                                    + secs
 
 
@@ -933,12 +934,12 @@
          first   = .false.
 
          secspd  = spd()
-         halfd   = spd() / 2.0d0
+         halfd   = spd() / 2.0_wp
 
          dn2000  = dp0001 ( 2000, 1, 1 )
          sunday  = dp0001 ( 1991, 1, 6 )
 
-         jd1101  = j2000() - dble(dn2000) - 0.5d0
+         jd1101  = j2000() - real(dn2000, wp) - 0.5_wp
 
 !
 !        Initialize the list of Uniform time systems.
@@ -1181,7 +1182,7 @@
 !        the day number past 1 Jan 1 AD for the beginning of the
 !        days loaded in TAITAB.
 !
-         lastdt = taitab(1) - 1.0d0
+         lastdt = taitab(1) - 1.0_wp
 
          do i = 1, nref, 2
 
@@ -1410,7 +1411,7 @@
 
          end if
 
-         frac   = tvec(2) - dble(day)
+         frac   = tvec(2) - real(day, wp)
          daynum = dp0001  ( year, month, day ) &
                 + doffst
 
@@ -1641,15 +1642,15 @@
 !
       else
 
-         if (      (secs .gt. (secspd - 1.0d0)) &
-              .or. (secs .lt. 0.0d0)          ) then
+         if (      (secs .gt. (secspd - 1.0_wp)) &
+              .or. (secs .lt. 0.0_wp)          ) then
 
 !
 !           First convert to TAI...
 !
             dayptr = max( 1, lstlei ( daynum, nref, daytab ) )
             secs   = secs &
-                   + dble ( daynum - daytab(dayptr) ) * secspd
+                   + real( daynum - daytab(dayptr), wp ) * secspd
             tai    = taitab(dayptr) + secs
 
 !
@@ -1743,11 +1744,11 @@
 !        86399 to hours, minutes and seconds.  Take anything extra
 !        and put it in EXSECS.
 !
-         exsecs = max ( 0.0d0, secs - secspd + 1 )
+         exsecs = max ( 0.0_wp, secs - secspd + 1 )
          tsecs  = secs - exsecs
 
-         call rmaind ( tsecs, 3600.0d0, hours, tempd )
-         call rmaind ( tempd,   60.0d0, mins,  tsecs )
+         call rmaind ( tsecs, 3600.0_wp, hours, tempd )
+         call rmaind ( tempd,   60.0_wp, mins,  tsecs )
 
          tsecs  = tsecs + exsecs
 
@@ -1759,24 +1760,24 @@
 !
       if      ( pto .eq. ymd .or. pto .eq. ymdf ) then
 
-         tvec(1) = dble ( year  )
-         tvec(2) = dble ( month )
-         tvec(3) = dble ( day   )
+         tvec(1) = real( year, wp  )
+         tvec(2) = real( month, wp )
+         tvec(3) = real( day, wp   )
          tvec(4) = hours
          tvec(5) = mins
          tvec(6) = tsecs
 
       else if ( pto .eq. yd .or. pto .eq. ydf  ) then
 
-         tvec(1) = dble ( year  )
-         tvec(2) = dble ( dofyr )
+         tvec(1) = real( year, wp  )
+         tvec(2) = real( dofyr, wp )
          tvec(3) = hours
          tvec(4) = mins
          tvec(5) = tsecs
 
       else if ( pto .eq. ydd .or. pto .eq. yddf   ) then
 
-         tvec(1) = dble   ( year  )
+         tvec(1) = real( year, wp  )
 
          if ( pto .eq. ydd ) then
             dayptr  = lstlei ( daynum, nref, daytab )
@@ -1786,30 +1787,30 @@
                daylen = taitab(dayptr+1) - taitab(dayptr)
             end if
 
-            tvec(2) = dble(dofyr) + secs/daylen
+            tvec(2) = real(dofyr, wp) + secs/daylen
          else
-            tvec(2) = dble(dofyr) + secs/secspd
+            tvec(2) = real(dofyr, wp) + secs/secspd
          end if
 
 
       else if ( pto .eq. frml ) then
 
-         tvec(1) = dble ( daynum - dn2000 ) * secspd &
+         tvec(1) = real( daynum - dn2000, wp ) * secspd &
                  - halfd &
                  + secs
 
       else if ( pto .eq. jdutc  ) then
 
-         tvec(1) = jd1101 + dble( daynum ) + secs/secspd
+         tvec(1) = jd1101 + real( daynum, wp ) + secs/secspd
 
       else if ( pto .eq. daysec ) then
 
-         tvec(1) = dble(daynum)
+         tvec(1) = real(daynum, wp)
          tvec(2) = secs
 
       else if ( pto .eq. dayp2 ) then
 
-         tvec(1) = dble (daynum - dn2000)
+         tvec(1) = real(daynum - dn2000, wp)
          tvec(2) = secs
 
       else if ( pto  .eq. ywd .or. pto .eq. ywdf ) then
@@ -1822,9 +1823,9 @@
 !
 !        Now just put everything where it belongs.
 !
-         tvec(1) = dble(year)
-         tvec(2) = dble(week)
-         tvec(3) = dble(day) + 1.0d0
+         tvec(1) = real(year, wp)
+         tvec(2) = real(week, wp)
+         tvec(3) = real(day, wp) + 1.0_wp
          tvec(4) = hours
          tvec(5) = mins
          tvec(6) = tsecs
@@ -1835,7 +1836,7 @@
 !        First compute how many weeks into the month DAYNUM is,
 !        and compute the day of week number.
 !
-         tvec(1) = dble (year)
+         tvec(1) = real(year, wp)
          doffst  = 0
 
          if ( year .le. 0 ) then
@@ -1858,9 +1859,9 @@
 !
 !        Now just move the remaining stuff into TVEC.
 !
-         tvec(2) = dble (month)
-         tvec(3) = dble (week)
-         tvec(4) = dble (day) + 1.0d0
+         tvec(2) = real(month, wp)
+         tvec(3) = real(week, wp)
+         tvec(4) = real(day, wp) + 1.0_wp
          tvec(5) = hours
          tvec(6) = mins
          tvec(7) = tsecs
@@ -1875,7 +1876,7 @@
 
          dayptr  = max( 1, lstlei ( daynum, nref, daytab ) )
          secs    = secs &
-                 + dble ( daynum - daytab(dayptr) ) * secspd
+                 + real( daynum - daytab(dayptr), wp ) * secspd
          tai     = taitab(dayptr) + secs
 
          tvec(1) = unitim ( tai, 'TAI', myto )

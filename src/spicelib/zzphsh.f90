@@ -1,6 +1,7 @@
 !$Procedure ZZPHSH ( Private---kernel POOL hash function umbrella )
 
-      integer function zzphsh ( word, m, m2 )
+      integer(ip) function zzphsh ( word, m, m2 )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,8 +24,8 @@
 
       implicit none
       character*(*)         word
-      integer               m
-      integer               m2
+      integer(ip)           m
+      integer(ip)           m2
 
 ! $ Brief_I/O
 !
@@ -135,28 +136,28 @@
 !
 !     Entry Points
 !
-      integer               zzshsh
-      integer               zzhash
-      integer               zzhash2
+      integer(ip)           zzshsh
+      integer(ip)           zzhash
+      integer(ip)           zzhash2
 
 !
 !     SPICELIB functions
 !
-      integer               intmax
+      integer(ip)           intmax
 
 !
 !     Local Variables.
 !
-      integer               i
-      integer               divisr
-      integer               val ( 0:128 )
-      integer               f
-      integer               base
-      integer               blank
-      integer               length
-      integer               maxdiv
+      integer(ip)           i
+      integer(ip)           divisr
+      integer(ip)           val ( 0:128 )
+      integer(ip)           f
+      integer(ip)           base
+      integer(ip)           blank
+      integer(ip)           length
+      integer(ip)           maxdiv
 
-      integer               bslash
+      integer(ip)           bslash
       parameter           ( bslash = 92 )
 
 

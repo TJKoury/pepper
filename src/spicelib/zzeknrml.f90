@@ -3,6 +3,7 @@
       subroutine zzeknrml ( query,   ntoken,  lxbegs,  lxends,  tokens, &
                             values,  numvls,  chrbuf,  chbegs,  chends, &
                             eqryi,   eqryc,   eqryd,   error,   prserr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,22 +27,22 @@
       include 'ektokn.inc'
       include 'ektype.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               ntoken
-      integer               lxbegs ( * )
-      integer               lxends ( * )
-      integer               tokens ( * )
-      integer               values ( * )
-      double precision      numvls ( * )
+      integer(ip)           ntoken
+      integer(ip)           lxbegs ( * )
+      integer(ip)           lxends ( * )
+      integer(ip)           tokens ( * )
+      integer(ip)           values ( * )
+      real(wp)              numvls ( * )
       character*(*)         chrbuf
-      integer               chbegs ( * )
-      integer               chends ( * )
-      integer               eqryi  ( lbcell : * )
+      integer(ip)           chbegs ( * )
+      integer(ip)           chends ( * )
+      integer(ip)           eqryi  ( lbcell : * )
       character*(*)         eqryc
-      double precision      eqryd  ( * )
+      real(wp)              eqryd  ( * )
       logical               error
       character*(*)         prserr
 
@@ -328,13 +329,13 @@
 !
 !     SPICELIB functions
 !
-      integer               cardi
-      integer               isrchi
-      integer               lnkhl
-      integer               lnknfn
-      integer               lnknxt
-      integer               lnkprv
-      integer               lnktl
+      integer(ip)           cardi
+      integer(ip)           isrchi
+      integer(ip)           lnkhl
+      integer(ip)           lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           lnkprv
+      integer(ip)           lnktl
 
       logical               return
 
@@ -342,7 +343,7 @@
 !
 !     Local parameters
 !
-      integer               nil
+      integer(ip)           nil
       parameter           ( nil   =  0 )
 
 !
@@ -353,21 +354,21 @@
 !     MAXREL is the maximum number of relations that can be handled
 !     by this routine.
 !
-      integer               maxrel
+      integer(ip)           maxrel
       parameter           ( maxrel =   10*maxtok  )
 
 !
 !     MAXMET is the maximum number of meta-tokens making up any
 !     expression.
 !
-      integer               maxmet
+      integer(ip)           maxmet
       parameter           ( maxmet =   10*maxtok )
 
 !
 !     LBPOOL is the lower bound of the second index of a linked list
 !     pool array.
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -375,7 +376,7 @@
 !     Stack parameters:
 !
 !
-      integer               maxstk
+      integer(ip)           maxstk
       parameter           ( maxstk = 500 )
 
 
@@ -386,82 +387,82 @@
 !     NLOGOP is the number of recognized logical operators.  These
 !     are AND, OR, and NOT.
 !
-      integer               nlogop
+      integer(ip)           nlogop
       parameter           ( nlogop =  3 )
 
 !
 !     NRELOP is the number of arithmetic and character comparison
 !     operators.
 !
-      integer               nrelop
+      integer(ip)           nrelop
       parameter           ( nrelop = 8 )
 
 !
 !
 !     Meta-token codes, excluding codes for relational operators:
 !
-      integer               rgroup
+      integer(ip)           rgroup
       parameter           ( rgroup = -1 )
 
-      integer               lgroup
+      integer(ip)           lgroup
       parameter           ( lgroup = rgroup - 1 )
 
-      integer               btween
+      integer(ip)           btween
       parameter           ( btween = lgroup - 1 )
 
-      integer               notbtw
+      integer(ip)           notbtw
       parameter           ( notbtw = btween - 1 )
 
-      integer               btwexp
+      integer(ip)           btwexp
       parameter           ( btwexp = notbtw - 1 )
 
-      integer               name
+      integer(ip)           name
       parameter           ( name   = btwexp - 1 )
 
-      integer               ident
+      integer(ip)           ident
       parameter           ( ident  = name   - 1 )
 
-      integer               value
+      integer(ip)           value
       parameter           ( value  = ident  - 1 )
 
-      integer               period
+      integer(ip)           period
       parameter           ( period = value  - 1 )
 
-      integer               and
+      integer(ip)           and
       parameter           ( and    = period - 1 )
 
-      integer               or
+      integer(ip)           or
       parameter           ( or     = and    - 1 )
 
-      integer               not
+      integer(ip)           not
       parameter           ( not    = or     - 1 )
 
-      integer               expr
+      integer(ip)           expr
       parameter           ( expr   = not    - 1 )
 
 !
 !     Number of keywords that can terminate a WHERE clause.
 !
-      integer               nendkw
+      integer(ip)           nendkw
       parameter           ( nendkw = 3 )
 
 !
 !
 !     State parameters:
 !
-      integer               push
+      integer(ip)           push
       parameter           ( push   =          0 )
 
-      integer               pop
+      integer(ip)           pop
       parameter           ( pop    = push   + 1 )
 
-      integer               parse
+      integer(ip)           parse
       parameter           ( parse  = pop    + 1 )
 
-      integer               reducd
+      integer(ip)           reducd
       parameter           ( reducd = parse  + 1 )
 
-      integer               term
+      integer(ip)           term
       parameter           ( term   = reducd + 1 )
 
 
@@ -469,19 +470,19 @@
 !
 !     'Pop condition' codes:
 !
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
-      integer               reduce
+      integer(ip)           reduce
       parameter           ( reduce = 1 )
 
-      integer               endgrp
+      integer(ip)           endgrp
       parameter           ( endgrp = reduce + 1 )
 
 !
 !     Token descriptor size:
 !
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz = eqvdsz + 1 )
 
 !
@@ -500,11 +501,11 @@
 !     pointers are contained in the CJPTRS array.  The pointers are
 !     linked via entries in the double linked list pool CJPOOL.
 !
-      integer               rels   ( 3,  maxrel          )
-      integer               rlpool ( 2,  lbpool : maxrel )
+      integer(ip)           rels   ( 3,  maxrel          )
+      integer(ip)           rlpool ( 2,  lbpool : maxrel )
 
-      integer               cjpool ( 2,  lbpool : maxrel )
-      integer               cjptrs (              maxrel )
+      integer(ip)           cjpool ( 2,  lbpool : maxrel )
+      integer(ip)           cjptrs (              maxrel )
 
 !
 !     Each normalized expression is a disjunction of conjunctions.  Each
@@ -513,8 +514,8 @@
 !     is the parallel array used to associate each node of a disjunction
 !     with the head node of a conjunction list in CJPOOL.
 !
-      integer               djpool ( 2,  lbpool : maxrel )
-      integer               djptrs (              maxrel )
+      integer(ip)           djpool ( 2,  lbpool : maxrel )
+      integer(ip)           djptrs (              maxrel )
 
 !
 !     Meta-tokens are groups of tokens that comprise syntactic units
@@ -532,9 +533,9 @@
 !     normalized expression.  In the latter case, the pointer is the
 !     head node of a list in the disjunction table.
 !
-      integer               mtpool ( 2,  lbpool : maxtok )
-      integer               mtcode (              maxtok )
-      integer               mtexpr (              maxtok )
+      integer(ip)           mtpool ( 2,  lbpool : maxtok )
+      integer(ip)           mtcode (              maxtok )
+      integer(ip)           mtexpr (              maxtok )
 
 !
 !     Stack variables
@@ -551,69 +552,69 @@
 !        The two events that can cause the state to be popped are
 !        the execution of a reduction and encountering a right grouper.
 !
-      integer               mstart ( maxstk )
-      integer               popcnd ( maxstk )
-      integer               nmeta
+      integer(ip)           mstart ( maxstk )
+      integer(ip)           popcnd ( maxstk )
+      integer(ip)           nmeta
 
 !
 !
 !     Other local variables
 !
-      integer               b
-      integer               cj(4)
-      integer               cjnode
-      integer               colptr
-      integer               dj(2)
-      integer               djnode
-      integer               djtail
-      integer               dspool ( 2, lbpool : maxrel )
-      integer               dscbuf ( dscsiz,     maxrel )
-      integer               e
-      integer               endkw  ( nendkw )
-      integer               endloc
-      integer               exprhd
-      integer               first
-      integer               fourth
-      integer               head1
-      integer               head2
-      integer               i
-      integer               j
-      integer               k
-      integer               level
-      integer               lxb
-      integer               lxe
-      integer               metahd
-      integer               nconj
-      integer               newcj
-      integer               newdj
-      integer               newrel
-      integer               next
-      integer               node
-      integer               nrels
-      integer               op
-      integer               prev
-      integer               rel(4)
-      integer               relptr
-      integer               relset ( lbcell : maxrel )
-      integer               retcnd
-      integer               rhsptr
-      integer               second
-      integer               skip
-      integer               sizes  ( maxcon )
-      integer               start
-      integer               state
-      integer               tabptr
-      integer               tail
-      integer               third
-      integer               type
-      integer               whrbeg
-      integer               whrend
-      integer               whrsiz
-      integer               cmpcde ( nrelop     )
-      integer               cmpneg ( nrelop     )
-      integer               cmpops ( nrelop - 1 )
-      integer               logcde ( nlogop     )
-      integer               logops ( nlogop     )
+      integer(ip)           b
+      integer(ip)           cj(4)
+      integer(ip)           cjnode
+      integer(ip)           colptr
+      integer(ip)           dj(2)
+      integer(ip)           djnode
+      integer(ip)           djtail
+      integer(ip)           dspool ( 2, lbpool : maxrel )
+      integer(ip)           dscbuf ( dscsiz,     maxrel )
+      integer(ip)           e
+      integer(ip)           endkw  ( nendkw )
+      integer(ip)           endloc
+      integer(ip)           exprhd
+      integer(ip)           first
+      integer(ip)           fourth
+      integer(ip)           head1
+      integer(ip)           head2
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           level
+      integer(ip)           lxb
+      integer(ip)           lxe
+      integer(ip)           metahd
+      integer(ip)           nconj
+      integer(ip)           newcj
+      integer(ip)           newdj
+      integer(ip)           newrel
+      integer(ip)           next
+      integer(ip)           node
+      integer(ip)           nrels
+      integer(ip)           op
+      integer(ip)           prev
+      integer(ip)           rel(4)
+      integer(ip)           relptr
+      integer(ip)           relset ( lbcell : maxrel )
+      integer(ip)           retcnd
+      integer(ip)           rhsptr
+      integer(ip)           second
+      integer(ip)           skip
+      integer(ip)           sizes  ( maxcon )
+      integer(ip)           start
+      integer(ip)           state
+      integer(ip)           tabptr
+      integer(ip)           tail
+      integer(ip)           third
+      integer(ip)           type
+      integer(ip)           whrbeg
+      integer(ip)           whrend
+      integer(ip)           whrsiz
+      integer(ip)           cmpcde ( nrelop     )
+      integer(ip)           cmpneg ( nrelop     )
+      integer(ip)           cmpops ( nrelop - 1 )
+      integer(ip)           logcde ( nlogop     )
+      integer(ip)           logops ( nlogop     )
 
       logical               donow
       logical               fnd

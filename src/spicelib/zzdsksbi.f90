@@ -3,6 +3,7 @@
       subroutine zzdsksbi ( maxbod, stsize, btbody, btnbod, btsegp, &
                             btstsz, sthan,  stdscr, stdlad, stfree, &
                             stoff,  stctr,  strad                  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,19 +31,19 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer               maxbod
-      integer               stsize
-      integer               btbody ( * )
-      integer               btnbod
-      integer               btsegp ( * )
-      integer               btstsz ( * )
-      integer               sthan  ( * )
-      double precision      stdscr ( dskdsz, * )
-      integer               stdlad ( dladsz, * )
-      integer               stfree
-      double precision      stoff  ( 3, * )
-      double precision      stctr  ( 3, * )
-      double precision      strad  ( * )
+      integer(ip)           maxbod
+      integer(ip)           stsize
+      integer(ip)           btbody ( * )
+      integer(ip)           btnbod
+      integer(ip)           btsegp ( * )
+      integer(ip)           btstsz ( * )
+      integer(ip)           sthan  ( * )
+      real(wp)              stdscr ( dskdsz, * )
+      integer(ip)           stdlad ( dladsz, * )
+      integer(ip)           stfree
+      real(wp)              stoff  ( 3, * )
+      real(wp)              stctr  ( 3, * )
+      real(wp)              strad  ( * )
 
 
 ! $ Brief_I/O
@@ -231,7 +232,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 
       if ( return() ) then
@@ -266,7 +267,7 @@
          call cleard( 3,      stoff (1,i) )
          call cleard( 3,      stctr (1,i) )
 
-         strad(i) = 0.d0
+         strad(i) = 0.0_wp
 
       end do
 

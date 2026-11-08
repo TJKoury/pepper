@@ -1,6 +1,7 @@
 !$Procedure ZZINLAT0 ( DSK, in latitudinal element, w/o margin? )
 
       subroutine zzinlat0 ( r, lon, lat, bounds, exclud, inside )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,23 +33,23 @@
 
       include 'dsktol.inc'
 
-      double precision      r
-      double precision      lon
-      double precision      lat
-      double precision      bounds ( 2, 3 )
-      integer               exclud
+      real(wp)              r
+      real(wp)              lon
+      real(wp)              lat
+      real(wp)              bounds ( 2, 3 )
+      integer(ip)           exclud
       logical               inside
 
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
-      integer               lonidx
+      integer(ip)           lonidx
       parameter           ( lonidx = 1 )
 
-      integer               latidx
+      integer(ip)           latidx
       parameter           ( latidx = 2 )
 
-      integer               radidx
+      integer(ip)           radidx
       parameter           ( radidx = 3 )
 
 ! $ Brief_I/O
@@ -223,28 +224,28 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
+      real(wp)              twopi
 
 !
 !     Local parameters
 !
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper = 2 )
 
 !
 !     Local variables
 !
-      double precision      loclon
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxr
-      double precision      minlat
-      double precision      minlon
-      double precision      minr
-      double precision      pi2
+      real(wp)              loclon
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxr
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              minr
+      real(wp)              pi2
 
       logical               first
 
@@ -258,7 +259,7 @@
 !     Initial values
 !
       data                  first / .true. /
-      data                  pi2   / -1.d0  /
+      data                  pi2   / -1.0_wp  /
 
 
 
@@ -282,9 +283,9 @@
 !     Special case: if the input point is at the origin, and the
 !     volume element contains the origin, the point is inside.
 !
-      if ( r .eq. 0.d0 ) then
+      if ( r .eq. 0.0_wp ) then
 
-         if ( bounds(lower, radidx) .eq. 0.d0 ) then
+         if ( bounds(lower, radidx) .eq. 0.0_wp ) then
 
             inside = .true.
 

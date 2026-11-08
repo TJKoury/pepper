@@ -1,6 +1,7 @@
 !$Procedure VPROJ ( Vector projection, 3 dimensions )
 
       subroutine vproj ( a, b, p )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision   a ( 3 )
-      double precision   b ( 3 )
-      double precision   p ( 3 )
+      real(wp)           a ( 3 )
+      real(wp)           b ( 3 )
+      real(wp)           p ( 3 )
 
 ! $ Brief_I/O
 !
@@ -225,32 +226,32 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
 !
 !     Local variables
 !
-      double precision      biga
-      double precision      bigb
-      double precision      r(3)
-      double precision      t(3)
-      double precision      scale
+      real(wp)              biga
+      real(wp)              bigb
+      real(wp)              r(3)
+      real(wp)              t(3)
+      real(wp)              scale
 
 
       biga = max ( dabs(a(1)), dabs(a(2)), dabs(a(3)) )
       bigb = max ( dabs(b(1)), dabs(b(2)), dabs(b(3)) )
 
       if ( biga .eq. 0 ) then
-         p(1) = 0.0d0
-         p(2) = 0.0d0
-         p(3) = 0.0d0
+         p(1) = 0.0_wp
+         p(2) = 0.0_wp
+         p(3) = 0.0_wp
          return
       end if
 
       if (  bigb .eq. 0 ) then
-         p(1) = 0.0d0
-         p(2) = 0.0d0
-         p(3) = 0.0d0
+         p(1) = 0.0_wp
+         p(2) = 0.0_wp
+         p(3) = 0.0_wp
          return
       end if
 

@@ -1,6 +1,7 @@
 !$Procedure SOMTRU ( Some entries true? )
 
       logical function somtru ( logcls, n )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       logical               logcls ( * )
-      integer               n
+      integer(ip)           n
 
 ! $ Brief_I/O
 !
@@ -121,7 +122,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Just do it.

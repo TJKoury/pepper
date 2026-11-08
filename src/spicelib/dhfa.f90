@@ -1,6 +1,7 @@
 !$Procedure DHFA ( Time derivative of half angle )
 
-      double precision function dhfa ( state, bodyr)
+      real(wp) function dhfa ( state, bodyr)
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision      state (6)
-      double precision      bodyr
+      real(wp)              state (6)
+      real(wp)              bodyr
 
 ! $ Brief_I/O
 !
@@ -304,17 +305,17 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
       logical               return
       logical               vzero
 
-      double precision      p     (3)
-      double precision      r
-      double precision      rngrat
-      double precision      base
+      real(wp)              p     (3)
+      real(wp)              r
+      real(wp)              rngrat
+      real(wp)              base
 
       if ( return () ) then
-         dhfa = 0.d0
+         dhfa = 0.0_wp
          return
       else
          call chkin( 'DHFA' )
@@ -327,13 +328,13 @@
 !
       if ( bodyr .eq. 0 ) then
 
-         dhfa = 0.d0
+         dhfa = 0.0_wp
          call chkout( 'DHFA' )
          return
 
       else if ( bodyr .lt. 0 ) then
 
-         dhfa = 0.d0
+         dhfa = 0.0_wp
          call setmsg( 'Non physical case. The input body radius ' &
             //        'has a negative value.'                      )
          call sigerr( 'SPICE(BADRADIUS)'                           )
@@ -350,7 +351,7 @@
 
       if ( vzero(p) ) then
 
-         dhfa = 0.d0
+         dhfa = 0.0_wp
          call setmsg( 'The position component of the input state ' &
             //        'vector equals the zero vector.'             )
          call sigerr( 'SPICE(DEGENERATECASE)'                      )
@@ -371,7 +372,7 @@
 
       if ( base .le. 0 ) then
 
-         dhfa = 0.d0
+         dhfa = 0.0_wp
          call setmsg( 'Invalid case. The body radius, #1, equals ' &
             //        'or exceeds the range to the target, #2.'    )
          call errdp ( '#1', bodyr                                  )

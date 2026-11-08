@@ -1,6 +1,7 @@
 !$Procedure ERRACT  ( Get/Set Default Error Action )
 
       subroutine erract ( op, action )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -361,24 +362,24 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
 !
 !     Local Parameters
 !
 !     Define the length of an option.
 !
-      integer               oplen
+      integer(ip)           oplen
       parameter           ( oplen = 3 )
 !
 !     Define the maximum length of an action.
 !
-      integer               actlen
+      integer(ip)           actlen
       parameter           ( actlen = 7 )
 !
 !     Define the number of actions
 !
-      integer               numact
+      integer(ip)           numact
       parameter           ( numact = 5 )
 !
 !     Local Variables
@@ -387,7 +388,7 @@
       character*(actlen)    actns (numact)
       character*(actlen)    locact
 
-      integer               iact
+      integer(ip)           iact
 !
 !     Saved Variables
 !

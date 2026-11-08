@@ -1,6 +1,7 @@
 !$Procedure ZZHASHI ( Private---integer hash function )
 
-      integer function zzhashi ( n, m )
+      integer(ip) function zzhashi ( n, m )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
 
       implicit none
 
-      integer               n
-      integer               m
+      integer(ip)           n
+      integer(ip)           m
 
 ! $ Brief_I/O
 !

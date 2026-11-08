@@ -2,6 +2,7 @@
 
       subroutine ekpsel (  query,   n,     xbegs,  xends,  xtypes, &
                            xclass,  tabs,  cols,   error,  errmsg  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,9 +29,9 @@
       include 'ektype.inc'
 
       character*(*)         query
-      integer               n
-      integer               xbegs  ( * )
-      integer               xends  ( * )
+      integer(ip)           n
+      integer(ip)           xbegs  ( * )
+      integer(ip)           xends  ( * )
       character*(*)         xtypes ( * )
       character*(*)         xclass ( * )
       character*(*)         tabs   ( * )
@@ -567,13 +568,13 @@
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               ntypes
+      integer(ip)           ntypes
       parameter           ( ntypes = 4 )
 
-      integer               short
+      integer(ip)           short
       parameter           ( short  = 4 )
 
 !
@@ -585,14 +586,14 @@
       character*(maxcln)    eqryc
       character*(tnamsz)    qtab
 
-      double precision      eqryd  ( maxqnm )
+      real(wp)              eqryd  ( maxqnm )
 
-      integer               attdsc ( adscsz )
-      integer               colidx
-      integer               eqryi  ( lbcell : eqimin )
-      integer               errptr
-      integer               i
-      integer               tabidx
+      integer(ip)           attdsc ( adscsz )
+      integer(ip)           colidx
+      integer(ip)           eqryi  ( lbcell : eqimin )
+      integer(ip)           errptr
+      integer(ip)           i
+      integer(ip)           tabidx
 
 !
 !     Saved values

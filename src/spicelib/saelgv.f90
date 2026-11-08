@@ -1,6 +1,7 @@
 !$Procedure SAELGV ( Semi-axes of ellipse from generating vectors )
 
       subroutine saelgv ( vec1, vec2, smajor, sminor )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      vec1   ( 3 )
-      double precision      vec2   ( 3 )
-      double precision      smajor ( 3 )
-      double precision      sminor ( 3 )
+      real(wp)              vec1   ( 3 )
+      real(wp)              vec2   ( 3 )
+      real(wp)              smajor ( 3 )
+      real(wp)              sminor ( 3 )
 
 ! $ Brief_I/O
 !
@@ -209,24 +210,24 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      c      ( 2, 2 )
-      double precision      eigval ( 2, 2 )
-      double precision      s      ( 2, 2 )
-      double precision      scale
-      double precision      tmpvc1 ( 3 )
-      double precision      tmpvc2 ( 3 )
+      real(wp)              c      ( 2, 2 )
+      real(wp)              eigval ( 2, 2 )
+      real(wp)              s      ( 2, 2 )
+      real(wp)              scale
+      real(wp)              tmpvc1 ( 3 )
+      real(wp)              tmpvc2 ( 3 )
 
-      integer               i
-      integer               major
-      integer               minor
+      integer(ip)           i
+      integer(ip)           major
+      integer(ip)           minor
 
 
 !
@@ -396,7 +397,7 @@
 !
       scale = max (  vnorm ( tmpvc1 ),   vnorm ( tmpvc2 )  )
 
-      if ( scale .eq. 0.d0 ) then
+      if ( scale .eq. 0.0_wp ) then
 
          call cleard ( 3, smajor )
          call cleard ( 3, sminor )

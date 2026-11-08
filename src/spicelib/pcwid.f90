@@ -1,6 +1,7 @@
 !$Procedure PCWID ( Printable width of a character array )
 
-      integer function pcwid ( array, nelt )
+      integer(ip) function pcwid ( array, nelt )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       character*(*)         array   ( * )
-      integer               nelt
+      integer(ip)           nelt
 
 ! $ Brief_I/O
 !
@@ -135,9 +136,9 @@
 !
 !     Local variables
 !
-      integer               strlen
-      integer               i
-      integer               j
+      integer(ip)           strlen
+      integer(ip)           i
+      integer(ip)           j
 
 
 !

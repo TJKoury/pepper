@@ -2,6 +2,7 @@
 
       subroutine eul2m (  angle3,   angle2,   angle1, &
                           axis3,    axis2,    axis1,   r  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,15 +22,15 @@
 
       implicit none
 
-      double precision      angle3
-      double precision      angle2
-      double precision      angle1
+      real(wp)              angle3
+      real(wp)              angle2
+      real(wp)              angle1
 
-      integer               axis3
-      integer               axis2
-      integer               axis1
+      integer(ip)           axis3
+      integer(ip)           axis2
+      integer(ip)           axis1
 
-      double precision      r ( 3, 3 )
+      real(wp)              r ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -430,7 +431,7 @@
 !
 !     Local variables
 !
-      double precision      r1    ( 3, 3 )
+      real(wp)              r1    ( 3, 3 )
       logical               badax
 
 

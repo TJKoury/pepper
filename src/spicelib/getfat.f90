@@ -1,6 +1,7 @@
 !$Procedure GETFAT ( Get file architecture and type )
 
       subroutine getfat ( file, arch, kertyp )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -634,29 +635,29 @@
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
 !
 !     Set the length of a SPICE kernel file ID word.
 !
-      integer               idlen
+      integer(ip)           idlen
       parameter           ( idlen = 12 )
 
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 !
 !     Set minimum and maximum values for the range of ASCII printing
 !     characters.
 !
-      integer               minpch
+      integer(ip)           minpch
       parameter           ( minpch = 32 )
 
-      integer               maxpch
+      integer(ip)           maxpch
       parameter           ( maxpch = 126 )
 
 !
@@ -667,13 +668,13 @@
       character*(idlen)     idword
       character*(idlen)     tmpwrd
 
-      integer               handle
-      integer               i
-      integer               intamn
-      integer               intarc
-      integer               intbff
-      integer               iostat
-      integer               number
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           intamn
+      integer(ip)           intarc
+      integer(ip)           intbff
+      integer(ip)           iostat
+      integer(ip)           number
 
       logical               diropn
       logical               exist

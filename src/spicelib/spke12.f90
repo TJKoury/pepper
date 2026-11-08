@@ -1,6 +1,7 @@
 !$Procedure SPKE12 ( S/P Kernel, evaluate, type 12 )
 
       subroutine spke12 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,12 +19,12 @@
 
       implicit none
 
-      integer               maxrec
+      integer(ip)           maxrec
       parameter           ( maxrec = 129 )
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -176,31 +177,31 @@
 !
 !     Local parameters
 !
-      integer               sizidx
+      integer(ip)           sizidx
       parameter           ( sizidx = 1 )
 
-      integer               stridx
+      integer(ip)           stridx
       parameter           ( stridx = sizidx + 1 )
 
-      integer               stpidx
+      integer(ip)           stpidx
       parameter           ( stpidx = stridx + 1 )
 
-      integer               staidx
+      integer(ip)           staidx
       parameter           ( staidx = stpidx + 1 )
 
 
 !
 !     Local variables
 !
-      double precision      locrec ( maxrec )
-      double precision      work   ( maxrec * 2,  2 )
+      real(wp)              locrec ( maxrec )
+      real(wp)              work   ( maxrec * 2,  2 )
 
-      integer               from
-      integer               i
-      integer               j
-      integer               n
-      integer               to
-      integer               xstart
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           n
+      integer(ip)           to
+      integer(ip)           xstart
 
 
 !

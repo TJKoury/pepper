@@ -1,6 +1,7 @@
 !$Procedure VZEROG ( Is a vector the zero vector? -- general dim. )
 
       logical function vzerog ( v, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision      v    ( * )
-      integer               ndim
+      real(wp)              v    ( * )
+      integer(ip)           ndim
 
 ! $ Brief_I/O
 !
@@ -287,7 +288,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Leave as soon as we find a non-zero component.  If we get through
@@ -296,7 +297,7 @@
 !
       do i = 1, ndim
 
-         if ( v(i) .ne. 0.d0 ) then
+         if ( v(i) .ne. 0.0_wp ) then
             vzerog = .false.
             return
          end if

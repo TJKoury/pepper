@@ -1,6 +1,7 @@
 !$Procedure SPKGPS ( S/P Kernel, geometric position )
 
       subroutine spkgps ( targ, et, ref, obs, pos, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
       include               'ninert.inc'
       include               'zzctr.inc'
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
-      integer               obs
-      double precision      pos ( 3 )
-      double precision      lt
+      integer(ip)           obs
+      real(wp)              pos ( 3 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -311,11 +312,11 @@
       logical               failed
       logical               return
 
-      double precision      clight
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              vnorm
 
-      integer               frstnp
-      integer               isrchi
+      integer(ip)           frstnp
+      integer(ip)           isrchi
 
 !
 !     Local parameters
@@ -328,16 +329,16 @@
 !     it is the maximum number of bodies in the chain from
 !     the target or observer to the SSB.
 !
-      integer               chlen
+      integer(ip)           chlen
       parameter           ( chlen = 20 )
 
-      integer               ssb
+      integer(ip)           ssb
       parameter           ( ssb   =  0 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 
@@ -349,26 +350,26 @@
       character*(40)        oname
       character*(80)        tstring
 
-      double precision      descr  ( 5        )
-      double precision      sobs   ( 6        )
-      double precision      starg  ( 6, chlen )
-      double precision      stemp  ( 6        )
+      real(wp)              descr  ( 5        )
+      real(wp)              sobs   ( 6        )
+      real(wp)              starg  ( 6, chlen )
+      real(wp)              stemp  ( 6        )
 
-      double precision      psxfrm ( 3, 3     )
-      double precision      rot    ( 3, 3     )
-      double precision      vtemp  ( 6        )
+      real(wp)              psxfrm ( 3, 3     )
+      real(wp)              rot    ( 3, 3     )
+      real(wp)              vtemp  ( 6        )
 
-      integer               cframe
-      integer               cobs
-      integer               ctarg  (    chlen )
-      integer               tframe (    chlen )
-      integer               ctpos
-      integer               handle
-      integer               i
-      integer               legs
-      integer               nct
-      integer               refid
-      integer               tmpfrm
+      integer(ip)           cframe
+      integer(ip)           cobs
+      integer(ip)           ctarg  (    chlen )
+      integer(ip)           tframe (    chlen )
+      integer(ip)           ctpos
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           legs
+      integer(ip)           nct
+      integer(ip)           refid
+      integer(ip)           tmpfrm
 
       logical               found
       logical               nofrm
@@ -377,9 +378,9 @@
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svref
-      integer               svrefi
+      integer(ip)           svrefi
 
       logical               first
 
@@ -435,7 +436,7 @@
 !
       if ( targ .eq. obs ) then
 
-         lt = 0.0d0
+         lt = 0.0_wp
 
          call cleard ( 3, pos )
          call chkout ( rname )

@@ -1,6 +1,7 @@
 !$Procedure BSRCHD ( Binary search for double precision value )
 
-      integer function bsrchd ( value, ndim, array )
+      integer(ip) function bsrchd ( value, ndim, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision   value
-      integer            ndim
-      double precision   array ( * )
+      real(wp)           value
+      integer(ip)        ndim
+      real(wp)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -140,9 +141,9 @@
 !
 !     Local variables
 !
-      integer          left
-      integer          right
-      integer          i
+      integer(ip)      left
+      integer(ip)      right
+      integer(ip)      i
 
 
 

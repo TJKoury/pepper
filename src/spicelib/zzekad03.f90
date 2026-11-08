@@ -2,6 +2,7 @@
 
       subroutine zzekad03 (  handle,  segdsc,  coldsc, &
                              recptr,  cval,    isnull  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
-      integer               recptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
+      integer(ip)           recptr
       character*(*)         cval
       logical               isnull
 
@@ -146,35 +147,35 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               colidx
-      integer               datptr
-      integer               itype
-      integer               lastw
-      integer               lnb
-      integer               mbase
-      integer               n
-      integer               ncols
-      integer               nlinks
-      integer               nwrite
-      integer               p
-      integer               p2
-      integer               pbase
-      integer               pcount
-      integer               pos
-      integer               prvbas
-      integer               ptrloc
-      integer               recno
-      integer               strlen
+      integer(ip)           colidx
+      integer(ip)           datptr
+      integer(ip)           itype
+      integer(ip)           lastw
+      integer(ip)           lnb
+      integer(ip)           mbase
+      integer(ip)           n
+      integer(ip)           ncols
+      integer(ip)           nlinks
+      integer(ip)           nwrite
+      integer(ip)           p
+      integer(ip)           p2
+      integer(ip)           pbase
+      integer(ip)           pcount
+      integer(ip)           pos
+      integer(ip)           prvbas
+      integer(ip)           ptrloc
+      integer(ip)           recno
+      integer(ip)           strlen
 
       logical               fixlen
 

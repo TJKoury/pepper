@@ -2,6 +2,7 @@
 
       subroutine azlcpo ( method, target, et,     abcorr, azccw, &
                           elplsz, obspos, obsctr, obsref, azlsta, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,15 +30,15 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         abcorr
       logical               azccw
       logical               elplsz
-      double precision      obspos ( 3 )
+      real(wp)              obspos ( 3 )
       character*(*)         obsctr
       character*(*)         obsref
-      double precision      azlsta ( 6 )
-      double precision      lt
+      real(wp)              azlsta ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -792,7 +793,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      pi
+      real(wp)              pi
 
       logical               eqstr
       logical               failed
@@ -807,22 +808,22 @@
 !
 !     Local variables
 !
-      double precision      alt
-      double precision      jacobi ( 3, 3 )
-      double precision      lhsta  ( 6    )
-      double precision      normal ( 3    )
-      double precision      obsspt ( 3    )
-      double precision      radii  ( 3    )
-      double precision      state  ( 6    )
-      double precision      tmpmat ( 3, 3 )
-      double precision      xftopo ( 3, 3 )
-      double precision      z      ( 3    )
+      real(wp)              alt
+      real(wp)              jacobi ( 3, 3 )
+      real(wp)              lhsta  ( 6    )
+      real(wp)              normal ( 3    )
+      real(wp)              obsspt ( 3    )
+      real(wp)              radii  ( 3    )
+      real(wp)              state  ( 6    )
+      real(wp)              tmpmat ( 3, 3 )
+      real(wp)              xftopo ( 3, 3 )
+      real(wp)              z      ( 3    )
 
-      integer               center
-      integer               clssid
-      integer               frclss
-      integer               fxfcde
-      integer               obscde
+      integer(ip)           center
+      integer(ip)           clssid
+      integer(ip)           frclss
+      integer(ip)           fxfcde
+      integer(ip)           obscde
 
       logical               found
 
@@ -834,7 +835,7 @@
 !
 !     Initial values
 !
-      data                  z       / 0.00d0,   0.00d0,   1.00d0 /
+      data                  z       / 0.00_wp,   0.00_wp,   1.00_wp /
 
 !
 !     Standard SPICE error handling.
@@ -939,12 +940,12 @@
 !
 !           - the +Y axis completes the right-handed frame.
 !
-         if (       ( obspos(1) .eq. 0.0d0 ) &
-              .and. ( obspos(2) .eq. 0.0d0 ) ) then
+         if (       ( obspos(1) .eq. 0.0_wp ) &
+              .and. ( obspos(2) .eq. 0.0_wp ) ) then
 
             call ident ( xftopo )
 
-            if ( obspos(3) .lt. 0.0d0 ) then
+            if ( obspos(3) .lt. 0.0_wp ) then
 
                call rotmat ( xftopo, pi(), 1, tmpmat )
                call moved  ( tmpmat, 9,       xftopo )

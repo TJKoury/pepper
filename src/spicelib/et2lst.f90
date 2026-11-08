@@ -1,6 +1,7 @@
 !$Procedure ET2LST ( ET to Local Solar Time )
 
       subroutine et2lst ( et, body, lon, type, hr, mn, sc, time, ampm )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,13 +20,13 @@
 
       implicit none
 
-      double precision      et
-      integer               body
-      double precision      lon
+      real(wp)              et
+      integer(ip)           body
+      real(wp)              lon
       character*(*)         type
-      integer               hr
-      integer               mn
-      integer               sc
+      integer(ip)           hr
+      integer(ip)           mn
+      integer(ip)           sc
       character*(*)         time
       character*(*)         ampm
 
@@ -425,9 +426,9 @@
 !
 !     SPICELIB Functions
 !
-      double precision      brcktd
-      double precision      pi
-      double precision      twopi
+      real(wp)              brcktd
+      real(wp)              pi
+      real(wp)              twopi
 
       logical               return
 
@@ -435,13 +436,13 @@
 !     Local parameters
 !
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               sun
+      integer(ip)           sun
       parameter           ( sun    = 10 )
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
 
@@ -458,26 +459,26 @@
       character*(2)         s
       character*(1)         kwtype
 
-      double precision      angle
-      double precision      hours
-      double precision      lat
-      double precision      lt
-      double precision      mins
-      double precision      mylong
-      double precision      range
-      double precision      rate
-      double precision      q
-      double precision      secnds
-      double precision      slat
-      double precision      slong
-      double precision      spoint ( 3 )
-      double precision      state  ( 6 )
-      double precision      tmpang
-      double precision      tmpsec
+      real(wp)              angle
+      real(wp)              hours
+      real(wp)              lat
+      real(wp)              lt
+      real(wp)              mins
+      real(wp)              mylong
+      real(wp)              range
+      real(wp)              rate
+      real(wp)              q
+      real(wp)              secnds
+      real(wp)              slat
+      real(wp)              slong
+      real(wp)              spoint ( 3 )
+      real(wp)              state  ( 6 )
+      real(wp)              tmpang
+      real(wp)              tmpsec
 
-      integer               frcode
-      integer               hrampm
-      integer               n
+      integer(ip)           frcode
+      integer(ip)           hrampm
+      integer(ip)           n
 
       logical               found
 
@@ -522,7 +523,7 @@
 !            Equatorial radius = 1
 !            Flattening factor = 0
 !
-         call pgrrec ( bodnam, lon, 0.d0, 0.d0, 1.d0, 0.d0, spoint )
+         call pgrrec ( bodnam, lon, 0.0_wp, 0.0_wp, 1.0_wp, 0.0_wp, spoint )
 
 !
 !        The output MYLONG is planetocentric longitude.  The other
@@ -637,7 +638,7 @@
 !
          call gdpool ( bpmkwd, 2, 1, n, rate, found )
 
-         if ( rate .lt. 0.d0 ) then
+         if ( rate .lt. 0.0_wp ) then
             angle = - angle
          end if
 
@@ -646,14 +647,14 @@
 !
 !     Convert the angle to "angle seconds" before or after local noon.
 !
-      secnds = 86400.0d0 * angle / twopi()
-      secnds = brcktd ( secnds, -43200.0d0, 43200.0d0 )
+      secnds = 86400.0_wp * angle / twopi()
+      secnds = brcktd ( secnds, -43200.0_wp, 43200.0_wp )
 
 !
 !     Get the hour, and minutes components of the local time.
 !
-      call rmaind ( secnds, 3600.0d0, hours, tmpsec )
-      call rmaind ( tmpsec, 60.0d0,   mins,  secnds )
+      call rmaind ( secnds, 3600.0_wp, hours, tmpsec )
+      call rmaind ( tmpsec, 60.0_wp,   mins,  secnds )
 !
 !     Construct the integer components of the local time.
 !
@@ -694,9 +695,9 @@
 !
 !     Now construct the two strings we need.
 !
-      hours  = dble(hr)
-      mins   = dble(mn)
-      secnds = dble(sc)
+      hours  = real(hr, wp)
+      mins   = real(mn, wp)
+      secnds = real(sc, wp)
 
       call dpfmt ( hours,  '0x', h )
       call dpfmt ( mins,   '0x', m )
@@ -705,7 +706,7 @@
       time = h // ':' // m // ':' // s
 
 
-      hours = dble(hrampm)
+      hours = real(hrampm, wp)
 
       call dpfmt ( hours,  '0x', h )
 

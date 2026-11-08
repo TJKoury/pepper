@@ -1,6 +1,7 @@
 !$Procedure UDDC ( Derivative of function less than zero, df(x)/dx < 0 )
 
       subroutine uddc ( udfunc, x, dx, isdecr )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
 
       external              udfunc
 
-      double precision      x
-      double precision      dx
+      real(wp)              x
+      real(wp)              dx
       logical               isdecr
 
 ! $ Brief_I/O
@@ -163,7 +164,7 @@
 !
 !     Local Variables
 !
-      double precision      deriv
+      real(wp)              deriv
 
       if ( return () ) then
          return
@@ -183,7 +184,7 @@
          return
       end if
 
-      isdecr = deriv .lt. 0.d0
+      isdecr = deriv .lt. 0.0_wp
 
       call chkout ( 'UDDC' )
       return

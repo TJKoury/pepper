@@ -1,6 +1,7 @@
 !$Procedure XDDA  ( list voxels intersected by a ray )
 
       subroutine xdda ( vertex, raydir, grdext, maxnvx, nvx, voxlst )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,15 +23,15 @@
 
       implicit none
 
-      double precision      grdtol
-      parameter           ( grdtol = 1.d-12 )
+      real(wp)              grdtol
+      parameter           ( grdtol = 1.0e-12_wp )
 
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      integer               grdext ( 3 )
-      integer               maxnvx
-      integer               nvx
-      integer               voxlst ( 3, * )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      integer(ip)           grdext ( 3 )
+      integer(ip)           maxnvx
+      integer(ip)           nvx
+      integer(ip)           voxlst ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -234,10 +235,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      dpmax
+      real(wp)              brcktd
+      real(wp)              dpmax
 
-      integer               brckti
+      integer(ip)           brckti
 
       logical               return
       logical               vzero
@@ -245,26 +246,26 @@
 !
 !     Local parameters
 !
-      double precision      eps
-      parameter           ( eps = 1.d-20 )
+      real(wp)              eps
+      parameter           ( eps = 1.0e-20_wp )
 
 !
 !     Local variables
 !
-      double precision      ax2err
-      double precision      ax3err
-      double precision      limit
-      double precision      maxcmp
-      double precision      vtxoff ( 3 )
-      double precision      s12
-      double precision      s13
+      real(wp)              ax2err
+      real(wp)              ax3err
+      real(wp)              limit
+      real(wp)              maxcmp
+      real(wp)              vtxoff ( 3 )
+      real(wp)              s12
+      real(wp)              s13
 
-      integer               i
-      integer               iaxis  ( 3 )
-      integer               icoord ( 3 )
-      integer               intvtx ( 3 )
-      integer               next   ( 3 )
-      integer               step   ( 3 )
+      integer(ip)           i
+      integer(ip)           iaxis  ( 3 )
+      integer(ip)           icoord ( 3 )
+      integer(ip)           intvtx ( 3 )
+      integer(ip)           next   ( 3 )
+      integer(ip)           step   ( 3 )
 
       logical               zzingrd
 
@@ -503,8 +504,8 @@
       do i = 1, 3
 
          vtxoff(i) = brcktd( vertex( iaxis(i) ) - (icoord(i)-1), &
-                             0.d0, &
-                             1.d0                               )
+                             0.0_wp, &
+                             1.0_wp                               )
       end do
 
 !
@@ -526,8 +527,8 @@
 !
       ax2err = dpmax()
       ax3err = ax2err
-      s12    = 0.d0
-      s13    = 0.d0
+      s12    = 0.0_wp
+      s13    = 0.0_wp
 
 !
 !     Compute the initial relative distance measurement AX2ERR
@@ -542,7 +543,7 @@
          s12 = abs (  raydir( iaxis(1) ) / raydir( iaxis(2) )  )
 
 
-         if ( raydir(iaxis(1)) .gt. 0.d0 ) then
+         if ( raydir(iaxis(1)) .gt. 0.0_wp ) then
 !
 !           The primary component of the ray's direction is positive.
 !           The distance to the next boundary plane in the primary
@@ -550,7 +551,7 @@
 !
 !              1.D0 - VTXOFF( IAXIS(1) )
 !
-            if( raydir(iaxis(2)) .gt. 0.d0 ) then
+            if( raydir(iaxis(2)) .gt. 0.0_wp ) then
 !
 !              The IAXIS(2) component of the ray's direction is
 !              positive. The distance to the next boundary plane for
@@ -566,7 +567,7 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 !
-               ax2err = s12*(1.d0 - vtxoff(2)) + vtxoff(1) - 1.d0
+               ax2err = s12*(1.0_wp - vtxoff(2)) + vtxoff(1) - 1.0_wp
 
             else
 !
@@ -584,7 +585,7 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 !
-               ax2err = s12*vtxoff(2) + vtxoff(1) - 1.d0
+               ax2err = s12*vtxoff(2) + vtxoff(1) - 1.0_wp
 
             end if
 
@@ -596,7 +597,7 @@
 !
 !              VTXOFF( IAXIS(1) )
 
-            if( raydir(iaxis(2)) .gt. 0.d0 ) then
+            if( raydir(iaxis(2)) .gt. 0.0_wp ) then
 !
 !              The IAXIS(2) component of the ray's direction is
 !              positive. The distance to the next boundary plane for
@@ -612,7 +613,7 @@
 !              distance from the vertex to the next boundary in the
 !              primary direction.
 
-               ax2err = s12*(1.d0 - vtxoff(2)) - vtxoff(1)
+               ax2err = s12*(1.0_wp - vtxoff(2)) - vtxoff(1)
 
             else
 !
@@ -651,18 +652,18 @@
 !
          s13 = abs(  raydir( iaxis(1) ) / raydir( iaxis(3) )  )
 
-         if ( raydir( iaxis(1) ) .gt. 0.d0 ) then
+         if ( raydir( iaxis(1) ) .gt. 0.0_wp ) then
 
-            if( raydir( iaxis(3) ) .gt. 0.d0 ) then
-               ax3err = s13*(1.d0 - vtxoff(3) ) + vtxoff(1) - 1.d0
+            if( raydir( iaxis(3) ) .gt. 0.0_wp ) then
+               ax3err = s13*(1.0_wp - vtxoff(3) ) + vtxoff(1) - 1.0_wp
             else
-               ax3err = s13*vtxoff(3) + vtxoff(1) - 1.d0
+               ax3err = s13*vtxoff(3) + vtxoff(1) - 1.0_wp
             end if
 
          else
 
-            if(  raydir( iaxis(3) ) .gt. 0.d0  ) then
-               ax3err = s13*(1.d0 - vtxoff(3)) - vtxoff(1)
+            if(  raydir( iaxis(3) ) .gt. 0.0_wp  ) then
+               ax3err = s13*(1.0_wp - vtxoff(3)) - vtxoff(1)
             else
                ax3err = s13*vtxoff(3) - vtxoff(1)
             end if
@@ -711,7 +712,7 @@
 !
       do while ( zzingrd( grdext, voxlst(1,nvx) ) )
 
-         if ( (ax2err .lt. 0.d0) .or. (ax3err .lt. 0.d0) ) then
+         if ( (ax2err .lt. 0.0_wp) .or. (ax3err .lt. 0.0_wp) ) then
 !
 !           Ray has crossed over into the next voxel in IAXIS(2) or
 !           IAXIS(3)
@@ -742,11 +743,11 @@
             nvx       = nvx       + 1
 
             if ( step(2) .ne. 0 ) then
-               ax2err = ax2err - 1.d0
+               ax2err = ax2err - 1.0_wp
             end if
 
             if ( step(3) .ne. 0 ) then
-               ax3err = ax3err - 1.d0
+               ax3err = ax3err - 1.0_wp
             end if
 
          end if

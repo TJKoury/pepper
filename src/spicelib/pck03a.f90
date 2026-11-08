@@ -1,6 +1,7 @@
 !$Procedure PCK03A ( PCK, add data to a type 3 segment )
 
       subroutine pck03a ( handle, ncsets, coeffs, epochs )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      integer               ncsets
-      double precision      coeffs ( * )
-      double precision      epochs ( * )
+      integer(ip)           handle
+      integer(ip)           ncsets
+      real(wp)              coeffs ( * )
+      real(wp)              epochs ( * )
 
 ! $ Brief_I/O
 !

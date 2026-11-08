@@ -1,6 +1,7 @@
 !$Procedure FILLI ( Fill an integer array )
 
       subroutine filli ( value, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               value
-      integer               ndim
-      integer               array ( * )
+      integer(ip)           value
+      integer(ip)           ndim
+      integer(ip)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -161,7 +162,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim

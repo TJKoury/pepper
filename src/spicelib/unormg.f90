@@ -1,6 +1,7 @@
 !$Procedure UNORMG ( Unit vector and norm, general dimension )
 
       subroutine unormg ( v1, ndim, vout, vmag )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer            ndim
-      double precision   v1   ( ndim )
-      double precision   vout ( ndim )
-      double precision   vmag
+      integer(ip)        ndim
+      real(wp)           v1   ( ndim )
+      real(wp)           vout ( ndim )
+      real(wp)           vmag
 
 ! $ Brief_I/O
 !
@@ -195,12 +196,12 @@
 !
 !     SPICELIB functions
 !
-      double precision   vnormg
+      real(wp)           vnormg
 
 !
 !     Local variables
 !
-      integer            i
+      integer(ip)        i
 
 !
 !  Obtain the magnitude of V1
@@ -214,13 +215,13 @@
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if (vmag.gt.0.d0) then
+      if (vmag.gt.0.0_wp) then
          do i = 1, ndim
             vout(i) = v1(i) / vmag
          end do
       else
          do i = 1, ndim
-            vout(i) = 0.d0
+            vout(i) = 0.0_wp
          end do
       end if
 !

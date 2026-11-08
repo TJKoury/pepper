@@ -1,6 +1,7 @@
 !$Procedure ZZDYNFID ( Fetch frame ID kernel variable )
 
       subroutine zzdynfid ( frname, frcode, item, idcode )
+      use pepper_kinds, only: ip
       implicit none
 
 ! $ Abstract
@@ -33,9 +34,9 @@
       include 'zzdyn.inc'
 
       character*(*)         frname
-      integer               frcode
+      integer(ip)           frcode
       character*(*)         item
-      integer               idcode
+      integer(ip)           idcode
 
 ! $ Brief_I/O
 !
@@ -222,7 +223,7 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
       logical               beint
       logical               failed
@@ -238,7 +239,7 @@
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer               templn
+      integer(ip)           templn
       parameter           ( templn = 7 )
 
 !
@@ -249,12 +250,12 @@
       character*(1)         dtype
       character*(kvnmln)    kvname
 
-      integer               codeln
-      integer               itemln
-      integer               n
-      integer               nameln
-      integer               reqnam
-      integer               reqnum
+      integer(ip)           codeln
+      integer(ip)           itemln
+      integer(ip)           n
+      integer(ip)           nameln
+      integer(ip)           reqnam
+      integer(ip)           reqnum
 
       logical               found
 

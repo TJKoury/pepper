@@ -1,6 +1,7 @@
 !$Procedure REPLWD ( Replace a word )
 
       subroutine replwd ( instr, nth, new, outstr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       character*(*)    instr
-      integer          nth
+      integer(ip)      nth
       character*(*)    new
       character*(*)    outstr
 
@@ -153,21 +154,21 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !   Local Variables
 !
       character*2           short
-      integer               begin
-      integer               i
-      integer               j
-      integer               f
-      integer               l
-      integer               k
-      integer               n
-      integer               shift
+      integer(ip)           begin
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           f
+      integer(ip)           l
+      integer(ip)           k
+      integer(ip)           n
+      integer(ip)           shift
 
 
 

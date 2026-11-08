@@ -1,6 +1,7 @@
 !$Procedure SPKR09 ( Read SPK record from segment, type 9 )
 
       subroutine spkr09 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -179,7 +180,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lstltd
+      integer(ip)           lstltd
 
       logical               odd
       logical               return
@@ -187,52 +188,52 @@
 !
 !     Local parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz = 6 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dirsiz + 1 )
 
 
 !
 !     Local variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      contrl ( 2  )
-      double precision      dc     ( nd )
+      real(wp)              buffer ( bufsiz )
+      real(wp)              contrl ( 2  )
+      real(wp)              dc     ( nd )
 
-      integer               begidx
-      integer               begin
-      integer               bufbas
-      integer               degree
-      integer               dirbas
-      integer               end
-      integer               endidx
-      integer               first
-      integer               group
-      integer               high
-      integer               i
-      integer               ic     ( ni )
-      integer               last
-      integer               low
-      integer               n
-      integer               ndir
-      integer               near
-      integer               nread
-      integer               remain
-      integer               start
-      integer               timbas
-      integer               type
-      integer               wndsiz
+      integer(ip)           begidx
+      integer(ip)           begin
+      integer(ip)           bufbas
+      integer(ip)           degree
+      integer(ip)           dirbas
+      integer(ip)           end
+      integer(ip)           endidx
+      integer(ip)           first
+      integer(ip)           group
+      integer(ip)           high
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           last
+      integer(ip)           low
+      integer(ip)           n
+      integer(ip)           ndir
+      integer(ip)           near
+      integer(ip)           nread
+      integer(ip)           remain
+      integer(ip)           start
+      integer(ip)           timbas
+      integer(ip)           type
+      integer(ip)           wndsiz
 
 
 !

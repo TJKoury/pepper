@@ -2,6 +2,7 @@
 
       subroutine zzektloc (  tokid,  kwcode,  ntoken,  tokens,  values, &
                              loc,    found                            )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
       include 'ektokn.inc'
       include 'ekkeyw.inc'
 
-      integer               tokid
-      integer               kwcode
-      integer               ntoken
-      integer               tokens ( * )
-      integer               values ( * )
-      integer               loc
+      integer(ip)           tokid
+      integer(ip)           kwcode
+      integer(ip)           ntoken
+      integer(ip)           tokens ( * )
+      integer(ip)           values ( * )
+      integer(ip)           loc
       logical               found
 
 ! $ Brief_I/O

@@ -2,6 +2,7 @@
 
       subroutine zzcln ( lookat, nameat, &
                          namlst, datlst, nmpool, chpool, dppool )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,16 +25,16 @@
 ! $ Declarations
 
       implicit none
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               lookat
-      integer               nameat
-      integer               namlst ( * )
-      integer               datlst ( * )
-      integer               nmpool ( 2, lbpool:* )
-      integer               chpool ( 2, lbpool:* )
-      integer               dppool ( 2, lbpool:* )
+      integer(ip)           lookat
+      integer(ip)           nameat
+      integer(ip)           namlst ( * )
+      integer(ip)           datlst ( * )
+      integer(ip)           nmpool ( 2, lbpool:* )
+      integer(ip)           chpool ( 2, lbpool:* )
+      integer(ip)           dppool ( 2, lbpool:* )
 
 
 ! $ Brief_I/O
@@ -139,15 +140,15 @@
 !
 !     Local Parameters and Variables
 !
-      integer               next
+      integer(ip)           next
       parameter           ( next   = 1 )
 
-      integer               prev
+      integer(ip)           prev
       parameter           ( prev   = 2 )
 
 
-      integer               head
-      integer               tail
+      integer(ip)           head
+      integer(ip)           tail
 !
 !     First perform the clean up function. This variable
 !     has been corrupted so there's no point in hanging

@@ -2,6 +2,7 @@
 
       subroutine zzbods2c ( usrctr, savnam, savcde, savfnd, &
                                     name,   code,   found    )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,12 +30,12 @@
 
       include              'zzctr.inc'
 
-      integer               usrctr    ( ctrsiz )
+      integer(ip)           usrctr    ( ctrsiz )
       character*(*)         savnam
-      integer               savcde
+      integer(ip)           savcde
       logical               savfnd
       character*(*)         name
-      integer               code
+      integer(ip)           code
       logical               found
 
 ! $ Brief_I/O

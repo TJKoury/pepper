@@ -1,6 +1,7 @@
 !$Procedure COPYD ( Copy a double precision cell )
 
       subroutine copyd ( cell, copy )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision   cell     ( lbcell:* )
-      double precision   copy     ( lbcell:* )
+      real(wp)           cell     ( lbcell:* )
+      real(wp)           copy     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -131,17 +132,17 @@
 !
 !     SPICELIB functions
 !
-      integer          sized
-      integer          cardd
+      integer(ip)      sized
+      integer(ip)      cardd
       logical          return
 
 !
 !     Local variables
 !
-      integer          size
-      integer          card
-      integer          moved
-      integer          i
+      integer(ip)      size
+      integer(ip)      card
+      integer(ip)      moved
+      integer(ip)      i
 
 !
 !     Set up the error processing.

@@ -1,6 +1,7 @@
 !$Procedure NBLEN ( Non blank length of a string )
 
-      integer function  nblen ( string )
+      integer(ip) function  nblen ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -110,8 +111,8 @@
 !
 !     SPICELIB functions
 !
-      integer          frstnb
-      integer          lastnb
+      integer(ip)      frstnb
+      integer(ip)      lastnb
 
 
 !

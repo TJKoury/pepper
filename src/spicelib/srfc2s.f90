@@ -1,6 +1,7 @@
 !$Procedure SRFC2S ( Surface and body ID codes to surface string )
 
       subroutine srfc2s ( code, bodyid, srfstr, isname )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,8 +27,8 @@
 
       implicit none
 
-      integer               code
-      integer               bodyid
+      integer(ip)           code
+      integer(ip)           bodyid
       character*(*)         srfstr
       logical               isname
 

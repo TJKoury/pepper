@@ -1,6 +1,7 @@
 !$Procedure SAMEAI ( Are two integer arrays the same? )
 
       logical function sameai ( a1, a2, ndim )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      integer               a1 ( * )
-      integer               a2 ( * )
-      integer               ndim
+      integer(ip)           a1 ( * )
+      integer(ip)           a2 ( * )
+      integer(ip)           ndim
 
 ! $ Brief_I/O
 !
@@ -117,7 +118,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Executable code

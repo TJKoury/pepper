@@ -1,6 +1,7 @@
 !$Procedure POSR ( Position of substring, reverse search)
 
-      integer function posr ( str, substr, start )
+      integer(ip) function posr ( str, substr, start )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       character*(*)         str
       character*(*)         substr
-      integer               start
+      integer(ip)           start
 
 ! $ Brief_I/O
 !
@@ -171,10 +172,10 @@
 !     Local variables
 !
       logical               found
-      integer               lenstr
-      integer               offset
-      integer               fchnce
-      integer               b
+      integer(ip)           lenstr
+      integer(ip)           offset
+      integer(ip)           fchnce
+      integer(ip)           b
 
 !
 !     Let's find out how big every body is.

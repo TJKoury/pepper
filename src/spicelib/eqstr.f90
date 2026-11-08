@@ -1,6 +1,7 @@
 !$Procedure EQSTR ( Equivalent strings )
 
       logical function eqstr ( a, b )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -304,18 +305,18 @@
 !
 !     Local variables
 !
-      integer               pa
-      integer               pb
+      integer(ip)           pa
+      integer(ip)           pb
 
-      integer               lena
-      integer               lenb
+      integer(ip)           lena
+      integer(ip)           lenb
 
-      integer               ca
-      integer               cb
+      integer(ip)           ca
+      integer(ip)           cb
 
-      integer               lbound
-      integer               ubound
-      integer               delta
+      integer(ip)           lbound
+      integer(ip)           ubound
+      integer(ip)           delta
 
       logical               done
 

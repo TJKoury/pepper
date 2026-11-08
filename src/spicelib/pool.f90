@@ -4,6 +4,7 @@
                         agent,  n,      values, found,  update, &
                         start,  room,   cvals,  ivals,  type, &
                         uwvars, uwptrs, uwpool, uwagnt, usrctr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,54 +25,54 @@
 
       include              'zzctr.inc'
 
-      integer               maxvar
+      integer(ip)           maxvar
       parameter           ( maxvar =  26003 )
 
-      integer               maxval
+      integer(ip)           maxval
       parameter           ( maxval = 400000 )
 
-      integer               maxlin
+      integer(ip)           maxlin
       parameter           ( maxlin =  15000 )
 
-      integer               maxchr
+      integer(ip)           maxchr
       parameter           ( maxchr =     80 )
 
-      integer               maxlen
+      integer(ip)           maxlen
       parameter           ( maxlen =     32 )
 
-      integer               maxagt
+      integer(ip)           maxagt
       parameter           ( maxagt =   1000 )
 
-      integer               mxnote
+      integer(ip)           mxnote
       parameter           ( mxnote =  maxvar * 5 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
 
       character*(*)         fname
-      integer               unit
+      integer(ip)           unit
       character*(*)         name
       character*(*)         names     ( * )
-      integer               nnames
+      integer(ip)           nnames
       character*(*)         agent
-      integer               n
-      double precision      values    ( * )
+      integer(ip)           n
+      real(wp)              values    ( * )
       logical               found
       logical               update
-      integer               start
-      integer               room
+      integer(ip)           start
+      integer(ip)           room
       character*(*)         cvals     ( * )
-      integer               ivals     ( * )
+      integer(ip)           ivals     ( * )
       character*(*)         type
       character*(*)         uwvars    ( lbcell : * )
-      integer               uwptrs    ( * )
-      integer               uwpool    ( 2, lbcell : * )
+      integer(ip)           uwptrs    ( * )
+      integer(ip)           uwpool    ( 2, lbcell : * )
       character*(*)         uwagnt    ( * )
-      integer               usrctr    ( ctrsiz )
+      integer(ip)           usrctr    ( ctrsiz )
 
 ! $ Brief_I/O
 !
@@ -679,17 +680,17 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               cardc
-      integer               intmax
-      integer               intmin
-      integer               lnknfn
-      integer               lnknxt
-      integer               lnktl
-      integer               lstltc
-      integer               rtrim
-      integer               sizec
-      integer               lastnb
+      integer(ip)           bsrchc
+      integer(ip)           cardc
+      integer(ip)           intmax
+      integer(ip)           intmin
+      integer(ip)           lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           lnktl
+      integer(ip)           lstltc
+      integer(ip)           rtrim
+      integer(ip)           sizec
+      integer(ip)           lastnb
 
 
       logical               elemc
@@ -701,7 +702,7 @@
 !
 !     Private SPICELIB functions
 !
-      integer               zzhash
+      integer(ip)           zzhash
 
 !
 !     Local Parameters
@@ -709,16 +710,16 @@
       character*(1)         quote
       parameter           ( quote = '''' )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 132 )
 
 !
 !     The next two variables are for use in traversing linked lists.
 !
-      integer               prev
+      integer(ip)           prev
       parameter           ( prev = 2 )
 
-      integer               next
+      integer(ip)           next
       parameter           ( next = 1 )
 
 
@@ -734,7 +735,7 @@
 !     This is the reason for the following block of declarations.
 !     Admittedly this is bizarre, but it works.
 !
-      integer               mrklen
+      integer(ip)           mrklen
       parameter           ( mrklen = 10 )
 
 
@@ -876,14 +877,14 @@
 !
 !
       character*(maxlen)    pnames   (           maxvar )
-      integer               namlst   (           maxvar )
-      integer               nmpool   ( 2, lbpool:maxvar )
-      integer               datlst   (           maxvar )
+      integer(ip)           namlst   (           maxvar )
+      integer(ip)           nmpool   ( 2, lbpool:maxvar )
+      integer(ip)           datlst   (           maxvar )
 
-      integer               chpool   ( 2, lbpool:maxlin )
-      integer               dppool   ( 2, lbpool:maxval )
+      integer(ip)           chpool   ( 2, lbpool:maxlin )
+      integer(ip)           dppool   ( 2, lbpool:maxval )
       character*(maxchr)    chvals   (           maxlin )
-      double precision      dpvals   (           maxval )
+      real(wp)              dpvals   (           maxval )
 
 !
 !     The WT... variables make up the data structure that
@@ -909,9 +910,9 @@
 !
 !
       character*(maxlen)    wtvars   (    lbcell : maxvar )
-      integer               wtpool   ( 2, lbpool : mxnote )
+      integer(ip)           wtpool   ( 2, lbpool : mxnote )
       character*(maxlen)    wtagnt   ( mxnote )
-      integer               wtptrs   ( maxvar )
+      integer(ip)           wtptrs   ( maxvar )
 
 !
 !     Agents contains the list of agents that need to be notified
@@ -934,7 +935,7 @@
 !
 !     POOL state counter.
 !
-      integer               subctr ( ctrsiz )
+      integer(ip)           subctr ( ctrsiz )
 
 !
 !     The remaining local variables...
@@ -944,43 +945,43 @@
       character*(lnsize)    line
       character*(maxlen)    varnam
 
-      double precision      big
-      double precision      dvalue
-      double precision      small
+      real(wp)              big
+      real(wp)              dvalue
+      real(wp)              small
 
-      integer               agnode
-      integer               avail
-      integer               begin
-      integer               chnode
-      integer               code
-      integer               datahd
-      integer               dnode
-      integer               dpnode
-      integer               free
-      integer               head
-      integer               hits
-      integer               i
-      integer               iostat
-      integer               iquote
-      integer               j
-      integer               k
-      integer               linnum
-      integer               lookat
-      integer               margin
-      integer               nameat
-      integer               need
-      integer               nfetch
-      integer               nnode
-      integer               nnodes
-      integer               node
-      integer               nptrs
-      integer               nvars
-      integer               nw
-      integer               r
-      integer               space
-      integer               tail
-      integer               tofree
-      integer               varlen
+      integer(ip)           agnode
+      integer(ip)           avail
+      integer(ip)           begin
+      integer(ip)           chnode
+      integer(ip)           code
+      integer(ip)           datahd
+      integer(ip)           dnode
+      integer(ip)           dpnode
+      integer(ip)           free
+      integer(ip)           head
+      integer(ip)           hits
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           iquote
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           linnum
+      integer(ip)           lookat
+      integer(ip)           margin
+      integer(ip)           nameat
+      integer(ip)           need
+      integer(ip)           nfetch
+      integer(ip)           nnode
+      integer(ip)           nnodes
+      integer(ip)           node
+      integer(ip)           nptrs
+      integer(ip)           nvars
+      integer(ip)           nw
+      integer(ip)           r
+      integer(ip)           space
+      integer(ip)           tail
+      integer(ip)           tofree
+      integer(ip)           varlen
 
       logical               chr
       logical               dp
@@ -5147,8 +5148,8 @@
 !
 !     Prepare for fetching values.
 !
-      big   =  dble( intmax() )
-      small =  dble( intmin() )
+      big   =  real( intmax(), wp )
+      small =  real( intmin(), wp )
       found = .true.
       k     =  0
       n     =  0
@@ -7097,7 +7098,7 @@
 !
 !        Finally insert this data item into the numeric buffer.
 !
-         dpvals(dpnode) = dble( ivals(i) )
+         dpvals(dpnode) = real( ivals(i), wp )
 
       end do
 

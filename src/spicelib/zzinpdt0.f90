@@ -1,6 +1,7 @@
 !$Procedure ZZINPDT0 ( DSK, in planetodetic element, w/o margin? )
 
       subroutine zzinpdt0 ( p, lon, bounds, corpar, exclud, inside )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,24 +34,24 @@
 
       include 'dsktol.inc'
 
-      double precision      p      ( 3 )
-      double precision      lon
-      double precision      bounds ( 2, 3 )
-      double precision      corpar ( * )
-      integer               exclud
+      real(wp)              p      ( 3 )
+      real(wp)              lon
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              corpar ( * )
+      integer(ip)           exclud
       logical               inside
 
 
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
-      integer               lonidx
+      integer(ip)           lonidx
       parameter           ( lonidx = 1 )
 
-      integer               latidx
+      integer(ip)           latidx
       parameter           ( latidx = 2 )
 
-      integer               altidx
+      integer(ip)           altidx
       parameter           ( altidx = 3 )
 
 ! $ Brief_I/O
@@ -252,8 +253,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      twopi
+      real(wp)              halfpi
+      real(wp)              twopi
 
       logical               failed
       logical               return
@@ -261,47 +262,47 @@
 !
 !     Local parameters
 !
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper = 2 )
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      integer               lt
+      integer(ip)           lt
       parameter           ( lt = -1 )
 
-      integer               eq
+      integer(ip)           eq
       parameter           ( eq =  0 )
 
-      integer               gt
+      integer(ip)           gt
       parameter           ( gt =  1 )
 
 
 !
 !     Local variables
 !
-      double precision      emax
-      double precision      emin
-      double precision      f
-      double precision      level
-      double precision      loclon
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxalt
-      double precision      minlat
-      double precision      minlon
-      double precision      minalt
-      double precision      pi2
-      double precision      pmax
-      double precision      pmin
-      double precision      re
-      double precision      rp
+      real(wp)              emax
+      real(wp)              emin
+      real(wp)              f
+      real(wp)              level
+      real(wp)              loclon
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxalt
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              minalt
+      real(wp)              pi2
+      real(wp)              pmax
+      real(wp)              pmin
+      real(wp)              re
+      real(wp)              rp
 
-      integer               maxrel
-      integer               minrel
+      integer(ip)           maxrel
+      integer(ip)           minrel
 
       logical               first
 
@@ -317,7 +318,7 @@
 !     Initial values
 !
       data                  first / .true. /
-      data                  pi2   / -1.d0  /
+      data                  pi2   / -1.0_wp  /
 
 
       if ( return() ) then
@@ -339,7 +340,7 @@
 !
       re = corpar(1)
       f  = corpar(2)
-      rp = re * ( 1.d0 - f )
+      rp = re * ( 1.0_wp - f )
 
 !
 !     Assume the point is outside to start. This allows us
@@ -442,7 +443,7 @@
 !
 !        Find the semi-axes of the bounding spheroids.
 !
-         if ( f .ge. 0.d0 ) then
+         if ( f .ge. 0.0_wp ) then
 !
 !           This is the oblate case. Get the semi-axis lengths
 !           for the inner and outer bounding spheroids.
@@ -473,7 +474,7 @@
 !
          level = ( p(1)/emax )**2 + ( p(2)/emax )**2 + ( p(3)/pmax )**2
 
-         if ( level .gt. 1.d0 ) then
+         if ( level .gt. 1.0_wp ) then
 !
 !           The point is outside of the outer bounding ellipsoid.
 !
@@ -485,7 +486,7 @@
 
          level = ( p(1)/emin )**2 + ( p(2)/emin )**2 + ( p(3)/pmin )**2
 
-         if ( level .lt. 1.d0 ) then
+         if ( level .lt. 1.0_wp ) then
 !
 !           The point is inside the inner bounding ellipsoid, which
 !           implies it is outside of the segment's boundaries.

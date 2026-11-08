@@ -1,6 +1,7 @@
 !$Procedure DSKSRF ( DSK, get surface IDs for body )
 
       subroutine dsksrf ( dskfnm, bodyid, srfids )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,12 +29,12 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         dskfnm
-      integer               bodyid
-      integer               srfids ( lbcell : * )
+      integer(ip)           bodyid
+      integer(ip)           srfids ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -245,8 +246,8 @@
 !
 !     SPICELIB functions
 !
-      integer               cardi
-      integer               sizei
+      integer(ip)           cardi
+      integer(ip)           sizei
 
       logical               failed
       logical               return
@@ -254,7 +255,7 @@
 !
 !     Local parameters
 !
-      integer               toklen
+      integer(ip)           toklen
       parameter           ( toklen = 4 )
 
 !
@@ -263,13 +264,13 @@
       character*(toklen)    arch
       character*(toklen)    kertyp
 
-      double precision      dskdsc ( dskdsz )
+      real(wp)              dskdsc ( dskdsz )
 
-      integer               bid
-      integer               dladsc ( dladsz )
-      integer               handle
-      integer               nxtdsc ( dladsz )
-      integer               sid
+      integer(ip)           bid
+      integer(ip)           dladsc ( dladsz )
+      integer(ip)           handle
+      integer(ip)           nxtdsc ( dladsz )
+      integer(ip)           sid
 
       logical               found
 

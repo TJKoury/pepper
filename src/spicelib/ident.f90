@@ -1,6 +1,7 @@
 !$Procedure IDENT ( Return the 3x3 identity matrix )
 
       subroutine ident ( matrix )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      double precision      matrix ( 3, 3 )
+      real(wp)              matrix ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -191,17 +192,17 @@
 !-&
 
 
-      matrix ( 1, 1 ) = 1.0d0
-      matrix ( 2, 1 ) = 0.0d0
-      matrix ( 3, 1 ) = 0.0d0
+      matrix ( 1, 1 ) = 1.0_wp
+      matrix ( 2, 1 ) = 0.0_wp
+      matrix ( 3, 1 ) = 0.0_wp
 
-      matrix ( 1, 2 ) = 0.0d0
-      matrix ( 2, 2 ) = 1.0d0
-      matrix ( 3, 2 ) = 0.0d0
+      matrix ( 1, 2 ) = 0.0_wp
+      matrix ( 2, 2 ) = 1.0_wp
+      matrix ( 3, 2 ) = 0.0_wp
 
-      matrix ( 1, 3 ) = 0.0d0
-      matrix ( 2, 3 ) = 0.0d0
-      matrix ( 3, 3 ) = 1.0d0
+      matrix ( 1, 3 ) = 0.0_wp
+      matrix ( 2, 3 ) = 0.0_wp
+      matrix ( 3, 3 ) = 1.0_wp
 
       return
       end

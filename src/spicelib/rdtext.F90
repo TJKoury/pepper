@@ -1,6 +1,7 @@
 !$Procedure RDTEXT ( Read a line from a text file )
 
       subroutine rdtext ( file, line, eof )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,14 +24,14 @@
       character*(*)       line
       logical             eof
 
-      integer             maxlen
+      integer(ip)         maxlen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter         ( maxlen = 128 )
 #else
       parameter         ( maxlen = 255 )
 #endif
 
-      integer             maxopn
+      integer(ip)         maxopn
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter         ( maxopn =  20 )
 #else
@@ -511,22 +512,22 @@
 !
 !     SPICELIB functions
 !
-      integer             isrchi
+      integer(ip)         isrchi
       logical             return
 
 !
 !     Local variables
 !
       character*(maxlen)  lstfil
-      integer             units   ( maxopn )
-      integer             lstunt
-      integer             unit
+      integer(ip)         units   ( maxopn )
+      integer(ip)         lstunt
+      integer(ip)         unit
 
-      integer             n
-      integer             number
-      integer             index
-      integer             iostat
-      integer             i
+      integer(ip)         n
+      integer(ip)         number
+      integer(ip)         index
+      integer(ip)         iostat
+      integer(ip)         i
 
       logical             same
 

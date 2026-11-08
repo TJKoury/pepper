@@ -1,6 +1,7 @@
 !$Procedure SPKS01 ( S/P Kernel, subset, type 1 )
 
       subroutine spks01 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -144,15 +145,15 @@
 !
 !     Local variables
 !
-      double precision      data     ( 71 )
+      real(wp)              data     ( 71 )
 
-      integer               nrec
-      integer               ndir
-      integer               offe
-      integer               first
-      integer               last
-      integer               offset
-      integer               i
+      integer(ip)           nrec
+      integer(ip)           ndir
+      integer(ip)           offe
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           offset
+      integer(ip)           i
 
 
 !
@@ -249,7 +250,7 @@
 !
 !     Add the number of records, and we're done.
 !
-      data(1) = dble ( last - first + 1 )
+      data(1) = real( last - first + 1, wp )
       call dafada ( data, 1 )
 
       call chkout ( 'SPKS01' )

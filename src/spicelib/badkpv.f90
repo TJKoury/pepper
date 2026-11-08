@@ -2,6 +2,7 @@
 
       logical function badkpv ( caller, name,  comp, &
                                 size,   divby, type )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,8 +25,8 @@
       character*(*)         caller
       character*(*)         name
       character*(*)         comp
-      integer               size
-      integer               divby
+      integer(ip)           size
+      integer(ip)           divby
       character*(*)         type
 
 ! $ Brief_I/O
@@ -380,8 +381,8 @@
 
       character*(1)         class
 
-      integer               dim
-      integer               ratio
+      integer(ip)           dim
+      integer(ip)           ratio
 
       logical               ok
       logical               found

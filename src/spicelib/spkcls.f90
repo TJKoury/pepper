@@ -1,6 +1,7 @@
 !$Procedure SPKCLS ( SPK, Close file )
 
       subroutine spkcls ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -236,7 +237,7 @@
 !
 !     Local Parameters
 !
-      integer               acclen
+      integer(ip)           acclen
       parameter           ( acclen = 5 )
 !
 !     Local Variables

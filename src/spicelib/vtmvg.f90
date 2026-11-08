@@ -1,6 +1,7 @@
 !$Procedure VTMVG  ( Vector transpose times matrix times vector )
 
-      double precision function vtmvg ( v1, matrix, v2, nrow, ncol )
+      real(wp) function vtmvg ( v1, matrix, v2, nrow, ncol )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               nrow
-      integer               ncol
-      double precision      v1      ( nrow       )
-      double precision      matrix  ( nrow, ncol )
-      double precision      v2      (       ncol )
+      integer(ip)           nrow
+      integer(ip)           ncol
+      real(wp)              v1      ( nrow       )
+      real(wp)              matrix  ( nrow, ncol )
+      real(wp)              v2      (       ncol )
 
 ! $ Brief_I/O
 !
@@ -152,13 +153,13 @@
 !
 !     Local variables
 !
-      integer               k
-      integer               l
+      integer(ip)           k
+      integer(ip)           l
 
 !
 !  Perform the multiplication
 !
-      vtmvg = 0.d0
+      vtmvg = 0.0_wp
       do k = 1, nrow
          do l = 1, ncol
             vtmvg = vtmvg + v1(k)*matrix(k,l)*v2(l)

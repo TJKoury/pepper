@@ -5,6 +5,7 @@
                             usestl, xmit,   fixref, obscde, &
                             dfrcde, dclass, dcentr, dvec, &
                             spoint, trgepc, srfvec, found  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -43,22 +44,22 @@
       external              udnear
       external              udmaxr
       external              udrayx
-      integer               trgcde
-      double precision      et
+      integer(ip)           trgcde
+      real(wp)              et
       character*(*)         abcorr
       logical               uselt
       logical               usecn
       logical               usestl
       logical               xmit
       character*(*)         fixref
-      integer               obscde
-      integer               dfrcde
-      integer               dclass
-      integer               dcentr
-      double precision      dvec    ( 3 )
-      double precision      spoint  ( 3 )
-      double precision      trgepc
-      double precision      srfvec  ( 3 )
+      integer(ip)           obscde
+      integer(ip)           dfrcde
+      integer(ip)           dclass
+      integer(ip)           dcentr
+      real(wp)              dvec    ( 3 )
+      real(wp)              spoint  ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec  ( 3 )
       logical               found
 
 ! $ Brief_I/O
@@ -497,12 +498,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      dasine
-      double precision      touchd
-      double precision      vdist
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              clight
+      real(wp)              dasine
+      real(wp)              touchd
+      real(wp)              vdist
+      real(wp)              vnorm
+      real(wp)              vsep
 
       logical               failed
       logical               vzero
@@ -520,31 +521,31 @@
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-17 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-17_wp )
 
 !
 !     Round-off error limit for arc sine input:
 !
-      double precision      rndtol
-      parameter           ( rndtol = 1.d-14 )
+      real(wp)              rndtol
+      parameter           ( rndtol = 1.0e-14_wp )
 
 !
 !     Fraction of target body angular radius used to define
 !     region outside of which rays are immediately rejected
 !     as non-intersecting.
 !
-      double precision      margin
-      parameter           ( margin = 1.01d0 )
+      real(wp)              margin
+      parameter           ( margin = 1.01_wp )
 
 
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr =  10 )
 
 !
 !     Code for the frame J2000.
 !
-      integer               j2code
+      integer(ip)           j2code
       parameter           ( j2code = 1 )
 
 
@@ -554,43 +555,43 @@
       character*(corlen)    loccor
       character*(corlen)    prvcor
 
-      double precision      dist
-      double precision      etdiff
-      double precision      j2dir  ( 3 )
-      double precision      j2est  ( 3 )
-      double precision      j2geom ( 3 )
-      double precision      j2pos  ( 3 )
-      double precision      j2tmat ( 3, 3 )
-      double precision      lt
-      double precision      ltcent
-      double precision      ltdiff
-      double precision      maxrad
-      double precision      negpos ( 3 )
-      double precision      obspos ( 3 )
-      double precision      pnear  ( 3 )
-      double precision      prevet
-      double precision      prevlt
-      double precision      r2jmat ( 3, 3 )
-      double precision      range
-      double precision      rayalt
-      double precision      refepc
-      double precision      reject
-      double precision      relerr
-      double precision      rpos   ( 3 )
-      double precision      s
-      double precision      srflen
-      double precision      ssbost ( 6 )
-      double precision      ssbtst ( 6 )
-      double precision      stldir ( 3 )
-      double precision      stlerr ( 3 )
-      double precision      stltmp ( 3 )
-      double precision      tpos   ( 3 )
-      double precision      trgdir ( 3 )
-      double precision      udir   ( 3 )
-      double precision      xform  ( 3, 3 )
+      real(wp)              dist
+      real(wp)              etdiff
+      real(wp)              j2dir  ( 3 )
+      real(wp)              j2est  ( 3 )
+      real(wp)              j2geom ( 3 )
+      real(wp)              j2pos  ( 3 )
+      real(wp)              j2tmat ( 3, 3 )
+      real(wp)              lt
+      real(wp)              ltcent
+      real(wp)              ltdiff
+      real(wp)              maxrad
+      real(wp)              negpos ( 3 )
+      real(wp)              obspos ( 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              prevet
+      real(wp)              prevlt
+      real(wp)              r2jmat ( 3, 3 )
+      real(wp)              range
+      real(wp)              rayalt
+      real(wp)              refepc
+      real(wp)              reject
+      real(wp)              relerr
+      real(wp)              rpos   ( 3 )
+      real(wp)              s
+      real(wp)              srflen
+      real(wp)              ssbost ( 6 )
+      real(wp)              ssbtst ( 6 )
+      real(wp)              stldir ( 3 )
+      real(wp)              stlerr ( 3 )
+      real(wp)              stltmp ( 3 )
+      real(wp)              tpos   ( 3 )
+      real(wp)              trgdir ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              xform  ( 3, 3 )
 
-      integer               i
-      integer               nitr
+      integer(ip)           i
+      integer(ip)           nitr
 
       logical               first
 
@@ -643,13 +644,13 @@
       if ( uselt ) then
 
          if ( xmit ) then
-            s   =  1.d0
+            s   =  1.0_wp
          else
-            s   = -1.d0
+            s   = -1.0_wp
          end if
 
       else
-         s = 0.d0
+         s = 0.0_wp
       end if
 
 
@@ -883,7 +884,7 @@
 !
 !           Now improve our estimate.
 !
-            relerr = 1.d0
+            relerr = 1.0_wp
             i      = 1
 
             do while ( ( i .le. nitr ) .and. ( relerr .gt. cnvlim ) )
@@ -924,7 +925,7 @@
 !
 !           Now improve our estimate.
 !
-            relerr = 1.d0
+            relerr = 1.0_wp
             i      = 1
 
             do while ( ( i .le. nitr ) .and. ( relerr .gt. cnvlim ) )
@@ -984,7 +985,7 @@
 
       range = vnorm( obspos )
 
-      if ( range .eq. 0.d0 ) then
+      if ( range .eq. 0.0_wp ) then
 !
 !        We've already ensured that observer and target are
 !        distinct, so this should be a very unusual occurrence.
@@ -1173,16 +1174,16 @@
       lt     =  dist / clight()
       trgepc =  et  +  s * lt
 
-      prevlt = 0.d0
+      prevlt = 0.0_wp
       prevet = trgepc
 
       i      = 0
-      ltdiff = 1.d0
-      etdiff = 1.d0
+      ltdiff = 1.0_wp
+      etdiff = 1.0_wp
 
       do while (       ( i      .lt.   nitr                ) &
                  .and. ( ltdiff .gt. ( cnvlim * abs(lt) )  ) &
-                 .and. ( etdiff .gt.   0.d0                )  )
+                 .and. ( etdiff .gt.   0.0_wp                )  )
 
 !
 !        Get the J2000-relative state of the target relative to

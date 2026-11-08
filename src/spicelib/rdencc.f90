@@ -1,6 +1,7 @@
 !$Procedure RDENCC  ( Read encoded characters from a text file )
 
       subroutine rdencc ( unit, n, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer               unit
-      integer               n
+      integer(ip)           unit
+      integer(ip)           n
       character*(*)         data(*)
 
 ! $ Brief_I/O
@@ -282,13 +283,13 @@
       character*(1)         escchr
       parameter           ( escchr = '@')
 
-      integer               mxescd
+      integer(ip)           mxescd
       parameter           ( mxescd = 2 )
 
-      integer               maxenc
+      integer(ip)           maxenc
       parameter           ( maxenc = 64 )
 
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen = 80 )
 !
 !     Local variables
@@ -299,14 +300,14 @@
       character*(mxescd)    hexnum
 
 
-      integer               dtalen
-      integer               dtalin
-      integer               dtapos
-      integer               encpos
-      integer               intch
-      integer               iostat
-      integer               nchars
-      integer               nescd
+      integer(ip)           dtalen
+      integer(ip)           dtalin
+      integer(ip)           dtapos
+      integer(ip)           encpos
+      integer(ip)           intch
+      integer(ip)           iostat
+      integer(ip)           nchars
+      integer(ip)           nescd
 
       logical               error
       logical               escape

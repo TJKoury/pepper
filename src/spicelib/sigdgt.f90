@@ -1,6 +1,7 @@
 !$Procedure SIGDGT ( Retain significant digits )
 
       subroutine sigdgt ( in, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -148,21 +149,21 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
-      integer               cpos
+      integer(ip)           frstnb
+      integer(ip)           lastnb
+      integer(ip)           cpos
 
 !
 !     Local variables
 !
-      integer               begin
-      integer               end
+      integer(ip)           begin
+      integer(ip)           end
       character*1           lchar
-      integer               zero
-      integer               i
-      integer               j
-      integer               k
-      integer               l
+      integer(ip)           zero
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           l
 
 
 !

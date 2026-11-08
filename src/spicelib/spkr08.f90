@@ -1,6 +1,7 @@
 !$Procedure SPKR08 ( Read SPK record from segment, type 8 )
 
       subroutine spkr08 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -188,40 +189,40 @@
 !
 !     Local parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz = 6 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 4 )
 
-      integer               staidx
+      integer(ip)           staidx
       parameter           ( staidx = 4 )
 
 !
 !     Local variables
 !
-      double precision      contrl ( ctrlsz  )
-      double precision      dc     ( nd )
-      double precision      start
-      double precision      step
+      real(wp)              contrl ( ctrlsz  )
+      real(wp)              dc     ( nd )
+      real(wp)              start
+      real(wp)              step
 
-      integer               begin
-      integer               degree
-      integer               end
-      integer               first
-      integer               grpsiz
-      integer               ic     ( ni )
-      integer               last
-      integer               low
-      integer               n
-      integer               near
-      integer               type
+      integer(ip)           begin
+      integer(ip)           degree
+      integer(ip)           end
+      integer(ip)           first
+      integer(ip)           grpsiz
+      integer(ip)           ic     ( ni )
+      integer(ip)           last
+      integer(ip)           low
+      integer(ip)           n
+      integer(ip)           near
+      integer(ip)           type
 
 !
 !     Use discovery check-in.

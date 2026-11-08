@@ -1,6 +1,7 @@
 !$Procedure DRDAZL ( Derivative of rectangular w.r.t. AZ/EL )
 
       subroutine drdazl ( range, az, el, azccw, elplsz, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      range
-      double precision      az
-      double precision      el
+      real(wp)              range
+      real(wp)              az
+      real(wp)              el
       logical               azccw
       logical               elplsz
-      double precision      jacobi ( 3, 3 )
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -479,12 +480,12 @@
 !
 !     Local variables
 !
-      double precision      lat
-      double precision      lon
+      real(wp)              lat
+      real(wp)              lon
 
-      integer               azsnse
-      integer               eldir
-      integer               i
+      integer(ip)           azsnse
+      integer(ip)           eldir
+      integer(ip)           i
 
 !
 !     Standard SPICE error handling.
@@ -499,7 +500,7 @@
 !     The input range must be non-negative. If not, signal an error
 !     and check out.
 !
-      if ( range .lt. 0.0d0 ) then
+      if ( range .lt. 0.0_wp ) then
 
          call setmsg ( 'Input range was #. Negative ' &
          //            'values are not allowed.'  )

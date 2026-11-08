@@ -1,6 +1,7 @@
 !$Procedure ZZGFTREB ( Geometry finder: return body axes )
 
       subroutine zzgftreb ( body, axes )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      integer              body
-      double precision     axes ( 3 )
+      integer(ip)          body
+      real(wp)             axes ( 3 )
 
 ! $ Brief_I/O
 !
@@ -142,8 +143,8 @@
 !
 !     Local variables
 !
-      integer               i
-      integer               n
+      integer(ip)           i
+      integer(ip)           n
 
 !
 !     Standard SPICE error handling.
@@ -179,7 +180,7 @@
 
          do i = 1, 3
 
-           if ( axes(i) .le. 0.0d0 ) then
+           if ( axes(i) .le. 0.0_wp ) then
 
                call setmsg ('Degenerate case. The # axis of body # ' &
                //           'is negative or zero.  Please check ' &

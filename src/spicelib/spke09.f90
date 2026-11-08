@@ -1,6 +1,7 @@
 !$Procedure SPKE09 ( S/P Kernel, evaluate, type 9 )
 
       subroutine spke09 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       include 'spkrec.inc'
 
-      double precision      et
-      double precision      record ( * )
-      double precision      state  ( 6 )
+      real(wp)              et
+      real(wp)              record ( * )
+      real(wp)              state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -185,13 +186,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      lgrint
+      real(wp)              lgrint
       logical               return
 
 !
 !     Local parameters
 !
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz = 6 )
 
 !
@@ -200,21 +201,21 @@
 !        -- size
 !        -- start of state information
 !
-      integer               sizidx
+      integer(ip)           sizidx
       parameter           ( sizidx = 1 )
 
-      integer               staidx
+      integer(ip)           staidx
       parameter           ( staidx = 2 )
 
 !
 !     Local variables
 !
-      double precision      locrec ( maxrec )
+      real(wp)              locrec ( maxrec )
 
-      integer               i
-      integer               n
-      integer               xstart
-      integer               ystart
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           xstart
+      integer(ip)           ystart
 
 !
 !     Discovery check-in.

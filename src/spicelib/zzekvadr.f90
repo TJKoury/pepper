@@ -1,6 +1,7 @@
 !$Procedure  ZZEKVADR  ( Compute row vector address )
 
       subroutine zzekvadr ( njrs, bases, rwvidx, rwvbas, sgvbas )
+      use pepper_kinds, only: ip
 
 
 ! $ Abstract
@@ -21,16 +22,16 @@
 !
 ! $ Declarations
 
-      integer               njrs
-      integer               bases  ( * )
-      integer               rwvidx
-      integer               rwvbas
-      integer               sgvbas
+      integer(ip)           njrs
+      integer(ip)           bases  ( * )
+      integer(ip)           rwvidx
+      integer(ip)           rwvbas
+      integer(ip)           sgvbas
 
-      integer               mxjoin
+      integer(ip)           mxjoin
       parameter           ( mxjoin = 10 )
 
-      integer               mxjrs
+      integer(ip)           mxjrs
       parameter           ( mxjrs  = 200 )
 
 ! $ Brief_I/O
@@ -220,7 +221,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lstlei
+      integer(ip)           lstlei
 
       logical               return
 
@@ -236,31 +237,31 @@
 !
 !     Base-relative index of join row set size
 !
-      integer               jszidx
+      integer(ip)           jszidx
       parameter           ( jszidx = 1 )
 
 !
 !     Index of row vector count
 !
-      integer               jrcidx
+      integer(ip)           jrcidx
       parameter           ( jrcidx = 2 )
 
 !
 !     Index of table count
 !
-      integer               jtcidx
+      integer(ip)           jtcidx
       parameter           ( jtcidx = 3 )
 
 !
 !     Index of segment vector count
 !
-      integer               jscidx
+      integer(ip)           jscidx
       parameter           ( jscidx = 4 )
 
 !
 !     Base address of first segment vector
 !
-      integer               jsvbas
+      integer(ip)           jsvbas
       parameter           ( jsvbas = 4 )
 !
 !
@@ -271,19 +272,19 @@
 !
 !     Local variables
 !
-      integer               addrss
-      integer               begidx ( mxjrs )
-      integer               i
-      integer               j
-      integer               jrsidx
-      integer               maxrwv
-      integer               nsv
-      integer               ntabs
-      integer               reloff
-      integer               rbas   ( mxjrs )
-      integer               svbas  ( mxjrs )
-      integer               svnjrs
-      integer               top
+      integer(ip)           addrss
+      integer(ip)           begidx ( mxjrs )
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           jrsidx
+      integer(ip)           maxrwv
+      integer(ip)           nsv
+      integer(ip)           ntabs
+      integer(ip)           reloff
+      integer(ip)           rbas   ( mxjrs )
+      integer(ip)           svbas  ( mxjrs )
+      integer(ip)           svnjrs
+      integer(ip)           top
 
 !
 !     Saved variables

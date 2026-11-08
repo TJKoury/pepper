@@ -1,6 +1,7 @@
 !$Procedure BODC2S ( Body ID code to string translation )
 
       subroutine bodc2s ( code, name )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
 
       implicit none
 
-      integer               code
+      integer(ip)           code
       character*(*)         name
 
 ! $ Brief_I/O

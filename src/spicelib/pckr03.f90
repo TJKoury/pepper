@@ -1,6 +1,7 @@
 !$Procedure PCKR03 ( PCK, read record from type 3 segment )
 
       subroutine pckr03 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -159,22 +160,22 @@
 !     The number of constant values stored with a type 03 segment
 !     segment.
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 1  )
 !
 !     The beginning location in the output record for the non-constant
 !     segment data.
 !
-      integer               begel1
+      integer(ip)           begel1
       parameter           ( begel1 = nconst + 1 )
 
 !
 !     Local Variables
 !
-      double precision      value
+      real(wp)              value
 
-      integer               ends
-      integer               indx
+      integer(ip)           ends
+      integer(ip)           indx
 
       logical               found
 

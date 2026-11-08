@@ -1,6 +1,7 @@
 !$Procedure EDPNT ( Ellipsoid point  )
 
       subroutine edpnt ( p, a, b, c, ep )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       implicit none
 
-      double precision      p  ( 3 )
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      ep ( 3 )
+      real(wp)              p  ( 3 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              ep ( 3 )
 
 ! $ Brief_I/O
 !
@@ -181,7 +182,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      touchd
+      real(wp)              touchd
 
       logical               failed
       logical               vzero
@@ -189,8 +190,8 @@
 !
 !     Local variables
 !
-      double precision      level
-      double precision      sq
+      real(wp)              level
+      real(wp)              sq
 
 !
 !     Use discovery check-in.
@@ -199,9 +200,9 @@
          return
       end if
 
-      if (      ( a .le. 0.d0 ) &
-           .or. ( b .le. 0.d0 ) &
-           .or. ( c .le. 0.d0 ) ) then
+      if (      ( a .le. 0.0_wp ) &
+           .or. ( b .le. 0.0_wp ) &
+           .or. ( c .le. 0.0_wp ) ) then
 
          call chkin  ( 'EDPNT'                            )
          call setmsg ( 'Ellipsoid radii must be strictly ' &
@@ -236,7 +237,7 @@
 !
       level = touchd( ( p(1)/a )**2 + ( p(2)/b )**2 + ( p(3)/c )**2  )
 
-      if ( level .le. 0.d0 ) then
+      if ( level .le. 0.0_wp ) then
 !
 !        We expect that LEVEL will be non-negative, but it could
 !        be zero. We check for negative values as a precaution.

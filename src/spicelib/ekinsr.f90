@@ -1,6 +1,7 @@
 !$Procedure EKINSR ( EK, insert record into segment )
 
       subroutine ekinsr ( handle, segno, recno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,9 +28,9 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           recno
 
 ! $ Brief_I/O
 !
@@ -274,21 +275,21 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               coldsc ( cdscsz )
-      integer               lastp
-      integer               lastw
-      integer               mbase
-      integer               mp
-      integer               ncols
-      integer               nlinks
-      integer               nrec
-      integer               p
-      integer               recbas
-      integer               recptr ( ipsize )
-      integer               room
-      integer               segdsc ( sdscsz )
-      integer               size
+      integer(ip)           base
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           lastp
+      integer(ip)           lastw
+      integer(ip)           mbase
+      integer(ip)           mp
+      integer(ip)           ncols
+      integer(ip)           nlinks
+      integer(ip)           nrec
+      integer(ip)           p
+      integer(ip)           recbas
+      integer(ip)           recptr ( ipsize )
+      integer(ip)           room
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           size
 
       logical               isshad
 

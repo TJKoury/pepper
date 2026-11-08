@@ -1,6 +1,7 @@
 !$Procedure SYPSHC ( Push a value onto a particular symbol )
 
       subroutine sypshc ( name, value, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         value
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
       character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
@@ -168,20 +169,20 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
-      integer               lstlec
+      integer(ip)           cardc
+      integer(ip)           lstlec
       logical               return
-      integer               sizec
-      integer               sumai
+      integer(ip)           sizec
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               nval
+      integer(ip)           nsym
+      integer(ip)           nval
 
-      integer               locsym
-      integer               locval
+      integer(ip)           locsym
+      integer(ip)           locval
       logical               oldsym
 
 

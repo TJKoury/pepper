@@ -1,6 +1,7 @@
 !$Procedure ZZGRAV ( SGP4 gravitational constants )
 
       subroutine zzgrav ( grav )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       include               'zzsgp4.inc'
 
-      double precision      grav( ngravs, ngravc )
+      real(wp)              grav( ngravs, ngravc )
 
 ! $ Brief_I/O
 !
@@ -126,19 +127,19 @@
 !     very wrong.
 !
 
-      grav( wgs721, p_rad)  =  6378.135d0
+      grav( wgs721, p_rad)  =  6378.135_wp
 
-      grav( wgs721, p_xke)  =  0.0743669161d0
+      grav( wgs721, p_xke)  =  0.0743669161_wp
 
-      grav( wgs721, p_mu)   =  398600.79964d0
+      grav( wgs721, p_mu)   =  398600.79964_wp
 
-      grav( wgs721, p_tumn) =  1.0d0 / grav(wgs721, p_xke)
+      grav( wgs721, p_tumn) =  1.0_wp / grav(wgs721, p_xke)
 
-      grav( wgs721, p_j2)   =  0.001082616d0
+      grav( wgs721, p_j2)   =  0.001082616_wp
 
-      grav( wgs721, p_j3)   =  -0.00000253881d0
+      grav( wgs721, p_j3)   =  -0.00000253881_wp
 
-      grav( wgs721, p_j4)   =  -0.00000165597d0
+      grav( wgs721, p_j4)   =  -0.00000165597_wp
 
       grav( wgs721, p_j3j2) =  grav(wgs721, p_j3) / grav(wgs721, p_j2)
 
@@ -147,20 +148,20 @@
 !     WGS 72 constants.
 !
 
-      grav( wgs72, p_mu)   = 398600.8d0
+      grav( wgs72, p_mu)   = 398600.8_wp
 
-      grav( wgs72, p_rad)  =  6378.135d0
+      grav( wgs72, p_rad)  =  6378.135_wp
 
-      grav( wgs72, p_xke)  =  60.0d0 / &
+      grav( wgs72, p_xke)  =  60.0_wp / &
                        dsqrt(grav(wgs72, p_rad)**3/grav(wgs72, p_mu))
 
-      grav( wgs72, p_tumn) =  1.0d0 / grav(wgs72, p_xke)
+      grav( wgs72, p_tumn) =  1.0_wp / grav(wgs72, p_xke)
 
-      grav( wgs72, p_j2)   =  0.001082616d0
+      grav( wgs72, p_j2)   =  0.001082616_wp
 
-      grav( wgs72, p_j3)   =  -0.00000253881d0
+      grav( wgs72, p_j3)   =  -0.00000253881_wp
 
-      grav( wgs72, p_j4)   =  -0.00000165597d0
+      grav( wgs72, p_j4)   =  -0.00000165597_wp
 
       grav( wgs72, p_j3j2) =  grav(wgs72, p_j3) / grav(wgs72, p_j2)
 
@@ -169,20 +170,20 @@
 !     WGS 84 constants.
 !
 
-      grav( wgs84, p_mu)   =  398600.5d0
+      grav( wgs84, p_mu)   =  398600.5_wp
 
-      grav( wgs84, p_rad)  =  6378.137d0
+      grav( wgs84, p_rad)  =  6378.137_wp
 
-      grav( wgs84, p_xke)  =  60.0d0 / &
+      grav( wgs84, p_xke)  =  60.0_wp / &
                        dsqrt(grav(wgs84, p_rad)**3/grav(wgs84, p_mu))
 
-      grav( wgs84, p_tumn) =  1.0d0 / grav(wgs84, p_xke)
+      grav( wgs84, p_tumn) =  1.0_wp / grav(wgs84, p_xke)
 
-      grav( wgs84, p_j2)   =  0.00108262998905d0
+      grav( wgs84, p_j2)   =  0.00108262998905_wp
 
-      grav( wgs84, p_j3)   =  -0.00000253215306d0
+      grav( wgs84, p_j3)   =  -0.00000253215306_wp
 
-      grav( wgs84, p_j4)   =  -0.00000161098761d0
+      grav( wgs84, p_j4)   =  -0.00000161098761_wp
 
       grav( wgs84, p_j3j2) =  grav(wgs84, p_j3) / grav(wgs84, p_j2)
 

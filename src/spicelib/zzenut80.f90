@@ -1,6 +1,7 @@
 !$Procedure ZZENUT80 ( Earth nutation transformation, IAU 1980 model )
 
       subroutine zzenut80 ( et, nutxf )
+      use pepper_kinds, only: wp
       implicit none
 
 ! $ Abstract
@@ -26,8 +27,8 @@
 !
 ! $ Declarations
 
-      double precision      et
-      double precision      nutxf  ( 6, 6 )
+      real(wp)              et
+      real(wp)              nutxf  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -108,10 +109,10 @@
 !
 !     Local variables
 !
-      double precision      dmob
-      double precision      dvnut  ( 4 )
-      double precision      eulang ( 6 )
-      double precision      mob
+      real(wp)              dmob
+      real(wp)              dvnut  ( 4 )
+      real(wp)              eulang ( 6 )
+      real(wp)              mob
 
 
       if ( return() ) then

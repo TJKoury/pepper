@@ -1,6 +1,7 @@
 !$Procedure INTSTR  ( Integer to character string )
 
       subroutine intstr ( number, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               number
+      integer(ip)           number
       character*(*)         string
 
 ! $ Brief_I/O
@@ -150,10 +151,10 @@
 !
 !     Local Parameters
 !
-      integer               base
+      integer(ip)           base
       parameter           ( base = 10 )
 
-      integer               strlen
+      integer(ip)           strlen
       parameter           ( strlen = 80 )
 !
 !     Local variables
@@ -162,11 +163,11 @@
 
       character*(1)         digits(0:9)
 
-      integer               tmpnum
-      integer               result
-      integer               remndr
+      integer(ip)           tmpnum
+      integer(ip)           result
+      integer(ip)           remndr
 
-      integer               i
+      integer(ip)           i
 
 !
 !    Saved values

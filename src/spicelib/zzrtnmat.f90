@@ -1,6 +1,7 @@
 !$Procedure ZZRTNMAT ( RTN transformation matrix )
 
       subroutine zzrtnmat ( v, m )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
 
       implicit none
 
-      double precision      v ( 3 )
-      double precision      m ( 3, 3 )
+      real(wp)              v ( 3 )
+      real(wp)              m ( 3, 3 )
 
 
 ! $ Brief_I/O
@@ -156,14 +157,14 @@
 !     descriptive names EAST for the "tangential"
 !     direction and NORTH for the "normal" direction.
 !
-      double precision      east   ( 3 )
-      double precision      lon
-      double precision      north  ( 3 )
-      double precision      rad    ( 3 )
-      double precision      vlon   ( 3 )
-      double precision      z ( 3 )
+      real(wp)              east   ( 3 )
+      real(wp)              lon
+      real(wp)              north  ( 3 )
+      real(wp)              rad    ( 3 )
+      real(wp)              vlon   ( 3 )
+      real(wp)              z ( 3 )
 
-      integer               i
+      integer(ip)           i
 
 !
 !     Saved variables
@@ -173,7 +174,7 @@
 !
 !     Initial values
 !
-      data                  z / 0.d0, 0.d0, 1.d0 /
+      data                  z / 0.0_wp, 0.0_wp, 1.0_wp /
 
 !
 !     Use discovery check-in. Just test the RETURN status.
@@ -183,7 +184,7 @@
       end if
 
 
-      if (  ( v(1) .eq. 0.d0 ) .and. ( v(2) .eq. 0.d0 )  ) then
+      if (  ( v(1) .eq. 0.0_wp ) .and. ( v(2) .eq. 0.0_wp )  ) then
 
          call cleard ( 9, m )
 
@@ -212,7 +213,7 @@
 !
          vlon(1) = cos( lon )
          vlon(2) = sin( lon )
-         vlon(3) = 0.d0
+         vlon(3) = 0.0_wp
 
 !
 !        We can compute the East and North vectors

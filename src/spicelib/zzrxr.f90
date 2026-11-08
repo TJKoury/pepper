@@ -2,6 +2,7 @@
 
 
       subroutine zzrxr ( matrix, n, output )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 ! $ Declarations
 
       implicit none
-      double precision      matrix ( 3, 3, * )
-      integer               n
-      double precision      output ( 3, 3    )
+      real(wp)              matrix ( 3, 3, * )
+      integer(ip)           n
+      real(wp)              output ( 3, 3    )
 
 ! $ Brief_I/O
 !
@@ -106,15 +107,15 @@
 !
 !-&
 
-      integer               i
-      integer               j
-      integer               k
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
 
-      integer               get
-      integer               put
-      integer               incr
+      integer(ip)           get
+      integer(ip)           put
+      integer(ip)           incr
 
-      double precision      temp ( 3, 3, 2 )
+      real(wp)              temp ( 3, 3, 2 )
 
 !
 !    If we have more than 2 matrices to deal with we will need to

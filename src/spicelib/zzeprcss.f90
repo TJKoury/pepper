@@ -1,6 +1,7 @@
 !$Procedure   ZZEPRCSS   ( Earth precession, 1976 IAU model )
 
       subroutine zzeprcss ( et, precm )
+      use pepper_kinds, only: wp
       implicit none
 
 ! $ Abstract
@@ -20,8 +21,8 @@
 !
 ! $ Declarations
 
-      double precision      et
-      double precision      precm ( 3, 3 )
+      real(wp)              et
+      real(wp)              precm ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -141,47 +142,47 @@
 !
 !     SPICELIB functions
 !
-      double precision      jyear
-      double precision      rpd
+      real(wp)              jyear
+      real(wp)              rpd
 
 !
 !     Local parameters
 !
-      double precision      zeta1
-      parameter           ( zeta1  = 2306.2181d0 )
+      real(wp)              zeta1
+      parameter           ( zeta1  = 2306.2181_wp )
 
-      double precision      zeta2
-      parameter           ( zeta2  = 0.30188d0   )
+      real(wp)              zeta2
+      parameter           ( zeta2  = 0.30188_wp   )
 
-      double precision      zeta3
-      parameter           ( zeta3  = 0.017998d0  )
+      real(wp)              zeta3
+      parameter           ( zeta3  = 0.017998_wp  )
 
-      double precision      z1
-      parameter           ( z1     = 2306.2181d0 )
+      real(wp)              z1
+      parameter           ( z1     = 2306.2181_wp )
 
-      double precision      z2
-      parameter           ( z2     = 1.09468d0   )
+      real(wp)              z2
+      parameter           ( z2     = 1.09468_wp   )
 
-      double precision      z3
-      parameter           ( z3     = 0.018203d0  )
+      real(wp)              z3
+      parameter           ( z3     = 0.018203_wp  )
 
-      double precision      theta1
-      parameter           ( theta1 = 2004.3109d0 )
+      real(wp)              theta1
+      parameter           ( theta1 = 2004.3109_wp )
 
-      double precision      theta2
-      parameter           ( theta2 = -0.42665d0 )
+      real(wp)              theta2
+      parameter           ( theta2 = -0.42665_wp )
 
-      double precision      theta3
-      parameter           ( theta3 = -0.041833d0 )
+      real(wp)              theta3
+      parameter           ( theta3 = -0.041833_wp )
 
 !
 !     Local variables
 !
-      double precision      scale
-      double precision      t
-      double precision      zeta
-      double precision      z
-      double precision      theta
+      real(wp)              scale
+      real(wp)              t
+      real(wp)              zeta
+      real(wp)              z
+      real(wp)              theta
 
 
 !
@@ -194,8 +195,8 @@
 !     angles in units of arcseconds prior to scaling.  After scaling,
 !     the angles are in units of radians.
 !
-      t      =  et    / ( jyear() * 100.d0 )
-      scale  =  rpd() / 3600.d0
+      t      =  et    / ( jyear() * 100.0_wp )
+      scale  =  rpd() / 3600.0_wp
 
       zeta   =  t  * (  zeta1  + t*( zeta2  + t*zeta3  )  ) * scale
       z      =  t  * (  z1     + t*( z2     + t*z3     )  ) * scale

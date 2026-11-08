@@ -1,6 +1,7 @@
 !$Procedure INT2HX  ( Integer to signed hexadecimal string )
 
       subroutine int2hx ( number, string, length )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               number
+      integer(ip)           number
       character*(*)         string
-      integer               length
+      integer(ip)           length
 
 ! $ Brief_I/O
 !
@@ -202,13 +203,13 @@
 !
 !     Local Parameters
 !
-      integer               base
+      integer(ip)           base
       parameter           ( base   = 16 )
 
-      integer               maxdig
+      integer(ip)           maxdig
       parameter           ( maxdig = 16 )
 
-      integer               strlen
+      integer(ip)           strlen
       parameter           ( strlen = 255 )
 !
 !     Local variables
@@ -216,10 +217,10 @@
       character*(1)         digits(0:maxdig-1)
       character*(strlen)    tmpstr
 
-      integer               begin
-      integer               itemp
-      integer               remndr
-      integer               result
+      integer(ip)           begin
+      integer(ip)           itemp
+      integer(ip)           remndr
+      integer(ip)           result
 !
 !     Saved variables
 !

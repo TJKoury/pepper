@@ -1,6 +1,7 @@
 !$Procedure APPNDD ( Append an item to a double precision cell )
 
       subroutine appndd ( item, cell )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      item
-      double precision      cell ( lbcell:* )
+      real(wp)              item
+      real(wp)              cell ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -224,13 +225,13 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               cardd
-      integer               sized
+      integer(ip)           cardd
+      integer(ip)           sized
 
 !
 !     Local variables
 !
-      integer               nwcard
+      integer(ip)           nwcard
 
 
 

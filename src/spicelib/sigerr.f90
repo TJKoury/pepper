@@ -1,6 +1,7 @@
 !$Procedure SIGERR ( Signal Error Condition )
 
       subroutine sigerr ( msg )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -325,24 +326,24 @@
 !     Define mnemonics for the integer action codes used by the error
 !     handling. See ERRACT for the character string equivalents used.
 !
-      integer               iabrt
+      integer(ip)           iabrt
       parameter           ( iabrt =          1 )
 
-      integer               ireprt
+      integer(ip)           ireprt
       parameter           ( ireprt = iabrt + 1 )
 
-      integer               iretrn
+      integer(ip)           iretrn
       parameter           ( iretrn = ireprt + 1 )
 
-      integer               iignor
+      integer(ip)           iignor
       parameter           ( iignor = iretrn + 1 )
 
-      integer               ideflt
+      integer(ip)           ideflt
       parameter           ( ideflt = iignor + 1 )
 !
 !     Length for output messages default settings.
 !
-      integer               deflen
+      integer(ip)           deflen
       parameter           ( deflen = 40)
 !
 !     Local Variables:
@@ -350,7 +351,7 @@
       character*(deflen)    defmsg
       character*(deflen)    errmsg
 
-      integer               action
+      integer(ip)           action
 
       logical               stat
       save

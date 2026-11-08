@@ -2,6 +2,7 @@
 
       subroutine latsrf ( method, target, et, &
                           fixref, npts,   lonlat, srfpts )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -37,11 +38,11 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
-      integer               npts
-      double precision      lonlat ( 2, * )
-      double precision      srfpts ( 3, * )
+      integer(ip)           npts
+      real(wp)              lonlat ( 2, * )
+      real(wp)              srfpts ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -784,8 +785,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpr
-      double precision      vdot
+      real(wp)              dpr
+      real(wp)              vdot
 
       logical               eqstr
       logical               failed
@@ -797,10 +798,10 @@
       character*(*)         rname
       parameter           ( rname = 'LATSRF' )
 
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -812,21 +813,21 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmtyp
 
-      double precision      r
-      double precision      raydir ( 3 )
-      double precision      x      ( 3 )
+      real(wp)              r
+      real(wp)              raydir ( 3 )
+      real(wp)              x      ( 3 )
 
-      integer               fixfid
-      integer               fxcent
-      integer               fxclss
-      integer               fxclid
-      integer               i
-      integer               n
-      integer               nsurf
-      integer               shape
-      integer               srfctr ( ctrsiz )
-      integer               srflst ( maxsrf )
-      integer               trgcde
+      integer(ip)           fixfid
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxclid
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           nsurf
+      integer(ip)           shape
+      integer(ip)           srfctr ( ctrsiz )
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           trgcde
 
       logical               first
       logical               fnd
@@ -836,24 +837,24 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(bdnmln)    svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfxfc
+      integer(ip)           svfxfc
 
 !
 !     Saved target radius values.
 !
-      integer               svctr3 ( ctrsiz )
-      integer               svprvt
-      double precision      svradi ( 3 )
+      integer(ip)           svctr3 ( ctrsiz )
+      integer(ip)           svprvt
+      real(wp)              svradi ( 3 )
 
 !
 !     Saved name/ID items.
@@ -1087,7 +1088,7 @@
             return
          end if
 
-         if (  min( svradi(1), svradi(2), svradi(3) ) .le. 0.d0 ) then
+         if (  min( svradi(1), svradi(2), svradi(3) ) .le. 0.0_wp ) then
 
             call setmsg ( 'Body # radii should be positive but ' &
             //            'were # # #.'                         )
@@ -1114,7 +1115,7 @@
 !           Let X be a point having norm 1 and located at the Ith input
 !           longitude and latitude.
 !
-            call latrec ( 1.d0, lonlat(1,i), lonlat(2,i), x )
+            call latrec ( 1.0_wp, lonlat(1,i), lonlat(2,i), x )
 !
 !           Scale X to place it on the ellipsoid surface.
 !
@@ -1197,7 +1198,7 @@
 !           Make sure the intercept is on the correct side of the
 !           object.
 !
-            if (  vdot( x, srfpts(1,i) )  .lt. 0.d0  ) then
+            if (  vdot( x, srfpts(1,i) )  .lt. 0.0_wp  ) then
 
                call setmsg ( 'A surface point was found on body # ' &
                //            'for the input planetocentric ' &

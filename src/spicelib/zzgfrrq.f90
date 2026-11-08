@@ -1,6 +1,7 @@
 !$Procedure ZZGFRRQ ( Private - GF, range rate between objects )
 
       subroutine zzgfrrq ( et, targ, obs, abcorr, value )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,11 +26,11 @@
 
       implicit none
 
-      double precision      et
-      integer               targ
-      integer               obs
+      real(wp)              et
+      integer(ip)           targ
+      integer(ip)           obs
       character*(*)         abcorr
-      double precision      value
+      real(wp)              value
 
 ! $ Brief_I/O
 !
@@ -157,7 +158,7 @@
 !
 !     SPICELIB functions.
 !
-      double precision      dvnorm
+      real(wp)              dvnorm
 
       logical               failed
       logical               return
@@ -165,8 +166,8 @@
 !
 !     Local Variables.
 !
-      double precision      lt
-      double precision      state    ( 6 )
+      real(wp)              lt
+      real(wp)              state    ( 6 )
 
       character*(5)         ref
 

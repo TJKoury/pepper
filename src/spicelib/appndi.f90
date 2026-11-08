@@ -1,6 +1,7 @@
 !$Procedure APPNDI ( Append an item to an integer cell )
 
       subroutine appndi ( item, cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               item
-      integer               cell ( lbcell:* )
+      integer(ip)           item
+      integer(ip)           cell ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -222,13 +223,13 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               cardi
-      integer               sizei
+      integer(ip)           cardi
+      integer(ip)           sizei
 
 !
 !     Local variables
 !
-      integer               nwcard
+      integer(ip)           nwcard
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure ERRDEV ( Get/Set Error Output Device Name )
 
       subroutine errdev ( op, device )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
       character*(*)          op
       character*(*)          device
 
-      integer                filen
+      integer(ip)            filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter            ( filen = 128 )
 #else
@@ -342,7 +343,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
 !
 !     Local Variables:
@@ -351,7 +352,7 @@
       character*(filen)     upnam
       character*(filen)     locnam
 
-      integer               oplen
+      integer(ip)           oplen
       parameter           ( oplen = 3 )
 
       character*(oplen)     upop

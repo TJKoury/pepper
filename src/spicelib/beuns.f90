@@ -1,6 +1,7 @@
 !$Procedure BEUNS  ( Be an unsigned integer? )
 
       logical function beuns  ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -148,13 +149,13 @@
 !
 !     SPICE functions
 !
-      integer               frstnb
+      integer(ip)           frstnb
 
 !
 !     Local variables
 !
-      integer               i
-      integer               l
+      integer(ip)           i
+      integer(ip)           l
 
       logical               ok
 

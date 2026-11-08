@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSCDP ( EK, set column data pointer )
 
       subroutine zzekscdp ( handle, segdsc, coldsc, recptr, datptr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
       include 'eksegdsc.inc'
       include 'ekrecptr.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      integer               datptr
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      integer(ip)           datptr
 
 ! $ Brief_I/O
 !
@@ -127,15 +128,15 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               colidx
-      integer               ncols
-      integer               ptrloc
-      integer               recno
+      integer(ip)           colidx
+      integer(ip)           ncols
+      integer(ip)           ptrloc
+      integer(ip)           recno
 
 !
 !     Use discovery check-in.

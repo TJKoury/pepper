@@ -4,6 +4,7 @@
                                   elts,    senses,  sthan,   stsdsc, &
                                   stdtpt,  dtpool,  dtdscs,  sgvec1, &
                                   rwvec1,  sgvec2,  rwvec2           )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,24 +30,24 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool =  -5 )
 
-      integer               op
-      integer               ncols
-      integer               tabs   ( * )
-      integer               cols   ( * )
-      integer               elts   ( * )
-      integer               senses ( * )
-      integer               sthan  ( * )
-      integer               stsdsc ( sdscsz, * )
-      integer               stdtpt ( * )
-      integer               dtpool ( 2, lbpool : * )
-      integer               dtdscs ( cdscsz, * )
-      integer               sgvec1 ( * )
-      integer               rwvec1 ( * )
-      integer               sgvec2 ( * )
-      integer               rwvec2 ( * )
+      integer(ip)           op
+      integer(ip)           ncols
+      integer(ip)           tabs   ( * )
+      integer(ip)           cols   ( * )
+      integer(ip)           elts   ( * )
+      integer(ip)           senses ( * )
+      integer(ip)           sthan  ( * )
+      integer(ip)           stsdsc ( sdscsz, * )
+      integer(ip)           stdtpt ( * )
+      integer(ip)           dtpool ( 2, lbpool : * )
+      integer(ip)           dtdscs ( cdscsz, * )
+      integer(ip)           sgvec1 ( * )
+      integer(ip)           rwvec1 ( * )
+      integer(ip)           sgvec2 ( * )
+      integer(ip)           rwvec2 ( * )
 
 ! $ Brief_I/O
 !
@@ -263,30 +264,30 @@
 !
 !     SPICELIB functions
 !
-      integer               lnknxt
+      integer(ip)           lnknxt
 
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekecmp
+      integer(ip)           zzekecmp
 
 !
 !     Local variables
 !
-      integer               cldscs ( cdscsz, 2 )
-      integer               col
-      integer               colidx
-      integer               colptr ( 2 )
-      integer               dtype  ( 2 )
-      integer               elidxs ( 2 )
-      integer               hans   ( 2 )
-      integer               i
-      integer               j
-      integer               rel
-      integer               rows   ( 2 )
-      integer               segs   ( 2 )
-      integer               sgdscs ( sdscsz, 2 )
-      integer               tabidx
+      integer(ip)           cldscs ( cdscsz, 2 )
+      integer(ip)           col
+      integer(ip)           colidx
+      integer(ip)           colptr ( 2 )
+      integer(ip)           dtype  ( 2 )
+      integer(ip)           elidxs ( 2 )
+      integer(ip)           hans   ( 2 )
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           rel
+      integer(ip)           rows   ( 2 )
+      integer(ip)           segs   ( 2 )
+      integer(ip)           sgdscs ( sdscsz, 2 )
+      integer(ip)           tabidx
 
 
 !

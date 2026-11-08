@@ -1,6 +1,7 @@
 !$Procedure CKFXFM ( CK frame, find state transformation )
 
       subroutine ckfxfm ( inst, et, xform, ref, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               inst
-      double precision      et
-      double precision      xform  ( 6, 6 )
-      integer               ref
+      integer(ip)           inst
+      real(wp)              et
+      real(wp)              xform  ( 6, 6 )
+      integer(ip)           ref
       logical               found
 
 ! $ Brief_I/O
@@ -349,33 +350,33 @@
 !                   a name and a summary have the same length in bytes.)
 !
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic = 6 )
 
-      integer               nc
+      integer(ip)           nc
       parameter           ( nc = ndc + ( nic + 1 )/2 )
 
-      integer               idlen
+      integer(ip)           idlen
       parameter           ( idlen = nc * 8 )
 
 !
 !     Local variables
 !
-      integer               handle
-      integer               icd      ( nic  )
-      integer               sclkid
+      integer(ip)           handle
+      integer(ip)           icd      ( nic  )
+      integer(ip)           sclkid
 
-      double precision      av       ( 3    )
-      double precision      clkout
-      double precision      descr    ( nc   )
-      double precision      dcd      ( ndc  )
-      double precision      rot      ( 3, 3 )
-      double precision      ref2in   ( 6, 6 )
-      double precision      time
-      double precision      tol
+      real(wp)              av       ( 3    )
+      real(wp)              clkout
+      real(wp)              descr    ( nc   )
+      real(wp)              dcd      ( ndc  )
+      real(wp)              rot      ( 3, 3 )
+      real(wp)              ref2in   ( 6, 6 )
+      real(wp)              time
+      real(wp)              tol
 
       character*(idlen)     segid
 
@@ -405,7 +406,7 @@
 !     Assume the segment won't be found until it really is.
 !
       needav = .true.
-      tol    =  0.0d0
+      tol    =  0.0_wp
 
 !
 !     Begin a search for this instrument and time, and get the first

@@ -1,6 +1,7 @@
 !$Procedure INEDPL ( Intersection of ellipsoid and plane )
 
       subroutine inedpl ( a, b, c, plane, ellips, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,17 +23,17 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      plane  ( ubpl )
-      double precision      ellips ( ubel )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              plane  ( ubpl )
+      real(wp)              ellips ( ubel )
       logical               found
 
 ! $ Brief_I/O
@@ -417,8 +418,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      vnorm
+      real(wp)              brcktd
+      real(wp)              vnorm
 
       logical               return
       logical               vzero
@@ -426,22 +427,22 @@
 !
 !     Local variables
 !
-      double precision      center ( 3 )
-      double precision      const
-      double precision      dplane ( ubpl )
-      double precision      dist
-      double precision      dstort ( 3 )
-      double precision      invdst ( 3 )
-      double precision      maxrad
-      double precision      normal ( 3 )
-      double precision      point  ( 3 )
-      double precision      rcircl
-      double precision      span1  ( 3 )
-      double precision      span2  ( 3 )
-      double precision      vec1   ( 3 )
-      double precision      vec2   ( 3 )
+      real(wp)              center ( 3 )
+      real(wp)              const
+      real(wp)              dplane ( ubpl )
+      real(wp)              dist
+      real(wp)              dstort ( 3 )
+      real(wp)              invdst ( 3 )
+      real(wp)              maxrad
+      real(wp)              normal ( 3 )
+      real(wp)              point  ( 3 )
+      real(wp)              rcircl
+      real(wp)              span1  ( 3 )
+      real(wp)              span2  ( 3 )
+      real(wp)              vec1   ( 3 )
+      real(wp)              vec2   ( 3 )
 
-      integer               i
+      integer(ip)           i
 
 
 !
@@ -456,9 +457,9 @@
 !
 !     We don't want to worry about flat ellipsoids:
 !
-      if (         ( a .le. 0.0d0 ) &
-            .or.   ( b .le. 0.0d0 ) &
-            .or.   ( c .le. 0.0d0 )   )   then
+      if (         ( a .le. 0.0_wp ) &
+            .or.   ( b .le. 0.0_wp ) &
+            .or.   ( c .le. 0.0_wp )   )   then
 
          found = .false.
 
@@ -545,9 +546,9 @@
 !     We declare them with length three, since we are going to make
 !     use of the diagonal elements only.
 !
-      dstort(1) = 1.0d0 / a
-      dstort(2) = 1.0d0 / b
-      dstort(3) = 1.0d0 / c
+      dstort(1) = 1.0_wp / a
+      dstort(2) = 1.0_wp / b
+      dstort(3) = 1.0_wp / c
 
       invdst(1) =  a
       invdst(2) =  b
@@ -598,7 +599,7 @@
 
       dist = vnorm ( center )
 
-      if ( dist .gt. 1.0d0 ) then
+      if ( dist .gt. 1.0_wp ) then
 
          found = .false.
          call chkout ( 'INEDPL' )
@@ -610,7 +611,7 @@
 !     Scale the generating vectors by the radius of the intersection
 !     circle.
 !
-      rcircl =  dsqrt (  brcktd ( 1.0d0 - dist**2,  0.0d0,  1.0d0  )  )
+      rcircl =  dsqrt (  brcktd ( 1.0_wp - dist**2,  0.0_wp,  1.0_wp  )  )
 
       call vsclip ( rcircl, vec1 )
       call vsclip ( rcircl, vec2 )

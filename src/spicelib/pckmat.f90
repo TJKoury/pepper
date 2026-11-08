@@ -1,6 +1,7 @@
 !$Procedure PCKMAT ( PCK, get transformation matrix at time )
 
       subroutine pckmat ( body, et, ref, tsipm, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,10 +25,10 @@
 
       implicit none
 
-      integer              body
-      double precision     et
-      integer              ref
-      double precision     tsipm ( 6, 6 )
+      integer(ip)          body
+      real(wp)             et
+      integer(ip)          ref
+      real(wp)             tsipm ( 6, 6 )
       logical              found
 
 ! $ Brief_I/O
@@ -228,36 +229,36 @@
 !
 !     ND and NI values for a PCK file.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 5 )
 !
 !     Index for the reference frame code in the integer summary.
 !
-      integer               nr
+      integer(ip)           nr
       parameter           ( nr = 2 )
 !
 !     Length of the descriptor for a PCK file.
 !
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns = nd + (ni+1)/2 )
 !
 !     Index for the data type code in the integer summary.
 !
-      integer               nt
+      integer(ip)           nt
       parameter           ( nt = 3 )
 !
 !     Maximum size allowed for a record in a segment of a binary PCK
 !     file.
 !
-      integer               maxrec
+      integer(ip)           maxrec
       parameter           ( maxrec = 130 )
 !
 !     Number of components in a state vector.
 !
-      integer               nstate
+      integer(ip)           nstate
       parameter           ( nstate = 6 )
 
 !
@@ -265,16 +266,16 @@
 !
       character*(40)        ident
 
-      double precision      dcd    (     nd )
-      double precision      descr  (     ns )
-      double precision      estate ( nstate )
-      double precision      eulang ( nstate )
-      double precision      record ( maxrec )
+      real(wp)              dcd    (     nd )
+      real(wp)              descr  (     ns )
+      real(wp)              estate ( nstate )
+      real(wp)              eulang ( nstate )
+      real(wp)              record ( maxrec )
 
-      integer               handle
-      integer               icd    (     ni )
-      integer               recsiz
-      integer               type
+      integer(ip)           handle
+      integer(ip)           icd    (     ni )
+      integer(ip)           recsiz
+      integer(ip)           type
 
 !
 !     Standard SPICE Error handling.

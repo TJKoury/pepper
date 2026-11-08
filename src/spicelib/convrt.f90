@@ -1,6 +1,7 @@
 !$Procedure CONVRT ( Convert Units )
 
       subroutine convrt ( x, in, out, y )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision x
+      real(wp) x
       character*(*)    in
       character*(*)    out
-      double precision y
+      real(wp) y
 
 ! $ Brief_I/O
 !
@@ -211,8 +212,8 @@
 !     SPICELIB functions
 !
       logical          return
-      integer          isrchc
-      double precision dpr
+      integer(ip)      isrchc
+      real(wp) dpr
 
 !
 !     Local variables
@@ -222,56 +223,56 @@
 
 
 
-      integer          i
-      integer          j
-      double precision temp
+      integer(ip)      i
+      integer(ip)      j
+      real(wp) temp
 
-      double precision secpjy
-      parameter      ( secpjy =  86400.0d0 * 365.25d0      )
+      real(wp) secpjy
+      parameter      ( secpjy =  86400.0_wp * 365.25_wp      )
 
-      double precision secpty
-      parameter      ( secpty =  86400.0d0 * 365.2421988d0 )
+      real(wp) secpty
+      parameter      ( secpty =  86400.0_wp * 365.2421988_wp )
 
-      double precision ltyear
-      parameter      ( ltyear = 86400.0d0 * 365.25d0 * 299792458.0d0)
+      real(wp) ltyear
+      parameter      ( ltyear = 86400.0_wp * 365.25_wp * 299792458.0_wp)
 
-      double precision dpm
-      parameter      ( dpm  = 1.0d0  /   60.0d0      )
+      real(wp) dpm
+      parameter      ( dpm  = 1.0_wp  /   60.0_wp      )
 
-      double precision dps
-      parameter      ( dps  = 1.0d0  / 3600.0d0      )
+      real(wp) dps
+      parameter      ( dps  = 1.0_wp  / 3600.0_wp      )
 
-      double precision dpsa
-      parameter      ( dpsa = 15.0d0 / 3600.0d0      )
+      real(wp) dpsa
+      parameter      ( dpsa = 15.0_wp / 3600.0_wp      )
 
-      double precision au
-      parameter      ( au   = 1.4959787061368887d11  )
+      real(wp) au
+      parameter      ( au   = 1.4959787061368887e11_wp  )
 !
 !     1.0d0 divided by the sin of 1 arc second
 !
-      double precision scale
-      parameter      ( scale = 2.0626480624790438d+05 )
+      real(wp) scale
+      parameter      ( scale = 2.0626480624790438e05_wp )
 
 
-      double precision parsec
+      real(wp) parsec
       parameter      ( parsec = au * scale )
 
-      integer          ang
+      integer(ip)      ang
       parameter      ( ang  = 0         )
 
-      integer          dist
+      integer(ip)      dist
       parameter      ( dist = ang  + 7  )
 
-      integer          tme
+      integer(ip)      tme
       parameter      ( tme  = dist + 17 )
 
-      integer          total
+      integer(ip)      total
       parameter      ( total = tme + 7  )
 
       character*16     units  (total)
       save             units
 
-      double precision cnvrtn (total)
+      real(wp) cnvrtn (total)
       save             cnvrtn
 
       character*8      type   (total)
@@ -309,11 +310,11 @@
 !     This value will be loaded using the SPICELIB function DPR()
 !     on the first execution of this routine.
 !
-      data cnvrtn (ang + 2)  /    1.0d0   /
+      data cnvrtn (ang + 2)  /    1.0_wp   /
       data cnvrtn (ang + 3)  /      dpm   /
       data cnvrtn (ang + 4)  /      dps   /
-      data cnvrtn (ang + 5)  / 15.000d0   /
-      data cnvrtn (ang + 6)  /  0.250d0   /
+      data cnvrtn (ang + 5)  / 15.000_wp   /
+      data cnvrtn (ang + 6)  /  0.250_wp   /
       data cnvrtn (ang + 7)  /  dpsa      /
 
       data type   (ang + 1)  / 'ANGLE'    /
@@ -348,16 +349,16 @@
       data units (dist + 9)  / 'CENTIMETERS'          /
       data units (dist + 10) / 'MILLIMETERS'          /
 
-      data cnvrtn(dist + 1)  / 1.00d0                 /
-      data cnvrtn(dist + 2)  / 1000.0d0               /
-      data cnvrtn(dist + 3)  / 0.01d0                 /
-      data cnvrtn(dist + 4)  / 0.001d0                /
-      data cnvrtn(dist + 5)  / 299792458.0d0        /
+      data cnvrtn(dist + 1)  / 1.00_wp                 /
+      data cnvrtn(dist + 2)  / 1000.0_wp               /
+      data cnvrtn(dist + 3)  / 0.01_wp                 /
+      data cnvrtn(dist + 4)  / 0.001_wp                /
+      data cnvrtn(dist + 5)  / 299792458.0_wp        /
       data cnvrtn(dist + 6)  / au                     /
-      data cnvrtn(dist + 7)  / 1.00d0                 /
-      data cnvrtn(dist + 8)  / 1000.0d0               /
-      data cnvrtn(dist + 9)  / 0.01d0                 /
-      data cnvrtn(dist + 10) / 0.001d0                /
+      data cnvrtn(dist + 7)  / 1.00_wp                 /
+      data cnvrtn(dist + 8)  / 1000.0_wp               /
+      data cnvrtn(dist + 9)  / 0.01_wp                 /
+      data cnvrtn(dist + 10) / 0.001_wp                /
 
       data type  (dist + 1)  / 'DISTANCE'             /
       data type  (dist + 2)  / 'DISTANCE'             /
@@ -385,11 +386,11 @@
       data units (dist + 14) / 'NAUTICAL_MILES'  /
       data units (dist + 15) / 'YARDS'           /
 
-      data cnvrtn(dist + 11) / 0.3048d0          /
-      data cnvrtn(dist + 12) / 0.0254d0          /
-      data cnvrtn(dist + 13) / 1609.344d0       /
-      data cnvrtn(dist + 14) / 1852.0d0         /
-      data cnvrtn(dist + 15) / 0.9144d0          /
+      data cnvrtn(dist + 11) / 0.3048_wp          /
+      data cnvrtn(dist + 12) / 0.0254_wp          /
+      data cnvrtn(dist + 13) / 1609.344_wp       /
+      data cnvrtn(dist + 14) / 1852.0_wp         /
+      data cnvrtn(dist + 15) / 0.9144_wp          /
 
       data type  (dist + 11) / 'DISTANCE'        /
       data type  (dist + 12) / 'DISTANCE'        /
@@ -431,10 +432,10 @@
       data units ( tme + 6 ) / 'TROPICAL_YEARS' /
       data units ( tme + 7 ) / 'YEARS'          /
 
-      data cnvrtn( tme + 1 ) /     1.0d0        /
-      data cnvrtn( tme + 2 ) /    60.0d0        /
-      data cnvrtn( tme + 3 ) /  3600.0d0        /
-      data cnvrtn( tme + 4 ) / 86400.0d0        /
+      data cnvrtn( tme + 1 ) /     1.0_wp        /
+      data cnvrtn( tme + 2 ) /    60.0_wp        /
+      data cnvrtn( tme + 3 ) /  3600.0_wp        /
+      data cnvrtn( tme + 4 ) / 86400.0_wp        /
       data cnvrtn( tme + 5 ) / secpjy           /
       data cnvrtn( tme + 6 ) / secpty           /
       data cnvrtn( tme + 7 ) / secpjy           /

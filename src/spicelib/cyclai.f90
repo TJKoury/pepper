@@ -1,6 +1,7 @@
 !$Procedure CYCLAI ( Cycle the elements of an integer array )
 
       subroutine cyclai ( array, nelt, dir, ncycle, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               array    ( * )
-      integer               nelt
+      integer(ip)           array    ( * )
+      integer(ip)           nelt
       character*1           dir
-      integer               ncycle
-      integer               out      ( * )
+      integer(ip)           ncycle
+      integer(ip)           out      ( * )
 
 ! $ Brief_I/O
 !
@@ -175,21 +176,21 @@
 !
 !     SPICELIB functions
 !
-      integer          gcd
+      integer(ip)      gcd
       logical          return
 
 !
 !     Local variables
 !
-      integer          last
-      integer          temp
+      integer(ip)      last
+      integer(ip)      temp
 
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
 
 
 

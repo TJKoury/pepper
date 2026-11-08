@@ -1,6 +1,7 @@
 !$Procedure BSRCHC ( Binary search for a character string )
 
-      integer function bsrchc ( value, ndim, array )
+      integer(ip) function bsrchc ( value, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
       implicit none
 
       character*(*)    value
-      integer          ndim
+      integer(ip)      ndim
       character*(*)    array ( * )
 
 ! $ Brief_I/O
@@ -149,9 +150,9 @@
 !
 !     Local variables
 !
-      integer          left
-      integer          right
-      integer          i
+      integer(ip)      left
+      integer(ip)      right
+      integer(ip)      i
 
 
 

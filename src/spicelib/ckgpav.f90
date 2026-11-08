@@ -2,6 +2,7 @@
 
       subroutine ckgpav ( inst, sclkdp, tol, ref, cmat, av, clkout, &
                           found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,13 +25,13 @@
       include               'frmtyp.inc'
       include               'zzctr.inc'
 
-      integer               inst
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           inst
+      real(wp)              sclkdp
+      real(wp)              tol
       character*(*)         ref
-      double precision      cmat   ( 3, 3 )
-      double precision      av     ( 3    )
-      double precision      clkout
+      real(wp)              cmat   ( 3, 3 )
+      real(wp)              av     ( 3    )
+      real(wp)              clkout
       logical               found
 
 ! $ Brief_I/O
@@ -934,22 +935,22 @@
 !                   a name and a summary have the same length in bytes.)
 !
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic = 6 )
 
-      integer               nc
+      integer(ip)           nc
       parameter           ( nc = ndc + ( nic + 1 )/2 )
 
-      integer               idlen
+      integer(ip)           idlen
       parameter           ( idlen = nc * 8 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 
@@ -958,24 +959,24 @@
 !
       character*(idlen)     segid
 
-      double precision      dcd      ( ndc  )
-      double precision      descr    ( nc   )
-      double precision      et
-      double precision      omega    ( 3    )
-      double precision      rot      ( 3, 3 )
-      double precision      tmpmat   ( 3, 3 )
-      double precision      tmpv     ( 3 )
-      double precision      xform    ( 6, 6 )
+      real(wp)              dcd      ( ndc  )
+      real(wp)              descr    ( nc   )
+      real(wp)              et
+      real(wp)              omega    ( 3    )
+      real(wp)              rot      ( 3, 3 )
+      real(wp)              tmpmat   ( 3, 3 )
+      real(wp)              tmpv     ( 3 )
+      real(wp)              xform    ( 6, 6 )
 
-      integer               center
-      integer               handle
-      integer               icd      ( nic  )
-      integer               refreq
-      integer               refseg
-      integer               sclk
-      integer               type1
-      integer               type2
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           handle
+      integer(ip)           icd      ( nic  )
+      integer(ip)           refreq
+      integer(ip)           refseg
+      integer(ip)           sclk
+      integer(ip)           type1
+      integer(ip)           type2
+      integer(ip)           typeid
 
       logical               needav
       logical               pfnd
@@ -985,9 +986,9 @@
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(frnmln)    svref
-      integer               svrefr
+      integer(ip)           svrefr
 
       logical               first
 
@@ -1039,7 +1040,7 @@
 !
 !     If the tolerance is less than zero, we go no further.
 !
-      if ( tol .lt. 0.0d0 ) then
+      if ( tol .lt. 0.0_wp ) then
          call chkout ( 'CKGPAV' )
          return
       end if
@@ -1092,7 +1093,7 @@
 !                 Any old value of ET will do in this case.  We'll
 !                 use zero.
 !
-                  et = 0.0d0
+                  et = 0.0_wp
 
                else
 !

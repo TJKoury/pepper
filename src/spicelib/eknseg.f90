@@ -1,6 +1,7 @@
 !$Procedure EKNSEG ( EK, number of segments in file )
 
-      integer function eknseg ( handle )
+      integer(ip) function eknseg ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       include 'ekfilpar.inc'
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -170,14 +171,14 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrbs
-      integer               zzektrsz
+      integer(ip)           zzektrbs
+      integer(ip)           zzektrsz
 
 !
 !     Local variables
 !
-      integer               base
-      integer               tree
+      integer(ip)           base
+      integer(ip)           tree
 
 !
 !     Set a default value for EKNSEG.

@@ -2,6 +2,7 @@
 
       subroutine zzgfspq ( et, targ1, targ2, r1, r2, &
                            obs, abcorr, ref, value )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,15 +24,15 @@
 ! $ Declarations
 
       implicit none
-      double precision      et
-      integer               targ1
-      integer               targ2
-      double precision      r1
-      double precision      r2
-      integer               obs
+      real(wp)              et
+      integer(ip)           targ1
+      integer(ip)           targ2
+      real(wp)              r1
+      real(wp)              r2
+      integer(ip)           obs
       character*(*)         abcorr
       character*(*)         ref
-      double precision      value
+      real(wp)              value
 
 
 ! $ Brief_I/O
@@ -194,10 +195,10 @@
 !
 !     SPICELIB functions.
 !
-      double precision      dasine
-      double precision      halfpi
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              dasine
+      real(wp)              halfpi
+      real(wp)              vnorm
+      real(wp)              vsep
       logical               failed
       logical               return
 
@@ -205,21 +206,21 @@
 !
 !     Local Variables.
 !
-      double precision      ang1
-      double precision      ang2
-      double precision      pv1    ( 3 )
-      double precision      pv2    ( 3 )
-      double precision      range1
-      double precision      range2
-      double precision      theta
-      double precision      lt
+      real(wp)              ang1
+      real(wp)              ang2
+      real(wp)              pv1    ( 3 )
+      real(wp)              pv2    ( 3 )
+      real(wp)              range1
+      real(wp)              range2
+      real(wp)              theta
+      real(wp)              lt
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      double precision      atol
-      parameter           ( atol  = 1.d-12 )
+      real(wp)              atol
+      parameter           ( atol  = 1.0e-12_wp )
 
 
 !
@@ -234,7 +235,7 @@
 !
 !     First check for bad inputs.
 !
-      if ( r1 .lt. 0.d0 .or. r2 .lt. 0.d0 ) then
+      if ( r1 .lt. 0.0_wp .or. r2 .lt. 0.0_wp ) then
 
          call setmsg  ('A negative radius for a body was ' &
          //            'encountered. The radius for body # was given ' &

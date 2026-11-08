@@ -1,6 +1,7 @@
 !$Procedure GETELM ( Get the components from two-line elements )
 
       subroutine getelm ( frstyr, lines, epoch, elems )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               frstyr
+      integer(ip)           frstyr
       character*(*)         lines ( 2  )
-      double precision      epoch
-      double precision      elems ( 10 )
+      real(wp)              epoch
+      real(wp)              elems ( 10 )
 
 ! $ Brief_I/O
 !

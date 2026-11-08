@@ -1,6 +1,7 @@
 !$Procedure SCFMT ( Convert SCLK "ticks" to character clock format )
 
       subroutine scfmt ( sc, ticks, clkstr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer               sc
-      double precision      ticks
+      integer(ip)           sc
+      real(wp)              ticks
       character*(*)         clkstr
 
 ! $ Brief_I/O
@@ -368,13 +369,13 @@
 !
 !     SPICELIB functions
 !
-      integer               sctype
+      integer(ip)           sctype
       logical               return
 
 !
 !     Local variables
 !
-      integer               type
+      integer(ip)           type
 
 
 !

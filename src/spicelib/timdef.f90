@@ -1,6 +1,7 @@
 !$Procedure TIMDEF ( Time Software Defaults )
 
       subroutine timdef ( action, item, value )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -265,16 +266,16 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
       logical               return
 
 !
 !     Local Variables.
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 16 )
 
-      integer               nzones
+      integer(ip)           nzones
       parameter           ( nzones = 8 )
 
       character*(wdsize)    defzon
@@ -288,11 +289,11 @@
       character*(wdsize)    myitem
       character*(wdsize)    myval
 
-      integer               last
-      integer               zone
+      integer(ip)           last
+      integer(ip)           zone
 
-      double precision      hoff
-      double precision      moff
+      real(wp)              hoff
+      real(wp)              moff
 
       logical               succes
 

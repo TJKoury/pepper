@@ -5,6 +5,7 @@
                           dppool, dpvals, &
                           chpool, chvals, &
                           varnam, found,  lookat, nameat )
+      use pepper_kinds, only: ip, wp
 
 
 ! $ Abstract
@@ -28,22 +29,22 @@
 
 
       implicit none
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               namlst     (           * )
-      integer               nmpool     ( 2, lbpool:* )
+      integer(ip)           namlst     (           * )
+      integer(ip)           nmpool     ( 2, lbpool:* )
       character*(*)         names      (           * )
-      integer               datlst     (           * )
-      integer               dppool     ( 2, lbpool:* )
-      double precision      dpvals     (           * )
-      integer               chpool     ( 2, lbpool:* )
+      integer(ip)           datlst     (           * )
+      integer(ip)           dppool     ( 2, lbpool:* )
+      real(wp)              dpvals     (           * )
+      integer(ip)           chpool     ( 2, lbpool:* )
       character*(*)         chvals     (           * )
 
       character*(*)         varnam
       logical               found
-      integer               lookat
-      integer               nameat
+      integer(ip)           lookat
+      integer(ip)           nameat
 
 ! $ Brief_I/O
 !
@@ -164,28 +165,28 @@
 !
 !     SPICELIB Functions
 !
-      integer               lnknfn
-      integer               zzhash
+      integer(ip)           lnknfn
+      integer(ip)           zzhash
       logical               return
 
 !
 !     Parameters
 !
-      integer               prev
+      integer(ip)           prev
       parameter           ( prev = 2 )
 
-      integer               next
+      integer(ip)           next
       parameter           ( next = 1 )
 
 
 !
 !     Local Variables
 !
-      integer               node
+      integer(ip)           node
       logical               full
 
-      integer               head
-      integer               tail
+      integer(ip)           head
+      integer(ip)           tail
 
 
 !

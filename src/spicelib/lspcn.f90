@@ -1,6 +1,7 @@
 !$Procedure LSPCN  ( Longitude of the sun, planetocentric )
 
-      double precision function lspcn ( body, et, abcorr )
+      real(wp) function lspcn ( body, et, abcorr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
       include               'zzctr.inc'
 
       character*(*)         body
-      double precision      et
+      real(wp)              et
       character*(*)         abcorr
 
 ! $ Brief_I/O
@@ -310,41 +311,41 @@
       character*(*)         ref
       parameter           ( ref     = 'J2000' )
 
-      integer               sun
+      integer(ip)           sun
       parameter           ( sun     = 10 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 
 !
 !     Local variables
 !
-      double precision      uavel  ( 3 )
-      double precision      lat
-      double precision      lt
-      double precision      npole  ( 3 )
-      double precision      pos    ( 3 )
-      double precision      radius
-      double precision      bstate ( 6 )
-      double precision      sstate ( 6 )
-      double precision      tipm   ( 3, 3 )
-      double precision      trans  ( 3, 3 )
+      real(wp)              uavel  ( 3 )
+      real(wp)              lat
+      real(wp)              lt
+      real(wp)              npole  ( 3 )
+      real(wp)              pos    ( 3 )
+      real(wp)              radius
+      real(wp)              bstate ( 6 )
+      real(wp)              sstate ( 6 )
+      real(wp)              tipm   ( 3, 3 )
+      real(wp)              trans  ( 3, 3 )
 
-      integer               idcode
-      integer               i
+      integer(ip)           idcode
+      integer(ip)           i
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svbody
-      integer               svidcd
+      integer(ip)           svidcd
       logical               svfnd1
 
       logical               first
@@ -368,7 +369,7 @@
 !
 !     Give the function an initial value.
 !
-      lspcn = 0.d0
+      lspcn = 0.0_wp
 
 !
 !     Standard SPICE error handling.

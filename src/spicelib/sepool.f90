@@ -1,6 +1,7 @@
 !$Procedure SEPOOL ( String from pool )
 
       subroutine sepool ( item, fidx, contin, string, size, lidx, found)
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
       implicit none
 
       character*(*)         item
-      integer               fidx
+      integer(ip)           fidx
       character*(*)         contin
       character*(*)         string
-      integer               size
-      integer               lidx
+      integer(ip)           size
+      integer(ip)           lidx
       logical               found
 
 ! $ Brief_I/O
@@ -324,23 +325,23 @@
 
 !     SPICELIB Variables
 !
-      integer               rtrim
+      integer(ip)           rtrim
       logical               return
 
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
       character*(lnsize)    part
 
 
-      integer               cfirst
-      integer               clast
-      integer               comp
-      integer               csize
-      integer               n
-      integer               putat
-      integer               room
+      integer(ip)           cfirst
+      integer(ip)           clast
+      integer(ip)           comp
+      integer(ip)           csize
+      integer(ip)           n
+      integer(ip)           putat
+      integer(ip)           room
 
       logical               gotit
       logical               more

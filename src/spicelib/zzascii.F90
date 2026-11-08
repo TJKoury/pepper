@@ -1,6 +1,7 @@
 !$Procedure ZZASCII ( determine/verify EOL terminators in a text file )
 
       subroutine zzascii ( file, line, check, termin )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -263,12 +264,12 @@
 !
       logical               eqstr
       logical               return
-      integer               rtrim
+      integer(ip)           rtrim
 
 !
 !     Local parameters.
 !
-      integer               eoltsz
+      integer(ip)           eoltsz
       parameter           ( eoltsz = 5 )
 
 !
@@ -276,13 +277,13 @@
 !
       character*(eoltsz)    native
 
-      integer               doscnt
-      integer               i
-      integer               iostat
-      integer               maccnt
-      integer               number
-      integer               reclen
-      integer               unxcnt
+      integer(ip)           doscnt
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           maccnt
+      integer(ip)           number
+      integer(ip)           reclen
+      integer(ip)           unxcnt
 
 !
 !     Discovery check-in. Can't determine the terminator in RETURN

@@ -1,6 +1,7 @@
 !$Procedure      ZZWAHR ( SPICELIB private version of Newhalls' WAHR )
 
       subroutine zzwahr ( et, dvnut )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 ! $ Declarations
 
       implicit none
-      double precision      et
-      double precision      dvnut(4)
+      real(wp)              et
+      real(wp)              dvnut(4)
 
 ! $ Brief_I/O
 !
@@ -129,9 +130,9 @@
 !
 !     SPICELIB Functions
 !
-      double precision      pi
-      double precision      twopi
-      double precision      spd
+      real(wp)              pi
+      real(wp)              twopi
+      real(wp)              spd
 
 !
 !     Parameters
@@ -139,11 +140,11 @@
 !     NTERM is the number of SIN and COSINE terms used in the
 !     computation of Delta Psi and Delta epsilon
 !
-      integer               nterm
+      integer(ip)           nterm
       parameter           ( nterm = 106 )
 
-      double precision      zero
-      parameter           ( zero  = 0.0d0 )
+      real(wp)              zero
+      parameter           ( zero  = 0.0_wp )
 
 !
 !     The parameters below stand for
@@ -162,94 +163,94 @@
 !     to degrees, degrees/day, degrees/(0.0001 days)**2 and
 !     degrees/(0.0001 days)**3.
 !
-      double precision      rev
-      parameter           ( rev   = 360.0d0           )
+      real(wp)              rev
+      parameter           ( rev   = 360.0_wp           )
 
-      double precision      deg
-      parameter           ( deg   = 1.0d0             )
+      real(wp)              deg
+      parameter           ( deg   = 1.0_wp             )
 
-      double precision      min
-      parameter           ( min   = 1.0d0 / 60.0d0    )
+      real(wp)              min
+      parameter           ( min   = 1.0_wp / 60.0_wp    )
 
-      double precision      sec
-      parameter           ( sec   = 1.0d0 / 3600.0d0  )
+      real(wp)              sec
+      parameter           ( sec   = 1.0_wp / 3600.0_wp  )
 
-      double precision      cent1
-      parameter           ( cent1 = 36525.0d0         )
+      real(wp)              cent1
+      parameter           ( cent1 = 36525.0_wp         )
 
-      double precision      cent2
-      parameter           ( cent2 = cent1*cent1*1.0d-8 )
+      real(wp)              cent2
+      parameter           ( cent2 = cent1*cent1*1.0e-8_wp )
 
-      double precision      cent3
-      parameter           ( cent3 = cent1*cent2*1.0d-4 )
+      real(wp)              cent3
+      parameter           ( cent3 = cent1*cent2*1.0e-4_wp )
 
 
 !
 !     The next set of parameters is an enumeration of the various
 !     angles needed in the computation of nutations.
 !
-      integer               l
+      integer(ip)           l
       parameter           ( l      = 1 )
 
-      integer               lp
+      integer(ip)           lp
       parameter           ( lp     = l      + 1 )
 
-      integer               f
+      integer(ip)           f
       parameter           ( f      = lp     + 1 )
 
-      integer               d
+      integer(ip)           d
       parameter           ( d      = f      + 1 )
 
-      integer               mg
+      integer(ip)           mg
       parameter           ( mg     = d      + 1 )
 
 !
 !     Local Variables.
 !
-      double precision      ce
-      double precision      cl
-      double precision      cosang
-      double precision      angle(5)
-      double precision      angrt(5)
-      double precision      arg
-      double precision      argrt
-      double precision      dd
-      double precision      dd2
-      double precision      dddj
-      double precision      dj
-      double precision      dpi
-      double precision      dtwopi
-      double precision      factr
-      double precision      oneday
-      double precision      radian
-      double precision      rasec
-      double precision      sinang
-      double precision      t
+      real(wp)              ce
+      real(wp)              cl
+      real(wp)              cosang
+      real(wp)              angle(5)
+      real(wp)              angrt(5)
+      real(wp)              arg
+      real(wp)              argrt
+      real(wp)              dd
+      real(wp)              dd2
+      real(wp)              dddj
+      real(wp)              dj
+      real(wp)              dpi
+      real(wp)              dtwopi
+      real(wp)              factr
+      real(wp)              oneday
+      real(wp)              radian
+      real(wp)              rasec
+      real(wp)              sinang
+      real(wp)              t
 
-      double precision      d0
-      double precision      d1
-      double precision      d2
-      double precision      d3
-      double precision      f0
-      double precision      f1
-      double precision      f2
-      double precision      f3
-      double precision      l0
-      double precision      l1
-      double precision      l2
-      double precision      l3
-      double precision      lp0
-      double precision      lp1
-      double precision      lp2
-      double precision      lp3
-      double precision      mg0
-      double precision      mg1
-      double precision      mg2
-      double precision      mg3
+      real(wp)              d0
+      real(wp)              d1
+      real(wp)              d2
+      real(wp)              d3
+      real(wp)              f0
+      real(wp)              f1
+      real(wp)              f2
+      real(wp)              f3
+      real(wp)              l0
+      real(wp)              l1
+      real(wp)              l2
+      real(wp)              l3
+      real(wp)              lp0
+      real(wp)              lp1
+      real(wp)              lp2
+      real(wp)              lp3
+      real(wp)              mg0
+      real(wp)              mg1
+      real(wp)              mg2
+      real(wp)              mg3
 
-      integer               i
-      integer               j
-      integer               matrix(9,nterm)
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           matrix(9,nterm)
 
       logical               first
       save
@@ -408,9 +409,9 @@
          first  = .false.
          dpi    = pi()
          dtwopi = twopi()
-         radian =  180.0d0 / dpi
-         rasec  = 3600.0d0 * radian
-         factr  =    1.0d4 * rasec
+         radian =  180.0_wp / dpi
+         rasec  = 3600.0_wp * radian
+         factr  =    1.0e4_wp * rasec
          oneday = spd()
 
 
@@ -429,11 +430,11 @@
 !           L2      degrees/(0.0001 days)**2
 !           L3      degrees/(0.0001 days)**3
 !
-         l0 =                134.0d0*deg + 57.0d0*min + 46.733d0*sec
-         l1 =(1325.0d0*rev + 198.0d0*deg + 52.0d0*min +  2.633d0*sec) &
+         l0 =                134.0_wp*deg + 57.0_wp*min + 46.733_wp*sec
+         l1 =(1325.0_wp*rev + 198.0_wp*deg + 52.0_wp*min +  2.633_wp*sec) &
                              / cent1
-         l2 =   31.310d0*sec / cent2
-         l3 =    0.064d0*sec / cent3
+         l2 =   31.310_wp*sec / cent2
+         l3 =    0.064_wp*sec / cent3
 
 
 
@@ -447,11 +448,11 @@
 !           LP2      degrees/(0.0001 days)**2
 !           LP3      degrees/(0.0001 days)**3
 !
-         lp0 =               357.0d0*deg + 31.0d0*min + 39.804d0*sec
-         lp1 = (99.0d0*rev + 359.0d0*deg +  3.0d0*min +  1.224d0*sec) &
+         lp0 =               357.0_wp*deg + 31.0_wp*min + 39.804_wp*sec
+         lp1 = (99.0_wp*rev + 359.0_wp*deg +  3.0_wp*min +  1.224_wp*sec) &
                               / cent1
-         lp2 =   -0.577d0*sec / cent2
-         lp3 =   -0.012d0*sec / cent3
+         lp2 =   -0.577_wp*sec / cent2
+         lp3 =   -0.012_wp*sec / cent3
 
 
 !
@@ -464,11 +465,11 @@
 !           F2      degrees/(0.0001 days)**2
 !           F3      degrees/(0.0001 days)**3
 !
-         f0 =                 93.0d0*deg + 16.0d0*min + 18.877d0*sec
-         f1 = (1342.0d0*rev + 82.0d0*deg +  1.0d0*min +  3.137d0*sec) &
+         f0 =                 93.0_wp*deg + 16.0_wp*min + 18.877_wp*sec
+         f1 = (1342.0_wp*rev + 82.0_wp*deg +  1.0_wp*min +  3.137_wp*sec) &
                               / cent1
-         f2 =   -13.257d0*sec / cent2
-         f3 =     0.011d0*sec / cent3
+         f2 =   -13.257_wp*sec / cent2
+         f3 =     0.011_wp*sec / cent3
 
 !
 !        D0 through D3 are the coefficients for D---the mean longitude
@@ -480,11 +481,11 @@
 !           D2      degrees/(0.0001 days)**2
 !           D3      degrees/(0.0001 days)**3
 !
-         d0 =                297.0d0*deg + 51.0d0*min +  1.307d0*sec
-         d1 =(1236.0d0*rev + 307.0d0*deg +  6.0d0*min + 41.328d0*sec) &
+         d0 =                297.0_wp*deg + 51.0_wp*min +  1.307_wp*sec
+         d1 =(1236.0_wp*rev + 307.0_wp*deg +  6.0_wp*min + 41.328_wp*sec) &
                              / cent1
-         d2 =   -6.891d0*sec / cent2
-         d3 =    0.019d0*sec / cent3
+         d2 =   -6.891_wp*sec / cent2
+         d3 =    0.019_wp*sec / cent3
 
 !
 !        MG0 through MG3 are the coefficients for Omega---the longitude
@@ -505,11 +506,11 @@
 !           MG2      degrees/(0.0001 days)**2
 !           MG3      degrees/(0.0001 days)**3
 !
-         mg0 =               125.0d0*deg + 2.0d0*min + 40.280d0*sec
-         mg1 =-( 5.0d0*rev + 134.0d0*deg + 8.0d0*min + 10.539d0*sec) &
+         mg0 =               125.0_wp*deg + 2.0_wp*min + 40.280_wp*sec
+         mg1 =-( 5.0_wp*rev + 134.0_wp*deg + 8.0_wp*min + 10.539_wp*sec) &
                               / cent1
-         mg2 =    7.455d0*sec / cent2
-         mg3 =    0.008d0*sec / cent3
+         mg2 =    7.455_wp*sec / cent2
+         mg3 =    0.008_wp*sec / cent3
 
 
 
@@ -520,10 +521,10 @@
 !     in the Julian date from the J2000 epoch.
 !
       dj   = et/oneday
-      dd   = dj/1.0d4
-      dddj = dd/1.0d4
+      dd   = dj/1.0e4_wp
+      dddj = dd/1.0e4_wp
       dd2  = dd*dd
-      t    = dj/365250.d0
+      t    = dj/365250.0_wp
 
 !
 !     Now compute all of the various angles and their rates
@@ -535,19 +536,19 @@
       angle(d)  = d0   +  dj*d1   +  (d2  + dd*d3 )*dd2
       angle(mg) = mg0  +  dj*mg1  +  (mg2 + dd*mg3)*dd2
 
-      angrt(l ) = l1   +  dddj * (2.0d0*l2  + 3.0d0*dd*l3 )
-      angrt(lp) = lp1  +  dddj * (2.0d0*lp2 + 3.0d0*dd*lp3)
-      angrt(f ) = f1   +  dddj * (2.0d0*f2  + 3.0d0*dd*f3 )
-      angrt(d ) = d1   +  dddj * (2.0d0*d2  + 3.0d0*dd*d3 )
-      angrt(mg) = mg1  +  dddj * (2.0d0*mg2 + 3.0d0*dd*mg3)
+      angrt(l ) = l1   +  dddj * (2.0_wp*l2  + 3.0_wp*dd*l3 )
+      angrt(lp) = lp1  +  dddj * (2.0_wp*lp2 + 3.0_wp*dd*lp3)
+      angrt(f ) = f1   +  dddj * (2.0_wp*f2  + 3.0_wp*dd*f3 )
+      angrt(d ) = d1   +  dddj * (2.0_wp*d2  + 3.0_wp*dd*d3 )
+      angrt(mg) = mg1  +  dddj * (2.0_wp*mg2 + 3.0_wp*dd*mg3)
 
 !
 !     Wrap all of the angles and rates to range from 0 to 360, then
 !     convert to radians.
 !
       do j = 1,5
-         angle(j) = dmod(angle(j), 360.d0)
-         angrt(j) = dmod(angrt(j), 360.d0)
+         angle(j) = dmod(angle(j), 360.0_wp)
+         angrt(j) = dmod(angrt(j), 360.0_wp)
 
          angle(j) = angle(j)/radian
          angrt(j) = angrt(j)/radian

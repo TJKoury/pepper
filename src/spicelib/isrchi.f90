@@ -1,6 +1,7 @@
 !$Procedure ISRCHI  ( Search in an integer array )
 
-      integer function  isrchi ( value, ndim, array )
+      integer(ip) function  isrchi ( value, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer    value
-      integer    ndim
-      integer    array ( * )
+      integer(ip)value
+      integer(ip)ndim
+      integer(ip)array ( * )
 
 ! $ Brief_I/O
 !
@@ -120,7 +121,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       isrchi = 0

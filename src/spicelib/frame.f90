@@ -1,6 +1,7 @@
 !$Procedure FRAME ( Build a right handed coordinate frame )
 
       subroutine frame ( x, y, z )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision    x ( 3 )
-      double precision    y ( 3 )
-      double precision    z ( 3 )
+      real(wp)            x ( 3 )
+      real(wp)            y ( 3 )
+      real(wp)            z ( 3 )
 
 ! $ Brief_I/O
 !
@@ -180,14 +181,14 @@
 !
 !     Local variables
 !
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      f
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              f
 
-      integer               s1
-      integer               s2
-      integer               s3
+      integer(ip)           s1
+      integer(ip)           s2
+      integer(ip)           s3
 
 
 
@@ -206,19 +207,19 @@
 !
 !     If X is zero, then just return the ijk frame.
 !
-      if ( a+b+c .eq. 0.0d0 ) then
+      if ( a+b+c .eq. 0.0_wp ) then
 
-         x(1) = 1.0d0
-         x(2) = 0.0d0
-         x(3) = 0.0d0
+         x(1) = 1.0_wp
+         x(2) = 0.0_wp
+         x(3) = 0.0_wp
 
-         y(1) = 0.0d0
-         y(2) = 1.0d0
-         y(3) = 0.0d0
+         y(1) = 0.0_wp
+         y(2) = 1.0_wp
+         y(3) = 0.0_wp
 
-         z(1) = 0.0d0
-         z(2) = 0.0d0
-         z(3) = 1.0d0
+         z(1) = 0.0_wp
+         z(2) = 0.0_wp
+         z(3) = 1.0_wp
 
          return
 
@@ -265,7 +266,7 @@
 !     from the assignment of values to S1, S2 and S3 (they are merely
 !     cycled from one case to the next).
 !
-      y(s1)  =   0.0d0
+      y(s1)  =   0.0_wp
       y(s2)  = - x(s3) / f
       y(s3)  =   x(s2) / f
 

@@ -4,6 +4,7 @@
                             maxbod, stsize, btbody, btnbod, btsegp, &
                             btstsz, sthan,  stdscr, stdlad, stfree, &
                             stoff,  stctr,  strad                  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,20 +33,20 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer               bodyid
-      integer               maxbod
-      integer               stsize
-      integer               btbody ( * )
-      integer               btnbod
-      integer               btsegp ( * )
-      integer               btstsz ( * )
-      integer               sthan  ( * )
-      double precision      stdscr ( dskdsz, * )
-      integer               stdlad ( dladsz, * )
-      integer               stfree
-      double precision      stoff  ( 3, * )
-      double precision      stctr  ( 3, * )
-      double precision      strad  ( * )
+      integer(ip)           bodyid
+      integer(ip)           maxbod
+      integer(ip)           stsize
+      integer(ip)           btbody ( * )
+      integer(ip)           btnbod
+      integer(ip)           btsegp ( * )
+      integer(ip)           btstsz ( * )
+      integer(ip)           sthan  ( * )
+      real(wp)              stdscr ( dskdsz, * )
+      integer(ip)           stdlad ( dladsz, * )
+      integer(ip)           stfree
+      real(wp)              stoff  ( 3, * )
+      real(wp)              stctr  ( 3, * )
+      real(wp)              strad  ( * )
 
 ! $ Brief_I/O
 !
@@ -321,7 +322,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -335,7 +336,7 @@
 !
 !     Local parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -343,21 +344,21 @@
 !
       character*(frnmln)    frname
 
-      double precision      dskdsc ( dskdsz )
-      double precision      et
-      double precision      lt
+      real(wp)              dskdsc ( dskdsz )
+      real(wp)              et
+      real(wp)              lt
 
-      integer               avail
-      integer               dladsc ( dladsz )
-      integer               frmctr
-      integer               handle
-      integer               i
-      integer               j
-      integer               nseg
-      integer               segcld
-      integer               segcls
-      integer               segctr
-      integer               segfid
+      integer(ip)           avail
+      integer(ip)           dladsc ( dladsz )
+      integer(ip)           frmctr
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           nseg
+      integer(ip)           segcld
+      integer(ip)           segcls
+      integer(ip)           segctr
+      integer(ip)           segfid
 
       logical               frmfnd
       logical               segfnd

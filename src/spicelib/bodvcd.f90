@@ -1,6 +1,7 @@
 !$Procedure BODVCD ( Return d.p. values from the kernel pool )
 
       subroutine bodvcd ( bodyid, item, maxn, dim, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      integer               bodyid
+      integer(ip)           bodyid
       character*(*)         item
-      integer               maxn
-      integer               dim
-      double precision      values  ( * )
+      integer(ip)           maxn
+      integer(ip)           dim
+      real(wp)              values  ( * )
 
 ! $ Brief_I/O
 !
@@ -294,10 +295,10 @@
 !
 !     Local parameters
 !
-      integer               cdelen
+      integer(ip)           cdelen
       parameter           ( cdelen = 16 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen = 32 )
 
 !

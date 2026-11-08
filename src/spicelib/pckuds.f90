@@ -2,6 +2,7 @@
 
       subroutine pckuds ( descr, body, frame, type, &
                           first, last, begin, end   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,14 +20,14 @@
 
       implicit none
 
-      double precision      descr ( * )
-      integer               body
-      integer               frame
-      integer               type
-      double precision      first
-      double precision      last
-      integer               begin
-      integer               end
+      real(wp)              descr ( * )
+      integer(ip)           body
+      integer(ip)           frame
+      integer(ip)           type
+      real(wp)              first
+      real(wp)              last
+      integer(ip)           begin
+      integer(ip)           end
 
 ! $ Brief_I/O
 !
@@ -153,18 +154,18 @@
 !
 !     Local Parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 5 )
 
 !
 !     Local Variables
 !
-      double precision      dppart ( nd )
+      real(wp)              dppart ( nd )
 
-      integer               ipart  ( ni )
+      integer(ip)           ipart  ( ni )
 
 !
 !     Standard SPICELIB error handling.

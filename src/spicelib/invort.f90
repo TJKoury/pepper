@@ -1,6 +1,7 @@
 !$Procedure INVORT ( Invert nearly orthogonal matrices )
 
       subroutine invort ( m, mit )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision      m   ( 3, 3 )
-      double precision      mit ( 3, 3 )
+      real(wp)              m   ( 3, 3 )
+      real(wp)              mit ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -232,17 +233,17 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
+      real(wp)              dpmax
 
 !
 !     Local Variables
 !
-      double precision      bound
-      double precision      length
-      double precision      scale
-      double precision      temp   ( 3, 3 )
+      real(wp)              bound
+      real(wp)              length
+      real(wp)              scale
+      real(wp)              temp   ( 3, 3 )
 
-      integer               i
+      integer(ip)           i
 
       logical               first
 
@@ -278,7 +279,7 @@
 
          call unorm ( m(1,i), temp(1,i), length )
 
-         if ( length .eq. 0.0d0 ) then
+         if ( length .eq. 0.0_wp ) then
 
             call chkin  ( 'INVORT'                                     )
             call setmsg ( 'Column # of the input matrix has a norm '  // &
@@ -293,9 +294,9 @@
 !
 !        Make sure we can actually rescale the rows.
 !
-         if    ( length .lt. 1.0d0 ) then
+         if    ( length .lt. 1.0_wp ) then
 
-            if (  ( length * bound ) .lt. 1.0d0 ) then
+            if (  ( length * bound ) .lt. 1.0_wp ) then
 
                call chkin  ( 'INVORT' )
                call setmsg ( 'The length of column # is #. This '     // &
@@ -312,7 +313,7 @@
 
          end if
 
-         scale = 1.0d0 / length
+         scale = 1.0_wp / length
 
          call vsclip ( scale, temp(1,i) )
 

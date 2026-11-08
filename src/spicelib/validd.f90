@@ -1,6 +1,7 @@
 !$Procedure VALIDD ( Validate a double precision set )
 
       subroutine validd ( size, n, a )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer            size
-      integer            n
-      double precision   a       ( lbcell:* )
+      integer(ip)        size
+      integer(ip)        n
+      real(wp)           a       ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -179,7 +180,7 @@
 !
 !     Local variables
 !
-      integer               card
+      integer(ip)           card
 
 
 !

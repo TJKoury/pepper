@@ -1,6 +1,7 @@
 !$Procedure SPKS19 ( S/P Kernel, subset, type 19 )
 
       subroutine spks19 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       include 'spk19.inc'
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -179,8 +180,8 @@
 !
 !     SPICELIB functions
 !
-      integer               lstled
-      integer               lstltd
+      integer(ip)           lstled
+      integer(ip)           lstltd
 
       logical               failed
       logical               return
@@ -188,19 +189,19 @@
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
 !
 !     Mini-segment control area size:
 !
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 3 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 
 !
@@ -208,48 +209,48 @@
 !
       character*(filsiz)    spk
 
-      double precision      contrl   ( ctrlsz )
-      double precision      data     ( bufsiz )
-      double precision      iv1beg
-      double precision      iv1end
-      double precision      ivfbeg
-      double precision      ivfend
-      double precision      ivlbeg
-      double precision      ivlend
+      real(wp)              contrl   ( ctrlsz )
+      real(wp)              data     ( bufsiz )
+      real(wp)              iv1beg
+      real(wp)              iv1end
+      real(wp)              ivfbeg
+      real(wp)              ivfend
+      real(wp)              ivlbeg
+      real(wp)              ivlend
 
-      integer               begidx
-      integer               bepidx
-      integer               bufbas
-      integer               curivl
-      integer               eepidx
-      integer               endidx
-      integer               i
-      integer               isel
-      integer               ivlbas
-      integer               l
-      integer               min1sz
-      integer               minbep
-      integer               minfsz
-      integer               minib
-      integer               minie
-      integer               minndr
-      integer               minnpk
-      integer               ndir
-      integer               nintvl
-      integer               noivl
-      integer               npad
-      integer               npkt
-      integer               nread
-      integer               nsdir
-      integer               pktsiz
-      integer               pktszs ( 0 : s19nst-1 )
-      integer               ptrbas
-      integer               remain
-      integer               shift
-      integer               start
-      integer               subtyp
-      integer               ub
-      integer               wndsiz
+      integer(ip)           begidx
+      integer(ip)           bepidx
+      integer(ip)           bufbas
+      integer(ip)           curivl
+      integer(ip)           eepidx
+      integer(ip)           endidx
+      integer(ip)           i
+      integer(ip)           isel
+      integer(ip)           ivlbas
+      integer(ip)           l
+      integer(ip)           min1sz
+      integer(ip)           minbep
+      integer(ip)           minfsz
+      integer(ip)           minib
+      integer(ip)           minie
+      integer(ip)           minndr
+      integer(ip)           minnpk
+      integer(ip)           ndir
+      integer(ip)           nintvl
+      integer(ip)           noivl
+      integer(ip)           npad
+      integer(ip)           npkt
+      integer(ip)           nread
+      integer(ip)           nsdir
+      integer(ip)           pktsiz
+      integer(ip)           pktszs ( 0 : s19nst-1 )
+      integer(ip)           ptrbas
+      integer(ip)           remain
+      integer(ip)           shift
+      integer(ip)           start
+      integer(ip)           subtyp
+      integer(ip)           ub
+      integer(ip)           wndsiz
 
       logical               final
 
@@ -1026,9 +1027,9 @@
 !
 !     Finally, write out the control area for the first mini-segment.
 !
-      call dafada (  dble( subtyp ),  1  )
-      call dafada (  dble( wndsiz ),  1  )
-      call dafada (  dble( minnpk ),  1  )
+      call dafada (  real( subtyp, wp ),  1  )
+      call dafada (  real( wndsiz, wp ),  1  )
+      call dafada (  real( minnpk, wp ),  1  )
 
       if ( failed() ) then
          call chkout( 'SPKS19' )
@@ -1515,9 +1516,9 @@
 !           Finally, write out the control area for the last
 !           mini-segment.
 !
-            call dafada (  dble( subtyp ),  1  )
-            call dafada (  dble( wndsiz ),  1  )
-            call dafada (  dble( minnpk ),  1  )
+            call dafada (  real( subtyp, wp ),  1  )
+            call dafada (  real( wndsiz, wp ),  1  )
+            call dafada (  real( minnpk, wp ),  1  )
 
             if ( failed() ) then
                call chkout( 'SPKS19' )
@@ -1699,7 +1700,7 @@
 !     The first output mini-segment ranges from relative
 !     addresses 1 : MIN1SZ.
 !
-      call dafada ( dble( 1 ),  1 )
+      call dafada ( real( 1, wp ),  1 )
 
       if ( noivl .eq. 1 ) then
 !
@@ -1709,7 +1710,7 @@
 !        Note that MIN1SZ was initialized after the first output
 !        mini-segment was written.
 !
-         call dafada ( dble( min1sz + 1),  1 )
+         call dafada ( real( min1sz + 1, wp),  1 )
 
       else
 !
@@ -1776,7 +1777,7 @@
 
             start = nint( data(1) )  +  shift
 
-            call dafada ( dble( start ), 1 )
+            call dafada ( real( start, wp ), 1 )
 
             if ( failed() ) then
                call chkout( 'SPKS19' )
@@ -1799,7 +1800,7 @@
 !
 !           Write the pointer.
 !
-            call dafada ( dble( start + minfsz ),  1 )
+            call dafada ( real( start + minfsz, wp ),  1 )
 
          end if
 
@@ -1809,8 +1810,8 @@
 !     Write the interval count and selection flag to the
 !     new segment.
 !
-      call dafada ( dble( isel  ), 1 )
-      call dafada ( dble( noivl ), 1 )
+      call dafada ( real( isel, wp  ), 1 )
+      call dafada ( real( noivl, wp ), 1 )
 
       call chkout ( 'SPKS19' )
       return

@@ -33,41 +33,55 @@ SUFFIXES = (".f90", ".F90", ".inc")
 COMPILE_FLAGS = ["-c", "-fallow-argument-mismatch", "-w"]
 
 
-def lowercase_text(text: str) -> str:
+def map_code(text: str, fn) -> str:
+    """Apply fn to every run of code characters (outside character literals,
+    comments and preprocessor directives) of each line; return the new text.
+    fn gets and returns a string; a run never spans lines."""
     out, quote, directive = [], None, False
     for line in text.split("\n"):
         if directive or (quote is None and line.startswith("#")):
             out.append(line)
             directive = line.endswith("\\")
             continue
-        chars = list(line)
-        k = 0
+        pieces, start, k = [], 0, 0
         if quote is not None:
             # Continued character literal: resumes after the leading '&'.
             stripped = line.lstrip()
             if stripped.startswith("&"):
                 k = len(line) - len(stripped) + 1
-        while k < len(chars):
-            ch = chars[k]
+        code_from = None if quote is not None else 0
+        while k < len(line):
+            ch = line[k]
             if quote is not None:
                 if ch == quote:
-                    if k + 1 < len(chars) and chars[k + 1] == quote:
+                    if k + 1 < len(line) and line[k + 1] == quote:
                         k += 1          # doubled quote inside the literal
                     else:
                         quote = None
+                        code_from = k + 1
                 elif ch == "&" and line[k + 1:].strip() == "":
                     break               # literal continues on the next line
-            elif ch in "'\"":
+            elif ch in "'\"" or ch == "!":
+                pieces.append(line[start:code_from])
+                pieces.append(fn(line[code_from:k]))
+                start, code_from = k, None
+                if ch == "!":
+                    break               # comment to end of line
                 quote = ch
-            elif ch == "!":
-                break                   # comment to end of line
-            else:
-                chars[k] = ch.lower()
             k += 1
-        out.append("".join(chars))
+        if code_from is not None:
+            pieces.append(line[start:code_from])
+            pieces.append(fn(line[code_from:]))
+        else:
+            pieces.append(line[start:])
+        out.append("".join(pieces))
     if quote is not None:
         raise ValueError("unterminated character literal at end of file")
     return "\n".join(out)
+
+
+def lowercase_text(text: str) -> str:
+    return map_code(text, str.lower)
 
 
 def compile_one(job):
@@ -77,8 +91,11 @@ def compile_one(job):
     return src, r.returncode, r.stderr
 
 
-def verify(files: dict, work: Path) -> list:
-    """files: {path: new text}. Compile old and new copies; return failures."""
+def verify(files: dict, work: Path, extra_flags=(), old_texts=None) -> list:
+    """files: {path: new text}. Compile old and new copies; return failures.
+    extra_flags are added to every compilation (e.g. -I for module files).
+    old_texts: {path: text} to compile instead of the file on disk as the
+    old copy (e.g. with blank lines so that line numbers match)."""
     dirs = sorted({p.parent for p in files})
     for tag in ("old", "new"):
         for d in dirs:
@@ -86,6 +103,8 @@ def verify(files: dict, work: Path) -> list:
                             ignore=shutil.ignore_patterns("*.mod", "*.o"))
     for p, text in files.items():
         (work / "new" / p.relative_to(ROOT)).write_text(text, encoding="ascii")
+    for p, text in (old_texts or {}).items():
+        (work / "old" / p.relative_to(ROOT)).write_text(text, encoding="ascii")
 
     jobs = []
     for k, defined in enumerate(gfortran_macro_sets()):
@@ -98,7 +117,7 @@ def verify(files: dict, work: Path) -> list:
                 obj = work / "obj" / str(k) / tag / (str(p.relative_to(ROOT)).replace(os.sep, "__") + ".o")
                 obj.parent.mkdir(parents=True, exist_ok=True)
                 inc = [f"-I{work / tag / d.relative_to(ROOT)}" for d in dirs]
-                jobs.append((src, obj, flags + inc))
+                jobs.append((src, obj, flags + inc + list(extra_flags)))
     failures = []
     with concurrent.futures.ThreadPoolExecutor(os.cpu_count() or 4) as ex:
         for src, rc, err in ex.map(compile_one, jobs):

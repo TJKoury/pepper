@@ -1,6 +1,7 @@
 !$Procedure SUBSOL ( Sub-solar point )
 
       subroutine subsol ( method, target, et, abcorr, obsrvr, spoint )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,10 +33,10 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
+      real(wp)              spoint ( 3 )
 
 ! $ Brief_I/O
 !
@@ -462,13 +463,13 @@
 !
 !     Local parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln =  80 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 
@@ -477,31 +478,31 @@
 !
       character*(frnmln)    frname
 
-      double precision      alt
-      double precision      ettarg
-      double precision      lt
-      double precision      origin ( 3 )
-      double precision      pos    ( 3 )
-      double precision      radii  ( 3 )
-      double precision      sunlt
+      real(wp)              alt
+      real(wp)              ettarg
+      real(wp)              lt
+      real(wp)              origin ( 3 )
+      real(wp)              pos    ( 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              sunlt
 
-      integer               frcode
-      integer               obscde
-      integer               trgcde
+      integer(ip)           frcode
+      integer(ip)           obscde
+      integer(ip)           trgcde
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
       logical               first
@@ -529,7 +530,7 @@
 !
 !     Initial values
 !
-      data                  origin / 3 * 0.0d0 /
+      data                  origin / 3 * 0.0_wp /
 
 !
 !     Initial values.
@@ -653,7 +654,7 @@
 !
       if (  eqstr ( abcorr, 'NONE' )  ) then
 
-         lt      =  0.0d0
+         lt      =  0.0_wp
          ettarg  =  et
 
       else

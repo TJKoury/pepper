@@ -1,6 +1,7 @@
 !$Procedure      ZZSIZEOK ( Determine if the size of a segment is ok )
 
       subroutine zzsizeok ( size, psize, dsize, offset, ok, n )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -31,12 +32,12 @@
 ! $ Declarations
 
       implicit none
-      integer               size
-      integer               psize
-      integer               dsize
-      integer               offset
+      integer(ip)           size
+      integer(ip)           psize
+      integer(ip)           dsize
+      integer(ip)           offset
       logical               ok
-      integer               n
+      integer(ip)           n
 
 ! $ Brief_I/O
 !
@@ -164,10 +165,10 @@
 !     and  OFFSET*PSIZE <= SIZE mod(PSIZE*DSIZE+1)
 !
 
-      integer               q
-      integer               pd1
-      integer               r
-      integer               a
+      integer(ip)           q
+      integer(ip)           pd1
+      integer(ip)           r
+      integer(ip)           a
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure DAZLDR ( Derivative of AZ/EL w.r.t. rectangular )
 
       subroutine dazldr ( x, y, z, azccw, elplsz, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      x
-      double precision      y
-      double precision      z
+      real(wp)              x
+      real(wp)              y
+      real(wp)              z
       logical               azccw
       logical               elplsz
-      double precision      jacobi ( 3, 3 )
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -429,7 +430,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Standard SPICE error handling.

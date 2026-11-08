@@ -1,6 +1,7 @@
 !$Procedure DSKOPN ( DSK, open new file )
 
       subroutine dskopn ( fname, ifname, ncomch, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,8 +26,8 @@
 
       character*(*)         fname
       character*(*)         ifname
-      integer               ncomch
-      integer               handle
+      integer(ip)           ncomch
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !

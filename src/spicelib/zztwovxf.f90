@@ -1,6 +1,7 @@
 !$Procedure ZZTWOVXF ( Two states defining a frame transformation )
 
       subroutine zztwovxf ( axdef, indexa, plndef, indexp, xform )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,11 +27,11 @@
 !
 ! $ Declarations
 
-      double precision   axdef  ( 6 )
-      integer            indexa
-      double precision   plndef ( 6 )
-      integer            indexp
-      double precision   xform  ( 6, 6 )
+      real(wp)           axdef  ( 6 )
+      integer(ip)        indexa
+      real(wp)           plndef ( 6 )
+      integer(ip)        indexp
+      real(wp)           xform  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -294,14 +295,14 @@
 !
 !     Local Variables
 !
-      double precision      tmpsta ( 6 )
+      real(wp)              tmpsta ( 6 )
 
-      integer               i
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               j
-      integer               seqnce ( 5 )
+      integer(ip)           i
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           j
+      integer(ip)           seqnce ( 5 )
 
 !
 !     Saved variables

@@ -1,6 +1,7 @@
 !$Procedure XPOSBL ( Transpose a matrix by blocks    )
 
       subroutine xposbl ( bmat, nrow, ncol, bsize, btmat )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               nrow
-      integer               ncol
-      integer               bsize
-      double precision      bmat  ( nrow, ncol )
-      double precision      btmat ( nrow, ncol )
+      integer(ip)           nrow
+      integer(ip)           ncol
+      integer(ip)           bsize
+      real(wp)              bmat  ( nrow, ncol )
+      real(wp)              btmat ( nrow, ncol )
 
 ! $ Brief_I/O
 !
@@ -208,12 +209,12 @@
 !
 !     Local variables
 !
-      double precision      temp
+      real(wp)              temp
 
-      integer               i
-      integer               j
-      integer               cb
-      integer               rb
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           cb
+      integer(ip)           rb
 
 
 !

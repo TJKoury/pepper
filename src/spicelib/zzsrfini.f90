@@ -3,6 +3,7 @@
       subroutine zzsrfini ( nornam, codes,  bodies, &
                             nvals,  maxval, snmhls, snmpol, &
                             snmidx, sidhls, sidpol, sididx )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -30,16 +31,16 @@
       include              'zzsrftrn.inc'
 
       character*(*)         nornam (          * )
-      integer               codes  (          * )
-      integer               bodies (          * )
-      integer               nvals
-      integer               maxval
-      integer               snmhls (          * )
-      integer               snmpol ( lbsngl : * )
-      integer               snmidx (          * )
-      integer               sidhls (          * )
-      integer               sidpol ( lbsngl : * )
-      integer               sididx (          * )
+      integer(ip)           codes  (          * )
+      integer(ip)           bodies (          * )
+      integer(ip)           nvals
+      integer(ip)           maxval
+      integer(ip)           snmhls (          * )
+      integer(ip)           snmpol ( lbsngl : * )
+      integer(ip)           snmidx (          * )
+      integer(ip)           sidhls (          * )
+      integer(ip)           sidpol ( lbsngl : * )
+      integer(ip)           sididx (          * )
 
 ! $ Brief_I/O
 !
@@ -199,16 +200,16 @@
 !
 !     SPICELIB functions.
 !
-      integer               zzhash2
-      integer               zzhashi
+      integer(ip)           zzhash2
+      integer(ip)           zzhashi
 
 !
 !     Hash control area items.
 !
-      integer               sizidx
+      integer(ip)           sizidx
       parameter           ( sizidx =   0 )
 
-      integer               freidx
+      integer(ip)           freidx
       parameter           ( freidx =  -1 )
 
 !
@@ -216,11 +217,11 @@
 !
       character*(sfnmln)    sqshnm
 
-      integer               head
-      integer               i
-      integer               itemat
-      integer               lookat
-      integer               node
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           itemat
+      integer(ip)           lookat
+      integer(ip)           node
 
       logical               full
       logical               idnew

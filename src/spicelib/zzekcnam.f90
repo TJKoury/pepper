@@ -1,6 +1,7 @@
 !$Procedure      ZZEKCNAM ( EK, get column name )
 
       subroutine zzekcnam ( handle, coldsc, column )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
       include 'ekcoldsc.inc'
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               coldsc ( cdscsz )
+      integer(ip)           handle
+      integer(ip)           coldsc ( cdscsz )
       character*(*)         column
 
 ! $ Brief_I/O
@@ -96,7 +97,7 @@
 !
 !     Local variables
 !
-      integer               nambas
+      integer(ip)           nambas
 
 !
 !     Use discovery check-in.

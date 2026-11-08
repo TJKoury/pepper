@@ -1,6 +1,7 @@
 !$Procedure CKCLS ( CK, Close file )
 
       subroutine ckcls ( handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -318,7 +319,7 @@
 !
 !     Local parameters
 !
-      integer               acclen
+      integer(ip)           acclen
       parameter           ( acclen= 5 )
 !
 !     Local Variables

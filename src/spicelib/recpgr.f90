@@ -1,6 +1,7 @@
 !$Procedure RECPGR ( Rectangular to planetographic )
 
       subroutine recpgr ( body, rectan, re, f, lon, lat, alt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,12 +27,12 @@
       include               'zzctr.inc'
 
       character*(*)         body
-      double precision      rectan ( 3 )
-      double precision      re
-      double precision      f
-      double precision      lon
-      double precision      lat
-      double precision      alt
+      real(wp)              rectan ( 3 )
+      real(wp)              re
+      real(wp)              f
+      real(wp)              lon
+      real(wp)              lat
+      real(wp)              alt
 
 ! $ Brief_I/O
 !
@@ -480,10 +481,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      twopi
+      real(wp)              brcktd
+      real(wp)              twopi
 
-      integer               plnsns
+      integer(ip)           plnsns
 
       logical               return
 
@@ -497,28 +498,28 @@
       parameter           ( ovrtmp = 'BODY#_PGR_POSITIVE_LON' )
 
 
-      integer               earth
+      integer(ip)           earth
       parameter           ( earth  = 399 )
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln = 32  )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80  )
 
-      integer               moon
+      integer(ip)           moon
       parameter           ( moon   = 301 )
 
-      integer               sensln
+      integer(ip)           sensln
       parameter           ( sensln = 4 )
 
-      integer               sun
+      integer(ip)           sun
       parameter           ( sun    = 10  )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl  = 36 )
 
 
@@ -529,18 +530,18 @@
       character*(kvnmln)    pmkvar
       character*(sensln)    pgrlon
 
-      integer               bodyid
-      integer               n
-      integer               sense
+      integer(ip)           bodyid
+      integer(ip)           n
+      integer(ip)           sense
 
       logical               found
 
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svbody
-      integer               svbdid
+      integer(ip)           svbdid
       logical               svfnd1
 
       logical               first
@@ -608,7 +609,7 @@
 !     The equatorial radius must be positive. If not, signal an error
 !     and check out.
 !
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
 
          call setmsg ( 'Equatorial radius was #.' )
          call errdp  ( '#', re                    )
@@ -623,7 +624,7 @@
 !     is negative. If F is equal to 1, the polar radius is zero. Either
 !     case is a problem, so signal an error and check out.
 !
-      if ( f .ge. 1.d0 ) then
+      if ( f .ge. 1.0_wp ) then
 
          call setmsg ( 'Flattening coefficient was #.'  )
          call errdp  ( '#', f                           )
@@ -723,7 +724,7 @@
 !     Convert the longitude from the range (-pi, pi] to [0, 2*pi),
 !     the latter being the range of planetographic longitude.
 !
-      if ( lon .lt. 0.d0 ) then
+      if ( lon .lt. 0.0_wp ) then
 
          lon = lon + twopi()
 
@@ -732,7 +733,7 @@
 !
 !     Make sure round-off error doesn't take LON out of range.
 !
-      lon = brcktd (  lon,   0.d0,  twopi()  )
+      lon = brcktd (  lon,   0.0_wp,  twopi()  )
 
       call chkout ( 'RECPGR' )
       return

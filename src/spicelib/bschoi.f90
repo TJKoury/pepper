@@ -1,6 +1,7 @@
 !$Procedure BSCHOI ( Binary search with order vector, integer )
 
-      integer function bschoi ( value, ndim, array, order )
+      integer(ip) function bschoi ( value, ndim, array, order )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer          value
-      integer          ndim
-      integer          array ( * )
-      integer          order ( * )
+      integer(ip)      value
+      integer(ip)      ndim
+      integer(ip)      array ( * )
+      integer(ip)      order ( * )
 
 ! $ Brief_I/O
 !
@@ -147,9 +148,9 @@
 !
 !     Local variables
 !
-      integer          left
-      integer          right
-      integer          i
+      integer(ip)      left
+      integer(ip)      right
+      integer(ip)      i
 
 !
 !     Set the initial bounds for the search area.

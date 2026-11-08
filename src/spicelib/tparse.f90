@@ -1,6 +1,7 @@
 !$Procedure TPARSE ( Parse a UTC time string )
 
       subroutine tparse ( string, sp2000, errmsg )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)      string
-      double precision   sp2000
+      real(wp)           sp2000
       character*(*)      errmsg
 
 ! $ Brief_I/O
@@ -542,29 +543,29 @@
 !
 !     SPICELIB functions
 !
-      double precision      j2000
-      double precision      spd
+      real(wp)              j2000
+      real(wp)              spd
 
 !
 !     Parameters
 !
-      integer               era
+      integer(ip)           era
       parameter           ( era    =  1 )
 
-      integer               wday
+      integer(ip)           wday
       parameter           ( wday   = era    + 1 )
 
-      integer               zone
+      integer(ip)           zone
       parameter           ( zone   = wday   + 1 )
 
-      integer               ampm
+      integer(ip)           ampm
       parameter           ( ampm   = zone   + 1 )
 
-      integer               system
+      integer(ip)           system
       parameter           ( system = ampm   + 1 )
 
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
 !
@@ -575,14 +576,14 @@
 
       character*(lnsize)    pictur
 
-      double precision      tvec     ( 10 )
+      real(wp)              tvec     ( 10 )
 
-      integer               day
-      integer               month
-      integer               ntvec
-      integer               q
-      integer               temp
-      integer               year
+      integer(ip)           day
+      integer(ip)           month
+      integer(ip)           ntvec
+      integer(ip)           q
+      integer(ip)           temp
+      integer(ip)           year
 
       logical               adjust
       logical               mods
@@ -664,7 +665,7 @@
             tvec(5) = tvec(4)
             tvec(4) = tvec(3)
             tvec(3) = tvec(2)
-            tvec(2) = 1.0d0
+            tvec(2) = 1.0_wp
          end if
 !
 !        Get the year month and day as integers.
@@ -727,9 +728,9 @@
 
          end if
 
-         sp2000 =  ( dble (day) - 0.5d0 ) * spd() &
-                  +  3600.0d0 * tvec(4) &
-                  +    60.0d0 * tvec(5) &
+         sp2000 =  ( real(day, wp) - 0.5_wp ) * spd() &
+                  +  3600.0_wp * tvec(4) &
+                  +    60.0_wp * tvec(5) &
                   +             tvec(6)
 
       else

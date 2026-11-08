@@ -1,6 +1,7 @@
 !$Procedure SETD ( Compare double precision sets )
 
       logical function setd ( a, op, b )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      integer                    lbcell
+      integer(ip)                lbcell
       parameter                ( lbcell = -5 )
 
-      double precision  a      ( lbcell:* )
+      real(wp)          a      ( lbcell:* )
       character*(*)     op
-      double precision  b      ( lbcell:* )
+      real(wp)          b      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -209,23 +210,23 @@
 !
 !     SPICELIB functions
 !
-      integer          cardd
+      integer(ip)      cardd
       logical          return
 
 !
 !     Local variables
 !
-      integer          carda
-      integer          cardb
-      integer          condlt
-      integer          condeq
-      integer          condgt
-      integer          condoa
-      integer          condob
-      integer          condab
-      integer          indexa
-      integer          indexb
-      integer          cond
+      integer(ip)      carda
+      integer(ip)      cardb
+      integer(ip)      condlt
+      integer(ip)      condeq
+      integer(ip)      condgt
+      integer(ip)      condoa
+      integer(ip)      condob
+      integer(ip)      condab
+      integer(ip)      indexa
+      integer(ip)      indexb
+      integer(ip)      cond
 
 
 

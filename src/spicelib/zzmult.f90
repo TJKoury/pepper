@@ -1,6 +1,7 @@
 !$Procedure ZZMULT ( Safer multiplication )
 
-      double precision function zzmult ( a, b )
+      real(wp) function zzmult ( a, b )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision      a
-      double precision      b
+      real(wp)              a
+      real(wp)              b
 
 ! $ Brief_I/O
 !
@@ -263,19 +264,19 @@
 !
 
       logical               return
-      double precision      dpmax
+      real(wp)              dpmax
 
 !
 !     Local variables
 !
 
-      double precision      loga
-      double precision      logb
+      real(wp)              loga
+      real(wp)              logb
 
 !
 !     The bounds on the potential result of the calculation.
 !
-      double precision      expnt
+      real(wp)              expnt
 
 !
 !     First entry flag.
@@ -289,7 +290,7 @@
 !     Return on error.
 !
       if ( return() ) then
-         zzmult = 0.d0
+         zzmult = 0.0_wp
          return
       end if
 
@@ -312,7 +313,7 @@
 !
 !        A "floor" evaluation.
 !
-         expnt = dble( int( log10( dpmax() ) ) )
+         expnt = real( int( log10( dpmax() ) ), wp )
 
        end if
 
@@ -320,9 +321,9 @@
 !
 !     If either A or B equals zero the multiplication is zero.
 !
-      if ( (a .eq. 0.d0) .or. (b .eq. 0.d0) ) then
+      if ( (a .eq. 0.0_wp) .or. (b .eq. 0.0_wp) ) then
 
-         zzmult = 0.d0
+         zzmult = 0.0_wp
          call chkout ( 'ZZMULT' )
          return
 
@@ -345,7 +346,7 @@
 !
       if ( (loga + logb) .gt. expnt ) then
 
-         zzmult = 0.d0
+         zzmult = 0.0_wp
          call setmsg ( 'Numerical overflow event. ' &
                     // 'Multiplier value, #1, ' &
                     // 'multiplicand value, #2.'  )
@@ -361,9 +362,9 @@
 !     Local possible underflow check. Accept this may occur,
 !     return a zero.
 !
-      if ( (loga + logb) .lt. -(expnt-1.d0) ) then
+      if ( (loga + logb) .lt. -(expnt-1.0_wp) ) then
 
-         zzmult = 0.d0
+         zzmult = 0.0_wp
          call chkout ( 'ZZMULT' )
          return
 

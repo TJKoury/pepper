@@ -2,6 +2,7 @@
 
       subroutine zzektr32 ( handle,  tree,    left,    middle, &
                             right,   parent,  lpkidx,  undrfl )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,13 +26,13 @@
       include 'ekpage.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
-      integer               left
-      integer               middle
-      integer               right
-      integer               parent
-      integer               lpkidx
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           left
+      integer(ip)           middle
+      integer(ip)           right
+      integer(ip)           parent
+      integer(ip)           lpkidx
       logical               undrfl
 
 ! $ Brief_I/O
@@ -266,49 +267,49 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrbs
+      integer(ip)           zzektrbs
 
 !
 !     Local parameters
 !
-      integer               lsize
+      integer(ip)           lsize
       parameter           ( lsize  = (3*mnkeyc)/2 )
 
-      integer               rsize
+      integer(ip)           rsize
       parameter           ( rsize  =  3*mnkeyc - lsize )
 
 !
 !     Local variables
 !
-      integer               c1page ( pgsizi )
-      integer               c2page ( pgsizi )
-      integer               c3page ( pgsizi )
-      integer               datbas
-      integer               i
-      integer               keybas
-      integer               kidbas
-      integer               leftsz
-      integer               lmidsz
-      integer               lpkey
-      integer               lsib
-      integer               midsiz
-      integer               msib
-      integer               n
-      integer               nlkeys
-      integer               nmkeys
-      integer               nnode
-      integer               npkeys
-      integer               nrkeys
-      integer               ppage ( pgsizi )
-      integer               psize
-      integer               rbase
-      integer               rmidsz
-      integer               root
-      integer               rpkey
-      integer               rshift
-      integer               rsib
-      integer               sizbas
-      integer               sum
+      integer(ip)           c1page ( pgsizi )
+      integer(ip)           c2page ( pgsizi )
+      integer(ip)           c3page ( pgsizi )
+      integer(ip)           datbas
+      integer(ip)           i
+      integer(ip)           keybas
+      integer(ip)           kidbas
+      integer(ip)           leftsz
+      integer(ip)           lmidsz
+      integer(ip)           lpkey
+      integer(ip)           lsib
+      integer(ip)           midsiz
+      integer(ip)           msib
+      integer(ip)           n
+      integer(ip)           nlkeys
+      integer(ip)           nmkeys
+      integer(ip)           nnode
+      integer(ip)           npkeys
+      integer(ip)           nrkeys
+      integer(ip)           ppage ( pgsizi )
+      integer(ip)           psize
+      integer(ip)           rbase
+      integer(ip)           rmidsz
+      integer(ip)           root
+      integer(ip)           rpkey
+      integer(ip)           rshift
+      integer(ip)           rsib
+      integer(ip)           sizbas
+      integer(ip)           sum
 
 
 !

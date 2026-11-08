@@ -2,6 +2,7 @@
 
       logical function zztime ( string, transl, letter, error, pic, &
                                 tvec,   b,      e,      l2r,   yabbrv )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,9 +29,9 @@
       character*(1)         letter
       character*(*)         error
       character*(*)         pic
-      double precision      tvec  ( * )
-      integer               b
-      integer               e
+      real(wp)              tvec  ( * )
+      integer(ip)           b
+      integer(ip)           e
       logical               l2r
       logical               yabbrv
 
@@ -252,11 +253,11 @@
 !
 !     SPICELIB Functions
 !
-      integer               cpos
-      integer               pos
-      integer               posr
-      integer               rtrim
-      integer               isrchc
+      integer(ip)           cpos
+      integer(ip)           pos
+      integer(ip)           posr
+      integer(ip)           rtrim
+      integer(ip)           isrchc
 
       logical               samsbi
       logical               samchi
@@ -278,13 +279,13 @@
 !     MIXED
 !
 
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower  = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper  = lower  + 1 )
 
-      integer               mixed
+      integer(ip)           mixed
       parameter           ( mixed  = upper  + 1 )
 
 !
@@ -292,39 +293,39 @@
 !     SHORT
 !
 
-      integer               full
+      integer(ip)           full
       parameter           ( full   = 1 )
 
-      integer               short
+      integer(ip)           short
       parameter           ( short  = full   + 1 )
 
 !
 !     Maximum number of tokens that a valid time string can contain.
 !
-      integer               maxtkn
+      integer(ip)           maxtkn
       parameter           ( maxtkn = 64 )
 
 !
 !     Length of the string buffer containing the time string picture.
 !
-      integer               piclen
+      integer(ip)           piclen
       parameter           ( piclen = maxtkn * 5 )
 
 !
 !     Representation Variables.
 !
       character*(maxtkn)    rep
-      integer               size
+      integer(ip)           size
 
-      integer               begs ( maxtkn )
-      integer               ends ( maxtkn )
-      integer               pbegs( maxtkn )
-      integer               pends( maxtkn )
+      integer(ip)           begs ( maxtkn )
+      integer(ip)           ends ( maxtkn )
+      integer(ip)           pbegs( maxtkn )
+      integer(ip)           pends( maxtkn )
 
       character*(piclen)    pictur
 
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
       character*(wdsize)    names( 32 : 126 )
@@ -339,45 +340,45 @@
       character*(3)         month
       character*(3)         months ( 12 )
 
-      double precision      hms    ( 3  )
+      real(wp)              hms    ( 3  )
 
-      integer               blank
-      integer               from
-      integer               get
-      integer               i
-      integer               item
-      integer               j
-      integer               k
-      integer               last
-      integer               nchar
-      integer               next
-      integer               p1
-      integer               p2
-      integer               ptr
-      integer               put
-      integer               r
-      integer               to
-      integer               w
-      integer               njd
+      integer(ip)           blank
+      integer(ip)           from
+      integer(ip)           get
+      integer(ip)           i
+      integer(ip)           item
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           last
+      integer(ip)           nchar
+      integer(ip)           next
+      integer(ip)           p1
+      integer(ip)           p2
+      integer(ip)           ptr
+      integer(ip)           put
+      integer(ip)           r
+      integer(ip)           to
+      integer(ip)           w
+      integer(ip)           njd
 
-      integer               pfrom
-      integer               pto
-      integer               pnext
-      integer               case
-      integer               kind
+      integer(ip)           pfrom
+      integer(ip)           pto
+      integer(ip)           pnext
+      integer(ip)           case
+      integer(ip)           kind
 
 
-      integer               nyear
-      integer               nmon
-      integer               nday
-      integer               nhour
-      integer               nmin
-      integer               nsec
-      integer               ndoy
-      integer               value
+      integer(ip)           nyear
+      integer(ip)           nmon
+      integer(ip)           nday
+      integer(ip)           nhour
+      integer(ip)           nmin
+      integer(ip)           nsec
+      integer(ip)           ndoy
+      integer(ip)           value
 
-      integer               mnsize ( short )
-      integer               wksize ( short )
+      integer(ip)           mnsize ( short )
+      integer(ip)           wksize ( short )
 
 !
 !     Token Recognition Variables.
@@ -386,13 +387,13 @@
 !     make room for 70 just so we won't have to increase
 !     the parameter NRECOG soon.
 !
-      integer               nrecog
+      integer(ip)           nrecog
       parameter           ( nrecog = 70 )
 
-      integer               smwdsz
+      integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
 
-      integer               width ( nrecog )
+      integer(ip)           width ( nrecog )
       character*(smwdsz)    recog ( nrecog )
       character*(smwdsz)    spcial
 
@@ -402,8 +403,8 @@
       character*(1)         class ( nrecog )
       character*(1)         this
 
-      integer               f ( 32 : 126 )
-      integer               l ( 32 : 126 )
+      integer(ip)           f ( 32 : 126 )
+      integer(ip)           l ( 32 : 126 )
 
       logical               ampm
       logical               did
@@ -2695,9 +2696,9 @@
       e      = 0
       transl = ' '
 
-      hms(1) = 0.0d0
-      hms(2) = 0.0d0
-      hms(3) = 0.0d0
+      hms(1) = 0.0_wp
+      hms(2) = 0.0_wp
+      hms(3) = 0.0_wp
 
       do i = size, 1, -1
 
@@ -2755,7 +2756,7 @@
                call nparsd  ( string(j:k), tvec(2), error, ptr )
                call zzrepsub( pictur, pbegs(i), pends(i), 'MM', pictur )
             else
-               tvec(2) = dble( value )
+               tvec(2) = real( value, wp )
             end if
 
 

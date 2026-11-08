@@ -1,6 +1,7 @@
 !$Procedure PL2NVP ( Plane to normal vector and point )
 
       subroutine pl2nvp ( plane, normal, point )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   =    4 )
 
-      double precision      plane  ( ubpl )
-      double precision      normal (    3 )
-      double precision      point  (    3 )
+      real(wp)              plane  ( ubpl )
+      real(wp)              normal (    3 )
+      real(wp)              point  (    3 )
 
 ! $ Brief_I/O
 !
@@ -148,7 +149,7 @@
 !
 !     Local variables
 !
-      double precision      const
+      real(wp)              const
 
 !
 !     Note for programmers: validity of the input plane is not

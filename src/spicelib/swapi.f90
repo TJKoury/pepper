@@ -1,6 +1,7 @@
 !$Procedure SWAPI ( Swap integer values )
 
       subroutine swapi ( a, b )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      integer          a
-      integer          b
+      integer(ip)      a
+      integer(ip)      b
 
 ! $ Brief_I/O
 !
@@ -113,7 +114,7 @@
 !
 !     Local variables
 !
-      integer          temp
+      integer(ip)      temp
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure TPICTR ( Create a Time Format Picture )
 
       subroutine tpictr ( sample, pictur, ok, errmsg )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -245,9 +246,9 @@
       character*(5)         type
       character*(8)         modify   ( 5 )
 
-      double precision      tvec     ( 10 )
+      real(wp)              tvec     ( 10 )
 
-      integer               ntvec
+      integer(ip)           ntvec
 
       logical               mods
       logical               succes

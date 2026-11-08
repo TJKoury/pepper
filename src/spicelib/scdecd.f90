@@ -1,6 +1,7 @@
 !$Procedure SCDECD ( Decode spacecraft clock )
 
       subroutine scdecd ( sc, sclkdp, sclkch )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
 
       include               'sclk.inc'
 
-      integer               sc
-      double precision      sclkdp
+      integer(ip)           sc
+      real(wp)              sclkdp
       character*(*)         sclkch
 
 ! $ Brief_I/O
@@ -489,24 +490,24 @@
       logical               return
       logical               failed
 
-      integer               lstled
-      integer               lastnb
+      integer(ip)           lstled
+      integer(ip)           lastnb
 
 !
 !     Local variables
 !
       character*(partln)    prtstr
 
-      integer               nparts
-      integer               part
-      integer               prelen
-      integer               suflen
-      integer               i
+      integer(ip)           nparts
+      integer(ip)           part
+      integer(ip)           prelen
+      integer(ip)           suflen
+      integer(ip)           i
 
-      double precision      ticks
-      double precision      pstart   ( mxpart )
-      double precision      pstop    ( mxpart )
-      double precision      ptotls   ( mxpart )
+      real(wp)              ticks
+      real(wp)              pstart   ( mxpart )
+      real(wp)              pstop    ( mxpart )
+      real(wp)              ptotls   ( mxpart )
 
 !
 !     Saved variables
@@ -587,7 +588,7 @@
       end if
 
 
-      if ( ( ticks .lt. 0.d0 ).or.( part .gt. nparts ) ) then
+      if ( ( ticks .lt. 0.0_wp ).or.( part .gt. nparts ) ) then
 
          call setmsg ( 'Value for ticks, #, does not fall in any ' // &
                        'partition for spacecraft #.'  )

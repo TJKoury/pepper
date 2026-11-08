@@ -1,6 +1,7 @@
 !$Procedure DCYLDR (Derivative of cylindrical w.r.t. rectangular )
 
       subroutine dcyldr ( x, y, z, jacobi )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      x
-      double precision      y
-      double precision      z
-      double precision      jacobi ( 3, 3 )
+      real(wp)              x
+      real(wp)              y
+      real(wp)              z
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -344,11 +345,11 @@
 !
 !     Local variables
 !
-      double precision      rectan  ( 3 )
-      double precision      r
-      double precision      long
-      double precision      zz
-      double precision      injacb  ( 3, 3 )
+      real(wp)              rectan  ( 3 )
+      real(wp)              r
+      real(wp)              long
+      real(wp)              zz
+      real(wp)              injacb  ( 3, 3 )
 
 !
 !     Standard SPICE error handling.
@@ -362,7 +363,7 @@
 !
 !     There is a singularity of the Jacobian for points on the z-axis.
 !
-      if ( ( x .eq. 0.d0 ) .and. ( y .eq. 0.d0 ) ) then
+      if ( ( x .eq. 0.0_wp ) .and. ( y .eq. 0.0_wp ) ) then
 
          call setmsg ( 'The Jacobian of the transformation from '     // &
                        'rectangular to cylindrical coordinates '      // &

@@ -1,6 +1,7 @@
 !$Procedure CARDC ( Cardinality of a character cell )
 
-      integer function cardc ( cell )
+      integer(ip) function cardc ( cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)     cell  ( lbcell:* )
@@ -163,8 +164,8 @@
 !
 !     Local variables
 !
-      integer               card
-      integer               size
+      integer(ip)           card
+      integer(ip)           size
 
 
       if ( return() ) then

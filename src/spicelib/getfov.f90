@@ -7,6 +7,7 @@
                           bsight, &
                           n, &
                           bounds  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,16 +27,16 @@
 
       implicit none
 
-      double precision      mincos
-      parameter           ( mincos = 1.0d-15 )
+      real(wp)              mincos
+      parameter           ( mincos = 1.0e-15_wp )
 
-      integer               instid
-      integer               room
+      integer(ip)           instid
+      integer(ip)           room
       character*(*)         shape
       character*(*)         frame
-      double precision      bsight ( 3    )
-      integer               n
-      double precision      bounds ( 3, * )
+      real(wp)              bsight ( 3    )
+      integer(ip)           n
+      real(wp)              bounds ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -673,9 +674,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
-      integer               bsrchc
-      integer               rtrim
+      real(wp)              vnorm
+      integer(ip)           bsrchc
+      integer(ip)           rtrim
       logical               eqstr
       logical               failed
       logical               return
@@ -688,31 +689,31 @@
 !
 !     Keyword Name Length.
 !
-      integer               kwdnln
+      integer(ip)           kwdnln
       parameter           ( kwdnln = 32 )
 
 !
 !     Maximum Number of Normal Vectors.
 !
-      integer               maxnml
+      integer(ip)           maxnml
       parameter           ( maxnml =  4 )
 
 !
 !     Number of CORNER Shapes Supported.
 !
-      integer               nshaps
+      integer(ip)           nshaps
       parameter           ( nshaps =  4 )
 
 !
 !     Number of ANGLE Shapes Supported.
 !
-      integer               numasp
+      integer(ip)           numasp
       parameter           ( numasp =  3 )
 
 !
 !     Maximum Length of String Data from the kernel pool.
 !
-      integer               vallen
+      integer(ip)           vallen
       parameter           ( vallen = 80 )
 
 !
@@ -734,24 +735,24 @@
       character*(vallen)    spec
       character*(1)         type
 
-      double precision      b      ( 3 )
-      double precision      b1     ( 3 )
-      double precision      b2     ( 3 )
-      double precision      bmag
-      double precision      coscan
-      double precision      cosran
-      double precision      crsang
-      double precision      normal ( 3, maxnml )
-      double precision      refang
-      double precision      refvec ( 3 )
-      double precision      sincan
-      double precision      sinran
-      double precision      tmpang
-      double precision      tmpvec ( 3 )
-      double precision      vmag
+      real(wp)              b      ( 3 )
+      real(wp)              b1     ( 3 )
+      real(wp)              b2     ( 3 )
+      real(wp)              bmag
+      real(wp)              coscan
+      real(wp)              cosran
+      real(wp)              crsang
+      real(wp)              normal ( 3, maxnml )
+      real(wp)              refang
+      real(wp)              refvec ( 3 )
+      real(wp)              sincan
+      real(wp)              sinran
+      real(wp)              tmpang
+      real(wp)              tmpvec ( 3 )
+      real(wp)              vmag
 
-      integer               i
-      integer               mxcmp
+      integer(ip)           i
+      integer(ip)           mxcmp
 
       logical               found
 
@@ -1174,7 +1175,7 @@
 !
          call vcrss ( bsight, refvec, normal(1,1) )
 
-         if ( vnorm ( normal(1,1) ) .eq. 0.0d0 ) then
+         if ( vnorm ( normal(1,1) ) .eq. 0.0_wp ) then
 
             call setmsg ( 'The reference vector, stored in ''#'', ' &
             //            'is parallel to the instrument boresight ' &

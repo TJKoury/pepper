@@ -1,6 +1,7 @@
 !$Procedure   ZZHULLAX ( Pyramidal FOV convex hull to FOV axis )
 
       subroutine zzhullax ( inst, n, bounds, axis )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,13 +30,13 @@
 
       implicit none
 
-      double precision      margin
-      parameter           ( margin = 1.d-12 )
+      real(wp)              margin
+      parameter           ( margin = 1.0e-12_wp )
 
       character*(*)         inst
-      integer               n
-      double precision      bounds ( 3, n )
-      double precision      axis   ( 3 )
+      integer(ip)           n
+      real(wp)              bounds ( 3, n )
+      real(wp)              axis   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -287,9 +288,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      pi
-      double precision      vsep
+      real(wp)              halfpi
+      real(wp)              pi
+      real(wp)              vsep
 
       logical               return
       logical               vzero
@@ -301,28 +302,28 @@
 !
 !     Local variables
 !
-      double precision      cp     ( 3 )
-      double precision      delta
-      double precision      lat
-      double precision      lon
-      double precision      maxlon
-      double precision      minlon
-      double precision      r
-      double precision      ray1   ( 3 )
-      double precision      ray2   ( 3 )
-      double precision      sep
-      double precision      trans  ( 3, 3 )
-      double precision      v      ( 3 )
-      double precision      xvec   ( 3 )
-      double precision      yvec   ( 3 )
-      double precision      zvec   ( 3 )
+      real(wp)              cp     ( 3 )
+      real(wp)              delta
+      real(wp)              lat
+      real(wp)              lon
+      real(wp)              maxlon
+      real(wp)              minlon
+      real(wp)              r
+      real(wp)              ray1   ( 3 )
+      real(wp)              ray2   ( 3 )
+      real(wp)              sep
+      real(wp)              trans  ( 3, 3 )
+      real(wp)              v      ( 3 )
+      real(wp)              xvec   ( 3 )
+      real(wp)              yvec   ( 3 )
+      real(wp)              zvec   ( 3 )
 
-      integer               i
-      integer               m
-      integer               maxix
-      integer               minix
-      integer               next
-      integer               xidx
+      integer(ip)           i
+      integer(ip)           m
+      integer(ip)           maxix
+      integer(ip)           minix
+      integer(ip)           next
+      integer(ip)           xidx
 
       logical               found
       logical               ok
@@ -435,7 +436,7 @@
 !                    angular separations will be computed using the new
 !                    value of CP.
 !
-                     call vsclip ( -1.d0, cp )
+                     call vsclip ( -1.0_wp, cp )
 
                      sep = pi() - sep
 
@@ -550,7 +551,7 @@
 !                             be computed using the new value of CP.
 !
 
-                              call vsclip ( -1.d0, cp )
+                              call vsclip ( -1.0_wp, cp )
 
                               sep = pi() - sep
 
@@ -661,7 +662,7 @@
       call vhat ( bounds(1,i),    ray1 )
       call vhat ( bounds(1,next), ray2 )
 
-      call vlcom  ( 0.5d0, ray1, 0.5d0, ray2, xvec )
+      call vlcom  ( 0.5_wp, ray1, 0.5_wp, ray2, xvec )
 
       call vhatip ( xvec )
       call vhat   ( cp,   yvec )
@@ -684,7 +685,7 @@
 !     We expect all longitudes to be between MARGIN and pi - MARGIN.
 !
       minlon =  pi()
-      maxlon =  0.d0
+      maxlon =  0.0_wp
       minix  =  1
       maxix  =  1
 

@@ -2,6 +2,7 @@
 
       subroutine zzuntngl ( nptr, maxcel, cells, &
                             maxb, pntrs,  nout,  outlst )
+      use pepper_kinds, only: ip
       implicit none
 
 ! $ Abstract
@@ -19,13 +20,13 @@
 !
 ! $ Declarations
 
-      integer               nptr
-      integer               maxcel
-      integer               cells  ( 2, * )
-      integer               maxb
-      integer               pntrs  ( * )
-      integer               nout
-      integer               outlst ( * )
+      integer(ip)           nptr
+      integer(ip)           maxcel
+      integer(ip)           cells  ( 2, * )
+      integer(ip)           maxb
+      integer(ip)           pntrs  ( * )
+      integer(ip)           nout
+      integer(ip)           outlst ( * )
 
 ! $ Brief_I/O
 !
@@ -201,10 +202,10 @@
 !
 !     Local Variables
 !
-      integer               aval
-      integer               ptrdex
-      integer               nfound
-      integer               room
+      integer(ip)           aval
+      integer(ip)           ptrdex
+      integer(ip)           nfound
+      integer(ip)           room
 
 !
 !     Standard SPICE error handling.

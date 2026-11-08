@@ -1,6 +1,7 @@
 !$Procedure RADREC ( Range, RA and DEC to rectangular coordinates )
 
       subroutine radrec ( range, ra, dec, rectan )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      double precision      range
-      double precision      ra
-      double precision      dec
-      double precision      rectan ( 3 )
+      real(wp)              range
+      real(wp)              ra
+      real(wp)              dec
+      real(wp)              rectan ( 3 )
 
 ! $ Brief_I/O
 !

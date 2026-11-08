@@ -1,6 +1,7 @@
 !$Procedure STELAB     ( Stellar Aberration )
 
       subroutine stelab ( pobj, vobs, appobj )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision   pobj   ( 3 )
-      double precision   vobs   ( 3 )
-      double precision   appobj ( 3 )
+      real(wp)           pobj   ( 3 )
+      real(wp)           vobs   ( 3 )
+      real(wp)           appobj ( 3 )
 
 ! $ Brief_I/O
 !
@@ -324,9 +325,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              vdot
+      real(wp)              vnorm
       logical               return
 
 
@@ -334,13 +335,13 @@
 !     Local variables
 !
 
-      double precision      onebyc
-      double precision      u      ( 3 )
-      double precision      vbyc   ( 3 )
-      double precision      lensqr
-      double precision      h      ( 3 )
-      double precision      sinphi
-      double precision      phi
+      real(wp)              onebyc
+      real(wp)              u      ( 3 )
+      real(wp)              vbyc   ( 3 )
+      real(wp)              lensqr
+      real(wp)              h      ( 3 )
+      real(wp)              sinphi
+      real(wp)              phi
 
 
 !
@@ -369,7 +370,7 @@
 !     Get the velocity vector scaled with respect to the speed of light
 !     ( v/c ).
 !
-      onebyc = 1.0d0 / clight()
+      onebyc = 1.0_wp / clight()
 
       call vscl  ( onebyc, vobs, vbyc )
 
@@ -381,7 +382,7 @@
 !
       lensqr = vdot ( vbyc, vbyc )
 
-      if ( lensqr .ge. 1.0d0 ) then
+      if ( lensqr .ge. 1.0_wp ) then
 
          call setmsg ( 'Velocity components of observer were:  '      // &
                        'dx/dt = *, dy/dt = *, dz/dt = *.'              )
@@ -408,7 +409,7 @@
 !
       sinphi  = vnorm ( h )
 
-      if ( sinphi .ne. 0.d0 ) then
+      if ( sinphi .ne. 0.0_wp ) then
 
          phi = dasin ( sinphi )
          call  vrotv ( pobj, h, phi, appobj )

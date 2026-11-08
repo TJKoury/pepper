@@ -1,6 +1,7 @@
 !$Procedure VNORMG ( Vector norm, general dimension )
 
-      double precision function vnormg ( v1, ndim )
+      real(wp) function vnormg ( v1, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer            ndim
-      double precision   v1   ( ndim )
+      integer(ip)        ndim
+      real(wp)           v1   ( ndim )
 
 ! $ Brief_I/O
 !
@@ -175,14 +176,14 @@
 !
 !     Local variables.
 !
-      integer               i
-      double precision      v1max
-      double precision      a
+      integer(ip)           i
+      real(wp)              v1max
+      real(wp)              a
 
 !
 !  Determine the maximum component of the vector.
 !
-      v1max = 0.d0
+      v1max = 0.0_wp
 
       do i=1,ndim
 
@@ -196,13 +197,13 @@
 !  or underflow.  In the cases where such is not a problem it not worth
 !  it to optimize further.
 !
-      if ( v1max .eq. 0.d0 ) then
+      if ( v1max .eq. 0.0_wp ) then
 
-         vnormg = 0.d0
+         vnormg = 0.0_wp
 
       else
 
-         vnormg = 0.d0
+         vnormg = 0.0_wp
 
          do i = 1, ndim
             a      = v1(i)  / v1max

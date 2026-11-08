@@ -1,6 +1,7 @@
 !$Procedure REMOVC ( Remove an item from a character set )
 
       subroutine removc ( item, a )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         item
@@ -222,16 +223,16 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
-      integer               bsrchc
+      integer(ip)           cardc
+      integer(ip)           bsrchc
       logical               return
 !
 !     Local variables
 !
-      integer          card
-      integer          loc
+      integer(ip)      card
+      integer(ip)      loc
       logical          in
-      integer          i
+      integer(ip)      i
 
 
 !

@@ -2,6 +2,7 @@
 
       subroutine dxtrct ( keywd,   maxwds ,  string, &
                           nfound,  parsed,   values   )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
       implicit none
 
       character*(*)      keywd
-      integer            maxwds
+      integer(ip)        maxwds
       character*(*)      string
-      integer            nfound
-      integer            parsed
-      double precision   values ( * )
+      integer(ip)        nfound
+      integer(ip)        parsed
+      real(wp)           values ( * )
 
 ! $ Brief_I/O
 !
@@ -226,28 +227,28 @@
 !
 !     SPICELIB functions
 !
-      integer          lastnb
-      integer          wdindx
-      integer          nblen
+      integer(ip)      lastnb
+      integer(ip)      wdindx
+      integer(ip)      nblen
 
 !
 !     Local variables
 !
-      integer          length
-      integer          positn
+      integer(ip)      length
+      integer(ip)      positn
 
-      integer          berase
-      integer          eerase
-      integer          fallbk
+      integer(ip)      berase
+      integer(ip)      eerase
+      integer(ip)      fallbk
 
-      integer          start
-      integer          i
-      integer          j
+      integer(ip)      start
+      integer(ip)      i
+      integer(ip)      j
 
 
-      double precision x
+      real(wp) x
       character*80     error
-      integer          pntr
+      integer(ip)      pntr
 
 !
 !     No keywords or numbers have been located yet.

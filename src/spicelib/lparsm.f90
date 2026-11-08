@@ -1,6 +1,7 @@
 !$Procedure LPARSM ( Parse a list of items )
 
       subroutine lparsm ( list, delims, nmax, n, items )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,8 +24,8 @@
 
       character*(*)    list
       character*(*)    delims
-      integer          nmax
-      integer          n
+      integer(ip)      nmax
+      integer(ip)      n
       character*(*)    items ( * )
 
 ! $ Brief_I/O
@@ -309,7 +310,7 @@
       character*(1)         blank
       parameter           ( blank = ' ' )
 
-      integer               ispace
+      integer(ip)           ispace
       parameter           ( ispace = 32 )
 
 !
@@ -318,9 +319,9 @@
       character*(1)         bchr
       character*(1)         echr
 
-      integer               b
-      integer               e
-      integer               eol
+      integer(ip)           b
+      integer(ip)           e
+      integer(ip)           eol
 
 !
 !     Because speed is essential in many list parsing applications,

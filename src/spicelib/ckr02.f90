@@ -1,6 +1,7 @@
 !$Procedure CKR02 ( C-kernel, read pointing record, data type 2 )
 
       subroutine ckr02 ( handle, descr, sclkdp, tol, record, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      double precision      sclkdp
-      double precision      tol
-      double precision      record ( * )
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      real(wp)              sclkdp
+      real(wp)              tol
+      real(wp)              record ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -269,7 +270,7 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               lstled
+      integer(ip)           lstled
 
 !
 !     Local parameters
@@ -290,48 +291,48 @@
 !                   operates on.
 !
 !
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc    = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic    = 6 )
 
-      integer               psiz
+      integer(ip)           psiz
       parameter           ( psiz   = 8 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype =  2 )
 
 !
 !     Local variables
 !
-      integer               icd    ( nic )
-      integer               beg
-      integer               end
-      integer               nrec
-      integer               ndir
-      integer               group
-      integer               dirloc
-      integer               remain
-      integer               skip
-      integer               grpndx
-      integer               index
-      integer               stploc
-      integer               arrsiz
-      integer               i
-      integer               n
+      integer(ip)           icd    ( nic )
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           nrec
+      integer(ip)           ndir
+      integer(ip)           group
+      integer(ip)           dirloc
+      integer(ip)           remain
+      integer(ip)           skip
+      integer(ip)           grpndx
+      integer(ip)           index
+      integer(ip)           stploc
+      integer(ip)           arrsiz
+      integer(ip)           i
+      integer(ip)           n
 
-      double precision      dcd    ( ndc    )
-      double precision      buffer ( dirsiz )
-      double precision      prec   ( psiz   )
-      double precision      start
-      double precision      clkout
-      double precision      stopi
-      double precision      diff1
-      double precision      diff2
+      real(wp)              dcd    ( ndc    )
+      real(wp)              buffer ( dirsiz )
+      real(wp)              prec   ( psiz   )
+      real(wp)              start
+      real(wp)              clkout
+      real(wp)              stopi
+      real(wp)              diff1
+      real(wp)              diff2
 
       logical               fnd
 
@@ -444,7 +445,7 @@
 !
       arrsiz = end - beg + 1
 
-      nrec   = nint (  ( 100.d0 * (dble(arrsiz)) + 1.d0 ) / 1001.d0  )
+      nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
 
       ndir   = ( nrec - 1 ) / dirsiz
 

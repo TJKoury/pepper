@@ -1,6 +1,7 @@
 !$Procedure VHAT ( "V-Hat", unit vector along V, 3 dimensions )
 
       subroutine vhat ( v1, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   v1   ( 3 )
-      double precision   vout ( 3 )
+      real(wp)           v1   ( 3 )
+      real(wp)           vout ( 3 )
 
 ! $ Brief_I/O
 !
@@ -176,12 +177,12 @@
 !
 !     SPICELIB functions
 !
-      double precision vnorm
+      real(wp) vnorm
 
 !
 !     Local variables
 !
-      double precision vmag
+      real(wp) vmag
 
 !
 !  Obtain the magnitude of V1
@@ -195,14 +196,14 @@
 !   In fact, the magnitude of any vector is never less than the
 !   magnitude of any component.
 !
-      if (vmag.gt.0.d0) then
+      if (vmag.gt.0.0_wp) then
          vout(1) = v1(1) / vmag
          vout(2) = v1(2) / vmag
          vout(3) = v1(3) / vmag
       else
-         vout(1) = 0.d0
-         vout(2) = 0.d0
-         vout(3) = 0.d0
+         vout(1) = 0.0_wp
+         vout(2) = 0.0_wp
+         vout(3) = 0.0_wp
       end if
 
       return

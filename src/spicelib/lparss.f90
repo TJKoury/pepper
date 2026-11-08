@@ -1,6 +1,7 @@
 !$Procedure LPARSS ( Parse a list of items; return a set. )
 
       subroutine lparss ( list, delims, set )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         list
@@ -264,8 +265,8 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
-      integer               sizec
+      integer(ip)           lastnb
+      integer(ip)           sizec
 
       logical               failed
       logical               return
@@ -276,7 +277,7 @@
       character*(1)         blank
       parameter           ( blank = ' ' )
 
-      integer               ispace
+      integer(ip)           ispace
       parameter           ( ispace = 32 )
 
 !
@@ -285,11 +286,11 @@
       character*(1)         bchr
       character*(1)         echr
 
-      integer               b
-      integer               e
-      integer               eol
-      integer               n
-      integer               nmax
+      integer(ip)           b
+      integer(ip)           e
+      integer(ip)           eol
+      integer(ip)           n
+      integer(ip)           nmax
 
       logical               valid
 

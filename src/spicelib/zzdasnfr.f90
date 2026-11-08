@@ -8,6 +8,7 @@
                             ncomr, &
                             ncomc, &
                             format  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,13 +29,13 @@
 
       include              'zzftprms.inc'
 
-      integer               lun
+      integer(ip)           lun
       character*(*)         idword
       character*(*)         ifname
-      integer               nresvr
-      integer               nresvc
-      integer               ncomr
-      integer               ncomc
+      integer(ip)           nresvr
+      integer(ip)           nresvc
+      integer(ip)           ncomr
+      integer(ip)           ncomc
       character*(*)         format
 
 ! $ Brief_I/O
@@ -141,7 +142,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
       logical               return
 
 !
@@ -152,7 +153,7 @@
 !     of FTPSTR to keep FTPSTR at character 700 in a 1024 byte
 !     record.
 !
-      integer               preftp
+      integer(ip)           preftp
       parameter           ( preftp = 607 )
 
 !
@@ -161,19 +162,19 @@
 !     end of the file record. Note: This value assumes the
 !     length of the file record is 1024 bytes.
 !
-      integer               pstftp
+      integer(ip)           pstftp
       parameter           ( pstftp = 297 )
 
 !
 !     Lengths of internal file name, ID word, and format word.
 !
-      integer               fmtlen
+      integer(ip)           fmtlen
       parameter           ( fmtlen = 8 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
 !
@@ -191,8 +192,8 @@
       character*(sizftp)    ftpstr
       character*(sizstr)    tststr
 
-      integer               i
-      integer               iostat
+      integer(ip)           i
+      integer(ip)           iostat
 
       logical               first
 

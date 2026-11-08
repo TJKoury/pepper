@@ -1,6 +1,7 @@
 !$Procedure CLEARD ( Clear a double precision array )
 
       subroutine cleard ( ndim, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer            ndim
-      double precision   array ( * )
+      integer(ip)        ndim
+      real(wp)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -157,11 +158,11 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       do i = 1, ndim
-        array(i) = 0.d0
+        array(i) = 0.0_wp
       end do
 
 

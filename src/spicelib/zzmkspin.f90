@@ -4,6 +4,7 @@
                             maxptr, mxcell, maxvxl, cells,  nvox, &
                             voxsiz, voxori, nvxtot, nvxptr, vxptr, &
                             nvxlst, vxlist, extent, cgrptr         )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -26,25 +27,25 @@
 
       include               'dsk02.inc'
 
-      integer               np
-      integer               plates ( 3, * )
-      double precision      vrtces ( 3, * )
-      double precision      voxscl
-      integer               cgscal
-      integer               maxptr
-      integer               mxcell
-      integer               maxvxl
-      integer               cells   ( 2, mxcell )
-      integer               nvox   ( 3 )
-      double precision      voxsiz
-      double precision      voxori ( 3 )
-      integer               nvxtot
-      integer               nvxptr
-      integer               vxptr  ( * )
-      integer               nvxlst
-      integer               vxlist ( * )
-      double precision      extent ( 6 )
-      integer               cgrptr ( * )
+      integer(ip)           np
+      integer(ip)           plates ( 3, * )
+      real(wp)              vrtces ( 3, * )
+      real(wp)              voxscl
+      integer(ip)           cgscal
+      integer(ip)           maxptr
+      integer(ip)           mxcell
+      integer(ip)           maxvxl
+      integer(ip)           cells   ( 2, mxcell )
+      integer(ip)           nvox   ( 3 )
+      real(wp)              voxsiz
+      real(wp)              voxori ( 3 )
+      integer(ip)           nvxtot
+      integer(ip)           nvxptr
+      integer(ip)           vxptr  ( * )
+      integer(ip)           nvxlst
+      integer(ip)           vxlist ( * )
+      real(wp)              extent ( 6 )
+      integer(ip)           cgrptr ( * )
 
 ! $ Brief_I/O
 !
@@ -297,9 +298,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      dpmax
-      double precision      dpmin
+      real(wp)              brcktd
+      real(wp)              dpmax
+      real(wp)              dpmin
 
       logical               failed
       logical               return
@@ -307,7 +308,7 @@
 !
 !     Other functions
 !
-      integer               zzvox2id
+      integer(ip)           zzvox2id
 
 !
 !     Local parameters
@@ -317,67 +318,67 @@
 !     Fraction of voxel edge length used a tolerance for plate
 !     inclusion in voxels:
 !
-      double precision      tol
-      parameter           ( tol  = 1.d-3 )
+      real(wp)              tol
+      parameter           ( tol  = 1.0e-3_wp )
 
 !
 !     Local Variables
 !
-      double precision      avext
-      double precision      bxmax
-      double precision      bxmin
-      double precision      bymax
-      double precision      bymin
-      double precision      bzmax
-      double precision      bzmin
-      double precision      cvxsiz
-      double precision      mdltol
-      double precision      vmod   ( 3 )
-      double precision      xextnt ( 6 )
-      double precision      xmax
-      double precision      xmin
-      double precision      xp     ( 3 )
-      double precision      xvmax
-      double precision      xvmin
-      double precision      ymax
-      double precision      ymin
-      double precision      yp     ( 3 )
-      double precision      yvmax
-      double precision      yvmin
-      double precision      zmax
-      double precision      zmin
-      double precision      zp     ( 3 )
-      double precision      zvmax
-      double precision      zvmin
+      real(wp)              avext
+      real(wp)              bxmax
+      real(wp)              bxmin
+      real(wp)              bymax
+      real(wp)              bymin
+      real(wp)              bzmax
+      real(wp)              bzmin
+      real(wp)              cvxsiz
+      real(wp)              mdltol
+      real(wp)              vmod   ( 3 )
+      real(wp)              xextnt ( 6 )
+      real(wp)              xmax
+      real(wp)              xmin
+      real(wp)              xp     ( 3 )
+      real(wp)              xvmax
+      real(wp)              xvmin
+      real(wp)              ymax
+      real(wp)              ymin
+      real(wp)              yp     ( 3 )
+      real(wp)              yvmax
+      real(wp)              yvmin
+      real(wp)              zmax
+      real(wp)              zmin
+      real(wp)              zp     ( 3 )
+      real(wp)              zvmax
+      real(wp)              zvmin
 
-      integer               cgof1d
-      integer               cgoff  ( 3 )
-      integer               cgrdim ( 3 )
-      integer               cgxyz  ( 3 )
-      integer               cvid
-      integer               gxmax
-      integer               gxmin
-      integer               gymax
-      integer               gymin
-      integer               gzmax
-      integer               gzmin
-      integer               i
-      integer               ix
-      integer               ixptr
-      integer               iy
-      integer               iz
-      integer               j
-      integer               ncell
-      integer               ncgflg
-      integer               npcg
-      integer               nx
-      integer               ny
-      integer               nz
-      integer               q
-      integer               r
-      integer               to
-      integer               vixyz  ( 3 )
-      integer               vcoord ( 3 )
+      integer(ip)           cgof1d
+      integer(ip)           cgoff  ( 3 )
+      integer(ip)           cgrdim ( 3 )
+      integer(ip)           cgxyz  ( 3 )
+      integer(ip)           cvid
+      integer(ip)           gxmax
+      integer(ip)           gxmin
+      integer(ip)           gymax
+      integer(ip)           gymin
+      integer(ip)           gzmax
+      integer(ip)           gzmin
+      integer(ip)           i
+      integer(ip)           ix
+      integer(ip)           ixptr
+      integer(ip)           iy
+      integer(ip)           iz
+      integer(ip)           j
+      integer(ip)           ncell
+      integer(ip)           ncgflg
+      integer(ip)           npcg
+      integer(ip)           nx
+      integer(ip)           ny
+      integer(ip)           nz
+      integer(ip)           q
+      integer(ip)           r
+      integer(ip)           to
+      integer(ip)           vixyz  ( 3 )
+      integer(ip)           vcoord ( 3 )
 
       logical               inbox
 
@@ -436,7 +437,7 @@
 !     overall model extent. The extents have model units; in
 !     other words km.
 !
-      avext = 0.d0
+      avext = 0.0_wp
 
       xmin =  dpmax()
       xmax =  dpmin()
@@ -515,7 +516,7 @@
 !     and the voxel size, i.e the length of one side
 !     of a voxel cube.
 !
-      avext  = avext / dble(3*np)
+      avext  = avext / real(3*np, wp)
       voxsiz = voxscl * avext
       mdltol = voxsiz * tol
 
@@ -554,12 +555,12 @@
 !     Extend the coarse voxel grid by at least 1/2
 !     coarse voxel length along each degree of freedom.
 !
-      xvmin = dnint ( xvmin - 1.d0 )
-      yvmin = dnint ( yvmin - 1.d0 )
-      zvmin = dnint ( zvmin - 1.d0 )
-      xvmax = dnint ( xvmax + 1.d0 )
-      yvmax = dnint ( yvmax + 1.d0 )
-      zvmax = dnint ( zvmax + 1.d0 )
+      xvmin = dnint ( xvmin - 1.0_wp )
+      yvmin = dnint ( yvmin - 1.0_wp )
+      zvmin = dnint ( zvmin - 1.0_wp )
+      xvmax = dnint ( xvmax + 1.0_wp )
+      yvmax = dnint ( yvmax + 1.0_wp )
+      zvmax = dnint ( zvmax + 1.0_wp )
 
 !
 !     Calculate the coarse voxel grid origin in model units.
@@ -602,7 +603,7 @@
 !     cube must not exceed the fine voxel count.
 !
       if (      ( cgscal .lt. 1                ) &
-           .or. ( cgscal .gt. nvxtot**(1.d0/3) )  ) then
+           .or. ( cgscal .gt. nvxtot**(1.0_wp/3) )  ) then
 
          call setmsg ( 'Coarse voxel scale = #; scale must ' &
          //            'be in the range 1:NVXTOT**3, where ' &

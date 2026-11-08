@@ -1,6 +1,7 @@
 !$Procedure JYEAR ( Seconds per julian year )
 
-      double precision function jyear ()
+      real(wp) function jyear ()
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -92,7 +93,7 @@
 !-&
 
 
-      jyear = 31557600.0d0
+      jyear = 31557600.0_wp
 
       return
       end

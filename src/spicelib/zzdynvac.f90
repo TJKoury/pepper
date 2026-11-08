@@ -1,6 +1,7 @@
 !$Procedure ZZDYNVAC ( Fetch array, character frame kernel variable )
 
       subroutine zzdynvac ( frname, frcode, item, maxn, n, values )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -32,10 +33,10 @@
       include 'zzdyn.inc'
 
       character*(*)         frname
-      integer               frcode
+      integer(ip)           frcode
       character*(*)         item
-      integer               maxn
-      integer               n
+      integer(ip)           maxn
+      integer(ip)           n
       character*(*)         values  ( * )
 
 ! $ Brief_I/O
@@ -190,7 +191,7 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
       logical               failed
       logical               return
@@ -205,7 +206,7 @@
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer               templn
+      integer(ip)           templn
       parameter           ( templn = 7 )
 
 !
@@ -215,11 +216,11 @@
       character*(1)         dtype
       character*(kvnmln)    kvname
 
-      integer               codeln
-      integer               itemln
-      integer               nameln
-      integer               reqnam
-      integer               reqnum
+      integer(ip)           codeln
+      integer(ip)           itemln
+      integer(ip)           nameln
+      integer(ip)           reqnam
+      integer(ip)           reqnum
 
       logical               found
 

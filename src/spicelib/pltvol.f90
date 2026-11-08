@@ -1,6 +1,7 @@
 !$Procedure PLTVOL ( Compute volume of plate model )
 
-      double precision function pltvol ( nv, vrtces, np, plates )
+      real(wp) function pltvol ( nv, vrtces, np, plates )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
 
-      integer               nv
-      double precision      vrtces ( 3, nv )
-      integer               np
-      integer               plates ( 3, np )
+      integer(ip)           nv
+      real(wp)              vrtces ( 3, nv )
+      integer(ip)           np
+      integer(ip)           plates ( 3, np )
 
 ! $ Brief_I/O
 !
@@ -275,7 +276,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      det
+      real(wp)              det
 
       logical               return
 
@@ -283,16 +284,16 @@
 !
 !     Local variables
 !
-      double precision      m ( 3, 3 )
+      real(wp)              m ( 3, 3 )
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 !
 !     The function must have an initial value.
 !
-      pltvol  =  0.d0
+      pltvol  =  0.0_wp
 
 !
 !     This routine uses discovery check-in.
@@ -577,7 +578,7 @@
 !        the area of the pyramid's base is half that of base of the
 !        parallelepiped. So the determinant must be divided by 6.
 !
-         pltvol = pltvol  +  (  det( m ) / 6.d0  )
+         pltvol = pltvol  +  (  det( m ) / 6.0_wp  )
 
       end do
 

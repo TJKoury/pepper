@@ -1,6 +1,7 @@
 !$Procedure DPMIN ( Smallest DP number )
 
-      double precision function dpmin ( )
+      real(wp) function dpmin ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -413,7 +414,7 @@
 !     HP-UX 9000/750, FORTRAN/9000 Series 700 computers
 !     PC/Linux, Fort77
 !
-      dpmin = -1.79769313486231d+308
+      dpmin = -1.79769313486231e308_wp
 
       return
       end

@@ -1,6 +1,7 @@
 !$Procedure ZZDDHIVF ( Private --- DDH Identify VAX DAF File Format )
 
       subroutine zzddhivf ( nsum, bff, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
       include              'zzddhman.inc'
 
       character*(*)         nsum
-      integer               bff
+      integer(ip)           bff
       logical               found
 
 ! $ Brief_I/O
@@ -230,13 +231,13 @@
 !
       character*(1)         carg
 
-      integer               leader
-      integer               trailr
+      integer(ip)           leader
+      integer(ip)           trailr
 
 !
 !     Statement Functions
 !
-      integer               zzichr
+      integer(ip)           zzichr
 
 !
 !     Statement Function Definitions

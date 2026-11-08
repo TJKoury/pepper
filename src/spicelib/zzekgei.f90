@@ -1,6 +1,7 @@
 !$Procedure  ZZEKGEI ( Private: EK, get encoded integer )
 
       subroutine zzekgei ( handle, addrss, ival )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       include 'ekdatpag.inc'
 
-      integer               handle
-      integer               addrss
-      integer               ival
+      integer(ip)           handle
+      integer(ip)           addrss
+      integer(ip)           ival
 
 ! $ Brief_I/O
 !

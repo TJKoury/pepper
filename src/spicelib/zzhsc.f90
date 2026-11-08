@@ -2,6 +2,7 @@
 
       subroutine zzhsc ( hashsz, hedlst, collst, items, &
                          item, itemat, new, avail )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,17 +24,17 @@
 
       implicit none
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               hashsz
-      integer               hedlst  (          * )
-      integer               collst  ( lbpool : * )
+      integer(ip)           hashsz
+      integer(ip)           hedlst  (          * )
+      integer(ip)           collst  ( lbpool : * )
       character*(*)         items   (          * )
       character*(*)         item
-      integer               itemat
+      integer(ip)           itemat
       logical               new
-      integer               avail
+      integer(ip)           avail
 
 ! $ Brief_I/O
 !
@@ -383,16 +384,16 @@
 !
 !     Hash control area items.
 !
-      integer               sizidx
+      integer(ip)           sizidx
       parameter           ( sizidx =   0 )
 
-      integer               freidx
+      integer(ip)           freidx
       parameter           ( freidx =  -1 )
 
 !
 !     SPICELIB functions.
 !
-      integer               zzhash2
+      integer(ip)           zzhash2
 
       logical               failed
       logical               return
@@ -400,9 +401,9 @@
 !
 !     Local variables.
 !
-      integer               i
-      integer               lookat
-      integer               node
+      integer(ip)           i
+      integer(ip)           lookat
+      integer(ip)           node
 
       logical               full
       logical               lfound

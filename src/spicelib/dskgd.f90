@@ -1,6 +1,7 @@
 !$Procedure DSKGD ( DSK, return DSK segment descriptor  )
 
       subroutine dskgd ( handle, dladsc, dskdsc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -27,9 +28,9 @@
       include 'dla.inc'
       include 'dskdsc.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      double precision      dskdsc ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      real(wp)              dskdsc ( * )
 
 ! $ Brief_I/O
 !
@@ -590,8 +591,8 @@
 !
 !     Local variables
 !
-      integer               dpbase
-      integer               dpsize
+      integer(ip)           dpbase
+      integer(ip)           dpsize
 
       if ( return() ) then
          return

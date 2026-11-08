@@ -3,6 +3,7 @@
       subroutine spkw15 ( handle, body,  center, frame,  first, last, &
                           segid,  epoch, tp,     pa,     p,     ecc, &
                           j2flg,  pv,    gm,     j2,     radius      )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,23 +21,23 @@
 
       implicit none
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      epoch
-      double precision      tp     ( 3 )
-      double precision      pa     ( 3 )
-      double precision      p
-      double precision      ecc
-      double precision      j2flg
-      double precision      pv     ( 3 )
-      double precision      gm
-      double precision      j2
-      double precision      radius
+      real(wp)              epoch
+      real(wp)              tp     ( 3 )
+      real(wp)              pa     ( 3 )
+      real(wp)              p
+      real(wp)              ecc
+      real(wp)              j2flg
+      real(wp)              pv     ( 3 )
+      real(wp)              gm
+      real(wp)              j2
+      real(wp)              radius
 
 ! $ Brief_I/O
 !
@@ -289,11 +290,11 @@
 !
 !     SPICELIB Functions
 !
-      double precision      dpr
-      double precision      vdot
-      double precision      vsep
+      real(wp)              dpr
+      real(wp)              vdot
+      real(wp)              vsep
 
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -305,47 +306,47 @@
 !
 !     Segment descriptor size
 !
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
 !
 !     Segment identifier size
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
 !
 !     SPK data type
 !
-      integer               type
+      integer(ip)           type
       parameter           ( type    = 15 )
 
 !
 !     Range of printing characters
 !
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 !
 !     Number of items in a segment
 !
-      integer               datsiz
+      integer(ip)           datsiz
       parameter           ( datsiz  = 16 )
 
 
-      double precision      angle
-      double precision      dot
-      double precision      descr ( ns )
-      double precision      mytp  ( 3 )
-      double precision      mypa  ( 3 )
+      real(wp)              angle
+      real(wp)              dot
+      real(wp)              descr ( ns )
+      real(wp)              mytp  ( 3 )
+      real(wp)              mypa  ( 3 )
 
-      double precision      record ( datsiz )
+      real(wp)              record ( datsiz )
 
-      integer               i
-      integer               value
+      integer(ip)           i
+      integer(ip)           value
 
 
 !
@@ -421,7 +422,7 @@
          call chkout ( 'SPKW15'                )
          return
 
-      else if ( ecc .lt. 0.0d0 ) then
+      else if ( ecc .lt. 0.0_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 15 ' &
          //            'segment is negative.  It must be non-negative. ' &
@@ -432,7 +433,7 @@
          call chkout ( 'SPKW15'                  )
          return
 
-      else if ( gm  .le. 0.0d0 ) then
+      else if ( gm  .le. 0.0_wp ) then
 
          call setmsg ( 'The mass supplied for the central body ' &
          //            'of a type 15 segment was non-positive. ' &
@@ -473,7 +474,7 @@
          return
 
 
-      else if ( radius .lt. 0.0d0 ) then
+      else if ( radius .lt. 0.0_wp ) then
 
          call setmsg ( 'The central body radius was negative. ' &
          //            'It must be zero or positive.  The value ' &
@@ -492,7 +493,7 @@
 !
       dot = vdot ( mypa, mytp )
 
-      if ( abs(dot) .gt. 1.0d-5 ) then
+      if ( abs(dot) .gt. 1.0e-5_wp ) then
 
          angle = vsep ( pa, tp ) * dpr()
 

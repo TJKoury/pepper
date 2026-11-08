@@ -1,6 +1,7 @@
 !$Procedure NTHWD ( N'th word in a character string )
 
       subroutine nthwd ( string, nth, word, loc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
       implicit none
 
       character*(*)    string
-      integer          nth
+      integer(ip)      nth
       character*(*)    word
-      integer          loc
+      integer(ip)      loc
 
 ! $ Brief_I/O
 !
@@ -225,9 +226,9 @@
 !
 !     Local variables
 !
-      integer          n
-      integer          i
-      integer          length
+      integer(ip)      n
+      integer(ip)      i
+      integer(ip)      length
 
       logical          loop
 

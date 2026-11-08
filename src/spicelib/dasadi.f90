@@ -1,6 +1,7 @@
 !$Procedure DASADI ( DAS, add data, integer )
 
       subroutine dasadi ( handle, n, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      integer               handle
-      integer               n
-      integer               data   ( * )
+      integer(ip)           handle
+      integer(ip)           n
+      integer(ip)           data   ( * )
 
 ! $ Brief_I/O
 !
@@ -324,31 +325,31 @@
 !
 !     Local parameters
 !
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi    = 256 )
 
 !
 !     Local variables
 !
-      integer               clbase
-      integer               clsize
-      integer               free
-      integer               lasti
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               ncomc
-      integer               ncomr
-      integer               nresvc
-      integer               nresvr
-      integer               numint
-      integer               nwritn
-      integer               recno
-      integer               record ( nwi )
-      integer               wordno
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           free
+      integer(ip)           lasti
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           numint
+      integer(ip)           nwritn
+      integer(ip)           recno
+      integer(ip)           record ( nwi )
+      integer(ip)           wordno
 
 !
 !     Saved variables

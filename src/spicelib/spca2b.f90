@@ -1,6 +1,7 @@
 !$Procedure SPCA2B ( SPK and CK, ASCII to binary )
 
       subroutine spca2b ( text, binary )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -180,7 +181,7 @@
 
 !     Local variables
 !
-      integer               unit
+      integer(ip)           unit
 
 !
 !     Standard SPICE error handling.

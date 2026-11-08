@@ -1,6 +1,7 @@
 !$Procedure SPKE03 ( S/P Kernel, evaluate, type 3 )
 
       subroutine spke03 ( et, record, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      state    ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              state    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -213,10 +214,10 @@
 !
 !     Local variables
 !
-      integer               ncof
-      integer               degp
-      integer               cofloc
-      integer               i
+      integer(ip)           ncof
+      integer(ip)           degp
+      integer(ip)           cofloc
+      integer(ip)           i
 
 !
 !     Use discovery check-in.
@@ -249,7 +250,7 @@
 !
 !     Check the radius of the domain interval.
 !
-      if ( record(3) .le. 0.d0 )  then
+      if ( record(3) .le. 0.0_wp )  then
 
          call chkin  ( 'SPKE03'                            )
          call setmsg ( 'Interval radius must be positive ' &

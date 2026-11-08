@@ -1,6 +1,7 @@
 !$Procedure SPKS18 ( S/P Kernel, subset, type 18 )
 
       subroutine spks18 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       include 'spk18.inc'
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -199,24 +200,24 @@
 !
 !     Local parameters
 !
-      integer               msize
+      integer(ip)           msize
       parameter           ( msize  = 3 )
 
 !
 !     Local variables
 !
-      double precision      data     ( 12 )
+      real(wp)              data     ( 12 )
 
-      integer               i
-      integer               ndir
-      integer               nrec
-      integer               offe
-      integer               offset
-      integer               packsz
-      integer               rec      ( 2 )
-      integer               subtyp
-      integer               winsiz
-      integer               wnszm1
+      integer(ip)           i
+      integer(ip)           ndir
+      integer(ip)           nrec
+      integer(ip)           offe
+      integer(ip)           offset
+      integer(ip)           packsz
+      integer(ip)           rec      ( 2 )
+      integer(ip)           subtyp
+      integer(ip)           winsiz
+      integer(ip)           wnszm1
 
 
 !
@@ -357,9 +358,9 @@
 !     Store subtype, the window size, and the number of
 !     records to end the segment.
 !
-      call dafada ( dble ( subtyp ),                  1 )
-      call dafada ( dble ( winsiz ),                  1 )
-      call dafada ( dble ( rec(2) - rec(1) + 1 ),     1 )
+      call dafada ( real( subtyp, wp ),                  1 )
+      call dafada ( real( winsiz, wp ),                  1 )
+      call dafada ( real( rec(2) - rec(1) + 1, wp ),     1 )
 
       call chkout ( 'SPKS18' )
       return

@@ -1,6 +1,7 @@
 !$Procedure SPCT2B ( SPK and CK, text to binary )
 
       subroutine spct2b ( unit, binary )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               unit
+      integer(ip)           unit
       character*(*)         binary
 
 ! $ Brief_I/O
@@ -223,8 +224,8 @@
 !
 !     SPICELIB functions
 !
-      integer               ltrim
-      integer               rtrim
+      integer(ip)           ltrim
+      integer(ip)           rtrim
       logical               return
 
 !
@@ -236,16 +237,16 @@
       character*(*)         emark
       parameter           ( emark ='~NAIF/SPC END COMMENTS~'  )
 
-      integer               maxcpr
+      integer(ip)           maxcpr
       parameter           ( maxcpr = 1000 )
 !
 !     Local variables
 !
       character*(maxcpr)    line
 
-      integer               handle
-      integer               iostat
-      integer               scrtch
+      integer(ip)           handle
+      integer(ip)           iostat
+      integer(ip)           scrtch
 
 !
 !     Standard SPICE error handling.

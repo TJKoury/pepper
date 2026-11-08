@@ -1,6 +1,7 @@
 !$Procedure SPKS03 ( S/P Kernel, subset, type 3 )
 
       subroutine spks03 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -153,17 +154,17 @@
 !
 !     Local variables
 !
-      double precision      data    ( 50 )
-      double precision      init
-      double precision      intlen
+      real(wp)              data    ( 50 )
+      real(wp)              init
+      real(wp)              intlen
 
-      integer               recsiz
-      integer               nrec
-      integer               first
-      integer               last
-      integer               remain
-      integer               addr
-      integer               move
+      integer(ip)           recsiz
+      integer(ip)           nrec
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           remain
+      integer(ip)           addr
+      integer(ip)           move
 
 
 !
@@ -238,8 +239,8 @@
 
       data( 1 ) = init
       data( 2 ) = intlen
-      data( 3 ) = dble( recsiz )
-      data( 4 ) = dble( nrec   )
+      data( 3 ) = real( recsiz, wp )
+      data( 4 ) = real( nrec, wp   )
       call dafada ( data, 4 )
 
       call chkout ( 'SPKS03' )

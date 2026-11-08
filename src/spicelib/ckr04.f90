@@ -2,6 +2,7 @@
 
       subroutine ckr04 ( handle, descr, sclkdp, tol, needav, &
                          record, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,12 +23,12 @@
 
       include               'ckparam.inc'
 
-      integer               handle
-      double precision      descr  ( * )
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      record ( * )
+      real(wp)              record ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -369,24 +370,24 @@
 !
 !     Local variables
 !
-      double precision      value
-      double precision      midpt1
-      double precision      midpt2
-      double precision      rad1
-      double precision      rad2
-      double precision      lbnd1
-      double precision      lbnd2
-      double precision      rbnd1
-      double precision      dcd    ( 2 )
-      double precision      clkout
+      real(wp)              value
+      real(wp)              midpt1
+      real(wp)              midpt2
+      real(wp)              rad1
+      real(wp)              rad2
+      real(wp)              lbnd1
+      real(wp)              lbnd2
+      real(wp)              rbnd1
+      real(wp)              dcd    ( 2 )
+      real(wp)              clkout
 
-      integer               numall
-      integer               numcft ( qavsiz )
-      integer               icd    ( 6 )
-      integer               ends
-      integer               indx
-      integer               k
-      integer               nrec
+      integer(ip)           numall
+      integer(ip)           numcft ( qavsiz )
+      integer(ip)           icd    ( 6 )
+      integer(ip)           ends
+      integer(ip)           indx
+      integer(ip)           k
+      integer(ip)           nrec
 
       logical               exist
 

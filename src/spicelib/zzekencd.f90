@@ -3,6 +3,7 @@
       subroutine zzekencd (  query, &
                              eqryi,  eqryc,   eqryd, &
                              error,  errmsg,  errptr  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,16 +26,16 @@
       include 'ekquery.inc'
       include 'ektype.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               eqryi  ( lbcell : * )
+      integer(ip)           eqryi  ( lbcell : * )
       character*(*)         eqryc
-      double precision      eqryd  ( * )
+      real(wp)              eqryd  ( * )
       logical               error
       character*(*)         errmsg
-      integer               errptr
+      integer(ip)           errptr
 
 ! $ Brief_I/O
 !
@@ -138,7 +139,7 @@
 !
 !     Storage limits:
 !
-      integer               maxcol
+      integer(ip)           maxcol
       parameter           ( maxcol = 100 )
 
 !
@@ -146,15 +147,15 @@
 !
       character*(maxcln)    chrbuf
 
-      double precision      numvls ( maxqnm )
+      real(wp)              numvls ( maxqnm )
 
-      integer               chbegs ( maxtok )
-      integer               chends ( maxtok )
-      integer               lxbegs ( maxtok )
-      integer               lxends ( maxtok )
-      integer               ntoken
-      integer               tokens ( maxtok )
-      integer               values ( maxtok )
+      integer(ip)           chbegs ( maxtok )
+      integer(ip)           chends ( maxtok )
+      integer(ip)           lxbegs ( maxtok )
+      integer(ip)           lxends ( maxtok )
+      integer(ip)           ntoken
+      integer(ip)           tokens ( maxtok )
+      integer(ip)           values ( maxtok )
 
 
 !

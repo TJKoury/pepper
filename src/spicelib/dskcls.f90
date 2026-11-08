@@ -1,6 +1,7 @@
 !$Procedure DSKCLS ( DSK, close file )
 
       subroutine dskcls ( handle, optmiz )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       include 'dla.inc'
 
-      integer               handle
+      integer(ip)           handle
       logical               optmiz
 
 ! $ Brief_I/O
@@ -149,7 +150,7 @@
 !
 !     Local parameters
 !
-      integer               methln
+      integer(ip)           methln
       parameter           ( methln  = 10 )
 
 !

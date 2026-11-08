@@ -2,6 +2,7 @@
 
       subroutine zzekbs02 (  handle,  tabnam,  ncols, &
                              cnames,  cdscrs,  segno  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -30,12 +31,12 @@
       include 'ektnamsz.inc'
       include 'ektype.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         tabnam
-      integer               ncols
+      integer(ip)           ncols
       character*(*)         cnames ( * )
-      integer               cdscrs ( cdscsz, * )
-      integer               segno
+      integer(ip)           cdscrs ( cdscsz, * )
+      integer(ip)           segno
 
 ! $ Brief_I/O
 !
@@ -136,7 +137,7 @@
 !
 !     SPICELIB functions
 !
-      integer               eknseg
+      integer(ip)           eknseg
 
       logical               failed
       logical               return
@@ -144,13 +145,13 @@
 !
 !     Local parameters
 !
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               mxspec
+      integer(ip)           mxspec
       parameter           ( mxspec = 512 )
 
-      integer               namlim
+      integer(ip)           namlim
       parameter           ( namlim = 32 )
 
 !
@@ -160,27 +161,27 @@
       character*(cnamsz)    tmpcnm
       character*(tnamsz)    tmptnm
 
-      integer               base
-      integer               cbase
-      integer               cp1
-      integer               cp
-      integer               cpagno
-      integer               cpt
-      integer               dpt
-      integer               dscbas
-      integer               i
-      integer               ipage  ( pgsizi )
-      integer               ipagno
-      integer               ipt
-      integer               metasz
-      integer               nambas
-      integer               ncpage
-      integer               nipage
-      integer               p
-      integer               p1
-      integer               p1base
-      integer               room
-      integer               sgtree
+      integer(ip)           base
+      integer(ip)           cbase
+      integer(ip)           cp1
+      integer(ip)           cp
+      integer(ip)           cpagno
+      integer(ip)           cpt
+      integer(ip)           dpt
+      integer(ip)           dscbas
+      integer(ip)           i
+      integer(ip)           ipage  ( pgsizi )
+      integer(ip)           ipagno
+      integer(ip)           ipt
+      integer(ip)           metasz
+      integer(ip)           nambas
+      integer(ip)           ncpage
+      integer(ip)           nipage
+      integer(ip)           p
+      integer(ip)           p1
+      integer(ip)           p1base
+      integer(ip)           room
+      integer(ip)           sgtree
 
 !
 !     Standard SPICE error handling.

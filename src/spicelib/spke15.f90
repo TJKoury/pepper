@@ -1,6 +1,7 @@
 !$Procedure SPKE15 ( Evaluate a type 15 SPK data record)
 
       subroutine spke15 ( et, recin, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      recin  ( * )
-      double precision      state  ( 6 )
+      real(wp)              et
+      real(wp)              recin  ( * )
+      real(wp)              state  ( 6 )
 
 ! $ Brief_I/O
 !
@@ -265,46 +266,46 @@
 !
 !     SPICELIB Functions
 !
-      double precision      dpr
+      real(wp)              dpr
       external              pi
-      double precision      pi
-      double precision      twopi
-      double precision      vdot
-      double precision      vsep
+      real(wp)              pi
+      real(wp)              twopi
+      real(wp)              vdot
+      real(wp)              vsep
       logical               return
       logical               vzero
 
 !
 !     Local Variables
 !
-      double precision      angle
-      double precision      cosinc
-      double precision      dmdt
-      double precision      dnode
-      double precision      dot
-      double precision      dperi
-      double precision      dt
-      double precision      ecc
-      double precision      epoch
-      double precision      gm
-      double precision      k2pi
-      double precision      manom
-      double precision      near
-      double precision      oj2
-      double precision      oneme2
-      double precision      p
-      double precision      pa     ( 3 )
-      double precision      pv     ( 3 )
-      double precision      rpl
-      double precision      speed
-      double precision      state0 ( 6 )
-      double precision      ta
-      double precision      theta
-      double precision      tmpsta ( 6 )
-      double precision      tp     ( 3 )
-      double precision      z
+      real(wp)              angle
+      real(wp)              cosinc
+      real(wp)              dmdt
+      real(wp)              dnode
+      real(wp)              dot
+      real(wp)              dperi
+      real(wp)              dt
+      real(wp)              ecc
+      real(wp)              epoch
+      real(wp)              gm
+      real(wp)              k2pi
+      real(wp)              manom
+      real(wp)              near
+      real(wp)              oj2
+      real(wp)              oneme2
+      real(wp)              p
+      real(wp)              pa     ( 3 )
+      real(wp)              pv     ( 3 )
+      real(wp)              rpl
+      real(wp)              speed
+      real(wp)              state0 ( 6 )
+      real(wp)              ta
+      real(wp)              theta
+      real(wp)              tmpsta ( 6 )
+      real(wp)              tp     ( 3 )
+      real(wp)              z
 
-      integer               j2flg
+      integer(ip)           j2flg
 
 !
 !     Standard SPICE error handling.
@@ -373,7 +374,7 @@
          call chkout ( 'SPKE15'                )
          return
 
-      else if ( ecc .lt. 0.0d0 ) then
+      else if ( ecc .lt. 0.0_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 15 ' &
          //            'segment is negative.  It must be non-negative. ' &
@@ -384,7 +385,7 @@
          call chkout ( 'SPKE15'                  )
          return
 
-      else if ( gm  .le. 0.0d0 ) then
+      else if ( gm  .le. 0.0_wp ) then
 
          call setmsg ( 'The mass supplied for the central body ' &
          //            'of a type 15 segment was non-positive. ' &
@@ -426,7 +427,7 @@
          return
 
 
-      else if ( rpl .lt. 0.0d0 ) then
+      else if ( rpl .lt. 0.0_wp ) then
 
          call setmsg ( 'The central body radius was negative. ' &
          //            'It must be zero or positive.  The value ' &
@@ -455,7 +456,7 @@
 !
       dot = vdot ( pa, tp )
 
-      if ( abs(dot) .gt. 1.0d-5 ) then
+      if ( abs(dot) .gt. 1.0e-5_wp ) then
 
          angle = vsep ( pa, tp ) * dpr()
 
@@ -472,8 +473,8 @@
 !
 !     Compute the distance and speed at periapse.
 !
-      near  = p           / ( 1.0d0 + ecc)
-      speed = dsqrt(gm/p) * ( 1.0d0 + ecc )
+      near  = p           / ( 1.0_wp + ecc)
+      speed = dsqrt(gm/p) * ( 1.0_wp + ecc )
 
 !
 !     Next get the position at periapse ...
@@ -525,14 +526,14 @@
 !     true anomaly in order to properly transform the state.
 !
       if (       ( j2flg .ne. 3     ) &
-           .and. ( oj2   .ne. 0.0d0 ) &
-           .and. ( ecc   .lt. 1.0d0 ) &
+           .and. ( oj2   .ne. 0.0_wp ) &
+           .and. ( ecc   .lt. 1.0_wp ) &
            .and. ( near  .gt. rpl   )  ) then
 
 !
 !        First compute the change in mean anomaly since periapsis.
 !
-         oneme2 = 1.0d0 - ecc**2
+         oneme2 = 1.0_wp - ecc**2
          dmdt   = ( oneme2 / p ) * dsqrt( gm * oneme2 / p )
          manom  = dmdt*dt
 !
@@ -561,9 +562,9 @@
 !
          cosinc = vdot(pv,tp)
 
-         z      = ta * 1.5d0 * oj2 *(rpl/p)**2
+         z      = ta * 1.5_wp * oj2 *(rpl/p)**2
          dnode  = -z * cosinc
-         dperi  =  z * ( 2.5d0*cosinc**2 - 0.5d0 )
+         dperi  =  z * ( 2.5_wp*cosinc**2 - 0.5_wp )
 
 !
 !        Precess the periapsis by rotating the state vector about the

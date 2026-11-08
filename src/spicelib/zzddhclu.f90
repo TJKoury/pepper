@@ -1,6 +1,7 @@
 !$Procedure ZZDDHCLU ( Private --- DDH Count Locks )
 
-      integer function zzddhclu ( utlck, nut )
+      integer(ip) function zzddhclu ( utlck, nut )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
       implicit none
 
       logical               utlck ( * )
-      integer               nut
+      integer(ip)           nut
 
 
 ! $ Brief_I/O
@@ -90,7 +91,7 @@
 !
 !     Local Variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Loop through UTLCK counting the number of TRUE values.

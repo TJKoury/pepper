@@ -2,6 +2,7 @@
 
       subroutine zzrytelt ( vertex, raydir, dskdsc, &
                             margin, nxpts,  xpt    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,12 +34,12 @@
 
       include 'dskdsc.inc'
 
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      dskdsc ( dskdsz )
-      double precision      margin
-      integer               nxpts
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              dskdsc ( dskdsz )
+      real(wp)              margin
+      integer(ip)           nxpts
+      real(wp)              xpt    ( 3 )
 
 
 ! $ Brief_I/O
@@ -154,7 +155,7 @@
 !
 !     Local variables
 !
-      integer               corsys
+      integer(ip)           corsys
 
 
       if ( return() ) then

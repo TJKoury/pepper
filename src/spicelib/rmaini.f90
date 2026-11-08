@@ -1,6 +1,7 @@
 !$Procedure RMAINI ( Remainder --- integer )
 
       subroutine rmaini ( num, denom, q, rem )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer               num
-      integer               denom
-      integer               q
-      integer               rem
+      integer(ip)           num
+      integer(ip)           denom
+      integer(ip)           q
+      integer(ip)           rem
 
 ! $ Brief_I/O
 !
@@ -119,7 +120,7 @@
 !
 !     Take care of the zero-denominator case first
 !
-      if ( denom .eq. 0.0d0 ) then
+      if ( denom .eq. 0.0_wp ) then
          call chkin  ( 'RMAINI'                                       )
          call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )

@@ -1,6 +1,7 @@
 !$Procedure ERRFNM ( Insert filename into long error message text )
 
       subroutine errfnm ( marker, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       character*(*)         marker
 
-      integer               unit
+      integer(ip)           unit
 
-      integer               filen
+      integer(ip)           filen
       parameter           ( filen = 128 )
 
 ! $ Brief_I/O
@@ -203,7 +204,7 @@
 !
       character*(filen)     name
 
-      integer               iostat
+      integer(ip)           iostat
 
 
 

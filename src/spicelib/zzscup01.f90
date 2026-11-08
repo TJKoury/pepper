@@ -5,6 +5,7 @@
                             prvsc,  nfield, delcde, timsys, ncoeff, &
                             npart,  cofbas, strbas, endbas, modbas, &
                             offbas                                 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,27 +31,27 @@
 
       include 'zzsc01.inc'
 
-      integer               sc
-      integer               polctr
-      integer               hdsclk ( * )
-      integer               scpool ( lbsngl : * )
-      integer               clklst ( * )
-      integer               dpfree
-      double precision      dpbuff ( * )
-      integer               ifree
-      integer               intbuf ( * )
-      integer               scbase ( * )
-      integer               prvsc
-      integer               nfield
-      integer               delcde
-      integer               timsys
-      integer               ncoeff
-      integer               npart
-      integer               cofbas
-      integer               strbas
-      integer               endbas
-      integer               modbas
-      integer               offbas
+      integer(ip)           sc
+      integer(ip)           polctr
+      integer(ip)           hdsclk ( * )
+      integer(ip)           scpool ( lbsngl : * )
+      integer(ip)           clklst ( * )
+      integer(ip)           dpfree
+      real(wp)              dpbuff ( * )
+      integer(ip)           ifree
+      integer(ip)           intbuf ( * )
+      integer(ip)           scbase ( * )
+      integer(ip)           prvsc
+      integer(ip)           nfield
+      integer(ip)           delcde
+      integer(ip)           timsys
+      integer(ip)           ncoeff
+      integer(ip)           npart
+      integer(ip)           cofbas
+      integer(ip)           strbas
+      integer(ip)           endbas
+      integer(ip)           modbas
+      integer(ip)           offbas
 
 ! $ Brief_I/O
 !
@@ -387,8 +388,8 @@
 !
 !     Local variables
 !
-      integer               ibase
-      integer               sclkat
+      integer(ip)           ibase
+      integer(ip)           sclkat
 
       logical               samclk
       logical               update

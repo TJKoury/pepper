@@ -2,6 +2,7 @@
 
       subroutine spkw05 ( handle, body,  center, frame,  first, last, &
                           segid,  gm,    n,      states, epochs      )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,17 +24,17 @@
 
       implicit none
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      gm
-      integer               n
-      double precision      states   ( 6, * )
-      double precision      epochs   (    * )
+      real(wp)              gm
+      integer(ip)           n
+      real(wp)              states   ( 6, * )
+      real(wp)              epochs   (    * )
 
 ! $ Brief_I/O
 !
@@ -318,7 +319,7 @@
 !
       logical               failed
       logical               return
-      integer               lastnb
+      integer(ip)           lastnb
 
 !
 !     Local parameters
@@ -342,25 +343,25 @@
 !     LPRINT is the integer value of the last printable ASCII character.
 !
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   5 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 
@@ -368,13 +369,13 @@
 !     Local variables
 !
 
-      double precision      dcd      ( nd     )
-      double precision      descr    ( ns     )
+      real(wp)              dcd      ( nd     )
+      real(wp)              descr    ( ns     )
 
-      integer               i
-      integer               refcod
-      integer               value
-      integer               icd      ( ni )
+      integer(ip)           i
+      integer(ip)           refcod
+      integer(ip)           value
+      integer(ip)           icd      ( ni )
 
 
 !
@@ -387,7 +388,7 @@
       end if
 
 
-      if ( gm .le. 0.0d0 ) then
+      if ( gm .le. 0.0_wp ) then
 
          call setmsg ( 'GM = #; Non-positive gravitational parameter' )
          call errdp  ( '#',  gm                   )
@@ -543,7 +544,7 @@
 !     Store the GM of the central body, and the number of states.
 !
       call dafada ( gm,         1 )
-      call dafada ( dble ( n ), 1 )
+      call dafada ( real( n, wp ), 1 )
 
 !
 !     If anything went wrong, don't end the segment.

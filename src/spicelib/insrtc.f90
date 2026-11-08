@@ -1,6 +1,7 @@
 !$Procedure INSRTC ( Insert an item into a character set )
 
       subroutine insrtc ( item, a )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         item
@@ -247,20 +248,20 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
-      integer               lstlec
-      integer               sizec
+      integer(ip)           cardc
+      integer(ip)           lstlec
+      integer(ip)           sizec
 
       logical               return
 
 !
 !     Local variables
 !
-      integer               card
-      integer               i
-      integer               last
-      integer               size
-      integer               slen
+      integer(ip)           card
+      integer(ip)           i
+      integer(ip)           last
+      integer(ip)           size
+      integer(ip)           slen
 
       logical               in
 

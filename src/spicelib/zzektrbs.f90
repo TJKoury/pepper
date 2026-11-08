@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRBS ( EK tree, base address )
 
-      integer function zzektrbs ( node )
+      integer(ip) function zzektrbs ( node )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       include 'ektype.inc'
 
-      integer               node
+      integer(ip)           node
 
 ! $ Brief_I/O
 !

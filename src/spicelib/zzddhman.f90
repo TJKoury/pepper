@@ -3,6 +3,7 @@
       subroutine zzddhman ( lock,   arch,   fname,  method, &
                             handle, unit,   intamh, intarc, &
                             intbff, native, found,  kill    )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,11 +34,11 @@
       character*(*)         arch
       character*(*)         fname
       character*(*)         method
-      integer               handle
-      integer               unit
-      integer               intamh
-      integer               intarc
-      integer               intbff
+      integer(ip)           handle
+      integer(ip)           unit
+      integer(ip)           intamh
+      integer(ip)           intarc
+      integer(ip)           intbff
       logical               native
       logical               found
       logical               kill
@@ -187,11 +188,11 @@
 !
 !     SPICELIB Functions
 !
-      integer               bsrchi
-      integer               isrchc
-      integer               isrchi
-      integer               rtrim
-      integer               zzddhclu
+      integer(ip)           bsrchi
+      integer(ip)           isrchc
+      integer(ip)           isrchi
+      integer(ip)           rtrim
+      integer(ip)           zzddhclu
 
       logical               failed
       logical               return
@@ -202,18 +203,18 @@
       character*(filen)     locfnm
       character*(strsiz)    tmpstr
 
-      double precision      mnm
+      real(wp)              mnm
 
-      integer               accmet
-      integer               bff
-      integer               filarc
-      integer               i
-      integer               inqhan
-      integer               iostat
-      integer               lchar
-      integer               locked
-      integer               loclun
-      integer               supidx
+      integer(ip)           accmet
+      integer(ip)           bff
+      integer(ip)           filarc
+      integer(ip)           i
+      integer(ip)           inqhan
+      integer(ip)           iostat
+      integer(ip)           lchar
+      integer(ip)           locked
+      integer(ip)           loclun
+      integer(ip)           supidx
 
       logical               error
       logical               inqext
@@ -263,18 +264,18 @@
 !     fashion, FTABS is guaranteed to be a sorted list.  We will use
 !     this fact to improve handle lookups in the file table.
 !
-      integer               nft
+      integer(ip)           nft
 
-      integer               ftabs  ( ftsize )
-      integer               ftamh  ( ftsize )
-      integer               ftarc  ( ftsize )
-      integer               ftbff  ( ftsize )
-      integer               fthan  ( ftsize )
+      integer(ip)           ftabs  ( ftsize )
+      integer(ip)           ftamh  ( ftsize )
+      integer(ip)           ftarc  ( ftsize )
+      integer(ip)           ftbff  ( ftsize )
+      integer(ip)           fthan  ( ftsize )
       character*(filen)     ftnam  ( ftsize )
-      integer               ftrtm  ( ftsize )
-      double precision      ftmnm  ( ftsize )
+      integer(ip)           ftrtm  ( ftsize )
+      real(wp)              ftmnm  ( ftsize )
 
-      integer               findex
+      integer(ip)           findex
 
 !
 !     NEXT stores the next handle to be used for file access.  This
@@ -282,7 +283,7 @@
 !     incremented just before entries in the file table are made.
 !     It begins as zero valued.
 !
-      integer               next
+      integer(ip)           next
 
 !
 !     The unit table consists of a set of arrays which serve as
@@ -306,28 +307,28 @@
 !     may not exceed UTSIZE.  UINDEX refers to a unit of interest
 !     within the table.
 !
-      integer               nut
+      integer(ip)           nut
 
-      integer               utcst ( utsize )
-      integer               uthan ( utsize )
+      integer(ip)           utcst ( utsize )
+      integer(ip)           uthan ( utsize )
       logical               utlck ( utsize )
-      integer               utlun ( utsize )
+      integer(ip)           utlun ( utsize )
 
-      integer               uindex
+      integer(ip)           uindex
 
 !
 !     The following stores the native binary file format, a list of
 !     codes for supported binary formats, and the number of entries
 !     in SUPBFF.
 !
-      integer               natbff
-      integer               supbff ( numbff )
-      integer               numsup
+      integer(ip)           natbff
+      integer(ip)           supbff ( numbff )
+      integer(ip)           numsup
 
 !
 !     Request counter used to determine cost.
 !
-      integer               reqcnt
+      integer(ip)           reqcnt
 
 !
 !     Saved Variables
@@ -760,7 +761,7 @@
 
       end if
 
-      mnm = 0.d0
+      mnm = 0.0_wp
 
 !
 !     In the READ or WRITE cases verify that LOCFNM is not already

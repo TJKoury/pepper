@@ -2,6 +2,7 @@
 
       subroutine spkw10 ( handle, body,   center, frame,  first, last, &
                           segid,  consts, n,      elems,  epochs      )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,17 +25,17 @@
       include              'sgparam.inc'
 
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      consts ( * )
-      integer               n
-      double precision      elems  ( * )
-      double precision      epochs ( * )
+      real(wp)              consts ( * )
+      integer(ip)           n
+      real(wp)              elems  ( * )
+      real(wp)              epochs ( * )
 
 ! $ Brief_I/O
 !
@@ -533,43 +534,43 @@
 !
 !     The type of this segment
 !
-      integer               spktyp
+      integer(ip)           spktyp
       parameter           ( spktyp = 10 )
 !
 !     The number of geophysical constants:
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 8 )
 !
 !     The number of elements per two-line set:
 !
-      integer               nelems
+      integer(ip)           nelems
       parameter           ( nelems = 10 )
 
-      integer               nuobl
+      integer(ip)           nuobl
       parameter           ( nuobl  = 11 )
 
-      integer               nulon
+      integer(ip)           nulon
       parameter           ( nulon  = 12 )
 
-      integer               dnuobl
+      integer(ip)           dnuobl
       parameter           ( dnuobl = 13 )
 
-      integer               dnulon
+      integer(ip)           dnulon
       parameter           ( dnulon = 14 )
 
-      integer               pktsiz
+      integer(ip)           pktsiz
       parameter           ( pktsiz = dnulon )
 
 
-      double precision      descr ( 6 )
-      double precision      packet( pktsiz )
-      double precision      dnut  ( 4 )
+      real(wp)              descr ( 6 )
+      real(wp)              packet( pktsiz )
+      real(wp)              dnut  ( 4 )
 
-      integer               base
-      integer               i
-      integer               npkts
-      integer               nepoch
+      integer(ip)           base
+      integer(ip)           i
+      integer(ip)           npkts
+      integer(ip)           nepoch
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure STPOOL ( String from pool )
 
       subroutine stpool ( item, nth, contin, nthstr, size, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       implicit none
 
       character*(*)         item
-      integer               nth
+      integer(ip)           nth
       character*(*)         contin
       character*(*)         nthstr
-      integer               size
+      integer(ip)           size
       logical               found
 
 ! $ Brief_I/O
@@ -321,24 +322,24 @@
 
 !     SPICELIB Variables
 !
-      integer               rtrim
+      integer(ip)           rtrim
       logical               return
 
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
       character*(lnsize)    part
 
 
-      integer               cfirst
-      integer               clast
-      integer               comp
-      integer               csize
-      integer               n
-      integer               putat
-      integer               room
-      integer               strno
+      integer(ip)           cfirst
+      integer(ip)           clast
+      integer(ip)           comp
+      integer(ip)           csize
+      integer(ip)           n
+      integer(ip)           putat
+      integer(ip)           room
+      integer(ip)           strno
 
       logical               gotit
       logical               more

@@ -1,6 +1,7 @@
 !$Procedure UDF ( Dummy function for UDFUNS )
 
       subroutine udf ( x, value )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision      x
-      double precision      value
+      real(wp)              x
+      real(wp)              value
 
 ! $ Brief_I/O
 !
@@ -94,8 +95,8 @@
 !-&
 
 
-      x     = x     + 0.d0
-      value = value + 0.d0
+      x     = x     + 0.0_wp
+      value = value + 0.0_wp
 
       return
 

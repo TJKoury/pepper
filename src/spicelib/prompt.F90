@@ -1,6 +1,7 @@
 !$Procedure PROMPT ( Prompt a user for a string )
 
       subroutine prompt ( dspmsg, buffer )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -424,7 +425,7 @@
 !
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
 !
 

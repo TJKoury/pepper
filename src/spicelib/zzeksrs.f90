@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSRS ( EK, set record status )
 
       subroutine zzeksrs ( handle, recptr, status )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       include 'ekrecptr.inc'
 
-      integer               handle
-      integer               recptr
-      integer               status
+      integer(ip)           handle
+      integer(ip)           recptr
+      integer(ip)           status
 
 ! $ Brief_I/O
 !
@@ -99,7 +100,7 @@
 !
 !     Local variables
 !
-      integer               loc
+      integer(ip)           loc
 
 !
 !     Use discovery check-in.

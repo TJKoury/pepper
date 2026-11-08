@@ -1,6 +1,7 @@
 !$Procedure PREFIX (Prefix a character string)
 
       subroutine prefix ( pref, spaces, string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)    pref
-      integer          spaces
+      integer(ip)      spaces
       character*(*)    string
 
 ! $ Brief_I/O
@@ -144,14 +145,14 @@
 !
 !     SPICELIB functions
 !
-      integer          lastnb
+      integer(ip)      lastnb
 
 !
 !     Local variables
 !
-      integer          plen
-      integer          slen
-      integer          shift
+      integer(ip)      plen
+      integer(ip)      slen
+      integer(ip)      shift
 
 
 

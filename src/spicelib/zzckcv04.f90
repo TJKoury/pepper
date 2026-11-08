@@ -2,6 +2,7 @@
 
       subroutine zzckcv04 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,16 +29,16 @@
 
       include              'ckparam.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               handle
-      integer               arrbeg
-      integer               arrend
-      integer               sclkid
-      double precision      tol
+      integer(ip)           handle
+      integer(ip)           arrbeg
+      integer(ip)           arrend
+      integer(ip)           sclkid
+      real(wp)              tol
       character*(*)         timsys
-      double precision      schedl ( lbcell:* )
+      real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -159,33 +160,33 @@
 !
 !     SPICELIB Functions
 !
-      integer               intmax
+      integer(ip)           intmax
       logical               eqstr
       logical               return
 
 !
 !     Local Parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 
 !
 !     Local Variables
 !
-      double precision      dc     ( nd )
-      double precision      descr  ( 5 )
-      double precision      et
-      double precision      left
-      double precision      right
-      double precision      values ( ck4rsz )
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( 5 )
+      real(wp)              et
+      real(wp)              left
+      real(wp)              right
+      real(wp)              values ( ck4rsz )
 
-      integer               ends   ( 2 )
-      integer               i
-      integer               ic     ( ni )
-      integer               nrec
+      integer(ip)           ends   ( 2 )
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           nrec
 
       logical               istdb
 
@@ -201,7 +202,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -251,8 +252,8 @@
       ic ( 5 ) = arrbeg
       ic ( 6 ) = arrend
 
-      dc ( 1 ) = 0.0d0
-      dc ( 2 ) = 0.0d0
+      dc ( 1 ) = 0.0_wp
+      dc ( 2 ) = 0.0_wp
 
       call dafps ( nd, ni, dc, ic, descr )
 
@@ -278,9 +279,9 @@
 !
 !        Adjust the interval using the tolerance.
 !
-         if ( tol .gt. 0.d0 ) then
+         if ( tol .gt. 0.0_wp ) then
 
-            left   =  max( left  - tol, 0.d0 )
+            left   =  max( left  - tol, 0.0_wp )
             right  =       right + tol
 
          end if

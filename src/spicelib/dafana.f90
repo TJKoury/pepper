@@ -1,6 +1,7 @@
 !$Procedure DAFANA ( DAF, add new array )
 
       subroutine dafana ( handle, sum, name, data, n )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       include              'zzddhman.inc'
 
-      integer               handle
-      double precision      sum      ( * )
+      integer(ip)           handle
+      real(wp)              sum      ( * )
       character*(*)         name
-      double precision      data     ( * )
-      integer               n
+      real(wp)              data     ( * )
+      integer(ip)           n
 
-      integer               tbsize
+      integer(ip)           tbsize
       parameter           ( tbsize =   20  )
 
 ! $ Brief_I/O
@@ -782,37 +783,37 @@
 !
 !     Local parameters
 !
-      integer               arycnt
+      integer(ip)           arycnt
       parameter           ( arycnt =    3 )
 
-      integer               bwdptr
+      integer(ip)           bwdptr
       parameter           ( bwdptr =    2 )
 
-      integer               crlen
+      integer(ip)           crlen
       parameter           ( crlen  = 1000 )
 
-      integer               dprsiz
+      integer(ip)           dprsiz
       parameter           ( dprsiz =  128 )
 
-      integer               fwdptr
+      integer(ip)           fwdptr
       parameter           ( fwdptr =    1 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen =   60 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell =   -5 )
 
-      integer               maxndc
+      integer(ip)           maxndc
       parameter           ( maxndc =  124 )
 
-      integer               maxnic
+      integer(ip)           maxnic
       parameter           ( maxnic =  250 )
 
-      integer               maxsum
+      integer(ip)           maxsum
       parameter           ( maxsum =  125 )
 
-      integer               nil
+      integer(ip)           nil
       parameter           ( nil    =   -1 )
 
 
@@ -854,14 +855,14 @@
 !     the size of the table is TBSIZE.
 !
 !
-      integer               stfh   (         tbsize )
+      integer(ip)           stfh   (         tbsize )
       character*(ifnlen)    stifnm (         tbsize )
       logical               staddg (         tbsize )
-      integer               stfrst (         tbsize )
-      integer               stlast (         tbsize )
-      integer               stfree (         tbsize )
-      integer               stbegn (         tbsize )
-      double precision      stlsum ( maxsum, tbsize )
+      integer(ip)           stfrst (         tbsize )
+      integer(ip)           stlast (         tbsize )
+      integer(ip)           stfree (         tbsize )
+      integer(ip)           stbegn (         tbsize )
+      real(wp)              stlsum ( maxsum, tbsize )
       character*(crlen)     stname (         tbsize )
 
 !
@@ -877,9 +878,9 @@
 !     STFPTR (`state table free pointer'), respectively.  Every node in
 !     the pool is on exactly one of these lists.
 !
-      integer               stpool ( tbsize )
-      integer               sthead
-      integer               stfptr
+      integer(ip)           stpool ( tbsize )
+      integer(ip)           sthead
+      integer(ip)           stfptr
 
 !
 !     The pool starts out with all of the nodes on the free list.
@@ -912,27 +913,27 @@
       character*(filen)     dafnam
       character*(ifnlen)    ifname
 
-      double precision      dc     ( maxndc )
-      double precision      sumrec ( dprsiz )
+      real(wp)              dc     ( maxndc )
+      real(wp)              sumrec ( dprsiz )
 
-      integer               bward
-      integer               cloc
-      integer               dloc
-      integer               free
-      integer               fward
-      integer               i
-      integer               ic     ( maxnic )
-      integer               namsiz
-      integer               nd
-      integer               ni
-      integer               narray
-      integer               next
-      integer               nextp
-      integer               opnset ( lbcell : ftsize )
-      integer               p
-      integer               prev
-      integer               sumsiz
-      integer               word
+      integer(ip)           bward
+      integer(ip)           cloc
+      integer(ip)           dloc
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           i
+      integer(ip)           ic     ( maxnic )
+      integer(ip)           namsiz
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           narray
+      integer(ip)           next
+      integer(ip)           nextp
+      integer(ip)           opnset ( lbcell : ftsize )
+      integer(ip)           p
+      integer(ip)           prev
+      integer(ip)           sumsiz
+      integer(ip)           word
 
       logical               first
       logical               found
@@ -1929,7 +1930,7 @@
       namrec(cloc : cloc+namsiz-1) = stname(p)
 
 
-      sumrec(arycnt) =  sumrec(arycnt) + 1.0d0
+      sumrec(arycnt) =  sumrec(arycnt) + 1.0_wp
       narray         =  idint ( sumrec(arycnt) )
 
 !
@@ -1955,7 +1956,7 @@
 !
          call dafarw ( stfree(p)-1, next, word )
          next           = next + 1
-         sumrec(fwdptr) = dble ( next )
+         sumrec(fwdptr) = real( next, wp )
 
          call dafwdr ( stfh(p), stlast(p),   sumrec )
          call dafwcr ( stfh(p), stlast(p)+1, namrec )
@@ -1966,9 +1967,9 @@
 !        it contains no summaries, and no names.
 !
          call cleard ( dprsiz, sumrec )
-         sumrec(fwdptr)  =  0.0d0
-         sumrec(bwdptr)  =  dble ( stlast(p) )
-         sumrec(arycnt)  =  0.0d0
+         sumrec(fwdptr)  =  0.0_wp
+         sumrec(bwdptr)  =  real( stlast(p), wp )
+         sumrec(arycnt)  =  0.0_wp
          namrec          = ' '
 
          call dafwdr ( stfh(p), next,   sumrec )

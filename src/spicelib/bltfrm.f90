@@ -1,6 +1,7 @@
 !$Procedure BLTFRM ( Built-in frame IDs )
 
       subroutine bltfrm ( frmcls, idset )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,11 +29,11 @@
       include 'ninert.inc'
       include 'nninrt.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               frmcls
-      integer               idset  ( lbcell : * )
+      integer(ip)           frmcls
+      integer(ip)           idset  ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -305,7 +306,7 @@
 !
 !     SPICELIB functions
 !
-      integer               sizei
+      integer(ip)           sizei
 
       logical               failed
       logical               return
@@ -313,10 +314,10 @@
 !
 !     Local parameters
 !
-      integer               nframe
+      integer(ip)           nframe
       parameter           ( nframe = ninert + nninrt )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -324,36 +325,36 @@
 !
       character*(frnmln)    frname ( nframe )
 
-      integer               ctrord ( nframe )
-      integer               center ( nframe )
-      integer               corder ( nframe )
-      integer               fclass ( nframe )
-      integer               fclsid ( nframe )
-      integer               fcode  ( nframe )
-      integer               i
-      integer               j
-      integer               to
+      integer(ip)           ctrord ( nframe )
+      integer(ip)           center ( nframe )
+      integer(ip)           corder ( nframe )
+      integer(ip)           fclass ( nframe )
+      integer(ip)           fclsid ( nframe )
+      integer(ip)           fcode  ( nframe )
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           to
 
       logical               pass1
 
 !
 !     Built-in frame hashes returned by ZZFDAT.
 !
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               maxbfr
+      integer(ip)           maxbfr
       parameter           ( maxbfr = nframe+1 )
 
-      integer               bnmlst  (          maxbfr )
-      integer               bnmpol  ( lbpool : maxbfr )
+      integer(ip)           bnmlst  (          maxbfr )
+      integer(ip)           bnmpol  ( lbpool : maxbfr )
       character*(frnmln)    bnmnms  (          maxbfr )
-      integer               bnmidx  (          maxbfr )
+      integer(ip)           bnmidx  (          maxbfr )
 
-      integer               bidlst  (          maxbfr )
-      integer               bidpol  ( lbpool : maxbfr )
-      integer               bidids  (          maxbfr )
-      integer               bididx  (          maxbfr )
+      integer(ip)           bidlst  (          maxbfr )
+      integer(ip)           bidpol  ( lbpool : maxbfr )
+      integer(ip)           bidids  (          maxbfr )
+      integer(ip)           bididx  (          maxbfr )
 
 !
 !     Saved variables

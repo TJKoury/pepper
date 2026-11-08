@@ -1,6 +1,7 @@
 !$Procedure RDKER ( Read a kernel file )
 
       subroutine rdker ( kernel, line, number, eof )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       character*(*)         kernel
       character*(*)         line
-      integer               number
+      integer(ip)           number
       logical               eof
 
 ! $ Brief_I/O
@@ -293,7 +294,7 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
       logical               return
       logical               failed
@@ -320,28 +321,28 @@
 !
 !     The ASCII decimal code for the tab character is 9.
 !
-      integer               tabcde
+      integer(ip)           tabcde
       parameter           ( tabcde = 9 )
 
-      integer               mrklen
+      integer(ip)           mrklen
       parameter           ( mrklen = 10 )
 
-      integer               bslash
+      integer(ip)           bslash
       parameter           ( bslash = 92 )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 
-      integer               intext
+      integer(ip)           intext
       parameter           ( intext = 1 )
 
-      integer               indata
+      integer(ip)           indata
       parameter           ( indata = intext + 1 )
 
-      integer               endoff
+      integer(ip)           endoff
       parameter           ( endoff = indata + 1 )
 
 !
@@ -352,10 +353,10 @@
       character*(filsiz)    file
       character*(lnsize)    first
 
-      integer               i
-      integer               r
-      integer               status
-      integer               linnum
+      integer(ip)           i
+      integer(ip)           r
+      integer(ip)           status
+      integer(ip)           linnum
 
       logical               end
       logical               frstim

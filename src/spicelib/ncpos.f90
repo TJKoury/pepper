@@ -1,6 +1,7 @@
 !$Procedure NCPOS ( NOT character position )
 
-      integer function ncpos ( str, chars, start )
+      integer(ip) function ncpos ( str, chars, start )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
 
       character*(*)         str
       character*(*)         chars
-      integer               start
+      integer(ip)           start
 
 ! $ Brief_I/O
 !
@@ -172,8 +173,8 @@
 !     Local variables
 !
       logical               found
-      integer               lenstr
-      integer               b
+      integer(ip)           lenstr
+      integer(ip)           b
 
 
       lenstr = len ( str )

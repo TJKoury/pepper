@@ -1,6 +1,7 @@
 !$Procedure DACOSN (arc cosine of bracketed argument)
 
-      double precision function dacosn ( arg, tol )
+      real(wp) function dacosn ( arg, tol )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -26,8 +27,8 @@
 
       implicit none
 
-      double precision   arg
-      double precision   tol
+      real(wp)           arg
+      real(wp)           tol
 
 ! $ Brief_I/O
 !
@@ -126,13 +127,13 @@
 !     Bracket ARG.
 !
 
-      dacosn      =  acos ( max ( - 1.d0, min ( 1.d0, arg ) ) )
+      dacosn      =  acos ( max ( - 1.0_wp, min ( 1.0_wp, arg ) ) )
 
 !
 !     Check that tolerance is non negative.
 !
 
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call chkin  ( 'DACOSN'                           )
          call setmsg ( 'TOL was #; must be non-negative.' )
@@ -148,7 +149,7 @@
 !     appropriate.
 !
 
-      if  ( ( abs ( arg ) - tol ) .gt. 1.d0) then
+      if  ( ( abs ( arg ) - tol ) .gt. 1.0_wp) then
 
          call chkin  ( 'DACOSN'                           )
          call setmsg ( 'The |argument| specified was greater '// &

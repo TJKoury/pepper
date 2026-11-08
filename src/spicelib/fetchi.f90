@@ -1,6 +1,7 @@
 !$Procedure FETCHI ( Fetch from an integer set )
 
-      integer function fetchi ( nth, set )
+      integer(ip) function fetchi ( nth, set )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               nth
-      integer               set      ( lbcell:* )
+      integer(ip)           nth
+      integer(ip)           set      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -175,7 +176,7 @@
 !
 !     SPICELIB functions
 !
-      integer            cardi
+      integer(ip)        cardi
       logical            return
 
 !

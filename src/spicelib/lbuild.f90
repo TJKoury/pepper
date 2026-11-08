@@ -1,6 +1,7 @@
 !$Procedure LBUILD ( Build a list in a character string )
 
       subroutine lbuild ( items, n, delim, list )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)    items ( * )
-      integer          n
+      integer(ip)      n
       character*(*)    delim
       character*(*)    list
 
@@ -156,19 +157,19 @@
 !
 !     SPICELIB functions
 !
-      integer          frstnb
-      integer          lastnb
+      integer(ip)      frstnb
+      integer(ip)      lastnb
 
 !
 !     Local variables
 !
-      integer          lpos
-      integer          first
-      integer          last
-      integer          dlen
-      integer          llen
-      integer          ilen
-      integer          i
+      integer(ip)      lpos
+      integer(ip)      first
+      integer(ip)      last
+      integer(ip)      dlen
+      integer(ip)      llen
+      integer(ip)      ilen
+      integer(ip)      i
 
 
 

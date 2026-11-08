@@ -4,6 +4,7 @@
                           targ2,  shape2, frame2, &
                           obsrvr, abcorr, &
                           bods,   frames, mxrad, obs )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,10 +34,10 @@
       character*(*)         frame2
       character*(*)         obsrvr
       character*(*)         abcorr
-      integer               bods   (2)
-      integer               frames (2)
-      double precision      mxrad  (2)
-      integer               obs
+      integer(ip)           bods   (2)
+      integer(ip)           frames (2)
+      real(wp)              mxrad  (2)
+      integer(ip)           obs
 
 ! $ Brief_I/O
 !
@@ -254,7 +255,7 @@
 !
 !     SPICELIB functions.
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               return
@@ -263,7 +264,7 @@
 !
 !     Local parameters
 !
-      integer               shapln
+      integer(ip)           shapln
       parameter           ( shapln = 6 )
 
 
@@ -273,22 +274,22 @@
       character*(shapln)    shap1
       character*(shapln)    shap2
 
-      double precision      axes1 (3)
-      double precision      axes2 (3)
+      real(wp)              axes1 (3)
+      real(wp)              axes2 (3)
 
-      integer               class
-      integer               clssid
-      integer               ctr1
-      integer               ctr2
-      integer               shp1
-      integer               shp2
+      integer(ip)           class
+      integer(ip)           clssid
+      integer(ip)           ctr1
+      integer(ip)           ctr2
+      integer(ip)           shp1
+      integer(ip)           shp2
 
       logical               attblk ( nabcor )
 
 !
 !     Below we initialize the list of shape names.
 !
-      integer               spshpn
+      integer(ip)           spshpn
       parameter           ( spshpn = 2 )
 
       character*(32)        svshap ( spshpn )
@@ -297,10 +298,10 @@
 !     Define integer ID parameters for the shape names in
 !     SVSHAP.
 !
-      integer               point
+      integer(ip)           point
       parameter           ( point = 1 )
 
-      integer               sphere
+      integer(ip)           sphere
       parameter           ( sphere = 2 )
 
       save                  svshap
@@ -429,7 +430,7 @@
 
       else if ( shp1 .eq. point ) then
 
-         mxrad(1) = 0.d0
+         mxrad(1) = 0.0_wp
 
       else if ( shp1 .eq. sphere ) then
 
@@ -480,7 +481,7 @@
 
       else if ( shp2 .eq. point ) then
 
-         mxrad(2) = 0.d0
+         mxrad(2) = 0.0_wp
 
       else if ( shp2 .eq. sphere ) then
 

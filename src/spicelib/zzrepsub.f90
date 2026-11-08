@@ -1,6 +1,7 @@
 !$Procedure      ZZREPSUB ( Replace one substring with another )
 
       subroutine zzrepsub ( in, left, right, string, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,8 +25,8 @@
 
       implicit none
       character*(*)         in
-      integer               left
-      integer               right
+      integer(ip)           left
+      integer(ip)           right
       character*(*)         string
       character*(*)         out
 
@@ -163,23 +164,23 @@
 !
 !     SPICELIB functions
 !
-      integer               sumai
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               inlen
-      integer               strlen
-      integer               outlen
+      integer(ip)           inlen
+      integer(ip)           strlen
+      integer(ip)           outlen
 
-      integer               remain
-      integer               use         ( 3 )
+      integer(ip)           remain
+      integer(ip)           use         ( 3 )
 
-      integer               end
-      integer               next
-      integer               i
-      integer               myleft
-      integer               myrght
+      integer(ip)           end
+      integer(ip)           next
+      integer(ip)           i
+      integer(ip)           myleft
+      integer(ip)           myrght
 
 !
 !     Get the lengths of all the strings involved in this transaction.

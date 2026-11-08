@@ -4,6 +4,7 @@
                           tvec,   ntvec, type, &
                           modify, mods,  yabbrv, succes, &
                           pictur, error )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,8 +26,8 @@
       implicit none
 
       character*(*)         string
-      double precision      tvec   ( * )
-      integer               ntvec
+      real(wp)              tvec   ( * )
+      integer(ip)           ntvec
       character*(*)         type
       character*(*)         modify ( * )
       logical               mods
@@ -563,10 +564,10 @@
 !
 !     SPICELIB Functions
 !
-      integer               bsrchc
-      integer               isrchc
-      integer               intmax
-      integer               rtrim
+      integer(ip)           bsrchc
+      integer(ip)           isrchc
+      integer(ip)           intmax
+      integer(ip)           rtrim
 
 !
 !     Private Functions
@@ -595,26 +596,26 @@
 !     SYSTEM
 !
 
-      integer               era
+      integer(ip)           era
       parameter           ( era    =  1 )
 
-      integer               wday
+      integer(ip)           wday
       parameter           ( wday   = era    + 1 )
 
-      integer               zone
+      integer(ip)           zone
       parameter           ( zone   = wday   + 1 )
 
-      integer               ampm
+      integer(ip)           ampm
       parameter           ( ampm   = zone   + 1 )
 
-      integer               system
+      integer(ip)           system
       parameter           ( system = ampm   + 1 )
 
-      integer               nmods
+      integer(ip)           nmods
       parameter           ( nmods = system )
 
-      integer               begs ( nmods )
-      integer               ends ( nmods )
+      integer(ip)           begs ( nmods )
+      integer(ip)           ends ( nmods )
 
 
       logical               havera
@@ -628,13 +629,13 @@
 !     The number of known time patterns NKNOWN comes from the include
 !     file timepars.inc
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 12 )
 
-      integer               room
+      integer(ip)           room
       parameter           ( room = 300 )
 
-      integer               nknown
+      integer(ip)           nknown
       character*(wdsize)    known ( room )
       character*(wdsize)    meanng( room )
       character*(wdsize)    rep
@@ -643,13 +644,13 @@
 !
 !     Time Zone Variables
 !
-      integer               zsize
+      integer(ip)           zsize
       parameter           ( zsize = 3 )
 
-      integer               osize
+      integer(ip)           osize
       parameter           ( osize = 6 )
 
-      integer               nzones
+      integer(ip)           nzones
       parameter           ( nzones = 8 )
 
       character*(zsize)     zones ( nzones )
@@ -658,18 +659,18 @@
 
 
 
-      integer               b
-      integer               b1
-      integer               b2
-      integer               e
-      integer               e1
-      integer               e2
-      integer               from
-      integer               i
-      integer               mapto
-      integer               to
-      integer               use
-      integer               r
+      integer(ip)           b
+      integer(ip)           b1
+      integer(ip)           b2
+      integer(ip)           e
+      integer(ip)           e1
+      integer(ip)           e2
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           mapto
+      integer(ip)           to
+      integer(ip)           use
+      integer(ip)           r
 
 
 

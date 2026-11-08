@@ -1,6 +1,7 @@
 !$Procedure ZZELNAXX ( ellipse normal axis intercepts )
 
       subroutine zzelnaxx ( a, b, lat, xxpt, yxpt )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -27,11 +28,11 @@
 
       implicit none
 
-      double precision      a
-      double precision      b
-      double precision      lat
-      double precision      xxpt
-      double precision      yxpt
+      real(wp)              a
+      real(wp)              b
+      real(wp)              lat
+      real(wp)              xxpt
+      real(wp)              yxpt
 
 ! $ Brief_I/O
 !
@@ -208,15 +209,15 @@
 !
 !     Local variables
 !
-      double precision      ept    ( 3 )
-      double precision      normal ( 3 )
+      real(wp)              ept    ( 3 )
+      real(wp)              normal ( 3 )
 
 
       if ( return() ) then
          return
       end if
 
-      if (  ( a .le. 0.d0 ) .or. ( b .le. 0.d0 )  ) then
+      if (  ( a .le. 0.0_wp ) .or. ( b .le. 0.0_wp )  ) then
 
          call chkin  ( 'ZZELNAXX'                             )
          call setmsg ( 'Semi-axis lengths were A = #; B = #. ' &
@@ -240,7 +241,7 @@
 !
       normal(1) = cos( lat )
       normal(2) = sin( lat )
-      normal(3) = 0.d0
+      normal(3) = 0.0_wp
 
       call ednmpt ( a, b, b, normal, ept )
 
@@ -249,9 +250,9 @@
 !     passing through EPT and parallel to a normal vector
 !     at EPT. Refer to the Particulars above for details.
 !
-      xxpt = (  1.d0 - ( (b/a)**2 )  ) * ept(1)
+      xxpt = (  1.0_wp - ( (b/a)**2 )  ) * ept(1)
 
-      yxpt = (  1.d0 - ( (a/b)**2 )  ) * ept(2)
+      yxpt = (  1.0_wp - ( (a/b)**2 )  ) * ept(2)
 
       return
       end

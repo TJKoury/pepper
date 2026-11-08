@@ -1,6 +1,7 @@
 !$Procedure DIFFD ( Difference of two double precision sets )
 
       subroutine diffd ( a, b, c )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision   a      ( lbcell:* )
-      double precision   b      ( lbcell:* )
-      double precision   c      ( lbcell:* )
+      real(wp)           a      ( lbcell:* )
+      real(wp)           b      ( lbcell:* )
+      real(wp)           c      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -164,23 +165,23 @@
 !
 !     SPICELIB functions
 !
-      integer             cardd
-      integer             sized
+      integer(ip)         cardd
+      integer(ip)         sized
       logical             return
 
 !
 !     Local variables
 !
 
-      integer             apoint
-      integer             bpoint
+      integer(ip)         apoint
+      integer(ip)         bpoint
 
-      integer             csize
-      integer             acard
-      integer             bcard
-      integer             ccard
+      integer(ip)         csize
+      integer(ip)         acard
+      integer(ip)         bcard
+      integer(ip)         ccard
 
-      integer             over
+      integer(ip)         over
 
 
 

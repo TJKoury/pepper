@@ -1,6 +1,7 @@
 !$Procedure SPKR14 ( Read SPK record from segment, type 14 )
 
       subroutine spkr14 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( * )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( * )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -159,19 +160,19 @@
 !     The number of constant values stored with a type 14 segment
 !     segment.
 !
-      integer               nconst
+      integer(ip)           nconst
       parameter           ( nconst = 1  )
 !
 !     The beginning location in the output record for the non constant
 !     segment data.
 !
-      integer               begel1
+      integer(ip)           begel1
       parameter           ( begel1 = nconst + 1      )
 
-      double precision      value
+      real(wp)              value
 
-      integer               ends
-      integer               indx
+      integer(ip)           ends
+      integer(ip)           indx
 
       logical               found
 

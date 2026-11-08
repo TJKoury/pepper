@@ -2,6 +2,7 @@
 
       subroutine ckw02 ( handle, begtim, endtim, inst,  ref,  segid, &
                          nrec,   start,  stop,   quats, avvs, rates )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,18 +23,18 @@
 
       implicit none
 
-      integer               handle
-      double precision      begtim
-      double precision      endtim
-      integer               inst
+      integer(ip)           handle
+      real(wp)              begtim
+      real(wp)              endtim
+      integer(ip)           inst
       character*(*)         ref
       character*(*)         segid
-      integer               nrec
-      double precision      start  (      * )
-      double precision      stop   (      * )
-      double precision      quats  ( 0:3, * )
-      double precision      avvs   (   3, * )
-      double precision      rates  (      * )
+      integer(ip)           nrec
+      real(wp)              start  (      * )
+      real(wp)              stop   (      * )
+      real(wp)              quats  ( 0:3, * )
+      real(wp)              avvs   (   3, * )
+      real(wp)              rates  (      * )
 
 ! $ Brief_I/O
 !
@@ -687,7 +688,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               return
       logical               failed
@@ -717,41 +718,41 @@
 !              character.
 !
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc     =   5 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   2 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 
 !
 !     Local variables
 !
-      double precision      dcd    ( nd    )
-      double precision      dirent
-      double precision      descr  ( ndc   )
+      real(wp)              dcd    ( nd    )
+      real(wp)              dirent
+      real(wp)              descr  ( ndc   )
 
-      integer               i
-      integer               icd    ( ni    )
-      integer               index
-      integer               ndir
-      integer               refcod
-      integer               value
+      integer(ip)           i
+      integer(ip)           icd    ( ni    )
+      integer(ip)           index
+      integer(ip)           ndir
+      integer(ip)           refcod
+      integer(ip)           value
 
 
 !
@@ -900,7 +901,7 @@
 !     For the first interval also make sure that the START time is
 !     nonnegative.
 !
-      if ( start(1) .lt. 0.d0 ) then
+      if ( start(1) .lt. 0.0_wp ) then
 
          call setmsg ( 'The first START time: # is negative.'  )
          call errdp  ( '#', start(1)                           )
@@ -1032,7 +1033,7 @@
       index = 100
 
       do i = 1, ndir
-         dirent   =  ( stop(index) + start(index+1) ) / 2.d0
+         dirent   =  ( stop(index) + start(index+1) ) / 2.0_wp
          call dafada ( dirent, 1 )
          index    =    index + 100
       end do

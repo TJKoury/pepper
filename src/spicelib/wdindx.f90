@@ -1,6 +1,7 @@
 !$Procedure WDINDX ( Index of a Word Within a String )
 
-      integer function wdindx ( string, word )
+      integer(ip) function wdindx ( string, word )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -128,25 +129,25 @@
 !
 !     SPICELIB functions
 !
-      integer          frstnb
-      integer          lastnb
+      integer(ip)      frstnb
+      integer(ip)      lastnb
 
 !
 !     Local variables
 !
-      integer          i
-      integer          j
+      integer(ip)      i
+      integer(ip)      j
 
-      integer          begwd
-      integer          endwd
+      integer(ip)      begwd
+      integer(ip)      endwd
 
-      integer          begstr
-      integer          endstr
+      integer(ip)      begstr
+      integer(ip)      endstr
 
-      integer          strlen
-      integer          wdlen
+      integer(ip)      strlen
+      integer(ip)      wdlen
 
-      integer          bgtond
+      integer(ip)      bgtond
 
 !
 !     Find the ends of the word and input string.

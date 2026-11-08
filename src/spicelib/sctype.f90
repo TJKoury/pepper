@@ -1,6 +1,7 @@
 !$Procedure SCTYPE ( SCLK type )
 
-      integer function sctype ( sc )
+      integer(ip) function sctype ( sc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       include               'zzctr.inc'
 
-      integer               sc
+      integer(ip)           sc
 
 ! $ Brief_I/O
 !

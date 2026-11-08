@@ -1,6 +1,7 @@
 !$Procedure SGFPKT ( Generic Segment: Fetch data packets )
 
       subroutine sgfpkt ( handle, descr, first, last, values, ends )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,12 +21,12 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               first
-      integer               last
-      double precision      values  ( * )
-      integer               ends    ( * )
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           first
+      integer(ip)           last
+      real(wp)              values  ( * )
+      integer(ip)           ends    ( * )
 
 ! $ Brief_I/O
 !
@@ -204,23 +205,23 @@
 !
 !     Local Variables
 !
-      double precision      dtemp(2)
+      real(wp)              dtemp(2)
 
-      integer               b
-      integer               begin1
-      integer               begin2
-      integer               e
-      integer               i
-      integer               mynpdr
-      integer               mynpkt
-      integer               mypdrb
-      integer               mypdrt
-      integer               mypksz
-      integer               mypktb
-      integer               mypkto
-      integer               size
-      integer               soffst
-      integer               voffst
+      integer(ip)           b
+      integer(ip)           begin1
+      integer(ip)           begin2
+      integer(ip)           e
+      integer(ip)           i
+      integer(ip)           mynpdr
+      integer(ip)           mynpkt
+      integer(ip)           mypdrb
+      integer(ip)           mypdrt
+      integer(ip)           mypksz
+      integer(ip)           mypktb
+      integer(ip)           mypkto
+      integer(ip)           size
+      integer(ip)           soffst
+      integer(ip)           voffst
 !
 !     Standard SPICE error handling.
 !

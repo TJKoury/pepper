@@ -1,6 +1,7 @@
 !$Procedure SSIZED ( Set the size of a double precision cell )
 
       subroutine ssized ( size, cell )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer          size
-      double precision cell   ( lbcell:* )
+      integer(ip)      size
+      real(wp) cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -174,7 +175,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 
 
@@ -199,11 +200,11 @@
 !
 !     Not much to this.
 !
-      cell(-1) = dble ( size )
-      cell( 0) = 0.0d0
+      cell(-1) = real( size, wp )
+      cell( 0) = 0.0_wp
 
       do i = lbcell, -2
-         cell(i) = 0.0d0
+         cell(i) = 0.0_wp
       end do
 
 

@@ -2,6 +2,7 @@
 
       subroutine zzaddlnk ( aval,   bval,  maxa, &
                             cellsz, pntrs, ncell, cells )
+      use pepper_kinds, only: ip
       implicit none
 
 ! $ Abstract
@@ -23,13 +24,13 @@
 !
 ! $ Declarations
 
-      integer               aval
-      integer               bval
-      integer               maxa
-      integer               cellsz
-      integer               pntrs  ( * )
-      integer               ncell
-      integer               cells  ( 2, * )
+      integer(ip)           aval
+      integer(ip)           bval
+      integer(ip)           maxa
+      integer(ip)           cellsz
+      integer(ip)           pntrs  ( * )
+      integer(ip)           ncell
+      integer(ip)           cells  ( 2, * )
 
 ! $ Brief_I/O
 !

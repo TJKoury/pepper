@@ -1,6 +1,7 @@
 !$Procedure  ZZEKJSQZ ( Private: EK, join row set squeeze )
 
       subroutine zzekjsqz ( jrsbas )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
       include 'ekjrs.inc'
       include 'ekqlimit.inc'
 
-      integer               jrsbas
+      integer(ip)           jrsbas
 
 ! $ Brief_I/O
 !
@@ -139,35 +140,35 @@
 !
 !     Local variables
 !
-      integer               cntloc
-      integer               delta
-      integer               i
-      integer               j
-      integer               nsvdel
-      integer               nrvdel
-      integer               newnsv
-      integer               nr
-      integer               nrloc
-      integer               nsv
-      integer               nsvloc
-      integer               ntab
-      integer               ntloc
-      integer               pcpair ( 2 )
-      integer               ptarg
-      integer               ptbase
-      integer               ptrloc
-      integer               rc
-      integer               rbase
-      integer               rowvec ( maxtab+1 )
-      integer               rtarg
-      integer               rvsize
-      integer               segvec ( maxtab )
-      integer               setbas
-      integer               size
-      integer               sizloc
-      integer               svbase
-      integer               svsize
-      integer               vtarg
+      integer(ip)           cntloc
+      integer(ip)           delta
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           nsvdel
+      integer(ip)           nrvdel
+      integer(ip)           newnsv
+      integer(ip)           nr
+      integer(ip)           nrloc
+      integer(ip)           nsv
+      integer(ip)           nsvloc
+      integer(ip)           ntab
+      integer(ip)           ntloc
+      integer(ip)           pcpair ( 2 )
+      integer(ip)           ptarg
+      integer(ip)           ptbase
+      integer(ip)           ptrloc
+      integer(ip)           rc
+      integer(ip)           rbase
+      integer(ip)           rowvec ( maxtab+1 )
+      integer(ip)           rtarg
+      integer(ip)           rvsize
+      integer(ip)           segvec ( maxtab )
+      integer(ip)           setbas
+      integer(ip)           size
+      integer(ip)           sizloc
+      integer(ip)           svbase
+      integer(ip)           svsize
+      integer(ip)           vtarg
 
 !
 !     Use discovery check-in.

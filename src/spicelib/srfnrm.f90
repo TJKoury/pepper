@@ -2,6 +2,7 @@
 
       subroutine srfnrm ( method, target, et,    fixref, &
                           npts,   srfpts, normls        )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -38,11 +39,11 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
-      integer               npts
-      double precision      srfpts ( 3, * )
-      double precision      normls ( 3, * )
+      integer(ip)           npts
+      real(wp)              srfpts ( 3, * )
+      real(wp)              normls ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -823,10 +824,10 @@
       character*(*)         rname
       parameter           ( rname  = 'SRFNRM' )
 
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -838,25 +839,25 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmtyp
 
-      double precision      a2
-      double precision      b2
-      double precision      c2
-      double precision      level
-      double precision      limit
-      double precision      maxr
-      double precision      ptsrfm
+      real(wp)              a2
+      real(wp)              b2
+      real(wp)              c2
+      real(wp)              level
+      real(wp)              limit
+      real(wp)              maxr
+      real(wp)              ptsrfm
 
-      integer               fixfid
-      integer               fxcent
-      integer               fxclss
-      integer               fxclid
-      integer               i
-      integer               n
-      integer               nsurf
-      integer               shape
-      integer               srfctr ( ctrsiz )
-      integer               srflst ( maxsrf )
-      integer               trgcde
+      integer(ip)           fixfid
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxclid
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           nsurf
+      integer(ip)           shape
+      integer(ip)           srfctr ( ctrsiz )
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           trgcde
 
       logical               first
       logical               fnd
@@ -866,24 +867,24 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(bdnmln)    svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfxfc
+      integer(ip)           svfxfc
 
 !
 !     Saved target radius values.
 !
-      integer               svctr3 ( ctrsiz )
-      integer               svprvt
-      double precision      svradi ( 3 )
+      integer(ip)           svctr3 ( ctrsiz )
+      integer(ip)           svprvt
+      real(wp)              svradi ( 3 )
 
 !
 !     Saved name/ID items.
@@ -1124,7 +1125,7 @@
             return
          end if
 
-         if (  min( svradi(1), svradi(2), svradi(3) ) .le. 0.d0 ) then
+         if (  min( svradi(1), svradi(2), svradi(3) ) .le. 0.0_wp ) then
 
             call setmsg ( 'Body # radii should be positive but ' &
             //            'were # # #.'                         )
@@ -1163,13 +1164,13 @@
 
             level = (   ( srfpts(1,i)*srfpts(1,i) / a2 ) &
                       + ( srfpts(2,i)*srfpts(2,i) / b2 ) &
-                      + ( srfpts(3,i)*srfpts(3,i) / c2 )  ) ** 0.5d0
+                      + ( srfpts(3,i)*srfpts(3,i) / c2 )  ) ** 0.5_wp
 
 !
 !           The test below is a distance test if the target shape
 !           is a sphere. For other ellipsoids, it's an approximation.
 !
-            if ( abs( level - 1.d0 ) .ge. limit ) then
+            if ( abs( level - 1.0_wp ) .ge. limit ) then
 
                call setmsg ( 'Input point at index # is not on ' &
                //            'the target body surface. The ' &

@@ -1,6 +1,7 @@
 !$Procedure EKFFLD ( EK, finish fast write )
 
       subroutine ekffld ( handle, segno, rcptrs )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       include 'eksegdsc.inc'
 
-      integer               handle
-      integer               segno
-      integer               rcptrs ( * )
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -415,8 +416,8 @@
 !
 !     Local variables
 !
-      integer               segdsc ( sdscsz )
-      integer               stype
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           stype
 
 !
 !     Standard SPICE error handling.

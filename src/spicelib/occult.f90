@@ -3,6 +3,7 @@
       subroutine occult ( targ1,  shape1, frame1, &
                           targ2,  shape2, frame2, &
                           abcorr, obsrvr, et,     ocltid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -42,8 +43,8 @@
       character*(*)         frame2
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      et
-      integer               ocltid
+      real(wp)              et
+      integer(ip)           ocltid
 
 ! $ Brief_I/O
 !
@@ -800,10 +801,10 @@
 !
 !     Local parameters
 !
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 !
 !     Local variables
@@ -827,13 +828,13 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmtyp
 
-      integer               i
-      integer               id1
-      integer               id2
-      integer               index
-      integer               mltfac
-      integer               nsurf
-      integer               srflst ( maxsrf )
+      integer(ip)           i
+      integer(ip)           id1
+      integer(ip)           id2
+      integer(ip)           index
+      integer(ip)           mltfac
+      integer(ip)           nsurf
+      integer(ip)           srflst ( maxsrf )
 
       logical               ellps2
       logical               found

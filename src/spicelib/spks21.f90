@@ -1,6 +1,7 @@
 !$Procedure SPKS21 ( S/P Kernel, subset, type 21 )
 
       subroutine spks21 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       include 'spk21.inc'
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -132,26 +133,26 @@
 !
 !     Local parameters
 !
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               maxdsz
+      integer(ip)           maxdsz
       parameter           ( maxdsz =  (4 * maxtrm) + 11 )
 
 !
 !     Local variables
 !
-      double precision      data     ( maxdsz )
+      real(wp)              data     ( maxdsz )
 
-      integer               dlsize
-      integer               maxdim
-      integer               nrec
-      integer               ndir
-      integer               offe
-      integer               first
-      integer               last
-      integer               offset
-      integer               i
+      integer(ip)           dlsize
+      integer(ip)           maxdim
+      integer(ip)           nrec
+      integer(ip)           ndir
+      integer(ip)           offe
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           offset
+      integer(ip)           i
 
 
 !
@@ -266,9 +267,9 @@
 !     Add the maximum difference line dimension and the
 !     number of records, and we're done.
 !
-      call dafada ( dble( maxdim ), 1 )
+      call dafada ( real( maxdim, wp ), 1 )
 
-      data(1) = dble ( last - first + 1 )
+      data(1) = real( last - first + 1, wp )
 
       call dafada ( data, 1 )
 

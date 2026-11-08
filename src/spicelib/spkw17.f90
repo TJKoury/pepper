@@ -2,6 +2,7 @@
 
       subroutine spkw17 ( handle, body,  center, frame, first, last, &
                           segid,  epoch, eqel,   rapol, decpol  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,17 +20,17 @@
 
       implicit none
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      double precision      epoch
-      double precision      eqel  ( 9 )
-      double precision      rapol
-      double precision      decpol
+      real(wp)              epoch
+      real(wp)              eqel  ( 9 )
+      real(wp)              rapol
+      real(wp)              decpol
 
 ! $ Brief_I/O
 !
@@ -408,7 +409,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -419,47 +420,47 @@
 !
 !     Segment descriptor size
 !
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns      =   5 )
 
 !
 !     Segment identifier size
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
 !
 !     SPK data type
 !
-      integer               type
+      integer(ip)           type
       parameter           ( type    = 17 )
 
 !
 !     Range of printing characters
 !
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 !
 !     Number of items in a segment
 !
-      integer               datsiz
+      integer(ip)           datsiz
       parameter           ( datsiz  = 12 )
 
 
 
-      double precision      a
-      double precision      descr  ( ns )
-      double precision      h
-      double precision      k
-      double precision      ecc
-      double precision      record ( datsiz )
+      real(wp)              a
+      real(wp)              descr  ( ns )
+      real(wp)              h
+      real(wp)              k
+      real(wp)              ecc
+      real(wp)              record ( datsiz )
 
-      integer               i
-      integer               value
+      integer(ip)           i
+      integer(ip)           value
 
 
 !
@@ -509,7 +510,7 @@
          call chkout ( 'SPKW17'                )
          return
 
-      else if ( ecc .gt. 0.9d0 ) then
+      else if ( ecc .gt. 0.9_wp ) then
 
          call setmsg ( 'The eccentricity supplied for a type 17 ' &
          //            'segment is greater than 0.9.  It must be ' &

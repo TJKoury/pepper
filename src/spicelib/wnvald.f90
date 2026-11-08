@@ -1,6 +1,7 @@
 !$Procedure WNVALD ( Validate a DP window )
 
       subroutine wnvald ( size, n, window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               size
-      integer               n
-      double precision      window ( lbcell:* )
+      integer(ip)           size
+      integer(ip)           n
+      real(wp)              window ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -253,9 +254,9 @@
 !
 !     Local variables
 !
-      double precision      left
-      double precision      right
-      integer               i
+      real(wp)              left
+      real(wp)              right
+      integer(ip)           i
 
 !
 !     Setting up error processing.

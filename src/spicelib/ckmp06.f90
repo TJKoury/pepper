@@ -2,6 +2,7 @@
 
       subroutine ckmp06 ( handle, descr,  msno, rate, &
                           subtyp, winsiz, nrec, ivlbds, lstepc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,15 +23,15 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr  ( * )
-      integer               msno
-      double precision      rate
-      integer               subtyp
-      integer               winsiz
-      integer               nrec
-      double precision      ivlbds ( 2 )
-      double precision      lstepc
+      integer(ip)           handle
+      real(wp)              descr  ( * )
+      integer(ip)           msno
+      real(wp)              rate
+      integer(ip)           subtyp
+      integer(ip)           winsiz
+      integer(ip)           nrec
+      real(wp)              ivlbds ( 2 )
+      real(wp)              lstepc
 
 ! $ Brief_I/O
 !
@@ -508,47 +509,47 @@
 !                   operates on.
 !
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype  = 6 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 2 )
 
 !
 !     Mini-segment control area size:
 !
-      integer               mctlsz
+      integer(ip)           mctlsz
       parameter           ( mctlsz = 4 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = mctlsz )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
 !
 !     Local variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      dc     ( nd )
-      double precision      dpdata ( 1  )
+      real(wp)              buffer ( bufsiz )
+      real(wp)              dc     ( nd )
+      real(wp)              dpdata ( 1  )
 
-      integer               baddr
-      integer               eaddr
-      integer               epaddr
-      integer               ic     ( ni )
-      integer               minie
-      integer               ndir
-      integer               nepdir
-      integer               nintvl
-      integer               ivlbas
-      integer               ptrbas
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      integer(ip)           epaddr
+      integer(ip)           ic     ( ni )
+      integer(ip)           minie
+      integer(ip)           ndir
+      integer(ip)           nepdir
+      integer(ip)           nintvl
+      integer(ip)           ivlbas
+      integer(ip)           ptrbas
 
 !
 !     Standard SPICE error handling.

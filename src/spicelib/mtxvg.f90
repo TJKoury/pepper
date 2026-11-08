@@ -1,6 +1,7 @@
 !$Procedure MTXVG ( Matrix transpose times vector, general dimension )
 
       subroutine mtxvg ( m1, v2, nc1, nr1r2, vout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer            nc1
-      integer            nr1r2
-      double precision   m1   ( nr1r2,nc1 )
-      double precision   v2   ( nr1r2     )
-      double precision   vout (       nc1 )
+      integer(ip)        nc1
+      integer(ip)        nr1r2
+      real(wp)           m1   ( nr1r2,nc1 )
+      real(wp)           v2   ( nr1r2     )
+      real(wp)           vout (       nc1 )
 
 ! $ Brief_I/O
 !
@@ -192,8 +193,8 @@
 !
 !     Local variables
 !
-      double precision sum
-      integer          i,k
+      real(wp) sum
+      integer(ip)      i,k
 
 
 !
@@ -201,7 +202,7 @@
 !
       do i = 1, nc1
 
-         sum = 0.d0
+         sum = 0.0_wp
 
          do k = 1, nr1r2
             sum = sum + m1(k,i)*v2(k)

@@ -1,6 +1,7 @@
 !$Procedure ANA ( AN or A ? )
 
       character*(*) function ana ( word, case )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -151,15 +152,15 @@
 !-&
 
 
-      integer               isrchc
+      integer(ip)           isrchc
 
-      integer               anwrds
+      integer(ip)           anwrds
       parameter           ( anwrds = 22 )
 
-      integer               awrds
+      integer(ip)           awrds
       parameter           ( awrds  = 33 )
 
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
       character*(8)         anword ( anwrds )
@@ -170,8 +171,8 @@
       character*(1)         begin
 
 
-      integer               i
-      integer               caps
+      integer(ip)           i
+      integer(ip)           caps
 
       character*(wdsize)    start ( 7 )
 

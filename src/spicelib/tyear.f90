@@ -1,6 +1,7 @@
 !$Procedure TYEAR ( Seconds per tropical year )
 
-      double precision function tyear ()
+      real(wp) function tyear ()
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -94,6 +95,6 @@
 !-&
 
 
-      tyear = 31556925.9747d0
+      tyear = 31556925.9747_wp
       return
       end

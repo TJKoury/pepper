@@ -1,6 +1,7 @@
 !$Procedure TRACEG ( Trace of a matrix, general dimension )
 
-      double precision function  traceg ( matrix, ndim )
+      real(wp) function  traceg ( matrix, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      integer            ndim
-      double precision   matrix ( ndim,ndim )
+      integer(ip)        ndim
+      real(wp)           matrix ( ndim,ndim )
 
 ! $ Brief_I/O
 !
@@ -190,9 +191,9 @@
 !-&
 
 
-      integer         i
+      integer(ip)     i
 
-      traceg = 0.0d0
+      traceg = 0.0_wp
       do i = 1,ndim
          traceg = traceg + matrix(i,i)
       end do

@@ -1,6 +1,7 @@
 !$Procedure      ZZUTCPM ( UTC Plus or Minus Parse )
 
       subroutine zzutcpm ( string, start, hoff, moff, last, succes )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
       character*(*)         string
-      integer               start
-      double precision      hoff
-      double precision      moff
-      integer               last
+      integer(ip)           start
+      real(wp)              hoff
+      real(wp)              moff
+      integer(ip)           last
       logical               succes
 
 ! $ Brief_I/O
@@ -119,21 +120,21 @@
 !
 !     Local Variables
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
       character*(lnsize)    error
 
-      integer               need
-      integer               length
-      integer               signat
-      integer               unsat
-      integer               unsto
-      integer               nchar
-      integer               ptr
+      integer(ip)           need
+      integer(ip)           length
+      integer(ip)           signat
+      integer(ip)           unsat
+      integer(ip)           unsto
+      integer(ip)           nchar
+      integer(ip)           ptr
 
-      double precision      sign
-      double precision      x
+      real(wp)              sign
+      real(wp)              x
 
 !
 !     This is a special purpose routine.  The input string must have
@@ -141,8 +142,8 @@
 !     goes wrong, we just bail out and leave HOFF and MOFF right at
 !     zero.
 !
-      hoff   =  0.0d0
-      moff   =  0.0d0
+      hoff   =  0.0_wp
+      moff   =  0.0_wp
       last   =  start - 1
       succes = .false.
 
@@ -160,9 +161,9 @@
       end if
 
       if       ( ichar(string(signat:signat)) .eq. ichar('+') ) then
-         sign =  1.0d0
+         sign =  1.0_wp
       else if  ( ichar(string(signat:signat)) .eq. ichar('-') ) then
-         sign = -1.0d0
+         sign = -1.0_wp
       else
          return
       end if
@@ -175,7 +176,7 @@
       if ( nchar .gt. 0 .and. nchar .lt. 3 ) then
          call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         if ( x .ge. 13.0d0 ) then
+         if ( x .ge. 13.0_wp ) then
             return
          end if
 
@@ -203,7 +204,7 @@
       if ( nchar .gt. 0 .and. nchar .lt. 3 ) then
          call nparsd ( string(unsat:unsto), x, error, ptr )
 
-         if ( x .gt. 59.0d0 ) then
+         if ( x .gt. 59.0_wp ) then
             return
          end if
 

@@ -1,6 +1,7 @@
 !$Procedure WNEXTD ( Extract the endpoints from a DP window )
 
       subroutine wnextd ( side, window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*1           side
-      double precision      window  ( lbcell:* )
+      real(wp)              window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -155,14 +156,14 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
+      integer(ip)           cardd
       logical               return
 
 !
 !     Local variables
 !
-      integer               card
-      integer               i
+      integer(ip)           card
+      integer(ip)           i
 
 
 

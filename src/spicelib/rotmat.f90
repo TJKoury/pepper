@@ -1,6 +1,7 @@
 !$Procedure ROTMAT ( Rotate a matrix )
 
       subroutine rotmat ( m1, angle, iaxis, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      double precision   m1    ( 3,3 )
-      double precision   angle
-      integer            iaxis
-      double precision   mout  ( 3,3 )
+      real(wp)           m1    ( 3,3 )
+      real(wp)           angle
+      integer(ip)        iaxis
+      real(wp)           mout  ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -159,18 +160,18 @@
 !-&
 
 
-      double precision      s
-      double precision      c
+      real(wp)              s
+      real(wp)              c
 
-      integer               temp
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               i
+      integer(ip)           temp
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           i
 
-      double precision      prodm   (3,3)
+      real(wp)              prodm   (3,3)
 
-      integer               indexs  (5)
+      integer(ip)           indexs  (5)
       save                  indexs
 
       data                  indexs  / 3, 1, 2, 3, 1 /

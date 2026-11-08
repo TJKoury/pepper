@@ -1,6 +1,7 @@
 !$Procedure ZZVOX2ID ( Return voxel index from coords )
 
-      integer function zzvox2id ( vixyz, nvox )
+      integer(ip) function zzvox2id ( vixyz, nvox )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,8 +27,8 @@
 
       implicit              none
 
-      integer               nvox   ( 3 )
-      integer               vixyz  ( 3 )
+      integer(ip)           nvox   ( 3 )
+      integer(ip)           vixyz  ( 3 )
 
 ! $ Brief_I/O
 !

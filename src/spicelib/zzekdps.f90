@@ -1,6 +1,7 @@
 !$Procedure      ZZEKDPS ( EK, delete page from segment )
 
       subroutine zzekdps ( handle, segdsc, type, p )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               type
-      integer               p
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           type
+      integer(ip)           p
 
 ! $ Brief_I/O
 !
@@ -124,14 +125,14 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrls
+      integer(ip)           zzektrls
 
 !
 !     Local variables
 !
-      integer               mbase
-      integer               loc
-      integer               tree
+      integer(ip)           mbase
+      integer(ip)           loc
+      integer(ip)           tree
 
 
 !

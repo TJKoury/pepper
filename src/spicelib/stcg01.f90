@@ -2,6 +2,7 @@
 
       subroutine stcg01 ( index,  ra,     dec,    rasig, &
                           decsig, catnum, sptype, vmag )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,14 +20,14 @@
 
       implicit none
 
-      integer               index
-      double precision      ra
-      double precision      dec
-      double precision      rasig
-      double precision      decsig
-      integer               catnum
+      integer(ip)           index
+      real(wp)              ra
+      real(wp)              dec
+      real(wp)              rasig
+      real(wp)              decsig
+      integer(ip)           catnum
       character*(*)         sptype
-      double precision      vmag
+      real(wp)              vmag
 
 ! $ Brief_I/O
 !
@@ -199,7 +200,7 @@
 !     SPICELIB functions
 !
       logical               return
-      double precision      rpd
+      real(wp)              rpd
 
 !
 !     Local variables.

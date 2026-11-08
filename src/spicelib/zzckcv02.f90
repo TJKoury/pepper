@@ -2,6 +2,7 @@
 
       subroutine zzckcv02 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,16 +27,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               handle
-      integer               arrbeg
-      integer               arrend
-      integer               sclkid
-      double precision      tol
+      integer(ip)           handle
+      integer(ip)           arrbeg
+      integer(ip)           arrend
+      integer(ip)           sclkid
+      real(wp)              tol
       character*(*)         timsys
-      double precision      schedl ( lbcell:* )
+      real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -163,28 +164,28 @@
 !
 !     Local Parameters
 !
-      integer               psize
+      integer(ip)           psize
       parameter           ( psize = 8 )
 
-      integer               bsize
+      integer(ip)           bsize
       parameter           ( bsize = 100 )
 
 !
 !     Local Variables
 !
-      double precision      begin
-      double precision      et
-      double precision      finish
-      double precision      first ( bsize )
-      double precision      last  ( bsize )
+      real(wp)              begin
+      real(wp)              et
+      real(wp)              finish
+      real(wp)              first ( bsize )
+      real(wp)              last  ( bsize )
 
-      integer               arrsiz
-      integer               begat
-      integer               endat
-      integer               get
-      integer               got
-      integer               i
-      integer               nrec
+      integer(ip)           arrsiz
+      integer(ip)           begat
+      integer(ip)           endat
+      integer(ip)           get
+      integer(ip)           got
+      integer(ip)           i
+      integer(ip)           nrec
 
       logical               istdb
 
@@ -200,7 +201,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -239,7 +240,7 @@
 !     in it.
 !
       arrsiz = arrend - arrbeg + 1
-      nrec   = nint (  ( 100.d0 * (dble(arrsiz)) + 1.d0 ) / 1001.d0  )
+      nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
 
 !
 !     The variable GOT tells us how many time endpoints we've
@@ -270,9 +271,9 @@
             begin  = first(i)
             finish = last(i)
 
-            if ( tol .gt. 0.d0 ) then
+            if ( tol .gt. 0.0_wp ) then
 
-               begin   =  max( begin  - tol, 0.d0 )
+               begin   =  max( begin  - tol, 0.0_wp )
                finish  =       finish + tol
 
             end if

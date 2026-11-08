@@ -1,6 +1,7 @@
 !$Procedure EXCESS ( Report an excess of elements in a cell )
 
       subroutine excess ( number, struct )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       implicit none
 
-      integer          number
+      integer(ip)      number
       character*(*)    struct
 
 ! $ Brief_I/O
@@ -161,7 +162,7 @@
 !
 !     Local variables
 !
-      integer               longln
+      integer(ip)           longln
       parameter           ( longln = 320 )
       character*(longln)    error
 !

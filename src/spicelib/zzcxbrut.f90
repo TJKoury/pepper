@@ -2,6 +2,7 @@
 
       subroutine zzcxbrut ( apex,   axis,   angle, &
                             endpt1, endpt2, xpt,   isbrck )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,12 +32,12 @@
 
       implicit none
 
-      double precision      apex   ( 3 )
-      double precision      axis   ( 3 )
-      double precision      angle
-      double precision      endpt1 ( 3 )
-      double precision      endpt2 ( 3 )
-      double precision      xpt    ( 3 )
+      real(wp)              apex   ( 3 )
+      real(wp)              axis   ( 3 )
+      real(wp)              angle
+      real(wp)              endpt1 ( 3 )
+      real(wp)              endpt2 ( 3 )
+      real(wp)              xpt    ( 3 )
       logical               isbrck
 
 ! $ Brief_I/O
@@ -156,9 +157,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      pi
-      double precision      vdot
+      real(wp)              halfpi
+      real(wp)              pi
+      real(wp)              vdot
 
       logical               return
       logical               state1
@@ -168,35 +169,35 @@
 !
 !     Local parameters
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-15 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-15_wp )
 
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 1000 )
 
 !
 !     Local variables
 !
-      double precision      cosang
-      double precision      delta
-      double precision      dp
-      double precision      dp1
-      double precision      dp2
-      double precision      high
-      double precision      locang
-      double precision      locaxi ( 3 )
-      double precision      low
-      double precision      midpt
-      double precision      off1   ( 3 )
-      double precision      off2   ( 3 )
-      double precision      prvdlt
-      double precision      seg    ( 3 )
-      double precision      uoff1  ( 3 )
-      double precision      uoff2  ( 3 )
-      double precision      ux     ( 3 )
-      double precision      x      ( 3 )
+      real(wp)              cosang
+      real(wp)              delta
+      real(wp)              dp
+      real(wp)              dp1
+      real(wp)              dp2
+      real(wp)              high
+      real(wp)              locang
+      real(wp)              locaxi ( 3 )
+      real(wp)              low
+      real(wp)              midpt
+      real(wp)              off1   ( 3 )
+      real(wp)              off2   ( 3 )
+      real(wp)              prvdlt
+      real(wp)              seg    ( 3 )
+      real(wp)              uoff1  ( 3 )
+      real(wp)              uoff2  ( 3 )
+      real(wp)              ux     ( 3 )
+      real(wp)              x      ( 3 )
 
-      integer               nitr
+      integer(ip)           nitr
 
       logical               state
 
@@ -276,10 +277,10 @@
 !
       call vsub ( off2, off1, seg )
 
-      low    = 0.d0
-      high   = 1.d0
+      low    = 0.0_wp
+      high   = 1.0_wp
       delta  = abs( high - low )
-      prvdlt = 2.d0
+      prvdlt = 2.0_wp
       nitr   = 0
 
       do while (       ( delta .gt. cnvlim ) &
@@ -288,7 +289,7 @@
 
          midpt = ( low + high ) / 2
 
-         call vlcom ( 1.d0, off1, midpt, seg, x )
+         call vlcom ( 1.0_wp, off1, midpt, seg, x )
 
          call vhat ( x, ux )
 

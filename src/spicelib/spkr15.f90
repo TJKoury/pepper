@@ -1,6 +1,7 @@
 !$Procedure SPKR15 ( Read SPK record from segment, type 15 )
 
       subroutine spkr15 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr (5)
-      double precision      et
-      double precision      record(*)
+      integer(ip)           handle
+      real(wp)              descr (5)
+      real(wp)              et
+      real(wp)              record(*)
 
 ! $ Brief_I/O
 !
@@ -178,25 +179,25 @@
 !
 !     Local Variables
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 
 !
 !     The difference between the first and last address of a type 15
 !     segment should be 15.
 !
-      integer               diff
+      integer(ip)           diff
       parameter           ( diff = 15 )
 
-      double precision      dc  ( nd )
-      integer               ic  ( ni )
+      real(wp)              dc  ( nd )
+      integer(ip)           ic  ( ni )
 
-      integer               begin
-      integer               end
-      integer               type
+      integer(ip)           begin
+      integer(ip)           end
+      integer(ip)           type
 
 !
 !     Standard Spice Error Handling.

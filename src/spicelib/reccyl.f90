@@ -1,6 +1,7 @@
 !$Procedure RECCYL ( Rectangular to cylindrical coordinates )
 
       subroutine reccyl ( rectan, r, clon, z )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision rectan(3)
-      double precision r
-      double precision clon
-      double precision z
+      real(wp) rectan(3)
+      real(wp) r
+      real(wp) clon
+      real(wp) z
 
 ! $ Brief_I/O
 !
@@ -362,14 +363,14 @@
 !
 !     SPICELIB functions
 !
-      double precision twopi
+      real(wp) twopi
 
 !
 !     Local Variables
 !
-      double precision x
-      double precision y
-      double precision big
+      real(wp) x
+      real(wp) y
+      real(wp) big
 
 !
 !     Use temporary variables for computing R.
@@ -382,8 +383,8 @@
       z = rectan ( 3 )
 
       if ( big .eq. 0 ) then
-         r      = 0.d0
-         clon   = 0.d0
+         r      = 0.0_wp
+         clon   = 0.0_wp
       else
          x      = rectan(1) / big
          y      = rectan(2) / big
@@ -393,7 +394,7 @@
          clon   = datan2 ( y, x )
       end if
 
-      if ( clon .lt. 0.d0) then
+      if ( clon .lt. 0.0_wp) then
          clon = clon + twopi()
       end if
 

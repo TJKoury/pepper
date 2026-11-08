@@ -1,6 +1,7 @@
 !$Procedure  ZZVOXCVO ( Voxel to coarse voxel offset )
 
       subroutine zzvoxcvo ( vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,12 +26,12 @@
 
       implicit none
 
-      integer               vixyz  ( 3 )
-      integer               nvox   ( 3 )
-      integer               cgrscl
-      integer               cgxyz  ( 3 )
-      integer               cgoff  ( 3 )
-      integer               cgof1d
+      integer(ip)           vixyz  ( 3 )
+      integer(ip)           nvox   ( 3 )
+      integer(ip)           cgrscl
+      integer(ip)           cgxyz  ( 3 )
+      integer(ip)           cgoff  ( 3 )
+      integer(ip)           cgof1d
 
 ! $ Brief_I/O
 !
@@ -132,7 +133,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 
       if ( return() ) then

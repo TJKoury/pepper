@@ -1,6 +1,7 @@
 !$Procedure PUTACT ( Store Error Response Action )
 
       subroutine putact ( action )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
 
       implicit none
 
-      integer               action
+      integer(ip)           action
 
 ! $ Brief_I/O
 !
@@ -157,7 +158,7 @@
 !
 !     Define the mnemonic for the default error action.
 !
-      integer               ideflt
+      integer(ip)           ideflt
       parameter           ( ideflt = 5 )
 !
 !     Local Variables:
@@ -165,7 +166,7 @@
 !     The current error response action:
 !
 
-      integer                   savact
+      integer(ip)               savact
 
       save                      savact
 

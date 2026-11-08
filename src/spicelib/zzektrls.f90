@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRLS ( EK tree, linear search )
 
-      integer function zzektrls ( handle, tree, ival )
+      integer(ip) function zzektrls ( handle, tree, ival )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               ival
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           ival
 
 ! $ Brief_I/O
 !
@@ -101,13 +102,13 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrsz
+      integer(ip)           zzektrsz
 !
 !     Local variables
 !
-      integer               i
-      integer               n
-      integer               value
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           value
 
 !
 !     Use discovery check-in.

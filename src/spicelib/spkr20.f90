@@ -1,6 +1,7 @@
 !$Procedure SPKR20 ( SPK, read record from segment, type 20 )
 
       subroutine spkr20 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -171,38 +172,38 @@
 !
 !     SPICELIB functions
 !
-      double precision      j2000
-      double precision      spd
+      real(wp)              j2000
+      real(wp)              spd
 
       logical               return
 
 !
 !     Local variables
 !
-      double precision      dc       ( 2 )
-      double precision      dscale
-      double precision      init
-      double precision      initfr
-      double precision      initjd
-      double precision      intlen
-      double precision      intrvl
-      double precision      mid
-      double precision      pos      ( 3 )
-      double precision      radius
-      double precision      recbeg
-      double precision      tscale
+      real(wp)              dc       ( 2 )
+      real(wp)              dscale
+      real(wp)              init
+      real(wp)              initfr
+      real(wp)              initjd
+      real(wp)              intlen
+      real(wp)              intrvl
+      real(wp)              mid
+      real(wp)              pos      ( 3 )
+      real(wp)              radius
+      real(wp)              recbeg
+      real(wp)              tscale
 
-      integer               begin
-      integer               end
-      integer               i
-      integer               ic       ( 6 )
-      integer               loc
-      integer               nrec
-      integer               nterms
-      integer               recadr
-      integer               recno
-      integer               recsiz
-      integer               size
+      integer(ip)           begin
+      integer(ip)           end
+      integer(ip)           i
+      integer(ip)           ic       ( 6 )
+      integer(ip)           loc
+      integer(ip)           nrec
+      integer(ip)           nterms
+      integer(ip)           recadr
+      integer(ip)           recno
+      integer(ip)           recsiz
+      integer(ip)           size
 
 !
 !     Standard SPICE error handling.
@@ -276,7 +277,7 @@
 !
       recbeg = (  ( initjd - j2000() )  +  (recno-1)*intlen  ) * spd()
 
-      radius = intrvl / 2.d0
+      radius = intrvl / 2.0_wp
 
       mid    = recbeg + ( initfr * spd() ) + radius
 
@@ -289,7 +290,7 @@
 !     Along with the record, return the size, midpoint, and
 !     radius of the record.
 !
-      record( 1 ) = dble( recsiz + 2 )
+      record( 1 ) = real( recsiz + 2, wp )
       record( 2 ) = mid
       record( 3 ) = radius
       call dafgda ( handle, recadr, recadr + recsiz - 1, record( 4 ) )

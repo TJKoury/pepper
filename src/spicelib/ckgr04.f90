@@ -1,6 +1,7 @@
 !$Procedure CKGR04 ( C-kernel, get record, type 04 )
 
       subroutine ckgr04 ( handle, descr, recno, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
       include               'ckparam.inc'
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               recno
-      double precision      record  ( * )
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           recno
+      real(wp)              record  ( * )
 
 ! $ Brief_I/O
 !
@@ -266,10 +267,10 @@
 !
 !     Local parameters
 !
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc    = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic    = 6 )
 
 !
@@ -279,20 +280,20 @@
 !     CKR04 and CKE04 because it doesn't contain time at which
 !     pointing has to be evaluated.
 !
-      integer                 shftad
+      integer(ip)             shftad
       parameter             ( shftad = ck4sft - 1 )
 
 !
 !     Local variables
 !
-      double precision      dcd    ( ndc )
+      real(wp)              dcd    ( ndc )
 
-      integer               ends   ( 1 )
-      integer               icd    ( nic )
-      integer               k
-      integer               nrec
-      integer               numall
-      integer               numcft ( qavsiz )
+      integer(ip)           ends   ( 1 )
+      integer(ip)           icd    ( nic )
+      integer(ip)           k
+      integer(ip)           nrec
+      integer(ip)           numall
+      integer(ip)           numcft ( qavsiz )
 
 !
 !     Standard SPICE error handling.

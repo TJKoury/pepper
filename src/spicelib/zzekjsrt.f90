@@ -3,6 +3,7 @@
       subroutine zzekjsrt ( njrs,    ubases,  norder,  otabs, &
                             ocols,   oelts,   senses,  sthan, &
                             stsdsc,  stdtpt,  dtpool,  dtdscs,  ordbas )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -32,22 +33,22 @@
       include 'ektype.inc'
 
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               njrs
-      integer               ubases ( * )
-      integer               norder
-      integer               otabs  ( * )
-      integer               ocols  ( * )
-      integer               oelts  ( * )
-      integer               senses ( * )
-      integer               sthan  ( * )
-      integer               stsdsc ( sdscsz, * )
-      integer               stdtpt ( * )
-      integer               dtpool ( 2,      lbpool : * )
-      integer               dtdscs ( cdscsz,          * )
-      integer               ordbas
+      integer(ip)           njrs
+      integer(ip)           ubases ( * )
+      integer(ip)           norder
+      integer(ip)           otabs  ( * )
+      integer(ip)           ocols  ( * )
+      integer(ip)           oelts  ( * )
+      integer(ip)           senses ( * )
+      integer(ip)           sthan  ( * )
+      integer(ip)           stsdsc ( sdscsz, * )
+      integer(ip)           stdtpt ( * )
+      integer(ip)           dtpool ( 2,      lbpool : * )
+      integer(ip)           dtdscs ( cdscsz,          * )
+      integer(ip)           ordbas
 
 ! $ Brief_I/O
 !
@@ -267,7 +268,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lnknxt
+      integer(ip)           lnknxt
       logical               return
 
 !
@@ -278,10 +279,10 @@
 !
 !     Other local parameters
 !
-      integer               inisub
+      integer(ip)           inisub
       parameter           ( inisub = 32 )
 
-      integer               limit1
+      integer(ip)           limit1
       parameter           ( limit1 = 250000 )
 
 !
@@ -292,47 +293,47 @@
       character*(inisub)    cdat   ( limit1 )
       character*1           nf     ( limit1 )
 
-      double precision      d1
-      double precision      d2
-      double precision      ddat   ( limit1 )
+      real(wp)              d1
+      real(wp)              d2
+      real(wp)              ddat   ( limit1 )
 
-      integer               addrj
-      integer               addrjg
-      integer               cprime
-      integer               colptr
-      integer               cvlen
-      integer               dtype
-      integer               eltidx
-      integer               gap
-      integer               handle
-      integer               i1
-      integer               i2
-      integer               i
-      integer               idat   ( limit1 )
-      integer               j
-      integer               jg
-      integer               nr
-      integer               nrloc
-      integer               nrows
-      integer               ntab
-      integer               ordvec ( limit1 )
-      integer               prvbas
-      integer               row
-      integer               rj
-      integer               rjg
-      integer               rowvec ( maxtab + 1 )
-      integer               rvecj  ( maxtab + 1 )
-      integer               rvecjg ( maxtab + 1 )
-      integer               rvsize
-      integer               rwvbas
-      integer               seg
-      integer               segvec ( maxtab )
-      integer               sgvbas
-      integer               svecj  ( maxtab )
-      integer               svecjg ( maxtab )
-      integer               svsize
-      integer               tabloc
-      integer               tprime
+      integer(ip)           addrj
+      integer(ip)           addrjg
+      integer(ip)           cprime
+      integer(ip)           colptr
+      integer(ip)           cvlen
+      integer(ip)           dtype
+      integer(ip)           eltidx
+      integer(ip)           gap
+      integer(ip)           handle
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i
+      integer(ip)           idat   ( limit1 )
+      integer(ip)           j
+      integer(ip)           jg
+      integer(ip)           nr
+      integer(ip)           nrloc
+      integer(ip)           nrows
+      integer(ip)           ntab
+      integer(ip)           ordvec ( limit1 )
+      integer(ip)           prvbas
+      integer(ip)           row
+      integer(ip)           rj
+      integer(ip)           rjg
+      integer(ip)           rowvec ( maxtab + 1 )
+      integer(ip)           rvecj  ( maxtab + 1 )
+      integer(ip)           rvecjg ( maxtab + 1 )
+      integer(ip)           rvsize
+      integer(ip)           rwvbas
+      integer(ip)           seg
+      integer(ip)           segvec ( maxtab )
+      integer(ip)           sgvbas
+      integer(ip)           svecj  ( maxtab )
+      integer(ip)           svecjg ( maxtab )
+      integer(ip)           svsize
+      integer(ip)           tabloc
+      integer(ip)           tprime
 
       logical               brute
       logical               found

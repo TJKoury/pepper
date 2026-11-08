@@ -1,6 +1,7 @@
 !$Procedure INELPL ( Intersection of ellipse and plane )
 
       subroutine inelpl ( ellips, plane, nxpts, xpt1, xpt2 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,17 +22,17 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel = 9 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
-      double precision      ellips ( ubel )
-      double precision      plane  ( ubpl )
-      integer               nxpts
-      double precision      xpt1   ( 3 )
-      double precision      xpt2   ( 3 )
+      real(wp)              ellips ( ubel )
+      real(wp)              plane  ( ubpl )
+      integer(ip)           nxpts
+      real(wp)              xpt1   ( 3 )
+      real(wp)              xpt2   ( 3 )
 
 ! $ Brief_I/O
 !
@@ -267,10 +268,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      halfpi
-      double precision      vdot
-      double precision      vnormg
-      double precision      vsep
+      real(wp)              halfpi
+      real(wp)              vdot
+      real(wp)              vnormg
+      real(wp)              vsep
 
       logical               return
       logical               vzero
@@ -279,27 +280,27 @@
 !
 !     Local parameters
 !
-      double precision      seplim
-      parameter           ( seplim = 1.d-9 )
+      real(wp)              seplim
+      parameter           ( seplim = 1.0e-9_wp )
 
 !
 !     Local variables
 !
-      double precision      alpha
-      double precision      angle1
-      double precision      angle2
-      double precision      beta
-      double precision      center (    3 )
-      double precision      const
-      double precision      inpcon
-      double precision      normal (    3 )
-      double precision      point  (    3 )
-      double precision      sep
-      double precision      smajor (    3 )
-      double precision      sminor (    3 )
-      double precision      tmpvec (    3 )
-      double precision      trans  ( ubpl )
-      double precision      v      (    2 )
+      real(wp)              alpha
+      real(wp)              angle1
+      real(wp)              angle2
+      real(wp)              beta
+      real(wp)              center (    3 )
+      real(wp)              const
+      real(wp)              inpcon
+      real(wp)              normal (    3 )
+      real(wp)              point  (    3 )
+      real(wp)              sep
+      real(wp)              smajor (    3 )
+      real(wp)              sminor (    3 )
+      real(wp)              tmpvec (    3 )
+      real(wp)              trans  ( ubpl )
+      real(wp)              v      (    2 )
 
 !
 !     Standard SPICE error handling.
@@ -322,7 +323,7 @@
          call chkout ( 'INELPL'                                    )
          return
 
-      else if ( inpcon .lt. 0.d0 ) then
+      else if ( inpcon .lt. 0.0_wp ) then
 
          call setmsg ( 'Input SPICE plane has non-positive ' &
          //            'constant #. Properly constructed ' &
@@ -458,7 +459,7 @@
 !        The ellipse lies in the plane if and only if CONST is zero.
 !        In any case, we don't modify XPT1 or XPT2.
 !
-         if ( const .eq. 0.d0 ) then
+         if ( const .eq. 0.0_wp ) then
             nxpts = -1
          else
             nxpts = 0
@@ -568,11 +569,11 @@
 !
 !     Compute the intersection points.
 !
-      call vlcom3 ( 1.0d0,         center, &
+      call vlcom3 ( 1.0_wp,         center, &
                     dcos(angle1),  smajor, &
                     dsin(angle1),  sminor,    xpt1 )
 
-      call vlcom3 ( 1.0d0,         center, &
+      call vlcom3 ( 1.0_wp,         center, &
                     dcos(angle2),  smajor, &
                     dsin(angle2),  sminor,    xpt2 )
 

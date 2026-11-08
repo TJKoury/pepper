@@ -1,6 +1,7 @@
 !$Procedure CKNR04 ( C-kernel, number of records, data type 4 )
 
       subroutine cknr04 ( handle, descr, nrec )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       include               'ckparam.inc'
 
-      integer               handle
-      double precision      descr   ( * )
-      integer               nrec
+      integer(ip)           handle
+      real(wp)              descr   ( * )
+      integer(ip)           nrec
 
 ! $ Brief_I/O
 !
@@ -221,18 +222,18 @@
 !
 !     Local parameters
 !
-      integer               ndc
+      integer(ip)           ndc
       parameter           ( ndc = 2 )
 
-      integer               nic
+      integer(ip)           nic
       parameter           ( nic = 6 )
 
 !
 !     Local variables
 !
-      double precision      dcd    ( ndc )
+      real(wp)              dcd    ( ndc )
 
-      integer               icd    ( nic )
+      integer(ip)           icd    ( nic )
 
 !
 !     Standard SPICE error handling.

@@ -1,6 +1,7 @@
 !$Procedure LATCYL ( Latitudinal to cylindrical coordinates )
 
       subroutine latcyl ( radius, lon, lat, r, clon, z )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision   radius
-      double precision   lon
-      double precision   lat
-      double precision   r
-      double precision   clon
-      double precision   z
+      real(wp)           radius
+      real(wp)           lon
+      real(wp)           lat
+      real(wp)           r
+      real(wp)           clon
+      real(wp)           z
 
 ! $ Brief_I/O
 !
@@ -476,8 +477,8 @@
 !
 !     Local variables
 !
-      double precision rh
-      double precision zz
+      real(wp) rh
+      real(wp) zz
 
 !
 !     Convert to cylindrical, storing in temporary variables

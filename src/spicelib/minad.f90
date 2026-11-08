@@ -1,6 +1,7 @@
 !$Procedure MINAD  ( Minimum element of array, DP )
 
       subroutine minad ( array, ndim, minval, loc )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision      array ( * )
-      integer               ndim
-      double precision      minval
-      integer               loc
+      real(wp)              array ( * )
+      integer(ip)           ndim
+      real(wp)              minval
+      integer(ip)           loc
 
 ! $ Brief_I/O
 !
@@ -128,7 +129,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       if (ndim .le. 0) then

@@ -2,6 +2,7 @@
 
       subroutine zzekrd06 ( handle,  segdsc,  coldsc,  recptr, &
                             beg,     end,     cvals,   isnull,  found )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -30,12 +31,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      integer               beg
-      integer               end
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      integer(ip)           beg
+      integer(ip)           end
       character*(*)         cvals  ( * )
       logical               isnull
       logical               found
@@ -196,37 +197,37 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
       character*(cnamsz)    column
 
-      integer               avail
-      integer               base
-      integer               colidx
-      integer               cvlen
-      integer               d
-      integer               datptr
-      integer               delta
-      integer               eltidx
-      integer               eltoff
-      integer               maxelt
-      integer               ncols
-      integer               nelt
-      integer               nread
-      integer               nskip
-      integer               offset
-      integer               p
-      integer               pagnum
-      integer               pg
-      integer               ptrloc
-      integer               ptroff
-      integer               recno
-      integer               remain
-      integer               start
-      integer               strlen
+      integer(ip)           avail
+      integer(ip)           base
+      integer(ip)           colidx
+      integer(ip)           cvlen
+      integer(ip)           d
+      integer(ip)           datptr
+      integer(ip)           delta
+      integer(ip)           eltidx
+      integer(ip)           eltoff
+      integer(ip)           maxelt
+      integer(ip)           ncols
+      integer(ip)           nelt
+      integer(ip)           nread
+      integer(ip)           nskip
+      integer(ip)           offset
+      integer(ip)           p
+      integer(ip)           pagnum
+      integer(ip)           pg
+      integer(ip)           ptrloc
+      integer(ip)           ptroff
+      integer(ip)           recno
+      integer(ip)           remain
+      integer(ip)           start
+      integer(ip)           strlen
 
 
 !

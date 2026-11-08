@@ -1,6 +1,7 @@
 !$Procedure BODS2C ( Body string to ID code translation )
 
       subroutine bods2c ( name, code, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,7 +25,7 @@
       implicit none
 
       character*(*)         name
-      integer               code
+      integer(ip)           code
       logical               found
 
 ! $ Brief_I/O
@@ -255,14 +256,14 @@
 !
 !     Local parameters
 !
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen = 1 )
 
 !
 !     Local variables
 !
       character*(msglen)    errmsg
-      integer               ptr
+      integer(ip)           ptr
 
 !
 !     Standard SPICELIB error handling.

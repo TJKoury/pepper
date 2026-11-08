@@ -4,6 +4,7 @@
                             nseg,   hanbuf, dlabuf, dskbuf, offbuf, &
                             ctrbuf, radbuf, vertex, raydir, xpt, &
                             segidx, dc,     ic,     found          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -45,24 +46,24 @@
       include 'zzctr.inc'
 
 
-      integer               bodyid
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      et
-      integer               fixfid
-      integer               nseg
-      integer               hanbuf ( * )
-      integer               dlabuf ( dladsz, * )
-      double precision      dskbuf ( dskdsz, * )
-      double precision      offbuf ( 3,      * )
-      double precision      ctrbuf ( 3,      * )
-      double precision      radbuf ( * )
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      xpt    ( 3 )
-      integer               segidx
-      double precision      dc     ( * )
-      integer               ic     ( * )
+      integer(ip)           bodyid
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              et
+      integer(ip)           fixfid
+      integer(ip)           nseg
+      integer(ip)           hanbuf ( * )
+      integer(ip)           dlabuf ( dladsz, * )
+      real(wp)              dskbuf ( dskdsz, * )
+      real(wp)              offbuf ( 3,      * )
+      real(wp)              ctrbuf ( 3,      * )
+      real(wp)              radbuf ( * )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              xpt    ( 3 )
+      integer(ip)           segidx
+      real(wp)              dc     ( * )
+      integer(ip)           ic     ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -304,10 +305,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdist
-      double precision      vnorm
+      real(wp)              vdist
+      real(wp)              vnorm
 
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -316,42 +317,42 @@
 !
 !     Local parameters
 !
-      double precision      radscl
-      parameter           ( radscl = 1.01d0 )
+      real(wp)              radscl
+      parameter           ( radscl = 1.01_wp )
 
-      integer               maxhit
+      integer(ip)           maxhit
       parameter           ( maxhit = 1000 )
 
 !
 !     Local variables
 !
-      double precision      dist
-      double precision      dmin
-      double precision      maxrad
-      double precision      minrad
-      double precision      segdir ( 3 )
-      double precision      segvtx ( 3 )
-      double precision      pnear  ( 3 )
-      double precision      sgdist ( maxhit )
-      double precision      sgmarg
-      double precision      sgxbuf ( 3, 3, maxhit )
-      double precision      sphvtx ( 3 )
-      double precision      srfx   ( 3 )
-      double precision      vtemp  ( 3 )
-      double precision      xform  ( 3, 3 )
+      real(wp)              dist
+      real(wp)              dmin
+      real(wp)              maxrad
+      real(wp)              minrad
+      real(wp)              segdir ( 3 )
+      real(wp)              segvtx ( 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              sgdist ( maxhit )
+      real(wp)              sgmarg
+      real(wp)              sgxbuf ( 3, 3, maxhit )
+      real(wp)              sphvtx ( 3 )
+      real(wp)              srfx   ( 3 )
+      real(wp)              vtemp  ( 3 )
+      real(wp)              xform  ( 3, 3 )
 
-      integer               dtype
-      integer               i
-      integer               iorder ( maxhit )
-      integer               j
-      integer               k
-      integer               nhit
-      integer               nxpts
-      integer               prvfrm
-      integer               segfid
-      integer               sghit  ( maxhit )
-      integer               surfce
-      integer               winner
+      integer(ip)           dtype
+      integer(ip)           i
+      integer(ip)           iorder ( maxhit )
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           nhit
+      integer(ip)           nxpts
+      integer(ip)           prvfrm
+      integer(ip)           segfid
+      integer(ip)           sghit  ( maxhit )
+      integer(ip)           surfce
+      integer(ip)           winner
 
       logical               bodyok
       logical               done

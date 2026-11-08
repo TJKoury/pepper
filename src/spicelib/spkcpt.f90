@@ -2,6 +2,7 @@
 
       subroutine spkcpt ( trgpos, trgctr, trgref, et,    outref, &
                           refloc, abcorr, obsrvr, state, lt     )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -27,16 +28,16 @@
 
       include               'zzabcorr.inc'
 
-      double precision      trgpos ( 3 )
+      real(wp)              trgpos ( 3 )
       character*(*)         trgctr
       character*(*)         trgref
-      double precision      et
+      real(wp)              et
       character*(*)         outref
       character*(*)         refloc
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      state  ( 6 )
-      double precision      lt
+      real(wp)              state  ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -1028,8 +1029,8 @@
 !
 !     Local variables
 !
-      double precision      trgepc
-      double precision      trgsta ( 6 )
+      real(wp)              trgepc
+      real(wp)              trgsta ( 6 )
 
 !
 !     Standard SPICE error handling.
@@ -1052,7 +1053,7 @@
 !     Set the target epoch; the value is arbitrary, since
 !     the target's velocity is zero.
 !
-      trgepc = 0.0d0
+      trgepc = 0.0_wp
 
 
       call spkcvt ( trgsta, trgepc, trgctr, trgref, et, &

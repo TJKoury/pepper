@@ -1,6 +1,7 @@
 !$Procedure MEQU ( Matrix equal to another, 3x3 )
 
       subroutine mequ ( m1, mout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   m1   ( 3, 3 )
-      double precision   mout ( 3, 3 )
+      real(wp)           m1   ( 3, 3 )
+      real(wp)           mout ( 3, 3 )
 
 ! $ Brief_I/O
 !

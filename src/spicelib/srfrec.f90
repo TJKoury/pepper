@@ -1,6 +1,7 @@
 !$Procedure SRFREC ( Surface to rectangular coordinates )
 
       subroutine srfrec ( body, lon, lat, rectan )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
 
-      integer               body
-      double precision      lon
-      double precision      lat
-      double precision      rectan ( 3 )
+      integer(ip)           body
+      real(wp)              lon
+      real(wp)              lat
+      real(wp)              rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -314,8 +315,8 @@
 !
 !     Local variables
 !
-      double precision      radii  ( 3 )
-      double precision      uvec   ( 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              uvec   ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -340,7 +341,7 @@
 !     Find the unit vector pointing from the body center to the
 !     input surface point.
 !
-      call latrec ( 1.d0, lon, lat, uvec )
+      call latrec ( 1.0_wp, lon, lat, uvec )
 
 !
 !     Find out where the ray defined by this vector intersects the

@@ -5,6 +5,7 @@
                           dppool, dpvals, &
                           chpool, chvals, &
                           varnam, eof )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,25 +27,25 @@
 ! $ Declarations
 
       implicit none
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               namlst     (           * )
-      integer               nmpool     ( 2, lbpool:* )
+      integer(ip)           namlst     (           * )
+      integer(ip)           nmpool     ( 2, lbpool:* )
       character*(*)         names      (           * )
-      integer               datlst     (           * )
-      integer               dppool     ( 2, lbpool:* )
-      double precision      dpvals     (           * )
-      integer               chpool     ( 2, lbpool:* )
+      integer(ip)           datlst     (           * )
+      integer(ip)           dppool     ( 2, lbpool:* )
+      real(wp)              dpvals     (           * )
+      integer(ip)           chpool     ( 2, lbpool:* )
       character*(*)         chvals     (           * )
 
       character*(*)         varnam
       logical               eof
 
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 132 )
 
-      integer               maxlen
+      integer(ip)           maxlen
       parameter           ( maxlen =    32 )
 
 ! $ Brief_I/O
@@ -221,11 +222,11 @@
 !
 !     SPICELIB functions
 !
-      integer               lastpc
-      integer               lnknfn
-      integer               rtrim
-      integer               zzhash
-      integer               lastnb
+      integer(ip)           lastpc
+      integer(ip)           lnknfn
+      integer(ip)           rtrim
+      integer(ip)           zzhash
+      integer(ip)           lastnb
 
       logical               return
       logical               failed
@@ -239,13 +240,13 @@
 !     processing flow of a variable assignment.
 !
 
-      integer               begin
+      integer(ip)           begin
       parameter           ( begin  = 1 )
 
-      integer               done
+      integer(ip)           done
       parameter           ( done   = begin  + 1 )
 
-      integer               invar
+      integer(ip)           invar
       parameter           ( invar  = done   + 1 )
 
 !
@@ -259,22 +260,22 @@
 !     EQ  --- equal sign
 !     EQP --- equal sign plus
 !
-      integer               q
+      integer(ip)           q
       parameter           ( q      = 1          )
 
-      integer               nq
+      integer(ip)           nq
       parameter           ( nq     = q      + 1 )
 
-      integer               bv
+      integer(ip)           bv
       parameter           ( bv     = nq     + 1 )
 
-      integer               ev
+      integer(ip)           ev
       parameter           ( ev     = bv     + 1 )
 
-      integer               eq
+      integer(ip)           eq
       parameter           ( eq     = ev     + 1 )
 
-      integer               eqp
+      integer(ip)           eqp
       parameter           ( eqp    = eq     + 1 )
 
 !
@@ -283,42 +284,42 @@
 !
 !
 
-      integer               strtyp
+      integer(ip)           strtyp
       parameter           ( strtyp = 1 )
 
-      integer               numtyp
+      integer(ip)           numtyp
       parameter           ( numtyp = strtyp + 1 )
 
-      integer               unknwn
+      integer(ip)           unknwn
       parameter           ( unknwn = numtyp + 1 )
 
 !
 !     The next two parameters indicate which component of a linked
 !     list node point to the previous node and the next node.
 !
-      integer               prev
+      integer(ip)           prev
       parameter           ( prev = 2 )
 
-      integer               next
+      integer(ip)           next
       parameter           ( next = 1 )
 
 
-      integer               filsiz
+      integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 !
 !     The next collection of variables are set up in first pass
 !     through this routine.  They would be parameters if FORTRAN
 !     allowed us to do this in a standard way.
 !
-      integer               iblank
-      integer               icomma
-      integer               iequal
-      integer               ilparn
-      integer               iplus
-      integer               iquote
-      integer               irparn
-      integer               itab
-      integer               itmark
+      integer(ip)           iblank
+      integer(ip)           icomma
+      integer(ip)           iequal
+      integer(ip)           ilparn
+      integer(ip)           iplus
+      integer(ip)           iquote
+      integer(ip)           irparn
+      integer(ip)           itab
+      integer(ip)           itmark
 
 
       character*(linlen)    line
@@ -327,40 +328,40 @@
 
       character*(255)       error
 
-      double precision      dvalue
+      real(wp)              dvalue
 
 
-      integer               at
-      integer               b
-      integer               badat
-      integer               chnode
-      integer               code
-      integer               count
-      integer               datahd
-      integer               dirctv
-      integer               dpnode
-      integer               e
-      integer               free
-      integer               head
-      integer               i
-      integer               j
-      integer               lookat
-      integer               lstnb
-      integer               nameat
-      integer               ncomp
-      integer               node
-      integer               number
-      integer               nxttok
-      integer               r1
-      integer               r2
-      integer               status
-      integer               tail
-      integer               varlen
-      integer               vartyp
+      integer(ip)           at
+      integer(ip)           b
+      integer(ip)           badat
+      integer(ip)           chnode
+      integer(ip)           code
+      integer(ip)           count
+      integer(ip)           datahd
+      integer(ip)           dirctv
+      integer(ip)           dpnode
+      integer(ip)           e
+      integer(ip)           free
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           lookat
+      integer(ip)           lstnb
+      integer(ip)           nameat
+      integer(ip)           ncomp
+      integer(ip)           node
+      integer(ip)           number
+      integer(ip)           nxttok
+      integer(ip)           r1
+      integer(ip)           r2
+      integer(ip)           status
+      integer(ip)           tail
+      integer(ip)           varlen
+      integer(ip)           vartyp
 
-      integer               begs(linlen)
-      integer               ends(linlen)
-      integer               type(linlen)
+      integer(ip)           begs(linlen)
+      integer(ip)           ends(linlen)
+      integer(ip)           type(linlen)
 
 
 !

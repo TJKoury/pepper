@@ -1,6 +1,7 @@
 !$Procedure OPSGND ( Opposite Sign Double Precision Numbers )
 
       logical function opsgnd  ( x, y )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   x
-      double precision   y
+      real(wp)           x
+      real(wp)           y
 
 ! $ Brief_I/O
 !

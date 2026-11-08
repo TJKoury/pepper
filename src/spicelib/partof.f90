@@ -1,6 +1,7 @@
 !$Procedure PARTOF ( Parabolic time of flight )
 
       subroutine partof ( ma, d )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision      ma
-      double precision      d
+      real(wp)              ma
+      real(wp)              d
 
 ! $ Brief_I/O
 !
@@ -121,22 +122,22 @@
 !     SPICELIB functions
 !
       logical               return
-      double precision      dcbrt
+      real(wp)              dcbrt
 
 !
 !     Local parameters
 !
-      double precision      tol
-      parameter           ( tol = 1.d-13 )
+      real(wp)              tol
+      parameter           ( tol = 1.0e-13_wp )
 
 !
 !     Local variables
 !
-      double precision      m
-      double precision      fn
-      double precision      deriv
-      double precision      deriv2
-      double precision      change
+      real(wp)              m
+      real(wp)              fn
+      real(wp)              deriv
+      real(wp)              deriv2
+      real(wp)              change
 
 
 
@@ -158,8 +159,8 @@
 !     that it's positive (by symmetry).
 !
 
-      if ( ma .eq. 0.d0 ) then
-         d = 0.d0
+      if ( ma .eq. 0.0_wp ) then
+         d = 0.0_wp
          call chkout ( 'PARTOF' )
          return
       else
@@ -171,7 +172,7 @@
 !     We need an initial guess for the eccentric anomaly D. The function
 !     is well behaved, so just about any guess will do.
 !
-      d = dcbrt ( 3.d0 * m )
+      d = dcbrt ( 3.0_wp * m )
 
 
 !
@@ -193,20 +194,20 @@
 !          f'' = 2 D
 !
 
-      change = 1.d0
+      change = 1.0_wp
 
       do while ( abs ( change ) .gt. tol )
 
-         fn     = d    + d**3/3.d0 - m
-         deriv  = 1.d0 + d**2
-         deriv2 = 2.d0 * d
+         fn     = d    + d**3/3.0_wp - m
+         deriv  = 1.0_wp + d**2
+         deriv2 = 2.0_wp * d
 
-         change = (fn/deriv) * ( 1.d0 + (fn*deriv2) / (2.d0*deriv**2) )
+         change = (fn/deriv) * ( 1.0_wp + (fn*deriv2) / (2.0_wp*deriv**2) )
          d      = d - change
 
       end do
 
-      if ( ma .lt. 0.d0 ) then
+      if ( ma .lt. 0.0_wp ) then
          d = -d
       end if
 

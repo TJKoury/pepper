@@ -3,6 +3,7 @@
       subroutine dskmi2 ( nv,     vrtces, np,     plates, finscl, &
                           corscl, worksz, voxpsz, voxlsz, makvtl, &
                           spxisz, work,   spaixd, spaixi         )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,20 +32,20 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               nv
-      double precision      vrtces ( 3, * )
-      integer               np
-      integer               plates ( 3, * )
-      double precision      finscl
-      integer               corscl
-      integer               worksz
-      integer               voxpsz
-      integer               voxlsz
+      integer(ip)           nv
+      real(wp)              vrtces ( 3, * )
+      integer(ip)           np
+      integer(ip)           plates ( 3, * )
+      real(wp)              finscl
+      integer(ip)           corscl
+      integer(ip)           worksz
+      integer(ip)           voxpsz
+      integer(ip)           voxlsz
       logical               makvtl
-      integer               spxisz
-      integer               work   ( 2, worksz )
-      double precision      spaixd ( ixdfix )
-      integer               spaixi ( spxisz )
+      integer(ip)           spxisz
+      integer(ip)           work   ( 2, worksz )
+      real(wp)              spaixd ( ixdfix )
+      integer(ip)           spaixi ( spxisz )
 
 ! $ Brief_I/O
 !
@@ -756,16 +757,16 @@
 !
 !     Local variables
 !
-      integer               i
-      integer               j
-      integer               nshift
-      integer               nvxtot
-      integer               reqsiz
-      integer               vtlidx
-      integer               vtpidx
-      integer               vtxlsz
-      integer               vxlidx
-      integer               vxpidx
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           nshift
+      integer(ip)           nvxtot
+      integer(ip)           reqsiz
+      integer(ip)           vtlidx
+      integer(ip)           vtpidx
+      integer(ip)           vtxlsz
+      integer(ip)           vxlidx
+      integer(ip)           vxpidx
 
 
       if ( return() ) then
@@ -777,7 +778,7 @@
 !
 !     Perform error checks on inputs.
 !
-      if (  finscl .le. 0.d0 ) then
+      if (  finscl .le. 0.0_wp ) then
 
          call setmsg ( 'Fine voxel scale = #; scale must ' &
          //            'be positive. Usually scale should ' &

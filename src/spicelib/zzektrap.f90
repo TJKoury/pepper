@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRAP ( EK tree, append item )
 
       subroutine zzektrap ( handle, tree, value, key )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 ! $ Declarations
 
 
-      integer               handle
-      integer               tree
-      integer               value
-      integer               key
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           value
+      integer(ip)           key
 
 ! $ Brief_I/O
 !
@@ -115,7 +116,7 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzektrsz
+      integer(ip)           zzektrsz
 
       key  =  zzektrsz ( handle, tree )   +   1
 

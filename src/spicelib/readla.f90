@@ -1,6 +1,7 @@
 !$Procedure READLA   ( Read array of lines from a logical unit )
 
       subroutine readla ( unit, maxlin, numlin, array, eof )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               unit
-      integer               maxlin
-      integer               numlin
+      integer(ip)           unit
+      integer(ip)           maxlin
+      integer(ip)           numlin
       character*(*)         array(*)
       logical               eof
 
@@ -252,7 +253,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
       logical               myeof
 !

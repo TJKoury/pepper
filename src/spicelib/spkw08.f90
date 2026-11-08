@@ -3,6 +3,7 @@
       subroutine spkw08 (  handle,  body,    center,  frame, &
                            first,   last,    segid,   degree, &
                            n,       states,  begtim,  step     )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,18 +27,18 @@
 
       include 'spk08.inc'
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               degree
-      integer               n
-      double precision      states ( 6, * )
-      double precision      begtim
-      double precision      step
+      integer(ip)           degree
+      integer(ip)           n
+      real(wp)              states ( 6, * )
+      real(wp)              begtim
+      real(wp)              step
 
 ! $ Brief_I/O
 !
@@ -378,7 +379,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -408,31 +409,31 @@
 !     LPRINT is the integer value of the last printable ASCII character.
 !
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen =  40 )
 
-      integer               ns
+      integer(ip)           ns
       parameter           ( ns     =   5 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     =   6 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype  =   8 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint = 126 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz =   6 )
 
-      integer               timlen
+      integer(ip)           timlen
       parameter           ( timlen =  40 )
 
 !
@@ -440,15 +441,15 @@
 !
       character*(timlen)    etstr
 
-      double precision      dcd    ( nd )
-      double precision      descr  ( ns )
-      double precision      ltime
-      double precision      tol
+      real(wp)              dcd    ( nd )
+      real(wp)              descr  ( ns )
+      real(wp)              ltime
+      real(wp)              tol
 
-      integer               chrcod
-      integer               i
-      integer               icd    ( ni )
-      integer               refcod
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           icd    ( ni )
+      integer(ip)           refcod
 
 
 !
@@ -564,7 +565,7 @@
 !
 !     The step size must be positive.
 !
-      if ( step .le. 0.d0 ) then
+      if ( step .le. 0.0_wp ) then
 
          call setmsg ( 'The step size must be > 0 but was #. ' )
          call errdp  ( '#', step                               )
@@ -685,8 +686,8 @@
       call dafada ( states,          n*statsz )
       call dafada ( begtim,          1        )
       call dafada ( step,            1        )
-      call dafada ( dble(degree),    1        )
-      call dafada ( dble(n),         1        )
+      call dafada ( real(degree, wp),    1        )
+      call dafada ( real(n, wp),         1        )
 
 !
 !     As long as nothing went wrong, end the segment.

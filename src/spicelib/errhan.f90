@@ -1,6 +1,7 @@
 !$Procedure ERRHAN ( Insert DAF/DAS file name into long error message )
 
       subroutine errhan ( marker, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,7 +27,7 @@
       include 'zzddhman.inc'
 
       character*(*)         marker
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -141,7 +142,7 @@
 !
 !     Local parameters
 !
-      integer               maxnum
+      integer(ip)           maxnum
       parameter           ( maxnum = 32 )
 
 !
@@ -150,9 +151,9 @@
       character*(filen)     fname
       character*(maxnum)    numstr
 
-      integer               intarc
-      integer               intbff
-      integer               intamh
+      integer(ip)           intarc
+      integer(ip)           intbff
+      integer(ip)           intamh
 
       logical               found
 

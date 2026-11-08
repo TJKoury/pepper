@@ -2,6 +2,7 @@
 
       subroutine zzeksinf ( handle,  segno,   tabnam, &
                             segdsc,  cnames,  cdscrs )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -24,12 +25,12 @@
       include 'eksegdsc.inc'
       include 'ektnamsz.inc'
 
-      integer               handle
-      integer               segno
+      integer(ip)           handle
+      integer(ip)           segno
       character*(*)         tabnam
-      integer               segdsc ( sdscsz    )
+      integer(ip)           segdsc ( sdscsz    )
       character*(*)         cnames (         * )
-      integer               cdscrs ( cdscsz, * )
+      integer(ip)           cdscrs ( cdscsz, * )
 
 ! $ Brief_I/O
 !
@@ -244,7 +245,7 @@
 !
 !     SPICELIB functions
 !
-      integer               eknseg
+      integer(ip)           eknseg
 
       logical               failed
       logical               return
@@ -252,11 +253,11 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               i
-      integer               ncols
-      integer               nseg
-      integer               p
+      integer(ip)           base
+      integer(ip)           i
+      integer(ip)           ncols
+      integer(ip)           nseg
+      integer(ip)           p
 
 
 !

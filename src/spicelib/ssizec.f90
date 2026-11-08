@@ -1,6 +1,7 @@
 !$Procedure SSIZEC ( Set the size of a character cell )
 
       subroutine ssizec ( size, cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer            size
+      integer(ip)        size
       character*(*)      cell   ( lbcell:* )
 
 ! $ Brief_I/O
@@ -174,7 +175,7 @@
 !
 !     Local variables
 !
-      integer               i
+      integer(ip)           i
 
 
 

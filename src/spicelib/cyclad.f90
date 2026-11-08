@@ -1,6 +1,7 @@
 !$Procedure CYCLAD ( Cycle the elements of a DP array )
 
       subroutine cyclad ( array, nelt, dir, ncycle, out )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      double precision      array    ( * )
-      integer               nelt
+      real(wp)              array    ( * )
+      integer(ip)           nelt
       character*1           dir
-      integer               ncycle
-      double precision      out      ( * )
+      integer(ip)           ncycle
+      real(wp)              out      ( * )
 
 ! $ Brief_I/O
 !
@@ -176,21 +177,21 @@
 !
 !     SPICELIB functions
 !
-      integer          gcd
+      integer(ip)      gcd
       logical          return
 
 !
 !     Local variables
 !
-      double precision last
-      double precision temp
+      real(wp) last
+      real(wp) temp
 
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure HYPTOF ( Hyperbolic time of flight )
 
       subroutine hyptof ( ma, ecc, f )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      ma
-      double precision      ecc
-      double precision      f
+      real(wp)              ma
+      real(wp)              ecc
+      real(wp)              f
 
 ! $ Brief_I/O
 !
@@ -151,28 +152,28 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      dcbrt
+      real(wp)              dpmax
+      real(wp)              dcbrt
 
       logical               return
 
 !
 !     Local variables
 !
-      integer               count
-      integer               mcount
+      integer(ip)           count
+      integer(ip)           mcount
 
-      double precision      maxlog
+      real(wp)              maxlog
 
-      double precision      m
+      real(wp)              m
 
-      double precision      lower
-      double precision      middle
-      double precision      midval
-      double precision      upper
+      real(wp)              lower
+      real(wp)              middle
+      real(wp)              midval
+      real(wp)              upper
 
-      double precision      diff
-      double precision      lastdf
+      real(wp)              diff
+      real(wp)              lastdf
 
       logical               first
 
@@ -203,7 +204,7 @@
          maxlog = log ( dpmax() )
       end if
 
-      if ( ecc .lt. 1.d0 ) then
+      if ( ecc .lt. 1.0_wp ) then
          call sigerr ( 'SPICE(WRONGCONIC)' )
          call chkout ( 'HYPTOF'            )
          return
@@ -220,8 +221,8 @@
 !     the solution to MA = e sinh(F) - F by negating F if MA is
 !     less than 0.
 !
-      if ( ma .eq. 0.d0 ) then
-         f = 0.d0
+      if ( ma .eq. 0.0_wp ) then
+         f = 0.0_wp
          call chkout ( 'HYPTOF' )
          return
       else
@@ -317,8 +318,8 @@
 !     approximately LOG( DPMAX() / e ) = LOG(DPMAX()) - LOG(e) .
 !
 !
-      lower = log ( (m/ecc)  +  dsqrt( 1.0d0 + (m/ecc)**2 ) )
-      upper = min ( dcbrt(6.0d0*m/ecc), maxlog - log (ecc ) )
+      lower = log ( (m/ecc)  +  dsqrt( 1.0_wp + (m/ecc)**2 ) )
+      upper = min ( dcbrt(6.0_wp*m/ecc), maxlog - log (ecc ) )
       upper = max ( lower, upper )
 !
 !     Perform some simple checks first to avoid problems with
@@ -331,7 +332,7 @@
 !
 !     Now we simply perform bisection to locate the root.
 !
-      middle = max( lower, min( upper, 0.5d0*upper + 0.5d0*lower ) )
+      middle = max( lower, min( upper, 0.5_wp*upper + 0.5_wp*lower ) )
       midval = ecc * sinh(middle) - middle - m
 
       diff   = upper - lower
@@ -341,16 +342,16 @@
 !
       mcount = 100
       count  = 0
-      do while ( diff .gt. 0.0d0 .and. count .lt. mcount )
+      do while ( diff .gt. 0.0_wp .and. count .lt. mcount )
 
 !
 !        Move one of the endpoints to the middle.
 !
-         if ( midval .gt. 0.0d0 ) then
+         if ( midval .gt. 0.0_wp ) then
 
             upper = middle
 
-         else if ( midval .lt. 0.0d0 ) then
+         else if ( midval .lt. 0.0_wp ) then
 
             lower = middle
 
@@ -364,7 +365,7 @@
 !
 !        Compute the next middle point.
 !
-         middle = max( lower, min( upper, 0.5d0*upper + 0.5d0*lower ) )
+         middle = max( lower, min( upper, 0.5_wp*upper + 0.5_wp*lower ) )
          lastdf = diff
          count  = count + 1
 
@@ -374,7 +375,7 @@
          if (      ( middle .eq. lower ) &
               .or. ( middle .eq. upper ) ) then
 
-            diff   = 0.0d0
+            diff   = 0.0_wp
 
          else
 

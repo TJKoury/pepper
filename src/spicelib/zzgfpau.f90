@@ -3,6 +3,7 @@
       subroutine zzgfpau ( target, illmn,  abcorr, obsrvr, &
                            udfunc, et,     decres, rvl, &
                            xtarg,  xillmn, xabcor, xobs, xablk )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,13 +34,13 @@
       character*(*)         illmn
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      et
+      real(wp)              et
       logical               decres
-      double precision      rvl
-      integer               xtarg
-      integer               xillmn
+      real(wp)              rvl
+      integer(ip)           xtarg
+      integer(ip)           xillmn
       character*(*)         xabcor
-      integer               xobs
+      integer(ip)           xobs
       logical               xablk  ( nabcor )
 
 
@@ -209,9 +210,9 @@
       logical               failed
       logical               return
 
-      double precision      clight
-      double precision      dvsep
-      double precision      vdot
+      real(wp)              clight
+      real(wp)              dvsep
+      real(wp)              vdot
 
 
 !
@@ -231,17 +232,17 @@
 !
       character*(corlen)    svabco
 
-      double precision      dsep
-      double precision      lt
-      double precision      dlt
-      double precision      s1   (6)
-      double precision      s2   (6)
-      double precision      uvec (3)
+      real(wp)              dsep
+      real(wp)              lt
+      real(wp)              dlt
+      real(wp)              s1   (6)
+      real(wp)              s2   (6)
+      real(wp)              uvec (3)
 
-      integer               svillm
-      integer               svobs
-      integer               svtarg
-      integer               i
+      integer(ip)           svillm
+      integer(ip)           svobs
+      integer(ip)           svtarg
+      integer(ip)           i
 
       logical               svablk ( nabcor )
       logical               found
@@ -715,7 +716,7 @@
 !
 !        Apply the correction to the velocity vector components.
 !
-         call vsclip ( 1.d0 - dlt,  s2(4) )
+         call vsclip ( 1.0_wp - dlt,  s2(4) )
 
       end if
 
@@ -750,7 +751,7 @@
 !
       dsep   = dvsep( s1, s2 )
 
-      decres = -dsep .lt. 0.d0
+      decres = -dsep .lt. 0.0_wp
 
       call chkout ( 'ZZGFPADC' )
       return

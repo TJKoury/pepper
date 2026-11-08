@@ -2,6 +2,7 @@
 
       subroutine zzekad04 (  handle,  segdsc,  coldsc, &
                              recptr,  nvals,   ivals,  isnull  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,12 +27,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( * )
-      integer               coldsc ( * )
-      integer               recptr
-      integer               nvals
-      integer               ivals  ( * )
+      integer(ip)           handle
+      integer(ip)           segdsc ( * )
+      integer(ip)           coldsc ( * )
+      integer(ip)           recptr
+      integer(ip)           nvals
+      integer(ip)           ivals  ( * )
       logical               isnull
 
 ! $ Brief_I/O
@@ -163,27 +164,27 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
-      integer               colidx
-      integer               datptr
-      integer               lastw
-      integer               mbase
-      integer               ncols
-      integer               nlinks
-      integer               nrec
-      integer               nwrite
-      integer               p
-      integer               p2
-      integer               pbase
-      integer               ptrloc
-      integer               recno
-      integer               remain
-      integer               room
-      integer               start
+      integer(ip)           colidx
+      integer(ip)           datptr
+      integer(ip)           lastw
+      integer(ip)           mbase
+      integer(ip)           ncols
+      integer(ip)           nlinks
+      integer(ip)           nrec
+      integer(ip)           nwrite
+      integer(ip)           p
+      integer(ip)           p2
+      integer(ip)           pbase
+      integer(ip)           ptrloc
+      integer(ip)           recno
+      integer(ip)           remain
+      integer(ip)           room
+      integer(ip)           start
 
       logical               fstpag
 

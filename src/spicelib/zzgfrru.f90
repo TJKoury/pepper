@@ -3,6 +3,7 @@
       subroutine zzgfrru ( target, abcorr, obsrvr, dt, &
                            udfunc, et,     decres, rvl, &
                            xtarg, xabcor, xobs, xdt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,14 +34,14 @@
       character*(*)         target
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      et
-      double precision      dt
+      real(wp)              et
+      real(wp)              dt
       logical               decres
-      double precision      rvl
-      integer               xtarg
+      real(wp)              rvl
+      integer(ip)           xtarg
       character*(*)         xabcor
-      integer               xobs
-      double precision      xdt
+      integer(ip)           xobs
+      real(wp)              xdt
 
 ! $ Brief_I/O
 !
@@ -241,7 +242,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
       logical               failed
       logical               return
@@ -251,14 +252,14 @@
 !
 !     Local Variables
 !
-      double precision      lt
-      double precision      drvel
-      double precision      srhat  ( 6 )
-      double precision      state  ( 6 )
-      double precision      dfdt   ( 6 )
-      double precision      states ( 6, 2 )
+      real(wp)              lt
+      real(wp)              drvel
+      real(wp)              srhat  ( 6 )
+      real(wp)              state  ( 6 )
+      real(wp)              dfdt   ( 6 )
+      real(wp)              states ( 6, 2 )
 
-      integer               n
+      integer(ip)           n
 
       logical               attblk ( nabcor )
       logical               found
@@ -270,16 +271,16 @@
       character*(corlen)    svabco
       save                  svabco
 
-      integer               svtarg
+      integer(ip)           svtarg
       save                  svtarg
 
       character*(32)        svref
       save                  svref
 
-      integer               svobs
+      integer(ip)           svobs
       save                  svobs
 
-      double precision      svdt
+      real(wp)              svdt
       save                  svdt
 
       call chkin  ( 'ZZGFRRU'           )
@@ -548,7 +549,7 @@
 !
 !     The "delta" argument for QDERIV, DT, must have a non-zero value.
 !
-      if ( dt .eq. 0.d0 ) then
+      if ( dt .eq. 0.0_wp ) then
 
          call setmsg ( 'Delta value for QDERIV is zero; a non-zero ' // &
                        'value is required.'                        )
@@ -740,7 +741,7 @@
       call dvhat ( state, srhat )
 
       drvel  =  vdot( dfdt(4), srhat ) + vdot( state(4), srhat(4) )
-      decres =  drvel .lt. 0.d0
+      decres =  drvel .lt. 0.0_wp
 
       call chkout ( 'ZZGFRRDC' )
       return

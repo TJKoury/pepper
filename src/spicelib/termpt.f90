@@ -4,6 +4,7 @@
                            abcorr, corloc, obsrvr, refvec, rolstp, &
                            ncuts,  schstp, soltol, maxn,   npts, &
                            points, epochs, trmvcs                 )
+       use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -52,21 +53,21 @@
       character*(*)         method
       character*(*)         ilusrc
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         corloc
       character*(*)         obsrvr
-      double precision      refvec ( 3 )
-      double precision      rolstp
-      integer               ncuts
-      double precision      schstp
-      double precision      soltol
-      integer               maxn
-      integer               npts   ( * )
-      double precision      points ( 3, * )
-      double precision      epochs ( * )
-      double precision      trmvcs ( 3, * )
+      real(wp)              refvec ( 3 )
+      real(wp)              rolstp
+      integer(ip)           ncuts
+      real(wp)              schstp
+      real(wp)              soltol
+      integer(ip)           maxn
+      integer(ip)           npts   ( * )
+      real(wp)              points ( 3, * )
+      real(wp)              epochs ( * )
+      real(wp)              trmvcs ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -1908,11 +1909,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      touchd
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              touchd
+      real(wp)              vnorm
 
-      integer               cardd
+      integer(ip)           cardd
 
       logical               eqstr
       logical               failed
@@ -1931,38 +1932,38 @@
 !
 !     Convergence limit:
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-17 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-17_wp )
 
 !
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 5 )
 
-      integer               ssb
+      integer(ip)           ssb
       parameter           ( ssb   = 0 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               maxivl
+      integer(ip)           maxivl
       parameter           ( maxivl = 1000 )
 
-      integer               maxwin
+      integer(ip)           maxwin
       parameter           ( maxwin = 2 * maxivl )
 
 !
@@ -1977,58 +1978,58 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmstr
 
-      double precision      axis   ( 3 )
-      double precision      cp     ( 3 )
-      double precision      edir   ( 3 )
-      double precision      epoch
-      double precision      icorvc ( 3 )
-      double precision      ilumlt
-      double precision      ilurad
-      double precision      itrmvc ( 3 )
-      double precision      lt
-      double precision      lterr
-      double precision      maxrad
-      double precision      plnvec ( 3 )
-      double precision      pntbuf ( 3, maxwin )
-      double precision      prvlt
-      double precision      ptarg  ( 3 )
-      double precision      raydir ( 3 )
-      double precision      rayvtx ( 3 )
-      double precision      result ( lbcell : maxwin )
-      double precision      roll
-      double precision      srfvec ( 3 )
-      double precision      ssblt
-      double precision      ssbtrg ( 3 )
-      double precision      stloff ( 3 )
-      double precision      stobs  ( 6 )
-      double precision      tmpvec ( 3 )
-      double precision      trgepc
-      double precision      trgpos ( 3 )
-      double precision      xform  ( 3, 3 )
+      real(wp)              axis   ( 3 )
+      real(wp)              cp     ( 3 )
+      real(wp)              edir   ( 3 )
+      real(wp)              epoch
+      real(wp)              icorvc ( 3 )
+      real(wp)              ilumlt
+      real(wp)              ilurad
+      real(wp)              itrmvc ( 3 )
+      real(wp)              lt
+      real(wp)              lterr
+      real(wp)              maxrad
+      real(wp)              plnvec ( 3 )
+      real(wp)              pntbuf ( 3, maxwin )
+      real(wp)              prvlt
+      real(wp)              ptarg  ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              rayvtx ( 3 )
+      real(wp)              result ( lbcell : maxwin )
+      real(wp)              roll
+      real(wp)              srfvec ( 3 )
+      real(wp)              ssblt
+      real(wp)              ssbtrg ( 3 )
+      real(wp)              stloff ( 3 )
+      real(wp)              stobs  ( 6 )
+      real(wp)              tmpvec ( 3 )
+      real(wp)              trgepc
+      real(wp)              trgpos ( 3 )
+      real(wp)              xform  ( 3, 3 )
 
-      integer               fxcent
-      integer               fxclss
-      integer               fxfcde
-      integer               fxtyid
-      integer               i
-      integer               ilucde
-      integer               j
-      integer               loccde
-      integer               nrad
-      integer               nsurf
-      integer               numitr
-      integer               obscde
-      integer               prvilu
-      integer               prvtrg
-      integer               room
-      integer               shadow
-      integer               shape
-      integer               srflst ( maxsrf )
-      integer               svlcod
-      integer               to
-      integer               total
-      integer               trgcde
-      integer               trmtyp
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxfcde
+      integer(ip)           fxtyid
+      integer(ip)           i
+      integer(ip)           ilucde
+      integer(ip)           j
+      integer(ip)           loccde
+      integer(ip)           nrad
+      integer(ip)           nsurf
+      integer(ip)           numitr
+      integer(ip)           obscde
+      integer(ip)           prvilu
+      integer(ip)           prvtrg
+      integer(ip)           room
+      integer(ip)           shadow
+      integer(ip)           shape
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           svlcod
+      integer(ip)           to
+      integer(ip)           total
+      integer(ip)           trgcde
+      integer(ip)           trmtyp
 
       logical               attblk ( nabcor )
       logical               first
@@ -2043,42 +2044,42 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(maxl)      svilum
-      integer               svicde
+      integer(ip)           svicde
       logical               svfnd3
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfxfc
+      integer(ip)           svfxfc
 
 
 !
 !     Saved surface name/ID item declarations.
 !
-      integer               svctr5 ( ctrsiz )
+      integer(ip)           svctr5 ( ctrsiz )
 
 !
 !     Saved target radii declarations.
 !
-      integer               svctr6 ( ctrsiz )
-      double precision      svtrad ( 3 )
+      integer(ip)           svctr6 ( ctrsiz )
+      real(wp)              svtrad ( 3 )
 
-      integer               svctr7 ( ctrsiz )
-      double precision      svsrad ( 3 )
+      integer(ip)           svctr7 ( ctrsiz )
+      real(wp)              svsrad ( 3 )
 
 !
 !     Saved variables
@@ -2595,7 +2596,7 @@
 !
       if ( ncuts .gt. 1 )  then
 
-         if ( rolstp .eq. 0.d0 ) then
+         if ( rolstp .eq. 0.0_wp ) then
 
             call setmsg ( 'ROLSTP is zero; NCUTS = #; the roll ' &
             //            'step is required to be non-zero ' &
@@ -2897,7 +2898,7 @@
 !                 to perform this computation, since the surface may be
 !                 invisible from the interior of the target.
 !
-                  call vscl  ( 3.d0*maxrad, edir, rayvtx )
+                  call vscl  ( 3.0_wp*maxrad, edir, rayvtx )
                   call vminus( edir, raydir )
 
                   call zzsudski ( trgcde, nsurf, srflst, fxfcde )
@@ -3067,7 +3068,7 @@
                end if
 
                j     = 0
-               lterr = 1.d0
+               lterr = 1.0_wp
 
                do while (       ( j     .lt. numitr ) &
                           .and. ( lterr .gt. cnvlim )  )
@@ -3153,7 +3154,7 @@
 !                 corrected epoch.
 !
                   lterr = touchd(    abs( lt  - prvlt      ) &
-                                   / max( 1.d0, abs(epoch) )  )
+                                   / max( 1.0_wp, abs(epoch) )  )
                   j     = j + 1
 
                end do

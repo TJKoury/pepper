@@ -1,6 +1,7 @@
 !$Procedure HRMINT ( Hermite polynomial interpolation  )
 
       subroutine hrmint ( n,  xvals,  yvals,  x,  work,  f,  df )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               n
-      double precision      xvals (   n )
-      double precision      yvals ( 2*n )
-      double precision      x
-      double precision      work  ( 2*n, 2 )
-      double precision      f
-      double precision      df
+      integer(ip)           n
+      real(wp)              xvals (   n )
+      real(wp)              yvals ( 2*n )
+      real(wp)              x
+      real(wp)              work  ( 2*n, 2 )
+      real(wp)              f
+      real(wp)              df
 
 ! $ Brief_I/O
 !
@@ -250,18 +251,18 @@
 !
 !     Local variables
 !
-      double precision      c1
-      double precision      c2
-      double precision      denom
-      double precision      temp
+      real(wp)              c1
+      real(wp)              c2
+      real(wp)              denom
+      real(wp)              temp
 
-      integer               i
-      integer               j
-      integer               next
-      integer               prev
-      integer               this
-      integer               xi
-      integer               xij
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           next
+      integer(ip)           prev
+      integer(ip)           this
+      integer(ip)           xi
+      integer(ip)           xij
 
 !
 !     Check in only if an error is detected.
@@ -312,7 +313,7 @@
          denom  =  xvals(i+1) - xvals(i)
 
 
-         if ( denom .eq. 0.d0 ) then
+         if ( denom .eq. 0.0_wp ) then
 
             call chkin  ( 'HRMINT'                  )
             call setmsg ( 'XVALS(#) = XVALS(#) = #' )
@@ -393,7 +394,7 @@
 
             denom    =     xvals(xij)   -   xvals(xi)
 
-            if ( denom .eq. 0.d0 ) then
+            if ( denom .eq. 0.0_wp ) then
 
                call chkin  ( 'HRMINT'                  )
                call setmsg ( 'XVALS(#) = XVALS(#) = #' )

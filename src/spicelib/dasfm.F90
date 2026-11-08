@@ -15,6 +15,7 @@
                          ncomc, &
                          fhset, &
                          access  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -37,23 +38,23 @@
       include 'das.inc'
       include 'errhnd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell  =   -5 )
 
       character*(*)         fname
       character*(*)         ftype
       character*(*)         ifname
-      integer               handle
-      integer               unit
-      integer               free
-      integer               lastla ( 3 )
-      integer               lastrc ( 3 )
-      integer               lastwd ( 3 )
-      integer               nresvr
-      integer               nresvc
-      integer               ncomr
-      integer               ncomc
-      integer               fhset  ( lbcell : * )
+      integer(ip)           handle
+      integer(ip)           unit
+      integer(ip)           free
+      integer(ip)           lastla ( 3 )
+      integer(ip)           lastrc ( 3 )
+      integer(ip)           lastwd ( 3 )
+      integer(ip)           nresvr
+      integer(ip)           nresvc
+      integer(ip)           ncomr
+      integer(ip)           ncomc
+      integer(ip)           fhset  ( lbcell : * )
       character*(*)         access
 
 !
@@ -98,9 +99,9 @@
 !                  Absoft Fortran Version 3.2
 !     Source:      NAIF Program
 
-      integer               recl
+      integer(ip)           recl
       parameter           ( recl   = 1024 )
-      integer               filen
+      integer(ip)           filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter           ( filen  =  128 )
 #else
@@ -785,10 +786,10 @@
 !
 !     SPICELIB functions
 !
-      integer               lnknfn
-      integer               lnknxt
-      integer               ltrim
-      integer               rtrim
+      integer(ip)           lnknfn
+      integer(ip)           lnknxt
+      integer(ip)           ltrim
+      integer(ip)           rtrim
 
       logical               elemi
       logical               failed
@@ -797,33 +798,33 @@
 !
 !     Local parameters
 !
-      integer               acclen
+      integer(ip)           acclen
       parameter           ( acclen =   10 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =    8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen =   60 )
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool =   -5 )
 
-      integer               maxpc
+      integer(ip)           maxpc
       parameter           ( maxpc  =  126 )
 
-      integer               minpc
+      integer(ip)           minpc
       parameter           ( minpc  =   32 )
 
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen =    4 )
 !
 !     Access method parameters:
 !
-      integer               read
+      integer(ip)           read
       parameter           ( read   =          1 )
 
-      integer               write
+      integer(ip)           write
       parameter           ( write  =  read  + 1 )
 
 !
@@ -862,19 +863,19 @@
 !           +----------------------------------------+
 !
 
-      integer               rrcidx
+      integer(ip)           rrcidx
       parameter           ( rrcidx  =           1 )
 
-      integer               rchidx
+      integer(ip)           rchidx
       parameter           ( rchidx  =  rrcidx + 1 )
 
-      integer               crcidx
+      integer(ip)           crcidx
       parameter           ( crcidx  =  rchidx + 1 )
 
-      integer               cchidx
+      integer(ip)           cchidx
       parameter           ( cchidx  =  crcidx + 1 )
 
-      integer               freidx
+      integer(ip)           freidx
       parameter           ( freidx =   cchidx + 1 )
 
 !
@@ -888,40 +889,40 @@
 !     is obtained by adding the appropriate data type parameter
 !     (DP, INT, or CHAR) to the base index for the item.
 !
-      integer               llabas
+      integer(ip)           llabas
       parameter           ( llabas =   freidx     )
 
-      integer               lrcbas
+      integer(ip)           lrcbas
       parameter           ( lrcbas =   llabas + 3 )
 
-      integer               lwdbas
+      integer(ip)           lwdbas
       parameter           ( lwdbas =   lrcbas + 3 )
 
-      integer               sumsiz
+      integer(ip)           sumsiz
       parameter           ( sumsiz =   lwdbas + 3 )
 
 !
 !     Descriptor record pointer locations (within descriptor records):
 !
-      integer               fwdloc
+      integer(ip)           fwdloc
       parameter           ( fwdloc =  2 )
 
 !
 !     Directory address range location parameters:
 !
-      integer               rngbas
+      integer(ip)           rngbas
       parameter           ( rngbas =   2 )
 
 !
 !     First descriptor position in descriptor record:
 !
-      integer               begdsc
+      integer(ip)           begdsc
       parameter           ( begdsc =   9 )
 
 !
 !     Length of the Binary File Format string:
 !
-      integer               fmtlen
+      integer(ip)           fmtlen
       parameter           ( fmtlen = 8 )
 
 !
@@ -955,7 +956,7 @@
 !     1 byte characters, and a DAS record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      integer               tailen
+      integer(ip)           tailen
       parameter           ( tailen = 932 )
 
 !
@@ -987,24 +988,24 @@
 !     NEXT is incremented each time a file is opened to become the
 !     next file handle assigned.
 !
-      integer               fthan  (         ftsize )
-      integer               ftacc  (         ftsize )
-      integer               ftlnk  (         ftsize )
-      integer               ftsum  ( sumsiz, ftsize )
+      integer(ip)           fthan  (         ftsize )
+      integer(ip)           ftacc  (         ftsize )
+      integer(ip)           ftlnk  (         ftsize )
+      integer(ip)           ftsum  ( sumsiz, ftsize )
 
-      integer               pool   ( 2,  lbpool : ftsize )
+      integer(ip)           pool   ( 2,  lbpool : ftsize )
 
 !
 !     FTHEAD is a pointer to the head of the active file list.
 !
-      integer               fthead
+      integer(ip)           fthead
 
 !
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
-      integer               next   ( 3 )
-      integer               prev   ( 3 )
+      integer(ip)           next   ( 3 )
+      integer(ip)           prev   ( 3 )
 
 !
 !     Other local variables
@@ -1018,34 +1019,34 @@
       character*(tailen)    tail
       character*(typlen)    ttype
 
-      integer               curtyp
-      integer               dirrec ( nwi )
-      integer               dsctyp
-      integer               endrec
-      integer               fnb
-      integer               fhlist ( lbcell : ftsize )
-      integer               findex
-      integer               i
-      integer               inqsta
-      integer               iostat
-      integer               last
-      integer               ldrec  ( 3 )
-      integer               ldrmax
-      integer               loc
-      integer               loccch
-      integer               loccrc
-      integer               locrrc
-      integer               locrch
-      integer               maxadr
-      integer               new
-      integer               nrec
-      integer               number
-      integer               nw     ( 3 )
-      integer               nxtdir
-      integer               nxtrec
-      integer               pos
-      integer               prvtyp
-      integer               type
+      integer(ip)           curtyp
+      integer(ip)           dirrec ( nwi )
+      integer(ip)           dsctyp
+      integer(ip)           endrec
+      integer(ip)           fnb
+      integer(ip)           fhlist ( lbcell : ftsize )
+      integer(ip)           findex
+      integer(ip)           i
+      integer(ip)           inqsta
+      integer(ip)           iostat
+      integer(ip)           last
+      integer(ip)           ldrec  ( 3 )
+      integer(ip)           ldrmax
+      integer(ip)           loc
+      integer(ip)           loccch
+      integer(ip)           loccrc
+      integer(ip)           locrrc
+      integer(ip)           locrch
+      integer(ip)           maxadr
+      integer(ip)           new
+      integer(ip)           nrec
+      integer(ip)           number
+      integer(ip)           nw     ( 3 )
+      integer(ip)           nxtdir
+      integer(ip)           nxtrec
+      integer(ip)           pos
+      integer(ip)           prvtyp
+      integer(ip)           type
 
       logical               found
       logical               pass1

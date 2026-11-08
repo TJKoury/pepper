@@ -1,6 +1,7 @@
 !$Procedure SPKS20 ( S/P Kernel, subset, type 20 )
 
       subroutine spks20 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -118,39 +119,39 @@
 !
 !     SPICELIB functions
 !
-      double precision      j2000
-      double precision      spd
+      real(wp)              j2000
+      real(wp)              spd
 
       logical               return
 
 !
 !     Local parameters
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 100 )
 
 !
 !     Local variables
 !
-      double precision      btime
-      double precision      data   ( bufsiz )
-      double precision      dscale
-      double precision      tscale
-      double precision      initjd
-      double precision      initfr
-      double precision      intlen
-      double precision      intrvl
-      double precision      subbeg
-      double precision      subifr
-      double precision      subijd
+      real(wp)              btime
+      real(wp)              data   ( bufsiz )
+      real(wp)              dscale
+      real(wp)              tscale
+      real(wp)              initjd
+      real(wp)              initfr
+      real(wp)              intlen
+      real(wp)              intrvl
+      real(wp)              subbeg
+      real(wp)              subifr
+      real(wp)              subijd
 
-      integer               recsiz
-      integer               nrec
-      integer               first
-      integer               last
-      integer               remain
-      integer               addr
-      integer               move
+      integer(ip)           recsiz
+      integer(ip)           nrec
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           remain
+      integer(ip)           addr
+      integer(ip)           move
 
 
 !
@@ -250,8 +251,8 @@
       data( 3 ) = subijd
       data( 4 ) = subifr
       data( 5 ) = intlen
-      data( 6 ) = dble( recsiz )
-      data( 7 ) = dble( nrec   )
+      data( 6 ) = real( recsiz, wp )
+      data( 7 ) = real( nrec, wp   )
 
       call dafada ( data, 7 )
 

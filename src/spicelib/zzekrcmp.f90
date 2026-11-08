@@ -4,6 +4,7 @@
                                   ncols, &
                                   han1, sgdsc1, cdlst1, row1, elts1, &
                                   han2, sgdsc2, cdlst2, row2, elts2  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -28,18 +29,18 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               op
-      integer               ncols
-      integer               han1
-      integer               sgdsc1 ( sdscsz )
-      integer               cdlst1 ( cdscsz, * )
-      integer               row1
-      integer               elts1  ( * )
-      integer               han2
-      integer               sgdsc2 ( sdscsz )
-      integer               cdlst2 ( cdscsz, * )
-      integer               row2
-      integer               elts2  ( * )
+      integer(ip)           op
+      integer(ip)           ncols
+      integer(ip)           han1
+      integer(ip)           sgdsc1 ( sdscsz )
+      integer(ip)           cdlst1 ( cdscsz, * )
+      integer(ip)           row1
+      integer(ip)           elts1  ( * )
+      integer(ip)           han2
+      integer(ip)           sgdsc2 ( sdscsz )
+      integer(ip)           cdlst2 ( cdscsz, * )
+      integer(ip)           row2
+      integer(ip)           elts2  ( * )
 
 ! $ Brief_I/O
 !
@@ -242,18 +243,18 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekecmp
+      integer(ip)           zzekecmp
 
 !
 !     Local variables
 !
-      integer               cldscs ( cdscsz, 2 )
-      integer               col
-      integer               elts   ( 2 )
-      integer               hans   ( 2 )
-      integer               rel
-      integer               rows   ( 2 )
-      integer               sgdscs ( sdscsz, 2 )
+      integer(ip)           cldscs ( cdscsz, 2 )
+      integer(ip)           col
+      integer(ip)           elts   ( 2 )
+      integer(ip)           hans   ( 2 )
+      integer(ip)           rel
+      integer(ip)           rows   ( 2 )
+      integer(ip)           sgdscs ( sdscsz, 2 )
 
 !
 !     Use discovery check-in for speed.

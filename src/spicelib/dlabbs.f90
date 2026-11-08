@@ -1,6 +1,7 @@
 !$Procedure DLABBS ( DLA, begin backward search )
 
       subroutine dlabbs ( handle, dladsc, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,8 +24,8 @@
 
       include 'dla.inc'
 
-      integer               handle
-      integer               dladsc  ( * )
+      integer(ip)           handle
+      integer(ip)           dladsc  ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -294,7 +295,7 @@
 !
 !     Local variables
 !
-      integer               this
+      integer(ip)           this
 
 !
 !     Standard SPICE error handling.

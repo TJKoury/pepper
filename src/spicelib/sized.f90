@@ -1,6 +1,7 @@
 !$Procedure SIZED ( Size of a double precision cell )
 
-      integer function sized ( cell )
+      integer(ip) function sized ( cell )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      cell   ( lbcell:* )
+      real(wp)              cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !

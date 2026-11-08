@@ -1,6 +1,7 @@
 !$Procedure DASUDD ( DAS, update data, double precision )
 
       subroutine dasudd ( handle, first, last, data )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
 
       implicit none
 
-      integer               handle
-      integer               first
-      integer               last
-      double precision      data   ( * )
+      integer(ip)           handle
+      integer(ip)           first
+      integer(ip)           last
+      real(wp)              data   ( * )
 
 ! $ Brief_I/O
 !
@@ -325,25 +326,25 @@
 !
 !     Local parameters
 !
-      integer               dp
+      integer(ip)           dp
       parameter           ( dp     =  2  )
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd    = 128 )
 
 !
 !     Local variables
 !
-      integer               clbase
-      integer               clsize
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               n
-      integer               numdp
-      integer               nwritn
-      integer               recno
-      integer               wordno
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           n
+      integer(ip)           numdp
+      integer(ip)           nwritn
+      integer(ip)           recno
+      integer(ip)           wordno
 
 !
 !     Standard SPICE error handling.

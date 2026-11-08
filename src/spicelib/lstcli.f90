@@ -1,6 +1,7 @@
 !$Procedure LSTCLI ( Closest integer array element )
 
-      integer function  lstcli ( x, n, array )
+      integer(ip) function  lstcli ( x, n, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      integer               x
-      integer               n
-      integer               array ( * )
+      integer(ip)           x
+      integer(ip)           n
+      integer(ip)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -153,12 +154,12 @@
 !
 !     Local variables
 !
-      integer          j
+      integer(ip)      j
 
-      integer          begin
-      integer          end
-      integer          middle
-      integer          items
+      integer(ip)      begin
+      integer(ip)      end
+      integer(ip)      middle
+      integer(ip)      items
 
 !
 !     Save the size of the array and point to the beginning and ending

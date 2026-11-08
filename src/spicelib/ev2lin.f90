@@ -1,6 +1,7 @@
 !$Procedure EV2LIN ( Evaluate "two-line" element data, near-earth )
 
       subroutine ev2lin ( et, geophs, elems, state )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,12 +26,12 @@
 
       implicit none
 
-      double precision      et
-      double precision      geophs ( * )
-      double precision      elems  ( * )
-      double precision      state  ( * )
+      real(wp)              et
+      real(wp)              geophs ( * )
+      real(wp)              elems  ( * )
+      real(wp)              state  ( * )
 
-      integer               nmodl
+      integer(ip)           nmodl
       parameter           ( nmodl = 6 )
 
 ! $ Brief_I/O
@@ -430,8 +431,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      twopi
+      real(wp)              brcktd
+      real(wp)              twopi
 
 !
 !     Local Parameters
@@ -451,14 +452,14 @@
 !     KAE  --- distance units/earth radius
 !
 !
-      integer               kj2
-      integer               kj3
-      integer               kj4
-      integer               kke
-      integer               kqo
-      integer               kso
-      integer               ker
-      integer               kae
+      integer(ip)           kj2
+      integer(ip)           kj3
+      integer(ip)           kj4
+      integer(ip)           kke
+      integer(ip)           kqo
+      integer(ip)           kso
+      integer(ip)           ker
+      integer(ip)           kae
 
       parameter           ( kj2 = 1 )
       parameter           ( kj3 = 2 )
@@ -469,7 +470,7 @@
       parameter           ( ker = 7 )
       parameter           ( kae = 8 )
 
-      integer               ngeocn
+      integer(ip)           ngeocn
       parameter           ( ngeocn = kae )
 !
 !     An enumeration of the various components of the
@@ -486,17 +487,17 @@
 !     KNO
 !
 
-      integer               kndt20
-      integer               kndd60
-      integer               kbstar
-      integer               kincl
-      integer               knode0
-      integer               kecc
-      integer               komega
-      integer               kmo
-      integer               kno
-      integer               kepoch
-      integer               nelems
+      integer(ip)           kndt20
+      integer(ip)           kndd60
+      integer(ip)           kbstar
+      integer(ip)           kincl
+      integer(ip)           knode0
+      integer(ip)           kecc
+      integer(ip)           komega
+      integer(ip)           kmo
+      integer(ip)           kno
+      integer(ip)           kepoch
+      integer(ip)           nelems
 
       parameter           ( kndt20 =      1 )
       parameter           ( kndd60 =      2 )
@@ -519,13 +520,13 @@
 !     PREV
 !
 
-      integer               next
+      integer(ip)           next
       parameter           ( next   = 1 )
 
-      integer               prev
+      integer(ip)           prev
       parameter           ( prev   = 2 )
 
-      integer               nil
+      integer(ip)           nil
       parameter           ( nil    = 0 )
 
 !
@@ -536,71 +537,71 @@
 !     quantities  will not be recomputed.  PRSIZE is the parameter
 !     used to declare the needed room.
 !
-      integer               prsize
+      integer(ip)           prsize
       parameter           ( prsize = 29 )
 !
 !     When we perform bisection in the solution of Kepler's equation
 !     we don't want to bisect too many times.
 !
-      integer               mxloop
+      integer(ip)           mxloop
       parameter           ( mxloop = 20 )
 
 !
 !     Numerical Constants
 !
-      double precision      half
-      double precision      one
-      double precision      f3ov8
-      double precision      f3ov2
-      double precision      tothrd
-      double precision      onethd
+      real(wp)              half
+      real(wp)              one
+      real(wp)              f3ov8
+      real(wp)              f3ov2
+      real(wp)              tothrd
+      real(wp)              onethd
 
-      parameter           ( half    =    0.5d0         )
-      parameter           ( one     =    1.0d0         )
-      parameter           ( f3ov8   =    3.0d0/8.0d0   )
-      parameter           ( f3ov2   =    1.50d0        )
-      parameter           ( tothrd  =    2.0d0/3.0d0   )
-      parameter           ( onethd  =    1.0d0/3.0d0   )
+      parameter           ( half    =    0.5_wp         )
+      parameter           ( one     =    1.0_wp         )
+      parameter           ( f3ov8   =    3.0_wp/8.0_wp   )
+      parameter           ( f3ov2   =    1.50_wp        )
+      parameter           ( tothrd  =    2.0_wp/3.0_wp   )
+      parameter           ( onethd  =    1.0_wp/3.0_wp   )
 
 !
 !     Local variables
 !
 !     Geophysical Quantities
 !
-      double precision      j2
-      double precision      j3
-      double precision      j4
-      double precision      ke
-      double precision      qo
-      double precision      so
-      double precision      er
-      double precision      ae
-      double precision      ae2
-      double precision      ae3
-      double precision      ae4
-      double precision      ck2
-      double precision      a3ovk2
-      double precision      ck4
-      double precision      qomso
-      double precision      q1
-      double precision      q2
-      double precision      qoms2t
-      double precision      s
+      real(wp)              j2
+      real(wp)              j3
+      real(wp)              j4
+      real(wp)              ke
+      real(wp)              qo
+      real(wp)              so
+      real(wp)              er
+      real(wp)              ae
+      real(wp)              ae2
+      real(wp)              ae3
+      real(wp)              ae4
+      real(wp)              ck2
+      real(wp)              a3ovk2
+      real(wp)              ck4
+      real(wp)              qomso
+      real(wp)              q1
+      real(wp)              q2
+      real(wp)              qoms2t
+      real(wp)              s
 
 
 !
 !     Elements
 !
-      double precision      epoch
-      double precision      xndt2o
-      double precision      xndd6o
-      double precision      bstar
-      double precision      xincl
-      double precision      xnodeo
-      double precision      eo
-      double precision      omegao
-      double precision      xmo
-      double precision      xno
+      real(wp)              epoch
+      real(wp)              xndt2o
+      real(wp)              xndd6o
+      real(wp)              bstar
+      real(wp)              xincl
+      real(wp)              xnodeo
+      real(wp)              eo
+      real(wp)              omegao
+      real(wp)              xmo
+      real(wp)              xno
 
 !
 !     Intermediate quantities. The time independent quantities
@@ -608,155 +609,155 @@
 !
 
 
-      double precision      a
-      double precision      a1
-      double precision      ao
-      double precision      aodp
-      double precision      axn
-      double precision      aycof
-      double precision      ayn
-      double precision      aynl
-      double precision      betal
-      double precision      betao
-      double precision      betao2
-      double precision      betao3
-      double precision      betao4
-      double precision      c1
-      double precision      c1sq
-      double precision      c2
-      double precision      c3
-      double precision      c4
-      double precision      c5
-      double precision      capu
-      double precision      coef
-      double precision      coef1
-      double precision      cos2u
-      double precision      cosepw
-      double precision      cosik
-      double precision      cosio
-      double precision      cosnok
-      double precision      cosu
-      double precision      cosuk
-      double precision      d2
-      double precision      d3
-      double precision      d4
-      double precision      del1
-      double precision      delm
-      double precision      delmo
-      double precision      delo
-      double precision      delomg
-      double precision      e
-      double precision      ecose
-      double precision      eeta
-      double precision      elemnt ( nelems, nmodl )
-      double precision      elsq
-      double precision      epsiln
-      double precision      epw
-      double precision      epwnxt
-      double precision      esine
-      double precision      est
-      double precision      eta
-      double precision      etasq
-      double precision      f
-      double precision      fl
-      double precision      fmod2p
-      double precision      fprime
-      double precision      fu
-      double precision      lower
-      double precision      lstgeo ( ngeocn )
-      double precision      m
-      double precision      mov1m
-      double precision      omega
-      double precision      omgadf
-      double precision      omgcof
-      double precision      omgdot
-      double precision      perige
-      double precision      pinvsq
-      double precision      pix2
-      double precision      pl
-      double precision      prelim ( prsize, nmodl )
-      double precision      psisq
-      double precision      qoms24
-      double precision      r
-      double precision      rdot
-      double precision      rdotk
-      double precision      rfdot
-      double precision      rfdotk
-      double precision      rk
-      double precision      s4
-      double precision      sin2u
-      double precision      sinepw
-      double precision      sinik
-      double precision      sinio
-      double precision      sinmo
-      double precision      sinnok
-      double precision      sinu
-      double precision      sinuk
-      double precision      t2cof
-      double precision      t3cof
-      double precision      t4cof
-      double precision      t5cof
-      double precision      tcube
-      double precision      temp
-      double precision      temp1
-      double precision      temp2
-      double precision      temp3
-      double precision      temp4
-      double precision      temp5
-      double precision      temp6
-      double precision      tempa
-      double precision      tempe
-      double precision      templ
-      double precision      tfour
-      double precision      theta2
-      double precision      theta4
-      double precision      tokm
-      double precision      tokmps
-      double precision      tsi
-      double precision      tsince
-      double precision      tsq
-      double precision      u
-      double precision      uk
-      double precision      upper
-      double precision      ux
-      double precision      uy
-      double precision      uz
-      double precision      vx
-      double precision      vy
-      double precision      vz
-      double precision      x1m5th
-      double precision      x1mth2
-      double precision      x3thm1
-      double precision      x7thm1
-      double precision      xhdot1
-      double precision      xinck
-      double precision      xl
-      double precision      xlcof
-      double precision      xll
-      double precision      xlt
-      double precision      xmcof
-      double precision      xmdf
-      double precision      xmdot
-      double precision      xmp
-      double precision      xmx
-      double precision      xmy
-      double precision      xn
-      double precision      xnodcf
-      double precision      xnoddf
-      double precision      xnode
-      double precision      xnodek
-      double precision      xnodot
-      double precision      xnodp
+      real(wp)              a
+      real(wp)              a1
+      real(wp)              ao
+      real(wp)              aodp
+      real(wp)              axn
+      real(wp)              aycof
+      real(wp)              ayn
+      real(wp)              aynl
+      real(wp)              betal
+      real(wp)              betao
+      real(wp)              betao2
+      real(wp)              betao3
+      real(wp)              betao4
+      real(wp)              c1
+      real(wp)              c1sq
+      real(wp)              c2
+      real(wp)              c3
+      real(wp)              c4
+      real(wp)              c5
+      real(wp)              capu
+      real(wp)              coef
+      real(wp)              coef1
+      real(wp)              cos2u
+      real(wp)              cosepw
+      real(wp)              cosik
+      real(wp)              cosio
+      real(wp)              cosnok
+      real(wp)              cosu
+      real(wp)              cosuk
+      real(wp)              d2
+      real(wp)              d3
+      real(wp)              d4
+      real(wp)              del1
+      real(wp)              delm
+      real(wp)              delmo
+      real(wp)              delo
+      real(wp)              delomg
+      real(wp)              e
+      real(wp)              ecose
+      real(wp)              eeta
+      real(wp)              elemnt ( nelems, nmodl )
+      real(wp)              elsq
+      real(wp)              epsiln
+      real(wp)              epw
+      real(wp)              epwnxt
+      real(wp)              esine
+      real(wp)              est
+      real(wp)              eta
+      real(wp)              etasq
+      real(wp)              f
+      real(wp)              fl
+      real(wp)              fmod2p
+      real(wp)              fprime
+      real(wp)              fu
+      real(wp)              lower
+      real(wp)              lstgeo ( ngeocn )
+      real(wp)              m
+      real(wp)              mov1m
+      real(wp)              omega
+      real(wp)              omgadf
+      real(wp)              omgcof
+      real(wp)              omgdot
+      real(wp)              perige
+      real(wp)              pinvsq
+      real(wp)              pix2
+      real(wp)              pl
+      real(wp)              prelim ( prsize, nmodl )
+      real(wp)              psisq
+      real(wp)              qoms24
+      real(wp)              r
+      real(wp)              rdot
+      real(wp)              rdotk
+      real(wp)              rfdot
+      real(wp)              rfdotk
+      real(wp)              rk
+      real(wp)              s4
+      real(wp)              sin2u
+      real(wp)              sinepw
+      real(wp)              sinik
+      real(wp)              sinio
+      real(wp)              sinmo
+      real(wp)              sinnok
+      real(wp)              sinu
+      real(wp)              sinuk
+      real(wp)              t2cof
+      real(wp)              t3cof
+      real(wp)              t4cof
+      real(wp)              t5cof
+      real(wp)              tcube
+      real(wp)              temp
+      real(wp)              temp1
+      real(wp)              temp2
+      real(wp)              temp3
+      real(wp)              temp4
+      real(wp)              temp5
+      real(wp)              temp6
+      real(wp)              tempa
+      real(wp)              tempe
+      real(wp)              templ
+      real(wp)              tfour
+      real(wp)              theta2
+      real(wp)              theta4
+      real(wp)              tokm
+      real(wp)              tokmps
+      real(wp)              tsi
+      real(wp)              tsince
+      real(wp)              tsq
+      real(wp)              u
+      real(wp)              uk
+      real(wp)              upper
+      real(wp)              ux
+      real(wp)              uy
+      real(wp)              uz
+      real(wp)              vx
+      real(wp)              vy
+      real(wp)              vz
+      real(wp)              x1m5th
+      real(wp)              x1mth2
+      real(wp)              x3thm1
+      real(wp)              x7thm1
+      real(wp)              xhdot1
+      real(wp)              xinck
+      real(wp)              xl
+      real(wp)              xlcof
+      real(wp)              xll
+      real(wp)              xlt
+      real(wp)              xmcof
+      real(wp)              xmdf
+      real(wp)              xmdot
+      real(wp)              xmp
+      real(wp)              xmx
+      real(wp)              xmy
+      real(wp)              xn
+      real(wp)              xnodcf
+      real(wp)              xnoddf
+      real(wp)              xnode
+      real(wp)              xnodek
+      real(wp)              xnodot
+      real(wp)              xnodp
 
-      integer               before
-      integer               count
-      integer               after
-      integer               head
-      integer               i
-      integer               j
-      integer               last
-      integer               list ( 2, nmodl )
-      integer               n
+      integer(ip)           before
+      integer(ip)           count
+      integer(ip)           after
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           last
+      integer(ip)           list ( 2, nmodl )
+      integer(ip)           n
 
       logical               doinit
       logical               newgeo
@@ -779,12 +780,12 @@
          pix2   = twopi()
 
          do i = 1, ngeocn
-            lstgeo(i) = 0.0d0
+            lstgeo(i) = 0.0_wp
          end do
 
          do i = 1, nmodl
             do j = 1, nelems
-               elemnt ( j, i ) = 0.0d0
+               elemnt ( j, i ) = 0.0_wp
             end do
          end do
 
@@ -847,7 +848,7 @@
          ae3    =  ae    * ae2
          ae4    =  ae    * ae3
          ck2    =  half  * j2 * ae2
-         a3ovk2 = -2.0d0 * j3 * ae  / j2
+         a3ovk2 = -2.0_wp * j3 * ae  / j2
          ck4    = -f3ov8 * j4 * ae4
          qomso  = qo-so
          q1     = qomso  * ae / er
@@ -860,7 +861,7 @@
 !        factors we shall need to do this.
 !
          tokm   = er/ae
-         tokmps = tokm   / 60.0d0
+         tokmps = tokm   / 60.0_wp
 
          newgeo = .true.
 
@@ -1009,11 +1010,11 @@
          theta2 = cosio  * cosio
 
          theta4 = theta2 * theta2
-         x3thm1 = 3.0d0  * theta2  -  one
-         x7thm1 = 7.0d0  * theta2  -  one
+         x3thm1 = 3.0_wp  * theta2  -  one
+         x7thm1 = 7.0_wp  * theta2  -  one
 
          x1mth2 = one    - theta2
-         x1m5th = one    - 5.0d0 * theta2
+         x1m5th = one    - 5.0_wp * theta2
 !
 !        Eccentricity dependent constants
 !
@@ -1025,13 +1026,13 @@
 !        Semi-major axis and ascending node related constants.
 !
          a1     = (ke/xno)**tothrd
-         del1   = 1.5d0 * ck2 * x3thm1 / ( a1*a1*betao3 )
+         del1   = 1.5_wp * ck2 * x3thm1 / ( a1*a1*betao3 )
 
          ao     = a1    * ( one &
                            - del1*( onethd &
-                                 + del1*( one + del1*134.0d0/81.0d0)))
+                                 + del1*( one + del1*134.0_wp/81.0_wp)))
 
-         delo   = 1.5d0 * ck2 * x3thm1 / (ao*ao*betao3)
+         delo   = 1.5_wp * ck2 * x3thm1 / (ao*ao*betao3)
 
          xnodp  = xno / (one + delo)
          aodp   = ao  / (one - delo)
@@ -1044,14 +1045,14 @@
 !        For perigee below 156 km, the values of S and QOMS2T are
 !        altered.
 !
-         if ( perige .lt. 156.0d0 ) then
-            s4 = perige - 78.0d0
+         if ( perige .lt. 156.0_wp ) then
+            s4 = perige - 78.0_wp
 
-            if ( perige .le. 98.0d0 ) then
-               s4 = 20.0d0
+            if ( perige .le. 98.0_wp ) then
+               s4 = 20.0_wp
             end if
 
-            qoms24 = ( (120.0d0-s4)*ae / er )**4
+            qoms24 = ( (120.0_wp-s4)*ae / er )**4
             s4     = ae + ( s4/er )
          end if
 !
@@ -1068,69 +1069,69 @@
 
          psisq  = dabs(one - etasq)
 
-         coef1  = coef  / psisq**3.5d0
+         coef1  = coef  / psisq**3.5_wp
          c2     = coef1 &
                   * xnodp &
                   * (   aodp   * (  one &
                                  + f3ov2*etasq &
-                                 + eeta *( 4.0d0 +       etasq) ) &
-                     + 0.75d0 * ck2 &
+                                 + eeta *( 4.0_wp +       etasq) ) &
+                     + 0.75_wp * ck2 &
                               * (tsi/psisq) &
                               * x3thm1 &
-                              * (  8.0d0 &
-                                 + etasq*(24.0d0 + 3.0d0*etasq) )   )
+                              * (  8.0_wp &
+                                 + etasq*(24.0_wp + 3.0_wp*etasq) )   )
 
          c1     =  c2 * bstar
 
          c3     =  coef * tsi * a3ovk2 * xnodp *ae * sinio / eo
 
-         c4    = 2.0d0 * xnodp * coef1 * aodp &
+         c4    = 2.0_wp * xnodp * coef1 * aodp &
                * betao2 &
-               * (  eta   * ( 2.0d0 + 0.50d0*etasq  ) &
-                  + eo    * ( half  + 2.0d0*etasq  ) &
-                  - 2.0d0 * ( ck2*tsi/(aodp*psisq) ) &
-                           * ( -3.00d0 * x3thm1 &
+               * (  eta   * ( 2.0_wp + 0.50_wp*etasq  ) &
+                  + eo    * ( half  + 2.0_wp*etasq  ) &
+                  - 2.0_wp * ( ck2*tsi/(aodp*psisq) ) &
+                           * ( -3.00_wp * x3thm1 &
                                        * ( one &
-                                         - eeta * 2.0d0 &
+                                         - eeta * 2.0_wp &
                                          + etasq*(f3ov2 - half*eeta)) &
-                              + 0.75d0 * dcos ( 2.0d0 * omegao ) &
+                              + 0.75_wp * dcos ( 2.0_wp * omegao ) &
                                        * x1mth2 &
-                                       * (  etasq * 2.0d0 &
+                                       * (  etasq * 2.0_wp &
                                           - eeta  * (one+etasq))))
 
-         c5    = 2.0d0*coef1*aodp*betao2 &
-                        *(one + 2.75d0*(etasq+eeta) + eeta*etasq )
+         c5    = 2.0_wp*coef1*aodp*betao2 &
+                        *(one + 2.75_wp*(etasq+eeta) + eeta*etasq )
 
-         temp1  = 3.0d0  * ck2 * pinvsq * xnodp
+         temp1  = 3.0_wp  * ck2 * pinvsq * xnodp
          temp2  = temp1  * ck2 * pinvsq
-         temp3  = 1.25d0 * ck4 * pinvsq * pinvsq * xnodp
+         temp3  = 1.25_wp * ck4 * pinvsq * pinvsq * xnodp
 
          xmdot  =  xnodp &
                   +  half     * temp1 * betao * x3thm1 &
-                  +  0.0625d0 * temp2 * betao * (  13.0d0 &
-                                             -  78.0d0*theta2 &
-                                             + 137.0d0*theta4 )
+                  +  0.0625_wp * temp2 * betao * (  13.0_wp &
+                                             -  78.0_wp*theta2 &
+                                             + 137.0_wp*theta4 )
 
          omgdot = -half      * temp1 * x1m5th &
-                  + 0.0625d0 * temp2 * (   7.0d0 &
-                                       - 114.0d0*theta2 &
-                                       + 395.0d0*theta4 ) &
-                  +            temp3 * (   3.0d0 &
-                                       -  36.0d0*theta2 &
-                                       +  49.0d0*theta4 )
+                  + 0.0625_wp * temp2 * (   7.0_wp &
+                                       - 114.0_wp*theta2 &
+                                       + 395.0_wp*theta4 ) &
+                  +            temp3 * (   3.0_wp &
+                                       -  36.0_wp*theta2 &
+                                       +  49.0_wp*theta4 )
 
          xhdot1 = -temp1*cosio
 
          xnodot = xhdot1 &
-                  + cosio * (  half  * temp2*(4.0d0 - 19.0d0*theta2) &
-                           + 2.0d0 * temp3*(3.0d0 -  7.0d0*theta2) )
+                  + cosio * (  half  * temp2*(4.0_wp - 19.0_wp*theta2) &
+                           + 2.0_wp * temp3*(3.0_wp -  7.0_wp*theta2) )
 
          omgcof =  bstar   * c3     * dcos(omegao)
          xmcof  = -bstar   * tothrd * coef  * ae / eeta
-         xnodcf =  3.5d0   * betao2 * xhdot1* c1
+         xnodcf =  3.5_wp   * betao2 * xhdot1* c1
          t2cof  =  f3ov2   * c1
-         aycof  =  0.250d0 * a3ovk2 * sinio
-         xlcof  =  half    * aycof  * (3.0d0 + 5.0d0*cosio) &
+         aycof  =  0.250_wp * a3ovk2 * sinio
+         xlcof  =  half    * aycof  * (3.0_wp + 5.0_wp*cosio) &
                                     / (one   +       cosio)
 
          delmo  =  (one    + eta*cos(xmo) )**3
@@ -1142,23 +1143,23 @@
 !        term, the Delta OMEGA term, and the Delta M term are
 !        dropped.  (Note: Normally we would just use
 !
-         if ( perige .ge. 220.0d0 ) then
+         if ( perige .ge. 220.0_wp ) then
 
             c1sq  = c1*c1
-            d2    = 4.0d0 * tsi   * c1sq   * aodp
+            d2    = 4.0_wp * tsi   * c1sq   * aodp
             temp  = d2    * tsi   * c1     * onethd
-            d3    = temp  * (s4   + 17.0d0 * aodp )
+            d3    = temp  * (s4   + 17.0_wp * aodp )
             d4    = temp  * tsi   * c1     * aodp &
-                          * half  *(221.0d0* aodp + 31.0d0*s4)
+                          * half  *(221.0_wp* aodp + 31.0_wp*s4)
 
-            t3cof = d2    + 2.0d0 * c1sq
+            t3cof = d2    + 2.0_wp * c1sq
 
-            t4cof = 0.25d0 * ( 3.0d0*d3 + c1*(  12.0d0*d2 &
-                                              + 10.0d0*c1sq) )
+            t4cof = 0.25_wp * ( 3.0_wp*d3 + c1*(  12.0_wp*d2 &
+                                              + 10.0_wp*c1sq) )
 
-            t5cof = 0.20d0 * (3.0d0*d4 + 12.0d0*c1*d3 &
-                                       +  6.0d0*d2*d2 &
-                                       + 15.0d0*c1sq*(  2.0d0*d2 &
+            t5cof = 0.20_wp * (3.0_wp*d4 + 12.0_wp*c1*d3 &
+                                       +  6.0_wp*d2*d2 &
+                                       + 15.0_wp*c1sq*(  2.0_wp*d2 &
                                                       + c1sq) )
          end if
 !
@@ -1214,7 +1215,7 @@
 !
 !     and convert it to minutes
 !
-      tsince = tsince / 60.0d0
+      tsince = tsince / 60.0_wp
 
 
       xmdf   = xmo      +   xmdot  * tsince
@@ -1225,18 +1226,18 @@
 
       tsq    = tsince  *  tsince
       xnode  = xnoddf  +  xnodcf * tsq
-      tempa  = 1.0d0   -  c1     * tsince
+      tempa  = 1.0_wp   -  c1     * tsince
       tempe  = bstar   *  c4     * tsince
       templ  = t2cof   *  tsq
 
 
-      if(perige .gt. 220.0d0 ) then
+      if(perige .gt. 220.0_wp ) then
 
          tcube  = tsq    * tsince
          tfour  = tcube  * tsince
 
          delomg = omgcof * tsince
-         delm   = xmcof* ( (1.0d0 + eta*cos(xmdf))**3  -  delmo )
+         delm   = xmcof* ( (1.0_wp + eta*cos(xmdf))**3  -  delmo )
          temp   = delomg + delm
          xmp    = xmdf   + temp
          omega  = omgadf - temp
@@ -1265,12 +1266,12 @@
 
 
 
-      xn   =  ke/a**1.5d0
+      xn   =  ke/a**1.5_wp
 
 !
 !     Long period periodics
 !
-      temp = 1.0d0/(a*(1.0d0 - e*e) )
+      temp = 1.0_wp/(a*(1.0_wp - e*e) )
       aynl = temp * aycof
       ayn  = e    * sin(omega)   +    aynl
       axn  = e    * cos(omega)
@@ -1490,7 +1491,7 @@
 !
 
       m      = dsqrt ( axn*axn + ayn*ayn )
-      mov1m  = dabs  ( m / ( 1.0d0 - m ) )
+      mov1m  = dabs  ( m / ( 1.0_wp - m ) )
 
 
       fmod2p = dmod(xlt-xnode,pix2)
@@ -1501,11 +1502,11 @@
 
       capu  = fmod2p
       epw   = capu
-      est   = 1.0d0
+      est   = 1.0_wp
 
       count = 0
 
-      do while ( est .gt. 0.125d0 )
+      do while ( est .gt. 0.125_wp )
 
          count = count + 1
 
@@ -1547,7 +1548,7 @@
             cosepw = cos(epw)
 
             f      =  epw - capu - axn * sinepw + ayn * cosepw
-            fprime =  1.0d0      - axn * cosepw -  ayn * sinepw
+            fprime =  1.0_wp      - axn * cosepw -  ayn * sinepw
 
             epwnxt = epw -  f/fprime
 !
@@ -1600,7 +1601,7 @@
          do while ( f .gt. 0 .and. lower .ne. upper )
             epw    = epw - epsiln
             f      = epw - capu - axn * sin(epw) + ayn * cos(epw)
-            epsiln = epsiln * 2.0d0
+            epsiln = epsiln * 2.0_wp
          end do
 
          lower = epw
@@ -1621,7 +1622,7 @@
          do while ( f .lt. 0 .and. lower .ne. upper )
             epw    = epw + epsiln
             f      = epw - capu - axn * sin(epw) + ayn * cos(epw)
-            epsiln = epsiln * 2.0d0
+            epsiln = epsiln * 2.0_wp
          end do
 
          upper = epw
@@ -1640,7 +1641,7 @@
 
       do while ( upper .gt. lower .and. count .lt. mxloop )
          count = count + 1
-         epw   = brcktd( 0.5d0 * ( upper + lower ), lower, upper )
+         epw   = brcktd( 0.5_wp * ( upper + lower ), lower, upper )
 !
 !        EPW eventually will not be different from one of the
 !        two bracketing values.  If this is the time, we need
@@ -1693,24 +1694,24 @@
       ecose = temp5   + temp6
       esine = temp3   - temp4
       elsq  = axn*axn + ayn*ayn
-      temp  = 1.0d0   - elsq
+      temp  = 1.0_wp   - elsq
       pl    = a       * temp
-      r     = a       * (1.0d0 - ecose)
+      r     = a       * (1.0_wp - ecose)
 
-      temp1 = 1.0d0   /  r
+      temp1 = 1.0_wp   /  r
       rdot  = ke      * temp1 * sqrt(a)  * esine
       rfdot = ke      * temp1 * sqrt(pl)
       temp2 = a       * temp1
       betal = dsqrt   ( temp )
-      temp3 = 1.0d0 / (1.0d0 + betal)
+      temp3 = 1.0_wp / (1.0_wp + betal)
 
       cosu  = temp2 * (cosepw  -  axn  +  ayn * esine * temp3)
       sinu  = temp2 * (sinepw  -  ayn  -  axn * esine * temp3)
 !
 !     Compute the angle from the x-axis of the point ( COSU, SINU )
 !
-      if (      sinu .ne. 0.0d0 &
-           .or. cosu .ne. 0.0d0 ) then
+      if (      sinu .ne. 0.0_wp &
+           .or. cosu .ne. 0.0_wp ) then
 
          u     = datan2 (sinu,cosu)
 
@@ -1720,28 +1721,28 @@
 
       else
 
-         u = 0.0d0
+         u = 0.0_wp
 
       end if
 
 
-      sin2u = 2.0d0 * sinu * cosu
-      cos2u = 2.0d0 * cosu * cosu  -  1.0d0
-      temp  = 1.0d0 / pl
+      sin2u = 2.0_wp * sinu * cosu
+      cos2u = 2.0_wp * cosu * cosu  -  1.0_wp
+      temp  = 1.0_wp / pl
       temp1 = ck2   * temp
       temp2 = temp1 * temp
 
 !
 !     Update for short periodics
 !
-      rk     = r * ( 1.0d0   -  1.5d0 * temp2 * betal * x3thm1) &
-             +     0.50d0 * temp1 * x1mth2 * cos2u
-      uk     = u - 0.25d0 * temp2 * x7thm1 * sin2u
+      rk     = r * ( 1.0_wp   -  1.5_wp * temp2 * betal * x3thm1) &
+             +     0.50_wp * temp1 * x1mth2 * cos2u
+      uk     = u - 0.25_wp * temp2 * x7thm1 * sin2u
 
-      xnodek = xnode + 1.50d0 * temp2 * cosio  * sin2u
-      xinck  = xincl + 1.50d0 * temp2 * cosio  * cos2u * sinio
+      xnodek = xnode + 1.50_wp * temp2 * cosio  * sin2u
+      xinck  = xincl + 1.50_wp * temp2 * cosio  * cos2u * sinio
       rdotk  = rdot  - xn     * temp1 * x1mth2 * sin2u
-      rfdotk = rfdot + xn     * temp1 *(x1mth2 * cos2u + 1.5d0*x3thm1)
+      rfdotk = rfdot + xn     * temp1 *(x1mth2 * cos2u + 1.5_wp*x3thm1)
 !
 !     Orientation vectors
 !

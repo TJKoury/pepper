@@ -1,6 +1,7 @@
 !$Procedure VREL ( Vector relative difference, 3 dimensions )
 
-      double precision function vrel ( v1, v2  )
+      real(wp) function vrel ( v1, v2  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision      v1 ( 3 )
-      double precision      v2 ( 3 )
+      real(wp)              v1 ( 3 )
+      real(wp)              v2 ( 3 )
 
 ! $ Brief_I/O
 !
@@ -179,15 +180,15 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
-      double precision      vdist
+      real(wp)              vnorm
+      real(wp)              vdist
 
 
 !
 !     Local variables
 !
-      double precision      nunorm
-      double precision      denorm
+      real(wp)              nunorm
+      real(wp)              denorm
 
 
 
@@ -203,9 +204,9 @@
 !
       nunorm = vdist ( v1, v2 )
 
-      if ( nunorm .eq. 0.d0 ) then
+      if ( nunorm .eq. 0.0_wp ) then
 
-         vrel = 0.d0
+         vrel = 0.0_wp
 
       else
 

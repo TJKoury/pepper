@@ -1,6 +1,7 @@
 !$Procedure VUPACK ( Unpack three scalar components from a vector )
 
       subroutine vupack ( v, x, y, z )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      double precision v ( 3 )
-      double precision x
-      double precision y
-      double precision z
+      real(wp) v ( 3 )
+      real(wp) x
+      real(wp) y
+      real(wp) z
 
 ! $ Brief_I/O
 !

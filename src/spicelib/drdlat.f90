@@ -1,6 +1,7 @@
 !$Procedure DRDLAT ( Derivative of rectangular w.r.t. latitudinal )
 
       subroutine drdlat ( r, lon, lat, jacobi )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      double precision      r
-      double precision      lon
-      double precision      lat
-      double precision      jacobi ( 3, 3 )
+      real(wp)              r
+      real(wp)              lon
+      real(wp)              lat
+      real(wp)              jacobi ( 3, 3 )
 
 ! $ Brief_I/O
 !
@@ -351,22 +352,22 @@
 !
 !     Local variables
 !
-      integer               dx
+      integer(ip)           dx
       parameter           ( dx   = 1 )
 
-      integer               dy
+      integer(ip)           dy
       parameter           ( dy   = 2 )
 
-      integer               dz
+      integer(ip)           dz
       parameter           ( dz   = 3 )
 
-      integer               dr
+      integer(ip)           dr
       parameter           ( dr   = 1 )
 
-      integer               dlon
+      integer(ip)           dlon
       parameter           ( dlon = 2 )
 
-      integer               dlat
+      integer(ip)           dlat
       parameter           ( dlat = 3 )
 
 
@@ -379,7 +380,7 @@
 
       jacobi (dx,dlon) = -r * dsin( lon ) * dcos( lat )
       jacobi (dy,dlon) =  r * dcos( lon ) * dcos( lat )
-      jacobi (dz,dlon) =  0.0d0
+      jacobi (dz,dlon) =  0.0_wp
 
       jacobi (dx,dlat) = -r * dcos( lon ) * dsin( lat )
       jacobi (dy,dlat) = -r * dsin( lon ) * dsin( lat )

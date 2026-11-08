@@ -1,6 +1,7 @@
 !$Procedure BODN2C ( Body name to ID code translation )
 
       subroutine bodn2c ( name, code, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
       implicit none
 
       character*(*)         name
-      integer               code
+      integer(ip)           code
       logical               found
 
 ! $ Brief_I/O

@@ -1,6 +1,7 @@
 !$Procedure DIAGS2   ( Diagonalize symmetric 2x2 matrix )
 
       subroutine diags2 ( symmat, diag, rotate )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision      symmat ( 2, 2 )
-      double precision      diag   ( 2, 2 )
-      double precision      rotate ( 2, 2 )
+      real(wp)              symmat ( 2, 2 )
+      real(wp)              diag   ( 2, 2 )
+      real(wp)              rotate ( 2, 2 )
 
 ! $ Brief_I/O
 !
@@ -318,16 +319,16 @@
 !
 !     Local variables
 !
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      eigvec ( 2 )
-      double precision      ident  ( 2, 2 )
-      double precision      root1  ( 2 )
-      double precision      root2  ( 2 )
-      double precision      scale
-      double precision      tmpd
-      double precision      tmpv   ( 2 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              eigvec ( 2 )
+      real(wp)              ident  ( 2, 2 )
+      real(wp)              root1  ( 2 )
+      real(wp)              root2  ( 2 )
+      real(wp)              scale
+      real(wp)              tmpd
+      real(wp)              tmpv   ( 2 )
 
 !
 !     Saved variables
@@ -337,8 +338,8 @@
 !
 !     Initial values
 !
-      data ident /  1.d0, 0.d0, &
-                    0.d0, 1.d0  /
+      data ident /  1.0_wp, 0.0_wp, &
+                    0.0_wp, 1.0_wp  /
 
 
 
@@ -356,7 +357,7 @@
 !     eigenvector determination is simplified by ruling out this
 !     case.
 
-      if  ( symmat(1,2) .eq. 0.d0 ) then
+      if  ( symmat(1,2) .eq. 0.0_wp ) then
 
          call moved  ( ident,  4, rotate )
          call moved  ( symmat, 4, diag   )
@@ -364,7 +365,7 @@
 !        Explicitly zero out the (2,1) entry of DIAG, since DIAG is
 !        guaranteed to be diagonal.
 !
-         diag(2,1) = 0.d0
+         diag(2,1) = 0.0_wp
 
          call chkout ( 'DIAGS2' )
          return
@@ -398,15 +399,15 @@
 !          x   -  ( A + C ) x  +  ( AC - B )  =   0.
 !
 !
-      call rquad (  1.d0,  -(a + c),   a*c - b**2,   root1,   root2   )
+      call rquad (  1.0_wp,  -(a + c),   a*c - b**2,   root1,   root2   )
 
 !
 !     ROOT1 is the root corresponding to the positive discriminant term;
 !     this is guaranteed by RQUAD.
 !
       diag(1,1) = root1(1)
-      diag(2,1) = 0.d0
-      diag(1,2) = 0.d0
+      diag(2,1) = 0.0_wp
+      diag(1,2) = 0.0_wp
       diag(2,2) = root2(1)
 
 !

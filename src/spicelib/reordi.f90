@@ -1,6 +1,7 @@
 !$Procedure REORDI ( Reorder an integer array )
 
       subroutine reordi ( iorder, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      integer          iorder ( * )
-      integer          ndim
-      integer          array  ( * )
+      integer(ip)      iorder ( * )
+      integer(ip)      ndim
+      integer(ip)      array  ( * )
 
 ! $ Brief_I/O
 !
@@ -231,11 +232,11 @@
 !
 !     Local variables
 !
-      integer          start
-      integer          index
-      integer          hold
+      integer(ip)      start
+      integer(ip)      index
+      integer(ip)      hold
 
-      integer          temp
+      integer(ip)      temp
 
 
 !

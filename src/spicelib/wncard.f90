@@ -1,6 +1,7 @@
 !$Procedure WNCARD ( Cardinality of a double precision window )
 
-      integer function wncard ( window )
+      integer(ip) function wncard ( window )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      window  ( lbcell:* )
+      real(wp)              window  ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -192,7 +193,7 @@
       logical               return
       logical               even
 
-      integer               cardd
+      integer(ip)           cardd
 
 !
 !     Standard SPICE error handling.

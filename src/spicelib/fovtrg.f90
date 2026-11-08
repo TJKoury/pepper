@@ -2,6 +2,7 @@
 
       subroutine fovtrg ( inst,   target, tshape, tframe, &
                           abcorr, obsrvr, et,     visibl )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -37,7 +38,7 @@
       character*(*)         tframe
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      et
+      real(wp)              et
       logical               visibl
 
 ! $ Brief_I/O
@@ -590,7 +591,7 @@
 !     the target is an ephemeris object. We initialize the
 !     ray to prevent portability problems.
 !
-      double precision      raydir ( 3 )
+      real(wp)              raydir ( 3 )
 
 !
 !     Saved variables
@@ -600,7 +601,7 @@
 !
 !     Initial values
 !
-      data                  raydir / 3 * 0.d0 /
+      data                  raydir / 3 * 0.0_wp /
 
 !
 !     Standard SPICE error handling.

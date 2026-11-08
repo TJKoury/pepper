@@ -1,6 +1,7 @@
 !$Procedure DLAOPN ( DLA, open new file )
 
       subroutine dlaopn ( fname, ftype, ifname, ncomch, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,8 +27,8 @@
       character*(*)         fname
       character*(*)         ftype
       character*(*)         ifname
-      integer               ncomch
-      integer               handle
+      integer(ip)           ncomch
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -438,7 +439,7 @@
 !
 !     Local variables
 !
-      integer               ncomr
+      integer(ip)           ncomr
 
 
       if ( return() ) then

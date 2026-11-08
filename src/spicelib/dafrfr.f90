@@ -1,6 +1,7 @@
 !$Procedure DAFRFR ( DAF, read file record )
 
       subroutine dafrfr ( handle, nd, ni, ifname, fward, bward, free )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,13 +19,13 @@
 
       implicit none
 
-      integer               handle
-      integer               nd
-      integer               ni
+      integer(ip)           handle
+      integer(ip)           nd
+      integer(ip)           ni
       character*(*)         ifname
-      integer               fward
-      integer               bward
-      integer               free
+      integer(ip)           fward
+      integer(ip)           bward
+      integer(ip)           free
 
 ! $ Brief_I/O
 !
@@ -213,10 +214,10 @@
 !
 !     Local Parameters
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60)
 
 !

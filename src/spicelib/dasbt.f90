@@ -1,6 +1,7 @@
 !$Procedure DASBT ( DAS, convert binary file to transfer file )
 
       subroutine dasbt ( binfil, xfrlun )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)         binfil
-      integer               xfrlun
+      integer(ip)           xfrlun
 
 ! $ Brief_I/O
 !
@@ -181,7 +182,7 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
       logical               return
       logical               failed
@@ -244,42 +245,42 @@
 !
 !     Some parameters for writing the array markers
 !
-      integer               linlen
+      integer(ip)           linlen
       parameter           ( linlen = 80 )
 !
 !     Length of a character buffer array element.
 !
-      integer               cbflen
+      integer(ip)           cbflen
       parameter           ( cbflen = 4                            )
 !
 !     Length of a DAS file ID word.
 !
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8                            )
 !
 !     Length of a DAS internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60                           )
 !
 !     Length of a DAS comment record, in characters.
 !
-      integer               crlen
+      integer(ip)           crlen
       parameter           ( crlen = 1024                          )
 !
 !     Size of the character, double precision, and integer data buffers.
 !
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = 1024                         )
 !
 !     Beginning and ending string positions for reading/writing
 !     character data from/to a DAS file using the character data
 !     buffer.
 !
-      integer               bcbpos
+      integer(ip)           bcbpos
       parameter           ( bcbpos = 1                            )
 
-      integer               ecbpos
+      integer(ip)           ecbpos
       parameter           ( ecbpos = cbflen                       )
 !
 !     Local variables
@@ -290,24 +291,24 @@
       character*(ifnlen)    ifname
       character*(linlen)    line
 
-      double precision      dbuffr(bufsiz)
+      real(wp)              dbuffr(bufsiz)
 
-      integer               daslun
-      integer               dtabeg
-      integer               handle
-      integer               ibuffr(bufsiz)
-      integer               iostat
-      integer               ncdata
-      integer               nddata
-      integer               nidata
-      integer               nresvr
-      integer               nresvc
-      integer               ncomr
-      integer               ncomc
-      integer               numblk
-      integer               numdta
-      integer               numlft
-      integer               recno
+      integer(ip)           daslun
+      integer(ip)           dtabeg
+      integer(ip)           handle
+      integer(ip)           ibuffr(bufsiz)
+      integer(ip)           iostat
+      integer(ip)           ncdata
+      integer(ip)           nddata
+      integer(ip)           nidata
+      integer(ip)           nresvr
+      integer(ip)           nresvc
+      integer(ip)           ncomr
+      integer(ip)           ncomc
+      integer(ip)           numblk
+      integer(ip)           numdta
+      integer(ip)           numlft
+      integer(ip)           recno
 
 !
 !     Standard SPICE error handling.

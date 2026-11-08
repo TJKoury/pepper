@@ -2,6 +2,7 @@
 
       subroutine zzspkas0 ( targ,  et,     ref,   abcorr, &
                             stobs, accobs, starg, lt,     dlt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,15 +31,15 @@
 
       include 'zzabcorr.inc'
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
-      double precision      stobs  ( 6 )
-      double precision      accobs ( 3 )
-      double precision      starg  ( 6 )
-      double precision      lt
-      double precision      dlt
+      real(wp)              stobs  ( 6 )
+      real(wp)              accobs ( 3 )
+      real(wp)              starg  ( 6 )
+      real(wp)              lt
+      real(wp)              dlt
 
 ! $ Brief_I/O
 !
@@ -585,12 +586,12 @@
 !
       character*(corlen)    prvcor
 
-      double precision      corpos ( 3 )
-      double precision      corvel ( 3 )
-      double precision      dpcorr ( 3 )
-      double precision      pcorr  ( 3 )
+      real(wp)              corpos ( 3 )
+      real(wp)              corvel ( 3 )
+      real(wp)              dpcorr ( 3 )
+      real(wp)              pcorr  ( 3 )
 
-      integer               refid
+      integer(ip)           refid
 
       logical               attblk ( nabcor )
       logical               first

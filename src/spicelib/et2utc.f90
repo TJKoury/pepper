@@ -1,6 +1,7 @@
 !$Procedure ET2UTC ( Ephemeris Time to UTC )
 
       subroutine et2utc ( et, format, prec, utcstr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      et
+      real(wp)              et
       character*(*)         format
-      integer               prec
+      integer(ip)           prec
       character*(*)         utcstr
 
 ! $ Brief_I/O
@@ -395,13 +396,13 @@
 !     SPICELIB functions
 !
       logical               return
-      double precision      unitim
+      real(wp)              unitim
       logical               failed
 
 !
 !     Local Functions (Statement Functions)
 !
-      integer               ndigit
+      integer(ip)           ndigit
 
 !
 !     Local variables
@@ -412,33 +413,33 @@
       character*(80)        str
       character*(80)        fract
 
-      double precision      tai
-      double precision      frcsec
-      double precision      scale
-      double precision      tvec   ( 8 )
-      double precision      whlsec
+      real(wp)              tai
+      real(wp)              frcsec
+      real(wp)              scale
+      real(wp)              tvec   ( 8 )
+      real(wp)              whlsec
 
-      integer               day
-      integer               hour
-      integer               minute
-      integer               month
-      integer               second
-      integer               year
+      integer(ip)           day
+      integer(ip)           hour
+      integer(ip)           minute
+      integer(ip)           month
+      integer(ip)           second
+      integer(ip)           year
 
-      integer               myprec
+      integer(ip)           myprec
 
-      integer               bday
-      integer               bhr
-      integer               bmn
-      integer               bmonth
-      integer               bsc
-      integer               eday
-      integer               ehr
-      integer               emn
-      integer               emonth
-      integer               esc
+      integer(ip)           bday
+      integer(ip)           bhr
+      integer(ip)           bmn
+      integer(ip)           bmonth
+      integer(ip)           bsc
+      integer(ip)           eday
+      integer(ip)           ehr
+      integer(ip)           emn
+      integer(ip)           emonth
+      integer(ip)           esc
 
-      integer               i
+      integer(ip)           i
 
       character*3           mthnam   ( 12 )
 
@@ -563,10 +564,10 @@
 !
       whlsec = aint ( tai )
 
-      if (        ( tai .lt. 0.0d0  ) &
+      if (        ( tai .lt. 0.0_wp  ) &
             .and. ( tai .ne. whlsec )  )  then
 
-         whlsec = whlsec - 1.0d0
+         whlsec = whlsec - 1.0_wp
 
       end if
 
@@ -580,7 +581,7 @@
 !     10**MYPREC.
 !
 !
-      scale  = anint (  10.0d0 ** myprec )
+      scale  = anint (  10.0_wp ** myprec )
       frcsec = anint (  scale * ( tai - whlsec )  )
 
 !
@@ -589,8 +590,8 @@
 !
       if (  frcsec  .eq.  scale  ) then
 
-         whlsec = whlsec + 1.0d0
-         frcsec = 0.0d0
+         whlsec = whlsec + 1.0_wp
+         frcsec = 0.0_wp
 
       end if
 
@@ -733,7 +734,7 @@
 !        The integer part of FRCSEC will not affect the output
 !        string.
 !
-         frcsec = frcsec + 1.0d0
+         frcsec = frcsec + 1.0_wp
 
          call dpstrf ( frcsec, myprec+1, 'F', fract )
 

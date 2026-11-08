@@ -3,6 +3,7 @@
       subroutine ckw05 ( handle,  subtyp,  degree,  begtim,  endtim, &
                          inst,    ref,     avflag,  segid,   n, &
                          sclkdp,  packts,  rate,    nints,   starts  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,23 +27,23 @@
 
       include 'ck05.inc'
 
-      integer               handle
-      integer               subtyp
-      integer               degree
-      double precision      begtim
-      double precision      endtim
-      integer               inst
+      integer(ip)           handle
+      integer(ip)           subtyp
+      integer(ip)           degree
+      real(wp)              begtim
+      real(wp)              endtim
+      integer(ip)           inst
       character*(*)         ref
       logical               avflag
       character*(*)         segid
-      integer               n
-      double precision      sclkdp ( * )
-      double precision      packts ( * )
-      double precision      rate
-      integer               nints
-      double precision      starts ( * )
+      integer(ip)           n
+      real(wp)              sclkdp ( * )
+      real(wp)              packts ( * )
+      real(wp)              rate
+      integer(ip)           nints
+      real(wp)              starts ( * )
 
-      integer               maxdeg
+      integer(ip)           maxdeg
       parameter           ( maxdeg = 23 )
 
 ! $ Brief_I/O
@@ -596,9 +597,9 @@
 !
       logical               vzerog
 
-      integer               bsrchd
-      integer               lastnb
-      integer               lstltd
+      integer(ip)           bsrchd
+      integer(ip)           lastnb
+      integer(ip)           lstltd
 
       logical               failed
       logical               odd
@@ -607,55 +608,55 @@
 !
 !     Local parameters
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni      =   6 )
 
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz  =   5 )
 
-      integer               typidx
+      integer(ip)           typidx
       parameter           ( typidx  =   4 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   5 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz  = 100 )
 
-      integer               statsz
+      integer(ip)           statsz
       parameter           ( statsz  =   6 )
 
 !
 !     Packet structure parameters
 !
-      integer               qidx
+      integer(ip)           qidx
       parameter           ( qidx   = 1 )
 
 !
 !     Local variables
 !
-      double precision      dc     ( nd )
-      double precision      descr  ( dscsiz )
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( dscsiz )
 
-      integer               addr
-      integer               chrcod
-      integer               i
-      integer               ic     ( ni )
-      integer               packsz
-      integer               refcod
-      integer               winsiz
+      integer(ip)           addr
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           packsz
+      integer(ip)           refcod
+      integer(ip)           winsiz
 
 !
 !     Standard SPICE error handling.
@@ -750,7 +751,7 @@
 !
 !     Check that the first time is nonnegative.
 !
-      if ( sclkdp(1) .lt. 0.d0 ) then
+      if ( sclkdp(1) .lt. 0.0_wp ) then
 
          call setmsg ( 'The first SCLKDP time: # is negative.' )
          call errdp  ( '#', sclkdp(1)                          )
@@ -990,7 +991,7 @@
 !
 !     The clock rate must be non-zero.
 !
-      if ( rate .eq. 0.d0 ) then
+      if ( rate .eq. 0.0_wp ) then
 
          call setmsg ( 'The SCLK rate RATE was zero.'  )
          call sigerr ( 'SPICE(INVALIDVALUE)'           )
@@ -1107,10 +1108,10 @@
 !     count, and packet count.
 !
       call dafada ( rate,            1 )
-      call dafada ( dble( subtyp ),  1 )
-      call dafada ( dble( winsiz ),  1 )
-      call dafada ( dble( nints  ),  1 )
-      call dafada ( dble( n      ),  1 )
+      call dafada ( real( subtyp, wp ),  1 )
+      call dafada ( real( winsiz, wp ),  1 )
+      call dafada ( real( nints, wp  ),  1 )
+      call dafada ( real( n, wp      ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRSB ( EK tree, identify siblings )
 
       subroutine zzektrsb ( handle, tree, key, lsib, lkey, rsib, rkey )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               lsib
-      integer               lkey
-      integer               rsib
-      integer               rkey
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           lsib
+      integer(ip)           lkey
+      integer(ip)           rsib
+      integer(ip)           rkey
 
 ! $ Brief_I/O
 !
@@ -128,26 +129,26 @@
 !
 !     Other functions
 !
-      integer               zzektrbs
+      integer(ip)           zzektrbs
 
 !
 !     Local variables
 !
-      integer               addrss
-      integer               base
-      integer               keybas
-      integer               kidbas
-      integer               loffst
-      integer               llpidx
-      integer               lpidx
-      integer               lpkey
-      integer               nkbas
-      integer               parent
-      integer               pkey
-      integer               poffst
-      integer               roffst
-      integer               rpidx
-      integer               rpkey
+      integer(ip)           addrss
+      integer(ip)           base
+      integer(ip)           keybas
+      integer(ip)           kidbas
+      integer(ip)           loffst
+      integer(ip)           llpidx
+      integer(ip)           lpidx
+      integer(ip)           lpkey
+      integer(ip)           nkbas
+      integer(ip)           parent
+      integer(ip)           pkey
+      integer(ip)           poffst
+      integer(ip)           roffst
+      integer(ip)           rpidx
+      integer(ip)           rpkey
 
 !
 !     Start out by looking up the parent node.  We get LSIB

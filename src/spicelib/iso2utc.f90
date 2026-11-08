@@ -1,6 +1,7 @@
 !$Procedure ISO2UTC ( Convert ISO time strings to UTC strings. )
 
       subroutine iso2utc ( tstrng, utcstr, error )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -181,15 +182,15 @@
 !
 !     SPICELIB functions
 !
-      integer               bsrchc
-      integer               rtrim
+      integer(ip)           bsrchc
+      integer(ip)           rtrim
 
       logical               return
 
 !
 !     Local Parameters
 !
-      integer               nmnths
+      integer(ip)           nmnths
       parameter           ( nmnths = 12 )
 
 !
@@ -212,9 +213,9 @@
       character*(2)         imonth (     nmnths )
       save                  imonth
 
-      integer               i
-      integer               l
-      integer               m
+      integer(ip)           i
+      integer(ip)           l
+      integer(ip)           m
 
       logical               change
 !

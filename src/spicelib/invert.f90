@@ -1,6 +1,7 @@
 !$Procedure INVERT ( Invert a 3x3 matrix )
 
       subroutine invert ( m, mout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      double precision   m    ( 3,3 )
-      double precision   mout ( 3,3 )
+      real(wp)           m    ( 3,3 )
+      real(wp)           mout ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -222,17 +223,17 @@
 !
 !     Local variables
 !
-      double precision   det
-      double precision   mtemp(3,3)
-      double precision   mdet
-      double precision   invdet
+      real(wp)           det
+      real(wp)           mtemp(3,3)
+      real(wp)           mdet
+      real(wp)           invdet
 
 !
 !  Find the determinant of M and check for singularity
 !
       mdet = det(m)
-      if ( dabs(mdet) .lt. 1.d-16 ) then
-         call filld ( 0.d0, 9, mout )
+      if ( dabs(mdet) .lt. 1.0e-16_wp ) then
+         call filld ( 0.0_wp, 9, mout )
          return
       end if
 
@@ -252,7 +253,7 @@
 !
 !  Multiply the cofactor matrix by 1/MDET to obtain the inverse
 !
-      invdet = 1.d0 / mdet
+      invdet = 1.0_wp / mdet
       call vsclg (invdet, mtemp, 9, mout)
 !
       return

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKECMP ( EK, column entry element comparison )
 
-      integer function zzekecmp ( hans,  sgdscs,  cldscs,  rows,  elts )
+      integer(ip) function zzekecmp ( hans,  sgdscs,  cldscs,  rows,  elts )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,11 +27,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               hans   ( * )
-      integer               sgdscs ( sdscsz, * )
-      integer               cldscs ( cdscsz, * )
-      integer               rows   ( * )
-      integer               elts   ( * )
+      integer(ip)           hans   ( * )
+      integer(ip)           sgdscs ( sdscsz, * )
+      integer(ip)           cldscs ( cdscsz, * )
+      integer(ip)           rows   ( * )
+      integer(ip)           elts   ( * )
 
 ! $ Brief_I/O
 !
@@ -159,14 +160,14 @@
 !
       character*(maxstr)    cval   ( 2 )
 
-      double precision      dval   ( 2 )
+      real(wp)              dval   ( 2 )
 
-      integer               cmplen ( 2 )
-      integer               cvlen  ( 2 )
-      integer               i
-      integer               ival   ( 2 )
-      integer               lhstyp
-      integer               rhstyp
+      integer(ip)           cmplen ( 2 )
+      integer(ip)           cvlen  ( 2 )
+      integer(ip)           i
+      integer(ip)           ival   ( 2 )
+      integer(ip)           lhstyp
+      integer(ip)           rhstyp
 
       logical               found
       logical               null   ( 2 )

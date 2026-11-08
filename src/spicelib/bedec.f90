@@ -1,6 +1,7 @@
 !$Procedure BEDEC  ( Be a decimal number? )
 
       logical function bedec  ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -158,15 +159,15 @@
 !
       logical               beint
       logical               beuns
-      integer               pos
+      integer(ip)           pos
 
 !
 !     Local Variables
 !
-      integer               c
-      integer               d
-      integer               e
-      integer               l
+      integer(ip)           c
+      integer(ip)           d
+      integer(ip)           e
+      integer(ip)           l
 
 
 !

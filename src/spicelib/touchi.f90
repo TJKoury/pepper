@@ -1,6 +1,7 @@
 !$Procedure TOUCHI ( Touch a variable )
 
-      integer function touchi ( int )
+      integer(ip) function touchi ( int )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               int
+      integer(ip)           int
 
 ! $ Brief_I/O
 !

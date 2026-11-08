@@ -2,6 +2,7 @@
 
       subroutine zzckcv03 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,16 +27,16 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               handle
-      integer               arrbeg
-      integer               arrend
-      integer               sclkid
-      double precision      tol
+      integer(ip)           handle
+      integer(ip)           arrbeg
+      integer(ip)           arrend
+      integer(ip)           sclkid
+      real(wp)              tol
       character*(*)         timsys
-      double precision      schedl ( lbcell:* )
+      real(wp)              schedl ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -165,26 +166,26 @@
 !
 !     Local Variables
 !
-      double precision      begin
-      double precision      buffer ( 2 )
-      double precision      et
-      double precision      finish
-      double precision      start
-      double precision      tick
+      real(wp)              begin
+      real(wp)              buffer ( 2 )
+      real(wp)              et
+      real(wp)              finish
+      real(wp)              start
+      real(wp)              tick
 
-      integer               intat
-      integer               intbeg
-      integer               invls
-      integer               lstint
-      integer               lsttik
-      integer               ndir
-      integer               nrec
-      integer               rsize
-      integer               tickat
+      integer(ip)           intat
+      integer(ip)           intbeg
+      integer(ip)           invls
+      integer(ip)           lstint
+      integer(ip)           lsttik
+      integer(ip)           ndir
+      integer(ip)           nrec
+      integer(ip)           rsize
+      integer(ip)           tickat
 
-      integer               navsln
-      integer               avsln
-      integer               seglen
+      integer(ip)           navsln
+      integer(ip)           avsln
+      integer(ip)           seglen
 
       logical               bail
       logical               istdb
@@ -201,7 +202,7 @@
 !
 !     Check tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call setmsg ( 'Tolerance must be non-negative; actual value '// &
                        'was #.'                                       )
@@ -409,9 +410,9 @@
 !
 !        Adjust the interval using the tolerance.
 !
-         if ( tol .gt. 0.d0 ) then
+         if ( tol .gt. 0.0_wp ) then
 
-            begin   =  max( begin  - tol, 0.d0 )
+            begin   =  max( begin  - tol, 0.0_wp )
             finish  =       finish + tol
 
          end if

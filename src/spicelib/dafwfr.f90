@@ -1,6 +1,7 @@
 !$Procedure DAFWFR ( DAF write file record )
 
       subroutine dafwfr ( handle, nd, ni, ifname, fward, bward, free )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,13 +19,13 @@
 
       implicit none
 
-      integer               handle
-      integer               nd
-      integer               ni
+      integer(ip)           handle
+      integer(ip)           nd
+      integer(ip)           ni
       character*(*)         ifname
-      integer               fward
-      integer               bward
-      integer               free
+      integer(ip)           fward
+      integer(ip)           bward
+      integer(ip)           free
 
 ! $ Brief_I/O
 !
@@ -248,13 +249,13 @@
 !
 !     Local Parameters
 !
-      integer               fmtlen
+      integer(ip)           fmtlen
       parameter           ( fmtlen =  8 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen =  8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
 !
@@ -289,7 +290,7 @@
 !     1 byte characters, and a DAF record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      integer               tailen
+      integer(ip)           tailen
       parameter           ( tailen = 928 )
 
 !
@@ -301,13 +302,13 @@
       character*(ifnlen)    locifn
       character*(tailen)    tail
 
-      integer               iostat
-      integer               locfdr
-      integer               locffa
-      integer               locldr
-      integer               locnd
-      integer               locni
-      integer               unit
+      integer(ip)           iostat
+      integer(ip)           locfdr
+      integer(ip)           locffa
+      integer(ip)           locldr
+      integer(ip)           locnd
+      integer(ip)           locni
+      integer(ip)           unit
 
 !
 !     Standard SPICE error handling.

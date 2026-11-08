@@ -4,6 +4,7 @@
                            corloc, obsrvr, refvec, rolstp, ncuts, &
                            schstp, soltol, maxn,   npts,   points, &
                            epochs, tangts                         )
+       use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -42,21 +43,21 @@
 
       character*(*)         method
       character*(*)         target
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         corloc
       character*(*)         obsrvr
-      double precision      refvec ( 3 )
-      double precision      rolstp
-      integer               ncuts
-      double precision      schstp
-      double precision      soltol
-      integer               maxn
-      integer               npts   ( * )
-      double precision      points ( 3, * )
-      double precision      epochs ( * )
-      double precision      tangts ( 3, * )
+      real(wp)              refvec ( 3 )
+      real(wp)              rolstp
+      integer(ip)           ncuts
+      real(wp)              schstp
+      real(wp)              soltol
+      integer(ip)           maxn
+      integer(ip)           npts   ( * )
+      real(wp)              points ( 3, * )
+      real(wp)              epochs ( * )
+      real(wp)              tangts ( 3, * )
 
 ! $ Brief_I/O
 !
@@ -2102,12 +2103,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      touchd
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              touchd
+      real(wp)              vdot
+      real(wp)              vnorm
 
-      integer               cardd
+      integer(ip)           cardd
 
       logical               eqstr
       logical               failed
@@ -2126,8 +2127,8 @@
 !
 !     Convergence limit:
 !
-      double precision      cnvlim
-      parameter           ( cnvlim = 1.d-18 )
+      real(wp)              cnvlim
+      parameter           ( cnvlim = 1.0e-18_wp )
 !
 !     This limit was chosen to achieve convergence on
 !     platforms providing extended precision arithmetic.
@@ -2137,37 +2138,37 @@
 !     Maximum number of light time iterations for any
 !     aberration correction:
 !
-      integer               maxitr
+      integer(ip)           maxitr
       parameter           ( maxitr = 5 )
 
-      integer               ssb
+      integer(ip)           ssb
       parameter           ( ssb   = 0 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               maxivl
+      integer(ip)           maxivl
       parameter           ( maxivl = 1000 )
 
-      integer               maxwin
+      integer(ip)           maxwin
       parameter           ( maxwin = 2 * maxivl )
 
 !
 !     SPICELIB ellipse upper bound:
 !
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel   = 9 )
 
 !
@@ -2182,61 +2183,61 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmstr
 
-      double precision      axis   ( 3 )
-      double precision      center ( 3 )
-      double precision      cortrg ( 3 )
-      double precision      cp     ( 3 )
-      double precision      cutnml ( 3 )
-      double precision      edir   ( 3 )
-      double precision      enorml ( 3 )
-      double precision      epoch
-      double precision      epoint ( 3 )
-      double precision      ipoint ( 3 )
-      double precision      isrfvc ( 3 )
-      double precision      limb   ( ubel )
-      double precision      lt
-      double precision      lterr
-      double precision      maxrad
-      double precision      plnvec ( 3 )
-      double precision      pntbuf ( 3, maxwin )
-      double precision      pos    ( 3 )
-      double precision      prvlt
-      double precision      raydir ( 3 )
-      double precision      rayvtx ( 3 )
-      double precision      result ( lbcell : maxwin )
-      double precision      roll
-      double precision      s
-      double precision      smajor ( 3 )
-      double precision      sminor ( 3 )
-      double precision      ptarg  ( 3 )
-      double precision      stloff ( 3 )
-      double precision      stlpos ( 3 )
-      double precision      stobs  ( 6 )
-      double precision      ssblt
-      double precision      ssbtrg ( 3 )
-      double precision      tmpvec ( 3 )
-      double precision      trgepc
-      double precision      xform  ( 3, 3 )
+      real(wp)              axis   ( 3 )
+      real(wp)              center ( 3 )
+      real(wp)              cortrg ( 3 )
+      real(wp)              cp     ( 3 )
+      real(wp)              cutnml ( 3 )
+      real(wp)              edir   ( 3 )
+      real(wp)              enorml ( 3 )
+      real(wp)              epoch
+      real(wp)              epoint ( 3 )
+      real(wp)              ipoint ( 3 )
+      real(wp)              isrfvc ( 3 )
+      real(wp)              limb   ( ubel )
+      real(wp)              lt
+      real(wp)              lterr
+      real(wp)              maxrad
+      real(wp)              plnvec ( 3 )
+      real(wp)              pntbuf ( 3, maxwin )
+      real(wp)              pos    ( 3 )
+      real(wp)              prvlt
+      real(wp)              raydir ( 3 )
+      real(wp)              rayvtx ( 3 )
+      real(wp)              result ( lbcell : maxwin )
+      real(wp)              roll
+      real(wp)              s
+      real(wp)              smajor ( 3 )
+      real(wp)              sminor ( 3 )
+      real(wp)              ptarg  ( 3 )
+      real(wp)              stloff ( 3 )
+      real(wp)              stlpos ( 3 )
+      real(wp)              stobs  ( 6 )
+      real(wp)              ssblt
+      real(wp)              ssbtrg ( 3 )
+      real(wp)              tmpvec ( 3 )
+      real(wp)              trgepc
+      real(wp)              xform  ( 3, 3 )
 
-      integer               fxcent
-      integer               fxclss
-      integer               fxfcde
-      integer               fxtyid
-      integer               i
-      integer               j
-      integer               lmbtyp
-      integer               loccde
-      integer               nsurf
-      integer               numitr
-      integer               obscde
-      integer               prvtrg
-      integer               room
-      integer               shape
-      integer               srflst ( maxsrf )
-      integer               svnrad
-      integer               to
-      integer               total
-      integer               trgcde
+      integer(ip)           fxcent
+      integer(ip)           fxclss
+      integer(ip)           fxfcde
+      integer(ip)           fxtyid
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           lmbtyp
+      integer(ip)           loccde
+      integer(ip)           nsurf
+      integer(ip)           numitr
+      integer(ip)           obscde
+      integer(ip)           prvtrg
+      integer(ip)           room
+      integer(ip)           shape
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           svnrad
+      integer(ip)           to
+      integer(ip)           total
+      integer(ip)           trgcde
 
       logical               attblk ( nabcor )
       logical               first
@@ -2251,34 +2252,34 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svfxfc
+      integer(ip)           svfxfc
 
 
 !
 !     Saved surface name/ID item declarations.
 !
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
 
 !
 !     Saved target radii declarations.
 !
-      integer               svctr5 ( ctrsiz )
-      double precision      svradi ( 3 )
+      integer(ip)           svctr5 ( ctrsiz )
+      real(wp)              svradi ( 3 )
 
 !
 !     Saved variables
@@ -2416,13 +2417,13 @@
       if ( uselt ) then
 
          if ( xmit ) then
-            s   =  1.d0
+            s   =  1.0_wp
          else
-            s   = -1.d0
+            s   = -1.0_wp
          end if
 
       else
-         s = 0.d0
+         s = 0.0_wp
       end if
 
 !
@@ -2736,7 +2737,7 @@
 !
       if ( shape .eq. dskshp ) then
 
-         if ( schstp .le. 0.d0 ) then
+         if ( schstp .le. 0.0_wp ) then
 
             call setmsg ( 'The angular search step ' &
             //            'SCHSTP = #; SCHSTP is required ' &
@@ -2748,7 +2749,7 @@
 
          end if
 
-         if ( soltol .le. 0.d0 ) then
+         if ( soltol .le. 0.0_wp ) then
 
             call setmsg ( 'The angular search tolerance ' &
             //            'SOLTOL = #; SOLTOL is required ' &
@@ -2766,7 +2767,7 @@
 !     Check the roll step. This value applies only if
 !     there are multiple cutting half-planes.
 !
-      if (  ( ncuts .gt. 1 ) .and. ( rolstp .eq. 0.d0 )  ) then
+      if (  ( ncuts .gt. 1 ) .and. ( rolstp .eq. 0.0_wp )  ) then
 
          call setmsg ( 'The angular roll step is 0.D0. ' &
          //            'NCUTS = #. ROLSTP is required ' &
@@ -2970,9 +2971,9 @@
 !           Make sure ENORML points into the same half-space as
 !           AXIS.
 !
-            if ( vdot( enorml, axis ) .lt. 0.d0 ) then
+            if ( vdot( enorml, axis ) .lt. 0.0_wp ) then
 
-               call vsclip ( -1.d0, enorml )
+               call vsclip ( -1.0_wp, enorml )
 
             end if
 
@@ -3032,7 +3033,7 @@
 !                 Note that the evaluation epoch for the surface is
 !                 optionally corrected for light time.
 !
-                  call zztangnt ( lmbcrv, 0.d0,   shape,  trgcde, &
+                  call zztangnt ( lmbcrv, 0.0_wp,   shape,  trgcde, &
                                   nsurf,  srflst, fxfcde, trgepc, &
                                   plnvec, axis,   schstp, soltol, &
                                   result, pntbuf                 )
@@ -3077,7 +3078,7 @@
 !                 perform this computation, since the surface may be
 !                 invisible from the interior of the target.
 !
-                  call vlcom ( 1.d0, center, 3.d0*maxrad, edir, rayvtx )
+                  call vlcom ( 1.0_wp, center, 3.0_wp*maxrad, edir, rayvtx )
                   call vminus( edir, raydir )
 
                   call zzraysfx ( rayvtx,      raydir, trgepc, &
@@ -3277,7 +3278,7 @@
                end if
 
                j     = 0
-               lterr = 1.d0
+               lterr = 1.0_wp
 
                do while (       ( j     .lt. numitr ) &
                           .and. ( lterr .gt. cnvlim )  )
@@ -3381,9 +3382,9 @@
 !                 Make sure ENORML points into the same half-space as
 !                 AXIS.
 !
-                  if ( vdot( enorml, axis ) .lt. 0.d0 ) then
+                  if ( vdot( enorml, axis ) .lt. 0.0_wp ) then
 
-                     call vsclip ( -1.d0, enorml )
+                     call vsclip ( -1.0_wp, enorml )
 
                   end if
 
@@ -3480,7 +3481,7 @@
 !                 corrected epoch.
 !
                   lterr = touchd(    abs( lt  - prvlt      ) &
-                                   / max( 1.d0, abs(epoch) )  )
+                                   / max( 1.0_wp, abs(epoch) )  )
 
                   j     = j + 1
 
@@ -3546,9 +3547,9 @@
 !              Make sure ENORML points into the same half-space as
 !              AXIS.
 !
-               if ( vdot( enorml, axis ) .lt. 0.d0 ) then
+               if ( vdot( enorml, axis ) .lt. 0.0_wp ) then
 
-                  call vsclip ( -1.d0, enorml )
+                  call vsclip ( -1.0_wp, enorml )
 
                end if
 
@@ -3625,7 +3626,7 @@
 !              Note that the evaluation epoch for the surface is
 !              corrected for light time.
 !
-               call zztangnt ( lmbcrv, 0.d0,   shape, trgcde, &
+               call zztangnt ( lmbcrv, 0.0_wp,   shape, trgcde, &
                                nsurf,  srflst, fxfcde, epoch, &
                                plnvec, axis,   schstp, soltol, &
                                result, pntbuf                 )

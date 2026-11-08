@@ -1,6 +1,7 @@
 !$Procedure PCKR02 ( PCK, read record from type 2 segment )
 
       subroutine pckr02 ( handle, descr, et, record )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      et
-      double precision      record   ( * )
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              et
+      real(wp)              record   ( * )
 
 ! $ Brief_I/O
 !
@@ -328,27 +329,27 @@
 !
 !     Parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd      =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     =    5 )
 
 !
 !     Local variables
 !
 
-      double precision      dc       (   nd )
-      double precision      init
-      double precision      intlen
+      real(wp)              dc       (   nd )
+      real(wp)              init
+      real(wp)              intlen
 
-      integer               begin
-      integer               end
-      integer               ic       (   ni )
-      integer               nrec
-      integer               recadr
-      integer               recno
-      integer               recsiz
+      integer(ip)           begin
+      integer(ip)           end
+      integer(ip)           ic       (   ni )
+      integer(ip)           nrec
+      integer(ip)           recadr
+      integer(ip)           recno
+      integer(ip)           recsiz
 
 
 !

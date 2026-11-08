@@ -1,6 +1,7 @@
 !$Procedure DSKZ02 ( DSK, fetch type 2 model size parameters )
 
       subroutine dskz02 ( handle, dladsc, nv, np )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               nv
-      integer               np
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           nv
+      integer(ip)           np
 
 ! $ Brief_I/O
 !
@@ -330,7 +331,7 @@
 !
 !     Local variables
 !
-      integer               n
+      integer(ip)           n
 
 
 

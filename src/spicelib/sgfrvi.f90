@@ -1,6 +1,7 @@
 !$Procedure SGFRVI ( Generic Segments: Fetch ref. value and index )
 
       subroutine sgfrvi ( handle, descr, x, value, indx, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               handle
-      double precision      descr ( * )
-      double precision      x
-      double precision      value
-      integer               indx
+      integer(ip)           handle
+      real(wp)              descr ( * )
+      real(wp)              x
+      real(wp)              value
+      integer(ip)           indx
       logical               found
 
 ! $ Brief_I/O
@@ -174,8 +175,8 @@
 !
 !     SPICELIB Functions
 !
-      integer               intmax
-      integer               lstled
+      integer(ip)           intmax
+      integer(ip)           lstled
 
       logical               failed
       logical               return
@@ -187,35 +188,35 @@
 !
       include 'sgparam.inc'
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               bufsiz
+      integer(ip)           bufsiz
       parameter           ( bufsiz = dirsiz + 1 )
 !
 !     Local Variables
 !
-      double precision      buffer ( bufsiz )
-      double precision      dpimax
-      double precision      dptemp
-      double precision      endref
-      double precision      myvalu
+      real(wp)              buffer ( bufsiz )
+      real(wp)              dpimax
+      real(wp)              dptemp
+      real(wp)              endref
+      real(wp)              myvalu
 
-      integer               begin
-      integer               bfindx
-      integer               fullrd
-      integer               end
-      integer               i
-      integer               myindx
-      integer               nfetch
-      integer               mynpkt
-      integer               mynrdr
-      integer               mynref
-      integer               myrdrb
-      integer               myrdrt
-      integer               myrefb
-      integer               rdridx
-      integer               remain
+      integer(ip)           begin
+      integer(ip)           bfindx
+      integer(ip)           fullrd
+      integer(ip)           end
+      integer(ip)           i
+      integer(ip)           myindx
+      integer(ip)           nfetch
+      integer(ip)           mynpkt
+      integer(ip)           mynrdr
+      integer(ip)           mynref
+      integer(ip)           myrdrb
+      integer(ip)           myrdrt
+      integer(ip)           myrefb
+      integer(ip)           rdridx
+      integer(ip)           remain
 
       logical               done
       logical               first
@@ -245,7 +246,7 @@
       if ( first ) then
 
          first  = .false.
-         dpimax = dble( intmax() )
+         dpimax = real( intmax(), wp )
 
       end if
 
@@ -290,7 +291,7 @@
 !
       myfnd  = .false.
       myindx = 0
-      myvalu = 0.0d0
+      myvalu = 0.0_wp
 !
 !     We pass the idiot checks, so lets proceed. We have a IF block for
 !     each allowed reference directory type code.
@@ -773,7 +774,7 @@
             return
          end if
 
-         endref = buffer(1) + dble(mynpkt-1) * buffer(2)
+         endref = buffer(1) + real(mynpkt-1, wp) * buffer(2)
 !
 !        Compute the index if we can.
 !
@@ -804,7 +805,7 @@
 !
 !              Compute the index.
 !
-               dptemp = 1.0d0 + (x - buffer(1)) / buffer(2)
+               dptemp = 1.0_wp + (x - buffer(1)) / buffer(2)
 !
 !              Test to see if we can safely convert the index to an
 !              integer.
@@ -837,7 +838,7 @@
 !
 !           Compute the reference value.
 !
-            myvalu = buffer(1) + dble(myindx-1) * buffer(2)
+            myvalu = buffer(1) + real(myindx-1, wp) * buffer(2)
 
          end if
 
@@ -856,7 +857,7 @@
             return
          end if
 
-         endref = buffer(1) + dble(mynpkt-1) * buffer(2)
+         endref = buffer(1) + real(mynpkt-1, wp) * buffer(2)
 !
 !        Compute the index if we can.
 !
@@ -894,9 +895,9 @@
 !
 !              Compute the index.
 !
-               dptemp = 1.5d0 + (x - buffer(1)) / buffer(2)
+               dptemp = 1.5_wp + (x - buffer(1)) / buffer(2)
 
-               if ( dptemp .gt. dpimax + 0.5d0 ) then
+               if ( dptemp .gt. dpimax + 0.5_wp ) then
 
                   call setmsg ( 'The computed index is too large' &
                   //            ' to be represented as an integer.' &
@@ -923,7 +924,7 @@
 !
 !           Compute the reference value.
 !
-            myvalu = buffer(1) + dble(myindx-1) * buffer(2)
+            myvalu = buffer(1) + real(myindx-1, wp) * buffer(2)
 
          end if
 

@@ -1,6 +1,7 @@
 !$Procedure ZZDDHRCM ( Private --- DDH Request Count )
 
       subroutine zzddhrcm ( nut, utcst, reqcnt )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,9 +24,9 @@
 
       implicit none
 
-      integer               nut
-      integer               utcst  ( * )
-      integer               reqcnt
+      integer(ip)           nut
+      integer(ip)           utcst  ( * )
+      integer(ip)           reqcnt
 
 ! $ Brief_I/O
 !
@@ -116,12 +117,12 @@
 !
 !     SPICELIB Functions
 !
-      integer               intmax
+      integer(ip)           intmax
 
 !
 !     Local Variables
 !
-      integer               i
+      integer(ip)           i
 
 !
 !     Check to see if REQCNT is INTMAX, otherwise just increment

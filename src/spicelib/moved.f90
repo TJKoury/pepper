@@ -1,6 +1,7 @@
 !$Procedure MOVED ( Move a double precision array to another )
 
       subroutine moved ( arrfrm, ndim, arrto )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      arrfrm ( * )
-      integer               ndim
-      double precision      arrto  ( * )
+      real(wp)              arrfrm ( * )
+      integer(ip)           ndim
+      real(wp)              arrto  ( * )
 
 ! $ Brief_I/O
 !

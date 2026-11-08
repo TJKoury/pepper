@@ -3,6 +3,7 @@
       subroutine zzgfocu ( occtyp, front,  fshape, fframe, &
                            back,   bshape, bframe, obsrvr, &
                            abcorr, time,   ocstat          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -47,7 +48,7 @@
       character*(*)         bframe
       character*(*)         obsrvr
       character*(*)         abcorr
-      double precision      time
+      real(wp)              time
       logical               ocstat
 
 ! $ Brief_I/O
@@ -251,13 +252,13 @@
 !
 !     SPICELIB functions
 !
-      double precision      dasine
-      double precision      halfpi
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              dasine
+      real(wp)              halfpi
+      real(wp)              vnorm
+      real(wp)              vsep
 
-      integer               isrchc
-      integer               zzocced
+      integer(ip)           isrchc
+      integer(ip)           zzocced
 
       logical               eqstr
       logical               failed
@@ -273,22 +274,22 @@
 !     at which target body may move, relative to the solar
 !     system barycenter.
 !
-      double precision      alpha
-      parameter           ( alpha = 1.d-2 )
+      real(wp)              alpha
+      parameter           ( alpha = 1.0e-2_wp )
 
 !
 !     ATOL is a tolerance value for computing arc sine.
 !
-      double precision      atol
-      parameter           ( atol  = 1.d-12 )
+      real(wp)              atol
+      parameter           ( atol  = 1.0e-12_wp )
 
-      integer               bdnmln
+      integer(ip)           bdnmln
       parameter           ( bdnmln = 36 )
 
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
-      integer               poslen
+      integer(ip)           poslen
       parameter           ( poslen = 10 )
 
 !
@@ -315,63 +316,63 @@
       character*(tmtlen)    trmtyp
 
 
-      double precision      bckfrt ( 3 )
-      double precision      bckobs ( 3 )
-      double precision      bckpos ( 3 )
-      double precision      bdist
-      double precision      bsmaxs ( 3, 3 )
-      double precision      etbcor
-      double precision      etfcor
-      double precision      fdist
-      double precision      frtbck ( 3 )
-      double precision      frtobs ( 3 )
-      double precision      frtpos ( 3 )
-      double precision      fsmaxs ( 3, 3 )
-      double precision      ltback
-      double precision      ltfrnt
-      double precision      maxang
-      double precision      minang
-      double precision      mtemp  ( 3, 3 )
-      double precision      svorig ( 3 )
-      double precision      radii  ( 3 )
-      double precision      spoint ( 3 )
-      double precision      srfvec ( 3 )
-      double precision      srad
-      double precision      svbrad ( 3 )
-      double precision      svfrad ( 3 )
-      double precision      svmnbr
-      double precision      svmnfr
-      double precision      svmxbr
-      double precision      svmxfr
-      double precision      t2sep
-      double precision      tdist
-      double precision      trgepc
-      double precision      trgsep
+      real(wp)              bckfrt ( 3 )
+      real(wp)              bckobs ( 3 )
+      real(wp)              bckpos ( 3 )
+      real(wp)              bdist
+      real(wp)              bsmaxs ( 3, 3 )
+      real(wp)              etbcor
+      real(wp)              etfcor
+      real(wp)              fdist
+      real(wp)              frtbck ( 3 )
+      real(wp)              frtobs ( 3 )
+      real(wp)              frtpos ( 3 )
+      real(wp)              fsmaxs ( 3, 3 )
+      real(wp)              ltback
+      real(wp)              ltfrnt
+      real(wp)              maxang
+      real(wp)              minang
+      real(wp)              mtemp  ( 3, 3 )
+      real(wp)              svorig ( 3 )
+      real(wp)              radii  ( 3 )
+      real(wp)              spoint ( 3 )
+      real(wp)              srfvec ( 3 )
+      real(wp)              srad
+      real(wp)              svbrad ( 3 )
+      real(wp)              svfrad ( 3 )
+      real(wp)              svmnbr
+      real(wp)              svmnfr
+      real(wp)              svmxbr
+      real(wp)              svmxfr
+      real(wp)              t2sep
+      real(wp)              tdist
+      real(wp)              trgepc
+      real(wp)              trgsep
 
-      integer               center
-      integer               clssid
-      integer               ffrmid
-      integer               frclss
-      integer               i
-      integer               idback
-      integer               idfrnt
-      integer               idobs
-      integer               loc
-      integer               nsurf
-      integer               occnum
-      integer               occode
-      integer               srflst ( maxsrf )
-      integer               svback
-      integer               svfrnt
-      integer               svobs
-      integer               trgid
+      integer(ip)           center
+      integer(ip)           clssid
+      integer(ip)           ffrmid
+      integer(ip)           frclss
+      integer(ip)           i
+      integer(ip)           idback
+      integer(ip)           idfrnt
+      integer(ip)           idobs
+      integer(ip)           loc
+      integer(ip)           nsurf
+      integer(ip)           occnum
+      integer(ip)           occode
+      integer(ip)           srflst ( maxsrf )
+      integer(ip)           svback
+      integer(ip)           svfrnt
+      integer(ip)           svobs
+      integer(ip)           trgid
 
       logical               attblk ( nabcor )
       logical               found
       logical               pntocc
       logical               pri
 
-      integer               ncalls
+      integer(ip)           ncalls
       save                  ncalls
 
 !
@@ -406,7 +407,7 @@
 !
 !     Initial values
 !
-      data                  svorig / 3 * 0.d0 /
+      data                  svorig / 3 * 0.0_wp /
 
 !
 !     Below we initialize the list of occultation types.
@@ -1330,16 +1331,16 @@
 
                call cleard ( 3, svfrad )
 
-               svmnfr = 0.d0
-               svmxfr = 0.d0
+               svmnfr = 0.0_wp
+               svmxfr = 0.0_wp
                svffrm = ' '
 
             else
 
                call cleard ( 3, svbrad )
 
-               svmnbr = 0.d0
-               svmxbr = 0.d0
+               svmnbr = 0.0_wp
+               svmxbr = 0.0_wp
                svbfrm = ' '
 
             end if
@@ -1685,7 +1686,7 @@
                call chkout ( 'ZZGFOCST'                              )
                return
 
-            else if ( bdist .eq. 0.d0 ) then
+            else if ( bdist .eq. 0.0_wp ) then
 
                call setmsg ( 'Back target coincides with observer.'  )
                call sigerr ( 'SPICE(NOTDISJOINT)'                    )
@@ -1715,7 +1716,7 @@
                call chkout ( 'ZZGFOCST'                             )
                return
 
-            else if ( fdist .eq. 0.d0 ) then
+            else if ( fdist .eq. 0.0_wp ) then
 
                call setmsg ( 'Front target coincides with observer.'  )
                call sigerr ( 'SPICE(NOTDISJOINT)'                     )

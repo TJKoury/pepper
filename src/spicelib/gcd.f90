@@ -1,6 +1,7 @@
 !$Procedure GCD ( Greatest Common Divisor )
 
-      integer function gcd ( a, b )
+      integer(ip) function gcd ( a, b )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,8 +20,8 @@
 
       implicit none
 
-      integer          a
-      integer          b
+      integer(ip)      a
+      integer(ip)      b
 
 ! $ Brief_I/O
 !
@@ -124,11 +125,11 @@
 !
 !     Local variables
 !
-      integer          remndr
-      integer          absa
-      integer          absb
-      integer          p
-      integer          q
+      integer(ip)      remndr
+      integer(ip)      absa
+      integer(ip)      absb
+      integer(ip)      p
+      integer(ip)      q
 
       absa = abs(a)
       absb = abs(b)

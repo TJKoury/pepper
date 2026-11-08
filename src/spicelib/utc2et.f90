@@ -1,6 +1,7 @@
 !$Procedure UTC2ET ( UTC to Ephemeris Time )
 
       subroutine utc2et ( utcstr, et )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)       utcstr
-      double precision    et
+      real(wp)            et
 
 ! $ Brief_I/O
 !
@@ -340,45 +341,45 @@
 !
 !     Parameters
 !
-      integer               era
+      integer(ip)           era
       parameter           ( era    =  1 )
 
-      integer               wday
+      integer(ip)           wday
       parameter           ( wday   = era    + 1 )
 
-      integer               zone
+      integer(ip)           zone
       parameter           ( zone   = wday   + 1 )
 
-      integer               ampm
+      integer(ip)           ampm
       parameter           ( ampm   = zone   + 1 )
 
-      integer               system
+      integer(ip)           system
       parameter           ( system = ampm   + 1 )
 
 !
 !     Local variables
 !
 
-      integer               longln
+      integer(ip)           longln
       parameter           ( longln = 480 )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
 
       character*(lnsize)    pictur
       character*(longln)    error
 
-      integer               smwdsz
+      integer(ip)           smwdsz
       parameter           ( smwdsz = 8 )
 
       character*(smwdsz)    type
       character*(smwdsz)    modify ( 5 )
 
 
-      double precision      tvec   ( 10 )
-      integer               ntvec
-      integer               year
+      real(wp)              tvec   ( 10 )
+      integer(ip)           ntvec
+      integer(ip)           year
 
 
       logical               succes
@@ -495,7 +496,7 @@
 
          end if
 
-         tvec(1) = dble(year)
+         tvec(1) = real(year, wp)
 !
 !        We are ready for launch, convert the time vector.
 !

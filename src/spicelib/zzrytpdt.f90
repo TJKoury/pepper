@@ -2,6 +2,7 @@
 
       subroutine zzrytpdt ( vertex, raydir, bounds, &
                             corpar, margin, nxpts,  xpt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -39,21 +40,21 @@
 
       include 'dsktol.inc'
 
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      bounds ( 2, 3 )
-      double precision      corpar ( * )
-      double precision      margin
-      integer               nxpts
-      double precision      xpt    ( 3 )
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              bounds ( 2, 3 )
+      real(wp)              corpar ( * )
+      real(wp)              margin
+      integer(ip)           nxpts
+      real(wp)              xpt    ( 3 )
 
-      integer               lonidx
+      integer(ip)           lonidx
       parameter           ( lonidx = 1 )
 
-      integer               latidx
+      integer(ip)           latidx
       parameter           ( latidx = 2 )
 
-      integer               altidx
+      integer(ip)           altidx
       parameter           ( altidx = 3 )
 
 ! $ Brief_I/O
@@ -207,12 +208,12 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      halfpi
-      double precision      vdist
-      double precision      vdot
-      double precision      vnorm
-      double precision      vsep
+      real(wp)              dpmax
+      real(wp)              halfpi
+      real(wp)              vdist
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              vsep
 
       logical               failed
       logical               return
@@ -226,76 +227,76 @@
 !
 !     Altitude expansion factor:
 !
-      double precision      radfac
-      parameter           ( radfac = 1.1d0 )
+      real(wp)              radfac
+      parameter           ( radfac = 1.1_wp )
 
 
 !
 !     Element boundary indices:
 !
-      integer               west
+      integer(ip)           west
       parameter           ( west   = 1 )
 
-      integer               east
+      integer(ip)           east
       parameter           ( east   = 2 )
 
-      integer               south
+      integer(ip)           south
       parameter           ( south  = 1 )
 
-      integer               north
+      integer(ip)           north
       parameter           ( north  = 2 )
 
-      integer               lower
+      integer(ip)           lower
       parameter           ( lower  = 1 )
 
-      integer               upper
+      integer(ip)           upper
       parameter           ( upper  = 2 )
 
-      integer               none
+      integer(ip)           none
       parameter           ( none   = 0 )
 
 !
 !     Local variables
 !
-      double precision      amnalt
-      double precision      amxalt
-      double precision      angle
-      double precision      apex   ( 3 )
-      double precision      dist
-      double precision      eastb  ( 3 )
-      double precision      eback  ( 3 )
-      double precision      emax
-      double precision      emin
-      double precision      endpt2 ( 3 )
-      double precision      f
-      double precision      loncov
-      double precision      maxalt
-      double precision      maxlat
-      double precision      maxlon
-      double precision      maxr
-      double precision      minalt
-      double precision      minlat
-      double precision      minlon
-      double precision      mndist
-      double precision      negdir ( 3 )
-      double precision      pmax
-      double precision      pmin
-      double precision      re
-      double precision      rp
-      double precision      s
-      double precision      srfx   ( 3 )
-      double precision      udir   ( 3 )
-      double precision      vtxang
-      double precision      vtxlvl
-      double precision      vtxoff ( 3 )
-      double precision      wback  ( 3 )
-      double precision      westb  ( 3 )
-      double precision      xpt2   ( 3 )
-      double precision      xincpt
-      double precision      yincpt
-      double precision      z      ( 3 )
+      real(wp)              amnalt
+      real(wp)              amxalt
+      real(wp)              angle
+      real(wp)              apex   ( 3 )
+      real(wp)              dist
+      real(wp)              eastb  ( 3 )
+      real(wp)              eback  ( 3 )
+      real(wp)              emax
+      real(wp)              emin
+      real(wp)              endpt2 ( 3 )
+      real(wp)              f
+      real(wp)              loncov
+      real(wp)              maxalt
+      real(wp)              maxlat
+      real(wp)              maxlon
+      real(wp)              maxr
+      real(wp)              minalt
+      real(wp)              minlat
+      real(wp)              minlon
+      real(wp)              mndist
+      real(wp)              negdir ( 3 )
+      real(wp)              pmax
+      real(wp)              pmin
+      real(wp)              re
+      real(wp)              rp
+      real(wp)              s
+      real(wp)              srfx   ( 3 )
+      real(wp)              udir   ( 3 )
+      real(wp)              vtxang
+      real(wp)              vtxlvl
+      real(wp)              vtxoff ( 3 )
+      real(wp)              wback  ( 3 )
+      real(wp)              westb  ( 3 )
+      real(wp)              xpt2   ( 3 )
+      real(wp)              xincpt
+      real(wp)              yincpt
+      real(wp)              z      ( 3 )
 
-      integer               nx
+      integer(ip)           nx
 
       logical               found
       logical               inside
@@ -311,7 +312,7 @@
 !
 !     Initial values
 !
-      data                  z      / 0.d0, 0.d0, 1.d0 /
+      data                  z      / 0.0_wp, 0.0_wp, 1.0_wp /
 
 
 
@@ -322,7 +323,7 @@
       call chkin ( 'ZZRYTPDT' )
 
 
-      if ( margin .lt. 0.d0 ) then
+      if ( margin .lt. 0.0_wp ) then
 
          call setmsg ( 'Margin must be non-negative but was #.' )
          call errdp  ( '#', margin                              )
@@ -370,7 +371,7 @@
 !
       re = corpar(1)
       f  = corpar(2)
-      rp = re * ( 1.d0 - f )
+      rp = re * ( 1.0_wp - f )
 
 !
 !     Extract the segment's coordinate bounds into easily
@@ -491,7 +492,7 @@
                    +  ( vertex(2)/emax )**2 &
                    +  ( vertex(3)/pmax )**2
 
-         if ( vtxlvl .gt. 1.d0 ) then
+         if ( vtxlvl .gt. 1.0_wp ) then
 !
 !           The vertex is outside this ellipsoid, and the DSK segment
 !           lies within the ellipsoid.
@@ -524,7 +525,7 @@
 
       s    = vnorm(vertex) + radfac * maxr
 
-      call vlcom ( 1.d0, vertex, s, udir, endpt2 )
+      call vlcom ( 1.0_wp, vertex, s, udir, endpt2 )
 
 !
 !     Now try the upper latitude bound. We can skip this test
@@ -536,7 +537,7 @@
 !        MAXLAT and the +Z axis. Note that the surface might be the
 !        lower nappe of the cone.
 !
-         angle = max ( 0.d0,  halfpi() - maxlat )
+         angle = max ( 0.0_wp,  halfpi() - maxlat )
 
 !
 !        Compute the Z coordinate of the apex of the latitude cone.
@@ -548,8 +549,8 @@
             return
          end if
 
-         apex(1) = 0.d0
-         apex(2) = 0.d0
+         apex(1) = 0.0_wp
+         apex(2) = 0.0_wp
          apex(3) = yincpt
 
 !
@@ -667,8 +668,8 @@
 
                   if ( vtxang .lt. angle ) then
 
-                     if (      ( maxlat    .lt. 0.d0 ) &
-                          .or. ( vertex(3) .gt. 0.d0 )  ) then
+                     if (      ( maxlat    .lt. 0.0_wp ) &
+                          .or. ( vertex(3) .gt. 0.0_wp )  ) then
 !
 !                       If MAXLAT is negative, the vertex offset
 !                       being outside the cone is enough to
@@ -769,8 +770,8 @@
             return
          end if
 
-         apex(1) = 0.d0
-         apex(2) = 0.d0
+         apex(1) = 0.0_wp
+         apex(2) = 0.0_wp
          apex(3) = yincpt
 
          call incnsg ( apex,   z,  angle, vertex, &
@@ -865,8 +866,8 @@
 
                   if ( vtxang .gt. angle ) then
 
-                     if (      ( minlat    .gt. 0.d0 ) &
-                          .or. ( vertex(3) .lt. 0.d0 )  ) then
+                     if (      ( minlat    .gt. 0.0_wp ) &
+                          .or. ( vertex(3) .lt. 0.0_wp )  ) then
 !
 !                       If MINLAT is positive, the vertex offset
 !                       being outside the cone is enough to
@@ -954,7 +955,7 @@
 !
       loncov = maxlon - minlon
 
-      if ( cos(loncov) .lt. 1.d0 ) then
+      if ( cos(loncov) .lt. 1.0_wp ) then
 !
 !        We have distinct longitude boundaries. Go to work.
 !
@@ -962,13 +963,13 @@
 !        Check the longitude boundaries. Try the plane of western
 !        longitude first.
 !
-         call vpack ( sin(minlon), -cos(minlon), 0.d0, westb )
+         call vpack ( sin(minlon), -cos(minlon), 0.0_wp, westb )
 
 
          s = radfac * ( vnorm(vertex) + maxr )
 
 
-         call zzinrypl ( vertex, udir, westb, 0.d0, s, nx, srfx )
+         call zzinrypl ( vertex, udir, westb, 0.0_wp, s, nx, srfx )
 
          if ( nx .eq. 1 ) then
 !
@@ -1022,9 +1023,9 @@
 !
 !        Try the plane of eastern longitude next.
 !
-         call vpack ( -sin(maxlon), cos(maxlon), 0.d0, eastb )
+         call vpack ( -sin(maxlon), cos(maxlon), 0.0_wp, eastb )
 
-         call zzinrypl ( vertex, udir, eastb, 0.d0, s, nx, srfx )
+         call zzinrypl ( vertex, udir, eastb, 0.0_wp, s, nx, srfx )
 
          if ( nx .eq. 1 ) then
 !

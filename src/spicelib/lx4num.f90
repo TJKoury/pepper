@@ -1,6 +1,7 @@
 !$Procedure LX4NUM (Scan for a number)
 
       subroutine lx4num ( string, first, last, nchar )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       implicit none
 
       character*(*)         string
-      integer               first
-      integer               last
-      integer               nchar
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           nchar
 
 ! $ Brief_I/O
 !
@@ -151,11 +152,11 @@
 !-&
 
 
-      integer               f
-      integer               i
-      integer               l
-      integer               n
-      integer               temp
+      integer(ip)           f
+      integer(ip)           i
+      integer(ip)           l
+      integer(ip)           n
+      integer(ip)           temp
 
       last  = first - 1
       l     = len ( string )

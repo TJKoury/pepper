@@ -1,6 +1,7 @@
 !$Procedure VRELG ( Vector relative difference, general dimension )
 
-      double precision function vrelg ( v1, v2, ndim )
+      real(wp) function vrelg ( v1, v2, ndim )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      v1 ( * )
-      double precision      v2 ( * )
-      integer               ndim
+      real(wp)              v1 ( * )
+      real(wp)              v2 ( * )
+      integer(ip)           ndim
 
 ! $ Brief_I/O
 !
@@ -209,15 +210,15 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnormg
-      double precision      vdistg
+      real(wp)              vnormg
+      real(wp)              vdistg
 
 
 !
 !     Local variables
 !
-      double precision      nunorm
-      double precision      denorm
+      real(wp)              nunorm
+      real(wp)              denorm
 
 
 
@@ -232,9 +233,9 @@
 !
       nunorm = vdistg ( v1, v2, ndim )
 
-      if ( nunorm .eq. 0.d0 ) then
+      if ( nunorm .eq. 0.0_wp ) then
 
-         vrelg = 0.d0
+         vrelg = 0.0_wp
 
       else
 

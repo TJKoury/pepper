@@ -1,6 +1,7 @@
 !$Procedure J1950 ( Julian Date of 1950.0 JAN 1.0 )
 
-      double precision function j1950 ( )
+      real(wp) function j1950 ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -95,7 +96,7 @@
 !-&
 
 
-      j1950 = 2433282.5d0
+      j1950 = 2433282.5_wp
 
       return
       end

@@ -1,6 +1,7 @@
 !$Procedure TRCPKG ( Trace package )
 
       subroutine trcpkg ( depth, index, module, trace, name )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,23 +19,23 @@
 
       implicit none
 
-      integer               depth
-      integer               index
+      integer(ip)           depth
+      integer(ip)           index
       character*(*)         module
       character*(*)         trace
       character*(*)         name
 
-      integer               filen
+      integer(ip)           filen
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter           ( filen  = 128 )
 #else
       parameter           ( filen  = 255 )
 #endif
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen =  32 )
 
-      integer               maxmod
+      integer(ip)           maxmod
       parameter           ( maxmod = 100 )
 
 ! $ Brief_I/O
@@ -397,8 +398,8 @@
 !
 !     SPICELIB functions:
 !
-      integer               frstnb
-      integer               rtrim
+      integer(ip)           frstnb
+      integer(ip)           rtrim
 
       logical               failed
 !
@@ -410,12 +411,12 @@
 !     FORTRAN compilers. 80 characters should be more than sufficient
 !     to contain a module name.
 !
-      integer               tmplen
+      integer(ip)           tmplen
       parameter           ( tmplen = 80 )
 !
 !     The integer mnemonic for the RETURN error action.
 !
-      integer               iretrn
+      integer(ip)           iretrn
       parameter           ( iretrn = 3 )
 
 !
@@ -425,10 +426,10 @@
       character*(11)        string
       character*(tmplen)    tmpnam
 
-      integer               action
-      integer               first
-      integer               i
-      integer               l
+      integer(ip)           action
+      integer(ip)           first
+      integer(ip)           i
+      integer(ip)           l
 
 !
 !     Saved variables:
@@ -436,11 +437,11 @@
       character*(namlen)    stack (maxmod)
       character*(namlen)    frozen(maxmod)
 
-      integer               frzcnt
-      integer               frzovr
-      integer               maxdep
-      integer               modcnt
-      integer               ovrflw
+      integer(ip)           frzcnt
+      integer(ip)           frzovr
+      integer(ip)           maxdep
+      integer(ip)           modcnt
+      integer(ip)           ovrflw
 
       logical               notrc
 

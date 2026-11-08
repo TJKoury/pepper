@@ -3,6 +3,7 @@
       logical function zzekscmp ( op, &
                                   handle, segdsc, coldsc, row,   eltidx, &
                                   dtype,  cval,   dval,   ival,  null  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -28,16 +29,16 @@
       include 'ektype.inc'
       include 'ekwild.inc'
 
-      integer               op
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               row
-      integer               eltidx
-      integer               dtype
+      integer(ip)           op
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           row
+      integer(ip)           eltidx
+      integer(ip)           dtype
       character*(*)         cval
-      double precision      dval
-      integer               ival
+      real(wp)              dval
+      integer(ip)           ival
       logical               null
 
 
@@ -256,15 +257,15 @@
 !
       character*(maxstr)    eltc
 
-      double precision      eltd
-      double precision      numval
+      real(wp)              eltd
+      real(wp)              numval
 
-      integer               cmplen
-      integer               cvlen
-      integer               coltyp
-      integer               elti
-      integer               rel
-      integer               strlen
+      integer(ip)           cmplen
+      integer(ip)           cvlen
+      integer(ip)           coltyp
+      integer(ip)           elti
+      integer(ip)           rel
+      integer(ip)           strlen
 
       logical               enull
       logical               found

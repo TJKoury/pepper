@@ -1,6 +1,7 @@
 !$Procedure GETMSG ( Get Error Message )
 
       subroutine getmsg ( option, msg )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -199,7 +200,7 @@
 !     Length of short error message:
 !
 
-      integer               shrtln
+      integer(ip)           shrtln
       parameter           ( shrtln = 25 )
 
       character*(shrtln)    shrtms
@@ -208,7 +209,7 @@
 !     Upper case version of the option:
 !
 
-      integer               optlen
+      integer(ip)           optlen
       parameter           ( optlen = 10 )
 
       character*(optlen)    upopt

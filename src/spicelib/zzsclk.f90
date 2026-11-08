@@ -1,6 +1,7 @@
 !$Procedure    ZZSCLK ( Is there and SCLK for a CKID )
 
       logical function zzsclk ( ckid, sclkid )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,8 +23,8 @@
 ! $ Declarations
 
       implicit none
-      integer               ckid
-      integer               sclkid
+      integer(ip)           ckid
+      integer(ip)           sclkid
 
 ! $ Brief_I/O
 !
@@ -102,8 +103,8 @@
 !-&
 !     SPICELIB Functions
 !
-      integer               cardi
-      integer               sizei
+      integer(ip)           cardi
+      integer(ip)           sizei
 
       logical               return
       logical               elemi
@@ -111,13 +112,13 @@
 !
 !     Local Variables
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 32 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               maxids
+      integer(ip)           maxids
       parameter           ( maxids = 10 )
 
 
@@ -126,12 +127,12 @@
       character*(wdsize)    type
       character*(wdsize)    agent
 
-      integer               dtsize ( 7 )
-      integer               i
-      integer               n
+      integer(ip)           dtsize ( 7 )
+      integer(ip)           i
+      integer(ip)           n
 
-      integer               known  ( lbcell : maxids )
-      integer               passed ( lbcell : maxids )
+      integer(ip)           known  ( lbcell : maxids )
+      integer(ip)           passed ( lbcell : maxids )
 
       logical               keepid
       logical               update

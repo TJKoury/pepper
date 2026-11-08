@@ -1,6 +1,7 @@
 !$Procedure ZZGFWSTS ( Private --- GF, sift first window thru second )
 
       subroutine zzgfwsts ( wndw1, wndw2, inclsn, wndw3 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,13 +24,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      wndw1 ( lbcell : * )
-      double precision      wndw2 ( lbcell : * )
+      real(wp)              wndw1 ( lbcell : * )
+      real(wp)              wndw2 ( lbcell : * )
       character*(*)         inclsn
-      double precision      wndw3 ( lbcell : * )
+      real(wp)              wndw3 ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -146,15 +147,15 @@
 !     SPICELIB functions
 !
 
-      integer               cardd
-      integer               sized
+      integer(ip)           cardd
+      integer(ip)           sized
 
       logical               return
 
 !
 !     Local parameters
 !
-      integer               inclen
+      integer(ip)           inclen
       parameter           ( inclen = 2 )
 
 !
@@ -162,16 +163,16 @@
 !
       character*(inclen)    locinc
 
-      integer               begp1
-      integer               begp2
-      integer               begp3
-      integer               endp1
-      integer               endp2
-      integer               endp3
-      integer               maxpts
-      integer               ovflow
-      integer               size1
-      integer               size2
+      integer(ip)           begp1
+      integer(ip)           begp2
+      integer(ip)           begp3
+      integer(ip)           endp1
+      integer(ip)           endp2
+      integer(ip)           endp3
+      integer(ip)           maxpts
+      integer(ip)           ovflow
+      integer(ip)           size1
+      integer(ip)           size2
 
       logical               closed
       logical               keep

@@ -1,6 +1,7 @@
 !$Procedure EL2CGV ( Ellipse to center and generating vectors )
 
       subroutine el2cgv ( ellips, center, smajor, sminor )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,13 +22,13 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel    =   9 )
 
-      double precision      ellips ( ubel )
-      double precision      center (    3 )
-      double precision      smajor (    3 )
-      double precision      sminor (    3 )
+      real(wp)              ellips ( ubel )
+      real(wp)              center (    3 )
+      real(wp)              smajor (    3 )
+      real(wp)              sminor (    3 )
 
 ! $ Brief_I/O
 !
@@ -316,13 +317,13 @@
 !        MINPOS through MINPOS + 1
 !
 !
-      integer               ctrpos
+      integer(ip)           ctrpos
       parameter           ( ctrpos = 1 )
 
-      integer               majpos
+      integer(ip)           majpos
       parameter           ( majpos = 4 )
 
-      integer               minpos
+      integer(ip)           minpos
       parameter           ( minpos = 7 )
 
 

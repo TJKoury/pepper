@@ -1,6 +1,7 @@
 !$Procedure DSKN02 ( DSK, type 2, compute normal vector for plate )
 
       subroutine dskn02 ( handle, dladsc, plid, normal )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               handle
-      integer               dladsc ( * )
-      integer               plid
-      double precision      normal ( 3 )
+      integer(ip)           handle
+      integer(ip)           dladsc ( * )
+      integer(ip)           plid
+      real(wp)              normal ( 3 )
 
 ! $ Brief_I/O
 !
@@ -366,18 +367,18 @@
 !
 !     Local variables
 !
-      double precision      dskdsc ( dskdsz )
-      double precision      edge1  ( 3 )
-      double precision      edge2  ( 3 )
-      double precision      verts  ( 3, 3 )
+      real(wp)              dskdsc ( dskdsz )
+      real(wp)              edge1  ( 3 )
+      real(wp)              edge2  ( 3 )
+      real(wp)              verts  ( 3, 3 )
 
-      integer               i
-      integer               n
-      integer               np
-      integer               nv
-      integer               plate  ( 3 )
-      integer               start
-      integer               unit
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           np
+      integer(ip)           nv
+      integer(ip)           plate  ( 3 )
+      integer(ip)           start
+      integer(ip)           unit
 
       if ( return() ) then
          return

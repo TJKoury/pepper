@@ -1,6 +1,7 @@
 !$Procedure TWOVEC ( Two vectors defining an orthonormal frame )
 
       subroutine twovec ( axdef, indexa, plndef, indexp, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       implicit none
 
-      double precision   axdef  (   3 )
-      integer            indexa
-      double precision   plndef (   3 )
-      integer            indexp
-      double precision   mout   ( 3,3 )
+      real(wp)           axdef  (   3 )
+      integer(ip)        indexa
+      real(wp)           plndef (   3 )
+      integer(ip)        indexp
+      real(wp)           mout   ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -179,12 +180,12 @@
 !
 !     Local variables
 !
-      double precision      mtemp  ( 3, 3 )
+      real(wp)              mtemp  ( 3, 3 )
 
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               seqnce ( 5 )
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           seqnce ( 5 )
 
 !
 !     Saved variables
@@ -273,9 +274,9 @@
 !     in one of the one columns of MOUT(1,I2) and MOUT(1,I3) (we need
 !     only check one of them since they are related by a cross product).
 !
-      if (       ( mout(1,i2) .eq. 0.0d0 ) &
-           .and. ( mout(2,i2) .eq. 0.0d0 ) &
-           .and. ( mout(3,i2) .eq. 0.0d0 ) ) then
+      if (       ( mout(1,i2) .eq. 0.0_wp ) &
+           .and. ( mout(2,i2) .eq. 0.0_wp ) &
+           .and. ( mout(3,i2) .eq. 0.0_wp ) ) then
 
          call setmsg ( 'The input vectors AXDEF and PLNDEF are '      // &
                        'linearly dependent.'                          )

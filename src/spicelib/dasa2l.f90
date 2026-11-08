@@ -2,6 +2,7 @@
 
       subroutine dasa2l ( handle, type,   addrss, &
                           clbase, clsize, recno,  wordno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,18 +23,18 @@
 
       implicit none
 
-      integer               handle
-      integer               type
-      integer               addrss
-      integer               clbase
-      integer               clsize
-      integer               recno
-      integer               wordno
+      integer(ip)           handle
+      integer(ip)           type
+      integer(ip)           addrss
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           recno
+      integer(ip)           wordno
 
-      integer               char
+      integer(ip)           char
       parameter           ( char   =  1  )
 
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
 ! $ Brief_I/O
@@ -363,7 +364,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchi
+      integer(ip)           isrchi
       logical               failed
 
 !
@@ -373,58 +374,58 @@
 !
 !     Words per data record, for each data type:
 !
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc = 1024 )
 
-      integer               nwd
+      integer(ip)           nwd
       parameter           ( nwd =  128 )
 
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi =  256 )
 
 !
 !     Directory forward pointer location
 !
-      integer               fwdloc
+      integer(ip)           fwdloc
       parameter           ( fwdloc = 2 )
 
 !
 !     Directory address range locations
 !
-      integer               chrrng
+      integer(ip)           chrrng
       parameter           ( chrrng =          3 )
 
-      integer               dprng
+      integer(ip)           dprng
       parameter           ( dprng  = chrrng + 2 )
 
-      integer               intrng
+      integer(ip)           intrng
       parameter           ( intrng = dprng  + 2 )
 
 !
 !     Index of highest address in a `range array':
 !
-      integer               high
+      integer(ip)           high
       parameter           ( high = 2 )
 
 !
 !     Location of first type descriptor
 !
-      integer               begdsc
+      integer(ip)           begdsc
       parameter           ( begdsc = 9 )
 
 !
 !     Access word length
 !
-      integer               acclen
+      integer(ip)           acclen
       parameter           ( acclen = 10 )
 
 !
 !     File table size
 !
-      integer               maxfil
+      integer(ip)           maxfil
       parameter           ( maxfil = 20 )
 
-      integer               maxvec
+      integer(ip)           maxvec
       parameter           ( maxvec = 3 * maxfil )
 
 
@@ -433,40 +434,40 @@
 !
       character*(acclen)    access
 
-      integer               baserc
-      integer               curtyp
-      integer               dirrec ( nwi )
-      integer               dscloc
-      integer               fidx
-      integer               free
-      integer               hiaddr
-      integer               i
-      integer               j
-      integer               lstrec ( 3 )
-      integer               lstwrd ( 3 )
-      integer               mxaddr
-      integer               ncomc
-      integer               ncomr
-      integer               ndirs
-      integer               next   ( 3 )
-      integer               nfiles
-      integer               nrec
-      integer               nresvc
-      integer               nresvr
-      integer               ntypes
-      integer               nw     ( 3 )
-      integer               nxtrec
-      integer               prev   ( 3 )
-      integer               prvhan
-      integer               prvtyp
-      integer               range  ( 2 )
-      integer               rngloc ( 3 )
-      integer               tbbase ( 3, maxfil )
-      integer               tbfwrd (    maxfil )
-      integer               tbhan  (    maxfil )
-      integer               tbmxad ( 3, maxfil )
-      integer               tbsize ( 3, maxfil )
-      integer               ub
+      integer(ip)           baserc
+      integer(ip)           curtyp
+      integer(ip)           dirrec ( nwi )
+      integer(ip)           dscloc
+      integer(ip)           fidx
+      integer(ip)           free
+      integer(ip)           hiaddr
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           lstrec ( 3 )
+      integer(ip)           lstwrd ( 3 )
+      integer(ip)           mxaddr
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           ndirs
+      integer(ip)           next   ( 3 )
+      integer(ip)           nfiles
+      integer(ip)           nrec
+      integer(ip)           nresvc
+      integer(ip)           nresvr
+      integer(ip)           ntypes
+      integer(ip)           nw     ( 3 )
+      integer(ip)           nxtrec
+      integer(ip)           prev   ( 3 )
+      integer(ip)           prvhan
+      integer(ip)           prvtyp
+      integer(ip)           range  ( 2 )
+      integer(ip)           rngloc ( 3 )
+      integer(ip)           tbbase ( 3, maxfil )
+      integer(ip)           tbfwrd (    maxfil )
+      integer(ip)           tbhan  (    maxfil )
+      integer(ip)           tbmxad ( 3, maxfil )
+      integer(ip)           tbsize ( 3, maxfil )
+      integer(ip)           ub
       logical               fast
       logical               known
       logical               prvok

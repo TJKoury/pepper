@@ -1,6 +1,7 @@
 !$Procedure SCARDI ( Set the cardinality of an integer cell )
 
       subroutine scardi ( card, cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,11 +19,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               card
-      integer               cell   ( lbcell:* )
+      integer(ip)           card
+      integer(ip)           cell   ( lbcell:* )
 
 ! $ Brief_I/O
 !

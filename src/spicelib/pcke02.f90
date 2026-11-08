@@ -1,6 +1,7 @@
 !$Procedure PCKE02 ( PCK, evaluate data record from type 2 segment )
 
       subroutine pcke02 ( et, record, eulang )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      et
-      double precision      record   ( * )
-      double precision      eulang   ( 6 )
+      real(wp)              et
+      real(wp)              record   ( * )
+      real(wp)              eulang   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -166,7 +167,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      twopi
+      real(wp)              twopi
       logical               return
 
 !

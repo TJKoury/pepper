@@ -1,6 +1,7 @@
 !$Procedure XPSGIP ( Transpose a matrix, general dimension, in place )
 
       subroutine xpsgip ( nrow, ncol, matrix )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,9 +19,9 @@
 
       implicit none
 
-      integer            nrow
-      integer            ncol
-      double precision   matrix ( 0 : * )
+      integer(ip)        nrow
+      integer(ip)        ncol
+      real(wp)           matrix ( 0 : * )
 
 ! $ Brief_I/O
 !
@@ -164,17 +165,17 @@
 !
 !     Local Variables
 !
-      double precision      source
-      double precision      temp
+      real(wp)              source
+      real(wp)              temp
 
-      integer               dest
-      integer               k
-      integer               m
-      integer               moved
-      integer               n
-      integer               nmoves
-      integer               r
-      integer               start
+      integer(ip)           dest
+      integer(ip)           k
+      integer(ip)           m
+      integer(ip)           moved
+      integer(ip)           n
+      integer(ip)           nmoves
+      integer(ip)           r
+      integer(ip)           start
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure DACOSH ( Double precision arc hyperbolic cosine )
 
-      double precision function  dacosh ( x )
+      real(wp) function  dacosh ( x )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
 
       implicit none
 
-      double precision   x
+      real(wp)           x
 
 ! $ Brief_I/O
 !
@@ -134,18 +135,18 @@
 !   Set up the error processing.
 !
       if ( return() ) then
-         dacosh = 0.0d0
+         dacosh = 0.0_wp
          return
       else
          call chkin ( 'DACOSH' )
-         dacosh = 0.0d0
+         dacosh = 0.0_wp
       end if
 
 !
 !  Check that X >= 1.
 !
 
-      if ( x .lt. 1.d0 ) then
+      if ( x .lt. 1.0_wp ) then
 
          call setmsg ( 'DACOSH: Invalid argument, X is less than one.' )
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
@@ -159,7 +160,7 @@
 !  large values of X if the equivalent expression, 1.0D0/(X*X), were
 !  used.
 !
-      dacosh = dlog (x + x * dsqrt (1.0d0 - (1.0d0/x)/x) )
+      dacosh = dlog (x + x * dsqrt (1.0_wp - (1.0_wp/x)/x) )
 
 
       call chkout ( 'DACOSH' )

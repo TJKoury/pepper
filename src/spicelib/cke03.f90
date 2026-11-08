@@ -1,6 +1,7 @@
 !$Procedure CKE03  ( C-kernel, evaluate pointing record, data type 3 )
 
       subroutine cke03 ( needav, record, cmat, av, clkout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       implicit none
 
       logical               needav
-      double precision      record ( *     )
-      double precision      cmat   ( 3, 3  )
-      double precision      av     ( 3     )
-      double precision      clkout
+      real(wp)              record ( *     )
+      real(wp)              cmat   ( 3, 3  )
+      real(wp)              av     ( 3     )
+      real(wp)              clkout
 
 ! $ Brief_I/O
 !
@@ -412,20 +413,20 @@
 !     Local variables
 !
 
-      double precision      t
-      double precision      t1
-      double precision      t2
-      double precision      q1    (    4 )
-      double precision      q2    (    4 )
-      double precision      cmat1 ( 3, 3 )
-      double precision      cmat2 ( 3, 3 )
-      double precision      av1   (    3 )
-      double precision      av2   (    3 )
-      double precision      axis  (    3 )
-      double precision      rot   ( 3, 3 )
-      double precision      delta ( 3, 3 )
-      double precision      frac
-      double precision      angle
+      real(wp)              t
+      real(wp)              t1
+      real(wp)              t2
+      real(wp)              q1    (    4 )
+      real(wp)              q2    (    4 )
+      real(wp)              cmat1 ( 3, 3 )
+      real(wp)              cmat2 ( 3, 3 )
+      real(wp)              av1   (    3 )
+      real(wp)              av2   (    3 )
+      real(wp)              axis  (    3 )
+      real(wp)              rot   ( 3, 3 )
+      real(wp)              delta ( 3, 3 )
+      real(wp)              frac
+      real(wp)              angle
 
 !
 !     Standard SPICE error handling.
@@ -539,7 +540,7 @@
 
       if ( needav ) then
 
-         call vlcom ( 1.d0 - frac, av1, frac, av2, av )
+         call vlcom ( 1.0_wp - frac, av1, frac, av2, av )
 
       end if
 

@@ -1,6 +1,7 @@
 !$Procedure REPML ( Replace marker with logical value text )
 
       subroutine repml ( in, marker, value, rtcase, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -243,19 +244,19 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               isrchc
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           isrchc
+      integer(ip)           lastnb
 
       logical               return
 
 !
 !     Local parameters
 !
-      integer               maxllt
+      integer(ip)           maxllt
       parameter           ( maxllt = 5 )
 
-      integer               ncase
+      integer(ip)           ncase
       parameter           ( ncase  = 3 )
 
 !
@@ -266,12 +267,12 @@
       character*(1)         tmpcas
       character*(1)         casstr ( ncase )
 
-      integer               casidx
-      integer               mrknbf
-      integer               mrknbl
-      integer               mrkpsb
-      integer               mrkpse
-      integer               validx
+      integer(ip)           casidx
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
+      integer(ip)           validx
 
 !
 !     Saved variables

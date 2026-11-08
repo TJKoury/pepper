@@ -1,6 +1,7 @@
 !$Procedure RQUAD ( Roots of a quadratic equation )
 
       subroutine rquad (  a,  b,  c,  root1,  root2  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      root1 ( 2 )
-      double precision      root2 ( 2 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              root1 ( 2 )
+      real(wp)              root2 ( 2 )
 
 ! $ Brief_I/O
 !
@@ -204,11 +205,11 @@
 !
 !     Local variables
 !
-      double precision      con
-      double precision      discrm
-      double precision      lin
-      double precision      scale
-      double precision      sqr
+      real(wp)              con
+      real(wp)              discrm
+      real(wp)              lin
+      real(wp)              scale
+      real(wp)              sqr
 
       logical               zeroed
 
@@ -226,7 +227,7 @@
 !     The degree of the equation is zero unless at least one of the
 !     second or first degree coefficients is non-zero.
 !
-      if (  ( a .eq. 0.d0 )  .and.  ( b .eq. 0.d0 )  )  then
+      if (  ( a .eq. 0.0_wp )  .and.  ( b .eq. 0.0_wp )  )  then
 
          call setmsg ( 'Both 1st and 2nd degree coefficients are zero.')
          call sigerr ( 'SPICE(DEGENERATECASE)'                         )
@@ -242,9 +243,9 @@
       scale  = max ( abs(a), abs(b), abs(c) )
 
 
-      zeroed =      (  ( a .ne. 0.d0 ) .and. ( a / scale .eq. 0.d0 )  ) &
-               .or. (  ( b .ne. 0.d0 ) .and. ( b / scale .eq. 0.d0 )  ) &
-               .or. (  ( c .ne. 0.d0 ) .and. ( c / scale .eq. 0.d0 )  )
+      zeroed =      (  ( a .ne. 0.0_wp ) .and. ( a / scale .eq. 0.0_wp )  ) &
+               .or. (  ( b .ne. 0.0_wp ) .and. ( b / scale .eq. 0.0_wp )  ) &
+               .or. (  ( c .ne. 0.0_wp ) .and. ( c / scale .eq. 0.0_wp )  )
 
 
       if ( .not. zeroed ) then
@@ -265,22 +266,22 @@
 !     If the second-degree coefficient is non-zero, we have a bona fide
 !     quadratic equation, as opposed to a linear equation.
 !
-      if ( sqr .ne. 0.d0 ) then
+      if ( sqr .ne. 0.0_wp ) then
 !
 !        Compute the discriminant.
 !
-         discrm = lin**2  -  4.d0 * sqr * con
+         discrm = lin**2  -  4.0_wp * sqr * con
 
 !
 !        A non-negative discriminant indicates that the roots are
 !        real.
 !
-         if ( discrm .ge. 0.d0 ) then
+         if ( discrm .ge. 0.0_wp ) then
 !
 !           The imaginary parts of both roots are zero.
 !
-            root1(2) = 0.d0
-            root2(2) = 0.d0
+            root1(2) = 0.0_wp
+            root2(2) = 0.0_wp
 !
 !           We can take advantage of the fact that CON/SQR is the
 !           product of the roots to improve the accuracy of the root
@@ -288,19 +289,19 @@
 !           first and then divide CON/SQR by it to obtain the smaller
 !           root.
 !
-            if ( lin .lt. 0.d0 ) then
+            if ( lin .lt. 0.0_wp ) then
 !
 !              ROOT1 will contain the root of larger magnitude.
 !
-               root1(1) =  ( - lin + dsqrt(discrm) )  /  ( 2.d0 * sqr )
+               root1(1) =  ( - lin + dsqrt(discrm) )  /  ( 2.0_wp * sqr )
 
                root2(1) =  ( con / sqr )  /   root1(1)
 
-            else if ( lin .gt. 0.d0 ) then
+            else if ( lin .gt. 0.0_wp ) then
 !
 !              ROOT2 will contain the root of larger magnitude.
 !
-               root2(1) =  ( - lin - dsqrt(discrm) )  /  ( 2.d0 * sqr )
+               root2(1) =  ( - lin - dsqrt(discrm) )  /  ( 2.0_wp * sqr )
 
                root1(1) =  ( con / sqr )  /   root2(1)
 
@@ -308,7 +309,7 @@
 !
 !              The roots have the same magnitude.
 !
-               root1(1)  =    dsqrt( discrm )  /  ( 2.d0 * sqr )
+               root1(1)  =    dsqrt( discrm )  /  ( 2.0_wp * sqr )
 
                root2(1)  =  - root1(1)
 
@@ -322,8 +323,8 @@
 !           The roots are complex conjugates, so they have equal
 !           magnitudes.
 !
-            root1(1)  =  -lin                /   ( 2.d0 * sqr )
-            root1(2)  =   dsqrt( -discrm )   /   ( 2.d0 * sqr )
+            root1(1)  =  -lin                /   ( 2.0_wp * sqr )
+            root1(2)  =   dsqrt( -discrm )   /   ( 2.0_wp * sqr )
 
             root2(1)  =   root1(1)
             root2(2)  =  -root1(2)
@@ -335,10 +336,10 @@
 !     If the second-degree coefficient is zero, we actually have a
 !     linear equation.
 !
-      else if ( lin .ne. 0.d0 ) then
+      else if ( lin .ne. 0.0_wp ) then
 
          root1(1) =  - con / lin
-         root1(2) =    0.d0
+         root1(2) =    0.0_wp
 
 !
 !        We set the second root equal to the first, rather than

@@ -1,6 +1,7 @@
 !$Procedure STDIO ( Standard IO )
 
       subroutine stdio ( name, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,7 +21,7 @@
       implicit none
 
       character*(*)         name
-      integer               unit
+      integer(ip)           unit
 
 ! $ Brief_I/O
 !
@@ -116,7 +117,7 @@
 !
 !     Local Variables
 !
-      integer               wdsize
+      integer(ip)           wdsize
       parameter           ( wdsize = 8 )
 
       character*(wdsize)    myname

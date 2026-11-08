@@ -1,6 +1,7 @@
 !$Procedure DVSEP ( Derivative of separation angle )
 
-      double precision function dvsep ( s1, s2 )
+      real(wp) function dvsep ( s1, s2 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision      s1 (6)
-      double precision      s2 (6)
+      real(wp)              s1 (6)
+      real(wp)              s2 (6)
 
 ! $ Brief_I/O
 !
@@ -316,9 +317,9 @@
 !     SPICELIB functions
 !
 
-      double precision      vdot
-      double precision      vnorm
-      double precision      zzdiv
+      real(wp)              vdot
+      real(wp)              vnorm
+      real(wp)              zzdiv
 
       logical               return
       logical               vzero
@@ -327,15 +328,15 @@
 !     Local variables
 !
 
-      double precision      denom
-      double precision      numr
-      double precision      pcross (3)
-      double precision      u1     (6)
-      double precision      u2     (6)
+      real(wp)              denom
+      real(wp)              numr
+      real(wp)              pcross (3)
+      real(wp)              u1     (6)
+      real(wp)              u2     (6)
 
 
       if ( return() ) then
-         dvsep = 0.d0
+         dvsep = 0.0_wp
          return
       end if
 
@@ -360,7 +361,7 @@
 !
       if ( vzero(pcross) ) then
 
-         dvsep = 0.d0
+         dvsep = 0.0_wp
          call chkout( 'DVSEP' )
          return
 

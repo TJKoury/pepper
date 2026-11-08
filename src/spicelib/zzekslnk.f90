@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSLNK ( EK, set link count for data page )
 
       subroutine zzekslnk ( handle, type, p, nlinks )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               type
-      integer               p
-      integer               nlinks
+      integer(ip)           handle
+      integer(ip)           type
+      integer(ip)           p
+      integer(ip)           nlinks
 
 ! $ Brief_I/O
 !
@@ -112,8 +113,8 @@
 !
 !     Local variables
 !
-      double precision      dplnk
-      integer               base
+      real(wp)              dplnk
+      integer(ip)           base
 
 !
 !     Use discovery check-in.

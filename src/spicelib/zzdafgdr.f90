@@ -1,6 +1,7 @@
 !$Procedure ZZDAFGDR ( Private --- DAF Get Data Record )
 
       subroutine zzdafgdr ( handle, recno, dprec, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,9 +25,9 @@
 
       include              'zzddhman.inc'
 
-      integer               handle
-      integer               recno
-      double precision      dprec  ( * )
+      integer(ip)           handle
+      integer(ip)           recno
+      real(wp)              dprec  ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -120,7 +121,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               return
@@ -133,15 +134,15 @@
       character*(strsiz)    strbff ( numbff )
       character*(strsiz)    tmpstr
 
-      double precision      dpbuf  ( 128 )
+      real(wp)              dpbuf  ( 128 )
 
-      integer               i
-      integer               iamh
-      integer               iarch
-      integer               ibff
-      integer               iostat
-      integer               lun
-      integer               natbff
+      integer(ip)           i
+      integer(ip)           iamh
+      integer(ip)           iarch
+      integer(ip)           ibff
+      integer(ip)           iostat
+      integer(ip)           lun
+      integer(ip)           natbff
 
       logical               first
       logical               locfnd

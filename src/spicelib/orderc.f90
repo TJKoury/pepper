@@ -1,6 +1,7 @@
 !$Procedure ORDERC ( Order of a character array )
 
       subroutine orderc ( array, ndim, iorder )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
       implicit none
 
       character*(*)    array  ( * )
-      integer          ndim
-      integer          iorder ( * )
+      integer(ip)      ndim
+      integer(ip)      iorder ( * )
 
 ! $ Brief_I/O
 !
@@ -215,10 +216,10 @@
 !
 !     Local variables
 !
-      integer          gap
-      integer          i
-      integer          j
-      integer          jg
+      integer(ip)      gap
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      jg
 
 
 !

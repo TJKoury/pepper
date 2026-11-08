@@ -1,6 +1,7 @@
 !$Procedure PL2PSV ( Plane to point and spanning vectors )
 
       subroutine pl2psv ( plane, point, span1, span2 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,13 +22,13 @@
 
       implicit none
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
 
-      double precision      plane ( ubpl )
-      double precision      point (    3 )
-      double precision      span1 (    3 )
-      double precision      span2 (    3 )
+      real(wp)              plane ( ubpl )
+      real(wp)              point (    3 )
+      real(wp)              span1 (    3 )
+      real(wp)              span2 (    3 )
 
 ! $ Brief_I/O
 !
@@ -243,7 +244,7 @@
 !
 !     Local variables
 !
-      double precision      normal ( 3 )
+      real(wp)              normal ( 3 )
 
 !
 !     Note for programmers: validity of the input plane is not

@@ -1,6 +1,7 @@
 !$Procedure REPMF  ( Replace marker with formatted d.p. value )
 
       subroutine repmf ( in, marker, value, sigdig, format, out )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
 
       character*(*)         in
       character*(*)         marker
-      double precision      value
-      integer               sigdig
+      real(wp)              value
+      integer(ip)           sigdig
       character*(*)         format
       character*(*)         out
 
-      integer               maxlfd
+      integer(ip)           maxlfd
       parameter           ( maxlfd = 56 )
 
 ! $ Brief_I/O
@@ -334,8 +335,8 @@
 !
 !     SPICELIB functions
 !
-      integer               frstnb
-      integer               lastnb
+      integer(ip)           frstnb
+      integer(ip)           lastnb
 
 !
 !     Local variables
@@ -343,14 +344,14 @@
       character*(1)         gdfmt
       character*(maxlfd)    substr
 
-      integer               mrknbf
-      integer               mrknbl
+      integer(ip)           mrknbf
+      integer(ip)           mrknbl
 
-      integer               mrkpsb
-      integer               mrkpse
+      integer(ip)           mrkpsb
+      integer(ip)           mrkpse
 
-      integer               subnbf
-      integer               subnbl
+      integer(ip)           subnbf
+      integer(ip)           subnbl
 
 
 !

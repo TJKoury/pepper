@@ -1,6 +1,7 @@
 !$Procedure SPKS08 ( S/P Kernel, subset, type 8 )
 
       subroutine spks08 ( handle, baddr, eaddr, begin, end )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               handle
-      integer               baddr
-      integer               eaddr
-      double precision      begin
-      double precision      end
+      integer(ip)           handle
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      real(wp)              begin
+      real(wp)              end
 
 ! $ Brief_I/O
 !
@@ -172,16 +173,16 @@
 !
 !     Local variables
 !
-      double precision      data     ( 6 )
-      double precision      ratio
-      double precision      start
-      double precision      step
+      real(wp)              data     ( 6 )
+      real(wp)              ratio
+      real(wp)              start
+      real(wp)              step
 
-      integer               degree
-      integer               i
-      integer               nrec
-      integer               offset
-      integer               rec      ( 2 )
+      integer(ip)           degree
+      integer(ip)           i
+      integer(ip)           nrec
+      integer(ip)           offset
+      integer(ip)           rec      ( 2 )
 
 
 !
@@ -227,7 +228,7 @@
 !     state to be transferred.
 !
 
-      ratio  =   max (  0.d0,   ( begin - start ) / step  )
+      ratio  =   max (  0.0_wp,   ( begin - start ) / step  )
 
       rec(1) =   1  +  min (  int(ratio),  nrec-1 )
 
@@ -287,8 +288,8 @@
 !
       call dafada (  start + ( rec(1) - 1 ) * step,    1  )
       call dafada (  step,                             1  )
-      call dafada (  dble ( degree ),                  1  )
-      call dafada (  dble ( rec(2) - rec(1) + 1 ),     1  )
+      call dafada (  real( degree, wp ),                  1  )
+      call dafada (  real( rec(2) - rec(1) + 1, wp ),     1  )
 
       call chkout ( 'SPKS08' )
       return

@@ -1,6 +1,7 @@
 !$Procedure VTMV ( Vector transpose times matrix times vector, 3 dim )
 
-      double precision function vtmv ( v1, matrix, v2 )
+      real(wp) function vtmv ( v1, matrix, v2 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision   v1     (   3 )
-      double precision   matrix ( 3,3 )
-      double precision   v2     (   3 )
+      real(wp)           v1     (   3 )
+      real(wp)           matrix ( 3,3 )
+      real(wp)           v2     (   3 )
 
 ! $ Brief_I/O
 !
@@ -222,10 +223,10 @@
 !
 !     Local variables
 !
-      integer               k
-      integer               l
+      integer(ip)           k
+      integer(ip)           l
 
-      vtmv = 0.d0
+      vtmv = 0.0_wp
       do k=1,3
          do l=1,3
             vtmv = vtmv + v1(k) * matrix(k,l) * v2(l)

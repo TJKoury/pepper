@@ -1,6 +1,7 @@
 !$Procedure SUMAD ( Sum of a double precision array )
 
-      double precision function sumad ( array, n )
+      real(wp) function sumad ( array, n )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,8 +21,8 @@
 
       implicit none
 
-      double precision   array  ( * )
-      integer            n
+      real(wp)           array  ( * )
+      integer(ip)        n
 
 ! $ Brief_I/O
 !
@@ -126,14 +127,14 @@
 !
 !     Local variables
 !
-      double precision sum
-      integer          i
+      real(wp) sum
+      integer(ip)      i
 
 
 !
 !     Begin at zero.
 !
-      sum = 0.d0
+      sum = 0.0_wp
 
 !
 !     Sum the elements. If N is zero or negative, nothing happens.

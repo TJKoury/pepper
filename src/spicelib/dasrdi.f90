@@ -1,6 +1,7 @@
 !$Procedure DASRDI ( DAS, read data, integer )
 
       subroutine dasrdi ( handle, first, last, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               handle
-      integer               first
-      integer               last
-      integer               data   ( * )
+      integer(ip)           handle
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           data   ( * )
 
 ! $ Brief_I/O
 !
@@ -286,22 +287,22 @@
 !
 !     Local parameters
 !
-      integer               nwi
+      integer(ip)           nwi
       parameter           ( nwi    =  256 )
 
-      integer               int
+      integer(ip)           int
       parameter           ( int    =  3  )
 
 !
 !     Local variables
 !
-      integer               clbase
-      integer               clsize
-      integer               n
-      integer               nread
-      integer               numint
-      integer               recno
-      integer               wordno
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           n
+      integer(ip)           nread
+      integer(ip)           numint
+      integer(ip)           recno
+      integer(ip)           wordno
 
 
 

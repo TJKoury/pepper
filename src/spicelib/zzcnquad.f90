@@ -1,6 +1,7 @@
 !$Procedure  ZZCNQUAD ( Solve quadratic equation for cone intercept )
 
       subroutine zzcnquad ( a, b, c, ub, n, r1, r2 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,13 +27,13 @@
 
       implicit none
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      ub
-      integer               n
-      double precision      r1
-      double precision      r2
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              ub
+      integer(ip)           n
+      real(wp)              r1
+      real(wp)              r2
 
 ! $ Brief_I/O
 !
@@ -151,29 +152,29 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      touchd
+      real(wp)              dpmax
+      real(wp)              touchd
 
       logical               return
 
 !
 !     Local parameters
 !
-      double precision      small
-      parameter           ( small = 1.d-8 )
+      real(wp)              small
+      parameter           ( small = 1.0e-8_wp )
 
 !
 !     Local variables
 !
-      double precision      coeffs ( 3 )
-      double precision      inv1
-      double precision      inv2
-      double precision      invub
-      double precision      maxmag
+      real(wp)              coeffs ( 3 )
+      real(wp)              inv1
+      real(wp)              inv2
+      real(wp)              invub
+      real(wp)              maxmag
 
-      integer               i
-      integer               maxix
-      integer               nx
+      integer(ip)           i
+      integer(ip)           maxix
+      integer(ip)           nx
 
       logical               first
 
@@ -187,7 +188,7 @@
 !     Initial values
 !
       data                  first / .true. /
-      data                  invub / -1.d0  /
+      data                  invub / -1.0_wp  /
 
 
       if ( return() ) then
@@ -202,7 +203,7 @@
 !
       if ( first ) then
 
-         invub = sqrt( dpmax() ) / 200.d0
+         invub = sqrt( dpmax() ) / 200.0_wp
 
          first = .false.
 
@@ -211,12 +212,12 @@
 !
 !     Handle the degenerate cases first.
 !
-      if ( ( a .eq. 0.d0 ) .and. ( b .eq. 0.d0 )  ) then
+      if ( ( a .eq. 0.0_wp ) .and. ( b .eq. 0.0_wp )  ) then
 
-         r1 = 0.d0
-         r2 = 0.d0
+         r1 = 0.0_wp
+         r2 = 0.0_wp
 
-         if ( c .eq. 0.d0 ) then
+         if ( c .eq. 0.0_wp ) then
 
             n = -1
          else
@@ -257,13 +258,13 @@
 !
 !     Make sure the value of maximum magnitude is +/- 1.
 !
-      coeffs(maxix) = sign( 1.d0, coeffs(maxix) )
+      coeffs(maxix) = sign( 1.0_wp, coeffs(maxix) )
 
 !
 !     Find roots in a manner suited to the coefficients we have.
 !
       if (       (  abs( coeffs(1) ) .ge.  small  ) &
-           .or.  (       coeffs(1)   .eq.  0.d0   )  ) then
+           .or.  (       coeffs(1)   .eq.  0.0_wp   )  ) then
 !
 !        This is a numerically well-behaved case. Delegate the
 !        job to ZZBQUAD.
@@ -316,13 +317,13 @@
 !
 !           We have one real root. Make sure we can invert it.
 !
-            if (  abs( inv1 * ub )  .ge.  1.d0  ) then
+            if (  abs( inv1 * ub )  .ge.  1.0_wp  ) then
 !
 !
 !              |1/INV1| <= UB
 !
 !
-               r1 = 1.d0 / inv1
+               r1 = 1.0_wp / inv1
 
             else
 !
@@ -336,7 +337,7 @@
 !
 !           There is no second root.
 !
-            r2 = 0.d0
+            r2 = 0.0_wp
 
          else if ( n .eq. 2 ) then
 !
@@ -345,24 +346,24 @@
 !           the smaller root of the original equation, as long
 !           as the reciprocal is within bounds.
 !
-            if (  abs( inv2 * ub )  .ge.  1.d0  ) then
+            if (  abs( inv2 * ub )  .ge.  1.0_wp  ) then
 !
 !
 !              |1/INV2| <= UB
 !
 !
-               r1 = 1.d0 / inv2
+               r1 = 1.0_wp / inv2
 
 !
 !              Proceed to the first root of the transformed equation.
 !
-               if (  abs( inv1 * ub )  .ge.  1.d0  ) then
+               if (  abs( inv1 * ub )  .ge.  1.0_wp  ) then
 !
 !
 !                 |1/INV1| <= UB
 !
 !
-                  r2 = 1.d0 / inv1
+                  r2 = 1.0_wp / inv1
 
                else
 !
@@ -370,7 +371,7 @@
 !
                   n  = 1
 
-                  r2 = 0.d0
+                  r2 = 0.0_wp
 
                end if
 
@@ -384,8 +385,8 @@
 !
                n  = 0
 
-               r1 = 0.d0
-               r2 = 0.d0
+               r1 = 0.0_wp
+               r2 = 0.0_wp
 
             end if
 
@@ -397,8 +398,8 @@
 !
             n  = 0
 
-            r1 = 0.d0
-            r2 = 0.d0
+            r1 = 0.0_wp
+            r2 = 0.0_wp
 
          end if
 
@@ -413,7 +414,7 @@
 !
 !        It will be convenient to make B equal to 1; do this now.
 !
-         if ( b .lt. 0.d0 ) then
+         if ( b .lt. 0.0_wp ) then
 
             coeffs(1) = -coeffs(1)
             coeffs(2) = -coeffs(2)
@@ -485,8 +486,8 @@
 !
 
          n  = 0
-         r1 = 0.d0
-         r2 = 0.d0
+         r1 = 0.0_wp
+         r2 = 0.0_wp
 
          if ( abs( coeffs(3) ) .le. ub ) then
 
@@ -494,10 +495,10 @@
 
             n  = 1
 
-            if (        abs( coeffs(1)*coeffs(3) - 1.d0 ) &
+            if (        abs( coeffs(1)*coeffs(3) - 1.0_wp ) &
                   .lt.  abs( coeffs(1)*ub               )  ) then
 
-               r2 = coeffs(3) - 1.d0/coeffs(1)
+               r2 = coeffs(3) - 1.0_wp/coeffs(1)
 
                n  = 2
 

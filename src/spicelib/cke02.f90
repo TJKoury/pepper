@@ -1,6 +1,7 @@
 !$Procedure CKE02 ( C-kernel, evaluate pointing record, data type 2 )
 
       subroutine cke02 ( needav, record, cmat, av, clkout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       implicit none
 
       logical               needav
-      double precision      record ( *    )
-      double precision      cmat   ( 3, 3 )
-      double precision      av     ( 3    )
-      double precision      clkout
+      real(wp)              record ( *    )
+      real(wp)              cmat   ( 3, 3 )
+      real(wp)              av     ( 3    )
+      real(wp)              clkout
 
 ! $ Brief_I/O
 !
@@ -279,7 +280,7 @@
 !
       logical               return
 
-      double precision      vnorm
+      real(wp)              vnorm
 
 
 
@@ -287,12 +288,12 @@
 !
 !     Local variables
 !
-      double precision      quat   ( 4    )
-      double precision      cbase  ( 3, 3 )
-      double precision      rot    ( 3, 3 )
-      double precision      avtemp (    3 )
-      double precision      angle
-      double precision      time
+      real(wp)              quat   ( 4    )
+      real(wp)              cbase  ( 3, 3 )
+      real(wp)              rot    ( 3, 3 )
+      real(wp)              avtemp (    3 )
+      real(wp)              angle
+      real(wp)              time
 
 
 !

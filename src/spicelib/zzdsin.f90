@@ -14,6 +14,7 @@
                          dedt,   didt,  dmdt,  dndt,  dnodt, domdt, &
                          del1,   del2,  del3,  xfact, xlamo, xli, &
                          xni )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -35,80 +36,80 @@
 
       include 'zzsgp4.inc'
 
-      double precision         argpm
-      double precision         argpo
-      double precision         atime
-      double precision         cosim
-      double precision         d2201
-      double precision         d2211
-      double precision         d3210
-      double precision         d3222
-      double precision         d4410
-      double precision         d4422
-      double precision         d5220
-      double precision         d5232
-      double precision         d5421
-      double precision         d5433
-      double precision         dedt
-      double precision         del1
-      double precision         del2
-      double precision         del3
-      double precision         didt
-      double precision         dmdt
-      double precision         dndt
-      double precision         dnodt
-      double precision         domdt
-      double precision         eccm
-      double precision         ecco
-      double precision         eccsq
-      double precision         emsq
-      double precision         geophs    ( 8 )
-      double precision         gsto
-      double precision         inclm
-      double precision         mdot
-      double precision         mm
-      double precision         mo
-      double precision         no
-      double precision         nodedot
-      double precision         nodem
-      double precision         nodeo
-      double precision         s1
-      double precision         s2
-      double precision         s3
-      double precision         s4
-      double precision         s5
-      double precision         sinim
-      double precision         ss1
-      double precision         ss2
-      double precision         ss3
-      double precision         ss4
-      double precision         ss5
-      double precision         sz1
-      double precision         sz11
-      double precision         sz13
-      double precision         sz21
-      double precision         sz23
-      double precision         sz3
-      double precision         sz31
-      double precision         sz33
-      double precision         t
-      double precision         tc
-      double precision         xfact
-      double precision         xlamo
-      double precision         xli
-      double precision         xn
-      double precision         xni
-      double precision         xpidot
-      double precision         z1
-      double precision         z11
-      double precision         z13
-      double precision         z21
-      double precision         z23
-      double precision         z3
-      double precision         z31
-      double precision         z33
+      real(wp)                 argpm
+      real(wp)                 argpo
+      real(wp)                 atime
+      real(wp)                 cosim
+      real(wp)                 d2201
+      real(wp)                 d2211
+      real(wp)                 d3210
+      real(wp)                 d3222
+      real(wp)                 d4410
+      real(wp)                 d4422
+      real(wp)                 d5220
+      real(wp)                 d5232
+      real(wp)                 d5421
+      real(wp)                 d5433
+      real(wp)                 dedt
+      real(wp)                 del1
+      real(wp)                 del2
+      real(wp)                 del3
+      real(wp)                 didt
+      real(wp)                 dmdt
+      real(wp)                 dndt
+      real(wp)                 dnodt
+      real(wp)                 domdt
+      real(wp)                 eccm
+      real(wp)                 ecco
+      real(wp)                 eccsq
+      real(wp)                 emsq
+      real(wp)                 geophs    ( 8 )
+      real(wp)                 gsto
+      real(wp)                 inclm
+      real(wp)                 mdot
+      real(wp)                 mm
+      real(wp)                 mo
+      real(wp)                 no
+      real(wp)                 nodedot
+      real(wp)                 nodem
+      real(wp)                 nodeo
+      real(wp)                 s1
+      real(wp)                 s2
+      real(wp)                 s3
+      real(wp)                 s4
+      real(wp)                 s5
+      real(wp)                 sinim
+      real(wp)                 ss1
+      real(wp)                 ss2
+      real(wp)                 ss3
+      real(wp)                 ss4
+      real(wp)                 ss5
+      real(wp)                 sz1
+      real(wp)                 sz11
+      real(wp)                 sz13
+      real(wp)                 sz21
+      real(wp)                 sz23
+      real(wp)                 sz3
+      real(wp)                 sz31
+      real(wp)                 sz33
+      real(wp)                 t
+      real(wp)                 tc
+      real(wp)                 xfact
+      real(wp)                 xlamo
+      real(wp)                 xli
+      real(wp)                 xn
+      real(wp)                 xni
+      real(wp)                 xpidot
+      real(wp)                 z1
+      real(wp)                 z11
+      real(wp)                 z13
+      real(wp)                 z21
+      real(wp)                 z23
+      real(wp)                 z3
+      real(wp)                 z31
+      real(wp)                 z33
 
-      integer                  irez
+      integer(ip)              irez
 
 ! $ Brief_I/O
 !
@@ -366,70 +367,70 @@
 !
 !     Local Variables
 !
-      double precision         ainv2
-      double precision         aonv
-      double precision         cosisq
-      double precision         emo
-      double precision         emsqo
-      double precision         eoc
-      double precision         f220
-      double precision         f221
-      double precision         f311
-      double precision         f321
-      double precision         f322
-      double precision         f330
-      double precision         f441
-      double precision         f442
-      double precision         f522
-      double precision         f523
-      double precision         f542
-      double precision         f543
-      double precision         g200
-      double precision         g201
-      double precision         g211
-      double precision         g300
-      double precision         g310
-      double precision         g322
-      double precision         g410
-      double precision         g422
-      double precision         g520
-      double precision         g521
-      double precision         g532
-      double precision         g533
-      double precision         q22
-      double precision         q31
-      double precision         q33
-      double precision         root22
-      double precision         root32
-      double precision         root44
-      double precision         root52
-      double precision         root54
-      double precision         rptim
-      double precision         ses
-      double precision         sghl
-      double precision         sghs
-      double precision         sgs
-      double precision         shl
-      double precision         shs
-      double precision         sini2
-      double precision         sis
-      double precision         sls
-      double precision         temp
-      double precision         temp1
-      double precision         theta
-      double precision         x2o3
-      double precision         xke
-      double precision         xno2
-      double precision         znl
-      double precision         zns
+      real(wp)                 ainv2
+      real(wp)                 aonv
+      real(wp)                 cosisq
+      real(wp)                 emo
+      real(wp)                 emsqo
+      real(wp)                 eoc
+      real(wp)                 f220
+      real(wp)                 f221
+      real(wp)                 f311
+      real(wp)                 f321
+      real(wp)                 f322
+      real(wp)                 f330
+      real(wp)                 f441
+      real(wp)                 f442
+      real(wp)                 f522
+      real(wp)                 f523
+      real(wp)                 f542
+      real(wp)                 f543
+      real(wp)                 g200
+      real(wp)                 g201
+      real(wp)                 g211
+      real(wp)                 g300
+      real(wp)                 g310
+      real(wp)                 g322
+      real(wp)                 g410
+      real(wp)                 g422
+      real(wp)                 g520
+      real(wp)                 g521
+      real(wp)                 g532
+      real(wp)                 g533
+      real(wp)                 q22
+      real(wp)                 q31
+      real(wp)                 q33
+      real(wp)                 root22
+      real(wp)                 root32
+      real(wp)                 root44
+      real(wp)                 root52
+      real(wp)                 root54
+      real(wp)                 rptim
+      real(wp)                 ses
+      real(wp)                 sghl
+      real(wp)                 sghs
+      real(wp)                 sgs
+      real(wp)                 shl
+      real(wp)                 shs
+      real(wp)                 sini2
+      real(wp)                 sis
+      real(wp)                 sls
+      real(wp)                 temp
+      real(wp)                 temp1
+      real(wp)                 theta
+      real(wp)                 x2o3
+      real(wp)                 xke
+      real(wp)                 xno2
+      real(wp)                 znl
+      real(wp)                 zns
 
 
 
 !
 !     SPICELIB routines.
 !
-      double precision         pi
-      double precision         twopi
+      real(wp)                 pi
+      real(wp)                 twopi
       logical                  return
 
 
@@ -445,23 +446,23 @@
 !
 !     Constants
 !
-      q22    = 1.7891679d-6
-      q31    = 2.1460748d-6
-      q33    = 2.2123015d-7
-      root22 = 1.7891679d-6
-      root44 = 7.3636953d-9
-      root54 = 2.1765803d-9
+      q22    = 1.7891679e-6_wp
+      q31    = 2.1460748e-6_wp
+      q33    = 2.2123015e-7_wp
+      root22 = 1.7891679e-6_wp
+      root44 = 7.3636953e-9_wp
+      root54 = 2.1765803e-9_wp
 
 !
 !     This equates to 7.29211514668855e-5 rad/sec
 !
-      rptim  = 4.37526908801129966d-3
+      rptim  = 4.37526908801129966e-3_wp
 
-      root32 = 3.7393792d-7
-      root52 = 1.1428639d-7
-      x2o3   = 2.0d0 / 3.0d0
-      znl    = 1.5835218d-4
-      zns    = 1.19459d-5
+      root32 = 3.7393792e-7_wp
+      root52 = 1.1428639e-7_wp
+      x2o3   = 2.0_wp / 3.0_wp
+      znl    = 1.5835218e-4_wp
+      zns    = 1.19459e-5_wp
 
 !
 !     This code block replaces the call:
@@ -478,14 +479,14 @@
 !     DEEP SPACE INITIALIZATION
 !
       irez = 0
-      if ( (xn.lt.0.0052359877d0)  .and. &
-           (xn.gt.0.0034906585d0) ) then
+      if ( (xn.lt.0.0052359877_wp)  .and. &
+           (xn.gt.0.0034906585_wp) ) then
          irez = 1
       end if
 
-      if ( (xn   .ge. 8.26d-3) .and. &
-           (xn   .le. 9.24d-3) .and. &
-           (eccm .ge. 0.5d0)  )then
+      if ( (xn   .ge. 8.26e-3_wp) .and. &
+           (xn   .le. 9.24e-3_wp) .and. &
+           (eccm .ge. 0.5_wp)  )then
          irez = 2
       end if
 
@@ -494,19 +495,19 @@
 !
       ses  =  ss1*zns*ss5
       sis  =  ss2*zns*(sz11 + sz13)
-      sls  = -zns*ss3*(sz1 + sz3 - 14.0d0 - 6.0d0*emsq)
-      sghs =  ss4*zns*(sz31 + sz33 - 6.0d0)
+      sls  = -zns*ss3*(sz1 + sz3 - 14.0_wp - 6.0_wp*emsq)
+      sghs =  ss4*zns*(sz31 + sz33 - 6.0_wp)
       shs  = -zns*ss2*(sz21 + sz23)
 
 !
 !       sgp4fix for 180 deg incl
 !
-        if ( (inclm .lt. 5.2359877d-2) .or. &
-             (inclm .gt. pi()-5.2359877d-2) ) then
-            shs = 0.0d0
+        if ( (inclm .lt. 5.2359877e-2_wp) .or. &
+             (inclm .gt. pi()-5.2359877e-2_wp) ) then
+            shs = 0.0_wp
         end if
 
-        if (sinim.ne.0.0d0) then
+        if (sinim.ne.0.0_wp) then
             shs = shs/sinim
         end if
 
@@ -517,23 +518,23 @@
 !
         dedt = ses + s1*znl*s5
         didt = sis + s2*znl*(z11 + z13)
-        dmdt = sls - znl*s3*(z1 + z3 - 14.0d0 - 6.0d0*emsq)
-        sghl = s4*znl*(z31 + z33 - 6.0d0)
+        dmdt = sls - znl*s3*(z1 + z3 - 14.0_wp - 6.0_wp*emsq)
+        sghl = s4*znl*(z31 + z33 - 6.0_wp)
         shl  = -znl*s2*(z21 + z23)
 
 !
 !       sgp4fix for 180 deg incl
 !
 
-        if ( (inclm .lt. 5.2359877d-2 ) .or. &
-             (inclm .gt. pi()-5.2359877d-2)) then
-            shl = 0.0d0
+        if ( (inclm .lt. 5.2359877e-2_wp ) .or. &
+             (inclm .gt. pi()-5.2359877e-2_wp)) then
+            shl = 0.0_wp
         end if
 
         domdt= sgs+sghl
         dnodt= shs
 
-        if (sinim .ne. 0.0d0) then
+        if (sinim .ne. 0.0_wp) then
             domdt = domdt-cosim/sinim*shl
             dnodt = dnodt+shl/sinim
         end if
@@ -541,7 +542,7 @@
 !
 !       CALCULATE DEEP SPACE RESONANCE EFFECTS
 !
-        dndt  = 0.0d0
+        dndt  = 0.0_wp
         theta = dmod(gsto + tc*rptim, twopi() )
         eccm  = eccm + dedt*t
         emsq  = eccm**2
@@ -579,87 +580,87 @@
                eccm   = ecco
                emsq   = eccsq
                eoc    = eccm*emsq
-               g201   = -0.306d0-(eccm-0.64d0)*0.440d0
+               g201   = -0.306_wp-(eccm-0.64_wp)*0.440_wp
 
-               if (eccm.le.0.65d0) then
+               if (eccm.le.0.65_wp) then
 
-                  g211 =   3.616d0 -  13.2470d0*eccm + &
-                              16.2900d0*emsq
-                  g310 = -19.302d0 + 117.3900d0*eccm - &
-                              228.4190d0*emsq + 156.591d0*eoc
-                  g322 = -18.9068d0+ 109.7927d0*eccm - &
-                              214.6334d0*emsq + 146.5816d0*eoc
-                  g410 = -41.122d0 + 242.6940d0*eccm - &
-                              471.0940d0*emsq + 313.953d0*eoc
-                  g422 =-146.407d0 + 841.8800d0*eccm - &
-                              1629.014d0*emsq + 1083.435d0*eoc
-                  g520 =-532.114d0 + 3017.977d0*eccm - &
-                              5740.032d0*emsq + 3708.276d0*eoc
+                  g211 =   3.616_wp -  13.2470_wp*eccm + &
+                              16.2900_wp*emsq
+                  g310 = -19.302_wp + 117.3900_wp*eccm - &
+                              228.4190_wp*emsq + 156.591_wp*eoc
+                  g322 = -18.9068_wp+ 109.7927_wp*eccm - &
+                              214.6334_wp*emsq + 146.5816_wp*eoc
+                  g410 = -41.122_wp + 242.6940_wp*eccm - &
+                              471.0940_wp*emsq + 313.953_wp*eoc
+                  g422 =-146.407_wp + 841.8800_wp*eccm - &
+                              1629.014_wp*emsq + 1083.435_wp*eoc
+                  g520 =-532.114_wp + 3017.977_wp*eccm - &
+                              5740.032_wp*emsq + 3708.276_wp*eoc
 
                else
 
-                  g211 =  -72.099d0 +  331.819d0*eccm - &
-                              508.738d0*emsq + 266.724d0*eoc
-                  g310 = -346.844d0 + 1582.851d0*eccm - &
-                              2415.925d0*emsq + 1246.113d0*eoc
-                  g322 = -342.585d0 + 1554.908d0*eccm - &
-                              2366.899d0*emsq + 1215.972d0*eoc
-                  g410 =-1052.797d0 + 4758.686d0*eccm - &
-                              7193.992d0*emsq + 3651.957d0*eoc
-                  g422 =-3581.690d0 + 16178.11d0*eccm - &
-                              24462.77d0*emsq + 12422.52d0*eoc
+                  g211 =  -72.099_wp +  331.819_wp*eccm - &
+                              508.738_wp*emsq + 266.724_wp*eoc
+                  g310 = -346.844_wp + 1582.851_wp*eccm - &
+                              2415.925_wp*emsq + 1246.113_wp*eoc
+                  g322 = -342.585_wp + 1554.908_wp*eccm - &
+                              2366.899_wp*emsq + 1215.972_wp*eoc
+                  g410 =-1052.797_wp + 4758.686_wp*eccm - &
+                              7193.992_wp*emsq + 3651.957_wp*eoc
+                  g422 =-3581.690_wp + 16178.11_wp*eccm - &
+                              24462.77_wp*emsq + 12422.52_wp*eoc
 
-                  if (eccm.gt.0.715d0) then
-                     g520 =-5149.66d0 + 29936.92d0*eccm - &
-                              54087.36d0*emsq + 31324.56d0*eoc
+                  if (eccm.gt.0.715_wp) then
+                     g520 =-5149.66_wp + 29936.92_wp*eccm - &
+                              54087.36_wp*emsq + 31324.56_wp*eoc
                   else
-                     g520 = 1464.74d0 -  4664.75d0*eccm + &
-                              3763.64d0*emsq
+                     g520 = 1464.74_wp -  4664.75_wp*eccm + &
+                              3763.64_wp*emsq
                   end if
 
                end if
 
-            if (eccm.lt.0.7d0) then
+            if (eccm.lt.0.7_wp) then
 
-                g533 = -919.22770d0 + 4988.6100d0*eccm-9064.7700d0*emsq &
-                     + 5542.21d0*eoc
-                g521 = -822.71072d0 + 4568.6173d0*eccm-8491.4146d0*emsq &
-                     + 5337.524d0*eoc
-                g532 = -853.66600d0 + 4690.2500d0*eccm-8624.7700d0*emsq &
-                     + 5341.4d0*eoc
+                g533 = -919.22770_wp + 4988.6100_wp*eccm-9064.7700_wp*emsq &
+                     + 5542.21_wp*eoc
+                g521 = -822.71072_wp + 4568.6173_wp*eccm-8491.4146_wp*emsq &
+                     + 5337.524_wp*eoc
+                g532 = -853.66600_wp + 4690.2500_wp*eccm-8624.7700_wp*emsq &
+                     + 5341.4_wp*eoc
 
             else
 
-                g533 =-37995.780d0 + 161616.52d0*eccm-229838.20d0*emsq+ &
-                    109377.94d0*eoc
-                g521 =-51752.104d0 + 218913.95d0*eccm-309468.16d0*emsq+ &
-                    146349.42d0*eoc
-                g532 =-40023.880d0 + 170470.89d0*eccm-242699.48d0*emsq+ &
-                    115605.82d0*eoc
+                g533 =-37995.780_wp + 161616.52_wp*eccm-229838.20_wp*emsq+ &
+                    109377.94_wp*eoc
+                g521 =-51752.104_wp + 218913.95_wp*eccm-309468.16_wp*emsq+ &
+                    146349.42_wp*eoc
+                g532 =-40023.880_wp + 170470.89_wp*eccm-242699.48_wp*emsq+ &
+                    115605.82_wp*eoc
 
             end if
 
             sini2 =  sinim*sinim
-            f220  =  0.75d0* (1.0d0+2.0d0*cosim+cosisq)
-            f221  =  1.5d0*sini2
-            f321  =  1.875d0*sinim * (1.0d0-2.0d0*cosim-3.0d0*cosisq)
-            f322  = -1.875d0*sinim * (1.0d0+2.0d0*cosim-3.0d0*cosisq)
-            f441  = 35.0d0*sini2*f220
-            f442  = 39.3750d0*sini2*sini2
-            f522  =  9.84375d0*sinim * (sini2* (1.0d0-2.0d0*cosim- &
-                     5.0d0*cosisq)+0.33333333d0 * (-2.0d0+4.0d0*cosim+ &
-                     6.0d0*cosisq) )
-            f523  =  sinim * (4.92187512d0*sini2 * (-2.0d0-4.0d0*cosim+ &
-                     10.0d0*cosisq) + 6.56250012d0* &
-                     (1.0d0+2.0d0*cosim-3.0d0*cosisq))
-            f542  =  29.53125d0*sinim * (2.0d0-8.0d0*cosim+cosisq* &
-                     (-12.0d0+8.0d0*cosim+10.0d0*cosisq) )
-            f543  = 29.53125d0*sinim * (-2.0d0-8.0d0*cosim+cosisq* &
-                     (12.0d0+8.0d0*cosim-10.0d0*cosisq) )
+            f220  =  0.75_wp* (1.0_wp+2.0_wp*cosim+cosisq)
+            f221  =  1.5_wp*sini2
+            f321  =  1.875_wp*sinim * (1.0_wp-2.0_wp*cosim-3.0_wp*cosisq)
+            f322  = -1.875_wp*sinim * (1.0_wp+2.0_wp*cosim-3.0_wp*cosisq)
+            f441  = 35.0_wp*sini2*f220
+            f442  = 39.3750_wp*sini2*sini2
+            f522  =  9.84375_wp*sinim * (sini2* (1.0_wp-2.0_wp*cosim- &
+                     5.0_wp*cosisq)+0.33333333_wp * (-2.0_wp+4.0_wp*cosim+ &
+                     6.0_wp*cosisq) )
+            f523  =  sinim * (4.92187512_wp*sini2 * (-2.0_wp-4.0_wp*cosim+ &
+                     10.0_wp*cosisq) + 6.56250012_wp* &
+                     (1.0_wp+2.0_wp*cosim-3.0_wp*cosisq))
+            f542  =  29.53125_wp*sinim * (2.0_wp-8.0_wp*cosim+cosisq* &
+                     (-12.0_wp+8.0_wp*cosim+10.0_wp*cosisq) )
+            f543  = 29.53125_wp*sinim * (-2.0_wp-8.0_wp*cosim+cosisq* &
+                     (12.0_wp+8.0_wp*cosim-10.0_wp*cosisq) )
 
             xno2   =  xn * xn
             ainv2  =  aonv * aonv
-            temp1  =  3.0d0*xno2*ainv2
+            temp1  =  3.0_wp*xno2*ainv2
             temp   =  temp1*root22
             d2201  =  temp*f220*g201
             d2211  =  temp*f221*g211
@@ -668,18 +669,18 @@
             d3210  =  temp*f321*g310
             d3222  =  temp*f322*g322
             temp1  =  temp1*aonv
-            temp   =  2.0d0*temp1*root44
+            temp   =  2.0_wp*temp1*root44
             d4410  =  temp*f441*g410
             d4422  =  temp*f442*g422
             temp1  =  temp1*aonv
             temp   =  temp1*root52
             d5220  =  temp*f522*g520
             d5232  =  temp*f523*g532
-            temp   =  2.0d0*temp1*root54
+            temp   =  2.0_wp*temp1*root54
             d5421  =  temp*f542*g521
             d5433  =  temp*f543*g533
             xlamo  =  dmod(mo+nodeo+nodeo-theta-theta, twopi())
-            xfact  = mdot + dmdt + 2.0d0 * (nodedot+dnodt-rptim) - no
+            xfact  = mdot + dmdt + 2.0_wp * (nodedot+dnodt-rptim) - no
 
             eccm = emo
             emsq = emsqo
@@ -691,17 +692,17 @@
 !
 !           SYNCHRONOUS RESONANCE TERMS
 !
-            g200  = 1.0d0 + emsq * (-2.5d0+0.8125d0*emsq)
-            g310  = 1.0d0 + 2.0d0*emsq
-            g300  = 1.0d0 + emsq * (-6.0d0+6.60937d0*emsq)
-            f220  = 0.75d0 * (1.0d0+cosim) * (1.0d0+cosim)
-            f311  = 0.9375d0*sinim*sinim* &
-                     (1.0d0+3.0d0*cosim) - 0.75d0*(1.0d0+cosim)
-            f330  = 1.0d0+cosim
-            f330  = 1.875d0*f330*f330*f330
-            del1  = 3.0d0*xn*xn*aonv*aonv
-            del2  = 2.0d0*del1*f220*g200*q22
-            del3  = 3.0d0*del1*f330*g300*q33*aonv
+            g200  = 1.0_wp + emsq * (-2.5_wp+0.8125_wp*emsq)
+            g310  = 1.0_wp + 2.0_wp*emsq
+            g300  = 1.0_wp + emsq * (-6.0_wp+6.60937_wp*emsq)
+            f220  = 0.75_wp * (1.0_wp+cosim) * (1.0_wp+cosim)
+            f311  = 0.9375_wp*sinim*sinim* &
+                     (1.0_wp+3.0_wp*cosim) - 0.75_wp*(1.0_wp+cosim)
+            f330  = 1.0_wp+cosim
+            f330  = 1.875_wp*f330*f330*f330
+            del1  = 3.0_wp*xn*xn*aonv*aonv
+            del2  = 2.0_wp*del1*f220*g200*q22
+            del3  = 3.0_wp*del1*f330*g300*q33*aonv
             del1  = del1*f311*g310*q31*aonv
             xlamo = dmod(mo+nodeo+argpo-theta, twopi())
             xfact = mdot + xpidot - rptim + dmdt + domdt + dnodt - no
@@ -713,7 +714,7 @@
 !
          xli   = xlamo
          xni   = no
-         atime = 0.0d0
+         atime = 0.0_wp
          xn    = no + dndt
 
       end if

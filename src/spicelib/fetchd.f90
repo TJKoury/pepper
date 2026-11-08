@@ -1,6 +1,7 @@
 !$Procedure FETCHD ( Fetch from a DP set )
 
-      integer function fetchd ( nth, set )
+      integer(ip) function fetchd ( nth, set )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,11 +20,11 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               nth
-      double precision      set      ( lbcell:* )
+      integer(ip)           nth
+      real(wp)              set      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -175,7 +176,7 @@
 !
 !     SPICELIB functions
 !
-      integer            cardd
+      integer(ip)        cardd
       logical            return
 
 !

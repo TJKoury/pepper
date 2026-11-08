@@ -2,6 +2,7 @@
 
       subroutine zznrddp ( ao , elems , em, omgasm, omgdot, t, xinc, &
                            xll, xlldot, xn, xnodes, xnodot, xnodp  )
+      use pepper_kinds, only: ip, wp
       implicit none
 
 ! $ Abstract
@@ -21,19 +22,19 @@
 !
 ! $ Declarations
 
-      double precision      ao
-      double precision      elems ( 10 )
-      double precision      em
-      double precision      omgasm
-      double precision      omgdot
-      double precision      t
-      double precision      xinc
-      double precision      xll
-      double precision      xlldot
-      double precision      xn
-      double precision      xnodes
-      double precision      xnodot
-      double precision      xnodp
+      real(wp)              ao
+      real(wp)              elems ( 10 )
+      real(wp)              em
+      real(wp)              omgasm
+      real(wp)              omgdot
+      real(wp)              t
+      real(wp)              xinc
+      real(wp)              xll
+      real(wp)              xlldot
+      real(wp)              xn
+      real(wp)              xnodes
+      real(wp)              xnodot
+      real(wp)              xnodp
 
 
 ! $ Brief_I/O
@@ -264,222 +265,222 @@
 !
 !     Local variables
 !
-      double precision      a1
-      double precision      a10
-      double precision      a2
-      double precision      a3
-      double precision      a4
-      double precision      a5
-      double precision      a6
-      double precision      a7
-      double precision      a8
-      double precision      a9
-      double precision      ainv2
-      double precision      alfdp
-      double precision      aqnv
-      double precision      atime
-      double precision      betdp
-      double precision      bfact
-      double precision      bsq
-      double precision      c
-      double precision      cc
-      double precision      cosiq
-      double precision      cosis
-      double precision      cosok
-      double precision      cosomo
-      double precision      cosq
-      double precision      cosq2
-      double precision      ctem
-      double precision      day
-      double precision      delt
-      double precision      ds50
-      double precision      e3
-      double precision      ee2
-      double precision      eo
-      double precision      eoc
-      double precision      eq
-      double precision      eqsq
-      double precision      et
-      double precision      f2
-      double precision      f220
-      double precision      f221
-      double precision      f3
-      double precision      f311
-      double precision      f321
-      double precision      f322
-      double precision      f330
-      double precision      f441
-      double precision      f442
-      double precision      f522
-      double precision      f523
-      double precision      f542
-      double precision      f543
-      double precision      ft
-      double precision      g200
-      double precision      g201
-      double precision      g211
-      double precision      g300
-      double precision      g310
-      double precision      g322
-      double precision      g410
-      double precision      g422
-      double precision      g520
-      double precision      g521
-      double precision      g532
-      double precision      g533
-      double precision      gam
-      double precision      omegao
-      double precision      oxnode
-      double precision      pe
-      double precision      pe0
-      double precision      pgh
-      double precision      pgh0
-      double precision      ph
-      double precision      ph0
-      double precision      pinc
-      double precision      pinc0
-      double precision      pix1
-      double precision      pix2
-      double precision      pl
-      double precision      pl0
-      double precision      preep
-      double precision      rteqsq
-      double precision      s1
-      double precision      s2
-      double precision      s3
-      double precision      s4
-      double precision      s5
-      double precision      s6
-      double precision      s7
-      double precision      se
-      double precision      se2
-      double precision      se3
-      double precision      sel
-      double precision      ses
-      double precision      sgh
-      double precision      sgh2
-      double precision      sgh3
-      double precision      sgh4
-      double precision      sghl
-      double precision      sghs
-      double precision      sh
-      double precision      sh2
-      double precision      sh3
-      double precision      shl
-      double precision      shs
-      double precision      si
-      double precision      si2
-      double precision      si3
-      double precision      sil
-      double precision      sini2
-      double precision      siniq
-      double precision      sinis
-      double precision      sinok
-      double precision      sinomo
-      double precision      sinq
-      double precision      sinzf
-      double precision      sis
-      double precision      sl
-      double precision      sl2
-      double precision      sl3
-      double precision      sl4
-      double precision      sll
-      double precision      sls
-      double precision      stem
-      double precision      stepn
-      double precision      stepp
-      double precision      temp
-      double precision      temp1
-      double precision      theta
-      double precision      thgr
-      double precision      x1
-      double precision      x2
-      double precision      x3
-      double precision      x4
-      double precision      x5
-      double precision      x6
-      double precision      x7
-      double precision      x8
-      double precision      xfact
-      double precision      xgh2
-      double precision      xgh3
-      double precision      xgh4
-      double precision      xh2
-      double precision      xh3
-      double precision      xi2
-      double precision      xi3
-      double precision      xincl
-      double precision      xl
-      double precision      xl2
-      double precision      xl3
-      double precision      xl4
-      double precision      xlamo
-      double precision      xldot
-      double precision      xli
-      double precision      xls
-      double precision      xmao
-      double precision      xmo
-      double precision      xnddt
-      double precision      xndot
-      double precision      xni
-      double precision      xno2
-      double precision      xnodce
-      double precision      xnodeo
-      double precision      xnoi
-      double precision      xnq
-      double precision      xqncl
-      double precision      z1
-      double precision      z11
-      double precision      z12
-      double precision      z13
-      double precision      z2
-      double precision      z21
-      double precision      z22
-      double precision      z23
-      double precision      z3
-      double precision      z31
-      double precision      z32
-      double precision      z33
-      double precision      zcosg
-      double precision      zcosgl
-      double precision      zcosh
-      double precision      zcoshl
-      double precision      zcosi
-      double precision      zcosil
-      double precision      ze
-      double precision      zf
-      double precision      zm
-      double precision      zmol
-      double precision      zmos
-      double precision      zn
-      double precision      zsing
-      double precision      zsingl
-      double precision      zsinh
-      double precision      zsinhl
-      double precision      zsini
-      double precision      zsinil
-      double precision      zx
-      double precision      zy
-      double precision      del   ( 3  )
-      double precision      dg    ( 10 )
-      double precision      ssx   ( 5  )
-      double precision      jdtdb
-      double precision      jdut50
+      real(wp)              a1
+      real(wp)              a10
+      real(wp)              a2
+      real(wp)              a3
+      real(wp)              a4
+      real(wp)              a5
+      real(wp)              a6
+      real(wp)              a7
+      real(wp)              a8
+      real(wp)              a9
+      real(wp)              ainv2
+      real(wp)              alfdp
+      real(wp)              aqnv
+      real(wp)              atime
+      real(wp)              betdp
+      real(wp)              bfact
+      real(wp)              bsq
+      real(wp)              c
+      real(wp)              cc
+      real(wp)              cosiq
+      real(wp)              cosis
+      real(wp)              cosok
+      real(wp)              cosomo
+      real(wp)              cosq
+      real(wp)              cosq2
+      real(wp)              ctem
+      real(wp)              day
+      real(wp)              delt
+      real(wp)              ds50
+      real(wp)              e3
+      real(wp)              ee2
+      real(wp)              eo
+      real(wp)              eoc
+      real(wp)              eq
+      real(wp)              eqsq
+      real(wp)              et
+      real(wp)              f2
+      real(wp)              f220
+      real(wp)              f221
+      real(wp)              f3
+      real(wp)              f311
+      real(wp)              f321
+      real(wp)              f322
+      real(wp)              f330
+      real(wp)              f441
+      real(wp)              f442
+      real(wp)              f522
+      real(wp)              f523
+      real(wp)              f542
+      real(wp)              f543
+      real(wp)              ft
+      real(wp)              g200
+      real(wp)              g201
+      real(wp)              g211
+      real(wp)              g300
+      real(wp)              g310
+      real(wp)              g322
+      real(wp)              g410
+      real(wp)              g422
+      real(wp)              g520
+      real(wp)              g521
+      real(wp)              g532
+      real(wp)              g533
+      real(wp)              gam
+      real(wp)              omegao
+      real(wp)              oxnode
+      real(wp)              pe
+      real(wp)              pe0
+      real(wp)              pgh
+      real(wp)              pgh0
+      real(wp)              ph
+      real(wp)              ph0
+      real(wp)              pinc
+      real(wp)              pinc0
+      real(wp)              pix1
+      real(wp)              pix2
+      real(wp)              pl
+      real(wp)              pl0
+      real(wp)              preep
+      real(wp)              rteqsq
+      real(wp)              s1
+      real(wp)              s2
+      real(wp)              s3
+      real(wp)              s4
+      real(wp)              s5
+      real(wp)              s6
+      real(wp)              s7
+      real(wp)              se
+      real(wp)              se2
+      real(wp)              se3
+      real(wp)              sel
+      real(wp)              ses
+      real(wp)              sgh
+      real(wp)              sgh2
+      real(wp)              sgh3
+      real(wp)              sgh4
+      real(wp)              sghl
+      real(wp)              sghs
+      real(wp)              sh
+      real(wp)              sh2
+      real(wp)              sh3
+      real(wp)              shl
+      real(wp)              shs
+      real(wp)              si
+      real(wp)              si2
+      real(wp)              si3
+      real(wp)              sil
+      real(wp)              sini2
+      real(wp)              siniq
+      real(wp)              sinis
+      real(wp)              sinok
+      real(wp)              sinomo
+      real(wp)              sinq
+      real(wp)              sinzf
+      real(wp)              sis
+      real(wp)              sl
+      real(wp)              sl2
+      real(wp)              sl3
+      real(wp)              sl4
+      real(wp)              sll
+      real(wp)              sls
+      real(wp)              stem
+      real(wp)              stepn
+      real(wp)              stepp
+      real(wp)              temp
+      real(wp)              temp1
+      real(wp)              theta
+      real(wp)              thgr
+      real(wp)              x1
+      real(wp)              x2
+      real(wp)              x3
+      real(wp)              x4
+      real(wp)              x5
+      real(wp)              x6
+      real(wp)              x7
+      real(wp)              x8
+      real(wp)              xfact
+      real(wp)              xgh2
+      real(wp)              xgh3
+      real(wp)              xgh4
+      real(wp)              xh2
+      real(wp)              xh3
+      real(wp)              xi2
+      real(wp)              xi3
+      real(wp)              xincl
+      real(wp)              xl
+      real(wp)              xl2
+      real(wp)              xl3
+      real(wp)              xl4
+      real(wp)              xlamo
+      real(wp)              xldot
+      real(wp)              xli
+      real(wp)              xls
+      real(wp)              xmao
+      real(wp)              xmo
+      real(wp)              xnddt
+      real(wp)              xndot
+      real(wp)              xni
+      real(wp)              xno2
+      real(wp)              xnodce
+      real(wp)              xnodeo
+      real(wp)              xnoi
+      real(wp)              xnq
+      real(wp)              xqncl
+      real(wp)              z1
+      real(wp)              z11
+      real(wp)              z12
+      real(wp)              z13
+      real(wp)              z2
+      real(wp)              z21
+      real(wp)              z22
+      real(wp)              z23
+      real(wp)              z3
+      real(wp)              z31
+      real(wp)              z32
+      real(wp)              z33
+      real(wp)              zcosg
+      real(wp)              zcosgl
+      real(wp)              zcosh
+      real(wp)              zcoshl
+      real(wp)              zcosi
+      real(wp)              zcosil
+      real(wp)              ze
+      real(wp)              zf
+      real(wp)              zm
+      real(wp)              zmol
+      real(wp)              zmos
+      real(wp)              zn
+      real(wp)              zsing
+      real(wp)              zsingl
+      real(wp)              zsinh
+      real(wp)              zsinhl
+      real(wp)              zsini
+      real(wp)              zsinil
+      real(wp)              zx
+      real(wp)              zy
+      real(wp)              del   ( 3  )
+      real(wp)              dg    ( 10 )
+      real(wp)              ssx   ( 5  )
+      real(wp)              jdtdb
+      real(wp)              jdut50
 
-      integer               i
-      integer               iresfl
-      integer               isynfl
+      integer(ip)           i
+      integer(ip)           iresfl
+      integer(ip)           isynfl
 
       logical               cont
 
 !
 !     SPICELIB functions
 !
-      double precision      j1950
-      double precision      spd
-      double precision      j2000
-      double precision      pi
-      double precision      twopi
+      real(wp)              j1950
+      real(wp)              spd
+      real(wp)              j2000
+      real(wp)              pi
+      real(wp)              twopi
 
       logical               return
 
@@ -487,75 +488,75 @@
 !
 !     Define rather a large number of local parameters.
 !
-      double precision      zns
-      parameter           ( zns    = 1.19459d-5   )
+      real(wp)              zns
+      parameter           ( zns    = 1.19459e-5_wp   )
 
-      double precision      c1ss
-      parameter           ( c1ss   = 2.9864797d-6 )
+      real(wp)              c1ss
+      parameter           ( c1ss   = 2.9864797e-6_wp )
 
 
-      double precision      zes
-      parameter           ( zes    = 0.01675d0    )
+      real(wp)              zes
+      parameter           ( zes    = 0.01675_wp    )
 
-      double precision      znl
-      parameter           ( znl    = 1.5835218d-4 )
+      real(wp)              znl
+      parameter           ( znl    = 1.5835218e-4_wp )
 
-      double precision      c1l
-      parameter           ( c1l    = 4.7968065d-7 )
+      real(wp)              c1l
+      parameter           ( c1l    = 4.7968065e-7_wp )
 
-      double precision      zel
-      parameter           ( zel    = .05490d0     )
+      real(wp)              zel
+      parameter           ( zel    = 0.05490_wp     )
 
-      double precision      zcosis
-      parameter           ( zcosis = .91744867d0  )
+      real(wp)              zcosis
+      parameter           ( zcosis = 0.91744867_wp  )
 
-      double precision      zsinis
-      parameter           ( zsinis = .39785416d0  )
+      real(wp)              zsinis
+      parameter           ( zsinis = 0.39785416_wp  )
 
-      double precision      zsings
-      parameter           ( zsings = -.98088458d0 )
+      real(wp)              zsings
+      parameter           ( zsings = -0.98088458_wp )
 
-      double precision      zcosgs
-      parameter           ( zcosgs = .1945905d0   )
+      real(wp)              zcosgs
+      parameter           ( zcosgs = 0.1945905_wp   )
 
-      double precision      q22
-      parameter           ( q22    = 1.7891679d-6 )
+      real(wp)              q22
+      parameter           ( q22    = 1.7891679e-6_wp )
 
-      double precision      q31
-      parameter           ( q31    = 2.1460748d-6 )
+      real(wp)              q31
+      parameter           ( q31    = 2.1460748e-6_wp )
 
-      double precision      q33
-      parameter           ( q33    = 2.2123015d-7 )
+      real(wp)              q33
+      parameter           ( q33    = 2.2123015e-7_wp )
 
-      double precision      root22
-      parameter           ( root22 = 1.7891679d-6 )
+      real(wp)              root22
+      parameter           ( root22 = 1.7891679e-6_wp )
 
-      double precision      root32
-      parameter           ( root32 = 3.7393792d-7 )
+      real(wp)              root32
+      parameter           ( root32 = 3.7393792e-7_wp )
 
-      double precision      root44
-      parameter           ( root44 = 7.3636953d-9 )
+      real(wp)              root44
+      parameter           ( root44 = 7.3636953e-9_wp )
 
-      double precision      root52
-      parameter           ( root52 = 1.1428639d-7 )
+      real(wp)              root52
+      parameter           ( root52 = 1.1428639e-7_wp )
 
-      double precision      root54
-      parameter           ( root54 = 2.1765803d-9 )
+      real(wp)              root54
+      parameter           ( root54 = 2.1765803e-9_wp )
 
-      double precision      thdt
-      parameter           ( thdt   = 4.3752691d-3 )
+      real(wp)              thdt
+      parameter           ( thdt   = 4.3752691e-3_wp )
 
-      double precision      step2
-      parameter           ( step2 = 259200.d0 )
+      real(wp)              step2
+      parameter           ( step2 = 259200.0_wp )
 
-      integer               lunar
+      integer(ip)           lunar
       parameter           ( lunar = 1 )
 
-      double precision      zero
-      parameter           ( zero    =  0.0d0    )
+      real(wp)              zero
+      parameter           ( zero    =  0.0_wp    )
 
-      double precision      one
-      parameter           ( one     =  1.0d0    )
+      real(wp)              one
+      parameter           ( one     =  1.0_wp    )
 
 
 !
@@ -810,7 +811,7 @@
 !     epoch.  We call this JDTDB epoch ---JDUT50. Then we get the days
 !     since 1950 by simple arithmetic.
 !
-      jdut50 = j1950() - one    + (32.184d0/spd())
+      jdut50 = j1950() - one    + (32.184_wp/spd())
       ds50   = jdtdb   - jdut50
 
 !
@@ -820,7 +821,7 @@
 !     2*PI to get the right ascension for the epoch.  This technique may
 !     not be the best way to get this value.
 !
-      theta  = 1.72944494d0 + 6.3003880987d0 * ds50
+      theta  = 1.72944494_wp + 6.3003880987_wp * ds50
       thgr   = dmod( theta, pix2 )
 
 
@@ -847,29 +848,29 @@
 !     Initialize lunar solar terms
 !
 
-      day = ds50 + 18261.5d0
+      day = ds50 + 18261.5_wp
 
 
       if ( day .ne. preep ) then
 
          preep  = day
-         xnodce = 4.5236020d0  -  9.2422029d-04 * day
+         xnodce = 4.5236020_wp  -  9.2422029e-04_wp * day
          stem   = dsin( xnodce )
          ctem   = dcos( xnodce )
-         zcosil = 0.91375164d0 - .03568096d0*ctem
+         zcosil = 0.91375164_wp - 0.03568096_wp*ctem
          zsinil = dsqrt ( one - zcosil**2 )
-         zsinhl = 0.089683511d0 * stem / zsinil
+         zsinhl = 0.089683511_wp * stem / zsinil
          zcoshl = dsqrt ( one - zsinhl**2 )
-         c      = 4.7199672d0 + .22997150d0 * day
-         gam    = 5.8351514d0 + .0019443680d0 * day
+         c      = 4.7199672_wp + 0.22997150_wp * day
+         gam    = 5.8351514_wp + 0.0019443680_wp * day
          zmol   = dmod( (c - gam), pix2 )
 
          if ( zmol .lt. zero ) then
             zmol = zmol + pix2
          end if
 
-         zx = .39785416d0 * stem/zsinil
-         zy = zcoshl*ctem + 0.91744867d0 * zsinhl*stem
+         zx = 0.39785416_wp * stem/zsinil
+         zy = zcoshl*ctem + 0.91744867_wp * zsinhl*stem
 
 !
 !        Compute the angle from the x-axis of the point
@@ -892,7 +893,7 @@
          zx     = gam + zx - xnodce
          zcosgl = dcos( zx )
          zsingl = dsin( zx )
-         zmos   = 6.2565837d0 + .017201977d0 * day
+         zmos   = 6.2565837_wp + 0.017201977_wp * day
          zmos   = dmod( zmos, pix2 )
 
          if ( zmos .lt. zero ) then
@@ -948,69 +949,69 @@
          x7  = a5*cosomo
          x8  = a6*cosomo
 
-         z31 = 12.d0*x1**2 - 3.d0*x3**2
-         z32 = 24.d0*x1*x2 - 6.d0*x3*x4
-         z33 = 12.d0*x2**2 - 3.d0*x4**2
+         z31 = 12.0_wp*x1**2 - 3.0_wp*x3**2
+         z32 = 24.0_wp*x1*x2 - 6.0_wp*x3*x4
+         z33 = 12.0_wp*x2**2 - 3.0_wp*x4**2
 
-         z1  = 3.d0*(a1**2 + a2**2) + z31*eqsq
-         z2  = 6.d0*(a1*a3 + a2*a4) + z32*eqsq
-         z3  = 3.d0*(a3**2 + a4**2) + z33*eqsq
+         z1  = 3.0_wp*(a1**2 + a2**2) + z31*eqsq
+         z2  = 6.0_wp*(a1*a3 + a2*a4) + z32*eqsq
+         z3  = 3.0_wp*(a3**2 + a4**2) + z33*eqsq
 
-         z11 =-6.d0*a1*a5 + eqsq*(-24.d0*x1*x7 - 6.d0*x3*x5)
-         z12 =-6.d0*(a1*a6 + a3*a5) + eqsq* &
-               ( -24.d0*(x2*x7 + x1*x8) - 6.d0*(x3*x6 + x4*x5))
-         z13 =-6.d0*a3*a6+eqsq *(-24.d0*x2*x8-6.d0*x4*x6)
-         z21 = 6.d0*a2*a5+eqsq *(24.d0*x1*x5-6.d0*x3*x7)
-         z22 = 6.d0*(a4*a5+a2*a6)+eqsq *(24.d0*(x2*x5+x1*x6) - &
-               6.d0*(x4*x7+x3*x8))
-         z23 = 6.d0*a4*a6 + eqsq* &
-               ( 24.d0*x2*x6 - 6.d0*x4*x8 )
+         z11 =-6.0_wp*a1*a5 + eqsq*(-24.0_wp*x1*x7 - 6.0_wp*x3*x5)
+         z12 =-6.0_wp*(a1*a6 + a3*a5) + eqsq* &
+               ( -24.0_wp*(x2*x7 + x1*x8) - 6.0_wp*(x3*x6 + x4*x5))
+         z13 =-6.0_wp*a3*a6+eqsq *(-24.0_wp*x2*x8-6.0_wp*x4*x6)
+         z21 = 6.0_wp*a2*a5+eqsq *(24.0_wp*x1*x5-6.0_wp*x3*x7)
+         z22 = 6.0_wp*(a4*a5+a2*a6)+eqsq *(24.0_wp*(x2*x5+x1*x6) - &
+               6.0_wp*(x4*x7+x3*x8))
+         z23 = 6.0_wp*a4*a6 + eqsq* &
+               ( 24.0_wp*x2*x6 - 6.0_wp*x4*x8 )
 
          z1  = z1 + z1 + bsq*z31
          z2  = z2 + z2 + bsq*z32
          z3  = z3 + z3 + bsq*z33
 
          s3  = cc * xnoi
-         s2  =-0.5d0 * s3/rteqsq
+         s2  =-0.5_wp * s3/rteqsq
          s4  = s3 * rteqsq
-         s1  =-15.d0 * eq * s4
+         s1  =-15.0_wp * eq * s4
          s5  = x1*x3 + x2*x4
          s6  = x2*x3 + x1*x4
          s7  = x2*x4 - x1*x3
 
          se  = s1 * zn * s5
          si  = s2 * zn * ( z11 + z13 )
-         sl  =-zn * s3 * ( z1  + z3 - 14.d0 - 6.d0*eqsq )
-         sgh = s4 * zn * ( z31 + z33 - 6.d0 )
+         sl  =-zn * s3 * ( z1  + z3 - 14.0_wp - 6.0_wp*eqsq )
+         sgh = s4 * zn * ( z31 + z33 - 6.0_wp )
          sh  =-zn * s2 * ( z21 + z23 )
 
 !
 !        Check for, and adjust SH, at inclinations near 0 and 180 degs.
 !
-         if ( (xqncl .lt. 5.2359877d-2)        .or. &
-              (xqncl .gt. pi()-5.2359877d-2) ) then
+         if ( (xqncl .lt. 5.2359877e-2_wp)        .or. &
+              (xqncl .gt. pi()-5.2359877e-2_wp) ) then
             sh = zero
          end if
 
 !
 !        Secondary check, J.I.C.
 !
-         if ( siniq .eq. 0.d0 ) then
+         if ( siniq .eq. 0.0_wp ) then
             sh = zero
          end if
 
-         ee2  =  2.d0 * s1 * s6
-         e3   =  2.d0 * s1 * s7
-         xi2  =  2.d0 * s2 * z12
-         xi3  =  2.d0 * s2 *(z13-z11)
-         xl2  = -2.d0 * s3 * z2
-         xl3  = -2.d0 * s3 *(z3-z1)
-         xl4  = -2.d0 * s3 * (-21.d0-9.d0*eqsq)*ze
-         xgh2 =  2.d0 * s4 * z32
-         xgh3 =  2.d0 * s4 *(z33-z31)
-         xgh4 =-18.d0 * s4 * ze
-         xh2  = -2.d0 * s2 * z22
-         xh3  = -2.d0 * s2 *(z23-z21)
+         ee2  =  2.0_wp * s1 * s6
+         e3   =  2.0_wp * s1 * s7
+         xi2  =  2.0_wp * s2 * z12
+         xi3  =  2.0_wp * s2 *(z13-z11)
+         xl2  = -2.0_wp * s3 * z2
+         xl3  = -2.0_wp * s3 *(z3-z1)
+         xl4  = -2.0_wp * s3 * (-21.0_wp-9.0_wp*eqsq)*ze
+         xgh2 =  2.0_wp * s4 * z32
+         xgh3 =  2.0_wp * s4 *(z33-z31)
+         xgh4 =-18.0_wp * s4 * ze
+         xh2  = -2.0_wp * s2 * z22
+         xh3  = -2.0_wp * s2 *(z23-z21)
 
          if ( i .eq. lunar ) then
 
@@ -1022,8 +1023,8 @@
 !
 !            Prevent evaluation of 1/SINIQ for SH = 0.
 !
-            if ( sh .eq. 0.d0 ) ssx(3) = 0.d0
-            if ( sh .ne. 0.d0 ) ssx(3) = sh/siniq
+            if ( sh .eq. 0.0_wp ) ssx(3) = 0.0_wp
+            if ( sh .ne. 0.0_wp ) ssx(3) = sh/siniq
 
             ssx(2)   = sgh  -  cosiq * ssx(3)
             ssx(4)   = se
@@ -1065,11 +1066,11 @@
 !
 !      Prevent evaluation of 1/SINIQ for SH = 0.
 !
-      if ( sh .eq. 0.d0 ) ssx(2) = ssx(2) + sgh
-      if ( sh .ne. 0.d0 ) ssx(2) = ssx(2) + sgh - cosiq/siniq * sh
+      if ( sh .eq. 0.0_wp ) ssx(2) = ssx(2) + sgh
+      if ( sh .ne. 0.0_wp ) ssx(2) = ssx(2) + sgh - cosiq/siniq * sh
 
-      if ( sh .eq. 0.d0 ) ssx(3) = ssx(3)
-      if ( sh .ne. 0.d0 ) ssx(3) = ssx(3) + sh/siniq
+      if ( sh .eq. 0.0_wp ) ssx(3) = ssx(3)
+      if ( sh .ne. 0.0_wp ) ssx(3) = ssx(3) + sh/siniq
 
       ssx(4) = ssx(4) + se
       ssx(5) = ssx(5) + si
@@ -1081,8 +1082,8 @@
       iresfl = 0
       isynfl = 0
 
-      if( xnq .lt. (.0052359877d0) .and. &
-          xnq .gt. (.0034906585d0)       ) then
+      if( xnq .lt. (0.0052359877_wp) .and. &
+          xnq .gt. (0.0034906585_wp)       ) then
 
 !
 !        Synchronous resonance terms initialization
@@ -1090,16 +1091,16 @@
 
          iresfl = 1
          isynfl = 1
-         g200   = one + eqsq*(-2.5d0 +.8125d0 * eqsq)
-         g310   = one + 2.d0*eqsq
-         g300   = one + eqsq*(-6.0d0 + 6.60937d0 * eqsq)
-         f220   = 0.75d0 * (one + cosiq)**2
-         f311   =.9375d0 * siniq*siniq*(one + 3.d0*cosiq) - &
-                  0.75d0*(one + cosiq)
-         f330   = 1.875d0 * ( one + cosiq )**3
-         del(1) = 3.d0*(xnq**2)*(aqnv**2)
-         del(2) = 2.d0*del(1)*f220*g200*q22
-         del(3) = 3.d0*del(1)*f330*g300*q33*aqnv
+         g200   = one + eqsq*(-2.5_wp +0.8125_wp * eqsq)
+         g310   = one + 2.0_wp*eqsq
+         g300   = one + eqsq*(-6.0_wp + 6.60937_wp * eqsq)
+         f220   = 0.75_wp * (one + cosiq)**2
+         f311   =0.9375_wp * siniq*siniq*(one + 3.0_wp*cosiq) - &
+                  0.75_wp*(one + cosiq)
+         f330   = 1.875_wp * ( one + cosiq )**3
+         del(1) = 3.0_wp*(xnq**2)*(aqnv**2)
+         del(2) = 2.0_wp*del(1)*f220*g200*q22
+         del(3) = 3.0_wp*del(1)*f330*g300*q33*aqnv
          del(1) =      del(1)*f311*g310*q31*aqnv
          xlamo  = xmao   + xnodeo + omegao - thgr
          bfact  = xlldot + omgdot + xnodot - thdt
@@ -1107,9 +1108,9 @@
 
       else
 
-         if ( xnq .lt.(8.26d-3) .or. &
-              xnq .gt.(9.24d-3) .or. &
-              eq  .lt. 0.5d0        ) then
+         if ( xnq .lt.(8.26e-3_wp) .or. &
+              xnq .gt.(9.24e-3_wp) .or. &
+              eq  .lt. 0.5_wp        ) then
 
             return
 
@@ -1118,105 +1119,105 @@
 
          iresfl = 1
          eoc    = eq*eqsq
-         g201   = -.306d0 - ( eq - .64d0 )*0.440d0
+         g201   = -0.306_wp - ( eq - 0.64_wp )*0.440_wp
 
 !
 !     Looks icky doesn't it?
 !
 
-         if( eq.gt. (.65d0) ) then
+         if( eq.gt. (0.65_wp) ) then
 
-            g211 =-72.099d0  + 331.819d0 * eq - 508.738d0 * eqsq + &
-                   266.724d0 * eoc
-            g310 =-346.844d0 + 1582.851d0 * eq - 2415.925d0 * eqsq + &
-                   1246.113d0 * eoc
-            g322 =-342.585d0 + 1554.908d0 * eq - 2366.899d0 * eqsq + &
-                   1215.972d0 * eoc
-            g410 =-1052.797d0 + 4758.686d0 * eq - 7193.992d0 * eqsq + &
-                   3651.957d0 * eoc
-            g422 =-3581.69d0 + 16178.11d0 * eq - 24462.77d0 * eqsq + &
-                   12422.52d0 * eoc
+            g211 =-72.099_wp  + 331.819_wp * eq - 508.738_wp * eqsq + &
+                   266.724_wp * eoc
+            g310 =-346.844_wp + 1582.851_wp * eq - 2415.925_wp * eqsq + &
+                   1246.113_wp * eoc
+            g322 =-342.585_wp + 1554.908_wp * eq - 2366.899_wp * eqsq + &
+                   1215.972_wp * eoc
+            g410 =-1052.797_wp + 4758.686_wp * eq - 7193.992_wp * eqsq + &
+                   3651.957_wp * eoc
+            g422 =-3581.69_wp + 16178.11_wp * eq - 24462.77_wp * eqsq + &
+                   12422.52_wp * eoc
 
 !
 !           Decide on the G520 coefficient.
 !
-            if ( eq .gt. (.715d0) ) then
+            if ( eq .gt. (0.715_wp) ) then
 
-               g520 = -5149.66d0 + 29936.92d0 * eq - &
-                      54087.36d0 * eqsq + 31324.56d0 * eoc
+               g520 = -5149.66_wp + 29936.92_wp * eq - &
+                      54087.36_wp * eqsq + 31324.56_wp * eoc
 
             else
 
-               g520 = 1464.74d0 - 4664.75d0 * eq + 3763.64d0 * eqsq
+               g520 = 1464.74_wp - 4664.75_wp * eq + 3763.64_wp * eqsq
 
             end if
 
          else
 
-            g211 = 3.616d0 - 13.247d0*eq + 16.290d0*eqsq
-            g310 = -19.302d0 + 117.390d0*eq - &
-                   228.419d0 * eqsq + 156.591d0*eoc
-            g322 = -18.9068d0 + 109.7927d0*eq - &
-                   214.6334d0 * eqsq + 146.5816d0*eoc
-            g410 = -41.122d0 + 242.694d0*eq - 471.094d0*eqsq + &
-                   313.953d0 * eoc
-            g422 = -146.407d0 + 841.880d0*eq - 1629.014d0*eqsq + &
-                   1083.435d0 * eoc
-            g520 = -532.114d0 + 3017.977d0*eq - 5740.d0*eqsq + &
-                   3708.276d0 * eoc
+            g211 = 3.616_wp - 13.247_wp*eq + 16.290_wp*eqsq
+            g310 = -19.302_wp + 117.390_wp*eq - &
+                   228.419_wp * eqsq + 156.591_wp*eoc
+            g322 = -18.9068_wp + 109.7927_wp*eq - &
+                   214.6334_wp * eqsq + 146.5816_wp*eoc
+            g410 = -41.122_wp + 242.694_wp*eq - 471.094_wp*eqsq + &
+                   313.953_wp * eoc
+            g422 = -146.407_wp + 841.880_wp*eq - 1629.014_wp*eqsq + &
+                   1083.435_wp * eoc
+            g520 = -532.114_wp + 3017.977_wp*eq - 5740.0_wp*eqsq + &
+                   3708.276_wp * eoc
 
          end if
 
 
-         if( eq .ge.(.7d0) ) then
+         if( eq .ge.(0.7_wp) ) then
 
-            g533  = -37995.78d0 + 161616.52d0*eq - &
-                    229838.2d0*eqsq + 109377.94d0*eoc
-            g521  = -51752.104d0 + 218913.95d0*eq - &
-                    309468.16d0*eqsq + 146349.42d0*eoc
-            g532  = -40023.88d0 + 170470.89d0*eq - &
-                    242699.48d0*eqsq + 115605.82d0*eoc
+            g533  = -37995.78_wp + 161616.52_wp*eq - &
+                    229838.2_wp*eqsq + 109377.94_wp*eoc
+            g521  = -51752.104_wp + 218913.95_wp*eq - &
+                    309468.16_wp*eqsq + 146349.42_wp*eoc
+            g532  = -40023.88_wp + 170470.89_wp*eq - &
+                    242699.48_wp*eqsq + 115605.82_wp*eoc
 
          else
 
-            g533  = -919.2277d0 + 4988.61d0*eq - &
-                    9064.77d0*eqsq + 5542.21d0*eoc
-            g521  = -822.71072d0 + 4568.6173d0*eq - &
-                    8491.4146d0*eqsq + 5337.524d0*eoc
-            g532  = -853.666d0 + 4690.25d0*eq - &
-                    8624.77d0*eqsq + 5341.4d0*eoc
+            g533  = -919.2277_wp + 4988.61_wp*eq - &
+                    9064.77_wp*eqsq + 5542.21_wp*eoc
+            g521  = -822.71072_wp + 4568.6173_wp*eq - &
+                    8491.4146_wp*eqsq + 5337.524_wp*eoc
+            g532  = -853.666_wp + 4690.25_wp*eq - &
+                    8624.77_wp*eqsq + 5341.4_wp*eoc
 
          end if
 
 
          sini2    = siniq*siniq
 
-         f220     = .75d0 * (one + 2.d0*cosiq + cosq2)
-         f221     = 1.5d0*sini2
-         f321     = 1.875d0 * siniq * (one-2.d0*cosiq-3.d0*cosq2)
-         f322     =-1.875d0 * siniq * (one+2.d0*cosiq-3.d0*cosq2)
-         f441     = 35.d0 * sini2 * f220
-         f442     = 39.3750d0 * sini2 * sini2
+         f220     = 0.75_wp * (one + 2.0_wp*cosiq + cosq2)
+         f221     = 1.5_wp*sini2
+         f321     = 1.875_wp * siniq * (one-2.0_wp*cosiq-3.0_wp*cosq2)
+         f322     =-1.875_wp * siniq * (one+2.0_wp*cosiq-3.0_wp*cosq2)
+         f441     = 35.0_wp * sini2 * f220
+         f442     = 39.3750_wp * sini2 * sini2
 
-         f522     = 9.84375d0 * siniq * (sini2 * &
-                    (one - 2.d0*cosiq-5.d0*cosq2) &
-                    +.33333333d0 * (-2.d0 + 4.d0 * cosiq + &
-                    6.d0 *cosq2))
+         f522     = 9.84375_wp * siniq * (sini2 * &
+                    (one - 2.0_wp*cosiq-5.0_wp*cosq2) &
+                    +0.33333333_wp * (-2.0_wp + 4.0_wp * cosiq + &
+                    6.0_wp *cosq2))
 
-         f523     = siniq * (4.92187512d0 * sini2 * &
-                    ( -2.d0 - 4.d0 * cosiq + 10.d0 * cosq2 ) &
-                    + 6.56250012d0 * ( one + 2.d0 * cosiq - &
-                    3.d0 * cosq2 ) )
+         f523     = siniq * (4.92187512_wp * sini2 * &
+                    ( -2.0_wp - 4.0_wp * cosiq + 10.0_wp * cosq2 ) &
+                    + 6.56250012_wp * ( one + 2.0_wp * cosiq - &
+                    3.0_wp * cosq2 ) )
 
-         f542     = 29.53125d0 * siniq * (2.d0 - 8.d0 * cosiq + &
-                    cosq2 * ( -12.d0+8.d0*cosiq + 10.d0 * cosq2 ) )
+         f542     = 29.53125_wp * siniq * (2.0_wp - 8.0_wp * cosiq + &
+                    cosq2 * ( -12.0_wp+8.0_wp*cosiq + 10.0_wp * cosq2 ) )
 
-         f543     = 29.53125d0 * siniq * (-2.d0 - 8.d0 * cosiq + &
-                    cosq2 * (12.d0 + 8.d0*cosiq - 10.d0*cosq2 ) )
+         f543     = 29.53125_wp * siniq * (-2.0_wp - 8.0_wp * cosiq + &
+                    cosq2 * (12.0_wp + 8.0_wp*cosiq - 10.0_wp*cosq2 ) )
 
          xno2     = xnq   * xnq
          ainv2    = aqnv  * aqnv
-         temp1    = 3.d0  * xno2 * ainv2
+         temp1    = 3.0_wp  * xno2 * ainv2
          temp     = temp1 * root22
          dg( 1  ) = temp  * f220 * g201
          dg( 2  ) = temp  * f221 * g211
@@ -1225,14 +1226,14 @@
          dg( 3  ) = temp  * f321 * g310
          dg( 4  ) = temp  * f322 * g322
          temp1    = temp1 * aqnv
-         temp     = 2.d0  * temp1 * root44
+         temp     = 2.0_wp  * temp1 * root44
          dg( 5  ) = temp  * f441 * g410
          dg( 6  ) = temp  * f442 * g422
          temp1    = temp1 * aqnv
          temp     = temp1 * root52
          dg( 7  ) = temp  * f522  * g520
          dg( 8  ) = temp  * f523  * g532
-         temp     = 2.d0  * temp1 * root54
+         temp     = 2.0_wp  * temp1 * root54
          dg( 9  ) = temp  * f542  * g521
          dg( 10 ) = temp  * f543  * g533
 
@@ -1425,8 +1426,8 @@
 !
 !-&
 
-      stepp  = 720.d0
-      stepn  =-720.d0
+      stepp  = 720.0_wp
+      stepn  =-720.0_wp
 
       xincl  = elems( 4 )
       eo     = elems( 6 )
@@ -1537,8 +1538,8 @@
                       omegao, atime, omgdot, xli, &
                       xfact , xldot, xndot , xnddt )
 
-      xn    = xni    + xndot * ft + xnddt * ft * ft * 0.5d0
-      xl    = xli    + xldot * ft + xndot * ft * ft * 0.5d0
+      xn    = xni    + xndot * ft + xnddt * ft * ft * 0.5_wp
+      xl    = xli    + xldot * ft + xndot * ft * ft * 0.5_wp
       temp  =-xnodes + thgr       + t     * thdt
       xll   = xl     - omgasm     + temp
 
@@ -1712,10 +1713,10 @@
 !     Update for solar perts at time T.
 !
       zm     = zmos + zns * t
-      zf     = zm   + 2.d0 * zes * dsin(zm)
+      zf     = zm   + 2.0_wp * zes * dsin(zm)
       sinzf  = dsin(zf)
-      f2     = 0.5d0 * sinzf * sinzf - 0.25d0
-      f3     =-0.5d0*sinzf*dcos( zf )
+      f2     = 0.5_wp * sinzf * sinzf - 0.25_wp
+      f3     =-0.5_wp*sinzf*dcos( zf )
       ses    =  se2*f2 +  se3*f3
       sis    =  si2*f2 +  si3*f3
       sls    =  sl2*f2 +  sl3*f3 +  sl4*sinzf
@@ -1727,10 +1728,10 @@
 !     Update for lunar perts at time T.
 !
       zm     = zmol + znl*t
-      zf     = zm + 2.d0*zel * dsin(zm)
+      zf     = zm + 2.0_wp*zel * dsin(zm)
       sinzf  = dsin( zf )
-      f2     = 0.5d0*sinzf*sinzf - 0.25d0
-      f3     =-0.5d0*sinzf*dcos(zf)
+      f2     = 0.5_wp*sinzf*sinzf - 0.25_wp
+      f3     =-0.5_wp*sinzf*dcos(zf)
       sel    =  ee2*f2 +   e3*f3
       sil    =  xi2*f2 +  xi3*f3
       sll    =  xl2*f2 +  xl3*f3 +  xl4*sinzf
@@ -1769,7 +1770,7 @@
       cosis = dcos( xinc )
 
 
-      if ( xqncl.gt. (.2d0) ) then
+      if ( xqncl.gt. (0.2_wp) ) then
 
          ph     = ph/siniq
          pgh    = pgh    - cosiq * ph

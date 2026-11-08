@@ -1,6 +1,7 @@
 !$Procedure CONICS ( Determine state from conic elements )
 
       subroutine conics ( elts, et, state )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision      elts    ( 8 )
-      double precision      et
-      double precision      state   ( 6 )
+      real(wp)              elts    ( 8 )
+      real(wp)              et
+      real(wp)              state   ( 6 )
 
 ! $ Brief_I/O
 !
@@ -236,39 +237,39 @@
 !     SPICELIB functions
 !
       logical               return
-      double precision      twopi
+      real(wp)              twopi
 
 !
 !     Local variables
 !
-      double precision      rp
-      double precision      ecc
-      double precision      inc
-      double precision      lnode
-      double precision      argp
-      double precision      m0
-      double precision      t0
-      double precision      mu
-      double precision      n
-      double precision      period
+      real(wp)              rp
+      real(wp)              ecc
+      real(wp)              inc
+      real(wp)              lnode
+      real(wp)              argp
+      real(wp)              m0
+      real(wp)              t0
+      real(wp)              mu
+      real(wp)              n
+      real(wp)              period
 
-      double precision      ainvrs
-      double precision      dt
+      real(wp)              ainvrs
+      real(wp)              dt
 
-      double precision      cosi
-      double precision      sini
-      double precision      cosn
-      double precision      sinn
-      double precision      cosw
-      double precision      sinw
+      real(wp)              cosi
+      real(wp)              sini
+      real(wp)              cosn
+      real(wp)              sinn
+      real(wp)              cosw
+      real(wp)              sinw
 
-      double precision      snci
-      double precision      cnci
+      real(wp)              snci
+      real(wp)              cnci
 
-      double precision      basisp     ( 3 )
-      double precision      basisq     ( 3 )
-      double precision      pstate     ( 6 )
-      double precision      v
+      real(wp)              basisp     ( 3 )
+      real(wp)              basisq     ( 3 )
+      real(wp)              pstate     ( 6 )
+      real(wp)              v
 
 
 
@@ -387,7 +388,7 @@
 !
 !     so that:
 !
-      v = dsqrt( mu*(1.0d0 + ecc) / rp )
+      v = dsqrt( mu*(1.0_wp + ecc) / rp )
 
       call vscl( rp, basisp, pstate(1) )
       call vscl( v,  basisq, pstate(4) )
@@ -396,7 +397,7 @@
 !     Finally compute DT the elapsed time since the epoch of periapse.
 !     Ellipses first, since they are the most common.
 !
-      if ( ecc .lt. 1.d0 ) then
+      if ( ecc .lt. 1.0_wp ) then
 
 !
 !        Recall that:
@@ -404,7 +405,7 @@
 !        N ( mean motion ) is given by DSQRT( MU / A**3 ).
 !        But since, A = RP / ( 1 - ECC ) ...
 !
-         ainvrs = (1.0d0 - ecc)   / rp
+         ainvrs = (1.0_wp - ecc)   / rp
          n      = sqrt(mu*ainvrs) * ainvrs
          period = twopi()         / n
 
@@ -437,7 +438,7 @@
 !        N ( mean motion ) is given by DSQRT( MU / |A**3| ).
 !        But since, |A| = RP / ( ECC - 1 ) ...
 !
-         ainvrs = (ecc - 1.0d0)    / rp
+         ainvrs = (ecc - 1.0_wp)    / rp
          n      = dsqrt(mu*ainvrs) * ainvrs
          dt     = et - t0          + m0/n
 
@@ -446,7 +447,7 @@
 !
       else
 
-         n  = dsqrt( mu / (2.0d0*rp) ) / rp
+         n  = dsqrt( mu / (2.0_wp*rp) ) / rp
          dt = et - t0                + m0/n
 
       end if

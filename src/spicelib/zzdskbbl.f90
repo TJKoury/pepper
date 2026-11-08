@@ -1,6 +1,7 @@
 !$Procedure ZZDSKBBL ( DSK, build BSR segment list )
 
       subroutine zzdskbbl ( bodyid )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,7 +32,7 @@
       include 'dskdsc.inc'
       include 'dsk02.inc'
 
-      integer               bodyid
+      integer(ip)           bodyid
 
 ! $ Brief_I/O
 !
@@ -139,12 +140,12 @@
 !
 !     Local variables
 !
-      double precision      dskdsc ( dskdsz )
+      real(wp)              dskdsc ( dskdsz )
 
-      integer               ctr    ( ctrsiz )
-      integer               dladsc ( dladsz )
-      integer               handle
-      integer               prvbod
+      integer(ip)           ctr    ( ctrsiz )
+      integer(ip)           dladsc ( dladsz )
+      integer(ip)           handle
+      integer(ip)           prvbod
 
       logical               first
       logical               newbod

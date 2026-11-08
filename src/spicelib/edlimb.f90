@@ -1,6 +1,7 @@
 !$Procedure EDLIMB   ( Ellipsoid Limb )
 
       subroutine edlimb ( a, b, c, viewpt, limb )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,14 +23,14 @@
 
       implicit none
 
-      integer               ubel
+      integer(ip)           ubel
       parameter           ( ubel   =    9 )
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      viewpt (    3 )
-      double precision      limb   ( ubel )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              viewpt (    3 )
+      real(wp)              limb   ( ubel )
 
 ! $ Brief_I/O
 !
@@ -420,25 +421,25 @@
 !
 !     Local parameters
 !
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl   =    4 )
 
 
 !
 !     Local variables
 !
-      double precision      level
-      double precision      lplane ( ubpl )
-      double precision      normal (    3 )
-      double precision      scale
-      double precision      scla
-      double precision      scla2
-      double precision      sclb
-      double precision      sclb2
-      double precision      sclc
-      double precision      sclc2
-      double precision      tmpel  ( ubel )
-      double precision      v      (    3 )
+      real(wp)              level
+      real(wp)              lplane ( ubpl )
+      real(wp)              normal (    3 )
+      real(wp)              scale
+      real(wp)              scla
+      real(wp)              scla2
+      real(wp)              sclb
+      real(wp)              sclb2
+      real(wp)              sclc
+      real(wp)              sclc2
+      real(wp)              tmpel  ( ubel )
+      real(wp)              v      (    3 )
 
       logical               found
 
@@ -455,9 +456,9 @@
 !
 !     The semi-axes must have positive length.
 !
-      if (       ( a .le. 0.d0 ) &
-           .or.  ( b .le. 0.d0 ) &
-           .or.  ( c .le. 0.d0 )   )   then
+      if (       ( a .le. 0.0_wp ) &
+           .or.  ( b .le. 0.0_wp ) &
+           .or.  ( c .le. 0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis lengths:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                      )
@@ -485,9 +486,9 @@
       sclb2  =  sclb**2
       sclc2  =  sclc**2
 
-      if (       ( scla2  .eq.  0.d0 ) &
-           .or.  ( sclb2  .eq.  0.d0 ) &
-           .or.  ( sclc2  .eq.  0.d0 )   )   then
+      if (       ( scla2  .eq.  0.0_wp ) &
+           .or.  ( sclb2  .eq.  0.0_wp ) &
+           .or.  ( sclc2  .eq.  0.0_wp )   )   then
 
          call setmsg ( 'Semi-axis too small:  A = #, B = #, C = #. ' )
          call errdp  ( '#', a                                        )
@@ -499,7 +500,7 @@
 
       end if
 
-      call vscl ( 1.0d0 / scale, viewpt, v )
+      call vscl ( 1.0_wp / scale, viewpt, v )
 
 !
 !     The viewing point must be outside of the ellipsoid.  LEVEL is the
@@ -510,7 +511,7 @@
                  +  ( v(2)**2 / sclb2 ) &
                  +  ( v(3)**2 / sclc2 )
 
-      if ( level .lt. 1.d0 ) then
+      if ( level .lt. 1.0_wp ) then
 
          call setmsg ( 'Viewing point is inside the ellipsoid.' )
          call sigerr ( 'SPICE(DEGENERATECASE)'                  )
@@ -582,7 +583,7 @@
       normal(2)  =  v(2) / sclb2
       normal(3)  =  v(3) / sclc2
 
-      call nvc2pl ( normal, 1.0d0, lplane )
+      call nvc2pl ( normal, 1.0_wp, lplane )
 
 !
 !     Find the limb by intersecting the limb plane with the ellipsoid.

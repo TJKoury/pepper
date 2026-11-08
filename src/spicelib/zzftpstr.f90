@@ -1,6 +1,7 @@
 !$Procedure ZZFTPSTR ( Private --- Fetch FTP Validation String )
 
       subroutine zzftpstr ( tstcom, lend, rend, delim )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -227,28 +228,28 @@
 !     Maximum size of an individual test cluster component
 !     including the ':'.
 !
-      integer               siztsq
+      integer(ip)           siztsq
       parameter           ( siztsq = 5 )
 
 !
 !     Integer codes of characters appearing in test clusters.
 !
-      integer               int000
+      integer(ip)           int000
       parameter           ( int000 = 0 )
 
-      integer               int010
+      integer(ip)           int010
       parameter           ( int010 = 10 )
 
-      integer               int013
+      integer(ip)           int013
       parameter           ( int013 = 13 )
 
-      integer               int016
+      integer(ip)           int016
       parameter           ( int016 = 16 )
 
-      integer               int129
+      integer(ip)           int129
       parameter           ( int129 = 129 )
 
-      integer               int206
+      integer(ip)           int206
       parameter           ( int206 = 206 )
 
 !
@@ -271,7 +272,7 @@
       character*(1)         asc129
       character*(1)         asc206
 
-      integer               i
+      integer(ip)           i
 
       logical               first
 

@@ -2,6 +2,7 @@
 
       subroutine zzekrd03 (  handle,  segdsc,  coldsc, &
                              recptr,  cvlen,   cval,    isnull  )
+      use pepper_kinds, only: ip
 
       implicit none
 
@@ -29,11 +30,11 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segdsc ( sdscsz )
-      integer               coldsc ( cdscsz )
-      integer               recptr
-      integer               cvlen
+      integer(ip)           handle
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           recptr
+      integer(ip)           cvlen
       character*(*)         cval
       logical               isnull
 
@@ -196,28 +197,28 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekrp2n
+      integer(ip)           zzekrp2n
 
 !
 !     Local variables
 !
       character*(cnamsz)    column
 
-      integer               avail
-      integer               b
-      integer               bpos
-      integer               colidx
-      integer               datptr
-      integer               e
-      integer               epos
-      integer               l
-      integer               n
-      integer               ncols
-      integer               p
-      integer               pbase
-      integer               relptr
-      integer               ptrloc
-      integer               recno
+      integer(ip)           avail
+      integer(ip)           b
+      integer(ip)           bpos
+      integer(ip)           colidx
+      integer(ip)           datptr
+      integer(ip)           e
+      integer(ip)           epos
+      integer(ip)           l
+      integer(ip)           n
+      integer(ip)           ncols
+      integer(ip)           p
+      integer(ip)           pbase
+      integer(ip)           relptr
+      integer(ip)           ptrloc
+      integer(ip)           recno
 
 !
 !     Use discovery check-in.

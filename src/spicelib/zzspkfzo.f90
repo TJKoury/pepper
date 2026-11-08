@@ -1,6 +1,7 @@
 !$Procedure ZZSPKFZO ( SPK function, easy reader, observer )
 
       subroutine zzspkfzo ( targ, et, ref, abcorr, obssub, starg, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -31,13 +32,13 @@
       include              'frmtyp.inc'
       include              'zzabcorr.inc'
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
       character*(*)         abcorr
       external              obssub
-      double precision      starg    ( 6 )
-      double precision      lt
+      real(wp)              starg    ( 6 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -748,8 +749,8 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              vnorm
 
       logical               failed
       logical               return
@@ -765,23 +766,23 @@
 !
       character*(corlen)    prvcor
 
-      double precision      corxfm   ( 6, 6 )
-      double precision      dlt
-      double precision      dltctr
-      double precision      ltcent
-      double precision      state    ( 6    )
-      double precision      stemp    ( 6    )
-      double precision      stobs    ( 6    )
-      double precision      stoctr   ( 6    )
-      double precision      xform    ( 6, 6 )
+      real(wp)              corxfm   ( 6, 6 )
+      real(wp)              dlt
+      real(wp)              dltctr
+      real(wp)              ltcent
+      real(wp)              state    ( 6    )
+      real(wp)              stemp    ( 6    )
+      real(wp)              stobs    ( 6    )
+      real(wp)              stoctr   ( 6    )
+      real(wp)              xform    ( 6, 6 )
 
-      integer               center
-      integer               fj2000
-      integer               ltsign
-      integer               obsctr
-      integer               reqfrm
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           fj2000
+      integer(ip)           ltsign
+      integer(ip)           obsctr
+      integer(ip)           reqfrm
+      integer(ip)           type
+      integer(ip)           typeid
 
       logical               attblk ( nabcor )
       logical               found

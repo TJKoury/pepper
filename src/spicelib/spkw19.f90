@@ -4,6 +4,7 @@
                           first,   last,    segid,   nintvl, &
                           npkts,   subtps,  degres,  packts, &
                           epochs,  ivlbds,  sellst          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,20 +31,20 @@
       include 'spkrec.inc'
 
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               nintvl
-      integer               npkts  ( * )
-      integer               subtps ( * )
-      integer               degres ( * )
-      double precision      packts ( * )
-      double precision      epochs ( * )
-      double precision      ivlbds ( * )
+      integer(ip)           nintvl
+      integer(ip)           npkts  ( * )
+      integer(ip)           subtps ( * )
+      integer(ip)           degres ( * )
+      real(wp)              packts ( * )
+      real(wp)              epochs ( * )
+      real(wp)              ivlbds ( * )
       logical               sellst
 
 ! $ Brief_I/O
@@ -378,7 +379,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               odd
@@ -387,57 +388,57 @@
 !
 !     Local parameters
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen =  40 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint = 126 )
 
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     =   2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     =   6 )
 
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz =   5 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype  =  19 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
 !
 !     Local variables
 !
-      double precision      dc     ( nd )
-      double precision      descr  ( dscsiz )
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( dscsiz )
 
 
-      integer               bepix
-      integer               chrcod
-      integer               eepix
-      integer               i
-      integer               ic     ( ni )
-      integer               isel
-      integer               j
-      integer               k
-      integer               minisz
-      integer               ndir
-      integer               pktbeg
-      integer               pktdsz
-      integer               pktend
-      integer               pktsiz
-      integer               pktszs ( 0 : s19nst-1 )
-      integer               refcod
-      integer               segbeg
-      integer               segend
-      integer               subtyp
-      integer               winsiz
+      integer(ip)           bepix
+      integer(ip)           chrcod
+      integer(ip)           eepix
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           isel
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           minisz
+      integer(ip)           ndir
+      integer(ip)           pktbeg
+      integer(ip)           pktdsz
+      integer(ip)           pktend
+      integer(ip)           pktsiz
+      integer(ip)           pktszs ( 0 : s19nst-1 )
+      integer(ip)           refcod
+      integer(ip)           segbeg
+      integer(ip)           segend
+      integer(ip)           subtyp
+      integer(ip)           winsiz
 
 !
 !     Saved values
@@ -980,9 +981,9 @@
 !        Write the mini-segment's subtype, window size, and packet
 !        count to the segment.
 !
-         call dafada ( dble( subtps(i) ),  1 )
-         call dafada ( dble( winsiz    ),  1 )
-         call dafada ( dble( npkts(i)  ),  1 )
+         call dafada ( real( subtps(i), wp ),  1 )
+         call dafada ( real( winsiz, wp    ),  1 )
+         call dafada ( real( npkts(i), wp  ),  1 )
 
          if ( failed() ) then
             call chkout ( 'SPKW19' )
@@ -1057,7 +1058,7 @@
 !        After the loop terminates, the final end pointer, incremented
 !        by 1, will be written.
 !
-         call dafada ( dble(segbeg), 1 )
+         call dafada ( real(segbeg, wp), 1 )
 
       end do
 
@@ -1065,7 +1066,7 @@
 !     Write the last mini-segment end pointer, incremented by one.
 !     SEGEND was computed on the last iteration of the above loop.
 !
-      call dafada ( dble(segend+1), 1 )
+      call dafada ( real(segend+1, wp), 1 )
 
 !
 !     Write out the interval selection flag. The input
@@ -1078,12 +1079,12 @@
          isel = ifalse
       end if
 
-      call dafada ( dble( isel ),  1 )
+      call dafada ( real( isel, wp ),  1 )
 
 !
 !     Write the mini-segment/interpolation interval count.
 !
-      call dafada ( dble(nintvl), 1 )
+      call dafada ( real(nintvl, wp), 1 )
 
 !
 !     End the segment.

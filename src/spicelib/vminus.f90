@@ -1,6 +1,7 @@
 !$Procedure VMINUS ( Negate vector, "-V", 3 dimensions )
 
       subroutine vminus ( v1, vout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      double precision  v1   ( 3 )
-      double precision  vout ( 3 )
+      real(wp)          v1   ( 3 )
+      real(wp)          vout ( 3 )
 
 ! $ Brief_I/O
 !

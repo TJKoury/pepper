@@ -2,6 +2,7 @@
 
       subroutine ekifld (  handle,  tabnam,  ncols,  nrows, &
                            cnames,  decls,   segno,  rcptrs  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,14 +23,14 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
+      integer(ip)           handle
       character*(*)         tabnam
-      integer               ncols
-      integer               nrows
+      integer(ip)           ncols
+      integer(ip)           nrows
       character*(*)         cnames ( * )
       character*(*)         decls  ( * )
-      integer               segno
-      integer               rcptrs ( * )
+      integer(ip)           segno
+      integer(ip)           rcptrs ( * )
 
 ! $ Brief_I/O
 !
@@ -563,10 +564,10 @@
 !
 !     Local variables
 !
-      integer               mbase
-      integer               p
-      integer               segdsc ( sdscsz )
-      integer               stype
+      integer(ip)           mbase
+      integer(ip)           p
+      integer(ip)           segdsc ( sdscsz )
+      integer(ip)           stype
 
 !
 !     Standard SPICE error handling.

@@ -10,6 +10,7 @@
                          unit, &
                          fhset, &
                          access  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,21 +31,21 @@
 
       include              'zzddhman.inc'
 
-      integer               inteoc
+      integer(ip)           inteoc
       parameter           ( inteoc = 4 )
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell  = -5 )
 
       character*(*)         fname
       character*(*)         ftype
-      integer               nd
-      integer               ni
+      integer(ip)           nd
+      integer(ip)           ni
       character*(*)         ifname
-      integer               resv
-      integer               handle
-      integer               unit
-      integer               fhset ( lbcell : * )
+      integer(ip)           resv
+      integer(ip)           handle
+      integer(ip)           unit
+      integer(ip)           fhset ( lbcell : * )
       character*(*)         access
 
 ! $ Brief_I/O
@@ -743,9 +744,9 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchi
-      integer               ltrim
-      integer               rtrim
+      integer(ip)           isrchi
+      integer(ip)           ltrim
+      integer(ip)           rtrim
 
       logical               elemi
       logical               failed
@@ -754,43 +755,43 @@
 !
 !     Local parameters
 !
-      integer               acclen
+      integer(ip)           acclen
       parameter           ( acclen =   10 )
 
-      integer               arclen
+      integer(ip)           arclen
       parameter           ( arclen =    3 )
 
-      integer               crlen
+      integer(ip)           crlen
       parameter           ( crlen  = 1000 )
 
-      integer               dprsiz
+      integer(ip)           dprsiz
       parameter           ( dprsiz =  128 )
 
-      integer               fmtlen
+      integer(ip)           fmtlen
       parameter           ( fmtlen =    8 )
 
-      integer               idlen
+      integer(ip)           idlen
       parameter           ( idlen  =    8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen =   60 )
 
-      integer               maxnd
+      integer(ip)           maxnd
       parameter           ( maxnd  =  124 )
 
-      integer               maxni
+      integer(ip)           maxni
       parameter           ( maxni  =  250 )
 
-      integer               maxsum
+      integer(ip)           maxsum
       parameter           ( maxsum =  125 )
 
-      integer               maxpc
+      integer(ip)           maxpc
       parameter           ( maxpc  =  126 )
 
-      integer               minpc
+      integer(ip)           minpc
       parameter           ( minpc  =   32 )
 
-      integer               typlen
+      integer(ip)           typlen
       parameter           ( typlen =    4 )
 
 !
@@ -818,12 +819,12 @@
 !     NEXT is incremented each time a file is opened to become the
 !     next file handle assigned.
 !
-      integer               nft
-      integer               fthan  ( ftsize )
-      integer               ftlnk  ( ftsize )
-      integer               ftnd   ( ftsize )
-      integer               ftni   ( ftsize )
-      integer               findex
+      integer(ip)           nft
+      integer(ip)           fthan  ( ftsize )
+      integer(ip)           ftlnk  ( ftsize )
+      integer(ip)           ftnd   ( ftsize )
+      integer(ip)           ftni   ( ftsize )
+      integer(ip)           findex
 
 !
 !     Other local variables
@@ -836,21 +837,21 @@
       character*(ifnlen)    ifn
       character*(typlen)    ttype
 
-      double precision      drec   ( dprsiz )
+      real(wp)              drec   ( dprsiz )
 
-      integer               bward
-      integer               fhlist ( lbcell : ftsize )
-      integer               fnd
-      integer               fni
-      integer               free
-      integer               fnb
-      integer               fward
-      integer               i
-      integer               iarc
-      integer               ibff
-      integer               iamh
-      integer               iostat
-      integer               lun
+      integer(ip)           bward
+      integer(ip)           fhlist ( lbcell : ftsize )
+      integer(ip)           fnd
+      integer(ip)           fni
+      integer(ip)           free
+      integer(ip)           fnb
+      integer(ip)           fward
+      integer(ip)           i
+      integer(ip)           iarc
+      integer(ip)           ibff
+      integer(ip)           iamh
+      integer(ip)           iostat
+      integer(ip)           lun
 
       logical               first
       logical               found

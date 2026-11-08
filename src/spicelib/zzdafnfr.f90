@@ -9,6 +9,7 @@
                             bward, &
                             free, &
                             format  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,14 +30,14 @@
 
       include              'zzftprms.inc'
 
-      integer               lun
+      integer(ip)           lun
       character*(*)         idword
-      integer               nd
-      integer               ni
+      integer(ip)           nd
+      integer(ip)           ni
       character*(*)         ifname
-      integer               fward
-      integer               bward
-      integer               free
+      integer(ip)           fward
+      integer(ip)           bward
+      integer(ip)           free
       character*(*)         format
 
 
@@ -150,7 +151,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
       logical               return
 
 !
@@ -161,7 +162,7 @@
 !     first character of FTPSTR to keep FTPSTR at character
 !     700 in a 1024 byte record.
 !
-      integer               preftp
+      integer(ip)           preftp
       parameter           ( preftp = 603 )
 
 !
@@ -173,19 +174,19 @@
 !     characters, so this may require modification for
 !     non-standard platforms.
 !
-      integer               pstftp
+      integer(ip)           pstftp
       parameter           ( pstftp = 297 )
 
 !
 !     Lengths of internal file name, ID word, and format word.
 !
-      integer               fmtlen
+      integer(ip)           fmtlen
       parameter           ( fmtlen = 8 )
 
-      integer               idwlen
+      integer(ip)           idwlen
       parameter           ( idwlen = 8 )
 
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
 !
@@ -203,8 +204,8 @@
       character*(sizftp)    ftpstr
       character*(sizstr)    tststr
 
-      integer               i
-      integer               iostat
+      integer(ip)           i
+      integer(ip)           iostat
 
       logical               first
 

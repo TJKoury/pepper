@@ -1,6 +1,7 @@
 !$Procedure DUCRSS ( Unit Normalized Cross Product and Derivative )
 
       subroutine ducrss ( s1, s2, sout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision    s1   ( 6 )
-      double precision    s2   ( 6 )
-      double precision    sout ( 6 )
+      real(wp)            s1   ( 6 )
+      real(wp)            s2   ( 6 )
+      real(wp)            sout ( 6 )
 
 ! $ Brief_I/O
 !
@@ -316,11 +317,11 @@
 !
 !     Local variables
 !
-      double precision      f1
-      double precision      f2
-      double precision      scls1  ( 6 )
-      double precision      scls2  ( 6 )
-      double precision      tmpsta ( 6 )
+      real(wp)              f1
+      real(wp)              f2
+      real(wp)              scls1  ( 6 )
+      real(wp)              scls2  ( 6 )
+      real(wp)              tmpsta ( 6 )
 
 !
 !     Scale the components of the input states so the states have the
@@ -331,16 +332,16 @@
       f1 = max( abs(s1(1)), abs(s1(2)), abs(s1(3)) )
       f2 = max( abs(s2(1)), abs(s2(2)), abs(s2(3)) )
 
-      if ( f1 .gt. 0.d0 ) then
+      if ( f1 .gt. 0.0_wp ) then
 
-         call vsclg ( 1.d0/f1, s1, 6, scls1 )
+         call vsclg ( 1.0_wp/f1, s1, 6, scls1 )
       else
          call moved ( s1,          6, scls1 )
       end if
 
-      if ( f2 .gt. 0.d0 ) then
+      if ( f2 .gt. 0.0_wp ) then
 
-         call vsclg ( 1.d0/f2, s2, 6, scls2 )
+         call vsclg ( 1.0_wp/f2, s2, 6, scls2 )
       else
          call moved ( s2,          6, scls2 )
       end if

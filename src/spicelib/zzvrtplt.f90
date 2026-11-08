@@ -2,6 +2,7 @@
 
       subroutine zzvrtplt ( nv,    np,     plates, cellsz, maxlst, &
                             cells, vrtptr, nlist,  pltlst          )
+      use pepper_kinds, only: ip
       implicit none
 
 ! $ Abstract
@@ -27,15 +28,15 @@
 
       include              'dsk02.inc'
 
-      integer               nv
-      integer               np
-      integer               plates ( 3, * )
-      integer               cellsz
-      integer               maxlst
-      integer               cells  ( 2, cellsz )
-      integer               vrtptr ( * )
-      integer               nlist
-      integer               pltlst ( * )
+      integer(ip)           nv
+      integer(ip)           np
+      integer(ip)           plates ( 3, * )
+      integer(ip)           cellsz
+      integer(ip)           maxlst
+      integer(ip)           cells  ( 2, cellsz )
+      integer(ip)           vrtptr ( * )
+      integer(ip)           nlist
+      integer(ip)           pltlst ( * )
 
 ! $ Brief_I/O
 !
@@ -225,9 +226,9 @@
 
       logical               return
 
-      integer               i
-      integer               j
-      integer               ncell
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           ncell
 
 
       save

@@ -1,6 +1,7 @@
 !$Procedure DASUDC ( DAS, update data, character )
 
       subroutine dasudc ( handle, first, last, bpos, epos, data )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      integer               handle
-      integer               first
-      integer               last
-      integer               bpos
-      integer               epos
+      integer(ip)           handle
+      integer(ip)           first
+      integer(ip)           last
+      integer(ip)           bpos
+      integer(ip)           epos
       character*(*)         data   ( * )
 
 ! $ Brief_I/O
@@ -409,31 +410,31 @@
 !
 !     Local parameters
 !
-      integer               nwc
+      integer(ip)           nwc
       parameter           ( nwc  =  1024 )
 
-      integer               char
+      integer(ip)           char
       parameter           ( char =  1  )
 
 !
 !     Local variables
 !
-      integer               chr
-      integer               clbase
-      integer               clsize
-      integer               elt
-      integer               l
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               n
-      integer               nmove
-      integer               nmoved
-      integer               numchr
-      integer               nwritn
-      integer               recno
-      integer               rcpos
-      integer               wordno
+      integer(ip)           chr
+      integer(ip)           clbase
+      integer(ip)           clsize
+      integer(ip)           elt
+      integer(ip)           l
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           n
+      integer(ip)           nmove
+      integer(ip)           nmoved
+      integer(ip)           numchr
+      integer(ip)           nwritn
+      integer(ip)           recno
+      integer(ip)           rcpos
+      integer(ip)           wordno
 
 
 !

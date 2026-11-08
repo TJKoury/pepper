@@ -1,6 +1,7 @@
 !$Procedure ASTRIP ( STRIP Ascii characters from a string )
 
       subroutine astrip ( instr, asciib, asciie, outstr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -158,18 +159,18 @@
 !
 !     SPICELIB functions
 !
-      integer          lastnb
+      integer(ip)      lastnb
 
 !
 !     Local Variables
 !
-      integer          outlen
-      integer          last
-      integer          lwrbnd
-      integer          uprbnd
-      integer          i
-      integer          j
-      integer          k
+      integer(ip)      outlen
+      integer(ip)      last
+      integer(ip)      lwrbnd
+      integer(ip)      uprbnd
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
 
 
 

@@ -1,6 +1,7 @@
 !$Procedure LNKNFN ( LNK, number of free nodes )
 
-      integer function lnknfn ( pool )
+      integer(ip) function lnknfn ( pool )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,10 +19,10 @@
 
       implicit none
 
-      integer               lbpool
+      integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-      integer               pool ( 2,  lbpool : * )
+      integer(ip)           pool ( 2,  lbpool : * )
 
 ! $ Brief_I/O
 !
@@ -134,22 +135,22 @@
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer               sizrow
+      integer(ip)           sizrow
       parameter           ( sizrow =   1 )
 
-      integer               sizcol
+      integer(ip)           sizcol
       parameter           ( sizcol =   0 )
 
-      integer               nfrrow
+      integer(ip)           nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer               nfrcol
+      integer(ip)           nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer               frerow
+      integer(ip)           frerow
       parameter           ( frerow =   1 )
 
-      integer               frecol
+      integer(ip)           frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -166,10 +167,10 @@
 !
 !
 !
-      integer               forwrd
+      integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
-      integer               bckwrd
+      integer(ip)           bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -177,7 +178,7 @@
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer               free
+      integer(ip)           free
       parameter           ( free   = 0 )
 
 

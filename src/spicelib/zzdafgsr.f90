@@ -1,6 +1,7 @@
 !$Procedure ZZDAFGSR ( Private --- DAF Get Summary/Descriptor Record )
 
       subroutine zzdafgsr ( handle, recno, nd, ni, dprec, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -24,11 +25,11 @@
 
       include              'zzddhman.inc'
 
-      integer               handle
-      integer               recno
-      integer               nd
-      integer               ni
-      double precision      dprec  ( * )
+      integer(ip)           handle
+      integer(ip)           recno
+      integer(ip)           nd
+      integer(ip)           ni
+      real(wp)              dprec  ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -131,7 +132,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               return
@@ -141,10 +142,10 @@
 !
 !     Length in bytes of double precision numbers and integers.
 !
-      integer               dplen
+      integer(ip)           dplen
       parameter           ( dplen = 8       )
 
-      integer               inlen
+      integer(ip)           inlen
       parameter           ( inlen = dplen/2 )
 
 !
@@ -155,21 +156,21 @@
       character*(strsiz)    strbff ( numbff )
       character*(strsiz)    tmpstr
 
-      double precision      dpbuf  ( 128 )
+      real(wp)              dpbuf  ( 128 )
 
-      integer               cindex
-      integer               dindex
-      integer               i
-      integer               iamh
-      integer               iarch
-      integer               ibff
-      integer               inbuf  ( 256 )
-      integer               iostat
-      integer               left
-      integer               lun
-      integer               natbff
-      integer               nsum
-      integer               sumsiz
+      integer(ip)           cindex
+      integer(ip)           dindex
+      integer(ip)           i
+      integer(ip)           iamh
+      integer(ip)           iarch
+      integer(ip)           ibff
+      integer(ip)           inbuf  ( 256 )
+      integer(ip)           iostat
+      integer(ip)           left
+      integer(ip)           lun
+      integer(ip)           natbff
+      integer(ip)           nsum
+      integer(ip)           sumsiz
 
       logical               first
       logical               locfnd

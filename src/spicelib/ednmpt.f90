@@ -1,6 +1,7 @@
 !$Procedure EDNMPT ( Ellipsoid normal vector to surface point )
 
       subroutine ednmpt ( a, b, c, normal, point )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,11 +22,11 @@
 
       implicit none
 
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      normal ( 3 )
-      double precision      point  ( 3 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              normal ( 3 )
+      real(wp)              point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -305,7 +306,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      touchd
+      real(wp)              touchd
 
       logical               return
       logical               vzero
@@ -313,15 +314,15 @@
 !
 !     Local variables
 !
-      double precision      arg
-      double precision      lambda
-      double precision      na2
-      double precision      nb2
-      double precision      nc2
-      double precision      sa
-      double precision      sb
-      double precision      sc
-      double precision      scale
+      real(wp)              arg
+      real(wp)              lambda
+      real(wp)              na2
+      real(wp)              nb2
+      real(wp)              nc2
+      real(wp)              sa
+      real(wp)              sb
+      real(wp)              sc
+      real(wp)              scale
 
 !
 !     Use discovery check-in. We will test RETURN though, since
@@ -337,9 +338,9 @@
 !
 !     We need a non-degenerate ellipsoid to start with.
 !
-      if (      ( a .le. 0.d0 ) &
-           .or. ( b .le. 0.d0 ) &
-           .or. ( c .le. 0.d0 )  ) then
+      if (      ( a .le. 0.0_wp ) &
+           .or. ( b .le. 0.0_wp ) &
+           .or. ( c .le. 0.0_wp )  ) then
 
          call chkin  ( 'EDNMPT'                               )
          call setmsg ( 'All ellipsoid semi-axis lengths must ' &
@@ -367,9 +368,9 @@
 !     If any of the scaled-semi axes underflowed to zero,
 !     we can't continue.
 !
-      if (      ( sa .le. 0.d0 ) &
-           .or. ( sb .le. 0.d0 ) &
-           .or. ( sc .le. 0.d0 )  ) then
+      if (      ( sa .le. 0.0_wp ) &
+           .or. ( sb .le. 0.0_wp ) &
+           .or. ( sc .le. 0.0_wp )  ) then
 
          call chkin  ( 'EDNMPT'                                   )
          call setmsg ( 'Scaled semi-axis lengths must be ' &
@@ -435,7 +436,7 @@
       arg = touchd(   ( na2 * normal(1) ) + ( nb2 * normal(2) ) &
                     + ( nc2 * normal(3) )                        )
 
-      if ( arg .le. 0.d0 ) then
+      if ( arg .le. 0.0_wp ) then
 
          call chkin  ( 'EDNMPT'                                   )
          call setmsg ( 'Scale factor LAMBDA must be positive, ' &
@@ -451,7 +452,7 @@
 !     Compute LAMBDA as above, and scale it too. This will place
 !     POINT on the original ellipsoid.
 !
-      lambda   = ( arg ** (-0.5d0) ) * scale
+      lambda   = ( arg ** (-0.5_wp) ) * scale
 
       point(1) = lambda * na2
       point(2) = lambda * nb2

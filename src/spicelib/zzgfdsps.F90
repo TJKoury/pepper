@@ -1,6 +1,7 @@
 !$Procedure   ZZGFDSPS  ( GF, display string  )
 
       subroutine zzgfdsps ( nlead, string, fmt, ntrail )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,10 +27,10 @@
 
       implicit none
 
-      integer               nlead
+      integer(ip)           nlead
       character*(*)         string
       character*(*)         fmt
-      integer               ntrail
+      integer(ip)           ntrail
 
 ! $ Brief_I/O
 !
@@ -201,12 +202,12 @@
 !
 !     SPICELIB Functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
 !
 !     Local parameters
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
 !
@@ -214,9 +215,9 @@
 !
       character*(lnsize)    tmpstr
 
-      integer               i
-      integer               iostat
-      integer               l
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           l
 
 !
 !     Use discovery check-in.

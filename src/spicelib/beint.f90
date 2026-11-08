@@ -1,6 +1,7 @@
 !$Procedure BEINT  ( Be an Integer? )
 
       logical function beint  ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -148,11 +149,11 @@
 !-&
 
 
-      integer               frstnb
+      integer(ip)           frstnb
       logical               beuns
 
-      integer               i
-      integer               l
+      integer(ip)           i
+      integer(ip)           l
 
 
       character*(1)         letter

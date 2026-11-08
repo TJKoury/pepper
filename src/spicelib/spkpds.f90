@@ -2,6 +2,7 @@
 
       subroutine spkpds ( body, center, frame, &
                           type, first,  last, descr )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               body
-      integer               center
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      integer               type
-      double precision      first
-      double precision      last
-      double precision      descr ( * )
+      integer(ip)           type
+      real(wp)              first
+      real(wp)              last
+      real(wp)              descr ( * )
 
 ! $ Brief_I/O
 !
@@ -158,15 +159,15 @@
 !
 !     ND and NI values for an SPK file.
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni = 6 )
 !
 !     Length of a calender string.
 !
-      integer               calsiz
+      integer(ip)           calsiz
       parameter           ( calsiz = 40 )
 !
 !     Local Variables
@@ -174,10 +175,10 @@
       character*(calsiz)    calfst
       character*(calsiz)    callst
 
-      double precision      dppart ( 2 )
+      real(wp)              dppart ( 2 )
 
-      integer               ipart  ( 6 )
-      integer               refcod
+      integer(ip)           ipart  ( 6 )
+      integer(ip)           refcod
 
 !
 !     Standard SPICELIB error handling.

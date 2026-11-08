@@ -1,6 +1,7 @@
 !$Procedure CYLREC ( Cylindrical to rectangular )
 
       subroutine cylrec ( r, clon, z,  rectan )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision    r
-      double precision    clon
-      double precision    z
-      double precision    rectan ( 3 )
+      real(wp)            r
+      real(wp)            clon
+      real(wp)            z
+      real(wp)            rectan ( 3 )
 
 ! $ Brief_I/O
 !
@@ -355,8 +356,8 @@
 !
 !     Local variables
 !
-      double precision x
-      double precision y
+      real(wp) x
+      real(wp) y
 
 !
 !     Convert to rectangular coordinates, storing the results in

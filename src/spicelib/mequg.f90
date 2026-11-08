@@ -1,6 +1,7 @@
 !$Procedure MEQUG  ( Matrix equal to another, general dimension )
 
       subroutine mequg ( m1, nr, nc, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      integer            nr
-      integer            nc
-      double precision   m1   ( nr,nc )
-      double precision   mout ( nr,nc )
+      integer(ip)        nr
+      integer(ip)        nc
+      real(wp)           m1   ( nr,nc )
+      real(wp)           mout ( nr,nc )
 
 ! $ Brief_I/O
 !

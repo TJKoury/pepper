@@ -1,6 +1,7 @@
 !$Procedure      ZZINILNK ( Initialize an AB cell linked-list )
 
       subroutine zzinilnk ( maxp, maxc, ncell, pntrs, cells )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,11 +24,11 @@
 
       implicit none
 
-      integer               maxp
-      integer               maxc
-      integer               ncell
-      integer               pntrs  ( * )
-      integer               cells  ( 2, * )
+      integer(ip)           maxp
+      integer(ip)           maxc
+      integer(ip)           ncell
+      integer(ip)           pntrs  ( * )
+      integer(ip)           cells  ( 2, * )
 
 ! $ Brief_I/O
 !
@@ -142,7 +143,7 @@
 !
 !-&
 
-      integer               i
+      integer(ip)           i
       logical               return
 
       if ( return () ) then

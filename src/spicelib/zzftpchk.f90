@@ -1,6 +1,7 @@
 !$Procedure ZZFTPCHK ( Private --- Check for FTP Errors )
 
       subroutine zzftpchk ( string, ftperr )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -213,8 +214,8 @@
 !
 !     SPICELIB Functions
 !
-      integer               pos
-      integer               rtrim
+      integer(ip)           pos
+      integer(ip)           rtrim
 
 !
 !     Local Variables
@@ -225,9 +226,9 @@
       character*(sizstr)    memstr
       character*(sizend)    rgtbkt
 
-      integer               fsmidx
-      integer               length
-      integer               msfidx
+      integer(ip)           fsmidx
+      integer(ip)           length
+      integer(ip)           msfidx
 
       logical               first
       logical               isther

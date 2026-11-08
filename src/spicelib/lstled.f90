@@ -1,6 +1,7 @@
 !$Procedure LSTLED ( Last double precision element less than or equal)
 
-      integer function  lstled ( x, n, array )
+      integer(ip) function  lstled ( x, n, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision   x
-      integer            n
-      double precision   array ( * )
+      real(wp)           x
+      integer(ip)        n
+      real(wp)           array ( * )
 
 ! $ Brief_I/O
 !
@@ -171,12 +172,12 @@
 !
 !     Local variables
 !
-      integer          j
+      integer(ip)      j
 
-      integer          begin
-      integer          end
-      integer          middle
-      integer          items
+      integer(ip)      begin
+      integer(ip)      end
+      integer(ip)      middle
+      integer(ip)      items
 
       items = n
 

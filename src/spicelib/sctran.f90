@@ -1,6 +1,7 @@
 !$Procedure SCTRAN  ( SCLK name/ID code translation )
 
       subroutine sctran ( clknam, clkid, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
       implicit none
 
       character*(*)         clknam
-      integer               clkid
+      integer(ip)           clkid
       logical               found
 
-      integer               maxlen
+      integer(ip)           maxlen
       parameter           ( maxlen = 32 )
 
 ! $ Brief_I/O
@@ -133,8 +134,8 @@
 !
 !     SPICELIB functions
 !
-      integer               posr
-      integer               rtrim
+      integer(ip)           posr
+      integer(ip)           rtrim
 
       logical               return
 
@@ -143,7 +144,7 @@
 !
       character*(maxlen)    tmpnam
 
-      integer               loc
+      integer(ip)           loc
 
 !
 !     Standard SPICE error handling.

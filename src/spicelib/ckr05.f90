@@ -2,6 +2,7 @@
 
       subroutine ckr05 ( handle, descr, sclkdp, tol, needav, &
                          record, found                       )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,12 +24,12 @@
       include 'ck05.inc'
       include 'ckparam.inc'
 
-      integer               handle
-      double precision      descr    ( 5 )
-      double precision      sclkdp
-      double precision      tol
+      integer(ip)           handle
+      real(wp)              descr    ( 5 )
+      real(wp)              sclkdp
+      real(wp)              tol
       logical               needav
-      double precision      record   ( * )
+      real(wp)              record   ( * )
       logical               found
 
 ! $ Brief_I/O
@@ -235,11 +236,11 @@
 !
 !     SPICELIB functions
 !
-      double precision      brcktd
-      double precision      dpmax
+      real(wp)              brcktd
+      real(wp)              dpmax
 
-      integer               lstled
-      integer               lstltd
+      integer(ip)           lstled
+      integer(ip)           lstltd
 
       logical               odd
       logical               failed
@@ -248,88 +249,88 @@
 !
 !     Local parameters
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd     = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni     = 6 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz = 100 )
 
-      integer               pbufsz
+      integer(ip)           pbufsz
       parameter           ( pbufsz = dirsiz + 1 )
 
-      integer               ctrlsz
+      integer(ip)           ctrlsz
       parameter           ( ctrlsz = 5 )
 
-      integer               parsiz
+      integer(ip)           parsiz
       parameter           ( parsiz = 4 )
 
-      integer               sbufsz
+      integer(ip)           sbufsz
       parameter           ( sbufsz = dirsiz + 3 )
 
 !
 !     Maximum polynomial degree:
 !
-      integer               maxdeg
+      integer(ip)           maxdeg
       parameter           ( maxdeg = 23 )
 
 !
 !     Local variables
 !
-      double precision      contrl ( ctrlsz )
-      double precision      dc     ( nd )
-      double precision      hepoch
-      double precision      lepoch
-      double precision      nstart
-      double precision      nnstrt
-      double precision      pbuffr ( pbufsz )
-      double precision      prevn
-      double precision      prevnn
-      double precision      prevs
-      double precision      rate
-      double precision      sbuffr ( sbufsz )
-      double precision      start
-      double precision      t
+      real(wp)              contrl ( ctrlsz )
+      real(wp)              dc     ( nd )
+      real(wp)              hepoch
+      real(wp)              lepoch
+      real(wp)              nstart
+      real(wp)              nnstrt
+      real(wp)              pbuffr ( pbufsz )
+      real(wp)              prevn
+      real(wp)              prevnn
+      real(wp)              prevs
+      real(wp)              rate
+      real(wp)              sbuffr ( sbufsz )
+      real(wp)              start
+      real(wp)              t
 
-      integer               pbegix
-      integer               begin
-      integer               bufbas
-      integer               dirbas
-      integer               end
-      integer               pendix
-      integer               first
-      integer               high
-      integer               i
-      integer               ic     ( ni )
-      integer               j
-      integer               last
-      integer               lbeg
-      integer               lend
-      integer               lhand
-      integer               lsize
-      integer               low
-      integer               maxwnd
-      integer               n
-      integer               nidir
-      integer               npdir
-      integer               nints
-      integer               npread
-      integer               nsrch
-      integer               nsread
-      integer               packsz
-      integer               pgroup
-      integer               remain
-      integer               rsize
-      integer               sbegix
-      integer               sendix
-      integer               sgroup
-      integer               subtyp
-      integer               timbas
-      integer               type
-      integer               wndsiz
-      integer               wstart
+      integer(ip)           pbegix
+      integer(ip)           begin
+      integer(ip)           bufbas
+      integer(ip)           dirbas
+      integer(ip)           end
+      integer(ip)           pendix
+      integer(ip)           first
+      integer(ip)           high
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           j
+      integer(ip)           last
+      integer(ip)           lbeg
+      integer(ip)           lend
+      integer(ip)           lhand
+      integer(ip)           lsize
+      integer(ip)           low
+      integer(ip)           maxwnd
+      integer(ip)           n
+      integer(ip)           nidir
+      integer(ip)           npdir
+      integer(ip)           nints
+      integer(ip)           npread
+      integer(ip)           nsrch
+      integer(ip)           nsread
+      integer(ip)           packsz
+      integer(ip)           pgroup
+      integer(ip)           remain
+      integer(ip)           rsize
+      integer(ip)           sbegix
+      integer(ip)           sendix
+      integer(ip)           sgroup
+      integer(ip)           subtyp
+      integer(ip)           timbas
+      integer(ip)           type
+      integer(ip)           wndsiz
+      integer(ip)           wstart
 
 !
 !     Saved variables
@@ -347,9 +348,9 @@
       data    lbeg    / -1    /
       data    lend    / -1    /
       data    lhand   / 0     /
-      data    prevn   / -1.d0 /
-      data    prevnn  / -1.d0 /
-      data    prevs   / -1.d0 /
+      data    prevn   / -1.0_wp /
+      data    prevnn  / -1.0_wp /
+      data    prevs   / -1.0_wp /
 
 
 !
@@ -391,7 +392,7 @@
 !
 !     Check the tolerance value.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
          call setmsg( 'Tolerance must be non-negative but '  // &
                       'was actually *.'                      )
          call errdp ( '*',  tol                              )

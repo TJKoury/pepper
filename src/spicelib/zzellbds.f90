@@ -1,6 +1,7 @@
 !$Procedure ZZELLBDS ( Create bounding ellipsoids )
 
       subroutine zzellbds ( a, b, hmax, hmin, amax, bmax, amin, bmin )
+      use pepper_kinds, only: wp
       implicit none
 
 ! $ Abstract
@@ -27,14 +28,14 @@
 !
 ! $ Declarations
 
-      double precision      a
-      double precision      b
-      double precision      hmax
-      double precision      hmin
-      double precision      amax
-      double precision      bmax
-      double precision      amin
-      double precision      bmin
+      real(wp)              a
+      real(wp)              b
+      real(wp)              hmax
+      real(wp)              hmin
+      real(wp)              amax
+      real(wp)              bmax
+      real(wp)              amin
+      real(wp)              bmin
 
 ! $ Brief_I/O
 !
@@ -339,7 +340,7 @@
 !
 !     Use discovery check-in.
 !
-      if ( b .le. 0.d0 ) then
+      if ( b .le. 0.0_wp ) then
 
          call chkin  ( 'ZZELLBDS'                                )
          call setmsg ( 'This routine requires B > 0, but B = #.' )
@@ -363,7 +364,7 @@
 
       end if
 
-      if ( ( b + hmin ) .le. 0.d0 ) then
+      if ( ( b + hmin ) .le. 0.0_wp ) then
 
          call chkin  ( 'ZZELLBDS'                                 )
          call setmsg ( 'This routine requires B + HMIN > 0, but ' &
@@ -377,9 +378,9 @@
 
       end if
 
-      if ( hmin .lt. 0.d0 ) then
+      if ( hmin .lt. 0.0_wp ) then
 
-         if (  ( b + (a/b)*hmin ) .le. 0.d0 ) then
+         if (  ( b + (a/b)*hmin ) .le. 0.0_wp ) then
 
             call chkin  ( 'ZZELLBDS'                                 )
             call setmsg ( 'For oblate spheroids and HMIN < 0, ' &
@@ -419,7 +420,7 @@
 !
 !     Generate radii of the outer bounding ellipsoid.
 !
-      if ( hmax .ge. 0.d0 ) then
+      if ( hmax .ge. 0.0_wp ) then
 !
 !        Pick radii of E' so that E' matches
 !

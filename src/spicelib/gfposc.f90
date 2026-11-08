@@ -4,6 +4,7 @@
                           crdsys, coord,  relate, refval, &
                           adjust, step,   cnfine, mw, &
                           nw,     work,   result )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -34,7 +35,7 @@
       include               'zzabcorr.inc'
       include               'zzholdd.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         target
@@ -44,14 +45,14 @@
       character*(*)         crdsys
       character*(*)         coord
       character*(*)         relate
-      double precision      refval
-      double precision      adjust
-      double precision      step
-      double precision      cnfine ( lbcell : * )
-      integer               mw
-      integer               nw
-      double precision      work   ( lbcell : mw, nw )
-      double precision      result ( lbcell : * )
+      real(wp)              refval
+      real(wp)              adjust
+      real(wp)              step
+      real(wp)              cnfine ( lbcell : * )
+      integer(ip)           mw
+      integer(ip)           nw
+      real(wp)              work   ( lbcell : mw, nw )
+      real(wp)              result ( lbcell : * )
 
 ! $ Brief_I/O
 !
@@ -1855,7 +1856,7 @@
 !
       logical               return
       logical               gfbail
-      integer               sized
+      integer(ip)           sized
       logical               even
 
       external              gfbail
@@ -1873,10 +1874,10 @@
 !
 !     Local parameters
 !
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
-      integer               qnpars
+      integer(ip)           qnpars
       parameter           ( qnpars = 10 )
 
       logical               nobail
@@ -1888,7 +1889,7 @@
 !
 !     Local variables
 !
-      double precision      tol
+      real(wp)              tol
       logical               ok
 
 !
@@ -1898,17 +1899,17 @@
       character*(lnsize)    qpnams ( qnpars )
       character*(lnsize)    dref
 
-      double precision      qdpars ( qnpars )
-      double precision      dvec   ( 3 )
+      real(wp)              qdpars ( qnpars )
+      real(wp)              dvec   ( 3 )
 
-      integer               qipars ( qnpars )
+      integer(ip)           qipars ( qnpars )
 
       logical               qlpars ( qnpars )
 
 !
 !     Define no-use values for DVEC and DREF
 !
-      data                  dvec  / 0.d0, 0.d0, 0.d0 /
+      data                  dvec  / 0.0_wp, 0.0_wp, 0.0_wp /
       data                  dref  / ' '  /
 
 

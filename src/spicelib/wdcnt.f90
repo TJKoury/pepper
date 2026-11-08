@@ -1,6 +1,7 @@
 !$Procedure WDCNT ( Word Count )
 
-      integer function wdcnt ( string )
+      integer(ip) function wdcnt ( string )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -126,9 +127,9 @@
 !
 !     Local variables
 !
-      integer          n
-      integer          loc
-      integer          length
+      integer(ip)      n
+      integer(ip)      loc
+      integer(ip)      length
       logical          cont
 
 

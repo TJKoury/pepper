@@ -1,6 +1,7 @@
 !$Procedure DAFPS ( DAF, pack summary )
 
       subroutine dafps ( nd, ni, dc, ic, sum )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -20,11 +21,11 @@
 
       implicit none
 
-      integer               nd
-      integer               ni
-      double precision      dc       ( * )
-      integer               ic       ( * )
-      double precision      sum      ( * )
+      integer(ip)           nd
+      integer(ip)           ni
+      real(wp)              dc       ( * )
+      integer(ip)           ic       ( * )
+      real(wp)              sum      ( * )
 
 ! $ Brief_I/O
 !
@@ -294,11 +295,11 @@
 !
 !     Local variables
 !
-      double precision      dequiv   ( 125 )
-      integer               iequiv   ( 250 )
+      real(wp)              dequiv   ( 125 )
+      integer(ip)           iequiv   ( 250 )
 
-      integer               n
-      integer               m
+      integer(ip)           n
+      integer(ip)           m
 
 !
 !     Equivalences

@@ -1,6 +1,7 @@
 !$Procedure SPCOPN ( SPK or CK, open new file )
 
       subroutine spcopn ( fname, ifname, handle )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
 
       character*(*)         fname
       character*(*)         ifname
-      integer               handle
+      integer(ip)           handle
 
 ! $ Brief_I/O
 !
@@ -175,13 +176,13 @@
 !                 file.
 !
 !
-      integer               nd
+      integer(ip)           nd
       parameter           ( nd   = 2 )
 
-      integer               ni
+      integer(ip)           ni
       parameter           ( ni   = 6 )
 
-      integer               resv
+      integer(ip)           resv
       parameter           ( resv = 0 )
 
 

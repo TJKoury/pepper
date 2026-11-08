@@ -1,6 +1,7 @@
 !$Procedure ERRINT ( Insert Integer into Error Message Text )
 
       subroutine errint ( marker, intnum )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
       include 'errhnd.inc'
 
       character*(*)        marker
-      integer              intnum
+      integer(ip)          intnum
 
 ! $ Brief_I/O
 !
@@ -219,8 +220,8 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
-      integer               frstnb
+      integer(ip)           lastnb
+      integer(ip)           frstnb
       logical               allowd
 
 !
@@ -230,7 +231,7 @@
       character*(lmsgln)    tmpmsg
       character*(11)        istrng
 
-      integer               strpos
+      integer(ip)           strpos
 
 
 !

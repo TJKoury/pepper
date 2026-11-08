@@ -2,6 +2,7 @@
 
       subroutine dskrb2 ( nv,     vrtces, np,     plates, &
                           corsys, corpar, mncor3, mxcor3 )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,14 +27,14 @@
 
       include 'dskdsc.inc'
 
-      integer               nv
-      double precision      vrtces ( 3, * )
-      integer               np
-      integer               plates ( 3, * )
-      integer               corsys
-      double precision      corpar ( * )
-      double precision      mncor3
-      double precision      mxcor3
+      integer(ip)           nv
+      real(wp)              vrtces ( 3, * )
+      integer(ip)           np
+      integer(ip)           plates ( 3, * )
+      integer(ip)           corsys
+      real(wp)              corpar ( * )
+      real(wp)              mncor3
+      real(wp)              mxcor3
 
 ! $ Brief_I/O
 !
@@ -508,10 +509,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      dpmin
-      double precision      vnorm
-      double precision      vdist
+      real(wp)              dpmax
+      real(wp)              dpmin
+      real(wp)              vnorm
+      real(wp)              vdist
 
       logical               failed
       logical               return
@@ -519,24 +520,24 @@
 !
 !     Local parameters
 !
-      double precision      third
-      parameter           ( third  = 1.d0/3.d0 )
+      real(wp)              third
+      parameter           ( third  = 1.0_wp/3.0_wp )
 !
 !
 !     Local variables
 !
-      double precision      alt
-      double precision      center ( 3 )
-      double precision      dist
-      double precision      f
-      double precision      lat
-      double precision      lon
-      double precision      maxd
-      double precision      origin ( 3 )
-      double precision      pnear  ( 3 )
-      double precision      re
+      real(wp)              alt
+      real(wp)              center ( 3 )
+      real(wp)              dist
+      real(wp)              f
+      real(wp)              lat
+      real(wp)              lon
+      real(wp)              maxd
+      real(wp)              origin ( 3 )
+      real(wp)              pnear  ( 3 )
+      real(wp)              re
 
-      integer               i
+      integer(ip)           i
 
 !
 !     Saved variables
@@ -546,7 +547,7 @@
 !
 !     Initial values
 !
-      data                  origin / 3 * 0.d0 /
+      data                  origin / 3 * 0.0_wp /
 
 
 
@@ -564,7 +565,7 @@
 !        Compute radius bounds. Start with the maximum radius.
 !        This is simply the maximum norm of the vertices.
 !
-         mxcor3 = 0.d0
+         mxcor3 = 0.0_wp
 
          do i = 1, nv
             mxcor3 = max (  vnorm( vrtces(1,i) ),  mxcor3  )

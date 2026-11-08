@@ -1,6 +1,7 @@
 !$Procedure RMDUPD ( Remove duplicates from a double precision array )
 
       subroutine rmdupd ( nelt, array )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -18,8 +19,8 @@
 
       implicit none
 
-      integer          nelt
-      double precision array   (*)
+      integer(ip)      nelt
+      real(wp) array   (*)
 
 ! $ Brief_I/O
 !
@@ -131,8 +132,8 @@
 !
 !     Local variables
 !
-      integer          i
-      integer          j
+      integer(ip)      i
+      integer(ip)      j
 
 
 

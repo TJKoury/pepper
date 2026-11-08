@@ -2,6 +2,7 @@
 
       subroutine kxtrct ( keywd,  terms, nterms, &
                           wordsq, found, substr  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -25,7 +26,7 @@
 
       character*(*)    keywd
       character*(*)    terms(*)
-      integer          nterms
+      integer(ip)      nterms
       character*(*)    wordsq
       logical          found
       character*(*)    substr
@@ -224,24 +225,24 @@
 !
 !     SPICELIB functions
 !
-      integer          wdindx
-      integer          nblen
-      integer          isrchc
+      integer(ip)      wdindx
+      integer(ip)      nblen
+      integer(ip)      isrchc
 
 !
 !     Local variables
 !
-      integer          positn
+      integer(ip)      positn
 
-      integer          berase
-      integer          eerase
-      integer          begstr
-      integer          endstr
+      integer(ip)      berase
+      integer(ip)      eerase
+      integer(ip)      begstr
+      integer(ip)      endstr
 
-      integer          start
-      integer          b
-      integer          e
-      integer          delims
+      integer(ip)      start
+      integer(ip)      b
+      integer(ip)      e
+      integer(ip)      delims
 
 !
 !     Locate the keyword within the string.

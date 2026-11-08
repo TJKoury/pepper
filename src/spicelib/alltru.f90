@@ -1,6 +1,7 @@
 !$Procedure ALLTRU ( All entries true? )
 
       logical function alltru ( logcls, n )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
       implicit none
 
       logical               logcls ( * )
-      integer               n
+      integer(ip)           n
 
 ! $ Brief_I/O
 !
@@ -117,7 +118,7 @@
 !-&
 
 
-      integer               i
+      integer(ip)           i
 
 !
 !     Just do it.

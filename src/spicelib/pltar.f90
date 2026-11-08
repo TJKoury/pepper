@@ -1,6 +1,7 @@
 !$Procedure PLTAR ( Compute area of plate set )
 
-      double precision function pltar ( nv, vrtces, np, plates )
+      real(wp) function pltar ( nv, vrtces, np, plates )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       implicit none
 
-      integer               nv
-      double precision      vrtces ( 3, nv )
-      integer               np
-      integer               plates ( 3, np )
+      integer(ip)           nv
+      real(wp)              vrtces ( 3, nv )
+      integer(ip)           np
+      integer(ip)           plates ( 3, np )
 
 ! $ Brief_I/O
 !
@@ -257,25 +258,25 @@
 !
 !     SPICELIB functions
 !
-      double precision      vnorm
+      real(wp)              vnorm
       logical               return
 
 
 !
 !     Local variables
 !
-      double precision      cp    ( 3 )
-      double precision      edge1 ( 3 )
-      double precision      edge2 ( 3 )
+      real(wp)              cp    ( 3 )
+      real(wp)              edge1 ( 3 )
+      real(wp)              edge2 ( 3 )
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
 
 !
 !     The function must have an initial value.
 !
-      pltar  =  0.d0
+      pltar  =  0.0_wp
 
 !
 !     This routine uses discovery check-in.
@@ -367,7 +368,7 @@
 !        The plate area is 1/2 of the magnitude of the
 !        cross product.
 !
-         pltar = pltar  +  ( 0.5d0 * vnorm(cp) )
+         pltar = pltar  +  ( 0.5_wp * vnorm(cp) )
 
       end do
 

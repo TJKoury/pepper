@@ -1,6 +1,7 @@
 !$Procedure SHIFTC ( Shift a character string )
 
       subroutine shiftc ( in, dir, nshift, fillc, out )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       character*(*)      in
       character*1        dir
-      integer            nshift
+      integer(ip)        nshift
       character*1        fillc
       character*(*)      out
 

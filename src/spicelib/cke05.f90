@@ -1,6 +1,7 @@
 !$Procedure CKE05 ( C-Kernel, evaluate, type 5 )
 
       subroutine cke05 ( needav, record, cmat, av, clkout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
 
 
       logical               needav
-      double precision      record   ( * )
-      double precision      cmat     ( 3, 3 )
-      double precision      av       ( 3 )
-      double precision      clkout
+      real(wp)              record   ( * )
+      real(wp)              cmat     ( 3, 3 )
+      real(wp)              av       ( 3 )
+      real(wp)              clkout
 
 ! $ Brief_I/O
 !
@@ -382,10 +383,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      lgrint
-      double precision      vdistg
-      double precision      vdotg
-      double precision      vnormg
+      real(wp)              lgrint
+      real(wp)              vdistg
+      real(wp)              vdotg
+      real(wp)              vnormg
 
       logical               return
 
@@ -396,59 +397,59 @@
 !
 !     Index of evaluation epoch in record:
 !
-      integer               epcidx
+      integer(ip)           epcidx
       parameter           ( epcidx = 1 )
 
 !
 !     Index of subtype code in record:
 !
-      integer               sbtidx
+      integer(ip)           sbtidx
       parameter           ( sbtidx = 2 )
 
 !
 !     Index of packet count in record:
 !
-      integer               cntidx
+      integer(ip)           cntidx
       parameter           ( cntidx = 3 )
 
 !
 !     Index at which packets start; packet base:
 !
-      integer               pktidx
+      integer(ip)           pktidx
       parameter           ( pktidx = 5 )
 
-      integer               pktbas
+      integer(ip)           pktbas
       parameter           ( pktbas = pktidx - 1 )
 
 !
 !     Local variables
 !
-      double precision      dq     ( 0 : 3 )
-      double precision      ds     ( 0 : 3 )
-      double precision      locrec ( ckmrsz )
-      double precision      mags
-      double precision      q      ( 0 : 3 )
-      double precision      qneg   ( 0 : 3 )
-      double precision      radtrm ( 0 : 3 )
-      double precision      rate
-      double precision      sclddq ( 0 : 3 )
-      double precision      sclkdp
-      double precision      state  ( 8 )
-      double precision      vbuff  ( 6 )
-      double precision      work   ( ckmrsz * 2,  2 )
+      real(wp)              dq     ( 0 : 3 )
+      real(wp)              ds     ( 0 : 3 )
+      real(wp)              locrec ( ckmrsz )
+      real(wp)              mags
+      real(wp)              q      ( 0 : 3 )
+      real(wp)              qneg   ( 0 : 3 )
+      real(wp)              radtrm ( 0 : 3 )
+      real(wp)              rate
+      real(wp)              sclddq ( 0 : 3 )
+      real(wp)              sclkdp
+      real(wp)              state  ( 8 )
+      real(wp)              vbuff  ( 6 )
+      real(wp)              work   ( ckmrsz * 2,  2 )
 
-      integer               from
-      integer               i
-      integer               j
-      integer               n
-      integer               newptr
-      integer               packsz
-      integer               prvptr
-      integer               subtyp
-      integer               to
-      integer               ub
-      integer               xstart
-      integer               ystart
+      integer(ip)           from
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           n
+      integer(ip)           newptr
+      integer(ip)           packsz
+      integer(ip)           prvptr
+      integer(ip)           subtyp
+      integer(ip)           to
+      integer(ip)           ub
+      integer(ip)           xstart
+      integer(ip)           ystart
 
 
 !
@@ -650,7 +651,7 @@
          mags = vnormg( state, 4 )
 
 
-         if ( mags .eq. 0.d0 ) then
+         if ( mags .eq. 0.0_wp ) then
 
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
             call errdp  ( '#',  sclkdp                               )
@@ -660,7 +661,7 @@
 
          end if
 
-         call vsclg ( 1.d0/mags, state, 4, q )
+         call vsclg ( 1.0_wp/mags, state, 4, q )
 
 
          if ( needav ) then
@@ -683,7 +684,7 @@
 !
             call moved ( state(5), 4, ds )
 
-            call vsclg ( 1.d0          / mags,  ds, 4,  sclddq )
+            call vsclg ( 1.0_wp          / mags,  ds, 4,  sclddq )
             call vsclg ( vdotg(q,ds,4) / mags,  q,  4,  radtrm )
 
             call vsubg ( sclddq, radtrm, 4, dq )
@@ -695,7 +696,7 @@
 !
 !           Scale the AV from radians/tick to radians/second.
 !
-            call vsclip ( 1.d0/rate, av )
+            call vsclip ( 1.0_wp/rate, av )
 
          end if
 
@@ -812,7 +813,7 @@
 !
          mags = vnormg( state, 4 )
 
-         if ( mags .eq. 0.d0 ) then
+         if ( mags .eq. 0.0_wp ) then
 
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
             call errdp  ( '#',  sclkdp                               )
@@ -822,7 +823,7 @@
 
          end if
 
-         call vsclg ( 1.d0/mags, state, 4, q )
+         call vsclg ( 1.0_wp/mags, state, 4, q )
 
 
          if ( needav ) then
@@ -847,7 +848,7 @@
 !
                call moved ( state(5), 4, ds )
 
-               call vsclg ( 1.d0          / mags,  ds, 4,  sclddq )
+               call vsclg ( 1.0_wp          / mags,  ds, 4,  sclddq )
                call vsclg ( vdotg(q,ds,4) / mags,  q,  4,  radtrm )
 
                call vsubg ( sclddq, radtrm, 4, dq )
@@ -859,7 +860,7 @@
 !
 !              Scale the AV from radians/tick to radians/second.
 !
-               call vsclip ( 1.d0/rate, av )
+               call vsclip ( 1.0_wp/rate, av )
 
             else
 !

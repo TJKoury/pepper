@@ -1,6 +1,7 @@
 !$Procedure RAV2XF ( Rotation and angular velocity to transform )
 
       subroutine rav2xf ( rot, av, xform )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision      rot    ( 3, 3 )
-      double precision      av     ( 3    )
-      double precision      xform  ( 6, 6 )
+      real(wp)              rot    ( 3, 3 )
+      real(wp)              av     ( 3    )
+      real(wp)              xform  ( 6, 6 )
 
 ! $ Brief_I/O
 !
@@ -321,11 +322,11 @@
 !-&
 
 
-      integer               i
-      integer               j
+      integer(ip)           i
+      integer(ip)           j
 
-      double precision      omegat ( 3, 3 )
-      double precision      drotdt ( 3, 3 )
+      real(wp)              omegat ( 3, 3 )
+      real(wp)              drotdt ( 3, 3 )
 
 !
 !     A state transformation matrix XFORM has the following form
@@ -348,7 +349,7 @@
          do j = 1,3
             xform(i,  j  ) = rot(i,j)
             xform(i+3,j+3) = rot(i,j)
-            xform(i,  j+3) = 0.0d0
+            xform(i,  j+3) = 0.0_wp
          end do
       end do
 
@@ -390,17 +391,17 @@
 !     From this discussion we can see that we need OMEGA transpose.
 !     Here it is.
 !
-      omegat(1,1) =  0.0d0
+      omegat(1,1) =  0.0_wp
       omegat(2,1) = -av(3)
       omegat(3,1) =  av(2)
 
       omegat(1,2) =  av(3)
-      omegat(2,2) =  0.0d0
+      omegat(2,2) =  0.0_wp
       omegat(3,2) = -av(1)
 
       omegat(1,3) = -av(2)
       omegat(2,3) =  av(1)
-      omegat(3,3) =  0.0d0
+      omegat(3,3) =  0.0_wp
 
       call mxm ( rot, omegat, drotdt )
 

@@ -1,6 +1,7 @@
 !$Procedure POS ( Position of substring )
 
-      integer function pos ( str, substr, start )
+      integer(ip) function pos ( str, substr, start )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -23,7 +24,7 @@
 
       character*(*)         str
       character*(*)         substr
-      integer               start
+      integer(ip)           start
 
 ! $ Brief_I/O
 !
@@ -165,10 +166,10 @@
 !     Local variables
 !
       logical               found
-      integer               lenstr
-      integer               offset
-      integer               lchnce
-      integer               b
+      integer(ip)           lenstr
+      integer(ip)           offset
+      integer(ip)           lchnce
+      integer(ip)           b
 
 
 !

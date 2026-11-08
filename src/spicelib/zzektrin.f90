@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRIN ( EK tree, insert value )
 
       subroutine zzektrin ( handle, tree, key, value )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
       include 'ekpage.inc'
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               value
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           value
 
 ! $ Brief_I/O
 !
@@ -163,56 +164,56 @@
 !
 !     Other functions
 !
-      integer               zzektrnk
+      integer(ip)           zzektrnk
 
 !
 !     Local parameters
 !
-      integer               term
+      integer(ip)           term
       parameter           ( term   = 1 )
 
-      integer               lcheck
+      integer(ip)           lcheck
       parameter           ( lcheck = term   + 1 )
 
-      integer               rcheck
+      integer(ip)           rcheck
       parameter           ( rcheck = lcheck + 1 )
 
-      integer               balnce
+      integer(ip)           balnce
       parameter           ( balnce = rcheck + 1 )
 
-      integer               splt23
+      integer(ip)           splt23
       parameter           ( splt23 = balnce + 1 )
 
-      integer               splt13
+      integer(ip)           splt13
       parameter           ( splt13 = splt23 + 1 )
 
 
 !
 !     Local variables
 !
-      integer               idx
-      integer               left
-      integer               level
-      integer               lkey
-      integer               lnode
-      integer               lpidx
-      integer               lpkey
-      integer               lval
-      integer               nkeys
-      integer               node
-      integer               noffst
-      integer               nsize
-      integer               parent
-      integer               pkey
-      integer               pkidx
-      integer               poffst
-      integer               right
-      integer               rnode
-      integer               root
-      integer               rpidx
-      integer               rpkey
-      integer               state
-      integer               trust
+      integer(ip)           idx
+      integer(ip)           left
+      integer(ip)           level
+      integer(ip)           lkey
+      integer(ip)           lnode
+      integer(ip)           lpidx
+      integer(ip)           lpkey
+      integer(ip)           lval
+      integer(ip)           nkeys
+      integer(ip)           node
+      integer(ip)           noffst
+      integer(ip)           nsize
+      integer(ip)           parent
+      integer(ip)           pkey
+      integer(ip)           pkidx
+      integer(ip)           poffst
+      integer(ip)           right
+      integer(ip)           rnode
+      integer(ip)           root
+      integer(ip)           rpidx
+      integer(ip)           rpkey
+      integer(ip)           state
+      integer(ip)           trust
 
       logical               overfl
 

@@ -1,6 +1,7 @@
 !$Procedure DVHAT ( Derivative and unit vector "V-hat" of a state)
 
       subroutine dvhat ( s1, sout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
 
       implicit none
 
-      double precision   s1   ( 6 )
-      double precision   sout ( 6 )
+      real(wp)           s1   ( 6 )
+      real(wp)           sout ( 6 )
 
 ! $ Brief_I/O
 !
@@ -253,16 +254,16 @@
 !
 !     Local Constants.
 !
-      integer               pos
+      integer(ip)           pos
       parameter           ( pos = 1 )
 
-      integer               vel
+      integer(ip)           vel
       parameter           ( vel = 4 )
 
 !
 !     Local variables.
 !
-      double precision      length
+      real(wp)              length
 
 !
 !     Get the position portion of the output state and the length of
@@ -270,7 +271,7 @@
 !
       call unorm ( s1(pos), sout(pos), length )
 
-      if ( length .eq. 0.0d0 ) then
+      if ( length .eq. 0.0_wp ) then
 !
 !        If the length of the input position is zero, just copy
 !        the input velocity to the output velocity.
@@ -285,7 +286,7 @@
 !        input position.
 !
          call vperp  ( s1(vel),      sout(pos), sout(vel) )
-         call vsclip ( 1.0d0/length,            sout(vel) )
+         call vsclip ( 1.0_wp/length,            sout(vel) )
 
       end if
 

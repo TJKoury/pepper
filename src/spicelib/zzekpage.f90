@@ -2,6 +2,7 @@
 
       subroutine zzekpage (  handle,  type,   addrss,  stat,  p, &
                              pagec,   paged,  pagei,   base,  value  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,16 +27,16 @@
       include 'ekpage.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               type
-      integer               addrss
+      integer(ip)           handle
+      integer(ip)           type
+      integer(ip)           addrss
       character*(*)         stat
-      integer               p
+      integer(ip)           p
       character*(*)         pagec
-      double precision      paged ( * )
-      integer               pagei ( * )
-      integer               base
-      integer               value
+      real(wp)              paged ( * )
+      integer(ip)           pagei ( * )
+      integer(ip)           base
+      integer(ip)           value
 
 ! $ Brief_I/O
 !
@@ -147,26 +148,26 @@
       character*(pgsizc)    cfill
       character*(5)         encpag
 
-      double precision      dfill  ( pgsizd )
-      double precision      dpptr
+      real(wp)              dfill  ( pgsizd )
+      real(wp)              dpptr
 
-      integer               addr
-      integer               e
-      integer               forwrd
-      integer               freec
-      integer               freed
-      integer               freei
-      integer               ifill  ( pgsizi )
-      integer               l
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               nfreec
-      integer               nfreed
-      integer               nfreei
-      integer               npc
-      integer               npd
-      integer               npi
+      integer(ip)           addr
+      integer(ip)           e
+      integer(ip)           forwrd
+      integer(ip)           freec
+      integer(ip)           freed
+      integer(ip)           freei
+      integer(ip)           ifill  ( pgsizi )
+      integer(ip)           l
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           nfreec
+      integer(ip)           nfreed
+      integer(ip)           nfreei
+      integer(ip)           npc
+      integer(ip)           npd
+      integer(ip)           npi
 
 !
 !     Saved variables
@@ -320,7 +321,7 @@
 !     Initialize our fill buffers.
 !
       call fillc ( ' ',   1,       cfill )
-      call filld ( 0.d0,  pgsizd,  dfill )
+      call filld ( 0.0_wp,  pgsizd,  dfill )
       call filli ( 0,     pgsizi,  ifill )
 
 !
@@ -1030,7 +1031,7 @@
 !
          addr  =  (p-1)*pgsizd + 1
 
-         call dasudd ( handle, addr, addr, dble(freed) )
+         call dasudd ( handle, addr, addr, real(freed, wp) )
 
 !
 !        Update the current d.p. free pointer and free page count.

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRIT ( EK tree, initialize )
 
       subroutine zzektrit ( handle, tree )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,8 +22,8 @@
       include 'ektree.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
+      integer(ip)           handle
+      integer(ip)           tree
 
 ! $ Brief_I/O
 !
@@ -106,9 +107,9 @@
 !
 !     Local variables
 !
-      integer               base
-      integer               p
-      integer               page  ( pgsizi )
+      integer(ip)           base
+      integer(ip)           p
+      integer(ip)           page  ( pgsizi )
 
 !
 !     Saved variables

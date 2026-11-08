@@ -1,6 +1,7 @@
 !$Procedure SYENQI ( Enqueue a value onto a symbol )
 
       subroutine syenqi ( name, value, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,14 +21,14 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
-      integer               value
+      integer(ip)           value
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      integer               tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      integer(ip)           tabval     ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -171,21 +172,21 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
-      integer               cardi
-      integer               lstlec
+      integer(ip)           cardc
+      integer(ip)           cardi
+      integer(ip)           lstlec
       logical               return
-      integer               sizei
-      integer               sumai
+      integer(ip)           sizei
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               nval
+      integer(ip)           nsym
+      integer(ip)           nval
 
-      integer               locsym
-      integer               locval
+      integer(ip)           locsym
+      integer(ip)           locval
       logical               oldsym
 
 

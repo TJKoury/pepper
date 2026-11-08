@@ -1,6 +1,7 @@
 !$Procedure FNDNWD ( Find the next word after an index )
 
       subroutine fndnwd ( string, start, b, e )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,9 +23,9 @@
       implicit none
 
       character*(*)    string
-      integer          start
-      integer          b
-      integer          e
+      integer(ip)      start
+      integer(ip)      b
+      integer(ip)      e
 
 ! $ Brief_I/O
 !
@@ -151,11 +152,11 @@
 !
 !     Local Variables
 !
-      integer               blank
-      integer               l
-      integer               i
-      integer               n
-      integer               size
+      integer(ip)           blank
+      integer(ip)           l
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           size
 
       logical               lastn
       logical               thisb

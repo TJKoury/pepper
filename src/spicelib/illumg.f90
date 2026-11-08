@@ -3,6 +3,7 @@
       subroutine illumg ( method, target, ilusrc, et, &
                           fixref, abcorr, obsrvr, spoint, &
                           trgepc, srfvec, phase,  incdnc, emissn )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -42,16 +43,16 @@
       character*(*)         method
       character*(*)         target
       character*(*)         ilusrc
-      double precision      et
+      real(wp)              et
       character*(*)         fixref
       character*(*)         abcorr
       character*(*)         obsrvr
-      double precision      spoint ( 3 )
-      double precision      trgepc
-      double precision      srfvec ( 3 )
-      double precision      phase
-      double precision      incdnc
-      double precision      emissn
+      real(wp)              spoint ( 3 )
+      real(wp)              trgepc
+      real(wp)              srfvec ( 3 )
+      real(wp)              phase
+      real(wp)              incdnc
+      real(wp)              emissn
 
 ! $ Brief_I/O
 !
@@ -1155,7 +1156,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vsep
+      real(wp)              vsep
 
       logical               eqstr
       logical               failed
@@ -1167,19 +1168,19 @@
       character*(*)         rname
       parameter           ( rname  =  'ILLUMG' )
 
-      integer               lnsize
+      integer(ip)           lnsize
       parameter           ( lnsize = 80 )
 
 !
 !     Saved body name length.
 !
-      integer               maxl
+      integer(ip)           maxl
       parameter           ( maxl   = 36 )
 
 !
 !     Saved frame name length.
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -1192,24 +1193,24 @@
       character*(sublen)    subtyp
       character*(tmtlen)    trmstr
 
-      double precision      lt
-      double precision      lti
-      double precision      normal ( 3 )
-      double precision      obspos ( 3 )
-      double precision      opstat ( 6 )
-      double precision      radii  ( 3 )
-      double precision      s
-      double precision      tistat ( 6 )
+      real(wp)              lt
+      real(wp)              lti
+      real(wp)              normal ( 3 )
+      real(wp)              obspos ( 3 )
+      real(wp)              opstat ( 6 )
+      real(wp)              radii  ( 3 )
+      real(wp)              s
+      real(wp)              tistat ( 6 )
 
-      integer               center
-      integer               fxfcde
-      integer               nsurf
-      integer               obscde
-      integer               shape
-      integer               trgcde
-      integer               type
-      integer               typeid
-      integer               srflst ( maxsrf )
+      integer(ip)           center
+      integer(ip)           fxfcde
+      integer(ip)           nsurf
+      integer(ip)           obscde
+      integer(ip)           shape
+      integer(ip)           trgcde
+      integer(ip)           type
+      integer(ip)           typeid
+      integer(ip)           srflst ( maxsrf )
 
       logical               attblk ( nabcor )
       logical               first
@@ -1222,27 +1223,27 @@
 !
 !     Saved name/ID item declarations.
 !
-      integer               svctr1 ( ctrsiz )
+      integer(ip)           svctr1 ( ctrsiz )
       character*(maxl)      svtarg
-      integer               svtcde
+      integer(ip)           svtcde
       logical               svfnd1
 
-      integer               svctr2 ( ctrsiz )
+      integer(ip)           svctr2 ( ctrsiz )
       character*(maxl)      svobsr
-      integer               svobsc
+      integer(ip)           svobsc
       logical               svfnd2
 
 !
 !     Saved frame name/ID item declarations.
 !
-      integer               svctr3 ( ctrsiz )
+      integer(ip)           svctr3 ( ctrsiz )
       character*(frnmln)    svfref
-      integer               svrefc
+      integer(ip)           svrefc
 
 !
 !     Saved surface name/ID item declarations.
 !
-      integer               svctr4 ( ctrsiz )
+      integer(ip)           svctr4 ( ctrsiz )
 
 
 !
@@ -1568,13 +1569,13 @@
       if ( uselt ) then
 
          if ( xmit ) then
-            s =  1.d0
+            s =  1.0_wp
          else
-            s = -1.d0
+            s = -1.0_wp
          end if
 
       else
-         s =  0.d0
+         s =  0.0_wp
       end if
 
 !

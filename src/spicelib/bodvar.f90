@@ -1,6 +1,7 @@
 !$Procedure BODVAR ( Return values from the kernel pool )
 
       subroutine bodvar ( body, item, dim, values )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,10 +26,10 @@
 
       implicit none
 
-      integer               body
+      integer(ip)           body
       character*(*)         item
-      integer               dim
-      double precision      values  ( * )
+      integer(ip)           dim
+      real(wp)              values  ( * )
 
 ! $ Brief_I/O
 !

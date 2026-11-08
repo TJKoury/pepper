@@ -1,6 +1,7 @@
 !$Procedure ZZSPKPA1 ( S/P Kernel, apparent position only )
 
       subroutine zzspkpa1 ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,13 +20,13 @@
 
       implicit none
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
-      double precision      sobs     ( 6 )
+      real(wp)              sobs     ( 6 )
       character*(*)         abcorr
-      double precision      ptarg    ( 3 )
-      double precision      lt
+      real(wp)              ptarg    ( 3 )
+      real(wp)              lt
 
 ! $ Brief_I/O
 !
@@ -624,10 +625,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      clight
-      double precision      vnorm
+      real(wp)              clight
+      real(wp)              vnorm
 
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
       logical               odd
@@ -636,45 +637,45 @@
 !
 !     Local parameters
 !
-      integer               corlen
+      integer(ip)           corlen
       parameter           ( corlen = 5 )
 
-      integer               nflags
+      integer(ip)           nflags
       parameter           ( nflags = 9 )
 !
 !     Indices of flags in the FLAGS array:
 !
-      integer               ixnone
+      integer(ip)           ixnone
       parameter           ( ixnone = 1 )
 
-      integer               ixlt
+      integer(ip)           ixlt
       parameter           ( ixlt   = ixnone + 1 )
 
-      integer               ixlts
+      integer(ip)           ixlts
       parameter           ( ixlts  = ixlt   + 1 )
 
-      integer               ixcn
+      integer(ip)           ixcn
       parameter           ( ixcn   = ixlts  + 1 )
 
-      integer               ixcns
+      integer(ip)           ixcns
       parameter           ( ixcns  = ixcn   + 1 )
 
-      integer               ixxlt
+      integer(ip)           ixxlt
       parameter           ( ixxlt  = ixcns  + 1 )
 
-      integer               ixxlts
+      integer(ip)           ixxlts
       parameter           ( ixxlts = ixxlt  + 1 )
 
-      integer               ixxcn
+      integer(ip)           ixxcn
       parameter           ( ixxcn  = ixxlts + 1 )
 
-      integer               ixxcns
+      integer(ip)           ixxcns
       parameter           ( ixxcns = ixxcn  + 1 )
 
 !
 !     NAIF ID code for the solar system barycenter:
 !
-      integer               ssb
+      integer(ip)           ssb
       parameter           ( ssb    = 0 )
 
 !
@@ -684,12 +685,12 @@
       character*(corlen)    flags  ( nflags )
       character*(corlen)    prvcor
 
-      double precision      tpos   ( 3 )
+      real(wp)              tpos   ( 3 )
 
-      integer               i
-      integer               ltsign
-      integer               maxitr
-      integer               refid
+      integer(ip)           i
+      integer(ip)           ltsign
+      integer(ip)           maxitr
+      integer(ip)           refid
 
       logical               first
       logical               usecn

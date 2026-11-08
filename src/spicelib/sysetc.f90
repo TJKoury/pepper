@@ -1,6 +1,7 @@
 !$Procedure SYSETC ( Set the value associated with a symbol )
 
       subroutine sysetc ( name, value, tabsym, tabptr, tabval )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,13 +21,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         name
       character*(*)         value
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
       character*(*)         tabval     ( lbcell:* )
 
 ! $ Brief_I/O
@@ -185,24 +186,24 @@
 !     SPICELIB functions
 !
 
-      integer               cardc
-      integer               cardi
-      integer               lstlec
+      integer(ip)           cardc
+      integer(ip)           cardi
+      integer(ip)           lstlec
       logical               return
-      integer               sizec
-      integer               sizei
-      integer               sumai
+      integer(ip)           sizec
+      integer(ip)           sizei
+      integer(ip)           sumai
 
 !
 !     Local variables
 !
-      integer               nsym
-      integer               nptr
-      integer               nval
+      integer(ip)           nsym
+      integer(ip)           nptr
+      integer(ip)           nval
 
-      integer               locsym
-      integer               locval
-      integer               dimval
+      integer(ip)           locsym
+      integer(ip)           locval
+      integer(ip)           dimval
       logical               oldsym
 
 

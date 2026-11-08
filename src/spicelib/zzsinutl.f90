@@ -3,6 +3,7 @@
       subroutine zzsinutl ( trgcde, nsurf,  srflst, et,    fixfid, &
                             vertex, raydir, spoint, found, minrad, &
                             maxrad, pnear,  dist                  )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -30,19 +31,19 @@
 
       include 'dsk.inc'
 
-      integer               trgcde
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      et
-      integer               fixfid
-      double precision      vertex ( 3 )
-      double precision      raydir ( 3 )
-      double precision      spoint ( 3 )
+      integer(ip)           trgcde
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              et
+      integer(ip)           fixfid
+      real(wp)              vertex ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              spoint ( 3 )
       logical               found
-      double precision      minrad
-      double precision      maxrad
-      double precision      pnear  ( 3 )
-      double precision      dist
+      real(wp)              minrad
+      real(wp)              maxrad
+      real(wp)              pnear  ( 3 )
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -203,24 +204,24 @@
 !
 !     Target types:
 !
-      integer               elltrg
+      integer(ip)           elltrg
       parameter           ( elltrg = 1 )
 
-      integer               dsktrg
+      integer(ip)           dsktrg
       parameter           ( dsktrg = 2 )
 
 !
 !     Local variables
 !
-      double precision      savmnr
-      double precision      savmxr
-      double precision      savrad ( 3 )
+      real(wp)              savmnr
+      real(wp)              savmxr
+      real(wp)              savrad ( 3 )
 
-      integer               savfid
-      integer               savnsf
-      integer               savsrf ( maxsrf )
-      integer               savtrg
-      integer               savtyp
+      integer(ip)           savfid
+      integer(ip)           savnsf
+      integer(ip)           savsrf ( maxsrf )
+      integer(ip)           savtrg
+      integer(ip)           savtyp
 
 !
 !     Saved variables

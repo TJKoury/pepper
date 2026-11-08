@@ -1,6 +1,7 @@
 !$Procedure RMAIND ( Remainder --- double precision )
 
       subroutine rmaind ( num, denom, q, rem )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,10 +21,10 @@
 
       implicit none
 
-      double precision      num
-      double precision      denom
-      double precision      q
-      double precision      rem
+      real(wp)              num
+      real(wp)              denom
+      real(wp)              q
+      real(wp)              rem
 
 ! $ Brief_I/O
 !
@@ -119,13 +120,13 @@
 !-&
 
 
-      double precision      mynum
-      double precision      mydnom
+      real(wp)              mynum
+      real(wp)              mydnom
 
 !
 !     Take care of the zero-denominator case first
 !
-      if ( denom .eq. 0.0d0 ) then
+      if ( denom .eq. 0.0_wp ) then
          call chkin  ( 'RMAIND'                                       )
          call setmsg ( 'Attempting to compute a quotient with a '     // &
                        'divide by zero.'                              )
@@ -140,8 +141,8 @@
       q   = dint ( mynum / mydnom )
       rem = mynum -    q * mydnom
 
-      if ( rem .lt. 0.0d0 ) then
-         q   = q   - 1.0d0
+      if ( rem .lt. 0.0_wp ) then
+         q   = q   - 1.0_wp
          rem = rem + mydnom
       end if
 

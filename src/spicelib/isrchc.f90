@@ -1,6 +1,7 @@
 !$Procedure ISRCHC  ( Search in a character array )
 
-      integer function  isrchc ( value, ndim, array )
+      integer(ip) function  isrchc ( value, ndim, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,7 +23,7 @@
       implicit none
 
       character*(*)    value
-      integer          ndim
+      integer(ip)      ndim
       character*(*)    array ( * )
 
 ! $ Brief_I/O
@@ -126,7 +127,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       isrchc = 0

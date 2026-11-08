@@ -1,6 +1,7 @@
 !$Procedure APPROX ( Approximate equality )
 
       logical function approx ( x, y, tol )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
 
       implicit none
 
-      double precision      x
-      double precision      y
-      double precision      tol
+      real(wp)              x
+      real(wp)              y
+      real(wp)              tol
 
 ! $ Brief_I/O
 !

@@ -1,6 +1,7 @@
 !$Procedure DET  ( Determinant of a double precision 3x3 matrix )
 
-      double precision function  det ( m1 )
+      real(wp) function  det ( m1 )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,7 +20,7 @@
 
       implicit none
 
-      double precision    m1 ( 3,3 )
+      real(wp)            m1 ( 3,3 )
 
 ! $ Brief_I/O
 !

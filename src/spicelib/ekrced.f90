@@ -2,6 +2,7 @@
 
       subroutine ekrced ( handle,  segno,  recno,  column, &
                           nvals,   dvals,  isnull          )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,12 +27,12 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           recno
       character*(*)         column
-      integer               nvals
-      double precision      dvals  ( * )
+      integer(ip)           nvals
+      real(wp)              dvals  ( * )
       logical               isnull
 
 ! $ Brief_I/O
@@ -198,16 +199,16 @@
 !
 !     Non-SPICELIB functions
 !
-      integer               zzekesiz
+      integer(ip)           zzekesiz
 
 !
 !     Local variables
 !
-      integer               coldsc ( cdscsz )
-      integer               class
-      integer               dtype
-      integer               recptr
-      integer               segdsc ( sdscsz )
+      integer(ip)           coldsc ( cdscsz )
+      integer(ip)           class
+      integer(ip)           dtype
+      integer(ip)           recptr
+      integer(ip)           segdsc ( sdscsz )
 
       logical               found
 

@@ -2,6 +2,7 @@
 
       subroutine sc01 ( sc,     clkstr, ticks,  sclkdp, et, &
                         npartn, parbeg, parend, clktyp     )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -25,15 +26,15 @@
       include               'zzctr.inc'
       include               'zzsc01.inc'
 
-      integer               sc
+      integer(ip)           sc
       character*(*)         clkstr
-      double precision      ticks
-      double precision      sclkdp
-      double precision      et
-      integer               npartn
-      double precision      parbeg ( * )
-      double precision      parend ( * )
-      integer               clktyp
+      real(wp)              ticks
+      real(wp)              sclkdp
+      real(wp)              et
+      integer(ip)           npartn
+      real(wp)              parbeg ( * )
+      real(wp)              parend ( * )
+      integer(ip)           clktyp
 
 ! $ Brief_I/O
 !
@@ -327,9 +328,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      unitim
+      real(wp)              unitim
 
-      integer               sumai
+      integer(ip)           sumai
 
       logical               failed
       logical               return
@@ -339,16 +340,16 @@
 !
 
 
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen =    240 )
 
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen =    320 )
 
-      integer               initsc
+      integer(ip)           initsc
       parameter           ( initsc =      0 )
 
-      integer               kvnmln
+      integer(ip)           kvnmln
       parameter           ( kvnmln =     32 )
 
 !
@@ -358,10 +359,10 @@
 !
 !     SCLK pool:
 !
-      integer               hdsclk ( mxnclk )
-      integer               scpool ( lbsngl : mxnclk )
-      integer               clklst ( mxnclk )
-      integer               scbase ( mxnclk )
+      integer(ip)           hdsclk ( mxnclk )
+      integer(ip)           scpool ( lbsngl : mxnclk )
+      integer(ip)           clklst ( mxnclk )
+      integer(ip)           scbase ( mxnclk )
 
 !
 !     Other local variables
@@ -373,48 +374,48 @@
       character*(errlen)    error
       character*(kvnmln)    kvname
 
-      double precision      cmptks ( mxnfld )
-      double precision      cmpval ( mxnfld )
-      double precision      const
-      double precision      dpbuff ( dbufsz )
-      double precision      dval
-      double precision      maxwid
-      double precision      mxtick
-      double precision      partim
-      double precision      rate
-      double precision      rem
-      double precision      savcmp
-      double precision      tikdif
-      double precision      tikmsc
-      double precision      timdif
+      real(wp)              cmptks ( mxnfld )
+      real(wp)              cmpval ( mxnfld )
+      real(wp)              const
+      real(wp)              dpbuff ( dbufsz )
+      real(wp)              dval
+      real(wp)              maxwid
+      real(wp)              mxtick
+      real(wp)              partim
+      real(wp)              rate
+      real(wp)              rem
+      real(wp)              savcmp
+      real(wp)              tikdif
+      real(wp)              tikmsc
+      real(wp)              timdif
 
-      integer               cmpwid ( mxnfld )
-      integer               cofbas
-      integer               delcde
-      integer               dpfree
-      integer               end
-      integer               endbas
-      integer               i
-      integer               ifree
-      integer               intbuf ( ibufsz )
-      integer               j
-      integer               length ( mxnfld )
-      integer               lower
-      integer               middle
-      integer               modbas
-      integer               n
-      integer               ncoeff
-      integer               needed
-      integer               nfield
-      integer               npart
-      integer               offbas
-      integer               pad
-      integer               pntr
-      integer               polctr ( ctrsiz )
-      integer               prvsc
-      integer               strbas
-      integer               timsys
-      integer               upper
+      integer(ip)           cmpwid ( mxnfld )
+      integer(ip)           cofbas
+      integer(ip)           delcde
+      integer(ip)           dpfree
+      integer(ip)           end
+      integer(ip)           endbas
+      integer(ip)           i
+      integer(ip)           ifree
+      integer(ip)           intbuf ( ibufsz )
+      integer(ip)           j
+      integer(ip)           length ( mxnfld )
+      integer(ip)           lower
+      integer(ip)           middle
+      integer(ip)           modbas
+      integer(ip)           n
+      integer(ip)           ncoeff
+      integer(ip)           needed
+      integer(ip)           nfield
+      integer(ip)           npart
+      integer(ip)           offbas
+      integer(ip)           pad
+      integer(ip)           pntr
+      integer(ip)           polctr ( ctrsiz )
+      integer(ip)           prvsc
+      integer(ip)           strbas
+      integer(ip)           timsys
+      integer(ip)           upper
 
       logical               found
       logical               pass1
@@ -424,11 +425,11 @@
 !
 !     Declarations of statement functions
 !
-      double precision      coeffs
-      double precision      moduli
-      double precision      offset
-      double precision      prend
-      double precision      prstrt
+      real(wp)              coeffs
+      real(wp)              moduli
+      real(wp)              offset
+      real(wp)              prend
+      real(wp)              prstrt
 
 !
 !     Saved variables
@@ -936,7 +937,7 @@
 !
 !     Determine how many ticks is each field is worth.
 !
-      cmptks( nfield ) = 1.d0
+      cmptks( nfield ) = 1.0_wp
 
       do  i = nfield-1, 1, -1
          cmptks(i) = cmptks(i+1) * moduli(i+1)
@@ -1006,7 +1007,7 @@
          savcmp    = cmpval(i)
          cmpval(i) = cmpval(i) - offset(i)
 
-         if  ( anint( cmpval(i) ) .lt. 0.d0  )   then
+         if  ( anint( cmpval(i) ) .lt. 0.0_wp  )   then
 
             pass1 = .true.
 
@@ -1029,7 +1030,7 @@
 !     the number of ticks each component count represents, and then
 !     add up the results.
 !
-      ticks = 0.d0
+      ticks = 0.0_wp
 
       do i = 1, n
          ticks = ticks + cmpval(i)*cmptks(i)
@@ -1389,7 +1390,7 @@
 !
 !     Determine how many ticks each field is worth.
 !
-      cmptks( nfield ) = 1.d0
+      cmptks( nfield ) = 1.0_wp
 
       do  i = nfield-1, 1, -1
          cmptks(i) = cmptks(i+1) * moduli(i+1)
@@ -1400,9 +1401,9 @@
 !
       do i  = 1, nfield
 
-         maxwid     =  moduli(i) + offset(i) - 1.d0
+         maxwid     =  moduli(i) + offset(i) - 1.0_wp
 
-         cmpwid(i)  =  1 + int ( log10( maxwid + 0.5d0 ) )
+         cmpwid(i)  =  1 + int ( log10( maxwid + 0.5_wp ) )
 
       end do
 
@@ -1854,7 +1855,7 @@
 !     of the last partition, in total ticks since spacecraft clock
 !     start.
 !
-      mxtick = 0.d0
+      mxtick = 0.0_wp
 
       do i = 1, npart
          mxtick  =  anint (  prend(i) - prstrt(i) + mxtick  )
@@ -1969,13 +1970,13 @@
 !     SCLK count, so we use the conversion factor TIKMSC to change the
 !     rate to seconds per tick.
 !
-      tikmsc = 1.0d0
+      tikmsc = 1.0_wp
 
       do i = nfield, 2, -1
          tikmsc  =  tikmsc * moduli(i)
       end do
 
-      if (  coeffs( 3, lower ) .le. 0.d0  ) then
+      if (  coeffs( 3, lower ) .le. 0.0_wp  ) then
 
          pass1 = .true.
 
@@ -2528,7 +2529,7 @@
       timdif =  partim  -  coeffs( 2, lower )
       const  =             coeffs( 1, lower )
 
-      if (  coeffs( 3, lower ) .le. 0.d0  ) then
+      if (  coeffs( 3, lower ) .le. 0.0_wp  ) then
 
          pass1 = .true.
 
@@ -2540,13 +2541,13 @@
       end if
 
 
-      tikmsc = 1.0d0
+      tikmsc = 1.0_wp
 
       do i = nfield, 2, -1
          tikmsc  =  tikmsc * moduli(i)
       end do
 
-      rate   =  1.d0   /   (  coeffs(3, lower) / tikmsc  )
+      rate   =  1.0_wp   /   (  coeffs(3, lower) / tikmsc  )
 
       sclkdp =  anint (  const   +   ( rate * timdif )  )
 
@@ -3035,7 +3036,7 @@
       timdif =  partim  -  coeffs( 2, lower )
       const  =             coeffs( 1, lower )
 
-      if (  coeffs( 3, lower ) .le. 0.d0  ) then
+      if (  coeffs( 3, lower ) .le. 0.0_wp  ) then
 
          pass1 = .true.
 
@@ -3048,13 +3049,13 @@
       end if
 
 
-      tikmsc = 1.0d0
+      tikmsc = 1.0_wp
 
       do i = nfield, 2, -1
          tikmsc  =  tikmsc * moduli(i)
       end do
 
-      rate   =  1.d0   /  (  coeffs(3, lower) / tikmsc  )
+      rate   =  1.0_wp   /  (  coeffs(3, lower) / tikmsc  )
 
       sclkdp =  const  +  ( rate * timdif )
 

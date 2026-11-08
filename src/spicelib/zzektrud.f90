@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRUD ( EK tree, unbalanced deletion )
 
       subroutine zzektrud ( handle, tree, key, trgkey, undrfl )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
       include 'ekpage.inc'
       include 'ektree.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               trgkey
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           trgkey
       logical               undrfl
 
 ! $ Brief_I/O
@@ -163,43 +164,43 @@
 !
 !     Local variables
 !
-      integer               datptr
-      integer               depth
-      integer               i
-      integer               keyidx
-      integer               leaf
-      integer               level
-      integer               loffst
-      integer               lpage  ( pgsizi )
-      integer               lpidx
-      integer               lpidx2
-      integer               lpkey
-      integer               lpkey2
-      integer               lsib
-      integer               lsib2
-      integer               nkeys
-      integer               nlkeys
-      integer               nnode
-      integer               parent
-      integer               paren2
-      integer               pkey
-      integer               pkey2
-      integer               poffs2
-      integer               poffst
-      integer               prev
-      integer               root
-      integer               rpage  ( pgsizi )
-      integer               rpidx
-      integer               rpidx2
-      integer               rpkey
-      integer               rpkey2
-      integer               rsib
-      integer               rsib2
-      integer               target
-      integer               tnkeys
-      integer               toffst
-      integer               totkey
-      integer               tpage  ( pgsizi )
+      integer(ip)           datptr
+      integer(ip)           depth
+      integer(ip)           i
+      integer(ip)           keyidx
+      integer(ip)           leaf
+      integer(ip)           level
+      integer(ip)           loffst
+      integer(ip)           lpage  ( pgsizi )
+      integer(ip)           lpidx
+      integer(ip)           lpidx2
+      integer(ip)           lpkey
+      integer(ip)           lpkey2
+      integer(ip)           lsib
+      integer(ip)           lsib2
+      integer(ip)           nkeys
+      integer(ip)           nlkeys
+      integer(ip)           nnode
+      integer(ip)           parent
+      integer(ip)           paren2
+      integer(ip)           pkey
+      integer(ip)           pkey2
+      integer(ip)           poffs2
+      integer(ip)           poffst
+      integer(ip)           prev
+      integer(ip)           root
+      integer(ip)           rpage  ( pgsizi )
+      integer(ip)           rpidx
+      integer(ip)           rpidx2
+      integer(ip)           rpkey
+      integer(ip)           rpkey2
+      integer(ip)           rsib
+      integer(ip)           rsib2
+      integer(ip)           target
+      integer(ip)           tnkeys
+      integer(ip)           toffst
+      integer(ip)           totkey
+      integer(ip)           tpage  ( pgsizi )
 
 !
 !     Use discovery check-in.

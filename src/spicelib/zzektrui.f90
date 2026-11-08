@@ -1,6 +1,7 @@
 !$Procedure      ZZEKTRUI ( EK tree, unbalanced insertion )
 
       subroutine zzektrui ( handle, tree, key, value, overfl )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -22,10 +23,10 @@
       include 'ektree.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               tree
-      integer               key
-      integer               value
+      integer(ip)           handle
+      integer(ip)           tree
+      integer(ip)           key
+      integer(ip)           value
       logical               overfl
 
 ! $ Brief_I/O
@@ -154,43 +155,43 @@
 !
 !     Local variables
 !
-      integer               datloc
-      integer               datptr
-      integer               depth
-      integer               i
-      integer               idx
-      integer               keyloc
-      integer               kidloc
-      integer               level
-      integer               lpidx
-      integer               lpidx2
-      integer               lpkey
-      integer               lpkey2
-      integer               lsib
-      integer               lsib2
-      integer               next
-      integer               nkeys
-      integer               nnode
-      integer               parent
-      integer               paren2
-      integer               pkey
-      integer               pkey2
-      integer               poffs2
-      integer               poffst
-      integer               prev
-      integer               root
-      integer               rpage  ( pgsizi )
-      integer               rpidx
-      integer               rpidx2
-      integer               rpkey
-      integer               rpkey2
-      integer               rsib
-      integer               rsib2
-      integer               target
-      integer               tnkeys
-      integer               toffst
-      integer               totkey
-      integer               tpage  ( pgsizi )
+      integer(ip)           datloc
+      integer(ip)           datptr
+      integer(ip)           depth
+      integer(ip)           i
+      integer(ip)           idx
+      integer(ip)           keyloc
+      integer(ip)           kidloc
+      integer(ip)           level
+      integer(ip)           lpidx
+      integer(ip)           lpidx2
+      integer(ip)           lpkey
+      integer(ip)           lpkey2
+      integer(ip)           lsib
+      integer(ip)           lsib2
+      integer(ip)           next
+      integer(ip)           nkeys
+      integer(ip)           nnode
+      integer(ip)           parent
+      integer(ip)           paren2
+      integer(ip)           pkey
+      integer(ip)           pkey2
+      integer(ip)           poffs2
+      integer(ip)           poffst
+      integer(ip)           prev
+      integer(ip)           root
+      integer(ip)           rpage  ( pgsizi )
+      integer(ip)           rpidx
+      integer(ip)           rpidx2
+      integer(ip)           rpkey
+      integer(ip)           rpkey2
+      integer(ip)           rsib
+      integer(ip)           rsib2
+      integer(ip)           target
+      integer(ip)           tnkeys
+      integer(ip)           toffst
+      integer(ip)           totkey
+      integer(ip)           tpage  ( pgsizi )
 
 !
 !     Use discovery check-in.

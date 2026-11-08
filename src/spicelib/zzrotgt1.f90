@@ -1,6 +1,7 @@
 !$Procedure      ZZROTGT1 ( Frame get rotation )
 
       subroutine zzrotgt1 ( infrm, et, rotate, outfrm, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,10 +22,10 @@
 
       include              'frmtyp.inc'
 
-      integer               infrm
-      double precision      et
-      double precision      rotate ( 3, 3 )
-      integer               outfrm
+      integer(ip)           infrm
+      real(wp)              et
+      real(wp)              rotate ( 3, 3 )
+      integer(ip)           outfrm
       logical               found
 
 ! $ Brief_I/O
@@ -158,11 +159,11 @@
 !
       character*(6)         versn
 
-      integer               center
-      integer               type
-      integer               typeid
+      integer(ip)           center
+      integer(ip)           type
+      integer(ip)           typeid
 
-      double precision      tipm  ( 3, 3 )
+      real(wp)              tipm  ( 3, 3 )
 
 !
 !     Saved variables

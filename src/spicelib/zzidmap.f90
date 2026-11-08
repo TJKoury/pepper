@@ -1,6 +1,7 @@
 !$Procedure ZZIDMAP ( Private --- SPICE body ID/name assignments )
 
       subroutine  zzidmap( bltcod, bltnam )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       include              'zzbodtrn.inc'
 
-      integer              bltcod(nperm)
+      integer(ip)          bltcod(nperm)
       character*(maxl)     bltnam(nperm)
 
 ! $ Brief_I/O

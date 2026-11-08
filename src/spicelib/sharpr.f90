@@ -1,6 +1,7 @@
 !$Procedure SHARPR ( Sharpen a rotation )
 
       subroutine sharpr ( rot )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
 
       implicit none
 
-      double precision      rot ( 3, 3 )
+      real(wp)              rot ( 3, 3 )
 
 ! $ Brief_I/O
 !

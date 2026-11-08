@@ -1,6 +1,7 @@
 !$Procedure PLTNP ( Nearest point on triangular plate )
 
       subroutine pltnp ( point, v1, v2, v3, pnear, dist )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      double precision      point ( 3 )
-      double precision      v1    ( 3 )
-      double precision      v2    ( 3 )
-      double precision      v3    ( 3 )
-      double precision      pnear ( 3 )
-      double precision      dist
+      real(wp)              point ( 3 )
+      real(wp)              v1    ( 3 )
+      real(wp)              v2    ( 3 )
+      real(wp)              v3    ( 3 )
+      real(wp)              pnear ( 3 )
+      real(wp)              dist
 
 ! $ Brief_I/O
 !
@@ -199,9 +200,9 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdist
-      double precision      vdot
-      double precision      vnorm
+      real(wp)              vdist
+      real(wp)              vdot
+      real(wp)              vnorm
 
       logical               return
       logical               vzero
@@ -209,23 +210,23 @@
 !
 !     Local variables
 !
-      double precision      d1
-      double precision      d2
-      double precision      d3
-      double precision      e1     ( 3 )
-      double precision      e2     ( 3 )
-      double precision      e3     ( 3 )
-      double precision      enorm1 ( 3 )
-      double precision      enorm2 ( 3 )
-      double precision      enorm3 ( 3 )
-      double precision      l1
-      double precision      l2
-      double precision      l3
-      double precision      normal ( 3 )
-      double precision      np1    ( 3 )
-      double precision      np2    ( 3 )
-      double precision      pdiff  ( 3 )
-      double precision      perp   ( 3 )
+      real(wp)              d1
+      real(wp)              d2
+      real(wp)              d3
+      real(wp)              e1     ( 3 )
+      real(wp)              e2     ( 3 )
+      real(wp)              e3     ( 3 )
+      real(wp)              enorm1 ( 3 )
+      real(wp)              enorm2 ( 3 )
+      real(wp)              enorm3 ( 3 )
+      real(wp)              l1
+      real(wp)              l2
+      real(wp)              l3
+      real(wp)              normal ( 3 )
+      real(wp)              np1    ( 3 )
+      real(wp)              np2    ( 3 )
+      real(wp)              pdiff  ( 3 )
+      real(wp)              perp   ( 3 )
 
       logical               degen
       logical               in1
@@ -272,7 +273,7 @@
          l2 = vnorm(e2)
          l3 = vnorm(e3)
 
-         if ( ( l1 .eq. 0.d0 ) .and. ( l2 .eq. 0.d0 ) ) then
+         if ( ( l1 .eq. 0.0_wp ) .and. ( l2 .eq. 0.0_wp ) ) then
 !
 !           Up to round-off error, the vertices coincide.
 !           The vertex V1 for practical purposes is the plate.
@@ -333,9 +334,9 @@
 !     constant for edge 2 is that of the offset of V2
 !     from V1; this offset is edge 1.
 !
-      in1 = vdot( perp, enorm1 ) .le. 0.d0
+      in1 = vdot( perp, enorm1 ) .le. 0.0_wp
       in2 = vdot( perp, enorm2 ) .le. vdot(e1,enorm2)
-      in3 = vdot( perp, enorm3 ) .le. 0.d0
+      in3 = vdot( perp, enorm3 ) .le. 0.0_wp
 
 
       if ( in1 .and. in2 .and. in3 ) then

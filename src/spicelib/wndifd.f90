@@ -1,6 +1,7 @@
 !$Procedure WNDIFD ( Difference two DP windows )
 
       subroutine wndifd ( a, b, c )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      double precision      a        ( lbcell:* )
-      double precision      b        ( lbcell:* )
-      double precision      c        ( lbcell:* )
+      real(wp)              a        ( lbcell:* )
+      real(wp)              b        ( lbcell:* )
+      real(wp)              c        ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -157,27 +158,27 @@
 !
 !     SPICELIB functions
 !
-      integer               cardd
-      integer               sized
+      integer(ip)           cardd
+      integer(ip)           sized
       logical               return
 
 !
 !     Local variables
 !
-      integer               acard
-      integer               bcard
-      integer               csize
+      integer(ip)           acard
+      integer(ip)           bcard
+      integer(ip)           csize
 
-      integer               apb
-      integer               ape
-      integer               bpb
-      integer               bpe
-      integer               put
-      double precision      f
-      double precision      l
-      integer               needed
+      integer(ip)           apb
+      integer(ip)           ape
+      integer(ip)           bpb
+      integer(ip)           bpe
+      integer(ip)           put
+      real(wp)              f
+      real(wp)              l
+      integer(ip)           needed
 
-      integer               over
+      integer(ip)           over
 
       logical               keep
       logical               unrslv

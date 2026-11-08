@@ -1,6 +1,7 @@
 !$Procedure SPKSSB ( S/P Kernel, solar system barycenter )
 
       subroutine spkssb ( targ, et, ref, starg )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               targ
-      double precision      et
+      integer(ip)           targ
+      real(wp)              et
       character*(*)         ref
-      double precision      starg    ( 6 )
+      real(wp)              starg    ( 6 )
 
 ! $ Brief_I/O
 !
@@ -187,8 +188,8 @@
 !
 !     Local variables
 !
-      double precision      lt
-      integer               bary
+      real(wp)              lt
+      integer(ip)           bary
 
 !
 !     Standard SPICE error handling.

@@ -1,6 +1,7 @@
 !$Procedure FETCHC ( Fetch from a character set )
 
-      integer function fetchc ( nth, set )
+      integer(ip) function fetchc ( nth, set )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               nth
+      integer(ip)           nth
       character*(*)         set      ( lbcell:* )
 
 ! $ Brief_I/O
@@ -170,7 +171,7 @@
 !
 !     SPICELIB functions
 !
-      integer            cardc
+      integer(ip)        cardc
       logical            return
 
 !

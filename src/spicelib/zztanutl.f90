@@ -3,6 +3,7 @@
       subroutine zztanutl ( curve,  srcrad, shape, trgcde, nsurf, &
                             srflst, fixfid, et,    plnvec, axis, &
                             angle,  ocultd, point                )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -34,19 +35,19 @@
 
       include 'zzdsk.inc'
 
-      integer               curve
-      double precision      srcrad
-      integer               shape
-      integer               trgcde
-      integer               nsurf
-      integer               srflst ( * )
-      integer               fixfid
-      double precision      et
-      double precision      plnvec ( 3 )
-      double precision      axis   ( 3 )
-      double precision      angle
+      integer(ip)           curve
+      real(wp)              srcrad
+      integer(ip)           shape
+      integer(ip)           trgcde
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      integer(ip)           fixfid
+      real(wp)              et
+      real(wp)              plnvec ( 3 )
+      real(wp)              axis   ( 3 )
+      real(wp)              angle
       logical               ocultd
-      double precision      point  ( 3 )
+      real(wp)              point  ( 3 )
 
 ! $ Brief_I/O
 !
@@ -155,7 +156,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      pi
+      real(wp)              pi
 
       logical               return
       logical               vzero
@@ -163,16 +164,16 @@
 !
 !     Local variables
 !
-      double precision      apex   ( 3 )
-      double precision      raydir ( 3 )
-      double precision      svaxis ( 3 )
-      double precision      svet
-      double precision      svirad
-      double precision      svnrml ( 3 )
-      double precision      svvrtx ( 3 )
-      double precision      vrtoff ( 3 )
+      real(wp)              apex   ( 3 )
+      real(wp)              raydir ( 3 )
+      real(wp)              svaxis ( 3 )
+      real(wp)              svet
+      real(wp)              svirad
+      real(wp)              svnrml ( 3 )
+      real(wp)              svvrtx ( 3 )
+      real(wp)              vrtoff ( 3 )
 
-      integer               svcurv
+      integer(ip)           svcurv
 
 !
 !     Saved variables
@@ -492,7 +493,7 @@
 !
       if (  ( curve .eq. umbral ) .or. ( curve .eq. pnmbrl )  ) then
 
-         if ( srcrad .le. 0.d0 ) then
+         if ( srcrad .le. 0.0_wp ) then
 
             call setmsg ( 'The source radius was #. The radius ' &
             //            'must be positive for a terminator ' &
@@ -791,7 +792,7 @@
 !        by 3*pi/2 - ANGLE radians. The length of the vector
 !        must be SRCRAD. The saved axis has unit length.
 !
-         call vrotv  ( svaxis, svnrml, (1.5d0*pi())-angle, vrtoff )
+         call vrotv  ( svaxis, svnrml, (1.5_wp*pi())-angle, vrtoff )
 
          call vsclip ( svirad, vrtoff )
 

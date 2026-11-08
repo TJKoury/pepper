@@ -1,6 +1,7 @@
 !$Procedure WRITLN ( Write a text line to a logical unit )
 
       subroutine writln ( line, unit )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -21,7 +22,7 @@
       implicit none
 
       character*(*)      line
-      integer            unit
+      integer(ip)        unit
 
 ! $ Brief_I/O
 !
@@ -302,7 +303,7 @@
 !
 !     SPICELIB functions
 !
-      integer               rtrim
+      integer(ip)           rtrim
 
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
@@ -313,14 +314,14 @@
 !     but the Fortran standard does not specify a value, so it may be
 !     different for different fortran implementations.
 !
-      integer               stdout
+      integer(ip)           stdout
       parameter           ( stdout = 6 )
 !
 #else
 #endif
 !     Local variables
 !
-      integer               iostat
+      integer(ip)           iostat
 
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)

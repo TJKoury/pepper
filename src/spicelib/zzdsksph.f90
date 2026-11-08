@@ -1,6 +1,7 @@
 !$Procedure ZZDSKSPH ( DSK, bounding spheres for target body )
 
       subroutine zzdsksph ( bodyid, nsurf, srflst, minrad, maxrad )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -33,11 +34,11 @@
       include 'dskdsc.inc'
       include 'zzctr.inc'
 
-      integer               bodyid
-      integer               nsurf
-      integer               srflst ( * )
-      double precision      minrad
-      double precision      maxrad
+      integer(ip)           bodyid
+      integer(ip)           nsurf
+      integer(ip)           srflst ( * )
+      real(wp)              minrad
+      real(wp)              maxrad
 
 ! $ Brief_I/O
 !
@@ -197,10 +198,10 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpmax
-      double precision      vnorm
+      real(wp)              dpmax
+      real(wp)              vnorm
 
-      integer               isrchi
+      integer(ip)           isrchi
 
       logical               failed
       logical               return
@@ -213,7 +214,7 @@
 !
 !     Local parameters
 !
-      integer               frnmln
+      integer(ip)           frnmln
       parameter           ( frnmln = 32 )
 
 !
@@ -222,41 +223,41 @@
       character*(lmsgln)    errmsg
       character*(frnmln)    frname
 
-      double precision      boxctr ( 3 )
-      double precision      boxrad
-      double precision      ctrmnr
-      double precision      dskdsc ( dskdsz )
-      double precision      f
-      double precision      lt
-      double precision      lx
-      double precision      ly
-      double precision      lz
-      double precision      maxr
-      double precision      midtim
-      double precision      minr
-      double precision      offmag
-      double precision      offset ( 3 )
-      double precision      re
-      double precision      rp
-      double precision      sgmaxr
-      double precision      sgminr
-      double precision      svmaxr
-      double precision      svminr
+      real(wp)              boxctr ( 3 )
+      real(wp)              boxrad
+      real(wp)              ctrmnr
+      real(wp)              dskdsc ( dskdsz )
+      real(wp)              f
+      real(wp)              lt
+      real(wp)              lx
+      real(wp)              ly
+      real(wp)              lz
+      real(wp)              maxr
+      real(wp)              midtim
+      real(wp)              minr
+      real(wp)              offmag
+      real(wp)              offset ( 3 )
+      real(wp)              re
+      real(wp)              rp
+      real(wp)              sgmaxr
+      real(wp)              sgminr
+      real(wp)              svmaxr
+      real(wp)              svminr
 
-      integer               corsys
-      integer               ctr    ( ctrsiz )
-      integer               dladsc ( dladsz )
-      integer               framid
-      integer               frcent
-      integer               frclid
-      integer               frclas
-      integer               handle
-      integer               i
-      integer               prvbod
-      integer               prvfid
-      integer               prvlst ( maxsrf )
-      integer               prvnls
-      integer               surfid
+      integer(ip)           corsys
+      integer(ip)           ctr    ( ctrsiz )
+      integer(ip)           dladsc ( dladsz )
+      integer(ip)           framid
+      integer(ip)           frcent
+      integer(ip)           frclid
+      integer(ip)           frclas
+      integer(ip)           handle
+      integer(ip)           i
+      integer(ip)           prvbod
+      integer(ip)           prvfid
+      integer(ip)           prvlst ( maxsrf )
+      integer(ip)           prvnls
+      integer(ip)           surfid
 
       logical               first
       logical               found
@@ -286,8 +287,8 @@
       data                  prvbod /  0          /
       data                  prvlst /  maxsrf * 0 /
       data                  prvnls / -1          /
-      data                  svmaxr / -1.d0       /
-      data                  svminr / -1.d0       /
+      data                  svmaxr / -1.0_wp       /
+      data                  svminr / -1.0_wp       /
 
 
 
@@ -370,7 +371,7 @@
 !
 !        Initialize the saved radius data.
 !
-         svmaxr = -1.d0
+         svmaxr = -1.0_wp
          svminr = dpmax()
 
 !
@@ -394,7 +395,7 @@
 !
 !        Re-initialize MINR and MAXR.
 !
-         maxr = -1.d0
+         maxr = -1.0_wp
          minr = dpmax()
 
 !
@@ -454,7 +455,7 @@
 !                    The frame is centered at the target, so
 !                    the frame center offset magnitude is zero.
 !
-                     offmag = 0.d0
+                     offmag = 0.0_wp
 
                   else
 
@@ -517,9 +518,9 @@
 !
                   re = dskdsc(paridx  )
                   f  = dskdsc(paridx+1)
-                  rp = re *  (1.d0 - f)
+                  rp = re *  (1.0_wp - f)
 
-                  if ( f .ge. 0.d0 ) then
+                  if ( f .ge. 0.0_wp ) then
 !
 !                    The spheroid is oblate. The maximum altitude over
 !                    the equator is an upper bound for the distance of
@@ -553,7 +554,7 @@
 !                 SGMINR is a lower bound on the distance of the
 !                 segment from the origin of the coordinate system.
 !
-                  sgminr = max ( vnorm(boxctr) - boxrad,  0.0d0 )
+                  sgminr = max ( vnorm(boxctr) - boxrad,  0.0_wp )
 
                   sgmaxr =       vnorm(boxctr) + boxrad
 
@@ -595,7 +596,7 @@
 !                 The segment's central body is between the bounding
 !                 spheres. No positive lower radius bound exists.
 !
-                  ctrmnr = 0.d0
+                  ctrmnr = 0.0_wp
 
                end if
 
@@ -626,7 +627,7 @@
 
          end do
 
-         if (  ( maxr .gt. 0.d0 ) .and. (.not. failed() )  ) then
+         if (  ( maxr .gt. 0.0_wp ) .and. (.not. failed() )  ) then
 !
 !           Update the saved bounds.
 !
@@ -638,7 +639,7 @@
       end if
 
 
-      if ( maxr .lt. 0.d0 ) then
+      if ( maxr .lt. 0.0_wp ) then
 !
 !        We tried to update the radius bounds but didn't find any
 !        segments for the specified body.

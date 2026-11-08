@@ -1,6 +1,7 @@
 !$Procedure XF2EUL ( State transformation to Euler angles )
 
       subroutine xf2eul ( xform, axisa, axisb, axisc, eulang, unique )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       implicit none
 
-      double precision      xform  ( 6, 6 )
-      integer               axisa
-      integer               axisb
-      integer               axisc
-      double precision      eulang ( 6 )
+      real(wp)              xform  ( 6, 6 )
+      integer(ip)           axisa
+      integer(ip)           axisb
+      integer(ip)           axisc
+      real(wp)              eulang ( 6 )
       logical               unique
 
 ! $ Brief_I/O
@@ -485,12 +486,12 @@
 !
 !     Parameters
 !
-      integer               alpha
-      integer               beta
-      integer               gamma
-      integer               dalpha
-      integer               dbeta
-      integer               dgamma
+      integer(ip)           alpha
+      integer(ip)           beta
+      integer(ip)           gamma
+      integer(ip)           dalpha
+      integer(ip)           dbeta
+      integer(ip)           dgamma
 
       parameter           ( alpha  = 1 )
       parameter           ( beta   = 2 )
@@ -502,31 +503,31 @@
 !
 !     Local variables
 !
-      double precision      ca
-      double precision      d
-      double precision      delta  ( 3, 3 )
-      double precision      domega ( 3 )
-      double precision      drdt   ( 3, 3 )
-      double precision      drdtrt ( 3, 3 )
-      double precision      locang ( 6 )
-      double precision      omega  ( 3 )
-      double precision      r      ( 3, 3 )
-      double precision      sa
-      double precision      solutn ( 3, 3 )
-      double precision      u
-      double precision      v
+      real(wp)              ca
+      real(wp)              d
+      real(wp)              delta  ( 3, 3 )
+      real(wp)              domega ( 3 )
+      real(wp)              drdt   ( 3, 3 )
+      real(wp)              drdtrt ( 3, 3 )
+      real(wp)              locang ( 6 )
+      real(wp)              omega  ( 3 )
+      real(wp)              r      ( 3, 3 )
+      real(wp)              sa
+      real(wp)              solutn ( 3, 3 )
+      real(wp)              u
+      real(wp)              v
 
 
-      integer               a
-      integer               b
-      integer               i
-      integer               j
-      integer               k
-      integer               l
-      integer               locaxa
-      integer               locaxb
-      integer               locaxc
-      integer               next   ( 3 )
+      integer(ip)           a
+      integer(ip)           b
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           l
+      integer(ip)           locaxa
+      integer(ip)           locaxb
+      integer(ip)           locaxc
+      integer(ip)           next   ( 3 )
 
 !
 !     Saved variables
@@ -542,9 +543,9 @@
 !     in fact it is the correct thing.
 !
 
-      data                  delta   /  0.0d0, -1.0d0,  1.0d0, &
-                                       1.0d0,  0.0d0, -1.0d0, &
-                                      -1.0d0,  1.0d0,  0.0d0  /
+      data                  delta   /  0.0_wp, -1.0_wp,  1.0_wp, &
+                                       1.0_wp,  0.0_wp, -1.0_wp, &
+                                      -1.0_wp,  1.0_wp,  0.0_wp  /
 
 
       data                  next   / 2, 3, 1 /
@@ -892,8 +893,8 @@
 !     After all U*U + V*V = 1 if SIN and COS and various arithmetic
 !     operations work perfectly.
 !
-      if ( dabs(u) .eq. 1.0d0 ) then
-         v = 0.0d0
+      if ( dabs(u) .eq. 1.0_wp ) then
+         v = 0.0_wp
       end if
 
 !
@@ -914,7 +915,7 @@
       if ( v .eq. 0 ) then
 
          unique         = .false.
-         eulang(dalpha) =  0.0d0
+         eulang(dalpha) =  0.0_wp
          eulang(dgamma) = -u*omega(1)
 
 !
@@ -944,9 +945,9 @@
 
       unique      = .true.
 
-      solutn(1,1) =  -1.0d0
-      solutn(2,1) =   0.0d0
-      solutn(3,1) =   0.0d0
+      solutn(1,1) =  -1.0_wp
+      solutn(2,1) =   0.0_wp
+      solutn(3,1) =   0.0_wp
 
       solutn(1,2) =   u*d*sa/v
       solutn(2,2) =      -ca
@@ -1364,10 +1365,10 @@
 !        second angle to zero.  The same goes for the angular rates.
 !
          locang(i)   = locang(i)   + locang(2)
-         locang(2)   = 0.d0
+         locang(2)   = 0.0_wp
 
          locang(i+3) = locang(i+3) + locang(5)
-         locang(5)   = 0.d0
+         locang(5)   = 0.0_wp
 
 !
 !        Pick a second axis that doesn't match the others.  Since
@@ -1464,10 +1465,10 @@
 !     and compute D*OMEGA which we denote by the variable DOMEGA.
 !
       solutn(1,1) =  -d
-      solutn(2,1) =   0.0d0
-      solutn(3,1) =   0.0d0
+      solutn(2,1) =   0.0_wp
+      solutn(3,1) =   0.0_wp
 
-      solutn(1,2) =   0.0d0
+      solutn(1,2) =   0.0_wp
       solutn(2,2) =  -d*ca
       solutn(3,2) =     sa
 
@@ -1486,9 +1487,9 @@
       drdtrt(b,a) =  domega(3)
       drdtrt(a,b) = -domega(3)
 
-      drdtrt(1,1) =  0.0d0
-      drdtrt(2,2) =  0.0d0
-      drdtrt(3,3) =  0.0d0
+      drdtrt(1,1) =  0.0_wp
+      drdtrt(2,2) =  0.0_wp
+      drdtrt(3,3) =  0.0_wp
 
       call mxm ( drdtrt, r, drdt )
 
@@ -1497,7 +1498,7 @@
             xform(i,  j  ) = r   (i,j)
             xform(i+3,j+3) = r   (i,j)
             xform(i+3,j  ) = drdt(i,j)
-            xform(i,  j+3) = 0.0d0
+            xform(i,  j+3) = 0.0_wp
          end do
       end do
 

@@ -1,6 +1,7 @@
 !$Procedure ZZPDPLTC (Planetodetic coordinates, point latitude check)
 
       logical function zzpdpltc ( re, f, p, lat )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -27,10 +28,10 @@
 
       implicit none
 
-      double precision      re
-      double precision      f
-      double precision      p   ( 3 )
-      double precision      lat
+      real(wp)              re
+      real(wp)              f
+      real(wp)              p   ( 3 )
+      real(wp)              lat
 
 ! $ Brief_I/O
 !
@@ -183,18 +184,18 @@
 !
 !     Local parameters
 !
-      double precision      limit
-      parameter           ( limit = 1.d-2 )
+      real(wp)              limit
+      parameter           ( limit = 1.0e-2_wp )
 
 !
 !     Local variables
 !
-      double precision      a
-      double precision      b
-      double precision      r
-      double precision      r2
-      double precision      xxpt
-      double precision      yxpt
+      real(wp)              a
+      real(wp)              b
+      real(wp)              r
+      real(wp)              r2
+      real(wp)              xxpt
+      real(wp)              yxpt
 
 !
 !     Give the function a default value.
@@ -211,7 +212,7 @@
 !
 !     The equatorial radius must be greater than zero.
 !
-      if ( re .le. 0.0d0 ) then
+      if ( re .le. 0.0_wp ) then
 
           call setmsg ( 'Equatorial radius was *.' )
           call errdp  ( '*', re                    )
@@ -245,7 +246,7 @@
 !     nothing to do: the point is automatically on the correct side of
 !     the X-Y plane.
 !
-      if ( f .le. 0.d0 ) then
+      if ( f .le. 0.0_wp ) then
 
          zzpdpltc = .true.
 
@@ -269,7 +270,7 @@
 !              LAT * P(3) > 0
 !
 !
-         if (  ( p(3) * lat )  .ge.  0.d0  ) then
+         if (  ( p(3) * lat )  .ge.  0.0_wp  ) then
 
             zzpdpltc = .true.
 
@@ -308,7 +309,7 @@
 !           cone on the wrong side of the X-Y plane.
 !
             a = re
-            b = a * ( 1.d0 - f )
+            b = a * ( 1.0_wp - f )
 
 !
 !           Compute the intercepts of a normal vector of a point
@@ -336,7 +337,7 @@
 
             r2       = ( p(1) * p(1) ) +  ( p(2) * p(2) )
 
-            r        = sqrt(  max( r2, 0.d0 )  )
+            r        = sqrt(  max( r2, 0.0_wp )  )
 
             zzpdpltc = r .ge. xxpt
 

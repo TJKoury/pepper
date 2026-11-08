@@ -1,6 +1,7 @@
 !$Procedure UNIONI ( Union two integer sets )
 
       subroutine unioni ( a, b, c )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,12 +20,12 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer          a      ( lbcell:* )
-      integer          b      ( lbcell:* )
-      integer          c      ( lbcell:* )
+      integer(ip)      a      ( lbcell:* )
+      integer(ip)      b      ( lbcell:* )
+      integer(ip)      c      ( lbcell:* )
 
 ! $ Brief_I/O
 !
@@ -156,23 +157,23 @@
 !
 !     SPICELIB functions
 !
-      integer             cardi
-      integer             sizei
+      integer(ip)         cardi
+      integer(ip)         sizei
       logical             return
 
 !
 !     Local variables
 !
 
-      integer             apoint
-      integer             bpoint
+      integer(ip)         apoint
+      integer(ip)         bpoint
 
-      integer             csize
-      integer             acard
-      integer             bcard
-      integer             ccard
+      integer(ip)         csize
+      integer(ip)         acard
+      integer(ip)         bcard
+      integer(ip)         ccard
 
-      integer             over
+      integer(ip)         over
 
 
 

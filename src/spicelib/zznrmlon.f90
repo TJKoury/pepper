@@ -1,6 +1,7 @@
 !$Procedure ZZNRMLON ( Normalize longitude bounds )
 
       subroutine zznrmlon ( inmin, inmax, tol, outmin, outmax )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -29,11 +30,11 @@
 
       implicit none
 
-      double precision      inmin
-      double precision      inmax
-      double precision      tol
-      double precision      outmin
-      double precision      outmax
+      real(wp)              inmin
+      real(wp)              inmax
+      real(wp)              tol
+      real(wp)              outmin
+      real(wp)              outmax
 
 ! $ Brief_I/O
 !
@@ -151,15 +152,15 @@
 !
 !     SPICELIB functions
 !
-      double precision      dpr
-      double precision      touchd
-      double precision      twopi
+      real(wp)              dpr
+      real(wp)              touchd
+      real(wp)              twopi
 
 !
 !     Local variables
 !
-      double precision      delta
-      double precision      pi2
+      real(wp)              delta
+      real(wp)              pi2
 
       logical               first
 
@@ -187,7 +188,7 @@
 !
 !     TOL cannot be negative.
 !
-      if ( tol .lt. 0.d0 ) then
+      if ( tol .lt. 0.0_wp ) then
 
          call chkin  ( 'ZZNRMLON'                                  )
          call setmsg ( 'Tolerance must be non-negative but was #.' )
@@ -276,7 +277,7 @@
 !        Shift one of the bounds by 2*pi, while keeping
 !        the bounds in the range [-2pi, 2pi].
 !
-         if ( outmax .le. 0.d0 ) then
+         if ( outmax .le. 0.0_wp ) then
 !
 !           OUTMAX is non-positive. Shift it to the right.
 !

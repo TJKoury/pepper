@@ -6,6 +6,7 @@
                             stramh, &
                             strarc, &
                             strbff  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -29,9 +30,9 @@
 
       include              'zzddhman.inc'
 
-      integer               natbff
-      integer               supbff ( * )
-      integer               numsup
+      integer(ip)           natbff
+      integer(ip)           supbff ( * )
+      integer(ip)           numsup
       character*(*)         stramh ( * )
       character*(*)         strarc ( * )
       character*(*)         strbff ( * )
@@ -132,7 +133,7 @@
 !
 !     SPICELIB Functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
       logical               return
 
 !
@@ -141,7 +142,7 @@
       character*(strlen)    linstr
       character*(strsiz)    tmpstr
 
-      integer               i
+      integer(ip)           i
 
       logical               done
 

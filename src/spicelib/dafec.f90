@@ -1,6 +1,7 @@
 !$Procedure DAFEC ( DAF extract comments )
 
       subroutine dafec ( handle, bufsiz, n, buffer, done )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      integer               handle
-      integer               bufsiz
-      integer               n
+      integer(ip)           handle
+      integer(ip)           bufsiz
+      integer(ip)           n
       character*(*)         buffer(*)
       logical               done
 
@@ -588,9 +589,9 @@
 !
 !     SPICELIB functions
 !
-      integer               cpos
-      integer               isrchi
-      integer               ncpos
+      integer(ip)           cpos
+      integer(ip)           isrchi
+      integer(ip)           ncpos
 
       logical               failed
       logical               return
@@ -600,32 +601,32 @@
 !
 !     Length of a DAF internal filename.
 !
-      integer               ifnlen
+      integer(ip)           ifnlen
       parameter           ( ifnlen = 60 )
 
 !
 !     Decimal value for the DAF comment area end-of-comment (EOC)
 !     marker.
 !
-      integer               inteoc
+      integer(ip)           inteoc
       parameter           ( inteoc = 4 )
 
 !
 !     Decimal value for the DAF comment area end-of-line (EOL) marker.
 !
-      integer               inteol
+      integer(ip)           inteol
       parameter           ( inteol = 0 )
 
 !
 !     The maximum number of DAFs that may be open simultaneously.
 !
-      integer               ftsize
+      integer(ip)           ftsize
       parameter           ( ftsize = 5000 )
 
 !
 !     Length of a DAF character record, in characters.
 !
-      integer               mxcrec
+      integer(ip)           mxcrec
       parameter           ( mxcrec = 1000 )
 !
 !     Local variables
@@ -636,38 +637,38 @@
       character*(1)         eolmrk
       character*(ifnlen)    ifname
 
-      integer               curpos
-      integer               daflun
-      integer               eocpos
-      integer               i
-      integer               index
-      integer               j
-      integer               k
-      integer               linlen
-      integer               nchars
-      integer               ncomc
-      integer               ncomr
-      integer               nelpos
-      integer               numcom
-      integer               recno
+      integer(ip)           curpos
+      integer(ip)           daflun
+      integer(ip)           eocpos
+      integer(ip)           i
+      integer(ip)           index
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           linlen
+      integer(ip)           nchars
+      integer(ip)           ncomc
+      integer(ip)           ncomr
+      integer(ip)           nelpos
+      integer(ip)           numcom
+      integer(ip)           recno
 
-      integer               iostat
-      integer               bward
-      integer               fward
-      integer               free
-      integer               nd
-      integer               ni
+      integer(ip)           iostat
+      integer(ip)           bward
+      integer(ip)           fward
+      integer(ip)           free
+      integer(ip)           nd
+      integer(ip)           ni
 !
 !     The file table declarations for keeping track of which files
 !     are currently in the process of having comments extracted.
 !
-      integer               filchr(ftsize)
-      integer               filcnt(ftsize)
-      integer               filhan(ftsize)
-      integer               lsthan
-      integer               lstpos(ftsize)
-      integer               lstrec(ftsize)
-      integer               nfiles
+      integer(ip)           filchr(ftsize)
+      integer(ip)           filcnt(ftsize)
+      integer(ip)           filhan(ftsize)
+      integer(ip)           lsthan
+      integer(ip)           lstpos(ftsize)
+      integer(ip)           lstrec(ftsize)
+      integer(ip)           nfiles
 
       logical               empty
       logical               eol

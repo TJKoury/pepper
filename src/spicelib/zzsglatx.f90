@@ -1,6 +1,7 @@
 !$Procedure ZZSGLATX ( Line segment latitude extent )
 
       subroutine zzsglatx ( p1, p2, minlat, minp, maxlat, maxp )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -26,14 +27,14 @@
 
       implicit none
 
-      double precision      p1     ( 3 )
-      double precision      p2     ( 3 )
-      double precision      minlat
-      double precision      minp   ( 3 )
-      double precision      maxlat
-      double precision      maxp   ( 3 )
+      real(wp)              p1     ( 3 )
+      real(wp)              p2     ( 3 )
+      real(wp)              minlat
+      real(wp)              minp   ( 3 )
+      real(wp)              maxlat
+      real(wp)              maxp   ( 3 )
 
-      integer               ubpl
+      integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
 ! $ Brief_I/O
@@ -219,7 +220,7 @@
 !
 !     SPICELIB functions
 !
-      double precision      vdot
+      real(wp)              vdot
 
       logical               failed
       logical               opsgnd
@@ -229,21 +230,21 @@
 !
 !     Local variables
 !
-      double precision      crease ( 3 )
-      double precision      dir    ( 3 )
-      double precision      dp1
-      double precision      dp2
-      double precision      lat
-      double precision      lat1
-      double precision      lat2
-      double precision      lon
-      double precision      normal ( 3 )
-      double precision      plane2 ( ubpl )
-      double precision      r
-      double precision      t      ( 3 )
-      double precision      z      ( 3 )
+      real(wp)              crease ( 3 )
+      real(wp)              dir    ( 3 )
+      real(wp)              dp1
+      real(wp)              dp2
+      real(wp)              lat
+      real(wp)              lat1
+      real(wp)              lat2
+      real(wp)              lon
+      real(wp)              normal ( 3 )
+      real(wp)              plane2 ( ubpl )
+      real(wp)              r
+      real(wp)              t      ( 3 )
+      real(wp)              z      ( 3 )
 
-      integer               nxpts
+      integer(ip)           nxpts
 !
 !     Saved variables
 !
@@ -252,7 +253,7 @@
 !
 !     Initial values
 !
-      data                  z / 0.d0, 0.d0, 1.d0 /
+      data                  z / 0.0_wp, 0.0_wp, 1.0_wp /
 
 !
 !     Standard SPICE error handling.
@@ -379,7 +380,7 @@
 !        an error. Therefore we don't check FAILED after the
 !        following call.
 !
-         call nvc2pl ( crease, 0.d0, plane2 )
+         call nvc2pl ( crease, 0.0_wp, plane2 )
 
          call vsub ( p2, p1, dir )
 

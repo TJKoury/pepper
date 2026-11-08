@@ -1,6 +1,7 @@
 !$Procedure RECSPH ( Rectangular to spherical coordinates )
 
       subroutine recsph ( rectan, r, colat, slon  )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      double precision   rectan ( 3 )
-      double precision   r
-      double precision   colat
-      double precision   slon
+      real(wp)           rectan ( 3 )
+      real(wp)           r
+      real(wp)           colat
+      real(wp)           slon
 
 ! $ Brief_I/O
 !
@@ -370,10 +371,10 @@
 !-&
 
 
-      double precision x
-      double precision y
-      double precision z
-      double precision big
+      real(wp) x
+      real(wp) y
+      real(wp) z
+      real(wp) big
 
 !
 !     Store rectangular coordinates in temporary variables
@@ -393,16 +394,16 @@
          x      = rectan(1)
          y      = rectan(2)
 
-         if (x.eq.0.0d0 .and. y.eq.0.0d0) then
-            slon  = 0.0d0
+         if (x.eq.0.0_wp .and. y.eq.0.0_wp) then
+            slon  = 0.0_wp
          else
             slon  = datan2 (y,x)
          end if
 
       else
-         r     = 0.0d0
-         colat = 0.0d0
-         slon  = 0.0d0
+         r     = 0.0_wp
+         colat = 0.0_wp
+         slon  = 0.0_wp
       end if
 
       return

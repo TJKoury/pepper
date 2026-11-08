@@ -2,6 +2,7 @@
 
       subroutine spkw01 (  handle,  body,    center,  frame,   first, &
                            last,    segid,   n,       dlines,  epochs )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,19 +23,19 @@
 
       implicit none
 
-      integer               dlsize
+      integer(ip)           dlsize
       parameter           ( dlsize = 71 )
 
-      integer               handle
-      integer               body
-      integer               center
+      integer(ip)           handle
+      integer(ip)           body
+      integer(ip)           center
       character*(*)         frame
-      double precision      first
-      double precision      last
+      real(wp)              first
+      real(wp)              last
       character*(*)         segid
-      integer               n
-      double precision      dlines ( dlsize, * )
-      double precision      epochs (         * )
+      integer(ip)           n
+      real(wp)              dlines ( dlsize, * )
+      real(wp)              epochs (         * )
 
 ! $ Brief_I/O
 !
@@ -236,7 +237,7 @@
 !
 !     SPICELIB functions
 !
-      integer               lastnb
+      integer(ip)           lastnb
 
       logical               failed
       logical               return
@@ -244,40 +245,40 @@
 !
 !     Local parameters
 !
-      integer               sidlen
+      integer(ip)           sidlen
       parameter           ( sidlen  =  40 )
 
-      integer               fprint
+      integer(ip)           fprint
       parameter           ( fprint  =  32 )
 
-      integer               lprint
+      integer(ip)           lprint
       parameter           ( lprint  = 126 )
 
 !
 !     Local variables
 !
-      integer               dscsiz
+      integer(ip)           dscsiz
       parameter           ( dscsiz  =   5 )
 
-      integer               typidx
+      integer(ip)           typidx
       parameter           ( typidx  =   4 )
 
-      integer               dtype
+      integer(ip)           dtype
       parameter           ( dtype   =   1 )
 
-      integer               dirsiz
+      integer(ip)           dirsiz
       parameter           ( dirsiz  = 100 )
 
 
 !
 !     Local variables
 !
-      double precision      descr  ( dscsiz )
-      double precision      maxtim
+      real(wp)              descr  ( dscsiz )
+      real(wp)              maxtim
 
-      integer               chrcod
-      integer               i
-      integer               refcod
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           refcod
 
 
 !
@@ -468,7 +469,7 @@
          call dafada (  epochs( dirsiz*i ),  1  )
       end do
 
-      call dafada ( dble( n ),  1 )
+      call dafada ( real( n, wp ),  1 )
 
 !
 !     As long as nothing went wrong, end the segment.

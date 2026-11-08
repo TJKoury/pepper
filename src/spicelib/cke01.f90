@@ -1,6 +1,7 @@
 !$Procedure CKE01 ( CK evaluate pointing record, data type 1 )
 
       subroutine cke01 ( needav, record, cmat, av, clkout )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -23,10 +24,10 @@
       implicit none
 
       logical               needav
-      double precision      record ( *    )
-      double precision      cmat   ( 3, 3 )
-      double precision      av     ( 3    )
-      double precision      clkout
+      real(wp)              record ( *    )
+      real(wp)              cmat   ( 3, 3 )
+      real(wp)              av     ( 3    )
+      real(wp)              clkout
 
 ! $ Brief_I/O
 !

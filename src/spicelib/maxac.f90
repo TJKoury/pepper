@@ -1,6 +1,7 @@
 !$Procedure MAXAC  ( Maximum element of array, character )
 
       subroutine maxac ( array, ndim, maxval, loc )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -20,9 +21,9 @@
       implicit none
 
       character*(*)   array ( * )
-      integer         ndim
+      integer(ip)     ndim
       character*(*)   maxval
-      integer         loc
+      integer(ip)     loc
 
 ! $ Brief_I/O
 !
@@ -135,7 +136,7 @@
 !
 !     Local variables
 !
-      integer i
+      integer(ip) i
 
 
       if (ndim .le. 0) then

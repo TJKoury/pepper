@@ -1,6 +1,7 @@
 !$Procedure DPR ( Degrees per radian )
 
-      double precision function dpr ( )
+      real(wp) function dpr ( )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -111,20 +112,20 @@
 !
 !     Local variables
 !
-      double precision      value
+      real(wp)              value
       save                  value
 
 !
 !     Initial values
 !
-      data                  value      / 0.d0 /
+      data                  value      / 0.0_wp /
 
 
 !
 !     What is there to say?
 !
-      if ( value .eq. 0.d0 ) then
-         value = 180.d0 / acos ( -1.d0 )
+      if ( value .eq. 0.0_wp ) then
+         value = 180.0_wp / acos ( -1.0_wp )
       end if
 
       dpr = value

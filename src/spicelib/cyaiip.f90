@@ -1,6 +1,7 @@
 !$Procedure CYAIIP ( Cycle the elements of an integer array, in place )
 
       subroutine cyaiip ( nelt, dir, ncycle, array )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -19,10 +20,10 @@
 
       implicit none
 
-      integer               nelt
+      integer(ip)           nelt
       character*1           dir
-      integer               ncycle
-      integer               array    ( * )
+      integer(ip)           ncycle
+      integer(ip)           array    ( * )
 
 ! $ Brief_I/O
 !
@@ -145,21 +146,21 @@
 !
 !     SPICELIB functions
 !
-      integer          gcd
+      integer(ip)      gcd
       logical          return
 
 !
 !     Local variables
 !
-      integer          last
-      integer          temp
+      integer(ip)      last
+      integer(ip)      temp
 
-      integer          g
-      integer          i
-      integer          j
-      integer          k
-      integer          l
-      integer          m
+      integer(ip)      g
+      integer(ip)      i
+      integer(ip)      j
+      integer(ip)      k
+      integer(ip)      l
+      integer(ip)      m
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure      ZZEKSCA ( EK, scratch area )
 
       subroutine zzeksca ( n, beg, end, idata, top )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -17,11 +18,11 @@
 !
 ! $ Declarations
 
-      integer               n
-      integer               beg
-      integer               end
-      integer               idata ( * )
-      integer               top
+      integer(ip)           n
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           idata ( * )
+      integer(ip)           top
 
 ! $ Brief_I/O
 !
@@ -249,7 +250,7 @@
 !     word of the scratch DAS file corresponds to scratch area address
 !     MEMSIZ + 1.
 !
-      integer               memsiz
+      integer(ip)           memsiz
       parameter           ( memsiz = 2500000 )
 
 
@@ -257,22 +258,22 @@
 !
 !     Local variables
 !
-      integer               b
-      integer               base
-      integer               e
-      integer               i
-      integer               lastc
-      integer               lastd
-      integer               lasti
-      integer               numadd
-      integer               numrd
-      integer               rb
-      integer               remain
-      integer               rt
-      integer               scrhan
-      integer               scrtch ( memsiz )
-      integer               start
-      integer               t
+      integer(ip)           b
+      integer(ip)           base
+      integer(ip)           e
+      integer(ip)           i
+      integer(ip)           lastc
+      integer(ip)           lastd
+      integer(ip)           lasti
+      integer(ip)           numadd
+      integer(ip)           numrd
+      integer(ip)           rb
+      integer(ip)           remain
+      integer(ip)           rt
+      integer(ip)           scrhan
+      integer(ip)           scrtch ( memsiz )
+      integer(ip)           start
+      integer(ip)           t
 
       logical               first
 

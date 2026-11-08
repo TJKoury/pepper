@@ -1,6 +1,7 @@
 !$Procedure ROTATE ( Generate a rotation matrix )
 
       subroutine rotate ( angle, iaxis, mout )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -21,9 +22,9 @@
 
       implicit none
 
-      double precision   angle
-      integer            iaxis
-      double precision   mout  ( 3,3 )
+      real(wp)           angle
+      integer(ip)        iaxis
+      real(wp)           mout  ( 3,3 )
 
 ! $ Brief_I/O
 !
@@ -158,14 +159,14 @@
 
 !
 !
-      double precision      s
-      double precision      c
+      real(wp)              s
+      real(wp)              c
 
-      integer               temp
-      integer               i1
-      integer               i2
-      integer               i3
-      integer               indexs ( 5 )
+      integer(ip)           temp
+      integer(ip)           i1
+      integer(ip)           i2
+      integer(ip)           i3
+      integer(ip)           indexs ( 5 )
       save                  indexs
 
       data                  indexs  / 3, 1, 2, 3, 1 /
@@ -188,13 +189,13 @@
 !
 !  Construct the rotation matrix
 !
-      mout(i1,i1) = 1.d0
-      mout(i2,i1) = 0.d0
-      mout(i3,i1) = 0.d0
-      mout(i1,i2) = 0.d0
+      mout(i1,i1) = 1.0_wp
+      mout(i2,i1) = 0.0_wp
+      mout(i3,i1) = 0.0_wp
+      mout(i1,i2) = 0.0_wp
       mout(i2,i2) = c
       mout(i3,i2) = -s
-      mout(i1,i3) = 0.d0
+      mout(i1,i3) = 0.0_wp
       mout(i2,i3) = s
       mout(i3,i3) = c
 !

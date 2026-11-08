@@ -1,6 +1,7 @@
 !$Procedure DNEARP ( Derivative of near point )
 
       subroutine dnearp ( state, a, b, c, dnear, dalt, found )
+      use pepper_kinds, only: wp
 
 ! $ Abstract
 !
@@ -21,12 +22,12 @@
 
       implicit none
 
-      double precision      state ( 6 )
-      double precision      a
-      double precision      b
-      double precision      c
-      double precision      dnear ( 6 )
-      double precision      dalt  ( 2 )
+      real(wp)              state ( 6 )
+      real(wp)              a
+      real(wp)              b
+      real(wp)              c
+      real(wp)              dnear ( 6 )
+      real(wp)              dalt  ( 2 )
       logical               found
 
 ! $ Brief_I/O

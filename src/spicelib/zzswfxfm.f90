@@ -1,6 +1,7 @@
 !$Procedure ZZSWFXFM ( Private, get switch frame transformation )
 
       subroutine zzswfxfm ( infrm, et, ndim, xform, outfrm, found )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -29,11 +30,11 @@
       include              'zzswtchf.inc'
       include              'zzctr.inc'
 
-      integer               infrm
-      double precision      et
-      integer               ndim
-      double precision      xform ( ndim, ndim )
-      integer               outfrm
+      integer(ip)           infrm
+      real(wp)              et
+      integer(ip)           ndim
+      real(wp)              xform ( ndim, ndim )
+      integer(ip)           outfrm
       logical               found
 
 ! $ Brief_I/O
@@ -270,7 +271,7 @@
       logical               failed
       logical               return
 
-      integer               lstled
+      integer(ip)           lstled
 
 !
 !     Local parameters
@@ -279,7 +280,7 @@
 !
 !     ID code of the J2000 frame:
 !
-      integer               j2code
+      integer(ip)           j2code
       parameter           ( j2code = 1 )
 
 !
@@ -287,25 +288,25 @@
 !
 !     The add-only hash pool for frame IDs is singly linked.
 !
-      integer               fplsiz
+      integer(ip)           fplsiz
       parameter           ( fplsiz = maxfrm - lbsngl + 1 )
 
 !
 !     Dimensions
 !
-      integer               d3
+      integer(ip)           d3
       parameter           ( d3 = 3 )
 
-      integer               d6
+      integer(ip)           d6
       parameter           ( d6 = 6 )
 
 !
 !     Matrix sizes.
 !
-      integer               size33
+      integer(ip)           size33
       parameter           ( size33 =  9 )
 
-      integer               size66
+      integer(ip)           size66
       parameter           ( size66 = 36 )
 
 !
@@ -365,17 +366,17 @@
 !     Each base frame list for a given switch frame is ordered
 !     according to ascending priority.
 !
-      double precision      starts ( maxbas )
-      double precision      stops  ( maxbas )
+      real(wp)              starts ( maxbas )
+      real(wp)              stops  ( maxbas )
 
-      integer               basbeg ( maxfrm )
-      integer               bascnt ( maxfrm )
-      integer               baslst ( maxbas )
-      integer               clsids ( maxbas )
-      integer               clsses ( maxbas )
-      integer               fidlst ( maxfrm )
-      integer               frpool ( lbsngl : maxfrm )
-      integer               hdfram ( maxfrm )
+      integer(ip)           basbeg ( maxfrm )
+      integer(ip)           bascnt ( maxfrm )
+      integer(ip)           baslst ( maxbas )
+      integer(ip)           clsids ( maxbas )
+      integer(ip)           clsses ( maxbas )
+      integer(ip)           fidlst ( maxfrm )
+      integer(ip)           frpool ( lbsngl : maxfrm )
+      integer(ip)           hdfram ( maxfrm )
 
       logical               binary ( maxfrm )
       logical               usetim ( maxfrm )
@@ -383,21 +384,21 @@
 !
 !     Other declarations
 !
-      double precision      rmat   ( 3, 3 )
-      double precision      tsipm  ( 6, 6 )
-      double precision      xident ( 6, 6 )
+      real(wp)              rmat   ( 3, 3 )
+      real(wp)              tsipm  ( 6, 6 )
+      real(wp)              xident ( 6, 6 )
 
-      integer               basidx
-      integer               framat
-      integer               free
-      integer               head
-      integer               i
-      integer               j
-      integer               lb
-      integer               lstbeg
-      integer               polctr ( ctrsiz )
-      integer               prvat
-      integer               prvfrm
+      integer(ip)           basidx
+      integer(ip)           framat
+      integer(ip)           free
+      integer(ip)           head
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           lb
+      integer(ip)           lstbeg
+      integer(ip)           polctr ( ctrsiz )
+      integer(ip)           prvat
+      integer(ip)           prvfrm
 
       logical               pass1
       logical               samfrm
@@ -442,8 +443,8 @@
       data                  pass1  / .true.           /
       data                  prvat  / 0                /
       data                  prvfrm / 0                /
-      data                  starts / maxbas * 0.d0    /
-      data                  stops  / maxbas * 0.d0    /
+      data                  starts / maxbas * 0.0_wp    /
+      data                  stops  / maxbas * 0.0_wp    /
       data                  usetim / maxfrm * .false. /
 
       if ( return() ) then
@@ -472,10 +473,10 @@
 !
 !        Create a 6x6 identity matrix.
 !
-         call filld( 0.d0, size66, xident )
+         call filld( 0.0_wp, size66, xident )
 
          do i = 1, 6
-            xident(i,i) = 1.d0
+            xident(i,i) = 1.0_wp
          end do
 
          pass1 = .false.
@@ -738,8 +739,8 @@
                      do j = 1,3
                         xform(i,  j  ) = rmat(i,j)
                         xform(i+3,j+3) = rmat(i,j)
-                        xform(i+3,j  ) = 0.0d0
-                        xform(i,  j+3) = 0.0d0
+                        xform(i+3,j  ) = 0.0_wp
+                        xform(i,  j+3) = 0.0_wp
                      end do
                   end do
 
@@ -799,8 +800,8 @@
                      do j = 1,3
                         xform(i,  j  ) = rmat(i,j)
                         xform(i+3,j+3) = rmat(i,j)
-                        xform(i+3,j  ) = 0.0d0
-                        xform(i,  j+3) = 0.0d0
+                        xform(i+3,j  ) = 0.0_wp
+                        xform(i,  j+3) = 0.0_wp
                      end do
                   end do
 

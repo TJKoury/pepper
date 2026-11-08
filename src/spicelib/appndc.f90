@@ -1,6 +1,7 @@
 !$Procedure APPNDC ( Append an item to a character cell )
 
       subroutine appndc ( item, cell )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,7 +19,7 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         item
@@ -142,13 +143,13 @@
 !     SPICELIB functions
 !
       logical               return
-      integer               cardc
-      integer               sizec
+      integer(ip)           cardc
+      integer(ip)           sizec
 
 !
 !     Local variables
 !
-      integer               nwcard
+      integer(ip)           nwcard
 
 
 

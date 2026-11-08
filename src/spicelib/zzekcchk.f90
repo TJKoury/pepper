@@ -2,6 +2,7 @@
 
       subroutine zzekcchk (  query,  eqryi,  eqryc,  ntab,    tablst, &
                              alslst, base,   error,  errmsg,  errptr  )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -27,19 +28,19 @@
       include 'ekqlimit.inc'
       include 'ekquery.inc'
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
       character*(*)         query
-      integer               eqryi ( lbcell : * )
+      integer(ip)           eqryi ( lbcell : * )
       character*(*)         eqryc
-      integer               ntab
+      integer(ip)           ntab
       character*(*)         tablst ( * )
       character*(*)         alslst ( * )
-      integer               base
+      integer(ip)           base
       logical               error
       character*(*)         errmsg
-      integer               errptr
+      integer(ip)           errptr
 
 ! $ Brief_I/O
 !
@@ -193,7 +194,7 @@
 !
 !     SPICELIB functions
 !
-      integer               isrchc
+      integer(ip)           isrchc
 
       logical               failed
 
@@ -207,19 +208,19 @@
       character*(cnamsz)    column
       character*(1)         ctouch
 
-      integer               attdsc ( adscsz )
-      integer               cb
-      integer               cc
-      integer               ce
-      integer               colidx
-      integer               i
-      integer               iparse
-      integer               j
-      integer               lxb ( 2 )
-      integer               nmatch
-      integer               tabidx
-      integer               tb
-      integer               te
+      integer(ip)           attdsc ( adscsz )
+      integer(ip)           cb
+      integer(ip)           cc
+      integer(ip)           ce
+      integer(ip)           colidx
+      integer(ip)           i
+      integer(ip)           iparse
+      integer(ip)           j
+      integer(ip)           lxb ( 2 )
+      integer(ip)           nmatch
+      integer(ip)           tabidx
+      integer(ip)           tb
+      integer(ip)           te
 
       logical               fnd
       logical               noname

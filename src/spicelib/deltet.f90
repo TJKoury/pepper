@@ -1,6 +1,7 @@
 !$Procedure DELTET ( Delta ET, ET - UTC )
 
       subroutine deltet ( epoch, eptype, delta )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -19,9 +20,9 @@
 
       implicit none
 
-      double precision epoch
+      real(wp) epoch
       character*(*)    eptype
-      double precision delta
+      real(wp) delta
 
 ! $ Brief_I/O
 !
@@ -218,7 +219,7 @@
 !
 !     Local parameters
 !
-      integer               nmax
+      integer(ip)           nmax
       parameter           ( nmax = 200 )
 
 !
@@ -228,21 +229,21 @@
       character*4           type
       character*1           dtype
 
-      double precision      aet
-      double precision      dleap  ( 2,nmax )
-      double precision      dta
-      double precision      ea
-      double precision      eb
-      double precision      et
-      double precision      ettai
-      double precision      k
-      double precision      leaps
-      double precision      m    ( 0:1 )
-      double precision      ma
+      real(wp)              aet
+      real(wp)              dleap  ( 2,nmax )
+      real(wp)              dta
+      real(wp)              ea
+      real(wp)              eb
+      real(wp)              et
+      real(wp)              ettai
+      real(wp)              k
+      real(wp)              leaps
+      real(wp)              m    ( 0:1 )
+      real(wp)              ma
 
-      integer               i
-      integer               n
-      integer               nleap
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           nleap
 
       logical               found    ( 5 )
 

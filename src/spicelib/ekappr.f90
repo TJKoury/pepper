@@ -1,6 +1,7 @@
 !$Procedure EKAPPR ( EK, append record onto segment )
 
       subroutine ekappr ( handle, segno, recno )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -26,9 +27,9 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-      integer               handle
-      integer               segno
-      integer               recno
+      integer(ip)           handle
+      integer(ip)           segno
+      integer(ip)           recno
 
 ! $ Brief_I/O
 !
@@ -413,10 +414,10 @@
 !
 !     Local variables
 !
-      integer               mbase
-      integer               mp
-      integer               nrec
-      integer               segdsc ( sdscsz )
+      integer(ip)           mbase
+      integer(ip)           mp
+      integer(ip)           nrec
+      integer(ip)           segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.

@@ -1,6 +1,7 @@
 !$Procedure SYFETI ( Fetch the Nth symbol in the table )
 
       subroutine syfeti ( nth, tabsym, tabptr, tabval, name, found )
+      use pepper_kinds, only: ip
 
 ! $ Abstract
 !
@@ -18,13 +19,13 @@
 
       implicit none
 
-      integer               lbcell
+      integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-      integer               nth
+      integer(ip)           nth
       character*(*)         tabsym     ( lbcell:* )
-      integer               tabptr     ( lbcell:* )
-      integer               tabval     ( lbcell:* )
+      integer(ip)           tabptr     ( lbcell:* )
+      integer(ip)           tabval     ( lbcell:* )
       character*(*)         name
       logical               found
 
@@ -158,13 +159,13 @@
 !
 !     SPICELIB functions
 !
-      integer               cardc
+      integer(ip)           cardc
       logical               return
 
 !
 !     Local variables
 !
-      integer               nsym
+      integer(ip)           nsym
 
 
 

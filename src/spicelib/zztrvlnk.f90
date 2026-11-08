@@ -2,6 +2,7 @@
 
       subroutine zztrvlnk ( aval,  maxa, pntrs, cellsz, &
                             cells, maxb, nb,    blist  )
+      use pepper_kinds, only: ip
       implicit none
 
 ! $ Abstract
@@ -24,14 +25,14 @@
 !
 ! $ Declarations
 
-      integer               aval
-      integer               maxa
-      integer               pntrs  ( * )
-      integer               cellsz
-      integer               cells  ( 2, * )
-      integer               maxb
-      integer               nb
-      integer               blist  ( * )
+      integer(ip)           aval
+      integer(ip)           maxa
+      integer(ip)           pntrs  ( * )
+      integer(ip)           cellsz
+      integer(ip)           cells  ( 2, * )
+      integer(ip)           maxb
+      integer(ip)           nb
+      integer(ip)           blist  ( * )
 
 ! $ Brief_I/O
 !
@@ -219,8 +220,8 @@
 
       logical               return
 
-      integer               i
-      integer               ptr
+      integer(ip)           i
+      integer(ip)           ptr
 
 !
 !     Standard SPICE error handling.

@@ -1,6 +1,7 @@
 !$Procedure SCPS01 ( Convert type 1 SCLK string to ticks )
 
       subroutine scps01 ( sc, clkstr, error, msg, ticks )
+      use pepper_kinds, only: ip, wp
 
 ! $ Abstract
 !
@@ -22,11 +23,11 @@
 
       include               'sclk.inc'
 
-      integer               sc
+      integer(ip)           sc
       character*(*)         clkstr
       logical               error
       character*(*)         msg
-      double precision      ticks
+      real(wp)              ticks
 
 ! $ Brief_I/O
 !
@@ -326,36 +327,36 @@
 !
 !     Local parameters
 !
-      integer               errlen
+      integer(ip)           errlen
       parameter           ( errlen =    240 )
 
-      integer               namlen
+      integer(ip)           namlen
       parameter           ( namlen =     60 )
 
-      integer               msglen
+      integer(ip)           msglen
       parameter           ( msglen =    320 )
 
-      integer               initsc
+      integer(ip)           initsc
       parameter           ( initsc =      0 )
 
-      double precision      initid
-      parameter           ( initid = -1.d20 )
+      real(wp)              initid
+      parameter           ( initid = -1.0e20_wp )
 
 !
 !     Following are parameters for the indices within the
 !     array NAMLST of the kernel variable names.
 !
 
-      integer               nflidx
+      integer(ip)           nflidx
       parameter           ( nflidx = 1 )
 
-      integer               offidx
+      integer(ip)           offidx
       parameter           ( offidx = nflidx + 1 )
 
-      integer               modidx
+      integer(ip)           modidx
       parameter           ( modidx = offidx + 1 )
 
-      integer               nkitem
+      integer(ip)           nkitem
       parameter           ( nkitem = modidx )
 
 !
@@ -365,15 +366,15 @@
       character*(errlen)    strerr
       character*(namlen)    namlst ( nkitem )
 
-      double precision      cmptks ( mxnfld )
-      double precision      cmpval ( mxnfld )
-      double precision      moduli ( mxnfld )
-      double precision      offset ( mxnfld )
+      real(wp)              cmptks ( mxnfld )
+      real(wp)              cmpval ( mxnfld )
+      real(wp)              moduli ( mxnfld )
+      real(wp)              offset ( mxnfld )
 
-      integer               i
-      integer               n
-      integer               nfield
-      integer               pntr
+      integer(ip)           i
+      integer(ip)           n
+      integer(ip)           nfield
+      integer(ip)           pntr
 
 
 !
@@ -446,7 +447,7 @@
 !
 !     Determine how many ticks is each field is worth.
 !
-      cmptks( nfield ) = 1.d0
+      cmptks( nfield ) = 1.0_wp
 
       do  i = nfield-1, 1, -1
          cmptks(i) = cmptks(i+1) * moduli(i+1)
@@ -515,7 +516,7 @@
 !
          cmpval(i) = cmpval(i) - offset(i)
 
-         if  ( anint( cmpval(i) ) .lt. 0.d0  )   then
+         if  ( anint( cmpval(i) ) .lt. 0.0_wp  )   then
 
             error = .true.
 
@@ -538,7 +539,7 @@
 !     the number of ticks each component count represents, and then
 !     add up the results.
 !
-      ticks = 0.d0
+      ticks = 0.0_wp
 
       do i = 1, n
          ticks = ticks + cmpval(i)*cmptks(i)
