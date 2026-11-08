@@ -5,3 +5,42 @@ author = "Jacob Williams"
 maintainer = "jacobwilliams@users.noreply.github.com"
 copyright = "Copyright 2026, Jacob Williams"
 
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+
+[fortran]
+# SPICELIB is legacy fixed-form F77: implicit typing and external procedures
+# without interfaces. "default" lets the compiler pick the source form from
+# the file extension (.f/.F fixed, .f90/.F90 free).
+implicit-typing = true
+implicit-external = true
+source-form = "default"
+
+[preprocess]
+[preprocess.cpp]
+# Only the platform-specific SPICELIB sources (.F) contain directives.
+suffixes = ["F"]
+
+# Platform selection for SPICELIB. The merged platform files (src/spicelib/*.F)
+# select their code with these macros: exactly one SPICE_OS_* and one
+# SPICE_COMPILER_* must be defined. Combinations NAIF does not ship (e.g.
+# Windows + gfortran) use the #else branches, which are NAIF's Cygwin gfortran
+# code. The "platform" feature is applied automatically through the default
+# profile (it is also applied with --profile debug/release).
+[features]
+platform.macos.preprocess.cpp.macros = ["SPICE_OS_MACOS"]
+platform.linux.preprocess.cpp.macros = ["SPICE_OS_LINUX"]
+platform.windows.preprocess.cpp.macros = ["SPICE_OS_WINDOWS"]
+platform.cygwin.preprocess.cpp.macros = ["SPICE_OS_CYGWIN"]
+platform.gfortran.preprocess.cpp.macros = ["SPICE_COMPILER_GFORTRAN"]
+platform.ifx.preprocess.cpp.macros = ["SPICE_COMPILER_INTEL"]
+platform.ifort.preprocess.cpp.macros = ["SPICE_COMPILER_INTEL"]
+# gfortran >= 10 rejects SPICELIB's (legal in F77 practice) argument
+# rank/type mismatches without this.
+platform.gfortran.flags = "-fallow-argument-mismatch"
+
+[profiles]
+default = ["platform"]

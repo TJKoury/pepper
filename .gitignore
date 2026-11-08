@@ -1,0 +1,5 @@
+upstream/archives/
+.DS_Store
+build/
+*.pyc
+
