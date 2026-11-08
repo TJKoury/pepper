@@ -85,7 +85,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM WRITLA_EX1
 !              IMPLICIT NONE
 !
@@ -103,16 +102,13 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Mary had a little lamb
 !        Whose fleece was white as snow
 !        And everywhere that mary went
 !        The lamb was sure to go
-!
 !
 ! $ Restrictions
 !
@@ -153,13 +149,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write an array of text lines to a logical unit
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -175,7 +169,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check to see if the maximum number of lines is positive.

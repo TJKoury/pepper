@@ -137,7 +137,6 @@
 !        The code example below is the first example in the header of
 !        GFOCCE.
 !
-!
 !        Conduct a search using the default GF progress reporting
 !        capability.
 !
@@ -154,7 +153,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -179,7 +177,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -190,9 +187,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFRPRT_EX1
 !              IMPLICIT NONE
@@ -321,7 +316,6 @@
 !             .              GFREPI,   GFREPU,       GFREPF,
 !             .              BAIL,     GFBAIL,       CNFINE,  RESULT )
 !
-!
 !              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
 !
 !                 WRITE (*,*) 'No occultation was found.'
@@ -348,10 +342,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Occultation/transit search 100.00% done.
 !
@@ -359,14 +351,12 @@
 !            Start time: 2001 DEC 14 20:10:14.195952  (TDB)
 !            Stop time:  2001 DEC 14 21:35:50.317994  (TDB)
 !
-!
 !        Note that the progress report has the format shown below:
 !
 !           Occultation/transit search   6.02% done.
 !
 !        The completion percentage was updated approximately once per
 !        second.
-!
 !
 !     2) The following piece of code provides a more concrete example
 !        of how these routines might be used. It is part of code that
@@ -401,7 +391,6 @@
 !             .                   FINISH,   TOL,    RPT,    UDREPU,
 !             .                   RESULT                          )
 !
-!
 !                 IF (  FAILED()  ) THEN
 !                    CALL CHKOUT ( 'GFOCCE'  )
 !                    RETURN
@@ -432,7 +421,6 @@
 !              IF ( RPT ) THEN
 !                 CALL UDREPF
 !              END IF
-!
 !
 !     3) For more concrete examples of how these routines are used in
 !        SPICELIB, please refer to the actual code of any of the GF API
@@ -477,13 +465,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF progress report umbrella
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -532,11 +518,8 @@
       save                  t0
       save                  remain
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
 
 !$Procedure GFREPI ( GF, progress report initialization )
 
@@ -680,20 +663,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF initialize a progress report
 !
 !-&
 
-
-!
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check to see if either the message prefix or suffix
@@ -759,7 +738,6 @@
 
       end do
 
-
       copyb = begmss
       copye = endmss
 
@@ -771,7 +749,6 @@
       call zzgftswk ( measur, 1.0_wp,  4,   begmss, endmss )
 
       if ( failed() ) return
-
 
 !
 !     Initialize the time to the start of the confinement window.
@@ -789,13 +766,7 @@
 
       end if
 
-
-
       return
-
-
-
-
 
 !$Procedure GFREPU ( GF, progress report update )
 
@@ -856,7 +827,6 @@
 !
 !                   for all calls to this routine made during the pass
 !                   must equal the measure of the confinement window.
-!
 !
 !     TIME     is the current time reached in the search for an event.
 !              TIME must lie in the interval
@@ -938,16 +908,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF update a progress report
 !
 !-&
 
-
       if ( return () ) return
-
 
 !
 !     Do a few error checks before getting started.
@@ -1017,7 +984,6 @@
       call zzgfwkin ( incr )
 
       return
-
 
 !$Procedure GFREPF ( GF, progress report finalization )
 
@@ -1104,16 +1070,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF finish a progress report
 !
 !-&
 
-
       if ( return () ) return
-
 
       call zzgfwkad ( 0.0_wp, 1, copyb, copye )
       call zzgfwkin ( 0.0_wp )
@@ -1157,7 +1120,6 @@
 !     performed, we rely on ZZGFDSPS to do that job.
 !
       call zzgfdsps  ( 1, ' ', 'A', 1 )
-
 
       return
       end

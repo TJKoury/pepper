@@ -53,14 +53,12 @@
 !
 !                       { X : X = VERTEX + s*UDIR, s >= 0 }
 !
-!
 !     UPLNML,
 !     CONST          are a unit-length plane normal vector and plane
 !                    constant. The plane is the set of points in
 !                    3-dimensional space
 !
 !                       { X :  < X, UPLNML > = CONST }
-!
 !
 !     MAXD           is the maximum length of a ray-plane intercept
 !                    from the ray's vertex. If an intercept exists but
@@ -80,7 +78,6 @@
 !                       1     One point of intersection. Note that
 !                             this case may occur when the ray's
 !                             vertex is in the plane.
-!
 !
 !     XPT            is the point of intersection of the input ray
 !                    and plane, when there is exactly one point of
@@ -188,7 +185,6 @@
 
       if ( ( vtxcon < const ) .and. ( dircon < 0.0_wp ) ) return
 
-
       if ( vtxcon == const ) then
 !
 !        The ray's vertex lies in the plane.
@@ -212,7 +208,6 @@
 !     parallel to and perpendicular to UPLNML.
 !
 !     Compute the maximum allowed length of UPERP.
-!
 !
       h     = abs( vtxcon - const )
       lpar  = abs( dircon )

@@ -151,7 +151,6 @@
 !     types 1 or 2. It then evaluates the pointing for that epoch and
 !     prints the result.
 !
-!
 !           SC     = -32
 !           INST   = -32002
 !     C
@@ -267,13 +266,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate CK type_2 pointing data record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -281,9 +278,6 @@
       logical               return
 
       real(wp)              vnorm
-
-
-
 
 !
 !     Local variables
@@ -294,7 +288,6 @@
       real(wp)              avtemp (    3 )
       real(wp)              angle
       real(wp)              time
-
 
 !
 !     Standard SPICE error handling.
@@ -371,7 +364,6 @@
       if ( needav ) then
          call vequ ( avtemp, av )
       end if
-
 
       return
       end

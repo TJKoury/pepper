@@ -125,7 +125,6 @@
 
       do while ( loc <= ntoken )
 
-
          if ( tokens(loc) == tokid ) then
 
             if ( tokid == tkkey ) then
@@ -148,11 +147,9 @@
 
          end if
 
-
          loc = loc + 1
 
       end do
-
 
       return
       end

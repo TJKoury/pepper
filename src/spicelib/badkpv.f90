@@ -163,7 +163,6 @@
 !        Use the kernel shown below to define some variables related
 !        to the Earth.
 !
-!
 !           KPL/PCK
 !
 !           File name: badkpv_ex1.tpc
@@ -180,9 +179,7 @@
 !
 !           End of constants kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM BADKPV_EX1
 !              IMPLICIT NONE
@@ -274,13 +271,10 @@
 !        C
 !              CALL ERRACT ( 'SET', 'DEFAULT' )
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Expected form of variable BODY_399_DATA found in kernel pool.
 !
@@ -298,11 +292,9 @@
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 4 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that, as expected, the error SPICE(BADVARIABLETYPE) is
 !        signaled by the second BADKPV call, since we have improperly
@@ -361,13 +353,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check the properties of a kernel pool variable
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -387,7 +377,6 @@
       logical               ok
       logical               found
 
-
 !
 !     Until we know otherwise, we shall assume that we have
 !     a bad kernel pool variable.
@@ -395,7 +384,6 @@
       badkpv = .true.
 
       if ( return() ) return
-
 
 !
 !     Look up the attributes of this variable in the kernel pool.
@@ -462,7 +450,6 @@
 !
       if ( .not. ok ) then
 
-
          call setmsg ( '#: The kernel pool variable ''#'' is ' &
          //            'expected to have a number of components ' &
          //            'DIM such that the comparison DIM # # is ' &
@@ -479,7 +466,6 @@
          return
 
       end if
-
 
 !
 !     Check to see that DIVBY evenly divides the dimension of
@@ -516,7 +502,6 @@
 
          if ( class /= 'C' ) then
 
-
             call setmsg ( '#: The kernel pool variable ''#'' ' &
             //            'must be of type "CHARACTER". ' &
             //            'However, the current type is numeric. ' )
@@ -527,9 +512,7 @@
 
          end if
 
-
       else if ( eqchr ( type, 'N' ) ) then
-
 
          if ( class /= 'N' ) then
 
@@ -555,7 +538,6 @@
          return
 
       end if
-
 
       badkpv = .false.
 

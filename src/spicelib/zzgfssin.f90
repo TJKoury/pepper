@@ -71,16 +71,13 @@
 !                 the computation method to be used. Any value
 !                 supported by SUBPNT may be used.
 !
-!
 !     TRGID      is the NAIF ID code of the target object.
 !
 !                *This routine assumes that the target is modeled
 !                as a tri-axial ellipsoid.*
 !
-!
 !     ET         is the time, expressed as ephemeris seconds past J2000
 !                TDB, at which the specified state is to be computed.
-!
 !
 !     FIXREF     is the name of the reference frame relative to which
 !                the state of interest is specified.
@@ -89,7 +86,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string FIXREF.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied to
 !                the state of the target body to account for one-way
@@ -124,9 +120,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
 !
-!
 !     OBSID      is the NAIF ID code of the observer.
-!
 !
 !     DREF        is the name of the reference frame relative to which
 !                 a ray's direction vector is expressed. This may be
@@ -144,14 +138,12 @@
 !                 correction. See the description of the direction
 !                 vector DVEC for details.
 !
-!
 !     DCTR        is the NAIF ID code of the body at which the frame
 !                 designated by DREF is centered. While DCTR can
 !                 be obtained from the FRAMEX system, passing in
 !                 the ID code is more efficient. DCTR should be looked
 !                 up by the coordinate search utility initialization
 !                 routine before a search is performed.
-!
 !
 !     DVEC        Ray direction vector emanating from the observer. The
 !                 intercept with the target body's surface of the ray
@@ -173,7 +165,6 @@
 !                 LTCENT is computed using the method indicated by
 !                 ABCORR.
 !
-!
 !     RADII      is an array containing three radii defining
 !                a reference ellipsoid for the target body.
 !
@@ -191,7 +182,6 @@
 !
 !               STATE is defined if and only if the output flag FOUND
 !               is set to .TRUE.
-!
 !
 !     FOUND     is a logical flag indicating whether the requested
 !               state was found. FOUND is set to .TRUE. if and only
@@ -438,19 +428,15 @@
       data                  svobs / ' ' /
       data                  svtarg / ' ' /
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
 
-
 !
 !     No result has been found.
 !
       found = .false.
-
 
       if (  first  .or. ( trgid /= prvtrg )  ) then
 
@@ -459,7 +445,6 @@
          prvtrg = trgid
 
       end if
-
 
       if (  first  .or. ( obsid /= prvobs )  ) then
 
@@ -506,7 +491,6 @@
          return
 
       end if
-
 
       if ( geom ) then
 !
@@ -558,7 +542,6 @@
 
          end if
 
-
 !        Get the state of the target with respect to the observer,
 !        expressed relative to the target body-fixed frame. We don't
 !        need to propagate states to the solar system barycenter in
@@ -597,7 +580,6 @@
 !
          if ( .not. found ) return
 
-
       else if ( uselt ) then
 !
 !        Light time and possibly stellar aberration corrections
@@ -619,7 +601,6 @@
 !           determining the epoch, just as in SINCPT. Let DLTCTR be the
 !           rate of change of light time between the frame center and
 !           the observer.
-!
 !
 !           Find the light time from the observer to the center of
 !           frame DREF.
@@ -697,7 +678,6 @@
 !
 !        - Express the state of the observer relative to the
 !          target in the target body fixed frame at TRGEPC.
-!
 !
 !        Below, we'll use the convention that vectors expressed
 !        relative to the body-fixed frame have names of the form
@@ -905,7 +885,6 @@
 !              range rate
 !              ----------
 !                  c
-!
 !
 !           If we're correcting for stellar aberration, *ideally* we
 !           should remove that correction now, since the light time

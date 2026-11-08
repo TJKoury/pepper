@@ -79,14 +79,11 @@
 !                    Case and leading and trailing blanks are not
 !                    significant in ABCORR.
 !
-!
 !     ET             is an epoch, expressed as seconds past J2000 TDB.
 !
 !     LT             is a light time value, expressed as TDB seconds.
 !
-!
 ! $ Detailed_Output
-!
 !
 !     ETCORR         is the input epoch ET, corrected for light time:
 !
@@ -164,16 +161,13 @@
 !
       logical               corblk ( abatsz )
 
-
       if ( return() ) return
-
 
 !
 !     Parse the aberration correction string.  Obtain a correction
 !     attribute block.
 !
       call zzprscor ( abcorr, corblk )
-
 
       if ( corblk(ltidx) ) then
 !
@@ -205,10 +199,3 @@
 
       return
       end
-
-
-
-
-
-
-

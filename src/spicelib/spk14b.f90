@@ -172,9 +172,7 @@
 !        containing only one segment, given a set of Chebyshev
 !        coefficients and their associated epochs.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPK14B_EX1
 !              IMPLICIT NONE
@@ -255,7 +253,6 @@
 !             .                      4.0501D0, 4.0502D0, 4.0503D0,
 !             .                      4.0601D0, 4.0602D0, 4.0603D0 /
 !
-!
 !        C
 !        C     Set the start and end times of interval covered by
 !        C     segment.
@@ -305,7 +302,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 14 exists in
 !        the output directory.
@@ -352,13 +348,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin writing a type_14 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions

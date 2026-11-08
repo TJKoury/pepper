@@ -206,13 +206,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of CK type_4 records
 !
 !-&
-
 
 !
 !     SPICELIB functions

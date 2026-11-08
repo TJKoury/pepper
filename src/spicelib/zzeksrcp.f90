@@ -113,9 +113,6 @@
       integer(ip)           loc
 
 !
-!     Use discovery check-in.
-!
-!
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
 !

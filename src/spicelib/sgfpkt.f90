@@ -181,13 +181,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch packets from a generic segment
 !
 !-&
-
 
 !
 !     Spicelib Functions

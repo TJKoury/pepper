@@ -97,7 +97,6 @@
 !         handle and DLA descriptor matches one seen previously.
 !         The logic of such a test can be implemented as follows:
 !
-!
 !                   SUBROUTINE SUBA ( HANDLE, DLADSC )
 !                   IMPLICIT NONE
 !
@@ -175,13 +174,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test DLA segments for match
 !
 !-&
-
 
 !
 !     Local variables

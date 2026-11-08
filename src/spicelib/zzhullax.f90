@@ -107,7 +107,6 @@
 !
 !                The boundary vectors need not have unit length.
 !
-!
 ! $ Detailed_Output
 !
 !     AXIS       is a unit vector normal to a plane containing the
@@ -182,7 +181,6 @@
 !            If this test produces a candidate face of the convex hull,
 !            proceed to step 3.
 !
-!
 !        2)  If step (1) fails, repeat the search for a candidate
 !            convex hull face, but this time search over every pair of
 !            distinct boundary vectors.
@@ -191,13 +189,11 @@
 !
 !            If this search fails, signal an error.
 !
-!
 !        3)  Produce a set of basis vectors for a reference frame,
 !            which we'll call the "face frame," using as the +X axis
 !            the angle bisector of the vectors bounding the candidate
 !            face, the +Y axis the inward normal vector to this face,
 !            and the +Z axis completing a right-handed basis.
-!
 !
 !        4)  Transform each boundary vector, other than the two vectors
 !            defining the selected convex hull face, to the face frame
@@ -208,7 +204,6 @@
 !            If any vector's longitude is less than 2*MARGIN or greater
 !            than pi - 2*MARGIN radians, signal an error.
 !
-!
 !        5)  Let DELTA be the difference between pi and the maximum
 !            longitude found in step (4). Rotate the +Y axis (which
 !            points in the inward normal direction relative to the
@@ -217,12 +212,10 @@
 !            central longitude of the set of boundary vectors. The
 !            resulting vector is our candidate FOV axis.
 !
-!
 !        6)  Check the angular separation of the candidate FOV axis
 !            against each boundary vector. If any vector has angular
 !            separation of more than (pi/2)-MARGIN radians from the
 !            axis, signal an error.
-!
 !
 !     Note that there are reasonable FOVs that cannot be handled by the
 !     algorithm described here. For example, any FOV whose cross
@@ -282,8 +275,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -328,9 +319,7 @@
       logical               ok
       logical               pass1
 
-
       if ( return() ) return
-
 
 !
 !     Nothing found yet.
@@ -650,7 +639,6 @@
 !
 !     We'll call the reference frame having these basis vectors
 !     the "face frame."
-!
 !
       call vhat ( bounds(1,i),    ray1 )
       call vhat ( bounds(1,next), ray2 )

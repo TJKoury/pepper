@@ -188,13 +188,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read the first comment line of an SPK or CK file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -210,7 +208,6 @@
 !        unit.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -273,7 +270,6 @@
 !     SPCRFL has been called for this file.
 !
       called = .true.
-
 
 !
 !     Read the file record to find out if the DAF contains any
@@ -370,9 +366,6 @@
       eocsav  = eoc
 
       return
-
-
-
 
 !$Procedure SPCRNL ( SPK and CK, read next line of comments )
 
@@ -563,7 +556,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     continue reading comments from an SPK or CK file
@@ -571,12 +563,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     If SPCRFL hasn't been called, then we don't know which
@@ -677,7 +667,6 @@
          eocsav = eoc
          return
       end if
-
 
       if ( record ( bol: bol ) == null ) then
 !
@@ -783,7 +772,6 @@
          eocsav = eoc
 
       end if
-
 
       return
       end

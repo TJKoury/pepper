@@ -18,13 +18,14 @@ module pepper_state_dafrwd
 
    !> The saved variables of DAFRWD.
    type, public :: dafrwd_state
-      integer(ip) :: rbhan    (      rbsize )  !! saved between calls by DAFRWD
-      integer(ip) :: rbrec    (      rbsize )  !! saved between calls by DAFRWD
-      integer(ip) :: rbreq    (      rbsize )  !! saved between calls by DAFRWD
-      real(wp) :: rbdat    ( 128, rbsize )  !! saved between calls by DAFRWD
-      integer(ip) :: rbnbr  !! saved between calls by DAFRWD
-      integer(ip) :: nread  !! saved between calls by DAFRWD
-      integer(ip) :: nreq  !! saved between calls by DAFRWD
+      integer(ip) :: rbhan    (      rbsize )  !! handle of the file of each buffered record
+      integer(ip) :: rbrec    (      rbsize )  !! record number of each buffered record
+      integer(ip) :: rbreq    (      rbsize )  !! request number of the last use of each buffered
+                                               !! record (to replace the oldest)
+      real(wp) :: rbdat    ( 128, rbsize )  !! the buffered records
+      integer(ip) :: rbnbr  !! number of records in the buffer
+      integer(ip) :: nread  !! number of records read from files
+      integer(ip) :: nreq  !! number of requests
    end type dafrwd_state
 
 contains

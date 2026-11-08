@@ -166,7 +166,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a new DSK file
@@ -174,15 +173,12 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
 
-
       if ( return() ) return
-
 
       call dlaopn ( fname, 'DSK', ifname, ncomch, handle )
 

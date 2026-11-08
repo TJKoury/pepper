@@ -246,7 +246,6 @@
 !               + [W]  [DELTA]  d[PHI] /dt
 !                    3        1           3
 !
-!
 !     If a binary PCK file record can be used for the time and
 !     body requested, it will be used. The most recently loaded
 !     binary PCK file has first priority, followed by previously
@@ -284,7 +283,6 @@
 !                        d          2        /
 !                                  d        '-----
 !                                              i
-!
 !
 !     where `d' is in seconds/day; T in seconds/Julian century;
 !     a(i), d(i), and w(i) arrays apply to satellites only; and
@@ -337,7 +335,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: tisbod_ex1.tm
@@ -361,7 +358,6 @@
 !                                            radii
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'sat375.bsp',
@@ -372,9 +368,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TISBOD_EX1
 !              IMPLICIT NONE
@@ -436,10 +430,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Titan as seen from Saturn (J2000 frame):
 !           position   (km):  1071928.661  -505781.970   -60383.976
@@ -448,13 +440,11 @@
 !           position   (km):   401063.338 -1116965.364    -5408.806
 !           velocity (km/s):     -177.547      -63.745        0.028
 !
-!
 !        Note that the complete example could be replaced by a single
 !        SPKEZR call:
 !
 !           CALL SPKEZR ( 'TITAN',  ET,    'IAU_SATURN', 'NONE',
 !          .              'SATURN', STATE, LT                   )
-!
 !
 !     2) Use TISBOD is used to compute the angular velocity vector (with
 !        respect to the J2000 inertial frame) of the specified body at
@@ -462,9 +452,7 @@
 !
 !        Use the meta-kernel from Example 1 above.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TISBOD_EX2
 !              IMPLICIT NONE
@@ -580,16 +568,13 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Angular velocity (km/s):
 !             0.000014001     0.000011995     0.000162744
 !        Angular velocity using XF2RAV (km/s):
 !             0.000014001     0.000011995     0.000162744
-!
 !
 ! $ Restrictions
 !
@@ -709,13 +694,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transformation from inertial state to bodyfixed
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -815,7 +798,6 @@
 !         specification of a P_constants inertial reference frame via
 !         kernel pool variables.
 !
-!
 !         Also, the $Required_Reading and $Literature_References
 !         sections were updated. The SPK required reading has been
 !         deleted from the $Literature_References section, and the
@@ -823,7 +805,6 @@
 !         been added in the $Required_Reading section.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -995,7 +976,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Perform any needed first pass initializations.

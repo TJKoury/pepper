@@ -114,7 +114,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -129,10 +128,7 @@
 
       integer(ip)           corsys
 
-
       if ( return() ) return
-
-
 
       corsys = nint( dskdsc(sysidx) )
 

@@ -468,7 +468,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -492,7 +491,6 @@
 !
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
-!
 !
 !     Step Size
 !     =========
@@ -535,7 +533,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -574,7 +571,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -635,7 +631,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfrr_ex1.tm
@@ -669,9 +664,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFRR_EX1
 !              IMPLICIT NONE
@@ -842,10 +835,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Relation condition: =
 !        Start time, drdt = 2007-JAN-02 00:35:19.571       0.336500000
@@ -903,7 +894,6 @@
 !        Start time, drdt = 2007-MAR-25 17:26:56.148       1.428141706
 !        Stop time,  drdt = 2007-MAR-25 17:26:56.148       1.428141706
 !
-!
 ! $ Restrictions
 !
 !     1)  The kernel files to be used by this routine must be loaded
@@ -959,13 +949,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF range rate search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1038,7 +1026,6 @@
 
       end if
 
-
       if ( nw < nwrr ) then
 
          call setmsg ( 'Workspace window count was #; count must be ' &
@@ -1049,7 +1036,6 @@
          return
 
       end if
-
 
 !
 !     Check the result window size.
@@ -1063,7 +1049,6 @@
          return
 
       end if
-
 
 !
 !     Set up a call to GFEVNT specific to the range rate search.
@@ -1112,7 +1097,6 @@
                     adjust,   cnfine,   norpt,       gfrepi, &
                     gfrepu,   gfrepf,   mw,          nwrr, &
                     work,     nobail,   gfbail,      result  )
-
 
       return
 

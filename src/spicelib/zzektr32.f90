@@ -199,7 +199,6 @@
 !
 !          If 3*MNKEYC is odd, we have strict inequality and also
 !
-!
 !             3*MNKEYC  =  2 * ( (3*MNKEYC)/2 )  +  1
 !
 !          so
@@ -231,7 +230,6 @@
 !          and since MNKEYC is approximately 40, the minimum size
 !          constraints on the child nodes are easily met.
 !
-!
 !     As the above description shows, the parent loses a key as a
 !     result of a 3-2 merge.  This may cause the parent to underflow;
 !     if it does, the underflow at the parent's level must be resolved.
@@ -261,8 +259,6 @@
 !-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
 !
 !-&
-
-
 
 !
 !     Non-SPICELIB functions
@@ -309,9 +305,6 @@
       integer(ip)           sizbas
       integer(ip)           sum
 
-
-!
-!     Use discovery check-in for speed.
 !
 !     The plan is to take three sibling nodes, two of which contain
 !     the minimum number of keys and one of which is underflowing by one
@@ -323,7 +316,6 @@
 !     children will be exactly (3*MNKEYC).  The numbers of keys in the
 !     left and right nodes will be, respectively:
 !
-!
 !        LSIZE  =   INT (  (3*MNKEYC)/2  )
 !        RSIZE  =   (3*MNKEYC)  - LSIZE
 !
@@ -331,11 +323,9 @@
 !
 !        MNKEYC : MXKEYC
 !
-!
 !     The definition of LSIZE implies that
 !
 !        LSIZE  =  MNKEYC + INT ( MNKEYC/2 )
-!
 !
 !     so
 !
@@ -361,7 +351,6 @@
 !
 !        MNKEYC  <  RSIZE
 !
-!
 !     It remains to be shown that
 !
 !        RSIZE   <  MXKEYC
@@ -383,7 +372,6 @@
 !               -
 !
 !     as we claimed.
-!
 !
 !     All right, read in the child and parent pages.
 !
@@ -440,7 +428,6 @@
       lsib  =  ppage ( kidbas+lpkidx   )
       msib  =  ppage ( kidbas+lpkidx+1 )
       rsib  =  ppage ( kidbas+lpkidx+2 )
-
 
       if (      ( lsib /= left   ) &
            .or. ( msib /= middle ) &
@@ -711,7 +698,6 @@
 !     Free the page used by the middle child.
 !
       call zzekpgfr ( handle, int, middle )
-
 
       return
       end

@@ -161,13 +161,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     state relative to solar system barycenter
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -178,7 +176,6 @@
 !        this change the routine now supports non-inertial frames.
 !
 !-&
-
 
 !
 !     SPICELIB functions

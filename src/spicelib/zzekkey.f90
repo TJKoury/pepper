@@ -109,7 +109,6 @@
 !                    referenced in the input constraints.  The Ith
 !                    descriptor corresponds to the Ith constraint.
 !
-!
 !     OPS            are relational operators used in the input
 !                    constraints.  The elements of OPS are any of the
 !                    integer parameters
@@ -289,9 +288,7 @@
 !
 !-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
 !
-!
 !-&
-
 
 ! $ Revisions
 !
@@ -299,7 +296,6 @@
 !
 !        Added check of FAILED after calls to the EK search functions.
 !-&
-
 
 !
 !     SPICELIB functions
@@ -320,7 +316,6 @@
 !     Local parameters
 !
       integer(ip), parameter :: lbcell = -5
-
 
 !
 !     Local variables
@@ -345,7 +340,6 @@
       logical               fnd
       logical               indexd
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -355,7 +349,6 @@
 !     There's no key column to begin with.
 !
       found = .false.
-
 
       if (  ( ncnstr < 0 ) .or. ( ncnstr > maxcon )  ) then
 
@@ -375,7 +368,6 @@
 !
       call ssizei ( maxcon, idxset )
 
-
       do i = 1, ncnstr
 
          if ( active(i) ) then
@@ -389,7 +381,6 @@
          end if
 
       end do
-
 
       do i = 1, cardi(idxset)
 
@@ -408,7 +399,6 @@
          end do
 
       end do
-
 
 !
 !     We finish up now if there are no indexed columns
@@ -490,7 +480,6 @@
                   maxptr  =  min ( lastlt, maxptr )
                   elim    =  maxptr == 0
 
-
                else if ( ops(i) == le ) then
 !
 !                 Find the index of the pointer to the last row
@@ -504,7 +493,6 @@
 
                   maxptr  =  min ( lastle, maxptr )
                   elim    =  maxptr == 0
-
 
                else if ( ops(i) == eq ) then
 !
@@ -521,7 +509,6 @@
                                         dsclst(1,i),    nrows, &
                                         dtypes(i),      chrbuf(b:e), &
                                         dvals(i),       ivals(i)    )
-
 
                   lastle  =  zzekille ( handle,         segdsc, &
                                         dsclst(1,i),    nrows, &
@@ -548,7 +535,6 @@
 
                   end if
 
-
                else if ( ops(i) == gt ) then
 !
 !                 Find the index of the pointer to the last row
@@ -565,7 +551,6 @@
 
                   minptr  =  max ( lastle + 1,  minptr )
                   elim    =  lastle == nrows
-
 
                else if ( ops(i) == ge ) then
 !
@@ -598,7 +583,6 @@
             if ( minptr > maxptr ) then
                elim  =  .true.
             end if
-
 
             if ( .not. elim ) then
                i  =  i  +  1
@@ -633,9 +617,7 @@
 
          end if
 
-
       end do
-
 
       if ( elim ) then
 !
@@ -656,11 +638,9 @@
 
       end if
 
-
       i   =  conmap(  ordi( key, idxset )  )
 
       call movei ( dsclst(1,i), cdscsz, keydsc )
-
 
 !
 !     De-activate constraints on the key column that we've already

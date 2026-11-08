@@ -101,7 +101,6 @@
 !     for a particular epoch before evaluating the record to obtain a
 !     state vector, as in the example which follows.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -156,13 +155,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_13 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -187,13 +184,10 @@
       integer(ip)           to
       integer(ip)           xstart
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       n =  nint( record(sizidx) )
 
@@ -230,7 +224,6 @@
                        state(i+3)      )
 
       end do
-
 
       return
       end

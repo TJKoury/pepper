@@ -96,9 +96,7 @@
 !
 !-&
 
-
       integer(ip)           i
-
 
       zzingrd = .false.
 

@@ -72,7 +72,6 @@
 !                    INTEGER               TRGCTR
 !                    DOUBLE PRECISION      STATE ( 6 )
 !
-!
 !                    The inputs of TRGSUB are ET and REF; the outputs
 !                    are TRGCTR and STATE. STATE is the geometric state
 !                    of the target relative to the returned center of
@@ -158,7 +157,6 @@
 !                               correction and stellar aberration
 !                               correction.
 !
-!
 !                 The following values of ABCORR apply to the
 !                 "transmission" case in which photons *depart* from
 !                 the observer's location at ET and arrive at the
@@ -192,14 +190,12 @@
 !                               Newtonian light time correction and
 !                               stellar aberration correction.
 !
-!
 !                 Neither special nor general relativistic effects are
 !                 accounted for in the aberration corrections applied
 !                 by this routine.
 !
 !                 Case and blanks are not significant in the string
 !                 ABCORR.
-!
 !
 !     STOBS       is the geometric state of the observer relative to
 !                 the solar system barycenter at ET. STOBS is expressed
@@ -366,8 +362,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
@@ -422,8 +416,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !

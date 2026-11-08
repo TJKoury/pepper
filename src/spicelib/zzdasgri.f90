@@ -147,15 +147,12 @@
       save                 intbff
       save                 natbff
 
-
 !
 !     Initial values
 !
       data                 first  / .true. /
 
-
       if ( return() ) return
-
 
       if ( first ) then
 !
@@ -191,7 +188,6 @@
          return
 
       end if
-
 
       if ( intbff == natbff ) then
 !

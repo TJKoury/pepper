@@ -193,7 +193,6 @@
 !          error response action can be modified, and refers
 !          to documentation of the error handling feature.
 !
-!
 !     NOTE:
 !
 !         By default, error messages are printed to the screen
@@ -216,7 +215,6 @@
 !
 !     1. Setting up 'ABORT' mode:
 !
-!
 !         C
 !         C      We wish to have our program abort if an error
 !         C      is detected. But instead of having the error
@@ -237,8 +235,6 @@
 !
 !                CALL ERRACT ( 'SET', 'ABORT' )
 !
-!
-!
 !     2. Setting up 'REPORT' mode:
 !
 !         C
@@ -253,13 +249,10 @@
 !
 !                CALL ERRACT ( 'SET', 'REPORT' )
 !
-!
 !     3. Setting up 'RETURN' mode: This is the same
 !         as example #2, except that the ERRACT call becomes:
 !
 !                CALL ERRACT ( 'SET', 'RETURN' )
-!
-!
 !
 !     4. Setting up 'IGNORE' mode:
 !
@@ -271,7 +264,6 @@
 !         C      it can do only if we misspell "IGNORE,"
 !         C      the resulting error messages will go to
 !         C      the screen).
-!
 !
 !                CALL ERRACT ( 'SET', 'IGNORE' )
 !
@@ -322,13 +314,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get/set default error action
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -357,7 +347,6 @@
 !         an error condition exists.
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -402,7 +391,6 @@
 !
 !     Executable Code:
 !
-
 
 !
 !     We convert the input values to upper case, as needed. Note: we

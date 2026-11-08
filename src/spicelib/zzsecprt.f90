@@ -139,7 +139,6 @@
 !
 !-   SPICELIB Version 1.0.0, MAY-19-1997 (EDW)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -172,8 +171,6 @@
       real(wp), parameter :: fasx4 = 2.8843198_wp
 
       real(wp), parameter :: fasx6 = 0.37448087_wp
-
-
 
 !
 !     Calculate the dot terms with respect to the state of the
@@ -227,7 +224,6 @@
                + 3.0_wp*del(3)*dcos( 3.0_wp*( xli - fasx6 ) )
 
       end if
-
 
       xldot = xni  +  xfact
       xnddt = xnddt * xldot

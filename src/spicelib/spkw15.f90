@@ -279,13 +279,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Write a type 15 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -302,7 +300,6 @@
 
 !
 !     Local Variables
-!
 !
 !     Segment descriptor size
 !
@@ -330,7 +327,6 @@
 !
       integer(ip), parameter :: datsiz = 16
 
-
       real(wp)              angle
       real(wp)              dot
       real(wp)              descr ( ns )
@@ -342,19 +338,16 @@
       integer(ip)           i
       integer(ip)           value
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Fetch the various entities from the inputs and put them into
 !     the data record, first the epoch.
 !
       record(1) = epoch
-
 
 !
 !     Convert TP and PA to unit vectors.
@@ -457,7 +450,6 @@
          //            'vector. '           )
          call sigerr ( 'SPICE(BADVECTOR)'   )
          return
-
 
       else if ( radius < 0.0_wp ) then
 

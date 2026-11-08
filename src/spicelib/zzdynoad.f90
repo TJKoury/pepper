@@ -195,7 +195,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -232,7 +231,6 @@
 !     Standard SPICE error handling
 !
       if ( return() ) return
-
 
 !
 !     Nothing found yet.
@@ -284,7 +282,6 @@
 
       end if
 
-
       if ( .not. found ) then
 !
 !        We need to look up the frame name-based kernel variable.
@@ -313,7 +310,6 @@
             call errint ( '#',  kvnmln                              )
             call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
             return
-
 
          else if  ( reqnam > kvnmln ) then
 !
@@ -367,7 +363,6 @@
 
       end if
 
-
       if ( n > maxn ) then
 
          call setmsg ( 'The kernel variable # has used to define '  // &
@@ -402,5 +397,3 @@
 
       return
       end
-
-

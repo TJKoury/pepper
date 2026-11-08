@@ -125,9 +125,7 @@
 !
 !           pck00010.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GEOREC_EX1
 !              IMPLICIT NONE
@@ -191,16 +189,13 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Geodetic coordinates in deg and km (lon, lat, alt)
 !             118.000000     30.000000      0.000000
 !         Rectangular coordinates in km (x, y, z)
 !           -2595.359123   4881.160589   3170.373523
-!
 !
 !     2) Create a table showing a variety of rectangular coordinates
 !        and the corresponding Earth geodetic coordinates. The
@@ -213,13 +208,10 @@
 !        Note: the values shown above may not be current or suitable
 !              for your application.
 !
-!
 !        Corresponding rectangular and geodetic coordinates are
 !        listed to three decimal places. Input angles are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GEOREC_EX2
 !              IMPLICIT NONE
@@ -303,10 +295,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !            LON      LAT       ALT     RECTAN(1)  RECTAN(2)  RECTAN(3)
 !          -------  -------  ---------  ---------  ---------  ---------
@@ -321,7 +311,6 @@
 !            0.000   88.707  -6355.573      1.000      0.000      1.000
 !           90.000   88.707  -6355.573      0.000      1.000      1.000
 !           45.000   88.171  -6355.561      1.000      1.000      1.000
-!
 !
 ! $ Restrictions
 !
@@ -371,13 +360,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     geodetic to rectangular coordinates
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -396,12 +383,10 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical          return
-
 
 !
 !     Local variables
@@ -421,15 +406,10 @@
       real(wp) base   (3)
       real(wp) normal (3)
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     The equatorial radius must be greater than zero.
@@ -445,7 +425,7 @@
 !     If the flattening coefficient is greater than one, the polar
 !     radius computed below is negative. If it's equal to one, the
 !     polar radius is zero. Either case is a problem, so signal an
-!     error and check out.
+!     error.
 !
       if ( f >= 1 ) then
           call setmsg ( 'Flattening coefficient was *.'  )
@@ -454,12 +434,10 @@
           return
       end if
 
-
 !
 !     Move the altitude to a temporary variable.
 !
       height = alt
-
 
 !
 !     Compute the polar radius of the spheroid.
@@ -500,8 +478,6 @@
 !     Move along the normal to the input point.
 !
       call vlcom ( 1.0_wp, base, height, normal, rectan )
-
-
 
       return
       end

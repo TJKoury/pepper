@@ -101,7 +101,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Display the interval-level coverage for each object in a
 !        specified CK file. Use tolerance of zero ticks. Do not
 !        request angular velocity. Express the results in the TDB time
@@ -111,9 +110,7 @@
 !        of the ID code set: find the coverage for each item in the
 !        set and display the coverage.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKOBJ_EX1
 !              IMPLICIT NONE
@@ -260,12 +257,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0010.tls, the SCLK file
 !        named cas00145.tsc and the CK file named 08052_08057ra.bc, the
 !        output was:
-!
 !
 !        Name of leapseconds kernel > naif0010.tls
 !        Name of SCLK kernel        > cas00145.tsc
@@ -277,38 +272,31 @@
 !         Start:    2008 FEB 21 00:01:07.771186 (TDB)
 !         Stop:     2008 FEB 23 22:53:30.001738 (TDB)
 !
-!
 !         Interval:            2
 !         Start:    2008 FEB 23 22:58:13.999732 (TDB)
 !         Stop:     2008 FEB 24 02:22:25.913175 (TDB)
-!
 !
 !         Interval:            3
 !         Start:    2008 FEB 24 02:27:49.910886 (TDB)
 !         Stop:     2008 FEB 24 19:46:33.470587 (TDB)
 !
-!
 !         Interval:            4
 !         Start:    2008 FEB 24 19:49:33.469315 (TDB)
 !         Stop:     2008 FEB 25 04:25:21.250677 (TDB)
-!
 !
 !         Interval:            5
 !         Start:    2008 FEB 25 04:29:33.248897 (TDB)
 !         Stop:     2008 FEB 25 15:23:44.971594 (TDB)
 !
-!
 !         Interval:            6
 !         Start:    2008 FEB 25 15:24:12.971396 (TDB)
 !         Stop:     2008 FEB 25 20:25:04.843864 (TDB)
-!
 !
 !         Interval:            7
 !         Start:    2008 FEB 25 20:25:48.843553 (TDB)
 !         Stop:     2008 FEB 26 00:01:04.752306 (TDB)
 !
 !         =======================================
-!
 !
 ! $ Restrictions
 !
@@ -349,13 +337,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find id codes of objects in CK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -390,7 +376,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     See whether GETFAT thinks we've got a CK file.

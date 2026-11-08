@@ -137,7 +137,6 @@
 !                            correction and stellar aberration
 !                            correction.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -170,7 +169,6 @@
 !                 'XCN+S'    "Transmission" case: converged
 !                            Newtonian light time correction and
 !                            stellar aberration correction.
-!
 !
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
@@ -287,9 +285,7 @@
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              IMPLICIT NONE
 !        C
@@ -361,10 +357,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         ET =    0.0000000000000000
 !
@@ -389,7 +383,6 @@
 !         J2000 x-position (km):     -284552.90265547187
 !         J2000 y-position (km):     -273814.30975274299
 !         J2000 z-position (km):     -79329.406046598189
-!
 !
 ! $ Restrictions
 !
@@ -455,7 +448,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     using body names get position relative to an observer
@@ -464,7 +456,6 @@
 !     read trajectory data
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -518,7 +509,6 @@
 !     Initial values.
 !
       data                  first   / .true. /
-
 
 !
 !     Standard SPICE error handling.
@@ -592,7 +582,6 @@
 !     After all translations are done we can call SPKEZP.
 !
       call spkezp ( targid, et, ref, abcorr, obsid, ptarg, lt )
-
 
       return
       end

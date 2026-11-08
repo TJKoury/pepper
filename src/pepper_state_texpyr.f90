@@ -11,7 +11,6 @@ module pepper_state_texpyr
 
    private
 
-
    public :: init_texpyr_state
 
    !> The saved variables of TEXPYR.

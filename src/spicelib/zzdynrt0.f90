@@ -217,14 +217,12 @@
 !           Near point on target
 !           Constant vector in specified frame
 !
-!
 !        Mean Equator and Equinox of Date
 !        ================================
 !
 !           Bodies and models
 !           -----------------
 !           Earth:  1976 IAU precession model
-!
 !
 !        Mean Ecliptic and Equinox of Date
 !        ================================
@@ -234,7 +232,6 @@
 !           Earth:  1976 IAU precession model
 !                   1980 IAU mean obliquity model
 !
-!
 !        True Equator and Equinox of Date
 !        ================================
 !
@@ -243,14 +240,12 @@
 !           Earth:  1976 IAU precession model
 !                   1980 IAU nutation model
 !
-!
 !        Euler frames
 !        ============
 !
 !           Euler angle definitions
 !           -----------------------
 !           Polynomial
-!
 !
 !        Product frames
 !        ==============
@@ -259,7 +254,6 @@
 !           -------------------
 !           Array of "from" frames
 !           Array of "to" frames
-!
 !
 ! $ Examples
 !
@@ -317,7 +311,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -333,7 +326,6 @@
 !     Local parameters
 !
       character(*), parameter :: rname = 'ZZDYNRT0'
-
 
       integer(ip), parameter :: timlen = 50
 
@@ -380,7 +372,6 @@
       character(kvlen)      vecdef ( 2 )
       character(frnmln)     velfrm
       character(vnamln)     vname  ( 2 )
-
 
       real(wp)              alt
       real(wp)              angles ( 2 )
@@ -484,10 +475,7 @@
       data                  itmsep / kwatol                   /
       data                  vname  / kwpri,           kwsec   /
 
-
       if ( return() ) return
-
-
 
       if ( first ) then
 !
@@ -560,7 +548,6 @@
             itmvec(i) = vname(i) // kwvect
 
          end do
-
 
          first = .false.
 
@@ -683,7 +670,6 @@
             if (      ( .not. eqstr( rotsta, kvrotg ) ) &
                 .and. ( .not. eqstr( rotsta, kvinrt ) )  ) then
 
-
                call setmsg ( 'Definition of frame # contains '     // &
                              '# specification #. The only valid '  // &
                              'rotation states are # or #. '        // &
@@ -701,7 +687,6 @@
             end if
 
          end if
-!
 !
 !        If the frame is frozen, the rotation state keyword *must be
 !        absent*.
@@ -915,7 +900,6 @@
 
                end if
 
-
             else if ( meanec ) then
 !
 !              We need a mean obliquity transformation as well.
@@ -1034,7 +1018,6 @@
 !
             call cleard ( 6, v2 )
 
-
             do i = 1, 2
 !
 !              Get the name of the axis associated with the Ith
@@ -1056,7 +1039,6 @@
                call cmprss ( '+', 0, axname, axname )
 
                axis(i) = isrchc ( axname, 3, axes )
-
 
                if ( axis(i) == 0 ) then
 
@@ -1093,7 +1075,6 @@
 
                call cmprss ( ' ',    0, vecdef(i), vecdef(i) )
                call ucase  ( vecdef(i),            vecdef(i) )
-
 
                if (  vecdef(i) == kvposv  ) then
 !
@@ -1242,7 +1223,6 @@
 !
 !                 At this point, V2(*,I) contains velocity
 !                 relative to frame J2000.
-
 
                else if ( vecdef(i) == kvnear ) then
 !
@@ -1469,7 +1449,6 @@
 
                         end if
 
-
                         if ( frcls /= inertl ) then
 !
 !                          Look up the observer associated with the
@@ -1495,7 +1474,6 @@
                            if ( failed() ) return
 
                         end if
-
 
                      else if ( corblk(stlidx) ) then
 !
@@ -1540,7 +1518,6 @@
                      call zzdynvad ( inname, infram, itmvec(i), &
                                      3,      n,      dirvec    )
 
-
                   else if (      ( spec == kvlatc ) &
                             .or. ( spec == kvradc ) ) then
 !
@@ -1550,7 +1527,6 @@
 !
                      call zzdynvac ( inname,  infram,  itmunt(i), &
                                      1,       n,       units     )
-
 
                      if ( spec == kvlatc ) then
 !
@@ -1592,7 +1568,6 @@
 !                    Now  produce a direction vector.
 !
                      call latrec ( 1.0_wp, angles(1), angles(2), dirvec )
-
 
                   else
 
@@ -1916,7 +1891,6 @@
                call moved ( rout,  9,      rotate )
 
             end do
-
 
          else
 

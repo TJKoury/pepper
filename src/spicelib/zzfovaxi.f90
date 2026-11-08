@@ -108,7 +108,6 @@
 !
 !                The boundary vectors need not have unit length.
 !
-!
 ! $ Detailed_Output
 !
 !     AXIS       is a unit vector normal to a plane containing the
@@ -212,7 +211,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -241,9 +239,7 @@
 
       logical               ok
 
-
       if ( return() ) return
-
 
 !
 !     We must have at least 3 boundary vectors.
@@ -259,7 +255,6 @@
          return
 
       end if
-
 
 !
 !     Check for linearly dependent consecutive boundary vectors.
@@ -341,7 +336,6 @@
          end if
 
       end do
-
 
       if ( .not. ok ) then
 !

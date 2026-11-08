@@ -69,7 +69,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     VECDEF     States computed by this routine consist of a an
 !                underlying vector and the vector's velocity. VECDEF is
 !                a short string describing the means by which the
@@ -99,7 +98,6 @@
 !                Case, leading and trailing blanks ARE significant
 !                in the string VECDEF.
 !
-!
 !     METHOD     is a string specifying the computational method
 !                applicable to the vector of interest. When VECDEF
 !                is the parameter
@@ -123,20 +121,16 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string METHOD.
 !
-!
 !     TRGID      is the NAIF ID code of the target object.
-!
 !
 !     ET         is the time, expressed as ephemeris seconds past J2000
 !                TDB, at which the specified state is to be computed.
-!
 !
 !     REF        is the name of the reference frame relative to which
 !                the state of interest is specified.
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string REF.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied to
 !                the state of the target body to account for one-way
@@ -171,9 +165,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
 !
-!
 !     OBSID      is the NAIF ID code of the observer.
-!
 !
 !     DREF       is the name of the reference frame relative to which a
 !                ray's direction vector is expressed. This may be any
@@ -190,13 +182,11 @@
 !                correction. See the description of the direction
 !                vector DVEC for details.
 !
-!
 !     DCTR       is the ID code of the object at which the frame
 !                designated by DREF is centered. Although DCTR
 !                can be derived from DREF, in the interest of
 !                efficiency, DCTR is obtained by the caller,
 !                normally during search initialization.
-!
 !
 !     DVEC       Ray direction vector emanating from the observer. The
 !                intercept with the target body's surface of the ray
@@ -218,7 +208,6 @@
 !                LTCENT is computed using the method indicated by
 !                ABCORR.
 !
-!
 !     RADII      is a double precision array containing the three
 !                radii of a reference ellipsoid associated with
 !                the target body.
@@ -226,7 +215,6 @@
 !                RADII is ignored if the input vector definition
 !                is POSDEF; in this case the caller may set the
 !                elements of RADII to zero.
-!
 !
 ! $ Detailed_Output
 !
@@ -238,7 +226,6 @@
 !
 !                STATE is defined if and only if the output argument
 !                FOUND is set to .TRUE.
-!
 !
 !     FOUND      is a logical flag indicating whether the requested
 !                state could be computed. FOUND is set to .FALSE. if
@@ -376,12 +363,10 @@
 !
       if ( return () ) return
 
-
 !
 !     No result was found yet.
 !
       found = .false.
-
 
       if ( vecdef == posdef  ) then
 !
@@ -399,7 +384,6 @@
                          abcorr, obsid, radii, state )
 
          found = .true.
-
 
       else if ( vecdef == sindef ) then
 !

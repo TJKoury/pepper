@@ -380,7 +380,6 @@
 !        Use the kernel shown below, an IK defining four FOVs of
 !        various shapes and sizes, to load the FOV definitions.
 !
-!
 !           KPL/IK
 !
 !           File name: getfov_ex1.ti
@@ -448,9 +447,7 @@
 !
 !           End of IK
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GETFOV_EX1
 !              IMPLICIT NONE
@@ -524,10 +521,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        --------------------------------------
 !        Instrument ID: -999001
@@ -564,7 +559,6 @@
 !                         0.40000000  0.80000000 -0.20000000
 !                        -0.40000000  0.80000000 -0.20000000
 !        --------------------------------------
-!
 !
 ! $ Restrictions
 !
@@ -662,13 +656,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return instrument's FOV parameters
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -781,7 +773,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       kwboun = 'INS#_FOV_BOUNDARY'
       kwbore = 'INS#_BORESIGHT'

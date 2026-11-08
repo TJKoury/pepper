@@ -156,7 +156,6 @@
 !                      target surface intercept and its time derivative
 !                      is computable.
 !
-!
 !        The following entry points support solution window
 !        computations for conditions involving longitude or right
 !        ascension. They may have applications for relations involving
@@ -232,13 +231,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     umbrella routine for finding coordinate events
 !
 !-&
-
 
       external              udfunc
 
@@ -345,7 +342,6 @@
       logical               attblk ( abatsz )
       logical               found
 
-
 !
 !     Saved Variables
 !
@@ -408,9 +404,7 @@
                                       loncrd,   latcrd,   altcrd, &
                                       loncrd,   latcrd,   altcrd  /
 
-
       data                  y      /  0.0_wp, 1.0_wp, 0.0_wp /
-
 
 !
 !     This routine should never be called.
@@ -419,9 +413,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
 
 !$Procedure ZZGFCOIN ( GF, coordinate search initialization )
 
@@ -505,7 +496,6 @@
 !              Case, leading and trailing blanks ARE significant
 !              in the string VECDEF.
 !
-!
 !     METHOD   is a string specifying the computational method
 !              applicable to the vector of interest. When VECDEF
 !              is the parameter
@@ -529,9 +519,7 @@
 !              Case, leading and trailing blanks are not significant
 !              in the string METHOD.
 !
-!
 !     TARGET   is the name of the target object.
-!
 !
 !     REF      is the name of the reference frame relative to which
 !              the vector of interest is specified. The specified
@@ -546,7 +534,6 @@
 !
 !              Case, leading and trailing blanks are not significant
 !              in the string REF.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied to
 !              the state of the target body to account for one-way
@@ -581,9 +568,7 @@
 !              Case, leading and trailing blanks are not significant
 !              in the string ABCORR.
 !
-!
 !     OBSRVR   is the name of the observer.
-!
 !
 !     DREF     is the name of the reference frame relative to which a
 !              ray's direction vector is expressed. This may be any
@@ -599,7 +584,6 @@
 !              not the observer, on the selected aberration
 !              correction. See the description of the direction
 !              vector DVEC for details.
-!
 !
 !     DVEC     ray direction vector emanating from the observer. The
 !              intercept with the target body's surface of the ray
@@ -621,7 +605,6 @@
 !              LTCENT is computed using the method indicated by
 !              ABCORR.
 !
-!
 !     CRDSYS   is the name of the coordinate system to which the
 !              coordinate of interest belongs. Allowed values are
 !              those defined in the GF Fortran INCLUDE file
@@ -636,7 +619,6 @@
 !
 !              Case, leading and trailing blanks are not significant
 !              in the string CRDSYS.
-!
 !
 !     CRDNAM   is the name of the coordinate of interest: this is
 !              the coordinate to which the specified condition
@@ -805,16 +787,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     coordinate initialization routine
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
@@ -833,7 +812,6 @@
          return
 
       end if
-
 
       call bods2c ( obsrvr, svobs, found )
 
@@ -1058,7 +1036,6 @@
 
          end if
 
-
 !
 !        We know the kernel pool contains data for body SVRCTR.
 !
@@ -1217,9 +1194,6 @@
 
       return
 
-
-
-
 !$Procedure ZZGFCOG ( GF, get coordinate )
 
       entry zzgfcog ( et, crdval )
@@ -1318,13 +1292,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get coordinate
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1348,9 +1320,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure ZZGFCODC ( GF, is coordinate decreasing? )
 
@@ -1484,19 +1453,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     is coordinate decreasing
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Fetch the state from which the coordinate is derived. If the
@@ -1535,10 +1501,6 @@
       decres  =  cdsign(svcidx) == -1
 
       return
-
-
-
-
 
 !$Procedure ZZGFCOEX ( GF, does coordinate state exist? )
 
@@ -1652,7 +1614,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     does coordinate state exist
@@ -1660,12 +1621,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Simply attempt to compute the state. The returned found flag
@@ -1676,10 +1635,6 @@
                       crdfnd                                          )
 
       return
-
-
-
-
 
 !$Procedure ZZGFCOCG ( GF, get cosine of coordinate )
 
@@ -1777,19 +1732,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get cosine of coordinate
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
                      svcorr, svobs,  svdref, svdvec, svcsys, &
@@ -1810,11 +1762,6 @@
       crdval = cos ( value )
 
       return
-
-
-
-
-
 
 !$Procedure ZZGFCOSG ( GF, get sine of coordinate )
 
@@ -1912,16 +1859,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get sine of coordinate
 !
 !-&
 
-
       if ( return () ) return
-
 
       call zzgfcoq ( svvdef, svmeth, svtarg, et,     svref, &
                      svcorr, svobs,  svdref, svdvec, svcsys, &
@@ -1942,10 +1886,6 @@
       crdval = sin ( value )
 
       return
-
-
-
-
 
 !$Procedure ZZGFCOCD ( GF, is cosine of coordinate decreasing? )
 
@@ -2079,19 +2019,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     is cosine of coordinate decreasing
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The derivative of cosine of the coordinate Q is
@@ -2131,32 +2068,26 @@
 !
          call moved ( state, 3, coords )
 
-
       else if ( svcsys == latsys ) then
 
          call reclat ( state, coords(1), coords(2), coords(3) )
-
 
       else if ( svcsys == radsys ) then
 
          call recrad ( state, coords(1), coords(2), coords(3) )
 
-
       else if ( svcsys == sphsys ) then
 
          call recsph ( state, coords(1), coords(2), coords(3) )
-
 
       else if ( svcsys == cylsys ) then
 
          call reccyl ( state, coords(1), coords(2), coords(3) )
 
-
       else if ( svcsys == geosys ) then
 
          call recgeo ( state,     svre,      svf, &
                        coords(1), coords(2), coords(3) )
-
 
       else if ( svcsys == pgrsys ) then
 
@@ -2191,11 +2122,7 @@
 !
       decres  =  ( - sin(value) * cdsign(svcidx) )  <  0.0_wp
 
-
       return
-
-
-
 
 !$Procedure ZZGFCOSD ( GF, is sine of coordinate decreasing? )
 
@@ -2327,20 +2254,17 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     is sine of coordinate decreasing
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
 
       if ( return () ) return
-
 
 !
 !     The derivative of the sine of the coordinate Q is
@@ -2353,7 +2277,6 @@
       call zzgfcost ( svvdef, svmeth, svtarg, et,     svref,  svcorr, &
                       svobs,  svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
-
 
       if ( .not. found ) then
 
@@ -2380,32 +2303,26 @@
 !
          call moved ( state, 3, coords )
 
-
       else if ( svcsys == latsys ) then
 
          call reclat ( state, coords(1), coords(2), coords(3) )
-
 
       else if ( svcsys == radsys ) then
 
          call recrad ( state, coords(1), coords(2), coords(3) )
 
-
       else if ( svcsys == sphsys ) then
 
          call recsph ( state, coords(1), coords(2), coords(3) )
-
 
       else if ( svcsys == cylsys ) then
 
          call reccyl ( state, coords(1), coords(2), coords(3) )
 
-
       else if ( svcsys == geosys ) then
 
          call recgeo ( state,     svre,      svf, &
                        coords(1), coords(2), coords(3) )
-
 
       else if ( svcsys == pgrsys ) then
 
@@ -2441,6 +2358,5 @@
       decres  =  ( cos(value) * cdsign(svcidx) )  <  0.0_wp
 
       return
-
 
       end

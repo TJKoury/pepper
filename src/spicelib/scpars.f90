@@ -82,13 +82,11 @@
 !              Any number of spaces may separate the partition number,
 !              the '/', and the rest of the clock string.
 !
-!
 !              If the partition number is omitted, a default partition
 !              will be assumed. The default partition is the lowest-
 !              numbered partition that contains the given clock time.
 !              If the clock time does not fall in any of the
 !              partition boundaries then an error is signaled.
-!
 !
 !              'sclk_string' is a spacecraft specific clock string.
 !              Using Galileo as an example, the full format is
@@ -349,7 +347,6 @@
 !
 !     The output from such a program might look like:
 !
-!
 !           Input  s/c clock count:  2 / 20538:39:768
 !           Output s/c clock count:  2/20538:39:768
 !           Output C-Matrix:  'first C-matrix'
@@ -417,13 +414,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode spacecraft_clock
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -433,7 +428,6 @@
 
       logical               failed
       logical               return
-
 
 !
 !     Local variables
@@ -459,7 +453,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     This routine handles errors in two different ways.
@@ -625,7 +618,6 @@
 !
 !           1) The clock count does not fall in the boundaries of any
 !              of the partitions.
-!
 !
       if ( pos > 1 ) then
 !

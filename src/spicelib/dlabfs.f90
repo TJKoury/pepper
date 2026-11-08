@@ -70,7 +70,6 @@
 !              DLADSC is valid only if the output argument FOUND is
 !              .TRUE.
 !
-!
 !     FOUND    is a logical flag indicating whether a segment was
 !              found. FOUND has the value .TRUE. if the file
 !              contains at least one segment; otherwise FOUND is
@@ -119,7 +118,6 @@
 !        and size attributes.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM DLABFS_EX1
 !              IMPLICIT NONE
@@ -214,14 +212,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
 !
-!
 !        Name of DLA file > phobos512.bds
-!
 !
 !         Segment number =            1
 !
@@ -233,7 +228,6 @@
 !         D.p. component size              =      4737076
 !         Integer base address             =           11
 !         Integer component size           =     29692614
-!
 !
 ! $ Restrictions
 !
@@ -274,20 +268,17 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin forward search in DLA file
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               failed
       logical               return
-
 
 !
 !     Local variables
@@ -298,7 +289,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Nothing found yet.

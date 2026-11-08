@@ -296,7 +296,6 @@
 !     structures created by this routine are aggregated into arrays
 !     of type INTEGER and type DOUBLE PRECISION.
 !
-!
 !     Voxel grids
 !     ===========
 !
@@ -386,9 +385,7 @@
 !
 !           phobos_3_3.bds
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Example program for DSKW02, DSKMI2, and DSKRB2
@@ -663,10 +660,8 @@
 !              WRITE (*,*) 'Done.'
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Reading input data...
 !         Done.
@@ -693,7 +688,6 @@
 !         Done.
 !         Segregating and closing DSK file...
 !         Done.
-!
 !
 !        Note that after run completion, a new DSK exists in the output
 !        directory.
@@ -736,13 +730,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     make spatial index for type 2 DSK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -768,9 +760,7 @@
       integer(ip)           vxlidx
       integer(ip)           vxpidx
 
-
       if ( return() ) return
-
 
 !
 !     Perform error checks on inputs.
@@ -795,7 +785,6 @@
          return
 
       end if
-
 
       if (  ( nv < 3 ) .or. ( nv > maxvrt )  ) then
 
@@ -847,7 +836,6 @@
 
       end if
 
-
       if ( voxlsz < (np+1)  ) then
 
          call setmsg ( 'Voxel-plate list array size = #; size ' &
@@ -879,7 +867,6 @@
 !
 !        - the vertex-plate association list
 !
-!
       reqsiz = ixifix + voxpsz + voxlsz
 
       if ( makvtl ) then
@@ -895,7 +882,6 @@
          vtxlsz = 0
       end if
 
-
       if ( spxisz < reqsiz ) then
 
          call setmsg ( 'Integer spatial index size = #; size ' &
@@ -906,7 +892,6 @@
          return
 
       end if
-
 
 !
 !     Set known values in spatial index arrays.

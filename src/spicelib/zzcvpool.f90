@@ -113,7 +113,6 @@
 !     C
 !           IF ( FIRST ) THEN
 !
-!
 !              FIRST = .FALSE.
 !              HAVE1 = .FALSE.
 !              HAVE2 = .FALSE.
@@ -175,7 +174,6 @@
 !              HAVE2 = .TRUE.
 !           END IF
 !
-!
 ! $ Restrictions
 !
 !     The POOL counter passed to the routine by the caller must be
@@ -224,9 +222,7 @@
 !
       if ( update ) then
 
-
          call cvpool ( agent, update )
-
 
       end if
 

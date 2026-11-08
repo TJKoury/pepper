@@ -151,7 +151,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -168,9 +167,6 @@
       integer(ip)           segno
 
 !
-!     Use discovery check-in.
-!
-!
 !     Nothing found to begin with.
 !
       found  =  .false.
@@ -179,7 +175,6 @@
 !     This column had better be of d.p. or TIME type.
 !
       dtype  =  coldsc(typidx)
-
 
       if ( ( dtype /= dp ) .and. ( dtype /= time )  ) then
 
@@ -207,13 +202,11 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 2 ) then
 
          call zzekrd02 ( handle, segdsc, coldsc, recptr, dval, isnull  )
 
          found  =  .true.
-
 
       else if ( class == 5 ) then
 !
@@ -222,13 +215,11 @@
          call zzekrd05 ( handle,  segdsc,  coldsc,  recptr, &
                          eltidx,  eltidx,  dval,    isnull,  found )
 
-
       else if ( class == 8 ) then
 
          call zzekrd08 ( handle, segdsc, coldsc, recptr, dval, isnull  )
 
          found  =  .true.
-
 
       else
 
@@ -252,7 +243,6 @@
          return
 
       end if
-
 
       return
       end

@@ -42,7 +42,6 @@
       integer(ip)           exclud
       logical               inside
 
-
       integer(ip), parameter :: none = 0
 
       integer(ip), parameter :: lonidx = 1
@@ -75,9 +74,7 @@
 !                The point is to be checked to determine whether it is
 !                inside the volume element specified by BOUNDS.
 !
-!
 !     LON        is the planetocentric longitude of the point P.
-!
 !
 !     BOUNDS     is an 2x3 array containing the bounds of a volume
 !                element expressed in planetodetic coordinates. BOUNDS
@@ -105,13 +102,11 @@
 !                However, the greedy margin is not used. See the
 !                Parameters section below for further information.
 !
-!
 !     CORPAR     is an array of coordinate parameters; normally these
 !                are obtained from a DSK descriptor. The first element
 !                is the equatorial radius of the reference spheroid.
 !                The second element is the flattening coefficient.
 !                Any other elements are ignored by this routine.
-!
 !
 !     EXCLUD     is either a coordinate index or the parameter NONE.
 !
@@ -180,7 +175,6 @@
 !                EXCLUD, indicates that latitude should be excluded
 !                from comparison.
 !
-!
 !     ALTIDX     is the index of altitude in the second dimension of
 !                BOUNDS. When used as a value of the input argument
 !                EXCLUD, indicates that altitude should be excluded
@@ -246,7 +240,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -271,7 +264,6 @@
 
       integer(ip), parameter :: gt = 1
 
-
 !
 !     Local variables
 !
@@ -294,9 +286,6 @@
       integer(ip)           maxrel
       integer(ip)           minrel
 
-
-
-
 !
 !     Saved variables
 !
@@ -304,15 +293,11 @@
 !
 !     Initial values
 !
-!
 !     Constants (SPICELIB computed them on the first call).
 !
       real(wp), parameter :: pi2 = twopi
 
-
       if ( return() ) return
-
-
 
 !
 !     Unpack the shape parameters. Set the polar axis length for
@@ -345,7 +330,6 @@
          call zzpdcmpl ( re, f, p, maxlat, maxrel )
 
          if ( failed() ) return
-
 
          if (      ( minrel == lt ) &
               .or. ( maxrel == gt )  ) then
@@ -395,7 +379,6 @@
 
          end if
 
-
          if (        ( loclon < (minlon-angmrg) ) &
                 .or. ( loclon > (maxlon+angmrg) )  ) then
 !
@@ -405,7 +388,6 @@
             return
 
          end if
-
 
       end if
 
@@ -457,7 +439,6 @@
 
          end if
 
-
          level = ( p(1)/emin )**2 + ( p(2)/emin )**2 + ( p(3)/pmin )**2
 
          if ( level < 1.0_wp ) then
@@ -476,7 +457,6 @@
 !     the segment. Being on the boundary counts as inside.
 !
       inside = .true.
-
 
       return
       end

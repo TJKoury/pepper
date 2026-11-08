@@ -63,7 +63,6 @@
 !              which indicate `character', `double precision',
 !              and `integer' respectively.
 !
-!
 !     ADDRSS   is the address in a DAS of a word of data
 !              type TYPE. For each data type (double precision,
 !              integer, or character), addresses range
@@ -211,7 +210,6 @@
 !                        NREAD   =   NREAD + N
 !                        RECNO   =   RECNO + 1
 !
-!
 !                     ELSE
 !            C
 !            C           We must find the next integer cluster to
@@ -322,13 +320,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map DAS logical address to physical location
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -349,7 +345,6 @@
 !
 !-&
 
-
 !
 !     Programmer's note: the TSPICE routine P_DASA2L must be
 !     kept in sync with this routine. Current version of that
@@ -357,7 +352,6 @@
 !
 !        TSPICE Version 1.0.0 APR-11-2014 (NJB)
 !
-
 
 !
 !     SPICELIB functions
@@ -414,7 +408,6 @@
 
       integer(ip), parameter :: maxvec = 3 * maxfil
 
-
 !
 !     Local variables
 !
@@ -470,7 +463,6 @@
 !
 !     Initial values
 !
-!
 !     NEXT and PREV map the DAS data type codes to their
 !     successors and predecessors, respectively.
 !
@@ -498,7 +490,6 @@
 !     this routine calls routines that can signal errors. This
 !     routine is a special case, because fast operation is very
 !     important.
-!
 !
 !     DAS files have the following general structure:
 !
@@ -531,11 +522,9 @@
 !           |                        |
 !           +------------------------+
 !
-!
 !        Within each DAS data record, word numbers start at one and
 !        increase up to NWI, NWD, or NWC: the number of words in an
 !        integer, double precision, or character data record.
-!
 !
 !           +--------------------------------+
 !           |       |       |   ...  |       |
@@ -551,7 +540,6 @@
 !           | | |           ...                | |
 !           +------------------------------------+
 !            1 2                               NWC
-!
 !
 !        Directories are single records that describe the data
 !        types of data records that follow. The directories
@@ -624,7 +612,6 @@
 !        whereas if the descriptor contained the number -800, the type
 !        of the descriptor would be `D'.
 !
-!
 !     Logic cases
 !     ===========
 !
@@ -679,7 +666,6 @@
 !        Set CLBASE, CLSIZE                 ALL
 !
 !     ========================
-!
 !
 !     Make sure the data type is valid.
 !
@@ -998,7 +984,6 @@
                        rngloc(type)+1, &
                        range )
 
-
          do while ( range(high) < addrss )
 !
 !           The record number of the next directory is the forward
@@ -1193,7 +1178,6 @@
 !        +--------------------------------------+  Record #
 !        |                               |HIADDR|
 !        +--------------------------------------+  CLBASE + CLSIZE - 1
-!
 !
       recno  =     ( clbase + clsize - 1 ) &
                 -  ( hiaddr - addrss     ) / nw(type)

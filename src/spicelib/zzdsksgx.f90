@@ -95,12 +95,10 @@
 !                center may differ from the central body of the
 !                segment.
 !
-!
 !     DC         is the double precision component of the data
 !                source information. Contents are data type-
 !                dependent. DC is valid if and only if FOUND
 !                is .TRUE.
-!
 !
 !     IC         is the integer component of the data
 !                source information. Contents are data type-
@@ -109,7 +107,6 @@
 !
 !                For type 2 segments, IC contains just the
 !                intercept plate ID in element 1.
-!
 !
 !     FOUND      is a logical flag that is set to .TRUE. if and only
 !                if a ray-surface intercept was found.
@@ -173,7 +170,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -188,9 +184,7 @@
 
       integer(ip)           plid
 
-
       if ( return() ) return
-
 
 !
 !     Note: input argument ET is provided to support time-dependent
@@ -221,7 +215,5 @@
 
       end if
 
-
       return
       end
-

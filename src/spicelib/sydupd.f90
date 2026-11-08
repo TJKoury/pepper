@@ -157,13 +157,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     create a duplicate of a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -193,7 +191,6 @@
       integer(ip)           newsym
       integer(ip)           newval
       integer(ip)           i
-
 
 !
 !     Standard SPICE error handling.
@@ -229,7 +226,6 @@
          call errch  ( '#', name )
          call sigerr ( 'SPICE(NOSUCHSYMBOL)' )
 
-
 !
 !     Otherwise, we need to know the dimension, to check for overflow.
 !
@@ -264,14 +260,12 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
-
          else if ( nptr+newsym > sizei ( tabptr ) ) then
 
             call setmsg ( 'SYDUPD: Duplication of the symbol # '    // &
                           'causes an overflow in the pointer table.' )
             call errch  ( '#', name )
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
-
 
          else if ( nval+newval > sized ( tabval ) ) then
 
@@ -330,7 +324,6 @@
          end if
 
       end if
-
 
       return
       end

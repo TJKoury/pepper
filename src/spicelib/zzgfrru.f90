@@ -247,8 +247,6 @@
       logical               failed
       logical               return
 
-
-
 !
 !     Local Variables
 !
@@ -263,7 +261,6 @@
 
       logical               attblk ( nabcor )
       logical               found
-
 
 !
 !     Saved Variables
@@ -286,8 +283,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
 
 !$Procedure ZZGFRRIN ( Private --- GF, range rate initialization )
 
@@ -468,7 +463,6 @@
 
       if ( return() ) return
 
-
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
 !
@@ -486,7 +480,6 @@
          return
 
       end if
-
 
       call bods2c ( obsrvr, svobs, found )
 
@@ -553,9 +546,6 @@
 
       return
 
-
-
-
 !$Procedure ZZGFRRDC (  Private --- GF, when range rate is decreasing )
 
       entry zzgfrrdc ( udfunc, et, decres )
@@ -599,7 +589,6 @@
 !
 !     DECRES     is true if the range rate between the objects
 !                is decreasing, false otherwise.
-!
 !
 ! $ Parameters
 !
@@ -675,7 +664,6 @@
 
       if ( return () ) return
 
-
       n  = 6
 
 !
@@ -723,9 +711,6 @@
       decres =  drvel < 0.0_wp
 
       return
-
-
-
 
 !$Procedure ZZGFRRGQ ( Private --- GF, get range rate between bodies )
 
@@ -818,9 +803,6 @@
       call zzgfrrq ( et, svtarg, svobs, svabco, rvl )
 
       return
-
-
-
 
 !$Procedure ZZGFRRX ( Private -- GF, retrieve ZZGFRRIN values )
 

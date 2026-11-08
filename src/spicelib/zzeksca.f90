@@ -111,7 +111,6 @@
 !            C
 !                  CALL ZZEKSPSH ( N, DATA )
 !
-!
 !     2)  Update a range of addresses that may span the stack top.
 !
 !            C
@@ -131,8 +130,6 @@
 !                     CALL ZZEKSUPD ( BEG, END, DATA )
 !
 !                  END IF
-!
-!
 !
 !     3)  Read from the scratch area.
 !
@@ -230,8 +227,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -251,8 +246,6 @@
 !     MEMSIZ + 1.
 !
       integer(ip), parameter :: memsiz = 2500000
-
-
 
 !
 !     Local variables
@@ -276,7 +269,6 @@
 
       logical               first
 
-
 !
 !     Saved variables
 !
@@ -287,8 +279,6 @@
 !
       data                  first  / .true.  /
       data                  t      /  0      /
-
-
 
 !
 !     Standard SPICE error handling.
@@ -301,9 +291,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
-
 
 !$Procedure    ZZEKSTOP  ( EK scratch area, stack top )
 
@@ -397,11 +384,6 @@
 
       top  =  t
       return
-
-
-
-
-
 
 !$Procedure    ZZEKSPSH  ( EK scratch area, push data )
 
@@ -506,8 +488,6 @@
 !-    Beta Version 1.0.0, 15-JAN-1995 (NJB)
 !
 !-&
-
-
 
 ! $ Index_Entries
 !
@@ -616,9 +596,6 @@
 
       return
 
-
-
-
 !$Procedure    ZZEKSPOP  ( EK scratch area, pop data )
 
       entry zzekspop ( n, idata )
@@ -721,8 +698,6 @@
 !
 !-&
 
-
-
 ! $ Index_Entries
 !
 !     pop integer data from EK scratch area stack
@@ -772,7 +747,6 @@
 
       end if
 
-
 !
 !     Read as much data as possible from our big array.
 !
@@ -819,11 +793,6 @@
       t      =  t - n
 
       return
-
-
-
-
-
 
 !$Procedure    ZZEKSDEC  ( EK scratch area, decrement stack pointer )
 
@@ -913,8 +882,6 @@
 !
 !-&
 
-
-
 ! $ Index_Entries
 !
 !     decrement EK scratch area stack pointer
@@ -937,7 +904,6 @@
          if ( failed() ) return
 
       end if
-
 
 !
 !     Catch non-positive decrement requests.
@@ -965,13 +931,9 @@
 
       end if
 
-
       t  =  t  -  n
 
       return
-
-
-
 
 !$Procedure    ZZEKSUPD  ( EK scratch area, update )
 
@@ -1096,8 +1058,6 @@
 !
 !-&
 
-
-
 !
 !     No checking in here.
 !
@@ -1125,7 +1085,6 @@
          return
       end if
 
-
       if ( end <= memsiz ) then
 !
 !        If the entire range is in memory, fine.  Update the range
@@ -1134,7 +1093,6 @@
          do i = beg, end
             scrtch(i)  =  idata(i-beg+1)
          end do
-
 
       else if ( beg <= memsiz ) then
 !
@@ -1162,11 +1120,6 @@
       end if
 
       return
-
-
-
-
-
 
 !$Procedure    ZZEKSRD  ( EK scratch area, read )
 
@@ -1282,7 +1235,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read from EK scratch area
@@ -1316,7 +1268,6 @@
          return
       end if
 
-
       if ( end <= memsiz ) then
 !
 !        If the entire range is in memory, fine.  Read from the range
@@ -1325,7 +1276,6 @@
          do i = beg, end
             idata(i-beg+1)  =  scrtch(i)
          end do
-
 
       else if ( beg <= memsiz ) then
 !
@@ -1353,8 +1303,6 @@
       end if
 
       return
-
-
 
 !$Procedure    ZZEKSCLN  ( EK scratch area, clean up )
 
@@ -1434,7 +1382,6 @@
 !-    SPICELIB Version 3.0.0, 27-DEC-2001 (NJB)
 !
 !-&
-
 
 ! $ Index_Entries
 !

@@ -113,7 +113,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified frame class ID
 !     C     and epoch.
@@ -158,13 +157,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_20 PCK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -271,7 +268,6 @@
 !
       recbeg = (  ( initjd - j2000() )  +  (recno-1)*intlen  ) * spd()
 
-
       radius = intrvl / 2.0_wp
 
       mid    = recbeg + ( initfr * spd() ) + radius
@@ -298,7 +294,6 @@
       do i = 1, 3
          pos( i ) = record ( 3  +  i*nterms )
       end do
-
 
       size = recsiz + 3
 !

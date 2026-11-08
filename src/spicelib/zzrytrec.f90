@@ -38,7 +38,6 @@
       integer(ip)           nxpts
       real(wp)              xpt    ( 3 )
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  DESCRIPTION
@@ -90,7 +89,6 @@
 !                an offset from the origin of the coordinate system.
 !
 !                XPT is valid only if NXPTS is set to 1.
-!
 !
 !     NXPTS      is the number of intercept points of the ray and
 !                the volume element.
@@ -182,7 +180,6 @@
 
       logical               found
       logical               inside
-
 
       if ( return() ) return
 

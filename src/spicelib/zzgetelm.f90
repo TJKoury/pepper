@@ -91,7 +91,6 @@
 !  1 22076U 92052A   97173.53461370 -.00000038  00000-0  10000-3 0   594
 !  2 22076  66.0378 163.4372 0008359 278.7732  81.2337 12.80930736227550
 !
-!
 ! $ Detailed_Output
 !
 !     EPOCH      is the epoch of the two line elements supplied via
@@ -174,7 +173,6 @@
 !     points are implied.  Also note that
 !     input units are degrees, degrees/day**n and revolutions/day.
 !
-!
 !                      DAY OF YEAR             NDD60    BSTAR
 !                      vvvvvvvvvvvv            vvvvvv   vvvvvv
 !  ---------------------------------------------------------------------
@@ -182,8 +180,6 @@
 !  ---------------------------------------------------------------------
 !                    ^^             ^^^^^^^^^^       ^^       ^^
 !                    YEAR             NDT20          IEXP     IBEXP
-!
-!
 !
 !     The ``raw'' elements in the second line are marked below
 !                   NODE0            OMEGA             N0
@@ -207,7 +203,6 @@
 !     can use this routine together with the routine EV2LIN to
 !     propagate a state to an epoch of interest.
 !
-!
 !        The parameters below will make it easier to make assignments
 !        to the array GEOPHS required by EV2LIN.
 !
@@ -228,7 +223,6 @@
 !        PARAMETER           ( SO = 6 )
 !        PARAMETER           ( ER = 7 )
 !        PARAMETER           ( AE = 8 )
-!
 !
 !        We set the lower bound for the years to be the beginning
 !        of the space age.
@@ -261,7 +255,6 @@
 !        interest.
 !
 !        CALL EV2LIN ( ET, GEOPHS, ELEMS, STATE )
-!
 !
 ! $ Restrictions
 !
@@ -301,7 +294,6 @@
 !     None.
 !
 ! $ Version
-!
 !
 !-    SPICELIB Version 1.0.0, 26-APR-2004 (EDW)
 !
@@ -428,8 +420,6 @@
       real(wp)              power  ( minp:maxp )
       real(wp)              tvec   ( 8 )
 
-
-
       integer(ip)           bexp
       integer(ip)           begyr
       integer(ip)           i
@@ -450,7 +440,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Initialize the error indicators and the elements to zero.
 !
@@ -467,7 +456,6 @@
       elems ( kno    ) = 0.0_wp
       elems ( kepoch ) = 0.0_wp
       epoch            = 0.0_wp
-
 
 !
 !     First entry initialization.
@@ -618,7 +606,6 @@
       cmo    = lines(2)(44:51)
       cno    = lines(2)(53:63)
 
-
 !
 !     Parse the numerical values from the data string.
 !
@@ -658,7 +645,6 @@
          end if
 
       end do
-
 
 !
 !     Check for reasonable exponets; a single digit. These should
@@ -747,7 +733,6 @@
             return
          end if
 
-
 !
 !     NO - mean motion (0,20) (Earth orbiter).
 !
@@ -761,9 +746,6 @@
 
             return
          end if
-
-
-
 
 !
 !     Finish up the computation of NDD60 and BSTAR
@@ -826,4 +808,3 @@
 
       return
       end
-

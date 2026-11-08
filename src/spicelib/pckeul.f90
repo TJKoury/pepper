@@ -147,13 +147,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get Euler angles and their derivatives
 !
 !-&
-
 
 !
 !     SPICELIB functions

@@ -267,7 +267,6 @@
 !
 !        END DO
 !
-!
 !     Example 2.
 !     ----------
 !
@@ -315,13 +314,11 @@
 !
 !        END IF
 !
-!
 !     Once all of the initializations are out of the way,
 !     we can scan an input string.
 !
 !        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
 !       .            START,  NTOKNS, IDENT,  BEG,    END   )
-!
 !
 !     Next eliminate any white space that was returned in the
 !     list of tokens.
@@ -374,7 +371,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Scan a string for recognized and unrecognized tokens
@@ -382,14 +378,12 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
       integer(ip)           rtrim
       integer(ip)           ncpos
-
 
 !
 !     Local variables
@@ -420,9 +414,6 @@
       logical               equal
       logical               known
 
-
-
-
       if ( .not. return () ) then
 
          call setmsg ( 'Your program has referenced the umbrella '    // &
@@ -433,8 +424,6 @@
       end if
 
       return
-
-
 
 !$Procedure SCANPR ( Scanning preparation )
 
@@ -583,7 +572,6 @@
 !                                    '.'             46
 !                                    '/'             47
 !
-!
 !              (Decimal Digits)      Character     ASCII Code
 !                                    -----------   ----------
 !                                    '0'             48
@@ -730,7 +718,6 @@
 !        INTEGER               LCHAR
 !        PARAMETER           ( LCHAR = 59 )
 !
-!
 !        The proper size to declare PNTERS is given by the parameter
 !        RCHAR defined in terms of LCHAR and FCHAR.
 !
@@ -802,14 +789,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Prepare for scanning strings
 !     Prepare for parsing strings
 !
 !-&
-
 
 !
 !     We handle the case where NMARKS is non-positive separately.
@@ -887,7 +872,6 @@
 !
 !             PNTERS(4+M) = PNTERS(3+M)
 !
-!
 
 !
 !     Next determine the minimum and maximum ASCII values
@@ -948,9 +932,6 @@
       nmarks         = n
 
       return
-
-
-
 
 !$Procedure SCAN ( Scan a string for tokens )
 
@@ -1141,7 +1122,6 @@
 !        INTEGER            NWORDS
 !        CHARACTER*(*)      WORDS  ( * )
 !
-!
 !        CHARACTER*(1)      MARKS  ( 1 )
 !        INTEGER            MRKLEN ( 1 )
 !        INTEGER            PNTERS ( 5 )
@@ -1160,7 +1140,6 @@
 !        LOGICAL            FIRST
 !        SAVE               FIRST
 !        DATA               FIRST  / .TRUE. /
-!
 !
 !        On the first time through the routine, set up the MARKS
 !        MRKLEN, and PNTERS arrays.
@@ -1191,7 +1170,6 @@
 !        DO WHILE (       ( NWORDS .LT. WDROOM )
 !       .           .AND. ( NTOKNS .GT. 0      ) )
 !
-!
 !           Step through the scanned substrings, looking for those
 !           that are not blank ...
 !
@@ -1212,7 +1190,6 @@
 !
 !           END DO
 !
-!
 !           Scan the STRING again for any substrings that might
 !           remain. Note that START is already pointing at the
 !           point in the string from which to resume scanning.
@@ -1226,7 +1203,6 @@
 !        that we had room for).
 !
 !        RETURN
-!
 !
 !     Example 2.
 !     ----------
@@ -1282,13 +1258,11 @@
 !
 !        END IF
 !
-!
 !        Once all of the initializations are out of the way,
 !        we can scan an input string.
 !
 !        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
 !       .            START,  NTOKNS, IDENT,  BEG,    END  )
-!
 !
 !        Next eliminate any white space that was returned in the
 !        list of tokens.
@@ -1342,14 +1316,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Scan a string for recognized and unrecognized tokens
 !     Parse a string
 !
 !-&
-
 
 !
 !     All of the MARKS have the same declared length.
@@ -1400,7 +1372,6 @@
 !                           MYCHAR(N).
 !
 !             PNTERS(4+N) = PNTERS(3+N)
-!
 !
 !     Get the information concerning the range of the
 !     marks from the PNTERS array.
@@ -1491,7 +1462,6 @@
                      end if
 
                   end if
-
 
 !
 !                 Ok. We have a new known token.

@@ -163,7 +163,6 @@
 !     Another use of SCTIKS, however, is to convert a clock measurement
 !     to ticks for use as a tolerance for the CK reader CKGP.
 !
-!
 !     C
 !     C      Get the pointing from a CK file of the VGR 1 narrow angle
 !     C      image corresponding to a particular SCLK count.
@@ -200,8 +199,6 @@
 !     C
 !            CALL CKGP ( INSTR, SCLK, TOL, REF, CMAT, CLKOUT, FOUND )
 !
-!
-!
 !      Below are some examples illustrating various clock string inputs
 !      and the resulting outputs for the Galileo spacecraft. See the
 !      SCLK required reading for a detailed description of the Galileo
@@ -226,7 +223,6 @@
 !         '1.1.1.1.1'           Error: Too many components
 !         '1.1.1.1.'            Error: The last delimiter signals that
 !                                      a fifth component will follow.
-!
 !
 !         The following examples are for the Voyager 2 spacecraft. Note
 !         that the last component of the Voyager clock has an offset
@@ -283,13 +279,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert spacecraft_clock string to ticks
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -297,12 +291,10 @@
       integer(ip)           sctype
       logical               return
 
-
 !
 !     Local variables
 !
       integer(ip)           type
-
 
 !
 !     Standard SPICE error handling.
@@ -325,7 +317,6 @@
          return
 
       end if
-
 
       return
       end

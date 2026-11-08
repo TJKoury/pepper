@@ -86,7 +86,6 @@
 !     4)  If LEFT and RIGHT are not neighboring sibling nodes, the
 !         error will be diagnosed by routines called by this routine.
 !
-!
 !     5)  The sum of the key counts in LEFT and RIGHT must be between
 !         2*MNKEYC and 2*MXKEYC; otherwise the key count invariants
 !         cannot be satisfied by balancing.  If the sum fails to meet
@@ -162,7 +161,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -177,9 +175,6 @@
       integer(ip)           schlep
       integer(ip)           sum
 
-!
-!     Use discovery check-in for speed.
-!
       root  =  tree
 
       if ( ( left == root ) .or. ( right == root )  ) then
@@ -206,7 +201,6 @@
 !
 
       sum  =  lnkeys + rnkeys
-
 
       if (      (  sum >  2*mxkeyc  ) &
            .or. (  sum <  2*mnkeyc  )   )  then

@@ -353,13 +353,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_4 CK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions

@@ -43,7 +43,6 @@
       include               'zzctr.inc'
       include               'zzdsk.inc'
 
-
       character(*)          method
       character(*)          target
       real(wp)              et
@@ -90,7 +89,6 @@
 !                    body. The ellipsoid's radii must be available
 !                    in the kernel pool.
 !
-!
 !                 'DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
 !
 !                    The intercept computation uses topographic data
@@ -119,7 +117,6 @@
 !
 !                    See the $Particulars section below for details
 !                    concerning use of DSK data.
-!
 !
 !              Neither case nor white space are significant in
 !              METHOD, except within double-quoted strings. For
@@ -628,7 +625,6 @@
 !     from sources other than SPICE, it's essential to make sure the
 !     same geometric definitions are used.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -649,7 +645,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -676,7 +671,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -748,7 +742,6 @@
 !
 !           'DSK/UNPRIORITIZED/SURFACES = "Mars MEGDR 64 PIXEL/DEG", 3'
 !
-!
 !        Round-off errors and mitigating algorithms
 !        ------------------------------------------
 !
@@ -811,7 +804,6 @@
 !              cause an intersection to be found when the ray misses
 !              the target by a very small distance.
 !
-!
 !        Aberration corrections
 !        ----------------------
 !
@@ -830,7 +822,6 @@
 !     platforms. The results depend on the SPICE kernels used as
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
-!
 !
 !     1) The following program computes surface intercept points on Mars
 !        for the boresight and FOV boundary vectors of the MGS MOC
@@ -851,7 +842,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -900,9 +890,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SINCPT_EX1
 !              IMPLICIT NONE
@@ -1024,7 +1012,6 @@
 !              CALL GETFOV ( CAMID,  NCORNR, SHAPE,  DREF,
 !             .              BSIGHT, N,      BOUNDS       )
 !
-!
 !              WRITE (*,*) ' '
 !              WRITE (*,*) 'Surface Intercept Locations for Camera'
 !              WRITE (*,*) 'FOV Boundary and Boresight Vectors'
@@ -1132,10 +1119,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Surface Intercept Locations for Camera
 !         FOV Boundary and Boresight Vectors
@@ -1239,10 +1224,8 @@
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 112 lines have been
 !        provided.
-!
 !
 !     2) Use SUBPNT to find the sub-spacecraft point on Mars for the
 !        Mars Reconnaissance Orbiter spacecraft (MRO) at a specified
@@ -1277,7 +1260,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1336,9 +1318,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SINCPT_EX2
 !              IMPLICIT NONE
@@ -1528,10 +1508,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Sub-observer point computation method = Ellipsoid/Near point
 !
@@ -1592,7 +1570,6 @@
 !              Observer altitude         (km) =         249.785151209
 !
 !           Intercept comparison error (km) =           0.000000001
-!
 !
 ! $ Restrictions
 !
@@ -1713,7 +1690,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find surface intercept point
@@ -1721,7 +1697,6 @@
 !     find intercept of ray on target body surface
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1739,7 +1714,6 @@
 !        sphere for the target.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1894,7 +1868,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Nothing has been found yet.
 !
@@ -1937,7 +1910,6 @@
 !
 !           USESTL indicates stellar aberration corrections.
 !
-!
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
@@ -1973,7 +1945,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
 
@@ -1991,7 +1962,6 @@
          return
 
       end if
-
 
 !
 !     Check the input body codes. If they are equal, signal
@@ -2157,14 +2127,12 @@
 !
       first = .false.
 
-
       if ( shape == ellshp ) then
 !
 !        Initialize the intercept algorithm to use the reference
 !        ellipsoid of the target body.
 !
          call zzsuelin ( trgcde )
-
 
       else if ( shape == dskshp ) then
 !

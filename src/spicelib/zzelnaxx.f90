@@ -57,7 +57,6 @@
 !
 !                are allowed.
 !
-!
 !     LAT        is a planetodetic latitude corresponding to
 !                some point P on the ellipse defined by A and B,
 !                where
@@ -76,7 +75,6 @@
 !
 !                        2
 !                   A - B / A
-!
 !
 !     YXPT       is the Y-intercept of a line passing through the
 !                ellipse and normal to the ellipse at the point having
@@ -110,10 +108,8 @@
 !
 ! $ Particulars
 !
-!
 !     The outputs of this routine can be used to determine the
 !     apex of a cone of constant planetodetic latitude.
-!
 !
 !     The axis intercepts computed by this routine are defined
 !     as described below.
@@ -140,7 +136,6 @@
 !                         2   2
 !        XXPT = X ( 1 - (B / A ) )
 !
-!
 !     The X intercept is a linear function of the X-coordinate
 !     of the point on the ellipsoid. Define the intercept for
 !
@@ -150,7 +145,6 @@
 !     The expression is continuous and defined at X = 0, so
 !     we can just evaluate the expression at X = 0 as for other
 !     values of X.
-!
 !
 !     Using the definition of M above, we have for non-zero X:
 !
@@ -171,7 +165,6 @@
 !
 !                    2   2
 !        B (  1 - ( A / B )  )
-!
 !
 ! $ Examples
 !
@@ -211,7 +204,6 @@
 !
       real(wp)              ept    ( 3 )
       real(wp)              normal ( 3 )
-
 
       if ( return() ) return
 

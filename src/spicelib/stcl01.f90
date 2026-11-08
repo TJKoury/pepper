@@ -162,15 +162,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     load a type 1 star catalog file
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !

@@ -372,7 +372,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !     None.
@@ -393,7 +392,6 @@
 
       logical               samclk
       logical               update
-
 
       if ( return() ) return
 

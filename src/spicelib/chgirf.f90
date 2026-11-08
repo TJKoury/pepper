@@ -191,13 +191,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     change inertial reference frames
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -207,7 +205,6 @@
 !        in CONVRT, ROTMAT  and MXM calls.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -255,7 +252,6 @@
 
 !
 !     Initial values
-!
 !
 !     Each frame is defined in terms of another frame, except for
 !     the root frame, which is defined in terms of itself. For now,
@@ -351,7 +347,6 @@
       data frames( 3)  / 'FK4'   /
       data bases ( 3)  / 'B1950' /
       data defs  ( 3)  / '0.525  3' /
-
 
 !
 !     The DE-118 reference frame is nearly identical to the FK4
@@ -592,8 +587,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
 
 !$Procedure IRFROT ( Inertial reference frame rotation )
 
@@ -839,13 +832,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     inertial reference frame rotation
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -865,7 +856,6 @@
 !         root->frame      base->frame    root->base
 !
       if ( .not. ready ) then
-
 
          do i = 1, maxf
 
@@ -892,7 +882,6 @@
             call moved ( tmpmat,     9,          trans(1,i) )
 
          end do
-
 
          ready = .true.
 
@@ -940,7 +929,6 @@
          call errint ( '#', refb )
          call sigerr ( 'SPICE(IRFNOTREC)' )
 
-
       else if ( refa == refb ) then
          call rotate ( 0.0_wp, 1, rotab )
 
@@ -949,9 +937,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure IRFNUM ( Inertial reference frame number )
 
@@ -1141,13 +1126,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     inertial reference frame number
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1166,9 +1149,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure IRFNAM ( Inertial reference frame name )
 
@@ -1349,13 +1329,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     inertial reference frame name
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1370,8 +1348,6 @@
       end if
 
       return
-
-
 
 !$Procedure IRFDEF ( Inertial reference frame, default )
 
@@ -1561,13 +1537,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     inertial reference frame default
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1583,7 +1557,6 @@
          //            'not a recognized inertial reference ' &
          //            'frame. ' )
          call errint ( '#', index )
-
 
          call sigerr ( 'SPICE(IRFNOTREC)' )
 

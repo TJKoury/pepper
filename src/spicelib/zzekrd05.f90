@@ -170,7 +170,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -202,9 +201,6 @@
       integer(ip)           start
 
 !
-!     Use discovery check-in.
-!
-!
 !     Make sure the column exists.
 !
       ncols  =  segdsc ( ncidx  )
@@ -227,7 +223,6 @@
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
-
       if ( datptr > 0 ) then
 !
 !        The entry is non-null.
@@ -241,7 +236,6 @@
          call dasrdd ( handle, datptr, datptr, dpnelt )
 
          nelt  =  nint ( dpnelt )
-
 
          if (  ( beg < 1 ) .or. ( beg > nelt )  )  then
 
@@ -269,7 +263,6 @@
          minidx  =  1
          maxidx  =  base   + dpsize - datptr
          datptr  =  datptr + beg
-
 
          do while ( maxidx < beg )
 !
@@ -313,7 +306,6 @@
 
          remain  =  remain  -  nread
 
-
          do while (  ( remain > 0 ) .and.  ( .not. failed() )  )
 !
 !           Locate the page on which the element is continued.
@@ -333,9 +325,7 @@
 
          end do
 
-
          found =  .not. failed()
-
 
       else if ( datptr == null ) then
 !
@@ -343,7 +333,6 @@
 !
          isnull =  .true.
          found  =  .true.
-
 
       else if ( datptr == uninit ) then
 !
@@ -361,7 +350,6 @@
          call sigerr ( 'SPICE(UNINITIALIZEDVALUE)'                   )
          return
 
-
       else
 !
 !        The data pointer is corrupted.
@@ -378,7 +366,6 @@
          return
 
       end if
-
 
       return
       end

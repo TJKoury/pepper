@@ -156,13 +156,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     create a duplicate of a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -190,13 +188,10 @@
       integer(ip)           newval
       integer(ip)           i
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     How many symbols to start with?
@@ -261,14 +256,12 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
-
          else if ( nptr+newsym > sizei ( tabptr ) ) then
 
             call setmsg ( 'SYDUPC: Duplication of the symbol # '    // &
                           'causes an overflow in the pointer table.' )
             call errch  ( '#', name )
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
-
 
          else if ( nval+newval > sizec ( tabval ) ) then
 
@@ -327,7 +320,6 @@
          end if
 
       end if
-
 
       return
       end

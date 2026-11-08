@@ -152,15 +152,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     check whether a file is a type 1 star catalog
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !
@@ -168,7 +165,6 @@
       integer(ip)           eknseg
       integer(ip)           nblen
       integer(ip)           isrchc
-
 
 !
 !     Local parameters.

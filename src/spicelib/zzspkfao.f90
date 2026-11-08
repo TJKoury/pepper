@@ -133,7 +133,6 @@
 !                               correction and stellar aberration
 !                               correction.
 !
-!
 !                 The following values of ABCORR apply to the
 !                 "transmission" case in which photons *depart* from
 !                 the observer's location at ET and arrive at the
@@ -166,7 +165,6 @@
 !                    'XCN+S'    "Transmission" case:  converged
 !                               Newtonian light time correction and
 !                               stellar aberration correction.
-!
 !
 !     OBSSUB      is the name of an external subroutine that returns
 !                 the geometric state of the observer relative to a
@@ -337,8 +335,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
@@ -392,13 +388,10 @@
 
       data                  prvcor  / ' ' /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !

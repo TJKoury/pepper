@@ -123,13 +123,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DSK tolerance and margin umbrella
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -183,8 +181,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
 
 !$Procedure DSKGTL ( DSK, get tolerance )
 
@@ -277,9 +273,7 @@
 !
 !     1) Obtain and display the DSK type 2 plate expansion fraction.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKGTL_EX1
 !              IMPLICIT NONE
@@ -300,13 +294,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Plate expansion fraction =    1.0000000000000000E-010
-!
 !
 ! $ Restrictions
 !
@@ -332,13 +323,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     retrieve DSK tolerance or margin parameters
 !
 !-&
-
 
 !
 !     Use discovery check-in.
@@ -356,10 +345,6 @@
       dpval = dppars( keywrd )
 
       return
-
-
-
-
 
 !$Procedure DSKSTL ( DSK, set tolerance )
 
@@ -464,9 +449,7 @@
 !     1) Obtain, display, and update the DSK type 2 plate expansion
 !        fraction.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKSTL_EX1
 !              IMPLICIT NONE
@@ -499,14 +482,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Default plate expansion fraction =    1.0000000000000000E-010
 !         New plate expansion fraction     =    1.0000000000000000E-008
-!
 !
 ! $ Restrictions
 !
@@ -536,17 +516,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set DSK tolerance or margin parameters
 !
 !-&
 
-
       if ( return() ) return
-
-
 
       if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
 

@@ -122,7 +122,6 @@
 !
 !         Is equivalent to
 !
-!
 !            STRINGS = ( 'This is a variable'
 !                        'with a blank'
 !                        'component.' )
@@ -186,7 +185,6 @@
 !     .   //           'up as several components of a kernel pool '
 !     .   //           'variable. '
 !
-!
 !      These string components would be retrieved by the following two
 !      calls.
 !
@@ -245,9 +243,7 @@
 !         WRITE (*,*) 'The ', I, '''th file name was too long.'
 !      END IF
 !
-!
 !      Example 2. Retrieving all components as a string.
-!
 !
 !      Occasionally, it may be useful to retrieve the entire
 !      contents of a kernel pool variable as a single string. To
@@ -283,11 +279,9 @@
 !      Then the call to SEPOOL above would have resulted in several
 !      words being run together as shown below.
 !
-!
 !         COMMNT = 'This is a long noteabout the intendeduse of '
 !     .   //       'this text kernel thatcan be retrieved at run '
 !     .   //       'time. '
-!
 !
 !      resulted in several words being run together as shown below.
 !
@@ -315,24 +309,20 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Retrieve a continued string value from the kernel pool
 !
 !-&
 
-
 !     SPICELIB Variables
 !
       integer(ip)           rtrim
       logical               return
 
-
       integer(ip), parameter :: lnsize = 80
 
       character(lnsize)     part
-
 
       integer(ip)           cfirst
       integer(ip)           clast
@@ -443,7 +433,6 @@
 !
       size = putat - 1
       lidx = comp  - 1
-
 
       return
       end

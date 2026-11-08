@@ -78,7 +78,6 @@
 !     CVAL           is the specified column entry.  CVAL is valid only
 !                    when FOUND is set to .TRUE.
 !
-!
 !     ISNULL         is a logical flag indicating whether the entry is
 !                    null.  ISNULL is valid only when FOUND is set to
 !                    .TRUE.
@@ -159,7 +158,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -176,8 +174,6 @@
       integer(ip)           segno
 
 !
-!     Use discovery check-in.
-!
 !     Nothing found to begin with.
 !
       found  =  .false.
@@ -186,7 +182,6 @@
 !     This column had better be of character type.
 !
       dtype  =  coldsc(typidx)
-
 
       if ( dtype /= chr ) then
 
@@ -214,14 +209,12 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 3 ) then
 
          call zzekrd03 (  handle,  segdsc,  coldsc, &
                           recptr,  cvlen,   cval,   isnull  )
 
          found  =  .true.
-
 
       else if ( class == 6 ) then
 !
@@ -230,14 +223,12 @@
          call zzekrd06 ( handle,  segdsc,  coldsc,  recptr, &
                          eltidx,  eltidx,  cval,    isnull,  found )
 
-
       else if ( class == 9 ) then
 
          call zzekrd09 (  handle,  segdsc,  coldsc, &
                           recptr,  cvlen,   cval,   isnull  )
 
          found  =  .true.
-
 
       else
 
@@ -261,7 +252,6 @@
          return
 
       end if
-
 
       return
       end

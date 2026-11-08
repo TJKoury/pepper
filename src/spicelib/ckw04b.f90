@@ -258,13 +258,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin writing a type_4 CK segment
 !
 !-&
-
 
 !
 !     Spicelib functions

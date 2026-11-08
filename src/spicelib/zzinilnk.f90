@@ -59,7 +59,6 @@
 !
 !                normally contain pointers.
 !
-!
 ! $ Detailed_Output
 !
 !     NCELL      is the number of cells in use; this argument is
@@ -147,7 +146,6 @@
       logical               return
 
       if ( return () ) return
-
 
       if ( maxp < 1 ) then
 

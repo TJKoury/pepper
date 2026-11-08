@@ -131,13 +131,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode a character string, portably
 !
 !-&
-
 
 !
 !     Local parameters
@@ -186,9 +184,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure PRTDEC ( Decode a character string )
 
@@ -293,13 +288,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     decode a portably encoded character string
 !
 !-&
-
 
       if ( len ( string ) < minlen ) then
          call sigerr ( 'SPICE(INSUFFLEN)' )

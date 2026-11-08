@@ -122,7 +122,6 @@
 !                   CALL ERRCH  ( '#',  FILE                     )
 !                   CALL SIGERR ( SPICE(FILEOPENFAILED)        )
 !
-!
 !     2)   Same example as (1), except this time we'll use a better-
 !          looking and more descriptive marker than '#'.  Instead,
 !          we'll use the marker 'FILENAME'. This does not affect the
@@ -136,7 +135,6 @@
 !                   CALL SETMSG ( 'File open error. File is FILENAME.')
 !                   CALL ERRCH  ( 'FILENAME',  FILE                   )
 !                   CALL SIGERR ( SPICE(FILEOPENFAILED)             )
-!
 !
 !     3)   Same example as (2), except this time there's a problem with
 !          the variable FILE: it's blank. This time, the code fragment
@@ -198,13 +196,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert string into error message text
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -229,7 +225,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -245,7 +240,6 @@
       character(lmsgln)     tmpmsg
 
       integer(ip)           mrkpos
-
 
 !
 !     Changes to the long error message must be allowed, or we do
@@ -320,7 +314,6 @@
                end if
 
             end if
-
 
          else
 !

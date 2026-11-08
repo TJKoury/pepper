@@ -131,7 +131,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -182,13 +181,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_17 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -211,7 +208,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Fetch the various entities from the input record, first the epoch.
 !
@@ -223,7 +219,6 @@
 
       rapole = recin(11)
       decpol = recin(12)
-
 
 !
 !     Check all the inputs here for obvious failures.  Yes, perhaps
@@ -261,7 +256,7 @@
       call eqncpv ( et, epoch, recin(2), rapole, decpol, state )
 
 !
-!     That's all folks.  Check out and return.
+!     That's all folks.  return.
 !
       return
       end

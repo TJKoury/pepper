@@ -105,7 +105,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     VECDEF     Every coordinate computed by this routine is a
 !                function of an underlying vector. VECDEF is a short
 !                string describing the means by which the vector of
@@ -135,7 +134,6 @@
 !                Case, leading and trailing blanks ARE significant
 !                in the string VECDEF.
 !
-!
 !     METHOD     is a string specifying the computational method
 !                applicable to the vector of interest. When VECDEF
 !                is the parameter
@@ -159,9 +157,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string METHOD.
 !
-!
 !     TARGET     is the name of the target object.
-!
 !
 !     REF        is the name of the reference frame relative to which
 !                the vector of interest is specified. The specified
@@ -176,7 +172,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string REF.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied to
 !                the state of the target body to account for one-way
@@ -211,9 +206,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
 !
-!
 !     OBSRVR     is the name of the observer.
-!
 !
 !     DREF       is the name of the reference frame relative to which a
 !                ray's direction vector is expressed. This may be any
@@ -229,7 +222,6 @@
 !                not the observer, on the selected aberration
 !                correction. See the description of the direction
 !                vector DVEC for details.
-!
 !
 !     DVEC       Ray direction vector emanating from the observer. The
 !                intercept with the target body's surface of the ray
@@ -251,7 +243,6 @@
 !                LTCENT is computed using the method indicated by
 !                ABCORR.
 !
-!
 !     CRDSYS     is the name of the coordinate system to which the
 !                coordinate of interest belongs. Allowed values are
 !                those defined in the GF Fortran INCLUDE file
@@ -268,7 +259,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string CRDSYS.
-!
 !
 !     CRDNAM     is the name of the coordinate of interest: this is
 !                the coordinate to which the specified condition
@@ -314,7 +304,6 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string CRDNAM.
 !
-!
 !     RELATE      is a relational operator used to define a constraint
 !                 on longitude or right ascension of the specified
 !                 vector. The result window found by this routine
@@ -330,7 +319,6 @@
 !
 !                    '<'      Longitude or RA is less than the
 !                             reference value REFVAL.
-!
 !
 !                   'ABSMAX'  Longitude or RA is at an absolute maximum.
 !
@@ -353,7 +341,6 @@
 !                point of the confinement window.
 !
 !                Case is not significant in the string RELATE.
-!
 !
 !     REFVAL     is the reference value used to define equality or
 !                inequality conditions.
@@ -384,11 +371,9 @@
 !                REFVAL is ignored if RELATE is not an equality or
 !                inequality operator.
 !
-!
 !     TOL        is a tolerance value used to determine convergence of
 !                root-finding operations. TOL is measured in TDB
 !                seconds and is greater than zero.
-!
 !
 !     ADJUST     The amount by which the coordinate is allowed to vary
 !                from an absolute extremum. ADJUST is not used for
@@ -414,7 +399,6 @@
 !
 !                where MN is the minimum value of the coordinate's
 !                range.
-!
 !
 !     UDSTEP     is a routine that computes a time step used to search
 !                for a transition of the state of the specified
@@ -451,7 +435,6 @@
 !                If a constant step size is desired, the routine GFSTEP
 !                may be used. GFSTEP returns the step size that was set
 !                via the most recent call to GFSSTP.
-!
 !
 !     UDREFN     is the name of the externally specified routine that
 !                computes a refinement in the times that bracket a
@@ -490,11 +473,9 @@
 !                If a simple bisection method is desired, the routine
 !                GFREFN may be used. This is the default option.
 !
-!
 !     RPT        is a logical variable which controls whether the
 !                progress reporter is on or off; setting RPT
 !                to .TRUE. enables progress reporting.
-!
 !
 !     UDREPI     is a user-defined subroutine that initializes a
 !                progress report. When progress reporting is
@@ -526,7 +507,6 @@
 !                the progress reporting update and termination routines
 !                GFREPU and GFREPF must be used as well.
 !
-!
 !     UDREPU     is a user-defined subroutine that updates the
 !                progress report for a search pass. The calling
 !                sequence of UDREPU is
@@ -546,16 +526,13 @@
 !                completion percentage; however the method of
 !                measurement is up to the user.
 !
-!
 !     UDREPF     is a user-defined subroutine that finalizes a
 !                progress report. UDREPF has no arguments.
-!
 !
 !     BAIL       is a logical flag indicating whether or not interrupt
 !                signal handling is enabled. Setting BAIL to .TRUE.
 !                enables interrupt signal handling: the GF system will
 !                then call UDBAIL to check for interrupt signals.
-!
 !
 !     UDBAIL     is the name of a user defined logical function that
 !                checks to see whether an interrupt signal has been
@@ -564,14 +541,11 @@
 !                not used, the SPICELIB function GFBAIL should be
 !                passed in as the actual bail-out function argument.
 !
-!
 !     MW         is the cell size of the windows in the workspace array
 !                WORK.
 !
-!
 !     NW         is the number of windows in the workspace array WORK.
 !                NW must be at least as large as the parameter NWMAX.
-!
 !
 !     WORK       is an array used to store workspace windows. This
 !                array has dimensions ( LBCELL : MW, NW).
@@ -580,14 +554,12 @@
 !                are initialized here to have size MW. The other
 !                elements of WORK are not modified.
 !
-!
 !     CNFINE     is a SPICE window that confines the bounds of the
 !                search.
 !
 !                For coordinates defined by ray-target surface
 !                intercepts, the intercept and its time derivative are
 !                expected to be computable on the confinement window.
-!
 !
 !     RESULT     is an initialized SPICE window. RESULT must be large
 !                enough to hold all of the intervals, within the
@@ -598,7 +570,6 @@
 !                SPICELIB routine SSIZED.
 !
 ! $ Detailed_Output
-!
 !
 !     WORK       has undefined contents on output, with the exception
 !                of the windows occupying the range
@@ -758,7 +729,6 @@
 !
 !     See the Files section of GFEVNT's header for further information.
 !
-!
 ! $ Particulars
 !
 !     Since this is a private SPICELIB routine, the header comments
@@ -894,11 +864,8 @@
 !
       external zzgfudlt
 
-
 !
 !     Local parameters
-!
-!
 !
 !     Margin for branch cut avoidance. Units are radians:
 !
@@ -1048,7 +1015,6 @@
 
       data                  y   / 0.0_wp, 1.0_wp, 0.0_wp /
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -1057,7 +1023,6 @@
 !
 !     Overview
 !     ========
-!
 !
 !     Terminology
 !     -----------
@@ -1122,7 +1087,6 @@
 !          Some of the aliases aren't wonderful names:  we use
 !          F1, F2, etc.  to represent "free" window 1, 2, etc.
 !
-!
 !     Algorithm
 !     ---------
 !
@@ -1136,13 +1100,11 @@
 !           spurious roots, we cast out any such roots after completing
 !           the search.
 !
-!
 !        -  Local extrema
 !
 !           We first find local extrema in the right and left half
 !           circles, using longitude as a proxy function on the right
 !           half and right ascension on the left.
-!
 !
 !        -  Absolute extrema
 !
@@ -1175,7 +1137,6 @@
 !           half circle and right ascension as a proxy function on
 !           the left half circle.
 !
-!
 !        -  Inequality
 !
 !           In general, we use  proxy functions and break up the unit
@@ -1188,7 +1149,6 @@
 !           when longitude is in the right half circle, and with
 !           the window of times when longitude is in the third
 !           quadrant.
-!
 !
 !     Code layout
 !     -----------
@@ -1339,7 +1299,6 @@
 
       end if
 
-
 !
 !     Get an upper case, left-justified, compressed versions of the
 !     coordinate system and coordinate names.
@@ -1417,7 +1376,6 @@
 
          end if
 
-
       else if (      ( nrmsys == geosys ) &
                 .or. ( nrmsys == latsys ) &
                 .or. ( nrmsys == sphsys )  ) then
@@ -1465,7 +1423,6 @@
 !        Planetographic ( longitude range is [0, 2*pi] ) -> RA/Dec
 !           Longitude                                    -> RA
 !
-!
 !     For planetographic coordinates, if the longitude is positive
 !     west, and since REFVAL does not lie on the branch cut, we can
 !     make the following additional adjustments:
@@ -1482,9 +1439,7 @@
 !        >        REFVAL                     <        2*pi - REFVAL
 !        =        REFVAL                     =        2*pi - REFVAL
 !
-!
       xrfval = refval
-
 
       if ( nrmsys == sphsys ) then
 
@@ -1613,7 +1568,6 @@
 !        Operator:           UOP
 !        Reference value:    XRFVAL
 !
-!
 !     The result window must be initialized by the caller of the GF
 !     system (usually a user application). We simply empty the result
 !     window here.
@@ -1631,7 +1585,6 @@
 !
       rptsuf(1) = 'done.'
       rptsuf(2) = 'done.'
-
 
 !
 !     Case:  '='
@@ -1789,7 +1742,6 @@
 
       end if
 
-
 !
 !     Case: local minimum or local maximum
 !
@@ -1855,7 +1807,6 @@
 
          call lnkan  ( wwpool, node )
          right = wix(node)
-
 
          rptpre(1) = 'Coordinate pass 3 of 6'
          rptpre(2) = 'Coordinate pass 4 of 6'
@@ -1927,7 +1878,6 @@
 
             end if
 
-
             call zzgfcoin ( vecdef, method, target, &
                             ref,    abcorr, obsrvr, dref, &
                             dvec,   prxsys, prxcrd )
@@ -1961,7 +1911,6 @@
          return
 
       end if
-
 
 !
 !     The remaining operators are: ABSMAX, ABSMIN, '<', '>'.
@@ -2059,13 +2008,11 @@
          call repmi ( tmplat, '#', total+i, rptpre(i) )
       end do
 
-
       call lnkan  ( wwpool, node )
       call lnkila ( head,   node,   wwpool )
       bot = wix(node)
 
       prxval = -sin( bcamrg )
-
 
       call zzgfcoin ( vecdef, method, target, &
                       ref,    abcorr, obsrvr, dref, &
@@ -2092,7 +2039,6 @@
 !
 !     Find the window where the cosine of the coordinate is
 !     greater than zero.
-!
 !
 !     The ZZGFREL call below involves two passes.
 !
@@ -2134,7 +2080,6 @@
       end if
 
       if ( failed() ) return
-
 
 !
 !     Now find the absolute extremum, if this was requested.
@@ -2180,7 +2125,6 @@
                region(2) = right
                region(3) = q2
             end if
-
 
          else if ( nrmcrd == racrd ) then
 !
@@ -2299,7 +2243,6 @@
                if ( udbail() ) return
             end if
 
-
             if ( wncard(result) > 0 ) then
 !
 !              We found an extremum. We don't have to search further.
@@ -2310,7 +2253,6 @@
             end if
 
          end do
-
 
          if ( adjust == 0.0_wp ) then
 !
@@ -2327,7 +2269,6 @@
 !        We'll need to obtain the extreme value.
 !
          et = result(1)
-
 
          call zzgfcoin ( vecdef, method, target, &
                          ref,    abcorr, obsrvr, dref, &
@@ -2456,7 +2397,6 @@
 
                call wnintd ( work(lb,right), work(lb,top), work(lb,q1) )
 
-
             else if ( ( rlist(i) == 'Q2' ) .and. ( q2 == 0 ) ) then
 
                call lnkan  ( wwpool, node )
@@ -2464,7 +2404,6 @@
                q2 = wix(node)
 
                call wndifd ( work(lb,top), work(lb,right), work(lb,q2) )
-
 
             else if ( ( rlist(i) == 'Q3' ) .and. ( q3 == 0 ) ) then
 !
@@ -2475,7 +2414,6 @@
                q3 = wix(node)
 
                call wndifd ( work(lb,bot), work(lb,right), work(lb,q3) )
-
 
             else if ( ( rlist(i) == 'Q4' ) .and. ( q4 == 0 ) ) then
 !
@@ -2492,7 +2430,6 @@
          end do
 
          if ( failed() ) return
-
 
 !
 !        Now decide the sector and proxy function we'll use to
@@ -2546,7 +2483,6 @@
 
             end if
 
-
          end if
 
 !
@@ -2575,7 +2511,6 @@
 !        Create the set NEEDWN of the windows we need to retain.
 !
          call ssizei ( nwlong, needwn )
-
 
          if ( nrmcrd == loncrd ) then
 
@@ -2617,8 +2552,6 @@
 
          end do
 
-
-
          if ( nrmcrd == loncrd ) then
 !
 !           This is a longitude search.
@@ -2651,7 +2584,6 @@
                f1 = q3
 
             end if
-
 
          else
 !
@@ -2693,7 +2625,6 @@
 !        holds.
 !
 !        Allocate window F2 to hold the result of the search.
-!
 !
          do i = 1, 2
             call repmi ( tmplat, '#', total+i, rptpre(i) )

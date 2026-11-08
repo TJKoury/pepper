@@ -34,7 +34,6 @@
       integer(ip)           sense
       integer(ip)           cdsign ( 3 )
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description
@@ -145,7 +144,6 @@
 !
 !     Below, we discuss the proxy functions used by this routine.
 !
-!
 !     Non-singular case
 !     =================
 !
@@ -198,7 +196,6 @@
 !          these coordinates is equal to sign of the up component of
 !          the MRTN velocity.
 !
-!
 !     Singular cases
 !     ==============
 !
@@ -241,7 +238,6 @@
 !
 !                                            -1 if velocity Z-component
 !                                               is negative            }
-!
 !
 ! $ Examples
 !
@@ -293,7 +289,6 @@
 
       integer(ip), parameter :: noridx = 3
 
-
 !
 !     Local variables
 !
@@ -314,12 +309,10 @@
       integer(ip)           i
       integer(ip)           rtnsgn ( 3 )
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     For planetographic coordinates, check the longitude sense.
@@ -463,7 +456,6 @@
 !        rectangular system, which was handled already, and
 !        the cylindrical system.
 !
-!
 !        Recall the coordinate systems and their coordinate orders:
 !
 !        System          Coordinates
@@ -475,7 +467,6 @@
 !        Cylindrical     Radius, Longitude, Z
 !        Geodetic        Longitude, Latitude, Altitude
 !        Planetographic  Longitude, Latitude, Altitude
-!
 !
          if ( corsys == latsys ) then
 !
@@ -546,7 +537,6 @@
                cdsign(3) = nint(  sign( 1.0_wp, vel(3) )  )
             end if
 
-
          else
 !
 !           If we end up here, we have an invalid coordinate system.
@@ -587,7 +577,6 @@
 
          call latrec ( 1.0_wp,  lon, lat, normal )
 
-
       else if ( corsys == cylsys ) then
 !
 !        The normal vector is aligned with the local radial
@@ -603,7 +592,6 @@
          call vhat ( state, normal )
 
       end if
-
 
 !     Obtain the matrix required to transform the velocity to the MRTN
 !     frame; transform the velocity.
@@ -631,7 +619,6 @@
 !     Set the signs of the coordinate derivatives from the MRTN
 !     derivative signs.
 !
-!
 !        Recall the coordinate systems and their coordinate orders:
 !
 !        System          Coordinates
@@ -643,7 +630,6 @@
 !        Cylindrical     Radius, Longitude, Z
 !        Geodetic        Longitude, Latitude, Altitude
 !        Planetographic  Longitude, Latitude, Altitude
-!
 !
       if ( corsys == latsys ) then
 
@@ -705,4 +691,3 @@
 
       return
       end
-

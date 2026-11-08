@@ -225,13 +225,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     end a type_4 CK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions.

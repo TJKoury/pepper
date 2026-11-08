@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekqlimit.inc'
       include 'eksegdsc.inc'
@@ -153,7 +152,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Determine the data type of the column, and look up the value
 !     associated with RECPTR.
@@ -165,7 +163,6 @@
          call zzekrsc (  handle,  segdsc,  coldsc,  recptr, &
                          1,       cvlen,   cval,    isnull,  found  )
 
-
          if (  found  .and. ( .not. isnull )  ) then
 
             cmplen = min ( cvlen, maxstr )
@@ -173,12 +170,10 @@
             cmplen = 0
          end if
 
-
       else if (  ( dtype == dp ) .or. ( dtype == time )  ) then
 
          call zzekrsd (  handle,  segdsc,  coldsc,  recptr, &
                          1,       dval,    isnull,  found  )
-
 
       else if ( dtype == int ) then
 
@@ -196,8 +191,6 @@
          return
 
       end if
-
-
 
       if ( .not. found ) then
 !
@@ -230,12 +223,10 @@
          call zzeklerc ( handle,  segdsc,  coldsc,  cval(:cmplen), &
                          recptr,  isnull,  pos,     prvptr         )
 
-
       else if (  ( dtype == dp ) .or. ( dtype == time )  ) then
 
          call zzeklerd ( handle,  segdsc,  coldsc,  dval, &
                          recptr,  isnull,  pos,     prvptr  )
-
 
       else
 !
@@ -247,7 +238,6 @@
                          recptr,  isnull,  pos,     prvptr  )
 
       end if
-
 
       if ( prvptr /= recptr ) then
 !
@@ -267,7 +257,6 @@
          return
 
       end if
-
 
       return
       end

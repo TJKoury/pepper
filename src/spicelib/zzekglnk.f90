@@ -110,21 +110,17 @@
       integer(ip)           base
 
 !
-!     Use discovery check-in.
-!
 !     Look up the base address of the page.
 !
       call zzekpgbs ( type, p, base )
 
       if ( failed() ) return
 
-
       if ( type == chr ) then
 !
 !        Look up the encoded count.
 !
          call zzekgei ( handle, base+clcidx, nlinks )
-
 
       else if ( type == dp ) then
 !
@@ -133,7 +129,6 @@
          call dasrdd ( handle, base+dlcidx, base+dlcidx, dplnk )
 
          nlinks  =  nint ( dplnk )
-
 
       else
 !

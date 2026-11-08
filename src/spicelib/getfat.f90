@@ -143,10 +143,8 @@
 !
 !           earthstns_itrf93_050714.xsp
 !
-!
 !        Use the meta-kernel shown below to load the other types of
 !        SPICE kernels.
-!
 !
 !           KPL/MK
 !
@@ -195,9 +193,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GETFAT_EX1
 !              IMPLICIT NONE
@@ -270,10 +266,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         File name     : earthstns_itrf93_050714.xsp
 !           Architecture: XFR
@@ -328,7 +322,6 @@
 !           Source      : getfat_ex1.tm
 !           Architecture: DAS
 !           Kernel type : DSK
-!
 !
 ! $ Restrictions
 !
@@ -575,13 +568,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     determine the architecture and type of a kernel file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -625,7 +616,6 @@
 !        file and the ID word does not completely fill 8 characters.
 !
 !-&
-
 
 !
 !     SPICELIB functions

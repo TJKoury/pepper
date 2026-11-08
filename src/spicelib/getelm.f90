@@ -179,16 +179,13 @@
 !
 !     Column refers to the substring within the line, e.g.
 !
-!
 !  1 22076U 92052A   97173.53461370 -.00000038  00000-0  10000-3 0   594
 !  2 22076  66.0378 163.4372 0008359 278.7732  81.2337 12.80930736227550
 !  ^
 !  123456789012345678901234567890123456789012345678901234567890123456789
 !           1         2         3         4         5         6
 !
-!
 !        In this example, the satellite number (column 03-07) is 22076.
-!
 !
 !     The "raw" elements used by this routine in the first lines are
 !     described in detail below as in several instances exponents and
@@ -251,7 +248,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: getelm_ex1.tm
@@ -286,9 +282,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GETELM_EX1
 !              IMPLICIT NONE
@@ -487,11 +481,9 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 10 exists in
 !        the output directory.
-!
 !
 !     2) Suppose you have a set of two-line elements for the LUME 1
 !        cubesat. This example shows how you can use this routine
@@ -501,9 +493,7 @@
 !        Use the meta-kernel from the previous example to load the
 !        required SPICE kernels.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GETELM_EX2
 !              IMPLICIT NONE
@@ -610,18 +600,14 @@
 !              WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
 !              WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Epoch   : 2020-05-26 02:25:00
 !        Position:  -4644.60403398  -5038.95025539   -337.27141116
 !        Velocity:     -0.45719025      0.92884817     -7.55917355
-!
 !
 ! $ Restrictions
 !
@@ -708,13 +694,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Parse two-line elements
 !
 !-&
-
 
 !
 !     Spicelib functions
@@ -731,7 +715,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Pass the input to the parse routine...

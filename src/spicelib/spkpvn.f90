@@ -233,14 +233,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     position and velocity from ephemeris
 !     SPK file position and velocity
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -252,7 +250,6 @@
 !     Some local space is needed in which to return records, and
 !     into which to unpack the segment descriptor.
 !
-
 
       real(wp)              record   ( maxrec )
 
@@ -300,7 +297,6 @@
       else if ( type == 03 ) then
          call spkr03 ( handle, descr, et, record         )
          call spke03 (                et, record, state  )
-
 
 !
 !     Type 04 is not officially part of the library.
@@ -398,7 +394,6 @@
          call sigerr ( 'SPICE(SPKTYPENOTSUPP)' )
          return
       end if
-
 
       return
       end

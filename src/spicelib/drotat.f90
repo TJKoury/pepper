@@ -160,13 +160,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     derivative of a rotation matrix
 !
 !-&
-
 
       real(wp)              s
       real(wp)              c
@@ -178,8 +176,6 @@
       save                  indexs
 
       data                  indexs  / 1, 2, 3, 1, 2 /
-
-
 
 !
 !     First make sure the input axis is reasonable.
@@ -221,6 +217,5 @@
       dmout(i1,i3) =  0.0_wp
       dmout(i2,i3) =  c
       dmout(i3,i3) = -s
-!
       return
       end

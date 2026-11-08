@@ -120,9 +120,7 @@
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TPICTR_EX1
 !              IMPLICIT NONE
@@ -188,17 +186,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Sample format: Thu Oct 01 11:11:11 PDT 1111
 !         Time picture : Wkd Mon DD HR:MN:SC PDT YYYY ::UTC-7
 !
 !         Input UTC    : 24 Mar 2018  16:23:00 UTC
 !         Output       : Sat Mar 24 09:23:00 PDT 2018
-!
 !
 ! $ Restrictions
 !
@@ -232,13 +227,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Use a sample time string to produce a time format picture
 !
 !-&
-
 
 !
 !     Local variables
@@ -264,7 +257,6 @@
                     tvec,   ntvec, type, &
                     modify, mods,  yabbrv, succes, &
                     pictur, errmsg )
-
 
       if ( pictur == ' ' ) then
          ok = .false.

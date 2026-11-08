@@ -123,7 +123,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -148,9 +147,6 @@
 
       logical               nullok
 
-!
-!     Use discovery check-in.
-!
 !
 !     Make sure the column exists.
 !
@@ -225,7 +221,6 @@
       addrss  =  datbas + offset
 
       call dasrdd ( handle, addrss, addrss, dval )
-
 
       return
       end

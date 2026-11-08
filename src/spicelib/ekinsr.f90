@@ -147,7 +147,6 @@
 !               DESCRIPTION     CHARACTER*(*)
 !               PRICE           DOUBLE PRECISION
 !
-!
 !         We'll suppose that the file ORDER_DB.EK contains two segments,
 !         the first containing the DATAORDERS table and the second
 !         containing the DATAITEMS table.
@@ -215,7 +214,6 @@
 !                  CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'FIRST_NAME',
 !                 .              SIZE,   FNAME,  ISNULL               )
 !
-!
 !                  CALL UTC2ET ( ODATE,  ET )
 !                  CALL EKACED ( HANDLE, SEGNO,  RECNO, 'ORDER_DATE',
 !                 .              SIZE,   ET,     ISNULL               )
@@ -258,13 +256,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert record into EK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -411,7 +407,6 @@
 !
          segdsc ( liwidx )  =  segdsc ( liwidx ) + size
 
-
       else
 !
 !        Allocate an integer page.
@@ -461,7 +456,6 @@
 !     Write out the updated segment descriptor.
 !
       call dasudi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
-
 
       return
       end

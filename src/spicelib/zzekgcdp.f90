@@ -53,7 +53,6 @@
 !     RECPTR         is a pointer to the record containing the column
 !                    entry whose data pointer is desired.
 !
-!
 ! $ Detailed_Output
 !
 !     DATPTR         is the data pointer of the specified column entry.
@@ -126,10 +125,6 @@
       integer(ip)           ncols
       integer(ip)           ptrloc
       integer(ip)           recno
-
-!
-!     Use discovery check-in.
-!
 
 !
 !     Make sure the column exists.

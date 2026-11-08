@@ -133,13 +133,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert an integer to ordinal text
 !
 !-&
-
 
 !
 !     SPICELIB functions

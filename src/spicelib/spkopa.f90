@@ -102,9 +102,7 @@
 !        replacing the call to SPKW05 with a suitably modified call to
 !        another SPK writing routine.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKOPA_EX1
 !              IMPLICIT NONE
@@ -243,9 +241,7 @@
 !        C
 !              CALL SPKCLS ( HANDLE )
 !
-!
 !              END
-!
 !
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 5, with two
@@ -279,13 +275,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Open an existing SPK file for adding segments
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -309,7 +303,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Until we get a legitimate handle we set HANDLE to zero.

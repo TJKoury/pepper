@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekcoldsc.inc'
       include  'ekcnamsz.inc'
@@ -304,9 +303,7 @@
 
          end do
 
-
       else
-
 
          if ( fixsiz ) then
 
@@ -322,9 +319,7 @@
 
          end if
 
-
       end if
-
 
       if ( ndata > 0 ) then
 !
@@ -361,7 +356,6 @@
       n       =  0
       nlink   =  0
 
-
       do while ( row <= nrows )
 
 !
@@ -370,16 +364,13 @@
 !
          newreq  =  .false.
 
-
          if (  nullok  .and.  ( nlflgs(row) )  ) then
-
 
             if ( fixsiz ) then
                cursiz  =  size
             else
                cursiz  =  entszs(row)
             end if
-
 
             from           =  from   +  cursiz
             adrbuf(bufptr) =  null
@@ -388,9 +379,7 @@
             nelt           =  1
             cntinu         =  .false.
 
-
          else
-
 
             if ( nelt == 1 ) then
 !
@@ -447,7 +436,6 @@
                   newreq   =   n  > ( ipsize - 2 )
                end if
 
-
                nelt  =  1
                row   =  row   +  1
 
@@ -459,7 +447,6 @@
 
          end if
 
-
          if (  ( bufptr > bufsiz ) .or. ( row > nrows )  ) then
 !
 !           The address buffer is full or we're out of input values
@@ -469,7 +456,6 @@
             bufptr  =  1
 
          end if
-
 
          if (         cntinu &
              .or.     newreq &

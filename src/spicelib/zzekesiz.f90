@@ -108,7 +108,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -132,11 +131,8 @@
       zzekesiz  =  0
 
 !
-!     Use discovery check-in.
-!
 !     Delegate the problem to the routine of the appropriate class.
 !     The first three classes are scalars.
-!
 !
       class  =  coldsc ( clsidx )
 
@@ -144,46 +140,37 @@
 
          zzekesiz  =  1
 
-
       else if ( class == 2 ) then
 
          zzekesiz  =  1
-
 
       else if ( class == 3 ) then
 
          zzekesiz  =  1
 
-
       else if ( class == 4 ) then
 
          zzekesiz  =  zzeksz04 ( handle, segdsc, coldsc, recptr )
-
 
       else if ( class == 5 ) then
 
          zzekesiz  =  zzeksz05 ( handle, segdsc, coldsc, recptr )
 
-
       else if ( class == 6 ) then
 
          zzekesiz  =  zzeksz06 ( handle, segdsc, coldsc, recptr )
-
 
       else if ( class == 7 ) then
 
          zzekesiz  =  1
 
-
       else if ( class == 8 ) then
 
          zzekesiz  =  1
 
-
       else if ( class == 9 ) then
 
          zzekesiz  =  1
-
 
       else
 
@@ -207,7 +194,6 @@
          return
 
       end if
-
 
       return
       end

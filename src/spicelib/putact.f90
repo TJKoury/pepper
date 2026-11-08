@@ -118,13 +118,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     store the error response action
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -151,7 +149,6 @@
 !         non-error-handling code.
 !
 !-&
-
 
 !
 !     Local Parameters:
@@ -182,7 +179,6 @@
       savact = action
 
       return
-
 
 !$Procedure GETACT ( Get Error Response Action )
 
@@ -291,13 +287,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get current error response action
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -319,7 +313,6 @@
 !         following the header.
 !
 !-&
-
 
 !
 !     Executable Code:

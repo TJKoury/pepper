@@ -108,7 +108,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -167,13 +166,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_8 SPK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -184,7 +181,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -193,7 +189,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Size of a state vector:
 !
@@ -237,14 +232,10 @@
 !
 !     Initial values
 !
-!
 !     Initialize the workspace array to suppress compiler warnings.
 !
       data                  work / maxrec * 0.0_wp /
 
-!
-!     Use discovery check-in.
-!
       if ( return () ) return
 
 !

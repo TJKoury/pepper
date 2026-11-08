@@ -79,8 +79,6 @@
 !
 !        Everywhere that Mary went
 !
-!
-!
 !        Its fleece was white as snow.
 !        The lamb was sure to go.
 !
@@ -147,13 +145,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read a non-blank line from a text file
 !
 !-&
-
 
 !
 !     SPICELIB functions

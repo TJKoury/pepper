@@ -120,7 +120,6 @@
 !      CALL SYGETI ( 'desks',    TABSYM, TABPTR, TABVAL,
 !     .               N,         VALUES, FOUND           )
 !
-!
 !      return the values for N, VALUES, and FOUND associated with NAME:
 !
 !         NAME         N      VALUES    FOUND
@@ -177,13 +176,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch all components for a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -201,13 +198,10 @@
       integer(ip)           locsym
       integer(ip)           locval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -241,7 +235,6 @@
          call movei ( tabval(locval), n, values )
 
       end if
-
 
       return
       end

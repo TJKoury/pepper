@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcoldsc.inc'
       include 'ekcnamsz.inc'
@@ -68,7 +67,6 @@
 !                    their corresponding descriptors:  the Ith element
 !                    of CNAMES and the Ith descriptor apply to
 !                    the Ith column in the segment.
-!
 !
 ! $ Detailed_Output
 !
@@ -133,7 +131,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -196,7 +193,6 @@
 
       if ( failed() ) return
 
-
 !
 !     The metadata layout has the following form:
 !
@@ -250,7 +246,6 @@
       do i = 2, ncpage
          call zzekpgan ( handle, chr, p, base )
       end do
-
 
 !
 !     On the third day of Christmas, we initialized three data page
@@ -391,7 +386,6 @@
 !
             call movei ( cdscrs(1,i), cdscsz, ipage(dscbas+1) )
 
-
          else
 !
 !           Some or all of the descriptor will overflow onto the next
@@ -423,7 +417,6 @@
 !        If we encountered a DAS error, leave now.
 !
          if ( failed() ) return
-
 
       end do
 

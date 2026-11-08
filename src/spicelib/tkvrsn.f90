@@ -249,13 +249,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Return version strings
 !
 !-&
-
 
 !
 !     SPICELIB functions

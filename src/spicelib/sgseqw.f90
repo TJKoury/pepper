@@ -1186,13 +1186,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     generic segments sequential writer
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -1336,7 +1334,6 @@
       //            ' points.'                                    )
       call sigerr ( 'SPICE(BOGUSENTRY)'                           )
       return
-
 
 !$Procedure SGBWFS ( Generic segments: Begin a fixed size segment. )
 
@@ -1505,13 +1502,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin writing a fixed packet size generic segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1521,7 +1516,6 @@
 !
 !     LOGICAL               FAILED
 !     LOGICAL               RETURN
-!
 !
 !     Standard SPICE error handling.
 !
@@ -1745,7 +1739,6 @@
 
       return
 
-
 !$Procedure SGBWVS ( Generic segments: Begin a variable size segment. )
 
       entry sgbwvs ( handle, descr, segid, nconst, const, idxtyp )
@@ -1903,13 +1896,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin writing a variable packet size generic segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2133,7 +2124,6 @@
 
       return
 
-
 !$Procedure SGWFPK ( Generic segments: Write fixed size packets. )
 
       entry sgwfpk ( handle, npkts, pktdat, nrefs, refdat )
@@ -2349,13 +2339,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write fixed size packets to a generic segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2617,7 +2605,6 @@
 
       return
 
-
 !$Procedure SGWVPK ( Generic segment: Write variable size packets. )
 
       entry sgwvpk ( handle, npkts, pktsiz, pktdat, nrefs, refdat )
@@ -2855,13 +2842,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write variable size packets to a generic segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -3171,7 +3156,6 @@
 
       return
 
-
 !$Procedure SGWES ( Generic segments: End a segment. )
 
       entry sgwes ( handle )
@@ -3285,13 +3269,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     end a generic segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -3463,7 +3445,6 @@
 !              compute the size of the last packet.
 !
             do i  = 1, ftnpkt(index)
-
 
                call dafgda ( handle, pktadr-1, pktadr-1, mysize )
                call dafada ( myaddr, 1                          )

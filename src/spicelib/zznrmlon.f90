@@ -59,7 +59,6 @@
 !                INMAX is allowed to be less than INMIN, but must
 !                not be equal to it.
 !
-!
 !     TOL        is a non-negative tolerance value. If an input bound
 !                lies outside of the range
 !
@@ -70,7 +69,6 @@
 !
 !                If INMAX exceeds INMIN by less than TOL, the bounds
 !                are interpreted as being 2*pi radians apart.
-!
 !
 ! $ Detailed_Output
 !
@@ -149,7 +147,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -161,7 +158,6 @@
 !
       real(wp)              delta
 
-
 !
 !     Saved values
 !
@@ -169,13 +165,12 @@
 !
 !     Initial values
 !
-!
 !     Constants (SPICELIB computed them on the first call).
 !
       real(wp), parameter :: pi2 = twopi
 
 !
-!     Use discovery check-in. Don't check RETURN.
+! Don't check RETURN.
 !
 
 !
@@ -300,7 +295,6 @@
          outmax = touchd( outmax - pi2 )
 
       end if
-
 
 !
 !     The output bounds must not be equal. We could end up with

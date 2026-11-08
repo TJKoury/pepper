@@ -105,13 +105,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -129,24 +127,19 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions:
 !
 
-
       logical               allowd
-
 
 !
 !     Local Variables:
 !
 
-
       logical               savok
 
       save                  savok
-
 
 !
 !     Initial Values:
@@ -158,16 +151,11 @@
 !     Executable Code:
 !
 
-
-
       savok  =  ok
 
       accept = .false.
 
       return
-
-
-
 
 !$Procedure ALLOWD    (Are Changes of Long Error Message Allowed?)
 
@@ -270,13 +258,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     allow changes of long error message
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -292,12 +278,10 @@
 !
 !-&
 
-
 !
 !     Executable Code:
 !
 
       allowd = savok
-
 
       end

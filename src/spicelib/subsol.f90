@@ -73,7 +73,6 @@
 !              METHOD. For example, the string ' NEARPOINT' is
 !              valid.
 !
-!
 !     TARGET   is the name of the target body. TARGET is
 !              case-insensitive, and leading and trailing blanks in
 !              TARGET are not significant. Optionally, you may
@@ -87,11 +86,9 @@
 !              containing its radii has been loaded into the kernel
 !              pool via FURNSH.
 !
-!
 !     ET       is the epoch in ephemeris seconds past J2000 at which
 !              the sub-solar point on the target body is to be
 !              computed.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied
 !              when computing the observer-target state.  ABCORR
@@ -145,7 +142,6 @@
 !                            correction. Light time and stellar
 !                            aberration corrections are applied as
 !                            in the 'LT+S' case.
-!
 !
 !     OBSRVR   is the name of the observing body, typically a
 !              spacecraft, the earth, or a surface point on the
@@ -433,13 +429,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED sub-solar point
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -450,7 +444,6 @@
 !        were replaced by calls to BODS2C.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -469,7 +462,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
 
 !
 !     Local variables
@@ -535,7 +527,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -575,7 +566,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, found    )
 
@@ -591,7 +581,6 @@
          return
 
       end if
-
 
 !
 !     Check the input body codes.  If they are equal, signal
@@ -673,7 +662,6 @@
 !
          call nearpt ( pos, radii(1), radii(2), radii(3), spoint, alt )
 
-
       else if (  eqstr( method, 'Intercept' )  ) then
 
          call surfpt ( origin,  pos,   radii(1),  radii(2),  radii(3), &
@@ -694,8 +682,6 @@
 
          end if
 
-
-
       else
 
          call setmsg ( 'The computation method # was not recognized. '// &
@@ -706,7 +692,6 @@
          return
 
       end if
-
 
       return
       end

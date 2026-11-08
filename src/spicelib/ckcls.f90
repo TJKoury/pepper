@@ -70,7 +70,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM CKCLS_EX1
 !              IMPLICIT NONE
 !
@@ -148,7 +147,6 @@
 !        C
 !              SEGID  = 'Test type 3 CK segment'
 !              IFNAME = 'Test CK type 3 segment created by CKW03'
-!
 !
 !        C
 !        C     Open a new kernel.
@@ -258,7 +256,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new CK file exists in the
 !        output directory.
@@ -302,13 +299,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close a CK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -331,7 +326,6 @@
 !     Standard SPICELIB error handling.
 !
       if ( return() ) return
-
 
 !
 !     Get the access method for the file. Currently, if HANDLE < 0, the

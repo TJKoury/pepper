@@ -276,7 +276,6 @@
       integer(ip)              iret
       integer(ip)              iretn
 
-
 !
 !     SPICELIB routines.
 !
@@ -287,7 +286,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Constants
@@ -469,7 +467,6 @@
          xn = no + dndt
 
       end if
-
 
       return
       end

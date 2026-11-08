@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekcoldsc.inc'
       include  'ekcnamsz.inc'
@@ -194,7 +193,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -316,9 +314,7 @@
 
          end do
 
-
       else
-
 
          if ( fixsiz ) then
 
@@ -334,9 +330,7 @@
 
          end if
 
-
       end if
-
 
       if ( ndata > 0 ) then
 !
@@ -388,7 +382,6 @@
       nlink   =  0
       newent  =  .true.
 
-
       do while ( row <= nrows )
 !
 !        NEWREQ is set to TRUE if we discover that the next column
@@ -415,9 +408,7 @@
             cntinu         =  .false.
             newent         =  .true.
 
-
          else
-
 
             if ( newent ) then
 !
@@ -507,7 +498,6 @@
 
                   end if
 
-
                else
 !
 !                 The input data doesn't require padding.
@@ -577,7 +567,6 @@
 
             end if
 
-
          end if
 
 !
@@ -595,7 +584,6 @@
             bufptr  =  1
 
          end if
-
 
          if (         cntinu &
              .or.     newreq &

@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
 
       integer(ip)           handle
@@ -100,7 +99,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -130,7 +128,6 @@
       coldsc(ixtidx)  =  1
 
       call zzektrit ( handle, coldsc(ixpidx) )
-
 
       return
       end

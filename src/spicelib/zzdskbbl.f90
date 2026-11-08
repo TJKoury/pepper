@@ -168,8 +168,6 @@
 
       if ( return() ) return
 
-
-
       if ( first ) then
 
          call zzctruin ( ctr )
@@ -206,7 +204,6 @@
 
          call zzdsksns ( zzdsknot, handle, dladsc, dskdsc, segfnd )
 
-
          if ( .not. failed() ) then
 
             prvbod = bodyid
@@ -214,7 +211,6 @@
          end if
 
       end if
-
 
       return
       end

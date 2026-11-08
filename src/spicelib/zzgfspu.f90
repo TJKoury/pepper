@@ -252,13 +252,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     umbrella routine for finding angular separation events
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -291,7 +289,6 @@
       integer(ip)           clssid
       integer(ip)           ctr1
       integer(ip)           ctr2
-
 
 !
 !     Saved Variables
@@ -360,9 +357,6 @@
       call sigerr( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
-
 
 !$Procedure ZZGFSPIN ( Private - GF, angular separation initialization )
 
@@ -580,13 +574,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     angular separation initialization routine
 !
 !-&
-
 
       if ( return () ) return
 
@@ -605,7 +597,6 @@
 
       end if
 
-
       call bods2c ( of(2), svbod2, found )
 
       if ( .not. found ) then
@@ -621,7 +612,6 @@
 
       end if
 
-
       call bods2c ( from, svobs, found )
 
       if ( .not. found ) then
@@ -636,7 +626,6 @@
          return
 
       end if
-
 
 !
 !     Confirm the three bodies have unique IDs.
@@ -768,7 +757,6 @@
 
       end if
 
-
 !
 !     Confirm the center of the input reference frames correspond
 !     to the target bodies for non-point, non-spherical bodies.
@@ -809,7 +797,6 @@
 
       end if
 
-
       if ( (svshp2 /= point)  .and. (svshp2 /= sphere) ) then
 
          call namfrm ( svref2, fcode2 )
@@ -841,9 +828,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure ZZGFSPDC ( Private - GF, angular separation decreasing)
 
@@ -957,13 +941,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     angular separation is decreasing
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1018,9 +1000,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure ZZGFSPGQ ( Private - GF, calculate angular separation )
 
@@ -1118,13 +1097,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     angular separation between two bodies
 !
 !-&
-
 
       sep = zzsepq ( et, &
                      svbod1, svbod2, &
@@ -1132,9 +1109,6 @@
                      svobs,  svabcr, svref )
 
       return
-
-
-
 
 !$Procedure ZZGFSPX ( Private -- GF, retrieve ZZGFSPIN values )
 
@@ -1248,13 +1222,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get saved separation angle parameters
 !
 !-&
-
 
       xabcr   = svabcr
       xbod(1) = svbod1

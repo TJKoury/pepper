@@ -134,13 +134,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch constants from a generic segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -166,7 +164,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Get the value for the base of the constants and the number of

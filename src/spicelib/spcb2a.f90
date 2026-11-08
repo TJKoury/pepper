@@ -148,13 +148,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary SPK or CK to ascii
 !
 !-&
-
 
 !
 !     SPICELIB functions

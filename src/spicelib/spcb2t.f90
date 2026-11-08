@@ -115,7 +115,6 @@
 !
 !            CLOSE ( UNIT )
 !
-!
 !     The following code fragment reconverts the text format
 !     SPK data and comments back into binary format.
 !
@@ -167,13 +166,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary SPK or CK to text
 !
 !-&
-
 
 !
 !     SPICELIB functions

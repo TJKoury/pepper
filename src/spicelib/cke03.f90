@@ -185,9 +185,7 @@
 !                                       T
 !                       ROT12   =  CMAT2    *   CMAT1
 !
-!
 !                       ROT12   ==> ( ANGLE, AXIS )
-!
 !
 !     3)  To obtain pointing at time t, rotate the spacecraft frame
 !         about the vector AXIS from its orientation at time t1 by the
@@ -207,7 +205,6 @@
 !                                                 T
 !                       CMAT  =  CMAT1   *   ROT1t
 !
-!
 !     5)  The angular velocity is treated independently of the
 !         C-matrix. If it is requested, then the AV at time t is
 !         the weighted average of the angular velocity vectors at
@@ -216,7 +213,6 @@
 !                          ( t  - t1 )
 !                    W  =  -----------
 !                          ( t2 - t1 )
-!
 !
 !                    AV  = ( 1 - W ) * AV1   +   W * AV2
 !
@@ -255,7 +251,6 @@
 !           LOGICAL               NEEDAV
 !           LOGICAL               FND
 !           LOGICAL               SFND
-!
 !
 !           SC     = -94
 !           INST   = -94000
@@ -311,7 +306,6 @@
 !          .        ( SCLKDP + TOL  .GE. DCD( 1 ) ) .AND.
 !          .        ( SCLKDP - TOL  .LE. DCD( 2 ) ) .AND.
 !          .        ( DTYPE         .EQ. ICD( 3 ) )      ) THEN
-!
 !
 !                 CALL CKR03 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
 !          .                   RECORD, FND )
@@ -379,13 +373,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate CK type_3 pointing data record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -401,7 +393,6 @@
 !        the output arguments.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -459,7 +450,6 @@
          if ( needav ) then
             call vequ ( av1, av )
          end if
-
 
          return
 
@@ -535,7 +525,6 @@
          call vlcom ( 1.0_wp - frac, av1, frac, av2, av )
 
       end if
-
 
       return
       end

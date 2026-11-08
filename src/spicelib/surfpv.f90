@@ -62,7 +62,6 @@
 !              and time, but these units must be consistent with
 !              those of the other inputs.
 !
-!
 !     STDIR    is the state of the input ray's direction vector.
 !              The first three components of STDIR are a non-zero
 !              vector giving the x, y, and z components of the
@@ -97,7 +96,6 @@
 !              The position units of STX are the same as those of
 !              STVRTX, STDIR, and A, B, and C. The time units are
 !              the same as those of STVRTX and STDIR.
-!
 !
 !     FOUND    is a logical flag indicating whether STX is
 !              defined. FOUND is .TRUE. if and only if both the
@@ -166,7 +164,6 @@
 !     The expression for X'(t) is much simpler than that of W'(t);
 !     SURFPV evaluates X'(t) at t0.
 !
-!
 !     Derivation of X(t) and X'(t)
 !     ----------------------------------------------------------------
 !
@@ -228,9 +225,7 @@
 !        ray direction vector velocity via several simple cases. Also
 !        show the results of a near-tangency computation.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SURFPV_EX1
 !              IMPLICIT NONE
@@ -270,7 +265,6 @@
 !              STVRTX( 4 ) =  0.D0
 !              STVRTX( 5 ) =  0.D0
 !              STVRTX( 6 ) =  3.D0
-!
 !
 !              STDIR ( 1 ) = -1.D0
 !              STDIR ( 2 ) =  0.D0
@@ -359,10 +353,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Ellipsoid radii:
 !              A =    1.0000000000000000
@@ -384,7 +376,6 @@
 !         Intercept velocity:
 !           0.000000000000E+00  0.000000000000E+00  0.300000000000E+01
 !
-!
 !         Case 2: Vertex and direction both vary
 !
 !         Vertex:
@@ -399,7 +390,6 @@
 !           0.100000000000E+01  0.000000000000E+00  0.000000000000E+00
 !         Intercept velocity:
 !           0.000000000000E+00  0.000000000000E+00  0.700000000000E+01
-!
 !
 !         Case 3: Vertex and direction both vary;
 !                 near-tangent case.
@@ -416,7 +406,6 @@
 !           0.258095682795E-07  0.000000000000E+00  0.300000000000E+01
 !         Intercept velocity:
 !          -0.387453203621+307  0.000000000000E+00  0.299999997419+300
-!
 !
 ! $ Restrictions
 !
@@ -446,13 +435,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ellipsoid surface point and velocity
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -493,7 +480,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Determine the ellipsoid surface intercept point of the ray
 !     emanating from the observer in the direction of D. We'll call it
@@ -533,7 +519,6 @@
 !     Then, from the derivation in $ Particulars above,
 !
 !           DX  =
-!
 !
 !            < V-X,N >       < U,N > < DV,N > - < V-X,N > < DU,N >
 !      DV -  --------- DU -  ------------------------------------- U
@@ -621,12 +606,10 @@
 !               2      MARGIN
 !        < U,N >
 !
-!
 !     or equivalently
 !
 !                               2
 !        M  >  DPMAX() * < U,N >  / MARGIN
-!
 !
 !     then the velocity is probably too large to compute. We know that
 !     we can perform the multiplication above because U and N are both
@@ -641,7 +624,6 @@
 !
 !                                                         2
 !        DX =  DV  -  SECOND / < U,N >  -  THIRD / < U,N >
-!
 !
       r = 1.0_wp / udn
 

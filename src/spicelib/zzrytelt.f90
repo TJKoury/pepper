@@ -41,7 +41,6 @@
       integer(ip)           nxpts
       real(wp)              xpt    ( 3 )
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  DESCRIPTION
@@ -65,11 +64,9 @@
 !                considered to be an offset from the center of the
 !                reference frame associated with the segment.
 !
-!
 !     DSKDSC     is a DSK segment descriptor. The coordinate system
 !                and spatial boundaries of a the segment are specified
 !                by members of this descriptor.
-!
 !
 ! $ Detailed_Output
 !
@@ -84,7 +81,6 @@
 !                an offset from the origin of the coordinate system.
 !
 !                XPT is valid only if NXPTS is set to 1.
-!
 !
 !     NXPTS      is the number of intercept points of the ray and
 !                the volume element.
@@ -157,10 +153,7 @@
 !
       integer(ip)           corsys
 
-
       if ( return() ) return
-
-
 
       corsys = nint( dskdsc(sysidx) )
 
@@ -169,12 +162,10 @@
          call zzrytlat ( vertex, raydir, dskdsc(mn1idx), &
                          margin, nxpts,  xpt              )
 
-
       else if ( corsys == recsys ) then
 
          call zzrytrec ( vertex, raydir, dskdsc(mn1idx), &
                          margin, nxpts,  xpt              )
-
 
       else if ( corsys == pdtsys ) then
 

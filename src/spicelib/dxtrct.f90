@@ -130,8 +130,6 @@
 !             PARSED  1
 !             VALUES  3.92829D+01
 !
-!
-!
 !     Input   STRING  'THIS IS A BAD STRING FOR NUMBERS'
 !             KEYWD   'RADIUS'
 !             MAXWDS  2
@@ -140,8 +138,6 @@
 !             NFOUND  -1
 !             PARSED   0
 !             VALUES   (unchanged)
-!
-!
 !
 !     Input   STRING  'PRIMES 11  13 17 19 23 NON-PRIMES 12 14 15'
 !             KEYWD   'PRIMES'
@@ -203,13 +199,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract d.p. values from a string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -222,7 +216,6 @@
 !         value.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -244,7 +237,6 @@
       integer(ip)      start
       integer(ip)      i
       integer(ip)      j
-
 
       real(wp) x
       character(80)    error
@@ -305,7 +297,6 @@
          return
 
       end if
-
 
 !
 !     Now find all of the succeeding numeric words until we run out of

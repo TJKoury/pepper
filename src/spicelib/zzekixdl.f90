@@ -19,7 +19,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcoldsc.inc'
       include 'eksegdsc.inc'
@@ -130,8 +129,6 @@
 !
       if ( return () ) return
 
-
-
       idxtyp  =  coldsc ( ixtidx )
 
       if ( idxtyp /= ifalse ) then
@@ -142,7 +139,6 @@
 !        and delete it.
 !
          call zzekfrx ( handle, segdsc, coldsc, recptr, idx )
-
 
          if ( idxtyp == 1 ) then
 !
@@ -163,7 +159,6 @@
             return
 
          end if
-
 
       else
 !

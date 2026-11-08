@@ -213,18 +213,15 @@
 !        done in order to make the calendar date format of ETCAL
 !        consistent with the calendar date format of ET2UTC.
 !
-!
 !-    SPICELIB Version 1.0.0, 14-DEC-1993 (WLT)
 !
 !-&
-
 
 ! $ Index_Entries
 !
 !     Convert ephemeris time to a formal calendar date
 !
 !-&
-
 
 !
 !     SPICELIB Functions.
@@ -233,8 +230,6 @@
       integer(ip)           intmax
       integer(ip)           intmin
       integer(ip)           lstlti
-
-
 
 !
 !     We declare the variables that contain the number of days in
@@ -247,7 +242,6 @@
       integer(ip), parameter :: dp4y = 365*4   + 1
 
       integer(ip), parameter :: dp1y = 365
-
 
 !
 !     The following integers give the number of days during the
@@ -336,7 +330,6 @@
       integer(ip), parameter :: strsiz = 16
 
       integer(ip), parameter :: lngsiz = 180
-
 
 !
 !     The variables below hold the components of the output string
@@ -435,11 +428,8 @@
                                       'MAY',  'JUN', 'JUL', 'AUG', &
                                       'SEP',  'OCT', 'NOV', 'DEC' /
 
-
-
 !
 !     Definitions of statement functions.
-!
 !
 !     The number of days elapsed since Jan 1, of year 1 A.D. to
 !     Jan 1 of YEAR is given by:
@@ -470,16 +460,12 @@
                             + extra  ( month ) * ldays(year) &
                             + day
 
-
 !
 !     The number of days since 1 Jan 1 A.D. is given by:
 !
       dp0001(year,month,day) = ydays(year) &
                              + doy  (year, month, day) &
                              - 1
-
-
-
 
       if ( first ) then
 
@@ -693,7 +679,6 @@
          bm = 1
       end if
 
-
       mstr = '00'
       hstr = '00'
       sstr = ' '
@@ -737,7 +722,6 @@
       //     mstr(1:2) &
       //     ':' &
       //     sstr(1:6)
-
 
       call cmprss ( ' ', 1, date, date )
       call ljust  (         date, date )

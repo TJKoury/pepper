@@ -43,7 +43,6 @@
       integer(ip)           xobs
       logical               xablk  ( nabcor )
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  Entry points
@@ -214,7 +213,6 @@
       real(wp)              dvsep
       real(wp)              vdot
 
-
 !
 !     Local parameters
 !
@@ -224,7 +222,6 @@
 !     reference frame. Use J2000 for convenience.
 !
       character(*), parameter :: ref = 'J2000'
-
 
 !
 !     Local Variables
@@ -246,7 +243,6 @@
       logical               svablk ( nabcor )
       logical               found
 
-
 !
 !     Saved Variables
 !
@@ -259,8 +255,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
 
 !$Procedure  ZZGFPAIN ( Private --- GF, phase angle initialization )
 
@@ -425,7 +419,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Find NAIF IDs for TARGET, ILLMN, and OBSRVR.
 !
@@ -444,7 +437,6 @@
 
       end if
 
-
       call bods2c ( illmn, svillm, found )
 
       if ( .not. found ) then
@@ -460,7 +452,6 @@
 
       end if
 
-
       call bods2c ( obsrvr, svobs, found )
 
       if ( .not. found ) then
@@ -475,7 +466,6 @@
          return
 
       end if
-
 
 !
 !     Make sure the observer, illuminator, and target are distinct.
@@ -526,11 +516,7 @@
 
       end if
 
-
       return
-
-
-
 
 !$Procedure ZZGFPADC ( Private --- GF, when phase angle is decreasing )
 
@@ -640,15 +626,12 @@
 !
       if ( return () ) return
 
-
-
 !
 !     Get the state of the TARG object relative to OBS at ET.
 !
       call spkez ( svtarg, et, ref, svabco, svobs, s1, lt )
 
       if (  failed() ) return
-
 
 !
 !     Get the state of the ILLMN object relative to TARG at ET
@@ -683,7 +666,6 @@
 !        d LT    = 1   d ||R||  = 1 < R, V >
 !        ----      -   -------    -
 !        dt        C   dt         C
-!
 !
          call vhat ( s1, uvec )
 
@@ -727,9 +709,6 @@
       decres = -dsep < 0.0_wp
 
       return
-
-
-
 
 !$Procedure ZZGFPAGQ ( Private --- GF, phase angle between two bodies )
 
@@ -821,9 +800,6 @@
       call zzgfpaq ( et, svtarg, svillm, svobs, svabco, rvl )
 
       return
-
-
-
 
 !$Procedure ZZGFPAX ( Private -- GF, retrieve ZZGFPAIN values )
 
@@ -933,5 +909,3 @@
 
       return
       end
-
-

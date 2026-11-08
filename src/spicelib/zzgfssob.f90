@@ -63,16 +63,13 @@
 !                 the computation method to be used. Any value
 !                 supported by SUBPNT may be used.
 !
-!
 !     TRGID      is the NAIF ID code of the target object.
 !
 !                *This routine assumes that the target is modeled
 !                as a tri-axial ellipsoid.*
 !
-!
 !     ET         is the time, expressed as ephemeris seconds past J2000
 !                TDB, at which the specified state is to be computed.
-!
 !
 !     FIXREF     is the name of the reference frame relative to which
 !                the state of interest is specified.
@@ -81,7 +78,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string FIXREF.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied to
 !                the state of the target body to account for one-way
@@ -116,9 +112,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
 !
-!
 !     OBSID      is the NAIF ID code of the observer.
-!
 !
 !     RADII      is an array containing three radii defining
 !                a reference ellipsoid for the target body.
@@ -354,14 +348,10 @@
       data                  svobs / ' ' /
       data                  svtarg / ' ' /
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  first  .or. ( trgid /= prvtrg )  ) then
 
@@ -370,7 +360,6 @@
          prvtrg = trgid
 
       end if
-
 
       if (  first  .or. ( obsid /= prvobs )  ) then
 
@@ -416,7 +405,6 @@
          return
 
       end if
-
 
       if ( geom ) then
 !
@@ -520,7 +508,6 @@
 
          end if
 
-
       else if ( uselt ) then
 !
 !        Light time and possibly stellar aberration corrections are
@@ -568,7 +555,6 @@
 !
 !           - Express the state of the observer relative to the target
 !             in the target body fixed frame at TRGEPC.
-!
 !
 !        Below, we'll use the convention that vectors expressed
 !        relative to the body-fixed frame have names of the form
@@ -805,7 +791,6 @@
 !              ----------
 !                  c
 !
-!
 !           If we're correcting for stellar aberration, *ideally* we
 !           should remove that correction now, since the light time
 !           rate is based on light time between the observer and the
@@ -822,7 +807,6 @@
 !           computations.
 !
          end do
-
 
       else
 !

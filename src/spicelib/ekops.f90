@@ -99,14 +99,11 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        This examples demonstrates how to open a scratch EK file;
 !        create the segment described above, how to insert a new record
 !        into it, and how to summarize its contents.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKOPS_EX1
 !              IMPLICIT NONE
@@ -214,7 +211,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -272,7 +268,6 @@
 !
 !              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
 !             .              ESIZE,  PRICE,  ISNULL               )
-!
 !
 !        C
 !        C     At this point, we could perform read operations
@@ -376,10 +371,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Number of segments =  1
 !
@@ -408,7 +401,6 @@
 !          Data  :   1345.67
 !
 !         ----------------------------------------
-!
 !
 !        Note that after run completion, there is no EK file in the
 !        output directory as scratch files are deleted when they are
@@ -442,14 +434,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open scratch E-kernel
 !     open scratch EK
 !
 !-&
-
 
 !
 !     SPICELIB functions

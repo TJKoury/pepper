@@ -102,7 +102,6 @@
 !                    See the $Particulars section below for details
 !                    concerning use of DSK data.
 !
-!
 !              Neither case nor white space are significant in
 !              METHOD, except within double-quoted strings. For
 !              example, the string ' eLLipsoid ' is valid.
@@ -122,7 +121,6 @@
 !
 !                 "MARS MEGDR128PIXEL/DEG"
 !
-!
 !     TARGET   is the name of the target body. TARGET is
 !              case-insensitive, and leading and trailing blanks in
 !              TARGET are not significant. Optionally, you may
@@ -137,7 +135,6 @@
 !              present in the kernel pool. Normally the kernel
 !              variable would be defined by loading a PCK file.
 !
-!
 !     ET       is the epoch for which target surface data will be
 !              selected, if the surface is modeled using DSK data.
 !              In this case, only segments having time coverage that
@@ -147,7 +144,6 @@
 !              ellipsoid.
 !
 !              ET is expressed as TDB seconds past J2000 TDB.
-!
 !
 !     FIXREF   is the name of a body-fixed reference frame centered
 !              on the target body.
@@ -169,9 +165,7 @@
 !              The output surface points in the array SRFPTS will be
 !              expressed relative to this reference frame.
 !
-!
 !     NPTS     is the number of coordinate pairs in the array LONLAT.
-!
 !
 !     LONLAT   is an array of pairs of planetocentric longitudes and
 !              latitudes of surface points. Elements
@@ -348,7 +342,6 @@
 !     may be more suitable. That routine works with rays having vertices
 !     anywhere outside of the target body.
 !
-!
 !     Planetocentric coordinates
 !     ==========================
 !
@@ -360,7 +353,6 @@
 !
 !        Latitude of a point P is the angle from the XY plane of the
 !        ray from the origin through the point.
-!
 !
 !     Using DSK data
 !     ==============
@@ -382,7 +374,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -409,7 +400,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -488,7 +478,6 @@
 !     the compiler and supporting libraries, and the machine specific
 !     arithmetic implementation.
 !
-!
 !     1) In the following example program, a DSK file containing a
 !        type 2 segment is used to provide a plate model representation
 !        of the surface of Phobos.
@@ -496,9 +485,7 @@
 !        Find the surface points on a target body corresponding to a
 !        given planetocentric longitude/latitude grid.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATSRF_EX1
 !              IMPLICIT NONE
@@ -662,11 +649,9 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name    > phobos512.bds
 !
@@ -736,7 +721,6 @@
 !            Longitude (deg):  240.000000
 !            Latitude  (deg):  -30.000000
 !
-!
 ! $ Restrictions
 !
 !     1)  This routine assumes that the origin of the body-fixed
@@ -773,14 +757,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map latitudinal coordinates to Cartesian surface points
 !     map latitudinal coordinates to DSK surface points
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -892,10 +874,7 @@
       data                  prvmth / ' '    /
       data                  svprvt / 0      /
 
-
-
       if ( return() ) return
-
 
       if ( first ) then
 !
@@ -1105,8 +1084,6 @@
 
          end do
 
-
-
       else if  ( shape == dskshp ) then
 !
 !        Initialize the DSK ray-surface intercept algorithm to use a
@@ -1122,7 +1099,6 @@
          r = 2 * r
 
          if ( failed() ) return
-
 
 !
 !        Generate surface points.
@@ -1190,7 +1166,6 @@
             end if
 
          end do
-
 
       else
 

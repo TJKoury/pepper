@@ -112,7 +112,6 @@
 !     Then letting s be +1 if cos(THETA) > 0 and -1 if cos(THETA) < 0,
 !     we have for any value of THETA other than 0 or Pi
 !
-!
 !                                  2          1/2
 !        cos(THETA) = s * ( 1 - sin (THETA)  )                       (5)
 !
@@ -120,7 +119,6 @@
 !
 !                                  2          1/2
 !        < U1, U2 > = s * ( 1 - sin (THETA)  )                       (6)
-!
 !
 !     At this point, for any value of THETA other than 0 or Pi,
 !     we can differentiate both sides with respect to time (T)
@@ -132,7 +130,6 @@
 !                                   * (-2) sin(THETA)*cos(THETA)
 !
 !                                   * d(THETA)/dT                   (7a)
-!
 !
 !     Using equation (5), and noting that s = 1/s, we can cancel
 !     the cosine terms on the right hand side
@@ -172,10 +169,8 @@
 !     1) Calculate the time derivative of the angular separation of
 !        the Earth and Moon as seen from the Sun at a given time.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -200,7 +195,6 @@
 !                                            radii
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -211,9 +205,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DVSEP_EX1
 !              IMPLICIT NONE
@@ -263,14 +255,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Time derivative of angular
 !            separation (rad/sec):    3.8121193666132696E-009
-!
 !
 ! $ Restrictions
 !
@@ -305,13 +294,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     time derivative of angular separation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -334,12 +321,10 @@
       real(wp)              u1     (6)
       real(wp)              u2     (6)
 
-
       if ( return() ) then
          dvsep = 0.0_wp
          return
       end if
-
 
 !
 !     Compute the unit vectors and corresponding time derivatives

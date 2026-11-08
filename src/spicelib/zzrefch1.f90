@@ -62,7 +62,6 @@
 !
 !                    CALL MXV ( ROTATE, POS, POS2 )
 !
-!
 ! $ Parameters
 !
 !     None.
@@ -85,7 +84,6 @@
 !     This routine allows you to compute the rotation matrix
 !     between two reference frames.
 !
-!
 ! $ Examples
 !
 !     Suppose that you have a position POS1 at epoch ET
@@ -95,7 +93,6 @@
 !
 !        CALL REFCHG ( FRAME1, FRAME2, ET,   ROTATE )
 !        CALL MXV    ( ROTATE, POS1,   POS2 )
-!
 !
 ! $ Restrictions
 !
@@ -133,7 +130,6 @@
 !        A typo was corrected in the long error message.
 !
 !-    SPICELIB Version 1.0.0, 9-JUL-1998 (WLT)
-!
 !
 !-&
 
@@ -244,7 +240,6 @@
 
       end if
 
-
       call frinfo ( frame2, cent, class, clssid, found )
 
       if ( failed() ) return
@@ -258,8 +253,6 @@
          return
 
       end if
-
-
 
       node        = 1
       frame(node) = frame1
@@ -298,7 +291,6 @@
              .or. frame(node) == frame2 &
              .or. .not. found
 
-
       do while ( .not. done )
 !
 !        The only way to get to this point is to have run out of
@@ -311,7 +303,6 @@
          call zzrotgt1 ( frame(node), et, rot(1,1,node), relto, found )
 
          if ( failed() ) return
-
 
          if ( found  ) then
 !
@@ -348,7 +339,6 @@
 !     that is that NODE .GT. 1.  If NODE .EQ. 1 then we have
 !     no rotations computed yet.
 !
-!
 !     ROT(1...3, 1...3, 1    )    rotates FRAME1   to FRAME(2)
 !     ROT(1...3, 1...3, 2    )    rotates FRAME(2) to FRAME(3)
 !     ROT(1...3, 1...3, 3    )    rotates FRAME(3) to FRAME(4)
@@ -357,7 +347,6 @@
 !        .
 !     ROT(1...3, 1...3, NODE-1 )  rotates FRAME(NODE-1)
 !                                   to         FRAME(NODE)
-!
 !
 !     One of the following situations is true.
 !
@@ -465,8 +454,6 @@
                   end do
                end do
 
-
-
 !
 !              Adjust GET and PUT so that GET points to the slots
 !              where we just stored the result of our multiply and
@@ -492,7 +479,6 @@
          done   =       this  == rootf &
                   .or.  gotone &
                   .or. .not. found
-
 
       end do
 

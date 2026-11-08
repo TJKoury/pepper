@@ -170,14 +170,12 @@
 !                               Newtonian light time correction and
 !                               stellar aberration correction.
 !
-!
 !                 Neither special nor general relativistic effects are
 !                 accounted for in the aberration corrections applied
 !                 by this routine.
 !
 !                 Case and blanks are not significant in the string
 !                 ABCORR.
-!
 !
 !     STOBS       is the geometric state of the observer relative to
 !                 the solar system barycenter at ET. STOBS is expressed
@@ -338,7 +336,6 @@
 !          kernels referenced here must be present in the user's
 !          current working directory.
 !
-!
 !          \begindata
 !
 !             KERNELS_TO_LOAD = ( 'de418.bsp',
@@ -346,7 +343,6 @@
 !                                 'naif0008.tls'  )
 !
 !          \begintext
-!
 !
 !       The code example follows:
 !
@@ -449,7 +445,6 @@
 !
 !           END
 !
-!
 !     The output produced by this program will vary somewhat as
 !     a function of the platform on which the program is built and
 !     executed. On a PC/Linux/g77 platform, the following output
@@ -504,7 +499,6 @@
 !        J2000 z-velocity (km/s):  -0.294458645
 !        One-way light time (s):    1.3438081
 !        Light time rate:           1.00673404E-07
-!
 !
 ! $ Restrictions
 !
@@ -561,8 +555,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
@@ -617,8 +609,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !

@@ -288,18 +288,15 @@
 !         The restriction that a C-kernel file must be loaded
 !         was explicitly stated.
 !
-!
 !-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
 !
 !-&
-
 
 ! $ Index_Entries
 !
 !     get pointing from CK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -364,7 +361,6 @@
 !-    Beta Version 1.0.0, 07-MAY-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions

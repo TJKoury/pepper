@@ -196,7 +196,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions.
 !
@@ -226,9 +225,6 @@
       logical               lfound
       logical               namnew
 
-!
-!     This routine uses discovery check-in.
-!
 !
 !     Consistency check.
 !

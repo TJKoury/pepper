@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include 'eksegdsc.inc'
 
       integer(ip)           handle
@@ -101,9 +100,6 @@
       integer(ip)           mp
       integer(ip)           mbase
 
-!
-!     Use discovery check-in.
-!
       call zzekmloc (  handle,  segno,    mp,            mbase   )
       call dasrdi   (  handle,  mbase+1,  mbase+sdscsz,  segdsc  )
 

@@ -96,7 +96,6 @@
 !                         BROWNIAN MOTION
 !         FERMI     -->   NUCLEAR FISSION
 !
-!
 !      The call,
 !
 !         CALL SYENQC ( 'EINSTEIN', 'GENERAL RELATIVITY',
@@ -160,13 +159,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     enqueue a value onto a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -192,7 +189,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -227,7 +223,6 @@
          call errch  ( '#', name  )
          call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
-
 !
 !     If there's room, add the new value to the value table at the
 !     correct location, and add one to the dimension.
@@ -242,7 +237,6 @@
          tabptr(locsym) = tabptr(locsym) + 1
 
       end if
-
 
       return
       end

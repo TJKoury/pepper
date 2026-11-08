@@ -270,9 +270,7 @@
 !
 !           pck00008.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECPGR_EX1
 !              IMPLICIT NONE
@@ -348,10 +346,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -371,7 +367,6 @@
 !           Latitude  (deg)        =    45.000000000000014
 !           Altitude  (km)         =    300.00000000000057
 !
-!
 !     2) Below is a table showing a variety of rectangular coordinates
 !        and the corresponding Mars planetographic coordinates. The
 !        values are computed using the reference spheroid having radii
@@ -382,10 +377,8 @@
 !        Note:  the values shown above may not be current or suitable
 !               for your application.
 !
-!
 !        Corresponding rectangular and planetographic coordinates are
 !        listed to three decimal places.
-!
 !
 !        RECTAN(1)  RECTAN(2)  RECTAN(3)       LON       LAT        ALT
 !        --------------------------------------------------------------
@@ -399,7 +392,6 @@
 !            0.000      0.000  -3376.200     0.000   -90.000      0.000
 !            0.000      0.000      0.000     0.000    90.000  -3376.200
 !
-!
 !     3) Below we show the analogous relationships for the earth,
 !        using the reference ellipsoid radii
 !
@@ -408,7 +400,6 @@
 !
 !        Note the change in longitudes for points on the +/- Y axis
 !        for the earth vs the Mars values.
-!
 !
 !        RECTAN(1)  RECTAN(2)  RECTAN(3)     LON       LAT        ALT
 !        --------------------------------------------------------------
@@ -470,13 +461,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert rectangular to planetographic coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -495,7 +484,6 @@
 
       character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
 
-
       integer(ip), parameter :: earth = 399
 
       integer(ip), parameter :: kvnmln = 32
@@ -512,7 +500,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
 
 !
 !     Local variables
@@ -552,12 +539,10 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialization.
@@ -593,8 +578,7 @@
       end if
 
 !
-!     The equatorial radius must be positive. If not, signal an error
-!     and check out.
+!     The equatorial radius must be positive. If not, signal an error.
 !
       if ( re <= 0.0_wp ) then
 
@@ -608,7 +592,7 @@
 !
 !     If the flattening coefficient is greater than 1, the polar radius
 !     is negative. If F is equal to 1, the polar radius is zero. Either
-!     case is a problem, so signal an error and check out.
+!     case is a problem, so signal an error.
 !
       if ( f >= 1.0_wp ) then
 
@@ -650,7 +634,6 @@
             return
 
          end if
-
 
       else
 !
@@ -696,7 +679,6 @@
 !     Convert the input coordinates first to geodetic coordinates.
 !
       call recgeo ( rectan, re, f, lon, lat, alt )
-
 
 !     Adjust the longitude according to the sense of the body's
 !     spin, or according to the override value if one is provided.

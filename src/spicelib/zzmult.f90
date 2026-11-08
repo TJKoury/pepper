@@ -116,12 +116,10 @@
 !           DOUBLE PRECISION      ZZMULT
 !           DOUBLE PRECISION      DPMAX
 !
-!
 !     C
 !     C     Set error reporting to REPORT.
 !     C
 !           CALL ERRACT( 'SET', 'REPORT' )
-!
 !
 !     C
 !     C     Standard, safe evaluation.
@@ -132,8 +130,6 @@
 !           MULT = ZZMULT( A, B )
 !           WRITE(*,*) 'MULT 1*10         = ', MULT
 !
-!
-!
 !     C
 !     C     A numeric overflow event as defined in ZZMULT.
 !     C
@@ -142,8 +138,6 @@
 !
 !           MULT = ZZMULT( A, B )
 !           WRITE(*,*) 'MULT 1*DPMAX()    = ', MULT
-!
-!
 !
 !     C
 !     C     A numeric overflow event as defined in ZZMULT.
@@ -154,8 +148,6 @@
 !           MULT = ZZMULT( A, B )
 !           WRITE(*,*) 'MULT 1.D515       = ', MULT
 !
-!
-!
 !     C
 !     C     A multiply by zero event.
 !     C
@@ -164,8 +156,6 @@
 !
 !           MULT = ZZMULT( A, B )
 !           WRITE(*,*) 'MULT 1*0          = ', MULT
-!
-!
 !
 !     C
 !     C     A multiply by zero event.
@@ -176,7 +166,6 @@
 !           MULT = ZZMULT( A, B )
 !           WRITE(*,*) 'MULT 0*0          = ', MULT
 !
-!
 !           END
 !
 !   The program outputs:
@@ -184,7 +173,6 @@
 !   -The function returns the evaluation value. No error.
 !
 !      MULT 1*10         =    10.000000000000000
-!
 !
 !   -The function signals a NUMERICOVERFLOW error, and sets the
 !    return value to zero.
@@ -205,7 +193,6 @@
 !     =================================================================
 !      MULT 1*DPMAX()   =  0.0000000000000000
 !
-!
 !   -The function signals a NUMERICOVERFLOW error, and sets the
 !    return value to zero.
 !
@@ -225,11 +212,9 @@
 !     =================================================================
 !      MULT 1.D515       =    0.0000000000000000
 !
-!
 !   -The function returns the evaluation value. No error.
 !
 !      MULT 1*0          =    0.0000000000000000
-!
 !
 !   -The function returns the evaluation value. No error.
 !
@@ -294,11 +279,9 @@
          return
       end if
 
-
 !
 !     Participate in error tracing.
 !
-
 
 !
 !     Calculate the bounds parameter on first entry.
@@ -316,7 +299,6 @@
 
        end if
 
-
 !
 !     If either A or B equals zero the multiplication is zero.
 !
@@ -326,7 +308,6 @@
          return
 
       end if
-
 
 !
 !     Calculate base 10 logarithms of the absolute value of the
@@ -370,7 +351,6 @@
 !     This operation should be safe. Probably.
 !
       zzmult = a*b
-
 
       return
       end

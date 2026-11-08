@@ -173,7 +173,6 @@
 !
 !-&
 
-
       if (  ( body >= 100 ) .and. ( body <= 999 )  ) then
 !
 !        BODY is a "traditional" NAIF planet or natural satellite

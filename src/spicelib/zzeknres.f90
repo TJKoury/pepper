@@ -291,14 +291,12 @@
 
       end do
 
-
 !
 !     Make sure that all of the tables are loaded in the EK system.
 !
       call ekntab ( nload )
 
       do i = 1, ntab
-
 
          fnd  =  .false.
          j    =   1
@@ -319,7 +317,6 @@
             end if
 
          end do
-
 
          if ( .not. fnd ) then
 
@@ -342,7 +339,6 @@
 
          end if
 
-
       end do
 
 !
@@ -358,7 +354,6 @@
          eqryi( base + eqvdsz + eqtord ) = i
 
       end do
-
 
 !
 !     Check the column names used in the constraints.
@@ -383,7 +378,6 @@
 
          if ( error ) return
 
-
          if ( cnstyp == eqcol ) then
 !
 !           Check the column and table on the RHS of the constraint.
@@ -396,9 +390,7 @@
 
          end if
 
-
       end do
-
 
 !
 !     Do the same checks and assignments for the SELECT columns.
@@ -422,7 +414,6 @@
 
       end do
 
-
 !
 !     Do the same checks and assignments for the order-by columns.
 !
@@ -443,7 +434,6 @@
          if ( error ) return
 
       end do
-
 
 !
 !     Indicate completion of name resolution.

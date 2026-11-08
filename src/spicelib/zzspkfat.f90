@@ -68,7 +68,6 @@
 !                    INTEGER               TRGCTR
 !                    DOUBLE PRECISION      STATE ( 6 )
 !
-!
 !                    The inputs of TRGSUB are ET and REF; the outputs
 !                    are TRGCTR and STATE. STATE is the geometric state
 !                    of the target relative to the returned center of
@@ -153,7 +152,6 @@
 !                               correction and stellar aberration
 !                               correction.
 !
-!
 !                 The following values of ABCORR apply to the
 !                 "transmission" case in which photons *depart* from
 !                 the observer's location at ET and arrive at the
@@ -186,7 +184,6 @@
 !                    'XCN+S'    "Transmission" case:  converged
 !                               Newtonian light time correction and
 !                               stellar aberration correction.
-!
 !
 !     OBS         is the NAIF ID code for the observer body.  The
 !                 target and observer define a state vector whose
@@ -336,8 +333,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
@@ -392,13 +387,10 @@
 
       data                  prvcor  / ' ' /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -459,7 +451,6 @@
       call spkgeo ( obs, et, ref, ssb, ssbobs, ssblt )
 
       if ( failed() ) return
-
 
       if ( usestl ) then
 !

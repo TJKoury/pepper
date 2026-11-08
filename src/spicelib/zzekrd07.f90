@@ -122,7 +122,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -148,16 +147,12 @@
       logical               nullok
 
 !
-!     Use discovery check-in.
-!
-!
 !     Make sure the column exists.
 !
       ncols   =  segdsc ( ncidx  )
       colidx  =  coldsc ( ordidx )
       metloc  =  coldsc ( metidx )
       nullok  =  coldsc ( nflidx ) == itrue
-
 
       if (  ( colidx < 1 ) .or. ( colidx > ncols )  ) then
 

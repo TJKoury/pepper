@@ -74,7 +74,6 @@
 !     NCOMC       is the number of characters in use in the comment area
 !                 of the DAS file specified by HANDLE.
 !
-!
 ! $ Parameters
 !
 !     None.
@@ -112,7 +111,6 @@
 !
 !     1)  Obtain the internal file name of an existing DAS file.
 !
-!
 !            C
 !            C     Open the file for reading.
 !            C
@@ -129,7 +127,6 @@
 !                 .                NRESVC,
 !                 .                NCOMR,
 !                 .                NCOMC  )
-!
 !
 !                  WRITE (*,*) 'Internal file name is: '
 !                  WRITE (*,*)  IFNAME
@@ -155,7 +152,6 @@
 !        Based on DASRFR Version 1.0.0, 15-JUL-1992 (NJB) (WLT)
 !
 !-&
-
 
 ! $ Index_Entries
 !
@@ -196,7 +192,6 @@
 
       integer(ip), parameter :: endidw = 8
 
-
 !
 !     Internal file name begin and end:
 !
@@ -217,7 +212,6 @@
       integer(ip), parameter :: begnrc = 73
 
       integer(ip), parameter :: endnrc = 76
-
 
 !
 !     Comment area record count begin and end:
@@ -263,7 +257,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     On the first pass through this routine, get the integer code of
@@ -317,7 +310,6 @@
 
          idword  =  tmpidw
          ifname  =  tmpifn
-
 
       else
 !

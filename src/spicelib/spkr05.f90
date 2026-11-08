@@ -68,7 +68,6 @@
 !                  RECORD(14)      epoch 2 in seconds past 2000.
 !                  RECORD(15)      GM for the center of motion.
 !
-!
 !              Epoch 1 and epoch 2 are the times in the segment that
 !              bracket ET. If ET is less than the first time in the
 !              segment then both epochs 1 and 2 are equal to the
@@ -112,7 +111,6 @@
 !     completely. Given that understanding, however, the SPKRnn
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
-!
 !
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
@@ -170,13 +168,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_5 SPK segment
 !
 !-&
-
 
 !
 !     Local parameters
@@ -221,8 +217,6 @@
       integer(ip)           n
 
       logical               fnd
-
-
 
 !
 !     Standard SPICE error handling.
@@ -324,7 +318,6 @@
 !           in the segment.
 !
 !           Otherwise keep looking.
-!
 !
             i = lstltd( et, n, data )
 

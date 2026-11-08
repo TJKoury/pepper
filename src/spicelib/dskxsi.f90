@@ -305,7 +305,6 @@
 !     in which multiple ray-surface intercepts are to be performed
 !     using a constant ray vertex.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -326,7 +325,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -353,7 +351,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the presence of the PRI
 !        argument is required.
-!
 !
 !        Round-off errors and mitigating algorithms
 !        ------------------------------------------
@@ -438,10 +435,8 @@
 !        number of errors, the number of computations, and the
 !        number of intercepts found.
 !
-!
 !        Use the meta-kernel shown below to load example SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -472,9 +467,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKXSI_EX1
 !              IMPLICIT NONE
@@ -558,7 +551,6 @@
 !              INTEGER               SURFID
 !
 !              LOGICAL               FOUND
-!
 !
 !              CALL CHKIN ( 'SPEAR' )
 !
@@ -762,11 +754,9 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using as input the meta-kernel dskxsi_ex1.tm, the
 !        output was:
-!
 !
 !        Enter meta-kernel name >  dskxsi_ex1.tm
 !
@@ -776,7 +766,6 @@
 !         NCASES =        32580
 !         NHITS  =        32580
 !         NDERR  =            0
-!
 !
 ! $ Restrictions
 !
@@ -811,7 +800,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DSK ray-surface intercept with source information
@@ -819,7 +807,6 @@
 !     DSK ray-surface intercept with handle and descriptors
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -878,10 +865,7 @@
       data                  prvfrm / ' '    /
       data                  prvtcd / 0      /
 
-
       if ( return() ) return
-
-
 
       if ( first ) then
 !
@@ -959,7 +943,6 @@
          return
 
       end if
-
 
       newfrm = ( fixref /= prvfrm ) .or. first
       newtrg = ( trgcde /= prvtcd ) .or. first
@@ -1039,13 +1022,11 @@
 !
 !     TRGCDE and FIXFID are set.
 !
-!
 !     Perform the intercept computation.
 !
       call zzsbfxri ( trgcde, nsurf,  srflst, et, &
                       fixfid, vertex, raydir, xpt, handle, &
                       dladsc, dskdsc, dc,     ic,  found   )
-
 
       return
       end

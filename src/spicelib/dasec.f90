@@ -303,13 +303,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract comments from a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -340,7 +338,6 @@
 !-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -436,8 +433,6 @@
 !     Initial values
 !
       data                  first   / .true. /
-
-
 
 !
 !     Standard SPICE error handling.

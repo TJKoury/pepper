@@ -148,9 +148,6 @@
       integer(ip)           tree
 
 !
-!     Use discovery check-in.
-!
-!
 !     Allocate the pages.
 !
       call zzekpgan ( handle, type, p, base )
@@ -158,7 +155,6 @@
       do i = 2, n
          call zzekpgan ( handle, type, p2, b )
       end do
-
 
       if ( failed() ) return
 
@@ -195,7 +191,6 @@
          tree  =  segdsc ( iptidx )
 
       end if
-
 
       do i = 1, n
          call zzektrap ( handle, tree, p+i-1, idx )

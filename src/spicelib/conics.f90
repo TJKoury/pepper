@@ -189,13 +189,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     state from conic elements
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -231,7 +229,6 @@
 !        the interval 0 to 2*PI. This has been fixed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -271,8 +268,6 @@
       real(wp)              pstate     ( 6 )
       real(wp)              v
 
-
-
 !
 !      The only real work required by this routine is the construction
 !      of a preliminary state vector from the input elements.  Once this
@@ -290,12 +285,10 @@
 !      this state and the delta time ET - TP.
 !
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Unpack the element vector.
@@ -308,7 +301,6 @@
       m0     = elts(6)
       t0     = elts(7)
       mu     = elts(8)
-
 
 !
 !     Handle all of the exceptions first.
@@ -331,7 +323,6 @@
          call sigerr ( 'SPICE(BADPERIAPSEVALUE)'                      )
          return
       end if
-
 
       if ( mu <= 0 ) then
          call setmsg ( 'The value of GM supplied was '                // &
@@ -423,7 +414,6 @@
 !     Hyperbolas next.
 !
       else if ( ecc > 1 ) then
-
 
 !
 !        Again, recall that:

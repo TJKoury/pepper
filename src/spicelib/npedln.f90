@@ -80,7 +80,6 @@
 !              ellipsoid, PNEAR will not necessarily be the
 !              closest point of intersection.
 !
-!
 !     DIST     is the distance of the line from the ellipsoid.
 !              This is the minimum distance between any point on
 !              the line and any point on the ellipsoid.
@@ -164,7 +163,6 @@
 !
 !          yields a value for PNEAR, the nearest point on the body to
 !          the optic axis ray, of
-!
 !
 !             (  -1.6333110792340931E+03,
 !                -3.2666222157820771E+03,
@@ -259,7 +257,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     distance between line and ellipsoid
@@ -267,7 +264,6 @@
 !     nearest point on ellipsoid to line
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -291,7 +287,6 @@
 !        to exist was removed. (The check for this exception was already
 !        being done.)
 !
-!
 !-    SPICELIB Version 1.1.0, 04-DEC-1990 (NJB)
 !
 !        Error message and description changed for non-positive
@@ -300,7 +295,6 @@
 !        `zero-length', rather than `non-positive' axes as invalid.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -333,7 +327,6 @@
       logical               found  (    2 )
       logical               ifound
       logical               xfound
-
 
 !
 !     Standard SPICE error handling.
@@ -383,11 +376,7 @@
 !         ellipse that was found in step 3.  This is the nearest point
 !         on the ellipsoid to the line.
 !
-!
-!
-!
 !                      Glossary of Geometric Variables
-!
 !
 !            A,
 !            B,
@@ -419,7 +408,6 @@
 !                        projection of line point.
 !
 !            PNEAR       Nearest point on ellipsoid to line.
-!
 !
 
 !
@@ -514,7 +502,6 @@
 !     centered at the origin and a plane containing the origin.  Only
 !     numerical problems can prevent the intersection from being found.
 !
-!
       normal(1)  =  udir(1) / scla**2
       normal(2)  =  udir(2) / sclb**2
       normal(3)  =  udir(3) / sclc**2
@@ -541,7 +528,6 @@
 !     then find the near point PRJNPT on the projected ellipse.  Here
 !     PRJPT is the point on the line lying in the projection plane.
 !     The distance between PRJPT and PRJNPT is DIST.
-!
 !
       call vprjp  ( sclpt,   prjpl,  prjpt         )
       call npelpt ( prjpt,   prjel,  prjnpt,  dist )
@@ -572,7 +558,6 @@
       call vsclip ( scale, pnear )
 
       dist = scale * dist
-
 
       return
       end

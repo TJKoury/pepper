@@ -102,7 +102,6 @@
 !                   POINT    is a 3-vector associated with X. POINT
 !                            is defined if and only if IN_CON is .TRUE.
 !
-!
 !     UDSTEP     the routine that computes a step in an attempt to
 !                find a transition of the state of the specified
 !                coordinate. In the context of this routine's algorithm,
@@ -143,7 +142,6 @@
 !                   GFSSTP(STEP)
 !
 !                prior to calling this routine.
-!
 !
 !     UDREFN     the routine that computes a refinement in the abscissa
 !                values that bracket a transition point. In other
@@ -242,7 +240,6 @@
 !                The output ENDFLG indicates whether the first and
 !                last endpoints of RESULT are transitions.
 !
-!
 !     POINTS     is an array of 3-vectors associated with the endpoints
 !                of the intervals of RESULT. Elements
 !
@@ -263,7 +260,6 @@
 !                POINTS must be declared with size at least 3 times
 !                that of RESULT.
 !
-!
 !     ENDFLG     is an array of two logical flags that indicate
 !                whether state transitions occur at the initial
 !                and final endpoints of the result window. Element
@@ -272,7 +268,6 @@
 !                RESULT (in element RESULT(1)); element 2 is .TRUE.
 !                if and only if there is a state transition at the
 !                last element of RESULT.
-!
 !
 ! $ Parameters
 !
@@ -416,7 +411,6 @@
 
       logical               prvset
 
-
 !
 !     The maximum number of search loop iterations to execute.
 !     The default refinement method is bisection, a very slow
@@ -432,8 +426,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     Check the convergence tolerance.
@@ -481,7 +473,6 @@
 
       end if
 
-
 !
 !     Make sure that TOL is not too small, i.e. that neither
 !     FINISH + TOL nor FINISH - TOL equals FINISH.
@@ -518,7 +509,6 @@
          end if
 
          maxmag = max( abs(start), abs(finish) )
-
 
          if ( touchd(maxmag+step) == maxmag ) then
 
@@ -677,7 +667,6 @@
                if ( failed() ) return
 
             end if
-
 
             curx = min ( touchd(curx + xstep), finish )
 !
@@ -932,7 +921,6 @@
 
                end if
 
-
             else
 !
 !              We ran out of room in the output point array. Note that
@@ -984,4 +972,3 @@
 
       return
       end
-

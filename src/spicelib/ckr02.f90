@@ -258,13 +258,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read CK type_2 pointing data record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -289,7 +287,6 @@
 !
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
-!
 !
       integer(ip), parameter :: dirsiz = 100
 
@@ -331,8 +328,6 @@
 
       logical               fnd
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -351,7 +346,6 @@
 !     One more read would be required for every other group of 10,000
 !     records in the segment.
 !
-
 
 !
 !     Start off with FOUND equal to false.
@@ -399,7 +393,6 @@
 !     Get the number of records in this segment, and from that determine
 !     the number of directory epochs.
 !
-!
 !        Based on the structure of a type 2 segment, the size of a
 !        segment with N pointing intervals is given as follows:
 !
@@ -407,7 +400,6 @@
 !
 !        In the above equation PSIZ is eight and integer arithmetic is
 !        used.  This equation is equivalent to:
-!
 !
 !           100 * ARRSIZ  =  1000 * N  + ( N-1 ) * 100            (2)
 !                                        -------
@@ -563,7 +555,6 @@
 !            return the closer of STOP(I) or START(I+1) if it is
 !            within TOL of SCLKDP.
 !
-!
 !     If SCLKDP is less than the first time in BUFFER then check to see
 !     if we want the first START time in the group.
 !
@@ -666,7 +657,6 @@
 
       end if
 !
-!
 !     Now we know the exact record that we want and can begin
 !     constructing the output record.
 !
@@ -688,7 +678,6 @@
       record ( 3 ) = prec ( psiz )
 
       call vequg ( prec, 7, record( 4 ) )
-
 
 !
 !     That is all.

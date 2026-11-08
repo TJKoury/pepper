@@ -693,7 +693,6 @@
 !     solution process that are relevant to correct and efficient use
 !     of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -729,7 +728,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -756,7 +754,6 @@
 !     cases, the step size is likely to have a much greater effect on
 !     processing time than would the convergence tolerance.
 !
-!
 !     The Confinement Window
 !     ======================
 !
@@ -776,7 +773,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Search for times when Saturn's satellite Phoebe is within
 !        the FOV of the Cassini narrow angle camera (CASSINI_ISS_NAC).
 !        To simplify the problem, restrict the search to a short time
@@ -791,7 +787,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -822,7 +817,6 @@
 !              cas00071.tsc                    Cassini SCLK kernel
 !              cas_iss_v10.ti                  Cassini IK
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'naif0012.tls',
@@ -836,9 +830,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFFOVE_EX1
 !              IMPLICIT NONE
@@ -1040,10 +1032,8 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Instrument: CASSINI_ISS_NAC
 !        Target:     PHOEBE
@@ -1057,7 +1047,6 @@
 !          2004-JUN-11 09:49:56.476397     2004-JUN-11 10:22:04.242879
 !          2004-JUN-11 10:36:56.283771     2004-JUN-11 11:09:04.397165
 !          2004-JUN-11 11:23:56.020645     2004-JUN-11 11:56:04.733536
-!
 !
 !        Note that the progress report has the format shown below:
 !
@@ -1089,7 +1078,6 @@
 !        Use the meta-kernel from the first example.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM GFFOVE_EX2
 !              IMPLICIT NONE
@@ -1130,7 +1118,6 @@
 !              CHARACTER*(*)         TIMFMT
 !              PARAMETER           ( TIMFMT =
 !             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
-!
 !
 !              DOUBLE PRECISION      AU
 !              PARAMETER           ( AU     = 149597870.693D0 )
@@ -1339,7 +1326,6 @@
 !              RPT  = .TRUE.
 !              BAIL = .FALSE.
 !
-!
 !              WRITE (*,*) ' '
 !              WRITE (*,*) 'Instrument:              '//INST
 !              WRITE (*,*) 'Star''s catalog number:  ', CATNO
@@ -1387,10 +1373,8 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Instrument:              CASSINI_ISS_WAC
 !         Star's catalog number:          6000
@@ -1400,7 +1384,6 @@
 !          Visibility start time (TDB)           Stop time (TDB)
 !          ---------------------------     ---------------------------
 !          2004-JUN-11 06:30:00.000000     2004-JUN-11 12:00:00.000000
-!
 !
 ! $ Restrictions
 !
@@ -1445,13 +1428,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF mid-level target in instrument FOV search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1470,7 +1451,6 @@
 !
 !     Local parameters
 !
-!
 !     STEP is a step size initializer for the unused, dummy step size
 !     argument to ZZGFSOLV. The routine UDSTEP, which is passed to
 !     ZZGFSOLV, will be used by that routine to obtain the step size.
@@ -1483,7 +1463,6 @@
 !
       logical, parameter :: cstep = .false.
 
-
 !
 !     Local variables
 !
@@ -1493,12 +1472,10 @@
       integer(ip)           count
       integer(ip)           i
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check the result window's size.
@@ -1597,7 +1574,6 @@
       if ( rpt ) then
          call udrepf
       end if
-
 
       return
       end

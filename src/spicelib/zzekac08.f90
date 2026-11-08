@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekclas08.inc'
       include  'ekcnamsz.inc'
@@ -238,7 +237,6 @@
       to  =  1
       call cleard ( pgsizd, page )
 
-
       do from = 1, nrows
 
 !
@@ -253,7 +251,6 @@
          end if
 
          to =  to + 1
-
 
          if (  ( to > dpsize ) .or. ( from == nrows )  ) then
 !
@@ -277,7 +274,6 @@
          end if
 
       end do
-
 
 !
 !     Update the column's metadata area to point to the data array.
@@ -314,7 +310,6 @@
 
       end if
 
-
       if ( nullok ) then
 !
 !        Nulls are allowed.  Write out the null flag array.
@@ -328,7 +323,6 @@
          call dasudi ( handle, cmbase+nfix08, cmbase+nfix08, nflbas )
 
       end if
-
 
       return
       end

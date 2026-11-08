@@ -19,20 +19,20 @@ module pepper_state_hx2dp
 
    !> The saved variables of HX2DP.
    type, public :: hx2dp_state
-      real(wp) :: maxdp  !! saved between calls by HX2DP
-      real(wp) :: mindp  !! saved between calls by HX2DP
-      real(wp) :: scales(maxman)  !! saved between calls by HX2DP
-      integer(ip) :: digbeg  !! saved between calls by HX2DP
-      integer(ip) :: digend  !! saved between calls by HX2DP
-      integer(ip) :: iexpch  !! saved between calls by HX2DP
-      integer(ip) :: iminus  !! saved between calls by HX2DP
-      integer(ip) :: iplus  !! saved between calls by HX2DP
-      integer(ip) :: ispace  !! saved between calls by HX2DP
-      integer(ip) :: lccbeg  !! saved between calls by HX2DP
-      integer(ip) :: lccend  !! saved between calls by HX2DP
-      integer(ip) :: uccbeg  !! saved between calls by HX2DP
-      integer(ip) :: uccend  !! saved between calls by HX2DP
-      logical :: first  !! saved between calls by HX2DP
+      real(wp) :: maxdp  !! largest number divided by the base
+      real(wp) :: mindp  !! smallest number divided by the base
+      real(wp) :: scales(maxman)  !! negative powers of the base (16) for the digits of the mantissa
+      integer(ip) :: digbeg  !! character code of '0'
+      integer(ip) :: digend  !! character code of '9'
+      integer(ip) :: iexpch  !! character code of the exponent character
+      integer(ip) :: iminus  !! character code of '-'
+      integer(ip) :: iplus  !! character code of '+'
+      integer(ip) :: ispace  !! character code of ' '
+      integer(ip) :: lccbeg  !! character code of 'a'
+      integer(ip) :: lccend  !! character code of 'f'
+      integer(ip) :: uccbeg  !! character code of 'A'
+      integer(ip) :: uccend  !! character code of 'F'
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type hx2dp_state
 
 contains

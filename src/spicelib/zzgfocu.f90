@@ -241,13 +241,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     solving for occultation states in GF routines
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -264,10 +262,8 @@
       logical               failed
       logical               return
 
-
 !
 !     Local parameters
-!
 !
 
 !     ALPHA is a bound for the fraction of the speed of light
@@ -309,7 +305,6 @@
       character(oclln)      svtype
       character(oclln)      svtyps ( noctyp )
       character(tmtlen)     trmtyp
-
 
       real(wp)              bckfrt ( 3 )
       real(wp)              bckobs ( 3 )
@@ -396,7 +391,6 @@
       save                  svtype
       save                  svtyps
 
-
       data ncalls / 0 /
 
 !
@@ -413,13 +407,9 @@
 !     This routine should never be called directly.
 !
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
-
 
 !$Procedure ZZGFOCIN ( GF, occultation initialization )
 
@@ -483,7 +473,6 @@
 !              Supported values of OCCTYP and corresponding
 !              definitions are:
 !
-!
 !                 'FULL'      denotes the full occultation of the
 !                             body designated by BACK by the body
 !                             designated by FRONT, as seen from the
@@ -520,7 +509,6 @@
 !              Case and leading or trailing blanks are not
 !              significant in the string OCCTYP.
 !
-!
 !     FRONT    is the name of the target body that occults---that is,
 !              passes in front of---the other. Optionally, you may
 !              supply the integer NAIF ID code for the body as a
@@ -529,8 +517,6 @@
 !
 !              Case and leading or trailing blanks are not
 !              significant in the string FRONT.
-!
-!
 !
 !     FSHAPE   is a string indicating the geometric model used to
 !              represent the shape of the front target body. The
@@ -596,7 +582,6 @@
 !              Case and leading or trailing blanks are not
 !              significant in the string FSHAPE.
 !
-!
 !     FFRAME   is the name of the body-fixed, body-centered reference
 !              frame associated with the front target body. Examples
 !              of such names are 'IAU_SATURN' (for Saturn) and
@@ -609,7 +594,6 @@
 !              non-blank frame name are not significant in the string
 !              FFRAME.
 !
-!
 !     BACK     is the name of the target body that is occulted
 !              by---that is, passes in back of---the other.
 !              Optionally, you may supply the integer NAIF ID code
@@ -619,11 +603,9 @@
 !              Case and leading or trailing blanks are not
 !              significant in the string BACK.
 !
-!
 !     BSHAPE   is the shape specification for the body designated
 !              by BACK. See the description of FSHAPE above for
 !              details.
-!
 !
 !     BFRAME   is the name of the body-fixed, body-centered reference
 !              frame associated with the ``back'' target body.
@@ -637,14 +619,12 @@
 !              non-blank frame name are not significant in the string
 !              BFRAME.
 !
-!
 !     OBSRVR   is the name of the body from which the occultation is
 !              observed. Optionally, you may supply the integer NAIF
 !              ID code for the body as a string.
 !
 !              Case and leading or trailing blanks are not
 !              significant in the string OBSRVR.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied to
 !              the state of the target body to account for one-way
@@ -802,19 +782,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     initialization for occultation state determination
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Find NAIF IDs for FRONT, BACK, and OBSRVR.
@@ -834,7 +811,6 @@
 
       end if
 
-
       call bods2c ( back, idback, found )
 
       if ( .not. found ) then
@@ -849,7 +825,6 @@
          return
 
       end if
-
 
       call bods2c ( obsrvr, idobs, found )
 
@@ -901,7 +876,6 @@
       svfrnt = idfrnt
       svffrm = fframe
 
-
       svback = idback
       svbfrm = bframe
 
@@ -951,7 +925,6 @@
          end if
 
       end if
-
 
 !
 !     Parse the back body shape string.
@@ -1161,7 +1134,6 @@
 !        Minimum and maximum bounding radii are set, if the target
 !        shape is modeled as an ellipsoid.
 !
-!
 !        Check body-fixed frame for extended targets.
 !
          if (  ( shape == edshap ) .or. ( shape == dsshap )  ) then
@@ -1246,7 +1218,6 @@
 !
 !        We've performed frame checks for an extended target.
 !
-!
 !        Obtain radii of inner and outer bounding spheres for
 !        DSK targets.
 !
@@ -1309,8 +1280,6 @@
 !     checks for both targets.
 !
       return
-
-
 
 !$Procedure ZZGFOCST ( GF, "in occultation?"  )
 
@@ -1437,19 +1406,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the state output.
@@ -1494,7 +1460,6 @@
             call vscl ( svbrad(i), mtemp(1,i), bsmaxs(1,i) )
          end do
 
-
          call zzcorepc ( svcorr,  time,   ltfrnt, etfcor )
          call pxform   ( svffrm, 'J2000', etfcor, mtemp  )
 
@@ -1515,13 +1480,11 @@
 
          if ( failed() ) return
 
-
          if ( occode == noocc ) then
 !
 !           Neither body occults the other.
 !
             ocstat = .false.
-
 
          else if (       ( svtype == any ) &
                    .and. ( occode < 0   ) ) then
@@ -1531,7 +1494,6 @@
 !
             ocstat = .true.
 
-
          else if (       ( svtype ==  full   ) &
                    .and. ( occode ==  total1 ) ) then
 !
@@ -1540,7 +1502,6 @@
 
             ocstat = .true.
 
-
          else if (       ( svtype == annulr ) &
                    .and. ( occode == annlr1 ) ) then
 !
@@ -1548,14 +1509,12 @@
 !
             ocstat = .true.
 
-
          else if (       ( svtype == partl  ) &
                    .and. ( occode == partl1 ) ) then
 !
 !           The BACK body is partially occulted.
 !
             ocstat = .true.
-
 
          else
 !
@@ -1566,7 +1525,6 @@
          end if
 
          return
-
 
       else if (     (       ( svfshp == edshap ) &
                       .and. ( svbshp == ptshap ) ) &
@@ -1605,7 +1563,6 @@
 !        intersect FRONT.
 !
          call vsub ( frtpos, bckpos, bckfrt )
-
 
          if ( pntocc ) then
 !
@@ -1740,7 +1697,6 @@
 
          if ( failed() ) return
 
-
          if ( trgsep < minang ) then
 !
 !           The targets must overlap as seen from the observer.
@@ -1818,7 +1774,6 @@
             call sincpt ( svfmth, svfnam,  time,    svffrm, &
                           svcorr, svonam,  'J2000', bckpos, &
                           spoint, trgepc,  srfvec,  found )
-
 
             if ( failed()) return
 

@@ -33,7 +33,6 @@
       include 'dsktol.inc'
       include 'dskdsc.inc'
 
-
       real(wp)              p      ( 3 )
       integer(ip)           corsys
       real(wp)              corpar ( * )
@@ -78,7 +77,6 @@
 !
 !                       CORPAR(2) = ( RE - RP ) / RE
 !
-!
 !     BOUNDS     is an 2x3 array containing the bounds of a volume
 !                element expressed in a supported coordinate system,
 !                specifically one of:
@@ -86,7 +84,6 @@
 !                   LATITUDINAL
 !                   PLANETODETIC
 !                   RECTANGULAR
-!
 !
 !                BOUNDS defines the volume element used in the
 !                comparison. In the element
@@ -108,7 +105,6 @@
 !                respective coordinate systems supported by those
 !                routines.
 !
-!
 !     MARGIN     is a fraction used to expand the volume element for
 !                inclusion testing.
 !
@@ -119,7 +115,6 @@
 !                   ZZINREC
 !
 !                for details regarding the application of MARGIN.
-!
 !
 !     EXCLUD     is either a coordinate index or the parameter NONE.
 !
@@ -171,7 +166,6 @@
 !        ZZINLAT
 !        ZZINPDT
 !        ZZINREC
-!
 !
 ! $ Exceptions
 !
@@ -233,7 +227,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -243,8 +236,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
-
 
       if ( margin < 0.0_wp ) then
 
@@ -263,16 +254,13 @@
 
          call zzinlat ( p, bounds, margin, exclud, inside )
 
-
       else if ( corsys == pdtsys ) then
 
          call zzinpdt ( p, bounds, corpar, margin, exclud, inside )
 
-
       else if ( corsys == recsys ) then
 
          call zzinrec ( p, bounds, margin, exclud, inside )
-
 
       else
 
@@ -285,4 +273,3 @@
 
       return
       end
-

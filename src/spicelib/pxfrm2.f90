@@ -46,16 +46,13 @@
 !     FROM     is the name of a reference frame recognized by
 !              SPICELIB that corresponds to the input ETFROM.
 !
-!
 !     TO       is the name of a reference frame recognized by
 !              SPICELIB that corresponds to the desired output
 !              at ETTO.
 !
-!
 !     ETFROM   is the epoch in ephemeris seconds past the epoch
 !              of J2000 (TDB) corresponding to the FROM reference
 !              frame.
-!
 !
 !     ETTO     is the epoch in ephemeris seconds past the epoch
 !              of J2000 (TDB) that corresponds to the TO reference
@@ -167,7 +164,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: pxfrm2_ex1.tm
@@ -209,9 +205,7 @@
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PXFRM2_EX1
 !              IMPLICIT NONE
@@ -508,10 +502,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Observation Reference frame:  MGS_MOC_NA
 !         Boresight surface intercept coordinates:
@@ -534,7 +526,6 @@
 !         of the selected boundary vector using
 !         SURFPT and SINCPT:
 !            Distance (mm):        32.139880286899256
-!
 !
 ! $ Restrictions
 !
@@ -562,13 +553,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Position transformation matrix for different epochs
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -629,12 +618,10 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialization.

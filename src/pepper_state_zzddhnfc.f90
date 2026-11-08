@@ -19,9 +19,9 @@ module pepper_state_zzddhnfc
 
    !> The saved variables of ZZDDHNFC.
    type, public :: zzddhnfc_state
-      logical :: first  !! saved between calls by ZZDDHNFC
-      integer(ip) :: savbff  !! saved between calls by ZZDDHNFC
-      character(strsiz) :: strbff ( numbff )  !! saved between calls by ZZDDHNFC
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: savbff  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff )  !! names of the binary file formats
    end type zzddhnfc_state
 
 contains

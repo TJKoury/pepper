@@ -111,7 +111,6 @@
 !
 !     A typical use of ZZGFRPWK might be as follows.
 !
-!
 !     C
 !     C     Compute how much work is to be done and put it in TOTAL
 !     C
@@ -151,7 +150,6 @@
 !              CALL ZZGFWKIN ( AMOUNT )
 !
 !           END DO
-!
 !
 ! $ Restrictions
 !
@@ -255,13 +253,8 @@
       data                  svincr / 0.0_wp    /
       data                  svunit / 6       /
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
-
 
 !$Procedure ZZGFTSWK ( Geometry finder total sum of work to be done. )
 
@@ -358,7 +351,6 @@
 !      END       is the second part of the output message that will be
 !                constructed and sent to the output device (see above).
 !
-!
 ! $ Detailed_Output
 !
 !      None.
@@ -418,7 +410,6 @@
 !-&
 
       if ( return() ) return
-
 
 !
 !     On the first pass, obtain the logical unit for
@@ -491,8 +482,6 @@
       end if
 
       return
-
-
 
 !$Procedure ZZGFWKIN ( Geometry finder work finished increment )
 
@@ -585,7 +574,6 @@
 
       if ( return() ) return
 
-
       svincr = incr
       done   = done  + incr
       calls  = calls + 1
@@ -599,7 +587,6 @@
          call zzcputim ( tvec )
 
          cursec = tvec(4)*3600.0_wp + tvec(5)*60.0_wp + tvec(6)
-
 
          if ( dabs( cursec - lstsec ) >= step ) then
 
@@ -619,7 +606,6 @@
                             ' '            // &
                             finish(1:rtrim(finish))
 
-
             if ( svunit == stdout ) then
 
                call zzgfdsps ( 0, messge, 'A', 0 )
@@ -637,8 +623,6 @@
       end if
 
       return
-
-
 
 !$Procedure ZZGFWKAD ( Geometry finder work reporting adjustment )
 
@@ -714,7 +698,6 @@
 !                If a non-positive value for TCHECK is entered, a value
 !                of 1 will be used instead of the input value.
 !
-!
 !     BEGIN      Is the first part of the output message that will be
 !                constructed for shipment to the output device. This
 !                message will have the form:
@@ -726,7 +709,6 @@
 !
 !     END        is the second part of the output message that will be
 !                constructed and sent to the output device (see above).
-!
 !
 ! $ Detailed_Output
 !
@@ -792,7 +774,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF low-level progress report adjust frequency
@@ -805,11 +786,6 @@
       finish = end
 
       return
-
-
-
-
-
 
 !$Procedure ZZGFWUN ( Geometry finder set work report output unit )
 
@@ -897,13 +873,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF low-level progress report output select unit
 !
 !-&
-
 
 !
 !     On the first pass, obtain the logical unit for
@@ -920,10 +894,6 @@
       svunit = unit
 
       return
-
-
-
-
 
 !$Procedure ZZGFWKMO ( Geometry finder work reporting monitor )
 
@@ -1031,7 +1001,6 @@
 !-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
 !
 !-&
-
 
 ! $ Index_Entries
 !

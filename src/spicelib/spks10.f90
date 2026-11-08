@@ -105,13 +105,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_10 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -164,8 +162,6 @@
 
       logical               found
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -213,7 +209,6 @@
       if ( myref > begtim ) then
          begidx = max ( 1, begidx - 1 )
       end if
-
 
       call sgfrvi ( srchan, srcdsc, endtim, myref, endidx, found )
 

@@ -82,7 +82,6 @@
 !     BODYID     is the body ID of the target on which the input
 !                point is located.
 !
-!
 !     NSURF,
 !     SRFLST     are, respectively, the surface list count and
 !                an array containing a list of surface IDs.
@@ -90,36 +89,28 @@
 !                If the count is zero, all surfaces for the body
 !                are considered applicable.
 !
-!
 !     ET         is the lookup epoch, specified as seconds past
 !                J2000 TDB. Only DSK segments containing ET in
 !                their time coverage intervals are considered
 !                in the normal vector computation.
 !
-!
 !     FIXFID     is the frame ID of a body-fixed reference frame
 !                centered on the target body.
-!
 !
 !     NSEG       is the number of DSK segments for which the input
 !                buffers contain data.
 !
-!
 !     HANBUF     is the DSK handle buffer.
-!
 !
 !     DLABUF     is the DLA segment descriptor buffer.
 !
-!
 !     DSKBUF     is the DSK segment descriptor buffer.
-!
 !
 !     OFFBUF     is the frame offset buffer. For each DSK segment, the
 !                entry in this buffer is the position of that segment's
 !                reference frame center relative to the target body's
 !                center. The vector is expressed in the segment's
 !                reference frame. Units are km.
-!
 !
 !     CTRBUF     is the bounding sphere center buffer. For each DSK
 !                segment, the entry in this buffer is the position of
@@ -128,11 +119,9 @@
 !                expressed in the segment's reference frame. Units are
 !                km.
 !
-!
 !     RADBUF     is the bounding sphere radius buffer. For each DSK
 !                segment, the entry in this buffer is the radius of the
 !                segment's outer bounding sphere. Units are km.
-!
 !
 !     POINT      is a point on the surface of the target body. POINT is
 !                expressed in the reference frame designated by FIXFID.
@@ -141,7 +130,6 @@
 !
 !                POINT must be located on the surface of the target
 !                body, within a small tolerance.
-!
 !
 ! $ Detailed_Output
 !
@@ -234,8 +222,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -250,7 +236,6 @@
 !     Local parameters
 !
       integer(ip), parameter :: maxhit = 1000
-
 
 !
 !     Local variables
@@ -293,7 +278,6 @@
 !
 
       if ( return() ) return
-
 
 !
 !     Check the incoming segment count.
@@ -348,7 +332,6 @@
 
          bodyok = bodyid == nint( dskbuf(ctridx,i) )
 
-
          if ( bodyok ) then
 !
 !           See whether the current segment contains a surface we're
@@ -375,7 +358,6 @@
 
          end if
 
-
          if ( bodyok .and. surfok .and. timeok  ) then
 !
 !           This segment is to be considered.
@@ -388,7 +370,6 @@
 !           input frame to the output frame if needed.
 
             segfid = nint( dskbuf(frmidx,i) )
-
 
             if ( segfid /= fixfid ) then
 !
@@ -429,7 +410,6 @@
 
                end if
 
-
             else if ( multfr ) then
 !
 !              The input and segment frames are the same for this
@@ -445,7 +425,6 @@
 !           segment's coverage volume.
 !
             dist = vdist ( ctrbuf(1,i), segpt )
-
 
             if ( dist <= radbuf(i) ) then
 !
@@ -480,7 +459,6 @@
 
                if ( failed() ) return
 
-
                if ( inside ) then
 !
 !                 The point in inside the region enclosed by the
@@ -505,7 +483,6 @@
                   call moved ( xform, 9, sgxbuf(1,1,nhit) )
 
                end if
-
 
             end if
 !
@@ -539,7 +516,6 @@
 
       end if
 
-
 !
 !     Now process the segments on the hit list. If we find a segment
 !     surface on which the input point is located, we compute the
@@ -557,7 +533,6 @@
 !        in the parallel input arrays.
 !
          j = sghit (i)
-
 
          segfid = nint( dskbuf(frmidx,j) )
 
@@ -621,7 +596,6 @@
 
             end if
 
-
          else
 
             call setmsg ( 'Segment type is #; this type is not ' &
@@ -632,10 +606,7 @@
 
          end if
 
-
          if ( failed() ) return
-
-
 
          if ( .not. done ) then
 

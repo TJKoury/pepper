@@ -221,14 +221,12 @@
 !           Near point on target
 !           Constant vector in specified frame
 !
-!
 !        Mean Equator and Equinox of Date
 !        ================================
 !
 !           Bodies and models
 !           -----------------
 !           Earth:  1976 IAU precession model
-!
 !
 !        Mean Ecliptic and Equinox of Date
 !        ================================
@@ -238,7 +236,6 @@
 !           Earth:  1976 IAU precession model
 !                   1980 IAU mean obliquity model
 !
-!
 !        True Equator and Equinox of Date
 !        ================================
 !
@@ -247,14 +244,12 @@
 !           Earth:  1976 IAU precession model
 !                   1980 IAU nutation model
 !
-!
 !        Euler frames
 !        ============
 !
 !           Euler angle definitions
 !           -----------------------
 !           Polynomial
-!
 !
 !        Product frames
 !        ==============
@@ -263,9 +258,6 @@
 !           -------------------
 !           Array of "from" frames
 !           Array of "to" frames
-!
-!
-!
 !
 ! $ Examples
 !
@@ -351,7 +343,6 @@
 !     Local parameters
 !
       character(*), parameter :: rname = 'ZZDYNFRM'
-
 
       integer(ip), parameter :: timlen = 50
 
@@ -502,11 +493,7 @@
       data                  itmsep / kwatol                   /
       data                  vname  / kwpri,           kwsec   /
 
-
-
       if ( return() ) return
-
-
 
       if ( first ) then
 !
@@ -580,11 +567,9 @@
 
          end do
 
-
          first = .false.
 
       end if
-
 
 !
 !     Initialize the output arguments.
@@ -936,7 +921,6 @@
 
                end if
 
-
             else if ( meanec ) then
 !
 !              We need a mean obliquity transformation as well.
@@ -1090,7 +1074,6 @@
 
                axis(i) = isrchc ( axname, 3, axes )
 
-
                if ( axis(i) == 0 ) then
 
                   call setmsg ( 'Definition of frame # associates '   // &
@@ -1126,7 +1109,6 @@
 
                call cmprss ( ' ',    0, vecdef(i), vecdef(i) )
                call ucase  ( vecdef(i),            vecdef(i) )
-
 
                if (  vecdef(i) == kvposv  ) then
 !
@@ -1187,7 +1169,6 @@
                   delta = max ( 1.0_wp,  (2.0_wp**qexp) * t0 )
 
                   call vpack ( t0-delta, t0, t0+delta, tarray )
-
 
                   do j = 1, 3
 
@@ -1412,7 +1393,6 @@
 
                   end if
 
-
 !
 !                 Find the observer-near point state in the target
 !                 body-fixed frame.
@@ -1448,7 +1428,6 @@
                else if ( vecdef(i) == kvcons ) then
 !
 !                 The vector is constant in a specified frame.
-!
 !
 !                 We need a 3-vector and an associated reference
 !                 frame relative to which the vector is specified.
@@ -1627,7 +1606,6 @@
                   call cmprss ( ' ', 0, spec, spec )
                   call ucase  ( spec,         spec )
 
-
                   if ( spec == kvrecc ) then
 !
 !                    The coordinate system is rectangular.
@@ -1636,7 +1614,6 @@
 !
                      call zzdynvad ( inname, infram, itmvec(i), &
                                      3,      n,      dirvec    )
-
 
                   else if (      ( spec == kvlatc ) &
                             .or. ( spec == kvradc ) ) then
@@ -1647,7 +1624,6 @@
 !
                      call zzdynvac ( inname,  infram,  itmunt(i), &
                                      1,       n,       units     )
-
 
                      if ( spec == kvlatc ) then
 !
@@ -1689,7 +1665,6 @@
 !                    Now  produce a direction vector.
 !
                      call latrec ( 1.0_wp, angles(1), angles(2), dirvec )
-
 
                   else
 
@@ -1795,7 +1770,6 @@
                   call vminug ( s2(1,i), 6, stemp   )
                   call moved  ( stemp,   6, s2(1,i) )
                end if
-
 
             end do
 
@@ -2027,7 +2001,6 @@
                call moved ( xout,  36,              xform )
 
             end do
-
 
          else
 

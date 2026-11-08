@@ -85,7 +85,6 @@
 !                        BROWNIAN MOTION
 !        FERMI     -->   NUCLEAR FISSION
 !
-!
 !     Perhaps we want to know how many subjects are associated with
 !     certain scientists. The following code returns the values of
 !     NUMSUB indicated in the table.
@@ -94,7 +93,6 @@
 !     NUMSUB = SYDIMC ( 'BOHR',     TABSYM, TABPTR, TABVAL )
 !     NUMSUB = SYDIMC ( 'FERMI',    TABSYM, TABPTR, TABVAL )
 !     NUMSUB = SYDIMC ( 'MILLIKAN', TABSYM, TABPTR, TABVAL )
-!
 !
 !     ----SYMBOL----------NUMSUB------
 !     | EINSTEIN     |       3       |
@@ -144,13 +142,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch the dimension of a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -164,8 +160,6 @@
 !
       integer(ip)           nsym
       integer(ip)           locsym
-
-
 
 !
 !     Standard SPICE error handling
@@ -195,7 +189,6 @@
       else
          sydimc = tabptr(locsym)
       end if
-
 
       return
       end

@@ -187,15 +187,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get data for single star from a type 1 star catalog
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !

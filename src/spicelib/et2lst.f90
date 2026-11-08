@@ -157,7 +157,6 @@
 !     relative to standard time zones on earth, see the routines
 !     TIMOUT and STR2ET.
 !
-!
 !     Regarding planetographic longitude
 !     ----------------------------------
 !
@@ -209,7 +208,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: et2lst_ex1.tm
@@ -233,7 +231,6 @@
 !                                            radii
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -244,9 +241,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ET2LST_EX1
 !              IMPLICIT NONE
@@ -312,14 +307,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Local time at Mars 326.17 degrees planetographic longitude:
 !            at UTC 2002 SEP 02 00:00:00, LST = 03:25:35 A.M.
-!
 !
 ! $ Restrictions
 !
@@ -415,13 +407,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute the local time for a point on a body.
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -435,13 +425,11 @@
 !
 !     Local parameters
 !
-!
       integer(ip), parameter :: bdnmln = 36
 
       integer(ip), parameter :: sun = 10
 
       integer(ip), parameter :: wdsize = 32
-
 
 !
 !     Local Variables
@@ -484,8 +472,6 @@
 !
       if ( return() ) return
 
-
-
       call ljust ( type,   mytype )
       call ucase ( mytype, mytype )
 
@@ -525,7 +511,6 @@
 !        later in another RECLAT call; it's not used after that.
 !
          call reclat ( spoint, range, mylong, lat )
-
 
       else if ( mytype == 'PLANETOCENTRIC' ) then
 
@@ -577,8 +562,6 @@
          return
 
       end if
-
-
 
       call spkez  (  sun,   et,    frame, 'LT+S', body, state, lt )
       call reclat (  state, range, slong,  slat )
@@ -694,7 +677,6 @@
       call dpfmt ( secnds, '0x', s )
 
       time = h // ':' // m // ':' // s
-
 
       hours = real(hrampm, wp)
 

@@ -153,7 +153,6 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -168,9 +167,6 @@
       integer(ip)           root
       integer(ip)           rpage  ( pgsizi )
 
-!
-!     Use discovery check-in for speed.
-!
       root    =  tree
 
       call zzekpgri ( handle, root, rpage )

@@ -108,7 +108,6 @@ contains
 !     Environment: PC/Linux, Fort77
 !     Value:       128
 !
-!
 !     For other machines, the value can be determined by running
 !     the following simple program:
 !
@@ -345,13 +344,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     base for encoding integers in character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -391,14 +388,12 @@ contains
 !
 !-&
 
-
 !
 !     We have provided values for several popular machines. Remove
 !     the comment character in front of the value for your machine,
 !     or provide your own value. Numbers are provided in a variety
 !     of formats: decimal, hex, and binary. These last two formats
 !     are not portable; but then, neither are the values.
-!
 !
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     VAX, VAX FORTRAN
@@ -412,7 +407,6 @@ contains
 #else
 !     PC Linux, g77 or fort77
 #endif
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       chbase = 256
 #else
@@ -445,7 +439,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
       integer(ip)        minlen
       parameter        ( minlen = 5 )
@@ -554,13 +547,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode a character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -571,7 +562,6 @@ contains
 !        treated as errors.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -726,13 +716,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     decode a character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -746,7 +734,6 @@ contains
 !        simultaneously.)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -806,7 +793,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -910,13 +896,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     report an excess of elements in a cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -928,11 +912,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -996,7 +978,6 @@ contains
 
       end if
 
-
       return
       end procedure excess
 
@@ -1023,7 +1004,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -1130,13 +1110,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cardinality of a character cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1147,18 +1125,15 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)           card
       integer(ip)           size
-
 
       if ( ctx%failed() ) then
          cardc = 0
@@ -1230,7 +1205,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -1337,13 +1311,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cardinality of a d.p. cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1354,12 +1326,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
       if ( ctx%failed() ) then
          cardd = 0
@@ -1400,9 +1369,7 @@ contains
          call ctx%sigerr ( 'SPICE(INVALIDCARDINALITY)' )
          return
 
-
       end if
-
 
       return
       end procedure cardd
@@ -1430,7 +1397,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -1537,13 +1503,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cardinality of an integer cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1554,12 +1518,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
       if ( ctx%failed() ) then
          cardi = 0
@@ -1570,7 +1531,6 @@ contains
 !     Set return value, regardless of validity.
 !
       cardi = cell(0)
-
 
 !
 !     Squeal if something is awry.
@@ -1601,9 +1561,7 @@ contains
          call ctx%sigerr ( 'SPICE(INVALIDCARDINALITY)' )
          return
 
-
       end if
-
 
       return
       end procedure cardi
@@ -1631,7 +1589,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -1724,13 +1681,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     size of a character cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1741,19 +1696,15 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)           size
       integer(ip)           card
-
-
 
       if ( ctx%failed() ) then
          sizec = 0
@@ -1826,7 +1777,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CELL     is a cell.
@@ -1918,13 +1868,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     size of a d.p. cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1935,12 +1883,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
       if ( ctx%failed() ) then
          sized = 0
@@ -2010,7 +1955,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CELL     is a cell.
@@ -2102,13 +2046,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     size of an integer cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2119,12 +2061,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
       if ( ctx%failed() ) then
          sizei = 0
@@ -2167,7 +2106,6 @@ contains
 
       end if
 
-
       return
       end procedure sizei
 
@@ -2195,7 +2133,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CARD     is the cardinality of (number of elements in) the
@@ -2204,7 +2141,6 @@ contains
 ! $ Detailed_Output
 !
 !     CELL     is a cell.
-!
 !
 !              On output, the cardinality of the cell is CARD.
 !
@@ -2255,7 +2191,6 @@ contains
 !           STOP
 !           END
 !
-!
 !           SUBROUTINE WILMA ( FRED )
 !
 !           CHARACTER*(*)      FRED  ( LBCELL:* )
@@ -2310,13 +2245,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the cardinality of a character cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2329,7 +2262,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -2338,8 +2270,6 @@ contains
 !     Local variables
 !
       integer(ip)           size
-
-
 
       if ( ctx%failed() ) return
 
@@ -2357,7 +2287,6 @@ contains
          call ctx%sigerr ( 'SPICE(INVALIDCARDINALITY)' )
          return
       end if
-
 
 !
 !     Not much to this.
@@ -2391,7 +2320,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CARD     is the cardinality of (number of elements in) the
@@ -2400,7 +2328,6 @@ contains
 ! $ Detailed_Output
 !
 !     CELL     is a cell.
-!
 !
 !                On output, the cardinality of the cell is CARD.
 !
@@ -2450,7 +2377,6 @@ contains
 !            .
 !           STOP
 !           END
-!
 !
 !           SUBROUTINE WILMA ( FRED )
 !
@@ -2506,13 +2432,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the cardinality of a d.p. cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2525,11 +2449,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
       if ( ctx%failed() ) return
 
@@ -2544,7 +2466,6 @@ contains
          call ctx%sigerr ( 'SPICE(INVALIDCARDINALITY)' )
          return
       end if
-
 
 !
 !     Not much to this.
@@ -2578,7 +2499,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CARD     is the cardinality of (number of elements in) the
@@ -2587,7 +2507,6 @@ contains
 ! $ Detailed_Output
 !
 !     CELL     is a cell.
-!
 !
 !                On output, the cardinality of the cell is CARD.
 !
@@ -2637,7 +2556,6 @@ contains
 !            .
 !           STOP
 !           END
-!
 !
 !           SUBROUTINE WILMA ( FRED )
 !
@@ -2693,13 +2611,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the cardinality of an integer cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2712,11 +2628,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
       if ( ctx%failed() ) return
 
@@ -2764,7 +2678,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the size (maximum number of elements) of the cell.
@@ -2772,7 +2685,6 @@ contains
 ! $ Detailed_Output
 !
 !     CELL     is a cell.
-!
 !
 !                On output, the size of the cell is SIZE. The
 !                cardinality of the cell is 0. The rest of the
@@ -2818,7 +2730,6 @@ contains
 !            .
 !           STOP
 !           END
-!
 !
 !           SUBROUTINE WILMA ( FRED )
 !
@@ -2874,13 +2785,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the size of a character cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2898,18 +2807,14 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)           i
-
-
 
       if ( ctx%failed() ) return
 
@@ -2923,7 +2828,6 @@ contains
          call ctx%sigerr ( 'SPICE(INVALIDSIZE)' )
          return
       end if
-
 
 !
 !     Not much to this.
@@ -2962,7 +2866,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the size (maximum number of elements) of the cell.
@@ -2970,7 +2873,6 @@ contains
 ! $ Detailed_Output
 !
 !     CELL     is a cell.
-!
 !
 !                On output, the size of the cell is SIZE. The
 !                cardinality of the cell is 0. The rest of the
@@ -3016,7 +2918,6 @@ contains
 !            .
 !           STOP
 !           END
-!
 !
 !           SUBROUTINE WILMA ( FRED )
 !
@@ -3072,13 +2973,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the size of a d.p. cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3096,18 +2995,14 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)           i
-
-
 
       if ( ctx%failed() ) return
 
@@ -3131,7 +3026,6 @@ contains
       do i = lbcell, -2
          cell(i) = 0.0_wp
       end do
-
 
       return
       end procedure ssized
@@ -3160,7 +3054,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the size (maximum number of elements) of the cell.
@@ -3168,7 +3061,6 @@ contains
 ! $ Detailed_Output
 !
 !     CELL     is a cell.
-!
 !
 !                On output, the size of the cell is SIZE. The
 !                cardinality of the cell is 0. The rest of the
@@ -3214,7 +3106,6 @@ contains
 !            .
 !           STOP
 !           END
-!
 !
 !           SUBROUTINE WILMA ( FRED )
 !
@@ -3270,13 +3161,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the size of an integer cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3294,7 +3183,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -3303,8 +3191,6 @@ contains
 !     Local variables
 !
       integer(ip)           i
-
-
 
       if ( ctx%failed() ) return
 
@@ -3358,7 +3244,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the maximum cardinality (number of elements)
@@ -3369,9 +3254,7 @@ contains
 !              the set. N cannot be greater than the size of the
 !              set.
 !
-!
 !     A        is a set.
-!
 !
 !              On input, A contains N elements beginning at A(1).
 !              To create a valid set, the elements are ordered,
@@ -3473,13 +3356,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     validate a character set
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3495,21 +3376,16 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)        card
 
-
-
       if ( ctx%failed() ) return
-
 
 !
 !     Is the set size big enough?
@@ -3536,7 +3412,6 @@ contains
 !
       call ssizec ( ctx, size, a )
       call scardc ( ctx, card, a )
-
 
       return
       end procedure validc
@@ -3567,7 +3442,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the maximum cardinality (number of elements)
@@ -3578,9 +3452,7 @@ contains
 !              the set. N cannot be greater than the size of the
 !              set.
 !
-!
 !     A        is a set.
-!
 !
 !              On input, A contains N elements beginning at A(1).
 !              To create a valid set, the elements are ordered,
@@ -3682,13 +3554,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     validate a d.p. set
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3704,7 +3574,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -3713,7 +3582,6 @@ contains
 !     Local variables
 !
       integer(ip)           card
-
 
 !
 !     Standard error handling:
@@ -3775,7 +3643,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the maximum cardinality (number of elements)
@@ -3786,9 +3653,7 @@ contains
 !              the set. N cannot be greater than the size of the
 !              set.
 !
-!
 !     A        is a set.
-!
 !
 !              On input, A contains N elements beginning at A(1).
 !              To create a valid set, the elements are ordered,
@@ -3890,13 +3755,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     validate an integer set
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3912,19 +3775,14 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)           card
-
-
-
 
       if ( ctx%failed() ) return
 
@@ -3948,13 +3806,11 @@ contains
       card = n
       call rmdupi ( card, a(1) )
 
-
 !
 !     Set the size and cardinality of the input set.
 !
       call ssizei ( ctx, size, a )
       call scardi ( ctx, card, a )
-
 
       return
       end procedure validi
@@ -3982,7 +3838,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -4083,13 +3938,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     append an item to a character cell
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -4099,10 +3952,6 @@ contains
 !     Local variables
 !
       integer(ip)           nwcard
-
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -4133,7 +3982,6 @@ contains
 
       end if
 
-
       return
       end procedure appndc
 
@@ -4160,7 +4008,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -4209,9 +4056,7 @@ contains
 !        it and then append several more double precision numbers.
 !        Validate the cell into a set and print the result.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM APPNDD_EX1
 !              IMPLICIT NONE
@@ -4288,16 +4133,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Items in original cell A:
 !           0.0   3.0   1.0   1.0   2.0   5.0   8.0  21.0  13.0  34.0
 !         Items in cell A after VALIDD (now a set):
 !           0.0   1.0   2.0   3.0   5.0   8.0  13.0  21.0  34.0
-!
 !
 !        Note that if the cell is not big enough to accommodate the
 !        addition of an item, an error is signaled. In this case, the
@@ -4343,13 +4185,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     append an item to a d.p. cell
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -4360,15 +4200,10 @@ contains
 !
       integer(ip)           nwcard
 
-
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check to see if the cell can accommodate the addition of a
@@ -4393,7 +4228,6 @@ contains
         call ctx%sigerr ( 'SPICE(CELLTOOSMALL)' )
 
       end if
-
 
       return
       end procedure appndd
@@ -4421,7 +4255,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -4469,9 +4302,7 @@ contains
 !        it and then append several more integer numbers. Validate
 !        the cell into a set and print the result.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM APPNDI_EX1
 !              IMPLICIT NONE
@@ -4546,16 +4377,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Items in original cell A:
 !             0     3     1     1     2     5     8    21    13    34
 !         Items in cell A after VALIDI (now a set):
 !             0     1     2     3     5     8    13    21    34
-!
 !
 !        Note that if the cell is not big enough to accommodate the
 !        addition of an item, an error is signaled. In this case, the
@@ -4602,13 +4430,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     append an item to an integer cell
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -4618,7 +4444,6 @@ contains
 !     Local variables
 !
       integer(ip)           nwcard
-
 
 !
 !     Standard SPICE error handling.
@@ -4649,7 +4474,6 @@ contains
 
       end if
 
-
       return
       end procedure appndi
 
@@ -4677,7 +4501,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -4762,13 +4585,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     copy a character cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4782,10 +4603,8 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local variables
 !
@@ -4795,7 +4614,6 @@ contains
       integer(ip)      i
       logical          trunc
       integer(ip)      reqlen
-
 
 !
 !     Set up the error processing.
@@ -4901,7 +4719,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CELL     is a cell.
@@ -4981,13 +4798,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     copy a d.p. cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4997,7 +4812,6 @@ contains
 !        has been removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -5015,7 +4829,6 @@ contains
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     We need the cardinality of the input cell, and the size of
@@ -5039,7 +4852,6 @@ contains
 !
       call scardd ( ctx, moved, copy )
 
-
       if ( card > size ) then
 
          call excess ( ctx, card - size, 'cell' )
@@ -5047,7 +4859,6 @@ contains
          return
 
       end if
-
 
       return
       end procedure copyd
@@ -5076,7 +4887,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     CELL     is a cell.
@@ -5156,13 +4966,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     copy an integer cell
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5172,7 +4980,6 @@ contains
 !        has been removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -5185,7 +4992,6 @@ contains
       integer(ip)      card
       integer(ip)      moved
       integer(ip)      i
-
 
 !
 !     Set up the error processing.
@@ -5251,7 +5057,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     ITEM     is an item which is to be inserted into the specified
@@ -5311,9 +5116,7 @@ contains
 !     1) Create a set with all the original planets of the Solar
 !        System and then remove Pluto from that set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INSRTC_EX1
 !              IMPLICIT NONE
@@ -5385,10 +5188,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planets of the Solar System:
 !            EARTH
@@ -5399,7 +5200,6 @@ contains
 !            SATURN
 !            URANUS
 !            VENUS
-!
 !
 ! $ Restrictions
 !
@@ -5447,13 +5247,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert an item into a character set
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5463,11 +5261,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -5484,7 +5280,6 @@ contains
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     What are the size and cardinality of the set?
@@ -5577,7 +5372,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     ITEM     is an item which is to be inserted into the specified
@@ -5624,9 +5418,7 @@ contains
 !     1) Create an double precision set for ten elements, insert items
 !        to it and then remove the even values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INSRTD_EX1
 !              IMPLICIT NONE
@@ -5707,17 +5499,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Items in original set A:
 !           0.0   1.0   2.0   3.0   5.0   8.0  10.0  13.0  21.0
 !
 !         Odd numbers in set A:
 !           1.0   3.0   5.0  13.0  21.0
-!
 !
 ! $ Restrictions
 !
@@ -5763,18 +5552,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert an item into a d.p. set
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -5790,7 +5576,6 @@ contains
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     What are the size and cardinality of the set?
@@ -5813,7 +5598,6 @@ contains
       else
          in  =  .false.
       end if
-
 
       if ( .not. in ) then
 !
@@ -5872,7 +5656,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     ITEM     is an item which is to be inserted into the specified
@@ -5919,9 +5702,7 @@ contains
 !     1) Create an integer set for ten elements, insert items
 !        to it and then remove the even values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INSRTI_EX1
 !              IMPLICIT NONE
@@ -5998,17 +5779,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Items in original set A:
 !             0     1     2     3     5     8    10    13    21
 !
 !         Odd numbers in set A:
 !             1     3     5    13    21
-!
 !
 ! $ Restrictions
 !
@@ -6052,13 +5830,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert an item into an integer set
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6067,7 +5843,6 @@ contains
 !        Calling protocol of EXCESS changed. Call to SETMSG removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -6087,7 +5862,6 @@ contains
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     What are the size and cardinality of the set?
@@ -6139,7 +5913,6 @@ contains
 
       end if
 
-
       return
       end procedure insrti
 
@@ -6168,7 +5941,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -6221,9 +5993,7 @@ contains
 !     1) Create a set with all the original planets of the Solar
 !        System and then remove Pluto from that set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REMOVC_EX1
 !              IMPLICIT NONE
@@ -6295,10 +6065,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planets of the Solar System:
 !            EARTH
@@ -6309,7 +6077,6 @@ contains
 !            SATURN
 !            URANUS
 !            VENUS
-!
 !
 ! $ Restrictions
 !
@@ -6349,17 +6116,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove an item from a character set
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local variables
 !
@@ -6367,7 +6131,6 @@ contains
       integer(ip)      loc
       logical          in
       integer(ip)      i
-
 
 !
 !     Standard error handling:
@@ -6403,7 +6166,6 @@ contains
 
       end if
 
-
       return
       end procedure removc
 
@@ -6432,7 +6194,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -6484,9 +6245,7 @@ contains
 !     1) Create an double precision set for ten elements, insert items
 !        to it and then remove the even values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REMOVD_EX1
 !              IMPLICIT NONE
@@ -6567,17 +6326,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Items in original set A:
 !           0.0   1.0   2.0   3.0   5.0   8.0  10.0  13.0  21.0
 !
 !         Odd numbers in set A:
 !           1.0   3.0   5.0  13.0  21.0
-!
 !
 ! $ Restrictions
 !
@@ -6615,17 +6371,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove an item from a d.p. set
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local variables
 !
@@ -6633,7 +6386,6 @@ contains
       integer(ip)      loc
       logical          in
       integer(ip)      i
-
 
 !
 !     Standard error handling:
@@ -6698,7 +6450,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     ITEM     is an item which is to be removed from the specified set.
@@ -6749,9 +6500,7 @@ contains
 !     1) Create an integer set for ten elements, insert items
 !        to it and then remove the even values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REMOVI_EX1
 !              IMPLICIT NONE
@@ -6828,17 +6577,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Items in original set A:
 !             0     1     2     3     5     8    10    13    21
 !
 !         Odd numbers in set A:
 !             1     3     5    13    21
-!
 !
 ! $ Restrictions
 !
@@ -6876,13 +6622,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove an item from an integer set
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -6895,7 +6639,6 @@ contains
       integer(ip)           loc
       logical               in
       integer(ip)           i
-
 
 !
 !     Standard error handling:
@@ -6931,7 +6674,6 @@ contains
 
       end if
 
-
       return
       end procedure removi
 
@@ -6960,7 +6702,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -7005,9 +6746,7 @@ contains
 !     1) Check if the elements of a list of body names belong to the
 !        Solar System planets set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ELEMC_EX1
 !              IMPLICIT NONE
@@ -7079,10 +6818,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Item EARTH   is in the set.
 !         Item APOLLO  is NOT in the set.
@@ -7090,7 +6827,6 @@ contains
 !         Item PLUTO   is in the set.
 !         Item VENUS   is in the set.
 !         Item CERES   is NOT in the set.
-!
 !
 ! $ Restrictions
 !
@@ -7140,18 +6876,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     element of a character set
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Standard error handling:
@@ -7164,7 +6897,6 @@ contains
 !     Just a binary search.
 !
       elemc = ( bsrchc ( item, cardc ( ctx, a ), a(1) ) /= 0 )
-
 
       return
       end procedure elemc
@@ -7195,7 +6927,6 @@ contains
 
       integer(ip)               lbcell
       parameter               ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -7239,9 +6970,7 @@ contains
 !     1) Check if the elements of a list of double precision numbers
 !        belong to a given double precision set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ELEMD_EX1
 !              IMPLICIT NONE
@@ -7309,10 +7038,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Item   6.0 is NOT in the set.
 !        Item  -1.0 is in the set.
@@ -7320,7 +7047,6 @@ contains
 !        Item   2.0 is NOT in the set.
 !        Item   3.0 is in the set.
 !        Item  -2.0 is NOT in the set.
-!
 !
 ! $ Restrictions
 !
@@ -7366,18 +7092,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     element of a d.p. set
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Standard error handling:
@@ -7421,7 +7144,6 @@ contains
       integer(ip)      lbcell
       parameter      ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     ITEM     is an item which may or may not be an element of
@@ -7464,9 +7186,7 @@ contains
 !     1) Check if the elements of a list of integers belong to a given
 !        integer set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ELEMI_EX1
 !              IMPLICIT NONE
@@ -7531,10 +7251,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Item    6 is NOT in the set.
 !        Item   -1 is in the set.
@@ -7542,7 +7260,6 @@ contains
 !        Item    2 is NOT in the set.
 !        Item    3 is in the set.
 !        Item   -2 is NOT in the set.
-!
 !
 ! $ Restrictions
 !
@@ -7588,18 +7305,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     element of an integer set
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Standard error handling:
@@ -7642,7 +7356,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
-
 
 ! $ Detailed_Input
 !
@@ -7727,7 +7440,6 @@ contains
 !        INTEGER               NVALID
 !        INTEGER               POSITION
 !
-!
 !     set the value of NVALID to be the number of valid elements in the
 !     array ARRAY
 !
@@ -7783,18 +7495,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     the ordinal position of an element in a set
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Standard error handling:
@@ -7808,7 +7517,6 @@ contains
 !     Given the structure of sets, there's not much to do.
 !
       ordc = bsrchc ( item, cardc( ctx,set), set(1) )
-
 
       return
       end procedure ordc
@@ -7839,7 +7547,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
-
 
 ! $ Detailed_Input
 !
@@ -7977,18 +7684,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     the ordinal position of an element in a set
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Standard error handling:
@@ -8032,7 +7736,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = - 5 )
-
 
 ! $ Detailed_Input
 !
@@ -8170,17 +7873,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     the ordinal position of an element in a set
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Standard error handling:
 !
@@ -8222,11 +7922,9 @@ contains
       integer(ip)                lbcell
       parameter                ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     OP       is a comparison operator, indicating the way in
 !              which the input sets are to be compared. OP may
@@ -8291,7 +7989,6 @@ contains
 !              .
 !              .
 !           END DO
-!
 !
 !     2) In the following example, let the integer sets A, B, and C
 !        contain the elements listed below. Let E be an empty integer
@@ -8367,13 +8064,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compare character sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -8389,7 +8084,6 @@ contains
 !       If the operator is not recognized, an error is now signaled.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -8410,8 +8104,6 @@ contains
       integer(ip)      indexb
       integer(ip)      cond
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -8422,13 +8114,11 @@ contains
          setc = .false.
       end if
 
-
 !
 !     Obtain the cardinality of the sets.
 !
       carda = cardc ( ctx, a )
       cardb = cardc ( ctx, b )
-
 
 !
 !     The easiest way to compare two sets is to list them side by side
@@ -8467,7 +8157,6 @@ contains
 !     other set in the appropriate column.  This is what the loop
 !     below does.
 !
-!
 !           NEXTA = 1
 !           NEXTB = 1
 !
@@ -8500,7 +8189,6 @@ contains
 !           DO NEXTB = 1, CARD(B)
 !              WRITE (UNIT,*) B(NEXTB),SPACES
 !           END DO
-!
 !
 !     This also gives us a way to compare the elements of the two
 !     sets one item at a time.  Instead of writing the items, we
@@ -8546,16 +8234,12 @@ contains
 !           END DO
 !
 
-
-
-
 !
 !     Using the cardinality of the two sets, some function
 !     values can be determined right away. If the cardinality
 !     is not enough, we need to set up some conditions for the
 !     loop which compares the individual elements of the sets.
 !
-
 
 !
 !     A cannot be a proper subset of B if the cardinality of A is
@@ -8575,7 +8259,6 @@ contains
                  condab = 1
               end if
 
-
 !
 !     A cannot be a subset of B if A contains more elements than B.
 !
@@ -8592,7 +8275,6 @@ contains
                  condob = 1
                  condab = 1
                end if
-
 
 !
 !     If the cardinality of the two sets is not equal, there's no way
@@ -8612,7 +8294,6 @@ contains
                   condab = 1
                end if
 
-
 !
 !     If the cardinality of the two sets is not equal, the sets
 !     are not equal.
@@ -8630,7 +8311,6 @@ contains
                  condob = 0
                  condab = 0
               end if
-
 
 !
 !     B cannot be a proper subset of A if the cardinality of A is less
@@ -8682,7 +8362,6 @@ contains
                  condob = 0
               end if
 
-
 !
 !     If either A or B is the null set, the two sets are disjoint.
 !
@@ -8712,14 +8391,12 @@ contains
              return
       end if
 
-
 !
 !     Initialize counters used for checking the elements of the sets.
 !
       indexa    = 1
       indexb    = 1
       cond      = 0
-
 
 !
 !     If we've come this far we need to check the elements of the
@@ -8745,7 +8422,6 @@ contains
 
          end if
 
-
 !
 !        At this point, there are several cases which allow us to
 !        determine the function value without continuing to compare
@@ -8768,7 +8444,6 @@ contains
 !        5. If the operator is '<>' and the elements being compared are
 !           not equal, the sets are not equal ( COND = 2 ).
 !
-!
          if      ( cond == 0 ) then
 
                   setc = .false.
@@ -8782,7 +8457,6 @@ contains
          end if
 
       end do
-
 
 !
 !     We've exited the loop, so now we need to make a decision based on
@@ -8808,14 +8482,10 @@ contains
                 cond = condab
       end if
 
-
-
 !
 !     Determine the value of SETC from the results.
 !
       setc = ( cond == 1 )
-
-
 
       return
       end procedure setc
@@ -8847,11 +8517,9 @@ contains
       integer(ip)                lbcell
       parameter                ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     OP       is a comparison operator, indicating the way in
 !              which the input sets are to be compared. OP may
@@ -8916,7 +8584,6 @@ contains
 !              .
 !              .
 !           END DO
-!
 !
 !     2) In the following example, let the integer sets A, B, and C
 !        contain the elements listed below. Let E be an empty integer
@@ -8992,13 +8659,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compare d.p. sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -9014,7 +8679,6 @@ contains
 !       If the operator is not recognized, an error is now signaled.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -9035,8 +8699,6 @@ contains
       integer(ip)      indexb
       integer(ip)      cond
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -9047,13 +8709,11 @@ contains
          setd = .false.
       end if
 
-
 !
 !     Obtain the cardinality of the sets.
 !
       carda = cardd ( ctx, a )
       cardb = cardd ( ctx, b )
-
 
 !
 !     The easiest way to compare two sets is to list them side by side
@@ -9092,7 +8752,6 @@ contains
 !     other set in the appropriate column.  This is what the loop
 !     below does.
 !
-!
 !           NEXTA = 1
 !           NEXTB = 1
 !
@@ -9125,7 +8784,6 @@ contains
 !           DO NEXTB = 1, CARD(B)
 !              WRITE (UNIT,*) B(NEXTB),SPACES
 !           END DO
-!
 !
 !     This also gives us a way to compare the elements of the two
 !     sets one item at a time.  Instead of writing the items, we
@@ -9171,16 +8829,12 @@ contains
 !           END DO
 !
 
-
-
-
 !
 !     Using the cardinality of the two sets, some function
 !     values can be determined right away. If the cardinality
 !     is not enough, we need to set up some conditions for the
 !     loop which compares the individual elements of the sets.
 !
-
 
 !
 !     A cannot be a proper subset of B if the cardinality of A is
@@ -9200,7 +8854,6 @@ contains
                  condab = 1
               end if
 
-
 !
 !     A cannot be a subset of B if A contains more elements than B.
 !
@@ -9217,7 +8870,6 @@ contains
                  condob = 1
                  condab = 1
                end if
-
 
 !
 !     If the cardinality of the two sets is not equal, there's no way
@@ -9237,7 +8889,6 @@ contains
                   condab = 1
                end if
 
-
 !
 !     If the cardinality of the two sets is not equal, the sets
 !     are not equal.
@@ -9255,7 +8906,6 @@ contains
                  condob = 0
                  condab = 0
               end if
-
 
 !
 !     B cannot be a proper subset of A if the cardinality of A is less
@@ -9307,7 +8957,6 @@ contains
                  condob = 0
               end if
 
-
 !
 !     If either A or B is the null set, the two sets are disjoint.
 !
@@ -9337,14 +8986,12 @@ contains
              return
       end if
 
-
 !
 !     Initialize counters used for checking the elements of the sets.
 !
       indexa    = 1
       indexb    = 1
       cond      = 0
-
 
 !
 !     If we've come this far we need to check the elements of the
@@ -9370,7 +9017,6 @@ contains
 
          end if
 
-
 !
 !        At this point, there are several cases which allow us to
 !        determine the function value without continuing to compare
@@ -9393,7 +9039,6 @@ contains
 !        5. If the operator is '<>' and the elements being compared are
 !           not equal, the sets are not equal ( COND = 2 ).
 !
-!
          if      ( cond == 0 ) then
 
                   setd = .false.
@@ -9407,7 +9052,6 @@ contains
          end if
 
       end do
-
 
 !
 !     We've exited the loop, so now we need to make a decision based on
@@ -9433,14 +9077,10 @@ contains
                 cond = condab
       end if
 
-
-
 !
 !     Determine the value of SETD from the results.
 !
       setd = ( cond == 1 )
-
-
 
       return
       end procedure setd
@@ -9471,11 +9111,9 @@ contains
       integer(ip)                lbcell
       parameter                ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     OP       is a comparison operator, indicating the way in
 !              which the input sets are to be compared. OP may
@@ -9540,7 +9178,6 @@ contains
 !              .
 !              .
 !           END DO
-!
 !
 !     2) In the following example, let the integer sets A, B, and C
 !        contain the elements listed below. Let E be an empty integer
@@ -9616,13 +9253,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compare integer sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -9638,7 +9273,6 @@ contains
 !       If the operator is not recognized, an error is now signaled.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -9659,8 +9293,6 @@ contains
       integer(ip)      indexb
       integer(ip)      cond
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -9671,13 +9303,11 @@ contains
          seti = .false.
       end if
 
-
 !
 !     Obtain the cardinality of the sets.
 !
       carda = cardi ( ctx, a )
       cardb = cardi ( ctx, b )
-
 
 !
 !     The easiest way to compare two sets is to list them side by side
@@ -9716,7 +9346,6 @@ contains
 !     other set in the appropriate column.  This is what the loop
 !     below does.
 !
-!
 !           NEXTA = 1
 !           NEXTB = 1
 !
@@ -9749,7 +9378,6 @@ contains
 !           DO NEXTB = 1, CARD(B)
 !              WRITE (UNIT,*) B(NEXTB),SPACES
 !           END DO
-!
 !
 !     This also gives us a way to compare the elements of the two
 !     sets one item at a time.  Instead of writing the items, we
@@ -9795,16 +9423,12 @@ contains
 !           END DO
 !
 
-
-
-
 !
 !     Using the cardinality of the two sets, some function
 !     values can be determined right away. If the cardinality
 !     is not enough, we need to set up some conditions for the
 !     loop which compares the individual elements of the sets.
 !
-
 
 !
 !     A cannot be a proper subset of B if the cardinality of A is
@@ -9824,7 +9448,6 @@ contains
                  condab = 1
               end if
 
-
 !
 !     A cannot be a subset of B if A contains more elements than B.
 !
@@ -9841,7 +9464,6 @@ contains
                  condob = 1
                  condab = 1
                end if
-
 
 !
 !     If the cardinality of the two sets is not equal, there's no way
@@ -9861,7 +9483,6 @@ contains
                   condab = 1
                end if
 
-
 !
 !     If the cardinality of the two sets is not equal, the sets
 !     are not equal.
@@ -9879,7 +9500,6 @@ contains
                  condob = 0
                  condab = 0
               end if
-
 
 !
 !     B cannot be a proper subset of A if the cardinality of A is less
@@ -9931,7 +9551,6 @@ contains
                  condob = 0
               end if
 
-
 !
 !     If either A or B is the null set, the two sets are disjoint.
 !
@@ -9961,14 +9580,12 @@ contains
              return
       end if
 
-
 !
 !     Initialize counters used for checking the elements of the sets.
 !
       indexa    = 1
       indexb    = 1
       cond      = 0
-
 
 !
 !     If we've come this far we need to check the elements of the
@@ -9994,7 +9611,6 @@ contains
 
          end if
 
-
 !
 !        At this point, there are several cases which allow us to
 !        determine the function value without continuing to compare
@@ -10017,7 +9633,6 @@ contains
 !        5. If the operator is '<>' and the elements being compared are
 !           not equal, the sets are not equal ( COND = 2 ).
 !
-!
          if      ( cond == 0 ) then
 
                   seti = .false.
@@ -10031,7 +9646,6 @@ contains
          end if
 
       end do
-
 
 !
 !     We've exited the loop, so now we need to make a decision based on
@@ -10057,14 +9671,10 @@ contains
                 cond = condab
       end if
 
-
-
 !
 !     Determine the value of SETI from the results.
 !
       seti = ( cond == 1 )
-
-
 
       return
       end procedure seti
@@ -10094,11 +9704,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -10204,13 +9812,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     union two character sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -10221,7 +9827,6 @@ contains
 !        Also, calling protocol for EXCESS has been changed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10240,9 +9845,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -10330,7 +9932,6 @@ contains
 
             end if
 
-
 !
 !        Otherwise, stop filling the array, but continue to count the
 !        number of elements in excess of the size of the output set.
@@ -10382,7 +9983,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure unionc
 
@@ -10412,11 +10012,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -10514,13 +10112,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     union two d.p. sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -10530,7 +10126,6 @@ contains
 !        deleted.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10550,15 +10145,10 @@ contains
 
       integer(ip)         over
 
-
-
-
-
 !
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Find the cardinality of the input sets, and the allowed size
@@ -10623,7 +10213,6 @@ contains
 
             end if
 
-
 !
 !        Otherwise, stop filling the array, but continue to count the
 !        number of elements in excess of the size of the output set.
@@ -10676,8 +10265,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
-
       return
       end procedure uniond
 
@@ -10706,11 +10293,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -10808,13 +10393,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     union two integer sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -10824,7 +10407,6 @@ contains
 !        deleted.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10843,8 +10425,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
 
 !
 !     Set up the error processing.
@@ -10965,8 +10545,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
-
       return
       end procedure unioni
 
@@ -10995,11 +10573,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -11105,13 +10681,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersect two character sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11122,7 +10696,6 @@ contains
 !        Also, calling protocol for EXCESS has been changed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -11141,9 +10714,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -11167,7 +10737,6 @@ contains
          return
 
       end if
-
 
 !     Find the cardinality of the input sets, and the allowed size
 !     of the output set.
@@ -11216,7 +10785,6 @@ contains
 
             end if
 
-
 !
 !        Otherwise, stop filling the array, but continue to count the
 !        number of elements in excess of the size of the output set.
@@ -11256,7 +10824,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure interc
 
@@ -11285,11 +10852,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -11387,13 +10952,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersect two d.p. sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11402,7 +10965,6 @@ contains
 !        Calling protocol of EXCESS changed. Call to SETMSG removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -11421,8 +10983,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
 
 !
 !     Set up the error processing.
@@ -11477,7 +11037,6 @@ contains
 
             end if
 
-
 !
 !        Otherwise, stop following the array, but continue to count the
 !        number of elements in excess of the size of the output set.
@@ -11517,7 +11076,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure interd
 
@@ -11546,11 +11104,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -11648,13 +11204,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersect two integer sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11663,7 +11217,6 @@ contains
 !        Calling protocol of EXCESS changed. Call to SETMSG removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -11682,10 +11235,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
-
 
 !
 !     Set up the error processing.
@@ -11740,7 +11289,6 @@ contains
 
             end if
 
-
 !
 !        Otherwise, stop following the array, but continue to count the
 !        number of elements in excess of the size of the output set.
@@ -11780,7 +11328,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure interi
 
@@ -11809,11 +11356,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -11916,13 +11461,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     difference of two character sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11942,11 +11485,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -11961,9 +11502,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -12005,8 +11543,6 @@ contains
 
       ccard  = 0
       over   = 0
-
-
 
 !
 !     When the end of the first input set is reached, we're done.
@@ -12088,7 +11624,6 @@ contains
 
       end if
 
-
       return
       end procedure diffc
 
@@ -12118,11 +11653,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -12221,13 +11754,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     difference of two d.p. sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -12243,7 +11774,6 @@ contains
 !        enough room.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -12263,14 +11793,10 @@ contains
 
       integer(ip)         over
 
-
-
-
 !
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Find the cardinality of the input sets, and the allowed size
@@ -12290,8 +11816,6 @@ contains
 
       ccard  = 0
       over   = 0
-
-
 
 !
 !     When the end of the first input set is reached, we're done.
@@ -12326,7 +11850,6 @@ contains
                bpoint = bpoint + 1
 
             end if
-
 
 !
 !        Otherwise, stop filling the array, but continue to count the
@@ -12372,8 +11895,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
-
       return
       end procedure diffd
 
@@ -12402,11 +11923,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -12505,13 +12024,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     difference of two integer sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -12527,7 +12044,6 @@ contains
 !        enough room.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -12546,9 +12062,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -12573,8 +12086,6 @@ contains
 
       ccard  = 0
       over   = 0
-
-
 
 !
 !     When the end of the first input set is reached, we're done.
@@ -12609,7 +12120,6 @@ contains
                bpoint = bpoint + 1
 
             end if
-
 
 !
 !        Otherwise, stop following the array, but continue to count the
@@ -12656,7 +12166,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure diffi
 
@@ -12686,11 +12195,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -12798,13 +12305,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     symmetric difference of two character sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -12816,10 +12321,8 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local variables
 !
@@ -12833,9 +12336,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -12878,8 +12378,6 @@ contains
       ccard  = 0
       over   = 0
 
-
-
 !
 !     When the end of both input sets are reached, we're done.
 !
@@ -12921,8 +12419,6 @@ contains
                bpoint   = bpoint + 1
 
             end if
-
-
 
 !
 !        Otherwise, stop following the array, but continue to count the
@@ -12974,7 +12470,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure sdiffc
 
@@ -13004,11 +12499,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -13108,13 +12601,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     symmetric difference of two d.p. sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -13124,11 +12615,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -13143,9 +12632,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -13170,8 +12656,6 @@ contains
 
       ccard  = 0
       over   = 0
-
-
 
 !
 !     When the end of both input sets are reached, we're done.
@@ -13214,7 +12698,6 @@ contains
                bpoint   = bpoint + 1
 
             end if
-
 
 !
 !        Otherwise, stop filling the array, but continue to count the
@@ -13267,7 +12750,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
       return
       end procedure sdiffd
 
@@ -13297,11 +12779,9 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A        is a set.
-!
 !
 !     B        is a set, distinct from A.
 !
@@ -13401,13 +12881,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     symmetric difference of two integer sets
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -13416,7 +12894,6 @@ contains
 !        Calling protocol of EXCESS changed. Call to SETMSG removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -13434,9 +12911,6 @@ contains
       integer(ip)         ccard
 
       integer(ip)         over
-
-
-
 
 !
 !     Set up the error processing.
@@ -13461,8 +12935,6 @@ contains
 
       ccard  = 0
       over   = 0
-
-
 
 !
 !     When the end of both input sets are reached, we're done.
@@ -13505,8 +12977,6 @@ contains
                bpoint   = bpoint + 1
 
             end if
-
-
 
 !
 !        Otherwise, stop following the array, but continue to count the
@@ -13559,8 +13029,6 @@ contains
          call ctx%sigerr ( 'SPICE(SETEXCESS)' )
       end if
 
-
-
       return
       end procedure sdiffi
 
@@ -13590,7 +13058,6 @@ contains
 
       integer(ip)             lbcell
       parameter             ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -13698,7 +13165,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -13777,7 +13243,6 @@ contains
          return
 
       end if
-
 
 !
 !     Now on to the tougher cases.
@@ -13889,7 +13354,6 @@ contains
 
       end if
 
-
       return
       end procedure zzwninsd
 
@@ -13918,7 +13382,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -13961,9 +13424,7 @@ contains
 !        how to loop over all its intervals to extract their left and
 !        right points.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNCARD_EX1
 !              IMPLICIT NONE
@@ -14022,15 +13483,12 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Interval 1 [   1.000,   3.000]
 !        Interval 2 [   7.000,  11.000]
 !        Interval 3 [  23.000,  27.000]
-!
 !
 ! $ Restrictions
 !
@@ -14066,18 +13524,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cardinality of a d.p. window
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Standard SPICE error handling.
@@ -14086,8 +13541,6 @@ contains
          wncard = 0
          return
       end if
-
-
 
       wncard = cardd( ctx,window)
 
@@ -14139,7 +13592,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -14269,13 +13721,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     complement a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -14287,13 +13737,10 @@ contains
       integer(ip)           card
       integer(ip)           i
 
-
-
 !
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Get the cardinality of the input window.
@@ -14305,7 +13752,6 @@ contains
 !
       call scardd ( ctx, 0, result )
 
-
 !
 !     Check to see if the input interval is valid. If it is not, signal
 !     an error and return.
@@ -14316,8 +13762,6 @@ contains
          call ctx%sigerr ( 'SPICE(BADENDPOINTS)' )
          return
       end if
-
-
 
 !
 !     There are two trivial cases: the window is empty, or it does not
@@ -14333,8 +13777,6 @@ contains
          return
 
       end if
-
-
 
 !
 !     Let WINDOW represent the set of intervals
@@ -14392,7 +13834,6 @@ contains
          call wninsd ( ctx, window(i), right, result )
       end if
 
-
       return
       end procedure wncomd
 
@@ -14419,7 +13860,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -14531,31 +13971,25 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     contract the intervals of a d.p. window
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
-
-
 
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
 
-
 !
 !     This is just negative expansion.
 !
       call wnexpd ( ctx, -left, -right, window )
-
 
       return
       end procedure wncond
@@ -14584,7 +14018,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -14687,13 +14120,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     difference two d.p. windows
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -14704,7 +14135,6 @@ contains
 !        excess of elements needed to be changed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -14731,12 +14161,10 @@ contains
       logical               keep
       logical               unrslv
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Find the cardinality of the input windows, and the allowed size
@@ -14977,7 +14405,6 @@ contains
 
       end if
 
-
       return
       end procedure wndifd
 
@@ -15005,7 +14432,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -15105,13 +14531,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     element of a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -15123,8 +14547,6 @@ contains
       integer(ip)           card
       integer(ip)           i
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -15132,7 +14554,6 @@ contains
          wnelmd = .false.
          return
       end if
-
 
 !
 !     How many endpoints in the window?
@@ -15153,7 +14574,6 @@ contains
       end do
 
       wnelmd = .false.
-
 
       return
       end procedure wnelmd
@@ -15181,7 +14601,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -15293,13 +14712,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     expand the intervals of a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -15312,7 +14729,6 @@ contains
       integer(ip)           gone
       integer(ip)           i
       integer(ip)           j
-
 
 !
 !     Standard SPICE error handling.
@@ -15410,7 +14826,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -15513,13 +14928,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract the endpoints from a d.p. window
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15531,7 +14944,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -15541,8 +14953,6 @@ contains
 !
       integer(ip)           card
       integer(ip)           i
-
-
 
 !
 !     Standard SPICE error handling.
@@ -15607,7 +15017,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     WINDOW   is a window containing zero or more intervals.
@@ -15662,9 +15071,7 @@ contains
 !        how to loop over all its intervals to extract their left and
 !        right points.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNFETD_EX1
 !              IMPLICIT NONE
@@ -15723,15 +15130,12 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Interval 1 [   1.000,   3.000]
 !        Interval 2 [   7.000,  11.000]
 !        Interval 3 [  23.000,  27.000]
-!
 !
 ! $ Restrictions
 !
@@ -15776,13 +15180,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch an interval from a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -15794,13 +15196,11 @@ contains
       integer(ip)           card
       integer(ip)           end
 
-
 !
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
 
-!
 !
 !     How many endpoints in the window? Enough? Normally, endpoints
 !     of the Nth interval are stored in elements 2N and 2N-1.
@@ -15815,7 +15215,6 @@ contains
          left  = window(end-1)
          right = window(end  )
       end if
-
 
       return
       end procedure wnfetd
@@ -15844,7 +15243,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -15903,9 +15301,7 @@ contains
 !        merge any adjacent intervals separated by a gap equal to or
 !        less than 3.0.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNFILD_EX1
 !              IMPLICIT NONE
@@ -15990,10 +15386,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Initial WINDOW:
 !           Interval  1: [  1.000,  3.000 ]
@@ -16005,7 +15399,6 @@ contains
 !           Interval  1: [  1.000,  3.000 ]
 !           Interval  2: [  7.000, 11.000 ]
 !           Interval  3: [ 23.000, 29.000 ]
-!
 !
 !     2) Using the same window from the first example:
 !
@@ -16078,13 +15471,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fill small gaps in a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16101,7 +15492,6 @@ contains
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Get the cardinality of the window. (The size is not important;
@@ -16165,7 +15555,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SMLINT   is the limiting measure of the small intervals to be
@@ -16221,9 +15610,7 @@ contains
 !
 !        remove any intervals equal to or less than 3.0.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNFLTD_EX1
 !              IMPLICIT NONE
@@ -16308,10 +15695,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Initial WINDOW:
 !           Interval  1: [  1.000,  3.000 ]
@@ -16322,7 +15707,6 @@ contains
 !         Window after filtering intervals <= 3.0:
 !           Interval  1: [  7.000, 11.000 ]
 !           Interval  2: [ 23.000, 27.000 ]
-!
 !
 !     2) Using the same window from the first example:
 !
@@ -16384,13 +15768,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     filter small intervals from a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16407,7 +15789,6 @@ contains
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Get the cardinality of the window. (The size is not important;
@@ -16466,7 +15847,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -16571,13 +15951,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     included in a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16588,9 +15966,6 @@ contains
 !
       integer(ip)           card
       integer(ip)           i
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -16646,7 +16021,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -16707,9 +16081,7 @@ contains
 !        how to loop over all its intervals to extract their left and
 !        right points.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNINSD_EX1
 !              IMPLICIT NONE
@@ -16768,15 +16140,12 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Interval 1 [   1.000,   3.000]
 !        Interval 2 [   7.000,  11.000]
 !        Interval 3 [  23.000,  27.000]
-!
 !
 ! $ Restrictions
 !
@@ -16844,13 +16213,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert an interval into a d.p. window
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -16893,7 +16260,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -16907,13 +16273,10 @@ contains
       integer(ip)           i
       integer(ip)           j
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Get the size and cardinality of the window.
@@ -16954,7 +16317,6 @@ contains
          return
 
       end if
-
 
 !
 !     Now on to the tougher cases.
@@ -17082,7 +16444,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A,
@@ -17172,13 +16533,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersect two d.p. windows
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -17189,7 +16548,6 @@ contains
 !        excess of elements needed to be changed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -17207,8 +16565,6 @@ contains
       integer(ip)           cp
       character(1)          use
       integer(ip)           over
-
-
 
 !
 !     Standard SPICE error handling.
@@ -17316,9 +16672,6 @@ contains
          call ctx%sigerr ( 'SPICE(WINDOWEXCESS)' )
       end if
 
-
-
-
       return
       end procedure wnintd
 
@@ -17345,7 +16698,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -17545,13 +16897,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compare two d.p. windows
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -17566,7 +16916,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -17579,8 +16928,6 @@ contains
       logical               equal
       logical               subset
       integer(ip)           i
-
-
 
 !
 !     Standard SPICE error handling.
@@ -17676,7 +17023,6 @@ contains
 
       end if
 
-
       return
       end procedure wnreld
 
@@ -17704,7 +17050,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -17787,9 +17132,7 @@ contains
 !     1) Define a window with six intervals, and calculate the
 !        summary for that window.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNSUMD_EX1
 !              IMPLICIT NONE
@@ -17885,10 +17228,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Measure           :   57.000000
 !        Average           :    9.500000
@@ -17899,7 +17240,6 @@ contains
 !        Interval longest  :    5
 !        Shortest interval : [ 18.000, 18.000 ]
 !        Longest interval  : [ 30.000, 69.000 ]
-!
 !
 !     2) Let A contain the intervals
 !
@@ -17985,18 +17325,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     summary of a d.p. window
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -18009,7 +17346,6 @@ contains
 
       integer(ip)           i
       integer(ip)           card
-
 
 !
 !     Standard SPICE error handling.
@@ -18116,7 +17452,6 @@ contains
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
 
-
 ! $ Detailed_Input
 !
 !     A,
@@ -18213,13 +17548,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     union two d.p. windows
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -18230,7 +17563,6 @@ contains
 !        excess of elements needed to be changed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -18250,14 +17582,10 @@ contains
       character(1)          use
       integer(ip)           over
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Find the cardinality of the input windows, and the allowed size
@@ -18393,8 +17721,6 @@ contains
          call ctx%sigerr ( 'SPICE(WINDOWEXCESS)' )
       end if
 
-
-
       return
       end procedure wnunid
 
@@ -18423,7 +17749,6 @@ contains
 
       integer(ip)           lbcell
       parameter           ( lbcell = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -18494,9 +17819,7 @@ contains
 !        overlapping intervals, and validate the array as a SPICE
 !        window.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM WNVALD_EX1
 !              IMPLICIT NONE
@@ -18527,14 +17850,12 @@ contains
 !
 !              INTEGER               I
 !
-!
 !              DATA                  WINDAT  /  0,  0,
 !             .                                10, 12,
 !             .                                 2,  7,
 !             .                                13, 15,
 !             .                                 1,  5,
 !             .                                23, 29,  4*0 /
-!
 !
 !        C
 !        C     Insert the data into the SPICE cell array.
@@ -18558,10 +17879,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Current intervals:            5
 !         Maximum intervals:           10
@@ -18573,7 +17892,6 @@ contains
 !           10.000000000000000        12.000000000000000
 !           13.000000000000000        15.000000000000000
 !           23.000000000000000        29.000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -18627,13 +17945,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     validate a d.p. window
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -18699,7 +18015,6 @@ contains
          i = i + 2
 
       end do
-
 
       return
       end procedure wnvald

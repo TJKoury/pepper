@@ -250,13 +250,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ephemeris time to utc
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -391,7 +389,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -443,7 +440,6 @@
 
       character(3)          mthnam   ( 12 )
 
-
 !
 !     Save everything between calls
 !
@@ -456,8 +452,6 @@
                                   'MAY', 'JUN', 'JUL', 'AUG', &
                                   'SEP', 'OCT', 'NOV', 'DEC'  /
 
-
-
 !
 !     The function NDIGIT gives the number of digits required to
 !     display a non-negative integer that is less than 10000
@@ -468,7 +462,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Convert FORMAT to uppercase for ease of comparison. Make sure it's
@@ -572,7 +565,6 @@
 !     To accomplish the rounding, we scale the fraction by
 !     10**MYPREC.
 !
-!
       scale  = anint (  10.0_wp ** myprec )
       frcsec = anint (  scale * ( tai - whlsec )  )
 
@@ -626,7 +618,6 @@
 !
             eday = 7
             bday = eday - ndigit(day) + 1
-
 
             call intstr ( day, endstr(bday:eday) )
             ehr  = 10
@@ -782,6 +773,5 @@
       utcstr = str
 
       return
-
 
       end

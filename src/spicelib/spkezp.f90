@@ -27,7 +27,6 @@
       include               'frmtyp.inc'
       include               'zzctr.inc'
 
-
       integer(ip)           targ
       real(wp)              et
       character(*)          ref
@@ -133,7 +132,6 @@
 !                            correction and stellar aberration
 !                            correction.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -166,7 +164,6 @@
 !                 'XCN+S'    "Transmission" case: converged
 !                            Newtonian light time correction and
 !                            stellar aberration correction.
-!
 !
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
@@ -356,14 +353,12 @@
 !           it may be more accurate to use no correction at all than to
 !           use light time alone.
 !
-!
 !        2) Find the corrected pointing direction to radiate a signal
 !           to a target. This computation is often applicable for
 !           implementing communications sessions.
 !
 !              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
 !              aberration corrections for transmission.
-!
 !
 !        3) Compute the apparent position of a target body relative
 !           to a star or other distant object.
@@ -377,19 +372,16 @@
 !              vector from the observer to the planet should be
 !              corrected for light time but not stellar aberration.
 !
-!
 !        4) Obtain an uncorrected position vector derived directly from
 !           data in an SPK file.
 !
 !              Use 'NONE'.
-!
 !
 !        5) Use a geometric position vector as a low-accuracy estimate
 !           of the apparent position for an application where execution
 !           speed is critical.
 !
 !              Use 'NONE'.
-!
 !
 !        6) While this routine cannot perform the relativistic
 !           aberration corrections required to compute positions
@@ -399,7 +391,6 @@
 !
 !              Use 'NONE', then apply high-accuracy aberration
 !              corrections (not available in the SPICE Toolkit).
-!
 !
 !     Below, we discuss in more detail how the aberration corrections
 !     applied by this routine are computed.
@@ -420,7 +411,6 @@
 !        The geometric relationship between the observer, target, and
 !        solar system barycenter is as shown:
 !
-!
 !           SSB ---> O(ET)
 !            |      /
 !            |     /
@@ -429,12 +419,9 @@
 !            V  V
 !           T(ET)
 !
-!
 !        The returned position vector is
 !
 !           T(ET) - O(ET)
-!
-!
 !
 !        Reception case
 !        ==============
@@ -497,7 +484,6 @@
 !           Rotate r by phi radians about h to obtain the apparent
 !           position of the object.
 !
-!
 !        Transmission case
 !        ==================
 !
@@ -531,7 +517,6 @@
 !        relative velocity vector of the observer. The rotation is
 !        computed as in the reception case, but the sign of the
 !        rotation angle is negated.
-!
 !
 !     Precision of light time corrections
 !     ===================================
@@ -587,7 +572,6 @@
 !        converged light time solutions is recommended when adequacy of
 !        the one-iteration solution is in doubt.
 !
-!
 !        Converged corrections
 !        ---------------------
 !
@@ -618,7 +602,6 @@
 !        general relativity. These may be as high as a few hundredths
 !        of a millisecond for some objects.
 !
-!
 !     Relativistic Corrections
 !     =========================
 !
@@ -635,7 +618,6 @@
 !     1)  Load a planetary ephemeris SPK, then look up a series of
 !         geometric positions of the moon relative to the earth,
 !         referenced to the J2000 frame.
-!
 !
 !               IMPLICIT NONE
 !         C
@@ -783,7 +765,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     using body names get position relative to an observer
@@ -792,7 +773,6 @@
 !     read trajectory data
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -810,8 +790,6 @@
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !
@@ -831,7 +809,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
 
 !
 !     Local variables

@@ -224,9 +224,7 @@
       logical               uselt
       logical               xmit
 
-
       if ( return() ) return
-
 
 !
 !     For now, only ellipsoids are supported as target shapes.
@@ -307,7 +305,6 @@
 
       end if
 
-
       if ( uselt ) then
 !
 !        Compute the rate of change with respect to ET of the
@@ -385,8 +382,5 @@
       emista( 1 ) =  vsep  ( nrmsta, obssta )
       emista( 2 ) =  dvsep ( nrmsta, obssta )
 
-
       return
       end
-
-

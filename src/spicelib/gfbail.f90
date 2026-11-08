@@ -116,7 +116,6 @@
 !     Note that GFBAIL is the third-to-last argument in the
 !     GFOCCE call.
 !
-!
 !              PROGRAM EX1
 !
 !              IMPLICIT NONE
@@ -147,7 +146,6 @@
 !             .              GFSTEP,   GFREFN,       RPT,
 !             .              GFREPI,   GFREPU,       GFREPF,
 !             .              BAIL,     GFBAIL,       CNFINE,  RESULT )
-!
 !
 !             ...
 !
@@ -180,13 +178,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF standard bail out routine
 !
 !-&
-
 
       gfbail  =  .false.
 

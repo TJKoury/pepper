@@ -18,18 +18,18 @@ module pepper_state_dafec
 
    !> The saved variables of DAFEC.
    type, public :: dafec_state
-      character(mxcrec) :: crecrd  !! saved between calls by DAFEC
-      character(1) :: eocmrk  !! saved between calls by DAFEC
-      character(1) :: eolmrk  !! saved between calls by DAFEC
+      character(mxcrec) :: crecrd  !! the comment record read last
+      character(1) :: eocmrk  !! the end-of-comments marker
+      character(1) :: eolmrk  !! the end-of-line marker
       integer(ip) :: filchr(ftsize)  !! the file table declarations for keeping track of which files
                                      !! are currently in the process of having comments extracted.
-      integer(ip) :: filcnt(ftsize)  !! saved between calls by DAFEC
-      integer(ip) :: filhan(ftsize)  !! saved between calls by DAFEC
-      integer(ip) :: lsthan  !! saved between calls by DAFEC
-      integer(ip) :: lstpos(ftsize)  !! saved between calls by DAFEC
-      integer(ip) :: lstrec(ftsize)  !! saved between calls by DAFEC
-      integer(ip) :: nfiles  !! saved between calls by DAFEC
-      logical :: first  !! saved between calls by DAFEC
+      integer(ip) :: filcnt(ftsize)  !! number of comment lines read from each file
+      integer(ip) :: filhan(ftsize)  !! handles of the files whose comments are being read
+      integer(ip) :: lsthan  !! the handle read last
+      integer(ip) :: lstpos(ftsize)  !! position in the last comment record of each file
+      integer(ip) :: lstrec(ftsize)  !! the comment record read last of each file
+      integer(ip) :: nfiles  !! number of files whose comments are being read
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type dafec_state
 
 contains

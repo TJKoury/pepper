@@ -50,7 +50,6 @@
 !
 !              CALL ERRPRT ( 'SeT' , 'ALL' )
 !
-!
 !     LIST     is a list of error message items. The items
 !              are delimited by commas. The items that can be
 !              in the list are the words:
@@ -164,7 +163,6 @@
 !     response action are 'RETURN', 'REPORT', 'ABORT', 'DEFAULT', and
 !     'IGNORE'.  Use ERRACT to set the error response action.
 !
-!
 !     Only the first 100 characters of LIST are saved.
 !
 !     The default set of error messages that are output is the
@@ -237,13 +235,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get/set error output items
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -268,7 +264,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -289,7 +284,6 @@
 
       integer(ip)           numwrd
 
-
       integer(ip)           i
 
       logical               short
@@ -303,15 +297,11 @@
       character(oplen)      upop
       character(oplen)      locop
 
-
-
       integer(ip), parameter :: lstlen = 100
-
 
 !
 !     Executable Code:
 !
-
 
 !
 !     We first initialize the message selection flags to
@@ -342,7 +332,6 @@
 
          end if
 
-
          if ( long ) then
 
             if ( list == ' ' ) then
@@ -352,7 +341,6 @@
             end if
 
          end if
-
 
          if ( expl ) then
 
@@ -364,7 +352,6 @@
 
          end if
 
-
          if ( trace ) then
 
             if ( list == ' ' ) then
@@ -375,7 +362,6 @@
 
          end if
 
-
          if ( dfault ) then
 
             if ( list == ' ' ) then
@@ -385,7 +371,6 @@
             end if
 
          end if
-
 
       else if ( upop == 'SET' ) then
 !
@@ -401,8 +386,6 @@
 !        If an invalid word is encountered, we signal an
 !        error, and continue parsing the list.
 !
-!
-
 
          call lparse ( list,  ','  ,  maxwrd,  numwrd, words )
 
@@ -449,7 +432,6 @@
                trace  =  .false.
                dfault =  .false.
 
-
             else if  (  upword /= ' '  )  then
 !
 !              Oops! Invalid word...
@@ -460,7 +442,6 @@
                            )
 
                call sigerr ( 'SPICE(INVALIDLISTITEM)' )
-
 
             end if
 !

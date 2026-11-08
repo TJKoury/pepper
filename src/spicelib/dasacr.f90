@@ -147,13 +147,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add comment records to a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -169,13 +167,11 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               failed
       logical               return
-
 
 !
 !     Local parameters
@@ -209,7 +205,6 @@
 !
       integer(ip), parameter :: begdsc = 9
 
-
 !
 !     Local variables
 !
@@ -240,7 +235,6 @@
       integer(ip)           type
       integer(ip)           unit
 
-
 !
 !     Saved variables
 !
@@ -261,13 +255,10 @@
       data                  next   /  2,   3,   1  /
       data                  prev   /  3,   1,   2  /
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Programmer's note: the calls to
@@ -365,7 +356,6 @@
 !
          call cleari ( nwi,                             dirrec )
          call dasioi ( 'WRITE', unit, nresvr+ncomr+n+2, dirrec )
-
 
       else
 !
@@ -536,7 +526,6 @@
          end if
 
       end do
-
 
       call dasufs ( handle, &
                     nresvr, &

@@ -126,7 +126,6 @@
 !     The code fragment below demonstrates reading and evaluating
 !     a type 20 SPK record.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -181,13 +180,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_20 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -209,7 +206,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The first number in the record is the record size. This is the
@@ -263,7 +259,6 @@
       posloc = 4  +  ( 3 * ncof )
 
       call vadd ( record(posloc), intgrl, xyzdot )
-
 
       return
       end

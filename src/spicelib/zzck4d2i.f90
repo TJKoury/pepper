@@ -34,7 +34,6 @@
       real(wp)                parcod
       integer(ip)             i      ( * )
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description

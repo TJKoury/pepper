@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekcnamsz.inc'
       include  'ekcoldsc.inc'
@@ -165,7 +164,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !-    SPICELIB Version 1.1.0, 22-JUL-1996 (NJB)
@@ -301,13 +299,11 @@
 
          ndata  =  nrows - nnull
 
-
       else
 
          ndata  =  nrows
 
       end if
-
 
       if ( ndata > 0 ) then
 !
@@ -357,10 +353,8 @@
 
          end if
 
-
          from    =  from   + 1
          remain  =  remain - 1
-
 
          if (  ( bufptr == bufsiz ) .or. ( remain == 0 )  ) then
 !
@@ -375,7 +369,6 @@
             bufptr  =  bufptr + 1
 
          end if
-
 
          if (  (   n      == dpsize ) .or. &
                ( ( nwrite == ndata  ) .and. ( ndata  /= 0 ) ) ) then
@@ -437,7 +430,6 @@
          call dasudi ( handle,  dscbas+ixpidx,  dscbas+ixpidx,  tree )
 
       end if
-
 
       return
       end

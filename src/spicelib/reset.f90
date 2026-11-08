@@ -61,7 +61,6 @@
 !
 !     3. Setting of the long error message is re-enabled.
 !
-!
 !     Subsequent to a call to RESET, references to the status
 !     indicator function, FAILED, will return a value of .FALSE.,
 !     until an error is detected.
@@ -175,13 +174,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reset error status
 !
 !-&
-
 
 !
 !     SPICELIB functions

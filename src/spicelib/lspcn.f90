@@ -161,7 +161,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM LSPCN_EX1
 !              IMPLICIT NONE
 !
@@ -188,7 +187,6 @@
 !
 !              DOUBLE PRECISION      ET
 !              DOUBLE PRECISION      LON
-!
 !
 !              CALL PROMPT ( 'Enter name of LSK file > ', LSK )
 !              CALL PROMPT ( 'Enter name of PCK file > ', PCK )
@@ -222,13 +220,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0012.tls, the PCK file
 !        named pck00010.tpc, the SPK file named de421.bsp; the 'EARTH'
 !        as central body and the time string '2018 Mar 8  17:59 UTC',
 !        the output was:
-!
 !
 !        Enter name of LSK file > naif0012.tls
 !        Enter name of PCK file > pck00010.tpc
@@ -242,7 +238,6 @@
 !         Central body              = EARTH
 !         Time                      = 2018 Mar 8  17:59 UTC
 !         Planetocentric L_s (deg.) =    348.11593978317080
-!
 !
 ! $ Restrictions
 !
@@ -277,7 +272,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     planetocentric longitude of Sun
@@ -286,7 +280,6 @@
 !     compute L_sub_s
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -297,7 +290,6 @@
 !        has changed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -316,7 +308,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
 
 !
 !     Local variables
@@ -362,7 +353,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Give the function an initial value.
 !
@@ -372,7 +362,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialization.

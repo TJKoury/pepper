@@ -150,7 +150,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM PROP2B_EX2
 !              IMPLICIT NONE
 !
@@ -208,10 +207,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         State at t0:
 !           R   (km):          0.00000   70710678.11865   70710678.11865
@@ -220,7 +217,6 @@
 !         State at tau/2:
 !           R   (km):         -0.00000  -70710678.11865  -70710678.11865
 !           V (km/s):          0.00000          0.04464         -0.04464
-!
 !
 ! $ Restrictions
 !
@@ -270,13 +266,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Propagate state vector using two-body force model
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -300,7 +294,6 @@
 
 !
 !     Local variables
-!
 !
 !     The following quantities are needed in the solution of Kepler's
 !     equation and in the propagation of the input state.  They are
@@ -449,7 +442,6 @@
 
       end do
 
-
       if ( .not. new ) then
 !
 !        We update the order vector NEWEST so that the state being
@@ -530,10 +522,8 @@
 !                                       2
 !                   2)    H2    = |HVEC|  =  GM*(1+E)*Q
 !
-!
          call vcrss ( pos,  vel,     hvec )
          h2 = vdot  ( hvec, hvec          )
-
 
 !
 !        Let's make sure we are not in the pathological case of
@@ -554,11 +544,9 @@
 !                    1)  E*QVEC  =  ----------  -   ---
 !                                       GM           R0
 !
-!
 !                                         VEL X HVEC      POS
 !                    2)  E       = NORM ( ----------  -   --- )
 !                                            GM            R0
-!
 !
          call vcrss ( vel,       hvec,                      tmpvec  )
          call vlcom ( 1.0_wp/gm,  tmpvec,  -1.0_wp/r0,  pos,  eqvec   )
@@ -583,7 +571,6 @@
 !                      /  Q
 !              S  =   / -----    X   = B * X
 !                   \/   GM
-!
 !
 !        that DT satisfies the universal variables Kepler's equation:
 !
@@ -636,7 +623,6 @@
 !                                            3        2
 !           ( 2 )    VC    =  DT -  ( B*Q  )X C_3( F*X )
 !
-!
 !                                       Q               2
 !           ( 3 )    PCDOT =     -  ( ------ ) X C_1( F*X )
 !                                     B*R*R0
@@ -653,7 +639,6 @@
 !
 !                                                 2       2
 !                                        +   B*Q X C_2(F*X )
-!
 !
 !        Therefore we will also need the constant
 !
@@ -676,7 +661,6 @@
 !                         3        2
 !                +   B*Q*X * C_3(FX )
 !
-!
 !        (There is a unique solution to this equation. KFUN(X) is
 !        unbounded above and below and is an increasing function
 !        over all real X for all non-rectilinear orbits. To see this
@@ -697,22 +681,17 @@
 !        If F is less than zero, we can have the computation of C0,...
 !        overflow.  This is because for X < 0
 !
-!
 !               C_0(X) = COSH( DSQRT(-X) )
 !
 !               C_1(X) = SINH( DSQRT(-X) )
 !                        -----------------
 !                              DSQRT(-X)
 !
-!
-!
 !        and from the recursion relationship we know that
-!
 !
 !               C_2(X) =  ( 1/0! - C_0(X) ) / X
 !
 !               C_3(X) =  ( 1/1! - C_1(X) ) / X
-!
 !
 !                         1 - COSH( DSQRT(-X) )
 !               C_2(X) = ------------------------
@@ -736,29 +715,23 @@
 !
 !               | COEF_3 * X**3 * C_3(FX**2) |
 !
-!
 !         where COEF_n are coefficients that will be used in forming
 !         linear combinations of X**n C_n(FX**2) terms.
 !
 !         The variable portion of the last 3 terms above can be
 !         rewritten as:
 !
-!
 !                                   SINH ( DSQRT(-F)*|X| )
 !        | X**1 * C_1(FX**2) |  =   ----------------------
 !                                          DSQRT(-F)
-!
-!
 !
 !                                   1 - COSH( DSQRT(-F)*|X| )
 !        | X**2 * C_2(FX**2) |  =  ----------------------------
 !                                             -F
 !
-!
 !                                  DSQRT(-F)*|X|   - SINH(DSQRT(-F)*|X|)
 !        | X**3 * C_3(FX**2) |  =  -------------------------------------
 !                                              F*DSQRT(-F)
-!
 !
 !        For large |X| the absolute values of these expressions are well
 !        approximated by
@@ -775,10 +748,8 @@
 !                                         -1.5
 !               SINH( DSQRT(-F)|X| ) * |F|
 !
-!
 !        For large |X| the logarithms of these expressions are well
 !        approximated by:
-!
 !
 !               DSQRT(-F)|X| - LOG(2) - 0.0*LOG(-F)
 !
@@ -790,28 +761,21 @@
 !
 !        respectively.
 !
-!
 !        To ensure that we can form a linear combination of these terms
 !        we will require that:
 !
-!
 !           |COEF_N*X**N * C_N(FX**2)| < DPMAX / 4
-!
-!
 !
 !        for N=0,1,2,3.  This is equivalent to
 !
 !              LOG ( X**N * C_N(FX**2) )   <      LOG ( DPMAX )
 !            + LOG (|COEF_N|)                   - 2 LOG ( 2     )
 !
-!
-!
 !        or
 !
 !              LOG ( X**N * C_N(FX**2) )   <      LOG ( DPMAX    )
 !                                             -   LOG ( |COEF_N| )
 !                                             - 2*LOG ( 2        ).
-!
 !
 !        Replacing the left hand side with the magnitude expressions
 !        computed above we have:
@@ -822,7 +786,6 @@
 !
 !         So that:
 !
-!
 !            |X|  <    {   LOG ( DPMAX  )
 !                        - LOG (|COEF_N|)
 !                        - LOG (  2     )
@@ -832,14 +795,12 @@
 !         of the Stumpff functions.  We can then set our absolute value
 !         bound on X to be:
 !
-!
 !             MIN        LOG(DPMAX/2) - LOG(MAXC) + (n/2)LOG(-F)
 !            n = 0,3  {  -----------------------------------------  }
 !                               DSQRT(-F)
 !
 !        (Actually we know that the minimum must occur for n = 0 or
 !        for n = 3).
-!
 !
          maxc   = max   ( 1.0_wp, dabs(br0), &
                                  dabs(b2rv), &
@@ -871,7 +832,6 @@
 !
         else
 
-!
 !
 !           In the case when F is non-negative we must be sure we
 !           can compute all of the following.
@@ -944,7 +904,6 @@
 
       end if
 !
-!
 !     We are now ready to find the unique value of X such that
 !
 !             DT = KFUN ( X )
@@ -977,7 +936,6 @@
 !         0 < X  <  -------
 !                    B*Q
 !
-!
 !        We now have a guess at a bracketing interval. In the case
 !        DT is positive it looks like
 !
@@ -990,10 +948,8 @@
 !        endpoint farthest from zero and call this X, and make
 !        the other endpoint the old value of X.
 !
-!
 !                0
 !         -------+--------[--------]--------------------
-!
 !
 !        We continue this process ...
 !
@@ -1065,7 +1021,6 @@
             kfun = x*(br0*c1 + x*( b2rv*c2 + x*(bq*c3) ) )
 
          end do
-
 
       else if ( dt > 0 ) then
 
@@ -1175,7 +1130,6 @@
 
       end do
 
-
 !
 !     With X in hand we simply compute BR, PC, VC, PCDOT and VCDOT
 !     described in equations (1) --- (5) above. (Note, by our choice
@@ -1186,12 +1140,10 @@
       x3    = x2*x
       br    = br0*c0 + x*( b2rv*c1  + x*(bq*c2) )
 
-
       pc    = 1.0_wp     -      qovr0        * x2 * c2
       vc    = dt        -      bq           * x3 * c3
       pcdot =           -     (qovr0 / br ) * x  * c1
       vcdot = 1.0_wp     -     (bq    / br ) * x2 * c2
-
 
 !
 !     ... and compute the linear combinations needed to get PVPROP

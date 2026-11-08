@@ -74,7 +74,6 @@
 !
 !                Units are km.
 !
-!
 !     MAXRAD     is the radius of an outer bounding sphere for the
 !                surface of the body designated by BODYID, NSURF,
 !                and SRFLST. The sphere is centered at the target
@@ -194,7 +193,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -289,10 +287,7 @@
       data                  svmaxr / -1.0_wp       /
       data                  svminr / -1.0_wp       /
 
-
-
       if ( return() ) return
-
 
       if ( first ) then
          call zzctruin ( ctr )
@@ -360,7 +355,6 @@
 !
       minr = svminr
       maxr = svmaxr
-
 
       if ( first .or. update .or. newlst ) then
 !
@@ -491,7 +485,6 @@
                   sgminr = dskdsc(mn3idx)
                   sgmaxr = dskdsc(mx3idx)
 
-
                else if ( corsys == pdtsys ) then
 !
 !                 Use the reference spheroid and altitude bounds to
@@ -525,8 +518,6 @@
 
                   end if
 
-
-
                else if ( corsys == recsys ) then
 
                   call zzrecbox ( dskdsc(mn1idx), boxctr, lx, &
@@ -538,7 +529,6 @@
                   sgminr = max ( vnorm(boxctr) - boxrad,  0.0_wp )
 
                   sgmaxr =       vnorm(boxctr) + boxrad
-
 
                else
 
@@ -614,7 +604,6 @@
          end if
 
       end if
-
 
       if ( maxr < 0.0_wp ) then
 !

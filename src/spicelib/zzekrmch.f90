@@ -32,7 +32,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcnamsz.inc'
       include 'ekcoldsc.inc'
       include 'ektype.inc'
@@ -113,7 +112,6 @@
 !
 !     ELTS           is an array of column entry elements to match.
 !
-!
 !     OPS            are relational operators used in the input
 !                    constraints.  The elements of OPS are any of the
 !                    integer parameters
@@ -191,7 +189,6 @@
 !
 !        LGE, LGT, LLE, LLT
 !
-!
 !     The additional unary operators
 !
 !        ISNULL, NOTNUL
@@ -235,9 +232,7 @@
 !
 !-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
 !
-!
 !-&
-
 
 !
 !     Non-SPICELIB functions
@@ -250,8 +245,6 @@
       integer(ip)           i
 
 !
-!     Use discovery check-in.
-!
 !     For each active constraint in the list, see whether the specified
 !     row satisfies the constraint.  If any constraint is not satisfied,
 !     return immediately.
@@ -260,7 +253,6 @@
       zzekrmch = .true.
 
       do while (  ( i <= ncnstr ) .and. zzekrmch  )
-
 
          if ( active(i) ) then
 !

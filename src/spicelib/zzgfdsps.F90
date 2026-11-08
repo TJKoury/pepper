@@ -34,7 +34,6 @@
 
 ! $ Brief_I/O
 !
-!
 !     VARIABLE  I/O  DESCRIPTION
 !     --------  ---  --------------------------------------------------
 !     NLEAD      I   Number of leading blank lines to write.
@@ -219,22 +218,16 @@
       integer(ip)           l
 
 !
-!     Use discovery check-in.
-!
-
-!
 !     Get a local copy of the input string.
 !
       tmpstr = string
       l      = rtrim(tmpstr)
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Write leading blank lines, if any.
 #else
 !     Write leading blank lines, if any. We use cursor control
 !     here so as to avoid overwriting the last status line.
 #endif
-!
       do i = 1, nlead
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
          call tostdo ( ' ' )
@@ -243,7 +236,6 @@
 #endif
       end do
 
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Write the status line without special cursor control.
 #else
@@ -251,7 +243,6 @@
 !     This places the cursor at the start of the line that
 !     was just written.
 #endif
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       call tostdo (   tmpstr( : rtrim(tmpstr) )   )
 #else
@@ -269,14 +260,12 @@
       end if
 #endif
 
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Write trailing blank lines, if any.
 #else
 !     Write trailing blank lines, if any. We use cursor control
 !     here so as to avoid overwriting the last status line.
 #endif
-!
       do i = 1, ntrail
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
          call tostdo ( ' ' )

@@ -112,15 +112,12 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1)  Find the latitude circle on which a line segment's endpoints
 !         must lie, if the longitude extent of the segment is 60
 !         degrees, and if the latitude of the segment's midpoint is 30
 !         degrees.
 !
-!
 !     Example code begins here.
-!
 !
 !           PROGRAM EX1
 !           IMPLICIT NONE
@@ -183,14 +180,11 @@
 !
 !           END
 !
-!
 !     When this program was executed on a PC/Linux/gfortran 64-bit
 !     platform, the output was:
 !
-!
 !        Endpoint latitude (deg) =    26.565051177077986
 !        Check: difference (deg) =   6.36110936292703354E-015
-!
 !
 ! $ Restrictions
 !
@@ -216,7 +210,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -231,9 +224,6 @@
 !
       real(wp)              mlat
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
       if ( ( dlon < 0.0_wp ) .or. ( dlon >= pi() ) )  then

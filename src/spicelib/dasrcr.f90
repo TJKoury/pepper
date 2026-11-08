@@ -150,20 +150,17 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove comment records from a DAS file
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               failed
       logical               return
-
 
 !
 !     Local parameters
@@ -195,7 +192,6 @@
 !
       integer(ip), parameter :: begdsc = 9
 
-
 !
 !     Local variables
 !
@@ -225,7 +221,6 @@
       integer(ip)           type
       integer(ip)           unit
 
-
 !
 !     Saved variables
 !
@@ -246,13 +241,10 @@
       data                  next   /  2,   3,   1  /
       data                  prev   /  3,   1,   2  /
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Make sure this DAS file is open for writing.  Signal an error if
@@ -304,7 +296,6 @@
                     lastla, &
                     lastrc, &
                     lastwd )
-
 
 !
 !     Determine the size of the record shift we'll actually perform.
@@ -458,7 +449,6 @@
 !     number of the first free record have been decremented by NSHIFT.
 !     The numbers of the records containing the last descriptor of each
 !     type have been decremented by NSHIFT only if they were non-zero.
-!
 !
 !     The call to DASUFS will update the file record as well as the
 !     file summary.

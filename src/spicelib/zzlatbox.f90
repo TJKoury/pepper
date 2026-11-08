@@ -166,7 +166,7 @@
       real(wp)              outrad
 
 !
-!     This routine uses discovery check-in. We check RETURN in order to
+! We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
       if ( return() ) return

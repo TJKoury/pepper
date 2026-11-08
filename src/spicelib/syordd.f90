@@ -140,13 +140,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     order the components of a single symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -165,13 +163,10 @@
       integer(ip)           locval
       integer(ip)           n
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols?
@@ -194,7 +189,6 @@
          call shelld ( tabptr(locsym), tabval(locval) )
 
       end if
-
 
       return
       end

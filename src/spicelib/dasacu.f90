@@ -351,13 +351,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add comments from a logical unit to a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -373,7 +371,6 @@
 !        open the SCRATCH file.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -429,7 +426,6 @@
 
       logical               eof
       logical               more
-
 
 !
 !     Standard SPICE error handling.

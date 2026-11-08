@@ -171,9 +171,6 @@
       integer(ip)           vtarg
 
 !
-!     Use discovery check-in.
-!
-!
 !     Look up the counts that are of interest:
 !
 !       -- The table count
@@ -217,7 +214,6 @@
 
          call zzeksrd ( cntloc, cntloc, rc )
 
-
          if ( rc > 0 ) then
 !
 !           The row vector set for this segment vector is non-empty.
@@ -248,14 +244,12 @@
 !
          svbase  =  jrsbas + jsvbas + (i-1)*svsize
 
-
          if (  ( rc == 0 ) .or. ( nrvdel == rc )  ) then
 !
 !           We're going to delete the current segment vector.  We'll
 !           just skip over it without advancing our target pointers.
 !
             nsvdel   =  nsvdel + 1
-
 
          else if ( nsvdel > 0 ) then
 !
@@ -318,7 +312,6 @@
 
          end do
 
-
       else
 
          newnsv = nsv
@@ -342,7 +335,6 @@
 !     If we deleted any segment vectors, the segment vector pointers
 !     embedded in the row vectors must change.  Make these updates
 !     if necessary.
-!
 !
       rtarg   =  jrsbas + jsvbas + newnsv*(svsize+2)
 
@@ -414,7 +406,6 @@
 
       end do
 
-
 !
 !     Update the total row count and size of the join row set.
 !
@@ -429,7 +420,6 @@
          nr      =  nr     + rc
 
       end do
-
 
       nrloc  =  jrsbas   +   jrcidx
       size   =  jsvbas   +   newnsv * ( svsize + 2 )  +  nr * rvsize

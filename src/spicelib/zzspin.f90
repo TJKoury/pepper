@@ -244,13 +244,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     check quantities for apparent relative angular separation
 !
 !-&
-
 
 !
 !     SPICELIB functions.
@@ -265,7 +263,6 @@
 !     Local parameters
 !
       integer(ip), parameter :: shapln = 6
-
 
 !
 !     Local Variables
@@ -310,7 +307,6 @@
 !
       if ( return () ) return
 
-
 !
 !     FRAMES argument not currently used.
 !
@@ -332,7 +328,6 @@
 
       end if
 
-
       call bods2c ( targ2, bods(2), found )
 
       if ( .not. found ) then
@@ -348,7 +343,6 @@
 
       end if
 
-
       call bods2c ( obsrvr, obs, found )
 
       if ( .not. found ) then
@@ -363,7 +357,6 @@
          return
 
       end if
-
 
 !
 !     Confirm the three bodies have unique IDs.
@@ -392,7 +385,6 @@
       call zzvalcor ( abcorr, attblk )
 
       if ( failed() ) return
-
 
 !
 !     Check first shape.
@@ -486,7 +478,6 @@
 
       end if
 
-
 !
 !     Confirm the center of the input reference frames correspond
 !     to the target bodies for non-point, non-spherical bodies.
@@ -526,7 +517,6 @@
          end if
 
       end if
-
 
       if ( (shp2 /= point)  .and. (shp2 /= sphere) ) then
 

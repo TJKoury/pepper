@@ -98,7 +98,6 @@
 !             IVALS(4)  =  5             NLFLGS(4)  =  .FALSE.
 !             IVALS(5)  =  2             NLFLGS(5)  =  .TRUE.
 !
-!
 !          The subroutine call
 !
 !              CALL ZZEKORDI ( IVALS, .TRUE., NLFLGS, 5, IORDER )
@@ -113,7 +112,6 @@
 !
 !          Note that the order of the null values is determined by
 !          their indices in the input array.
-!
 !
 !      2)  Given the same inputs values of IVALS and NLFLGS, the
 !          subroutine call
@@ -164,8 +162,6 @@
 !
 !-&
 
-
-
 !
 !     Local variables
 !
@@ -183,7 +179,6 @@
       logical               n2
       logical               ok
 
-
 !
 !     Statement functions
 !
@@ -193,32 +188,25 @@
       logical               cmp4
       logical               le
 
-
       cmp1 ( i1, i2, i3, i4 )          =          ( i1 < i2 ) &
                                           .or. (  ( i1 == i2 ) .and. &
                                                   ( i3 < i4 )       )
-
 
       cmp2 ( i3, i4, n1, n2 )          =       ( n1 .and. .not. n2  ) &
                                           .or. (      ( n1 .and. n2 ) &
                                                 .and. ( i3 < i4  ) )
 
-
       cmp3 ( i1, i2, i3, i4, n1, n2 )  =        ( .not. ( n1 .or. n2 ) ) &
                                          .and. cmp1 (  i1, i2, i3, i4  )
-
 
       cmp4 ( i1, i2, i3, i4, n1, n2 )  = cmp2 ( i3, i4, n1, n2 ) &
                                          .or. &
                                          cmp3 ( i1, i2, i3, i4, n1, n2 )
 
-
       le (  i1,  i2, i3, i4, ok,   n1,   n2  )  = &
 
               (  (.not. ok ) .and.  cmp1 ( i1, i2, i3, i4 )          ) &
         .or.  (  (      ok ) .and.  cmp4 ( i1, i2, i3, i4, n1, n2 )  )
-
-
 
 !
 !     Begin with the initial ordering.
@@ -237,7 +225,6 @@
       do while ( gap > 0 )
 
          do i = gap+1, nvals
-
 
             j = i - gap
 
@@ -270,7 +257,6 @@
                j = j - gap
 
             end do
-
 
          end do
 

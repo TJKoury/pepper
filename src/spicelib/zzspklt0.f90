@@ -67,7 +67,6 @@
 !                 Case and blanks are not significant in the string
 !                 REF.
 !
-!
 !     ABCORR      indicates the aberration corrections to be applied to
 !                 the state of the target body to account for one-way
 !                 light time. See the discussion in the Particulars
@@ -133,14 +132,12 @@
 !                    'XCN'      "Transmission" case:  converged
 !                               Newtonian light time correction.
 !
-!
 !                 Neither special nor general relativistic effects are
 !                 accounted for in the aberration corrections applied
 !                 by this routine.
 !
 !                 Case and blanks are not significant in the string
 !                 ABCORR.
-!
 !
 !     STOBS       is the geometric (uncorrected) state of the observer
 !                 relative to the solar system barycenter at epoch ET.
@@ -280,7 +277,6 @@
 !          kernels referenced here must be present in the user's
 !          current working directory.
 !
-!
 !          \begindata
 !
 !             KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -288,7 +284,6 @@
 !                                 'naif0010.tls'  )
 !
 !          \begintext
-!
 !
 !       The code example follows:
 !
@@ -374,10 +369,8 @@
 !
 !           END
 !
-!
 !     On a PC/Linux/gfortran platform, the following output was
 !     produced:
-!
 !
 !        ET =    0.0000000000000000
 !        J2000 x-position (km):     -291569.26541282982
@@ -428,7 +421,6 @@
 !        J2000 z-velocity (km/s):  -0.29446934336246899
 !        One-way light time (s):     1.3438080956559786
 !        Light time rate:           1.00673403630050830E-007
-!
 !
 ! $ Restrictions
 !
@@ -483,8 +475,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
@@ -498,7 +488,6 @@
       real(wp)              touchd
       real(wp)              vdot
       real(wp)              vnorm
-
 
       logical               failed
       logical               return
@@ -573,7 +562,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -654,7 +642,6 @@
          return
 
       end if
-
 
       if ( .not. uselt ) then
 !
@@ -781,7 +768,6 @@
 !                  * < PTARG(ET+S*LT) - POBS(ET),
 !                      VTARG(ET+S*LT)*(1+S*d(LT)/d(ET)) - VOBS(ET) >
 !
-!
 !               = (1/c) * ( 1 / || PTARG(ET+S*LT) - POBS(ET) || )
 !
 !                 * (  < PTARG(ET+S*LT) - POBS(ET),
@@ -805,8 +791,6 @@
 !     which implies
 !
 !        d(LT)/d(ET) =  A*B / ( 1 - S*C*A )
-!
-!
 !
       a   =  1.0_wp / ( clight()*vnorm(starg) )
 
@@ -840,7 +824,6 @@
 !
       call vlcom ( 1.0_wp + ltsign*dlt, ssbtrg(4), &
                   -1.0_wp,              stobs(4),   starg(4) )
-
 
       return
       end

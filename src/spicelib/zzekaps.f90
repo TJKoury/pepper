@@ -61,7 +61,6 @@
 !
 !     BASE           is the DAS base address of the allocated page.
 !
-!
 ! $ Parameters
 !
 !     None.
@@ -137,10 +136,6 @@
       integer(ip)           idx
       integer(ip)           tree
 
-
-!
-!     Use discovery check-in.
-!
       if ( new ) then
 !
 !        We must allocate a new page.
@@ -155,7 +150,6 @@
          call zzekpgal ( handle, type, p, base )
 
       end if
-
 
       if ( failed() ) return
 
@@ -173,11 +167,9 @@
 
          tree  =  segdsc ( cptidx )
 
-
       else if ( type == dp ) then
 
          tree  =  segdsc ( dptidx )
-
 
       else if ( type == int ) then
 !
@@ -189,9 +181,7 @@
 
       end if
 
-
       call zzektrap ( handle, tree, p, idx )
-
 
       return
       end

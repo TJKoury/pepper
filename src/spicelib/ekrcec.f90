@@ -137,9 +137,7 @@
 !        add data to a character column in a given record within the
 !        file, and how to read the data from it.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKRCEC_EX1
 !              IMPLICIT NONE
@@ -194,7 +192,6 @@
 !              INTEGER               SEGNO
 !
 !              LOGICAL               ISNULL
-!
 !
 !        C
 !        C     Open a new EK file.  For simplicity, we won't
@@ -295,10 +292,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from column: CHR_COL_1
 !            record number:            1
@@ -341,7 +336,6 @@
 !         Data from column: CHR_COL_2
 !            record number:            6
 !            values       : 50       51       52       53
-!
 !
 !        Note that the second record does not appear due to setting the
 !        ISNULL flag to true for that record.
@@ -394,13 +388,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read character data from EK column
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -424,7 +416,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -447,8 +438,6 @@
 
       logical               found
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -484,7 +473,6 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 3 ) then
 !
 !        Look up the record pointer for the target record.
@@ -495,7 +483,6 @@
                           recptr,  cvlen,  cvals,  isnull  )
          nvals  =  1
 
-
       else if ( class == 6 ) then
 
          call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
@@ -504,7 +491,6 @@
 
          call zzekrd06 (  handle,  segdsc,  coldsc,  recptr, &
                           1,       nvals,   cvals,   isnull,  found  )
-
 
       else if ( class == 9 ) then
 !
@@ -534,7 +520,6 @@
          return
 
       end if
-
 
       return
       end

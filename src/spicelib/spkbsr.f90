@@ -168,7 +168,6 @@
 !     (DELTA). The two routines WRITE_TABLE and WRITE_ERROR do not
 !     exist in SPICELIB.
 !
-!
 !           INTEGER               PRED_HNDL
 !           INTEGER               UPD1_HNDL
 !           INTEGER               UPD2_HNDL
@@ -459,13 +458,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     buffer SPK segments for readers
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -491,7 +488,6 @@
 !        Increased segment table buffer size to 10000 entries.
 !
 !-    SPICELIB Version 4.0.0, 28-DEC-2001 (NJB)
-!
 !
 !        Bug fixes:
 !
@@ -554,7 +550,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -583,7 +578,6 @@
       integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 6
-
 
 !
 !     Constants used in the doubly linked list structure:
@@ -784,8 +778,6 @@
 
       return
 
-
-
 !$Procedure SPKLEF ( S/P Kernel, Load ephemeris file )
 
       entry spklef ( fname, handle )
@@ -913,7 +905,6 @@
 !        Also, the flags indicating validity of the re-use intervals
 !        are set to .FALSE. here.
 !
-!
 !-    SPICELIB Version 2.0.0, 25-NOV-1992 (JML)
 !
 !        When loading a file, SPKLEF now checks if the file table is
@@ -938,13 +929,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     load SPK ephemeris file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -966,7 +955,6 @@
 !
 !        Also, the flags indicating validity of the re-use intervals
 !        are set to .FALSE. here.
-!
 !
 !-    SPICELIB Version 3.0.0, 14-AUG-1995 (WLT)
 !
@@ -1031,7 +1019,6 @@
 !        file cannot occur more than once in the file table.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1273,14 +1260,11 @@
 
       end if
 
-
       nft        = nft  + 1
       fthan(nft) = handle
       ftnum(nft) = next
 
       return
-
-
 
 !$Procedure SPKUEF ( SPK Kernel, Unload ephemeris file )
 
@@ -1393,7 +1377,6 @@
 !        Also, the flags indicating validity of those re-use intervals
 !        whose data comes from the unloaded file are set to .FALSE.
 !
-!
 !-    SPICELIB Version 3.0.0, 14-AUG-1995 (WLT)
 !
 !        An interim fix to a bug in SPKBSR was made. The parameters
@@ -1427,13 +1410,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unload SPK ephemeris file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1500,9 +1481,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     All of the stored segments from the file must be removed
@@ -1612,8 +1591,6 @@
       end do
 
       return
-
-
 
 !$Procedure SPKSFS ( S/P Kernel, Select file and segment )
 
@@ -1800,7 +1777,6 @@
 !        Various small updates and corrections were made to the
 !        comments throughout the file.
 !
-!
 !-    SPICELIB Version 3.0.0, 14-AUG-1995 (WLT)
 !
 !        An interim fix to a bug in SPKBSR was made. The parameters
@@ -1828,13 +1804,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     select SPK file and segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1909,7 +1883,6 @@
 !
 !-&
 
-
 !
 !     Assume the segment is not found, until it actually is.
 !
@@ -1919,7 +1892,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Buffering segments involves maintaining three tables:  the
@@ -1968,7 +1940,6 @@
 !     The individual tasks are described below.
 !
 !     'NEW BODY'
-!
 !
 !        This indicates that the specified body has no segments stored
 !        for it at all. It must be added to the body table.  (This is
@@ -2050,7 +2021,6 @@
 !        otherwise the list should be checked.
 !
 
-
 !
 !     Is the body already in the body table?  This determines what the
 !     first task should be.
@@ -2126,7 +2096,6 @@
 
          end if
 
-
 !
 !        If the segment list for this body is empty, make sure the
 !        expense is reset to 0.
@@ -2137,11 +2106,9 @@
 
          end if
 
-
          status = '?'
 
       end if
-
 
       do while ( status /= 'HOPELESS' )
 !
@@ -2165,8 +2132,6 @@
             else
                status = 'CHECK LIST'
             end if
-
-
 
          else if ( status == 'NEW BODY' ) then
 !
@@ -2276,8 +2241,6 @@
 !
             status = 'OLD FILES'
 
-
-
          else if ( status == 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
@@ -2315,7 +2278,6 @@
 !           zero so far.
 !
             cost = 0
-
 
          else if ( status == 'NEW SEGMENTS' ) then
 !
@@ -2397,7 +2359,6 @@
 
             if ( failed() ) return
 
-
             status = 'OLD SEGMENTS'
 !
 !           The next thing we'll do is search through all the segments
@@ -2406,7 +2367,6 @@
 !           zero so far.
 !
             cost = 0
-
 
          else if ( status == 'OLD SEGMENTS' ) then
 !
@@ -2490,7 +2450,6 @@
 !
                   btlb(bindex) = max ( btlb(bindex), stdes(2,p) )
 
-
                else if ( et < stdes(1,p) ) then
 !
 !                 ET is to the left of the coverage interval of this
@@ -2546,8 +2505,6 @@
             else
                status = 'HOPELESS'
             end if
-
-
 
          else if ( status == 'MAKE ROOM' ) then
 !
@@ -2609,7 +2566,6 @@
 
             end do
 
-
            if ( cheap == 0 ) then
 !
 !              What we do if there are no delete-able segments
@@ -2622,7 +2578,6 @@
 !                 files and segments without buffering them.
 !
                   status = 'SEARCH W/O BUFF'
-
 
                else
 !
@@ -2691,7 +2646,6 @@
                   btruex( cheap ) = btruex( nbt )
                   btchkp( cheap ) = btchkp( nbt )
 
-
                   call moved ( btprvd(1,nbt), dscsiz, btprvd(1,cheap) )
 
                end if
@@ -2718,7 +2672,6 @@
 !           latter case, the state is now 'OLD FILES' or
 !           'SEARCH W/O BUFF'.
 !
-
 
          else if ( status == 'ADD TO FRONT' ) then
 !
@@ -2762,8 +2715,6 @@
                status  = 'RESUME'
 
             end if
-
-
 
          else if ( status == 'ADD TO END' ) then
 !
@@ -2812,8 +2763,6 @@
                status = 'RESUME'
 
             end if
-
-
 
          else if ( status == 'SEARCH W/O BUFF' ) then
 !
@@ -2894,14 +2843,12 @@
 !
                   btruex(bindex) = btruex(bindex) + 1
 
-
                   if ( et > stdes(2,crflbg) ) then
 !
 !                    ET is to the right of the coverage interval of this
 !                    segment.
 !
                      btlb(bindex) = max( btlb(bindex), stdes(2,crflbg) )
-
 
                   else if ( et < stdes(1,crflbg) ) then
 !
@@ -3003,7 +2950,6 @@
 !                       of this segment.
 !
                         btlb(bindex) = max( btlb(bindex), dcd(2) )
-
 
                      else if ( et < dcd(1) ) then
 !
@@ -3111,7 +3057,6 @@
          btruex(bindex) =  0
 
       end if
-
 
       return
       end

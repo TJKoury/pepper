@@ -19,16 +19,10 @@ module pepper_state_zzbodblt
 
    !> The saved variables of ZZBODBLT.
    type, public :: zzbodblt_state
-      character(maxl) :: bltnam ( nperm )  !! saved between calls by ZZBODBLT
-      character(maxl) :: bltnor ( nperm )  !! saved between calls by ZZBODBLT
-      character(4) :: zzrqst  !! saved between calls by ZZBODBLT
-      character(maxl) :: zzint  !! saved between calls by ZZBODBLT
-      character(2*maxl+3) :: zzline  !! saved between calls by ZZBODBLT
-      integer(ip) :: bltcod ( nperm )  !! saved between calls by ZZBODBLT
-      integer(ip) :: i  !! saved between calls by ZZBODBLT
-      integer(ip) :: zzocod ( nperm )  !! saved between calls by ZZBODBLT
-      integer(ip) :: zzonam ( nperm )  !! saved between calls by ZZBODBLT
-      logical :: first  !! saved between calls by ZZBODBLT
+      character(maxl) :: bltnam ( nperm )  !! names of the built-in bodies
+      character(maxl) :: bltnor ( nperm )  !! the names, normalized
+      integer(ip) :: bltcod ( nperm )  !! NAIF ID codes of the built-in bodies
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type zzbodblt_state
 
 contains

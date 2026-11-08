@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include  'ekdatpag.inc'
       include  'ekpage.inc'
       include  'eksegdsc.inc'
@@ -202,14 +201,12 @@
       to   =  1
       page =  ' '
 
-
       do from = 1, nvals
 !
 !        The Assignment.
 !
          page( to : to+l-1 ) =  cvals(from)
          to                  =  to + l
-
 
          if (      ( to   > cpsize-l+1 ) &
               .or. ( from == nvals      )  ) then
@@ -234,7 +231,6 @@
          end if
 
       end do
-
 
       return
       end

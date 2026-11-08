@@ -90,8 +90,6 @@
 !
 !-&
 
-
-
 !
 !     Non-SPICELIB functions
 !

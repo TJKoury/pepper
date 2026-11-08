@@ -80,7 +80,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM EXISTS_EX1
 !              IMPLICIT NONE
 !
@@ -126,14 +125,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Cannot find the file exists_ex1.txt
 !         The file exists_ex1.pgm exists.
-!
 !
 ! $ Restrictions
 !
@@ -202,13 +198,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     does the file exist
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -221,7 +215,6 @@
 !        checks out.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -277,7 +270,7 @@
 
       end if
 !
-!     Set the value of the function, check out and return.
+!     Set the value of the function, return.
 !
       exists = myexst
 

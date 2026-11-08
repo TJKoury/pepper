@@ -156,7 +156,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: dnearp_ex1.tm
@@ -194,9 +193,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DNEARP_EX1
 !              IMPLICIT NONE
@@ -279,14 +276,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Ground-track velocity (km/s):  0.505252  1.986553 -2.475506
 !        Ground-track speed    (km/s):  3.214001
-!
 !
 !     2) Suppose you wish to compute the one-way doppler shift of a
 !        radar mounted on board a spacecraft as it passes over some
@@ -296,9 +290,7 @@
 !
 !        Use the meta-kernel from Example 1 above.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DNEARP_EX2
 !              IMPLICIT NONE
@@ -388,14 +380,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Central frequency (MHz): 20.0000000000000000
 !        Doppler shift     (MHz): -0.0000005500991159
-!
 !
 ! $ Restrictions
 !
@@ -442,7 +431,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Velocity of the nearest point on an ellipsoid
@@ -452,13 +440,11 @@
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
       logical               return
       logical               failed
-
 
 !
 !     Local Variables
@@ -468,7 +454,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Until we have reason to believe otherwise, we set FOUND to TRUE.
@@ -501,7 +486,6 @@
          found = .false.
          return
       end if
-
 
       return
       end

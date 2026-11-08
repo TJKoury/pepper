@@ -202,9 +202,7 @@
 !        The example code shown below creates an SPK type 17 kernel
 !        with a single segment using such data.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW17_EX1
 !              IMPLICIT NONE
@@ -363,7 +361,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 17 exists in
 !        the output directory.
@@ -398,13 +395,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Write a type 17 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -416,7 +411,6 @@
 
 !
 !     Local Variables
-!
 !
 !     Segment descriptor size
 !
@@ -444,8 +438,6 @@
 !
       integer(ip), parameter :: datsiz = 12
 
-
-
       real(wp)              a
       real(wp)              descr  ( ns )
       real(wp)              h
@@ -456,12 +448,10 @@
       integer(ip)           i
       integer(ip)           value
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Fetch the various entities from the inputs and put them into
@@ -474,10 +464,8 @@
 !
       call moved ( eqel, 9, record(2) )
 
-
       record(11) = rapol
       record(12) = decpol
-
 
       a      = record(2)
       h      = record(3)

@@ -62,7 +62,6 @@
 !                 RECORD( 7 ) = Av2  |-- Optional
 !                 RECORD( 8 ) = Av3  ]
 !
-!
 !              The quantities q0 - q3 represent a quaternion.
 !              The quantities Av1, Av2, and Av3 represent the angular
 !              velocity vector.
@@ -291,13 +290,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate CK type_1 pointing data record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -345,7 +342,6 @@
 !-    Beta Version 1.0.0, 18-MAY-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions

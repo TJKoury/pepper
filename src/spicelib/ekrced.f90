@@ -169,13 +169,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read double precision data from EK column
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -189,7 +187,6 @@
 !        Miscellaneous header changes were made as well.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -212,8 +209,6 @@
 
       logical               found
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -249,7 +244,6 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 2 ) then
 !
 !        Look up the record pointer for the target record.
@@ -259,7 +253,6 @@
          call zzekrd02 ( handle, segdsc, coldsc, recptr, dvals, isnull )
          nvals  =  1
 
-
       else if ( class == 5 ) then
 
          call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
@@ -268,7 +261,6 @@
 
          call zzekrd05 (  handle,  segdsc,  coldsc,  recptr, &
                           1,       nvals,   dvals,   isnull,  found  )
-
 
       else if ( class == 8 ) then
 !
@@ -297,7 +289,6 @@
          return
 
       end if
-
 
       return
       end

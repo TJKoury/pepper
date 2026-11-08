@@ -292,13 +292,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     end a type_03 PCK segment
 !
 !-&
-
 
 !
 !     Spicelib functions

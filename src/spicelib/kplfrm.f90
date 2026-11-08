@@ -171,7 +171,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: kplfrm_ex1.tm
@@ -193,7 +192,6 @@
 !              clem_v20.tf          Clementine FK
 !              moon_060721.tf       Generic Lunar SPICE frames
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'clem_v20.tf'
@@ -202,9 +200,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM KPLFRM_EX1
 !              IMPLICIT NONE
@@ -292,10 +288,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Number of frames of class 1: 0
 !           Frame IDs and names
@@ -344,7 +338,6 @@
 !               31002   MOON_PA_DE403
 !               31003   MOON_ME_DE403
 !
-!
 ! $ Restrictions
 !
 !     1)  This routine will work correctly if the kernel pool contains
@@ -384,13 +377,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch IDs of reference_frames from the kernel_pool
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -431,7 +422,6 @@
       logical               found
 
       if ( return() ) return
-
 
 !
 !     The output set starts out empty.
@@ -536,7 +526,6 @@
                   call repmi ( kvname, '<code>', idcode, kvname )
 
                   call gcpool ( kvname, 1, 1, w, tmpnam, found )
-
 
                   if ( found ) then
 !

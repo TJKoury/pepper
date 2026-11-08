@@ -99,7 +99,6 @@
 !        |        DATA(N)          |
 !        +-------------------------+
 !
-!
 !     The logical organization of the integers in the DAS file is
 !     independent of the location in the file of any data of double
 !     precision or character type.
@@ -127,9 +126,7 @@
 !     1) Create a new DAS file and add 200 integers to it. Close the
 !        file, then re-open it and read the data back out.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASADI_EX1
 !              IMPLICIT NONE
@@ -203,10 +200,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasadi_ex1.das":
 !
@@ -230,7 +225,6 @@
 !           71   72   73   74   75   76   77   78   79   80
 !           81   82   83   84   85   86   87   88   89   90
 !           91   92   93   94   95   96   97   98   99  100
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -297,13 +291,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add integer data to a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -314,7 +306,6 @@
 !        DASWRI signaled an error inside the loop.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -363,7 +354,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Get the file summary for this DAS.
@@ -415,7 +405,6 @@
 !
 !     Note that if N is non-positive, the loop doesn't get exercised.
 !
-!
       nwritn  =  0
 
       do while  (  ( nwritn < n ) .and. ( .not. failed() )  )
@@ -449,7 +438,6 @@
                               data(nwritn + 1)  )
 
             end if
-
 
             nwritn  =  nwritn + numint
             wordno  =  wordno + numint

@@ -189,7 +189,6 @@
       real(wp)              temp   ( 3 )
       real(wp)              zenith ( 3 )
 
-
       real(wp)              gradm  ( 3, 3 )
       real(wp)              m      ( 3, 3 )
 
@@ -321,9 +320,7 @@
 !     If we multiply both sides of the equation above by M
 !     we have
 !
-!
 !        M*P'  = N'  + L'* M * GRAD                      ( 2 )
-!
 !
 !     Recall now that N' is orthogonal to GRAD (N' lies in the
 !     tangent plane to the ellipsoid at N and GRAD is normal
@@ -336,7 +333,6 @@
 !                 < GRAD, M*P'   >
 !        L'   =   -----------------
 !                 < GRAD, M*GRAD >
-!
 !
 !             =   VTMV ( GRAD, M, P' ) / VTMV ( GRAD, M, GRAD )
 !
@@ -386,7 +382,6 @@
       call vlcom ( 1.0_wp, state(4), -lprime, grad, temp     )
       call mxv   ( m,     temp,                    dnear )
 
-
 !
 !     Only one thing left to do. Compute the derivative
 !     of the altitude ALT. This quantity equals the range rate of the
@@ -414,7 +409,6 @@
 !     Given P' = STATE(4,5,6)
 !
       dalt = vdot ( norml, state(4) )
-
 
       return
       end

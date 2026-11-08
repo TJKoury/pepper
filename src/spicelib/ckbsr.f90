@@ -217,20 +217,17 @@
 !        Then, the first update file is unloaded, the second update
 !        file is loaded, and the same search is performed, as above.
 !
-!
 !        Use the CK kernel below to load the Viking Orbiter 2 scan
 !        platform orientation containing a combination of data from
 !        SEDR files.
 !
 !           vo2_sedr_ck2.bc
 !
-!
 !        Use the CK kernel below to load the Viking Orbiter 2 scan
 !        platform orientation discrete data reconstructed during
 !        cartographic image registration by S. Wu, USGS.
 !
 !           vo2_swu.bc
-!
 !
 !        Use the CK kernel below to load the Viking Orbiter 2 scan
 !        platform orientation discrete data reconstructed during
@@ -240,10 +237,8 @@
 !
 !           vo2_swu_ck2.bc
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -266,7 +261,6 @@
 !              vo2_fict.tsc                  Viking 2 SCLK
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'vo2_fict.tsc',
@@ -276,9 +270,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKBSR_EX1
 !              IMPLICIT NONE
@@ -291,7 +283,6 @@
 !
 !              INTEGER               TIMLEN
 !              PARAMETER           ( TIMLEN = 24 )
-!
 !
 !        C
 !        C     Local variables.
@@ -332,7 +323,6 @@
 !             .                 '1977 APR 24 11:48:05.000',
 !             .                 '1977 JUN 07 00:13:15.000',
 !             .                 '1977-AUG-07 14:55:12.019' /
-!
 !
 !              UDFILE ( 1 ) = 'vo2_swu.bc'
 !              UDFILE ( 2 ) = 'vo2_swu_ck2.bc'
@@ -460,10 +450,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !             Input UTC time       Pointing found in      SCLK time
 !        ------------------------  -----------------  ----------------
@@ -478,7 +466,6 @@
 !        1977 APR 24 11:48:05.000  vo2_sedr_ck2.bc    1/0041428086.000
 !        1977 JUN 07 00:13:15.000  pointing not found in any file.
 !        1977-AUG-07 14:55:12.019  vo2_swu_ck2.bc     1/0050511313.019
-!
 !
 ! $ Restrictions
 !
@@ -548,7 +535,6 @@
 !          2) In CKUPF, the null pointer test used to determine
 !             eligibility for segment list deletion now uses the .LE.
 !             operator instead of the .EQ. operator.
-!
 !
 !-    SPICELIB Version 4.4.0, 07-APR-2010 (NJB)
 !
@@ -662,13 +648,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     buffer CK segments for readers
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -685,7 +669,6 @@
 !          2) In CKUPF, the null pointer test used to determine
 !             eligibility for segment list deletion now uses the .LE.
 !             operator instead of the .EQ. operator.
-!
 !
 !-    SPICELIB Version 4.3.0, 23-OCT-2005 (NJB)
 !
@@ -755,7 +738,6 @@
 !        replaced by an implementation relying on the SPICELIB
 !        doubly linked list routines.
 !
-!
 !-    SPICELIB Version 2.0.0, 25-NOV-1992 (JML)
 !
 !        1) When loading a file, CKLPF now checks if the file table is
@@ -780,7 +762,6 @@
 !        without CKBSS ever having been called to initiate the
 !        search.
 !
-!
 !-    Beta Version 1.1.0, 28-AUG-1990 (MJS) (JEM)
 !
 !        The following changes were made as a result of the
@@ -802,7 +783,6 @@
 !-    Beta Version 1.0.0, 14-MAR-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -854,7 +834,6 @@
       integer(ip), parameter :: bckwrd = 2
 
       integer(ip), parameter :: free = 0
-
 
 !
 !     Local variables
@@ -1087,7 +1066,6 @@
       data                  savtol    / 0.0_wp          /
       data                  status    / 'BOGUS ENTRY' /
 
-
 !
 !     Nobody has any business calling CKBSR directly.
 !
@@ -1096,7 +1074,6 @@
       call sigerr ( 'SPICE(CKBOGUSENTRY)' )
 
       return
-
 
 !$Procedure CKLPF ( CK, load pointing file )
 
@@ -1282,13 +1259,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     load CK pointing file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1365,7 +1340,6 @@
 !-    Beta Version 1.0.0, 14-MAR-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1638,11 +1612,7 @@
       fthan(nft) = handle
       ftnum(nft) = next
 
-
       return
-
-
-
 
 !$Procedure CKUPF ( CK, Unload pointing file )
 
@@ -1775,13 +1745,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unload CK pointing file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1852,9 +1820,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     Don't allow a search to continue after unloading a file; a new
@@ -1889,12 +1855,10 @@
 
       if ( findex == 0 ) return
 !
-!
 !     First get rid of the entry in the file table. Close the file
 !     before wiping out the handle.
 !
       call dafcls ( fthan(findex) )
-
 
       nft = nft - 1
 
@@ -1990,11 +1954,7 @@
 
       end do
 
-
       return
-
-
-
 
 !$Procedure CKBSS ( CK, begin search for segment )
 
@@ -2148,13 +2108,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin search for CK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2176,7 +2134,6 @@
 !-    Beta Version 1.0.0, 20-APR-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -2255,10 +2212,7 @@
 !
       newsch = .true.
 
-
       return
-
-
 
 !$Procedure CKSNS ( C-kernel, Select next segment )
 
@@ -2481,18 +2435,15 @@
 !        was added in order to detect the situation in which
 !        CKBSS was never called to initiate a search.
 !
-!
 !-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
 !
 !-&
-
 
 ! $ Index_Entries
 !
 !     select next CK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2548,13 +2499,11 @@
 !        Various small updates and corrections were made to the
 !        comments throughout the file.
 !
-!
 !-    SPICELIB Version 1.1.0, 01-NOV-1990 (JML)
 !
 !        A check on the initial value of the variable STATUS
 !        was added in order to detect the situation in which
 !        CKBSS was never called to initiate a search.
-!
 !
 !-    Beta Version 1.1.0, 28-AUG-1990 (MJS) (JEM)
 !
@@ -2571,7 +2520,6 @@
 !
 !-&
 
-
 !
 !     Nothing's been found yet.
 !
@@ -2581,7 +2529,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the segment list pointer to the saved value from
@@ -2768,7 +2715,6 @@
 
       end if
 
-
       do while ( status /= 'HOPELESS' )
 !
 !        If new files have been added, they have to be searched.
@@ -2893,8 +2839,6 @@
 
             end if
 
-
-
          else if ( status == 'NEW INSTRUMENT' ) then
 !
 !           New instruments are added to the end of the instrument
@@ -2999,7 +2943,6 @@
 !
             status = 'OLD FILES'
 
-
          else if ( status == 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
@@ -3039,7 +2982,6 @@
 !           zero so far.
 !
             cost   = 0
-
 
          else if ( status == 'NEW SEGMENTS' ) then
 !
@@ -3182,8 +3124,6 @@
 
             end if
 
-
-
          else if ( status == 'CHECK LIST' ) then
 !
 !           Okay, all the new files (and maybe an old file or two)
@@ -3231,7 +3171,6 @@
 !
                      itlb(iindex) = max ( itlb(iindex), stdcd(2,p) )
 
-
                   else if ( reqt < stdcd(1,p) ) then
 !
 !                    REQT is to the left of the coverage interval of
@@ -3243,7 +3182,6 @@
                   end if
 
                end if
-
 
                if (       ( omega >= stdcd(1,p) ) &
                     .and. ( alpha <= stdcd(2,p) )  ) then
@@ -3332,8 +3270,6 @@
                status = 'HOPELESS'
             end if
 
-
-
          else if ( status == 'MAKE ROOM' ) then
 !
 !           When adding a new segment to a full table, one of the
@@ -3392,7 +3328,6 @@
 
             end do
 
-
             if ( cheap == 0 ) then
 !
 !              If there are no deletable segments, the Thing To
@@ -3408,7 +3343,6 @@
 !                 we find an applicable segment or run out of segments.
 !
                   status = 'PREPARE PARTIAL LIST'
-
 
                else
 !
@@ -3501,7 +3435,6 @@
 !           'PREPARE PARTIAL LIST'.
 !
 
-
          else if ( status == 'ADD TO FRONT' ) then
 !
 !           The current segment information should be linked in at
@@ -3543,7 +3476,6 @@
                status  = 'RESUME'
 
             end if
-
 
          else if ( status == 'ADD TO END' ) then
 !
@@ -3592,7 +3524,6 @@
                status = 'RESUME'
 
             end if
-
 
          else if ( status == 'PREPARE PARTIAL LIST' ) then
 !
@@ -3677,13 +3608,11 @@
 
                status = 'CHECK PARTIAL LIST'
 
-
             else
 
                status = 'SEARCH W/O BUFF'
 
             end if
-
 
          else if ( status == 'CHECK PARTIAL LIST' ) then
 !
@@ -3723,7 +3652,6 @@
 !                    left, if necessary.
 !
                      itlb(iindex) = max ( itlb(iindex), stdcd(2,p) )
-
 
                   else if ( reqt < stdcd(1,p) ) then
 !
@@ -3859,7 +3787,6 @@
 !
             status = 'SEARCH W/O BUFF'
 
-
          else if ( status == 'SEARCH W/O BUFF' ) then
 !
 !           The only ways to get here are from the
@@ -3891,7 +3818,6 @@
 
                   if ( failed() ) return
 
-
                   if ( scinst == icd(1) ) then
 !
 !                    This is a segment for the instrument of interest.
@@ -3907,7 +3833,6 @@
 !                          on the left, if necessary.
 !
                            itlb(iindex) = max ( itlb(iindex), dcd(2) )
-
 
                         else if ( reqt < dcd(1) ) then
 !
@@ -4028,7 +3953,6 @@
             itruex(iindex) = 0
             status         = 'HOPELESS'
 
-
          else if ( status == 'SUSPEND' ) then
 !
 !           When a task is suspended, the current activity is placed on
@@ -4074,12 +3998,7 @@
 !
       newsch = .false.
 
-
       return
-
-
-
-
 
 !$Procedure CKHAVE ( CK --- Are there any loaded? )
 
@@ -4150,9 +4069,7 @@
 !        of an empty set of loaded kernels. The code example below
 !        shows how you might do this.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKHAVE_EX1
 !              IMPLICIT NONE
@@ -4187,14 +4104,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         No CK has been loaded.
 !         Calling CK readers will result in an error.
-!
 !
 ! $ Restrictions
 !
@@ -4238,13 +4152,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Determine whether any C-kernels are loaded
 !
 !-&
-
 
       found = nft > 0
       return

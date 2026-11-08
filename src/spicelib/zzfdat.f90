@@ -187,7 +187,6 @@
 !
 !        DATA                  FIRST / .TRUE. /
 !
-!
 !        IF ( FIRST ) THEN
 !
 !           FIRST = .FALSE.
@@ -334,13 +333,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     initialize built-in frame names and ID codes
 !
 !-&
-
 
       integer(ip), parameter :: non = nninrt
 
@@ -401,7 +398,6 @@
       integer(ip)           item
 
       logical               new
-
 
 !
 !     Perform the consistency checks first.

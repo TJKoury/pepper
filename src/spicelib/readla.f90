@@ -216,13 +216,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read an array of text lines from a logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -243,7 +241,6 @@
 !        EOF does not affect the termination of the read loop.
 !
 !-&
-
 
 !
 !     SPICELIB Functions

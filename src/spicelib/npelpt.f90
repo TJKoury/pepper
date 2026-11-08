@@ -118,7 +118,6 @@
 !                  CALL CGV2EL ( CENTER, SMAJOR, SMINOR, RING )
 !                  CALL NPELPT ( SCPOS,  RING,   PNEAR,  DIST )
 !
-!
 !     2)  The problem of finding the distance of a line from a tri-axial
 !         ellipsoid can be reduced to the problem of finding the
 !         distance between the same line and an ellipse; this problem in
@@ -165,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     nearest point on ellipse to point
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -194,8 +191,6 @@
       real(wp)              tempv  ( 3 )
       real(wp)              tmppnt ( 3 )
       real(wp)              prjpnt ( 3 )
-
-
 
 !
 !     Standard SPICE error handling.
@@ -266,7 +261,6 @@
 
       end if
 
-
       scale = 1.0_wp / majlen
 
       call vsclip ( scale, smajor )
@@ -304,7 +298,6 @@
 !
 !     we'll call this projection PRJPNT.
 !
-!
       call vpack ( tmppnt(1),  tmppnt(2),  0.0_wp,  prjpnt )
 
 !
@@ -335,7 +328,6 @@
       call vadd ( tempv,  center, pnear )
 
       dist = vdist ( pnear, point )
-
 
       return
       end

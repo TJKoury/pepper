@@ -78,7 +78,6 @@
 !
 !                 XFORM is defined if and only if FOUND is .TRUE.
 !
-!
 !     OUTFRM      is the frame ID code of a frame selected by this
 !                 routine, which may be a base frame of the switch
 !                 frame designated by INFRM, or which may be another
@@ -146,7 +145,6 @@
 !
 !                         > Base is class SWTCH: OUTFRM is set to the
 !                           ID code of the base frame.
-!
 !
 !     FOUND       is a logical flag indicating whether a frame
 !                 transformation was found at time ET. XFORM and OUTFRM
@@ -442,7 +440,6 @@
       data                  usetim / maxfrm * .false. /
 
       if ( return() ) return
-
 
 !
 !     No frame found yet.
@@ -761,7 +758,6 @@
 
                outfrm = j2code
                found  = .true.
-
 
             else if ( clsses(basidx) == inertl ) then
 

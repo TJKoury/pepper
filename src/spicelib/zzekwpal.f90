@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekdatpag.inc'
       include  'ekpage.inc'
@@ -174,7 +173,6 @@
 
          to  =  to + 1
 
-
          if (  ( to > cpsize ) .or. ( from == nvals )  ) then
 !
 !           Either the current data page is full, or we've buffered
@@ -199,7 +197,6 @@
          end if
 
       end do
-
 
       return
       end

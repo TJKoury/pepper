@@ -201,7 +201,6 @@
 !        Use the meta-kernel shown below to define the required SPICE
 !        kernel variables.
 !
-!
 !           KPL/MK
 !
 !           File: srfcss_ex1.tm
@@ -210,7 +209,6 @@
 !           example programs. The file contents shown here should not be
 !           assumed to contain adequate or correct versions of data
 !           required by SPICE-based user applications.
-!
 !
 !           \begindata
 !
@@ -222,9 +220,7 @@
 !
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFCSS_EX1
 !              IMPLICIT NONE
@@ -249,7 +245,6 @@
 !
 !              LOGICAL               ISNAME
 !
-!
 !              DATA  ( SURFID(I), BODSTR(I), I = 1, NCASE ) /
 !             .
 !             .        1,         'MARS',
@@ -257,7 +252,6 @@
 !             .        2,         '499',
 !             .        3,         'MARS',
 !             .        1,         'ZZZ'                     /
-!
 !
 !              META = 'srfcss_ex1.tm'
 !
@@ -280,10 +274,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         surface ID     =            1
 !         body string    = MARS
@@ -310,7 +302,6 @@
 !         name found     =  F
 !         surface string = 1
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -336,13 +327,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     surface ID code and body string to surface string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -355,9 +344,7 @@
 !
       integer(ip)           bodyid
 
-
       if ( return() ) return
-
 
 !
 !     No name has been found yet.

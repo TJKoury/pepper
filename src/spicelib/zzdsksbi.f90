@@ -45,7 +45,6 @@
       real(wp)              stctr  ( 3, * )
       real(wp)              strad  ( * )
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description
@@ -111,12 +110,9 @@
 !     STRAD      is an array of radii of outer bounding spheres of
 !                segments. Units are km.
 !
-!
-!
 ! $ Detailed_Output
 !
 !     BTBODY     is the input body ID table, zero-filled.
-!
 !
 !     BTNBOD     is the number of bodies in the body table, set to zero.
 !
@@ -125,27 +121,20 @@
 !
 !     STHAN      is the segment handle array, zero-filled.
 !
-!
 !     STDSCR     is the segment DSK descriptor array, zero-filled.
 !
-!
 !     STDLAD     is the segment DLA descriptor array, zero-filled.
-!
 !
 !     STFREE     is the index of the first free element in each
 !                segment table array, set to 1.
 !
-!
 !     STOFF      is the segment frame center offset array, zero-filled.
-!
 !
 !     STCTR      is the segment bounding sphere center array,
 !                zero-filled.
 !
-!
 !     STRAD      is the segment bounding sphere radius array,
 !                zero-filled.
-!
 !
 ! $ Parameters
 !
@@ -223,7 +212,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -234,9 +222,7 @@
 !
       integer(ip)           i
 
-
       if ( return() ) return
-
 
 !
 !     Clear the body table.
@@ -267,7 +253,6 @@
          strad(i) = 0.0_wp
 
       end do
-
 
       stfree = 1
 

@@ -355,13 +355,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_20 data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -422,11 +420,9 @@
       integer(ip)           refcod
 
 !
-!
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of sets of coefficients must be positive.
@@ -635,7 +631,6 @@
 !        Y position component at interval midpoint
 !        Z coefficients
 !        Z position component at interval midpoint
-!
 !
       call dafbna ( handle, descr, segid )
 

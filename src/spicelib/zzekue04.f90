@@ -19,7 +19,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'eksegdsc.inc'
       include 'ektype.inc'
@@ -62,7 +61,6 @@
 !
 !     IVALS          is an array of integer values with which to update
 !                    the specified column entry.
-!
 !
 !     ISNULL         is a logical flag indicating whether the value
 !                    of the specified column entry is to be set to NULL.
@@ -148,7 +146,6 @@
 !
       call zzekad04 ( handle,  segdsc,  coldsc, &
                       recptr,  nvals,   ivals,  isnull )
-
 
       return
       end

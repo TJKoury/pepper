@@ -99,7 +99,6 @@
 !                 RECORD( 14 ) =  ]     elements contain an angular
 !                                       velocity vector.
 !
-!
 !                 RECORD( 15 ) =  ]
 !                 RECORD( 16 ) =  ] --- For subtype 2, these
 !                 RECORD( 17 ) =  ]     elements contain the
@@ -185,12 +184,10 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) The following program dumps records from a CK file that
 !        contains only type 6 segments.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM CKGR06_EX1
 !              IMPLICIT NONE
@@ -247,7 +244,6 @@
 !              INTEGER               WINSIZ
 !
 !              LOGICAL               FOUND
-!
 !
 !              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
 !
@@ -388,14 +384,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the Rosetta CK file named
 !        RATT_DV_257_02_01_T6_00344.BC, the output was:
 !
-!
 !        Enter name of CK to dump > RATT_DV_257_02_01_T6_00344.BC
-!
 !
 !         Segment number:            1
 !
@@ -439,7 +432,6 @@
 !                  Q(2):   0.12480922302154081
 !                  Q(3):  -0.21321200307405938
 !
-!
 !            Mini-segment number:            2
 !               Rate:              1.5258789062500000E-005
 !               Subtype:                   1
@@ -480,7 +472,6 @@
 !                  Q(2):   0.12475418449192528
 !                  Q(3):  -0.21313651233726627
 !
-!
 !            Mini-segment number:            3
 !               Rate:              1.5258789062500000E-005
 !               Subtype:                   1
@@ -497,10 +488,8 @@
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 2378824 lines have
 !        been provided.
-!
 !
 ! $ Restrictions
 !
@@ -527,13 +516,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK type_6 record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -610,7 +597,6 @@
 !
       if ( return () ) return
 
-
 !
 !     The number of discrete pointing instances contained in a data
 !     type 6 segment is stored in the last double precision word of the
@@ -630,7 +616,6 @@
 !        IC(4)  Angular velocity flag
 !        IC(5)  Initial address of segment data
 !        IC(6)  Final address of segment data
-!
 !
       call dafus ( descr, nd, ni, dc, ic )
 

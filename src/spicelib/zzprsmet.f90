@@ -79,19 +79,16 @@
 !                the caller should use the parameter MAXSRF to
 !                set this value.
 !
-!
 ! $ Detailed_Output
 !
 !     SHAPE      is a string describing the shape model. Values are
 !
 !                    'ELLIPSOID' or 'DSK'
 !
-!
 !     SUBTYP     is a string describing a sub-observer or sub-solar
 !                point definition. Values are
 !
 !                    'INTERCEPT' or 'NEAR POINT'
-!
 !
 !     PRI        is a logical flag indicating whether a DSK-based
 !                computation uses DSK segments in a prioritized
@@ -100,19 +97,15 @@
 !                version of SPICE, all DSK-based computations
 !                use unprioritized data.
 !
-!
 !     NSURF      is the number of elements of the surface ID list.
-!
 !
 !     SRFLST     is a list of surface ID codes. All surfaces are
 !                associated with the body designated by BODYID.
-!
 !
 !     PNTDEF     is a string describing the point definition used
 !                to compute limb or terminator points. Values are
 !
 !                   'TANGENT' or 'GUIDED'
-!
 !
 !     TRMTYP     is a string that indicates the definition of the
 !                terminator on the target body. Values are:
@@ -213,7 +206,6 @@
 !     operator; this operator appends to rather than overwrites the
 !     kernel variable named on the left hand side of the assignment.
 !
-!
 ! $ Particulars
 !
 !     This routine supports parsing of the METHOD input argument
@@ -245,7 +237,6 @@
 !
 ! $ Examples
 !
-!
 !     1) For the routine SUBPNT,
 !
 !           Method string =
@@ -264,7 +255,6 @@
 !             PNTDEF = ' '
 !             TRMTYP = ' '
 !
-!
 !     2) For the routine TERMPT,
 !
 !           Method string =
@@ -282,7 +272,6 @@
 !             SRFLST = <ID code 1>, <ID code 2>
 !             PNTDEF = 'TANGENT'
 !             TRMTYP = 'UMBRAL'
-!
 !
 ! $ Restrictions
 !
@@ -312,7 +301,6 @@
 !     parse method string for geometry api routines
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -357,10 +345,7 @@
       logical               done
       logical               fnd
 
-
       if ( return() ) return
-
-
 
 !
 !     No shape or surfaces have been specified yet.
@@ -431,7 +416,6 @@
 
       end do
 
-
       if ( nshape /= 1 ) then
 
          call setmsg ( 'The "method" or "shape" string must contain ' &
@@ -446,7 +430,6 @@
          return
 
       end if
-
 
       if ( shape == 'DSK' ) then
 !
@@ -575,7 +558,6 @@
 
                      end if
 
-
                      nsurf = nsurf + 1
 !
 !                    Make sure there's room in the surface ID array.
@@ -601,7 +583,6 @@
 !
                      srflst( nsurf ) = code
 
-
                      if ( i == n ) then
 !
 !                       We're at the end of the method string.
@@ -626,7 +607,6 @@
 !                          slash will be seen as the next token.
 !
                            i    = i - 1
-
 
                         else if ( chr == comma ) then
 !
@@ -654,7 +634,6 @@
 
                            end if
 
-
                         else
 !
 !                          We have a syntax error in the surface list.
@@ -674,10 +653,8 @@
 
                   end do
 
-
                else if (      locmth( begs(i):ends(i) ) &
                          == 'UNPRIORITIZED'            ) then
-
 
                   npri = npri + 1
 
@@ -693,9 +670,7 @@
 
                   end if
 
-
                   pri  = .false.
-
 
                else if (     (       locmth( begs(i):ends(i) ) &
                                == 'INTERCEPT'                ) &
@@ -721,7 +696,6 @@
 
                   subtyp = locmth( begs(i):ends(i) )
 
-
                else if (     (       locmth( begs(i):ends(i) ) &
                                == 'TANGENT'                ) &
                         .or. (       locmth( begs(i):ends(i) ) &
@@ -745,8 +719,6 @@
                   end if
 
                   pntdef = locmth( begs(i):ends(i) )
-
-
 
                else if (     (       locmth( begs(i):ends(i) ) &
                                == 'UMBRAL'                   ) &
@@ -772,8 +744,6 @@
 
                   trmtyp = locmth( begs(i):ends(i) )
 
-
-
                else if (  locmth( begs(i):ends(i) ) == slash  )  then
 !
 !                 Adjust the token index in the message to account
@@ -786,7 +756,6 @@
                   call errch  ( '#', method                            )
                   call sigerr ( 'SPICE(BADMETHODSYNTAX)'               )
                   return
-
 
                else if ( locmth( begs(i):ends(i) )  /=  'DSK'  ) then
 !
@@ -801,7 +770,6 @@
                   return
 
                end if
-
 
             end if
 
@@ -825,7 +793,6 @@
             return
 
          end if
-
 
       else if ( shape == 'ELLIPSOID' ) then
 !
@@ -888,7 +855,6 @@
 
                i = i + 1
 
-
                if (  locmth( begs(i):ends(i) ) ==  'ELLIPSOID' ) then
 !
 !                 This case is a no-op.
@@ -941,10 +907,6 @@
                   else
                      subtyp = locmth( begs(i):ends(i) )
                   end if
-
-
-
-
 
                else if (     (       locmth( begs(i):ends(i) ) &
                                == 'TANGENT'                ) &
@@ -1016,8 +978,6 @@
                return
 
             end if
-
-
 
             i = i + 1
 

@@ -173,7 +173,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: zzcorsxf_ex1.tm
@@ -197,7 +196,6 @@
 !                                            radii
 !              naif0008.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -208,10 +206,7 @@
 !
 !           End of meta-kernel
 !
-!
-!
 !        Example code begins here.
-!
 !
 !           PROGRAM EX1
 !           IMPLICIT NONE
@@ -322,7 +317,6 @@
 !
 !           END
 !
-!
 !        When this program was executed on a PC/Linux/g77 system, the
 !        output was
 !
@@ -353,7 +347,6 @@
 !            0.0000000000000000E+00
 !            0.0000000000000000E+00
 !            0.0000000000000000E+00
-!
 !
 ! $ Restrictions
 !
@@ -411,9 +404,7 @@
 !
 !        1 + LTSIGN*DLT
 !
-!
       scale = 1.0_wp + ltsign*dlt
-
 
       do col = 1, 3
 !
@@ -425,4 +416,3 @@
       end do
 
       end
-

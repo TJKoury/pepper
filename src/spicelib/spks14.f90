@@ -105,13 +105,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_14 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions

@@ -105,13 +105,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     store long error message
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -129,7 +127,6 @@
 !        non-error-handling code.
 !
 !-&
-
 
 !
 !     Local Variables:
@@ -153,9 +150,6 @@
       savmsg = msg
 
       return
-
-
-
 
 !$Procedure GETLMS ( Get Long Error Message )
 
@@ -255,13 +249,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get current long error message
 !
 !-&
-
 
 !
 !     Grab the saved long message:

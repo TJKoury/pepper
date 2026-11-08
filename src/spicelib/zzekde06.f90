@@ -124,7 +124,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -155,7 +154,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Before trying to actually modify the file, do every error
 !     check we can.
@@ -176,7 +174,6 @@
       ptrloc  =  recptr + dptbas + coldsc(ordidx)
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
-
 
       if ( datptr > 0 ) then
 !
@@ -225,9 +222,7 @@
 
          end if
 
-
          nseen = min (  nchars,  (base+cpsize-datptr)  )
-
 
          do while (  ( nseen < nchars ) .and. ( .not. failed() )  )
 !
@@ -243,7 +238,6 @@
 
             call zzekgfwd ( handle, chr, p, next   )
             call zzekglnk ( handle, chr, p, nlinks )
-
 
             if ( nlinks > 1 ) then
 
@@ -263,13 +257,11 @@
 
          end do
 
-
       else if ( datptr == null ) then
 !
 !        Mark the entry as `uninitialized'.
 !
          call dasudi ( handle, ptrloc, ptrloc, uninit )
-
 
       else if ( datptr /= uninit ) then
 !
@@ -293,7 +285,6 @@
 !     Set the record's status to indicate that this record is updated.
 !
       call dasudi ( handle, recptr+staidx, recptr+staidx, update )
-
 
       return
       end

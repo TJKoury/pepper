@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcnamsz.inc'
       include 'ekcoldsc.inc'
@@ -139,7 +138,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -157,9 +155,6 @@
 
       logical               indexd
 
-!
-!     Use discovery check-in.
-!
       if ( failed() ) return
 
 !
@@ -195,9 +190,7 @@
 
       end if
 
-
       itype  =  coldsc(ixtidx)
-
 
       if ( itype == 1 ) then
 !
@@ -215,7 +208,6 @@
 !        Insert the new record pointer right after the item we've found.
 !
          call zzektrin ( handle, tree, prvidx+1, recptr )
-
 
       else
 

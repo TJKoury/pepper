@@ -145,7 +145,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -166,9 +165,6 @@
       integer(ip)           ptrloc
       integer(ip)           recno
 
-!
-!     Use discovery check-in.
-!
 !
 !     Make sure the column exists.
 !
@@ -211,7 +207,6 @@
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
-
       if (  ( datptr /= uninit ) .and. ( datptr /= noback )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
@@ -226,7 +221,6 @@
 
       end if
 
-
       if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
@@ -234,14 +228,12 @@
 !
          call dasudi ( handle, ptrloc, ptrloc, null )
 
-
       else
 !
 !        Decide where to write the data value.  If there's room left
 !        in the last double precision data page, append the value there.
 !
          lastw  =  segdsc ( ldwidx )
-
 
          if ( lastw < dpsize ) then
 !
@@ -265,7 +257,6 @@
 !           The last double precision word in use must be updated.
 !
             segdsc ( ldwidx )  =  lastw + 1
-
 
          else
 !

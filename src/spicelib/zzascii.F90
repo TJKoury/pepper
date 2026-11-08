@@ -285,7 +285,7 @@
       integer(ip)           unxcnt
 
 !
-!     Discovery check-in. Can't determine the terminator in RETURN
+! Can't determine the terminator in RETURN
 !     mode.
 !
       if ( return() ) then
@@ -470,7 +470,6 @@
                 unxcnt > 0 .and. &
                 maccnt == 0       ) then
 
-
 !
 !        Only Unix terminator counter is non-zero. ID the file as UNIX.
 !
@@ -516,7 +515,6 @@
          if ( .not. eqstr( termin, native ) .and. &
               .not. eqstr( termin, '?'    )       ) then
 
-
             call setmsg ( 'Text file ''$1'' contains lines ' &
                      //   'terminated with ''$2'' while ' &
                      //   'the expected terminator for ' &
@@ -541,7 +539,6 @@
          end if
 
       end if
-
 
       return
       end

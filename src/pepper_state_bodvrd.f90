@@ -20,10 +20,10 @@ module pepper_state_bodvrd
    !> The saved variables of BODVRD.
    type, public :: bodvrd_state
       integer(ip) :: svctr1 ( ctrsiz )  !! saved name/ID item declarations.
-      character(maxl) :: svbdnm  !! saved between calls by BODVRD
-      integer(ip) :: svbdid  !! saved between calls by BODVRD
-      logical :: svfnd1  !! saved between calls by BODVRD
-      logical :: first  !! saved between calls by BODVRD
+      character(maxl) :: svbdnm  !! the body name translated last
+      integer(ip) :: svbdid  !! its NAIF ID code
+      logical :: svfnd1  !! the name was found
+      logical :: first  !! no name has been translated yet
    end type bodvrd_state
 
 contains

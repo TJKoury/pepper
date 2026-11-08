@@ -72,7 +72,6 @@
 !
 !              Only one value can be added to a virtual column.
 !
-!
 !     ISNULL   is a logical flag indicating whether the entry is
 !              null. If ISNULL is .FALSE., the column entry
 !              defined by NVALS and IVALS is added to the
@@ -163,7 +162,6 @@
 !           INT_COL_2     INT         VARIABLE
 !           INT_COL_3     INT         3
 !
-!
 !        Issue the following query
 !
 !            QUERY = 'SELECT INT_COL_1, INT_COL2, INT_COL3 FROM TAB'
@@ -171,9 +169,7 @@
 !        to fetch and dump column values from the rows that satisfy the
 !        query.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACEI_EX1
 !              IMPLICIT NONE
@@ -450,10 +446,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ROW  =   1
 !           COLUMN = INT_COL_1:   100
@@ -475,10 +469,8 @@
 !           COLUMN = INT_COL_2:   801   802   803   804
 !           COLUMN = INT_COL_3:   104   204   304
 !
-!
 !        Note that after run completion, a new EK file exists in the
 !        output directory.
-!
 !
 !     2) Suppose we want to create an E-kernel which contains a table
 !        of items that have been ordered. The columns of this table
@@ -494,7 +486,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        This EK file will have one segment containing the DATAITEMS
 !        table.
 !
@@ -502,9 +493,7 @@
 !        the segment described above and how to insert a new record
 !        into it.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACEI_EX2
 !              IMPLICIT NONE
@@ -591,7 +580,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -660,7 +648,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -700,7 +687,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add integer data to EK column
@@ -708,7 +694,6 @@
 !     write integer data to EK column
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -724,8 +709,6 @@
       integer(ip)           recptr
       integer(ip)           segdsc ( sdscsz )
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -760,18 +743,15 @@
 !
       call zzektrdp ( handle, segdsc(rtidx), recno, recptr )
 !
-!
 !     Now it's time to add data to the file.
 !
       class  =  coldsc ( clsidx )
-
 
       if ( class == 1 ) then
 !
 !        Class 1 columns contain scalar integer data.
 !
          call zzekad01 ( handle, segdsc, coldsc, recptr, ivals, isnull )
-
 
       else if ( class == 4 ) then
 !
@@ -798,7 +778,6 @@
          return
 
       end if
-
 
       return
       end

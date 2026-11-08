@@ -82,7 +82,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -133,13 +132,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_10 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -175,9 +172,7 @@
 
       integer(ip), parameter :: enset2 = begel2 + nelems - 1
 
-
       real(wp)              value
-
 
       integer(ip)           ends    ( 2 )
       integer(ip)           from
@@ -194,12 +189,10 @@
 
       save
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Fetch the constants and store them in the first part of

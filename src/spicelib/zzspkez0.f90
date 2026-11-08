@@ -27,7 +27,6 @@
       include               'zzabcorr.inc'
       include               'zzctr.inc'
 
-
       integer(ip)           targ
       real(wp)              et
       character(*)          ref
@@ -133,7 +132,6 @@
 !                               correction and stellar aberration
 !                               correction.
 !
-!
 !                 The following values of ABCORR apply to the
 !                 "transmission" case in which photons *depart* from
 !                 the observer's location at ET and arrive at the
@@ -167,7 +165,6 @@
 !                               Newtonian light time correction and
 !                               stellar aberration correction.
 !
-!
 !                 Neither special nor general relativistic effects are
 !                 accounted for in the aberration corrections applied
 !                 by this routine.
@@ -176,7 +173,6 @@
 !                 ABCORR.
 !
 !     OBS         is the NAIF ID code for an observing body.
-!
 !
 ! $ Detailed_Output
 !
@@ -262,7 +258,6 @@
 !     ephemeris object relative to any other in a reference frame that
 !     is convenient for further computations.
 !
-!
 !     Aberration corrections
 !     ======================
 !
@@ -347,7 +342,6 @@
 !     Below, we indicate the aberration corrections to use for some
 !     common applications:
 !
-!
 !        1) Find the apparent direction of a target for a remote-sensing
 !           observation.
 !
@@ -361,14 +355,12 @@
 !           it may be more accurate to use no correction at all than to
 !           use light time alone.
 !
-!
 !        2) Find the corrected pointing direction to radiate a signal
 !           to a target. This computation is often applicable for
 !           implementing communications sessions.
 !
 !              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
 !              aberration corrections for transmission.
-!
 !
 !        3) Compute the apparent position of a target body relative
 !           to a star or other distant object.
@@ -382,19 +374,16 @@
 !              vector from the observer to the planet should be
 !              corrected for light time but not stellar aberration.
 !
-!
 !        4) Obtain an uncorrected state vector derived directly from
 !           data in an SPK file.
 !
 !              Use 'NONE'.
-!
 !
 !        5) Use a geometric state vector as a low-accuracy estimate
 !           of the apparent state for an application where execution
 !           speed is critical.
 !
 !              Use 'NONE'.
-!
 !
 !        6) While this routine cannot perform the relativistic
 !           aberration corrections required to compute states
@@ -403,7 +392,6 @@
 !
 !              Use 'NONE', then apply relativistic aberration
 !              corrections (not available in the SPICE Toolkit).
-!
 !
 !     Below, we discuss in more detail how the aberration corrections
 !     applied by this routine are computed.
@@ -424,7 +412,6 @@
 !        The geometric relationship between the observer, target, and
 !        solar system barycenter is as shown:
 !
-!
 !           SSB ---> O(ET)
 !            |      /
 !            |     /
@@ -432,7 +419,6 @@
 !            |   /  T(ET) - O(ET)
 !            V  V
 !           T(ET)
-!
 !
 !        The returned state consists of the position vector
 !
@@ -442,7 +428,6 @@
 !        corresponding velocities. In the geometric case, the
 !        returned velocity is actually the time derivative of the
 !        position.
-!
 !
 !        Reception case
 !        ==============
@@ -519,7 +504,6 @@
 !        change of the stellar aberration correction is accounted for
 !        in the computation of the output velocity.
 !
-!
 !        Transmission case
 !        ==================
 !
@@ -564,7 +548,6 @@
 !        computed as in the reception case, but the sign of the
 !        rotation angle is negated. Velocities are adjusted to account
 !        for the rate of change of the stellar aberration correction.
-!
 !
 !     Precision of light time corrections
 !     ===================================
@@ -620,7 +603,6 @@
 !        converged light time solutions is recommended when adequacy of
 !        the one-iteration solution is in doubt.
 !
-!
 !        Converged corrections
 !        ---------------------
 !
@@ -651,7 +633,6 @@
 !        general relativity. These may be as high as a few hundredths
 !        of a millisecond for some objects.
 !
-!
 !     Relativistic Corrections
 !     =========================
 !
@@ -662,7 +643,6 @@
 !     cycles. If however, your application requires these additional
 !     corrections we suggest you consult the astronomical almanac (page
 !     B36) for a discussion of how to carry out these corrections.
-!
 !
 ! $ Examples
 !
@@ -750,7 +730,6 @@
 !               END DO
 !
 !               END
-!
 !
 ! $ Restrictions
 !
@@ -878,8 +857,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !-    SPICELIB Version 5.0.0, 22-JUL-2007 (NJB)
@@ -1005,7 +982,6 @@
 !-&
 
 !
-!
 !     SPICELIB functions
 !
       logical               failed
@@ -1067,13 +1043,10 @@
       data                  first   /.true./
       data                  prvcor  / ' ' /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     Counter initialization is done separately.
@@ -1086,7 +1059,6 @@
          call zzctruin( svctr1 )
 
       end if
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -1162,7 +1134,6 @@
             return
 
          end if
-
 
          call frinfo ( reqfrm, center, type, typeid, found )
 

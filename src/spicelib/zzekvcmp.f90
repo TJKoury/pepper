@@ -22,7 +22,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'ekqlimit.inc'
@@ -88,7 +87,6 @@
 !                    the order relation
 !
 !                       <row1> OP <row2>
-!
 !
 !     NCOLS          is the number of columns used to define a
 !                    dictionary ordering.
@@ -288,11 +286,6 @@
       integer(ip)           sgdscs ( sdscsz, 2 )
       integer(ip)           tabidx
 
-
-!
-!     Use discovery check-in for speed.
-!
-
 !
 !     The function value defaults to .FALSE.
 !
@@ -347,7 +340,6 @@
 
          end do
 
-
          if ( dtype(1) == dtype(2) ) then
 !
 !           Find the order of the rows according to the order-by
@@ -366,7 +358,6 @@
 
             end if
 
-
          else
 
             call setmsg ( 'Data type mismatch for order-by '    // &
@@ -383,11 +374,9 @@
 
          end if
 
-
          col  =  col + 1
 
       end do
-
 
 !
 !     Determine the truth of the input relational expression.
@@ -396,31 +385,25 @@
 
          zzekvcmp  =  rel == eq
 
-
       else if ( op == lt )   then
 
          zzekvcmp  =  rel == lt
-
 
       else if ( op == le )   then
 
          zzekvcmp  =  rel /= gt
 
-
       else if ( op == gt )   then
 
          zzekvcmp  =  rel == gt
-
 
       else if ( op == ge )   then
 
          zzekvcmp  =  rel /= lt
 
-
       else if ( op == ne )   then
 
          zzekvcmp  =  rel /= eq
-
 
       else
 !
@@ -434,7 +417,6 @@
          return
 
       end if
-
 
       return
       end

@@ -187,7 +187,6 @@
 !
 !     Local parameters
 !
-!
 !     Let PHI be the (non-negative) rotation angle of the stellar
 !     aberration correction; then SEPLIM is a limit on how close PHI
 !     may be to zero radians while stellar aberration velocity is
@@ -234,9 +233,6 @@
 
       integer(ip)           i
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
 !
@@ -347,7 +343,6 @@
 !
 !           + ( sin(phi)*VPHAT + (cos(phi)-1)*RHAT ) * DPTMAG       (11)
 !
-!
 !     Computations begin here:
 !
 !     Split STARG into position and velocity components. Compute
@@ -422,12 +417,10 @@
 !
 !           ( sin(phi)*VPHAT + (cos(phi)-1)*RHAT ) * ||PTARG||
 !
-!
       ptgmag = vnorm( ptarg )
 
       call vlcom ( ptgmag * s,           vphat, &
                    ptgmag * (c - 1.0_wp),  rhat,   scorr )
-
 
 !
 !     Now we use S as an estimate of PHI to decide if we're
@@ -470,7 +463,6 @@
 !
 !           d(phi)/dt = (1/cos(phi)) * (1/c) * <DVP, VPHAT>
 !
-!
          dphi = ( 1.0_wp / ( c * clight() ) ) * vdot( dvp, vphat )
 
 !
@@ -489,7 +481,6 @@
 !
 !                +  ( sin(phi)*VPHAT + (cos(phi)-1)*RHAT ) * DPTMAG
 !
-!
          call vlcom  ( s,             dvphat, &
                        c * dphi,      vphat,  term1 )
 
@@ -501,7 +492,6 @@
          call vlcom3 ( ptgmag,                term3, &
                        dptmag * s,            vphat, &
                        dptmag * (c - 1.0_wp),   rhat,    dscorr )
-
 
       else
 !
@@ -580,4 +570,3 @@
 !     with respect to time DSCORR are both set.
 !
       end
-

@@ -216,15 +216,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find stars in RA-DEC rectangle in type 1 star catalog
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !

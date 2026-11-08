@@ -28,7 +28,6 @@
       include              'dsk02.inc'
       include              'dsktol.inc'
 
-
       integer(ip)           handle
       integer(ip)           dladsc   ( * )
       real(wp)              vertex   ( 3 )
@@ -207,9 +206,7 @@
 !        body is stored in a single type 2 DSK segment, and that this
 !        segment is the first one in the DSK file to which it belongs.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKX02_EX1
 !              IMPLICIT NONE
@@ -411,11 +408,9 @@
 !              CALL DASCLS ( HANDLE )
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos_3_3.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos_3_3.bds
 !
@@ -432,7 +427,6 @@
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
 !
-!
 !         Intercept found:
 !            Plate ID:                   317112
 !            Cartesian coordinates:  1.18970365  0.99827989  8.80777185
@@ -445,7 +439,6 @@
 !            Longitude (deg):    40.000000000000000
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
-!
 !
 !         Intercept found:
 !            Plate ID:                   324141
@@ -460,7 +453,6 @@
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
 !
-!
 !         Intercept found:
 !            Plate ID:                   327994
 !            Cartesian coordinates: -0.81082405  1.40438846  9.19682344
@@ -473,7 +465,6 @@
 !            Longitude (deg):    119.99999999999999
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
-!
 !
 !         Intercept found:
 !            Plate ID:                   329431
@@ -488,7 +479,6 @@
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
 !
-!
 !         Intercept found:
 !            Plate ID:                   196042
 !            Cartesian coordinates: -1.49854761 -0.54542673  9.04411256
@@ -501,7 +491,6 @@
 !            Longitude (deg):    200.00000000000000
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
-!
 !
 !         Intercept found:
 !            Plate ID:                   235899
@@ -516,14 +505,10 @@
 !            Latitude  (deg):    80.000000000000000
 !            Range      (km):    28.023536291251524
 !
-!
-!
 !        [...]
-!
 !
 !        Warning: incomplete output. Only 100 out of 1135 lines have
 !        been provided.
-!
 !
 ! $ Restrictions
 !
@@ -716,14 +701,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     plate and plate model point intersected by ray
 !     intersection of ray and surface
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -826,7 +809,6 @@
 !              |       PP@PPPPPPPPPPPPPPP    |
 !              +--------------+--------------+
 !
-!
 !           The updated algorithm, when presented with the
 !           situation shown above, will check all plates in voxel
 !           2 before terminating.
@@ -835,7 +817,6 @@
 !           voxels 1 and 2 are not adjacent.
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -852,11 +833,9 @@
 !
       integer(ip)           vox2id
 
-
 !
 !     Local parameters
 !
-
 
 !
 !     Tolerance used for vertex-voxel grid distance test:
@@ -887,7 +866,6 @@
       integer(ip)           isrchi
 
       integer(ip), parameter :: bufsiz = 200
-
 
       real(wp)              coord  ( 3 )
       real(wp)              edges  ( 3, 3 )
@@ -1036,7 +1014,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Until we have better knowledge we assume there is no intersection.
 !
@@ -1088,7 +1065,6 @@
          end if
 
       end if
-
 
       if ( newseg ) then
 !
@@ -1173,7 +1149,6 @@
          if ( failed() ) return
 
          corsys = nint( dskdsc(sysidx) )
-
 
          prvhan = handle
 
@@ -1275,7 +1250,6 @@
             cgxyz(j) = ( ( voxlst(j,i) - 1 ) / cgscal ) + 1
          end do
 
-
          cvid = vox2id ( cgxyz(1),  cgxyz(2), cgxyz(3), &
                          cgrext(1), cgrext(2)           )
 
@@ -1334,9 +1308,7 @@
 
       group  =  1
 
-
       do while (  ( group <= ngroup )  .and.  ( .not. have )  )
-
 
          pntr   = 1
 
@@ -1349,7 +1321,6 @@
          do vi = grpbeg, grpend
 !
 !           Look up the plate list pointer for this voxel.
-!
 !
 !           We begin by finding the offset of the voxel from
 !           the base of its parent coarse voxel.
@@ -1386,7 +1357,6 @@
                if ( failed() ) return
 
             end if
-
 
             if ( nplate > 0 ) then
 
@@ -1528,7 +1498,6 @@
 !
             j = platid(i)
 
-
             if ( j > 0 ) then
 !
 !              This is not a duplicate plate; consider it.
@@ -1549,7 +1518,6 @@
                   end if
 
                end if
-
 
                if ( .not. extra ) then
 !
@@ -1608,7 +1576,6 @@
                   end do
 
                end if
-
 
                if ( .not. extra ) then
 !
@@ -1692,7 +1659,6 @@
                                 .and. ( hitcor(2) < (vxc2+xtol  ) ) &
                                 .and. ( hitcor(3) > (vxc3-xtol-1) ) &
                                 .and. ( hitcor(3) < (vxc3+xtol  ) )
-
 
                         if ( invox ) then
 !

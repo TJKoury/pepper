@@ -220,7 +220,6 @@
 !
 !             ISTATE = ( LONG, LAT, ALT, DLONG, DLAT, DALT )
 !
-!
 !     Input Boundaries
 !     -------------------------------------------
 !
@@ -250,7 +249,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: xfmsta_ex1.tm
@@ -276,7 +274,6 @@
 !                                               Saturn Satellite
 !                                               ephemeris
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'naif0012.tls',
@@ -287,9 +284,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM XFMSTA_EX1
 !              IMPLICIT NONE
@@ -384,10 +379,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Phoebe as seen by CASSINI - rectangular
 !           Position [km]:
@@ -408,7 +401,6 @@
 !           Velocity [km/s]:
 !                3.910113       -4.228139       -1.526561
 !
-!
 !     2) Transform a given state from cylindrical to planetographic
 !        coordinates with respect to Earth.
 !
@@ -417,9 +409,7 @@
 !
 !           pck00010.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM XFMSTA_EX2
 !              IMPLICIT NONE
@@ -495,10 +485,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Cylindrical state
 !           Position [km, rad, km]:
@@ -517,7 +505,6 @@
 !                1.000000        0.500000        0.500000
 !           Velocity [km/s, rad/s, km/s]:
 !                0.200000        0.100000       -0.200000
-!
 !
 ! $ Restrictions
 !
@@ -558,14 +545,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     state transformation between coordinate systems
 !     convert state
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -615,7 +600,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
 
 !
 !     Local variables
@@ -723,7 +707,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     There are three main sections of this routine:
 !
@@ -737,7 +720,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Initialization.
@@ -939,7 +921,6 @@
 
             call drdcyl ( istate(1), istate(2), istate(3), jacobi )
 
-
          else if  ( isys == latnl )  then
 
 !
@@ -949,7 +930,6 @@
 
             call drdlat ( istate(1), istate(2), istate(3), jacobi )
 
-
          else if  ( isys == sphcl )  then
 
 !
@@ -958,7 +938,6 @@
             call sphrec ( istate(1), istate(2), istate(3), ipos   )
 
             call drdsph ( istate(1), istate(2), istate(3), jacobi )
-
 
          else if  ( isys == geodet ) then
 
@@ -972,7 +951,6 @@
 
             call drdgeo ( istate(1), istate(2), istate(3), radii(1), &
                           f, jacobi )
-
 
          else if  ( isys == plntgr ) then
 
@@ -1035,7 +1013,6 @@
 !        Transform the velocity into rectangular coordinates.
 !
          call mxv ( jacobi, istate(4), ivel )
-
 
       else if  ( isys == rectan ) then
 
@@ -1107,7 +1084,6 @@
                   call reccyl ( ipos(1),  ostate(1), ostate(2), &
                                 ostate(3) )
 
-
                else if  ( osys == latnl )  then
 
 !
@@ -1117,7 +1093,6 @@
 
                   call reclat ( ipos(1), ostate(1),  ostate(2), &
                                 ostate(3) )
-
 
                else if  ( osys == sphcl )  then
 
@@ -1129,7 +1104,6 @@
                   call recsph ( ipos(1), ostate(1),  ostate(2), &
                                 ostate(3) )
 
-
                else if  ( osys == geodet ) then
 
 !
@@ -1139,7 +1113,6 @@
 
                   call recgeo ( ipos(1), radii(1), f, ostate(1), &
                                 ostate(2), ostate(3) )
-
 
                else if  ( osys == plntgr ) then
 
@@ -1286,7 +1259,6 @@
 !        Calculate the velocity in the output coordinate system.
 !
          call mxv ( jacobi, ivel, ostate(4) )
-
 
       else if ( osys == rectan ) then
 

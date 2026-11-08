@@ -49,7 +49,6 @@
 !              to the standard range using modular arithmetic and
 !              the input year is adjusted appropriately.
 !
-!
 !     DAY      is the day of the month of some epoch, E, in the Julian
 !              proleptic calendar.
 !
@@ -198,13 +197,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Convert from Julian proleptic to Gregorian Calendar
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -214,7 +211,6 @@
 !        in RMAINI calls.
 !
 !-&
-
 
 !
 !     Spicelib Functions
@@ -247,7 +243,6 @@
       integer(ip), parameter :: dp4y = 365*4   + 1
 
       integer(ip), parameter :: dp1y = 365
-
 
 !
 !     The following integers give the number of days during the
@@ -332,7 +327,6 @@
       integer(ip), parameter :: novl0 = nov0 + 1
 
       integer(ip), parameter :: decl0 = dec0 + 1
-
 
 !
 !     Local variables
@@ -544,7 +538,6 @@
       m    = min (  3, dayg/dp1y )
       dayg = dayg   -     m*dp1y
 
-
       dofyr  = dayg + 1
       yr     = 400 * m400 &
              + 100 * m100 &
@@ -570,7 +563,6 @@
       doy   = dofyr
 
       return
-
 
 !$Procedure GR2JUL (Gregorian to Julian Calendar)
 
@@ -748,13 +740,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Convert from Gregorian to Julian Calendar
 !
 !-&
-
 
 !
 !     If this is the first pass through this entry point (or the
@@ -832,7 +822,6 @@
 
       m    = min ( 3, dayj/dp1y )
       dayj = dayj -      m*dp1y
-
 
       dofyr  = dayj + 1
       yr     = 4 * m4 &

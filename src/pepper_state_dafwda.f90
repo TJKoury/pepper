@@ -18,7 +18,8 @@ module pepper_state_dafwda
 
    !> The saved variables of DAFWDA.
    type, public :: dafwda_state
-      real(wp) :: buffer   ( bsize )  !! saved between calls by DAFWDA
+      real(wp) :: buffer   ( bsize )  !! work buffer of one record (saved in SPICELIB to keep it off
+                                      !! the stack)
    end type dafwda_state
 
 contains

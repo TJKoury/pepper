@@ -158,8 +158,6 @@
 !        | AV3 Cheby coefficients (optional)                |
 !        ----------------------------------------------------
 !
-!
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -185,11 +183,9 @@
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -224,7 +220,6 @@
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -280,7 +275,6 @@
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   +-             -+
@@ -312,7 +306,6 @@
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -458,13 +451,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add data to a type_4 CK segment
 !
 !-&
-
 
 !
 !     Spicelib functions.
@@ -538,7 +529,6 @@
             return
 
          end if
-
 
       end do
 

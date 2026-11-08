@@ -155,7 +155,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dhfa_ex1.tm
@@ -179,7 +178,6 @@
 !                                            radii
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -190,9 +188,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DHFA_EX
 !              IMPLICIT              NONE
@@ -209,7 +205,6 @@
 !              PARAMETER           ( STRLEN = 64 )
 !
 !              CHARACTER*(STRLEN)    BEGSTR
-!
 !
 !              DOUBLE PRECISION      SPD
 !              DOUBLE PRECISION      DHFA
@@ -254,15 +249,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Half angle derivative:
 !            at begin time  :   -2.5387993682459762E-011
 !            two weeks later:    2.9436205837172777E-011
-!
 !
 ! $ Restrictions
 !
@@ -294,13 +286,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     time derivative of half angle
 !
 !-&
-
 
 !
 !     SPICELIB functions

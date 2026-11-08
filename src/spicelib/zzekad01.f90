@@ -165,8 +165,6 @@
       integer(ip)           recno
 
 !
-!     Use discovery check-in.
-!
 !     Make sure the column exists.
 !
       ncols   =  segdsc ( ncidx  )
@@ -208,7 +206,6 @@
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
-
       if (  ( datptr /= uninit ) .and. ( datptr /= noback )  ) then
 
          recno  =  zzekrp2n ( handle, segdsc(snoidx), recptr )
@@ -233,14 +230,12 @@
 !
          call dasudi ( handle, ptrloc, ptrloc, null )
 
-
       else
 !
 !        Decide where to write the data value.  If there's room left
 !        in the last integer data page, append the value there.
 !
          lastw  =  segdsc ( liwidx )
-
 
          if ( lastw < ipsize ) then
 !
@@ -267,7 +262,6 @@
 !           The last integer word in use must be updated.
 !
             segdsc ( liwidx )  =  lastw + 1
-
 
          else
 !
@@ -335,7 +329,6 @@
          end if
 
       end if
-
 
       return
       end

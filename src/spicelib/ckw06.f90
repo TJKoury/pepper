@@ -32,7 +32,6 @@
       include 'ck06.inc'
       include 'ckparam.inc'
 
-
       integer(ip)           handle
       integer(ip)           inst
       character(*)          ref
@@ -78,7 +77,6 @@
 !     HANDLE   is the handle of a CK file that has been opened
 !              for writing.
 !
-!
 !     INST     is a NAIF integer code associated with an
 !              instrument or spacecraft structure whose
 !              orientation is described by the segment to be
@@ -86,10 +84,8 @@
 !              subsystem as a CK frame class ID (see the
 !              Frames Required Reading for details).
 !
-!
 !     AVFLAG   is a logical flag which indicates whether or not
 !              the segment will contain angular velocity.
-!
 !
 !     REF      is the NAIF name for a reference frame relative to
 !              which the pointing (attitude) information for INST
@@ -106,10 +102,8 @@
 !              interval stop time. See the description of IVLBDS
 !              below.
 !
-!
 !     SEGID    is the segment identifier. A CK segment
 !              identifier may contain up to 40 characters.
-!
 !
 !     NMINI    is the number of mini-segments comprised by
 !              the input data. Each mini-segment contains data
@@ -125,19 +119,16 @@
 !
 !              These inputs are described below.
 !
-!
 !     NPKTS    is an array of packet counts. The Ith element of
 !              NPKTS is the packet count of the Ith mini-segment.
 !
 !              NPKTS has dimension NMINI.
-!
 !
 !     SUBTPS   is an array of type 6 subtypes. The Ith element of
 !              SUBTPS is the subtype of the packets associated
 !              with the Ith mini-segment.
 !
 !              SUBTPS has dimension NMINI.
-!
 !
 !     DEGRES   is an array of interpolating polynomial degrees.
 !              The Ith element of DEGRES is the polynomial degree
@@ -154,7 +145,6 @@
 !              be odd and must be in the range 1:MAXDEG.
 !
 !              DEGRES has dimension NMINI.
-!
 !
 !     PACKTS   is an array of data packets representing the
 !              orientation of INST relative to the frame REF. The
@@ -250,14 +240,12 @@
 !              less than the distance between Q and -Q(I+1). The
 !              Lagrange subtypes do not have this restriction.
 !
-!
 !     RATES    is an array of nominal rates of the spacecraft
 !              clock associated with INST. The Ith element of
 !              rates is the clock rate for the packets associated
 !              with the Ith mini-segment. Units are seconds per
 !              tick. Spacecraft clock rates are used to scale
 !              angular velocity to radians/second.
-!
 !
 !     SCLKDP   is an array containing epochs for all input
 !              mini-segments. The epochs have a one-to-one
@@ -281,7 +269,6 @@
 !              Due to possible use of padding, the elements of
 !              SCLKDP, taken as a whole, might not be in
 !              increasing order.
-!
 !
 !     IVLBDS   is an array of mini-segment interval boundary
 !              times. This array is a strictly increasing list of
@@ -313,7 +300,6 @@
 !
 !              IVLBDS has dimension NMINI+1.
 !
-!
 !     SELLST   is a logical flag indicating to the CK type 6
 !              segment reader CKR06 how to select the
 !              mini-segment interval when a request time
@@ -339,7 +325,6 @@
 !
 !     If any of the following exceptions occur, this routine will
 !     return without creating a new segment.
-!
 !
 !     1)  If FIRST is greater than LAST, the error
 !         SPICE(BADDESCRTIMES) is signaled.
@@ -438,7 +423,6 @@
 !     the CK Required Reading. The CK file must have been opened with
 !     write access.
 !
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -464,11 +448,9 @@
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -503,7 +485,6 @@
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -559,7 +540,6 @@
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   +-             -+
@@ -591,7 +571,6 @@
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -691,13 +670,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_6 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -776,12 +753,10 @@
 !
       data                  pktszs  /  c06ps0, c06ps1, c06ps2, c06ps3 /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Start with a parameter compatibility check.
@@ -1056,7 +1031,6 @@
 !
          bepix  =  eepix + 1
          eepix  =  bepix - 1 +  npkts(i)
-
 
          do j = 1, npkts(i) - 1
 
@@ -1431,7 +1405,6 @@
          minisz =       npkts(i) * ( pktsiz + 1 ) &
                     + ( npkts(i) - 1 ) / dirsiz &
                     +   4
-
 
          segbeg = segend + 1
          segend = segbeg + minisz - 1

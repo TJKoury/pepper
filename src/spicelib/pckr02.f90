@@ -90,9 +90,7 @@
 !
 !           moon_pa_de418_1950-2050.bpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PCKR02_EX1
 !              IMPLICIT NONE
@@ -169,7 +167,6 @@
 !                 CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
 !             .                 BEGET, ENDET,  BADDR,  EADDR  )
 !
-!
 !                 IF ( PCKTYP .EQ. 2 ) THEN
 !
 !                    CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
@@ -224,10 +221,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Record size      :           32
 !         Polynomial degree:            9
@@ -268,7 +263,6 @@
 !                 -4.6460429330339309E-010
 !                 -1.0446918704281774E-010
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -303,13 +297,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_2 PCK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -319,7 +311,6 @@
 !        Added IMPLICIT NONE.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -348,7 +339,6 @@
       integer(ip)           recadr
       integer(ip)           recno
       integer(ip)           recsiz
-
 
 !
 !     Standard SPICE error handling.

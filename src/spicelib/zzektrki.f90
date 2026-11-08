@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ektree.inc'
 
       integer(ip)           handle
@@ -116,7 +115,6 @@
 !
 !-&
 
-
 !
 !     Functions
 !
@@ -134,10 +132,6 @@
       integer(ip)           noffst
       integer(ip)           ptr
       integer(ip)           size
-
-
-
-
 
       call zzektrlk (  handle,  tree,    nodkey,  idx, &
                        node,    noffst,  level,   ptr   )
@@ -159,9 +153,7 @@
 
       end if
 
-
       base  =  zzektrbs ( node )
-
 
       if ( level == 1 ) then
          addrss = base + trkeyr + n
@@ -169,13 +161,11 @@
          addrss = base + trkeyc + n
       end if
 
-
       call dasrdi ( handle, addrss, addrss, key )
 
 !
 !     Map the key from relative to absolute.
 !
       key  =  key + noffst
-
 
       end

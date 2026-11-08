@@ -122,13 +122,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete DAS comment area
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -155,8 +153,6 @@
       integer(ip)           ncomr
       integer(ip)           nresvc
       integer(ip)           nresvr
-
-
 
 !
 !     Standard SPICE error handling.

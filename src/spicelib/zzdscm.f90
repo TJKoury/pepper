@@ -451,7 +451,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Constants
 !
@@ -636,7 +635,6 @@
       xgh4= -18.0_wp*s4*zel
       xh2 =  -2.0_wp*s2*z22
       xh3 =  -2.0_wp*s2*(z23-z21)
-
 
       return
       end

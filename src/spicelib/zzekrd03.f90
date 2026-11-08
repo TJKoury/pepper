@@ -168,7 +168,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !-    SPICELIB Version 1.2.0, 23-JUL-1999 (NJB)
@@ -190,9 +189,6 @@
 !        than indices.
 !
 !-&
-
-
-
 
 !
 !     Non-SPICELIB functions
@@ -220,8 +216,6 @@
       integer(ip)           ptrloc
       integer(ip)           recno
 
-!
-!     Use discovery check-in.
 !
 !     Make sure the column exists.
 !
@@ -251,7 +245,6 @@
       ptrloc  =  recptr + dptbas + colidx
 
       call dasrdi  ( handle, ptrloc, ptrloc, datptr )
-
 
       if ( datptr > 0 ) then
 !
@@ -291,7 +284,6 @@
 
          n      =  n - l
 
-
          do while ( n > 0 )
 !
 !           Read the forward page pointer from the current page; find
@@ -320,9 +312,7 @@
             cval( epos+1 : )  =  ' '
          end if
 
-
          isnull  =  .false.
-
 
       else if ( datptr == null ) then
 !
@@ -330,7 +320,6 @@
 !
          isnull =  .true.
          cvlen  =   1
-
 
       else if (       ( datptr == uninit ) &
                  .or. ( datptr == noback )  )  then
@@ -351,7 +340,6 @@
          call sigerr ( 'SPICE(UNINITIALIZED)'                        )
          return
 
-
       else
 !
 !        The data pointer is corrupted.
@@ -370,7 +358,6 @@
          return
 
       end if
-
 
       return
       end

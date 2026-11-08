@@ -178,7 +178,6 @@
 !                    .             STATE,
 !                    .             LT      )
 !
-!
 !     2)  Convert UTC to a continuous encoded Voyager 2 SCLK value.
 !
 !            Again, your initialization code must load the leapseconds
@@ -189,7 +188,6 @@
 !               C
 !                     CALL FURNSH ( 'LEAPSECONDS.KER' )
 !                     CALL FURNSH ( 'VGR2SCLK.KER'    )
-!
 !
 !            To find the encoded Voyager 2 SCLK value SCLKDP
 !            corresponding to a UTC time, you can use the code fragment
@@ -235,13 +233,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ephemeris time to continuous spacecraft_clock ticks
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -249,7 +245,6 @@
       logical               return
 
       integer(ip)           sctype
-
 
 !
 !     Standard SPICE error handling.
@@ -271,7 +266,6 @@
          return
 
       end if
-
 
       return
       end

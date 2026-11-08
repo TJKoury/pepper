@@ -174,7 +174,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: spkw09_ex1.tm
@@ -205,9 +204,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW09_EX1
 !              IMPLICIT NONE
@@ -297,7 +294,6 @@
 !        C
 !              SEGID = 'MY_SAMPLE_SPK_TYPE_9_SEGMENT'
 !
-!
 !        C
 !        C     Write the segment.
 !        C
@@ -346,10 +342,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Phobos as seen from Mars
 !           Epoch       (s):    576059769.185657
@@ -360,7 +354,6 @@
 !           Epoch       (s):    576063369.185657
 !           Position   (km):  -7327.262770   2414.326550   5207.106376
 !           Velocity (km/s):     -0.942893     -1.894731     -0.396715
-!
 !
 !        Note that after run completion, a new SPK file exists in
 !        the output directory.
@@ -411,13 +404,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_9 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -426,7 +417,6 @@
 
       logical               failed
       logical               return
-
 
 !
 !     Local parameters
@@ -450,7 +440,6 @@
 !     character.
 !
 !     LPRINT is the integer value of the last printable ASCII character.
-!
 !
       integer(ip), parameter :: sidlen = 40
 
@@ -481,7 +470,6 @@
       integer(ip)           i
       integer(ip)           icd    ( ni )
       integer(ip)           refcod
-
 
 !
 !     Standard SPICE error handling.
@@ -535,7 +523,6 @@
 
       end do
 
-
 !
 !     Also check to see if the segment identifier is too long.
 !
@@ -547,7 +534,6 @@
          return
 
       end if
-
 
 !
 !     Make sure that the degree of the interpolating polynomials is
@@ -625,7 +611,6 @@
 
       end if
 
-
 !
 !     That concludes the error checks.  Make the segment.
 !
@@ -692,7 +677,6 @@
 !        | Number of states      |
 !        +-----------------------+
 !
-!
 
       call dafada ( states,  n*statsz )
       call dafada ( epochs,  n        )
@@ -710,7 +694,6 @@
       if ( .not. failed() ) then
          call dafena
       end if
-
 
       return
       end

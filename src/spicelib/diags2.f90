@@ -193,7 +193,6 @@
 !            |  0.2 * 5**(1/2)      0.4 * 5**(1/2) |
 !            +-                                   -+
 !
-!
 !     2)  Suppose we want to find the semi-axes of the ellipse defined
 !         by
 !                2                 2
@@ -303,13 +302,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     diagonalize symmetric 2x2_matrix
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -340,8 +337,6 @@
 !
       data ident /  1.0_wp, 0.0_wp, &
                     0.0_wp, 1.0_wp  /
-
-
 
 !
 !     Standard SPICE error handling.
@@ -392,7 +387,6 @@
 !
 !           2                             2
 !          x   -  ( A + C ) x  +  ( AC - B )  =   0.
-!
 !
       call rquad (  1.0_wp,  -(a + c),   a*c - b**2,   root1,   root2   )
 

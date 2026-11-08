@@ -133,7 +133,6 @@
 !
 ! $ Exceptions
 !
-!
 !     1)  If any of the kernel variables containing SCLK coefficients,
 !         partition start or stop times, moduli, or offsets are not
 !         found, the error SPICE(KERNELVARNOTFOUND) will be signaled.
@@ -216,7 +215,6 @@
 !     add sclk to type 1 sclk database
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -318,9 +316,7 @@
         'SCLK01_OUTPUT_DELIM',    1,         0, &
         'SCLK01_TIME_SYSTEM',     1,         0              /
 
-
       if ( return () ) return
-
 
 !
 !     Make up a list of names of kernel variables that we'll use.

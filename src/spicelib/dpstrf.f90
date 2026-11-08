@@ -146,7 +146,6 @@
 !
 !     You could perform the following sequence of steps
 !
-!
 !           DOUBLE PRECISION  X
 !           CHARACTER*5       DISTANCE
 !           CHARACTER*80      MESSAGE
@@ -162,8 +161,6 @@
 !     C     Squeeze any extra spaces out of the message string.
 !     C
 !           CALL CMPRSS ( ' ', 1, MESSAGE, MESSAGE )
-!
-!
 !
 !     The string MESSAGE would contain:
 !
@@ -217,13 +214,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     d.p. number to character with formatting
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -235,7 +230,6 @@
 !        However, most implementations of Fortran are not as forgiving.
 !
 !-&
-
 
 !
 !     Local variables
@@ -250,11 +244,7 @@
       integer(ip)           i
       integer(ip)           j
 
-
       logical               ovflow
-
-
-
 
       maxdig = min ( 14, max(1,sigdig)       )
 
@@ -338,7 +328,6 @@
 
       end if
 
-
       if ( last < 0 ) then
 
          j  = last - first + 3
@@ -357,9 +346,6 @@
          end if
 
       end if
-
-
-
 
       return
 

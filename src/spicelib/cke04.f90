@@ -320,13 +320,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate CK type_4 pointing data record
 !
 !-&
-
 
 !
 !     Local variables

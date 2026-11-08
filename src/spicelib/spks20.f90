@@ -108,13 +108,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_20 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -152,12 +150,10 @@
       integer(ip)           addr
       integer(ip)           move
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The segment is made up of a number of logical records, each
@@ -231,8 +227,6 @@
 !            (INTLEN).
 !        6)  The record size (RECSIZ).
 !        7)  The number of records (NREC).
-!
-!
 !
 !     Let SUBBEG be the subset begin time expressed as a TDB Julian
 !     date.

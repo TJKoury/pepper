@@ -208,13 +208,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset of SPK file
 !
 !-&
-
 
 !
 !     SPICELIB functions

@@ -108,7 +108,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: ckmeta_ex1.tm
@@ -132,7 +131,6 @@
 !              04153_04182ca_ISS.bc   CASSINI image navigated
 !                                     spacecraft CK
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'naif0012.tls',
@@ -143,9 +141,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKMETA_EX1
 !              IMPLICIT NONE
@@ -187,7 +183,6 @@
 !              DATA                  ET      / 141162208.034340D0 /
 !              DATA                  SECTOL  / 0.5D0 /
 !
-!
 !        C
 !        C     First load the CK, LSK and SCLK files.
 !        C
@@ -204,7 +199,6 @@
 !        C
 !              CALL SCE2C  ( IDCODE, ET,        TICKS  )
 !              CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
-!
 !
 !        C
 !        C     Compute the tolerance in spacecraft clock ticks.
@@ -232,14 +226,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Input ET:                141162208.034340
 !        Attitude found at ET:    141162208.034586
-!
 !
 ! $ Restrictions
 !
@@ -299,13 +290,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Map C-kernel ID to SCLK and SPK ID
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -314,7 +303,6 @@
 
       logical               failed
       logical               return
-
 
 !
 !     Local parameters
@@ -334,7 +322,6 @@
       character(7)          mymeta
       character(wdsize)     lookup ( 2, nck )
       character(wdsize)     agent  (    nck )
-
 
       integer(ip)           cks    (    nck )
       integer(ip)           cksord (    nck )
@@ -369,7 +356,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
       if ( first ) then
 
@@ -443,7 +429,6 @@
 
          end if
 
-
       else
 
 !
@@ -506,7 +491,6 @@
 
          call gipool (lookup(spk, this), 1, 1, n, &
                       spks (this),       found(spk ) )
-
 
          if ( failed() ) then
 
@@ -586,7 +570,6 @@
          return
 
       end if
-
 
       return
       end

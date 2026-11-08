@@ -179,7 +179,6 @@
 !           .                'NULLS_OK = TRUE',
 !           .                 PARDSC                       )
 !
-!
 !        When ZZEKPDEC returns, the values of its output column
 !        descriptor will be
 !
@@ -209,8 +208,6 @@
 !           +---------------+
 !           |       0       |  (Reserved)
 !           +---------------+
-!
-!
 !
 !     2)  Parse a declaration of a variable-size column of 80-character
 !         strings:
@@ -246,7 +243,6 @@
 !           |       0       |  (Reserved)
 !           +---------------+
 !
-!
 ! $ Restrictions
 !
 !     1) Currently does not diagnose extraneous keyword assignments.
@@ -273,7 +269,6 @@
 !-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -308,7 +303,6 @@
 
       integer(ip), parameter :: fxcpos = nflpos + 1
 
-
 !
 !     Local variables
 !
@@ -333,7 +327,6 @@
       save                  attkey
       save                  reqkey
 
-
 !
 !     Initial values
 !
@@ -345,10 +338,8 @@
                             'NULLS_OK', &
                             'FIXED_COUNT'  /
 
-
       data                  reqkey         / &
                             1              /
-
 
 !
 !     Standard SPICE error handling.
@@ -401,9 +392,7 @@
 !        | <TRUE/FALSE>         |
 !        +----------------------+
 !
-!
 !     The order of the token pairs is not necessarily as shown.
-!
 !
       call lparsm ( decl, ',=', maxtok, n, tokens )
 
@@ -517,11 +506,9 @@
 !
 !           CHARACTER**
 !
-!
          call cmprss ( ' ', 0, tokens(tokloc), tokens(tokloc) )
          call cmprss ( '(', 0, tokens(tokloc), tokens(tokloc) )
          call cmprss ( ')', 0, tokens(tokloc), tokens(tokloc) )
-
 
          if ( tokens(tokloc)(10:10) /= '*' ) then
 
@@ -534,7 +521,6 @@
             return
 
          end if
-
 
          if ( tokens(tokloc)(11:11)  ==  '*'  ) then
 !
@@ -576,7 +562,6 @@
 
       end if
 
-
 !
 !     Next, parse the size specification, if we have one.  If it's
 !     valid, it's either the string 'VARIABLE' or it's an integer.
@@ -594,7 +579,6 @@
             return
 
          end if
-
 
          if ( tokens(tokloc) == 'VARIABLE' ) then
 !
@@ -615,7 +599,6 @@
                end if
 
             end if
-
 
             pardsc(sizidx) = ifalse
 
@@ -658,7 +641,6 @@
             pardsc(clsidx) =  6
          end if
 
-
       else if ( pardsc(typidx) == int ) then
 !
 !        The integer classes are 1 for scalars, 4 for arrays.
@@ -668,7 +650,6 @@
          else
             pardsc(clsidx) =  4
          end if
-
 
       else if (      ( pardsc(typidx) == dp   ) &
                 .or. ( pardsc(typidx) == time )  ) then
@@ -720,7 +701,6 @@
 
          end if
 
-
       else
 !
 !        As a default, nulls are not allowed.
@@ -729,9 +709,6 @@
 
       end if
 
-
-
-!
 !
 !     Parse the `INDEXED' clause, if we have one.
 !
@@ -748,7 +725,6 @@
             return
 
          end if
-
 
          if ( tokens(tokloc) == 'TRUE' ) then
 !
@@ -783,7 +759,6 @@
 
          end if
 
-
       else
 !
 !        As a default, the column is not indexed.
@@ -791,9 +766,6 @@
          pardsc(ixtidx) = ifalse
 
       end if
-
-
-
 
 !
 !     Parse the `FIXED_COUNT' clause, if we have one.
@@ -846,7 +818,6 @@
 
             end if
 
-
          else if ( tokens(tokloc) /= 'FALSE' ) then
 !
 !           No action is required if the FIXED_COUNT keyword is set
@@ -862,9 +833,7 @@
 
          end if
 
-
       end if
-
 
       return
       end

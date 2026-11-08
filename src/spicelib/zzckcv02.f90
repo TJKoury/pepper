@@ -57,7 +57,6 @@
 !
 !     ARREND     is the ending address of a type 02 segment.
 !
-!
 !     SCLKID     is the ID code of the spacecraft clock associated with
 !                the object for which the segment contains pointing.
 !                This is the ID code used by the SCLK conversion
@@ -76,7 +75,6 @@
 !                CKGPAV and CKGP when that value of TOL is passed to
 !                them as an input.
 !
-!
 !     TIMSYS     is a string indicating the time system used in the
 !                output coverage window.  TIMSYS may have the values:
 !
@@ -90,7 +88,6 @@
 !
 !                TIMSYS must be consistent with the system used for
 !                the contents of SCHEDL on input, if any.
-!
 !
 !     SCHEDL     is a schedule (window) of intervals, to which the
 !                intervals of coverage for this segment will be added.

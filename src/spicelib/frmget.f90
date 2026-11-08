@@ -148,13 +148,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Find a frame transformation matrix from a specified frame
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -200,7 +198,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     On the first pass, initialize the identity matrix.
@@ -254,7 +251,6 @@
 
          end if
 
-
       else if ( type == pck ) then
 
          call tisbod ( 'J2000', typeid, et, tsipm  )
@@ -267,11 +263,9 @@
 
          end if
 
-
       else if ( type == ck ) then
 
          call ckfxfm ( typeid, et, xform, outfrm, found )
-
 
       else if ( type == tk ) then
 
@@ -289,7 +283,6 @@
             end do
 
          end if
-
 
       else if ( type == dyn ) then
 !

@@ -209,7 +209,6 @@
 !           LOGICAL               FND
 !           LOGICAL               SFND
 !
-!
 !           SC     = -94
 !           INST   = -94000
 !           DTYPE  =  3
@@ -264,7 +263,6 @@
 !          .        ( SCLKDP + TOL  .GE. DCD( 1 ) ) .AND.
 !          .        ( SCLKDP - TOL  .LE. DCD( 2 ) ) .AND.
 !          .        ( DTYPE         .EQ. ICD( 3 ) )      ) THEN
-!
 !
 !                 CALL CKR03 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
 !          .                   RECORD, FND )
@@ -339,13 +337,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read CK type_3 pointing data record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -382,7 +378,6 @@
 !
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
-!
 !
       integer(ip), parameter :: dirsiz = 100
 
@@ -436,7 +431,6 @@
 
       logical               fnd
 
-
 !
 !     Saved variables.
 !
@@ -446,7 +440,6 @@
       save                  lhand
       save                  lbeg
       save                  lend
-
 
 !
 !     Initial values.
@@ -460,9 +453,6 @@
       data    lbeg    / -1    /
 
       data    lend    / -1    /
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -506,7 +496,6 @@
 
       end if
 
-
 !
 !     Does this segment contain angular velocity?
 !
@@ -535,7 +524,6 @@
 !
       beg = icd( 5 )
       end = icd( 6 )
-
 
 !
 !     The procedure used in finding a record to satisfy the request
@@ -569,7 +557,6 @@
 !           associated with the endpoint closest to the request time,
 !           provided that it is within the tolerance.
 !
-
 
 !
 !     Get the number of intervals and pointing instances ( records )
@@ -610,7 +597,6 @@
 !                           .            .               .
 !                           .            .               .
 !                     NRDIR+1     (NRDIR)*100+1     NUMREC
-!
 !
 !     Thus if the Ith directory time is the largest one less than
 !     our request time SCLKDP, then we know that:
@@ -834,7 +820,6 @@
 
       end if
 
-
 !
 !     At this point we have the two times in the segment that bracket
 !     the request time.  We also have the addresses of the pointing
@@ -852,7 +837,6 @@
 !     First check if the request time falls in the same interval as
 !     it did last time.  We need to make sure that we are dealing
 !     with the same segment as well as the same time range.
-!
 !
 !     PREVS      is the start time of the interval that satisfied
 !                the previous request for pointing.
@@ -1047,7 +1031,6 @@
 
       end if
 
-
 !
 !     Check and see if the bracketing pointing instances belong
 !     to the same interval.  If they do then we can interpolate
@@ -1115,7 +1098,6 @@
          end if
 
       end if
-
 
       return
       end

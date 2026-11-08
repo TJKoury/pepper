@@ -65,7 +65,6 @@
 !                 RECORD( 9  ) = AV2
 !                 RECORD( 10 ) = AV3
 !
-!
 !              See the section on data type 2 in the CK Required
 !              Reading for a complete description on how pointing
 !              is obtained from a type 2 record.
@@ -133,7 +132,6 @@
 !           vo2_swu_ck2.bc
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM CKGR02_EX1
 !              IMPLICIT NONE
@@ -240,10 +238,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Record:  1
 !           Start encoded SCLK:   32380393707.000015
@@ -348,10 +344,8 @@
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 875 lines have been
 !        provided.
-!
 !
 ! $ Restrictions
 !
@@ -388,13 +382,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK type_2 record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -436,15 +428,11 @@
       real(wp)              dcd    ( ndc  )
       real(wp)              prec   ( psiz )
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
 
-
-!
 !
 !     The unpacked descriptor contains the following information
 !     about the segment:
@@ -469,7 +457,6 @@
          return
       end if
 
-
 !
 !     Find out how many pointing instances there are in the segment.
 !
@@ -493,7 +480,6 @@
 !     is stored in the fifth integer component of the descriptor.
 !
       beg  = icd( 5 )
-
 
 !
 !     Get the pointing record indexed by RECNO.

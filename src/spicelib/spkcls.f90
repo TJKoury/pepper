@@ -66,9 +66,7 @@
 !        containing only one segment, given a time-ordered set of
 !        discrete states and epochs.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKCLS_EX1
 !              IMPLICIT NONE
@@ -130,7 +128,6 @@
 !             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
 !             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
 !
-!
 !        C
 !        C     Set the start and end times of interval covered by
 !        C     segment, and the time step separating epochs of states.
@@ -177,7 +174,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 8 exists in
 !        the output directory.
@@ -220,13 +216,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close an SPK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -249,7 +243,6 @@
 !     Standard SPICELIB error handling.
 !
       if ( return() ) return
-
 
 !
 !     Get the access method for the file. Currently, if HANDLE < 0, the

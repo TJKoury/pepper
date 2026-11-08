@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekopcd.inc'
       include 'ekqlimit.inc'
       include 'ekquery.inc'
@@ -126,7 +125,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -134,7 +132,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Storage limits:
 !
@@ -154,7 +151,6 @@
       integer(ip)           ntoken
       integer(ip)           tokens ( maxtok )
       integer(ip)           values ( maxtok )
-
 
 !
 !     Standard SPICE error handling.
@@ -178,7 +174,6 @@
          return
       end if
 
-
 !
 !     Now parse the query.
 !
@@ -192,7 +187,6 @@
          return
       end if
 
-
 !
 !     Resolve names.
 !
@@ -200,7 +194,6 @@
                              error, errmsg, errptr )
 
       if ( error ) return
-
 
 !
 !     Resolve time values, if necessary.
@@ -210,7 +203,6 @@
 
       if ( error ) return
 
-
 !
 !     Perform semantic checks.
 !
@@ -218,7 +210,6 @@
                              error, errmsg, errptr )
 
       if ( error ) return
-
 
       return
       end

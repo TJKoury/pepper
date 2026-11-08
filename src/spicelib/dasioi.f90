@@ -51,7 +51,6 @@
 !              Case and leading or trailing blanks are not
 !              significant.
 !
-!
 !     UNIT     is the Fortran unit number connected to the DAS
 !              file that is to be read or written. Given the
 !              handle of the DAS file, the unit number can be
@@ -136,11 +135,8 @@
 !
 !            END DO
 !
-!
-!
 !     2)  Write the contents of the array RECORD to record number
 !         10 in the DAS file designated by HANDLE.
-!
 !
 !            INTEGER               RECORD ( NWI )
 !
@@ -183,7 +179,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     perform Fortran reads of integer records
@@ -191,7 +186,6 @@
 !     perform low-level I/O for DAS routines
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -204,12 +198,7 @@
 !
       integer(ip)           iostat
 
-
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
-
 
       if (   eqstr ( action, 'READ' )   ) then
 !
@@ -230,7 +219,6 @@
             return
 
          end if
-
 
       else if (  eqstr ( action, 'WRITE' )  ) then
 
@@ -253,7 +241,6 @@
 
          end if
 
-
       else
 !
 !        The requested action is a little too weird.
@@ -264,7 +251,6 @@
          return
 
       end if
-
 
       return
       end

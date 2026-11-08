@@ -132,7 +132,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -150,13 +149,8 @@
       integer(ip)           tbase
       integer(ip)           tree
 
-
-!
-!     Use discovery check-in.
-!
 !
 !     Validate the segment number to start out.
-!
 !
 !     Get the segment count; validate SEGNO.
 !

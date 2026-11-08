@@ -135,13 +135,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete a symbol from a symbol table
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -163,13 +161,10 @@
       integer(ip)           locval
       integer(ip)           dimval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     How many symbols to start with?
@@ -202,7 +197,6 @@
          call scardi ( nval, tabval )
 
       end if
-
 
       return
       end

@@ -240,13 +240,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read and write DAS physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -261,7 +259,6 @@
 !        efficiency. Removed references to the function RETURN.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -306,8 +303,6 @@
 !     elements in the same row are associated with the data record in
 !     that row.
 !
-!
-!
 !     Linked          Record       Record   Handles   Update
 !      List           buffer       Numbers            Flags
 !
@@ -322,7 +317,6 @@
 !      +---+      +------------+    +---+    +---+    +---+
 !      |   | ---> |            |    |   |    |   |    |   |
 !      +---+      +------------+    +---+    +---+    +---+
-!
 !
       character(nwc)        rcbufc (      bufszc )
       real(wp)              rcbufd ( nwd, bufszd )
@@ -409,12 +403,7 @@
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-
       return
-
-
-
-
 
 !$Procedure DASRRD ( DAS, read record, double precision )
 
@@ -585,13 +574,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAS double precision physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -614,7 +601,6 @@
 !
 !-&
 
-
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
 !
@@ -629,7 +615,7 @@
       end if
 
 !
-!     Check FIRST and LAST.  Use discovery check-in.
+!     Check FIRST and LAST.
 !
       if (        ( first < 1   ) &
             .or.  ( first > nwd ) &
@@ -743,7 +729,6 @@
 
          end if
 
-
       else
 !
 !        Allocate a new set of buffer entries, but don't link
@@ -783,13 +768,7 @@
                     last  -  first + 1, &
                     datad                     )
 
-
       return
-
-
-
-
-
 
 !$Procedure DASRRI ( DAS, read record, integer )
 
@@ -961,13 +940,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAS integer physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -983,7 +960,6 @@
 !        called when a single word is to be read.
 !
 !-&
-
 
 !
 !     Non-standard SPICE error handling.
@@ -1001,7 +977,7 @@
       end if
 
 !
-!     Check FIRST and LAST.  Use discovery check-in.
+!     Check FIRST and LAST.
 !
       if (        ( first < 1   ) &
             .or.  ( first > nwi ) &
@@ -1040,7 +1016,6 @@
 
          if (         (  handle == hnbufi(node)  ) &
                .and.  (  recno  == rnbufi(node)  )    )  then
-!
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
@@ -1112,7 +1087,6 @@
 
          end if
 
-
       else
 !
 !        Allocate a new set of buffer entries, but don't link
@@ -1152,14 +1126,7 @@
                     last  -  first + 1, &
                     datai                     )
 
-
       return
-
-
-
-
-
-
 
 !$Procedure DASRRC ( DAS, read record, character )
 
@@ -1330,13 +1297,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAS character physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1350,7 +1315,6 @@
 !        to the function RETURN.
 !
 !-&
-
 
 !
 !     If it hasn't been done yet, initialize the pointer list pools.
@@ -1366,7 +1330,7 @@
       end if
 
 !
-!     Check FIRST and LAST.  Use discovery check-in.
+!     Check FIRST and LAST.
 !
       if (        ( first < 1   ) &
             .or.  ( first > nwc ) &
@@ -1405,7 +1369,6 @@
 
          if (         (  handle == hnbufc(node)  ) &
                .and.  (  recno  == rnbufc(node)  )    )  then
-!
 !
 !           Found it.  Move this record to the head of the list.
 !           Update our head pointer as required.
@@ -1469,7 +1432,6 @@
 
          end if
 
-
       else
 !
 !        Allocate a new set of buffer entries, but don't link
@@ -1510,11 +1472,6 @@
       datac  =  rcbufc( node ) ( first : last )
 
       return
-
-
-
-
-
 
 !$Procedure DASWRD ( DAS, write record, double precision )
 
@@ -1670,13 +1627,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAS double precision physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1691,12 +1646,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -1826,11 +1779,6 @@
       headd = node
 
       return
-
-
-
-
-
 
 !$Procedure DASWRI ( DAS, write record, integer )
 
@@ -1985,13 +1933,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAS integer physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2006,12 +1952,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -2142,11 +2086,6 @@
       headi = node
 
       return
-
-
-
-
-
 
 !$Procedure DASWRC ( DAS, write record, character )
 
@@ -2302,13 +2241,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAS character physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2323,12 +2260,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -2457,11 +2392,6 @@
       headc = node
 
       return
-
-
-
-
-
 
 !$Procedure DASURD ( DAS, update record, double precision )
 
@@ -2650,13 +2580,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update DAS double precision physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2671,12 +2599,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -2812,7 +2738,6 @@
 
       end if
 
-
 !
 !     Now try to read the record we're going to update.
 !
@@ -2842,14 +2767,7 @@
 !
       call moved (  datad,  last-first+1,  rcbufd( first, node )  )
 
-
       return
-
-
-
-
-
-
 
 !$Procedure DASURI ( DAS, update record, integer )
 
@@ -3038,13 +2956,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update DAS integer physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3059,12 +2975,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -3227,14 +3141,7 @@
 !
       call movei (  datai,  last-first+1,  rcbufi( first, node )  )
 
-
       return
-
-
-
-
-
-
 
 !$Procedure DASURC ( DAS, update record, character )
 
@@ -3428,13 +3335,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update DAS character physical records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3449,12 +3354,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -3475,7 +3378,6 @@
          pass1  = .false.
 
       end if
-
 
 !
 !     If FIRST or LAST are out of range, no dice.
@@ -3576,7 +3478,6 @@
 !
          if (  upbufc(node)  ) then
 
-
             call zzddhhlu ( hnbufc( node ), 'DAS', .false., wrunit )
 
             call dasioc ( 'WRITE', &
@@ -3622,12 +3523,6 @@
       rcbufc ( node )  ( first : last )   =   datac
 
       return
-
-
-
-
-
-
 
 !$Procedure DASWBR ( DAS, write buffered records )
 
@@ -3741,9 +3636,7 @@
 !        small data additions, and in which the file is read between
 !        write operations.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASWBR_EX1
 !              IMPLICIT NONE
@@ -3792,7 +3685,6 @@
 !              INTEGER               NPASS
 !              INTEGER               PASSNO
 !              INTEGER               XINTBF ( IBUFSZ )
-!
 !
 !        C
 !        C     Initial values
@@ -3984,10 +3876,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Writing buffered data...
 !         Closing DAS file...
@@ -3999,7 +3889,6 @@
 !         Closing DAS file...
 !         File write is done.
 !         File check is done.
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -4048,13 +3937,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write buffered records to a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4069,12 +3956,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check that the file is open for writing.  Signal an error if not.
@@ -4153,8 +4038,6 @@
 
       end do
 
-
-
 !
 !     Next, integer records.
 !
@@ -4201,8 +4084,6 @@
          end if
 
       end do
-
-
 
 !
 !     And last, character records.

@@ -154,8 +154,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -202,9 +200,6 @@
       integer(ip)           totkey
       integer(ip)           tpage  ( pgsizi )
 
-!
-!     Use discovery check-in.
-!
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
@@ -308,8 +303,6 @@
 !
          call zzekpgwi ( handle, root, rpage )
 
-
-
       else if ( key == totkey ) then
 !
 !        The deleted key is the last key in the tree.  This case
@@ -320,7 +313,6 @@
                          target,  toffst,  level,  datptr  )
 
          if ( failed() ) return
-
 
          call zzekpgri ( handle, target, tpage )
 
@@ -363,14 +355,12 @@
          call zzekpgwi ( handle, root,   rpage )
          call zzekpgwi ( handle, target, tpage )
 
-
       else
 !
 !        Locate the item we wish to delete.
 !
          call zzektrlk ( handle,  tree,    key,    keyidx, &
                          target,  toffst,  level,  datptr )
-
 
          if ( level == depth ) then
 !
@@ -454,7 +444,6 @@
 !
             call zzekpgwi ( handle, target, tpage )
 
-
          else
 !
 !           The node containing KEY is not a leaf node.  Therefore,
@@ -492,7 +481,6 @@
 !           accomplished simply by transferring the data pointer.
 !
             call zzekpgri ( handle, leaf, lpage )
-
 
             if ( target == root ) then
 !
@@ -578,7 +566,6 @@
 
             tnkeys  =  tpage ( trnkc  )
 
-
             if ( rpidx > 0 ) then
 
                do i = rpidx, tnkeys
@@ -604,7 +591,6 @@
 !
          tnkeys  =  rpage ( trnkr )
 
-
          if ( rpidx > 0 ) then
 
             do i = rpidx, tnkeys
@@ -624,7 +610,6 @@
          call zzekpgwi ( handle, root, rpage )
 
       end if
-
 
       return
       end

@@ -109,9 +109,7 @@
 !        of the ID code set: find the coverage for each item in the
 !        set and display the coverage.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKOBJ_EX1
 !              IMPLICIT NONE
@@ -161,7 +159,6 @@
 !              INTEGER               IDS   ( LBCELL : MAXOBJ )
 !              INTEGER               J
 !              INTEGER               NIV
-!
 !
 !        C
 !        C     Load a leapseconds kernel for output time conversion.
@@ -252,11 +249,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0012.tls and the SPK
 !        file named mar097.bsp, the output was:
-!
 !
 !        Name of leapseconds kernel > naif0012.tls
 !        Name of SPK file           > mar097.bsp
@@ -317,7 +312,6 @@
 !
 !         ========================================
 !
-!
 ! $ Restrictions
 !
 !     1)  If an error occurs while this routine is updating the set
@@ -364,14 +358,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find id codes of ephemeris objects in SPK file
 !     find id codes of bodies in SPK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -406,7 +398,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     See whether GETFAT thinks we've got an SPK file.

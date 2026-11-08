@@ -152,10 +152,7 @@
 !
       data                 first  / .true. /
 
-
       if ( return() ) return
-
-
 
       if ( first ) then
 !
@@ -193,7 +190,6 @@
 
       end if
 
-
       if ( intbff == natbff ) then
 !
 !        The file has native format.
@@ -213,7 +209,6 @@
             return
 
          end if
-
 
       else
 !

@@ -164,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch from an integer set
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -202,7 +200,6 @@
       else
          fetchi = nth
       end if
-
 
       return
       end

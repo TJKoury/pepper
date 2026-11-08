@@ -92,7 +92,6 @@
 !        ERRFNM is used to replace the marker in the long error
 !        message with the name of the file.
 !
-!
 !        READ ( UNIT, REC=RECNUM, IOSTAT=IOSTAT ) RECORD
 !
 !         IF ( IOSTAT .NE. 0 ) THEN
@@ -110,7 +109,6 @@
 !
 !         END IF
 !
-!
 !         If the unit is attached to the file SAMPLE.DAT, RECNUM
 !         is 15 and IOSTAT is 36, and the INQUIRE statement in
 !         this routine executed successfully, the long error
@@ -118,7 +116,6 @@
 !
 !           'Error reading record number 15 from file SAMPLE.DAT.
 !            The value of IOSTAT was 36.'
-!
 !
 !         If the unit is not attached to a file or if the INQUIRE
 !         statement in this routine failed to execute successfully,
@@ -128,11 +125,9 @@
 !           <unavailable from the system>. The value of IOSTAT
 !           was 36.'
 !
-!
 !     2. Note that the case of the marker is significant. The following
 !        code fragment contains a call to ERRFNM using a marker
 !        that does not appear in the long error message.
-!
 !
 !        READ ( UNIT, REC=RECNUM, IOSTAT=IOSTAT ) RECORD
 !
@@ -150,7 +145,6 @@
 !            RETURN
 !
 !         END IF
-!
 !
 !         If the marker is not found, ERRFNM does not substitute
 !         the filename for the marker. The long error message in
@@ -190,13 +184,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert filename into long error message
 !
 !-&
-
 
 !
 !     Local variables
@@ -204,9 +196,6 @@
       character(filen)      name
 
       integer(ip)           iostat
-
-
-
 
 !
 !     Initialize the variables.
@@ -220,7 +209,6 @@
       inquire ( unit   = unit, &
                 name   = name, &
                 iostat = iostat )
-
 
 !
 !     If the INQUIRE statement executed successfully and the unit

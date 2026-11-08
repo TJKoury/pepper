@@ -110,13 +110,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parabolic time of flight
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -138,15 +136,10 @@
       real(wp)              deriv2
       real(wp)              change
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     If the mean anomaly is zero, the eccentric anomaly is also zero
@@ -161,13 +154,11 @@
          m = abs ( ma )
       end if
 
-
 !
 !     We need an initial guess for the eccentric anomaly D. The function
 !     is well behaved, so just about any guess will do.
 !
       d = dcbrt ( 3.0_wp * m )
-
 
 !
 !     Use the Newton second-order method,
@@ -183,7 +174,6 @@
 !
 !                     2
 !          f'  = 1 + D
-!
 !
 !          f'' = 2 D
 !
@@ -204,7 +194,6 @@
       if ( ma < 0.0_wp ) then
          d = -d
       end if
-
 
       return
       end

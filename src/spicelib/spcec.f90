@@ -165,13 +165,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract comments from SPK or CK file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -185,7 +183,6 @@
 !        make certain that HANDLE is present in DAFAH's file table.
 !
 !-&
-
 
 !
 !     SPICELIB functions

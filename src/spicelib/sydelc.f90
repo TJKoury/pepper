@@ -135,13 +135,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete a symbol from a symbol table
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -162,8 +160,6 @@
       integer(ip)           locsym
       integer(ip)           locval
       integer(ip)           dimval
-
-
 
 !
 !     Standard SPICE error handling.
@@ -201,7 +197,6 @@
          call scardc ( nval, tabval )
 
       end if
-
 
       return
       end

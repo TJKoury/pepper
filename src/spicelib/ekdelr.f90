@@ -161,13 +161,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete record from an EK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -281,31 +279,25 @@
 
             call zzekde01 ( handle, segdsc, coldsc, recptr )
 
-
          else if ( class == 2 ) then
 
             call zzekde02 ( handle, segdsc, coldsc, recptr )
-
 
          else if ( class == 3 ) then
 
             call zzekde03 ( handle, segdsc, coldsc, recptr )
 
-
          else if ( class == 4 ) then
 
             call zzekde04 ( handle, segdsc, coldsc, recptr )
-
 
          else if ( class == 5 ) then
 
             call zzekde05 ( handle, segdsc, coldsc, recptr )
 
-
          else if ( class == 6 ) then
 
             call zzekde06 ( handle, segdsc, coldsc, recptr )
-
 
          else
 !
@@ -315,7 +307,6 @@
 
             call dashlu    ( handle, unit )
             call zzekcnam  ( handle, coldsc, column )
-
 
             call setmsg ( 'Class # from input column descriptor '  // &
                           'is not supported.  COLUMN = #; '        // &
@@ -372,7 +363,6 @@
 !     Write out the updated segment descriptor.
 !
       call dasudi ( handle,  mbase+1,  mbase+sdscsz,  segdsc )
-
 
       return
       end

@@ -131,7 +131,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -140,7 +139,6 @@
 
 !
 !     Local variables
-!
 !
 !     Note:  the integer fill buffer should be as large as the maximum
 !     of the integer page size and the metadata area size.
@@ -176,11 +174,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
-
-
 
 !$Procedure  ZZEKPGIN ( Private: Initialize DAS for paged access )
 
@@ -283,7 +276,6 @@
 !
 !-&
 
-
 !
 !     The file must be open for write access.
 !
@@ -345,10 +337,6 @@
 !     interpreted as null pointer, all pointers are initialized.
 !
       return
-
-
-
-
 
 !$Procedure  ZZEKPGAN ( Private: EK, allocate new page )
 
@@ -462,14 +450,12 @@
 !
 !-&
 
-
 !
 !     Validate the file.
 !
       call zzekpgch ( handle, 'WRITE' )
 
       if ( failed() ) return
-
 
       if ( type == chr ) then
 !
@@ -489,7 +475,6 @@
          p     =  npc + 1
          base  =  npc * pgsizc
 
-
       else if ( type == dp ) then
 
          call dasadd ( handle, pgsizd, dfill )
@@ -499,7 +484,6 @@
 
          p     =  npd + 1
          base  =  npd * pgsizd
-
 
       else if ( type == int ) then
 
@@ -511,7 +495,6 @@
          p     =  npi + 1
          base  =  npi * pgsizi  +  pgbasi
 
-
       else
 
          call setmsg ( 'The data type code # was not recognized.' )
@@ -522,9 +505,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure  ZZEKPGAL ( Private: EK, allocate page )
 
@@ -641,14 +621,12 @@
 
       if ( failed() ) return
 
-
       if ( type == chr ) then
 !
 !        If the character free list is non-empty, take a page from
 !        that list.
 !
          call dasrdi ( handle, epfpc, epfpc, freec )
-
 
          if ( freec > 0 ) then
 !
@@ -679,7 +657,6 @@
 !
             base  =  (p-1) * pgsizc
 
-
          else
 !
 !           The new page follows the last character address.
@@ -700,15 +677,12 @@
 
          end if
 
-
-
       else if ( type == dp ) then
 !
 !        If the d.p. free list is non-empty, take a page from
 !        that list.
 !
          call dasrdi ( handle, epfpd, epfpd, freed )
-
 
          if ( freed > 0 ) then
 !
@@ -737,7 +711,6 @@
 !
             base  =  (p-1) * pgsizd
 
-
          else
 !
 !           The new page follows the last d.p. address.
@@ -758,14 +731,12 @@
 
          end if
 
-
       else if ( type == int ) then
 !
 !        If the integer free list is non-empty, take a page from
 !        that list.
 !
          call dasrdi ( handle, epfpi, epfpi, freei )
-
 
          if ( freei > 0 ) then
 !
@@ -793,7 +764,6 @@
 !
             base  =  (p-1) * pgsizi  +  pgbasi
 
-
          else
 
             call dasadi ( handle, pgsizi, ifill )
@@ -806,7 +776,6 @@
 
          end if
 
-
       else
 
          call setmsg ( 'The data type code # was not recognized.' )
@@ -817,11 +786,6 @@
       end if
 
       return
-
-
-
-
-
 
 !$Procedure  ZZEKPGFR ( Private: EK, free page )
 
@@ -936,7 +900,6 @@
 
       if ( failed() ) return
 
-
       if ( type == chr ) then
 !
 !        Validate the page number.  Find out how many pages are
@@ -976,7 +939,6 @@
          call dasudi ( handle, epfpc,  epfpc,  p        )
          call dasudi ( handle, epnfpc, epnfpc, nfreec+1 )
 
-
       else if ( type == dp ) then
 !
 !        Validate the page number.  Find out how many pages are
@@ -1014,9 +976,6 @@
 !
          call dasudi ( handle, epfpd,  epfpd,  p        )
          call dasudi ( handle, epnfpd, epnfpd, nfreed+1 )
-
-
-
 
       else if ( type == int ) then
 !
@@ -1056,7 +1015,6 @@
          call dasudi ( handle, epfpi,  epfpi,  p        )
          call dasudi ( handle, epnfpi, epnfpi, nfreei+1 )
 
-
       else
 
          call setmsg ( 'The data type code # was not recognized.' )
@@ -1067,9 +1025,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure  ZZEKPGRC ( Private: EK, read character page )
 
@@ -1173,7 +1128,6 @@
 !
 !     Use discovery check-in.
 !
-!
 !     Find out how many character pages are in use.
 !
       call dasrdi ( handle, epnpc, epnpc, npc )
@@ -1200,9 +1154,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure  ZZEKPGRD ( Private: EK, read d.p. page )
 
@@ -1301,7 +1252,6 @@
 !
 !     Use discovery check-in.
 !
-!
 !     Find out how many d.p. pages are in use.
 !
       call dasrdi ( handle, epnpd, epnpd, npd )
@@ -1321,10 +1271,6 @@
       call dasrdd ( handle, addr, addr+pgsizd-1, paged )
 
       return
-
-
-
-
 
 !$Procedure  ZZEKPGRI ( Private: EK, read integer page )
 
@@ -1423,7 +1369,6 @@
 !
 !     Use discovery check-in.
 !
-!
 !     Find out how many integer pages are in use.
 !
       call dasrdi ( handle, epnpi, epnpi, npi )
@@ -1443,11 +1388,6 @@
       call dasrdi ( handle, addr, addr+pgsizi-1, pagei )
 
       return
-
-
-
-
-
 
 !$Procedure  ZZEKPGWC ( Private: EK, write character page )
 
@@ -1576,7 +1516,6 @@
 
       end if
 
-
       l  =  len( pagec )
 
       if ( l < pgsizc ) then
@@ -1589,16 +1528,11 @@
 
       end if
 
-
       addr   =   (p-1)*pgsizc + 1
 
       call dasudc ( handle, addr, addr+pgsizc-1, 1, pgsizc, pagec )
 
       return
-
-
-
-
 
 !$Procedure  ZZEKPGWD ( Private: EK, write d.p. page )
 
@@ -1703,7 +1637,6 @@
 !
 !     Use discovery check-in.
 !
-!
 !     Validate the file.
 !
       call zzekpgch ( handle, 'WRITE' )
@@ -1725,17 +1658,11 @@
 
       end if
 
-
       addr   =  (p-1)*pgsizd + 1
 
       call dasudd ( handle, addr, addr+pgsizd-1, paged )
 
       return
-
-
-
-
-
 
 !$Procedure  ZZEKPGWI ( Private: EK, write integer page )
 
@@ -1861,17 +1788,11 @@
 
       end if
 
-
       addr   =   pgbasi + (p-1)*pgsizi + 1
 
       call dasudi ( handle, addr, addr+pgsizi-1, pagei )
 
       return
-
-
-
-
-
 
 !$Procedure  ZZEKPGBS ( Private: EK, map page to base address )
 
@@ -1971,11 +1892,9 @@
 
          base  =   ( p - 1 ) * pgsizc
 
-
       else if ( type == dp ) then
 
          base  =   ( p - 1 ) * pgsizd
-
 
       else if ( type == int ) then
 
@@ -1991,11 +1910,6 @@
       end if
 
       return
-
-
-
-
-
 
 !$Procedure  ZZEKPGPG ( Private: EK, map address to page )
 
@@ -2103,19 +2017,15 @@
 !
 !-&
 
-
-
       if ( type == chr ) then
 
          p     =   ( addrss  + pgsizc - 1 ) / pgsizc
          base  =   ( p - 1 ) * pgsizc
 
-
       else if ( type == dp ) then
 
          p     =   ( addrss  + pgsizd - 1 ) / pgsizd
          base  =   ( p - 1 ) * pgsizd
-
 
       else if ( type == int ) then
 
@@ -2132,9 +2042,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure  ZZEKPGST ( Private: EK, return paging statistics )
 
@@ -2246,33 +2153,25 @@
 !
 !-&
 
-
-
-
       if (  eqstr( stat, 'N_C_ALLOC' )  ) then
 
          call dasrdi ( handle, epnpc, epnpc, value   )
-
 
       else if (  eqstr( stat, 'N_D_ALLOC' )  ) then
 
          call dasrdi ( handle, epnpd, epnpd, value   )
 
-
       else if (  eqstr( stat, 'N_I_ALLOC' )  ) then
 
          call dasrdi ( handle, epnpi, epnpi, value   )
-
 
       else if (  eqstr( stat, 'N_C_FREE' )  ) then
 
          call dasrdi ( handle, epnfpc, epnfpc, value   )
 
-
       else if (  eqstr( stat, 'N_D_FREE' )  ) then
 
          call dasrdi ( handle, epnfpd, epnfpd, value   )
-
 
       else if (  eqstr( stat, 'N_I_FREE' )  ) then
 

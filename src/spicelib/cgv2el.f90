@@ -90,9 +90,7 @@
 !     1) Create a SPICE ellipse given its center and two linearly
 !        independent generating vectors of the ellipse.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CGV2EL_EX1
 !              IMPLICIT NONE
@@ -159,10 +157,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        SPICE ellipse:
 !          Semi-minor axis:  0.000000  1.414214  0.000000
@@ -174,12 +170,9 @@
 !          Semi-major axis:  1.414214 -0.000000  1.414214
 !          Center         : -1.000000  1.000000 -1.000000
 !
-!
 !     2) Find the intersection of an ellipse with a plane.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CGV2EL_EX2
 !              IMPLICIT NONE
@@ -243,15 +236,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Number of intercept points:  2
 !          Point 1:  1.131371  0.000000 -2.687006
 !          Point 2: -1.131371 -0.000000  2.687006
-!
 !
 ! $ Restrictions
 !
@@ -285,13 +275,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     center and generating vectors to ellipse
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -313,13 +301,11 @@
 !
 !        MINPOS through MINPOS + 1
 !
-!
       integer(ip), parameter :: ctrpos = 1
 
       integer(ip), parameter :: majpos = 4
 
       integer(ip), parameter :: minpos = 7
-
 
 !
 !     Standard SPICE error handling.

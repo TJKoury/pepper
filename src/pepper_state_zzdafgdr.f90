@@ -19,9 +19,9 @@ module pepper_state_zzdafgdr
 
    !> The saved variables of ZZDAFGDR.
    type, public :: zzdafgdr_state
-      logical :: first  !! saved between calls by ZZDAFGDR
-      integer(ip) :: natbff  !! saved between calls by ZZDAFGDR
-      character(strsiz) :: strbff ( numbff )  !! saved between calls by ZZDAFGDR
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff )  !! names of the binary file formats
    end type zzdafgdr_state
 
 contains

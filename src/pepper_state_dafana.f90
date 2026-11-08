@@ -26,44 +26,24 @@ module pepper_state_dafana
 
    !> The saved variables of DAFANA.
    type, public :: dafana_state
-      integer(ip) :: stfh   (         tbsize )  !! these variables are maintained in a table of
-                                                !! parallel arrays; the size of the table is TBSIZE.
-      character(ifnlen) :: stifnm (         tbsize )  !! saved between calls by DAFANA
-      logical :: staddg (         tbsize )  !! saved between calls by DAFANA
-      integer(ip) :: stfrst (         tbsize )  !! saved between calls by DAFANA
-      integer(ip) :: stlast (         tbsize )  !! saved between calls by DAFANA
-      integer(ip) :: stfree (         tbsize )  !! saved between calls by DAFANA
-      integer(ip) :: stbegn (         tbsize )  !! saved between calls by DAFANA
-      real(wp) :: stlsum ( maxsum, tbsize )  !! saved between calls by DAFANA
-      character(crlen) :: stname (         tbsize )  !! saved between calls by DAFANA
-      integer(ip) :: stpool ( tbsize )  !! saved between calls by DAFANA
-      integer(ip) :: sthead  !! saved between calls by DAFANA
-      integer(ip) :: stfptr  !! saved between calls by DAFANA
-      character(crlen) :: namrec  !! other local variables
-      character(filen) :: dafnam  !! saved between calls by DAFANA
-      character(ifnlen) :: ifname  !! saved between calls by DAFANA
-      real(wp) :: dc     ( maxndc )  !! saved between calls by DAFANA
-      real(wp) :: sumrec ( dprsiz )  !! saved between calls by DAFANA
-      integer(ip) :: bward  !! saved between calls by DAFANA
-      integer(ip) :: cloc  !! saved between calls by DAFANA
-      integer(ip) :: dloc  !! saved between calls by DAFANA
-      integer(ip) :: free  !! saved between calls by DAFANA
-      integer(ip) :: fward  !! saved between calls by DAFANA
-      integer(ip) :: i  !! saved between calls by DAFANA
-      integer(ip) :: ic     ( maxnic )  !! saved between calls by DAFANA
-      integer(ip) :: namsiz  !! saved between calls by DAFANA
-      integer(ip) :: nd  !! saved between calls by DAFANA
-      integer(ip) :: ni  !! saved between calls by DAFANA
-      integer(ip) :: narray  !! saved between calls by DAFANA
-      integer(ip) :: next  !! saved between calls by DAFANA
-      integer(ip) :: nextp  !! saved between calls by DAFANA
-      integer(ip) :: opnset ( lbcell : ftsize )  !! saved between calls by DAFANA
-      integer(ip) :: p  !! saved between calls by DAFANA
-      integer(ip) :: prev  !! saved between calls by DAFANA
-      integer(ip) :: sumsiz  !! saved between calls by DAFANA
-      integer(ip) :: word  !! saved between calls by DAFANA
-      logical :: first  !! saved between calls by DAFANA
-      logical :: found  !! saved between calls by DAFANA
+      integer(ip) :: stfh   (         tbsize )  !! handle of each DAF being written
+      character(ifnlen) :: stifnm (         tbsize )  !! internal file name of each DAF being
+                                                      !! written
+      logical :: staddg (         tbsize )  !! an array is being added to each DAF (between DAFBNA
+                                            !! and DAFENA)
+      integer(ip) :: stfrst (         tbsize )  !! record number of the first summary record of each
+                                                !! DAF
+      integer(ip) :: stlast (         tbsize )  !! record number of the last summary record of each
+                                                !! DAF
+      integer(ip) :: stfree (         tbsize )  !! address of the next free word of each DAF
+      integer(ip) :: stbegn (         tbsize )  !! beginning address of the new array of each DAF
+      real(wp) :: stlsum ( maxsum, tbsize )  !! summary of the new array of each DAF
+      character(crlen) :: stname (         tbsize )  !! name of the new array of each DAF
+      integer(ip) :: stpool ( tbsize )  !! linked-list pool of the state table (active and free
+                                        !! entries)
+      integer(ip) :: sthead  !! head of the list of active entries of the state table
+      integer(ip) :: stfptr  !! head of the list of free entries of the state table
+      logical :: first  !! the state table has not been initialized yet
    end type dafana_state
 
 contains

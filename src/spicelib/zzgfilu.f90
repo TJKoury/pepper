@@ -160,18 +160,15 @@
 !
 !        Removed unused declaration of parameter SUN.
 !
-!
 !-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
 !
 !-&
-
 
 ! $ Index_Entries
 !
 !     umbrella routine for finding illumination angle events.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -269,8 +266,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
 
-
-
 !$Procedure ZZGFILIN ( GF, illumination angle utility initialization )
 
       entry zzgfilin ( method, angtyp, target, illum, &
@@ -337,7 +332,6 @@
 !              Neither case nor blanks are significant in METHOD.
 !              For example, the string ' eLLipsoid ' is valid.
 !
-!
 !     ANGTYP   is a string specifying the type of illumination
 !              angle for which a search is to be performed. The
 !              possible values of ANGTYP are
@@ -357,7 +351,6 @@
 !              ANGTYP. For example, the string ' Incidence ' is
 !              valid.
 !
-!
 !     TARGET   is the name of a target body. Optionally, you may
 !              supply the integer ID code for the object as
 !              an integer string. For example both 'MOON' and
@@ -369,7 +362,6 @@
 !
 !              Case and leading or trailing blanks are not
 !              significant in the string TARGET.
-!
 !
 !     ILLUM    is the name of the illumination source. This source
 !              may be any ephemeris object. Case, blanks, and
@@ -397,14 +389,12 @@
 !              Case and embedded blanks are not significant in
 !              ABCORR.
 !
-!
 !     OBSRVR   is the name of the body from which the occultation is
 !              observed. Optionally, you may supply the integer NAIF
 !              ID code for the body as a string.
 !
 !              Case and leading or trailing blanks are not
 !              significant in the string OBSRVR.
-!
 !
 !     SPOINT   is a surface point on the target body, expressed in
 !              Cartesian coordinates, relative to the body-fixed
@@ -502,16 +492,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     illumination angle initialization routine
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     Find NAIF IDs for TARGET, OBSRVR, and ILLUM.
@@ -533,7 +520,6 @@
 
       end if
 
-
       call bods2c ( obsrvr, svobs, found )
 
       if ( failed() ) return
@@ -551,7 +537,6 @@
 
       end if
 
-
       call bods2c ( illum, svilum, found )
 
       if ( failed() ) return
@@ -568,7 +553,6 @@
          return
 
       end if
-
 
 !
 !     Make sure the observer and target are distinct.
@@ -686,7 +670,6 @@
 !     Look up the frame attributes; make sure the frame is centered
 !     on the target body.
 !
-!
 !     Determine the attributes of the frame designated by FIXREF.
 !
       call namfrm ( fixref, fxfcde )
@@ -737,12 +720,7 @@
 
       end if
 
-
       return
-
-
-
-
 
 !$Procedure ZZGFILDC ( GF, is illumination angle decreasing? )
 
@@ -858,19 +836,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     indicate whether illumination angle is decreasing
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Compute the rates of change of all of the illumination angles.
@@ -909,8 +884,6 @@
       decres  =  rate  <  0.0_wp
 
       return
-
-
 
 !$Procedure ZZGFILGQ ( GF, get illumination angle )
 
@@ -1015,16 +988,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return illumination angle
 !
 !-&
 
-
       if ( return() ) return
-
 
       call illumg ( svmeth, svtnam,    svinam,    et,      svref, &
                     svcorr, svonam,    svsspt,    ettarg, &

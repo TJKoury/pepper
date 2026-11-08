@@ -171,14 +171,12 @@
 !                            Newtonian light time correction and
 !                            stellar aberration correction.
 !
-!
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
 !              by this routine.
 !
 !              Case and blanks are not significant in the string
 !              ABCORR.
-!
 !
 !     STOBS    is the geometric state of the observer relative to
 !              the solar system barycenter at ET. STOBS is expressed
@@ -332,7 +330,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: spkaps_ex1.tm
@@ -356,7 +353,6 @@
 !                                            radii
 !              naif0008.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de418.bsp',
@@ -367,9 +363,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKAPS_EX1
 !              IMPLICIT NONE
@@ -471,10 +465,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         ET =    0.0000000000000000
 !         J2000 x-position (km):     -291584.61369497533
@@ -525,7 +517,6 @@
 !         J2000 z-velocity (km/s):  -0.29445864490384888
 !         One-way light time (s):     1.3438080956559786
 !         Light time rate:            1.0067340363005083E-007
-!
 !
 ! $ Restrictions
 !
@@ -578,14 +569,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     low-level aberration-corrected state computation
 !     low-level light time and stellar aberration correction
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -633,8 +622,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !

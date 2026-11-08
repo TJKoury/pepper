@@ -189,7 +189,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        The file "ekaclc_ex1.bdb" will contain two segments, the first
 !        containing the DATAORDERS table and the second containing the
 !        DATAITEMS table.
@@ -202,9 +201,7 @@
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACLC_EX1
 !              IMPLICIT NONE
@@ -314,14 +311,12 @@
 !             .             'INDEXED  = TRUE,'             //
 !             .             'NULLS_OK = TRUE'
 !
-!
 !        C
 !        C     Start the segment.  We presume the number of  rows
 !        C     of data is known in advance.
 !        C
 !              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
 !             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
-!
 !
 !        C
 !        C     At this point, arrays containing data for the
@@ -411,7 +406,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -453,13 +447,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write entire character column to EK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -521,14 +513,12 @@
 !
          call zzekac06 ( handle, segdsc, coldsc, cvals, entszs, nlflgs )
 
-
       else if ( class == 9 ) then
 !
 !        Class 9 columns contain fixed-count, fixed-length character
 !        scalars.
 !
          call zzekac09 ( handle, segdsc, coldsc, cvals, nlflgs, wkindx )
-
 
       else
 !

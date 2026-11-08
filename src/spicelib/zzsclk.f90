@@ -118,7 +118,6 @@
 
       integer(ip), parameter :: maxids = 10
 
-
       character(wdsize)     sclk
       character(wdsize)     sclkvr ( 7 )
       character(wdsize)     type
@@ -145,13 +144,11 @@
 
       data                  first / .true. /
 
-
       zzsclk = .false.
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
       if ( first ) then
          first = .false.

@@ -22,7 +22,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'ekqlimit.inc'
@@ -79,7 +78,6 @@
 !                    the order relation
 !
 !                       <row1> OP <row2>
-!
 !
 !     NCOLS          is the number of columns used to define a
 !                    dictionary ordering.
@@ -239,7 +237,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -256,8 +253,6 @@
       integer(ip)           rows   ( 2 )
       integer(ip)           sgdscs ( sdscsz, 2 )
 
-!
-!     Use discovery check-in for speed.
 !
 !     The function value defaults to .FALSE.
 !
@@ -306,7 +301,6 @@
 
       end do
 
-
 !
 !     Determine the truth of the input relational expression.
 !
@@ -314,31 +308,25 @@
 
          zzekrcmp  =  rel == eq
 
-
       else if ( op == lt )   then
 
          zzekrcmp  =  rel == lt
-
 
       else if ( op == le )   then
 
          zzekrcmp  =  rel /= gt
 
-
       else if ( op == gt )   then
 
          zzekrcmp  =  rel == gt
-
 
       else if ( op == ge )   then
 
          zzekrcmp  =  rel /= lt
 
-
       else if ( op == ne )   then
 
          zzekrcmp  =  rel /= eq
-
 
       else
 !
@@ -352,7 +340,6 @@
          return
 
       end if
-
 
       return
       end

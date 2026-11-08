@@ -39,7 +39,6 @@
       include               'zzctr.inc'
       include               'zzdsk.inc'
 
-
       character(*)          method
       character(*)          target
       real(wp)              et
@@ -90,7 +89,6 @@
 !
 !                    is accepted as well.
 !
-!
 !                 'INTERCEPT/ELLIPSOID'
 !
 !                    The sub-observer point computation uses a
@@ -105,7 +103,6 @@
 !                       'Intercept: ellipsoid'
 !
 !                    is accepted as well.
-!
 !
 !                 'NADIR/DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
 !
@@ -147,7 +144,6 @@
 !                    See the $Particulars section below for details
 !                    concerning use of DSK data.
 !
-!
 !                 'INTERCEPT/DSK/UNPRIORITIZED[/SURFACES =
 !                                              <surface list>]'
 !
@@ -163,7 +159,6 @@
 !                    The surface list specification is optional. The
 !                    syntax of the list is identical to that for the
 !                    NADIR option described above.
-!
 !
 !                 Neither case nor white space are significant in
 !                 METHOD, except within double-quoted strings. For
@@ -184,7 +179,6 @@
 !
 !                    "MARS MEGDR128PIXEL/DEG"
 !
-!
 !     TARGET   is the name of the target body. The target body is
 !              an ephemeris object (its trajectory is given by
 !              SPK data), and is an extended object.
@@ -202,7 +196,6 @@
 !              present in the kernel pool. Normally the kernel
 !              variable would be defined by loading a PCK file.
 !
-!
 !     ET       is the epoch of participation of the observer,
 !              expressed as ephemeris seconds past J2000 TDB: ET is
 !              the epoch at which the observer's state is computed.
@@ -218,7 +211,6 @@
 !              the sign applied to LT depends on the selected
 !              correction. See the description of ABCORR below for
 !              details.
-!
 !
 !     FIXREF   is the name of a body-fixed reference frame centered
 !              on the target body. FIXREF may be any such frame
@@ -258,7 +250,6 @@
 !              sub-observer point's location at the light-time
 !              corrected epoch ET-LT and *arrive* at the observer's
 !              location at ET:
-!
 !
 !                 'LT'       Correct for one-way light time (also
 !                            called "planetary aberration") using a
@@ -306,7 +297,6 @@
 !                            slowly when a converged solution is
 !                            computed.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -348,14 +338,12 @@
 !                            Newtonian light time and stellar
 !                            aberration corrections.
 !
-!
 !              Neither case nor white space are significant in
 !              ABCORR. For example, the string
 !
 !                'Lt + s'
 !
 !              is valid.
-!
 !
 !     OBSRVR   is the name of the observing body. The observing body
 !              is an ephemeris object: it typically is a spacecraft,
@@ -409,7 +397,6 @@
 !
 !              The components of SPOINT have units of km.
 !
-!
 !     TRGEPC   is the "sub-observer point epoch." TRGEPC is defined
 !              as follows: letting LT be the one-way light time
 !              between the observer and the sub-observer point,
@@ -420,7 +407,6 @@
 !              method indicated by ABCORR.
 !
 !              TRGEPC is expressed as seconds past J2000 TDB.
-!
 !
 !     SRFVEC   is the vector from the observer's position at ET to
 !              the aberration-corrected (or optionally, geometric)
@@ -657,7 +643,6 @@
 !     sources other than SPICE, it's essential to make sure the same
 !     geometric definitions are used.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -678,7 +663,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -705,7 +689,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -778,8 +761,6 @@
 !
 !        'NADIR/DSK/UNPRIORITIZED/SURFACES= "Mars MEGDR 64 PIXEL/DEG",3'
 !
-!
-!
 !        Aberration corrections
 !        ----------------------
 !
@@ -798,7 +779,6 @@
 !     platforms. The results depend on the SPICE kernels used as
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
-!
 !
 !     1) Find the sub-Earth point on Mars for a specified time.
 !
@@ -822,7 +802,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -862,9 +841,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SUBPNT_EX1
 !              IMPLICIT NONE
@@ -1055,10 +1032,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Computation method = Intercept/ellipsoid
 !
@@ -1074,7 +1049,6 @@
 !          Sub-observer planetocentric LAT  (deg) =         25.994934171
 !          Observer planetocentric LAT      (deg) =         25.994934171
 !
-!
 !         Computation method = Near point/ellipsoid
 !
 !          Observer ALT relative to spheroid (km) =  349199089.540938556
@@ -1088,7 +1062,6 @@
 !          Observer planetocentric LON      (deg) =        160.697694971
 !          Sub-observer planetocentric LAT  (deg) =         25.729407227
 !          Observer planetocentric LAT      (deg) =         25.994934171
-!
 !
 !         Computation method = Intercept/DSK/Unprioritized
 !
@@ -1104,7 +1077,6 @@
 !          Sub-observer planetocentric LAT  (deg) =         25.994934171
 !          Observer planetocentric LAT      (deg) =         25.994934171
 !
-!
 !         Computation method = Nadir/DSK/Unprioritized
 !
 !          Observer ALT relative to spheroid (km) =  349199089.541007578
@@ -1118,7 +1090,6 @@
 !          Observer planetocentric LON      (deg) =        160.697695000
 !          Sub-observer planetocentric LAT  (deg) =         25.729237570
 !          Observer planetocentric LAT      (deg) =         25.994934171
-!
 !
 !     2) Use SUBPNT to find the sub-spacecraft point on Mars for the
 !        Mars Reconnaissance Orbiter spacecraft (MRO) at a specified
@@ -1156,7 +1127,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1215,9 +1185,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SUBPNT_EX2
 !              IMPLICIT NONE
@@ -1407,10 +1375,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Sub-observer point computation method = Ellipsoid/Near point
 !
@@ -1471,7 +1437,6 @@
 !              Observer altitude         (km) =         249.785151209
 !
 !           Intercept comparison error (km) =           0.000000001
-!
 !
 ! $ Restrictions
 !
@@ -1570,7 +1535,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find sub-observer point on target body
@@ -1578,7 +1542,6 @@
 !     find nearest point to observer on target body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1603,7 +1566,6 @@
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
       real(wp), parameter :: cnvlim = 1.0e-17_wp
-
 
       integer(ip), parameter :: maxitr = 5
 
@@ -1740,8 +1702,6 @@
 !
       save                  svctr4
 
-
-
 !
 !     Initial values
 !
@@ -1751,12 +1711,10 @@
       data                  prvmth  / ' '    /
       data                  shape   / -1     /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Counter initialization is done separately.
@@ -1770,7 +1728,6 @@
          call zzctruin( svctr3 )
 
       end if
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -1794,7 +1751,6 @@
 !           USECN indicates converged Newtonian light time correction.
 !
 !           USESTL indicates stellar aberration corrections.
-!
 !
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
@@ -1831,7 +1787,6 @@
          return
 
       end if
-
 
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
@@ -1933,7 +1888,6 @@
 
          if ( failed() ) return
 
-
          if ( subtyp == ' ' ) then
 
             call setmsg ( 'Sub-observer point type was invalid or ' &
@@ -1943,7 +1897,6 @@
             return
 
          end if
-
 
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
@@ -1965,7 +1918,6 @@
 
          end if
 
-
          if ( shape == ellshp ) then
 !
 !           Allow both "near point" and "nadir" expressions the
@@ -1981,7 +1933,6 @@
             near = eqstr( subtyp, 'NADIR' )
 
          end if
-
 
          if ( .not. near ) then
 
@@ -2010,7 +1961,6 @@
 !
       first  = .false.
 
-
       if ( shape == dskshp ) then
 !
 !        This is the DSK case.
@@ -2019,7 +1969,6 @@
 !        model for the surface of the target body.
 !
          call zzsudski ( trgcde, nsurf, srflst, fixfid )
-
 
       else if ( shape /= ellshp ) then
 
@@ -2180,7 +2129,6 @@
 
          end if
 
-
       else
 
 !
@@ -2208,7 +2156,6 @@
             end if
 
             alt = vdist ( obspos, spoint )
-
 
          else
 !
@@ -2439,7 +2386,6 @@
 
             end if
 
-
          else
 
 !
@@ -2472,7 +2418,6 @@
                end if
 
                alt = vdist( obspos, spoint )
-
 
             else
 !

@@ -120,8 +120,6 @@
 !     STRAD      is an array of radii of outer bounding spheres of
 !                segments. Units are km.
 !
-!
-!
 ! $ Detailed_Output
 !
 !     BTBODY     is the input body ID table, modified by this routine.
@@ -132,17 +130,14 @@
 !                to make room for the body designated by BODYID, that
 !                has been done.
 !
-!
 !     BTNBOD     is the number of bodies in the body table. Depending
 !                on what deletions may have been necessary, this
 !                number may be greater than, equal to, or less than
 !                its value on input.
 !
-!
 !     BTSEGP     is an array of start indices in the segment table
 !                of existing entries, updated to reflect appending of
 !                segments corresponding to BODYID.
-!
 !
 !     BTSTSZ     is the array of sizes of segment lists of bodies.
 !                BTSTSZ contains an entry for the body designated by
@@ -151,14 +146,12 @@
 !                If it was necessary to make room, other entries of
 !                BTSTSZ may have been deleted.
 !
-!
 !     STHAN      is the segment handle array, updated to include
 !                an entry for each loaded DSK segment associated
 !                with BODYID.
 !
 !                If it was necessary to make room, other entries of
 !                STHAN may have been deleted.
-!
 !
 !     STDSCR     is the segment DSK descriptor array, updated to include
 !                an entry for each loaded DSK segment associated
@@ -171,7 +164,6 @@
 !                If it was necessary to make room, other entries of
 !                STDESR may have been deleted.
 !
-!
 !     STDLAD     is the segment DLA descriptor array, updated to include
 !                an entry for each loaded DSK segment associated
 !                with BODYID.
@@ -179,10 +171,8 @@
 !                If it was necessary to make room, other entries of
 !                STDLAD may have been deleted.
 !
-!
 !     STFREE     is the index of the first free element in each
 !                segment table array.
-!
 !
 !     STOFF      is the segment frame center offset array, updated to
 !                include an entry for each loaded DSK segment
@@ -191,7 +181,6 @@
 !                If it was necessary to make room, other entries of
 !                STOFF may have been deleted.
 !
-!
 !     STCTR      is the segment bounding sphere center array, updated
 !                to include an entry for each loaded DSK segment
 !                associated with BODYID.
@@ -199,14 +188,12 @@
 !                If it was necessary to make room, other entries of
 !                STCTR may have been deleted.
 !
-!
 !     STRAD      is the segment bounding sphere radius array, updated
 !                to include an entry for each loaded DSK segment
 !                associated with BODYID.
 !
 !                If it was necessary to make room, other entries of
 !                STRAD may have been deleted.
-!
 !
 ! $ Parameters
 !
@@ -363,9 +350,7 @@
       logical               segfnd
       logical               status
 
-
       if ( return() ) return
-
 
 !
 !     Check the body table for presence of the new body. It's
@@ -559,7 +544,6 @@
          end if
 
       end do
-
 
       return
       end

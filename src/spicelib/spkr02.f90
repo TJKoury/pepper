@@ -107,7 +107,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -181,13 +180,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_2 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -209,7 +206,6 @@
       integer(ip)           nrec
       integer(ip)           recno
       integer(ip)           recadr
-
 
 !
 !     Standard SPICE error handling.

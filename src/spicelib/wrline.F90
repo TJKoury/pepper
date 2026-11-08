@@ -60,13 +60,10 @@
 !                                 be any of the reserved strings
 !                                 below.
 !
-!
 !                 'SCREEN'        The output will go to the
 !                                 terminal screen.
 !
-!
 !                 'NULL'          The data will not be output.
-!
 !
 !              'SCREEN' and 'NULL' can be written in mixed
 !              case. For example, the following call will work:
@@ -156,7 +153,6 @@
 !
 !         will be written to the screen.
 !
-!
 !     2)  Write out all of the elements of a character string array
 !         to a file.
 !
@@ -167,7 +163,6 @@
 !                DO I = 1, ASIZE
 !                   CALL WRLINE ( FILE, STRING(I) )
 !                END DO
-!
 !
 !     3)  Set DEVICE to NULL to suppress output:
 !
@@ -422,13 +417,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write output line to a device
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -503,7 +496,6 @@
 !        8)  One other thing: now that LJUST and UCASE are error-free,
 !            WRLINE uses them; this simplifies the code.
 !
-!
 !-    Beta Version 1.2.0, 27-FEB-1989 (NJB)
 !
 !        Call to GETLUN replaced by call to FNDLUN, which is error-free.
@@ -520,7 +512,6 @@
 !        now used in the PRINT statement as well.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -540,7 +531,6 @@
 
       logical               exists
       logical               opened
-
 
 !
 !     Executable Code:
@@ -579,7 +569,6 @@
                 number       = unit, &
                 iostat       = iostat   )
 
-
       if ( iostat /= 0 ) then
 !
 !        This is weird.  How can an INQUIRE statement fail,
@@ -590,7 +579,6 @@
          return
 
       end if
-
 
       if ( .not. ( opened .and. exists )  ) then
 !
@@ -682,8 +670,6 @@
       end if
 
       return
-
-
 
 !$Procedure CLLINE ( Close a device )
 
@@ -821,13 +807,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close a device
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -848,7 +832,6 @@
 !        $Keywords added.
 !
 !-&
-
 
 !
 !     Find the unit connected to DEVICE.

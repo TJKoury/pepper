@@ -74,7 +74,6 @@
 !                 { X:  < ----------,  -------- >  =  cos(ANGLE) }
 !                         ||X-APEX||   ||AXIS||
 !
-!
 !     ENDPT1,
 !     ENDPT2   are endpoints of a line segment. These points
 !              must be distinct.
@@ -141,9 +140,7 @@
 !           XPT1   = ( 1, -1/2, sqrt(3)/2 )
 !           XPT2   = ( 1,  1/2, sqrt(3)/2 )
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INCNSG_EX1
 !              IMPLICIT NONE
@@ -209,10 +206,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Apex:           0.00000000   0.00000000   0.00000000
 !        Axis:           1.00000000   0.00000000   0.00000000
@@ -224,7 +219,6 @@
 !
 !        Point 1:       1.00000000  -0.50000000   0.86602540
 !        Point 2:       1.00000000   0.50000000   0.86602540
-!
 !
 ! $ Restrictions
 !
@@ -253,13 +247,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersection of line segment and cone
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -356,7 +348,7 @@
       data                  z      / 0.0_wp, 0.0_wp, 1.0_wp /
 
 !
-!     Use quasi-discovery check-in. We'll check in before
+!     Use quasi- We'll check in before
 !     code sections that can generate SPICE errors, and check
 !     out afterward. When those code sections are skipped,
 !     we avoid traceback participation.
@@ -564,7 +556,6 @@
 !
 !        CONE = { Q: < Q, UAXIS > = ||Q|| * cos(ANGLE) }             (4)
 !
-!
 !        Substituting the ray expression for Q, we obtain
 !
 !           < W + s*U, UAXIS > = ||W+s*U|| * CA                      (5)
@@ -577,7 +568,6 @@
 !                    2                2       2
 !           = ( ||W||  + 2*<W,U>*s + s  ) * CA                       (6)
 !
-!
 !       Collecting coefficients of powers of s, we have
 !
 !                         2     2     2
@@ -589,9 +579,7 @@
 !                       2        2    2
 !            + <W,UAXIS>  - ||W|| * CA
 !
-!
 !         =  0                                                       (7)
-!
 !
 !      Before continuing, we observe that the only non-unit vector
 !      in (7) is W. So the coefficients in (7) have no possibility
@@ -600,9 +588,7 @@
 !
 !      W has been computed above as OFF1.
 !
-!
 !         [ Consider adding check on OFF1 here. ]
-!
 !
 !     Intermediate values:
 !
@@ -775,7 +761,6 @@
 
             end if
 
-
          else
 
 !
@@ -815,7 +800,6 @@
 !           COLAT is the colatitude of the point of maximum latitude.
 !
             colat = halfpi() - maxlat
-
 
             if ( colat < locang ) then
 !
@@ -870,7 +854,6 @@
 
                end if
 
-
             else if ( colat == locang ) then
 !
 !              The root corresponds to a point of tangency of
@@ -885,8 +868,6 @@
 !           Note that if COLAT > LOCANG, there are no roots.
 !
             end if
-
-
 
          end if
 !

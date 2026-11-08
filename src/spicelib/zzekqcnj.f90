@@ -127,10 +127,6 @@
       integer(ip)           ncns
       integer(ip)           ntab
 
-!
-!     Use discovery check-in.
-!
-
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
       if ( failed() ) return
@@ -146,7 +142,6 @@
       call zzekreqi ( eqryi, 'NUM_TABLES',         ntab   )
       call zzekreqi ( eqryi, 'NUM_CONJUNCTIONS',   ncnj   )
       call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',    ncns   )
-
 
       if (  ( n < 1 ) .or. ( n > ncnj )  ) then
 
@@ -167,7 +162,6 @@
                  + n
 
       size   =  eqryi ( loc )
-
 
       return
       end

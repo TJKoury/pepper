@@ -22,7 +22,6 @@
       include 'ck05.inc'
       include 'ckparam.inc'
 
-
       logical               needav
       real(wp)              record   ( * )
       real(wp)              cmat     ( 3, 3 )
@@ -81,7 +80,6 @@
 !     RECORD   has been modified due to its use as a workspace array.
 !              The contents are undefined.
 !
-!
 !     CMAT     is a rotation matrix that transforms the components
 !              of a vector expressed in the base frame given in
 !              the segment to components expressed in the instrument
@@ -103,7 +101,6 @@
 !                   | y |  =   |   CMAT   |     | y' |
 !                   [ z ]      [          ]     [ z' ]
 !                            (Transpose of CMAT)
-!
 !
 !     AV       is the angular velocity vector of the instrument fixed
 !              frame defined by CMAT. The angular velocity is
@@ -191,7 +188,6 @@
 !           LOGICAL               FND
 !           LOGICAL               SFND
 !
-!
 !           SC     = -41
 !           INST   = -41000
 !           DTYPE  =  5
@@ -245,7 +241,6 @@
 !          .        ( SCLKDP + TOL  .GE. DCD( 1 ) ) .AND.
 !          .        ( SCLKDP - TOL  .LE. DCD( 2 ) ) .AND.
 !          .        ( DTYPE         .EQ. ICD( 3 ) )      ) THEN
-!
 !
 !                 CALL CKR05 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
 !          .                   RECORD, FND )
@@ -349,13 +344,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_5 CK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -378,7 +371,6 @@
 !        the quaternion derivative d(UQ)/dt is now used.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -446,19 +438,16 @@
       integer(ip)           xstart
       integer(ip)           ystart
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Capture the subtype from the record and set the packet size
 !     accordingly.
 !
       subtyp =  nint( record(sbtidx) )
-
 
       if ( subtyp == c05tp0 ) then
 
@@ -537,7 +526,6 @@
 
          end do
 
-
       else
 !
 !        For the Hermite types, if the quaternions need to be adjusted,
@@ -594,8 +582,6 @@
 
       end if
 
-
-
       if ( subtyp == c05tp1 ) then
 !
 !        We perform Lagrange interpolation on each quaternion
@@ -623,7 +609,6 @@
 
             ystart    =   pktidx  +  n * (i-1)
 
-
             call lgrind ( n, &
                           record(xstart), &
                           record(ystart), &
@@ -640,7 +625,6 @@
 !
          mags = vnormg( state, 4 )
 
-
          if ( mags == 0.0_wp ) then
 
             call setmsg ( 'Quaternion magnitude at SCLK # was zero.' )
@@ -652,7 +636,6 @@
 
          call vsclg ( 1.0_wp/mags, state, 4, q )
 
-
          if ( needav ) then
 !
 !           Find the time derivative of the unit quaternion:
@@ -661,15 +644,12 @@
 !
 !              Q = S/||S||
 !
-!
 !           Then letting < , > denote the 4-dimensional inner product
 !           operator, we have
-!
 !
 !                         d(S)/dt      < Q, d(S)/dt >
 !              d(Q)/dt =  -------  -   -------------- * Q
 !                          ||S||            ||S||
-!
 !
             call moved ( state(5), 4, ds )
 
@@ -692,7 +672,6 @@
 !
 !        Q and if required AV have been assigned.
 !
-
 
       else if ( subtyp == c05tp3 ) then
 !
@@ -737,7 +716,6 @@
 !        interpolated state.
 !
          call vhatg ( state, 4, q )
-
 
          if ( needav ) then
 !
@@ -813,7 +791,6 @@
 
          call vsclg ( 1.0_wp/mags, state, 4, q )
 
-
          if ( needav ) then
 
             if ( subtyp == c05tp0 ) then
@@ -824,15 +801,12 @@
 !
 !                 Q = S/||S||
 !
-!
 !              Then letting < , > denote the 4-dimensional inner product
 !              operator, we have
-!
 !
 !                            d(S)/dt      < Q, d(S)/dt >
 !                 d(Q)/dt =  -------  -   -------------- * Q
 !                             ||S||            ||S||
-!
 !
                call moved ( state(5), 4, ds )
 
@@ -916,14 +890,12 @@
 !     We've handled all four subtypes.
 !
 
-
 !
 !     Produce a C-matrix from the interpolated quaternion. Set CLKOUT.
 !
       call q2m ( q, cmat )
 
       clkout = record(epcidx)
-
 
       return
       end

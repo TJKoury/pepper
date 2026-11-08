@@ -173,13 +173,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read the next variable from a kernel file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -214,7 +212,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -243,8 +240,6 @@
 
       character(80)         error
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -255,12 +250,10 @@
 !
       name  = ' '
 
-
 !
 !     No parsing error has occurred yet.
 !
       error = ' '
-
 
 !
 !     Get the next data line. Unless something is terribly wrong,
@@ -378,7 +371,6 @@
 !     Return the name of the variable, but only if everything went okay.
 !
       name = varnam
-
 
       return
       end

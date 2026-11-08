@@ -195,7 +195,6 @@
 !                                  d        '-----
 !                                              i
 !
-!
 !     where `d' is in seconds/day; T in seconds/Julian century;
 !     a(i), d(i), and w(i) arrays apply to satellites only; and
 !     theta(i), defined as
@@ -224,7 +223,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: tipbod_ex1.tm
@@ -248,7 +246,6 @@
 !                                            radii
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'sat375.bsp',
@@ -259,9 +256,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TIPBOD_EX1
 !              IMPLICIT NONE
@@ -313,15 +308,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Titan as seen from Saturn:
 !           in J2000 frame     :  1071928.661  -505781.970   -60383.976
 !           in IAU_SATURN frame:   401063.338 -1116965.364    -5408.806
-!
 !
 !        Note that the complete example could be replaced by a single
 !        SPKPOS call:
@@ -399,13 +391,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transformation from inertial position to bodyfixed
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -416,7 +406,6 @@
 !        being performed with uninitialized or invalid data.
 !
 !-&
-
 
 !
 !     SPICELIB functions

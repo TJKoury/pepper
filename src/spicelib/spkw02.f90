@@ -235,9 +235,7 @@
 !        containing only one segment, given a set of Chebyshev
 !        coefficients and their associated epochs.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW02_EX1
 !              IMPLICIT NONE
@@ -303,7 +301,6 @@
 !             .                      4.0201D0, 4.0202D0, 4.0203D0,
 !             .                      4.0301D0, 4.0302D0, 4.0303D0 /
 !
-!
 !        C
 !        C     Set the start and end times of interval covered by
 !        C     segment, and the length of time covered by logical
@@ -344,7 +341,6 @@
 !              CALL SPKCLS ( HANDLE )
 !
 !              END
-!
 !
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 2 exists in
@@ -402,13 +398,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_2 data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -467,7 +461,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of sets of coefficients must be positive.

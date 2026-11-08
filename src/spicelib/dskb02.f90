@@ -164,9 +164,7 @@
 !     1) Dump several parameters from the first DLA segment of
 !        a DSK file. The segment is assumed to be of type 2.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKB02_EX1
 !              IMPLICIT NONE
@@ -206,7 +204,6 @@
 !              INTEGER               VTXNPL
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Prompt for the name of the DSK to read.
@@ -271,18 +268,15 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !        Number of vertices:                 1579014
 !        Number of plates:                   3145728
 !        Voxel edge length (km):             1.04248E-01
 !        Number of voxels:                   11914500
-!
 !
 ! $ Restrictions
 !
@@ -327,13 +321,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch parameters from a type 2 DSK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -360,9 +352,7 @@
       integer(ip)           ibase
       integer(ip)           ibuff  ( ibfsiz )
 
-
       if ( return() ) return
-
 
       dpbase = dladsc ( dbsidx )
       ibase  = dladsc ( ibsidx )

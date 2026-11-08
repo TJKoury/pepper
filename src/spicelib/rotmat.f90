@@ -140,13 +140,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rotate a matrix
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -158,7 +156,6 @@
 !     (or fast) as just reading the axes from data.
 !
 !-&
-
 
       real(wp)              s
       real(wp)              c
@@ -202,6 +199,5 @@
 !  Move the buffered matrix into MOUT.
 !
       call moved (prodm, 9, mout)
-!
       return
       end

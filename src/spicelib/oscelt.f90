@@ -43,7 +43,6 @@
 !              dz/dt. STATE must be expressed relative to an
 !              inertial reference frame. Units are km and km/sec.
 !
-!
 !     ET       is the epoch of the input state, in ephemeris seconds
 !              past J2000.
 !
@@ -137,7 +136,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: oscelt_ex1.tm
@@ -160,7 +158,6 @@
 !              gm_de431.tpc                  Gravitational constants
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'mar097.bsp',
@@ -171,9 +168,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM OSCELT_EX1
 !              IMPLICIT NONE
@@ -248,10 +243,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Perifocal distance          (km):       9232.5746716211
 !        Eccentricity                    :          0.0156113904
@@ -262,16 +255,13 @@
 !        Epoch                        (s):  251812865.1837092042
 !        Gravitational parameter (km3/s2):      42828.3736206991
 !
-!
 !     2) Calculate the history of Phobos's orbit plane inclination
 !        with respect to Mars in the J2000 frame at intervals of six
 !        months for a time interval of 10 years.
 !
 !        Use the meta-kernel from the first example.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM OSCELT_EX2
 !              IMPLICIT NONE
@@ -353,10 +343,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !                UCT Time          Inclination
 !        ------------------------  -----------
@@ -380,7 +368,6 @@
 !        2008 MAY 18 11:59:58.999    37.223573
 !        2008 NOV 14 11:59:59.001    36.084745
 !        2009 MAY 13 11:59:57.999    36.608971
-!
 !
 ! $ Restrictions
 !
@@ -493,7 +480,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     conic elements from state
@@ -501,7 +487,6 @@
 !     convert state to osculating elements
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -571,7 +556,6 @@
 !
 !-&
 
-
 !
 !     External functions
 !
@@ -638,7 +622,6 @@
 !
       if ( return () ) return
 
-
       if ( mu <= 0.0_wp ) then
 
          call setmsg ( 'MU = #; non-positive gravitational parameter' )
@@ -647,7 +630,6 @@
          return
 
       end if
-
 
 !
 !     In order to convert a position and velocity to an equivalent
@@ -700,7 +682,6 @@
 
       end if
 
-
       rmag   =  vnorm(r)
       vmag   =  vnorm(v)
 
@@ -720,12 +701,10 @@
 
       end if
 
-
       call vpack  ( -h(2), h(1), 0.0_wp, n )
 
       call vlcom  ( vmag**2 - mu/rmag,  r,  -vdot(r,v),  v,  e )
       call vsclip ( 1.0_wp/mu, e )
-
 
 !
 !     We begin by determining the size and shape of the orbit.
@@ -784,7 +763,6 @@
 !     -                              -
 !     circular orbits.
 !
-!
       if ( ecc == 0.0_wp ) then
 
          argp = 0.0_wp
@@ -795,7 +773,6 @@
 !        Set the magnitude of ARGP; we'll determine the sign next.
 !
          argp = vsep ( n, e )
-
 
          if ( argp /= 0.0_wp ) then
 
@@ -851,7 +828,6 @@
 
       nu = atan2 ( vdot(r,periy), vdot(r,perix) )
 
-
 !
 !     Unfortunately, the other element routines need the mean
 !     anomaly, M. The true and mean anomalies are related through
@@ -864,13 +840,11 @@
 !
 !           M       = E - e sin(E)
 !
-!
 !                       e + cos(nu)
 !           cosh(F) = ---------------         (hyperbola)
 !                       1 + e cos(nu)
 !
 !           M       = e sinh(F) - F
-!
 !
 !           D       = tan(nu/2)               (parabola)
 !
@@ -898,7 +872,6 @@
 !                               ______________
 !                    = (r/rp) \/ (1-e) / (1+e)  sin(nu)
 !
-!
          sinea  = (rmag/rp) * sqrt( (1.0_wp-ecc) / (1.0_wp+ecc) ) * sin(nu)
 
          ea     =  atan2 ( sinea, cosea )
@@ -911,7 +884,6 @@
 
          end if
 
-
       else if ( ecc > 1.0_wp ) then
 
          coshf = (ecc + cos(nu)) / (1.0_wp + ecc*cos(nu))
@@ -919,7 +891,6 @@
          ea    =  dacosh (  max ( 1.0_wp, coshf )  )
 
          m0    =  sign( ecc*sinh(ea) - ea,  nu )
-
 
       else
 
@@ -939,7 +910,6 @@
       elts(6) = m0
       elts(7) = et
       elts(8) = mu
-
 
       return
       end

@@ -176,9 +176,7 @@
 !        logical addresses within that file, and how to read that
 !        data out to a different array.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASRDC_EX1
 !              IMPLICIT NONE
@@ -283,10 +281,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasrdc_ex1.das":
 !
@@ -300,7 +296,6 @@
 !         ..............................
 !                  1         2         3
 !         123456789012345678901234567890
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -371,13 +366,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read character data from a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -391,7 +384,6 @@
 !        Bug fix: reference to DASADS in CHKOUT calls corrected.
 !        These references have been changed to 'DASRDC'.
 !
-!
 !-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
 !
 !        Test of FAILED() added to loop termination conditions. Without
@@ -399,7 +391,6 @@
 !        signaled an error inside the loops.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -412,8 +403,6 @@
       integer(ip), parameter :: nwc = 1024
 
       integer(ip), parameter :: char = 1
-
-
 
 !
 !     Local variables
@@ -432,8 +421,6 @@
       integer(ip)           rcpos
       integer(ip)           wordno
 
-
-
 !
 !     Make sure BPOS and EPOS are ok; stop here if not.
 !
@@ -449,7 +436,6 @@
          call errint ( '#',  epos                                      )
          call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
          return
-
 
       else if ( epos < bpos ) then
 
@@ -488,7 +474,6 @@
       chr     =  bpos
       nmoved  =  0
       rcpos   =  wordno
-
 
       do while ( nmoved < numchr )
 
@@ -533,7 +518,6 @@
 !        of the first record of the cluster we're about
 !        to read from.
 !
-!
          if (  recno  <  ( clbase + clsize )  ) then
 !
 !           We can continue reading from the current cluster.  Find
@@ -570,7 +554,6 @@
 
             nread   =   nread + numchr
             recno   =   recno + 1
-
 
          else
 !

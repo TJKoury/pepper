@@ -251,13 +251,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_18 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -330,7 +328,6 @@
 
       end if
 
-
 !
 !     Set the window size corresponding to the input degree.  This
 !     size will be used in various places below.
@@ -352,7 +349,6 @@
          return
 
       end if
-
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -504,11 +500,8 @@
 
       end if
 
-
-
 !
 !     If we made it this far, we're ready to start writing the segment.
-!
 !
 !     Create the segment descriptor.  We don't use SPKPDS because
 !     that routine doesn't allow creation of a singleton segment.
@@ -533,7 +526,6 @@
       call dafbna ( handle, descr, segid )
 
       if ( failed() ) return
-
 
 !
 !     The type 18 segment structure is eloquently described by this
@@ -574,7 +566,6 @@
 !        +-----------------------+
 !        | Number of packets     |
 !        +-----------------------+
-!
 !
       call dafada ( packts,  n*packsz )
       call dafada ( epochs,  n        )

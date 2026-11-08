@@ -153,13 +153,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     surface normal vector on an ellipsoid
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -194,7 +192,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Check the axes to make sure that none of them is less than or
 !     equal to zero. If one is, signal an error and return.
@@ -209,7 +206,6 @@
 
       if ( c <= 0 ) &
          bad = bad + 4
-
 
       if ( bad > 0 ) then
          call setmsg ( mssg (bad)                                     // &

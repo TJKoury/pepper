@@ -173,11 +173,6 @@
       integer(ip)           tb
       integer(ip)           te
 
-
-!
-!     Use discovery check-in.
-!
-
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
       if ( failed() ) return
@@ -190,7 +185,6 @@
 
       end if
 
-
       call zzekreqi ( eqryi,  'NUM_ORDERBY_COLS',   nord   )
 
       if (  ( n < 1 ) .or. ( n > nord )  ) then
@@ -202,7 +196,6 @@
          return
 
       end if
-
 
       call zzekreqi ( eqryi,  'NUM_TABLES',         ntab   )
       call zzekreqi ( eqryi,  'NUM_CONJUNCTIONS',   ncnj   )
@@ -220,7 +213,6 @@
                   +   ncnj &
                   +   ncns     * eqcdsz &
                   +   (n-1)    * eqodsz
-
 
 !
 !     Pick up the column name first.
@@ -288,7 +280,6 @@
          table  =  ' '
 
       end if
-
 
 !
 !     Set the order sense.

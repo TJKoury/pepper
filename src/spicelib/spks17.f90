@@ -135,13 +135,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_17 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -155,8 +153,6 @@
 
       real(wp)              data     ( nitems )
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -166,7 +162,6 @@
 !     See whether there's any work to do; return immediately if not.
 !
       if (  begin  >  end  ) return
-
 
 !
 !     This couldn't be much easier.  First copy the entire
@@ -178,7 +173,6 @@
 !     Now write the data into the output file.
 !
       call dafada ( data, nitems )
-
 
       return
       end

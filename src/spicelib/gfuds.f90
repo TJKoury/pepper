@@ -462,7 +462,6 @@
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
 !
-!
 !     Step Size
 !     =========
 !
@@ -504,7 +503,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -535,7 +533,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -594,7 +591,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfuds_ex1.tm
@@ -618,7 +614,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de414.bsp',
@@ -629,9 +624,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFUDS_EX1
 !              IMPLICIT NONE
@@ -762,7 +755,6 @@
 !             .                REFVAL, ADJUST,      STEP, CNFINE,
 !             .                MAXWIN,  NWUDS,      WORK, RESULT )
 !
-!
 !        C
 !        C        Display the results.
 !        C
@@ -811,8 +803,6 @@
 !
 !              END
 !
-!
-!
 !        C-Procedure GFQ
 !
 !              SUBROUTINE GFQ ( ET, VALUE )
@@ -860,9 +850,6 @@
 !
 !              END
 !
-!
-!
-!
 !        C-Procedure GFDECR
 !
 !              SUBROUTINE GFDECR ( UDFUNS, ET, ISDECR )
@@ -898,10 +885,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Relation condition: =
 !        Start time, drdt = 2007-JAN-02 00:35:19.574       0.336500000
@@ -959,7 +944,6 @@
 !        Start time, drdt = 2007-MAR-25 17:26:56.150       1.428141707
 !        Stop time,  drdt = 2007-MAR-25 17:26:56.150       1.428141707
 !
-!
 ! $ Restrictions
 !
 !     1)  Any kernel files required by this routine must be loaded
@@ -1013,13 +997,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF user defined scalar function search
 !
 !-&
-
 
 !
 !     SPICELIB functions.
@@ -1028,7 +1010,6 @@
       logical               odd
       logical               return
       integer(ip)           sized
-
 
 !
 !     Local variables.
@@ -1061,8 +1042,6 @@
 !
       if ( return() ) return
 
-
-
 !
 !     Confirm minimum number of windows.
 !
@@ -1077,7 +1056,6 @@
 
       end if
 
-
 !
 !     Confirm minimum window sizes.
 !
@@ -1090,7 +1068,6 @@
          return
 
       end if
-
 
 !
 !     Check the result window size.
@@ -1129,7 +1106,6 @@
 !
       call scardd ( 0, result)
 
-
 !
 !     Call ZZGFRELX to do the event detection work.
 !
@@ -1139,7 +1115,5 @@
                       nw,     work,      norpt,   gfrepi, &
                       gfrepu, gfrepf,    rptpre,  rptsuf, &
                       nobail, gfbail,    result   )
-
-
 
       end

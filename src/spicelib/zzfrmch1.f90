@@ -61,7 +61,6 @@
 !
 !                    CALL MXVG ( XFORM, STATE, 6, 6, STATE2 )
 !
-!
 ! $ Parameters
 !
 !     None.
@@ -97,8 +96,6 @@
 !        CALL FRMCHG ( FRAME1, FRAME2, ET,   XFORM )
 !        CALL MXVG   ( XFORM,  STATE1, 6, 6, STATE2 )
 !
-!
-!
 !     Example 2.  Suppose that you have the angular velocity, W, of some
 !     rotation relative to FRAME1 at epoch ET and that you wish to
 !     express this angular velocity with respect to FRAME2.  The
@@ -107,7 +104,6 @@
 !        CALL FRMCHG ( FRAME1, FRAME2, ET, STXFRM )
 !
 !     Recall that a state transformation matrix has the following form.
-!
 !
 !            -               -
 !           |                 |
@@ -120,12 +116,10 @@
 !           |                 |
 !            -               -
 !
-!
 !     The velocity of an arbitrary point P undergoing rotation with the
 !     angular velocity W is W x P
 !
 !     Thus the velocity of P in FRAME2 is:
-!
 !
 !        dR
 !        --  P    +    R (W x P )
@@ -134,7 +128,6 @@
 !           dR  t
 !     =  (  -- R  R P   +  W  x P  )            ( 1 )
 !           dt
-!
 !
 !           dR  t                                              t
 !     But   -- R  is skew symmetric  (simply differentiate  R*R to see
@@ -159,14 +152,12 @@
 !
 !     = ( [A+R*W] x R*P )
 !
-!
 !     From this final expression it follows that in FRAME2 the angular
 !     velocity vector is given by [A+R*W].
 !
 !     The code below implements these ideas.
 !
 !        CALL FRMCHG ( FRAME1, FRAME2, ET, STXFRM )
-!
 !
 !        DO I = 1, 3
 !           DO J = 1, 3
@@ -202,7 +193,6 @@
 !
 !        CALL MXV  ( R, W1,  W  )
 !        CALL VADD ( A, W,   W2 )
-!
 !
 ! $ Restrictions
 !
@@ -301,7 +291,6 @@
 !
       real(wp)              trans2( 6, 6, 2      )
 
-
       integer(ip)           cent
       integer(ip)           class
       integer(ip)           clssid
@@ -375,7 +364,6 @@
 
       end if
 
-
       call frinfo ( frame2, cent, class, clssid, found )
 
       if ( failed() ) return
@@ -389,8 +377,6 @@
          return
 
       end if
-
-
 
       node        = 1
       frame(node) = frame1
@@ -428,7 +414,6 @@
       done =      frame(node) == rootf &
              .or. frame(node) == frame2 &
              .or. .not. found
-
 
       do while ( .not. done )
 !
@@ -478,7 +463,6 @@
 !     that is that NODE .GT. 1.  If NODE .EQ. 1 then we have
 !     no transformations computed yet.
 !
-!
 !     TRANS(1...6, 1...6, 1    )    transforms FRAME1   to FRAME(2)
 !     TRANS(1...6, 1...6, 2    )    transforms FRAME(2) to FRAME(3)
 !     TRANS(1...6, 1...6, 3    )    transforms FRAME(3) to FRAME(4)
@@ -487,7 +471,6 @@
 !        .
 !     TRANS(1...6, 1...6, NODE-1 )  transforms FRAME(NODE-1)
 !                                   to         FRAME(NODE)
-!
 !
 !     One of the following situations is true.
 !
@@ -656,7 +639,6 @@
          done   =       this  == rootf &
                   .or.  gotone &
                   .or. .not. found
-
 
       end do
 

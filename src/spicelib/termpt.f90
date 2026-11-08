@@ -136,7 +136,6 @@
 !                                appears to be a lit disc. See the
 !                                $Particulars section below for details.
 !
-!
 !                 <curve type> may be either of the strings
 !
 !                    'TANGENT'   for topographic (DSK) target models
@@ -198,7 +197,6 @@
 !                                can be generated much more quickly
 !                                than tangent points.
 !
-!
 !                 <shape specification> may be either of the strings
 !
 !                    'DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
@@ -231,7 +229,6 @@
 !
 !                       See the $Particulars section below for details
 !                       concerning use of DSK data.
-!
 !
 !                    'ELLIPSOID'
 !
@@ -266,7 +263,6 @@
 !
 !                    "MARS MEGDR128PIXEL/DEG"
 !
-!
 !     ILUSRC   is the name of the illumination source. This source
 !              may be any ephemeris object. Case, blanks, and
 !              numeric values are treated in the same way as for the
@@ -275,7 +271,6 @@
 !              The shape of the illumination source is considered
 !              to be spherical. The radius of the sphere is the
 !              largest radius of the source's reference ellipsoid.
-!
 !
 !     TARGET   is the name of the target body. The target body is
 !              an extended ephemeris object.
@@ -293,7 +288,6 @@
 !              present in the kernel pool. Normally the kernel
 !              variable would be defined by loading a PCK file.
 !
-!
 !     ET       is the epoch of participation of the observer,
 !              expressed as TDB seconds past J2000 TDB: ET is
 !              the epoch at which the observer's state is computed.
@@ -310,7 +304,6 @@
 !              See the descriptions of ABCORR and CORLOC below for
 !              details.
 !
-!
 !     FIXREF   is the name of a body-fixed reference frame centered
 !              on the target body. FIXREF may be any such frame
 !              supported by the SPICE system, including built-in
@@ -323,7 +316,6 @@
 !              the output observer-terminator vectors in the array
 !              TRMVCS are expressed relative to this reference
 !              frame.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied
 !              when computing the target's position and orientation.
@@ -352,7 +344,6 @@
 !              case in which photons depart from the locus at the
 !              light-time corrected epoch ET-LT and *arrive* at the
 !              observer's location at ET:
-!
 !
 !                 'LT'       Correct for one-way light time (also
 !                            called "planetary aberration") using a
@@ -405,7 +396,6 @@
 !                            slowly when a converged solution is
 !                            computed.
 !
-!
 !     CORLOC   is a string specifying the aberration correction
 !              locus: the point or set of points for which
 !              aberration corrections are performed. CORLOC may be
@@ -452,7 +442,6 @@
 !                     computational speed for this option is
 !                     relatively slow.
 !
-!
 !     OBSRVR   is the name of the observing body. The observing body
 !              is an ephemeris object: it typically is a spacecraft,
 !              the earth, or a surface point on the earth. OBSRVR is
@@ -462,7 +451,6 @@
 !              the object. For example both 'MOON' and '301' are
 !              legitimate strings that indicate the Moon is the
 !              observer.
-!
 !
 !     REFVEC,
 !     ROLSTP,
@@ -506,7 +494,6 @@
 !              less uniform due to differences in the aberration
 !              corrections used for the respective terminator points.
 !
-!
 !     SCHSTP,
 !     SOLTOL   are used only for DSK-based surfaces. These inputs
 !              are, respectively, the search angular step size and
@@ -540,7 +527,6 @@
 !                    the convergence process is considered to be a
 !                    terminator point.
 !
-!
 !              SCHSTP and SOLTOL have units of radians.
 !
 !              Target bodies with simple surfaces---for example,
@@ -566,7 +552,6 @@
 !              specified bound on terminator point height errors
 !              depends on the illumination source-target distance.
 !
-!
 !     MAXN     is the maximum number of terminator points that can
 !              be stored in the output array POINTS.
 !
@@ -577,7 +562,6 @@
 !              element of NPTS is the terminator point count in the
 !              Ith half-plane. NPTS should be declared with length
 !              at least NCUTS.
-!
 !
 !     POINTS   is an array containing the terminator points found
 !              by this routine. Terminator points are ordered by
@@ -613,7 +597,6 @@
 !              (described below).
 !
 !              Units of the terminator points are km.
-!
 !
 !     EPOCHS   is an array of epochs associated with the terminator
 !              points, accounting for light time if aberration
@@ -651,7 +634,6 @@
 !              will all be set to
 !
 !                 ET - LT(I)
-!
 !
 !     TRMVCS   is an array of vectors connecting the observer to
 !              the terminator points. The terminator vectors are
@@ -850,7 +832,6 @@
 !     -  SCLK data: if the target body's orientation is provided by
 !        CK files, an associated SCLK kernel must be loaded.
 !
-!
 !     In all cases, kernel data are normally loaded once per program
 !     run, NOT every time this routine is called.
 !
@@ -864,7 +845,6 @@
 !
 !     In all cases, the surface of the illumination source is
 !     modeled as a sphere.
-!
 !
 !     Ellipsoidal target surface model
 !     --------------------------------
@@ -888,7 +868,6 @@
 !     containing that point is tangent to the surface of the light
 !     source as well, and the outward normal vectors at the two points
 !     of tangency are anti-parallel.
-!
 !
 !     Topographic target surface model (DSK case)
 !     -------------------------------------------
@@ -924,7 +903,6 @@
 !
 !     The two definitions are equivalent for spherical targets.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -945,7 +923,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -972,7 +949,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -1053,7 +1029,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find apparent terminator points on Phobos as seen from Mars.
 !        Use the "umbral" shadow definition.
 !
@@ -1080,7 +1055,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1117,9 +1091,7 @@
 !                                  'phobos512.bds' )
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Find terminator points on Phobos as seen from Mars.
@@ -1281,7 +1253,6 @@
 !                 WRITE(*,*) 'Locus              = ', CORLOC
 !                 WRITE(*,*) ' '
 !
-!
 !                 START  = 0
 !
 !                 DO J = 1, NCUTS
@@ -1310,10 +1281,8 @@
 !              END DO
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Light source:   SUN
 !         Observer:       MARS
@@ -1322,10 +1291,8 @@
 !
 !         Number of cuts:            3
 !
-!
 !         Computation method = UMBRAL/TANGENT/ELLIPSOID
 !         Locus              = CENTER
-!
 !
 !          Roll angle (deg) =           0.000000000
 !             Target epoch  =   271684865.152078211
@@ -1345,10 +1312,8 @@
 !               Terminator points:
 !                  8.195238564        -6.093889437        -5.122310498
 !
-!
 !         Computation method = UMBRAL/TANGENT/DSK/UNPRIORITIZED
 !         Locus              = CENTER
-!
 !
 !          Roll angle (deg) =           0.000000000
 !             Target epoch  =   271684865.152078211
@@ -1367,7 +1332,6 @@
 !            Number of terminator points  at this roll angle:  1
 !               Terminator points:
 !                  9.338447202        -6.091352186        -5.960849442
-!
 !
 !     2) Find apparent terminator points on Mars as seen from the
 !        earth.
@@ -1389,7 +1353,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1428,9 +1391,7 @@
 !
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Find terminator points on Mars as seen from the
@@ -1656,7 +1617,6 @@
 !                 WRITE(*,*) 'Computation method = ', METHOD(I)
 !                 WRITE(*,*) 'Locus              = ', CORLOC(I)
 !
-!
 !                 START  = 0
 !
 !                 DO J = 1, NCUTS
@@ -1698,7 +1658,6 @@
 !
 !                       WRITE (*,FM1) '      Incidence angle '
 !             .         //            '(deg): ', SOLAR * DPR()
-!
 !
 !        C
 !        C              Adjust the incidence angle for the angular
@@ -1744,7 +1703,6 @@
 !                       WRITE (*,FM1)  '      Adjusted angle  '
 !             .         //             '(deg): ', ADJANG * DPR()
 !
-!
 !                       IF ( I .EQ. 1 ) THEN
 !        C
 !        C                 Save terminator points for comparison.
@@ -1762,7 +1720,6 @@
 !             .            '      Distance offset  (km): ', DIST
 !                       END IF
 !
-!
 !                    END DO
 !
 !                    START = START + NPTS(J)
@@ -1774,10 +1731,8 @@
 !              END DO
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Light source:          SUN
 !         Observer:              EARTH
@@ -1820,7 +1775,6 @@
 !              Incidence angle (deg):          90.163843001
 !              Adjusted angle  (deg):          90.000000096
 !
-!
 !         Computation method = PENUMBRAL/ELLIPSOID/TANGENT
 !         Locus              = ELLIPSOID TERMINATOR
 !
@@ -1856,7 +1810,6 @@
 !              Incidence angle (deg):          89.836156972
 !              Adjusted angle  (deg):          89.999999877
 !              Distance offset  (km):          19.411437239
-!
 !
 ! $ Restrictions
 !
@@ -1898,13 +1851,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find terminator points on target body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2056,7 +2007,6 @@
       character(frnmln)     svfref
       integer(ip)           svfxfc
 
-
 !
 !     Saved surface name/ID item declarations.
 !
@@ -2124,7 +2074,6 @@
       save                  svfref
       save                  svfxfc
 
-
 !
 !     Saved surface name/ID items.
 !
@@ -2152,9 +2101,7 @@
       data                  uselt  / .false. /
       data                  usestl / .false. /
 
-
       if ( return() ) return
-
 
 !
 !     Counter initialization is done separately.
@@ -2171,7 +2118,6 @@
          call zzctruin( svctr6 )
 
       end if
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -2208,7 +2154,6 @@
 !
 !           USESTL indicates stellar aberration corrections.
 !
-!
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
@@ -2243,7 +2188,6 @@
          return
 
       end if
-
 
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
@@ -2400,9 +2344,7 @@
 
          end if
 
-
          if ( failed() ) return
-
 
          if (  eqstr( pntdef, 'TANGENT' )  ) then
 
@@ -2422,7 +2364,6 @@
             return
 
          end if
-
 
          if (  eqstr( trmstr, 'UMBRAL' )  ) then
 
@@ -2569,8 +2510,6 @@
 
       end if
 
-
-
       if ( shape == dskshp ) then
 !
 !        This is the DSK case.
@@ -2584,7 +2523,6 @@
 !        the target.
 !
          call zzmaxrad ( maxrad )
-
 
       else if ( shape /= ellshp ) then
 
@@ -2682,7 +2620,6 @@
 !
 !     Set up activities are complete at this point.
 !
-!
 !     Find terminator points on the target.
 !
       call cleari ( ncuts,  npts   )
@@ -2747,7 +2684,6 @@
 
          end if
 
-
          to    = 1
          room  = maxn
          total = 0
@@ -2765,7 +2701,6 @@
 !           sense about AXIS.
 !
             call vrotv ( refvec, axis, roll, plnvec )
-
 
             if ( shape == dskshp ) then
 !
@@ -2799,7 +2734,6 @@
                   if ( failed() ) return
 
                   npts(i) = cardd( result )
-
 
                else if ( trmtyp == guided ) then
 !
@@ -2849,7 +2783,6 @@
                      npts(i) = 0
                   end if
 
-
                else
 !
 !                 This is a backstop case; it should never be reached.
@@ -2860,7 +2793,6 @@
                   return
 
                end if
-
 
             else if ( shape == ellshp ) then
 !
@@ -2879,8 +2811,6 @@
 
                npts(i) = 1
 
-
-
             else
 !
 !              This is a backstop case; it should never be reached.
@@ -2891,7 +2821,6 @@
                return
 
             end if
-
 
             total = total + npts(i)
 
@@ -2930,8 +2859,6 @@
             end do
 
          end do
-
-
 
       else if ( svlcod == ellcor ) then
 !
@@ -3039,7 +2966,6 @@
 
                   npts(i) = 1
 !
-!
 !                 Compute the vector from the observer to the terminator
 !                 point.
 !
@@ -3114,7 +3040,6 @@
                   call mxv  ( xform, icorvc, stloff )
 
                end if
-
 
                call mxv  ( xform,  ptarg, tmpvec )
                call vequ ( tmpvec,        trgpos )

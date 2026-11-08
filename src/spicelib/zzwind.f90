@@ -76,13 +76,11 @@
 !
 !                       POINT is inside the polygon.
 !
-!
 !        ZZWIND < 0:    The polygon winds about POINT a total
 !                       of ZZWIND times in the clockwise
 !                       direction.
 !
 !                       POINT is inside the polygon.
-!
 !
 !        ZZWIND = 0:    The number of times the polygon wraps around
 !                       POINT in the counterclockwise sense is equal
@@ -96,7 +94,6 @@
 !     UBPL           is the array upper bound for SPICELIB planes.
 !
 ! $ Exceptions
-!
 !
 !     1)  If the number of boundary vectors N is not at least 3,
 !         or if the number exceeds MAXFOV, the error
@@ -143,11 +140,9 @@
 !        w =  -------  *  I  ( d ( log(z-z0) ) )
 !             2*Pi*i     z(t)
 !
-!
 !                1
 !          =  -------  *  I  ( ( 1 / (z-z0) ) dz )
 !             2*Pi*i     z(t)
-!
 !
 !     Because of Cauchy's theorem, we can transform the problem,
 !     without loss of generality (leaving out *many* steps here), to
@@ -158,16 +153,13 @@
 !
 !     for some real values r, n, and t0.  So
 !
-!
 !             1
 !      w = -------  *  I  ( 1 / (z-z0) )
 !          2*Pi*i     z(t)
 !
-!
 !             1      t=2*pi        i n*(t-t0)           i n*(t-t0)
 !        = ------- *   I   ( (1/r e         ) * ( r i n e          )dt )
 !          2*Pi*i     t=0
-!
 !
 !             1     t=2*pi
 !        = ------- *  I (   i n dt )
@@ -177,9 +169,7 @@
 !        = ------  *  ( 2 * Pi * i * n )
 !          2*Pi*i
 !
-!
 !        =    n
-!
 !
 !     Given the simplified form of z(t) we've chosen, it's now clear
 !     that n is the winding number.
@@ -203,7 +193,6 @@
 !        i=1
 !
 !     where vertex N+1 is considered identical to vertex 1.
-!
 !
 ! $ Examples
 !
@@ -264,7 +253,6 @@
       zzwind = 0
 
       if ( return() ) return
-
 
 !
 !     Check the number of sides of the polygon.

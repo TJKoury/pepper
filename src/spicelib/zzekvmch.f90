@@ -22,7 +22,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekopcd.inc'
       include 'ektype.inc'
@@ -30,7 +29,6 @@
       include 'eksegdsc.inc'
       include 'ekwild.inc'
       include 'ekqlimit.inc'
-
 
       integer(ip)           ncnstr
       logical               active ( * )
@@ -137,7 +135,6 @@
 !                    indices are ignored unless the columns they apply
 !                    to are array-valued.
 !
-!
 ! $ Detailed_Output
 !
 !     The function returns .TRUE. if and only if all of the relational
@@ -173,13 +170,11 @@
 !
 !        LGE, LGT, LLE, LLT
 !
-!
 !     The additional unary operators
 !
 !        ISNULL, NOTNUL
 !
 !     are used to test whether a value of any type is null.
-!
 !
 ! $ Exceptions
 !
@@ -260,7 +255,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -291,7 +285,7 @@
       logical               null   ( 2 )
 
 !
-!     Use discovery check-in for speed.  Don't check RETURN.
+!  Don't check RETURN.
 !
 !     The function value defaults to .TRUE.  As we test the constraints,
 !     we may find one that the input row vector doesn't satisfy, at
@@ -302,7 +296,6 @@
 
       do while  (  ( n <= ncnstr ) .and.  zzekvmch  )
 
-
          if ( active(n) ) then
 !
 !           Apply the Nth join constraint to the input row vector.
@@ -312,7 +305,6 @@
 !           address ranges for each column entry.  We don't check the
 !           found flag because every column entry has at least one
 !           element.
-!
 !
 !           We'll start out setting REL to EQ.  If we find out
 !           otherwise, we'll change it.
@@ -332,7 +324,6 @@
             call movei ( lcdscs(1,n), cdscsz, cldscs(1,1) )
             call movei ( rcdscs(1,n), cdscsz, cldscs(1,2) )
 
-
             rel  =  zzekecmp ( hans,  sgdscs,  cldscs,  rows,  elts  )
 
 !
@@ -343,35 +334,28 @@
 
                zzekvmch  =  rel == eq
 
-
             else if ( ops(n) == lt )   then
 
                zzekvmch  =   rel == lt
-
 
             else if ( ops(n) == le )   then
 
                zzekvmch  =   rel /= gt
 
-
             else if ( ops(n) == gt )   then
 
                zzekvmch  =   rel == gt
-
 
             else if ( ops(n) == ge )   then
 
                zzekvmch  =   rel /= lt
 
-
             else if ( ops(n) == ne )   then
 
                zzekvmch  =   rel /= eq
 
-
             else if (       ( ops(n)            == like ) &
                       .and. ( cldscs(typidx,1)  == chr  )  ) then
-
 
                do i = 1, 2
 
@@ -384,7 +368,6 @@
                                   cval(i), &
                                   null(i), &
                                   found           )
-
 
                   if ( .not. found ) then
 
@@ -409,13 +392,10 @@
 
                end do
 
-
                zzekvmch  =  matchi ( cval(1)( :cmplen(1) ), &
                                      cval(2)( :cmplen(2) ), &
                                      wstr, &
                                      wchr                  )
-
-
 
             else if (       ( ops(n)            == unlike ) &
                       .and. ( cldscs(typidx,1)  == chr    )  ) then
@@ -432,7 +412,6 @@
                                   null(i), &
                                   found      )
 
-
                   if ( .not. found ) then
 
                      call setmsg ( 'EK = #; COLIDX = #; ROW = #; ' // &
@@ -447,7 +426,6 @@
 
                   end if
 
-
                   if (  found  .and. ( .not. null(i) )  ) then
 
                      cmplen(i) = min ( cvlen(i), maxstr )
@@ -457,12 +435,10 @@
 
                end do
 
-
                zzekvmch  =  .not. matchi ( cval(1)( :cmplen(1) ), &
                                            cval(2)( :cmplen(2) ), &
                                            wstr, &
                                            wchr                 )
-
 
             else
 !
@@ -478,7 +454,6 @@
 
             end if
 
-
          end if
 
 !
@@ -488,7 +463,6 @@
          n = n + 1
 
       end do
-
 
       return
       end

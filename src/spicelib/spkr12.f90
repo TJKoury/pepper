@@ -106,7 +106,6 @@
 !     the SPKRnn routines could be used to "dump" and check segment data
 !     for a particular epoch, as in the example which follows.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -155,13 +154,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_12 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -172,7 +169,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The type 8 reader knows how to obtain a type 12 record.

@@ -175,11 +175,9 @@
 !
 !-&
 
-
 !
 !     Local Variables
 !
-
 
       integer(ip), parameter :: maxsig = 14
 
@@ -194,8 +192,6 @@
       logical, parameter :: yes = .true.
 
       logical, parameter :: no = .false.
-
-
 
       character(wdsize)     string
       character(1)          myfill
@@ -226,7 +222,6 @@
 !     This routine doesn't do anything.
 !
       return
-
 
 !$Procedure      ZZVSTSTR ( Set Virtual String)
 
@@ -318,7 +313,6 @@
 !
 !-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
 !
-!
 !-&
 
       myfill = fill
@@ -344,7 +338,6 @@
       code0 = ichar ( '0' )
       blank = ichar ( ' ' )
 
-
       minus = ichar( string(esgn:esgn) )== ichar('-')
       code  = ichar( string(efst:efst) )
       exp   = code - code0
@@ -367,7 +360,6 @@
       expont = exp
 
       return
-
 
 !$Procedure      ZZVSBSTR ( Virtual String Character )
 
@@ -422,7 +414,6 @@
 !                that results from rounding to the TO'th decimal
 !                location.
 !
-!
 ! $ Detailed_Output
 !
 !     SUBSTR     is we regard the virtual string as VIRTUL.  Then
@@ -470,9 +461,7 @@
 !
 !-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
 !
-!
 !-&
-
 
 !
 !     The buffered numeric string has the form:
@@ -497,10 +486,8 @@
 !        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
 !        -2  -1   0   1    2   3   4   5       16
 !
-!
 !     From this its clear that i'th digit can be easily computed
 !     via following decision block.
-!
 !
 !        if ( i .lt. 0 ) then
 !           digit  = '0'
@@ -526,7 +513,6 @@
 !     Combining these observations we can compute the SLOT'th character
 !     of the virtual string as follows.
 !
-!
 !     If the character requested is character zero of the virtual
 !     string, we just get the decimal point.
 !
@@ -539,7 +525,6 @@
 !     just to the left of the decimal point contains D_exp it follows
 !     by induction that for any negative slot, the decimal is
 !     D_exp+slot+1
-!
 !
 !     Since we may need to round the output, we will work from right
 !     to left.  First thing we do is get the index of the right most
@@ -643,7 +628,6 @@
 
             else if ( i == 0 ) then
 
-
                letter = string(2:2)
 !
 !              If necessary, increment LETTER.
@@ -665,7 +649,6 @@
                   end if
 
                end if
-
 
             else if ( i < maxsig ) then
 !

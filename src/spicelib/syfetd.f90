@@ -136,13 +136,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch the nth symbol in the table
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -151,7 +149,6 @@
 !         Declaration of the unused variable SUMAI removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -163,8 +160,6 @@
 !     Local variables
 !
       integer(ip)           nsym
-
-
 
 !
 !     Standard SPICE error handling.
@@ -193,7 +188,6 @@
          name  = tabsym(nth)
 
       end if
-
 
       return
       end

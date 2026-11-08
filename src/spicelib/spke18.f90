@@ -102,7 +102,6 @@
 !     for a particular epoch before evaluating the record to obtain a
 !     state vector, as in the example which follows.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -160,13 +159,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_18 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -198,7 +195,6 @@
 !
       integer(ip), parameter :: maxdeg = 15
 
-
 !
 !     Local variables
 !
@@ -216,12 +212,10 @@
       integer(ip)           xstart
       integer(ip)           ystart
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Capture the subtype from the record and set the packet size

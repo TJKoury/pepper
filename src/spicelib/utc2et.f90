@@ -110,7 +110,6 @@
 !        TPARTV as well as the User's reference file time.req
 !        located in the "doc" directory of the toolkit.
 !
-!
 !        ISO (T) Formats (with or without trailing "Z").
 !
 !        String                        Year Mon  DOY DOM  HR Min Sec
@@ -122,7 +121,6 @@
 !        1995-08T18:28:12Z             1995  na  008  na  18  28 12
 !        1995-18T                      1995  na  018  na  00  00 00
 !        0000-01-01T                   1 BC Jan   na  01  00  00 00
-!
 !
 !        Calendar Formats.
 !
@@ -145,7 +143,6 @@
 !        29 Jun  30 12:29:29.298       2029+  Jun  30  12  29  29.298
 !        29 Jun '30 12:29:29.298       2030*  Jun  29  12  29  29.298
 !
-!
 !        Day of Year Formats
 !
 !        String                        Year  DOY HR Min Sec
@@ -160,7 +157,6 @@
 !        92-182/ 18:28:28.281          1992* 182 18  28 28.281
 !        182-92/ 12:29:29.192          0182+ 092 12  29 29.192
 !        182-'92/ 12:28:29.182         1992  182 12  28 29.182
-!
 !
 !        Julian Date Strings
 !
@@ -209,9 +205,7 @@
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM UTC2ET_EX1
 !              IMPLICIT NONE
@@ -254,15 +248,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        UTC time             : Dec 19 2003  16:48:00
 !        Ephemeris time       :   125124544.183560610
 !        Julian Ephemeris Date:     2452993.200742865
-!
 !
 ! $ Restrictions
 !
@@ -324,19 +315,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     UTC to ephemeris time
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Parameters
@@ -359,7 +347,6 @@
 
       integer(ip), parameter :: lnsize = 80
 
-
       character(lnsize)     pictur
       character(longln)     error
 
@@ -368,18 +355,14 @@
       character(smwdsz)     type
       character(smwdsz)     modify ( 5 )
 
-
       real(wp)              tvec   ( 10 )
       integer(ip)           ntvec
       integer(ip)           year
-
 
       logical               succes
       logical               ok
       logical               mods
       logical               yabbrv
-
-
 
 !
 !     Standard SPICE error handling.
@@ -505,7 +488,6 @@
          return
 
       end if
-
 
       return
 

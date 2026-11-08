@@ -169,7 +169,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -265,17 +264,9 @@
 !
       save
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
-
-
-
-
-
 
 !$Procedure  ZZEKJPRP  ( Prepare join condition test )
 
@@ -395,7 +386,6 @@
 !                    input row vectors from the second join row set
 !                    occupies elements NT1+1 through NT1+NT2 of SEGVEC.
 !
-!
 !     NJCNST         is the number of join constraints that must be
 !                    satisfied by the output join row set.  Each of the
 !                    input arrays CPIDX1, CLIDX1, OPS, CPIDX2, and
@@ -440,7 +430,6 @@
 !                    specified table.  The index is the ordinal position
 !                    of the column's attributes in the column attribute
 !                    list for the table containing the column.
-!
 !
 !     ELTS1          is an array of element indices that apply to the
 !                    columns on the left-hand-sides of constraints.  The
@@ -556,7 +545,6 @@
 
       if ( return() ) return
 
-
 !
 !     We don't validate the inputs; these must be checked by ZZEKJOIN,
 !     the only routine that should call this one.
@@ -577,7 +565,6 @@
 !     row set.
 !
       nt3  =  nt1  +  nt2
-
 
 !
 !     Create handle, segment base, and column descriptor
@@ -605,20 +592,17 @@
 
             call movei ( dtdscs(1,dtptr), cdscsz,  ldscrs(1,j) )
 
-
             dtptr   =  stdtpt(rseg)
 
             do k = 2, clidx2(j)
                dtptr  =  lnknxt( dtptr, dtpool )
             end do
 
-
             call movei ( dtdscs(1,dtptr), cdscsz, rdscrs(1,j) )
 
          end if
 
       end do
-
 
 !
 !     Our objective is to limit as far as possible the number of
@@ -641,7 +625,6 @@
 !        3)  Hard luck:  the only constraints we have (if any) involve
 !            the operators NE, LIKE, or UNLIKE, none of which are
 !            helpful.  Test every row vector.
-!
 !
 !     First step:  We try to find a pair of columns related by an
 !     equi-join constraint.
@@ -667,7 +650,6 @@
          end if
 
       end do
-
 
       if ( case == noluck ) then
 
@@ -701,7 +683,6 @@
          end do
 
       end if
-
 
 !
 !     At this point, we know which case we've got.  If we've picked
@@ -793,7 +774,6 @@
                           lcol,    lelt,    eqasnd,  sthan, &
                           stsdsc,  stdtpt,  dtpool,  dtdscs,  lovbas  )
 
-
 !
 !        Produce an order vector for the column on the right side of
 !        the CNSTR constraint.
@@ -881,7 +861,6 @@
 
          locact(cnstr) = .false.
 
-
       else
 !
 !        This is the `no luck' case.  Save all of the constraints.
@@ -937,14 +916,7 @@
       rptr  = 1
       done  = .false.
 
-
       return
-
-
-
-
-
-
 
 !$Procedure  ZZEKJNXT  ( Return next join row vector )
 
@@ -1037,7 +1009,6 @@
 !
 !         END DO
 !
-!
 ! $ Restrictions
 !
 !     1)  This routine should not be called by routines outside of the
@@ -1062,7 +1033,6 @@
 !
 !-&
 
-
 !
 !     No row vector found to start with.
 !
@@ -1077,7 +1047,6 @@
          return
 
       else if ( case == equi ) then
-
 
          do while (  ( .not. done )  .and.  ( .not. found )  )
 !
@@ -1125,7 +1094,6 @@
                             rrow, &
                             relt               )  ) then
 !
-!
 !              The `left' key entry is smaller.  Advance the bottom
 !              pointer on the left side.
 !
@@ -1135,8 +1103,6 @@
                else
                   done  =  .true.
                end if
-
-
 
             else if (  zzekrcmp( eq, &
                                  1, &
@@ -1150,7 +1116,6 @@
                                  rdscrs( 1, cnstr ), &
                                  rrow, &
                                  relt               )  ) then
-!
 !
 !              The `left' key entry is equal.  Form a composite
 !              row vector and test it against the full set of active
@@ -1171,7 +1136,6 @@
                   k  =  1
 
                end if
-
 
                offset  =  svrb1  +  ( lrvidx - 1 ) * ( svnt1 + 1 )
 
@@ -1210,7 +1174,6 @@
 
                   lcur  =  lcur + 1
 
-
                else if (        ( lcur == svnr1 ) &
                           .and. ( rptr < svnr2 )  ) then
 !
@@ -1229,8 +1192,6 @@
                   done  =  .true.
 
                end if
-
-
 
             else
 !
@@ -1252,8 +1213,6 @@
 !           or LCUR, or else we've set DONE to .TRUE.
 !
          end do
-
-
 
       else if ( case == noneq ) then
 !
@@ -1302,7 +1261,6 @@
                             rrow, &
                             relt               )  ) then
 !
-!
 !              This pair of row vectors satisfies the join constraint.
 !              Form a composite row vector and test it against the full
 !              set of active constraints.
@@ -1323,7 +1281,6 @@
 
                end if
 
-
                offset  =  svrb1  +  ( lrvidx - 1 ) * ( svnt1 + 1 )
 
                call zzeksrd ( svbas1+offset+1, &
@@ -1333,7 +1290,6 @@
 
                call zzeksrd ( svbas2+offset+1, &
                               svbas2+offset+svnt2,  rowvec(k) )
-
 
 !
 !              Create row arrays for both sides of each active
@@ -1350,12 +1306,10 @@
 
                end do
 
-
                found = zzekvmch ( svncon, locact, &
                                   lhans,  lsdsc,  ldscrs, lrows, lelts, &
                                   svops, &
                                   rhans,  rsdsc,  rdscrs, rrows, relts )
-
 
                if ( lsmall ) then
 !
@@ -1378,7 +1332,6 @@
 
                   end if
 
-
                else
 !
 !                 The `right' key entry is smaller.  All higher-indexed
@@ -1400,13 +1353,11 @@
 
                   end if
 
-
                end if
 !
 !              We incremented LPTR or RPTR, or else we set DONE to
 !              .TRUE.
 !
-
 
             else
 !
@@ -1423,7 +1374,6 @@
                   else
                      done  =  .true.
                   end if
-
 
                else
 !
@@ -1444,10 +1394,7 @@
 
             end if
 
-
          end do
-
-
 
       else
 
@@ -1459,7 +1406,6 @@
 !        on a subsequent call.
 !
          do while ( lptr <= svnr1 )
-
 
             do while ( rptr <= svnr2 )
 !
@@ -1500,18 +1446,14 @@
 
                if ( found ) return
 
-
             end do
-
 
             lptr  =  lptr + 1
             rptr  =  1
 
          end do
 
-
       end if
-
 
       return
       end

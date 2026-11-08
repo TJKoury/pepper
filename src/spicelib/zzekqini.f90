@@ -139,7 +139,6 @@
 !
 !     Local parameters
 !
-!
 !     Minimum upper bound for the integer cell of an encoded query:
 !
       integer(ip)           mnisiz
@@ -155,12 +154,10 @@
 !
       integer(ip)           i
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check sizes:
@@ -176,7 +173,6 @@
 
       end if
 
-
       if ( dsize < maxqnm ) then
 
          call setmsg ( 'Size of d.p. component of encoded query ' // &
@@ -187,7 +183,6 @@
          return
 
       end if
-
 
       if ( len(eqryc) < maxcln ) then
 

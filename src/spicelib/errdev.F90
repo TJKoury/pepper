@@ -299,13 +299,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get/set error output device name
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -339,7 +337,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -361,18 +358,14 @@
 !     Initial Values:
 !
 
-
-
 !
 !     Executable Code:
 !
-
 
 !
 !     We save the operation string as input, and get
 !     an upper case version for our own use:
 !
-
 
       call ljust ( op,   upop )
       call ucase ( upop, upop )
@@ -382,7 +375,6 @@
          call getdev ( device )
 
       else if ( upop  == 'SET' ) then
-
 
 !
 !        We want the reserved words to be in upper
@@ -408,7 +400,6 @@
             return
 
          end if
-
 
          if (  ( upnam  == 'SCREEN' ) .or. &
                ( upnam  == 'NULL'   )        )  then

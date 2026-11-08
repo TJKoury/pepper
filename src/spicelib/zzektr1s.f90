@@ -134,7 +134,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -189,7 +188,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Make sure the input tree is empty.
 !
@@ -211,9 +209,7 @@
 !     Compute the tree depth required.  The largest tree of a given
 !     depth D contains the root node plus S(D) child nodes, where
 !
-!
 !        S(1)  =  1
-!
 !
 !     and if D is at least 2,
 !                                    D - 2
@@ -223,7 +219,6 @@
 !                         Root       ----           Child
 !                                    i = 0
 !
-!
 !                                    D - 2
 !                                    ____
 !                                    \            i
@@ -231,12 +226,10 @@
 !                                    ----
 !                                    i = 0
 !
-!
 !                                         D-1
 !                                   MXKIDC   -  1
 !              =  MXKIDR        *   -------------
 !                                    MXKIDC  - 1
-!
 !
 !     If all of these nodes are full, the number of keys that
 !     can be held in this tree is
@@ -266,7 +259,6 @@
 !              S(D+1)  =   MXKIDR  +  MXKIDC * S(D)
 !
 !           is handy.
-!
 !
             s  =  mxkidr  +  mxkidc * s
 
@@ -307,7 +299,6 @@
 !     items we save on the stack and the stack variables associated
 !     with those items:
 !
-!
 !        Item                                 Stack Variable
 !        ----                                 ---------------
 !        Node number                          STNODE
@@ -321,7 +312,6 @@
 !        Index of next subtree to visit       STNEXT
 !
 !        Base index of node                   STNBAS
-!
 !
       node              =  tree
       subsiz            =  size
@@ -387,7 +377,6 @@
 !
 !                 We'll compute this value of NKIDS.
 !
-!
                   q       =  subsiz + 1
                   div     =  maxsiz + 1
                   nkids  =  ( q + div - 1 )  / div
@@ -418,7 +407,6 @@
                   nbig    =    nkids - nsmall
 
                   nkeys   =  nkids  -  1
-
 
                else
 !
@@ -472,7 +460,6 @@
 
                end do
 
-
                totnod  =  1
 
                do i = 1, nkids
@@ -502,7 +489,6 @@
 !
                call zzekpgwi ( handle, tree, page )
 
-
             else if ( level < d ) then
 !
 !              The current node is a non-leaf child node.
@@ -519,7 +505,6 @@
 !              number of keys in the subtrees would be
 !
 !                 SUBSIZ  -  MNKEYC
-!
 !
                n       =  subsiz - mnkeyc
                reqsiz  =  ( n + mnkeyc - 1 )  /  mnkeyc
@@ -556,7 +541,6 @@
                   nbig    =  nkids  -  nsmall
 
                else
-!
 !
 !                 See how many subtrees of size MAXSIZ it would take
 !                 to hold the requisite number of keys.  We know the
@@ -634,7 +618,6 @@
 
                end do
 
-
                do i = 1, nkids
 !
 !                 Allocate a node for the Ith child.  Store pointers
@@ -685,7 +668,6 @@
                node    =  page ( kidbas+1 )
                subsiz  =  bigsiz
 
-
             else if ( level > 1 ) then
 !
 !              The current node is a child leaf node.  There are no
@@ -732,7 +714,6 @@
 
                end if
 
-
             else
 !
 !              The only node is the root.  Pop out.
@@ -756,23 +737,19 @@
 !
                stnext ( level )   =   next  +  1
 
-
                if ( level == 1 ) then
                   kidbas  =  trkidr
                else
                   kidbas  =  trkidc
                end if
 
-
                node    =  page ( kidbas + next )
-
 
                if ( next <= nbig ) then
                   subsiz  =  stlsiz(level)
                else
                   subsiz  =  stlsiz(level) - 1
                end if
-
 
                if ( next <= nbig+1 ) then
 
@@ -819,7 +796,6 @@
 
             end if
 
-
          end if
 
 !
@@ -837,14 +813,12 @@
 !
       end do
 
-
 !
 !     The last chore is setting the total number of nodes in the root.
 !
       base  = zzektrbs ( tree )
 
       call dasudi ( handle, base+trnnod, base+trnnod, totnod )
-
 
       return
       end

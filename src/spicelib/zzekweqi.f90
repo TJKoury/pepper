@@ -162,10 +162,6 @@
                  'CHR_BUF_SIZE',      eqcsiz, &
                  'FREE_CHR',          eqcptr                       /
 
-
-!
-!     Use discovery check-in.
-!
 !
 !     Find the location of the named item.
 !

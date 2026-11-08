@@ -236,7 +236,6 @@
 !              set to the number of seconds per Julian day
 !              (86400).
 !
-!
 !     INITJD   is the integer part of the Julian ephemeris date
 !              of initial epoch of the first record. INITJD may
 !              be less than, equal to, or greater than the
@@ -407,13 +406,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write PCK type_20 data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -474,11 +471,9 @@
       integer(ip)           refcod
 
 !
-!
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of sets of coefficients must be positive.
@@ -685,7 +680,6 @@
 !        ANGLE_2 angle at interval midpoint
 !        ANGLE_3 coefficients
 !        ANGLE_3 angle at interval midpoint
-!
 !
       call dafbna ( handle, descr, segid )
 

@@ -127,7 +127,6 @@
 !     tracking site (id-code 399001) to a spacecraft whose id-code
 !     is -77.
 !
-!
 !           signal traveling to spacecraft
 !       *  -._.-._.-._.-._.-._.-._.-._.-._.->  *
 !
@@ -150,7 +149,6 @@
 !
 !        WRITE (*,*) 'The signal arrived at time: ', ARRIVE
 !        WRITE (*,*) 'It took ', HOWLNG, ' seconds to get there.'
-!
 !
 !     Example 2.
 !     ----------
@@ -244,13 +242,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute uplink and downlink light time
 !
 !-&
-
 
 !
 !     SPICELIB Functions

@@ -36,7 +36,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     NELT     is the number of elements in the input array.
@@ -138,13 +137,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle the elements of a character array in place
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -166,8 +163,6 @@ contains
       integer(ip)      k
       integer(ip)      l
       integer(ip)      m
-
-
 
 !
 !     Standard SPICE error handling.
@@ -205,8 +200,6 @@ contains
 
       end if
 
-
-
       if ( k < 0 ) then
 
          k = k + nelt
@@ -216,7 +209,6 @@ contains
          return
 
       end if
-
 
 !
 !     The algorithm used to cycle arrays is identical to the one used
@@ -283,7 +275,6 @@ contains
 
       end if
 
-
       return
       end procedure cyacip
 
@@ -309,7 +300,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -412,13 +402,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle the elements of a d.p. array in place
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -436,7 +424,6 @@ contains
       integer(ip)      k
       integer(ip)      l
       integer(ip)      m
-
 
 !
 !     Standard SPICE error handling.
@@ -472,7 +459,6 @@ contains
          return
 
       end if
-
 
       if ( k < 0 ) then
 
@@ -513,7 +499,6 @@ contains
 
       end do
 
-
       return
       end procedure cyadip
 
@@ -539,7 +524,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -642,13 +626,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle the elements of an integer array in place
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -666,7 +648,6 @@ contains
       integer(ip)      k
       integer(ip)      l
       integer(ip)      m
-
 
 !
 !     Standard SPICE error handling.
@@ -703,7 +684,6 @@ contains
 
       end if
 
-
       if ( k < 0 ) then
 
          k = k + nelt
@@ -713,7 +693,6 @@ contains
          return
 
       end if
-
 
 !
 !     The algorithm used to cycle arrays is identical to the one used
@@ -744,7 +723,6 @@ contains
 
       end do
 
-
       return
       end procedure cyaiip
 
@@ -771,7 +749,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -892,13 +869,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle the elements of a character array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -914,7 +889,6 @@ contains
 !         The "Exceptions" section was filled out in more detail.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -937,8 +911,6 @@ contains
       integer(ip)      k
       integer(ip)      l
       integer(ip)      m
-
-
 
 !
 !     Standard SPICE error handling.
@@ -976,8 +948,6 @@ contains
 
       end if
 
-
-
       if ( k < 0 ) then
 
          k = k + nelt
@@ -988,10 +958,6 @@ contains
          return
 
       end if
-
-
-
-
 
 !
 !     The algorithm used to cycle arrays is identical to the one used
@@ -1061,7 +1027,6 @@ contains
 
       end if
 
-
       return
       end procedure cyclac
 
@@ -1088,7 +1053,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1204,13 +1168,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle the elements of a d.p. array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1226,7 +1188,6 @@ contains
 !         The "Exceptions" section was filled out in more detail.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1244,8 +1205,6 @@ contains
       integer(ip)      k
       integer(ip)      l
       integer(ip)      m
-
-
 
 !
 !     Standard SPICE error handling.
@@ -1282,8 +1241,6 @@ contains
 
       end if
 
-
-
       if ( k < 0 ) then
          k = k + nelt
 
@@ -1293,8 +1250,6 @@ contains
          return
 
       end if
-
-
 
 !
 !     The algorithm used to cycle arrays is identical to the one used
@@ -1325,7 +1280,6 @@ contains
 
       end do
 
-
       return
       end procedure cyclad
 
@@ -1351,7 +1305,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1467,13 +1420,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle the elements of an integer array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1489,7 +1440,6 @@ contains
 !         The "Exceptions" section was filled out in more detail.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1508,8 +1458,6 @@ contains
       integer(ip)      l
       integer(ip)      m
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -1519,7 +1467,6 @@ contains
 !     Don't even screw around if there are no elements in the array.
 !
       if ( nelt < 1 ) return
-
 
 !
 !     A backward cycle is the same as a forward cycle by the opposite
@@ -1546,7 +1493,6 @@ contains
 
       end if
 
-
       if ( k < 0 ) then
          k = k + nelt
 
@@ -1556,8 +1502,6 @@ contains
          return
 
       end if
-
-
 
 !
 !     The algorithm used to cycle arrays is identical to the one used
@@ -1588,7 +1532,6 @@ contains
 
       end do
 
-
       return
       end procedure cyclai
 
@@ -1614,7 +1557,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1692,7 +1634,6 @@ contains
 !                       ARRAY(6) = 'brown'
 !                       ARRAY(7) = 'dog'
 !
-!
 !     The following calls to INSLAC signal errors.
 !
 !     CALL INSLAC ( ELTS, 3, -1, ARRAY, NA )
@@ -1732,13 +1673,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert at location in a character array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1760,11 +1699,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Other functions
@@ -1777,14 +1714,10 @@ contains
       integer(ip)      size
       integer(ip)      i
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check the dimension of the array.
@@ -1804,7 +1737,6 @@ contains
          return
 
       end if
-
 
 !
 !     If the number of elements to be inserted is greater than zero,
@@ -1831,10 +1763,7 @@ contains
 !
          na = size + ne
 
-
       end if
-
-
 
       return
       end procedure inslac
@@ -1861,7 +1790,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1936,7 +1864,6 @@ contains
 !                       ARRAY(6) = 3.0D0
 !                       ARRAY(7) = 4.0D0
 !
-!
 !     The following calls to INSLAD signal errors.
 !
 !     CALL INSLAD ( ELTS, 3, -1, ARRAY, NA )
@@ -1977,13 +1904,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert at location in d.p. array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2005,11 +1930,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Other functions
@@ -2022,14 +1945,10 @@ contains
       integer(ip)      size
       integer(ip)      i
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check the dimension of the array.
@@ -2049,7 +1968,6 @@ contains
          return
 
       end if
-
 
 !
 !     If the number of elements to be inserted is greater than zero,
@@ -2076,10 +1994,7 @@ contains
 !
          na = size + ne
 
-
       end if
-
-
 
       return
       end procedure inslad
@@ -2106,7 +2021,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2181,7 +2095,6 @@ contains
 !                       ARRAY(6) = 3
 !                       ARRAY(7) = 4
 !
-!
 !     The following calls to INSLAI signal errors.
 !
 !     CALL INSLAI ( ELTS, 3, -1, ARRAY, NA )
@@ -2222,13 +2135,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert at location in an integer array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2250,11 +2161,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Other functions
@@ -2267,14 +2176,10 @@ contains
       integer(ip)      size
       integer(ip)      i
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check the dimension of the array.
@@ -2294,7 +2199,6 @@ contains
          return
 
       end if
-
 
 !
 !     If the number of elements to be inserted is greater than zero,
@@ -2321,10 +2225,7 @@ contains
 !
          na = size + ne
 
-
       end if
-
-
 
       return
       end procedure inslai
@@ -2351,7 +2252,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2422,7 +2322,6 @@ contains
 !                       ARRAY(3) = 'fell'
 !                       ARRAY(4) = 'down'
 !
-!
 !     The following calls would signal errors:
 !
 !     CALL REMLAC ( 3,  1, ARRAY, -1 )
@@ -2460,13 +2359,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove elements from a character array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2493,24 +2390,19 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)      i
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     If LOC does not point to an actual element, signal an error and
@@ -2535,7 +2427,6 @@ contains
          call ctx%sigerr ( 'SPICE(NONEXISTELEMENTS)' )
          return
 
-
 !
 !     If there are elements to be removed, remove them. Otherwise,
 !     do not modify the array.
@@ -2550,16 +2441,12 @@ contains
             array(i) = array(i+ne)
          end do
 
-
 !
 !        Update the number of elements in the array.
 !
          na = na - ne
 
-
       end if
-
-
 
       return
       end procedure remlac
@@ -2586,7 +2473,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2657,7 +2543,6 @@ contains
 !                       ARRAY(3) = 6.0D0
 !                       ARRAY(4) = 7.0D0
 !
-!
 !     The following calls would signal errors:
 !
 !     CALL REMLAD ( 3,  1, ARRAY, -1 )
@@ -2696,13 +2581,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove elements from a d.p. array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2729,24 +2612,19 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)      i
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     If LOC does not point to an actual element, signal an error and
@@ -2771,7 +2649,6 @@ contains
          call ctx%sigerr ( 'SPICE(NONEXISTELEMENTS)' )
          return
 
-
 !
 !     If there are elements to be removed, remove them. Otherwise,
 !     do not modify the array.
@@ -2786,16 +2663,12 @@ contains
             array(i) = array(i+ne)
          end do
 
-
 !
 !        Update the number of elements in the array.
 !
          na = na - ne
 
-
       end if
-
-
 
       return
       end procedure remlad
@@ -2822,7 +2695,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2893,7 +2765,6 @@ contains
 !                       ARRAY(3) = 6
 !                       ARRAY(4) = 7
 !
-!
 !     The following calls would signal errors:
 !
 !     CALL REMLAI ( 3,  1, ARRAY, -1 )
@@ -2932,13 +2803,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove elements from an integer array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2965,24 +2834,19 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)      i
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     If LOC does not point to an actual element, signal an error and
@@ -3007,7 +2871,6 @@ contains
          call ctx%sigerr ( 'SPICE(NONEXISTELEMENTS)' )
          return
 
-
 !
 !     If there are elements to be removed, remove them. Otherwise,
 !     do not modify the array.
@@ -3022,16 +2885,12 @@ contains
             array(i) = array(i+ne)
          end do
 
-
 !
 !        Update the number of elements in the array.
 !
          na = na - ne
 
-
       end if
-
-
 
       return
       end procedure remlai
@@ -3058,7 +2917,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -3168,7 +3026,6 @@ contains
 !           Reagan       Reagan
 !           Cuomo        Cuomo
 !
-!
 !     The calls
 !
 !           CALL SWAPAC ( 3,  5, 4,  6, ARRAY )
@@ -3223,13 +3080,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     swap elements of character array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3255,11 +3110,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -3277,8 +3130,6 @@ contains
       integer(ip)           nsub
 
       integer(ip)           i
-
-
 
 !
 !     We will assume that LOCN and N refer to the earlier group of
@@ -3371,14 +3222,10 @@ contains
 !        5) Cycle the sub-array EXTRA times in the indicated direction.
 !
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check to see if the inputs are valid.
@@ -3466,7 +3313,6 @@ contains
 
       end if
 
-
       return
       end procedure swapac
 
@@ -3492,7 +3338,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -3602,7 +3447,6 @@ contains
 !           Reagan       Reagan
 !           Cuomo        Cuomo
 !
-!
 !     The calls
 !
 !           CALL SWAPAC ( 3,  5, 4,  6, ARRAY )
@@ -3658,13 +3502,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     swap elements within a d.p. array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3690,11 +3532,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -3712,8 +3552,6 @@ contains
       integer(ip)           nsub
 
       integer(ip)           i
-
-
 
 !
 !     We will assume that LOCN and N refer to the earlier group of
@@ -3806,14 +3644,10 @@ contains
 !        5) Cycle the sub-array EXTRA times in the indicated direction.
 !
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check to see if the inputs are valid.
@@ -3849,7 +3683,6 @@ contains
 
       end if
 
-
 !
 !     Make sure we have the groups in the right order.
 !
@@ -3864,7 +3697,6 @@ contains
          nn = m
          nm = n
       end if
-
 
 !
 !     The elements must be distinct.
@@ -3930,7 +3762,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     N,
@@ -4039,7 +3870,6 @@ contains
 !           Reagan       Reagan
 !           Cuomo        Cuomo
 !
-!
 !     The calls
 !
 !           CALL SWAPAC ( 3,  5, 4,  6, ARRAY )
@@ -4095,13 +3925,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     swap elements within an integer array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4127,11 +3955,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -4149,8 +3975,6 @@ contains
       integer(ip)           nsub
 
       integer(ip)           i
-
-
 
 !
 !     We will assume that LOCN and N refer to the earlier group of
@@ -4243,14 +4067,10 @@ contains
 !        5) Cycle the sub-array EXTRA times in the indicated direction.
 !
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check to see if the inputs are valid.
@@ -4284,7 +4104,6 @@ contains
          return
 
       end if
-
 
 !
 !     Make sure we have the groups in the right order.
@@ -4366,8 +4185,6 @@ contains
 ! $ Declarations
 
       implicit none
-
-
 
 ! $ Detailed_Input
 !
@@ -4495,13 +4312,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pack a character array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4514,31 +4329,24 @@ contains
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
 
 !
-!
 !     Local variables
 !
       integer(ip)      i
-
-
-
 
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
 
-
 !
 !     First, determine how many items to transfer.
 !
       nout = min ( npack, maxout )
-
 
 !
 !     Check to see if PACK contains valid array indices.
@@ -4555,14 +4363,12 @@ contains
 
       end do
 
-
 !
 !     Transfer them. Just like it says in the header.
 !
       do i = 1, nout
          out(i) = in(pack(i))
       end do
-
 
       return
       end procedure packac
@@ -4591,8 +4397,6 @@ contains
 ! $ Declarations
 
       implicit none
-
-
 
 ! $ Detailed_Input
 !
@@ -4720,13 +4524,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pack a d.p. array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4739,19 +4541,14 @@ contains
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)      i
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -4785,7 +4582,6 @@ contains
          out(i) = in(pack(i))
       end do
 
-
       return
       end procedure packad
 
@@ -4814,8 +4610,6 @@ contains
 
       implicit none
 
-
-
 ! $ Detailed_Input
 !
 !     IN       is the input array.
@@ -4835,7 +4629,6 @@ contains
 ! $ Detailed_Output
 !
 !     NOUT     is the number of elements in the output array.
-!
 !
 !     OUT      is the output array. This array contains up to
 !              MAXOUT elements from the input array, located
@@ -4943,13 +4736,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pack an integer array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4962,30 +4753,24 @@ contains
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
-
 
 !
 !     Local variables
 !
       integer(ip)      i
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
 
-
 !
 !     First, determine how many items to transfer.
 !
       nout = min ( npack, maxout )
-
 
 !
 !     Check to see if PACK contains valid array indices.
@@ -5002,15 +4787,12 @@ contains
 
       end do
 
-
 !
 !     Transfer them. Just like it says in the header.
 !
       do i = 1, nout
          out(i) = in(pack(i))
       end do
-
-
 
       return
       end procedure packai
@@ -5039,7 +4821,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     POOL     is a doubly linked list pool.
@@ -5054,7 +4835,6 @@ contains
 !
 !                 -- The node that was the successor of NEW on
 !                    input is the head of the free list on output.
-!
 !
 !     NEW      is the number of the newly allocated node.
 !
@@ -5103,7 +4883,6 @@ contains
 !                     PREV = NODE
 !
 !                  END DO
-!
 !
 !     2)  In this version of example (1), we check that a sufficient
 !         number of free nodes are available before building the list:
@@ -5154,13 +4933,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     allocate node from linked list pool
 !
 !-&
-
 
 !
 !     Local parameters
@@ -5210,8 +4987,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -5225,8 +5000,6 @@ contains
 !
       integer(ip)           free
       parameter           ( free   = 0 )
-
-
 
 !
 !     Discovery check-in is used in place of standard SPICE error
@@ -5287,7 +5060,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -5366,8 +5138,6 @@ contains
 !
 !         The nodes 3, 7, and 88 will now be on the free list.
 !
-!
-!
 !     2)  Let POOL be a doubly linked list pool containing the list
 !
 !            1002 <--> 3 <--> 7 <--> 88 <--> 2
@@ -5404,13 +5174,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     free sublist of linked list
 !
 !-&
-
 
 !
 !     Local parameters
@@ -5460,8 +5228,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -5476,8 +5242,6 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
-
 !
 !     Local variables
 !
@@ -5485,7 +5249,6 @@ contains
       integer(ip)           next
       integer(ip)           node
       integer(ip)           prev
-
 
 !
 !     HEAD and TAIL must be valid node numbers.  These nodes
@@ -5503,7 +5266,6 @@ contains
          call ctx%errint ( '#', pool(sizrow, sizcol)                       )
          call ctx%sigerr ( 'SPICE(INVALIDNODE)'                            )
          return
-
 
       else if (       ( pool(bckwrd,head)  ==  free ) &
                 .or.  ( pool(bckwrd,tail)  ==  free )  ) then
@@ -5690,7 +5452,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     NODE     is the number of a node in POOL. Normally,
@@ -5749,7 +5510,6 @@ contains
 !
 !         will assign the value 3 to HEAD.
 !
-!
 !     2)  If POOL is a doubly linked list pool that contains the
 !         singleton list consisting of the allocated node
 !
@@ -5787,13 +5547,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return head of linked list
 !
 !-&
-
 
 !
 !     Local parameters
@@ -5843,8 +5601,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -5859,14 +5615,10 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
-
 !
 !     Local variables
 !
       integer(ip)           prev
-
-
 
 !
 !     If the node is non-positive, we regard it as the nil node.
@@ -5906,7 +5658,6 @@ contains
          return
 
       end if
-
 
 !
 !     Find the head of the list.
@@ -5952,7 +5703,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     PREV     is a node in a list. PREV is permitted to be
@@ -5976,7 +5726,6 @@ contains
 !
 !                    -- The successor of PREV is HEAD.
 !                    -- The predecessor of HEAD is PREV.
-!
 !
 !                 Let NEXT be the node that on input was the
 !                 successor of PREV; if NEXT exists, then on
@@ -6044,7 +5793,6 @@ contains
 !
 !             3 <--> 7 <--> 500 <--> 2 <--> 80 <--> 1
 !
-!
 !     2)  Let POOL be a doubly linked list pool that contains 5 nodes.
 !         The sequence of calls
 !
@@ -6093,13 +5841,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert sublist into linked list after a node
 !
 !-&
-
 
 !
 !     Local parameters
@@ -6149,8 +5895,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -6165,18 +5909,12 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
 !
 !     Local variables
 !
       integer(ip)           next
       integer(ip)           head
       integer(ip)           tail
-
-
-!
-!     Use discovery check-in.
-!
 
 !
 !     If PREV is non-positive, return now.
@@ -6198,7 +5936,6 @@ contains
          call ctx%errint ( '#', pool(sizrow, sizcol)                       )
          call ctx%sigerr ( 'SPICE(INVALIDNODE)'                            )
          return
-
 
       else if (       ( pool(bckwrd,prev)  ==  free ) &
                 .or.  ( pool(bckwrd,list)  ==  free )  ) then
@@ -6287,7 +6024,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     LIST     is a node in the list to be inserted. The entire
@@ -6311,7 +6047,6 @@ contains
 !                    -- The successor of TAIL is NEXT.
 !
 !                    -- The predecessor of NEXT is TAIL.
-!
 !
 !                 Let PREV be the node that on input was the
 !                 predecessor of NEXT; if PREV exists, then on
@@ -6382,7 +6117,6 @@ contains
 !
 !             3 <--> 500 <--> 2 <--> 80 <--> 7 <--> 1
 !
-!
 !     2)  Let POOL be a doubly linked list pool that contains 5 nodes.
 !         The sequence of calls
 !
@@ -6431,13 +6165,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert sublist into linked list before a node
 !
 !-&
-
 
 !
 !     Local parameters
@@ -6487,8 +6219,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -6503,18 +6233,12 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
 !
 !     Local variables
 !
       integer(ip)           head
       integer(ip)           prev
       integer(ip)           tail
-
-
-!
-!     Use discovery check-in.
-!
 
 !
 !     If NEXT is non-positive, return now.
@@ -6536,7 +6260,6 @@ contains
          call ctx%errint ( '#', pool(sizrow, sizcol)                       )
          call ctx%sigerr ( 'SPICE(INVALIDNODE)'                            )
          return
-
 
       else if (       ( pool(bckwrd,next)  ==  free ) &
                 .or.  ( pool(bckwrd,list)  ==  free )  ) then
@@ -6585,7 +6308,6 @@ contains
 !     In either case, the backward pointer of HEAD should be set
 !     to the backward pointer of NEXT.
 !
-!
       prev                  =  pool( bckwrd, next )
       pool( forwrd, tail )  =  next
       pool( bckwrd, next )  =  tail
@@ -6624,7 +6346,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -6689,7 +6410,6 @@ contains
 !
 !            INTEGER               POOL ( 2, LBPOOL : PLSIZE )
 !
-!
 !         To initialize POOL, use the call
 !
 !            CALL LNKINI ( PLSIZE, POOL )
@@ -6718,13 +6438,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     initialize linked list pool
 !
 !-&
-
 
 !
 !     Local parameters
@@ -6774,8 +6492,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -6790,17 +6506,10 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
-
 !
 !     Local variables
 !
       integer(ip)           i
-
-
-!
-!     Use discovery check-in.
-!
 
 !
 !     The requested number of nodes must be valid.
@@ -6875,7 +6584,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     SIZE     is the number of nodes in the pool.
@@ -6918,11 +6626,9 @@ contains
 !
 !            4 <--> 5 <--> 1 <--> 2
 !
-!
 !         and the node 3 is unallocated, then the function reference
 !
 !            NFREE  =  LNKNFN ( POOL )
-!
 !
 !         will assign the value 1 to NFREE.
 !
@@ -6952,13 +6658,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return number of nodes in linked list pool
 !
 !-&
-
 
 !
 !     Local parameters
@@ -7008,8 +6712,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -7023,9 +6725,6 @@ contains
 !
       integer(ip)           free
       parameter           ( free   = 0 )
-
-
-
 
 !
 !     Grab the number of free nodes from the control area.
@@ -7059,7 +6758,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -7123,7 +6821,6 @@ contains
 !            LNKNXT ( 7, POOL )                     1
 !            LNKNXT ( 1, POOL )                    -3
 !
-!
 !     2)  Forward traversal of a list: Let POOL be a doubly linked
 !         list pool, and let NODE be an allocated node in the pool.
 !         To traverse the list containing NODE in forward order
@@ -7174,17 +6871,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return next node in linked list
 !
 !-&
 
-
 !
 !     Local parameters
-!
 !
 !     The control area contains 3 elements.  They are:
 !
@@ -7229,8 +6923,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -7244,7 +6936,6 @@ contains
 !
       integer(ip)           free
       parameter           ( free   =  0  )
-
 
 !
 !     If the node is out of range, something's very wrong.
@@ -7311,7 +7002,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     NODE     is the number of an allocated node in POOL.
@@ -7374,7 +7064,6 @@ contains
 !            LNKPRV ( 7, POOL )                     3
 !            LNKPRV ( 3, POOL )                    -1
 !
-!
 !     2)  Backward traversal of a list: Let POOL be a doubly linked
 !         list pool, and let NODE be an allocated node in the pool.
 !         To traverse the list containing NODE in backward order
@@ -7425,13 +7114,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return previous node in linked list
 !
 !-&
-
 
 !
 !     Local parameters
@@ -7481,8 +7168,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -7496,8 +7181,6 @@ contains
 !
       integer(ip)           free
       parameter           ( free   = 0 )
-
-
 
 !
 !     If the node is out of range, something's very wrong.
@@ -7562,7 +7245,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -7632,13 +7314,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return size of linked list
 !
 !-&
-
 
 !
 !     Local parameters
@@ -7688,8 +7368,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -7703,8 +7381,6 @@ contains
 !
       integer(ip)           free
       parameter           ( free   = 0 )
-
-
 
 !
 !     Grab the pool size from the control area.
@@ -7737,7 +7413,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -7797,7 +7472,6 @@ contains
 !
 !         will assign the value 44 to TAIL.
 !
-!
 !     2)  If POOL is a doubly linked list pool that contains the
 !         singleton list consisting of the allocated node
 !
@@ -7839,13 +7513,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return tail of linked list
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -7856,7 +7528,6 @@ contains
 !        of range.
 !
 !-&
-
 
 !
 !     Local parameters
@@ -7906,8 +7577,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -7922,14 +7591,10 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
-
 !
 !     Local variables
 !
       integer(ip)           next
-
-
 
 !
 !     If the node is non-positive, we regard it as the nil node.
@@ -8013,7 +7678,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     HEAD,
@@ -8093,7 +7757,6 @@ contains
 !
 !            4 <--> 2000
 !
-!
 !     2)  Let POOL be a doubly linked list pool, and let
 !
 !            9 <--> 8 <--> 4 <--> 2000 <--> 1
@@ -8134,13 +7797,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract sublist of linked list
 !
 !-&
-
 
 !
 !     Local parameters
@@ -8190,8 +7851,6 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-!
-!
       integer(ip)           forwrd
       parameter           ( forwrd  = 1 )
 
@@ -8206,15 +7865,12 @@ contains
       integer(ip)           free
       parameter           ( free   = 0 )
 
-
-
 !
 !     Local variables
 !
       integer(ip)           next
       integer(ip)           node
       integer(ip)           prev
-
 
 !
 !     HEAD and TAIL must be valid node numbers.  These nodes
@@ -8232,7 +7888,6 @@ contains
          call ctx%errint ( '#', pool(sizrow, sizcol)                       )
          call ctx%sigerr ( 'SPICE(INVALIDNODE)'                            )
          return
-
 
       else if (       ( pool(bckwrd,head)  ==  free ) &
                 .or.  ( pool(bckwrd,tail)  ==  free )  ) then
@@ -8371,13 +8026,11 @@ contains
 !     portion existed) has now been taken care of.
 !
 
-
 !
 !     Cauterize the sublist.
 !
       pool ( bckwrd, head )  =  -tail
       pool ( forwrd, tail )  =  -head
-
 
       return
       end procedure lnkxsl

@@ -137,13 +137,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     generate a rotation matrix
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -156,8 +154,6 @@
 !
 !-&
 
-
-!
 !
       real(wp)              s
       real(wp)              c
@@ -198,6 +194,5 @@
       mout(i1,i3) = 0.0_wp
       mout(i2,i3) = s
       mout(i3,i3) = c
-!
       return
       end

@@ -451,7 +451,6 @@
 !        a spacecraft-fixed frame whose attitude is given by a
 !        C-kernel.
 !
-!
 !     In all cases, kernel data are normally loaded once per program
 !     run, NOT every time this routine is called.
 !
@@ -505,7 +504,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: srfxpt_ex1.tm
@@ -534,7 +532,6 @@
 !              mgs_sc_ext12.bc                  MGS s/c bus attitude
 !              mgs_ext12_ipng_mgs95j.bsp        MGS ephemeris
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de405s.bsp',
@@ -548,9 +545,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFXPT_EX1
 !              IMPLICIT NONE
@@ -654,7 +649,6 @@
 !              CALL GETFOV ( CAMID,  NCORNR, SHAPE,  DREF,
 !             .              BSIGHT, N,      BOUNDS       )
 !
-!
 !              WRITE (*,*) ' '
 !              WRITE (*,*) 'Surface Intercept Locations for Camera'
 !              WRITE (*,*) 'FOV Boundary and Boresight Vectors'
@@ -749,10 +743,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Surface Intercept Locations for Camera
 !         FOV Boundary and Boresight Vectors
@@ -760,7 +752,6 @@
 !            Instrument:            MGS_MOC_NA
 !            Epoch:                 2003 OCT 13 06:00:00 UTC
 !            Aberration correction: LT+S
-!
 !
 !         Corner vector 1
 !
@@ -773,7 +764,6 @@
 !              Planetocentric Longitude (deg) =   -123.47407882634886
 !              Range                    (km)  =    388.98310724844424
 !
-!
 !         Corner vector 2
 !
 !           Vector in MGS_MOC_NA frame =
@@ -784,7 +774,6 @@
 !              Planetocentric Latitude  (deg) =   -48.481636266908055
 !              Planetocentric Longitude (deg) =   -123.39882275183645
 !              Range                    (km)  =    388.97512489721356
-!
 !
 !         Corner vector 3
 !
@@ -797,7 +786,6 @@
 !              Planetocentric Longitude (deg) =   -123.39882595816586
 !              Range                    (km)  =    388.97466598000682
 !
-!
 !         Corner vector 4
 !
 !           Vector in MGS_MOC_NA frame =
@@ -809,7 +797,6 @@
 !              Planetocentric Longitude (deg) =   -123.47408199055646
 !              Range                    (km)  =    388.98264816551176
 !
-!
 !         Boresight vector
 !
 !           Vector in MGS_MOC_NA frame =
@@ -820,7 +807,6 @@
 !              Planetocentric Latitude  (deg) =   -48.479579751487201
 !              Planetocentric Longitude (deg) =   -123.43645374920047
 !              Range                    (km)  =    388.97573917648396
-!
 !
 !     2) SRFXPT will signal an error if required kernel data are
 !        unavailable: for example, in the program of Example 1, if the
@@ -836,7 +822,6 @@
 !        the value of the FOUND flag returned by CKGP, we'd go on to
 !        compute the surface intercept point or respond to the error
 !        condition.
-!
 !
 !                        .
 !                        .
@@ -991,13 +976,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED surface intercept point
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1017,7 +1000,6 @@
 !
 !     Local parameters
 !
-!
 !     This value will become system-dependent when systems
 !     using 128-bit d.p. numbers are supported by SPICELIB.
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
@@ -1036,7 +1018,6 @@
 !
       real(wp), parameter :: margin = 1.001_wp
 
-
       integer(ip), parameter :: abclen = 15
 
       integer(ip), parameter :: maxitr = 10
@@ -1050,7 +1031,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
 
 !
 !     Local variables
@@ -1126,7 +1106,6 @@
       character(frnmln)     svdref
       integer(ip)           svrefc
 
-
 !
 !     Saved name/ID items.
 !
@@ -1149,18 +1128,15 @@
       save                  svdref
       save                  svrefc
 
-
 !
 !     Initial values.
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Nothing has been found yet.
@@ -1202,7 +1178,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
 
@@ -1218,7 +1193,6 @@
          return
 
       end if
-
 
 !
 !     Check the input body codes.  If they are equal, signal
@@ -1382,14 +1356,12 @@
 !
          refepc = et
 
-
       else if ( .not. uselt ) then
 !
 !        We're not using light time corrections (converged or
 !        otherwise), so there's no time offset.
 !
          refepc = et
-
 
       else if ( center == obscde ) then
 !
@@ -1456,7 +1428,6 @@
 !        TRGEPC is set.
 !        TRGDIR is set.
 !        J2DIR is set.
-!
 !
 !     Get the J2000-relative state of the observer relative to
 !     the solar system barycenter at ET.  We'll use this in
@@ -1592,7 +1563,6 @@
 
          end if
 
-
          if ( range > margin*maxrad ) then
 !
 !           Compute the arc sine with SPICE error checking.
@@ -1636,7 +1606,6 @@
             return
 
          end if
-
 
          if ( .not. found ) then
 !
@@ -1736,7 +1705,6 @@
          else
             nitr = 1
          end if
-
 
 !
 !        Get the J2000-relative state of the observer relative to

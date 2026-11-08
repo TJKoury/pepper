@@ -125,7 +125,6 @@
 !        This is the value used in this routine.  The verification of
 !        this error is courtesy of Myles Standish.
 !
-!
 !-&
 !
 !     SPICELIB Functions
@@ -174,7 +173,6 @@
       real(wp), parameter :: cent2 = cent1*cent1*1.0e-8_wp
 
       real(wp), parameter :: cent3 = cent1*cent2*1.0e-4_wp
-
 
 !
 !     The next set of parameters is an enumeration of the various
@@ -389,7 +387,6 @@
             0,     0,     2,     4,     2,      -1,     0,     0,     0, &
             0,     1,     0,     1,     0,       1,     0,     0,     0/
 
-
       if (first) then
 
          first  = .false.
@@ -399,8 +396,6 @@
          rasec  = 3600.0_wp * radian
          factr  =    1.0e4_wp * rasec
          oneday = spd()
-
-
 
 !
 !        The following values are direct conversions to degrees from
@@ -422,8 +417,6 @@
          l2 =   31.310_wp*sec / cent2
          l3 =    0.064_wp*sec / cent3
 
-
-
 !
 !        LP0 through LP3 are the coefficients for l'---the mean
 !        longitude of the Sun minus the mean longitude of the Sun's
@@ -439,7 +432,6 @@
                               / cent1
          lp2 =   -0.577_wp*sec / cent2
          lp3 =   -0.012_wp*sec / cent3
-
 
 !
 !        F0 through F3 are the coefficients for F---the mean longitude
@@ -497,8 +489,6 @@
                               / cent1
          mg2 =    7.455_wp*sec / cent2
          mg3 =    0.008_wp*sec / cent3
-
-
 
       end if
 
@@ -590,7 +580,6 @@
 !
       dvnut(3) = dvnut(3)/oneday
       dvnut(4) = dvnut(4)/oneday
-
 
       return
       end

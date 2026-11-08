@@ -174,7 +174,6 @@
 !     This routine relieves the user from performing the repetitive
 !     calls to the DAF routines necessary to construct a CK segment.
 !
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -200,11 +199,9 @@
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -239,7 +236,6 @@
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -295,7 +291,6 @@
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   .-             -.
@@ -327,7 +322,6 @@
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -384,7 +378,6 @@
 !        velocity.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM CKW02_EX1
 !              IMPLICIT NONE
@@ -461,7 +454,6 @@
 !        C
 !              SEGID  = 'Test type 2 CK segment'
 !              IFNAME = 'Test CK type 2 segment created by CKW02'
-!
 !
 !        C
 !        C     Open a new kernel.
@@ -562,7 +554,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new CK file exists in the
 !        output directory.
@@ -642,13 +633,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write CK type_2 pointing data segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -684,7 +673,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -717,7 +705,6 @@
 !     LPRINT   is the integer value of the last printable ASCII
 !              character.
 !
-!
       integer(ip), parameter :: sidlen = 40
 
       integer(ip), parameter :: ndc = 5
@@ -732,7 +719,6 @@
 
       integer(ip), parameter :: lprint = 126
 
-
 !
 !     Local variables
 !
@@ -746,7 +732,6 @@
       integer(ip)           ndir
       integer(ip)           refcod
       integer(ip)           value
-
 
 !
 !     Standard SPICE error handling.
@@ -780,7 +765,6 @@
 
       end if
 
-
 !
 !     Check that the SCLK bounds on the segment are reasonable.
 !
@@ -806,10 +790,8 @@
 
       end if
 
-
       dcd( 1 ) = begtim
       dcd( 2 ) = endtim
-
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -833,7 +815,6 @@
       icd ( 2 ) = refcod
       icd ( 3 ) = dtype
       icd ( 4 ) = 1
-
 
 !
 !     Now pack the segment descriptor.
@@ -904,7 +885,6 @@
          return
 
       end if
-
 
       do i = 2, nrec
 
@@ -977,7 +957,6 @@
       call dafbna ( handle, descr, segid )
 
       if ( failed() ) return
-
 
 !
 !     Now add the quaternions, angular velocity vectors, and time

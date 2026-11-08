@@ -122,7 +122,6 @@
 !              See the INCLUDE file dskdsc.inc for parameter
 !              declarations.
 !
-!
 !     CORPAR   is an array of parameters associated with the input
 !              coordinate system.
 !
@@ -145,7 +144,6 @@
 !
 !                 CORPAR(3)...
 !                 CORPAR(NSYPAR)  Unused.
-!
 !
 !     MNCOR1,
 !     MXCOR1,
@@ -192,7 +190,6 @@
 !                 MXCOR3 are the minimum and maximum values of the
 !                 function attained on the domain.
 !
-!
 !                 General surfaces
 !                 ----------------
 !
@@ -209,7 +206,6 @@
 !                 caves, and arches can prevent a surface from being
 !                 represented as a single-valued function of latitude
 !                 and longitude, for example.
-!
 !
 !              Longitude interpretation and restrictions
 !              -----------------------------------------
@@ -230,7 +226,6 @@
 !                    Values that are out of range by no more than
 !                    ANGMRG are bracketed to be in range.
 !
-!
 !                 2) It is acceptable for the longitude bounds to be
 !                    out of order. If
 !
@@ -250,7 +245,6 @@
 !                 3) MXCOR1 must not exceed MNCOR1 by more than 2*pi.
 !                    Values that are out of range by no more than
 !                    ANGMRG are bracketed to be in range.
-!
 !
 !     FIRST,
 !     LAST     are the endpoints of the time interval over which
@@ -424,7 +418,6 @@
 !     structures created by this routine are aggregated into arrays
 !     of type INTEGER and type DOUBLE PRECISION.
 !
-!
 !     Voxel grids
 !     ===========
 !
@@ -514,9 +507,7 @@
 !
 !           phobos_3_3.bds
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Example program for DSKW02, DSKMI2, and DSKRB2
@@ -791,10 +782,8 @@
 !              WRITE (*,*) 'Done.'
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Reading input data...
 !         Done.
@@ -821,7 +810,6 @@
 !         Done.
 !         Segregating and closing DSK file...
 !         Done.
-!
 !
 !        Note that after run completion, a new DSK exists in the output
 !        directory.
@@ -905,13 +893,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write a type 2 DSK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -926,7 +912,6 @@
 !
 !     Local parameters
 !
-
 
 !
 !     Local variables
@@ -958,9 +943,7 @@
       integer(ip)           voxnpl
       integer(ip)           vtxnpl
 
-
       if ( return() ) return
-
 
 !
 !     Map the input reference frame name to an ID code.
@@ -1089,7 +1072,6 @@
 
          end if
 
-
          if ( segbds(2,1) > segbds(1,1) ) then
 !
 !           The upper bound exceeds the lower by at most 2*pi + ANGMRG.
@@ -1185,7 +1167,6 @@
 
          end if
 
-
          if ( corsys == latsys ) then
 !
 !           The coordinate system is latitudinal. Check radius
@@ -1213,7 +1194,6 @@
 
          end if
 
-
          if ( corsys == pdtsys ) then
 !
 !           The coordinate system is planetodetic. Check the coordinate
@@ -1228,7 +1208,6 @@
                return
 
             end if
-
 
             if ( corpar(2) >= 1.0_wp ) then
 
@@ -1306,8 +1285,6 @@
             return
 
          end if
-
-
 
       else if ( corsys == recsys ) then
 !
@@ -1471,8 +1448,6 @@
 !        VTXNPL      is the cardinality of the plate list of the
 !                    vertex-plate mapping.
 !
-!
-!
 !     Extract double precision elements of the spatial index.
 !
       call moved ( spaixd(sivtbd), 6, vtxbds )
@@ -1524,8 +1499,6 @@
 !
 !     Check the input parameters.
 !
-!
-!
 !     Make sure the voxel grid extents are within range.
 !
       do i = 1, 3
@@ -1561,7 +1534,6 @@
          return
 
       end if
-
 
 !
 !     Check the coarse voxel scale. It must be at least 1, and its
@@ -1601,7 +1573,6 @@
 
       end if
 
-
 !
 !     NCGR        is the number of voxels in the coarse voxel grid
 !                 associated with this model. Since each coarse voxel
@@ -1625,7 +1596,6 @@
 
       end if
 
-
 !
 !     Start a new DLA segment.
 !
@@ -1637,7 +1607,6 @@
 !     Write the d.p. data to the segment first. In the segregated
 !     segment, d.p. data will precede integer data, so less
 !     rearrangement will occur this way.
-!
 !
 !     First, fill in the DSK segment descriptor.
 !

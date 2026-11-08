@@ -22,7 +22,6 @@
       include 'ck06.inc'
       include 'ckparam.inc'
 
-
       logical               needav
       real(wp)              record   ( * )
       real(wp)              cmat     ( 3, 3 )
@@ -81,7 +80,6 @@
 !     RECORD   has been modified due to its use as a workspace array.
 !              The contents are undefined.
 !
-!
 !     CMAT     is a rotation matrix that transforms the components
 !              of a vector expressed in the base frame given in
 !              the segment to components expressed in the instrument
@@ -103,7 +101,6 @@
 !                   | y |  =   |   CMAT   |     | y' |
 !                   [ z ]      [          ]     [ z' ]
 !                            (Transpose of CMAT)
-!
 !
 !     AV       is the angular velocity vector of the instrument fixed
 !              frame defined by CMAT. The angular velocity is
@@ -192,7 +189,6 @@
 !           LOGICAL               FND
 !           LOGICAL               SFND
 !
-!
 !           SC     = -41
 !           INST   = -41000
 !           DTYPE  =  6
@@ -246,7 +242,6 @@
 !          .        ( SCLKDP + TOL  .GE. DCD( 1 ) ) .AND.
 !          .        ( SCLKDP - TOL  .LE. DCD( 2 ) ) .AND.
 !          .        ( DTYPE         .EQ. ICD( 3 ) )      ) THEN
-!
 !
 !                 CALL CKR06 ( HANDLE, DESCR, SCLKDP, TOL, NEEDAV,
 !          .                   RECORD, FND )
@@ -310,13 +305,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_6 ck_segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -327,7 +320,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Given that our nominally type 6 input record is actually a

@@ -96,9 +96,7 @@
 !        containing only one segment, given a time-ordered set of
 !        discrete states and epochs.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKOPN_EX1
 !              IMPLICIT NONE
@@ -160,7 +158,6 @@
 !             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
 !             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
 !
-!
 !        C
 !        C     Set the start and end times of interval covered by
 !        C     segment, and the time step separating epochs of states.
@@ -207,7 +204,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 8 exists in
 !        the output directory.
@@ -249,13 +245,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a new SPK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -295,7 +289,6 @@
 !     the number of comment characters requested is greater than zero,
 !     we always allocate an extra record to account for the end of line
 !     marks in the comment area.
-!
 !
       if ( ncomch > 0 ) then
          ncomr = ( ncomch - 1 )/mxcrec  +  1

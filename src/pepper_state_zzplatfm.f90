@@ -20,9 +20,10 @@ module pepper_state_zzplatfm
 
    !> The saved variables of ZZPLATFM.
    type, public :: zzplatfm_state
-      logical :: first  !! saved between calls by ZZPLATFM
-      character(wdsize) :: attcpy ( 0 : nattr )  !! saved between calls by ZZPLATFM
-      character(kysize) :: keyval ( nattr )  !! saved between calls by ZZPLATFM
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      character(wdsize) :: attcpy ( 0 : nattr )  !! copy of the attribute names (uppercase)
+      character(kysize) :: keyval ( nattr )  !! value of each platform attribute (system, compiler,
+                                             !! format, ...)
    end type zzplatfm_state
 
 contains

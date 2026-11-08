@@ -21,7 +21,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcnamsz.inc'
       include 'ekcoldsc.inc'
@@ -161,7 +160,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -177,11 +175,7 @@
 
       logical               indexd
 
-!
-!     Use discovery check-in.
-!
       if ( failed() ) return
-
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -198,7 +192,6 @@
          return
 
       end if
-
 
 !
 !     Check the column's data type.

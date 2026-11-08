@@ -106,9 +106,7 @@
 !
 !     1) Dump the DSK descriptors of a DSK file.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKGD_EX1
 !              IMPLICIT NONE
@@ -130,7 +128,6 @@
 !              INTEGER               NXTDSC ( DLADSZ )
 !
 !              LOGICAL               FOUND
-!
 !
 !              CALL PROMPT ( 'Enter DSK name > ', DSK )
 !        C
@@ -164,11 +161,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !         DSK descriptor contents:
@@ -197,7 +192,6 @@
 !          -1577879958.8160586
 !           1577880066.1839132
 !
-!
 !     2) Again, dump the DSK descriptors of a DSK file, this time
 !        interpreting the descriptor information and displaying
 !        it in a user-friendly form. This display is a simplified
@@ -208,9 +202,7 @@
 !        associations. If no meta-kernel is needed, the user can
 !        enter a carriage return at the prompt for this file.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKGD_EX2
 !              IMPLICIT NONE
@@ -301,7 +293,6 @@
 !             .                               'Cylindrical',
 !             .                               'Rectangular',
 !             .                               'Planetodetic' /
-!
 !
 !              CALL PROMPT ( 'Enter DSK name         > ', DSK  )
 !              CALL PROMPT ( 'Enter meta-kernel name > ', META )
@@ -396,7 +387,6 @@
 !             .      //            'Cylindrical'           )
 !                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'   )
 !
-!
 !                 ELSE IF ( CORSYS .EQ. RECSYS ) THEN
 !
 !                    WRITE (*,FMT1) '    X-coordinate (km): ',
@@ -430,11 +420,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds and an empty
 !        string instead of the meta-kernel name, the output was:
-!
 !
 !        Enter DSK name         > phobos512.bds
 !        Enter meta-kernel name >
@@ -453,7 +441,6 @@
 !            Latitude  (deg):      -90.000000000000    90.000000000000
 !            Radius     (km):        8.049632248722    13.940939832124
 !
-!
 !     3) Again, dump the DSK descriptors of a DSK file, using the
 !        program from example 2, but this time reading the DSK file
 !
@@ -463,7 +450,6 @@
 !        DSKW02. Use the meta-kernel shown below to demonstrate surface
 !        name-ID mapping.
 !
-!
 !           KPL/MK
 !
 !           File: dskgd_ex3.tm
@@ -472,7 +458,6 @@
 !           example programs. The file contents shown here should not be
 !           assumed to contain adequate or correct versions of data
 !           required by SPICE-based user applications.
-!
 !
 !           \begindata
 !
@@ -486,11 +471,9 @@
 !
 !           End of meta-kernel
 !
-!
 !        When Example #2 was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos_3_3_3seg.bds and the
 !        meta-kernel dskgd_ex3.tm, the output was:
-!
 !
 !        Enter DSK name         > phobos_3_3_3seg.bds
 !        Enter meta-kernel name > dskgd_ex3.tm
@@ -539,7 +522,6 @@
 !            Latitude  (deg):      -90.000000000000    90.000000000000
 !            Altitude   (km):       -3.728668683604     1.372015791081
 !
-!
 ! $ Restrictions
 !
 !     1)  See Exception #3.
@@ -575,13 +557,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return DSK segment descriptor
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -595,7 +575,6 @@
       integer(ip)           dpsize
 
       if ( return() ) return
-
 
 !
 !     Fetch the base address and size of the DP component of the

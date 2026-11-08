@@ -93,9 +93,7 @@
 !     1) Create a new DAS file and add 200 integers to it. Close the
 !        file, then re-open it and read the data back out.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASRDI_EX1
 !              IMPLICIT NONE
@@ -169,10 +167,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasrdi_ex1.das":
 !
@@ -196,7 +192,6 @@
 !           71   72   73   74   75   76   77   78   79   80
 !           81   82   83   84   85   86   87   88   89   90
 !           91   92   93   94   95   96   97   98   99  100
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -260,13 +255,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read integer data from a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -277,7 +270,6 @@
 !        signaled an error inside the loop.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -301,8 +293,6 @@
       integer(ip)           numint
       integer(ip)           recno
       integer(ip)           wordno
-
-
 
 !
 !     Find out the physical location of the first integer.  If FIRST

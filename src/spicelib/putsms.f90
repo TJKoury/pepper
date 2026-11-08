@@ -107,13 +107,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     store short error message
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -131,7 +129,6 @@
 !        non-error-handling code.
 !
 !-&
-
 
 !
 !     Local Variables:
@@ -155,9 +152,6 @@
       savmsg = msg
 
       return
-
-
-
 
 !$Procedure GETSMS ( Get Short Error Message )
 
@@ -260,13 +254,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get current short error message
 !
 !-&
-
 
 !
 !     Grab saved short message:

@@ -121,9 +121,7 @@
 !        associated with the segments in the file. For each body, find
 !        the set of surfaces associated with that body.
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Examine a DSK file and identify the set of
@@ -191,17 +189,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter name of DSK file > phobos512.bds
 !
 !         Body ID:              401
 !            Surface ID:          401
-!
 !
 ! $ Restrictions
 !
@@ -234,13 +229,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find id codes of surfaces in DSK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -272,9 +265,7 @@
 
       logical               found
 
-
       if ( return() ) return
-
 
 !
 !     See whether GETFAT thinks we've got a DSK file.

@@ -145,13 +145,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_5 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -170,7 +168,6 @@
       integer(ip)           offe
       integer(ip)           offset
       integer(ip)           rec      ( 2 )
-
 
 !
 !     Standard SPICE error handling.

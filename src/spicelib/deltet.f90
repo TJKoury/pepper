@@ -187,13 +187,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     difference between ephemeris time and utc
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -209,7 +207,6 @@
 !        were implemented to cope with this unfortunate oversight.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -259,8 +256,6 @@
                                        'DELTET/EB, #', &
                                        'DELTET/M, #', &
                                        'DELTET/DELTA_AT, #'    /
-
-
 
 !
 !     Standard SPICE error handling.
@@ -329,8 +324,6 @@
 
       end if
 
-
-
 !
 !     There are two separate quantities to be determined. First,
 !     the appropriate number of leap seconds. Second, the size of
@@ -397,7 +390,6 @@
          return
 
       end if
-
 
 !
 !     Add the constant offset, leap seconds, and the relativistic term

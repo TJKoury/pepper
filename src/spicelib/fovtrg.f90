@@ -357,7 +357,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: fovtrg_ex1.tm
@@ -410,9 +409,7 @@
 !           For project meta-kernels similar to the one shown
 !           here, please see the CASSINI SPICE PDS archive.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM FOVTRG_EX1
 !              IMPLICIT NONE
@@ -519,10 +516,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         At time 2010-OCT-06 17:09:45.34695 (TDB) the following were
 !         in the field of view of CASSINI_ISS_NAC
@@ -533,7 +528,6 @@
 !           PAN
 !           DAPHNIS
 !           ANTHE
-!
 !
 !        Note: there were actually 7 of Saturn's satellites in the
 !        field-of-view of Cassini's narrow-angle camera. However, Anthe
@@ -567,14 +561,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Target in instrument FOV at specified time
 !     Target in instrument field_of_view at specified time
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -607,7 +599,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Reject the target shape 'RAY'.

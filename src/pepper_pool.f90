@@ -19,7 +19,6 @@ contains
 !     variables are in pepper_state_zzctr. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     Manipulate counter array.
@@ -33,9 +32,6 @@ contains
 !     UTILITY
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -228,11 +224,9 @@ contains
 !     SPICELIB functions
 !
 
-
 !
 !     Local variables.
 !
-
 
 !
 !     Save EVERYTHING.
@@ -240,7 +234,6 @@ contains
 
 !
 !     Initial values.
-!
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -539,7 +532,6 @@ contains
 !
       if ( oldctr(1) == ctrhgh .and. oldctr(2) == ctrhgh ) then
 
-
          call ctx%setmsg ( 'A subsystem state counter overflowed. '    // &
                        'For this to happen there must be '         // &
                        'a SPICE bug or you must have been '        // &
@@ -549,7 +541,6 @@ contains
                        'which this happened.'                      )
 
          call ctx%sigerr ( 'SPICE(SPICEISTIRED)' )
-
 
          return
 
@@ -708,7 +699,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     ACTION   is the action which caused the error. This may
@@ -838,13 +828,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     i/o error message writer
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -858,7 +846,6 @@ contains
 !        in the constructed message.
 !
 !-&
-
 
 !
 !     Local variables
@@ -941,8 +928,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
-
 ! $ Detailed_Input
 !
 !     LOOKAT      is the hash value of some string.  NAMLST(LOOKAT) is
@@ -976,7 +961,6 @@ contains
 !                 with a kernel pool variable. If DATLST(NAMEAT) points
 !                 into DPPOOL, then the list containing this node must
 !                 be freed.
-!
 !
 ! $ Detailed_Output
 !
@@ -1028,7 +1012,6 @@ contains
 !
 !-&
 
-
 !
 !     Local Parameters and Variables
 !
@@ -1037,7 +1020,6 @@ contains
 
       integer(ip)           prev
       parameter           ( prev   = 2 )
-
 
       integer(ip)           head
       integer(ip)           tail
@@ -1107,13 +1089,10 @@ contains
 !
 ! $ Declarations
 
-
-
 !
 !     PEPPER: the same limits on all platforms (SPICELIB used 128 and 20
 !     for Windows with the Intel compiler).
 !
-
 
 ! $ Detailed_Input
 !
@@ -1185,7 +1164,6 @@ contains
 !
 !                 We couldn't find any documentation that addressed
 !                 this value, so we set it to 20.
-!
 !
 !     MAXLEN   is the maximum length of the file names that may
 !              used to identify the files opened by RDTEXT.
@@ -1497,13 +1475,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read a line from a text file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1575,7 +1551,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -1583,8 +1558,6 @@ contains
 !
 !     Local variables
 !
-
-
 
 !
 !     Save the names of the files, their associated logical units, and
@@ -1594,8 +1567,6 @@ contains
 !
 !     Initial values
 !
-
-
 
 !
 !     Set up the error processing.
@@ -1724,10 +1695,6 @@ contains
          lstunt = units(index)
 
       end if
-
-
-
-
 
 !
 !     This is the easy part. Read the next line from the file.
@@ -1910,13 +1877,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close a text file opened by rdtext
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1952,11 +1917,9 @@ contains
 !
 !-&
 
-
 !
 !     Set up the error processing.
 !
-
 
 !
 !     Which file?
@@ -2022,9 +1985,7 @@ contains
 
          n = n - 1
 
-
       end if
-
 
       return
       end associate
@@ -2036,7 +1997,6 @@ contains
 !     its entry points are the module procedures below, and its saved
 !     variables are in pepper_state_rdker. Its documentation follows.
 !
-
 
 ! $ Abstract
 !
@@ -2051,8 +2011,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
 
 ! $ Detailed_Input
 !
@@ -2254,13 +2212,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read a kernel file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2279,7 +2235,6 @@ contains
 !         executed an INQUIRE statement using this name, which was
 !         not initialized. On the NeXT, this caused the INQUIRE
 !         statement to fail.
-!
 !
 !-     SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
 !
@@ -2311,15 +2266,12 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
 
-
 !
 !     Local parameters
-!
 !
 !     Because some environments (such as the SUN) treat the backslash
 !     character as a special character, some gyrations are needed to
@@ -2328,24 +2280,13 @@ contains
 !     bizarre, but it works.
 !
 
-
-
 !
 !     The ASCII decimal code for the tab character is 9.
 !
 
-
-
-
-
-
-
-
 !
 !     Local variables
 !
-
-
 
 !
 !     Save EVERYTHING.
@@ -2513,13 +2454,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open and initialize a new kernel file
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -2599,9 +2538,7 @@ contains
 !     information from RDKLIN.
 !
 
-
       call rdtext ( ctx, kernel, first, end )
-
 
 !
 !     Replace any tab characters with blanks.
@@ -2617,7 +2554,6 @@ contains
          end if
 
       end do
-
 
       call ljust ( first, first )
       linnum =  1
@@ -2642,7 +2578,6 @@ contains
 !     Save the name of the file for future reference.
 !
       file = kernel
-
 
       return
       end associate
@@ -2808,13 +2743,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read the next data line from a kernel file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2828,7 +2761,6 @@ contains
 !        were satisfied.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -2896,9 +2828,7 @@ contains
       do while ( ( .not. ctx%failed() )          .and. &
                  ( status == intext  .or.  line == blank ) )
 
-
          call rdtext ( ctx, file, line, eof )
-
 
 !
 !        Replace any tab characters with blanks.
@@ -2915,10 +2845,8 @@ contains
 
          end do
 
-
          call ljust ( line, line )
          linnum = linnum + 1
-
 
          if ( eof ) then
             status = endoff
@@ -2934,7 +2862,6 @@ contains
          end if
 
       end do
-
 
       return
       end associate
@@ -3055,13 +2982,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Determine the last line read from a kernel file.
 !
 !-&
-
 
 !
 !     Not much to do here.  Just copy the information and return.
@@ -3135,7 +3060,6 @@ contains
 !     UTILITY
 !
 ! $ Declarations
-
 
 ! $ Detailed_Input
 !
@@ -3250,7 +3174,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     PICTUR     is a "TIMOUT" format picture that is under construction
@@ -3313,7 +3236,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 25-APR-1996 (WLT)
 !
-!
 !-&
 
       integer(ip), parameter :: maxplc = 14
@@ -3328,7 +3250,6 @@ contains
       integer(ip)           point
       integer(ip)           use
       integer(ip)           last
-
 
       places = '##############'
 !
@@ -3371,7 +3292,6 @@ contains
 !     PICTUR(B:E) with the marker we've constructed.
 !
       call zzrepsub ( pictur, b, e, mymark(1:last), pictur )
-
 
       return
 
@@ -3460,10 +3380,7 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 8-APR-1996 (WLT)
 !
-!
 !-&
-
-
 
       logical               ok
 
@@ -3494,8 +3411,6 @@ contains
 !
 ! $ Declarations
 
-
-
 ! $ Detailed_Input
 !
 !     TVEC     is an array of double precision numbers that
@@ -3515,7 +3430,6 @@ contains
 !              the default interpretation should be applied.
 !              Non-blank components will have the following values
 !              and meanings.
-!
 !
 !               Component   Meaning   Possible Non-blank Modifier Values
 !               ---------   -------   ----------------------------------
@@ -3657,7 +3571,6 @@ contains
 !
 !        CALL TPARCH ( CURNT )
 !
-!
 !        Now handle any problems that were diagnosed by TCHECK
 !
 !        IF ( .NOT. OK ) THEN
@@ -3706,13 +3619,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check the components of a time vector
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -3722,32 +3633,13 @@ contains
 !     In-line Functions
 !
 
-
-
-
-
-
-
-
-
 !
 !     Local Variables
 !
 
-
-
-
-
-
-
-
-
-
-
 !
 !     The in-line function DIVBLE returns 1 if YEAR is divisible
 !     by I,  it returns 0 otherwise.
-!
 !
 !     If checking isn't enabled, there is nothing to do.
 !
@@ -3875,7 +3767,6 @@ contains
 
       end if
 
-
 !
 !     First check.  The year must be an integer.
 !
@@ -3887,7 +3778,6 @@ contains
 
          return
       end if
-
 
       if      ( type == 'YD' ) then
 
@@ -3911,7 +3801,6 @@ contains
             return
 
          end if
-
 
       else if ( type == 'YMD' ) then
 
@@ -3962,9 +3851,7 @@ contains
 
          doy = doy + tvec(3)
 
-
       end if
-
 
 !
 !     Make sure the hours, minutes and seconds are all in range.
@@ -4055,7 +3942,6 @@ contains
                   //      'lesser significance have value 0.0D0. ' &
                   //      'However the ''#'' component has value ' &
                   //      '#. '
-
 
                   call repmc ( error, '#', cname(comp), error )
                   call repmc ( error, '#', cname(k),    error )
@@ -4218,9 +4104,7 @@ contains
 !        (FEB 34, 1993 is regarded as MARCH 6, 1993.) The following
 !        example code demonstrates how to modify this behavior.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TPARCH_EX1
 !              IMPLICIT NONE
@@ -4276,19 +4160,15 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        UTC (s):  -215352000.000000
 !        Error  : The day of the month specified for the month of Feb***
 !
-!
 !        Warning: incomplete output. 1 line extended past the right
 !        margin of the header and has been truncated. This line is
 !        marked by "***" at the end of the line.
-!
 !
 ! $ Restrictions
 !
@@ -4328,13 +4208,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Restrict time strings to proper form
 !
 !-&
-
 
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
@@ -4491,13 +4369,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Get the current time component checking status
 !
 !-&
-
 
       use pepper_kinds, only: ip, wp
       implicit none
@@ -4574,8 +4450,6 @@ contains
 !
 ! $ Declarations
 
-
-
 ! $ Detailed_Input
 !
 !     YEAR     is an "abbreviated year." In other words the 98 of
@@ -4647,7 +4521,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM TEXPYR_EX1
 !              IMPLICIT NONE
 !
@@ -4715,10 +4588,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Default behavior:
 !
@@ -4750,7 +4621,6 @@ contains
 !        81     1981
 !        99     1999
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -4781,15 +4651,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Expand an abbreviated year to a fully specified year.
 !
 !-&
-
-
-
 
       use pepper_kinds, only: ip
       implicit none
@@ -4885,9 +4751,7 @@ contains
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TSETYR_EX1
 !              IMPLICIT NONE
@@ -4950,10 +4814,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Time string    Expansion
 !         -----------    -----------
@@ -4964,7 +4826,6 @@ contains
 !         79 JUL 14      2079 JUL 14
 !         80 FEB 02      1980 FEB 02
 !         99 DEC 31      1999 DEC 31
-!
 !
 ! $ Restrictions
 !
@@ -5001,13 +4862,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Set the interval of expansion for abbreviated years
 !
 !-&
-
 
       use pepper_kinds, only: ip
       implicit none
@@ -5332,11 +5191,6 @@ contains
          'Y*m*D*H*', 'Y*y*H*', 'Y*m*D*H*', &
          'Y*m*D*H*', 'Y*y*H*', 'Y*y*H*' ]
 
-
-
-
-
-
 !
 !     Copy as many patterns and meanings as the input arrays allow.
 !
@@ -5393,7 +5247,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -5805,12 +5658,10 @@ contains
 !     how you would use this routine together with the routines
 !     TCHECK and TTRANS to perform this task.
 !
-!
 !         CALL TPARTV ( STRING,
 !        .              TVEC,   NTVEC, TYPE,
 !        .              MODIFY, MODS,  YABBRV, SUCCES,
 !        .              PICTUR, ERROR )
-!
 !
 !         IF ( .NOT. SUCCES ) THEN
 !
@@ -5895,13 +5746,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Parse a time string into a vector of components
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -5913,7 +5762,6 @@ contains
 
 !
 !     Parameters
-!
 !
 !     ERA
 !     WDAY
@@ -5943,7 +5791,6 @@ contains
       integer(ip)           begs ( nmods )
       integer(ip)           ends ( nmods )
 
-
       logical               havera
       logical               havwdy
       logical               havzon
@@ -5965,7 +5812,6 @@ contains
       character(wdsize)     meanng( room )
       character(wdsize)     rep
 
-
 !
 !     Time Zone Variables
 !
@@ -5982,8 +5828,6 @@ contains
            'UTC-8', 'UTC-7' ]
       character(1)          delim ( 3 )
 
-
-
       integer(ip)           b
       integer(ip)           b1
       integer(ip)           b2
@@ -5997,21 +5841,12 @@ contains
       integer(ip)           use
       integer(ip)           r
 
-
-
-
       logical               resolv
       logical               l2r
       logical               r2l
 
-
-
-
-
-
 !
 !     Standard SPICE error handling.
-!
 !
 !     So far there are no modifiers to the time string.
 !
@@ -6087,7 +5922,6 @@ contains
 !           H       stands for hours
 !           M       stands for minutes
 !           S       stands for seconds
-!
 !
 !     We will use the following logical functions to modify
 !     the tokenized representation:
@@ -6225,7 +6059,6 @@ contains
 !     ----------------------------------------------------------------
 !     ================================================================
 !
-!
 !     RESOLV = ZZGREP ( REP )
 !     USE    = ISRCHC ( REP, NCUSTM, CUSTOM )
 !
@@ -6244,9 +6077,6 @@ contains
 !        RETURN
 !     END IF
 !
-!
-
-
 
 !
 !     Julian Date
@@ -6275,7 +6105,6 @@ contains
          resolv = zzcmbt ( ctx, '-n',  'n', l2r )
          resolv = zzsubt ( ctx, 'n',   'J', l2r )
 
-
 !
 !        We let ZZUNPK handle the parsing or diagnosis of any problems.
 !
@@ -6294,9 +6123,6 @@ contains
          return
 
       end if
-
-
-
 
 !
 !     Calendar Date Formats.
@@ -6383,8 +6209,6 @@ contains
       do while ( zzsubt ( ctx, 'I', 'i', l2r ) )
          b = b+1
       end do
-
-
 
 !
 !     Resolve the system, and other text components.
@@ -6484,7 +6308,6 @@ contains
          succes = .false.
          ntvec  =  0
          type   = ' '
-
 
          error = string
          call zzinssub ( error, '>', to+1, error )
@@ -6669,8 +6492,6 @@ contains
 
       end if
 
-
-
 !
 !     Make the remaining obvious substitutions for hours,
 !     minutes, and seconds
@@ -6731,7 +6552,6 @@ contains
 
       return
 
-
       end procedure tpartv
 
 !$Procedure ZZTIME ( Private, Time --- time parsing utilities )
@@ -6740,7 +6560,6 @@ contains
 !     its entry points are the module procedures below, and its saved
 !     variables are in pepper_state_zztime. Its documentation follows.
 !
-
 
 ! $ Abstract
 !
@@ -6760,8 +6579,6 @@ contains
 !      TIME --- Private
 !
 ! $ Declarations
-
-
 
 ! $ Detailed_Input
 !
@@ -6833,7 +6650,6 @@ contains
 !     ZZGREP   returns the current internal representation
 !              in the case above 'ibmbibi:i:i.i'
 !
-!
 !     ZZISPT   returns TRUE if a pair of letters from a list are
 !              present in the internal representation. This is
 !              used primarily to detect erroneous substrings such
@@ -6854,7 +6670,6 @@ contains
 !     ZZSUBT   substitute a different letter for one listed in the
 !              input one for one. For example after removing blanks
 !              you might substitute YmD for imi.
-!
 !
 !     ZZVALT   replace an integer by a new marker if the integer
 !              lies withing a particular range. For example
@@ -6948,7 +6763,6 @@ contains
 !
 !-&
 
-
 !
 !     Entry points
 !
@@ -6957,13 +6771,9 @@ contains
 !     SPICELIB Functions
 !
 
-
 !
 !     Standard Parameters
 !
-
-
-
 
 !
 !     LOWER
@@ -6971,15 +6781,10 @@ contains
 !     MIXED
 !
 
-
-
-
 !
 !     FULL
 !     SHORT
 !
-
-
 
 !
 !     Maximum number of tokens that a valid time string can contain.
@@ -6992,21 +6797,6 @@ contains
 !
 !     Representation Variables.
 !
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 !
 !     Token Recognition Variables.
@@ -7032,7 +6822,6 @@ contains
 ! $ Keywords
 !
 !      TIME --- PRIVATE
-!
 !
 ! $ Declarations
 !
@@ -7116,7 +6905,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
 !
 !     So far we haven't combined anything.
@@ -7151,6 +6939,11 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: get
+      integer(ip) :: next
+      integer(ip) :: put
+      logical :: did
+      integer(ip) :: from
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -7161,12 +6954,7 @@ contains
                   ends => ctx%zztime%ends, &
                   pbegs => ctx%zztime%pbegs, &
                   pends => ctx%zztime%pends, &
-                  from => ctx%zztime%from, &
-                  get => ctx%zztime%get, &
-                  next => ctx%zztime%next, &
-                  put => ctx%zztime%put, &
-                  to => ctx%zztime%to, &
-                  did => ctx%zztime%did )
+                  to => ctx%zztime%to )
       did = no
 !
 !     Look for the substring either looking from the
@@ -7233,7 +7021,6 @@ contains
 !
 !      TIME --- PRIVATE
 !
-!
 ! $ Declarations
 !
 !     CHARACTER*(*)         STRING
@@ -7298,7 +7085,6 @@ contains
 !        to ZZTOKNS has a non-printing character.
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
 !
 !-&
 
@@ -7439,7 +7225,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
 
       use pepper_kinds, only: ip, wp
@@ -7472,6 +7257,8 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      logical :: did
+      integer(ip) :: from
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -7480,9 +7267,7 @@ contains
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
                   ends => ctx%zztime%ends, &
-                  from => ctx%zztime%from, &
-                  to => ctx%zztime%to, &
-                  did => ctx%zztime%did )
+                  to => ctx%zztime%to )
       did  = no
       from = cpos ( rep, string, 1 )
 
@@ -7535,7 +7320,6 @@ contains
 ! $ Keywords
 !
 !      TIME --- PRIVATE
-!
 !
 ! $ Declarations
 !
@@ -7604,7 +7388,6 @@ contains
 !        to ZZTOKNS has a non-printing character.
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-!
 !
 !-&
 
@@ -7748,9 +7531,7 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
-
 
       use pepper_kinds, only: ip, wp
       implicit none
@@ -7781,6 +7562,10 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: get
+      integer(ip) :: next
+      integer(ip) :: put
+      logical :: did
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -7790,11 +7575,7 @@ contains
                   begs => ctx%zztime%begs, &
                   ends => ctx%zztime%ends, &
                   pbegs => ctx%zztime%pbegs, &
-                  pends => ctx%zztime%pends, &
-                  get => ctx%zztime%get, &
-                  next => ctx%zztime%next, &
-                  put => ctx%zztime%put, &
-                  did => ctx%zztime%did )
+                  pends => ctx%zztime%pends )
       put = index ( rep, letter )
 
       if ( put > 0 ) then
@@ -7846,7 +7627,6 @@ contains
 ! $ Keywords
 !
 !     TIME --- Private
-!
 !
 ! $ Declarations
 !
@@ -7918,7 +7698,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
 
       use pepper_kinds, only: ip, wp
@@ -7950,6 +7729,9 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: put
+      integer(ip) :: i
+      logical :: did
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -7959,10 +7741,7 @@ contains
                   begs => ctx%zztime%begs, &
                   ends => ctx%zztime%ends, &
                   pbegs => ctx%zztime%pbegs, &
-                  pends => ctx%zztime%pends, &
-                  i => ctx%zztime%i, &
-                  put => ctx%zztime%put, &
-                  did => ctx%zztime%did )
+                  pends => ctx%zztime%pends )
       put = 0
       did = no
 
@@ -8012,7 +7791,6 @@ contains
 ! $ Keywords
 !
 !     TIME --- Private
-!
 !
 ! $ Declarations
 !
@@ -8113,7 +7891,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
 !
 !     So far we haven't combined anything.
@@ -8148,16 +7925,16 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: k
+      logical :: did
+      integer(ip) :: from
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
       end if
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
-                  from => ctx%zztime%from, &
-                  k => ctx%zztime%k, &
-                  to => ctx%zztime%to, &
-                  did => ctx%zztime%did )
+                  to => ctx%zztime%to )
       did = no
       k   = len ( string )
 
@@ -8193,7 +7970,6 @@ contains
          return
 
       end if
-
 
 !
 !     Look for the substring either looking from the
@@ -8363,7 +8139,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
 
 !
@@ -8400,6 +8175,23 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: pfrom
+      integer(ip) :: pnext
+      character(smwdsz) :: spcial
+      logical :: got
+      integer(ip) :: r
+      integer(ip) :: item
+      logical :: check
+      integer(ip) :: last
+      integer(ip) :: next
+      integer(ip) :: w
+      integer(ip) :: put
+      character(1) :: this
+      integer(ip) :: nchar
+      integer(ip) :: i
+      logical :: did
+      integer(ip) :: from
+      integer(ip) :: kind
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -8415,36 +8207,19 @@ contains
                   picerr => ctx%zztime%picerr, &
                   tknerr => ctx%zztime%tknerr, &
                   blank => ctx%zztime%blank, &
-                  from => ctx%zztime%from, &
-                  i => ctx%zztime%i, &
-                  item => ctx%zztime%item, &
-                  last => ctx%zztime%last, &
-                  nchar => ctx%zztime%nchar, &
-                  next => ctx%zztime%next, &
-                  put => ctx%zztime%put, &
-                  r => ctx%zztime%r, &
                   to => ctx%zztime%to, &
-                  w => ctx%zztime%w, &
-                  pfrom => ctx%zztime%pfrom, &
                   pto => ctx%zztime%pto, &
-                  pnext => ctx%zztime%pnext, &
                   case => ctx%zztime%case, &
-                  kind => ctx%zztime%kind, &
                   mnsize => ctx%zztime%mnsize, &
                   wksize => ctx%zztime%wksize, &
                   width => ctx%zztime%width, &
                   recog => ctx%zztime%recog, &
-                  spcial => ctx%zztime%spcial, &
                   mnmrk => ctx%zztime%mnmrk, &
                   wkday => ctx%zztime%wkday, &
                   class => ctx%zztime%class, &
-                  this => ctx%zztime%this, &
                   f => ctx%zztime%f, &
                   l => ctx%zztime%l, &
                   ampm => ctx%zztime%ampm, &
-                  did => ctx%zztime%did, &
-                  got => ctx%zztime%got, &
-                  check => ctx%zztime%check, &
                   first => ctx%zztime%first )
       zztokns = no
 
@@ -8487,14 +8262,12 @@ contains
 !        Note matching is performed from the first string in the
 !        group to the last.
 !
-!
 
          do i = 32, 126
             f(i)     =  0
             l(i)     = -1
             names(i) = 'substring'
          end do
-
 
          names( ichar('''') ) = '"Year Abbreviation Mark"'
          names( ichar(',' ) ) = 'comma'
@@ -8736,9 +8509,6 @@ contains
          class(i)       = 'E'
          l( ichar('D')) =  i
 
-
-
-
 !
 !        Tokens beginning with 'E'
 !
@@ -8772,7 +8542,6 @@ contains
          width(i)       =  1
          class(i)       = 'E'
          l( ichar('E')) =  i
-
 
 !
 !        Tokens beginning with 'F'
@@ -9176,7 +8945,6 @@ contains
             zztokns = no
             return
 
-
          else
 !
 !           This has to be one of the known types or we
@@ -9207,7 +8975,6 @@ contains
 !
                   if (      class(i) == 'm' &
                        .or. class(i) == 'w' ) then
-
 
                      spcial = recog(i)
                      r      = rtrim(spcial)
@@ -9338,7 +9105,6 @@ contains
                   check         = no
                   next          = to + 1
 
-
                end if
 
                i = i + 1
@@ -9370,7 +9136,6 @@ contains
          end if
 
       end do
-
 
       size    = put
       zztokns = yes
@@ -9515,9 +9280,7 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
-
 
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isrchc
@@ -9550,6 +9313,24 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: nsec
+      integer(ip) :: p2
+      integer(ip) :: nhour
+      character(piclen) :: messge
+      integer(ip) :: p1
+      integer(ip) :: item
+      integer(ip) :: nmon
+      integer(ip) :: ndoy
+      integer(ip) :: nmin
+      integer(ip) :: nyear
+      integer(ip) :: nday
+      integer(ip) :: njd
+      integer(ip) :: ptr
+      character(3) :: month
+      integer(ip) :: value
+      integer(ip) :: k
+      integer(ip) :: i
+      integer(ip) :: j
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -9562,25 +9343,7 @@ contains
                   pends => ctx%zztime%pends, &
                   pictur => ctx%zztime%pictur, &
                   names => ctx%zztime%names, &
-                  messge => ctx%zztime%messge, &
-                  month => ctx%zztime%month, &
                   hms => ctx%zztime%hms, &
-                  i => ctx%zztime%i, &
-                  item => ctx%zztime%item, &
-                  j => ctx%zztime%j, &
-                  k => ctx%zztime%k, &
-                  p1 => ctx%zztime%p1, &
-                  p2 => ctx%zztime%p2, &
-                  ptr => ctx%zztime%ptr, &
-                  njd => ctx%zztime%njd, &
-                  nyear => ctx%zztime%nyear, &
-                  nmon => ctx%zztime%nmon, &
-                  nday => ctx%zztime%nday, &
-                  nhour => ctx%zztime%nhour, &
-                  nmin => ctx%zztime%nmin, &
-                  nsec => ctx%zztime%nsec, &
-                  ndoy => ctx%zztime%ndoy, &
-                  value => ctx%zztime%value, &
                   ampm => ctx%zztime%ampm )
       nyear  = 0
       nmon   = 0
@@ -9655,7 +9418,6 @@ contains
             else
                tvec(2) = real( value, wp )
             end if
-
 
          else if ( item == ichar('D') ) then
 
@@ -9784,7 +9546,6 @@ contains
 
          end if
 
-
       end do
 
 !
@@ -9859,10 +9620,8 @@ contains
                .and. nmin  == 0 &
                .and. nsec  == 0  ) then
 
-
          error = 'No numeric components were supplied in the ' &
          //      'time string. '
-
 
       else if ( njd == 1 ) then
 
@@ -9873,7 +9632,6 @@ contains
 
          error = 'There is more than one Julian Date specified ' &
          //      'in the epoch string. '
-
 
       else if      ( nyear == 0 ) then
 
@@ -9888,7 +9646,6 @@ contains
          messge = 'Two substrings indicating a calendar year ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
-
 
          p1 = pos ( rep, 'Y', 1    )
          p2 = pos ( rep, 'Y', p1+1 )
@@ -9915,7 +9672,6 @@ contains
          error  =  string
          messge = 'Both a day of year and month were identified ' &
          //       'in the input string. "'
-
 
          p2 = max ( pos ( rep, 'm', 1 ), &
                     pos ( rep, 'y', 1 ) )
@@ -9945,7 +9701,6 @@ contains
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
-
          p1 = pos ( rep, 'm', 1    )
          p2 = pos ( rep, 'm', p1+1 )
 
@@ -9972,7 +9727,6 @@ contains
          messge = 'Two substrings indicating a day of year ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
-
 
          p1 = pos ( rep, 'y', 1    )
          p2 = pos ( rep, 'y', p1+1 )
@@ -10001,7 +9755,6 @@ contains
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
-
          p1 = pos ( rep, 'D', 1    )
          p2 = pos ( rep, 'D', p1+1 )
 
@@ -10028,7 +9781,6 @@ contains
          messge = 'Two substrings representing an hour of the day ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
-
 
          p1 = pos ( rep, 'H', 1    )
          p2 = pos ( rep, 'H', p1+1 )
@@ -10057,7 +9809,6 @@ contains
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
 
-
          p1 = pos ( rep, 'M', 1    )
          p2 = pos ( rep, 'M', p1+1 )
 
@@ -10084,7 +9835,6 @@ contains
          messge = 'Two substrings representing seconds ' &
          //       'were identified in the input time string <#> ' &
          //       'and <#>: "'
-
 
          p1 = pos ( rep, 'S', 1    )
          p2 = pos ( rep, 'S', p1+1 )
@@ -10145,7 +9895,6 @@ contains
          call repmc ( error, '#', string, error )
 
       end if
-
 
       zzunpck = no
       return
@@ -10251,7 +10000,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
 !
-!
 !-&
 !
 !     So far no translations have been performed.
@@ -10286,6 +10034,14 @@ contains
       parameter           ( nrecog = 70 )
       integer(ip)           smwdsz
       parameter           ( smwdsz = 12 )
+      integer(ip) :: item
+      character(wdsize) :: myerr
+      integer(ip) :: ptr
+      integer(ip) :: value
+      integer(ip) :: k
+      integer(ip) :: i
+      logical :: did
+      integer(ip) :: j
       if ( .not. allocated ( ctx%zztime ) ) then
          allocate ( ctx%zztime )
          call init_zztime_state ( ctx%zztime )
@@ -10293,15 +10049,7 @@ contains
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
-                  ends => ctx%zztime%ends, &
-                  myerr => ctx%zztime%myerr, &
-                  i => ctx%zztime%i, &
-                  item => ctx%zztime%item, &
-                  j => ctx%zztime%j, &
-                  k => ctx%zztime%k, &
-                  ptr => ctx%zztime%ptr, &
-                  value => ctx%zztime%value, &
-                  did => ctx%zztime%did )
+                  ends => ctx%zztime%ends )
       did = no
 !
 !     Examine each token to see if it is an integer.
@@ -10362,7 +10110,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10555,9 +10302,7 @@ contains
 !        each of them. Some of the input strings have an invalid format
 !        which is reflected in their output.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TPARSE_EX1
 !              IMPLICIT NONE
@@ -10619,10 +10364,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a PC/Linux/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !            Input string        UTC sec past J2000
 !        ----------------------  ------------------
@@ -10634,12 +10377,10 @@ contains
 !        1993 FEB 35              -215265600.000000
 !        1993 MAR 7               -215265600.000000
 !
-!
 !        Note that the "1993 FEB 35" string in converted to UTC seconds
 !        past J2000, interpreted as "1993 MAR 7". Also note that the
 !        error message resulting from parsing "-467-14-25 26:00:75"
 !        is truncated to the provided ERRMLN length.
-!
 !
 !     2) Below is a sampling of some of the time formats that are
 !        acceptable as inputs to TPARSE. A complete discussion of
@@ -10659,7 +10400,6 @@ contains
 !        1995-08T18:28:12Z             1995  na  008  na  18  28 12
 !        1995-18T                      1995  na  018  na  00  00 00
 !        0000-01-01T                   1 BC Jan   na  01  00  00 00
-!
 !
 !        Calendar Formats.
 !
@@ -10682,7 +10422,6 @@ contains
 !        29 Jun  30 12:29:29.298       2029+  Jun  30  12  29  29.298
 !        29 Jun '30 12:29:29.298       2030*  Jun  29  12  29  29.298
 !
-!
 !        Day of Year Formats.
 !
 !        String                        Year  DOY HR Min Sec
@@ -10697,7 +10436,6 @@ contains
 !        92-182/ 18:28:28.281          1992* 182 18  28 28.281
 !        182-92/ 12:29:29.192          0182+ 092 12  29 29.192
 !        182-'92/ 12:28:29.182         1992  182 12  28 29.182
-!
 !
 !        Julian Date Strings.
 !
@@ -10830,13 +10568,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse a utc time string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -10870,7 +10606,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -10892,7 +10627,6 @@ contains
 
       integer(ip)           system
       parameter           ( system = ampm   + 1 )
-
 
       integer(ip)           lnsize
       parameter           ( lnsize = 80 )
@@ -10966,8 +10700,6 @@ contains
 
       end if
 
-
-
       if ( type == 'JD' ) then
 !
 !        Nothing to do but convert TVEC(1).
@@ -10976,7 +10708,6 @@ contains
          sp2000 = (tvec(1)-j2000) * spd
 
       else if ( type == 'YMD' .or. type == 'YD' ) then
-
 
          call tcheck ( ctx, tvec, type, mods, modify, ok, errmsg )
 
@@ -11040,7 +10771,6 @@ contains
 
          end if
 
-
          day    = 367*year - 7*(year+(month+9)/12)/4 &
                            - 3*((year+(month-9)/7)/100+1)/4 &
                            + 275*month/9 + day - 730516
@@ -11072,10 +10802,7 @@ contains
 
          call repmc ( errmsg, '#', type, errmsg )
 
-
       end if
-
-
 
       return
 
@@ -11117,7 +10844,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
 ! $ Detailed_Input
 !
 !     FIRST       is a logical indicating whether or not this is
@@ -11128,7 +10854,6 @@ contains
 !
 !     MAXVAR      is the maximum number of variables that the
 !                 kernel pool may contain at any one time.
-!
 !
 !     MAXVAL      is the maximum number of distinct values that
 !                 may belong to the variables in the kernel pool.
@@ -11277,7 +11002,6 @@ contains
 !     SPICELIB Functions.
 !
 
-
 !
 !     Local parameters
 !
@@ -11298,15 +11022,12 @@ contains
 
       integer(ip)           i
 
-
       if ( first ) then
-
 
          do i = 1, maxvar
             namlst(i) = 0
             datlst(i) = 0
          end do
-
 
          begdat = char(bslash) // dat
          begtxt = char(bslash) // txt
@@ -11367,8 +11088,6 @@ contains
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
 
-
-
       integer(ip)           linlen
       parameter           ( linlen = 132 )
 
@@ -11376,7 +11095,6 @@ contains
       parameter           ( maxlen =    32 )
 
 ! $ Detailed_Input
-!
 !
 !     NAMLST    this collection of arrays together with the hash
 !     NMPOOL    function ZZHASH provide the mechanism for storing
@@ -11411,7 +11129,6 @@ contains
 !
 ! $ Detailed_Output
 !
-!
 !     NAMLST     is the same structure as input but updated to
 !     NMPOOL     include the next variable read from the current
 !     NAMES      active text kernel in RDKER.
@@ -11438,7 +11155,6 @@ contains
 !                  pool.f).
 !
 ! $ Exceptions
-!
 !
 !     1) The error 'SPICE(BADTIMESPEC)' is signaled if a value
 !        beginning with '@' cannot be parsed as a time.
@@ -11531,14 +11247,11 @@ contains
 !-&
 
 !
-!
 !     SPICELIB functions
-!
 !
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
       integer(ip), parameter :: maxvar = 26003
-
 
 !
 !     Local parameters.
@@ -11591,7 +11304,6 @@ contains
 !     A variable can have one of three types as we process
 !     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
 !
-!
 
       integer(ip)           strtyp
       parameter           ( strtyp = 1 )
@@ -11612,7 +11324,6 @@ contains
       integer(ip)           next
       parameter           ( next = 1 )
 
-
       integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 !
@@ -11621,7 +11332,6 @@ contains
 !     allowed us to do this in a standard way.
 !
 
-
       character(linlen)     line
       character(linlen)     name
       character(filsiz)     file
@@ -11629,7 +11339,6 @@ contains
       character(255)        error
 
       real(wp)              dvalue
-
 
       integer(ip)           at
       integer(ip)           b
@@ -11663,7 +11372,6 @@ contains
       integer(ip)           ends(linlen)
       integer(ip)           type(linlen)
 
-
 !
 !     The logicals below are used to take apart the tokens in an
 !     input line.
@@ -11691,7 +11399,6 @@ contains
 !
 !     Save everything.
 !
-
 
 !
 !     Constants (SPICELIB computed them on the first call).
@@ -11725,7 +11432,6 @@ contains
       isplus( code ) =      code == iplus
       istime( code ) =      code == itmark
 
-
       isbad ( dirctv ) =       dirctv /= eq &
                          .and. dirctv /= eqp
 
@@ -11744,7 +11450,6 @@ contains
       error = ' '
       ncomp = 0
 
-
 !
 !     Get the next data line. Unless something is terribly wrong,
 !     this will begin a new variable definition. We have to read
@@ -11758,7 +11463,6 @@ contains
          call rdkdat ( ctx, line, eof )
 
          if ( eof ) return
-
 
 !
 !        Find the "tokens" in the input line. As you scan from left
@@ -11934,7 +11638,6 @@ contains
 
          end do
 
-
 !
 !        The first word on the first line should be the name of a
 !        variable. The second word should be a directive: = or +=.
@@ -11985,14 +11688,12 @@ contains
                //            'non-printing character has ASCII ' &
                //            'code #. ' )
 
-
                call ctx%errint ( '#', number             )
                call ctx%errch  ( '#',        file(1 :r1) )
                call ctx%errint ( '#', ichar(line(at:at)) )
                call ctx%sigerr ( 'SPICE(NONPRINTINGCHAR)')
                return
             end if
-
 
 !
 !           Check the variable name length; signal an error
@@ -12126,7 +11827,6 @@ contains
 
             end if
 
-
 !
 !           Now depending upon the kind of directive, we will need
 !           to remove data and allocate a new list or simply append
@@ -12173,7 +11873,6 @@ contains
 
                end if
 
-
             else if ( dirctv == eqp ) then
 !
 !              We need to append to the current variable.
@@ -12194,10 +11893,6 @@ contains
 
             end if
 
-
-
-
-
 !
 !           If this is a vector, the next thing on the line will be a
 !           left parenthesis. Otherwise, assume that this is a scalar.
@@ -12213,7 +11908,6 @@ contains
                count       = count + 1
                type(count) = ev
             end if
-
 
 !
 !        For subsequent lines, treat everything as a new value.
@@ -12274,7 +11968,6 @@ contains
                   //            'is not true on line # of the ' &
                   //            'text kernel file ''#''. ' )
 
-
                   call ctx%errint ( '#', number     )
                   call ctx%errch  ( '#', file(1:r1) )
                   call ctx%sigerr ( 'SPICE(BADVARASSIGN)' )
@@ -12283,7 +11976,6 @@ contains
                end if
 
             end if
-
 
             if ( vartyp == strtyp ) then
 !
@@ -12358,12 +12050,10 @@ contains
                   //            'full at line # of the text ' &
                   //            'kernel file ''#''. ' )
 
-
                   call ctx%errint ( '#', number       )
                   call ctx%errch  ( '#', file  (1:r1) )
                   call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
                   return
-
 
                end if
 !
@@ -12498,7 +12188,6 @@ contains
 
                   end if
 
-
                   call tparse ( ctx, line(b+1:e), dvalue, error )
 
                   if ( error /= ' ' ) then
@@ -12572,12 +12261,10 @@ contains
                   //            'full at line # of the text ' &
                   //            'kernel file ''#''. ' )
 
-
                   call ctx%errint ( '#', number       )
                   call ctx%errch  ( '#', file  (1:r1) )
                   call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
                   return
-
 
                end if
 
@@ -12660,12 +12347,10 @@ contains
 
       end if
 
-
 !
 !     Return the name of the variable.
 !
       name = varnam
-
 
       return
       end procedure zzrvar
@@ -12698,9 +12383,6 @@ contains
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
-
-
 
       integer(ip)           linlen
       parameter           ( linlen = 132 )
@@ -12750,9 +12432,6 @@ contains
 !               in DPPOOL that gives the indexes of the values of NAME
 !               in DPVALS.
 !
-!
-!
-!
 ! $ Detailed_Output
 !
 !     LINNUM     is the line number at which the "next" read should
@@ -12781,7 +12460,6 @@ contains
 !                  can be stored in the kernel pool (defined in pool.f).
 !
 ! $ Exceptions
-!
 !
 !     1) The error 'SPICE(BADTIMESPEC)' is signaled if a value
 !        beginning with '@' cannot be parsed as a time.
@@ -12846,14 +12524,11 @@ contains
 !-&
 
 !
-!
 !     SPICELIB functions
-!
 !
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
       integer(ip), parameter :: maxvar = 26003
-
 
 !
 !     Local parameters.
@@ -12906,7 +12581,6 @@ contains
 !     A variable can have one of three types as we process
 !     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
 !
-!
 
       integer(ip)           strtyp
       parameter           ( strtyp = 1 )
@@ -12927,7 +12601,6 @@ contains
       integer(ip)           next
       parameter           ( next = 1 )
 
-
       integer(ip)           filsiz
       parameter           ( filsiz = 255 )
 !
@@ -12935,7 +12608,6 @@ contains
 !     through this routine.  They would be parameters if FORTRAN
 !     allowed us to do this in a standard way.
 !
-
 
       character(linlen)     line
       character(linlen)     name
@@ -13001,7 +12673,6 @@ contains
 !     Save everything.
 !
 
-
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -13034,7 +12705,6 @@ contains
       isplus( code ) =      code == iplus
       istime( code ) =      code == itmark
 
-
       isbad ( dirctv ) =       dirctv /= eq &
                          .and. dirctv /= eqp
 
@@ -13052,7 +12722,6 @@ contains
       name  = ' '
       error = ' '
       ncomp = 0
-
 
 !
 !     Get the next data line. Unless something is terribly wrong,
@@ -13251,7 +12920,6 @@ contains
 
          end do
 
-
 !
 !        The first word on the first line should be the name of a
 !        variable. The second word should be a directive: = or +=.
@@ -13288,7 +12956,6 @@ contains
 !
                at = begs(1) + badat
 
-
                call ctx%setmsg ( 'There is a non-printing character ' &
                //            'embedded in line # of the text ' &
                //            'buffer.  Non-printing ' &
@@ -13297,13 +12964,11 @@ contains
                //            'non-printing character has ASCII ' &
                //            'code #. ' )
 
-
                call ctx%errint ( '#', linnum             )
                call ctx%errint ( '#', ichar(line(at:at)) )
                call ctx%sigerr ( 'SPICE(NONPRINTINGCHAR)')
                return
             end if
-
 
 !
 !           Check the variable name length; signal an error
@@ -13333,7 +12998,6 @@ contains
 !
             varnam = line(begs(1):ends(1))
             dirctv = type(2)
-
 
 !
 !           If this is replacement (=) and not an addition (+=),
@@ -13429,7 +13093,6 @@ contains
 
             end if
 
-
 !
 !           Now depending upon the kind of directive, we will need
 !           to remove data and allocate a new list or simply append
@@ -13475,7 +13138,6 @@ contains
                   end if
 
                end if
-
 
             else if ( dirctv == eqp ) then
 !
@@ -13561,7 +13223,6 @@ contains
                   call zzcln ( ctx, lookat, nameat, &
                                namlst, datlst, nmpool, chpool, dppool )
 
-
                   call ctx%setmsg ( 'The first item following the ' &
                   //            'assignment operator should be ' &
                   //            'the value of a variable or a ' &
@@ -13570,7 +13231,6 @@ contains
                   //            'is not true on line # of the ' &
                   //            'text buffer. ' )
 
-
                   call ctx%errint ( '#', linnum     )
                   call ctx%sigerr ( 'SPICE(BADVARASSIGN)' )
                   return
@@ -13578,7 +13238,6 @@ contains
                end if
 
             end if
-
 
             if ( vartyp == strtyp ) then
 !
@@ -13618,7 +13277,6 @@ contains
                   call zzcln ( ctx, lookat, nameat, &
                                namlst, datlst, nmpool, chpool, dppool )
 
-
                   call ctx%setmsg ( 'There is a quoted string with ' &
                   //            'no characters on line # of the ' &
                   //            'text buffer. ' )
@@ -13637,7 +13295,6 @@ contains
 
                if ( free <= 0 ) then
 
-
                   call ctx%setmsg ( 'There is no room available for ' &
                   //            'adding another character value ' &
                   //            'to the kernel pool.  The ' &
@@ -13645,11 +13302,9 @@ contains
                   //            'full at line # of the text ' &
                   //            'buffer. ' )
 
-
                   call ctx%errint ( '#', linnum       )
                   call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
                   return
-
 
                end if
 !
@@ -13761,7 +13416,6 @@ contains
 
                   end if
 
-
                   call tparse ( ctx, line(b+1:e), dvalue, error )
 
                   if ( error /= ' ' ) then
@@ -13808,7 +13462,6 @@ contains
 
                if ( free <= 0 ) then
 
-
                   call ctx%setmsg ( 'There is no room available for ' &
                   //            'adding another numeric value ' &
                   //            'to the kernel pool.  The ' &
@@ -13816,11 +13469,9 @@ contains
                   //            'full at line # of the text ' &
                   //            'buffer.' )
 
-
                   call ctx%errint ( '#', linnum       )
                   call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
                   return
-
 
                end if
 
@@ -13875,7 +13526,6 @@ contains
 
       end do
 
-
 !
 !     It is possible that we reached this point without actually
 !     assigning a value to the kernel pool variable.  This can
@@ -13894,19 +13544,16 @@ contains
          //            'is not true on line # of the ' &
          //            'text buffer. ' )
 
-
          call ctx%errint ( '#', linnum-1   )
          call ctx%sigerr ( 'SPICE(BADVARASSIGN)' )
          return
 
       end if
 
-
 !
 !     Return the name of the variable.
 !
       name = varnam
-
 
       return
       end procedure zzrvbf
@@ -13916,7 +13563,6 @@ contains
       module procedure zzgapool
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-
 
 ! $ Abstract
 !
@@ -13946,7 +13592,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
 
 ! $ Detailed_Input
 !
@@ -14031,11 +13676,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -14044,9 +13687,7 @@ contains
       integer(ip)           nfetch
       integer(ip)           node
 
-
       if ( ctx%failed() ) return
-
 
 !
 !     The output agent set is empty until we find any
@@ -14088,7 +13729,6 @@ contains
 
       call validc ( ctx, sizec( ctx,agtset), nfetch, agtset )
 
-
       return
       end procedure zzgapool
 
@@ -14097,7 +13737,6 @@ contains
       module procedure zzgpnm
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
-
 
 ! $ Abstract
 !
@@ -14118,12 +13757,9 @@ contains
 !
 ! $ Declarations
 
-
       implicit none
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
-
 
 ! $ Detailed_Input
 !
@@ -14219,14 +13855,10 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 29-MAR-1999 (WLT)
 !
-!
 !-&
-
-
 
 !
 !     SPICELIB Functions
-!
 !
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
@@ -14241,7 +13873,6 @@ contains
       integer(ip)           next
       parameter           ( next = 1 )
 
-
 !
 !     Local Variables
 !
@@ -14251,16 +13882,13 @@ contains
       integer(ip)           head
       integer(ip)           tail
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
 
-
       nameat = 0
 
-!
 !
 !     Locate this variable name in the name pool or insert it
 !     if it isn't there.  The location will be NAMEAT and
@@ -14341,7 +13969,6 @@ contains
       module procedure zznwpool
       use pepper_kinds, only: ip
 
-
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -14371,8 +13998,6 @@ contains
 
       integer(ip)           lbpool
       parameter           ( lbpool = -5 )
-
-
 
 ! $ Detailed_Input
 !
@@ -14409,7 +14034,6 @@ contains
 !
 !     MXNOTE      Maximum size of the agent list WTAGNT in POOL.
 !                 See that routine for the parameter's value.
-!
 !
 ! $ Exceptions
 !
@@ -14481,9 +14105,7 @@ contains
 !     SPICELIB functions
 !
 
-
       if ( ctx%failed() ) return
-
 
 !
 !     Fetch the agents watching VARNAM into the set NOTIFY.
@@ -14508,7 +14130,6 @@ contains
 !     variables are in pepper_state_pool. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     Maintain a pool of variables read from SPICE ASCII kernel files.
@@ -14523,19 +14144,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -14592,7 +14200,6 @@ contains
 !                10501
 !                11003
 !                11503
-!
 !
 !     MAXLEN   is the maximum length of the variable names that
 !              can be stored in the kernel pool (also set in
@@ -14870,7 +14477,6 @@ contains
 !
 !        Various typos in comments throughout this file were fixed.
 !
-!
 !-    SPICELIB Version 8.3.0, 22-DEC-2004 (NJB)
 !
 !        Fixed bug in DVPOOL. Made corrections to comments in
@@ -14891,7 +14497,6 @@ contains
 !        remove list-directed formatting. This change was made to
 !        work around problems with the way f2c translates list-
 !        directed I/O.
-!
 !
 !-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
 !
@@ -14967,13 +14572,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     MAINTAIN a pool of kernel variables
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15102,12 +14705,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
 !
 !     Private SPICELIB functions
@@ -15117,13 +14717,9 @@ contains
 !     Local Parameters
 !
 
-
 !
 !     The next two variables are for use in traversing linked lists.
 !
-
-
-
 
 !
 !     Local variables
@@ -15136,10 +14732,6 @@ contains
 !     This is the reason for the following block of declarations.
 !     Admittedly this is bizarre, but it works.
 !
-
-
-
-
 
 !
 !     The following is the hash table used for holding kernel pool
@@ -15182,14 +14774,12 @@ contains
 !
 !        there is no data associated with PNAMES(I).
 !
-!
 !     The arrays DPPOOL and CHPOOL are linked list pools that
 !     give the address lists of values associated with a name.
 !
 !     The actual data is stored in DPVALS and CHVALS.
 !
 !     Here's a picture of how this all works.
-!
 !
 !                                             Linked list Pool
 !                                             of HASH collisions
@@ -15219,9 +14809,6 @@ contains
 !                                             |         |    |        |
 !                                             +---------+    +--------+
 !
-!
-!
-!
 !      Linked       Variable    Heads of
 !      List Pool     Names      Data lists
 !       NMPOOL       PNAME       DATLST
@@ -15238,10 +14825,6 @@ contains
 !     +--------+   +--------+   +---------+          of linked list
 !     |        |   |        |   |         |          in CHPOOL linked
 !     +--------+   +--------+   +---------+          list pool.
-!
-!
-!
-!
 !
 !      Linked                Values
 !      List Pool             of data
@@ -15272,8 +14855,6 @@ contains
 !     |            |         |            |
 !     +------------+         +------------+
 !
-!
-
 
 !
 !     The WT... variables make up the data structure that
@@ -15296,7 +14877,6 @@ contains
 !     +--------+   +--------+   +---------+   +---------+
 !     |        |   |        |   |         |   |         |
 !     +--------+   +--------+   +---------+   +---------+
-!
 !
 
 !
@@ -15321,9 +14901,6 @@ contains
 !     The remaining local variables...
 !
 
-
-
-
 !
 !     Save EVERYTHING.
 !
@@ -15335,7 +14912,6 @@ contains
 !
 !     Set up the definition of our in-line functions.
 !
-
 
 !
 !     Standard SPICE error handling.
@@ -15416,7 +14992,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM CLPOOL_EX1
 !              IMPLICIT NONE
 !
@@ -15428,7 +15003,6 @@ contains
 !              INTEGER               N
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Place a value into the kernel pool. Recall the routines
@@ -15477,19 +15051,15 @@ contains
 !
 !              END IF
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        First call to GDPOOL:
 !           TEST_VAR value: -666.00
 !        Second call to GDPOOL:
 !           TEST_VAR not in kernel pool.
-!
 !
 ! $ Restrictions
 !
@@ -15573,13 +15143,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     CLEAR the pool of kernel variables
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15625,7 +15193,6 @@ contains
 !        that buffer data stored in the kernel pool can fetch
 !        that data only when it is updated.
 !
-!
 !        Also the control of initializations was modified to be
 !        consistent with other SPICELIB practices.
 !
@@ -15647,7 +15214,6 @@ contains
 !-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -15755,7 +15321,6 @@ contains
                   begdat => ctx%spice%pool%begdat, &
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
-
 
 !
 !     Initialize the pool if necessary.
@@ -15876,9 +15441,7 @@ contains
 !        a kernel variable. If the variable is present in the kernel
 !        pool, the dimension and type of the variable are displayed.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LDPOOL_EX1
 !              IMPLICIT NONE
@@ -15949,11 +15512,9 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the PCK file gm_de431.tpc to ask for the
 !        variable 'BODY000_GMLIST', the output was:
-!
 !
 !        Enter text-kernel name        > gm_de431.tpc
 !        Enter name of kernel variable > BODY000_GMLIST
@@ -15962,7 +15523,6 @@ contains
 !
 !            Size:             65
 !            Type:   Numeric
-!
 !
 ! $ Restrictions
 !
@@ -16077,13 +15637,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     LOAD variables from a text kernel file into the pool
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -16190,7 +15748,6 @@ contains
 !-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -16353,9 +15910,7 @@ contains
 
             end if
 
-
          end if
-
 
          call zzrvar ( ctx, namlst, &
                        nmpool, pnames, datlst, &
@@ -16447,7 +16002,6 @@ contains
 !     several kernel files can be loaded into a kernel pool. After the
 !     pool is loaded, the values in the pool are written to a kernel
 !     file.
-!
 !
 !     C
 !     C     Store in an array the names of the kernel files whose
@@ -16561,13 +16115,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     RETURN the value of a pooled kernel variable
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -16579,7 +16131,6 @@ contains
 !-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -16688,7 +16239,6 @@ contains
                   begdat => ctx%spice%pool%begdat, &
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
-
 
 !
 !     Initialize the pool if necessary.
@@ -16845,7 +16395,6 @@ contains
 !        Use the kernel shown below; an IK defining two keywords
 !        used to provide data for an instrument with NAIF ID -999001.
 !
-!
 !           KPL/IK
 !
 !           File name: expool_ex1.ti
@@ -16862,12 +16411,9 @@ contains
 !
 !           \begintext
 !
-!
 !           End of IK
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EXPOOL_EX1
 !              IMPLICIT NONE
@@ -16932,10 +16478,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Variable name: INS-999001_FREQ_RGB
 !            It is numeric and exists in the kernel pool.
@@ -16943,7 +16487,6 @@ contains
 !            Either it is not numeric or it is not in the kernel pool.
 !         Variable name: INS-999001_FREQ_UNITS
 !            Either it is not numeric or it is not in the kernel pool.
-!
 !
 ! $ Restrictions
 !
@@ -17021,13 +16564,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     CONFIRM the existence of a pooled numeric kernel variable
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -17081,7 +16622,6 @@ contains
 !        pool if it has not been done yet.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -17189,7 +16729,6 @@ contains
                   begdat => ctx%spice%pool%begdat, &
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
-
 
 !
 !     Initialize the pool if necessary.
@@ -17327,7 +16866,6 @@ contains
 !     pool is loaded, the values in the pool are written to a kernel
 !     file.
 !
-!
 !     C
 !     C     Store in an array the names of the kernel files whose
 !     C     values will be loaded into the kernel pool.
@@ -17459,13 +16997,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     WRITE the values in pool to a specified unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -17543,7 +17079,6 @@ contains
 !        Declaration of unused function FAILED removed.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -17794,7 +17329,6 @@ contains
 !        Get the next node (if there is one).
 !
       end do
-
 
 !
 !     Indicate the beginning of a text section. Data sections and
@@ -18047,14 +17581,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Watch for an update to a kernel pool variable
 !     Notify a routine of an update to a kernel pool variable
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -18099,7 +17631,6 @@ contains
 !        stored in the Version line of the routine.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -18251,7 +17782,6 @@ contains
 
       space = sizec( ctx,wtvars) - cardc( ctx,wtvars)
 
-
       if ( need > space ) then
 
          call ctx%setmsg ( 'The watched kernel variable name ' &
@@ -18269,7 +17799,6 @@ contains
 
       end if
 
-
 !
 !     If the input agent is a new one for any member of NAMES,
 !     make sure we have enough room to store this agent. Also
@@ -18286,9 +17815,7 @@ contains
          call zzgapool ( ctx, names(i), wtvars, wtptrs, &
                          wtpool,   wtagnt, active )
 
-
          nfetch = cardc( ctx, active )
-
 
          noagnt =       ( nfetch ==   0               ) &
                    .or. ( .not.  elemc( ctx, agent, active ) )
@@ -18337,7 +17864,6 @@ contains
 
       end if
 
-
 !
 !     All of the overflow checks have been done. We finally can
 !     get on with setting the specified watch.
@@ -18374,7 +17900,6 @@ contains
 !        We could get fancy and try to minimize the number of lines of
 !        code required to handle the first two cases...but we won't.
 !        We'll just take them one at a time.
-!
 !
          if ( nfetch > 0 ) then
 
@@ -18715,13 +18240,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check the kernel pool for updated variables
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -18780,7 +18303,6 @@ contains
 !        stored in the Version line of the routine.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -18915,7 +18437,6 @@ contains
          call removc ( ctx, agent, agents )
       end if
 
-
       return
       end associate
       end procedure cvpool
@@ -19037,7 +18558,6 @@ contains
 !        LOGICAL               FOUND
 !        CHARACTER*(80)        CVALS(ROOM)
 !
-!
 !     Next load the data in the file 'typical.ker' into the
 !     kernel pool.
 !
@@ -19138,14 +18658,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     RETURN the character value of a pooled kernel variable
 !     RETURN the string value of a pooled kernel variable
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -19256,7 +18774,6 @@ contains
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
 
-
 !
 !     Initialize the pool if necessary.
 !
@@ -19283,14 +18800,11 @@ contains
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
 
       end if
-
-
 
 !
 !     Compute the hash value of this name.
@@ -19492,11 +19006,8 @@ contains
 !        LOGICAL               FOUND
 !        DOUBLE PRECISION      VALUES(ROOM)
 !
-!
 !     Next load the data in the file 'typical.ker' into the
 !     kernel pool.
-!
-!
 !
 !        CALL LDPOOL ( 'typical.ker' )
 !
@@ -19594,14 +19105,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     RETURN the d.p. value of a pooled kernel variable
 !     RETURN the numeric value of a pooled kernel variable
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -19712,7 +19221,6 @@ contains
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
 
-
 !
 !     Initialize the pool if necessary.
 !
@@ -19739,13 +19247,11 @@ contains
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
 
       end if
-
 
 !
 !     Compute the hash value of this name.
@@ -19949,7 +19455,6 @@ contains
 !        LOGICAL               FOUND
 !        INTEGER               IVALS(ROOM)
 !
-!
 !     Next load the data in the file 'typical.ker' into the
 !     kernel pool.
 !
@@ -20054,13 +19559,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     RETURN the integer value of a pooled kernel variable
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -20172,7 +19675,6 @@ contains
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
 
-
 !
 !     Initialize the pool if necessary.
 !
@@ -20199,13 +19701,11 @@ contains
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
 
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
 
       end if
-
 
 !
 !     Compute the hash value of this name.
@@ -20301,13 +19801,11 @@ contains
                //            'outside the range of integers. ' &
                //            'The value stored was: # .'      )
 
-
                call ctx%errint ( '#', k                     )
                call ctx%errch  ( '#', name(1:rtrim(name))   )
                call ctx%errdp  ( '#', dpvals(node)          )
                call ctx%sigerr ( 'SPICE(INTOUTOFRANGE)'     )
                return
-
 
             end if
             if ( n == room ) return
@@ -20398,9 +19896,7 @@ contains
 !        If the variable is present in the kernel pool, the dimension
 !        and type of the variable are displayed.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DTPOOL_EX1
 !              IMPLICIT NONE
@@ -20470,11 +19966,9 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the FK file named cas_v40.tf to ask for the
 !        variable 'FRAME_-82104_NAME', the output was:
-!
 !
 !        Enter text-kernel name        > cas_v40.tf
 !        Enter name of kernel variable > FRAME_-82104_NAME
@@ -20483,7 +19977,6 @@ contains
 !
 !            Size:              1
 !            Type:   Character
-!
 !
 ! $ Restrictions
 !
@@ -20547,13 +20040,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     RETURN summary information about a kernel pool variable
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -20841,7 +20332,6 @@ contains
 !     how you might set up various kernel pool variables that might
 !     be required by a program.
 !
-!
 !        Set up the relationship between the EARTH_BODYFIXED frame
 !        and the IAU_EARTH frame.
 !
@@ -20850,9 +20340,7 @@ contains
 !        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1, 'IAU_EARTH' )
 !        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX )
 !
-!
 !        Load the IAU model for the earth's rotation and shape.
-!
 !
 !        RA ( 1 ) =  0.0D0
 !        RA ( 2 ) = -0.641D0
@@ -20875,7 +20363,6 @@ contains
 !        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
 !        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
 !
-!
 !        Set up a preliminary set of leapsecond values.
 !
 !        CALL PDPOOL ( 'DELTET/DELTA_T_A/',1, 32.184D0  )
@@ -20886,7 +20373,6 @@ contains
 !        VALUES(2) = 1.99096871D-7
 !
 !        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
-!
 !
 !        VALUES(  1 ) = 10
 !        VALUES(  3 ) = 11
@@ -20995,13 +20481,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Set the value of a character_variable in the kernel_pool
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -21114,8 +20598,6 @@ contains
       if ( n <= 0 ) return
 
       if ( ctx%failed() ) return
-
-
 
 !
 !     Check the variable name length; signal an error
@@ -21232,7 +20714,6 @@ contains
 
          end if
 
-
          call ctx%setmsg ( 'There is not sufficient space available ' &
          //            'in the kernel pool to store the # items ' &
          //            'associated with the name #.  There is ' &
@@ -21346,7 +20827,6 @@ contains
 
       end do
 
-
 !
 !     One last thing, see if this variable is being watched,
 !     If it is, add its associated agents to the list of
@@ -21442,7 +20922,6 @@ contains
 !     how you might set up various kernel pool variables that might
 !     be required by a program.
 !
-!
 !        Set up the relationship between the EARTH_BODYFIXED frame
 !        and the IAU_EARTH frame.
 !
@@ -21451,9 +20930,7 @@ contains
 !        CALL PCPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1, 'IAU_EARTH' )
 !        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX )
 !
-!
 !        Load the IAU model for the earth's rotation and shape.
-!
 !
 !        RA ( 1 ) =  0.0D0
 !        RA ( 2 ) = -0.641D0
@@ -21476,7 +20953,6 @@ contains
 !        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
 !        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
 !
-!
 !        Set up a preliminary set of leapsecond values.
 !
 !        CALL PDPOOL ( 'DELTET/DELTA_T_A', 1, 32.184D0  )
@@ -21487,7 +20963,6 @@ contains
 !        VALUES(2) = 1.99096871D-7
 !
 !        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
-!
 !
 !        VALUES(  1 ) = 10
 !        VALUES(  3 ) = 11
@@ -21596,13 +21071,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Set the value of a d.p._variable in the kernel_pool
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -21715,8 +21188,6 @@ contains
       if ( n <= 0 ) return
 
       if ( ctx%failed() ) return
-
-
 
 !
 !     Check the variable name length; signal an error
@@ -21833,7 +21304,6 @@ contains
 
          end if
 
-
          call ctx%setmsg ( 'There is not sufficient space available ' &
          //            'in the kernel pool to store the # items ' &
          //            'associated with the name #.  There is ' &
@@ -21946,7 +21416,6 @@ contains
 
       end do
 
-
 !
 !     One last thing, see if this variable is being watched,
 !     If it is, add its associated agents to the list of
@@ -21960,7 +21429,6 @@ contains
          call zznwpool ( ctx, name,   wtvars, wtptrs, wtpool, &
                          wtagnt, active, notify, agents )
       end if
-
 
       return
       end associate
@@ -22042,7 +21510,6 @@ contains
 !     how you might set up various kernel pool variables that might
 !     be required by a program.
 !
-!
 !        Set up the relationship between the EARTH_BODYFIXED frame
 !        and the IAU_EARTH frame.
 !
@@ -22051,9 +21518,7 @@ contains
 !        CALL PIPOOL ( 'TKFRAME_EARTH_FIXED_RELATIVE', 1,  10081   )
 !        CALL PDPOOL ( 'TKFRAME_EARTH_FIXED_MATRIX',   9,  MATRIX  )
 !
-!
 !        Load the IAU model for the earth's rotation and shape.
-!
 !
 !        RA ( 1 ) =  0.0D0
 !        RA ( 2 ) = -0.641D0
@@ -22076,7 +21541,6 @@ contains
 !        CALL PDPOOL ( 'BODY399_PM',        3, PM  )
 !        CALL PDPOOL ( 'BODY399_RADII',     3, R   )
 !
-!
 !        Set up a preliminary set of leapsecond values.
 !
 !        CALL PDPOOL ( 'DELTET/DELTA_T_A/',1, 32.184D0  )
@@ -22087,7 +21551,6 @@ contains
 !        VALUES(2) = 1.99096871D-7
 !
 !        CALL PDPOOL ( 'DELTET/M', 2, VALUES )
-!
 !
 !        VALUES(  1 ) = 10
 !        VALUES(  3 ) = 11
@@ -22196,13 +21659,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Set the value of an integer_variable in the kernel_pool
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -22315,8 +21776,6 @@ contains
       if ( n <= 0 ) return
 
       if ( ctx%failed() ) return
-
-
 
 !
 !     Check the variable name length; signal an error
@@ -22545,7 +22004,6 @@ contains
 
       end do
 
-
 !
 !     One last thing, see if this variable is being watched,
 !     If it is, add its associated agents to the list of
@@ -22560,7 +22018,6 @@ contains
                          wtagnt, active, notify, agents )
 
       end if
-
 
       return
       end associate
@@ -22731,13 +22188,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Load the kernel pool from an internal text buffer
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -22879,7 +22334,6 @@ contains
                     dppool, dpvals, &
                     chpool, chvals, &
                     varnam, eof )
-
 
 !
 !     Read the variables in the file, one at a time.
@@ -23058,13 +22512,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return a kernel pool definition parameter
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -23152,7 +22604,6 @@ contains
       logical               vector
       isquot(code) = code == iquote
       if ( ctx%failed() ) return
-
 
       found = .true.
 
@@ -23301,13 +22752,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete a kernel pool variable
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -23329,12 +22778,10 @@ contains
 !
 !        formerly tested the variable NODE instead of NAMEAT.
 !
-!
 !        Corrected an in-line comment relating to finding the
 !        head node of the conflict resolution list for NAME.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -23468,7 +22915,6 @@ contains
 !     Locate the variable name in the hash table.  If the variable
 !     is not present, just return.
 !
-!
 !     Compute the hash value of this name.
 !
       lookat = name_hash ( name, maxvar )
@@ -23503,7 +22949,6 @@ contains
 !     values.  This list is in the numeric pool DPPOOL if the head
 !     node is positive; otherwise the list is in the character pool
 !     CHPOOL.
-!
 !
       call zzcln ( ctx, lookat, nameat, &
                    namlst, datlst, nmpool, chpool, dppool )
@@ -23567,7 +23012,6 @@ contains
 !              characters respectively. For details of string
 !              pattern matching see the header of the routine MATCHI.
 !
-!
 !     START    is the index of the first variable name to return that
 !              matches the NAME template. The matching names are
 !              assigned indices ranging from 1 to NVAR, where NVAR is
@@ -23581,7 +23025,6 @@ contains
 !              be set to zero. However, FOUND will still be set to
 !              .TRUE.
 !
-!
 !     ROOM     is the maximum number of variable names that should
 !              be returned for this template. If ROOM is less than 1
 !              the error SPICE(BADARRAYSIZE) will be signaled.
@@ -23593,7 +23036,6 @@ contains
 !              ROOM.
 !
 !              If no variable names match NAME, N is set to zero.
-!
 !
 !     CVALS    is an array of kernel pool variables whose names match
 !              the template NAME and which have indices ranging from
@@ -23610,7 +23052,6 @@ contains
 !              on the right. To ensure that names are not truncated,
 !              CVALS should be declared to be at least
 !              CHARACTER*(32).
-!
 !
 !     FOUND    is .TRUE. if the some variable name in the kernel pool
 !              matches NAME, .FALSE. if it is not.
@@ -23667,7 +23108,6 @@ contains
 !        INTEGER               N
 !
 !        LOGICAL               FOUND
-!
 !
 !     Next load the data in the file 'typical.ker' into the
 !     kernel pool.
@@ -23756,13 +23196,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return names of kernel pool variables matching a template
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -23872,8 +23310,6 @@ contains
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
 
-
-
 !
 !     Initialize the pool if necessary.
 !
@@ -23899,7 +23335,6 @@ contains
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
-
 
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
@@ -23963,7 +23398,6 @@ contains
 !        Advance to the next hash value.
 !
       end do
-
 
       found = hits > 0
 
@@ -24076,14 +23510,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete kernel pool watch
 !     delete agent from kernel pool watch lists
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -24190,7 +23622,6 @@ contains
                   begdat => ctx%spice%pool%begdat, &
                   begtxt => ctx%spice%pool%begtxt )
       if ( ctx%failed() ) return
-
 
 !
 !     Initialize the pool if necessary.
@@ -24328,7 +23759,6 @@ contains
 !           Now free AGNODE.
 !
             call lnkfsl ( ctx, agnode, agnode, wtpool )
-
 
             if ( nnodes == 1 ) then
 !
@@ -24500,13 +23930,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -24603,7 +24031,6 @@ contains
                   wtptrs => ctx%spice%pool%wtptrs )
       if ( ctx%failed() ) return
 
-
       call copyc ( ctx, wtvars, uwvars                )
       call movei ( wtptrs, cardc( ctx,wtvars), uwptrs )
 
@@ -24618,7 +24045,6 @@ contains
       call movei ( wtpool, i, uwpool )
 
       call movec ( wtagnt, mxnote, uwagnt )
-
 
       return
       end associate
@@ -24777,13 +24203,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.

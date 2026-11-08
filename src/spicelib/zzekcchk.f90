@@ -272,9 +272,7 @@
 
       end if
 
-
       noname  =  tb == 0
-
 
       if ( noname ) then
 !
@@ -303,7 +301,6 @@
 
          end do
 
-
          if ( nmatch == 0 ) then
 
             error  = .true.
@@ -314,7 +311,6 @@
 
             errptr = lxb(2)
             return
-
 
          else if ( nmatch > 1 ) then
 
@@ -327,10 +323,7 @@
             errptr = lxb(2)
             return
 
-
          end if
-
-
 
       else
 
@@ -365,7 +358,6 @@
 !
          call ekccnt ( tablst(tabidx), cc  )
 
-
          fnd  =  .false.
          i    =   1
 
@@ -382,7 +374,6 @@
 
          end do
 
-
          if ( .not. fnd ) then
 
             error  =  .true.
@@ -396,9 +387,7 @@
 
          end if
 
-
       end if
-
 
 !
 !     If we got this far, the table and column check out.  Fill in the

@@ -192,15 +192,11 @@
       save                  svobs
       save                  svtarg
 
-
 !
 !     This routine should never be called directly.
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
 
 !$Procedure  ZZGFDIIN ( Private --- GF, distance initialization )
 
@@ -252,7 +248,6 @@
 !                Case and leading or trailing blanks are not
 !                significant in the string TARGET.
 !
-!
 !     ABCORR     indicates the aberration corrections to be applied
 !                when computing the target's position and orientation.
 !                Any value accepted by SPKEZR may be used.
@@ -263,7 +258,6 @@
 !
 !                Case and embedded blanks are not significant in
 !                ABCORR.
-!
 !
 !     OBSRVR     is the name of the body from which the occultation is
 !                observed. Optionally, you may supply the integer NAIF
@@ -342,7 +336,6 @@
 
       if ( return() ) return
 
-
 !
 !     Find NAIF IDs for TARGET and OBSRVR.
 !
@@ -360,7 +353,6 @@
          return
 
       end if
-
 
       call bods2c ( obsrvr, svobs, found )
 
@@ -408,9 +400,6 @@
       if ( failed() ) return
 
       return
-
-
-
 
 !$Procedure ZZGFDIDC ( Private --- GF, is distance decreasing? )
 
@@ -536,12 +525,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       call spkez ( svtarg, et, 'J2000', svcorr, svobs, state, lt )
 
@@ -555,9 +542,6 @@
       decres  =  vdot( state, state(4) )  <  0.0_wp
 
       return
-
-
-
 
 !$Procedure ZZGFDIGQ ( Private --- GF, get observer-target distance )
 
@@ -667,11 +651,8 @@
 
       if ( return() ) return
 
-
       call zzgfdiq ( svtarg, et, svcorr, svobs, dist )
 
       return
 
       end
-
-

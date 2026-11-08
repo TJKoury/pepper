@@ -95,9 +95,7 @@
 !     1) The following program dumps records from a CK file that
 !        contains only type 6 segments.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKNM06_EX1
 !              IMPLICIT NONE
@@ -154,7 +152,6 @@
 !              INTEGER               WINSIZ
 !
 !              LOGICAL               FOUND
-!
 !
 !              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
 !
@@ -295,14 +292,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the Rosetta CK file named
 !        RATT_DV_257_02_01_T6_00344.BC, the output was:
 !
-!
 !        Enter name of CK to dump > RATT_DV_257_02_01_T6_00344.BC
-!
 !
 !         Segment number:            1
 !
@@ -346,7 +340,6 @@
 !                  Q(2):   0.12480922302154081
 !                  Q(3):  -0.21321200307405938
 !
-!
 !            Mini-segment number:            2
 !               Rate:              1.5258789062500000E-005
 !               Subtype:                   1
@@ -387,7 +380,6 @@
 !                  Q(2):   0.12475418449192528
 !                  Q(3):  -0.21313651233726627
 !
-!
 !            Mini-segment number:            3
 !               Rate:              1.5258789062500000E-005
 !               Subtype:                   1
@@ -404,10 +396,8 @@
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 2378824 lines have
 !        been provided.
-!
 !
 ! $ Restrictions
 !
@@ -434,13 +424,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of mini-segments in CK type_6 segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -474,12 +462,10 @@
 
       integer(ip)           ic     ( ni )
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -500,7 +486,6 @@
 !        IC(4)  Angular velocity flag
 !        IC(5)  Initial address of segment data
 !        IC(6)  Final address of segment data
-!
 !
       call dafus ( descr, nd, ni, dc, ic )
 

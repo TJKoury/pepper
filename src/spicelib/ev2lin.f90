@@ -185,7 +185,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: ev2lin_ex1.tm
@@ -217,9 +216,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EV2LIN_EX1
 !              IMPLICIT NONE
@@ -326,18 +323,14 @@
 !              WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
 !              WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Epoch   : 2020-05-26 02:25:00
 !        Position:  -4644.60403398  -5038.95025540   -337.27141117
 !        Velocity:     -0.45719025      0.92884817     -7.55917355
-!
 !
 ! $ Restrictions
 !
@@ -419,13 +412,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED Evaluate NORAD two-line element data.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -435,7 +426,6 @@
 
 !
 !     Local Parameters
-!
 !
 !     The following parameters give the location of the various
 !     geophysical parameters needed for the two line element
@@ -449,7 +439,6 @@
 !     KSO  --- lower bound of atmospheric model in KM
 !     KER  --- earth equatorial radius in KM.
 !     KAE  --- distance units/earth radius
-!
 !
 
       integer(ip), parameter :: kj2 = 1
@@ -476,7 +465,6 @@
 !     KMO
 !     KNO
 !
-
 
       integer(ip), parameter :: kndt20 = 1
       integer(ip), parameter :: kndd60 = 2
@@ -556,7 +544,6 @@
       real(wp)              qoms2t
       real(wp)              s
 
-
 !
 !     Elements
 !
@@ -575,7 +562,6 @@
 !     Intermediate quantities. The time independent quantities
 !     are calculated only as new elements come into the routine.
 !
-
 
       real(wp)              a
       real(wp)              a1
@@ -735,7 +721,6 @@
 
       data                  doinit / .true. /
 
-
 !
 !     Rather than always making function calls we store the
 !     values of the PI dependent constants the first time
@@ -768,12 +753,10 @@
 !        HEAD           points to the most recently used ephemeris
 !                       model.
 !
-!
          head            = 1
 
          list(prev,head) = nil
          list(next,1   ) = 2
-
 
          do i = 2,nmodl-1
             list(next,i) = i+1
@@ -837,7 +820,6 @@
          newgeo = .false.
 
       end if
-
 
 !
 !     Fetch all of the pieces of this model.
@@ -928,7 +910,6 @@
          head = n
 
       end if
-
 
       if ( recog .and. .not. newgeo ) then
 !
@@ -1184,7 +1165,6 @@
 !
       tsince = tsince / 60.0_wp
 
-
       xmdf   = xmo      +   xmdot  * tsince
       omgadf = omegao   +   omgdot * tsince
       xnoddf = xnodeo   +   xnodot * tsince
@@ -1196,7 +1176,6 @@
       tempa  = 1.0_wp   -  c1     * tsince
       tempe  = bstar   *  c4     * tsince
       templ  = t2cof   *  tsq
-
 
       if(perige > 220.0_wp ) then
 
@@ -1230,8 +1209,6 @@
 !
 !     BETA =  DSQRT( 1.0D0 - E*E )
 !
-
-
 
       xn   =  ke/a**1.5_wp
 
@@ -1298,7 +1275,6 @@
 !     phase of the root extraction.
 !
 !     few steps using bisection.
-!
 !
 !     For the benefit of those interested
 !     here's the basics of what we'll do.
@@ -1392,7 +1368,6 @@
 !
 !               EPW = U - F(EPW).
 !
-!
 !     or that
 !
 !               U = EPW + F(EPW).
@@ -1401,7 +1376,6 @@
 !     is within a tolerance of EPW and then switch to
 !     a Newton's method. (We'll compute the tolerance using
 !     the value of M given above).
-!
 !
 !     For the Newton's method portion of the problem, recall
 !     from Taylor's formula that:
@@ -1418,7 +1392,6 @@
 !                       f'(x_0)      f'(x_0)
 !
 !     Thus the error in the Newton approximation
-!
 !
 !                       f(x_0)
 !           x = x_0  -  -------
@@ -1459,7 +1432,6 @@
 
       m      = dsqrt ( axn*axn + ayn*ayn )
       mov1m  = dabs  ( m / ( 1.0_wp - m ) )
-
 
       fmod2p = dmod(xlt-xnode,pix2)
 
@@ -1577,7 +1549,6 @@
             upper = lower
          end if
 
-
       else if ( f < 0 ) then
 
          fl    = f
@@ -1643,7 +1614,6 @@
 
       end do
 
-
 !
 !     Short period preliminary quantities
 !
@@ -1690,7 +1660,6 @@
          u = 0.0_wp
 
       end if
-
 
       sin2u = 2.0_wp * sinu * cosu
       cos2u = 2.0_wp * cosu * cosu  -  1.0_wp
@@ -1739,7 +1708,6 @@
       state(4) = tokmps  * ( rdotk * ux     +   rfdotk * vx )
       state(5) = tokmps  * ( rdotk * uy     +   rfdotk * vy )
       state(6) = tokmps  * ( rdotk * uz     +   rfdotk * vz )
-
 
       return
       end

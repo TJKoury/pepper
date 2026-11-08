@@ -103,13 +103,11 @@
 !
 !               IF ( RETURN() )  RETURN
 !
-!
 !               [ rest of code goes here]
 !
 !                         .
 !                         .
 !                         .
-!
 !
 !     2. Here's how one might code a sequence of calls
 !         to routines with code that follows the pattern
@@ -199,13 +197,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     immediate return indicator
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -228,7 +224,6 @@
 !        Added parentheses to the declaration of RETURN.
 !
 !-&
-
 
 !
 !     SPICELIB functions

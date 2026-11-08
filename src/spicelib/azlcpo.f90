@@ -147,7 +147,6 @@
 !                 'CN+S'     Converged Newtonian light time
 !                            and stellar aberration corrections.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -180,7 +179,6 @@
 !                 'XCN+S'    "Transmission" case: converged
 !                            Newtonian light time and stellar
 !                            aberration corrections.
-!
 !
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
@@ -449,7 +447,6 @@
 !        using the data provided in the kernel pool for the DSS-14
 !        station.
 !
-!
 !        Task description
 !        ================
 !
@@ -480,13 +477,11 @@
 !        from the station location at an epoch specified in the
 !        documentation of that kernel.
 !
-!
 !        Kernels
 !        =======
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -527,9 +522,7 @@
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM AZLCPO_EX1
 !              IMPLICIT NONE
@@ -702,10 +695,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        AZ/EL coordinates (from AZLCPO):
 !
@@ -730,7 +721,6 @@
 !           d Range/dt     (km/s)  =          13.41734176
 !           d Azimuth/dt   (deg/s) =           0.00238599
 !           d Elevation/dt (deg/s) =          -0.00339644
-!
 !
 !        Note the discrepancy in the AZ/EL coordinates found by the two
 !        computation methods. Please refer to the task description for
@@ -779,7 +769,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     AZ/EL_coordinates relative to constant_position_observer
@@ -788,7 +777,6 @@
 !     AZ/EL_coordinates relative to landmark on extended_object
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -840,7 +828,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Get the center of motion ID code here, since it will be

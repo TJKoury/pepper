@@ -152,7 +152,6 @@
 !
 !     Below are some examples of messages created by this routine.
 !
-!
 !    1)   At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
 !         TDB), there is insufficient information available to
 !         transform from reference frame -82000 (CASSINI_SC_COORD) to
@@ -174,7 +173,6 @@
 !         can use CKBRIEF with the -dump option to display coverage
 !         intervals of a CK file.
 !
-!
 !    2)   At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
 !         TDB), there is insufficient information available to
 !         transform from reference frame -82360 (CASSINI_ISS_NAC) to
@@ -190,7 +188,6 @@
 !         that no loaded CK file has required angular velocity data for
 !         the input epoch, even if a loaded CK does have attitude data
 !         for that epoch. You can use CKBRIEF with the -dump option to
-!
 !
 !     3)  At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
 !         TDB), there is insufficient information available to
@@ -208,7 +205,6 @@
 !         in order to use this frame. No SCLK kernel for instrument or
 !         structure -41001, with corresponding SCLK ID -41, is
 !         currently loaded.
-!
 !
 !     4)  At epoch 2.8149297000000E+08 TDB (2008 DEC 02 12:29:30.000
 !         TDB), there is insufficient information available to
@@ -267,7 +263,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -310,7 +305,6 @@
 !     signaled, we have to check in.
 !
       if ( return() ) return
-
 
 !
 !     Capture input IDs in arrays.
@@ -366,7 +360,6 @@
       //       'transform from reference frame # (@) to ' &
       //       'reference frame # (@).'
 
-
       call repmf ( errmsg, '#', et,     14, 'E', errmsg )
       call repmc ( errmsg, '#', timstr,          errmsg )
 
@@ -412,8 +405,6 @@
 
                if ( failed() ) return
 
-
-
                if ( found ) then
 
                   if ( class == ck ) then
@@ -447,7 +438,6 @@
                         call repmi ( phrase, '#', sclkid, phrase )
 
                         call suffix ( phrase, 1, errmsg )
-
 
                      else
 !
@@ -484,7 +474,6 @@
             call frinfo ( frames(i), center, class, clssid, found )
 
             if ( failed() ) return
-
 
             if ( found ) then
 

@@ -21,14 +21,14 @@ module pepper_state_zzddhppf
 
    !> The saved variables of ZZDDHPPF.
    type, public :: zzddhppf_state
-      logical :: first  !! saved between calls by ZZDDHPPF
-      character(sizdlm) :: ftpdlm  !! saved between calls by ZZDDHPPF
-      character(sizend) :: ftplft  !! saved between calls by ZZDDHPPF
-      character(sizstr) :: ftpmem  !! saved between calls by ZZDDHPPF
-      character(sizend) :: ftprgt  !! saved between calls by ZZDDHPPF
-      character(1) :: null  !! saved between calls by ZZDDHPPF
-      character(strsiz) :: strarc ( numarc )  !! saved between calls by ZZDDHPPF
-      character(strsiz) :: strbff ( nullid )  !! saved between calls by ZZDDHPPF
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizdlm) :: ftpdlm  !! delimiter of the FTP validation string
+      character(sizend) :: ftplft  !! left bracket of the FTP validation string
+      character(sizstr) :: ftpmem  !! the FTP validation string without its brackets
+      character(sizend) :: ftprgt  !! right bracket of the FTP validation string
+      character(1) :: null  !! the null character
+      character(strsiz) :: strarc ( numarc )  !! names of the architectures
+      character(strsiz) :: strbff ( nullid )  !! names of the binary file formats
    end type zzddhppf_state
 
 contains

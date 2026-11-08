@@ -85,7 +85,6 @@
 !         The time system used in a kernel is TDB if and only if the
 !         variable is assigned the value 1.
 !
-!
 !     3)  If the clock type for the spacecraft clock identified by
 !         SC is not supported by this routine, the error
 !         SPICE(NOTSUPPORTED) is signaled. The output argument SCLKDP
@@ -176,7 +175,6 @@
 !                    .             STATE,
 !                    .             LT      )
 !
-!
 !     2)  Convert UTC to an encoded Voyager 2 SCLK value.
 !
 !            Again, your initialization code must load the leapseconds
@@ -187,7 +185,6 @@
 !               C
 !                     CALL FURNSH ( 'LEAPSECONDS.KER' )
 !                     CALL FURNSH ( 'VGR2SCLK.KER'    )
-!
 !
 !            To find the encoded Voyager 2 SCLK value SCLKDP
 !            corresponding to a UTC time, you can use the code fragment
@@ -257,13 +254,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ephemeris time to spacecraft_clock ticks
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -271,7 +266,6 @@
       logical               return
 
       integer(ip)           sctype
-
 
 !
 !     Standard SPICE error handling.
@@ -293,7 +287,6 @@
          return
 
       end if
-
 
       return
       end

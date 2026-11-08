@@ -251,13 +251,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK type_4 record
 !
 !-&
-
 
 !
 !     SPICELIB functions

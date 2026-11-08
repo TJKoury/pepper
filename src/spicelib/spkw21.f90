@@ -257,13 +257,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_21 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -297,7 +295,6 @@
 
       integer(ip), parameter :: dirsiz = 100
 
-
 !
 !     Local variables
 !
@@ -313,12 +310,10 @@
       integer(ip)           maxdsz
       integer(ip)           refcod
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Make sure the difference line size is within limits.
@@ -470,7 +465,6 @@
 !
       maxdim = ( dlsize - 11 ) / 4
       kqmloc = ( 4 * maxdim  ) + 8
-
 
       do i = 1, n
 !

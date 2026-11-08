@@ -124,15 +124,11 @@
       integer(ip)           segdsc ( sdscsz )
       integer(ip)           stype
 
-!
-!     Use discovery check-in.
-!
       zzekrp2n  =  0
 
       call zzeksdsc ( handle, segno, segdsc )
 
       if ( failed() ) return
-
 
       stype = segdsc ( ektidx )
 
@@ -150,7 +146,6 @@
             call sigerr ( 'SPICE(BUG)'                            )
 
          end if
-
 
       else if ( stype == 2 ) then
 

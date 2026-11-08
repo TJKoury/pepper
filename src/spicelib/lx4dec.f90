@@ -159,13 +159,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Scan a string for a signed integer.
 !
 !-&
-
 
       integer(ip)           f
       integer(ip)           i

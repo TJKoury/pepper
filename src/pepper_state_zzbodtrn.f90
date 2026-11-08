@@ -23,66 +23,45 @@ module pepper_state_zzbodtrn
 
    !> The saved variables of ZZBODTRN.
    type, public :: zzbodtrn_state
-      character(maxl) :: defnam  ( maxe )  !! DEFNAM, DEFNOR, and DEFCOD are the name, normalized
-                                           !! name, and ID code lists storing built-in/BODDEF name-
-                                           !! code mappings. DEFSIZ is the current size of the lists
-      character(maxl) :: defnor  ( maxe )  !! saved between calls by ZZBODTRN
-      integer(ip) :: defcod  ( maxe )  !! saved between calls by ZZBODTRN
-      integer(ip) :: defsiz  !! saved between calls by ZZBODTRN
-      integer(ip) :: dnmlst  (          maxe )  !! name-based hash for built-in/BODDEF bodies.
-                                                !! DNMLST, DNMPOL, and DNMNMS provide the index in
-                                                !! DNMIDX which stores the index of the body name,
-                                                !! normalized name, and ID in the arrays DEFNAM,
-                                                !! DEFNOR, DEFCOD.
-      integer(ip) :: dnmpol  ( lbpool : maxe )  !! saved between calls by ZZBODTRN
-      character(maxl) :: dnmnms  (          maxe )  !! saved between calls by ZZBODTRN
-      integer(ip) :: dnmidx  (          maxe )  !! saved between calls by ZZBODTRN
-      integer(ip) :: didlst  (          maxe )  !! ID-based hash for built-in/BODDEF bodies. DIDLST,
-                                                !! DIDPOL, and DIDIDS provide the index in DIDIDX
-                                                !! which stores the index of the body name,
-                                                !! normalized name, and ID in the arrays DEFNAM,
-                                                !! DEFNOR, DEFCOD.
-      integer(ip) :: didpol  ( lbpool : maxe )  !! saved between calls by ZZBODTRN
-      integer(ip) :: didids  (          maxe )  !! saved between calls by ZZBODTRN
-      integer(ip) :: dididx  (          maxe )  !! saved between calls by ZZBODTRN
-      character(maxl) :: kernam  ( nroom )  !! KERNAM, KERNOR, and KERCOD are the name, normalized
-                                            !! name, and ID code lists storing kernel POOL name-code
-                                            !! mappings. KERSIZ is the current size of the lists
-      character(maxl) :: kernor  ( nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: kercod  ( nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: kersiz  !! saved between calls by ZZBODTRN
-      integer(ip) :: knmlst  (          nroom )  !! name-based hash for kernel POOL bodies. KNMLST,
-                                                 !! KNMPOL, and KNMNMS provide the index in KNMIDX
-                                                 !! which stores the index of the body name,
-                                                 !! normalized name, and ID in the arrays KERNAM,
-                                                 !! KERNOR, KERCOD.
-      integer(ip) :: knmpol  ( lbpool : nroom )  !! saved between calls by ZZBODTRN
-      character(maxl) :: knmnms  (          nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: knmidx  (          nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: kidlst  (          nroom )  !! ID-based hash for kernel POOL bodies. KIDLST,
-                                                 !! KIDPOL, and KIDIDS provide the index in KIDIDX
-                                                 !! which stores the index of the body name,
-                                                 !! normalized name, and ID in the arrays KERNAM,
-                                                 !! KERNOR, KERCOD.
-      integer(ip) :: kidpol  ( lbpool : nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: kidids  (          nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: kididx  (          nroom )  !! saved between calls by ZZBODTRN
-      integer(ip) :: subctr ( ctrsiz )  !! ZZBODTRN state counter and POOL state counter.
-      integer(ip) :: pulctr ( ctrsiz )  !! saved between calls by ZZBODTRN
-      logical :: bodchg  !! flag indicating whether the built-in list was altered by BODDEF calls.
-      logical :: extker  !! flag indicating whether valid kernel POOL defined mappings are present
-                         !! in the KERNAM, KERNOR, and KERCOD lists.
-      logical :: nodata  !! flag indicating whether valid kernel POOL defined mappings were
-                         !! successfully fetched from the POOL.
-      character(maxl) :: tmpnam  !! other variables.
-      character(wdsize) :: wnames  ( 2 )  !! saved between calls by ZZBODTRN
-      integer(ip) :: codidx  !! saved between calls by ZZBODTRN
-      integer(ip) :: i  !! saved between calls by ZZBODTRN
-      integer(ip) :: index  !! saved between calls by ZZBODTRN
-      integer(ip) :: j  !! saved between calls by ZZBODTRN
-      integer(ip) :: nwatch  !! saved between calls by ZZBODTRN
-      logical :: first  !! saved between calls by ZZBODTRN
-      logical :: lupdte  !! saved between calls by ZZBODTRN
+      character(maxl) :: defnam  ( maxe )  !! names of the built-in and BODDEF-defined bodies
+      character(maxl) :: defnor  ( maxe )  !! the names, normalized (uppercase, single blanks)
+      integer(ip) :: defcod  ( maxe )  !! their NAIF ID codes
+      integer(ip) :: defsiz  !! number of built-in and defined names
+      integer(ip) :: dnmlst  (          maxe )  !! hash table of the defined names: head nodes
+      integer(ip) :: dnmpol  ( lbpool : maxe )  !! hash table of the defined names: collision lists
+      character(maxl) :: dnmnms  (          maxe )  !! hash table of the defined names: the names
+      integer(ip) :: dnmidx  (          maxe )  !! hash table of the defined names: index of each
+                                                !! name in defnam
+      integer(ip) :: didlst  (          maxe )  !! hash table of the defined codes: head nodes
+      integer(ip) :: didpol  ( lbpool : maxe )  !! hash table of the defined codes: collision lists
+      integer(ip) :: didids  (          maxe )  !! hash table of the defined codes: the codes
+      integer(ip) :: dididx  (          maxe )  !! hash table of the defined codes: index of each
+                                                !! code in defcod
+      character(maxl) :: kernam  ( nroom )  !! names from the kernel pool (NAIF_BODY_NAME)
+      integer(ip) :: kercod  ( nroom )  !! codes from the kernel pool (NAIF_BODY_CODE)
+      integer(ip) :: knmlst  (          nroom )  !! hash table of the kernel pool names: head nodes
+      integer(ip) :: knmpol  ( lbpool : nroom )  !! hash table of the kernel pool names: collision
+                                                 !! lists
+      character(maxl) :: knmnms  (          nroom )  !! hash table of the kernel pool names: the
+                                                     !! names
+      integer(ip) :: knmidx  (          nroom )  !! hash table of the kernel pool names: index of
+                                                 !! each name in kernam
+      integer(ip) :: kidlst  (          nroom )  !! hash table of the kernel pool codes: head nodes
+      integer(ip) :: kidpol  ( lbpool : nroom )  !! hash table of the kernel pool codes: collision
+                                                 !! lists
+      integer(ip) :: kidids  (          nroom )  !! hash table of the kernel pool codes: the codes
+      integer(ip) :: kididx  (          nroom )  !! hash table of the kernel pool codes: index of
+                                                 !! each code in kercod
+      integer(ip) :: subctr ( ctrsiz )  !! body name state counter (changes when the name tables
+                                        !! change)
+      integer(ip) :: pulctr ( ctrsiz )  !! the pool state counter when the kernel pool tables were
+                                        !! built
+      logical :: bodchg  !! the defined names changed
+      logical :: extker  !! the kernel pool defines names
+      logical :: nodata  !! the kernel pool tables have not been built yet
+      integer(ip) :: i  !! work variable (saved in SPICELIB; not shown to carry a value between
+                        !! calls)
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
       integer(ip) :: boddef_epoch  !! the instance's boddef_epoch these tables include
    end type zzbodtrn_state
 
@@ -94,8 +73,6 @@ contains
       state%bodchg = .false.
       state%extker = .false.
       state%nodata = .true.
-      state%wnames = [ character(len(state%wnames)) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE' ]
-      state%nwatch = 2
       state%first = .true.
       state%boddef_epoch = 0
    end subroutine init_zzbodtrn_state

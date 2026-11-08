@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekcnamsz.inc'
       include  'ekcoldsc.inc'
@@ -299,7 +298,6 @@
 
       end if
 
-
       if ( ndata > 0 ) then
 !
 !        There's some data to write, so allocate a page.  Also
@@ -345,7 +343,6 @@
 !
          from  =  from   + 1
 
-
          if (  nullok  .and.  ( nlflgs(from) )  ) then
 
             adrbuf(bufptr) =  null
@@ -378,7 +375,6 @@
             to      =   n  +  1
             nchars  =   strlen
 
-
             do while ( nchars > 0 )
 
                room  =  cpsize - n
@@ -400,7 +396,6 @@
                   call prtdec ( page(clcidx:clcidx+encsiz-1),   nlinks )
 
                   call prtenc ( nlinks+1, page(clcidx:clcidx+encsiz-1) )
-
 
                else
 !
@@ -449,7 +444,6 @@
 !
             nwrite  =  nwrite + 1
 
-
          end if
 !
 !        We're done with the current column entry, null or not.
@@ -477,7 +471,6 @@
 
             end if
 
-
          else if ( n > 0 ) then
 !
 !           We've written the last of the non-null data to the current
@@ -488,9 +481,7 @@
 
          end if
 
-
          remain  =  remain - 1
-
 
          if (  ( bufptr == bufsiz ) .or. ( remain == 0 )  ) then
 !
@@ -537,7 +528,6 @@
          call dasudi ( handle,  dscbas+ixpidx,  dscbas+ixpidx,  tree )
 
       end if
-
 
       return
       end

@@ -166,8 +166,6 @@
       integer(ip)           segno
 
 !
-!     Use discovery check-in.
-!
 !     Nothing found to begin with.
 !
       found  =  .false.
@@ -203,7 +201,6 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 1 ) then
 !
 !        Class 1 columns contain scalar, integer entries.
@@ -212,14 +209,12 @@
 
          found  =  .true.
 
-
       else if ( class == 4 ) then
 !
 !        Class 4 columns contain integer array entries.
 !
          call zzekrd04 ( handle,  segdsc,  coldsc,  recptr, &
                          eltidx,  eltidx,  ival,    isnull,  found )
-
 
       else if ( class == 7 ) then
 !
@@ -229,7 +224,6 @@
          call zzekrd07 ( handle, segdsc, coldsc, recptr, ival, isnull )
 
          found  =  .true.
-
 
       else
 

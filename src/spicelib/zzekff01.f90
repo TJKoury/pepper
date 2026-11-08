@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include 'ekdatpag.inc'
       include 'ekglimit.inc'
       include 'ekpage.inc'
@@ -166,7 +165,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Initialize all arrays.
 !
@@ -214,7 +212,6 @@
 !     ordinal position of each column is stored on the stack right
 !     before its address data.  COLORD will map ordinal positions given
 !     by a column declaration to ordinal positions on the stack.
-!
 !
       do i = 1, ncols
 
@@ -305,7 +302,6 @@
 !
          call zzekpgwi ( handle, p, ipage )
 
-
          recno   =  recno   +  nr
          remain  =  remain  -  nr
 
@@ -329,7 +325,6 @@
       call dasudi   (  handle,  base+lcwidx,  base+lcwidx,  cpsize  )
       call dasudi   (  handle,  base+ldwidx,  base+ldwidx,  dpsize  )
       call dasudi   (  handle,  base+liwidx,  base+liwidx,  ipsize  )
-
 
       return
       end

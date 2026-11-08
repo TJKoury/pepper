@@ -455,7 +455,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -479,7 +478,6 @@
 !
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
-!
 !
 !     Step Size
 !     =========
@@ -521,7 +519,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -560,7 +557,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -611,7 +607,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find times during the first three months of the year 2007 when
 !        the geometric Earth-Moon distance is greater than 400000 km.
 !        Display the start and stop times of the time intervals over
@@ -627,7 +622,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -652,7 +646,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -663,9 +656,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFDIST_EX1
 !              IMPLICIT NONE
@@ -817,10 +808,8 @@
 !              END IF
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Start time, distance = 2007-JAN-08 00:10:02.439  400000.0000000
 !        Stop time,  distance = 2007-JAN-13 06:36:42.770  400000.0000000
@@ -831,12 +820,10 @@
 !        Start time, distance = 2007-MAR-29 22:52:52.961  400000.0000000
 !        Stop time,  distance = 2007-APR-01 00:00:00.000  404531.9552322
 !
-!
 !        Note that the distance at the final solutions interval's stop
 !        time is not close to the reference value of 400000 km. This is
 !        because the interval's stop time was determined by the stop
 !        time of the confinement window.
-!
 !
 !     2) Extend the first example to demonstrate use of all supported
 !        relational operators. Find times when
@@ -862,9 +849,7 @@
 !
 !        Use the meta-kernel from the first example.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFDIST_EX2
 !              IMPLICIT NONE
@@ -1092,10 +1077,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Condition: distance = 4.00000E+05 km
 !         Result window:
@@ -1158,7 +1141,6 @@
 !          Start time, distance = 2007-MAR-06 15:56:00.957  405753.45213
 !          Stop time,  distance = 2007-MAR-07 15:00:38.674  405753.45213
 !
-!
 ! $ Restrictions
 !
 !     1)  The kernel files to be used by this routine must be loaded
@@ -1206,13 +1188,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF distance search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1270,12 +1250,10 @@
 
       logical               qlpars ( qnpars )
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Check the workspace window dimensions.

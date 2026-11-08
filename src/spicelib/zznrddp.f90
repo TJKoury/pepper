@@ -36,7 +36,6 @@
       real(wp)              xnodot
       real(wp)              xnodp
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  DESCRIPTION
@@ -484,14 +483,12 @@
 
       logical               return
 
-
 !
 !     Define rather a large number of local parameters.
 !
       real(wp), parameter :: zns = 1.19459e-5_wp
 
       real(wp), parameter :: c1ss = 2.9864797e-6_wp
-
 
       real(wp), parameter :: zes = 0.01675_wp
 
@@ -535,12 +532,10 @@
 
       real(wp), parameter :: one = 1.0_wp
 
-
 !
 !     Save everything just to be sure.
 !
       save
-
 
 !
 !     Standard SPICE error handling.
@@ -558,12 +553,7 @@
 
       call sigerr ( 'SPICE(EVILBOGUSENTRY)' )
 
-
       return
-
-
-
-
 
 !$Procedure ZZDPINIT (Initialize deep space algorithm and variables )
 
@@ -725,7 +715,6 @@
 !
 !-    SPICELIB Version 1.0.0, APR-30-1997 (EDW)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -757,7 +746,6 @@
       cosq2  = cosiq**2
       sinomo = dsin( omegao )
       cosomo = dcos( omegao )
-
 
 !
 !     This section of code was previously performed by the THETAG
@@ -796,7 +784,6 @@
       theta  = 1.72944494_wp + 6.3003880987_wp * ds50
       thgr   = dmod( theta, pix2 )
 
-
 !
 !     THGR should have a domain between 0 and 2 Pi.
 !
@@ -815,13 +802,11 @@
       sinq   = dsin( xnodeo )
       cosq   = dcos( xnodeo )
 
-
 !
 !     Initialize lunar solar terms
 !
 
       day = ds50 + 18261.5_wp
-
 
       if ( day /= preep ) then
 
@@ -873,8 +858,6 @@
          end if
 
       end if
-
-
 
 !
 !     Do solar terms.  Start with the constant values.
@@ -1029,9 +1012,7 @@
 
          end if
 
-
       end do
-
 
       ssx(1) = ssx(1) + sl
 
@@ -1081,7 +1062,6 @@
       else
 
          if ( xnq <(8.26e-3_wp) .or. xnq >(9.24e-3_wp) .or. eq  < 0.5_wp        ) return
-
 
          iresfl = 1
          eoc    = eq*eqsq
@@ -1134,7 +1114,6 @@
 
          end if
 
-
          if( eq >=(0.7_wp) ) then
 
             g533  = -37995.78_wp + 161616.52_wp*eq - &
@@ -1154,7 +1133,6 @@
                     8624.77_wp*eqsq + 5341.4_wp*eoc
 
          end if
-
 
          sini2    = siniq*siniq
 
@@ -1219,10 +1197,6 @@
       atime = zero
 
       return
-
-
-
-
 
 !$Procedure ZZDPSEC (Calculate secular perturbations )
 
@@ -1403,12 +1377,10 @@
       em     = eo      +  ssx(4) * t
       xinc   = xincl   +  ssx(5) * t
 
-
 !
 !     Check for the state of the resonance flag.
 !
       if ( iresfl == 0) return
-
 
 !
 !     If we got down here then the resonance effects need to be
@@ -1431,13 +1403,11 @@
                delt = stepn
             end if
 
-
             atime = zero
             xni   = xnq
             xli   = xlamo
 
             cont = .false.
-
 
          else if ( dabs( t )>= dabs(atime) ) then
 
@@ -1449,7 +1419,6 @@
 
             cont = .false.
 
-
          else
 
             delt = stepp
@@ -1457,7 +1426,6 @@
             if ( t >= zero ) then
                delt = stepn
             end if
-
 
             call zzsecprt ( isynfl, dg   , del   , xni, &
                             omegao, atime, omgdot, xli, &
@@ -1472,7 +1440,6 @@
          end if
 
       end do
-
 
 !
 !     Do this loop while the time interval is greater than STEPP
@@ -1490,7 +1457,6 @@
 
       end do
 
-
 !
 !     Calculate the time interval and determine the secular
 !     perturbations
@@ -1507,17 +1473,11 @@
       temp  =-xnodes + thgr       + t     * thdt
       xll   = xl     - omgasm     + temp
 
-
       if ( isynfl == 0) then
          xll = xl + temp + temp
       end if
 
-
       return
-
-
-
-
 
 !$Procedure ZZDPPER ( Calculate periodic perturbations )
 
@@ -1659,7 +1619,6 @@
 !
 !-    SPICELIB Version 1.0.0, MAY-17-1997 (EDW)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -1667,7 +1626,6 @@
 !     two line elements, periodic perturbation
 !
 !-&
-
 
 !
 !     Time varying periodic terms.
@@ -1686,7 +1644,6 @@
       sls    =  sl2*f2 +  sl3*f3 +  sl4*sinzf
       sghs   = sgh2*f2 + sgh3*f3 + sgh4*sinzf
       shs    =  sh2*f2 +  sh3*f3
-
 
 !
 !     Update for lunar perts at time T.
@@ -1711,7 +1668,6 @@
       pgh    = sghs + sghl
       ph     = shs  + shl
 
-
 !
 !     Subtract the epoch perturbations off the calculated values.
 !
@@ -1724,7 +1680,6 @@
       xinc  = xinc + pinc
       em    = em   + pe
 
-
 !
 !     Sin and Cos of the perturbed inclination.  The original
 !     Spacetrack 3 report calculated the values before the
@@ -1732,7 +1687,6 @@
 !
       sinis = dsin( xinc )
       cosis = dcos( xinc )
-
 
       if ( xqncl> (0.2_wp) ) then
 
@@ -1764,7 +1718,6 @@
          xls = xll + omgasm + pl + pgh +  cosis * xnodes &
                                        -  sinis * xnodes * pinc
 
-
 !
 !        Compute the angle from the x-axis of the point
 !
@@ -1785,7 +1738,6 @@
                xnodes = xnodes + pix2
             end if
 
-
 !
 !           XNODES should be the angular difference between the previous
 !           value of XNODES and that just calculated.  This is a
@@ -1802,7 +1754,6 @@
                end if
 
             end if
-
 
          else
             xnodes = zero

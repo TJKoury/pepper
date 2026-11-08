@@ -126,9 +126,7 @@
 !        fashion by updating the file. Recall that data must be present
 !        in the file before it can be updated.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASUDD_EX1
 !              IMPLICIT NONE
@@ -204,10 +202,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasudd_ex1.das":
 !
@@ -236,7 +232,6 @@
 !          177.0  178.0  179.0  180.0  181.0  182.0  183.0  184.0
 !          185.0  186.0  187.0  188.0  189.0  190.0  191.0  192.0
 !          193.0  194.0  195.0  196.0  197.0  198.0  199.0  200.0
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -298,13 +293,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update double precision data in a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -315,7 +308,6 @@
 !        signaled an error inside the loop.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -395,7 +387,6 @@
 !
 !     Note that if N is non-positive, the loop doesn't get exercised.
 !
-!
       nwritn  =  0
 
       do while (  ( nwritn < n ) .and. ( .not. failed() )  )
@@ -450,7 +441,6 @@
          end if
 
       end do
-
 
       return
       end

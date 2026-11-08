@@ -185,13 +185,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of CK type_1 records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -231,12 +229,10 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Local parameters
@@ -259,14 +255,10 @@
       real(wp)              dcd  ( ndc )
       real(wp)              n
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of pointing records contained in a data type 1
@@ -286,7 +278,6 @@
 !        ICD(4)  Angular velocity flag
 !        ICD(5)  Initial address of segment data
 !        ICD(6)  Final address of segment data
-!
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 

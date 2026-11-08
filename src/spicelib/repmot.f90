@@ -146,9 +146,7 @@
 !        replace a marker within a string with the ordinal text
 !        corresponding to an integer.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REPMOT_EX1
 !              IMPLICIT NONE
@@ -165,7 +163,6 @@
 !              CHARACTER*(STRLEN)      INSTR
 !              CHARACTER*(STRLEN)      MARKER
 !              CHARACTER*(STRLEN)      OUTSTR
-!
 !
 !        C
 !        C     1. Uppercase
@@ -208,10 +205,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Case 1: Replacement text in uppercase.
 !            Input : INVALID COMMAND. # WORD NOT RECOGNIZED.
@@ -224,7 +219,6 @@
 !         Case 3: Replacement text capitalized.
 !            Input : Name:  YY.  Rank:  XX.
 !            Output: Name:  Moriarty.  Rank:  Fifth.
-!
 !
 ! $ Restrictions
 !
@@ -279,13 +273,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace marker with ordinal text
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -306,12 +298,10 @@
       integer(ip)           mrkpsb
       integer(ip)           mrkpse
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Bail out if RTCASE is not recognized.
@@ -354,7 +344,6 @@
       if  ( mrkpsb == 0 ) then
 
          out = in
-
 
          return
 

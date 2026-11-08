@@ -177,7 +177,6 @@
 !     spheroids of low eccentricity, lie close to the level surfaces at
 !     heights HMIN and HMAX. A discussion of the method follows.
 !
-!
 !     Explanation
 !     ===========
 !
@@ -205,17 +204,14 @@
 !
 !           (A + LAMBDA/A), (B + LAMBDA/B)
 !
-!
 !        For any point (x,y) on E, the height of E' above that point is
 !
 !           LAMBDA*||N||
 !
 !        The square of this height HSQ is
 !
-!
 !                       2
 !           HSQ = LAMBDA  * <N, N>
-!
 !
 !                               2      2
 !                       2      x      y
@@ -234,7 +230,6 @@
 !               = LAMBDA  * ( ---- (----  -  ----) +  ---- )
 !                               2     2        2        2
 !                              A     A        B        B
-!
 !
 !        If A = B, this expression is constant.
 !
@@ -262,8 +257,6 @@
 !           If HMIN >  0    E' will have height HMIN at x = 0 and
 !                           height <= HMIN if 0 < x <= A.
 !
-!
-!
 !     Application to prolate spheroids
 !     ================================
 !
@@ -286,7 +279,6 @@
 !     lengths
 !
 !        BMIN, BMIN, AMIN
-!
 !
 ! $ Examples
 !
@@ -335,8 +327,6 @@
 !
 !-&
 
-
-!
 !
 !     Use discovery check-in.
 !
@@ -391,7 +381,6 @@
 
       end if
 
-
       if ( hmin > hmax ) then
 
          call setmsg ( 'This routine requires HMAX >= HMIN, but ' &
@@ -406,7 +395,6 @@
 !
 !     In the following comments, N, E, E', and LAMBDA are
 !     defined as in the Particulars section above.
-!
 !
 !     Generate radii of the outer bounding ellipsoid.
 !
@@ -438,7 +426,6 @@
 !
 !           AMAX =  A + LAMBDA*A/A**2  =  A + HMAX
 !           BMAX =  B + LAMBDA*B/B**2  =  B + HMAX*(A/B)
-!
 !
          amax = a  +  hmax
          bmax = b  +  hmax * (a/b)
@@ -496,4 +483,3 @@
       end if
 
       end
-

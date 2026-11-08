@@ -134,7 +134,6 @@
 !                               correction and stellar aberration
 !                               correction.
 !
-!
 !                 The following values of ABCORR apply to the
 !                 "transmission" case in which photons *depart* from
 !                 the observer's location at ET and arrive at the
@@ -335,14 +334,12 @@
 !           it may be more accurate to use no correction at all than to
 !           use light time alone.
 !
-!
 !        2) Find the corrected pointing direction to radiate a signal
 !           to a target. This computation is often applicable for
 !           implementing communications sessions.
 !
 !              Use 'XLT+S' or 'XCN+S: apply both light time and stellar
 !              aberration corrections for transmission.
-!
 !
 !        3) Compute the apparent position of a target body relative
 !           to a star or other distant object.
@@ -356,7 +353,6 @@
 !              vector from the observer to the planet should be
 !              corrected for light time but not stellar aberration.
 !
-!
 !        4) Obtain an uncorrected state vector derived directly from
 !           data in an SPK file.
 !
@@ -369,7 +365,6 @@
 !
 !              Use 'NONE'.
 !
-!
 !        6) While this routine cannot perform the relativistic
 !           aberration corrections required to compute states
 !           with the highest possible accuracy, it can supply the
@@ -378,10 +373,8 @@
 !              Use 'NONE', then apply high-accuracy aberration
 !              corrections (not available in the SPICE Toolkit).
 !
-!
 !     Below, we discuss in more detail how the aberration corrections
 !     applied by this routine are computed.
-!
 !
 !     Geometric case
 !     ==============
@@ -399,7 +392,6 @@
 !        The geometric relationship between the observer, target, and
 !        solar system barycenter is as shown:
 !
-!
 !           SSB ---> O(ET)
 !            |      /
 !            |     /
@@ -407,7 +399,6 @@
 !            |   /  T(ET) - O(ET)
 !            V  V
 !           T(ET)
-!
 !
 !        The returned state consists of the position vector
 !
@@ -417,7 +408,6 @@
 !        corresponding velocities.  In the geometric case, the
 !        returned velocity is actually the time derivative of the
 !        position.
-!
 !
 !     Reception case
 !     ==============
@@ -492,7 +482,6 @@
 !
 !        The velocity component of the output state STARG is
 !        not corrected for stellar aberration.
-!
 !
 !     Transmission case
 !     ==================
@@ -678,8 +667,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !-    SPICELIB Version 2.0.0, 22-MAY-1995 (WLT)
@@ -793,12 +780,10 @@
 
       data                  prvcor  / ' ' /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -903,7 +888,6 @@
 
       end if
 
-
       do i = 1, maxitr
 
          call zzspksb0 ( targ,  et + ltsign*lt,  ref,  starg  )
@@ -947,7 +931,6 @@
          end if
 
       end if
-
 
       return
       end

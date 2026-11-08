@@ -166,9 +166,7 @@
 !        The argument RECPTR was renamed to RECNO.  The reference to
 !        ZZEKRP2N was removed.
 !
-!
 !-&
-
 
 !
 !     Local variables
@@ -191,8 +189,6 @@
 
       logical               nullok
 
-!
-!     Use discovery check-in.
 !
 !     Make sure the column exists.
 !
@@ -302,7 +298,6 @@
       if ( len(cval) > l ) then
          cval( l+1 : )  =  ' '
       end if
-
 
       return
       end

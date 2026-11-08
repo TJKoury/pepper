@@ -181,9 +181,6 @@
 
       logical               hit
 
-!
-!     Use discovery check-in.
-!
       if ( ( njrs < 1 ) .or. ( njrs > mxjrs )  ) then
 
          call setmsg ( 'The number of join row sets in the union is #' )
@@ -233,7 +230,6 @@
 
          call zzeksrd  ( nsvloc, nsvloc, ncndsv  )
 
-
          do csv = 1, ncndsv
 !
 !           Look up the candidate segment vector.
@@ -259,7 +255,6 @@
 
             call zzeksrd ( base+2,  base+2,  ncndrv )
 
-
 !
 !           For the current predecessor join row set, look up the
 !           segment vectors in that join row set and compare them to the
@@ -273,7 +268,6 @@
                nsvloc = bases(pred) + jscidx
 
                call zzeksrd  ( nsvloc, nsvloc, nprdsv )
-
 
                do psv = 1, nprdsv
 !
@@ -316,20 +310,17 @@
 !
                      do crv = 1, ncndrv
 
-
                         base  =  crwbas + (crv-1)*rvsize
                         call zzeksrd ( base+1, base+rvsize, crwvec )
 
                         prv   =  1
                         hit   =  .false.
 
-
                         do while (         ( prv <=  nprdrv ) &
                                     .and.  (     .not. hit    )   )
 
                            base  =  prwbas + (prv-1)*rvsize
                            call zzeksrd ( base+1, base+rvsize, prwvec )
-
 
                            if ( sameai(crwvec, prwvec, rvsize) ) then
 !
@@ -352,7 +343,6 @@
                         end do
 
                      end do
-
 
                   end if
 !
@@ -381,7 +371,6 @@
       end do
 !
 !     We've compared all of the join row sets.
-!
 !
 !     Now, clean up the join row set union by compressing out deleted
 !     rows, segment vectors, and join row sets.
@@ -415,7 +404,6 @@
 
       end do
 
-
       njrs  = njrs - ndel
 
 !
@@ -432,7 +420,6 @@
          nrows = nrows + nr
 
       end do
-
 
       return
       end

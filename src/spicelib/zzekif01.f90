@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include 'ekdatpag.inc'
       include 'ekrecptr.inc'
       include 'eksegdsc.inc'
@@ -109,7 +108,6 @@
 !-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -208,7 +206,6 @@
          remain  =  remain  -  nr
 
       end do
-
 
       return
       end

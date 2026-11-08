@@ -19,7 +19,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcoldsc.inc'
       include 'ekdatpag.inc'
@@ -164,7 +163,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Is this file handle valid--is the file open for paged write
 !     access?  Signal an error if not.
@@ -179,7 +177,6 @@
       ptrloc  =  recptr + dptbas + coldsc(ordidx)
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
-
 
       if ( datptr > 0 ) then
 !
@@ -234,7 +231,6 @@
 
          end if
 
-
       else if ( datptr == null ) then
 !
 !        If the new entry is null too, there's nothing to do.
@@ -254,7 +250,6 @@
 !              for this column.
 !
                call zzekixdl ( handle,  segdsc,  coldsc, recptr )
-
 
             else if ( idxtyp /= ifalse ) then
 
@@ -281,14 +276,12 @@
 
          end if
 
-
       else if (      ( datptr == uninit ) &
                 .or. ( datptr == noback )  ) then
 !
 !        There is no current column entry.  Just add a new entry.
 !
          call zzekad02 ( handle, segdsc, coldsc, recptr, dval, isnull )
-
 
       else
 !
@@ -306,7 +299,6 @@
          return
 
       end if
-
 
       return
       end

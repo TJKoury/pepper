@@ -105,7 +105,6 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -116,11 +115,7 @@
       integer(ip)           r
       integer(ip)           tree
 
-!
-!     Use discovery check-in.
-!
       itype  =  coldsc ( ixtidx )
-
 
       if ( itype == 1 ) then
 !
@@ -130,7 +125,6 @@
          tree  = coldsc ( ixpidx )
 
          call zzektrdp ( handle, tree, key, recptr )
-
 
       else if ( itype == 2 ) then
 !
@@ -155,6 +149,5 @@
          return
 
       end if
-
 
       end

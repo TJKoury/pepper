@@ -85,7 +85,6 @@
 !     SCLK time and boresight vector for each pointing instance
 !     in the first segment in the file.
 !
-!
 !           INTEGER               ICD     ( 6 )
 !           INTEGER               HANDLE
 !           INTEGER               NREC
@@ -194,19 +193,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of CK type_5 records
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Local parameters
@@ -235,14 +231,10 @@
       real(wp)              dcd    ( ndc )
       real(wp)              npoint
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -262,7 +254,6 @@
 !        ICD(4)  Angular velocity flag
 !        ICD(5)  Initial address of segment data
 !        ICD(6)  Final address of segment data
-!
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 

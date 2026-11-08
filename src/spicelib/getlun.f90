@@ -152,13 +152,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get a free logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -174,27 +172,20 @@
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
       logical          return
-
-
 
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
 
-
-
 !
 !     Find a free logical unit, if there's one to be had.
 !
       call fndlun ( unit )
-
-
 
       if ( unit == 0 ) then
 !

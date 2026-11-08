@@ -96,7 +96,6 @@
 !                        SPECIAL RELATIVITY
 !        FERMI     -->   NUCLEAR FISSIONC
 !
-!
 !     Note that the call,
 !
 !        CALL SYORDC ( 'MAXWELL', TABSYM, TABPTR, TABVAL )
@@ -136,13 +135,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     order the components of a single symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -160,8 +157,6 @@
       integer(ip)           locsym
       integer(ip)           locval
       integer(ip)           n
-
-
 
 !
 !     Standard SPICE error handling.
@@ -189,7 +184,6 @@
          call shellc ( tabptr(locsym), tabval(locval) )
 
       end if
-
 
       return
       end

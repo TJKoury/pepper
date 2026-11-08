@@ -110,9 +110,6 @@
       integer(ip)           n
       integer(ip)           value
 
-!
-!     Use discovery check-in.
-!
       zzektrls  =  0
       n         =  zzektrsz ( handle, tree )
 

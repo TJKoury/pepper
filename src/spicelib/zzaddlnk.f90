@@ -82,7 +82,6 @@
 !     NCELL      Number of cells in use on output. NCELL is incremented
 !                by one relative to its input value.
 !
-!
 !     CELLS      is the input cell array, with a new entry. The element
 !
 !                   CELLS ( 1, PNTRS(AVAL) )
@@ -194,7 +193,6 @@
 !
 !-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -208,12 +206,10 @@
 !
       logical               return
 
-
 !
 !     Standard RETURN test.
 !
       if ( return() ) return
-
 
 !
 !     Test the pointer array index AVAL.

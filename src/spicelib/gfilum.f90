@@ -205,7 +205,6 @@
 !                 '<'      The angle is less than the reference
 !                          value REFVAL.
 !
-!
 !                'ABSMAX'  The angle is at an absolute maximum.
 !
 !                'ABSMIN'  The angle is at an absolute minimum.
@@ -510,7 +509,6 @@
 !     The term "illumination angles" refers to the following set of
 !     angles:
 !
-!
 !        phase angle              Angle between the vectors from the
 !                                 surface point to the observer and
 !                                 from the surface point to the
@@ -533,8 +531,6 @@
 !     defining these angles. The labels for the incidence, emission,
 !     and phase angles are "inc.", "e.", and "phase".
 !
-!
-!
 !                                                      *
 !                                              illumination source
 !
@@ -553,8 +549,6 @@
 !      viewing            vector            target body
 !      location           to viewing
 !      (observer)         location
-!
-!
 !
 !     Note that if the target-observer vector, the target normal vector
 !     at the surface point, and the target-illumination source vector
@@ -586,7 +580,6 @@
 !           observer will generally differ from the light time between
 !           the target body's center and the observer.
 !
-!
 !           Target body's orientation
 !           -------------------------
 !
@@ -594,7 +587,6 @@
 !           orientation at ET - LT is used. The surface normal is
 !           dependent on the target body's orientation, so the body's
 !           orientation model must be evaluated for the correct epoch.
-!
 !
 !           Target body -- illumination source vector
 !           -----------------------------------------
@@ -606,7 +598,6 @@
 !           from the target body at ET-LT. So, a second light time
 !           correction is used to compute the position of the
 !           illumination source relative to the surface point.
-!
 !
 !        Stellar aberration corrections
 !        ==============================
@@ -633,11 +624,9 @@
 !           time and stellar aberration, as seen from the surface point
 !           SPOINT at time ET-LT.
 !
-!
 !     Below we discuss in greater detail aspects of this routine's
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
-!
 !
 !     The Search Process
 !     ==================
@@ -662,7 +651,6 @@
 !
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
-!
 !
 !     Step Size
 !     =========
@@ -705,7 +693,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -747,7 +734,6 @@
 !     useful, since the results are unlikely to be more accurate.
 !     Making the tolerance looser will speed up searches somewhat,
 !     since a few convergence steps will be omitted.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -821,7 +807,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: gfilum_ex1.tm
@@ -851,7 +836,6 @@
 !                                            ephemeris
 !              mer1_v10.tf                   MER-1 frame kernel
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -867,9 +851,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFILUM_EX1
 !              IMPLICIT NONE
@@ -1131,7 +1113,6 @@
 !                    WRITE (*, '(A7, A28, 2F14.8)' )
 !             .            'Start: ', TIMSTR, SOLAR*DPR(), EMISSN*DPR()
 !
-!
 !                    CALL TIMOUT ( FINISH, FMT,   TIMSTR )
 !
 !                    CALL ILUMIN ( METHOD, TARGET, FINISH, FIXREF,
@@ -1149,10 +1130,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !                                            Solar Incidence   Emission
 !                                                  (deg)         (deg)
@@ -1180,7 +1159,6 @@
 !
 !        Start: 2006 NOV 30 01:38:07.309 UTC   55.28054784   19.99999983
 !        Stop:  2006 NOV 30 01:39:03.296 UTC   55.49418925   19.99999999
-!
 !
 ! $ Restrictions
 !
@@ -1224,7 +1202,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     solve for illumination_angle constraints
@@ -1236,7 +1213,6 @@
 !     search using lighting_angle constraints
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1280,7 +1256,6 @@
 !     Local variables
 !
 
-
 !
 !     Quantity definition parameter arrays:
 !
@@ -1300,12 +1275,10 @@
 
       logical               ok
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Check the result window's size.

@@ -133,13 +133,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch reference values from a generic segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -265,7 +263,7 @@
 !        in the file.  This is even easier than the last case.
 !        We simply fetch them with a call to DAF. We do not check for a
 !        failure here, since all we do after the attempt to read is
-!        checkout and return anyway.
+!        return anyway.
 !
          b = base + first
          e = base + last

@@ -169,13 +169,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_19 spk_segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -265,7 +263,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Terminology
 !     ===========
@@ -304,7 +301,6 @@
 !
 !       - A "base address" of a structure is the DAF address preceding
 !         the first address occupied by the structure.
-!
 !
 !     Algorithm
 !     =========
@@ -435,9 +431,6 @@
 !
 !                    - The output segment interval count
 !
-!
-!
-!
 !     See whether there's any work to do; return immediately if not.
 !
       if (  begin  >  end  ) return
@@ -455,7 +448,6 @@
 !     output mini-segment.
 !
       final  = .false.
-
 
 !***********************************************************************
 !
@@ -497,7 +489,6 @@
       ptrbas = eaddr  -  ( 2    +  nintvl + 1 )
       ivlbas = ptrbas -  ( ndir +  nintvl + 1 )
 
-
 !***********************************************************************
 !
 !     Part 2: Create the first output mini-segment
@@ -526,7 +517,6 @@
       call dafgda ( handle, bufbas+1, bufbas+nread, data )
 
       if ( failed() ) return
-
 
       remain = nintvl - nread
 
@@ -616,7 +606,6 @@
       end if
 
       pktsiz = pktszs( subtyp )
-
 
 !
 !     Determine how much of the mini-segment we need to transfer. The
@@ -878,7 +867,6 @@
 
       if ( failed() ) return
 
-
 !     We're ready to start transferring data to the output segment. The
 !     first mini-segment of the output segment will contain packets
 !     BEPIDX through EEPIDX of the input mini-segment at index BEGIDX.
@@ -986,14 +974,12 @@
 !
       min1sz = (  minnpk * ( pktsiz + 1 )  ) + minndr + ctrlsz
 
-
 !***********************************************************************
 !
 !     Part 3: Transfer the middle group of mini-segments to the
 !             output segment, if this group is non-empty
 !
 !***********************************************************************
-
 
 !
 !     At this point, we might already be done with copying
@@ -1404,7 +1390,6 @@
 
             minndr = ( minnpk - 1 ) / dirsiz
 
-
             do i = 1, minndr
 
                bufbas  =     ( minib - 1  ) + ( npkt * pktsiz ) &
@@ -1444,13 +1429,11 @@
 !     We've transferred all of the data we need from mini-segments at
 !     indices BEGIDX : ENDIDX.
 
-
 !***********************************************************************
 !
 !     Part 5: Create segment-level data structures in the output segment
 !
 !***********************************************************************
-
 
 !
 !     Write out the interval bounds for the new segment.
@@ -1560,7 +1543,6 @@
 !     count is
 !
 !        ( ( NOIVL + 1 ) - 1 ) / DIRSIZ
-!
 !
       nsdir = noivl / dirsiz
 

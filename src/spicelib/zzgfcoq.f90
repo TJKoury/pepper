@@ -75,7 +75,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     VECDEF     Every coordinate computed by this routine is a
 !                function of an underlying vector. VECDEF is a short
 !                string describing the means by which the vector of
@@ -105,7 +104,6 @@
 !                Case, leading and trailing blanks ARE significant
 !                in the string VECDEF.
 !
-!
 !     METHOD     is a string specifying the computational method
 !                applicable to the vector of interest. When VECDEF
 !                is the parameter
@@ -129,14 +127,11 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string METHOD.
 !
-!
 !     TRGID      is the NAIF ID code of the target object.
-!
 !
 !     ET         is the time, expressed as ephemeris seconds past J2000
 !                TDB, at which the specified coordinate is to be
 !                computed.
-!
 !
 !     REF        is the name of the reference frame relative to which
 !                the vector of interest is specified.  The specified
@@ -151,7 +146,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string REF.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied to
 !                the state of the target body to account for one-way
@@ -186,9 +180,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
 !
-!
 !     OBSID      is the NAIF ID code of the observer.
-!
 !
 !     DREF       is the name of the reference frame relative to which a
 !                ray's direction vector is expressed. This may be any
@@ -204,7 +196,6 @@
 !                not the observer, on the selected aberration
 !                correction. See the description of the direction
 !                vector DVEC for details.
-!
 !
 !     DVEC       Ray direction vector emanating from the observer. The
 !                intercept with the target body's surface of the ray
@@ -226,7 +217,6 @@
 !                LTCENT is computed using the method indicated by
 !                ABCORR.
 !
-!
 !     CRDSYS     is the name of the coordinate system to which the
 !                coordinate of interest belongs. Allowed values are
 !                those defined in the GF Fortran INCLUDE file
@@ -236,9 +226,7 @@
 !                Case, leading and trailing blanks ARE significant
 !                in the string CRDSYS.
 !
-!
 !     CTRID      is the NAIF ID code of the input frame REF's center.
-!
 !
 !     RE         is the equatorial radius associated with the body
 !                designated by CTRID. RE is used only when the
@@ -249,7 +237,6 @@
 !                designated by CTRID. RE is used only when the
 !                coordinate system is GEOSYS or PGRSYS; otherwise RE
 !                may be set to 0.D0.
-!
 !
 !     CRDNAM     is the name of the coordinate of interest:  this is
 !                the coordinate to which the specified condition
@@ -262,7 +249,6 @@
 !                Case, leading and trailing blanks ARE significant
 !                in the string CRDNAM.
 !
-!
 ! $ Detailed_Output
 !
 !     VALUE     is the specified coordinate, evaluated at the epoch ET.
@@ -272,7 +258,6 @@
 !
 !               VALUE is defined if and only if the output argument
 !               FOUND is set to .TRUE.
-!
 !
 !     FOUND     is a logical flag indicating whether the requested
 !               coordinate could be computed. FOUND is set to .FALSE.
@@ -404,7 +389,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -503,7 +487,6 @@
 !
       if ( return () ) return
 
-
 !
 !     No result was found yet.
 !
@@ -565,7 +548,6 @@
 
          end if
 
-
          if (  first  .or. ( obsid /= prvobs )  ) then
 
             call bodc2s ( obsid, obsnam )
@@ -592,7 +574,6 @@
 !
          call spkezp ( trgid, et, ref, abcorr, obsid, pos, lt )
 
-
       else if ( vecdef == sobdef ) then
 !
 !        The caller has requested a sub-observer point coordinate
@@ -600,7 +581,6 @@
 !
          call subpnt ( method, trgnam, et,  ref, &
                        abcorr, obsnam, pos, trgepc, srfvec )
-
 
       else if ( vecdef == sindef ) then
 !
@@ -642,31 +622,25 @@
 !
          call moved ( pos, 3, coords )
 
-
       else if ( sysnam == latsys ) then
 
          call reclat ( pos, coords(1), coords(2), coords(3) )
-
 
       else if ( sysnam == radsys ) then
 
          call recrad ( pos, coords(1), coords(2), coords(3) )
 
-
       else if ( sysnam == sphsys ) then
 
          call recsph ( pos, coords(1), coords(2), coords(3) )
-
 
       else if ( sysnam == cylsys ) then
 
          call reccyl ( pos, coords(1), coords(2), coords(3) )
 
-
       else if ( sysnam == geosys ) then
 
          call recgeo ( pos, re, f, coords(1), coords(2), coords(3) )
-
 
       else if ( sysnam == pgrsys ) then
 

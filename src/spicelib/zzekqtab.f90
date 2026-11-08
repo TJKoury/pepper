@@ -135,10 +135,6 @@
       integer(ip)           tb
       integer(ip)           te
 
-!
-!     Use discovery check-in.
-!
-
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
       if ( failed() ) return
@@ -153,7 +149,6 @@
 
       call zzekreqi ( eqryi, 'CHR_BUF_SIZE', buflen )
       call zzekreqi ( eqryi, 'NUM_TABLES',   ntab   )
-
 
       if (  ( n < 1 ) .or. ( n > ntab )  ) then
 

@@ -54,13 +54,10 @@
 !     NV       is the number of vertices belonging to the input
 !              set of plates.
 !
-!
 !     VRTCES   is an array of coordinates of the vertices. The Ith
 !              vertex occupies elements (1:3,I) of this array.
 !
-!
 !     NP       is the number of plates in the input plate set.
-!
 !
 !     PLATES   is an array representing the triangular plates of a
 !              shape model. The elements of PLATES are vertex
@@ -75,7 +72,6 @@
 !                 Latitudinal:           radius
 !                 Planetodetic:          altitude
 !                 Rectangular:           Z
-!
 !
 !     CORPAR   is an array of parameters associated with the
 !                coordinate system. Currently the only supported system
@@ -154,9 +150,7 @@
 !
 !           phobos_3_3.bds
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Example program for DSKW02, DSKMI2, and DSKRB2
@@ -431,10 +425,8 @@
 !              WRITE (*,*) 'Done.'
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Reading input data...
 !         Done.
@@ -461,7 +453,6 @@
 !         Done.
 !         Segregating and closing DSK file...
 !         Done.
-!
 !
 !        Note that after run completion, a new DSK exists in the output
 !        directory.
@@ -498,13 +489,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute range bounds for type 2 DSK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -521,7 +510,6 @@
 !     Local parameters
 !
       real(wp), parameter :: third = 1.0_wp/3.0_wp
-!
 !
 !     Local variables
 !
@@ -548,11 +536,7 @@
 !
       data                  origin / 3 * 0.0_wp /
 
-
-
       if ( return() ) return
-
-
 
       if ( corsys == latsys ) then
 !
@@ -585,7 +569,6 @@
 
          end do
 
-
       else if ( corsys == recsys ) then
 !
 !        The coordinate system is rectangular. Compute the range
@@ -600,7 +583,6 @@
             mxcor3 = max( mxcor3, vrtces(3,i) )
 
          end do
-
 
       else if ( corsys == pdtsys ) then
 !
@@ -654,7 +636,6 @@
             mncor3 = min (  mncor3,  ( alt - maxd )  )
 
          end do
-
 
       else
 

@@ -769,7 +769,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: tangpt_ex1.tm
@@ -827,9 +826,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TANGPT_EX1
 !              IMPLICIT NONE
@@ -1005,10 +1002,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a PC/Linux/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Instrument: MAVEN_IUVS
 !
@@ -1050,7 +1045,6 @@
 !            SRFPT  (km) =     -45.2530638   1584.5115999   2985.8825113
 !            SRFVEC (km) =      12.8557125   -450.1358344   -858.3185654
 !            Geometric case = Look-away
-!
 !
 !     2) The following program computes tangent and surface points for
 !        the MRO MCS A1 instrument, for a single epoch. The observer is
@@ -1095,10 +1089,8 @@
 !             computation are the same as those used to compute the
 !             aberration correction locus.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1150,9 +1142,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TANGPT_EX2
 !              IMPLICIT NONE
@@ -1380,10 +1370,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a PC/Linux/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Instrument: MRO_MCS_A1
 !
@@ -1397,7 +1385,6 @@
 !            TANPT  (km) =   -2530.9040220  -1630.9806346   1644.3612074
 !            SRFPT  (km) =   -2502.1342299  -1612.4406294   1625.4496512
 !            SRFVEC (km) =    -589.3842679   -234.0892764  -1206.9635473
-!
 !
 !        Aberration correction:       CN+S
 !        Aberration correction locus: SURFACE POINT
@@ -1418,7 +1405,6 @@
 !            SRFPT  delta (m) =     0.0004   -0.0006   -0.0000
 !            SRFVEC delta (m) =    -2.3760   -1.3189   -0.7614
 !
-!
 !        Aberration correction:       CN
 !        Aberration correction locus: TANGENT POINT
 !
@@ -1437,7 +1423,6 @@
 !            TANPT  delta (m) =    -9.5660 -101.4629   26.6261
 !            SRFPT  delta (m) =    40.0199  -68.4233   -6.1994
 !            SRFVEC delta (m) =    49.6168   33.0522  -32.7661
-!
 !
 !        Aberration correction:       CN
 !        Aberration correction locus: SURFACE POINT
@@ -1458,7 +1443,6 @@
 !            SRFPT  delta (m) =    40.0368  -68.4521   -6.2020
 !            SRFVEC delta (m) =    49.6469   33.0694  -32.7577
 !
-!
 !        Aberration correction:       NONE
 !        Aberration correction locus: TANGENT POINT
 !
@@ -1477,7 +1461,6 @@
 !            TANPT  delta (m) =    -4.2384   -2.4695    2.6310
 !            SRFPT  delta (m) =    -0.1448    0.1655   -0.0581
 !            SRFVEC delta (m) =   -22.0352   -7.8109  -52.7505
-!
 !
 !     3) The following program computes tangent and surface points for
 !        a ray pointing from the Goldstone DSN station DSS-14 to the
@@ -1500,7 +1483,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1547,9 +1529,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TANGPT_EX3
 !              IMPLICIT NONE
@@ -1775,10 +1755,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a PC/Linux/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Observer:   DSS-14
 !        Target:     MARS
@@ -1794,7 +1772,6 @@
 !            TANPT  (km) =       1351.574      1182.155     -3029.495
 !            SRFPT  (km) =       1298.181      1135.455     -2908.454
 !            SRFVEC (km) =  121233989.354  -5994858.328  51164606.676
-!
 !
 !        Aberration correction:       XCN+S
 !        Aberration correction locus: TANGENT POINT
@@ -1815,7 +1792,6 @@
 !            SRFPT  delta (km) =     -1466.989    -4492.334  2424.517
 !            SRFVEC delta (km) =   -618687.588 -7528636.755 -3965.012
 !
-!
 !        Aberration correction:       CN
 !        Aberration correction locus: TANGENT POINT
 !
@@ -1834,7 +1810,6 @@
 !            TANPT  delta (km) =       582.067     4001.541  -921.596
 !            SRFPT  delta (km) =      -332.236     1454.046   946.360
 !            SRFVEC delta (km) =      -918.388    -2547.420  1866.234
-!
 !
 !        Aberration correction:       NONE
 !        Aberration correction locus: TANGENT POINT
@@ -1855,7 +1830,6 @@
 !            SRFPT  delta (km) =      -797.915    -4018.919  1195.379
 !            SRFVEC delta (km) =   -250915.031 -3771135.823 -1999.603
 !
-!
 !        Aberration correction:       CN+S
 !        Aberration correction locus: SURFACE POINT
 !
@@ -1874,7 +1848,6 @@
 !            TANPT  delta (km) =         0.005        0.004    -0.012
 !            SRFPT  delta (km) =        -0.000        0.000     0.000
 !            SRFVEC delta (km) =        -0.003       -0.005     0.013
-!
 !
 ! $ Restrictions
 !
@@ -1919,14 +1892,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find ray-ellipsoid tangent point
 !     find nearest point to ray on ellipsoid
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2096,7 +2067,6 @@
       real(wp)              svradi ( 3 )
       integer(ip)           svnrad
 
-
 !
 !     Saved surface name/ID item declarations. To be used if DSK
 !     shapes are supported.
@@ -2168,9 +2138,7 @@
       data                  usestl / .false. /
       data                  xmit   / .false. /
 
-
       if ( return() ) return
-
 
 !
 !     Counter initialization is done separately.
@@ -2219,7 +2187,6 @@
 !           USECN indicates converged Newtonian light time correction.
 !
 !           USESTL indicates stellar aberration corrections.
-!
 !
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
@@ -2798,7 +2765,6 @@
 !
 !        - The relative difference between successive values of SRFPT
 !          becomes less than CNVLIM
-!
 !
       do while (             ( i     <  nitr   ) &
                  .and. .not. ( ltcnv .and. stlcnv ) )

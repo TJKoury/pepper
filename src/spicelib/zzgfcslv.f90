@@ -102,7 +102,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     VECDEF     Every coordinate computed by this routine is a
 !                function of an underlying vector. VECDEF is a short
 !                string describing the means by which the vector of
@@ -132,7 +131,6 @@
 !                Case, leading and trailing blanks ARE significant
 !                in the string VECDEF.
 !
-!
 !     METHOD     is a string specifying the computational method
 !                applicable to the vector of interest. When VECDEF
 !                is the parameter
@@ -156,9 +154,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string METHOD.
 !
-!
 !     TARGET     is the name of the target object.
-!
 !
 !     REF        is the name of the reference frame relative to which
 !                the vector of interest is specified. The specified
@@ -173,7 +169,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string REF.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied to
 !                the state of the target body to account for one-way
@@ -208,9 +203,7 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
 !
-!
 !     OBSRVR     is the name of the observer.
-!
 !
 !     DREF       is the name of the reference frame relative to which a
 !                ray's direction vector is expressed. This may be any
@@ -226,7 +219,6 @@
 !                not the observer, on the selected aberration
 !                correction. See the description of the direction
 !                vector DVEC for details.
-!
 !
 !     DVEC       Ray direction vector emanating from the observer. The
 !                intercept with the target body's surface of the ray
@@ -248,7 +240,6 @@
 !                LTCENT is computed using the method indicated by
 !                ABCORR.
 !
-!
 !     CRDSYS     is the name of the coordinate system to which the
 !                coordinate of interest belongs. Allowed values are
 !                those defined in the GF Fortran INCLUDE file
@@ -264,7 +255,6 @@
 !                Case, leading and trailing blanks are not significant
 !                in the string CRDSYS.
 !
-!
 !     CRDNAM     is the name of the coordinate of interest:  this is
 !                the coordinate to which the specified condition
 !                applies.  The set of coordinate names is a function of
@@ -275,7 +265,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string CRDNAM.
-!
 !
 !     RELATE      is a relational operator used to define a constraint
 !                 on the specified coordinate. The result window found
@@ -291,7 +280,6 @@
 !
 !                    '<'      Coordinate is less than the reference
 !                             value REFVAL.
-!
 !
 !                   'ABSMAX'  Coordinate is at an absolute maximum.
 !
@@ -313,7 +301,6 @@
 !                point of the confinement window.
 !
 !                Case is not significant in the string RELATE.
-!
 !
 !     REFVAL     is the reference value used to define equality or
 !                inequality conditions.
@@ -348,11 +335,9 @@
 !                REFVAL is ignored if RELATE is not an equality or
 !                inequality operator.
 !
-!
 !     TOL        is a tolerance value used to determine convergence of
 !                root-finding operations. TOL is measured in TDB
 !                seconds and is greater than zero.
-!
 !
 !     ADJUST     The amount by which the coordinate is allowed to vary
 !                from an absolute extremum. ADJUST is not used for
@@ -367,7 +352,6 @@
 !                If the search is for an absolute maximum, the
 !                corresponding range is  between ABSMAX - ADJUST and
 !                ABSMAX.
-!
 !
 !     UDSTEP     is a routine that computes a time step used to search
 !                for a transition of the state of the specified
@@ -404,7 +388,6 @@
 !                If a constant step size is desired, the routine GFSTEP
 !                may be used. GFSTEP returns the step size that was set
 !                via the most recent call to GFSSTP.
-!
 !
 !     UDREFN     is the name of the externally specified routine that
 !                computes a refinement in the times that bracket a
@@ -443,11 +426,9 @@
 !                If a simple bisection method is desired, the routine
 !                GFREFN may be used. This is the default option.
 !
-!
 !     RPT        is a logical variable which controls whether the
 !                progress reporter is on or off; setting RPT
 !                to .TRUE. enables progress reporting.
-!
 !
 !     UDREPI     is a user-defined subroutine that initializes a
 !                progress report. When progress reporting is
@@ -479,7 +460,6 @@
 !                the progress reporting update and termination routines
 !                GFREPU and GFREPF must be used as well.
 !
-!
 !     UDREPU     is a user-defined subroutine that updates the
 !                progress report for a search pass. The calling
 !                sequence of UDREPU is
@@ -499,16 +479,13 @@
 !                completion percentage; however the method of
 !                measurement is up to the user.
 !
-!
 !     UDREPF     is a user-defined subroutine that finalizes a
 !                progress report. UDREPF has no arguments.
-!
 !
 !     BAIL       is a logical flag indicating whether or not interrupt
 !                signal handling is enabled. Setting BAIL to .TRUE.
 !                enables interrupt signal handling: the GF system will
 !                then call UDBAIL to check for interrupt signals.
-!
 !
 !     UDBAIL     is the name of a user defined logical function that
 !                checks to see whether an interrupt signal has been
@@ -517,18 +494,14 @@
 !                not used, the SPICELIB function GFBAIL should be
 !                passed in as the actual bail-out function argument.
 !
-!
 !     MW         is the cell size of the windows in the workspace array
 !                WORK.
-!
 !
 !     NW         is the number of windows in the workspace array WORK.
 !                NW must be at least as large as the parameter NWMAX.
 !
-!
 !     WORK       is an array used to store workspace windows. This
 !                array has dimensions ( LBCELL : MW, NW).
-!
 !
 !     CNFINE     is a SPICE window that confines the bounds of the
 !                search.
@@ -545,7 +518,6 @@
 !                computable on this contracted window. The user must
 !                select CNFINE so that this requirement is met.
 !
-!
 !     RESULT     is an initialized SPICE window. RESULT must be large
 !                enough to hold all of the intervals, within the
 !                confinement window, on which the specified condition
@@ -554,11 +526,9 @@
 !                RESULT must be initialized by the caller via the
 !                SPICELIB routine SSIZED.
 !
-!
 ! $ Detailed_Output
 !
 !     WORK       has undefined contents on output.
-!
 !
 !     RESULT     is a SPICELIB window containing the intersection of
 !                the confinement window and the set of time intervals
@@ -723,7 +693,6 @@
 !            - The set of supported coordinate systems must be kept in
 !              sync with the set supported by zzgf.inc.
 !
-!
 ! $ Literature_References
 !
 !     None.
@@ -794,7 +763,6 @@
 !
       integer(ip), parameter :: maxop = 6
 
-
 !
 !     Local variables
 !
@@ -827,7 +795,6 @@
 !
 !     Initial values
 !
-!
 !     Below we initialize the list of comparison operator names.
 !
       data                  cnames / '>', &
@@ -848,7 +815,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Check the workspace window count.
@@ -1033,7 +999,6 @@
 
       end if
 
-
 !
 !     If progress reporting is enabled, set the report prefix array
 !     according to the quantity and the relational operator.
@@ -1049,7 +1014,6 @@
 
          noadjx =  ( adjust ==  0.0_wp    ) .and. &
                  ( ( uop    == 'ABSMIN' ) .or. ( uop == 'ABSMAX' ) )
-
 
          if ( localx .or. noadjx ) then
 !

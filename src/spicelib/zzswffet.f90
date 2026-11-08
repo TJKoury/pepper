@@ -394,7 +394,6 @@
 
       integer(ip), parameter :: ixstop = ixstrt + 1
 
-
       integer(ip), parameter :: kvnmln = 32
 
       integer(ip), parameter :: nkv = 8
@@ -447,7 +446,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     No result found yet.

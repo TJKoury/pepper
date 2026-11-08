@@ -92,7 +92,6 @@
 !                 Case and blanks are not significant in the string
 !                 REF.
 !
-!
 !     ABCORR      indicates the aberration corrections to be applied to
 !                 the state of the target body to account for one-way
 !                 light time. See the discussion in the Particulars
@@ -159,14 +158,12 @@
 !                    'XCN'      "Transmission" case:  converged
 !                               Newtonian light time correction.
 !
-!
 !                 Neither special nor general relativistic effects are
 !                 accounted for in the aberration corrections applied
 !                 by this routine.
 !
 !                 Case and blanks are not significant in the string
 !                 ABCORR.
-!
 !
 !     STOBS       is the geometric (uncorrected) state of the observer
 !                 relative to the solar system barycenter at epoch ET.
@@ -334,8 +331,6 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
@@ -349,7 +344,6 @@
       real(wp)              touchd
       real(wp)              vdot
       real(wp)              vnorm
-
 
       logical               failed
       logical               return
@@ -424,8 +418,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -508,7 +500,6 @@
          return
 
       end if
-
 
       if ( .not. uselt ) then
 !
@@ -639,7 +630,6 @@
 !                  * < PTARG(ET+S*LT) - POBS(ET),
 !                      VTARG(ET+S*LT)*(1+S*d(LT)/d(ET)) - VOBS(ET) >
 !
-!
 !               = (1/c) * ( 1 / || PTARG(ET+S*LT) - POBS(ET) || )
 !
 !                 * (  < PTARG(ET+S*LT) - POBS(ET),
@@ -663,8 +653,6 @@
 !     which implies
 !
 !        d(LT)/d(ET) =  A*B / ( 1 - S*C*A )
-!
-!
 !
       a   =  1.0_wp / ( clight()*vnorm(starg) )
 
@@ -698,7 +686,6 @@
 !
       call vlcom ( 1.0_wp + ltsign*dlt, ssbtrg(4), &
                   -1.0_wp,              stobs(4),   starg(4) )
-
 
       return
       end

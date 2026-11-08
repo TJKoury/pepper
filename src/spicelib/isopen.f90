@@ -102,14 +102,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test for file already open
 !     is a file open
 !
 !-&
-
 
 !
 !     SPICELIB functions

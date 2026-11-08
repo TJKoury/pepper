@@ -105,7 +105,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -143,10 +142,6 @@
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
-
 
 !$Procedure ZZCVXSTA ( Constant velocity state, fetch state )
 
@@ -302,7 +297,6 @@
 
       if ( return() ) return
 
-
 !
 !     Extrapolate the saved state to the input time.
 !
@@ -328,12 +322,6 @@
       center = svctr
 
       return
-
-
-
-
-
-
 
 !$Procedure ZZCVSSTA ( Constant velocity state, store parameters )
 
@@ -444,7 +432,6 @@
 !
 !     No SPICE errors are detected here, so we don't check in.
 !
-!
 !     Save all inputs.
 !
       call moved ( state, 6, svstat )
@@ -455,6 +442,3 @@
 
       return
       end
-
-
-

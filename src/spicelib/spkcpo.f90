@@ -66,12 +66,10 @@
 !              Case and leading and trailing blanks are not
 !              significant in the string TARGET.
 !
-!
 !     ET       is the ephemeris time at which the state of the
 !              target relative to the observer is to be computed. ET
 !              is expressed as seconds past J2000 TDB. ET refers to
 !              time at the observer's location.
-!
 !
 !     OUTREF   is the name of the reference frame with respect to
 !              which the output state is expressed.
@@ -83,7 +81,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string OUTREF.
-!
 !
 !     REFLOC   is a string indicating the output reference frame
 !              evaluation locus: this is the location associated
@@ -98,7 +95,6 @@
 !                             Normally the locus 'OBSERVER' should
 !                             be selected when OUTREF is centered
 !                             at the observer.
-!
 !
 !                 'TARGET'    Evaluate OUTREF at the target epoch;
 !                             letting LT be the one-way light time
@@ -117,7 +113,6 @@
 !                             Normally the locus 'TARGET' should
 !                             be selected when OUTREF is centered
 !                             at the target object.
-!
 !
 !                 'CENTER'    Evaluate the frame OUTREF at the epoch
 !                             associated its center. This epoch,
@@ -139,7 +134,6 @@
 !                                   ET        if no aberration
 !                                             corrections are used
 !
-!
 !                             The locus 'CENTER' should be selected
 !                             when the user intends to obtain
 !                             results compatible with those produced
@@ -150,7 +144,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string REFLOC.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied to
 !              the observer-target state to account for one-way
@@ -198,7 +191,6 @@
 !                 'CN+S'     Converged Newtonian light time
 !                            and stellar aberration corrections.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -232,7 +224,6 @@
 !                            Newtonian light time and stellar
 !                            aberration corrections.
 !
-!
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
 !              by this routine.
@@ -240,13 +231,11 @@
 !              Case and leading and trailing blanks are not
 !              significant in the string ABCORR.
 !
-!
 !     OBSPOS   is the fixed (constant) geometric position of an
 !              observer relative to its center of motion OBSCTR,
 !              expressed in the reference frame OBSREF.
 !
 !              Units are always km.
-!
 !
 !     OBSCTR   is the name of the center of motion of OBSPOS. The
 !              ephemeris of OBSCTR is provided by loaded SPK files.
@@ -258,7 +247,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string OBSCTR.
-!
 !
 !     OBSREF   is the name of the reference frame relative to which
 !              the input position OBSPOS is expressed. The observer
@@ -297,7 +285,6 @@
 !              frame relative to the J2000 frame is evaluated in the
 !              manner indicated by the input argument REFLOC (see
 !              description above).
-!
 !
 !     LT       is the one-way light time between the observer and
 !              target in seconds. If the target state is corrected
@@ -458,7 +445,6 @@
 !        the computation of light time between the target and
 !        observer.
 !
-!
 !     The SPK routines that compute observer-target states for
 !     combinations of objects having ephemerides provided by the SPK
 !     system and objects having constant position or constant velocity
@@ -475,7 +461,6 @@
 !     platforms. The results depend on the SPICE kernels used as
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
-!
 !
 !     1) Compute apparent solar azimuth and elevation as seen from a
 !        specified surface point on the earth.
@@ -517,13 +502,11 @@
 !              small offset---on the order of 10 cm---to the station-sun
 !              position vector, expressed in the ITRF93 frame.
 !
-!
 !        Kernels
 !        =======
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !        KPL/MK
 !
@@ -573,9 +556,7 @@
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Program: SPKCPO_EX1
@@ -669,7 +650,6 @@
 !        C     Initial values
 !        C
 !              DATA                  Z / 0.D0, 0.D0, 1.D0 /
-!
 !
 !        C
 !        C     Load SPICE kernels.
@@ -855,10 +835,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Frame evaluation locus:     OBSERVER
 !
@@ -879,15 +857,12 @@
 !         Solar azimuth (deg):           316.67141599
 !         Solar elevation (deg):         -54.85253168
 !
-!
-!
 !         AZ/EL computed without frame kernel:
 !
 !         Distance between last two positions (km):           3.07056970
 !
 !         Solar azimuth (deg):           316.67141786
 !         Solar elevation (deg):         -54.85253216
-!
 !
 !     2) Demonstrate applications of the output frame evaluation locus.
 !
@@ -918,15 +893,12 @@
 !
 !        The observation epoch is 2003 OCT 13 06:00:00 UTC.
 !
-!
 !        Kernels
 !        =======
 !
 !        Use the meta-kernel of example 1 above.
 !
-!
 !        Example code begins here.
-!
 !
 !        C     Program: SPKCPO_EX2
 !        C
@@ -1217,10 +1189,8 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Frame evaluation locus:     OBSERVER
 !
@@ -1237,7 +1207,6 @@
 !         Observer-target velocity (km/s):
 !                 -3751.69274754       3911.73417167         -2.17503628
 !         Light time (s):           255.79885530
-!
 !
 !         Frame evaluation locus:     CENTER
 !
@@ -1258,7 +1227,6 @@
 !         Distance between above positions (km):            115.21404099
 !         Velocity difference magnitude  (km/s):              0.00840050
 !
-!
 !         State computed using SPKEZR:
 !
 !         Target:                 MGS
@@ -1275,7 +1243,6 @@
 !
 !         Distance between last two positions (km):           0.00007437
 !         Velocity difference magnitude     (km/s):           0.00000000
-!
 !
 !         Frame evaluation locus:     TARGET
 !
@@ -1295,7 +1262,6 @@
 !
 !         Central meridian
 !         longitude (deg):           -1.85409037
-!
 !
 ! $ Restrictions
 !
@@ -1328,7 +1294,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     state relative to constant_position_observer
@@ -1337,7 +1302,6 @@
 !     state relative to landmark on extended_object
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1354,7 +1318,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Create a state vector for the observer. The velocity

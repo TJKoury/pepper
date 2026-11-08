@@ -148,13 +148,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Unpack and SPK segment descriptor
 !
 !-&
-
 
 !
 !     Spicelib Functions

@@ -137,6 +137,5 @@
       zzvox2id = vixyz(1) + &
                  nvox(1)*(  vixyz(2) - 1 + (vixyz(3)-1)*nvox(2)  )
 
-
       return
       end

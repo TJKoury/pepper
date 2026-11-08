@@ -250,7 +250,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: twovxf_ex1.tm
@@ -283,9 +282,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TWOVXF_EX1
 !              IMPLICIT NONE
@@ -413,15 +410,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Earth as seen from MRO in Sun-Canopus frame (km and km/s):
 !           position:   -16659764.322    97343706.915   106745539.738
 !           velocity:           2.691         -10.345          -7.877
-!
 !
 ! $ Restrictions
 !
@@ -451,13 +445,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     define a state transformation matrix from two states
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -469,13 +461,10 @@
 !
       real(wp)              xi     ( 6, 6 )
 
-
 !
 !     Standard SPICE error handling
 !
       if ( return() ) return
-
-
 
 !
 !     Get the matrix XI that transforms states from the frame

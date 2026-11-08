@@ -134,10 +134,6 @@
       integer(ip)           loc
       integer(ip)           tree
 
-
-!
-!     Use discovery check-in.
-!
 !
 !     Ashes to ashes, dust to dust.  This page goes to the free list.
 !
@@ -155,7 +151,6 @@
 !
       mbase  =  segdsc ( imdidx )
 
-
       if ( type == chr ) then
 
          tree  =  segdsc ( cptidx )
@@ -167,7 +162,6 @@
          if ( p == segdsc(lcpidx) ) then
             segdsc(lcwidx) = cpsize
          end if
-
 
       else if ( type == dp ) then
 

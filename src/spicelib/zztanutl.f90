@@ -188,9 +188,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
 
-
-
-
 !$Procedure ZZTANINI ( DSK, tangent utility initialization )
 
       entry zztanini ( curve,  srcrad, shape, trgcde, nsurf, &
@@ -273,12 +270,10 @@
 !                Terminator computations are performed assuming
 !                the light source is spherical.
 !
-!
 !     SRCRAD     is the radius of the illumination source. This
 !                value is used for terminator computations only.
 !                When used, SRCRAD must be strictly positive.
 !                Units are km.
-!
 !
 !     SHAPE      is an integer code indicating the target body shape.
 !
@@ -287,25 +282,20 @@
 !                   ELLSHP            shape is modeled as an ellipsoid
 !                   DSKSHP            shape is provided by DSK data
 !
-!
 !     TRGCDE     is the body ID code of the target body.
-!
 !
 !     NSURF,
 !     SRFLST     are, respectively, the count of surface IDs and the
 !                surface ID list.
 !
-!
 !     FIXFID     is the frame ID code of a body-fixed frame centered
 !                on the target body. The output tangent points will
 !                be expressed in this frame.
-!
 !
 !     ET         is the computation epoch, expressed as seconds past
 !                J2000 TDB. ET is used for DSK segment selection.
 !                If the target shape is modeled as an ellipsoid, ET
 !                is ignored.
-!
 !
 !     PLNVEC     is a vector used to define a half-plane in which
 !                to search for tangent rays. The half-plane contains
@@ -319,7 +309,6 @@
 !                but touch the light source in the complementary
 !                half-plane bounded by the line containing AXIS.
 !
-!
 !     AXIS       is a second vector used to define a half-plane in
 !                which to search for tangent vectors. AXIS lies in
 !                the line forming the boundary of the half-plane.
@@ -330,7 +319,6 @@
 !                For terminator computations, AXIS points from the
 !                target toward the center of the illumination source.
 !
-!
 ! $ Detailed_Output
 !
 !     None. This routine operates by side effects.
@@ -339,7 +327,6 @@
 !
 !     See the INCLUDE file zzdsk.inc for declarations of these
 !     parameters.
-!
 !
 !     ELLSHP     is a code specifying an ellipsoidal shape model.
 !
@@ -363,7 +350,6 @@
 !                a sphere, from any target surface point nearer to
 !                the source than the penumbral terminator, the source
 !                appears to be a lit disc.
-!
 !
 ! $ Exceptions
 !
@@ -441,9 +427,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     Check for zero vectors on input.
@@ -559,9 +543,6 @@
 
       return
 
-
-
-
 !$Procedure ZZTANSTA ( DSK, tangent ray state )
 
       entry zztansta ( angle, ocultd, point )
@@ -631,7 +612,6 @@
 !                is on the surface of the light source, in the half-
 !                plane defined by PLNDEF and AXIS. The line containing
 !                the ray is tangent to the light source at the vertex.
-!
 !
 !                For a penumbral terminator computation, the vertex is
 !                on the surface of the light source, in the half-plane
@@ -723,10 +703,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
-
 
       if ( svcurv == lmbcrv ) then
 !
@@ -737,7 +714,6 @@
          call vrotv ( svaxis, svnrml, angle, raydir )
 
          call zzraysfx ( svvrtx, raydir, svet, point, ocultd )
-
 
       else if ( svcurv == umbral ) then
 !
@@ -760,7 +736,6 @@
          call vadd   ( svvrtx, vrtoff, apex )
 
          call zzraysfx ( apex, raydir, svet, point, ocultd )
-
 
       else if ( svcurv == pnmbrl ) then
 !

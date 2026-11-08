@@ -48,7 +48,6 @@
 
       real(wp), parameter :: latmrg = 1.0e-8_wp
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  DESCRIPTION
@@ -99,7 +98,6 @@
 !                that of the greedy margin. See the Parameters section
 !                below for further information.
 !
-!
 !     MARGIN     is a fraction used to expand the volume element for
 !                inclusion testing.
 !
@@ -123,8 +121,6 @@
 !                     pi/2 or -pi/2, comparison against the longitude
 !                     bounds of the volume element is omitted if
 !                     MARGIN > 0.
-!
-!
 !
 !     EXCLUD     is either a coordinate index or the parameter NONE.
 !
@@ -158,7 +154,6 @@
 !                of any excluded coordinate.
 !
 ! $ Parameters
-!
 !
 !     LATMRG     Margin for determining whether the input latitude is
 !                "close" to the poles. Units are radians. This value
@@ -201,7 +196,6 @@
 !                BOUNDS. When used as a value of the input argument
 !                EXCLUD, indicates that latitude should be excluded
 !                from comparison.
-!
 !
 !     RADIDX     is the index of radius in the second dimension of
 !                BOUNDS. When used as a value of the input argument
@@ -255,9 +249,6 @@
 !
 !-&
 
-
-
-
 !
 !     SPICELIB functions
 !
@@ -283,7 +274,6 @@
 
       integer(ip), parameter :: outer = 2
 
-
 !
 !     Local variables
 !
@@ -307,26 +297,18 @@
       real(wp)              smax
       real(wp)              smin
 
-
-
-
 !
 !     Constants (SPICELIB computed them on the first call).
 !
       real(wp), parameter :: pi2 = twopi
       real(wp), parameter :: hpi = halfpi
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
-
 
 !
 !     Get the latitudinal coordinates of the input point.
 !
       call reclat ( p, r, lon, lat )
-
 
 !
 !     Handle the simpler zero-margin case separately.
@@ -345,7 +327,6 @@
          return
 
       end if
-
 
       if (  ( exclud < 0 ) .or. ( exclud > 3 )  ) then
 
@@ -372,7 +353,6 @@
          end if
 
       end if
-
 
 !
 !     Assume the point is outside to start. This allows us
@@ -408,7 +388,6 @@
          if ( ( r < aminr ) .or. ( r > amaxr ) ) return
 
       end if
-
 
       if ( exclud /= latidx ) then
 !
@@ -511,7 +490,6 @@
 !           adjusted longitude bounds.
 !
             if ( ( lon < aminlo ) .or. ( lon > amaxlo ) ) return
-
 
          else
 !

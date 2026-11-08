@@ -158,8 +158,6 @@
 !     bodies (if point objects) or the center of the bodies (if finite
 !     bodies).
 !
-!
-!
 !                       ILLMN     OBSRVR
 !       ILLMN as seen      ^       /
 !       from TARGET at     |      /
@@ -173,8 +171,6 @@
 !                      .  /
 !                        /
 !                       v
-!
-!
 !
 !        PI = SEP + PHASE
 !
@@ -202,7 +198,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -237,9 +232,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PHASEQ_EX1
 !              IMPLICIT NONE
@@ -304,7 +297,6 @@
 !              INTEGER               I
 !              INTEGER               J
 !
-!
 !        C
 !        C     The relation values for the search.
 !        C
@@ -315,7 +307,6 @@
 !             .                               'ABSMIN',
 !             .                               'LOCMAX',
 !             .                               'ABSMAX'  /
-!
 !
 !        C
 !        C     Load kernels.
@@ -393,7 +384,6 @@
 !                       WRITE (*, '(2X,A,F16.9)') 'Start time = '
 !             .                               //   TIMSTR, PHASE
 !
-!
 !                       PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
 !             .                         ABCORR )
 !                       CALL TIMOUT ( FINISH,
@@ -413,10 +403,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Relation condition: =
 !          Start time = 2006-DEC-02 13:31:34.414       0.575988450
@@ -466,7 +454,6 @@
 !          Start time = 2007-JAN-19 04:27:54.600       3.074603891
 !          Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -495,20 +482,17 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute phase angle for arbitrary illumination source
 !
 !-&
 
-
 !
 !     SPICELIB functions.
 !
       logical               failed
       logical               return
-
 
 !
 !     Local parameters
@@ -519,8 +503,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
-
 
 !
 !     Local Variables.
@@ -579,14 +561,12 @@
 !
       data                  first   / .true. /
 
-
       phaseq = 0.0_wp
 
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialization.
@@ -623,7 +603,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svilmn, svicde, svfnd2, &
                       illmn, illum, fnd    )
 
@@ -639,7 +618,6 @@
          return
 
       end if
-
 
       call zzbods2c ( svctr3, svobsr, svobsn, svfnd3, &
                       obsrvr, obs, fnd    )
@@ -657,13 +635,11 @@
 
       end if
 
-
 !
 !     Squeeze all blanks out of the aberration correction
 !     string; ensure the string is in upper case.
 !
       call ljucrs ( 0, abcorr, xbcorr )
-
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -672,7 +648,6 @@
       call zzvalcor ( xbcorr, attblk )
 
       if ( failed() ) return
-
 
 !
 !     Restrict correction to reception cases. The attribute block ID
@@ -688,7 +663,6 @@
          return
 
       end if
-
 
 !
 !     Make sure the observer, illuminator, and target are distinct.
@@ -713,7 +687,6 @@
 !     Call the routine to calculate the phase angle
 !
       call zzgfpaq ( et, targ, illum, obs, xbcorr, phaseq )
-
 
 !
 !     All done.

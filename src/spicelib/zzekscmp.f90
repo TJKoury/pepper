@@ -41,7 +41,6 @@
       integer(ip)           ival
       logical               null
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description
@@ -78,7 +77,6 @@
 !                       ISNULL
 !                       NOTNUL
 !
-!
 !     HANDLE         is an EK file handle.  The file may be open for
 !                    reading or writing.
 !
@@ -99,7 +97,6 @@
 !                    is ignored for scalar columns.
 !
 !     DTYPE          is the data type of the input scalar value.
-!
 !
 !     CVAL,
 !     DVAL,
@@ -192,7 +189,6 @@
 !         error SPICE(UNNATURALRELATION) is signaled.  The function
 !         value is .FALSE. in this case.
 !
-!
 ! $ Files
 !
 !     See the description of the argument HANDLE in $Detailed_Input.
@@ -270,11 +266,6 @@
       logical               enull
       logical               found
 
-
-!
-!     Use discovery check-in for speed.
-!
-
 !
 !     The function value defaults to .FALSE.
 !
@@ -322,12 +313,10 @@
          call zzekrsd (  handle,  segdsc,  coldsc, row, &
                          eltidx,  eltd,    enull,  found )
 
-
       else if ( coltyp == int ) then
 
          call zzekrsi (  handle,  segdsc,  coldsc, row, &
                          eltidx,  elti,    enull,  found )
-
 
       else
 
@@ -337,7 +326,6 @@
          return
 
       end if
-
 
       if ( .not. found ) then
 
@@ -380,7 +368,6 @@
             rel  =  lt
          end if
 
-
       else if ( null ) then
 
          if ( enull ) then
@@ -389,9 +376,7 @@
             rel  =  gt
          end if
 
-
       else
-!
 !
 !        Compare the value we looked up with the input scalar value.
 !
@@ -415,7 +400,6 @@
                rel = eq
             end if
 
-
          else if ( coltyp == time ) then
 
             if (  ( dtype /= time ) .and. ( dtype /= dp )  ) then
@@ -436,13 +420,11 @@
                rel = eq
             end if
 
-
          else if ( coltyp == dp ) then
 
             if ( dtype == int ) then
 
                numval = ival
-
 
             else if ( ( dtype == dp ) .or. ( dtype == time ) ) then
 
@@ -466,13 +448,11 @@
                rel = eq
             end if
 
-
          else if ( coltyp == int ) then
 
             if ( dtype == int ) then
 
                numval = ival
-
 
             else if ( dtype == dp ) then
 
@@ -496,7 +476,6 @@
                rel = eq
             end if
 
-
          else
 !
 !           Something untoward has happened in our column descriptor
@@ -518,31 +497,25 @@
 
          zzekscmp  =  rel == eq
 
-
       else if ( op == lt )   then
 
          zzekscmp  =  rel == lt
-
 
       else if ( op == le )   then
 
          zzekscmp  =  rel /= gt
 
-
       else if ( op == gt )   then
 
          zzekscmp  =  rel == gt
-
 
       else if ( op == ge )   then
 
          zzekscmp  =  rel /= lt
 
-
       else if ( op == ne )   then
 
          zzekscmp  =  rel /= eq
-
 
       else if (  ( op == like ) .and. ( dtype == chr )  ) then
 
@@ -551,7 +524,6 @@
          else
             zzekscmp = matchi( eltc(:cmplen), cval(:cvlen), wstr, wchr )
          end if
-
 
       else if (  ( op == unlike ) .and. ( dtype == chr )  ) then
 

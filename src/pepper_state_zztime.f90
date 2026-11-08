@@ -39,67 +39,40 @@ module pepper_state_zztime
 
    !> The saved variables of ZZTIME.
    type, public :: zztime_state
-      character(maxtkn) :: rep  !! representation Variables.
-      integer(ip) :: size  !! saved between calls by ZZTIME
-      integer(ip) :: begs ( maxtkn )  !! saved between calls by ZZTIME
-      integer(ip) :: ends ( maxtkn )  !! saved between calls by ZZTIME
-      integer(ip) :: pbegs( maxtkn )  !! saved between calls by ZZTIME
-      integer(ip) :: pends( maxtkn )  !! saved between calls by ZZTIME
-      character(piclen) :: pictur  !! saved between calls by ZZTIME
-      character(wdsize) :: names( 32 : 126 )  !! saved between calls by ZZTIME
-      character(wdsize) :: myerr  !! saved between calls by ZZTIME
-      character(piclen) :: messge  !! saved between calls by ZZTIME
-      character(piclen) :: picerr  !! saved between calls by ZZTIME
-      character(piclen) :: tknerr  !! saved between calls by ZZTIME
-      character(3) :: month  !! saved between calls by ZZTIME
-      real(wp) :: hms    ( 3  )  !! saved between calls by ZZTIME
-      integer(ip) :: blank  !! saved between calls by ZZTIME
-      integer(ip) :: from  !! saved between calls by ZZTIME
-      integer(ip) :: get  !! saved between calls by ZZTIME
-      integer(ip) :: i  !! saved between calls by ZZTIME
-      integer(ip) :: item  !! saved between calls by ZZTIME
-      integer(ip) :: j  !! saved between calls by ZZTIME
-      integer(ip) :: k  !! saved between calls by ZZTIME
-      integer(ip) :: last  !! saved between calls by ZZTIME
-      integer(ip) :: nchar  !! saved between calls by ZZTIME
-      integer(ip) :: next  !! saved between calls by ZZTIME
-      integer(ip) :: p1  !! saved between calls by ZZTIME
-      integer(ip) :: p2  !! saved between calls by ZZTIME
-      integer(ip) :: ptr  !! saved between calls by ZZTIME
-      integer(ip) :: put  !! saved between calls by ZZTIME
-      integer(ip) :: r  !! saved between calls by ZZTIME
-      integer(ip) :: to  !! saved between calls by ZZTIME
-      integer(ip) :: w  !! saved between calls by ZZTIME
-      integer(ip) :: njd  !! saved between calls by ZZTIME
-      integer(ip) :: pfrom  !! saved between calls by ZZTIME
-      integer(ip) :: pto  !! saved between calls by ZZTIME
-      integer(ip) :: pnext  !! saved between calls by ZZTIME
-      integer(ip) :: case  !! saved between calls by ZZTIME
-      integer(ip) :: kind  !! saved between calls by ZZTIME
-      integer(ip) :: nyear  !! saved between calls by ZZTIME
-      integer(ip) :: nmon  !! saved between calls by ZZTIME
-      integer(ip) :: nday  !! saved between calls by ZZTIME
-      integer(ip) :: nhour  !! saved between calls by ZZTIME
-      integer(ip) :: nmin  !! saved between calls by ZZTIME
-      integer(ip) :: nsec  !! saved between calls by ZZTIME
-      integer(ip) :: ndoy  !! saved between calls by ZZTIME
-      integer(ip) :: value  !! saved between calls by ZZTIME
-      integer(ip) :: mnsize ( short )  !! saved between calls by ZZTIME
-      integer(ip) :: wksize ( short )  !! saved between calls by ZZTIME
-      integer(ip) :: width ( nrecog )  !! saved between calls by ZZTIME
-      character(smwdsz) :: recog ( nrecog )  !! saved between calls by ZZTIME
-      character(smwdsz) :: spcial  !! saved between calls by ZZTIME
-      character(smwdsz) :: mnmrk ( mixed, short )  !! saved between calls by ZZTIME
-      character(smwdsz) :: wkday ( mixed, short )  !! saved between calls by ZZTIME
-      character(1) :: class ( nrecog )  !! saved between calls by ZZTIME
-      character(1) :: this  !! saved between calls by ZZTIME
-      integer(ip) :: f ( 32 : 126 )  !! saved between calls by ZZTIME
-      integer(ip) :: l ( 32 : 126 )  !! saved between calls by ZZTIME
-      logical :: ampm  !! saved between calls by ZZTIME
-      logical :: did  !! saved between calls by ZZTIME
-      logical :: got  !! saved between calls by ZZTIME
-      logical :: check  !! saved between calls by ZZTIME
-      logical :: first  !! saved between calls by ZZTIME
+      character(maxtkn) :: rep  !! the token representation of the time string: one letter per token
+      integer(ip) :: size  !! number of tokens
+      integer(ip) :: begs ( maxtkn )  !! first character of each token in the string
+      integer(ip) :: ends ( maxtkn )  !! last character of each token in the string
+      integer(ip) :: pbegs( maxtkn )  !! first character of each token's picture in pictur
+      integer(ip) :: pends( maxtkn )  !! last character of each token's picture in pictur
+      character(piclen) :: pictur  !! the format picture (as for TIMOUT) built from the tokens
+      character(wdsize) :: names( 32 : 126 )  !! name of each token class (by its letter), for error
+                                              !! messages
+      character(piclen) :: picerr  !! template of the message for a picture that is too long
+      character(piclen) :: tknerr  !! template of the message for too many tokens
+      real(wp) :: hms    ( 3  )  !! work variable (saved in SPICELIB; not shown to carry a value
+                                 !! between calls); hours, minutes and seconds
+      integer(ip) :: blank  !! character code of ' '
+      integer(ip) :: to  !! work variable (saved in SPICELIB; not shown to carry a value between
+                         !! calls)
+      integer(ip) :: pto  !! work variable (saved in SPICELIB; not shown to carry a value between
+                          !! calls)
+      integer(ip) :: case  !! work variable (saved in SPICELIB; not shown to carry a value between
+                           !! calls)
+      integer(ip) :: mnsize ( short )  !! number of characters of month names (full, short)
+      integer(ip) :: wksize ( short )  !! number of characters of weekday names (full, short)
+      integer(ip) :: width ( nrecog )  !! length of each recognized substring
+      character(smwdsz) :: recog ( nrecog )  !! the recognized substrings (month and weekday names,
+                                             !! eras, ...)
+      character(smwdsz) :: mnmrk ( mixed, short )  !! picture markers of month names by case (lower,
+                                                   !! upper, mixed) and length
+      character(smwdsz) :: wkday ( mixed, short )  !! picture markers of weekday names by case and
+                                                   !! length
+      character(1) :: class ( nrecog )  !! token class letter of each recognized substring
+      integer(ip) :: f ( 32 : 126 )  !! first recognized substring that starts with each character
+      integer(ip) :: l ( 32 : 126 )  !! last recognized substring that starts with each character
+      logical :: ampm  !! the string has an AM/PM marker
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type zztime_state
 
 contains

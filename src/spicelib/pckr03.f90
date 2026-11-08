@@ -90,7 +90,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -141,13 +140,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_03 PCK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions

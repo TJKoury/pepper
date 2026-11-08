@@ -263,9 +263,7 @@
 !
 !           pck00008.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PGRREC_EX1
 !              IMPLICIT NONE
@@ -342,10 +340,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planetographic coordinates:
 !
@@ -365,7 +361,6 @@
 !           Y (km)                 =   -2620.6789148181788
 !           Z (km)                 =    2592.4089088569663
 !
-!
 !     2) Below is a table showing a variety of rectangular coordinates
 !        and the corresponding Mars planetographic coordinates. The
 !        values are computed using the reference spheroid having radii
@@ -376,10 +371,8 @@
 !        Note:  the values shown above may not be current or suitable
 !               for your application.
 !
-!
 !        Corresponding rectangular and planetographic coordinates are
 !        listed to three decimal places.
-!
 !
 !        RECTAN(1)  RECTAN(2)  RECTAN(3)       LON       LAT        ALT
 !        --------------------------------------------------------------
@@ -393,7 +386,6 @@
 !            0.000      0.000  -3376.200     0.000   -90.000      0.000
 !            0.000      0.000      0.000     0.000    90.000  -3376.200
 !
-!
 !     3) Below we show the analogous relationships for the earth,
 !        using the reference ellipsoid radii
 !
@@ -402,7 +394,6 @@
 !
 !        Note the change in longitudes for points on the +/- Y axis
 !        for the earth vs the Mars values.
-!
 !
 !        RECTAN(1)  RECTAN(2)  RECTAN(3)       LON       LAT        ALT
 !        --------------------------------------------------------------
@@ -451,13 +442,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert planetographic to rectangular coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -489,8 +478,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
-
 
 !
 !     Local variables
@@ -532,12 +519,10 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialization.
@@ -573,8 +558,7 @@
       end if
 
 !
-!     The equatorial radius must be positive. If not, signal an error
-!     and check out.
+!     The equatorial radius must be positive. If not, signal an error.
 !
       if ( re <= 0.0_wp ) then
 
@@ -588,7 +572,7 @@
 !
 !     If the flattening coefficient is greater than 1, the polar radius
 !     is negative. If F is equal to 1, the polar radius is zero. Either
-!     case is a problem, so signal an error and check out.
+!     case is a problem, so signal an error.
 !
       if ( f >= 1.0_wp ) then
 
@@ -630,7 +614,6 @@
             return
 
          end if
-
 
       else
 !
@@ -684,7 +667,6 @@
 !     equivalent of the input coordinates to rectangular coordinates.
 !
       call georec ( geolon, lat, alt, re, f, rectan )
-
 
       return
       end

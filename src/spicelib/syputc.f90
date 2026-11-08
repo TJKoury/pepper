@@ -182,13 +182,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the values associated with a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -216,8 +214,6 @@
       integer(ip)           newsym
       integer(ip)           newval
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -232,7 +228,6 @@
          call sigerr ( 'SPICE(INVALIDARGUMENT)' )
          return
       end if
-
 
 !
 !     How many symbols to start with?
@@ -273,7 +268,6 @@
          call errch  ( '#', name )
          call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
-
       else if ( nptr+newsym > sizei ( tabptr ) ) then
 
          call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
@@ -281,14 +275,12 @@
          call errch  ( '#', name )
          call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
-
       else if ( nval+newval > sizec ( tabval ) ) then
 
          call setmsg ( 'SYPUTC: Addition of the new symbol # causes ' // &
                        'an overflow in the value table.' )
          call errch  ( '#', name )
          call sigerr ( 'SPICE(VALUETABLEFULL)' )
-
 
 !
 !     Looks like we can.
@@ -322,8 +314,6 @@
          call scardc ( nval, tabval )
 
       end if
-
-
 
       return
       end

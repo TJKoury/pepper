@@ -159,9 +159,7 @@
 !
 !           sdu_sclkscet_00074.tsc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SCFMT_EX1
 !              IMPLICIT NONE
@@ -224,10 +222,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Partition:            1
 !            Start : 0000000000.000
@@ -268,7 +264,6 @@
 !         Partition:           10
 !            Start : 0674564040.000
 !            Stop  : 4294537252.255
-!
 !
 !     2) Below are some examples illustrating various input numbers of
 !        ticks and the resulting clock string outputs for the Galileo
@@ -358,13 +353,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert spacecraft_clock ticks to character clock format
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -376,7 +369,6 @@
 !     Local variables
 !
       integer(ip)           type
-
 
 !
 !     Standard SPICE error handling.
@@ -398,7 +390,6 @@
          call sigerr ( 'SPICE(NOTSUPPORTED)'             )
          return
       end if
-
 
       return
       end

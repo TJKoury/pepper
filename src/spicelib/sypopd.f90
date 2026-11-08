@@ -118,7 +118,6 @@
 !
 !     FOUND is .TRUE., and VALUE is 6.239996D0.
 !
-!
 !     The next call,
 !
 !        CALL SYPOPD ( 'K', TABSYM, TABPTR, TABVAL, VALUE, FOUND )
@@ -168,13 +167,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pop a value from a particular symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -196,13 +193,10 @@
       integer(ip)           locsym
       integer(ip)           locval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -258,7 +252,6 @@
          end if
 
       end if
-
 
       return
       end

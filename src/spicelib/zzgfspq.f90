@@ -34,7 +34,6 @@
       character(*)          ref
       real(wp)              value
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  DESCRIPTION
@@ -202,7 +201,6 @@
       logical               failed
       logical               return
 
-
 !
 !     Local Variables.
 !
@@ -221,12 +219,10 @@
 
       real(wp), parameter :: atol = 1.0e-12_wp
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     First check for bad inputs.
@@ -245,14 +241,12 @@
          return
       end if
 
-
 !
 !     Get the state of the TARG1, TARG2 objects relative to OBS.
 !
       call spkezp ( targ1, et, ref, abcorr,  obs, pv1, lt )
 
       if (  failed() ) return
-
 
        call spkezp ( targ2, et, ref, abcorr, obs, pv2, lt )
 

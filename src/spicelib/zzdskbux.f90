@@ -45,7 +45,6 @@
       include 'dsktol.inc'
       include 'zzctr.inc'
 
-
       integer(ip)           bodyid
       integer(ip)           nsurf
       integer(ip)           srflst ( * )
@@ -94,7 +93,6 @@
 !     BODYID     is the body ID of the target on which the input
 !                point is located.
 !
-!
 !     NSURF,
 !     SRFLST     are, respectively, the surface list count and
 !                an array containing a list of surface IDs.
@@ -102,36 +100,28 @@
 !                If the count is zero, all surfaces for the body
 !                are considered applicable.
 !
-!
 !     ET         is the lookup epoch, specified as seconds past
 !                J2000 TDB. Only DSK segments containing ET in
 !                their time coverage intervals are considered
 !                in the normal vector computation.
 !
-!
 !     FIXFID     is the frame ID of a body-fixed reference frame
 !                centered on the target body.
-!
 !
 !     NSEG       is the number of DSK segments for which the input
 !                buffers contain data.
 !
-!
 !     HANBUF     is the DSK handle buffer.
-!
 !
 !     DLABUF     is the DLA segment descriptor buffer.
 !
-!
 !     DSKBUF     is the DSK segment descriptor buffer.
-!
 !
 !     OFFBUF     is the frame offset buffer. For each DSK segment, the
 !                entry in this buffer is the position of that segment's
 !                reference frame center relative to the target body's
 !                center. The vector is expressed in the segment's
 !                reference frame. Units are km.
-!
 !
 !     CTRBUF     is the bounding sphere center buffer. For each DSK
 !                segment, the entry in this buffer is the position of
@@ -140,11 +130,9 @@
 !                expressed in the segment's reference frame. Units are
 !                km.
 !
-!
 !     RADBUF     is the bounding sphere radius buffer. For each DSK
 !                segment, the entry in this buffer is the radius of the
 !                segment's outer bounding sphere. Units are km.
-!
 !
 !     VERTEX,
 !     RAYDIR     are, respectively, the vertex and direction vector of
@@ -154,9 +142,7 @@
 !                reference frame designated by FIXFID. The vertex is
 !                considered to be an offset from the target body.
 !
-!
 ! $ Detailed_Output
-!
 !
 !     XPT        is the surface intercept, if an intercept exists. If
 !                multiple intercepts exist, the one closest to the
@@ -164,12 +150,10 @@
 !                reference frame designated by FIXFID. XPT is
 !                considered to be an offset from the target body.
 !
-!
 !     SEGIDX     is the index, within the input buffer arguments, of
 !                the segment providing the surface data on which XPT
 !                was found. SEGIDX is valid if and only if FOUND is
 !                .TRUE.
-!
 !
 !     FOUND      is a logical flag that is .TRUE. if and only if a
 !                ray-surface intercept was found.
@@ -301,7 +285,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -359,7 +342,6 @@
       logical               timeok
       logical               xfnd
 
-
 !
 !     Saved variables
 !
@@ -368,7 +350,6 @@
 !     Initial values
 !
       if ( return() ) return
-
 
 !
 !     Check the incoming segment count.
@@ -516,7 +497,6 @@
 
             segfid = nint( dskbuf(frmidx,i) )
 
-
             if ( segfid /= fixfid ) then
 !
 !              We have a segment that uses a different frame
@@ -557,7 +537,6 @@
 
                end if
 
-
             else if ( multfr ) then
 !
 !              The input and segment frames are the same for this
@@ -574,7 +553,6 @@
 !           segment's coverage volume.
 !
             call nplnpt ( segvtx, segdir, ctrbuf(1,i), pnear, dist )
-
 
             if ( dist <= radbuf(i) ) then
 !
@@ -613,7 +591,6 @@
                   call moved ( xform, 9, sgxbuf(1,1,nhit) )
 
                end if
-
 
             end if
 !
@@ -663,7 +640,6 @@
          j = iorder(i)
          k = sghit (j)
 
-
          segfid = nint( dskbuf(frmidx,k) )
 
          if ( segfid /= fixfid ) then
@@ -703,7 +679,6 @@
                          ic,        xfnd                   )
 
          if ( failed() ) return
-
 
          if ( xfnd ) then
 !

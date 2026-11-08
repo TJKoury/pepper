@@ -66,7 +66,6 @@
 !
 !                are the indices of the vertices of the Ith plate.
 !
-!
 !     CELLSZ     Size of cell array: explicit workspace dimension used
 !                for error checking. This value should be
 !
@@ -75,7 +74,6 @@
 !     MAXLST     Maximum size of output plate list. This size should be
 !
 !                   3*NP  +  NV
-!
 !
 !     CELLS      workspace array used to construct the vertex-plate
 !                mapping.
@@ -169,7 +167,6 @@
 !        Updated error handling. Now ZZVRTPLT performs precise checks
 !        on cell and plate array size inputs.
 !
-!
 !        22-DEC-2015 (NJB)
 !
 !           Renamed routine from VRTCOM to ZZVRTPLT.
@@ -230,7 +227,6 @@
       integer(ip)           j
       integer(ip)           ncell
 
-
       save
 
 !
@@ -238,8 +234,6 @@
 !
 
       if ( return () ) return
-
-
 
       if ( nv < 1 ) then
 

@@ -95,9 +95,7 @@
 !        precision numbers to it. Close the file, then re-open
 !        it and read the data back out.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASRDD_EX1
 !              IMPLICIT NONE
@@ -174,10 +172,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasrdd_ex1.das":
 !
@@ -206,7 +202,6 @@
 !           77.0   78.0   79.0   80.0   81.0   82.0   83.0   84.0
 !           85.0   86.0   87.0   88.0   89.0   90.0   91.0   92.0
 !           93.0   94.0   95.0   96.0   97.0   98.0   99.0  100.0
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -270,13 +265,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read double precision data from a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -287,7 +280,6 @@
 !        signaled an error inside the loop.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -301,7 +293,6 @@
 
       integer(ip), parameter :: dp = 2
 
-
 !
 !     Local variables
 !
@@ -312,8 +303,6 @@
       integer(ip)           numdp
       integer(ip)           recno
       integer(ip)           wordno
-
-
 
 !
 !     Find out the physical location of the first double precision

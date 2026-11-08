@@ -74,7 +74,6 @@
 !
 !              Units are always km and km/sec.
 !
-!
 !     TRGEPC   is the epoch, expressed as seconds past J2000 TDB, at
 !              which the target state TRGSTA is applicable. For
 !              other epochs, the position of the target relative to
@@ -85,7 +84,6 @@
 !              TRGEPC is independent of the epoch ET at which the
 !              state of the target relative to the observer is to be
 !              computed.
-!
 !
 !     TRGCTR   is the name of the center of motion of TRGSTA. The
 !              ephemeris of TRGCTR is provided by loaded SPK files.
@@ -98,7 +96,6 @@
 !              Case and leading and trailing blanks are not
 !              significant in the string TRGCTR.
 !
-!
 !     TRGREF   is the name of the reference frame relative to which
 !              the input state TRGSTA is expressed. The target has
 !              constant velocity relative to its center of motion
@@ -107,14 +104,12 @@
 !              Case and leading and trailing blanks are not
 !              significant in the string TRGREF.
 !
-!
 !     ET       is the ephemeris time at which the state of the
 !              target relative to the observer is to be computed. ET
 !              is expressed as seconds past J2000 TDB. ET refers to
 !              time at the observer's location.
 !
 !              ET is independent of the target epoch TRGEPC.
-!
 !
 !     OUTREF   is the name of the reference frame with respect to
 !              which the output state is expressed.
@@ -126,7 +121,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string OUTREF.
-!
 !
 !     REFLOC   is a string indicating the output reference frame
 !              evaluation locus: this is the location associated
@@ -141,7 +135,6 @@
 !                             Normally the locus 'OBSERVER' should
 !                             be selected when OUTREF is centered
 !                             at the observer.
-!
 !
 !                 'TARGET'    Evaluate OUTREF at the target epoch;
 !                             letting LT be the one-way light time
@@ -161,7 +154,6 @@
 !                             be selected when OUTREF is TRGREF,
 !                             the frame in which the target state
 !                             is specified.
-!
 !
 !                 'CENTER'    Evaluate the frame OUTREF at the epoch
 !                             associated its center. This epoch,
@@ -183,7 +175,6 @@
 !                                   ET        if no aberration
 !                                             corrections are used
 !
-!
 !                             The locus 'CENTER' should be selected
 !                             when the user intends to obtain
 !                             results compatible with those produced
@@ -194,7 +185,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string REFLOC.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied to
 !              observer-target state to account for one-way light
@@ -242,7 +232,6 @@
 !                 'CN+S'     Converged Newtonian light time
 !                            and stellar aberration corrections.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -276,14 +265,12 @@
 !                            Newtonian light time and stellar
 !                            aberration corrections.
 !
-!
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
 !              by this routine.
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string ABCORR.
-!
 !
 !     OBSRVR   is the name of an observing body. Optionally, you
 !              may supply the ID code of the object as an integer
@@ -323,7 +310,6 @@
 !              frame relative to the J2000 frame is evaluated in the
 !              manner indicated by the input argument REFLOC (see
 !              description above).
-!
 !
 !     LT       is the one-way light time between the observer and
 !              target in seconds. If the target state is corrected
@@ -478,7 +464,6 @@
 !        the computation of light time between the target and
 !        observer.
 !
-!
 !     The SPK routines that compute observer-target states for
 !     combinations of objects having ephemerides provided by the SPK
 !     system and objects having constant position or constant velocity
@@ -525,13 +510,11 @@
 !
 !        The observation epoch is 2003 OCT 13 06:00:00 UTC.
 !
-!
 !        Kernels
 !        =======
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -579,9 +562,7 @@
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     This program demonstrates the use of SPKCVT.
@@ -629,7 +610,6 @@
 !              CHARACTER*(*)         TIMFM2
 !              PARAMETER           ( TIMFM2 =
 !             .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
-!
 !
 !              INTEGER               BDNMLN
 !              PARAMETER           ( BDNMLN = 36 )
@@ -950,10 +930,8 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Frame evaluation locus:   TARGET
 !
@@ -971,7 +949,6 @@
 !         Observer-target velocity (km/s):
 !                  3823.39593314      -3840.60002121          2.21337692
 !         Light time (s):           255.76708533
-!
 !
 !         Frame evaluation locus:   CENTER
 !
@@ -993,7 +970,6 @@
 !         Distance between above positions (km):             70.25135676
 !         Velocity difference magnitude  (km/s):              0.00552910
 !
-!
 !         State computed using SPKEZR:
 !
 !         Observer:               MGS
@@ -1010,7 +986,6 @@
 !
 !         Distance between last two positions (km):           0.00000000
 !         Velocity difference magnitude     (km/s):           0.00000000
-!
 !
 !         Frame evaluation locus:   OBSERVER
 !
@@ -1029,7 +1004,6 @@
 !                     2.91968665          0.15140014          0.92363513
 !         Light time (s):           0.00129748
 !         Target range from SINCPT (km):                    388.97573572
-!
 !
 ! $ Restrictions
 !
@@ -1061,7 +1035,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     state of constant_velocity_target
@@ -1069,7 +1042,6 @@
 !     state of landmark on extended_object
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1107,8 +1079,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
-
 
 !
 !     Local variables
@@ -1154,7 +1124,6 @@
       character(frnmln)     svoref
       integer(ip)           svorfc
 
-
 !
 !     Saved variables
 !
@@ -1185,10 +1154,8 @@
       save                  svoref
       save                  svorfc
 
-
 !
 !     Initial values
-!
 !
 !     Evaluation type flags. The order of these flags
 !     must match that of the INTEGER parameters
@@ -1202,12 +1169,10 @@
 
       data                  prvcor / ' '         /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Counter initialization is done separately.
@@ -1327,7 +1292,6 @@
 !     is ZZCVXSTA. ZZCVXSTA computes the geometric state of the
 !     target relative to its center of motion in the frame TRGREF.
 !
-!
 !     Get the state of the target relative to the observer at ET,
 !     expressed in the frame OUTREF, using the specified aberration
 !     corrections.
@@ -1357,7 +1321,6 @@
          call zzspkfzt ( zzcvxsta, et,     outref, &
                          abcorr,   obscde, state,  lt )
 
-
       else if ( evltyp == evlobs ) then
 !
 !        The output frame orientation is to be evaluated at the
@@ -1383,7 +1346,6 @@
             call mxvg ( xtrans,  j2stat,  6,  6, state )
 
          end if
-
 
       else if ( evltyp == evltrg ) then
 !
@@ -1420,7 +1382,6 @@
                          abcorr,   obscde, j2stat,  lt, dlt )
 
          if ( failed() ) return
-
 
          if (  orfcde == j2code ) then
 !

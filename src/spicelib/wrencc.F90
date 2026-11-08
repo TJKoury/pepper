@@ -161,7 +161,6 @@
 !
 !           'This is the data.                             '
 !
-!
 !     Example 2
 !     ---------
 !
@@ -426,13 +425,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode and write characters to a text file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -445,7 +442,6 @@
 !        in this range for all supported environments.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -537,7 +533,6 @@
 !     This function computes the value of ICHAR that this code requires
 !     on any version of g77 for x86 Linux.
 #endif
-!
 #if defined(SPICE_COMPILER_INTEL)
       zzichr(carg) = ichar(carg)
 #else

@@ -207,8 +207,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -246,7 +244,6 @@
       logical               fndcde
       logical               fndnam
 
-
 !
 !     Saved variables
 !
@@ -258,9 +255,7 @@
       data                  pass1 / .true. /
       data                  names / kvsfbd, kvsfcd, kvsfnm /
 
-
       if ( return() ) return
-
 
 !
 !     The primary functions performed inline in this routine are
@@ -272,7 +267,6 @@
 !        - Performing error checks on the kernel variables that define
 !          the surface name/ID mapping. Initialization of data
 !          structures is delegated to ZZSRFINI.
-!
 !
       if ( pass1 ) then
 !
@@ -319,7 +313,6 @@
             call errch ( '#', 'not found' )
          end if
 
-
          call errch  ( '#', kvsfcd )
 
          if ( fndcde ) then
@@ -327,7 +320,6 @@
          else
             call errch ( '#', 'not found' )
          end if
-
 
          call errch  ( '#', kvsfbd )
 
@@ -421,7 +413,6 @@
       call gipool ( kvsfbd, 1, mxnsrf, nbody, kerbid, fndbod )
 
       if ( failed() ) return
-
 
       nkvar = nname
 

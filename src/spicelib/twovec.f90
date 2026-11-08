@@ -164,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     define an orthonormal frame from two vectors
 !
 !-&
-
 
 !
 !     SPICELIB functions

@@ -111,7 +111,6 @@
 !        ZZSUELIN:   Initialize ray intercept and near point utilities
 !                    for ellipsoidal target surface
 !
-!
 !        ZZSUDSKI:   Initialize ray intercept and near point utilities
 !                    for DSK target surface
 !
@@ -124,10 +123,8 @@
 !        ZZRAYSFX:   Compute ray-surface intercept given inputs
 !                    set by ZZSUELIN or ZZSUDSKI
 !
-!
 !        ZZRAYNP:    Compute nearest point on surface to ray given
 !                    inputs set by ZZSUELIN or ZZSUDSKI
-!
 !
 !     The geometric computation routines ZZRAYSFX, ZZRAYNP are
 !     used as callback routines by the generalized SINCPT algorithm.
@@ -184,13 +181,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     umbrella for generalized sincpt utilities
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -200,7 +195,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Target types:
 !
@@ -241,9 +235,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
 
 !$Procedure ZZSUELIN ( Initialize SINCPT utilities for ellipsoid )
 
@@ -367,16 +358,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     initialize intercept utilities for ellipsoidal target
 !
 !-&
 
-
       if ( return() ) return
-
 
       savtyp = elltrg
 
@@ -388,10 +376,6 @@
       savmxr = max( savrad(1), savrad(2), savrad(3) )
 
       return
-
-
-
-
 
 !$Procedure ZZSUDSKI ( DSK, initialize SINCPT utilities for DSK target )
 
@@ -543,16 +527,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     initialize intercept utilities for DSK target
 !
 !-&
 
-
       if ( return() ) return
-
 
       savtyp = dsktrg
 
@@ -576,7 +557,6 @@
 
       call cleard ( 3, savrad )
 
-
       if ( failed() ) return
 
 !
@@ -585,10 +565,6 @@
       call zzdsksph ( trgcde, savnsf, savsrf, savmnr, savmxr )
 
       return
-
-
-
-
 
 !$Procedure ZZRAYSFX ( Callback for ray-surface intercept )
 
@@ -737,22 +713,18 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     callback for generalized ray surface intercept
 !
 !-&
 
-
       if ( return() ) return
-
 
       if ( savtyp == elltrg ) then
 
          call surfpt ( vertex,    raydir,    savrad(1), &
                        savrad(2), savrad(3), spoint,    found )
-
 
       else if ( savtyp == dsktrg ) then
 
@@ -771,9 +743,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure ZZMAXRAD ( Shape model, maximum radius )
 
@@ -905,21 +874,15 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return radius of maximum bounding sphere for target
 !
 !-&
 
-
       maxrad = savmxr
 
       return
-
-
-
-
 
 !$Procedure ZZMINRAD ( Shape model, minimum radius )
 
@@ -1051,21 +1014,15 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return radius of minimum bounding sphere for target
 !
 !-&
 
-
       minrad = savmnr
 
       return
-
-
-
-
 
 !$Procedure ZZRAYNP ( Shape model, callback for ray-surface near point )
 
@@ -1221,17 +1178,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     callback for generalized ray surface near point
 !
 !-&
 
-
       if ( return() ) return
-
-
 
       if ( savtyp == elltrg ) then
 !
@@ -1240,7 +1193,6 @@
 !
          call npedln ( savrad(1), savrad(2), savrad(3), &
                        vertex,    raydir,    pnear,    dist )
-
 
       else if ( savtyp == dsktrg ) then
 !

@@ -101,7 +101,6 @@
 !                However, the greedy margin is not used. See the
 !                Parameters section below for further information.
 !
-!
 !     EXCLUD     is either a coordinate index or the parameter NONE.
 !
 !                If EXCLUD is set to one of
@@ -169,7 +168,6 @@
 !                EXCLUD, indicates that latitude should be excluded
 !                from comparison.
 !
-!
 !     RADIDX     is the index of radius in the second dimension of
 !                BOUNDS. When used as a value of the input argument
 !                EXCLUD, indicates that radius should be excluded
@@ -217,7 +215,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -240,7 +237,6 @@
       real(wp)              minlon
       real(wp)              minr
 
-
 !
 !     Saved variables
 !
@@ -248,13 +244,9 @@
 !
 !     Initial values
 !
-!
 !     Constants (SPICELIB computed them on the first call).
 !
       real(wp), parameter :: pi2 = twopi
-
-
-
 
 !
 !     Assume the point is outside to start. This allows us
@@ -281,8 +273,6 @@
 
       end if
 
-
-
       if ( exclud /= radidx ) then
 !
 !        Compare the point's radius to the segment's radius bounds.
@@ -299,7 +289,6 @@
          end if
 
       end if
-
 
       if ( exclud /= latidx ) then
 !
@@ -337,7 +326,6 @@
 !
          loclon = lon
 
-
          if ( lon < ( minlon - lonali ) ) then
 !
 !           If the point's longitude is less than the segment's
@@ -356,7 +344,6 @@
 
          end if
 
-
          if (        ( loclon < (minlon-angmrg) ) &
                 .or. ( loclon > (maxlon+angmrg) )  ) then
 !
@@ -366,7 +353,6 @@
             return
 
          end if
-
 
       end if
 !

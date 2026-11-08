@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekpage.inc'
       include 'ektree.inc'
       include 'ektype.inc'
@@ -170,11 +169,9 @@
 !        Now uses ERRHAN to insert DAS file name into
 !        long error messages.
 !
-!
 !-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -197,7 +194,7 @@
       logical               found
 
 !
-!     Use discovery check-in in this puppy.
+! in this puppy.
 !
 !     Nothing found to begin with.
 !
@@ -290,7 +287,6 @@
          rsib   =  0
       end if
 
-
       child  =  page ( trkidr + prev + 1 )
       found  =  .false.
 
@@ -362,7 +358,6 @@
             child   =  page ( trkidc + prev + 1 )
 
          end if
-
 
       end do
 

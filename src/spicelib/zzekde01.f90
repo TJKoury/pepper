@@ -124,7 +124,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -152,7 +151,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Before trying to actually modify the file, do every error
 !     check we can.
@@ -174,13 +172,11 @@
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
-
       if ( datptr > 0 ) then
 !
 !        Determine whether the column is indexed.
 !
          idxtyp  =  coldsc(ixtidx)
-
 
          if ( idxtyp /= ifalse ) then
 !
@@ -223,7 +219,6 @@
 !
          call dasudi ( handle, ptrloc, ptrloc, uninit )
 
-
       else if ( datptr == null ) then
 !
 !        Determine whether the column is indexed.
@@ -243,7 +238,6 @@
 !        Mark the entry as `uninitialized'.
 !
          call dasudi ( handle, ptrloc, ptrloc, uninit )
-
 
       else if ( datptr /= uninit ) then
 !

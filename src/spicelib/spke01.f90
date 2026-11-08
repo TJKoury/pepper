@@ -136,13 +136,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_1 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -167,7 +165,6 @@
       integer(ip)           kq       (    3 )
 
       real(wp)              fc       (   14 )
-
 
       real(wp)              sum
       real(wp)              delta

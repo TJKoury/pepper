@@ -171,7 +171,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -202,12 +201,7 @@
       integer(ip)           schlep
       integer(ip)           subsiz
 
-
-!
-!     Use discovery check-in for speed.
-!
       if ( nrot == 0 ) return
-
 
       root  =  tree
 
@@ -299,7 +293,6 @@
 
          end if
 
-
       else if ( nrot < 0 ) then
 
          if (      ( ( lnkeys - nrot ) > ( mxkeyc + 1 ) ) &
@@ -360,7 +353,6 @@
 !           -- The offset delta to apply to the new right parent key,
 !              DPAR.  Note that the successors of this key in the
 !              parent node remain unchanged.
-!
 !
          schlep  =  nrot
          remain  =  lnkeys  -    schlep
@@ -453,7 +445,6 @@
          call movei( lpage(trdatc+remain+2), schlep-1, rpage(trdatc+1) )
          call movei( lpage(trkidc+remain+2), schlep,   rpage(trkidc+1) )
 
-
 !
 !        Update the key counts in both the input node and sibling.
 !
@@ -466,7 +457,6 @@
          call zzekpgwi ( handle, parent, ppage )
          call zzekpgwi ( handle, left,   lpage )
          call zzekpgwi ( handle, right,  rpage )
-
 
       else
 !
@@ -574,7 +564,6 @@
          call zzekpgwi ( handle, parent, ppage )
          call zzekpgwi ( handle, left,   lpage )
          call zzekpgwi ( handle, right,  rpage )
-
 
       end if
 

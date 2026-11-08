@@ -12,7 +12,6 @@
 !     Set an encoded integer at a specified address from a character
 !     data page.
 !
-!
 ! $ Required_Reading
 !
 !     EK
@@ -117,10 +116,8 @@
 !
       character(encsiz)     cval
 
-
 !
 !     Discovery error handling should be used in this utility.
-!
 !
 !     Encode the number.
 !
@@ -130,7 +127,6 @@
 !     Write the encoded value.
 !
       call dasudc ( handle, addrss, addrss+encsiz-1, 1, encsiz, cval )
-
 
       return
       end

@@ -148,7 +148,6 @@
 !     This routine relieves the user from performing the repetitive
 !     calls to the DAF routines necessary to construct a CK segment.
 !
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -174,11 +173,9 @@
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -213,7 +210,6 @@
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -269,7 +265,6 @@
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   .-             -.
@@ -301,7 +296,6 @@
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -359,9 +353,7 @@
 !        about the J2000 Z-axis. There will be one pointing instance
 !        per 10-tick interval.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKW01_EX1
 !              IMPLICIT NONE
@@ -532,7 +524,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new CK file exists in the
 !        output directory.
@@ -612,13 +603,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write CK type_1 pointing data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -652,7 +641,6 @@
 !     LPRINT    is the integer value of the last printable ASCII
 !               character.
 !
-!
       integer(ip), parameter :: sidlen = 40
 
       integer(ip), parameter :: ndc = 5
@@ -666,7 +654,6 @@
       integer(ip), parameter :: fprint = 32
 
       integer(ip), parameter :: lprint = 126
-
 
 !
 !     Local variables
@@ -682,12 +669,10 @@
       integer(ip)           refcod
       integer(ip)           value
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The first thing that we will do is create the segment descriptor.
@@ -743,7 +728,6 @@
 
       dcd( 1 ) = begtim
       dcd( 2 ) = endtim
-
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -807,7 +791,6 @@
 
       end if
 
-
 !
 !     Now check that the encoded SCLK times are positive and strictly
 !     increasing.
@@ -870,9 +853,6 @@
 
       if ( failed() ) return
 
-
-
-
 !
 !     Now add the quaternions and optionally, the angular velocity
 !     vectors.
@@ -891,7 +871,6 @@
          end do
 
       end if
-
 
 !
 !     Add the SCLK times.

@@ -248,7 +248,6 @@
 !
 !               MARGIN is currently set to 1.D-12.
 !
-!
 !     See INCLUDE file gf.inc for declarations and descriptions of
 !     parameters used throughout the GF system.
 !
@@ -389,7 +388,6 @@
 !     solution process that are relevant to correct and efficient use
 !     of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -425,7 +423,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -456,7 +453,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -505,7 +501,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfrfov_ex1.tm
@@ -533,7 +528,6 @@
 !              cas00071.tsc                    Cassini SCLK kernel
 !              cas_iss_v10.ti                  Cassini IK
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'naif0012.tls',
@@ -546,9 +540,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFRFOV_EX1
 !              IMPLICIT NONE
@@ -572,7 +564,6 @@
 !              CHARACTER*(*)         TIMFMT
 !              PARAMETER           ( TIMFMT =
 !             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
-!
 !
 !              DOUBLE PRECISION      AU
 !              PARAMETER           ( AU     = 149597870.693D0 )
@@ -797,10 +788,8 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Instrument:              CASSINI_ISS_WAC
 !         Star's catalog number:          6000
@@ -808,7 +797,6 @@
 !          Visibility start time (TDB)           Stop time (TDB)
 !          ---------------------------     ---------------------------
 !          2004-JUN-11 06:30:00.000000     2004-JUN-11 12:00:00.000000
-!
 !
 !        Note that the star is visible throughout the confinement
 !        window.
@@ -855,13 +843,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF ray in instrument FOV search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -872,7 +858,6 @@
 
 !
 !     External routines
-!
 !
 !     Interrupt handler:
 !
@@ -913,7 +898,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Note to maintenance programmer: input exception checks

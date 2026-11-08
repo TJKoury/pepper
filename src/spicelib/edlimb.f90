@@ -123,9 +123,7 @@
 !     1) Given an ellipsoid and a viewpoint exterior to it, calculate
 !        the limb ellipse as seen from that viewpoint.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EDLIMB_EX1
 !              IMPLICIT NONE
@@ -178,16 +176,13 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Limb ellipse as seen from viewpoint:
 !           Semi-minor axis:   0.000000   0.000000  -1.000000
 !           Semi-major axis:   0.000000   2.000000  -0.000000
 !           Center         :   1.000000   0.000000   0.000000
-!
 !
 !     2) We'd like to find the apparent limb of Jupiter, corrected for
 !        light time and stellar aberration, as seen from JUNO
@@ -195,7 +190,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -230,9 +224,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EDLIMB_EX2
 !              IMPLICIT NONE
@@ -331,17 +323,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Apparent limb of Jupiter as seen from JUNO:
 !           UTC time       : 2016 Jul 14 19:45:00
 !           Semi-minor axis:  12425.547643  -5135.572410  65656.053303
 !           Semi-major axis:  27305.667297  66066.222576      0.000000
 !           Center         :    791.732472   -327.228993   -153.408849
-!
 !
 ! $ Restrictions
 !
@@ -392,13 +381,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ellipsoid limb
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -411,7 +398,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -421,7 +407,6 @@
 !     Local parameters
 !
       integer(ip), parameter :: ubpl = 4
-
 
 !
 !     Local variables
@@ -440,7 +425,6 @@
       real(wp)              v      (    3 )
 
       logical               found
-
 
 !
 !     Standard SPICE error handling.
@@ -523,19 +507,15 @@
 !     indicate the dot product of the vectors a and b.  If we call the
 !     viewing point V and the limb point X, then
 !
-!
-!
 !                            X(1)         X(2)         X(3)
 !        0  =   < V - X,  ( -------- ,   -------- ,   --------  )  >
 !                                2           2             2
 !                            SCLA        SCLB          SCLC
 !
-!
 !                            X(1)         X(2)         X(3)
 !           =   <   V,    ( -------- ,   -------- ,   --------  )  >
 !                                2           2             2
 !                            SCLA        SCLB          SCLC
-!
 !
 !                            X(1)         X(2)         X(3)
 !            - <   X,    ( -------- ,   -------- ,   --------  )  >
@@ -548,20 +528,16 @@
 !                               2            2             2
 !                           SCLA         SCLB          SCLC
 !
-!
 !           =   1
-!
 !
 !     This last equation is just the equation of the scaled ellipsoid.
 !     We can combine the last two equalities and interchange the
 !     positions of X and V to obtain
 !
-!
 !                      V(1)         V(2)         V(3)
 !        <   X,    ( -------- ,   -------- ,   --------  )  >   =   1
 !                          2           2             2
 !                      SCLA        SCLB          SCLC
-!
 !
 !     This is the equation of the limb plane.
 !

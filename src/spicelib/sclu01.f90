@@ -152,13 +152,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     lookup type_1 spacecraft_clock
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -196,7 +194,6 @@
 !        added following the header.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -254,7 +251,6 @@
 !
       integer(ip), parameter :: sysidx = 9
 
-
 !
 !     Local variables
 !
@@ -274,7 +270,6 @@
       integer(ip)           ub     ( nkitem )
 
       logical               found
-
 
 !
 !     Saved variables
@@ -306,7 +301,6 @@
             'SCLK01_KERNEL_ID',         1,   1, &
             'SCLK01_TIME_SYSTEM',       0,   1                        /
 
-
       data nfdmsg / '# not found. Did you load the SCLK kernel?'      /
 
       data nummsg / '# values found for #: valid range is #:#.'       /
@@ -318,11 +312,9 @@
 !
       if ( return () ) return
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
 
 !$Procedure SCLI01 ( SCLK lookup of integer data, type 1 )
 
@@ -384,7 +376,6 @@
 !                 SCLK01_N_FIELDS
 !
 !              and SC as -77.
-!
 !
 !     MAXNV    is the maximum number of values to return.  MAXNV
 !              is used to prevent SCLI01 from writing past the end
@@ -467,7 +458,6 @@
 !
 !                  CALL SCLI01 ( NAME, SC, MXNFLD, N, NFIELD )
 !
-!
 !         After this subroutine call, NFIELD has the value 4.
 !
 ! $ Restrictions
@@ -529,14 +519,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     lookup of type_1 spacecraft_clock integer data
 !     lookup type_1 spacecraft_clock integer data
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -579,12 +567,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Form the name of the kernel pool data item, and do the lookup.
@@ -723,7 +709,6 @@
 
       end if
 
-
       if ( name == namlst(nflidx) ) then
 
          if (  ( ival(1) < 1 ) .or. ( ival(1) > mxnfld )  ) then
@@ -737,7 +722,6 @@
          end if
 
       end if
-
 
       if ( name == namlst(sysidx) ) then
 
@@ -754,7 +738,6 @@
       end if
 
       return
-
 
 !$Procedure SCLD01 ( SCLK lookup of double precision data, type 1 )
 
@@ -814,7 +797,6 @@
 !                 SCLK01_COEFFICIENTS
 !
 !              and SC as -77.
-!
 !
 !     MAXNV    is the maximum number of values to return.  MAXNV
 !              is used to prevent SCLD01 from writing past the end
@@ -1014,14 +996,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     lookup of type_1 spacecraft_clock d.p. data
 !     lookup type_1 spacecraft_clock d.p. data
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1045,12 +1025,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Form the name of the kernel pool datum, and do the lookup.
@@ -1160,7 +1138,6 @@
 
       end if
 
-
       if ( name == namlst(cofidx) ) then
 
          if (  ( (n/3)*3 )  /=  n  ) then
@@ -1195,7 +1172,6 @@
          end do
 
       end if
-
 
       if (       ( name == namlst(modidx) ) &
            .or.  ( name == namlst(offidx) )  ) then

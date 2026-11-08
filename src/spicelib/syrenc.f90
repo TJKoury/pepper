@@ -104,7 +104,6 @@
 !                        NEUTRINO
 !        STRASSMAN -->   NUCLEAR FISSION
 !
-!
 !     The next call,
 !
 !     CALL SYRENC ( 'HAHN', 'STRASSMAN', TABSYM, TABPTR, TABVAL )
@@ -123,7 +122,6 @@
 !     and the symbol "HAHN" was then renamed to "STRASSMAN". If the
 !     new symbol exists, it is deleted from the table before its name
 !     is given to another symbol.
-!
 !
 !     The next call,
 !
@@ -166,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rename an existing symbol
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -187,7 +183,6 @@
 !        Declaration of the unused function SIZEC removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -209,13 +204,10 @@
       integer(ip)           newloc
       integer(ip)           newval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Where was the old symbol?
@@ -273,7 +265,6 @@
          tabsym(newloc) = new
 
       end if
-
 
       return
       end

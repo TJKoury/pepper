@@ -122,7 +122,6 @@
 !
 !-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
 !
-!
 !        09-OCT-2009 (NJB)
 !
 !           Updated header.
@@ -133,13 +132,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close a DSK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -157,9 +154,7 @@
 !
       character(methln)     method
 
-
       if ( return() ) return
-
 
       if ( optmiz ) then
 !

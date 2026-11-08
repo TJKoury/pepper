@@ -122,7 +122,6 @@
 !      "EINSTEIN" have been deleted, and now only the new value is
 !      associated with the symbol.
 !
-!
 !      The next call,
 !
 !      CALL SYSETC ( 'MILLIKAN', 'PHOTOELECTRIC EFFECT'
@@ -173,13 +172,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the value associated with a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -204,8 +201,6 @@
       integer(ip)           locval
       integer(ip)           dimval
       logical               oldsym
-
-
 
 !
 !     Standard SPICE error handling.
@@ -255,7 +250,6 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
-
       else if ( nptr >= sizei ( tabptr ) ) then
 
             call setmsg ( 'SYSETC: Addition of the new symbol # '     // &
@@ -263,14 +257,12 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
-
       else if ( nval >= sizec ( tabval ) ) then
 
             call setmsg ( 'SYSETC: Addition of the new symbol #  '    // &
                           'causes an overflow in the value table.' )
             call errch  ( '#', name )
             call sigerr ( 'SPICE(VALUETABLEFULL)' )
-
 
 !
 !     If there's room, add the new name to the name table. Give the
@@ -290,7 +282,6 @@
          call scardc ( nval, tabval )
 
       end if
-
 
       return
       end

@@ -84,7 +84,6 @@ contains
 !
 !            CALL EXPLN ( SPICE(ZERORADIUS), EXPL )
 !
-!
 !     Now, EXPL  =
 !
 !     'Invalid Radius--Equatorial or Polar Radius is Zero'
@@ -125,13 +124,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get explanation for short error message
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -142,7 +139,6 @@ contains
 !        was not used.
 !
 !-&
-
 
 !
 !     Executable Code:
@@ -181,7 +177,6 @@ contains
       else if (  msg  ==  'SPICE(DATATYPENOTRECOG)' )  then
 
          expl  = 'Unrecognized Data Type Specification was Encountered'
-
 
       else if (  msg  ==  'SPICE(DATEEXPECTED)'  ) then
 
@@ -352,24 +347,19 @@ contains
 
       else if (  msg  ==  'SPICE(WRITEERROR)'  ) then
 
-
          expl  = 'An Attempt to write to a specified unit failed.'
-
 
       else if (  msg  ==  'SPICE(ZERORADIUS)'   ) then
 
          expl  = 'Invalid Radius--Equatorial or Polar Radius is Zero'
 
-
       else if (  msg  ==  'SPICE(ZEROVECTOR)'  ) then
 
          expl  = 'Input Vector is the Zero Vector'
 
-
       else if (  msg  ==  'SPICE(ZEROAXISLENGTH)'  )  then
 
          expl  = 'Input Axis Length is Zero'
-
 
       else
 

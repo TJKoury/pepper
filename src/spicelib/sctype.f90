@@ -88,9 +88,7 @@
 !
 !                      PRINT *, 'Galileo clock type is ', TYPE
 !
-!
 !     2)  Find the SCLK type for Mars Observer.
-!
 !
 !                C
 !                C     Load the SCLK kernel.
@@ -166,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spacecraft_clock type
 !
 !-&
-
 
 !
 !     SPICELIB functions

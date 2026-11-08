@@ -111,7 +111,6 @@
 !
 !-    SPICELIB Version 1.0.0, 27-SEP-1996 (WLT)
 !
-!
 !-&
 !
 !     Spicelib functions

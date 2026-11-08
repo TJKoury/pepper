@@ -252,7 +252,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch transformation matrix for a body
@@ -260,7 +259,6 @@
 !     transformation from j2000 to bodyfixed coordinates
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -348,7 +346,6 @@
 !        FOUND removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions

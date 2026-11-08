@@ -254,7 +254,6 @@
 !              Case, leading and trailing blanks are not significant in
 !              aberration correction parameter strings.
 !
-!
 !              ANGULAR SEPARATION
 !
 !                 is the apparent angular separation of two target
@@ -303,7 +302,6 @@
 !                 (In this case, the angular separation is the angle
 !                 between the centers of the spheres minus the sum of
 !                 the apparent angular radii of the spheres.)
-!
 !
 !              COORDINATE
 !
@@ -472,7 +470,6 @@
 !                    QCPARS(2) = <name of observer>
 !                    QCPARS(3) = <aberration correction>
 !
-!
 !              ILLUMINATION ANGLE
 !
 !                 is any of the illumination angles
@@ -511,7 +508,6 @@
 !                    QDPARS(2) =  <Y coordinate of surface point>
 !                    QDPARS(3) =  <Z coordinate of surface point>
 !
-!
 !              PHASE ANGLE
 !
 !                 is the apparent phase angle between a target body
@@ -530,7 +526,6 @@
 !                    QCPARS(2) =  <name of observer>
 !                    QCPARS(3) =  <aberration correction>
 !                    QCPARS(4) =  <name of illuminating body>
-!
 !
 !              RANGE RATE
 !
@@ -1031,7 +1026,6 @@
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
 !
-!
 !     Step Size
 !     =========
 !
@@ -1073,7 +1067,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -1095,7 +1088,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater affect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -1158,7 +1150,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfevnt_ex1.tm
@@ -1182,7 +1173,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de414.bsp',
@@ -1193,9 +1183,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFEVNT_EX1
 !              IMPLICIT              NONE
@@ -1222,7 +1210,6 @@
 !
 !              INTEGER               MAXVAL
 !              PARAMETER           ( MAXVAL = 20000 )
-!
 !
 !              INTEGER               STRSIZ
 !              PARAMETER           ( STRSIZ = 40 )
@@ -1399,7 +1386,6 @@
 !             .              MAXVAL,     NWDIST,   WORK,
 !             .              BAIL,       GFBAIL,   RESULT )
 !
-!
 !        C
 !        C     Check the number of intervals in the result window.
 !        C
@@ -1431,10 +1417,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Distance pass 1 of 1 100.00% done.
 !
@@ -1463,7 +1447,6 @@
 !         Interval            6
 !         Beginning TDB 2001-JUN-11 19:44:10.855458 (TDB)
 !         Ending TDB    2001-JUN-11 19:44:10.855458 (TDB)
-!
 !
 !        Note that the progress report has the format shown below:
 !
@@ -1563,13 +1546,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF mid-level geometric condition solver
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1578,7 +1559,6 @@
       logical               return
 
       external              zzgfudlt
-
 
 !
 !     Angular separation routines.
@@ -1610,7 +1590,6 @@
       external              zzgfildc
       external              zzgfilgq
 
-
 !
 !     Event quantity codes:
 !
@@ -1629,7 +1608,6 @@
       integer(ip), parameter :: angspd = 7
 
       integer(ip), parameter :: apdiam = 8
-
 
 !
 !     Number of supported quantities:
@@ -1656,7 +1634,6 @@
 !     parameter names and character quantity parameters.
 !
       integer(ip), parameter :: maxcln = 80
-
 
 !
 !     Local variables
@@ -1711,7 +1688,6 @@
       save                  srcpre
       save                  srcsuf
 
-
 !
 !     Initial values
 !
@@ -1741,7 +1717,6 @@
                                      'ABSMIN', &
                                      'LOCMAX', &
                                      'LOCMIN'   /
-
 
 !
 !     Below we initialize the list of quantity parameter names.
@@ -1821,12 +1796,10 @@
                                      'SPOINT', &
                                       2 * ' '                 /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( first ) then
 
@@ -1890,7 +1863,6 @@
 
       qtnum = isrchc ( quant, nq, qnames )
 
-
       if ( qtnum == 0 ) then
 
         call setmsg ('The geometric quantity, # is not '             // &
@@ -1946,7 +1918,6 @@
 !
             loc = isrchc ( qpars(i,qtnum), qnpars, pnames )
 
-
             if ( loc == 0 ) then
 
                call setmsg ( 'The parameter # is required in order ' // &
@@ -1963,7 +1934,6 @@
          end if
 
       end do
-
 
 !
 !     Capture as local variables those parameters passed from the
@@ -2002,7 +1972,6 @@
 
       end if
 
-
 !
 !     -OBSERVER-
 !
@@ -2013,7 +1982,6 @@
          obsrvr = cpars(loc)
 
       end if
-
 
 !
 !     -ILLUM-
@@ -2026,7 +1994,6 @@
 
       end if
 
-
 !
 !     -TARGET1-
 !
@@ -2038,7 +2005,6 @@
 
       end if
 
-
 !
 !     -TARGET2-
 !
@@ -2049,7 +2015,6 @@
          of(2) = cpars(loc)
 
       end if
-
 
 !
 !     -FRAME1-
@@ -2073,7 +2038,6 @@
 
       end if
 
-
 !
 !     -SHAPE1-
 !
@@ -2084,7 +2048,6 @@
          shape(1) = cpars(loc)
 
       end if
-
 
 !
 !     -SHAPE2-
@@ -2097,7 +2060,6 @@
 
       end if
 
-
 !
 !     -ABCORR-
 !
@@ -2108,7 +2070,6 @@
          abcorr = cpars(loc)
 
       end if
-
 
 !
 !     -REFERENCE FRAME-
@@ -2121,7 +2082,6 @@
 
       end if
 
-
 !
 !     -COORDINATE SYSTEM-
 !
@@ -2133,7 +2093,6 @@
 
       end if
 
-
 !
 !     -COORDINATE-
 !
@@ -2144,7 +2103,6 @@
          cornam = qcpars(loc)
 
       end if
-
 
 !
 !     -VECTOR DEFINITION-
@@ -2168,7 +2126,6 @@
 
       end if
 
-
 !
 !     -METHOD-
 !
@@ -2179,7 +2136,6 @@
          method = qcpars(loc)
 
       end if
-
 
 !
 !     -DREF-
@@ -2214,7 +2170,6 @@
 
       end if
 
-
 !
 !     Make sure that the requested comparison operation is one we
 !     recognize.
@@ -2241,7 +2196,6 @@
          return
 
       end if
-
 
 !
 !     If progress reporting is enabled, set the report prefix array
@@ -2304,7 +2258,6 @@
                         udrepu,        udrepf,   rptpre, &
                         srcsuf(1,sep), bail,     udbail, &
                         result  )
-
 
       else if ( qtnum == dist ) then
 
@@ -2403,7 +2356,6 @@
                         srcsuf(1,iluang), bail,     udbail, &
                         result                                   )
 
-
       else
 
 !
@@ -2418,7 +2370,6 @@
          return
 
       end  if
-
 
       return
       end

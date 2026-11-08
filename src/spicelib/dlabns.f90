@@ -123,9 +123,7 @@
 !        After writing and closing the file, open the file for
 !        read access; dump the data to standard output.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DLABNS_EX1
 !              IMPLICIT NONE
@@ -303,10 +301,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Character array:
 !         1234567890123456789012345678901234567890123456789012345678901
@@ -333,7 +329,6 @@
 !          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
 !          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
 !          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
-!
 !
 !        Note that after run completion, a new DLA file exists in the
 !        output directory.
@@ -376,13 +371,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin new segment in DLA file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -412,7 +405,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Make sure the input handle refers to a DAS file that

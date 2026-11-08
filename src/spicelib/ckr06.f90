@@ -69,7 +69,6 @@
 !              interval's start time or the smaller of an interval's
 !              end time and its last time tag.
 !
-!
 !     NEEDAV   is .TRUE. if angular velocity is requested. If the
 !              input segment descriptor indicates angular velocity
 !              is absent, the error SPICE(NOAVDATA) is signaled.
@@ -113,7 +112,6 @@
 !
 !              The packet size is a function of the subtype code.
 !              All packets in a record have the same size.
-!
 !
 !     FOUND    is a logical flag indicating whether data were found.
 !              If NEEDAV is .FALSE., data will be found if the
@@ -262,13 +260,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_6 CK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -297,7 +293,6 @@
       integer(ip), parameter :: ctrlsz = 4
 
       integer(ip), parameter :: nsgpar = 2
-
 
 !
 !     Maximum window sizes, based on subtypes:
@@ -436,7 +431,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Start with a parameter compatibility check on the first
 !     pass.
@@ -546,7 +540,6 @@
 !     From this point onward, we assume the segment was constructed
 !     correctly.
 !
-!
 !     Terminology: below, the phrase "base address of 'X'" refers to
 !     the DAF address immediately preceding X. Base addresses simplify
 !     mapping DAF array (here "array" means an array stored in
@@ -618,7 +611,6 @@
 !
 !        WNDSIZ    Interpolation window size of current mini-segment.
 !
-!
 !     Re-used variables: the variables shown in the list below
 !     are used as short-duration variables, much like loop index
 !     variables; they are re-used as needed.
@@ -628,7 +620,6 @@
 !        GROUP
 !        NREAD
 !        REMAIN
-!
 !
 !     Decide whether we're looking at the same segment we saw on the
 !     previous call, and whether the mini-segment interval used on
@@ -696,7 +687,6 @@
          end if
 
       end if
-
 
       if ( samseg .and. samivl ) then
 !
@@ -965,7 +955,6 @@
 !           the interval itself is IVEIX - 1.
 !
             miniix = iveix - 1
-
 
          else
 !
@@ -1563,7 +1552,6 @@
          endidx  =  min (  begidx + dirsiz,  npkt  )
 
       end if
-
 
       timbas  =  pkdbas - npkt
 

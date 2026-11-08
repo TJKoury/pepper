@@ -36,7 +36,6 @@ contains
 
       include              'zzbodtrn.inc'
 
-
 ! $ Detailed_Input
 !
 !     None.
@@ -69,7 +68,6 @@ contains
 !
 !     Simple to use, a call the ZZIDMAP returns the arrays defining the
 !     name/ID mappings.
-!
 !
 !        INCLUDE            'zzbodtrn.inc'
 !
@@ -429,7 +427,6 @@ contains
 !           STV-2 to STV52
 !           STV-3 to STV53
 !
-!
 !-    SPICELIB Version 1.0.4, 01-NOV-2006 (EDW)
 !
 !        NAIF removed several provisional name/ID mappings from
@@ -612,7 +609,6 @@ contains
 !
 !        Removed:
 !             -172   SLCOMB
-!
 !
 !-&
 
@@ -2704,8 +2700,6 @@ contains
       bltcod(692) =   399069
       bltnam(692) =  'DSS-69'
 
-
-
       return
       end procedure zzidmap
 
@@ -2733,7 +2727,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2825,7 +2818,6 @@ contains
 !     variables are in pepper_state_zzhsc. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -2843,9 +2835,6 @@ contains
 !     PRIVATE UTILITY
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -2954,7 +2943,6 @@ contains
 !                     |         |     |         |     |         |
 !                     +---------+     +---------+     +---------+
 !
-!
 ! $ Examples
 !
 !     An add-only hash used together with flat data arrays provides a
@@ -3051,8 +3039,6 @@ contains
 !
 !           END IF
 !
-!
-!
 !     Example 2: Stop buffering when filled up
 !     ----------------------------------------
 !
@@ -3095,7 +3081,6 @@ contains
 !              END IF
 !
 !           END IF
-!
 !
 !     Example 3: Trash when filled up and start buffering again
 !     ---------------------------------------------------------
@@ -3181,16 +3166,13 @@ contains
 !     Hash control area items.
 !
 
-
 !
 !     SPICELIB functions.
 !
 
-
 !
 !     Local variables.
 !
-
 
 !
 !     Standard SPICE error handling.
@@ -3339,7 +3321,6 @@ contains
          call ctx%sigerr ( 'SPICE(INVALIDDIVISOR)'                       )
          return
       end if
-
 
       return
       end procedure zzhscini
@@ -3589,7 +3570,6 @@ contains
 !     an error. Report it and return.
 !
       if ( full .and. .not. lfound ) then
-
 
          call ctx%setmsg ( 'The hash has no room for any more items.')
          call ctx%sigerr ( 'SPICE(HASHISFULL)' )
@@ -4042,7 +4022,6 @@ contains
 !     variables are in pepper_state_zzhsi. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -4060,9 +4039,6 @@ contains
 !     PRIVATE UTILITY
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -4171,7 +4147,6 @@ contains
 !                     |         |     |         |     |         |
 !                     +---------+     +---------+     +---------+
 !
-!
 ! $ Examples
 !
 !     An add-only hash used together with flat data arrays provides a
@@ -4268,8 +4243,6 @@ contains
 !
 !           END IF
 !
-!
-!
 !     Example 2: Stop buffering when filled up
 !     ----------------------------------------
 !
@@ -4312,7 +4285,6 @@ contains
 !              END IF
 !
 !           END IF
-!
 !
 !     Example 3: Trash when filled up and start buffering again
 !     ---------------------------------------------------------
@@ -4401,16 +4373,13 @@ contains
 !     Hash control area items.
 !
 
-
 !
 !     SPICELIB functions.
 !
 
-
 !
 !     Local variables.
 !
-
 
 !
 !     Standard SPICE error handling.
@@ -4549,7 +4518,6 @@ contains
       i = zzhashi( ctx, 1, hashsz )
 
       if ( ctx%failed() ) return
-
 
       return
       end procedure zzhsiini
@@ -4810,7 +4778,6 @@ contains
 !     an error. Report it and return.
 !
       if ( full .and. .not. lfound ) then
-
 
          call ctx%setmsg ( 'The hash has no room for any more items.')
          call ctx%sigerr ( 'SPICE(HASHISFULL)' )
@@ -5297,7 +5264,6 @@ contains
 
       integer(ip), parameter :: lbpool = -5
 
-
 ! $ Detailed_Input
 !
 !     NAMES     is the array of body names. This array is parallel to
@@ -5579,7 +5545,6 @@ contains
       include               'zzbodtrn.inc'
 
       integer(ip), parameter :: lbpool = -5
-
 
 ! $ Detailed_Input
 !
@@ -5897,10 +5862,9 @@ contains
 
       if ( ctx%failed() ) return
 
-
 !
 !     We're on the home stretch if we make it to this point. Set EXTKER
-!     to .TRUE., check out and return.
+!     to .TRUE., return.
 !
       extker = .true.
 
@@ -5914,7 +5878,6 @@ contains
 !     its entry points are the module procedures below, and its saved
 !     variables are in pepper_state_zzbodblt. Its documentation follows.
 !
-
 
 ! $ Abstract
 !
@@ -5934,9 +5897,6 @@ contains
 !     BODY
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -6226,7 +6186,6 @@ contains
 !     SPICELIB Functions
 !
 
-
 !
 !     Local Parameters
 !
@@ -6234,8 +6193,6 @@ contains
 !
 !     Local Variables
 !
-
-
 
 !
 !     Saved Variables
@@ -6352,6 +6309,7 @@ contains
       use pepper_strings, only: cmprss, ljust, ucase
       implicit none
       include              'zzbodtrn.inc'
+      integer(ip) :: i
       if ( .not. allocated ( ctx%zzbodblt ) ) then
          allocate ( ctx%zzbodblt )
          call init_zzbodblt_state ( ctx%zzbodblt )
@@ -6359,10 +6317,8 @@ contains
       associate ( bltnam => ctx%zzbodblt%bltnam, &
                   bltnor => ctx%zzbodblt%bltnor, &
                   bltcod => ctx%zzbodblt%bltcod, &
-                  i => ctx%zzbodblt%i, &
                   first => ctx%zzbodblt%first )
       if ( ctx%failed() ) return
-
 
 !
 !     On the first invocation compute the normalized forms of BLTNAM
@@ -6562,18 +6518,18 @@ contains
       use pepper_strings, only: eqstr, intstr, lastnb, ucase
       implicit none
       include              'zzbodtrn.inc'
+      character(2*maxl+3) :: zzline
+      character(4) :: zzrqst
+      integer(ip) :: zzocod ( nperm )
+      integer(ip) :: zzonam ( nperm )
+      character(maxl) :: zzint
+      integer(ip) :: i
       if ( .not. allocated ( ctx%zzbodblt ) ) then
          allocate ( ctx%zzbodblt )
          call init_zzbodblt_state ( ctx%zzbodblt )
       end if
       associate ( bltnam => ctx%zzbodblt%bltnam, &
-                  zzrqst => ctx%zzbodblt%zzrqst, &
-                  zzint => ctx%zzbodblt%zzint, &
-                  zzline => ctx%zzbodblt%zzline, &
-                  bltcod => ctx%zzbodblt%bltcod, &
-                  i => ctx%zzbodblt%i, &
-                  zzocod => ctx%zzbodblt%zzocod, &
-                  zzonam => ctx%zzbodblt%zzonam )
+                  bltcod => ctx%zzbodblt%bltcod )
       if ( ctx%failed() ) return
 
 !
@@ -6646,7 +6602,6 @@ contains
 !     variables are in pepper_state_zzbodtrn. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -6666,9 +6621,6 @@ contains
 !     BODY
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -6821,7 +6773,6 @@ contains
 !
 !           CALL SPKEZ    ( TARGET, EPOCH, FRAME, ABCORR,
 !          .                OBSRVR, STATE, LT             )
-!
 !
 !     2) This example assumes ZZBODDEF has not been called.
 !        Thus, only the set of default name/code pairs has been
@@ -7286,7 +7237,6 @@ contains
 !     collision list arrays.
 !
 
-
 !
 !     Local variables.
 !
@@ -7353,8 +7303,6 @@ contains
 !
 !     Other variables.
 !
-
-
 
 !
 !     Save all variables.
@@ -7575,6 +7523,10 @@ contains
       include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
+      character(maxl) :: tmpnam
+      integer(ip) :: kersiz
+      logical :: lupdte
+      character(maxl) :: kernor  ( nroom )
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
@@ -7595,9 +7547,7 @@ contains
                   didids => ctx%zzbodtrn%didids, &
                   dididx => ctx%zzbodtrn%dididx, &
                   kernam => ctx%zzbodtrn%kernam, &
-                  kernor => ctx%zzbodtrn%kernor, &
                   kercod => ctx%zzbodtrn%kercod, &
-                  kersiz => ctx%zzbodtrn%kersiz, &
                   knmlst => ctx%zzbodtrn%knmlst, &
                   knmpol => ctx%zzbodtrn%knmpol, &
                   knmnms => ctx%zzbodtrn%knmnms, &
@@ -7610,10 +7560,8 @@ contains
                   pulctr => ctx%zzbodtrn%pulctr, &
                   extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata, &
-                  tmpnam => ctx%zzbodtrn%tmpnam, &
                   i => ctx%zzbodtrn%i, &
-                  first => ctx%zzbodtrn%first, &
-                  lupdte => ctx%zzbodtrn%lupdte )
+                  first => ctx%zzbodtrn%first )
       if ( ctx%failed() ) return
 
 !
@@ -7941,7 +7889,6 @@ contains
 !
 !-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
 !
-!
 !-&
 
 !
@@ -7953,6 +7900,10 @@ contains
       include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
+      integer(ip) :: kersiz
+      logical :: lupdte
+      character(maxl) :: kernor  ( nroom )
+      integer(ip) :: j
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
@@ -7973,9 +7924,7 @@ contains
                   didids => ctx%zzbodtrn%didids, &
                   dididx => ctx%zzbodtrn%dididx, &
                   kernam => ctx%zzbodtrn%kernam, &
-                  kernor => ctx%zzbodtrn%kernor, &
                   kercod => ctx%zzbodtrn%kercod, &
-                  kersiz => ctx%zzbodtrn%kersiz, &
                   knmlst => ctx%zzbodtrn%knmlst, &
                   knmpol => ctx%zzbodtrn%knmpol, &
                   knmnms => ctx%zzbodtrn%knmnms, &
@@ -7989,9 +7938,7 @@ contains
                   extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata, &
                   i => ctx%zzbodtrn%i, &
-                  j => ctx%zzbodtrn%j, &
-                  first => ctx%zzbodtrn%first, &
-                  lupdte => ctx%zzbodtrn%lupdte )
+                  first => ctx%zzbodtrn%first )
       if ( ctx%failed() ) return
 
 !
@@ -8422,6 +8369,9 @@ contains
       include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
+      integer(ip) :: index
+      character(maxl) :: tmpnam
+      integer(ip) :: codidx
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
@@ -8441,10 +8391,7 @@ contains
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
                   bodchg => ctx%zzbodtrn%bodchg, &
-                  tmpnam => ctx%zzbodtrn%tmpnam, &
-                  codidx => ctx%zzbodtrn%codidx, &
                   i => ctx%zzbodtrn%i, &
-                  index => ctx%zzbodtrn%index, &
                   first => ctx%zzbodtrn%first )
       if ( ctx%failed() ) return
 
@@ -8758,6 +8705,9 @@ contains
       include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
+      integer(ip) :: kersiz
+      logical :: lupdte
+      character(maxl) :: kernor  ( nroom )
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
@@ -8775,9 +8725,7 @@ contains
                   didids => ctx%zzbodtrn%didids, &
                   dididx => ctx%zzbodtrn%dididx, &
                   kernam => ctx%zzbodtrn%kernam, &
-                  kernor => ctx%zzbodtrn%kernor, &
                   kercod => ctx%zzbodtrn%kercod, &
-                  kersiz => ctx%zzbodtrn%kersiz, &
                   knmlst => ctx%zzbodtrn%knmlst, &
                   knmpol => ctx%zzbodtrn%knmpol, &
                   knmnms => ctx%zzbodtrn%knmnms, &
@@ -8790,8 +8738,7 @@ contains
                   pulctr => ctx%zzbodtrn%pulctr, &
                   extker => ctx%zzbodtrn%extker, &
                   nodata => ctx%zzbodtrn%nodata, &
-                  first => ctx%zzbodtrn%first, &
-                  lupdte => ctx%zzbodtrn%lupdte )
+                  first => ctx%zzbodtrn%first )
       if ( ctx%failed() ) return
 
 !
@@ -8842,7 +8789,6 @@ contains
          first = .false.
 
       end if
-
 
 !
 !     Check for updates to the kernel pool variables. Note: the first
@@ -8963,7 +8909,6 @@ contains
 !        state using state counters.
 !
 !-    SPICELIB Version 4.0.0, 26-AUG-2002 (FST)
-!
 !
 !-&
 
@@ -9245,6 +9190,9 @@ contains
       include               'zzctr.inc'
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbpool = -5
+      integer(ip) :: kersiz
+      logical :: lupdte
+      character(maxl) :: kernor  ( nroom )
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
@@ -9253,9 +9201,7 @@ contains
          call init_zzbodtrn_state ( ctx%zzbodtrn )
       end if
       associate ( kernam => ctx%zzbodtrn%kernam, &
-                  kernor => ctx%zzbodtrn%kernor, &
                   kercod => ctx%zzbodtrn%kercod, &
-                  kersiz => ctx%zzbodtrn%kersiz, &
                   knmlst => ctx%zzbodtrn%knmlst, &
                   knmpol => ctx%zzbodtrn%knmpol, &
                   knmnms => ctx%zzbodtrn%knmnms, &
@@ -9267,8 +9213,7 @@ contains
                   subctr => ctx%zzbodtrn%subctr, &
                   pulctr => ctx%zzbodtrn%pulctr, &
                   extker => ctx%zzbodtrn%extker, &
-                  nodata => ctx%zzbodtrn%nodata, &
-                  lupdte => ctx%zzbodtrn%lupdte )
+                  nodata => ctx%zzbodtrn%nodata )
       if ( ctx%failed() ) return
 
 !
@@ -9305,7 +9250,6 @@ contains
 
          nodata = .false.
 
-
       end if
 
 !
@@ -9341,7 +9285,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -9449,7 +9392,6 @@ contains
 !
 !            CALL BODVCD ( JUPID, 'RADII', 3, N, RADII )
 !
-!
 !     2)  In this example, we assume that only the set of default
 !         name/code pairs has been defined.
 !
@@ -9467,7 +9409,6 @@ contains
 !            'U.S.S. Enterprise'             -    No
 !            ' '                             -    No
 !            'Halley's Comet'                -    No
-!
 !
 !         Given these codes, BODC2N will return the following names:
 !
@@ -9556,17 +9497,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     body name to code
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Standard SPICELIB error handling.
 !
@@ -9603,7 +9541,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -9709,7 +9646,6 @@ contains
 !        the SPK files, using the appropriate DAF routines, and then
 !        translate them, as above.
 !
-!
 !     2. In this example, we assume that BODDEF has not been called,
 !         so only the set of default name/code pairs has
 !         been defined.
@@ -9728,7 +9664,6 @@ contains
 !            'U.S.S. Enterprise'             -    No
 !            ' '                             -    No
 !            'Halley's Comet'                -    No
-!
 !
 !         Given these codes, BODC2N will return the following names:
 !
@@ -9800,13 +9735,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     body id code to name
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -9852,7 +9785,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -9981,7 +9913,6 @@ contains
 !
 !            CALL BODEUL ( JUPID, ET, RA, DEC, W, LAMBDA )
 !
-!
 !     2)  In this example, we assume that only the set of default
 !         name/code pairs has been defined.
 !
@@ -10057,13 +9988,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     body string to code
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10084,7 +10013,6 @@ contains
 !     Standard SPICELIB error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Attempt to translate the input name to an integer code.  Call
@@ -10153,7 +10081,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10241,7 +10168,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM BODC2S_EX1
 !              IMPLICIT NONE
 !
@@ -10281,10 +10207,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Code      Name
 !         -------   -----------------------
@@ -10295,7 +10219,6 @@ contains
 !              11   11
 !              -1   GEOTAIL
 !         6000001   6000001
-!
 !
 !        Note that the codes 11 and 6000001 did not map to a name so the
 !        call returns as NAME the string expression of the codes.
@@ -10332,13 +10255,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     body ID code to string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10353,7 +10274,6 @@ contains
 !     Standard SPICELIB error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Fortran. No type check available for CODE. Bother.
@@ -10407,7 +10327,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10636,13 +10555,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     body name/id code definition
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10687,7 +10604,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10790,13 +10706,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find constants for a body in the kernel pool
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10820,8 +10734,6 @@ contains
 
       logical               found
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -10829,7 +10741,6 @@ contains
         bodfnd = .false.
         return
       end if
-
 
 !
 !     Construct the variable name from BODY and ITEM.
@@ -10884,7 +10795,6 @@ contains
       implicit none
 
       include              'zzctr.inc'
-
 
 ! $ Detailed_Input
 !
@@ -11172,13 +11082,11 @@ contains
       implicit none
       include 'zzctr.inc'
 
-
 ! $ Detailed_Input
 !
 !     BODYID     is the NAIF integer ID code for a body of interest.
 !                For example, if the body is the earth, the code is
 !                399.
-!
 !
 !     ITEM       is the item to be returned. Together, the NAIF ID
 !                code of the body and the item name combine to form a
@@ -11196,13 +11104,11 @@ contains
 !                is inherited from the case-sensitivity of kernel
 !                variable names.
 !
-!
 !     MAXN       is the maximum number of values that may be returned.
 !                The output array VALUES must be declared with size at
 !                least MAXN.  It's an error to supply an output array
 !                that is too small to hold all of the values associated
 !                with the requested kernel variable.
-!
 !
 !     VARCTR     is, on input, a counter used to represent the kernel
 !                pool state at the time the kernel variable designated
@@ -11212,10 +11118,8 @@ contains
 !                VARCTR is required for each kernel variable to be
 !                updated by this routine.
 !
-!
 !     N          is, on input, the dimension of the saved kernel
 !                variable designated by BODYID and ITEM.
-!
 !
 !     VALUES     is, on input, the set of values associated with the
 !                kernel variable designated by BODYID and ITEM.
@@ -11321,7 +11225,6 @@ contains
 !         The call to ZZCTRUIN initializes CTR1, which forces ZZBODVCD
 !         to update the output values
 !
-!
 !     2)  After the call in example (1) has been made, the variable
 !
 !            BODY399_RADII
@@ -11338,7 +11241,6 @@ contains
 !            RADII
 !
 !         are unchanged on output.
-!
 !
 !     3)  After the call in example (2) has been made, the variable
 !
@@ -11367,7 +11269,6 @@ contains
 !
 !         CTR2 will be updated if the kernel pool contents have
 !         changed.
-!
 !
 !     4) The call
 !
@@ -11430,7 +11331,6 @@ contains
 
       if ( ctx%failed() ) return
 
-
 !
 !     See whether the kernel pool state has changed since the
 !     user counter was set. Update the user counter if so.
@@ -11486,7 +11386,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     BODY     is the ID code of the body for which ITEM is
@@ -11535,9 +11434,7 @@ contains
 !
 !           pck00008.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM BODVAR_EX1
 !              IMPLICIT NONE
@@ -11594,13 +11491,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        399 RADII:   6378.140   6378.140   6356.750
-!
 !
 ! $ Restrictions
 !
@@ -11655,14 +11549,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED fetch constants for a body from the kernel pool
 !     DEPRECATED physical constants for a body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -11674,8 +11566,6 @@ contains
       character(16)         code
       character(32)         varnam
       logical               found
-
-
 
 !
 !     Standard SPICE error handling.
@@ -11731,7 +11621,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -11841,9 +11730,7 @@ contains
 !
 !           pck00008.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM BODVCD_EX1
 !              IMPLICIT NONE
@@ -11853,7 +11740,6 @@ contains
 !        C
 !              INTEGER               NVALS
 !              PARAMETER           ( NVALS = 3 )
-!
 !
 !        C
 !        C     Local variables.
@@ -11893,10 +11779,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        399 RADII:   6378.140  6378.140  6356.750
 !
@@ -11920,11 +11804,9 @@ contains
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 8 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that, usually, the last call will cause a
 !        SPICE(KERNELVARNOTFOUND) error to be signaled, because this
@@ -11972,14 +11854,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch constants for a body from the kernel pool
 !     physical constants for a body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -12000,8 +11880,6 @@ contains
       character(namlen)     varnam
 
       logical               found
-
-
 
 !
 !     Standard SPICE error handling.
@@ -12089,9 +11967,6 @@ contains
 !     CONSTANTS
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -12210,9 +12085,7 @@ contains
 !
 !           pck00008.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM BODVRD_EX1
 !              IMPLICIT NONE
@@ -12222,7 +12095,6 @@ contains
 !        C
 !              INTEGER               NVALS
 !              PARAMETER           ( NVALS = 3 )
-!
 !
 !        C
 !        C     Local variables.
@@ -12285,10 +12157,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        EARTH RADII:   6378.140  6378.140  6356.750
 !        earth RADII:   6378.140  6378.140  6356.750
@@ -12314,11 +12184,9 @@ contains
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 8 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that, usually, the last call will cause a
 !        SPICE(KERNELVARNOTFOUND) error to be signaled, because this
@@ -12375,14 +12243,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch constants for a body from the kernel pool
 !     physical constants for a body
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -12393,7 +12259,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -12402,32 +12267,25 @@ contains
 !     Local parameters
 !
 
-
 !
 !     Saved body name length.
 !
-
 
 !
 !     Local variables
 !
 
-
-
 !
 !     Saved name/ID item declarations.
 !
-
 
 !
 !     Saved name/ID items.
 !
 
-
 !
 !     Initial values.
 !
-
 
 !
 !     Standard SPICE error handling.

@@ -176,7 +176,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
@@ -187,7 +186,6 @@
 !        as to use column names rather than indices.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -229,9 +227,6 @@
       integer(ip)           start
       integer(ip)           strlen
 
-
-!
-!     Use discovery check-in.
 !
 !     Make sure the column exists.
 !
@@ -279,14 +274,12 @@
 
       end if
 
-
 !
 !     Compute the data pointer location, and read the pointer.
 !
       ptrloc  =  recptr + dptbas + colidx
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
-
 
       if ( datptr > 0 ) then
 !
@@ -466,14 +459,11 @@
                cvals ( eltidx ) ( strlen+1: ) = ' '
             end if
 
-
             eltidx  =  eltidx + 1
 
          end do
 
-
          found =  .not. failed()
-
 
       else if ( datptr == null ) then
 !
@@ -481,7 +471,6 @@
 !
          isnull =  .true.
          found  =  .true.
-
 
       else if ( datptr == uninit ) then
 !
@@ -501,7 +490,6 @@
          call sigerr ( 'SPICE(UNINITIALIZED)'                        )
          return
 
-
       else
 !
 !        The data pointer is corrupted.
@@ -520,7 +508,6 @@
          return
 
       end if
-
 
       return
       end

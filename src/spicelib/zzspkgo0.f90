@@ -95,7 +95,6 @@
 !     O(t) from T(t) gives the geometric state of the target
 !     body relative to the observer.
 !
-!
 !        CENTER ----- O(t)
 !            |      /
 !            |     /
@@ -104,14 +103,11 @@
 !            |  /
 !           T(t)
 !
-!
 !     The one-way light time, tau, is given by
-!
 !
 !               | T(t) - O(t) |
 !        tau = -----------------
 !                      c
-!
 !
 !     For example, if the observing body is -94, the Mars Observer
 !     spacecraft, and the target body is 401, Phobos, then the
@@ -150,7 +146,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: spkgeo_ex1.tm
@@ -173,7 +168,6 @@
 !              mar097.bsp                       Mars satellite ephemeris
 !              naif0011.tls                     Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de430.bsp',
@@ -184,9 +178,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKGEO_EX1
 !              IMPLICIT NONE
@@ -218,7 +210,6 @@
 !              INTEGER               I
 !              INTEGER               OBSRVR
 !              INTEGER               TARGET
-!
 !
 !        C
 !        C     Load a set of kernels: an SPK file, a PCK
@@ -267,10 +258,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        The position of    : 499
 !        As observed from   : 399
@@ -281,7 +270,6 @@
 !        V (km/s):         -6.809504          7.513814          3.001290
 !
 !        Light time (s) between observer and target:  269.70264776317532
-!
 !
 ! $ Restrictions
 !
@@ -376,13 +364,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     geometric state of one body relative to another
 !
 !-&
-
 
 !
 !     This is the idea:
@@ -436,9 +422,7 @@
 !                   \               /                |
 !                    B-------------C-----------------D
 !
-!
 
-!
 !
 !     SPICELIB functions
 !
@@ -526,7 +510,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     In-line Function Definitions
 !
@@ -566,7 +549,6 @@
          return
 
       end if
-
 
 !
 !     CTARG contains the integer codes of the bodies in the
@@ -652,14 +634,12 @@
             //            'uninitialized variable. ' )
             call errch  ( '#', ref )
 
-
          else if ( ref == ' ' ) then
 
             call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame is blank.  The most ' &
             //            'common cause for this kind of error ' &
             //            'is an uninitialized variable. ' )
-
 
          else
 
@@ -691,7 +671,6 @@
 !     current error handling action is to NOT abort, then
 !     FOUND may be stuck at TRUE, CTARG(I) will never
 !     become zero, and the loop will execute indefinitely.
-!
 !
 !     Construct CTARG and STARG.  Begin by assigning the
 !     first elements:  TARG and the state of TARG relative
@@ -730,7 +709,7 @@
          end if
 !
 !        If one of the routines above failed during
-!        execution, we just give up and check out.
+!        execution, we just give up and return.
 !
          if ( failed() ) return
 
@@ -806,7 +785,7 @@
 
 !
 !           If one of the routines above failed during
-!           execution, we just give up and check out.
+!           execution, we just give up and return.
 !
             if ( failed() ) return
 
@@ -823,14 +802,12 @@
 !        CTARG(K-1)      relative to body CTARG(K) in the frame
 !        TFRAME(K)
 !
-!
 !     For K = 2,..., NCT.
 !
 !     CTARG(1) = TARG
 !     STARG(1...6,1) = ( 0, 0, 0, 0, 0, 0 )
 !     TFRAME(1)      = TFRAME(2)
 !
-
 
 !
 !     Now follow the observer's chain.  Assign
@@ -970,7 +947,6 @@
             call intstr ( targ, tname )
          end if
 
-
          call bodc2n ( obs, oname, found )
 
          if ( found ) then
@@ -1006,8 +982,6 @@
 !
 !        STARG(1,CTPOS) - SOBS.
 !
-!
-!
 !                     SOBS
 !         CENTER ---------------->OBS
 !            |                  .
@@ -1022,13 +996,11 @@
 !            V L
 !           TARG
 !
-!
 !     And the light-time between them is just
 !
 !               | STATE |
 !          LT = ---------
 !                   c
-!
 !
 !     Compute the state of the target relative to CTARG(CTPOS)
 !
@@ -1064,7 +1036,6 @@
          end if
 
       end do
-
 
 !
 !     To avoid unnecessary frame transformations we'll do
@@ -1106,7 +1077,6 @@
 !
          cframe = refid
          call vsubg ( starg(1,ctpos),  stemp, 6, state )
-
 
       else if ( isinrt( tframe(ctpos), cframe ) ) then
 !

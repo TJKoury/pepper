@@ -162,9 +162,7 @@
 !        file, how to update the data in this record, and how to read
 !        the data from it.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKUCEC_EX1
 !              IMPLICIT NONE
@@ -219,7 +217,6 @@
 !              INTEGER               SEGNO
 !
 !              LOGICAL               ISNULL
-!
 !
 !        C
 !        C     Open a new EK file.  For simplicity, we won't
@@ -356,10 +353,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from column: CHR_COL_1
 !            record number:            1
@@ -402,7 +397,6 @@
 !         Data from column: CHR_COL_2
 !            record number:            6
 !            values       : -50      -51      -52      -53
-!
 !
 !        Note that the second record does not appear due to setting the
 !        ISNULL flag to true for that record. The odd value record
@@ -447,13 +441,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace character entry in an EK column
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -471,8 +463,6 @@
 
       logical               isshad
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -526,13 +516,11 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 3 ) then
 !
 !        Class 3 columns contain scalar character data.
 !
          call zzekue03 ( handle, segdsc, coldsc, recptr, cvals, isnull )
-
 
       else if ( class == 6 ) then
 !

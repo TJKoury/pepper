@@ -105,7 +105,6 @@
 !     of strings. A more complete discussion of the interpretation
 !     of strings is given in the reference document time.req.
 !
-!
 !     Default Behavior
 !     ----------------
 !
@@ -188,14 +187,12 @@
 !
 !        1995 December 31  23:59:60.5  (UTC)
 !
-!
 !        1996 January   1, 05:29:60.5  (UTC+5:30 --- Calcutta Time)
 !        1995 December 31, 20:29:60.5  (UTC-3:30 --- Newfoundland)
 !        1995 December 31  18:59:60.5  (EST)
 !        1995 December 31  17:59:60.5  (CST)
 !        1995 December 31  16:59:60.5  (MST)
 !        1995 December 31  15:59:60.5  (PST)
-!
 !
 !     In addition to specifying time zones, you may specify that the
 !     string be interpreted as a formal calendar representation in
@@ -212,7 +209,6 @@
 !     Finally, you may explicitly state that the time system is UTC
 !
 !        1988 June 13, 12:29:48 UTC.
-!
 !
 !     Abbreviating Years
 !     ------------------
@@ -246,7 +242,6 @@
 !     When specifying the era it should immediately follow the year.
 !     Both the A.D. and B.C. eras are supported.
 !
-!
 !     Changing Default Behavior
 !     -------------------------
 !
@@ -276,7 +271,6 @@
 !     strings. If an input string is labeled the specification
 !     in the label is used.
 !
-!
 !     If any component of a date or time is out of range, STR2ET
 !     regards the string as erroneous. Below is a list of
 !     erroneous strings and why they are regarded as such.
@@ -290,7 +284,6 @@
 !        1997 Feb 29, 12:29:20.0  --- February has only 29 days in
 !                                     1997. This would be ok if the
 !                                     year was 1996.
-!
 !
 !        1992 Mar 12 12:62:20     --- Minutes must be between 0 and 59
 !                                     inclusive.
@@ -438,7 +431,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM STR2ET_EX1
 !              IMPLICIT NONE
 !
@@ -479,14 +471,11 @@
 !              WRITE (*,*) 'Calendar    Format:           ', CALDR
 !              WRITE (*,*) 'Day of year Format:           ', DAYOFY
 !
-!
 !              END
-!
 !
 !        When this program was executed on a PC/Linux/gfortran/64-bit
 !        platform, using the LCK file named naif0012.tls and the time
 !        string '2017-07-14T19:46:00', the output was:
-!
 !
 !        Leapseconds kernel: naif0012.tls
 !        Time string: 2017-07-14T19:46:00
@@ -494,7 +483,6 @@
 !         TBD seconds from J2000 epoch:    553333629.18372738
 !         Calendar    Format:           2017 JUL 14 19:46:00
 !         Day of year Format:           2017-195 // 19:46:00
-!
 !
 !     2) Below is a sampling of some of the time formats that are
 !        acceptable as inputs to STR2ET. A complete discussion of
@@ -514,7 +502,6 @@
 !        1995-08T18:28:12Z             1995  na  008  na  18  28 12
 !        1995-18T                      1995  na  018  na  00  00 00
 !        0000-01-01T                   1 BC Jan   na  01  00  00 00
-!
 !
 !        Calendar Formats.
 !
@@ -551,7 +538,6 @@
 !        92-182/ 18:28:28.281          1992* 182 18  28 28.281
 !        182-92/ 12:29:29.192          0182+ 092 12  29 29.192
 !        182-'92/ 12:28:29.182         1992  182 12  28 29.182
-!
 !
 !        Julian Date Strings
 !
@@ -670,13 +656,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Convert a string to TDB seconds past the J2000 epoch
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -693,12 +677,10 @@
 !
 !-&
 
-
 !
 !     SPICELIB Functions.
 !
       logical               return
-
 
 !
 !     Local (in-line) Functions
@@ -808,11 +790,7 @@
                                         'September', 'October', &
                                         'November',  'December'  /
 
-
-
-
       if ( return() ) return
-
 
 !
 !     Collect the current defaults.
@@ -836,7 +814,6 @@
                     tvec,   ntvec, type, &
                     modify, mods,  yabbrv, succes, &
                     pictur, error )
-
 
       if ( .not. succes ) then
 
@@ -878,7 +855,6 @@
          hoff           = dhoff
          moff           = dmoff
          zoned          = modify(zone) /= ' '
-
 
       else if ( modify(zone) /= ' ' ) then
 !
@@ -944,7 +920,6 @@
          forml = 'YMDF'
       end if
 
-
 !
 !     Check the components for reasonableness.
 !
@@ -969,8 +944,6 @@
          end if
 
       end if
-
-
 
       if ( calndr == mixed  ) then
 !
@@ -1070,7 +1043,6 @@
 
       end if
 
-
 !
 !     If a B.C. era marker is present we can't have a year abbreviation
 !
@@ -1127,7 +1099,6 @@
          tvec(yr) = real( year, wp )
 
       end if
-
 
 !
 !     We may need to convert to the Gregorian Calendar, now is
@@ -1225,7 +1196,6 @@
 
       end if
 
-
 !
 !     If a time zone has been specified, we need to convert
 !     from the time zone components to UTC components.
@@ -1268,7 +1238,6 @@
 
       end if
 
-
       if ( ok ) then
 !
 !        That's it we are ready to rumble.
@@ -1298,7 +1267,6 @@
 
          call repmc ( error,  '#', timstr,           error  )
          call repmc ( error , '#', modify(zone)(3:), error  )
-
 
       else if ( zoned ) then
 !
@@ -1358,7 +1326,6 @@
          extra  = 0.0_wp
       end if
 
-
       hour = 23.0_wp + hoff + extra
 
       if ( hour > 23 ) then
@@ -1417,7 +1384,6 @@
                call gr2jul ( year, month, day, doy )
             end if
 
-
             if ( year == orgnyr ) then
 
                call repmc ( error, '#', mname(month), error  )
@@ -1432,6 +1398,5 @@
       call setmsg ( error  )
       call sigerr ( 'SPICE(BADTIMESTRING)' )
       return
-
 
       end

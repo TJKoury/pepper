@@ -31,7 +31,6 @@
       logical               inbox
       integer(ip)           voxcor     ( 3 )
 
-
 ! $ Brief_I/O
 !
 !     VARIABLE  I/O  DESCRIPTION
@@ -95,7 +94,6 @@
 !     Points outside of the grid are not mapped to voxel coordinates.
 !
 ! $ Examples
-!
 !
 !   C
 !   C     Some position in model coordinates, i.e. the body fixed
@@ -186,9 +184,6 @@
       real(wp)               term
       integer(ip)            i
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
       if ( voxsiz <= 0.0_wp ) then

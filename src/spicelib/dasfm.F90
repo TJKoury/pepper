@@ -67,8 +67,6 @@
 !     These parameters are declared in das.inc.
 !
 
-
-
 !     For the following environments, record length is measured in
 !     characters (bytes) with eight characters per double precision
 !     number.
@@ -105,8 +103,6 @@
 #else
       parameter           ( filen  =  255 )
 #endif
-
-
 
 ! $ Brief_I/O
 !
@@ -319,7 +315,6 @@
 !
 !        DASHOF         Handles of open files.
 !        DASSIH         Signal invalid handles.
-!
 !
 !     Before a DAS file  can be used, it must be opened. Entry points
 !     DASOPR and DASOPW provide the only means for opening an
@@ -658,13 +653,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     manage open DAS files
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -779,7 +772,6 @@
 !              least one file opened with write access.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1056,9 +1048,6 @@
 
       return
 
-
-
-
 !$Procedure DASOPR ( DAS, open for read )
 
       entry dasopr ( fname, handle )
@@ -1160,7 +1149,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DASOPR_EX1
 !              IMPLICIT NONE
 !
@@ -1199,7 +1187,6 @@
 !              INTEGER               VTXNPL
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Prompt for the name of the DSK to read.
@@ -1271,18 +1258,15 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !        Number of vertices:                 1579014
 !        Number of plates:                   3145728
 !        Voxel edge length (km):             1.04248E-01
 !        Number of voxels:                   11914500
-!
 !
 ! $ Restrictions
 !
@@ -1372,14 +1356,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a DAS file for reading
 !     open a DAS file for read access
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1445,12 +1427,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -1466,7 +1446,6 @@
 
 !
 !     Try to open the file for READ access.
-!
 !
 !        The file may or may not already be open. If so, it should have
 !        not been opened for writing (FTACC .EQ. WRITE). If opened for
@@ -1584,7 +1563,6 @@
          maxadr  =  dirrec ( rngbas  +  2 * type )
          nxtdir  =  dirrec ( fwdloc              )
 
-
          do while ( nxtdir > 0 )
 !
 !           Read the directory record. If this record contains
@@ -1594,7 +1572,6 @@
             call zzdasgri ( handle, nxtdir, dirrec )
 
             if ( failed() ) return
-
 
             if (  dirrec(rngbas + 2*type)  >  0  ) then
 
@@ -1676,7 +1653,6 @@
             ftsum ( lwdbas + type, fthead )  =  pos
             ldrec ( type )                   =  endrec
 
-
          else
 !
 !           There's no data of TYPE in the file.
@@ -1702,7 +1678,6 @@
 
       nxtrec = dirrec(fwdloc)
 
-
       do while ( nxtrec /= 0 )
 
          nrec   = nxtrec
@@ -1724,9 +1699,6 @@
       call insrti ( handle, fhlist )
 
       return
-
-
-
 
 !$Procedure DASOPW ( DAS, open for write )
 
@@ -1824,9 +1796,7 @@
 !        to its addresses 1 through 200 in random-access fashion by
 !        updating the file.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASOPW_EX1
 !              IMPLICIT NONE
@@ -1926,10 +1896,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Contents of dasopw_ex1.das before update:
 !
@@ -1976,7 +1944,6 @@
 !          171  172  173  174  175  176  177  178  179  180
 !          181  182  183  184  185  186  187  188  189  190
 !          191  192  193  194  195  196  197  198  199  200
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -2061,14 +2028,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a DAS file for writing
 !     open a DAS file for write access
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2111,12 +2076,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -2129,7 +2092,6 @@
          pass1 = .false.
 
       end if
-
 
       if ( lnknfn(pool) == 0  ) then
 
@@ -2222,7 +2184,6 @@
          maxadr  =  dirrec ( rngbas  +  2 * type )
          nxtdir  =  dirrec ( fwdloc              )
 
-
          do while ( nxtdir > 0 )
 !
 !           Read the directory record. If this record contains
@@ -2232,7 +2193,6 @@
             call zzdasgri ( handle, nxtdir, dirrec )
 
             if ( failed() ) return
-
 
             if (  dirrec(rngbas + 2*type)  >  0  ) then
 
@@ -2314,7 +2274,6 @@
             ftsum ( lwdbas + type, fthead )  =  pos
             ldrec ( type )                   =  endrec
 
-
          else
 !
 !           There's no data of TYPE in the file.
@@ -2340,7 +2299,6 @@
 
       nxtrec = dirrec(fwdloc)
 
-
       do while ( nxtrec /= 0 )
 
          nrec   = nxtrec
@@ -2361,12 +2319,7 @@
 !
       call insrti ( handle, fhlist )
 
-
       return
-
-
-
-
 
 !$Procedure DASONW ( DAS, open new file )
 
@@ -2491,9 +2444,7 @@
 !     1) Create a new DAS file and add 200 integers to it. Close the
 !        file, then re-open it and read the data back out.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASONW_EX1
 !              IMPLICIT NONE
@@ -2567,10 +2518,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasonw_ex1.das":
 !
@@ -2594,7 +2543,6 @@
 !           71   72   73   74   75   76   77   78   79   80
 !           81   82   83   84   85   86   87   88   89   90
 !           91   92   93   94   95   96   97   98   99  100
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -2676,14 +2624,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a new DAS file
 !     open a new DAS file with write access
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2694,12 +2640,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -2837,7 +2781,7 @@
 !
 !     Check to see whether or not ZZDASNFR generated an error
 !     writing the file record to the logical unit. In the event
-!     an error occurs, checkout and return.
+!     an error occurs, return.
 !
       if ( failed() ) return
 
@@ -2896,11 +2840,7 @@
 !
       call insrti ( handle, fhlist )
 
-
       return
-
-
-
 
 !$Procedure DASOPN ( DAS, open new )
 
@@ -2999,9 +2939,7 @@
 !     1) Create a new DAS file and add 200 integers to it. Close the
 !        file, then re-open it and read the data back out.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASOPN_EX1
 !              IMPLICIT NONE
@@ -3075,10 +3013,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasopn_ex1.das":
 !
@@ -3102,7 +3038,6 @@
 !           71   72   73   74   75   76   77   78   79   80
 !           81   82   83   84   85   86   87   88   89   90
 !           91   92   93   94   95   96   97   98   99  100
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -3192,14 +3127,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a new DAS file for writing
 !     open a new DAS file for write access
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3214,12 +3147,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -3256,7 +3187,6 @@
          call sigerr ( 'SPICE(DASFTFULL)'                              )
          return
 
-
       end if
 
 !
@@ -3273,7 +3203,6 @@
 !
 !     If anything goes wrong after the file has been opened, delete
 !     the file.
-!
 !
       call zzddhopn ( fname, 'NEW', 'DAS', handle )
 
@@ -3303,7 +3232,6 @@
 !        -- the number of characters in use in the comment area
 !
 !     Initially, all of these counts are zero.
-!
 !
       locifn = ifname
       idword = 'NAIF/DAS'
@@ -3366,9 +3294,6 @@
       call insrti ( handle, fhlist )
 
       return
-
-
-
 
 !$Procedure DASOPS ( DAS, open scratch )
 
@@ -3477,9 +3402,7 @@
 !        precision numbers, and 4 characters, then print the logical
 !        address ranges in use.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASOPS_EX1
 !              IMPLICIT NONE
@@ -3532,15 +3455,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Last character address in use:            4
 !         Last d.p. address in use     :            5
 !         Last integer address in use  :           10
-!
 !
 ! $ Restrictions
 !
@@ -3625,13 +3545,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open a scratch DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3673,12 +3591,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -3767,7 +3683,7 @@
 !
 !     Check to see whether or not ZZDASNFR generated an error
 !     writing the file record to the logical unit. In the event
-!     an error occurs, checkout and return.
+!     an error occurs, return.
 !
       if ( failed() ) return
 
@@ -3800,10 +3716,7 @@
 !
       call insrti ( handle, fhlist )
 
-
       return
-
-
 
 !$Procedure DASLLC ( DAS, low-level close )
 
@@ -3907,9 +3820,7 @@
 !        small data additions, and in which the file is read between
 !        write operations.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASLLC_EX1
 !              IMPLICIT NONE
@@ -3958,7 +3869,6 @@
 !              INTEGER               NPASS
 !              INTEGER               PASSNO
 !              INTEGER               XINTBF ( IBUFSZ )
-!
 !
 !        C
 !        C     Initial values
@@ -4149,10 +4059,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Writing buffered data...
 !         Closing DAS file...
@@ -4164,7 +4072,6 @@
 !         Closing DAS file...
 !         File write is done.
 !         File check is done.
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -4246,13 +4153,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4267,12 +4172,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -4337,7 +4240,6 @@
       end if
 
       return
-
 
 !$Procedure DASHFS ( DAS, handle to file summary )
 
@@ -4484,9 +4386,7 @@
 !        numbers, and 4 characters. Print the summary of the file and
 !        dump its contents.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASHFS_EX1
 !              IMPLICIT NONE
@@ -4680,10 +4580,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Summary before adding data:
 !            Number of reserved records     :           0
@@ -4739,7 +4637,6 @@
 !         Character data in the DAS file:
 !            SP
 !            UD
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -4808,14 +4705,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return the file summary of a DAS file
 !     find the amount of data in a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4829,7 +4724,6 @@
 !-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -4848,7 +4742,6 @@
 
       end if
 
-
       findex  =  fthead
       found   = .false.
 
@@ -4861,7 +4754,6 @@
          end if
 
       end do
-
 
       if ( found ) then
 !
@@ -4886,7 +4778,6 @@
       end if
 
       return
-
 
 !$Procedure DASUFS ( DAS, update file summary )
 
@@ -5140,13 +5031,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update the file summary of a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5173,12 +5062,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -5329,8 +5216,6 @@
 
       return
 
-
-
 !$Procedure DASHLU ( DAS, handle to logical unit )
 
       entry dashlu ( handle, unit )
@@ -5480,13 +5365,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map DAS file handle to logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5501,7 +5384,6 @@
 !
 !-&
 
-
 !
 !     We use discovery check-ins in this routine.
 !
@@ -5512,10 +5394,8 @@
 !
       if ( pass1 ) then
 
-
          call lnkini ( ftsize, pool   )
          call ssizei ( ftsize, fhlist )
-
 
          pass1 = .false.
 
@@ -5537,7 +5417,6 @@
 
       end do
 
-
       if ( found ) then
 !
 !        For backward compatibility, the logical unit must be
@@ -5554,8 +5433,6 @@
       end if
 
       return
-
-
 
 !$Procedure DASLUH ( DAS, logical unit to handle )
 
@@ -5693,13 +5570,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map logical unit to DAS file handle
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5714,12 +5589,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -5747,8 +5620,6 @@
       end if
 
       return
-
-
 
 !$Procedure DASHFN ( DAS, handle to file name )
 
@@ -5825,14 +5696,11 @@
 !     1) In the following program, the name of a DAS file is
 !        recovered using the handle associated with the file.
 !
-!
 !        Use the DSK kernel below as input DAS file for the example.
 !
 !           phobos512.bds
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASHFN_EX1
 !              IMPLICIT NONE
@@ -5873,13 +5741,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         DAS file name = <phobos512.bds>.
-!
 !
 ! $ Restrictions
 !
@@ -5949,13 +5814,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map DAS handle to file name
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5969,7 +5832,6 @@
 !-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -6020,7 +5882,6 @@
       end if
 
       return
-
 
 !$Procedure DASFNH ( DAS, file name to handle )
 
@@ -6159,13 +6020,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map file name to DAS handle
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6180,12 +6039,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -6211,7 +6068,6 @@
       end if
 
       return
-
 
 !$Procedure DASHOF ( DAS, handles of open files )
 
@@ -6356,13 +6212,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return set of handles of open DAS files
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -6387,8 +6241,6 @@
       call copyi ( fhlist, fhset )
 
       return
-
-
 
 !$Procedure DASSIH ( DAS, signal invalid handles )
 
@@ -6429,7 +6281,6 @@
 !              considered valid, it must specify a DAS file that
 !              is open for the type of access specified by the
 !              input argument ACCESS.
-!
 !
 !     ACCESS   is a string indicating the type of access that
 !              the DAS file specified by the input argument HANDLE
@@ -6568,14 +6419,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     detect invalid DAS handles
 !     validate DAS handles
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6596,12 +6445,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.
@@ -6689,7 +6536,6 @@
 !     The DAS file's handle is o.k.
 !
       return
-
 
 !$Procedure DASHAM ( DAS, handle to access method )
 
@@ -6834,13 +6680,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return allowed access methods for DAS files
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6855,12 +6699,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the file table pool and handle list, if necessary.

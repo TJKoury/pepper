@@ -135,13 +135,11 @@
 !
       integer(ip)           i
 
-
       if ( return() ) return
 
       do i = 1, 3
 
          if ( nvox(i) < 1 ) then
-
 
             call setmsg ( 'Voxel grid dimensions must be positive ' &
             //            'but were # # #.'                        )
@@ -156,11 +154,9 @@
 
       end do
 
-
       do i = 1, 3
 
          if ( ( vixyz(i) < 1 ) .or. ( vixyz(i) > nvox(i) ) ) then
-
 
             call setmsg ( 'Voxel grid coordinates must be inside ' &
             //            'grid having dimensions # x # x # ' &
@@ -179,9 +175,7 @@
 
       end do
 
-
       if ( cgrscl < 1 ) then
-
 
          call setmsg ( 'Coarse voxel grid scale must be positive ' &
          //            'but was #.'                               )

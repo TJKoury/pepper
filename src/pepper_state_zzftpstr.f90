@@ -17,11 +17,11 @@ module pepper_state_zzftpstr
 
    !> The saved variables of ZZFTPSTR.
    type, public :: zzftpstr_state
-      logical :: first  !! saved between calls by ZZFTPSTR
-      character(sizdlm) :: locdlm  !! saved between calls by ZZFTPSTR
-      character(sizend) :: loclnd  !! saved between calls by ZZFTPSTR
-      character(sizend) :: locrnd  !! saved between calls by ZZFTPSTR
-      character(sizstr) :: locstr  !! saved between calls by ZZFTPSTR
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizdlm) :: locdlm  !! delimiter of the pieces of the FTP validation string
+      character(sizend) :: loclnd  !! left bracket of the FTP validation string
+      character(sizend) :: locrnd  !! right bracket of the FTP validation string
+      character(sizstr) :: locstr  !! the FTP validation string
    end type zzftpstr_state
 
 contains

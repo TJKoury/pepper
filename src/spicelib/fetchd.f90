@@ -164,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch from a d.p. set
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -201,7 +199,6 @@
       else
          fetchd = nth
       end if
-
 
       return
       end

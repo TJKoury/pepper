@@ -79,7 +79,6 @@
 !              METHOD. For example, the string ' NEARPOINT' is
 !              valid.
 !
-!
 !     TARGET   is the name of a target body. Optionally, you may
 !              supply the integer ID code for the object as
 !              an integer string. For example both 'MOON' and
@@ -92,7 +91,6 @@
 !     ET       is the epoch in ephemeris seconds past J2000 at which
 !              the sub-observer point on the target body is to be
 !              computed.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied
 !              when computing the observer-target state.  ABCORR
@@ -111,7 +109,6 @@
 !                            stellar aberrations. Both the state and
 !                            rotation of the target body are
 !                            corrected for light time.
-!
 !
 !                 'CN'       Converged Newtonian light time
 !                            correction. In solving the light time
@@ -171,7 +168,6 @@
 !              indicated above, the rotation of the target is
 !              retarded by one-way light time if ABCORR specifies
 !              that light time correction is to be done.
-!
 !
 !     ALT      is the "altitude" of the observer above the target
 !              body. When METHOD specifies a "near point"
@@ -307,7 +303,6 @@
 !     spacecraft on Mars for a specified time. Perform the computation
 !     twice, using both the "intercept" and "near point" options.
 !
-!
 !           IMPLICIT NONE
 !
 !           CHARACTER*25          METHOD ( 2 )
@@ -375,9 +370,7 @@
 !
 !           END
 !
-!
 !     When this program is executed, the output will be:
-!
 !
 !        Computation method: Intercept
 !
@@ -385,7 +378,6 @@
 !          Planetocentric Latitude  (deg) =  -39.7022724
 !          Planetocentric Longitude (deg) =  -159.226663
 !          Altitude                 (km)  =   373.173506
-!
 !
 !        Computation method: Near point
 !
@@ -464,13 +456,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED sub-observer point
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -553,7 +543,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -613,7 +602,6 @@
          return
 
       end if
-
 
 !
 !     Check the input body codes.  If they are equal, signal
@@ -689,7 +677,6 @@
 !
       call vminus ( tstate, pos )
 
-
 !
 !     Find the sub-point and "altitude" (distance from observer to
 !     sub-point) using the specified geometric definition.
@@ -736,7 +723,6 @@
          return
 
       end if
-
 
       return
       end

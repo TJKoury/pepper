@@ -36,7 +36,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     UNIT     is the Fortran unit number for a previously opened text
@@ -147,17 +146,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read and decode encoded integers from a text file
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local parameters
 !
@@ -178,7 +174,6 @@ contains
       integer(ip)           nitms
 
       logical               error
-
 
 !
 !     Standard SPICE error handling.
@@ -294,10 +289,6 @@ contains
 !     CONVERSION
 !
 ! $ Declarations
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -475,9 +466,7 @@ contains
 !        "scientific notation" representation of a double precision
 !        number, to their double precision values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM HX2DP_EX1
 !              IMPLICIT NONE
@@ -555,10 +544,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        string             number
 !        -----------------  ----------------
@@ -581,7 +568,6 @@ contains
 !
 !         String 4ABC123AB346523BDC568798C2473678^1 produces:
 !            ERROR: Too many digits in the mantissa (> 31).
-!
 !
 !        Note: The hat or caret, '^', signals an exponent.
 !
@@ -644,7 +630,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert signed normalized hexadecimal string to d.p.
@@ -653,34 +638,23 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-!
 !     Local Parameters
 !
-
-
-
-
 
 !
 !     Local variables
 !
 
-
 !
 !     Saved variables
 !
 
-
 !
 !     Initial values
 !
-
-
-
 
 !
 !     Here is a brief outline of the algorithm used to convert the
@@ -1138,7 +1112,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     UNIT     is the Fortran unit number for a previously opened text
@@ -1261,17 +1234,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read and decode encoded d.p. numbers from a text file
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local parameters
 !
@@ -1292,7 +1262,6 @@ contains
       integer(ip)           iostat
 
       logical               error
-
 
 !
 !     Standard SPICE error handling.
@@ -1413,7 +1382,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1663,13 +1631,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     text file open new
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1690,7 +1656,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -1699,8 +1664,6 @@ contains
 !     Local variables
 !
       integer(ip)           iostat
-
-
 
 !
 !     Standard SPICE error handling.
@@ -1754,7 +1717,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2024,13 +1986,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     text file open for read
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2055,7 +2015,6 @@ contains
 !        FORTRAN V 4.0 environment.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2122,7 +2081,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2269,13 +2227,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode and write integers to a text file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2320,7 +2276,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -2343,7 +2298,6 @@ contains
       integer(ip)           itmbeg
       integer(ip)           length(wrksiz)
       integer(ip)           nitms
-
 
 !
 !     Standard SPICE error handling.
@@ -2446,7 +2400,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2608,13 +2561,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert integer to signed hexadecimal string
 !
 !-&
-
 
 !
 !     Local Parameters
@@ -2639,10 +2590,8 @@ contains
 !
 !     Saved variables
 !
-!
 !     Local variables
 !
-
 
 !
 !     The hexadecimal digits in the integer are found by repeated
@@ -2765,8 +2714,6 @@ contains
 
       integer(ip), parameter :: strlen = 255
 
-
-
 ! $ Detailed_Input
 !
 !     NUMBER   is the double precision number to be converted to a
@@ -2808,7 +2755,6 @@ contains
 !              In order to obtain the entire character string produced
 !              by this routine, the output character string should be
 !              at least N characters long, where
-!
 !
 !                          # of bits per double precision mantissa + 3
 !                 N = 3 + ---------------------------------------------
@@ -2919,9 +2865,7 @@ contains
 !     1) Convert a set of double precision numbers to their equivalent
 !        character string using a base 16 "scientific notation."
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DP2HX_EX1
 !              IMPLICIT NONE
@@ -2967,10 +2911,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         number       string             length
 !         -----------  -----------------  ------
@@ -2982,7 +2924,6 @@ contains
 !          0.5217E+06  7F5EB^5                7
 !          0.2700E+02  1B^2                   4
 !          0.0000E+00  0^0                    3
-!
 !
 !        Note: the hat or caret, '^', signals an exponent.
 !
@@ -3031,7 +2972,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert d.p. to signed normalized hexadecimal string
@@ -3039,7 +2979,6 @@ contains
 !     convert d.p. to base 16 scientific notation
 !
 !-&
-
 
 !
 !     Local Parameters
@@ -3088,10 +3027,8 @@ contains
 !
 !     Saved variables
 !
-!
 !     Initial values
 !
-
 
 !
 !     Make a copy of the input so that it will not be changed by this
@@ -3398,7 +3335,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     UNIT     is the Fortran unit number for a previously opened text
@@ -3549,13 +3485,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode and write d.p. numbers to a text file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3600,10 +3534,8 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local parameters
 !
@@ -3622,7 +3554,6 @@ contains
       integer(ip)           itmbeg
       integer(ip)           nitms
       integer(ip)           length(wrksiz)
-
 
 !
 !     Standard SPICE error handling.
@@ -3723,9 +3654,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -3831,13 +3759,11 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
 !
-!
 !-&
 
 !
 !     SPICELIB Functions
 !
-
 
 !
 !     Local Parameters
@@ -3869,7 +3795,6 @@ contains
 !
 !     PEPPER: ZZXLATEI returns an array (also of one element).
 !
-
 
 !
 !     Saved Variables
@@ -4105,10 +4030,6 @@ contains
 !
 ! $ Declarations
 
-
-
-
-
 ! $ Detailed_Input
 !
 !     LUN        is a logical unit number of a DAF whose first record is
@@ -4199,7 +4120,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 02-MAR-1999 (FST)
 !
-!
 !-&
 
 !
@@ -4229,13 +4149,9 @@ contains
 !     Lengths of internal file name, ID word, and format word.
 !
 
-
-
 !
 !     Local Variables
 !
-
-
 
 !
 !     Saved Variables
@@ -4381,7 +4297,6 @@ contains
 
       end if
 
-
       return
       end associate
       end procedure zzdafnfr
@@ -4405,9 +4320,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -4485,20 +4397,15 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
 !
-!
 !-&
 
 !
 !     SPICELIB Functions
 !
 
-
 !
 !     Local Variables
 !
-
-
-
 
 !
 !     Saved Variables
@@ -4693,9 +4600,6 @@ contains
 !
 ! $ Declarations
 
-
-
-
 ! $ Detailed_Input
 !
 !     HANDLE     is the handle associated with the DAF.
@@ -4779,13 +4683,11 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
 !
-!
 !-&
 
 !
 !     SPICELIB Functions
 !
-
 
 !
 !     Local Parameters
@@ -4793,13 +4695,9 @@ contains
 !     Length in bytes of double precision numbers and integers.
 !
 
-
 !
 !     Local Variables
 !
-
-
-
 
 !
 !     Equivalence DPBUF to INBUF.
@@ -5032,7 +4930,7 @@ contains
 
 !
 !              If the translation routine fails for any reason,
-!              check out and return.
+!              return.
 !
                if ( ctx%failed() ) return
 
@@ -5064,7 +4962,7 @@ contains
 
 !
 !              If the translation routine fails for any reason,
-!              check out and return.
+!              return.
 !
                if ( ctx%failed() ) return
 
@@ -5113,7 +5011,6 @@ contains
 !     variables are in pepper_state_dafah. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     Assign handles to DAFs as they are opened.
@@ -5128,11 +5025,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -5231,7 +5123,6 @@ contains
 !
 !     FILEN    is the maximum filename length. See the include file
 !              'zzddhman.inc' for details.
-!
 !
 !     INTEOC   is the ASCII decimal integer code of the character
 !              recognized by SPICE as representing the end of the
@@ -5598,13 +5489,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     assign DAF handles
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5806,27 +5695,13 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
 
-
 !
 !     Local parameters
 !
-
-
-
-
-
-
-
-
-
-
-
-
 
 !
 !     Local variables
@@ -5857,9 +5732,6 @@ contains
 !
 !     Other local variables
 !
-
-
-
 
 !
 !     Saved variables
@@ -5972,7 +5844,6 @@ contains
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) In the following code fragment, DAFOPR is used to open a file,
 !        which is then searched for DAFs containing data for a
 !        particular object.
@@ -5994,7 +5865,6 @@ contains
 !              CALL DAFFNA ( FOUND )
 !           END DO
 !
-!
 !     2) Use a simple routine to output the double precision and integer
 !        values stored in an SPK's segments descriptors. This function
 !        opens a DAF for read, performs a forwards search for the DAF
@@ -6005,9 +5875,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFOPR_EX1
 !              IMPLICIT NONE
@@ -6080,10 +5948,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
@@ -6115,7 +5981,6 @@ contains
 !        Integers:      299        2        1        2  2098621  2098632
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
-!
 !
 !        Note, the final entries in the integer array contain the
 !        segment start/end indexes. The output indicates the search
@@ -6275,13 +6140,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open DAF for read
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -6357,7 +6220,6 @@ contains
 !     Check FAILED(); return if an error has occurred.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     See if this file is already present in the file table.  If it
@@ -6518,9 +6380,7 @@ contains
 !
 !           earthstns_itrf93_201023.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFOPW_EX1
 !              IMPLICIT NONE
@@ -6620,10 +6480,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Comment area of input DAF file (max. 10 lines):
 !        --------------------------------------------------------------
@@ -6635,7 +6493,6 @@ contains
 !            Creation date:                        2020 October 28 12:30
 !            Created by:                           Nat Bachman  (NAIF***
 !
-!
 !            Introduction
 !        --------------------------------------------------------------
 !
@@ -6643,11 +6500,9 @@ contains
 !
 !            Successful operation.
 !
-!
 !        Warning: incomplete output. 3 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 ! $ Restrictions
 !
@@ -6799,13 +6654,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open existing DAF for write
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6825,7 +6678,6 @@ contains
 !        names of relevant DAFs.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -7225,13 +7077,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open new DAF with type
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -7284,7 +7134,6 @@ contains
 !        of the impact of the changes made for this version.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -7503,7 +7352,7 @@ contains
 !
 !     Check to see whether or not ZZDAFNFR generated an error writing
 !     the file record to the logical unit.  In the event an error
-!     occurs, checkout and return.
+!     occurs, return.
 !
       if ( ctx%failed() ) return
 
@@ -7848,13 +7697,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED open new DAF
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -7881,7 +7728,6 @@ contains
 !        names of relevant DAFs.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -8058,7 +7904,7 @@ contains
 !
 !     Check to see whether or not ZZDAFNFR generated an error writing
 !     the file record to the logical unit.  In the event an error
-!     occurs, checkout and return.
+!     occurs, return.
 !
       if ( ctx%failed() ) return
 
@@ -8205,7 +8051,6 @@ contains
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) In the following code fragment, the arrays in a file are
 !        examined in order to determine whether the file contains
 !        any arrays whose names begin with the word TEST.
@@ -8234,7 +8079,6 @@ contains
 !        for use by other modules without interfering with the operation
 !        of those routines.
 !
-!
 !     2) Use a simple routine to output the double precision and integer
 !        values stored in an SPK's segments descriptors. This function
 !        opens a DAF for read, performs a forwards search for the DAF
@@ -8245,9 +8089,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFCLS_EX1
 !              IMPLICIT NONE
@@ -8320,10 +8162,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
@@ -8355,7 +8195,6 @@ contains
 !        Integers:      299        2        1        2  2098621  2098632
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
-!
 !
 !        Note, the final entries in the integer array contain the
 !        segment start/end indexes. The output indicates the search
@@ -8474,13 +8313,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close DAF
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -8654,9 +8491,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFHSF_EX1
 !              IMPLICIT NONE
@@ -8695,7 +8530,6 @@ contains
 !              INTEGER               NI
 !
 !              LOGICAL               FOUND
-!
 !
 !              DAF = 'de421.bsp'
 !
@@ -8736,13 +8570,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Number of d.p. words is      2098004
-!
 !
 ! $ Restrictions
 !
@@ -8830,13 +8661,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     handle to DAF summary format
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -9065,13 +8894,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DAF handle to logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -9101,7 +8928,6 @@ contains
 !        routines.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -9300,13 +9126,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     logical unit to DAF handle
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -9547,13 +9371,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DAF handle to file name
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -9812,13 +9634,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     file name to DAF handle
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -10037,13 +9857,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return the set of handles for open DAF files
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -10145,11 +9963,9 @@ contains
 !              open for the type of access specified by the input
 !              argument ACCESS.
 !
-!
 !     ACCESS   is a string indicating the type of access that
 !              the DAF specified by the input argument HANDLE
 !              must be open for. The values of ACCESS may be
-!
 !
 !                 'READ'      File must be open for read access
 !                             by DAF routines. All open DAFs
@@ -10161,7 +9977,6 @@ contains
 !                             Note that files open for write
 !                             access may be read as well as
 !                             written.
-!
 !
 !              Leading and trailing blanks in ACCESS are ignored,
 !              and case is not significant.
@@ -10343,13 +10158,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     signal an error for invalid DAF handles
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -10490,8 +10303,6 @@ contains
 !
 ! $ Declarations
 
-
-
 ! $ Detailed_Input
 !
 !     RECNO,
@@ -10567,13 +10378,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     record/word to DAF address
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10701,13 +10510,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DAF address to record/word
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -10750,8 +10557,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
 
 ! $ Detailed_Input
 !
@@ -10815,9 +10620,7 @@ contains
 !     1) Replace the body ID code 301 (Moon) with a test body ID,
 !        e.g. -999, in every descriptor of an SPK file.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFPS_EX1
 !              IMPLICIT NONE
@@ -10944,16 +10747,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the SPK file named de430.bsp, the output was:
-!
 !
 !        Enter name of the SPK file > de430.bsp
 !        Objects in the DAF file:
 !
 !        -999   1   2   3   4   5   6   7   8   9  10 199 299 399
-!
 !
 ! $ Restrictions
 !
@@ -11000,18 +10800,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pack DAF summary
 !
 !-&
 
-
 !
 !     Local variables
 !
-
 
 !
 !     Equivalences
@@ -11137,9 +10934,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFUS_EX1
 !              IMPLICIT NONE
@@ -11169,7 +10964,6 @@ contains
 !              INTEGER               IC     ( NI )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Open a DAF for read. Return a HANDLE referring to the
@@ -11213,10 +11007,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
@@ -11248,7 +11040,6 @@ contains
 !        Integers:      299        2        1        2  2098621  2098632
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
-!
 !
 !        Note, the final entries in the integer array contains the
 !        segment start/end indexes. The output indicates the search
@@ -11302,13 +11093,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unpack DAF summary
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11317,7 +11106,6 @@ contains
 !        Added IMPLICIT NONE statement.
 !
 !-&
-
 
 !
 !     Just undo whatever DAFPS did.
@@ -11349,7 +11137,6 @@ contains
 !     variables are in pepper_state_dafrwd. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     Read, write, and rewrite double precision records to and
@@ -11364,9 +11151,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -11553,13 +11337,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read write d.p. DAF
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11587,31 +11369,21 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
 
-
-
-
-
-
 !
 !     Saved variables
 !
 
-
 !
 !     Initial values
 !
-
-
 
 !
 !     As double precision records are processed, they are stored in a
@@ -11787,13 +11559,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAF d.p. record
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -12075,13 +11845,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAF summary record
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -12407,13 +12175,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAF d.p. record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -12474,7 +12240,6 @@ contains
 !        DAF routines.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -12756,13 +12521,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAF d.p. record
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -12980,13 +12743,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of DAF read requests
 !
 !-&
-
 
       use pepper_kinds, only: ip, wp
       implicit none
@@ -13041,7 +12802,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -13114,9 +12874,7 @@ contains
 !        IAU_MARS frame. Since the landing site does not change over
 !        time, it is expected that both records are equal.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFGDA_EX1
 !              IMPLICIT NONE
@@ -13202,10 +12960,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Beginning address       :  897
 !        Ending address          :  912
@@ -13213,7 +12969,6 @@ contains
 !        The first and second states stored in the segment:
 !          3376.422  -326.649  -115.392     0.000     0.000     0.000
 !          3376.422  -326.649  -115.392     0.000     0.000     0.000
-!
 !
 ! $ Restrictions
 !
@@ -13247,13 +13002,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read data from DAF address
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -13365,10 +13118,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -13576,13 +13325,11 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
 !
-!
 !-&
 
 !
 !     SPICELIB Functions
 !
-
 
 !
 !     Local Parameters
@@ -13593,19 +13340,13 @@ contains
 !     are equivalenced.
 !
 
-
 !
 !     These parameters are used for arithmetic shifting.
 !
 
-
-
 !
 !     Local Variables
 !
-
-
-
 
 !
 !     Equivalence DPBUFR to INBUFR.
@@ -13709,7 +13450,6 @@ contains
             return
 
          end if
-
 
 !
 !        Store the largest value a 32-bit integer can actually
@@ -13876,7 +13616,6 @@ contains
 !                  -------------------------
 !                     INBUFR(K+1)
 !
-!
 !              Perform the necessary computations.  What is outlined
 !              above is implemented below using arithmetic operations.
 !              The last "shifted 24 bits to the MSb" is handled
@@ -14004,7 +13743,6 @@ contains
                      inbufr(k+1) = -inbufr(k+1)
                   end if
                end if
-
 
 !
 !              Check to see if the local buffer is full and the
@@ -14161,7 +13899,6 @@ contains
 !                  -------------------------
 !                     INBUFR(K+1)
 !
-!
 !              Perform the necessary computations. What is outlined
 !              above is implemented below using arithmetic operations.
 !              The last "shifted 24 bits to the MSb" is handled
@@ -14290,7 +14027,6 @@ contains
                   end if
                end if
 
-
 !
 !              Check to see if the local buffer is full and the
 !              double precision numbers need to be moved into the
@@ -14379,7 +14115,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -14507,13 +14242,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED read data from DAF address
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -14540,7 +14273,6 @@ contains
 !        level DAF routines.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -14674,7 +14406,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -14815,7 +14546,6 @@ contains
 !        that were added are not new, but are being documented for the
 !        first time.
 !
-!
 !-    SPICELIB Version 1.0.3, 06-OCT-1992 (HAN)
 !
 !        Corrected a typo in the $Brief_I/O section. ND was listed
@@ -14834,13 +14564,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAF file record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -14872,7 +14600,7 @@ contains
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
-!     with read access. If the call fails, check out and return.
+!     with read access. If the call fails, return.
 !
       call dafsih ( ctx, handle, 'READ' )
 
@@ -14928,7 +14656,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -15062,13 +14789,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAF file record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15129,7 +14854,6 @@ contains
 !        sense doing it twice.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -15207,7 +14931,7 @@ contains
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
-!     with write access. If the call fails, check out and return.
+!     with write access. If the call fails, return.
 !
       call dafsih ( ctx, handle, 'WRITE' )
 
@@ -15296,8 +15020,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
 
 ! $ Detailed_Input
 !
@@ -15410,13 +15132,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write data to DAF address
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -15425,8 +15145,6 @@ contains
 !
 !     Local variables
 !
-
-
 
 !
 !     Saved variables
@@ -15458,7 +15176,6 @@ contains
       end if
       associate ( buffer => ctx%dafwda_state%buffer )
       if ( ctx%failed() ) return
-
 
 !
 !     Bad addresses?
@@ -15549,7 +15266,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -15666,13 +15382,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add DAF reserved records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15752,7 +15466,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -15813,7 +15526,6 @@ contains
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-!
 !
 !     Check to see if the number of records to be reserved is less than
 !     one. If so, just return without changing anything.
@@ -16000,7 +15712,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     HANDLE   is the handle associated with a DAF.
@@ -16095,13 +15806,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAF character record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -16123,7 +15832,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -16141,7 +15849,7 @@ contains
 
 !
 !     Check to be sure that HANDLE is attached to a file that is open
-!     with read access.  If the call fails, check out and return.
+!     with read access.  If the call fails, return.
 !
       call dafsih ( ctx, handle, 'READ' )
 
@@ -16204,7 +15912,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -16301,13 +16008,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAF character record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -16322,7 +16027,6 @@ contains
 !        rather than simply checking the sign of HANDLE.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16398,7 +16102,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -16531,13 +16234,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reorder DAF arrays
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16566,8 +16267,6 @@ contains
       integer(ip)           total
 
       logical               found
-
-
 
 !
 !     Standard SPICE error handling.
@@ -16612,8 +16311,6 @@ contains
          call ctx%sigerr ( 'SPICE(DISARRAY)' )
          return
       end if
-
-
 
 !
 !     Not surprisingly, this routine is patterned closely after the
@@ -16755,7 +16452,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     HANDLE   is the handle associated with a DAF that has been
@@ -16857,13 +16553,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove DAF reserved records
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -16891,7 +16585,6 @@ contains
 !        integer, REMOVE, into a DP number when doing some arithmetic.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -17120,7 +16813,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     HANDLE   is the file handle of a binary DAF which has been opened
@@ -17202,9 +16894,7 @@ contains
 !
 !           earthstns_itrf93_201023.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFAC_EX1
 !              IMPLICIT NONE
@@ -17253,7 +16943,6 @@ contains
 !             .  '   operation.',
 !             .  '',
 !             .  '================ END NEW COMMENTS ================' /
-!
 !
 !        C
 !        C     Open a DAF for write. Return a HANDLE referring to the
@@ -17340,10 +17029,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        End of comment area of input DAF file (max. 15 lines):
 !        --------------------------------------------------------------
@@ -17371,11 +17058,9 @@ contains
 !         ================ END NEW COMMENTS ================
 !        --------------------------------------------------------------
 !
-!
 !        Warning: incomplete output. 2 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 ! $ Restrictions
 !
@@ -17416,14 +17101,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add comments to a binary DAF file
 !     append comments to a DAF file comment area
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -17435,7 +17118,6 @@ contains
 !        its HANDLE, tying up resources in the handle manager.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -17501,9 +17183,7 @@ contains
 !
 !     Saved variables
 !
-!
 !     Initial values
-!
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -17524,7 +17204,6 @@ contains
 !     If this is the first time that this routine has been called,
 !     we need to initialize the character value for the end-of-line
 !     marker and the character value for the end of comments marker.
-!
 !
 !     Verify that the DAF file attached to HANDLE is opened with write
 !     access.
@@ -17952,7 +17631,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     HANDLE   is the handle of a binary DAF that is to have its entire
@@ -18011,9 +17689,7 @@ contains
 !
 !           earthstns_itrf93_201023.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFDC_EX1
 !              IMPLICIT NONE
@@ -18113,10 +17789,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Comment area of input DAF file (max. 10 lines):
 !        --------------------------------------------------------------
@@ -18128,7 +17802,6 @@ contains
 !            Creation date:                        2020 October 28 12:30
 !            Created by:                           Nat Bachman  (NAIF***
 !
-!
 !            Introduction
 !        --------------------------------------------------------------
 !
@@ -18136,11 +17809,9 @@ contains
 !
 !            Successful operation.
 !
-!
 !        Warning: incomplete output. 3 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 ! $ Restrictions
 !
@@ -18168,17 +17839,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete DAF comment area
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local parameters
 !
@@ -18253,8 +17921,6 @@ contains
 !     UTILITY
 !
 ! $ Declarations
-
-
 
 ! $ Detailed_Input
 !
@@ -18361,14 +18027,11 @@ contains
 !        go, for this example, use only a buffer size of 10,
 !        demonstrating the use of the DONE logical flag.
 !
-!
 !        Use the SPK kernel below as input DAF file for the program.
 !
 !           earthstns_itrf93_201023.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFEC_EX1
 !              IMPLICIT NONE
@@ -18451,10 +18114,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Comment area of input DAF file (max. 30 lines):
 !        --------------------------------------------------------------
@@ -18465,7 +18126,6 @@ contains
 !            Original file name:                   earthstns_itrf93_2***
 !            Creation date:                        2020 October 28 12:30
 !            Created by:                           Nat Bachman  (NAIF***
-!
 !
 !            Introduction
 !            ========================================================***
@@ -18492,11 +18152,9 @@ contains
 !
 !         Warning: Not all comments have been read!
 !
-!
 !        Warning: incomplete output. 12 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !     2) The following example demonstrates the use of this routine to
 !        simultaneously read the comment areas of multiple DAFs. For
@@ -18508,15 +18166,12 @@ contains
 !
 !           earthstns_itrf93_201023.bsp
 !
-!
 !        Use the CK kernel below as the second DAF file for the
 !        program.
 !
 !           vo2_swu_ck2.bc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFEC_EX2
 !              IMPLICIT NONE
@@ -18625,10 +18280,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         File: earthstns_itrf93_201023.bsp
 !         --------------------------------------------------------------
@@ -18639,7 +18292,6 @@ contains
 !            Original file name:                   earthstns_itrf93_2***
 !            Creation date:                        2020 October 28 12:30
 !            Created by:                           Nat Bachman  (NAIF***
-!
 !
 !            Introduction
 !
@@ -18694,7 +18346,6 @@ contains
 !            frame alias 'EARTH_FIXED'. See the comment area of that ***
 !            and the Frames Required Reading for details.
 !
-!
 !         File: vo2_swu_ck2.bc
 !         --------------------------------------------------------------
 !         STOP_TIME                    = 1977-11-27T05:55:16.772
@@ -18732,12 +18383,10 @@ contains
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 1049 lines have
 !        been provided. 18 lines extended past the right margin of the
 !        header and have been truncated. These lines are marked by "***"
 !        at the end of each line.
-!
 !
 ! $ Restrictions
 !
@@ -18798,18 +18447,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract comments from a DAF
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -18833,24 +18479,19 @@ contains
 !
 !     Length of a DAF character record, in characters.
 !
-!
 !     Local variables
 !
-
 
 !
 !     The file table declarations for keeping track of which files
 !     are currently in the process of having comments extracted.
 !
 
-
 !
 !     Saved variables
 !
-!
 !     Save all of the file table information.
 !
-
 
 !
 !     Initial values
@@ -19347,7 +18988,6 @@ contains
 !     variables are in pepper_state_dafana. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     Add a new array to an existing DAF.
@@ -19361,10 +19001,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -19469,7 +19105,6 @@ contains
 !     array DATA will be written to the first DAF; the rest of the
 !     array will be written to the second DAF.
 !
-!
 !        1) Open the DAFs for write access, using either DAFOPW
 !           (if the files already exist) or DAFOPN (if they do not).
 !
@@ -19522,9 +19157,7 @@ contains
 !
 !           vo2_swu_ck2.bc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFANA_EX1
 !              IMPLICIT NONE
@@ -19640,11 +19273,9 @@ contains
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new CK file exists in the
 !        output directory.
-!
 !
 !     2)  A simple example demonstrating simultaneous addition
 !         of data to multiple DAFs.
@@ -19672,9 +19303,7 @@ contains
 !         where the symbol nij indicates the jth number on the ith line
 !         of the source data file.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFANA_EX2
 !              IMPLICIT NONE
@@ -19883,10 +19512,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !             1.100000000E+01    1.200000000E+01    1.300000000E+01
 !             2.100000000E+01    2.200000000E+01    2.300000000E+01
@@ -19897,7 +19524,6 @@ contains
 !             7.100000000E+01    7.200000000E+01    7.300000000E+01
 !             8.100000000E+01    8.200000000E+01    8.300000000E+01
 !             9.100000000E+01    9.200000000E+01    9.300000000E+01
-!
 !
 !        Note that after run completion, three new DAF files exist in
 !        the output directory.
@@ -19963,13 +19589,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add new DAF array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -19997,7 +19621,6 @@ contains
 !        The parameter FILEN was removed, as it is defined
 !        on an environmental basis in the include file
 !        'zzddhman.inc'.
-!
 !
 !-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
 !
@@ -20096,26 +19719,13 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
 
-
 !
 !     Local parameters
 !
-
-
-
-
-
-
-
-
-
-
-
 
 !
 !     Local variables
@@ -20150,10 +19760,8 @@ contains
 !        STNAME         Local copy of the array name for the current
 !                       array.
 !
-!
 !     These variables are maintained in a table of parallel arrays;
 !     the size of the table is TBSIZE.
-!
 !
 
 !
@@ -20193,13 +19801,9 @@ contains
 !     list.
 !
 
-
 !
 !     Other local variables
 !
-
-
-
 
 !
 !     Save everything between calls
@@ -20332,13 +19936,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin new DAF array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -20350,7 +19952,6 @@ contains
 !        and initializes the state pool.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -20371,6 +19972,19 @@ contains
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: maxsum = 125
       integer(ip), parameter :: nil = -1
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: i
+      integer(ip) :: prev
+      integer(ip) :: bward
+      integer(ip) :: nd
+      integer(ip) :: free
+      character(ifnlen) :: ifname
+      logical :: found
+      integer(ip) :: ni
+      integer(ip) :: fward
+      integer(ip) :: opnset ( lbcell : ftsize )
+      integer(ip) :: nextp
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
@@ -20387,20 +20001,7 @@ contains
                   stpool => ctx%dafana%stpool, &
                   sthead => ctx%dafana%sthead, &
                   stfptr => ctx%dafana%stfptr, &
-                  ifname => ctx%dafana%ifname, &
-                  bward => ctx%dafana%bward, &
-                  free => ctx%dafana%free, &
-                  fward => ctx%dafana%fward, &
-                  i => ctx%dafana%i, &
-                  nd => ctx%dafana%nd, &
-                  ni => ctx%dafana%ni, &
-                  nextp => ctx%dafana%nextp, &
-                  opnset => ctx%dafana%opnset, &
-                  p => ctx%dafana%p, &
-                  prev => ctx%dafana%prev, &
-                  sumsiz => ctx%dafana%sumsiz, &
-                  first => ctx%dafana%first, &
-                  found => ctx%dafana%found )
+                  first => ctx%dafana%first )
       if ( ctx%failed() ) return
 
 !
@@ -20474,7 +20075,6 @@ contains
 !     state table entry describing the DAF indicated by HANDLE.
 !     In the latter case, PREV is the predecessor of P.
 !
-!
       if ( found ) then
 !
 !        We already have a dossier on this DAF.  We already have
@@ -20496,7 +20096,6 @@ contains
 !
 !           - Make P the active list head node.
 !
-!
          if ( p /= sthead ) then
 !
 !           P is in the active list, but is not at the head.  So,
@@ -20507,7 +20106,6 @@ contains
             sthead        =  p
 
          end if
-
 
       else
 !
@@ -20564,7 +20162,6 @@ contains
 !
 !                    - (PREV remains unchanged.)
 !
-!
                   nextp  =  stpool( p )
 
                   if ( p == sthead ) then
@@ -20585,7 +20182,6 @@ contains
                      stpool( prev ) = nextp
 
                   end if
-
 
                   stpool( p )  =  stfptr
                   stfptr       =  p
@@ -20644,7 +20240,6 @@ contains
 !
 !                    - (PREV remains unchanged.)
 !
-!
                      nextp  =  stpool( p )
 
                      if ( p == sthead ) then
@@ -20665,7 +20260,6 @@ contains
                         stpool( prev ) = nextp
 
                      end if
-
 
                      stpool( p )  =  stfptr
                      stfptr       =  p
@@ -20746,7 +20340,6 @@ contains
       call moved ( sum, sumsiz, stlsum(1,p) )
 
       stname( p )  =  name
-
 
       return
       end associate
@@ -20866,13 +20459,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add data to DAF array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -20883,7 +20474,6 @@ contains
 !        applications that write to one DAF at a time is unchanged.
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -20903,6 +20493,8 @@ contains
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: maxsum = 125
       integer(ip), parameter :: nil = -1
+      integer(ip) :: p
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
@@ -20910,9 +20502,7 @@ contains
       associate ( stfh => ctx%dafana%stfh, &
                   staddg => ctx%dafana%staddg, &
                   stfree => ctx%dafana%stfree, &
-                  sthead => ctx%dafana%sthead, &
-                  dafnam => ctx%dafana%dafnam, &
-                  p => ctx%dafana%p )
+                  sthead => ctx%dafana%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -21083,13 +20673,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     end new DAF array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -21110,7 +20698,6 @@ contains
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -21130,6 +20717,22 @@ contains
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: maxsum = 125
       integer(ip), parameter :: nil = -1
+      integer(ip) :: cloc
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: namsiz
+      integer(ip) :: dloc
+      integer(ip) :: narray
+      character(crlen) :: namrec
+      real(wp) :: sumrec ( dprsiz )
+      integer(ip) :: next
+      integer(ip) :: nd
+      logical :: found
+      integer(ip) :: ic     ( maxnic )
+      integer(ip) :: ni
+      integer(ip) :: word
+      character(filen) :: dafnam
+      real(wp) :: dc     ( maxndc )
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
@@ -21143,23 +20746,7 @@ contains
                   stbegn => ctx%dafana%stbegn, &
                   stlsum => ctx%dafana%stlsum, &
                   stname => ctx%dafana%stname, &
-                  sthead => ctx%dafana%sthead, &
-                  namrec => ctx%dafana%namrec, &
-                  dafnam => ctx%dafana%dafnam, &
-                  dc => ctx%dafana%dc, &
-                  sumrec => ctx%dafana%sumrec, &
-                  cloc => ctx%dafana%cloc, &
-                  dloc => ctx%dafana%dloc, &
-                  ic => ctx%dafana%ic, &
-                  namsiz => ctx%dafana%namsiz, &
-                  nd => ctx%dafana%nd, &
-                  ni => ctx%dafana%ni, &
-                  narray => ctx%dafana%narray, &
-                  next => ctx%dafana%next, &
-                  p => ctx%dafana%p, &
-                  sumsiz => ctx%dafana%sumsiz, &
-                  word => ctx%dafana%word, &
-                  found => ctx%dafana%found )
+                  sthead => ctx%dafana%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -21231,7 +20818,6 @@ contains
       cloc    =  1  +  narray * namsiz
 
       namrec(cloc : cloc+namsiz-1) = stname(p)
-
 
       sumrec(arycnt) =  sumrec(arycnt) + 1.0_wp
       narray         =  idint ( sumrec(arycnt) )
@@ -21379,8 +20965,6 @@ contains
 !
 !         AMOUNT (J,I)
 !
-!
-!
 !         DO I = 1, N
 !            CALL DAFOPW ( HANDLE(I) )
 !            CALL DAFBNA ( HANDLE(I) )
@@ -21399,7 +20983,6 @@ contains
 !            CALL DAFCAD  ( HANDLE(I) )
 !            CALL DAFENA
 !         END DO
-!
 !
 !     Note that if we write all of the data for each array to just one
 !     DAF at a time, we don't need to use DAFCAD:
@@ -21462,14 +21045,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     continue adding data to a DAF
 !     select a DAF to continue adding data to
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -21489,6 +21070,10 @@ contains
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: maxsum = 125
       integer(ip), parameter :: nil = -1
+      integer(ip) :: p
+      integer(ip) :: prev
+      logical :: found
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
          call init_dafana_state ( ctx%dafana )
@@ -21496,11 +21081,7 @@ contains
       associate ( stfh => ctx%dafana%stfh, &
                   staddg => ctx%dafana%staddg, &
                   stpool => ctx%dafana%stpool, &
-                  sthead => ctx%dafana%sthead, &
-                  dafnam => ctx%dafana%dafnam, &
-                  p => ctx%dafana%p, &
-                  prev => ctx%dafana%prev, &
-                  found => ctx%dafana%found )
+                  sthead => ctx%dafana%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -21568,7 +21149,6 @@ contains
 !
 !        - Make P the active list head node.
 !
-!
 
       if ( p /= sthead ) then
 !
@@ -21581,7 +21161,6 @@ contains
 
       end if
 
-
       return
       end associate
       end procedure dafcad
@@ -21592,7 +21171,6 @@ contains
 !     its entry points are the module procedures below, and its saved
 !     variables are in pepper_state_daffa. Its documentation follows.
 !
-
 
 ! $ Abstract
 !
@@ -21607,10 +21185,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -21705,8 +21279,6 @@ contains
 !
 !        END DO
 !
-!
-!
 !     DAFBBS (begin backward search) and DAFFPA are used to search the
 !     arrays in a DAF in backward order. In applications that search
 !     a single DAF at a time, the normal usage is
@@ -21725,7 +21297,6 @@ contains
 !
 !        END DO
 !
-!
 !     In applications that conduct multiple searches simultaneously,
 !     the above usage must be modified to specify the handle of the
 !     file to operate on, in any case where the file may not be the
@@ -21738,7 +21309,6 @@ contains
 !     Throughout, we use DAFCS to specify which file to operate on,
 !     before calling DAFFNA, DAFFPA, DAFGS, DAFRS, DAFWS, DAFGN, or
 !     DAFRN.
-!
 !
 !        CALL DAFBFS ( HANDL1 )
 !        CALL DAFBBS ( HANDL2 )
@@ -21776,7 +21346,6 @@ contains
 !           END IF
 !
 !        END DO
-!
 !
 !     At any time, the latest array found (whether by DAFFNA or DAFFPA)
 !     is regarded as the `current' array for the file in which the
@@ -21820,9 +21389,7 @@ contains
 !        segment identifier to indicate that such change has been
 !        implemented.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFFA_EX1
 !              IMPLICIT NONE
@@ -22030,10 +21597,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the SPK file named de430.bsp, the output was:
-!
 !
 !        Enter name of the SPK file > de430.bsp
 !        Objects in the original DAF file:
@@ -22072,7 +21637,6 @@ contains
 !             2     0  DE-0430LE-0430
 !             1     0  DE-0430LE-0430
 !
-!
 !     2) The following program compares data in two DAFs. The DAFs are
 !        expected to have the same number of arrays, the same number
 !        of elements in each corresponding array, and the same summary
@@ -22082,9 +21646,7 @@ contains
 !        is flagged. The difference information is written to the
 !        screen.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFFA_EX2
 !              IMPLICIT NONE
@@ -22120,7 +21682,6 @@ contains
 !
 !              INTEGER               RLEN
 !              PARAMETER           ( RLEN   = 1000 )
-!
 !
 !        C
 !        C     Local variables
@@ -22161,7 +21722,6 @@ contains
 !              INTEGER               PTR
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Start out by obtaining the names of the DAFs to be
@@ -22348,12 +21908,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the PCK (DAF) files named
 !        earth_720101_031229.bpc and earth_720101_070527.bpc, and a
 !        tolerance of '1.D0', the output was:
-!
 !
 !        Enter name of first DAF  > earth_720101_031229.bpc
 !        Enter name of second DAF > earth_720101_070527.bpc
@@ -22458,10 +22016,8 @@ contains
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 80582 lines have
 !        been provided.
-!
 !
 ! $ Restrictions
 !
@@ -22655,30 +22211,19 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find DAF array
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
 
-
-
 !
 !     Local parameters
 !
-
-
-
-
-
-
-
 
 !
 !     Local variables
@@ -22752,24 +22297,17 @@ contains
 !     in the DAF that is at the head of the active list.
 !
 
-
 !
 !     Other local variables
 !
-
-
-
-
 
 !
 !     Save everything between calls
 !
 
-
 !
 !     Initial values
 !
-
 
 !
 !     Standard SPICE error handling.
@@ -22835,9 +22373,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFBFS_EX1
 !              IMPLICIT NONE
@@ -22867,7 +22403,6 @@ contains
 !              INTEGER               IC( NI )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Open a DAF for read. Return a HANDLE referring to the
@@ -22911,10 +22446,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
@@ -22946,7 +22479,6 @@ contains
 !        Integers:      299        2        1        2  2098621  2098632
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
-!
 !
 !        Note, the final entries in the integer array contains the
 !        segment start/end indexes. The output indicates the search
@@ -23033,13 +22565,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin DAF forward search
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -23055,6 +22585,19 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: i
+      integer(ip) :: prev
+      integer(ip) :: nextp
+      integer(ip) :: p
+      integer(ip) :: bward
+      integer(ip) :: nd
+      integer(ip) :: free
+      character(ifnlen) :: ifname
+      integer(ip) :: ni
+      integer(ip) :: fward
+      logical :: fnd
+      character(filen) :: dafnam
+      integer(ip) :: opnset ( lbcell : ftsize )
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -23070,20 +22613,7 @@ contains
                   stpool => ctx%daffa%stpool, &
                   sthead => ctx%daffa%sthead, &
                   stfptr => ctx%daffa%stfptr, &
-                  dafnam => ctx%daffa%dafnam, &
-                  ifname => ctx%daffa%ifname, &
-                  bward => ctx%daffa%bward, &
-                  free => ctx%daffa%free, &
-                  fward => ctx%daffa%fward, &
-                  i => ctx%daffa%i, &
-                  nd => ctx%daffa%nd, &
-                  nextp => ctx%daffa%nextp, &
-                  ni => ctx%daffa%ni, &
-                  opnset => ctx%daffa%opnset, &
-                  p => ctx%daffa%p, &
-                  prev => ctx%daffa%prev, &
-                  first => ctx%daffa%first, &
-                  fnd => ctx%daffa%fnd )
+                  first => ctx%daffa%first )
       if ( ctx%failed() ) return
 
 !
@@ -23158,7 +22688,6 @@ contains
 !
 !           - Make P the active list head node.
 !
-!
          if ( p /= sthead ) then
 !
 !           P is in the active list, but is not at the head. So,
@@ -23169,7 +22698,6 @@ contains
             sthead        =  p
 
          end if
-
 
       else
 !
@@ -23225,9 +22753,7 @@ contains
 !
 !                    - (PREV remains unchanged.)
 !
-!
                   nextp  =  stpool( p )
-
 
                   if ( p == sthead ) then
 !
@@ -23404,9 +22930,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFFNA_EX1
 !              IMPLICIT NONE
@@ -23436,7 +22960,6 @@ contains
 !              INTEGER               IC( NI )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Open a DAF for read. Return a HANDLE referring to the
@@ -23480,10 +23003,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
@@ -23515,7 +23036,6 @@ contains
 !        Integers:      299        2        1        2  2098621  2098632
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
-!
 !
 !        Note, the final entries in the integer array contains the
 !        segment start/end indexes. The output indicates the search
@@ -23600,13 +23120,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find next DAF array
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -23622,6 +23140,9 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: p
+      logical :: fnd
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -23634,12 +23155,8 @@ contains
                   stcurr => ctx%daffa%stcurr, &
                   sthvnr => ctx%daffa%sthvnr, &
                   stsr => ctx%daffa%stsr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  p => ctx%daffa%p, &
-                  fnd => ctx%daffa%fnd )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
-
 
 !
 !     FOUND will be false until we make it past the error checks.
@@ -23671,13 +23188,11 @@ contains
 
       end if
 
-
 !
 !     Now that we know a search is going on, assume that we will find
 !     an array until proven otherwise.
 !
       found = .true.
-
 
 !
 !     Either there are more summaries left in this record, or
@@ -23819,9 +23334,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFBBS_EX1
 !              IMPLICIT NONE
@@ -23851,7 +23364,6 @@ contains
 !              INTEGER               IC( NI )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Open a DAF for read. Return a HANDLE referring to the
@@ -23895,10 +23407,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
@@ -23930,7 +23440,6 @@ contains
 !        Integers:        2        0        1        2   310405   423048
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
-!
 !
 !        Note, the final entries in the integer arrays record the
 !        segment start/end indexes. The output indicates the search
@@ -24017,13 +23526,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin DAF backward search
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -24039,6 +23546,19 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: i
+      integer(ip) :: prev
+      integer(ip) :: nextp
+      integer(ip) :: p
+      integer(ip) :: bward
+      integer(ip) :: nd
+      integer(ip) :: free
+      character(ifnlen) :: ifname
+      integer(ip) :: ni
+      integer(ip) :: fward
+      logical :: fnd
+      character(filen) :: dafnam
+      integer(ip) :: opnset ( lbcell : ftsize )
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -24054,20 +23574,7 @@ contains
                   stpool => ctx%daffa%stpool, &
                   sthead => ctx%daffa%sthead, &
                   stfptr => ctx%daffa%stfptr, &
-                  dafnam => ctx%daffa%dafnam, &
-                  ifname => ctx%daffa%ifname, &
-                  bward => ctx%daffa%bward, &
-                  free => ctx%daffa%free, &
-                  fward => ctx%daffa%fward, &
-                  i => ctx%daffa%i, &
-                  nd => ctx%daffa%nd, &
-                  nextp => ctx%daffa%nextp, &
-                  ni => ctx%daffa%ni, &
-                  opnset => ctx%daffa%opnset, &
-                  p => ctx%daffa%p, &
-                  prev => ctx%daffa%prev, &
-                  first => ctx%daffa%first, &
-                  fnd => ctx%daffa%fnd )
+                  first => ctx%daffa%first )
       if ( ctx%failed() ) return
 
 !
@@ -24142,7 +23649,6 @@ contains
 !
 !           - Make P the active list head node.
 !
-!
          if ( p /= sthead ) then
 !
 !           P is in the active list, but is not at the head. So,
@@ -24153,7 +23659,6 @@ contains
             sthead        =  p
 
          end if
-
 
       else
 !
@@ -24209,9 +23714,7 @@ contains
 !
 !                    - (PREV remains unchanged.)
 !
-!
                   nextp  =  stpool( p )
-
 
                   if ( p == sthead ) then
 !
@@ -24231,7 +23734,6 @@ contains
                      stpool( prev ) = nextp
 
                   end if
-
 
                   stpool( p )  =  stfptr
                   stfptr       =  p
@@ -24385,9 +23887,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFFPA_EX1
 !              IMPLICIT NONE
@@ -24417,7 +23917,6 @@ contains
 !              INTEGER               IC( NI )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Open a DAF for read. Return a HANDLE referring to the
@@ -24461,10 +23960,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
@@ -24496,7 +23993,6 @@ contains
 !        Integers:        2        0        1        2   310405   423048
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
-!
 !
 !        Note, the final entries in the integer arrays record the
 !        segment start/end indexes. The output indicates the search
@@ -24594,13 +24090,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find previous DAF array
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -24616,6 +24110,9 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: p
+      logical :: fnd
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -24628,12 +24125,8 @@ contains
                   stcurr => ctx%daffa%stcurr, &
                   sthvnr => ctx%daffa%sthvnr, &
                   stsr => ctx%daffa%stsr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  p => ctx%daffa%p, &
-                  fnd => ctx%daffa%fnd )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
-
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -24818,9 +24311,7 @@ contains
 !
 !           de421.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAFGS_EX1
 !              IMPLICIT NONE
@@ -24850,7 +24341,6 @@ contains
 !              INTEGER               IC( NI )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Open a DAF for read. Return a HANDLE referring to the
@@ -24894,10 +24384,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:        1        0        1        2      641   310404
@@ -24929,7 +24417,6 @@ contains
 !        Integers:      299        2        1        2  2098621  2098632
 !         Doubles:  -3169195200.0000000        1696852800.0000000
 !        Integers:      499        4        1        2  2098633  2098644
-!
 !
 !        Note, the final entries in the integer array contains the
 !        segment start/end indexes. The output indicates the search
@@ -25018,13 +24505,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get DAF summary
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -25041,6 +24526,12 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: offset
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: nd
+      integer(ip) :: ni
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -25049,13 +24540,7 @@ contains
                   stnseg => ctx%daffa%stnseg, &
                   stcurr => ctx%daffa%stcurr, &
                   stsr => ctx%daffa%stsr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  nd => ctx%daffa%nd, &
-                  ni => ctx%daffa%ni, &
-                  p => ctx%daffa%p, &
-                  sumsiz => ctx%daffa%sumsiz, &
-                  offset => ctx%daffa%offset )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -25265,13 +24750,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get DAF array name
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -25287,6 +24770,13 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: offset
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: namsiz
+      integer(ip) :: nd
+      integer(ip) :: ni
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -25297,16 +24787,8 @@ contains
                   stcurr => ctx%daffa%stcurr, &
                   stnr => ctx%daffa%stnr, &
                   sthvnr => ctx%daffa%sthvnr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  namsiz => ctx%daffa%namsiz, &
-                  nd => ctx%daffa%nd, &
-                  ni => ctx%daffa%ni, &
-                  p => ctx%daffa%p, &
-                  sumsiz => ctx%daffa%sumsiz, &
-                  offset => ctx%daffa%offset )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
-
 
 !
 !     Operate on the last DAF in which a search has been started.
@@ -25362,7 +24844,6 @@ contains
 
       end if
 
-
 !
 !     Read the name record for this summary record, if we don't have it
 !     already.
@@ -25374,7 +24855,6 @@ contains
          sthvnr( p )  =  .true.
 
       end if
-
 
 !
 !     The location of the name depends on the current pointer
@@ -25571,13 +25051,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get DAF handle
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -25593,13 +25071,13 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: p
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
       end if
       associate ( stfh => ctx%daffa%stfh, &
-                  sthead => ctx%daffa%sthead, &
-                  p => ctx%daffa%p )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -25778,13 +25256,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace DAF summary
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -25801,6 +25277,17 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: offset
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: exic   ( maxnic )
+      real(wp) :: newdc  ( maxndc )
+      integer(ip) :: nd
+      real(wp) :: exdc   ( maxndc )
+      integer(ip) :: ni
+      real(wp) :: exsum  ( maxndc )
+      integer(ip) :: newic  ( maxnic )
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -25810,18 +25297,7 @@ contains
                   stnseg => ctx%daffa%stnseg, &
                   stcurr => ctx%daffa%stcurr, &
                   stsr => ctx%daffa%stsr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  exdc => ctx%daffa%exdc, &
-                  exsum => ctx%daffa%exsum, &
-                  newdc => ctx%daffa%newdc, &
-                  exic => ctx%daffa%exic, &
-                  nd => ctx%daffa%nd, &
-                  newic => ctx%daffa%newic, &
-                  ni => ctx%daffa%ni, &
-                  p => ctx%daffa%p, &
-                  sumsiz => ctx%daffa%sumsiz, &
-                  offset => ctx%daffa%offset )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -26052,13 +25528,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     change DAF array name
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -26074,6 +25548,13 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: offset
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: namsiz
+      integer(ip) :: nd
+      integer(ip) :: ni
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -26084,14 +25565,7 @@ contains
                   stcurr => ctx%daffa%stcurr, &
                   stnr => ctx%daffa%stnr, &
                   sthvnr => ctx%daffa%sthvnr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  namsiz => ctx%daffa%namsiz, &
-                  nd => ctx%daffa%nd, &
-                  ni => ctx%daffa%ni, &
-                  p => ctx%daffa%p, &
-                  sumsiz => ctx%daffa%sumsiz, &
-                  offset => ctx%daffa%offset )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -26149,8 +25623,6 @@ contains
 
       end if
 
-
-
 !
 !     Read the name record for this summary record, if we don't have it
 !     already.
@@ -26162,7 +25634,6 @@ contains
          sthvnr( p )  =  .true.
 
       end if
-
 
 !
 !     The location of the name depends on the current pointer
@@ -26327,13 +25798,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAF summary
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -26350,6 +25819,12 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: offset
+      integer(ip) :: sumsiz
+      integer(ip) :: p
+      integer(ip) :: nd
+      integer(ip) :: ni
+      character(filen) :: dafnam
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
@@ -26359,13 +25834,7 @@ contains
                   stnseg => ctx%daffa%stnseg, &
                   stcurr => ctx%daffa%stcurr, &
                   stsr => ctx%daffa%stsr, &
-                  sthead => ctx%daffa%sthead, &
-                  dafnam => ctx%daffa%dafnam, &
-                  nd => ctx%daffa%nd, &
-                  ni => ctx%daffa%ni, &
-                  p => ctx%daffa%p, &
-                  sumsiz => ctx%daffa%sumsiz, &
-                  offset => ctx%daffa%offset )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -26422,8 +25891,6 @@ contains
          return
 
       end if
-
-
 
 !
 !     The location of the summary depends on the current pointer
@@ -26557,13 +26024,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     select a DAF to continue searching
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -26579,16 +26044,16 @@ contains
       integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: maxnic = 250
       integer(ip), parameter :: nil = -1
+      integer(ip) :: prev
+      integer(ip) :: p
+      logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
       end if
       associate ( stfh => ctx%daffa%stfh, &
                   stpool => ctx%daffa%stpool, &
-                  sthead => ctx%daffa%sthead, &
-                  p => ctx%daffa%p, &
-                  prev => ctx%daffa%prev, &
-                  fnd => ctx%daffa%fnd )
+                  sthead => ctx%daffa%sthead )
       if ( ctx%failed() ) return
 
 !
@@ -26634,7 +26099,6 @@ contains
          return
 
       end if
-
 
 !
 !     Move the node for this DAF to the head of the active list,
@@ -26685,7 +26149,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -26832,13 +26295,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert binary DAF into a DAF transfer file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -26889,7 +26350,6 @@ contains
 !        for details of the modification.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -27069,14 +26529,14 @@ contains
 !
 !     This routine will check the SPICELIB function FAILED() after
 !     each DAF file access call, and if an error was signaled it will
-!     simply check out and return to the caller.
+!     simply return to the caller.
 !
 !     We begin by opening the binary DAF file specified by BINFIL for
 !     read access, obtaining a DAF file handle.
 !
       call dafopr( ctx, binfil, binhdl )
 !
-!     If the open failed, check out and return, as an appropriate error
+!     If the open failed, return, as an appropriate error
 !     message should have already been set.
 !
       if ( ctx%failed() ) return
@@ -27092,7 +26552,7 @@ contains
       call zzddhhlu ( ctx, binhdl, 'DAF', .false., binlun )
 
 !
-!     If the translation failed, checkout and return, as an appropriate
+!     If the translation failed, return, as an appropriate
 !     error message should have already been set.
 !
       if ( ctx%failed() ) return
@@ -27446,7 +26906,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     ASCII    is the name of an existing ASCII (text) DAF.
@@ -27585,13 +27044,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED ascii DAF to binary
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -27618,7 +27075,7 @@ contains
 
 !
 !     Call DAFT2B to perform the conversion. If it fails, then just
-!     check out and return, as an appropriate error message should have
+!     return, as an appropriate error message should have
 !     already been set. Also close the text file that we opened.
 !
       call daft2b ( ctx, unit, binary, resv )
@@ -27662,7 +27119,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -27799,13 +27255,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED binary DAF to ascii
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -27830,7 +27284,7 @@ contains
       if ( ctx%failed() ) return
 !
 !     Attempt to perform the file conversion. If it fails, close the
-!     text file with STATUS = 'DELETE', check out and return, as an
+!     text file with STATUS = 'DELETE', return, as an
 !     appropriate error message should have already been set.
 !
       call dafb2t ( ctx, binary, unit )
@@ -27874,7 +27328,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -28106,13 +27559,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED binary DAF to text
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -28488,7 +27939,6 @@ contains
 
       implicit none
 
-
       integer(ip), parameter :: bsize = 1024
 
 ! $ Detailed_Input
@@ -28740,13 +28190,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED text DAF to binary
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -29090,7 +28538,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     XFRLUN   is the Fortran logical unit number of a previously opened
@@ -29239,13 +28686,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert DAF transfer file to binary
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -29292,10 +28737,8 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local Parameters
 !
@@ -29467,7 +28910,6 @@ contains
 !        END_ARRAY n NA(n)
 !        TOTAL_ARRAYS  n
 !        <EOF>
-!
 !
 !     Initialize a few things.
 !

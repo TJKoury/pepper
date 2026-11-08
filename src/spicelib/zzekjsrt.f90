@@ -32,7 +32,6 @@
       include 'eksegdsc.inc'
       include 'ektype.inc'
 
-
       integer(ip), parameter :: lbpool = -5
 
       integer(ip)           njrs
@@ -249,7 +248,6 @@
 !        error when the above code is exercised.  So PRVBAS is now
 !        initialized prior to the above IF statement.
 !
-!
 !-    SPICELIB Version 2.0.0, 08-SEP-2005 (NJB)
 !
 !        Increased buffer size parameter LIMIT1 from 25K to 250K.
@@ -369,7 +367,6 @@
       logical               chrle
 
 !
-!
 !     The following functions test whether two column entries
 !     are equal.  In the integer and d.p. cases, the test is conclusive.
 !     In the character case, the test indicates whether the initial
@@ -388,7 +385,6 @@
       chreq ( n1, n2, c1, c2 ) =            ( n1   .and.    n2  )  .or. &
                                     (       (.not. (n1 .or. n2) ) &
                                       .and. ( c1 == c2        )  )
-
 
 !
 !     The following functions indicate whether the first of two column
@@ -409,8 +405,6 @@
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
                        .and. (         i1 <= i2    )    )
 
-
-
       dpge  ( n1, n2, d1, d2 ) = &
 
            n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
@@ -421,7 +415,6 @@
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
                        .and. (         d1 <= d2    )    )
 
-
       chrge ( n1, n2, c1, c2 ) = &
 
            n2  .or.  (       ( .not. ( n1 .or. n2 )  ) &
@@ -431,7 +424,6 @@
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
                        .and. (         c1 <= c2    )    )
-
 
 !
 !     Standard SPICE error handling.
@@ -463,7 +455,6 @@
 !            we just read data from the order-by columns as needed.
 !            This algorithm is simple, but very slow, since many
 !            DAS reads of individual column entries are required.
-!
 !
 !     Find out how many rows are in the join row set union.
 !
@@ -512,7 +503,6 @@
 
       dtype = dtdscs( typidx, colptr )
 
-
       if ( nrows <= limit1 ) then
 !
 !        Case 1.
@@ -546,9 +536,7 @@
 
          do i = 1, nrows
 
-
             call zzekvcal ( i, rwvbas, sgvbas )
-
 
             if (  ( i == 1 ) .or. ( sgvbas /= prvbas )  ) then
 
@@ -564,12 +552,10 @@
 
             end if
 
-
             call zzeksrd  ( rwvbas+1,  rwvbas+rvsize,  rowvec )
 
             row     =  rowvec( tprime )
             eltidx  =  oelts ( cprime )
-
 
             if ( dtype == chr ) then
 
@@ -582,7 +568,6 @@
                               cdat(i), &
                               null, &
                               found            )
-
 
                if ( .not. found ) then
 
@@ -601,7 +586,6 @@
 
                trunc = trunc .or. ( cvlen  >  inisub )
 
-
             else if (  ( dtype == dp ) .or. ( dtype == time ) ) then
 
                call zzekrsd ( handle, &
@@ -612,7 +596,6 @@
                               ddat(i), &
                               null, &
                               found              )
-
 
                if ( .not. found ) then
 
@@ -628,8 +611,6 @@
                   return
 
                end if
-
-
 
             else if (  dtype == int ) then
 
@@ -642,7 +623,6 @@
                               null, &
                               found             )
 
-
                if ( .not. found ) then
 
                   call setmsg ( 'EK = #; SEG = #; ROW = #; COLIDX ' // &
@@ -657,7 +637,6 @@
                   return
 
                end if
-
 
             else
 !
@@ -679,7 +658,6 @@
             else
                nf(i)  =  cfalse
             end if
-
 
             prvbas  =  sgvbas
 
@@ -732,7 +710,6 @@
 !
                   brute = .false.
 
-
                   if ( dtype == int ) then
 
                      if ( norder == 1 ) then
@@ -747,7 +724,6 @@
                            jle = intge( nfj, nfjg, idat(rj), idat(rjg) )
                         end if
 
-
                      else if ( .not. inteq ( nfj,      nfjg, &
                                              idat(rj), idat(rjg) ) )then
 !
@@ -761,7 +737,6 @@
                            jle = intge( nfj, nfjg, idat(rj), idat(rjg) )
                         end if
 
-
                      else
 !
 !                       Otherwise, we'll have to look at values in the
@@ -771,8 +746,6 @@
                         brute  =  .true.
 
                      end if
-
-
 
                   else if (     ( dtype == dp   ) &
                            .or. ( dtype == time )  ) then
@@ -789,7 +762,6 @@
                            jle = dpge( nfj, nfjg, ddat(rj), ddat(rjg) )
                         end if
 
-
                      else if ( .not. dpeq ( nfj,      nfjg, &
                                             ddat(rj), ddat(rjg) )  )then
 
@@ -800,7 +772,6 @@
                            jle = dpge( nfj, nfjg, ddat(rj), ddat(rjg) )
                         end if
 
-
                      else
 !
 !                       Otherwise, we'll have to look at values in the
@@ -810,7 +781,6 @@
                         brute  =  .true.
 
                      end if
-
 
                   else
 
@@ -828,7 +798,6 @@
                            jle = chrge( nfj, nfjg, cdat(rj), cdat(rjg) )
                         end if
 
-
                      else if ( .not. chreq ( nfj,      nfjg, &
                                              cdat(rj), cdat(rjg) ) )then
 !
@@ -842,7 +811,6 @@
                            jle = chrge( nfj, nfjg, cdat(rj), cdat(rjg) )
                         end if
 
-
                      else
 !
 !                       Otherwise, we'll have to look at values in the
@@ -853,9 +821,7 @@
 
                      end if
 
-
                   end if
-
 
                   if ( brute ) then
 
@@ -910,7 +876,6 @@
          call zzekstop ( ordbas )
 
          call zzekspsh ( nrows, ordvec )
-
 
       else
 

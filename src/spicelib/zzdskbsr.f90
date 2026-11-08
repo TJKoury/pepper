@@ -44,7 +44,6 @@
       real(wp)              dskdsc ( * )
       logical               found
 
-
       integer(ip), parameter :: ftsize = 5000
 
       integer(ip), parameter :: btsize = 100
@@ -72,13 +71,11 @@
 !     HANDLE     on input is the handle of a binary DSK file to be
 !                unloaded.
 !
-!
 !     The purpose of entry points ZZDSKBSS and ZZDSKSNS is to search for
 !     segments in DSK files matching certain criteria.
 !
 !     USRCTR     on input is the value of a DSK loaded kernel counter
 !                maintained by a DSK routine or subsystem.
-!
 !
 ! $ Detailed_Output
 !
@@ -240,9 +237,6 @@
 !
 !-&
 
-
-
-
 ! $ Revisions
 !
 !     None.
@@ -263,7 +257,6 @@
 
 !
 !     Local parameters
-
 
       integer(ip), parameter :: slen = 40
 
@@ -385,7 +378,6 @@
 
       real(wp)              dsklds ( dskdsz )
 
-
       integer(ip)           cheap
       integer(ip)           cost
       integer(ip)           dlalds ( dladsz )
@@ -446,7 +438,6 @@
       data                  savep     / 0             /
       data                  status    / 'BOGUS ENTRY' /
 
-
 !
 !     Nobody has any business calling ZZDSKBSR directly.
 !
@@ -455,7 +446,6 @@
       call sigerr ( 'SPICE(DSKBOGUSENTRY)' )
 
       return
-
 
 !$Procedure ZZDSKLSF ( DSK, load shape file )
 
@@ -590,7 +580,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !     None.
@@ -600,7 +589,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( pass1 ) then
 !
@@ -840,9 +828,6 @@
 
       return
 
-
-
-
 !$Procedure ZZDSKUSF ( DSK, Unload shape file )
 
       entry zzdskusf ( handle )
@@ -948,15 +933,12 @@
 !
 !-&
 
-
-
 ! $ Revisions
 !
 !     None.
 !
 !-&
       if ( return() ) return
-
 
       if ( pass1 ) then
 !
@@ -973,7 +955,6 @@
 !     the load operation is successful.
 !
       call zzctrinc ( dskctr )
-
 
 !
 !     Don't allow a search to continue after unloading a file; a new
@@ -992,12 +973,10 @@
 
       if ( findex == 0 ) return
 !
-!
 !     First get rid of the entry in the file table. Close the file
 !     before wiping out the handle.
 !
       call dascls ( fthan(findex) )
-
 
       nft = nft - 1
 
@@ -1065,11 +1044,7 @@
 
       end do
 
-
       return
-
-
-
 
 !$Procedure ZZDSKBSS ( DSK, begin search for segment )
 
@@ -1175,7 +1150,6 @@
 !
 !        02-APR-2010 (NJB) (RET) (IMU)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -1183,8 +1157,6 @@
 !     begin search for dsk segment
 !
 !-&
-
-
 
 ! $ Revisions
 !
@@ -1197,8 +1169,6 @@
 !
       if ( return () ) return
 
-
-
       if ( pass1 ) then
 !
 !        Initialize the BSR counter.
@@ -1208,7 +1178,6 @@
          pass1 = .false.
 
       end if
-
 
 !
 !     Make a saved copy of the body ID code.
@@ -1238,7 +1207,6 @@
 !
       bindex = isrchi ( svbody, nbt, btbod )
 
-
       if ( bindex == 0 ) then
 
          status = 'NEW BODY'
@@ -1258,8 +1226,6 @@
       savep  = -1
 
       return
-
-
 
 !$Procedure ZZDSKSNS ( DSK, Select next segment )
 
@@ -1309,7 +1275,6 @@
 !     DLADSC
 !
 !     DSKDS
-!
 !
 !     HANDLE     is an integer handle of the file containing the
 !                segment matching the body and time
@@ -1438,7 +1403,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !     None.
@@ -1454,8 +1418,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       if ( pass1 ) then
 !
@@ -1629,7 +1591,6 @@
 
       end if
 
-
       do while ( status /= 'HOPELESS' )
 !
 !        If new files have been added, they have to be searched.
@@ -1667,7 +1628,6 @@
                status = 'CHECK LIST'
 
             end if
-
 
          else if ( status == 'NEW BODY' ) then
 !
@@ -1748,7 +1708,6 @@
 !
             status = 'OLD FILES'
 
-
          else if ( status == 'NEW FILES' ) then
 !
 !           When new files exist, they should be searched in forward
@@ -1792,7 +1751,6 @@
 !           zero so far.
 !
             cost   = 0
-
 
          else if ( status == 'NEW SEGMENTS' ) then
 !
@@ -1944,7 +1902,6 @@
 
             end if
 
-
             if ( failed() ) return
 
             if ( .not. fnd ) then
@@ -2003,7 +1960,6 @@
 !           a segment if there is a need for angular velocity data and
 !           the segment doesn't have it.
 !
-!
             do while ( p > 0 )
 
                if ( cmpfun( sthan(p), stdlad(1,p), stdskd(1,p) )  ) then
@@ -2025,7 +1981,6 @@
 
                end if
 
-
 !
 !              Get the next node.  We avoid LNKNXT here in order
 !              to speed up the operation.
@@ -2046,7 +2001,6 @@
             else
                status = 'HOPELESS'
             end if
-
 
          else if ( status == 'MAKE ROOM' ) then
 !
@@ -2085,8 +2039,6 @@
             minexp = intmax()
             cheap  = 0
 
-
-
             do i = 1, nbt
 
                if ( i /= bindex ) then
@@ -2107,7 +2059,6 @@
                end if
 
             end do
-
 
             if ( cheap == 0 ) then
 !
@@ -2287,7 +2238,6 @@
 !           it's 'OLD FILES'.
 !
 
-
          else if ( status == 'ADD TO FRONT' ) then
 !
 !           The current segment information should be linked in at
@@ -2331,7 +2281,6 @@
                status  = 'RESUME'
 
             end if
-
 
          else if ( status == 'ADD TO END' ) then
 !
@@ -2384,7 +2333,6 @@
 
             end if
 
-
          else if ( status == 'SUSPEND' ) then
 !
 !           When a task is suspended, the current activity is placed on
@@ -2402,7 +2350,6 @@
 
          end if
 
-
       end do
 
 !
@@ -2411,11 +2358,7 @@
 !
       found = .false.
 
-
       return
-
-
-
 
 !$Procedure ZZDSKCHK ( DSK, check for file updates )
 
@@ -2537,16 +2480,13 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !     None.
 !
 !-&
 
-
       if ( return() ) return
-
 
       call zzctrchk ( dskctr, usrctr, update )
 

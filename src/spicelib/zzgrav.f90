@@ -120,7 +120,6 @@
 !     assignments.
 !
 
-
 !
 !     WGS72 low precision Spacetrack #3 constants. These values should
 !     correspond to those in geophysical.ker. If not, something is
@@ -143,7 +142,6 @@
 
       grav( wgs721, p_j3j2) =  grav(wgs721, p_j3) / grav(wgs721, p_j2)
 
-
 !
 !     WGS 72 constants.
 !
@@ -164,7 +162,6 @@
       grav( wgs72, p_j4)   =  -0.00000165597_wp
 
       grav( wgs72, p_j3j2) =  grav(wgs72, p_j3) / grav(wgs72, p_j2)
-
 
 !
 !     WGS 84 constants.
@@ -188,4 +185,3 @@
       grav( wgs84, p_j3j2) =  grav(wgs84, p_j3) / grav(wgs84, p_j2)
 
       end
-

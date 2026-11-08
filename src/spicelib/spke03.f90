@@ -121,7 +121,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -198,13 +197,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_3 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -219,9 +216,6 @@
       integer(ip)           cofloc
       integer(ip)           i
 
-!
-!     Use discovery check-in.
-!
       if ( return () ) return
 
 !

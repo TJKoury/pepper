@@ -67,13 +67,11 @@
 !        zeta ,   z ,  and theta
 !            A     A            A
 !
-!
 !     Equation (5-147) of [2] gives the matrix determined by these
 !     angles as
 !
 !        A  =  [ -z   ]   [ theta  ]   [ -zeta  ]
 !                  A   3         A  2         A  3
-!
 !
 !     Formulas for the Euler angles are from [2], equation
 !     (5-143):
@@ -81,11 +79,9 @@
 !         zeta   =  2306".2181*T  +  0".30188*T   +  0".017998*T
 !             A
 !
-!
 !                                              2                3
 !         z      =  2306".2181*T  +  1".09468*T   +  0".018203*T
 !          A
-!
 !
 !                                              2                3
 !         theta  =  2004".3109*T  -  0".42665*T   -  0".041833*T
@@ -121,7 +117,6 @@
 !         Draft of JPL Publication documenting the JPL navigation
 !         program "Regres."
 !
-!
 ! $ Author_and_Institution
 !
 !     N.J. Bachman       (JPL)
@@ -137,7 +132,6 @@
 !     Earth precession matrix based on 1976 IAU model
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -175,11 +169,9 @@
       real(wp)              z
       real(wp)              theta
 
-
 !
 !     No check-in required; this routine does not participate in
 !     SPICELIB error handling.
-!
 !
 !     Compute the precession angles first.  The time argument has
 !     units of Julian centuries.  The polynomial expressions yield

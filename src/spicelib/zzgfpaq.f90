@@ -165,7 +165,6 @@
 !
       if ( return () ) return
 
-
 !
 !     This calculation is invariant with respect to reference frame.
 !     Use J2000 for convenience.
@@ -178,7 +177,6 @@
       call spkezp ( targ, et, ref, abcorr,  obs, pv1, lt )
 
       if (  failed() ) return
-
 
 !
 !     Get the state of the ILLMN object relative to TARG at ET
@@ -233,4 +231,3 @@
       return
 
       end
-

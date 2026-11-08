@@ -164,13 +164,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     strip ascii characters from a string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -186,8 +184,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      k
-
-
 
 !
 !     Find the length of the output string. We don't want to
@@ -391,13 +387,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     determine if a string is a decimal number
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -410,7 +404,6 @@ contains
       integer(ip)           d
       integer(ip)           e
       integer(ip)           l
-
 
 !
 !     First determine whether or not a decimal point is present.
@@ -657,21 +650,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     determine if a string is an integer
 !
 !-&
 
-
-
       integer(ip)           i
       integer(ip)           l
 
-
       character(1)          letter
-
 
 !
 !     Find the first non-blank character and the length of the
@@ -688,7 +676,6 @@ contains
          beint  = .false.
          return
       end if
-
 
 !
 !     Copy the first non-blank letter in the string.
@@ -876,13 +863,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     determine if a string is a number
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -896,9 +881,6 @@ contains
       integer(ip)           f
       integer(ip)           l
 
-
-
-
 !
 !     Determine whether or not there is an exponent character in the
 !     string.
@@ -907,7 +889,6 @@ contains
       e = cpos ( string, 'EeDd', 1 )
       d = e-1
       f = e+1
-
 
       if ( e == 0 ) then
 
@@ -1072,13 +1053,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     determine if a string is an unsigned integer
 !
 !-&
-
 
 !
 !     SPICE functions
@@ -1091,8 +1070,6 @@ contains
       integer(ip)           l
 
       logical               ok
-
-
 
 !
 !     Get the length of the string and the position of its
@@ -1267,15 +1244,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compress a character_string
 !
 !-&
 
-
-!
 !
 !     Local Variables
 !
@@ -1285,7 +1259,6 @@ contains
 
       integer(ip)      inlen
       integer(ip)      outlen
-
 
 !
 !     Find out how much space there is in the INPUT and OUTPUT strings
@@ -1449,7 +1422,6 @@ contains
 !
 !           CPOS( STRING, ' ,',    21 ) = 0
 !
-!
 !     START out of bounds
 !     -------------------
 !
@@ -1460,7 +1432,6 @@ contains
 !           CPOS( STRING, ' ,',    31 ) = 0
 !
 !           CPOS( STRING, ' ,',  1231 ) = 0
-!
 !
 !     Order within CHARS
 !     ------------------
@@ -1513,13 +1484,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     forward search for position of character
 !
 !-&
-
 
 !
 !     Local variables
@@ -1528,7 +1497,6 @@ contains
       logical               found
       integer(ip)           lenstr
       integer(ip)           b
-
 
       lenstr = len ( str )
 
@@ -1675,7 +1643,6 @@ contains
 !
 !           CPOSR( STRING, ' ,',   -10 ) =  0
 !
-!
 !     Order within CHARS
 !     ------------------
 !
@@ -1729,13 +1696,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     backward search for the position of a character
 !
 !-&
-
 
 !
 !     Local variables
@@ -1743,7 +1708,6 @@ contains
       logical               found
       integer(ip)           lenstr
       integer(ip)           b
-
 
       lenstr = len ( str )
 
@@ -1867,7 +1831,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM EQSTR_EX1
 !              IMPLICIT NONE
 !
@@ -1916,7 +1879,6 @@ contains
 !             .                               'Case Insensitive',
 !             .                               '  S t E v E  '  /
 !
-!
 !        C
 !        C     Compare the two arrays.
 !        C
@@ -1940,10 +1902,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         STR1 : A short string
 !         STR2 : ashortstring
@@ -1980,7 +1940,6 @@ contains
 !         STR1 : Steve
 !         STR2 :   S t E v E
 !         EQSTR: equivalent.
-!
 !
 ! $ Restrictions
 !
@@ -2026,13 +1985,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     equivalent strings
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2064,7 +2021,6 @@ contains
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -2082,7 +2038,6 @@ contains
       integer(ip)           delta
 
       logical               done
-
 
 !
 !     The general plan is to move a pair of pointers (PA, PB)
@@ -2181,9 +2136,7 @@ contains
 
             end if
 
-
             if ( .not. done ) then
-
 
                if ( pa > lena ) then
 !
@@ -2225,12 +2178,9 @@ contains
 !
                end if
 
-
             end if
 
-
          end do
-
 
       end if
 
@@ -2357,13 +2307,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     search array for equivalent character_string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2373,7 +2321,6 @@ contains
 !     Local variables
 !
       integer(ip)           i
-
 
 !
 !     Just like ISRCHC.
@@ -2516,13 +2463,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find the next word after an index
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2534,7 +2479,6 @@ contains
 !         ensure that the functionality was exactly duplicated.
 !
 !-&
-
 
 !
 !     Local Variables
@@ -2721,13 +2665,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     first non-blank character
 !
 !-&
-
 
 !
 !     Local parameters
@@ -2838,9 +2780,7 @@ contains
 !     1) Find the first non-printable character in a given string,
 !        considering blanks as printable characters.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM FRSTNP_EX1
 !              IMPLICIT NONE
@@ -2875,13 +2815,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        First non-printable character found at index 3
-!
 !
 ! $ Restrictions
 !
@@ -2910,13 +2847,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     first non-printable character
 !
 !-&
-
 
 !
 !     Local variables
@@ -3073,20 +3008,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     first printable character
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      i
-
-
 
 !
 !     Look for the first character in the range [33,126], and return
@@ -3230,7 +3161,6 @@ contains
 !               FOUND   .TRUE.
 !               SUBSTR  '1 January 1987'
 !
-!
 !     Example 2.
 !     ----------
 !       Input:  WORDSQ  'FROM 1 October 1984 12:00:00 TO 1 January 1987'
@@ -3244,7 +3174,6 @@ contains
 !               FOUND   .TRUE.
 !               SUBSTR  '1 October 1984 12:00:00'
 !
-!
 !     Example 3.
 !     ----------
 !       Input:  WORDSQ  'ADDRESS: 4800 OAK GROVE DRIVE PHONE: 354-4321 '
@@ -3256,7 +3185,6 @@ contains
 !       Output: WORDSQ  ' PHONE: 354-4321 '
 !               FOUND   .TRUE.
 !               SUBSTR  '4800 OAK GROVE DRIVE'
-!
 !
 !     Example 4.
 !     ----------
@@ -3305,13 +3233,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract a substring starting with a keyword
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3326,7 +3252,6 @@ contains
 !         module will never participate in error handling.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -3547,13 +3472,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last non-blank character
 !
 !-&
-
 
 !
 !     Local parameters
@@ -3713,20 +3636,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last printable character
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      i
-
-
 
 !
 !     Look for the last character in the range [33,126], and return
@@ -3891,13 +3810,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     build a list in a character_string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -3913,8 +3830,6 @@ contains
       integer(ip)      llen
       integer(ip)      ilen
       integer(ip)      i
-
-
 
 !
 !     Find the non-blank part of each item. Move it to the
@@ -4081,13 +3996,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert to lowercase
 !
 !-&
-
 
 !
 !     Local variables
@@ -4218,15 +4131,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compress uppercase left-justify a character_string
 !
 !-&
 
-
-!
 !
 !     Local Variables
 !
@@ -4434,13 +4344,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     left justify a character_string
 !
 !-&
-
 
 !
 !     Local variables
@@ -4450,7 +4358,6 @@ contains
       integer(ip)           i
       integer(ip)           j
       integer(ip)           pos
-
 
 !
 !     Is the first character of the input string non-blank? If yes, the
@@ -4609,7 +4516,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM LPARSE_EX1
 !              IMPLICIT NONE
 !
@@ -4657,23 +4563,19 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Item  1: Run
 !        Item  2: and
 !        Item  3: find
 !        Item  4: out.
 !
-!
 !     2) Repeat the previous example with different character
 !        delimiting the items in the list and different maximum number
 !        of items to return.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM LPARSE_EX2
 !              IMPLICIT NONE
@@ -4747,10 +4649,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Case 1:
 !           String: '//option1//option2/ //'
@@ -4774,7 +4674,6 @@ contains
 !              Item  2: 'bob'
 !              Item  3: 'carol'
 !              Item  4: ' '
-!
 !
 ! $ Restrictions
 !
@@ -4817,13 +4716,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse items from a list
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4841,7 +4738,6 @@ contains
 !        Whether or not such violations occur is platform-dependent.
 !
 !-&
-
 
 !
 !     Local parameters
@@ -4861,7 +4757,6 @@ contains
       integer(ip)           b
       integer(ip)           e
       integer(ip)           eol
-
 
 !
 !     Because speed is essential in many list parsing applications,
@@ -5089,9 +4984,7 @@ contains
 !     1) Parse a character string to retrieve the words contained
 !        within.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LPARSM_EX1
 !              IMPLICIT NONE
@@ -5143,23 +5036,18 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Item  1: Run
 !        Item  2: and
 !        Item  3: find
 !        Item  4: out.
 !
-!
 !     2) Parse a character string to retrieve the items contained
 !        within, when then items are separated by multiple delimiters.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LPARSM_EX2
 !              IMPLICIT NONE
@@ -5217,10 +5105,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Item  1: '1986'
 !        Item  2: '187'
@@ -5228,7 +5114,6 @@ contains
 !        Item  4: '13'
 !        Item  5: '15'
 !        Item  6: '12.184'
-!
 !
 ! $ Restrictions
 !
@@ -5266,13 +5151,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse a list of items
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5290,7 +5173,6 @@ contains
 !        Whether or not such violations occur is platform-dependent.
 !
 !-&
-
 
 !
 !     Local parameters
@@ -5549,15 +5431,11 @@ contains
 !     bound, but we have to handle the case where FRSTNB returns 0,
 !     so we write:
 !
-!
 !        WRITE ( UNIT, '(A)' ),  STRING ( MAX (1, FRSTNB (STRING)) : )
-!
 !
 !     This can be simplified using LTRIM:
 !
-!
 !        WRITE ( UNIT, '(A)' ),  STRING ( LTRIM (STRING) : )
-!
 !
 !     This routine has a counterpart, RTRIM, which finds the maximum of
 !     1 and the position of the last non-blank character of a string.
@@ -5607,13 +5485,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     left trim
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -5691,7 +5567,6 @@ contains
 !
 !              are common choices, but any non-blank character is
 !              accepted. Case *is* significant in QCHAR.
-!
 !
 !     FIRST    is the character position at which the routine
 !              is to start scanning a quoted string token. Note
@@ -5781,7 +5656,6 @@ contains
 !
 !     1)  The table below illustrates the action of this routine.
 !
-!
 !         STRING CONTENTS               QCHAR   FIRST   LAST   NCHAR
 !         ==========================================================
 !         The "SPICE" system            "       5       11     7
@@ -5822,7 +5696,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     scan quoted string token
@@ -5830,7 +5703,6 @@ contains
 !     recognize quoted string token
 !
 !-&
-
 
 !
 !     Local variables
@@ -5840,7 +5712,6 @@ contains
       integer(ip)           pos
 
       logical               even
-
 
 !
 !     Error free, no check-in required.
@@ -5896,7 +5767,6 @@ contains
       even  = .true.
       pos   =  last  + 1
 
-
       do while (  pos  <=  l  )
 
          if ( string(pos:pos) == qchar ) then
@@ -5927,7 +5797,6 @@ contains
 
          end if
 
-
          pos  =  pos + 1
 
 !
@@ -5949,7 +5818,6 @@ contains
 !     LAST that we already have is the largest value we can get.
 !
       nchar  =  last - first + 1
-
 
       return
       end subroutine lxqstr
@@ -6115,14 +5983,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     match string against wildcard template
 !     test whether a string matches a wildcard template
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6136,11 +6002,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local Variables
@@ -6183,7 +6047,6 @@ contains
       scur   = max ( 1, sfirst )
       tcur   = tfirst
 
-
 !
 !     A blank template matches a blank string, and nothing else.
 !
@@ -6198,7 +6061,6 @@ contains
          return
 
       end if
-
 
 !
 !     The beginning of the string and template must be identical
@@ -6311,7 +6173,6 @@ contains
       end do
 
       right = tcur - 1
-
 
       do while ( left <= tlast )
 
@@ -6556,18 +6417,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     non-blank length of a string
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Blank string is easy.
@@ -6699,13 +6557,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     non-blank width of a character array
 !
 !-&
-
 
 !
 !     Local variables
@@ -6713,7 +6569,6 @@ contains
       integer(ip)           strlen
       integer(ip)           i
       integer(ip)           j
-
 
 !
 !     Nonsense case: no elements.
@@ -6920,13 +6775,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     forward search for position of unlisted character
 !
 !-&
-
 
 !
 !     Local variables
@@ -6934,7 +6787,6 @@ contains
       logical               found
       integer(ip)           lenstr
       integer(ip)           b
-
 
       lenstr = len ( str )
 
@@ -7115,13 +6967,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     backward search for position of unlisted character
 !
 !-&
-
 
 !
 !     Local variables
@@ -7129,7 +6979,6 @@ contains
       logical               found
       integer(ip)           lenstr
       integer(ip)           b
-
 
       lenstr = len ( str )
 
@@ -7247,9 +7096,7 @@ contains
 !
 !     1) Given a character string, get the sequence of words within.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM NEXTWD_EX1
 !              IMPLICIT NONE
@@ -7292,10 +7139,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Next   Rest of the string
 !        -----  ------------------------------------------
@@ -7309,7 +7154,6 @@ contains
 !        men    to come.
 !        to     come.
 !        come.
-!
 !
 ! $ Restrictions
 !
@@ -7357,13 +7201,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     next word in a character_string
 !
 !-&
-
 
 !
 !     Local Parameters
@@ -7553,9 +7395,7 @@ contains
 !     1) Given a character string, get the N'th word within, and the
 !        word's location.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM NTHWD_EX1
 !              IMPLICIT NONE
@@ -7585,7 +7425,6 @@ contains
 !              INTEGER               LOC
 !              INTEGER               NTH
 !
-!
 !              DO NTH = -1, 11
 !
 !                 CALL NTHWD ( STRING, NTH, WORD, LOC )
@@ -7597,10 +7436,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Word # -1  is < >, starting at position  0
 !        Word #  0  is < >, starting at position  0
@@ -7615,7 +7452,6 @@ contains
 !        Word #  9  is <to>, starting at position 42
 !        Word # 10  is <come.>, starting at position 45
 !        Word # 11  is < >, starting at position  0
-!
 !
 ! $ Restrictions
 !
@@ -7667,13 +7503,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     N'th word in a character_string
 !
 !-&
-
 
 !
 !     Local variables
@@ -7683,8 +7517,6 @@ contains
       integer(ip)      length
 
       logical          loop
-
-
 
 !
 !     Trivial cases first. Blank STRING? Nonpositive NTH?
@@ -7854,7 +7686,6 @@ contains
 !              All blanks occurring between the bracketing
 !              quote characters in STRING are significant.
 !
-!
 !     QCHAR    is the quote character. This is always a single
 !              character. The characters
 !
@@ -7964,7 +7795,6 @@ contains
 !
 !     1)  The table below illustrates the action of this routine.
 !
-!
 !     STRING               QCHAR   VALUE           LENGTH       ERROR
 !     =================================================================
 !     "SPICE"              "       SPICE           5            .FALSE.
@@ -8005,13 +7835,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse quoted string token
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -8028,7 +7856,6 @@ contains
       integer(ip)           last
       integer(ip)           outlen
       integer(ip)           opos
-
 
 !
 !     Error free, no check-in required.  No parse error to start with.
@@ -8072,7 +7899,6 @@ contains
 
       end if
 
-
 !
 !     The input token must be bracketed by quote characters.
 !
@@ -8092,7 +7918,6 @@ contains
 
       end if
 
-
 !
 !     Null strings are not accepted.
 !
@@ -8104,7 +7929,6 @@ contains
          return
 
       end if
-
 
 !
 !     Transfer the interior characters of the input string to the output
@@ -8176,7 +8000,6 @@ contains
 
       end do
 
-
       if ( ipos < last-1 ) then
 !
 !        We must have stopped transferring characters to VALUE
@@ -8189,7 +8012,6 @@ contains
 
       end if
 
-
       if ( opos < outlen ) then
 !
 !        Blank-pad the trailing portion of the output string.
@@ -8197,7 +8019,6 @@ contains
          value(opos:) = ' '
 
       end if
-
 
       return
       end subroutine parsqs
@@ -8323,13 +8144,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     printable width of a character array
 !
 !-&
-
 
 !
 !     Local variables
@@ -8337,7 +8156,6 @@ contains
       integer(ip)           strlen
       integer(ip)           i
       integer(ip)           j
-
 
 !
 !     Nonsense case: no elements.
@@ -8539,13 +8357,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     position of substring
 !
 !-&
-
 
 !
 !     Local variables
@@ -8555,7 +8371,6 @@ contains
       integer(ip)           offset
       integer(ip)           lchnce
       integer(ip)           b
-
 
 !
 !     Let's find out how big every body is.
@@ -8745,13 +8560,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     position of substring reverse search
 !
 !-&
-
 
 !
 !     Local variables
@@ -8913,13 +8726,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     prefix a character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -8928,7 +8739,6 @@ contains
 !         Reference to SHIFT replaced by SHIFTL.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -8940,8 +8750,6 @@ contains
       integer(ip)      plen
       integer(ip)      slen
       integer(ip)      shift
-
-
 
 !
 !     L is the location of the last non-blank character in the prefix.
@@ -9106,19 +8914,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     enclose in quotes
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
 !
 !     Check for blank string first.
@@ -9251,20 +9055,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace characters in a string
 !
 !-&
 
-
 !
 !   Local Variables
 !
       integer(ip)      i
-
-
 
 !
 !     Move the input string to the output string. If it's too long,
@@ -9423,13 +9223,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace a word
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -9447,8 +9245,6 @@ contains
       integer(ip)           k
       integer(ip)           n
       integer(ip)           shift
-
-
 
 !
 !     First just shift the input string into the output string,
@@ -9693,9 +9489,7 @@ contains
 !        replace a marker within a string with a character string
 !        value.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REPMC_EX1
 !              IMPLICIT NONE
@@ -9741,10 +9535,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Case 1: Single marker.
 !            Input : Invalid value. The value was:  #
@@ -9753,7 +9545,6 @@ contains
 !         Case 2: Multiple markers.
 !            Input : The token XX was not recognized. Was it XX?
 !            Output: The token FND was not recognized. Was it XX?
-!
 !
 ! $ Restrictions
 !
@@ -9800,13 +9591,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace marker with character_string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -9820,7 +9609,6 @@ contains
 
       integer(ip)           mrkpsb
       integer(ip)           mrkpse
-
 
 !
 !     If MARKER is blank, no substitution is possible.
@@ -9973,13 +9761,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     right justify a character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -9996,7 +9782,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -10009,8 +9794,6 @@ contains
       integer(ip)           last
       integer(ip)           loc
       integer(ip)           start
-
-
 
 !
 !     Blank string? It's all the same.
@@ -10120,15 +9903,11 @@ contains
 !     substring bound, but we have to handle the case where LASTNB
 !     returns 0, so we write:
 !
-!
 !        WRITE ( UNIT, '(A)' ),  STRING ( : MAX (1, LASTNB (STRING)) )
-!
 !
 !     This can be simplified using RTRIM:
 !
-!
 !        WRITE ( UNIT, '(A)' ),  STRING ( : RTRIM (STRING) )  )
-!
 !
 !     This routine has a counterpart, LTRIM, which finds the maximum of
 !     1 and the position of the first non-blank character of a string.
@@ -10178,13 +9957,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     right trim
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10315,7 +10092,6 @@ contains
 !     However this is a much more complicated section of code. This
 !     routine allows you to code the above loops as:
 !
-!
 !        DO WHILE ( SAMCH ( STR1,L1, STR2,L2 )  )
 !           L1 = L1 + 1
 !           L2 = L2 + 1
@@ -10347,13 +10123,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check two characters substrings for case sensitive equal
 !
 !-&
-
 
       if (      l1 < 1 &
            .or. l2 < 1 &
@@ -10504,7 +10278,6 @@ contains
 !
 !     END DO
 !
-!
 !     However, this is code is far more effort. Using this routine
 !     you can make a much simpler block of code.
 !
@@ -10541,13 +10314,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check equality of two substrings.
 !
 !-&
-
 
       if (      ( e1      < b1           ) &
            .or. ( e2      < b2           ) &
@@ -10675,7 +10446,6 @@ contains
 !      IDS(1)    = 0
 !      N         = 1
 !
-!
 !      CALL SCANPR ( NMARKS, MARKS,  MRKLEN, MRKPTR )
 !
 !      IDS(1)    = BSRCHC ( ' ', NMARKS, MARKS )
@@ -10709,13 +10479,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Remove tokens from a scanned list of tokens
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10726,7 +10494,6 @@ contains
 !
       integer(ip)           i
       integer(ip)           j
-
 
 !
 !     There's not much to do, shift forward the token attributes for
@@ -10903,13 +10670,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     shift left
 !
 !-&
-
 
 !
 !     Local variables
@@ -11122,13 +10887,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     shift right
 !
 !-&
-
 
 !
 !     Local variables
@@ -11304,13 +11067,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     retain significant digits
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -11330,7 +11091,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -11346,7 +11106,6 @@ contains
       integer(ip)           j
       integer(ip)           k
       integer(ip)           l
-
 
 !
 !     Find the first and last non-blank characters in the string.
@@ -11457,7 +11216,6 @@ contains
             end do
 
             if ( l <= len(out) ) out(l:) = ' '
-!
 !
 !        Is there is a decimal point and no exponent, and is the last
 !        non-blank character a zero ('...0')? Then truncate the string
@@ -11649,13 +11407,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     suffix a character_string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -11667,8 +11423,6 @@ contains
       integer(ip)      l
       integer(ip)      slen
       integer(ip)      end
-
-
 
 !
 !     SLEN is the allocated length of the string. L is the location of
@@ -11802,13 +11556,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert to uppercase
 !
 !-&
-
 
 !
 !     Local variables
@@ -11953,13 +11705,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     word count
 !
 !-&
-
 
 !
 !     Local variables
@@ -11968,7 +11718,6 @@ contains
       integer(ip)      loc
       integer(ip)      length
       logical          cont
-
 
 !
 !     This is just NTHWD, except that it keeps looking until
@@ -12171,13 +11920,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     index of a word within a string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -12435,7 +12182,6 @@ contains
 !
 !        Adapted from the SPICELIB routine INSSUB to be error free.
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -12443,8 +12189,6 @@ contains
 !     insert a substring
 !
 !-&
-
-
 
 ! $ Revisions
 !
@@ -12472,7 +12216,6 @@ contains
 !        location equal to LEN(IN)+1.)
 !
 !-&
-
 
 !
 !     Local Variables
@@ -12509,7 +12252,6 @@ contains
       sublen  =  len ( sub )
       myloc   =  min ( inlen + 1, max ( 1, loc ) )
 
-
 !
 !     If the insertion occurs after the end of the output string,
 !     just return the original string.  Don't do the assignment if
@@ -12529,7 +12271,6 @@ contains
 
       end if
 
-
 !
 !     At this point, we're guaranteed that
 !
@@ -12540,7 +12281,6 @@ contains
 !             -
 !
 !        MYLOC  >  0
-!
 !
 !     The first part of the input string is copied without change
 !     to the output string, if this first part is non-empty.
@@ -12562,10 +12302,8 @@ contains
 !
       subend  =  myloc - 1 + sublen
 
-
       if (        ( myloc  <= inlen  ) &
             .and. ( subend < outlen )  ) then
-
 
          nmove  =  min (  outlen-subend, inlen-myloc+1  )
 
@@ -12745,12 +12483,7 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 27-APR-1996 (WLT)
 !
-!
 !-&
-
-
-
-
 
 !
 !     SPICELIB functions
@@ -12869,7 +12602,6 @@ contains
       if ( end < outlen ) then
          out(end+1: ) = ' '
       end if
-
 
       return
       end subroutine zzrepsub
@@ -13010,13 +12742,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert integer to character string
 !
 !-&
-
 
 !
 !     Local Parameters
@@ -13039,8 +12769,6 @@ contains
       integer(ip)           remndr
 
       integer(ip)           i
-
-
 
 !
 !     The digits are generated in reverse order, so we fill the
@@ -13351,13 +13079,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     d.p. number to character
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -13377,7 +13103,6 @@ contains
 !         Declaration of the unused variable FRAC removed.
 !
 !-&
-
 
 !
 !     Maximum number of allowed significant digits.
@@ -13416,8 +13141,6 @@ contains
            '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', &
            '40' ]
 
-
-
       real(wp)              copy
       integer(ip)           postn
       integer(ip)           expont
@@ -13432,14 +13155,7 @@ contains
       character(20)         expc
       character(28)         zero
 
-
       character(32)         numstr
-
-
-
-
-
-
 
 !
 !     Transfer X to the local variable COPY and leave X alone for the
@@ -13485,13 +13201,11 @@ contains
 
       end if
 
-
 !
 !     We need a first guess at the exponent string.  Compute the LOG
 !     base 10 of COPY
 !
       exp10  = dlog10(copy)
-
 
 !
 !     Scale our copy of the input into the range 1 to 10.
@@ -13516,7 +13230,6 @@ contains
             copy = copy * power(k)
          end if
 
-
       else
 
          expont = int ( exp10 )
@@ -13531,10 +13244,7 @@ contains
             copy = copy * ipower(k)
          end if
 
-
       end if
-
-
 
 !
 !     Round off the last significant digit.
@@ -13761,17 +13471,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check two characters for case insensitive equality
 !
 !-&
 
-
 !
 !     Entry points.
-!
 !
 !     Range of characters
 !
@@ -13792,9 +13499,6 @@ contains
       integer(ip), parameter :: uvalue ( 0 : lstchr ) = &
          [ ( merge( i - ( iachar('a') - iachar('A') ), i, &
                     i >= iachar('a') .and. i <= iachar('z') ), i = 0, lstchr ) ]
-
-
-
 
 !
 !     The first time through the loop we set the upper case values
@@ -13948,13 +13652,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check two characters for case insensitive not equal
 !
 !-&
-
 
       use pepper_kinds, only: ip
       implicit none
@@ -13968,7 +13670,6 @@ contains
          [ ( merge( i - ( iachar('a') - iachar('A') ), i, &
                     i >= iachar('a') .and. i <= iachar('z') ), i = 0, lstchr ) ]
 
-
       i     = ichar(a)
       j     = ichar(b)
 
@@ -13979,7 +13680,6 @@ contains
       end if
 
       return
-
 
       end function nechr
 
@@ -14101,7 +13801,6 @@ contains
 !     However this is a much more complicated section of code. This
 !     routine allows you to code the above loops as:
 !
-!
 !        DO WHILE ( SAMCHI ( STR1,L1, STR2,L2 )  )
 !           L1 = L1 + 1
 !           L2 = L2 + 1
@@ -14133,18 +13832,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check two character substrings for case insensitive equal
 !
 !-&
 
-
 !
 !     Spicelib Functions
 !
-
 
       if (      l1 < 1 &
            .or. l2 < 1 &
@@ -14299,7 +13995,6 @@ contains
 !
 !     END DO
 !
-!
 !     However, this is code is far more effort. Using this routine
 !     you can make a much simpler block of code.
 !
@@ -14336,19 +14031,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Check case insensitive equality of two substrings.
 !
 !-&
 
-
-
       integer(ip)           i
       integer(ip)           j
-
-
 
       if (      ( e1      < b1           ) &
            .or. ( e2      < b2           ) &
@@ -14518,7 +14208,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     match string against wildcard template
@@ -14526,11 +14215,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local Variables
@@ -14573,7 +14260,6 @@ contains
       scur   = max ( 1, sfirst )
       tcur   = tfirst
 
-
 !
 !     A blank template matches a blank string, and nothing else.
 !
@@ -14588,7 +14274,6 @@ contains
          return
 
       end if
-
 
 !
 !     The beginning of the string and template must be identical
@@ -14701,7 +14386,6 @@ contains
       end do
 
       right = tcur - 1
-
 
       do while ( left <= tlast )
 
@@ -14954,7 +14638,6 @@ contains
 !     The following code fragment parses the line and obtains the
 !     double precision value.
 !
-!
 !        CALL NEXTWD ( LINE,  FIRST,  REST )
 !        CALL NEXTWD ( REST, SECOND,  REST )
 !        CALL NEXTWD ( REST,  THIRD,  REST )
@@ -15058,11 +14741,9 @@ contains
 !        went unnoticed until NAIF began compiling with the CHECK=BOUNDS
 !        option of the DEC Fortran compiler.
 !
-!
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (HAN) (NJB)
 !
 !-&
-
 
 ! $ Index_Entries
 !
@@ -15070,11 +14751,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions.
 !
-
 
 !
 !     Local Parameters.
@@ -15146,7 +14825,6 @@ contains
       integer(ip)           nexti
       integer(ip)           thisi
 
-
       logical               dodec
       logical               expok
       logical               doexp
@@ -15165,11 +14843,6 @@ contains
 !     little variable that might need to be saved.
 !
 
-
-
-
-
-
 !
 !     PEPPER: SPICELIB computed these tables and limits on the first call
 !     only (saved); they are computed on every call now.
@@ -15184,22 +14857,17 @@ contains
       //       'too large to be stored as a double precision ' &
       //       'number. '
 
-
       unxpch = 'An unexpected character was found while ' &
       //       'attempting to parse the input string. '
-
 
       unxppt = 'An unexpected decimal point was found in the ' &
       //       'input string. '
 
-
       unxpsn = 'An unexpected sign character was found in the ' &
       //       'input string. '
 
-
       blnkst = 'The input string is blank. Blank strings are ' &
       //       'not considered to be numbers. '
-
 
       unrcst = 'The input string could not be recognized as a ' &
       //       'number. '
@@ -15273,7 +14941,6 @@ contains
       intbnd = intbnd / base
 !
 !        That takes care of the first pass initializations.
-!
 !
 !     Here's what's true right now.
 !
@@ -15416,7 +15083,6 @@ contains
 !
          end if
 
-
 !
 !        Finally compute NL,the index of the character that precedes
 !        L and the new midpoint of the stuff from B to NL.
@@ -15438,14 +15104,11 @@ contains
          l = l - 1
       end do
 
-
 !
 !     Begin to collect the number in its various parts: an integer
 !     portion, a fractional portion, and an exponent.
 !
       do i = 1, l
-
-
 
          id    = ichar(string(i:i))
 
@@ -15790,7 +15453,6 @@ contains
 
       end do
 
-
 !
 !     If we got through the loop and it's OK to end PI, then we started
 !     it but never finished.  This is an error.
@@ -15893,8 +15555,6 @@ contains
             end if
 
          end do
-
-
 
          exp = nint(expval)
 !
@@ -16037,7 +15697,6 @@ contains
 !     The following code fragment parses the line and obtains the
 !     integer value.
 !
-!
 !        CALL NEXTWD ( LINE,  FIRST,  REST )
 !        CALL NEXTWD ( REST, SECOND,  REST )
 !        CALL NEXTWD ( REST,  THIRD,  REST )
@@ -16121,18 +15780,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse a character_string to an integer
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local Variables
@@ -16142,9 +15798,7 @@ contains
 !
 !     Saved Variables
 !
-!
 !     Initial values
-!
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -16153,7 +15807,6 @@ contains
 !
 !     If this is the first time NPARSI has been called, initialize
 !     bounds for the range of integers.
-!
 !
 !     NPARSD will define ERROR and PNTER if there is an error,
 !     so we do not need to initialize them here.
@@ -16320,13 +15973,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Scan a string for an unsigned integer.
 !
 !-&
-
 
 !
 !     Local parameters
@@ -16346,7 +15997,6 @@ contains
       logical, parameter :: digit ( minc : maxc ) = &
          [ ( i >= iachar('0') .and. i <= iachar('9'), i = minc, maxc ) ]
 
-
 !
 !     Saved variables
 !
@@ -16359,7 +16009,6 @@ contains
 !     First we perform some initializations that are needed on
 !     each pass through this routine.
 !
-
 
       last  = first - 1
       l     = len ( string )

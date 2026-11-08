@@ -85,7 +85,6 @@
 !
 !     NPTS           is the number of terminator points to compute.
 !
-!
 ! $ Detailed_Output
 !
 !     TRMPTS         is an array of points on the umbral or penumbral
@@ -213,7 +212,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -276,12 +274,10 @@
 
       logical               umbral
 
-
 !
 !     Standard SPICELIB error handling.
 !
       if ( return() ) return
-
 
 !
 !     Check the terminator type.

@@ -123,9 +123,7 @@
 !        fashion by updating the file. Recall that data must be present
 !        in the file before it can be updated.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASUDI_EX1
 !              IMPLICIT NONE
@@ -200,10 +198,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasudi_ex1.das":
 !
@@ -227,7 +223,6 @@
 !          171  172  173  174  175  176  177  178  179  180
 !          181  182  183  184  185  186  187  188  189  190
 !          191  192  193  194  195  196  197  198  199  200
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -289,13 +284,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update integer data in a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -306,7 +299,6 @@
 !        signaled an error inside the loop.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -321,8 +313,6 @@
 
       integer(ip), parameter :: nwi = 256
 
-
-
 !
 !     Local variables
 !
@@ -336,8 +326,6 @@
       integer(ip)           nwritn
       integer(ip)           recno
       integer(ip)           wordno
-
-
 
 !
 !     Standard SPICE error handling.
@@ -389,7 +377,6 @@
 !     elements in DATA.
 !
 !     Note that if N is non-positive, the loop doesn't get exercised.
-!
 !
       nwritn  =  0
 
@@ -445,7 +432,6 @@
          end if
 
       end do
-
 
       return
       end

@@ -141,13 +141,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Validate and pack an SPK segment descriptor
 !
 !-&
-
 
 !
 !     Spicelib Functions

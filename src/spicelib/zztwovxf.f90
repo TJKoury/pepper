@@ -104,7 +104,6 @@
 !                the "base frame."  The input state PLNDEF must be
 !                specified relative to the same base frame.
 !
-!
 !     INDEXA     is the index of the reference frame axis that is
 !                parallel to the direction of AXDEF.
 !
@@ -113,7 +112,6 @@
 !                         1                      X
 !                         2                      Y
 !                         3                      Z
-!
 !
 !     PLNDEF     is a state vector defining (with AXDEF) a principal
 !                plane of the reference frame.  This vector consists
@@ -156,7 +154,6 @@
 !                AXDEF and PLNDEF must be specified relative to a
 !                common reference frame, which we call the "base
 !                frame."
-!
 !
 !     INDEXP     is the index of  second axis of the principal frame
 !                determined by AXDEF and PLNDEF.  The association of
@@ -284,8 +281,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -318,8 +313,6 @@
 !     Standard SPICE error handling
 !
       if ( return() ) return
-
-
 
 !
 !     Check for obvious bad inputs.

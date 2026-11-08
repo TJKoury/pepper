@@ -29,8 +29,6 @@ contains
 !
 ! $ Declarations
 
-
-
 ! $ Detailed_Input
 !
 !     KEY         is a string value that indicates which platform
@@ -233,7 +231,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch platform dependent information
@@ -294,9 +291,6 @@ contains
 !     Local Variables
 !
 
-
-
-
 !
 !     Saved Variables
 !
@@ -352,18 +346,11 @@ contains
 !        Platform/Environment specific assignments follow.
 !
 
-
-
-
-
 #if defined(SPICE_OS_MACOS)
          attcpy (idxsys) = 'INTEL MAC'
 #else
          attcpy (idxsys) = 'PC'
 #endif
-
-
-
 
 #if defined(SPICE_OS_MACOS)
          attcpy (idxos) = 'MAC OS-X'
@@ -375,27 +362,19 @@ contains
          attcpy (idxos) = 'MICROSOFT WINDOWS/CYGWIN'
 #endif
 
-
-
 #if defined(SPICE_COMPILER_INTEL)
          attcpy (idxcmp) = 'INTEL FORTRAN/64BIT'
 #else
          attcpy (idxcmp) = 'GFORTRAN/64BIT'
 #endif
 
-
-
          attcpy (idxfmt) = 'LTL-IEEE'
-
-
 
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
          attcpy (idxtfm) = 'CR-LF'
 #else
          attcpy (idxtfm) = 'LF'
 #endif
-
-
 
          attcpy (idxrbf) = 'BIG-IEEE LTL-IEEE'
 
@@ -454,7 +433,6 @@ contains
 
       include              'zzddhman.inc'
 
-
 ! $ Detailed_Input
 !
 !     None.
@@ -505,7 +483,6 @@ contains
 ! $ Version
 !
 !-    SPICELIB Version 1.0.0, 07-AUG-2002 (FST)
-!
 !
 !-&
 
@@ -603,9 +580,6 @@ contains
 !     UTILITY
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -739,7 +713,6 @@ contains
 !     indicating corruption under new Toolkits, as well as newer files
 !     failing on old Toolkits.
 !
-!
 ! $ Examples
 !
 !     This routine just fetches the components of the FTP validation
@@ -762,7 +735,6 @@ contains
 ! $ Version
 !
 !-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
-!
 !
 !-&
 
@@ -805,12 +777,6 @@ contains
 !     Integer codes of characters appearing in test clusters.
 !
 
-
-
-
-
-
-!
 !
 !     Local Variables
 !
@@ -818,8 +784,6 @@ contains
 !
 !     Non-printing character values.
 !
-
-
 
 !
 !     Saved Variables
@@ -977,9 +941,6 @@ contains
 !
 ! $ Declarations
 
-
-
-
 ! $ Detailed_Input
 !
 !     STRING     is a string read in directly from a binary file.  This
@@ -1121,7 +1082,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -1165,8 +1125,6 @@ contains
 !
 !     Local Variables
 !
-
-
 
 !
 !     Saved Variables
@@ -1317,7 +1275,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     STRING     is a string to be searched for a substring bracketed
@@ -1419,7 +1376,6 @@ contains
 ! $ Version
 !
 !-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
-!
 !
 !-&
 
@@ -1544,7 +1500,6 @@ contains
 
       include              'zzddhman.inc'
 
-
 ! $ Detailed_Input
 !
 !     None.
@@ -1623,7 +1578,6 @@ contains
 !        sections.
 !
 !-    SPICELIB Version 1.0.0, 13-AUGUST-2001 (FST)
-!
 !
 !-&
 
@@ -1763,9 +1717,6 @@ contains
 !
 ! $ Declarations
 
-
-
-
 ! $ Detailed_Input
 !
 !     None.
@@ -1871,7 +1822,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 06-AUG-2002 (FST)
 !
-!
 !-&
 
 !
@@ -1881,7 +1831,6 @@ contains
 !
 !     Local Variables
 !
-
 
       use pepper_kinds, only: ip, wp
       implicit none
@@ -1955,9 +1904,6 @@ contains
 !
 ! $ Declarations
 
-
-
-
 ! $ Detailed_Input
 !
 !     CLASS      is the class of the input ID code.  Acceptable
@@ -2024,7 +1970,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 07-JUN-2001 (FST)
 !
-!
 !-&
 
 !
@@ -2044,12 +1989,9 @@ contains
 !     Integer codes for the currently supported classes.
 !
 
-
-
 !
 !     Local Variables
 !
-
 
 !
 !     Saved Variables
@@ -2058,9 +2000,6 @@ contains
 !
 !     Data Statements
 !
-
-
-
 
 !
 !     Left justify and convert the input to upper case.
@@ -2143,11 +2082,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -2251,7 +2185,6 @@ contains
 !     SPICELIB Functions
 !
 
-
 !
 !     Local parameters.
 !
@@ -2264,20 +2197,13 @@ contains
 !     characters.
 !
 
-
 !
 !     Local variables.
 !
 
-
-
-
-
-
 !
 !     Saved variables.
 !
-
 
 !
 !     Data statements.
@@ -2466,7 +2392,6 @@ contains
 
       zzddhmnm = mnm
 
-
       return
       end associate
       end procedure zzddhmnm
@@ -2491,9 +2416,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -2738,7 +2660,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
 !
-!
 !-&
 
 ! $ Revisions
@@ -2770,11 +2691,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB Functions
 !
-
 
 !
 !     Local Parameters
@@ -2786,7 +2705,6 @@ contains
 !     Bounding indices for the window that brackets the FTP
 !     error detection string in the file record.
 !
-
 
 !
 !     Index of the start of the binary file format identification
@@ -2829,8 +2747,6 @@ contains
 !
 !     Local Variables
 !
-
-
 
 !
 !     Statement Functions
@@ -3306,9 +3222,6 @@ contains
 
       implicit none
 
-
-!
-
 ! $ Detailed_Input
 !
 !     IDWORD   is the ID word from a SPICE binary kernel file or a
@@ -3330,7 +3243,6 @@ contains
 !                 KPL -- Kernel Pool File (i.e., a text kernel)
 !                 TXT -- An ASCII text file.
 !                 TE1 -- Text E-Kernel type 1.
-!
 !
 !     TYPE     is the type of the SPICE file. If the type can not be
 !              extracted or if it is blank, the value '?' is
@@ -3454,13 +3366,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract architecture and type from an id word
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3482,7 +3392,6 @@ contains
 !         and the type to 'PRE', for pre-release version.
 !
 !-&
-
 
 !
 !     Spicelib Routines
@@ -3673,10 +3582,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -3892,28 +3797,21 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
 !
-!
 !-&
 
 !
 !     SPICELIB Functions
 !
 
-
 !
 !     Local Parameters
-!
 !
 !     These parameters are used for arithmetic shifting.
 !
 
-
-
 !
 !     Local Variables
 !
-
-
 
 !
 !     Statement Functions
@@ -4007,7 +3905,6 @@ contains
             return
 
          end if
-
 
 !
 !        Store the largest value a 32-bit integer can actually
@@ -4139,7 +4036,6 @@ contains
 !                   +  INPUT(J+3:J+3) shifted 24 bits to the MSb
 !                   -------------------------
 !                      OUTPUT(I)
-!
 !
 !              Perform the necessary computations.  What is outlined
 !              above is implemented below using arithmetic operations.
@@ -4315,7 +4211,6 @@ contains
 !                   -------------------------
 !                      OUTPUT(I)
 !
-!
 !              Perform the necessary computations.  What is outlined
 !              above is implemented below using arithmetic operations.
 !              The last "shifted 24 bits to the MSb" is handled
@@ -4457,7 +4352,6 @@ contains
       implicit none
 
       include              'zzddhman.inc'
-
 
 ! $ Detailed_Input
 !
@@ -4645,7 +4539,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
 !
-!
 !-&
 
 !
@@ -4674,7 +4567,6 @@ contains
 !     This function computes the value of ICHAR that this code requires
 !     on any version of g77 for x86 Linux.
 #endif
-!
 #if defined(SPICE_COMPILER_INTEL)
       zzichr(carg) = ichar(carg)
 #else
@@ -4806,8 +4698,6 @@ contains
 !     values.  In the interest of simplicity the preceding option
 !     was selected.
 !
-!
-!
 !     Convert the first and second characters in NSUM to integers.
 !
       leader = zzichr( nsum(1:1) )
@@ -4878,10 +4768,6 @@ contains
       implicit none
 
       include              'zzddhman.inc'
-
-
-
-
 
 ! $ Detailed_Input
 !
@@ -5046,7 +4932,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
 !
-!
 !-&
 
 ! $ Revisions
@@ -5067,8 +4952,6 @@ contains
 !
 !     SPICELIB Functions
 !
-
-
 
 !
 !     Local Variables
@@ -5307,7 +5190,6 @@ contains
             call zzddhrmu ( ctx, uindex, nft,   utcst, uthan, &
                             utlck,  utlun, nut           )
 
-
 !
 !           Signal the error and return.
 !
@@ -5381,7 +5263,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -5458,7 +5339,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
 !
-!
 !-&
 
 !
@@ -5519,8 +5399,6 @@ contains
       implicit none
 
       include              'zzddhman.inc'
-
-
 
 ! $ Detailed_Input
 !
@@ -5596,7 +5474,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 29-MAY-2001 (FST)
 !
-!
 !-&
 
 !
@@ -5610,7 +5487,6 @@ contains
       integer(ip)           orderv ( utsize )
 
       logical               done
-
 
 !
 !     Standard SPICE discovery error handling.
@@ -5793,8 +5669,6 @@ contains
 
       include               'zzddhman.inc'
 
-
-
 ! $ Detailed_Input
 !
 !     HANDLE     is the index of the row in the unit table for the
@@ -5893,7 +5767,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 05-NOV-2001 (FST)
 !
-!
 !-&
 
 !
@@ -5909,7 +5782,7 @@ contains
 
 !
 !     Check to see if we found the UINDEX in the unit table.
-!     If not, use discovery check-in, signal an error and return.
+!     If not,, signal an error and return.
 !
       if ( ( uindex > nut ) .or. ( uindex < 1 ) ) then
 
@@ -5993,8 +5866,6 @@ contains
 
       implicit none
 
-
-
 ! $ Detailed_Input
 !
 !     UTLCK      is the lock column of the unit table.  TRUE entries in
@@ -6044,7 +5915,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
 !
-!
 !-&
 
 !
@@ -6091,8 +5961,6 @@ contains
 !     FILES
 !
 ! $ Declarations
-
-
 
 ! $ Detailed_Input
 !
@@ -6154,7 +6022,6 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -6163,8 +6030,6 @@ contains
 !     Local variables
 !
 
-
-
 !
 !     Saved variables
 !
@@ -6172,7 +6037,6 @@ contains
 !
 !     Initial values
 !
-
 
 !
 !     This routine checks in on the first pass only.
@@ -6193,9 +6057,7 @@ contains
                   strbff => ctx%zzddhnfc%strbff )
       if ( ctx%failed() ) return
 
-
       if ( first ) then
-
 
 !
 !        Populate STRBFF, the buffer that contains the labels
@@ -6230,9 +6092,7 @@ contains
 !
          first = .false.
 
-
       end if
-
 
       natbff = savbff
 
@@ -6246,7 +6106,6 @@ contains
 !     its entry points are the module procedures below, and its saved
 !     variables are in pepper_state_zzddhman. Its documentation follows.
 !
-
 
 ! $ Abstract
 !
@@ -6268,9 +6127,6 @@ contains
 !     PRIVATE
 !
 ! $ Declarations
-
-
-
 
 ! $ Detailed_Input
 !
@@ -6374,7 +6230,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
 !
-!
 !-&
 
 ! $ Revisions
@@ -6401,13 +6256,9 @@ contains
 !     SPICELIB Functions
 !
 
-
 !
 !     Local Variables
 !
-
-
-
 
 !
 !     This logical allows initialization code to execute.
@@ -6447,8 +6298,6 @@ contains
 !     this fact to improve handle lookups in the file table.
 !
 
-
-
 !
 !     NEXT stores the next handle to be used for file access.  This
 !     could be either for read or write based operations. NEXT is
@@ -6479,8 +6328,6 @@ contains
 !     within the table.
 !
 
-
-
 !
 !     The following stores the native binary file format, a list of
 !     codes for supported binary formats, and the number of entries
@@ -6494,13 +6341,6 @@ contains
 !
 !     Saved Variables
 !
-
-
-
-
-
-
-
 
 !
 !     Data Statements
@@ -7175,7 +7015,7 @@ contains
 !
 !           Remove the UNIT from the unit table. Decrement NEXT,
 !           since the current value is not to be assigned as
-!           a handle for this file. Check out and return.
+!           a handle for this file. return.
 !
 !        END IF
 !
@@ -7326,7 +7166,7 @@ contains
                if ( supidx == 0 ) then
 
 !
-!                 Delay clean up and check out.
+!                 Delay clean up.
 !
                   error = .true.
 
@@ -7368,7 +7208,7 @@ contains
             else
 
 !
-!              Delay clean up and check out.
+!              Delay clean up.
 !
                if ( bff == 0 ) then
 
@@ -7412,7 +7252,7 @@ contains
 
 !
 !     If an error has occurred as a result of opening the file or
-!     examining its contents, clean up and check out.
+!     examining its contents, clean up.
 !
       if ( error ) then
 
@@ -7445,7 +7285,6 @@ contains
          return
 
       end if
-
 
 !
 !     Finish filling out the unit table.
@@ -8369,7 +8208,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
 !
-!
 !-&
 
 !
@@ -8655,7 +8493,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
 !
-!
 !-&
 
 !
@@ -8858,7 +8695,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
 !
-!
 !-&
 
 !
@@ -9042,7 +8878,6 @@ contains
 !        Updated for the new "magic number" column in the file table.
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!
 !
 !-&
 
@@ -9236,7 +9071,6 @@ contains
 ! $ Version
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!
 !
 !-&
 

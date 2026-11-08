@@ -59,13 +59,11 @@
 !                      2
 !                   A X   +  B X  +  C  =  0
 !
-!
 !     UB         is an upper bound on the absolute value of real
 !                roots to be found by this routine. Roots having
 !                absolute value larger than UB are not returned.
 !
 ! $ Detailed_Output
-!
 !
 !     N          is the number of real roots found that satisfy the
 !                magnitude bound constraint.
@@ -77,7 +75,6 @@
 !
 !                   If C != 0, N is set to -2; NX is set to 0; R1 and
 !                   R2 are set to zero.
-!
 !
 !     NX        is the number of real roots having absolute values that
 !               exceed the bound.
@@ -197,9 +194,6 @@
       data                  big   / 0.0_wp   /
       data                  first / .true. /
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
       if ( first ) then
@@ -315,7 +309,6 @@
 
          end if
 
-
       else
 !
 !        The leading coefficient of the equation is non-zero.
@@ -360,7 +353,6 @@
                r2  =  r1
 
             end if
-
 
          else
 !
@@ -417,7 +409,6 @@
                   r1 = 0.0_wp
 
                end if
-
 
             else
 !

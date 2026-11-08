@@ -53,10 +53,8 @@
 !                    case are not significant.  Only the first three
 !                    non-blank characters of EXTREM are significant.
 !
-!
 !     ELLIPS         is a SPICELIB ellipse data structure. ELLIPS must
 !                    have non-zero semi-axis lengths.
-!
 !
 !     VERTEX,
 !     DIR            are the vertex and direction vector of a ray in
@@ -76,7 +74,6 @@
 !                    non-positive value whose magnitude is the minimum
 !                    or maximum angular separation of the input ray and
 !                    the ellipse.
-!
 !
 !     EXTPT          is the point on the ellipse where the specified
 !                    extreme value of the angular separation is
@@ -141,7 +138,6 @@
 !     is an infinite set of solutions, since the minimum angular
 !     separation is achieved at every point on the circle.
 !
-!
 !     Uniqueness or multiplicity of maxima
 !     ====================================
 !
@@ -156,7 +152,6 @@
 !
 !     If the ray intersects the plane region bounded by the ellipse,
 !     there may be multiple absolute maxima of the angular separation.
-!
 !
 !     Extremum of angular separation versus distance
 !     ==============================================
@@ -175,14 +170,11 @@
 !     and maximum distance:  compare the points labeled 'M' and 'F'
 !     in the diagram below.
 !
-!
-!
 !                                                            *
 !                                                          (ray)
 !                                  *
 !    ray's vertex                (ray)
 !        *
-!
 !
 !  closest ellipse  ---->   c * * * * * * * * m   <-- point of minimum
 !  point to the ray       *                     *        angular
@@ -191,9 +183,6 @@
 !                           ^                 ^
 !     point of maximum angular                farthest ellipse
 !     separation                              point from ray
-!
-!
-!
 !
 !     Applications
 !     ============
@@ -252,7 +241,6 @@
 !            magnitude slightly less than 30 degrees.
 !
 !            The program below should verify these results.
-!
 !
 !               PROGRAM MINANG
 !               IMPLICIT NONE
@@ -326,7 +314,6 @@
 !
 !               END
 !
-!
 ! $ Restrictions
 !
 !     1) Under some unusual geometric conditions, the search used
@@ -351,12 +338,10 @@
 !        are distant but very close to equal in terms of angular
 !        separation from the input ray.
 !
-!
 !     2) The point at which the minimum or maximum angular separation
 !        occurs is determined to single precision.  Specifically, the
 !        angular parameter THETA defining the location relative to the
 !        semi-axes is determined at the single precision level.
-!
 !
 ! $ Literature_References
 !
@@ -394,8 +379,6 @@
 !     angular separation of ray and ellipse
 !
 !-&
-
-
 
 !
 !     SPICELIB functions
@@ -697,7 +680,6 @@
 
       call vhat ( dir, udir )
 
-
       do i = 0, npt-1
 
          theta  =  i * delta
@@ -757,7 +739,6 @@
 !                          --------------    =   GR   =    ------------
 !                          UPPER  - LOWER                        2
 !
-!
       gr     =  (  3.0_wp -  sqrt(5.0_wp)  )  /  2.0_wp
 
       lower  =  ( p2 / npt )  *  ( extidx - 1 )
@@ -814,7 +795,6 @@
 !        GR of the way into the larger of the intervals
 !        [ LOWER, BTWEEN ] and [ BTWEEN, UPPER ].
 !
-!
          if (  ( btween - lower )  > ( upper - btween )  ) then
 
             newpt = lower   +  gr * ( btween - lower  )
@@ -850,7 +830,6 @@
             call swapd ( btwprx, proxy )
 
          end if
-
 
          if ( domin ) then
 
@@ -895,7 +874,6 @@
 !     Set the angular separation at EXTPT.
 !
       angle  =  vsep( diff,  udir ) * asign
-
 
       return
       end

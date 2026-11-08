@@ -181,7 +181,6 @@
 !     How the tolerance argument is used
 !     ==================================
 !
-!
 !     Reading a type 1 CK segment (discrete pointing instances)
 !     ---------------------------------------------------------
 !
@@ -207,7 +206,6 @@
 !        - The quaternions occurring in the segment need not be
 !          evenly spaced in time.
 !
-!
 !     Case 1:  pointing is available
 !     ------------------------------
 !
@@ -222,7 +220,6 @@
 !                                     |
 !                         CKGPAV returns this instance.
 !
-!
 !     Case 2:  pointing is not available
 !     ----------------------------------
 !
@@ -234,11 +231,8 @@
 !                                                    .  .  .
 !     Segment      (0-----0--0--0--0--0--0---0--0--0---------0--0--0--0)
 !
-!
 !                         CKGPAV returns no pointing; the output
 !                         FOUND flag is set to .FALSE.
-!
-!
 !
 !     Reading a type 2, 3, 4, or 5 CK segment (continuous pointing)
 !     -------------------------------------------------------------
@@ -265,7 +259,6 @@
 !        - The quaternions occurring in the periods of continuous
 !          pointing need not be evenly spaced in time.
 !
-!
 !     Case 1:  pointing is available at the request time
 !     --------------------------------------------------
 !
@@ -285,7 +278,6 @@
 !                   continuous pointing is available. CKGPAV returns
 !                   pointing at the requested epoch.
 !
-!
 !     Case 2:  pointing is available "near" the request time
 !     ------------------------------------------------------
 !
@@ -304,7 +296,6 @@
 !                   returns pointing for the epoch closest to the
 !                   request time SCLKDP.
 !
-!
 !     Case 3:  pointing is not available
 !     ----------------------------------
 !
@@ -318,8 +309,6 @@
 !
 !                         CKGPAV returns no pointing; the output
 !                         FOUND flag is set to .FALSE.
-!
-!
 !
 !     Tolerance and segment priority
 !     ==============================
@@ -345,11 +334,9 @@
 !     A and B contain discrete pointing data, indicated by the number
 !     0.
 !
-!
 !     Case 1:  Pointing is available in the first segment searched.
 !              Because segment A has the highest priority and can
 !              satisfy the request, segment B is not searched.
-!
 !
 !                                  SCLKDP
 !                                        \  TOL
@@ -365,12 +352,9 @@
 !
 !     Segment B     (0--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0)
 !
-!
-!
 !     Case 2:  Pointing is not available in the first segment searched.
 !              Because segment A cannot satisfy the request, segment B
 !              is searched.
-!
 !
 !                             SCLKDP
 !                                  \   TOL
@@ -385,7 +369,6 @@
 !                                   |
 !                       CKGPAV returns this instance
 !
-!
 !     Segments that contain continuous pointing data are searched in
 !     the same manner as segments containing discrete pointing data.
 !     For request times that fall within the bounds of continuous
@@ -399,7 +382,6 @@
 !     the end of the file than segment C. Segment A contains discrete
 !     pointing data and segment C contains continuous data, indicated
 !     by the "=" character.
-!
 !
 !     Case 3:  Pointing is not available in the first segment searched.
 !              Because segment A cannot satisfy the request, segment C
@@ -421,11 +403,9 @@
 !                                    |
 !                         CKGPAV returns this instance
 !
-!
 !     In the next case, assume that the order of segments A and C in the
 !     file is reversed: A is now closer to the front, so data from
 !     segment C are considered first.
-!
 !
 !     Case 4:  Pointing is available in the first segment searched.
 !              Because segment C has the highest priority and can
@@ -449,7 +429,6 @@
 !                                           |
 !                                     "Best" answer
 !
-!
 !     The next case illustrates an unfortunate side effect of using
 !     a non-zero tolerance when reading multi-segment CKs with
 !     continuous data. In all cases when the look-up interval
@@ -458,7 +437,6 @@
 !     priority segment, the data at the end of the higher priority
 !     segment will be picked instead of the data from the lower
 !     priority segment.
-!
 !
 !     Case 5:  Pointing is available in the first segment searched.
 !              Because segment C has the highest priority and can
@@ -507,10 +485,8 @@
 !        clocks, most modern spacecraft ones require a leapseconds
 !        kernel to be loaded in addition to an SCLK kernel.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -534,7 +510,6 @@
 !              04153_04182ca_ISS.bc   CASSINI image navigated
 !                                     spacecraft CK
 !
-!
 !           \begindata
 !
 !             KERNELS_TO_LOAD = ( 'cas00071.tsc'
@@ -544,9 +519,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKGPAV_EX1
 !              IMPLICIT NONE
@@ -621,7 +594,6 @@
 !        C
 !              CALL SCTIKS ( SC, TOL, TOLTIK )
 !
-!
 !              DO I = 1, NPICS
 !        C
 !        C        CKGPAV requires encoded spacecraft clock.
@@ -660,10 +632,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Requested SCLK time : 1465644281.0
 !            CASSINI SCLK time: 1/1465644281.171
@@ -674,7 +644,6 @@
 !            CASSINI SCLK time: 1/1465644351.071
 !            CASSINI ISS boresight  :  0.9376657  0.3444504  0.0462266
 !            Angular velocity vector:  0.0000000  0.0000000  0.0000000
-!
 !
 ! $ Restrictions
 !
@@ -802,13 +771,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK pointing and angular velocity
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -905,7 +872,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -947,7 +913,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
 
 !
 !     Local variables
@@ -1000,7 +965,6 @@
 !     Initial values.
 !
       data                  first   / .true. /
-
 
 !
 !     Standard SPICE error handling.
@@ -1141,7 +1105,6 @@
 !              The transformation from the C-kernel reference frame to
 !              the C-kernel platform frame looks like:
 !
-!
 !                     [                 ]
 !                     [  CMAT   :   0   ]
 !                     [ ............... ]
@@ -1149,10 +1112,8 @@
 !                     [  ----   : CMAT  ]
 !                     [    dt   :       ]
 !
-!
 !              The transformation from the request frame to the platform
 !              frame is the product shown below
-!
 !
 !               [                 ][                 ]
 !               [  CMAT   :   0   ][   ROT   :   0   ]
@@ -1161,14 +1122,12 @@
 !               [  ----   : CMAT  ][  ----   : ROT   ]
 !               [    dt   :       ][    dt   :       ]
 !
-!
 !                     [                            :             ]
 !                     [  CMAT * ROT                :   0         ]
 !              =      [ ........................................ ]
 !                     [  dCMAT                dROT :             ]
 !                     [  ----  * ROT + CMAT * ---- : CMAT * ROT  ]
 !                     [    dt                  dt  :             ]
-!
 !
 !              In general, the angular velocity matrix of a
 !              transformation R is given by
@@ -1191,21 +1150,17 @@
 !                               +    ---- * CMAT  * CMAT * ROT
 !                                     dt
 !
-!
 !                                  T
 !                            =  ROT  * OMEGA      * ROT   + OMEGA
 !                                            CMAT                ROT
-!
 !
 !              Consider the first term of the final expression. If we
 !              let "x" stand for the cross product operation, then by
 !              definition for any vector V:
 !
-!
 !                  T
 !               ROT  * OMEGA     * ROT  * V
 !                           CMAT
-!
 !
 !                             T
 !                        = ROT  * (AV     x  ROT*V )
@@ -1218,7 +1173,6 @@
 !                        = (ROT * AV    ) x  ( ROT * ROT*V )
 !                                   CMAT
 !
-!
 !                              T
 !                        = (ROT * AV    ) x  V
 !                                   CMAT
@@ -1229,7 +1183,6 @@
 !                                      T
 !              product operation {( ROT *AV    )   +  AV   } x  .
 !                                          CMAT         ROT
-!
 !
                call mtxv ( rot,    av,    tmpv )
                call vadd ( omega,  tmpv,  av   )
@@ -1245,7 +1198,6 @@
          call cksns ( handle, descr, segid, sfnd )
 
       end do
-
 
       return
       end

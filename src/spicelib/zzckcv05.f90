@@ -96,7 +96,6 @@
 !                CKGPAV and CKGP when that value of TOL is passed to
 !                them as an input.
 !
-!
 !     TIMSYS     is a string indicating the time system used in the
 !                output coverage window.  TIMSYS may have the values:
 !
@@ -110,7 +109,6 @@
 !
 !                TIMSYS must be consistent with the system used for
 !                the contents of SCHEDL on input, if any.
-!
 !
 !     SCHEDL     is a schedule (window) of intervals, to which the
 !                intervals of coverage for this segment will be added.
@@ -295,7 +293,6 @@
 !
 !     Recall that the segment is layed out as:
 !
-!
 !       +------------------------------+
 !       |                              |
 !       |  Pointing                    |
@@ -354,7 +351,6 @@
 !
       if ( tick < start ) return
 
-
       bail = .false.
 
       do while (       ( intat  <=  lstint ) &
@@ -383,7 +379,6 @@
 !           and FINISH, depending on the values of TOL and TIMSYS,
 !           and we have to insert these values into SCHEDL.
 !           We'll carry out these tasks at the end of this IF block.
-
 
          else
 !
@@ -459,7 +454,6 @@
          end if
 
       end do
-
 
       return
       end

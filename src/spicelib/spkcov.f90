@@ -121,9 +121,7 @@
 !        Find the set of objects in the file; for each object, find
 !        and display the coverage.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKCOV_EX1
 !              IMPLICIT NONE
@@ -173,7 +171,6 @@
 !              INTEGER               IDS   ( LBCELL : MAXOBJ )
 !              INTEGER               J
 !              INTEGER               NIV
-!
 !
 !        C
 !        C     Load a leapseconds kernel for output time conversion.
@@ -264,11 +261,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0012.tls and the SPK
 !        file named mar097.bsp, the output was:
-!
 !
 !        Name of leapseconds kernel > naif0012.tls
 !        Name of SPK file           > mar097.bsp
@@ -329,13 +324,11 @@
 !
 !         ========================================
 !
-!
 !     2) Find the coverage for the object designated by IDCODE
 !        provided by the set of SPK files loaded via a metakernel.
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -359,7 +352,6 @@
 !              mar097.bsp                       Mars satellite ephemeris
 !              naif0011.tls                     Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de430.bsp',
@@ -369,9 +361,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKCOV_EX2
 !              IMPLICIT NONE
@@ -504,12 +494,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the meta-kernel named spkcov_ex2.tm provided
 !        above to find the coverage window for the Earth using its ID
 !        code, '399', the output was:
-!
 !
 !        Enter name of metakernel > spkcov_ex2.tm
 !        Enter ID code            > 399
@@ -519,7 +507,6 @@
 !         Interval:            1
 !         Start:    1549 DEC 31 00:00:00.000 (TDB)
 !         Stop:     2650 JAN 25 00:00:00.000 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -565,7 +552,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get coverage window for spk_object
@@ -574,7 +560,6 @@
 !     get coverage start and stop time for body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -605,12 +590,10 @@
 
       logical               found
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     See whether GETFAT thinks we've got a binary SPK file.

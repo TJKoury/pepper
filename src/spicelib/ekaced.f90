@@ -72,7 +72,6 @@
 !
 !              Only one value can be added to a virtual column.
 !
-!
 !     ISNULL   is a logical flag indicating whether the entry is
 !              null. If ISNULL is .FALSE., the column entry
 !              defined by NVALS and DVALS is added to the
@@ -170,9 +169,7 @@
 !        to fetch and dump column values from the rows that satisfy the
 !        query.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACED_EX1
 !              IMPLICIT NONE
@@ -450,10 +447,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ROW  =   1
 !           COLUMN = DP_COL_1:   100.00000000000000
@@ -475,7 +470,6 @@
 !           COLUMN = DP_COL_2: 801.0 802.0 803.0 804.0
 !           COLUMN = DP_COL_3: 104.0 204.0 304.0
 !
-!
 !     2) Suppose we want to create an E-kernel which contains a table
 !        of items that have been ordered. The columns of this table
 !        are shown below:
@@ -490,7 +484,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        This EK file will have one segment containing the DATAITEMS
 !        table.
 !
@@ -498,9 +491,7 @@
 !        the segment described above and how to insert a new record
 !        into it.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACED_EX2
 !              IMPLICIT NONE
@@ -587,7 +578,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -656,7 +646,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -694,7 +683,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add double precision data to EK column
@@ -702,7 +690,6 @@
 !     write double precision data to EK column
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -718,8 +705,6 @@
       integer(ip)           recptr
       integer(ip)           segdsc ( sdscsz )
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -759,13 +744,11 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 2 ) then
 !
 !        Class 2 columns contain scalar d.p. data.
 !
          call zzekad02 ( handle, segdsc, coldsc, recptr, dvals, isnull )
-
 
       else if ( class == 5 ) then
 !
@@ -793,7 +776,6 @@
          return
 
       end if
-
 
       return
       end

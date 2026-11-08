@@ -19,11 +19,11 @@ module pepper_state_zzxlated
 
    !> The saved variables of ZZXLATED.
    type, public :: zzxlated_state
-      integer(ip) :: bigint  !! saved between calls by ZZXLATED
-      integer(ip) :: smlint  !! saved between calls by ZZXLATED
-      character(strsiz) :: strbff ( numbff )  !! saved between calls by ZZXLATED
-      integer(ip) :: natbff  !! saved between calls by ZZXLATED
-      logical :: first  !! saved between calls by ZZXLATED
+      integer(ip) :: bigint  !! largest integer
+      integer(ip) :: smlint  !! smallest integer
+      character(strsiz) :: strbff ( numbff )  !! names of the binary file formats
+      integer(ip) :: natbff  !! code of the native binary file format
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
    end type zzxlated_state
 
 contains

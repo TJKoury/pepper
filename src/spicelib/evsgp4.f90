@@ -167,7 +167,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: evsgp4_ex1.tm
@@ -202,9 +201,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EVSGP4_EX1
 !              IMPLICIT NONE
@@ -308,18 +305,14 @@
 !              WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
 !              WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
 !
-!
 !              END
-!
 !
 !        When this program was executed on a PC/Linux/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Epoch   : 2020-05-26 02:25:00
 !        Position:  -4644.60403398  -5038.95025539   -337.27141116
 !        Velocity:     -0.45719025      0.92884817     -7.55917355
-!
 !
 ! $ Restrictions
 !
@@ -356,25 +349,21 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Evaluate NORAD two-line element data using SGP4.
 !
 !-&
 
-
       real(wp)              t1
 
       logical               failed
       logical               return
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Evaluate TLE.

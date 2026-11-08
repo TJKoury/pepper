@@ -143,7 +143,6 @@
 !     of gravitational field are beyond the scope of this header
 !     the effect of the J2 term of the gravity model are as follows
 !
-!
 !        The line of node precesses. Over one orbit average rate of
 !        precession,  DNode/dNu,  is given by
 !
@@ -162,7 +161,6 @@
 !
 !        Details of these formulae are given in the Battin's book (see
 !        literature references below).
-!
 !
 !     It is assumed that this routine is used in conjunction with
 !     the routine SPKR15 as shown here:
@@ -185,7 +183,6 @@
 !     completely. Given that understanding, however, the SPKRnn
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
-!
 !
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
@@ -255,13 +252,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_15 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -312,7 +307,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Fetch the various entities from the input record, first the epoch.
 !
@@ -358,7 +352,6 @@
 !     going on in this routine so that the small amount of overhead
 !     here should not be significant.
 !
-
 
       if ( p <= 0 ) then
 
@@ -417,7 +410,6 @@
          call sigerr ( 'SPICE(BADVECTOR)'   )
          return
 
-
       else if ( rpl < 0.0_wp ) then
 
          call setmsg ( 'The central body radius was negative. ' &
@@ -428,7 +420,6 @@
          return
 
       end if
-
 
 !
 !     Convert TP, PV and PA to unit vectors.
@@ -499,7 +490,6 @@
 !           CALL PROP2B( GM, STATE0, DT, STATE    )
 !           CALL MXV   ( R,  STATE,      STATE    )
 !           CALL MXV   ( R,  STATE(4),   STATE(4) )
-!
 !
 !     This allows us to first compute the propagation of our initial
 !     state and then if needed perform the precession of the line
@@ -588,7 +578,7 @@
       end if
 
 !
-!     That's all folks.  Check out and return.
+!     That's all folks.  return.
 !
       return
       end

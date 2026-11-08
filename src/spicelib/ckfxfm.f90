@@ -67,7 +67,6 @@
 !                 | dz' |     |           | | dz |
 !                 `-   -'     `-         -' `-  -'
 !
-!
 !     REF      is the ID code of the base reference frame to which
 !              XFORM will transform states.
 !
@@ -136,7 +135,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: ckfxfm_ex1.tm
@@ -169,9 +167,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKFXFM_EX1
 !              IMPLICIT NONE
@@ -236,13 +232,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Angular rate of change (rad/s):  0.0008907319999591
-!
 !
 ! $ Restrictions
 !
@@ -301,13 +294,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get instrument frame transformation and reference frame
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -319,7 +310,6 @@
 !        time value.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -393,7 +383,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Need angular velocity data.
 !     Assume the segment won't be found until it really is.
@@ -465,7 +454,6 @@
          call cksns ( handle, descr, segid, sfnd )
 
       end do
-
 
       return
       end

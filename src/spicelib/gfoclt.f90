@@ -533,7 +533,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -569,7 +568,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -601,7 +599,6 @@
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
 !
-!
 !     The Confinement Window
 !     ======================
 !
@@ -618,7 +615,6 @@
 !     to reduce the size of the time period over which a relatively
 !     slow search of interest must be performed. See the "CASCADE"
 !     example program in gf.req for a demonstration.
-!
 !
 !     Using DSK data
 !     ==============
@@ -640,7 +636,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -667,7 +662,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the FSHAPE and BSHAPE arguments.
-!
 !
 !        Syntax of the shape input arguments for the DSK case
 !        ----------------------------------------------------
@@ -762,7 +756,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfoclt_ex1.tm
@@ -786,7 +779,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -797,9 +789,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFOCLT_EX1
 !              IMPLICIT NONE
@@ -895,7 +885,6 @@
 !             .              'LT',    'EARTH',     STEP,
 !             .              CNFINE,  RESULT                  )
 !
-!
 !              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
 !
 !                 WRITE (*,*) 'No occultation was found.'
@@ -922,15 +911,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Interval            1
 !            Start time: 2001 DEC 14 20:10:14.195952 (TDB)
 !            Stop time:  2001 DEC 14 21:35:50.317994 (TDB)
-!
 !
 !     2) Find occultations of Titan by Saturn or of Saturn by
 !        Titan as seen from the center of the Earth over the
@@ -947,7 +933,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -985,9 +970,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFOCLT_EX2
 !              IMPLICIT NONE
@@ -1237,10 +1220,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Condition: FULL occultation of SATURN by TITAN
 !         Result window is empty: no occultation was found.
@@ -1306,7 +1287,6 @@
 !          2008 DEC 14 19:48:27.106157    2008 DEC 15 02:01:36.356012
 !          2008 DEC 30 18:44:23.495003    2008 DEC 31 00:59:17.027816
 !
-!
 !     3) Find occultations of the Mars Reconnaissance Orbiter (MRO)
 !        by Mars or transits of the MRO spacecraft across Mars
 !        as seen from the DSN station DSS-14 over a period of a
@@ -1324,7 +1304,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1371,9 +1350,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFOCLT_EX3
 !              IMPLICIT NONE
@@ -1534,7 +1511,6 @@
 !
 !                 END IF
 !
-!
 !                 DO J = 1, 2
 !
 !                    IF ( J .EQ. 1 ) THEN
@@ -1611,10 +1587,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Using shape model ELLIPSOID
 !        Starting occultation search...
@@ -1663,7 +1637,6 @@
 !            Interval            3
 !               Start time: 2015 FEB 28 11:56:34.634642 (TDB)
 !               Stop time:  2015 FEB 28 12:00:00.000000 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -1718,13 +1691,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF occultation search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1741,7 +1712,6 @@
 
 !
 !     External routines
-!
 !
 !     Interrupt handler:
 !
@@ -1761,7 +1731,6 @@
 !
 !     Local parameters
 !
-!
 !     Geometric quantity  bail switch:
 !
       logical, parameter :: bail = .false.
@@ -1771,12 +1740,10 @@
 !
       logical, parameter :: rpt = .false.
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Note to maintenance programmer: input exception checks
@@ -1825,8 +1792,6 @@
                     obsrvr,  tol,     gfstep,  gfrefn, &
                     rpt,     gfrepi,  gfrepu,  gfrepf, &
                     bail,    gfbail,  cnfine,  result )
-
-
 
       return
       end

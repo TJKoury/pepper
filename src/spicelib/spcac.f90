@@ -280,13 +280,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add comments to SPK or CK file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -301,7 +299,6 @@
 !        handle manager.
 !
 !-&
-
 
 !
 !     SPICELIB functions

@@ -198,7 +198,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dpspce_ex1.tm
@@ -230,9 +229,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DPSPCE_EX1
 !              IMPLICIT NONE
@@ -363,10 +360,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Reference epoch: 1997 MAY 13 01:25:34.894
 !
@@ -405,7 +400,6 @@
 !        Time    : 1997 MAY 14 01:25:34.894
 !        Position:  -35671.56713967 -22493.50518477    320.10323846
 !        Velocity:       1.63950543     -2.60040084     -0.01710490
-!
 !
 ! $ Restrictions
 !
@@ -495,13 +489,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED NORAD two line elements deep space evaluator
 !
 !-&
-
 
 !
 !     Local variables
@@ -523,7 +515,6 @@
 
       integer(ip), parameter :: numelm = 10
 
-
 !
 !     The geophysical Quantities
 !
@@ -540,7 +531,6 @@
       real(wp)              xkmper
       real(wp)              lstphs ( numgeo )
 
-
 !
 !     Elements
 !
@@ -555,7 +545,6 @@
       real(wp)              xno
       real(wp)              xnodeo
       real(wp)              lstelm ( numelm )
-
 
 !
 !     Other quantities
@@ -663,8 +652,6 @@
       logical               doinit
       logical               first
 
-
-
 !
 !     SPICELIB routines
 !
@@ -673,12 +660,10 @@
 
       logical               return
 
-
 !
 !     Save everything.
 !
       save
-
 
 !
 !     Set initialization flags
@@ -686,13 +671,10 @@
       data                  doinit / .true. /
       data                  first  / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     If this is the very first time into this routine, set these
@@ -705,7 +687,6 @@
          first  = .false.
 
       end if
-
 
 !
 !     If initialization flag is .FALSE., then this is not the first
@@ -727,7 +708,6 @@
 
          end do
 
-
          do i = 1, numelm
 
            if( lstelm( i ) /= elems( i ) ) then
@@ -736,9 +716,7 @@
 
          end do
 
-
       end if
-
 
 !
 !     Initialization block.  Always called on the initial entry and
@@ -767,7 +745,6 @@
             lstphs( i ) = geophs( i )
          end do
 
-
 !
 !        Unpack the elements array.
 !
@@ -787,7 +764,6 @@
             lstelm( i ) = elems( i )
          end do
 
-
 !
 !        Set common variables, the init flag and calculate the
 !        WGS-72 physical and geopotential constants
@@ -802,7 +778,6 @@
          ck4    =-0.375_wp * xj4 * ae**4
          qoms2t = ( (qo - so)*ae/xkmper )**4
          s      = ae * ( one + so/xkmper )
-
 
 !
 !        Recover original mean motion (XNODP) and semimajor axis (AODP)
@@ -831,7 +806,6 @@
          qoms24 = qoms2t
          perige = ( aodp * ( one - eo ) - ae ) * xkmper
 
-
          if ( perige < 156.0_wp ) then
 
             s4 = perige - 78.0_wp
@@ -847,7 +821,6 @@
             end if
 
          end if
-
 
          pinvsq = one/(aodp**2 * betao2**2)
          tsi    = one/(aodp - s4)
@@ -908,10 +881,8 @@
 
       end if
 
-
       call zzdpinit( aodp  , xmdot, omgdot, xnodot, &
                      xnodp , elems )
-
 
 !
 !     Get the time since the EPOCH in minutes.
@@ -931,7 +902,6 @@
       templ  =           t2cof  * tsq
       xn     = xnodp
 
-
 !
 !     Calculate the secular terms.
 !
@@ -942,7 +912,6 @@
       e    = em - tempe
       xmam = xmdf + xnodp * templ
 
-
 !
 !     Calculate the periodic terms.
 !
@@ -950,7 +919,6 @@
 
       xl   = xmam + omgadf + xnode
       xn   = xke/( a**1.5_wp )
-
 
 !
 !      Long period periodics
@@ -961,7 +929,6 @@
       aynl = temp * aycof
       xlt  = xl + xll
       ayn  = e * dsin( omgadf ) + aynl
-
 
 !
 !     Solve Kepler's equation
@@ -978,7 +945,6 @@
 !        AYNL =  -0.50D0 * SINIO * AE * J3 / (J2 * A * (1.0D0  -  E^2))
 !
 
-
 !
 !     Get the mod division of CAPU with 2 Pi
 !
@@ -987,7 +953,6 @@
       if ( capu < zero ) then
          capu = capu + pix2
       end if
-
 
 !
 !     Set initial states for the Kepler solution
@@ -1016,7 +981,6 @@
          end if
 
       end do
-
 
 !
 !     Short period preliminary quantities
@@ -1060,7 +1024,6 @@
       temp1 = ck2   * ( one/pl )
       temp2 = temp1 * ( one/pl )
 
-
 !
 !     Update for short periodics
 !
@@ -1071,7 +1034,6 @@
       xinck  = xinc  + 1.5_wp  * temp2 * cosio  * sinio  * cos2u
       rdotk  = rdot  -          xn    * temp1  * x1mth2 * sin2u
       rfdotk = rfdot + xn * temp1*( x1mth2*cos2u + 1.5_wp*x3thm1 )
-
 
 !
 !     Orientation vectors are calculated by
@@ -1102,7 +1064,6 @@
       call vlcom ( sinuk, m, cosuk, n, u )
       call vlcom ( cosuk, m,-sinuk, n, v )
 
-
 !
 !     Determine the position and velocity then pack the STATE vector
 !     with value scaled to KM and KPS.
@@ -1115,7 +1076,6 @@
 
       call vlcom( rk*scale, u, zero, v, state(1) )
 
-
 !
 !     Now scale to KPS for the velocity component
 !
@@ -1124,11 +1084,9 @@
 
       call vlcom( rdotk*scale, u, rfdotk*scale, v, state(4) )
 
-
 !
 !     All done now....
 !
-
 
       return
       end

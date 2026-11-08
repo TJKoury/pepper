@@ -131,7 +131,6 @@
 !            TPARSE.  If TPARSE can't deal with it, it's considered
 !            to be invalid.
 !
-!
 !     This routine assumes that encoded EK query architecture version
 !     1 is to be used with the query to be initialized; this routine
 !     will not work with any other architecture version.
@@ -266,7 +265,6 @@
 
             dtype  =  attdsc(2)
 
-
             if ( dtype == time ) then
 !
 !              The RHS points to a string representing a time
@@ -315,7 +313,6 @@
 !     Indicate completion of time resolution.
 !
       call zzekweqi (  'TIMES_RESOLVED',  itrue,  eqryi  )
-
 
       return
       end

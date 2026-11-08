@@ -69,7 +69,6 @@
 !
 !              is not equivalent to the names above.
 !
-!
 !     BODYID   is the integer ID code of the body associated with the
 !              surface designated by SRFSTR.
 !
@@ -178,7 +177,6 @@
 !        Use the meta-kernel shown below to define the required SPICE
 !        kernel variables.
 !
-!
 !           KPL/MK
 !
 !           File: srfscc_ex1.tm
@@ -187,7 +185,6 @@
 !           example programs. The file contents shown here should not be
 !           assumed to contain adequate or correct versions of data
 !           required by SPICE-based user applications.
-!
 !
 !           \begindata
 !
@@ -199,9 +196,7 @@
 !
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFSCC_EX1
 !              IMPLICIT NONE
@@ -226,7 +221,6 @@
 !
 !              LOGICAL               FOUND
 !
-!
 !              DATA  ( SRFSTR(I), BODYID(I), I = 1, NCASE )  /
 !             .
 !             .        'MGS MOLA  64 pixel/deg',    499,
@@ -236,7 +230,6 @@
 !             .        '1',                         401,
 !             .        '2',                         499,
 !             .        'ZZZ',                       499      /
-!
 !
 !              META = 'srfscc_ex1.tm'
 !
@@ -263,10 +256,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         surface string   = MGS MOLA  64 pixel/deg
 !         body ID          =          499
@@ -302,7 +293,6 @@
 !         body ID          =          499
 !         surface ID found =  F
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -331,13 +321,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     surface string and body ID code to surface ID code
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -357,10 +345,7 @@
 
       integer(ip)           ptr
 
-
-
       if ( return() ) return
-
 
 !
 !     No result has been found yet.

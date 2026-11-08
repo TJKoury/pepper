@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekpage.inc'
       include 'ektree.inc'
       include 'ektype.inc'
@@ -125,7 +124,6 @@
 !        Bug fix:  the original version was untested and had numerous
 !        problems.
 !
-!
 !-&
 
 !
@@ -164,7 +162,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Read in the root node.
@@ -217,7 +214,6 @@
 
       first  =  1
 
-
       do while ( remain > 0 )
 !
 !        At this point,
@@ -266,7 +262,6 @@
 
             first  =  1
 
-
          else
 !
 !           This node has no children.  We can free this page.
@@ -307,7 +302,6 @@
 !        made progress toward loop termination.
 !
       end do
-
 
       return
       end

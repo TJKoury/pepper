@@ -254,7 +254,6 @@
 !           Bug fix: determination of empty voxels is now based on
 !           voxel pointers, not their target values.
 !
-!
 !        08-OCT-2009 (NJB)
 !
 !           Re-ordered header sections.
@@ -384,7 +383,6 @@
 !
 !     Saved variables
 !
-!
 !     Required for f2c use on Linux, all local variables
 !     to static.
 !
@@ -394,7 +392,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check NP.
@@ -590,7 +587,6 @@
 
       end if
 
-
 !
 !     Check the coarse voxel scale. It must be at least 1, and its
 !     cube must not exceed the fine voxel count.
@@ -663,7 +659,6 @@
 
       call cleari ( ncgflg, cgrptr )
 
-
 !
 !     TO points to the first free location in the VXPTR array.
 !
@@ -687,8 +682,6 @@
          zp(1) = vrtces( 3, plates(1,i) )
          zp(2) = vrtces( 3, plates(2,i) )
          zp(3) = vrtces( 3, plates(3,i) )
-
-
 
          bxmin = brcktd( min( xp(1), xp(2), xp(3) ) - mdltol, &
                          xextnt(1),  xextnt(2)                )
@@ -826,7 +819,6 @@
 
                     if ( failed() ) return
 
-
                  end do
 
               end do
@@ -859,7 +851,6 @@
 !
       call zzuntngl ( nvxptr, mxcell, cells, &
                       maxvxl, vxptr,  nvxlst, vxlist )
-
 
       return
       end

@@ -183,8 +183,6 @@
 !     'my.dog spot'  |  ' 3.142'
 !     '+my.dog,spot' |  '+ 3.14159265'
 !
-!
-!
 !     Suppose that X has the binary representation of 2/3. Then the
 !     table below illustrates the strings that would be produced
 !     by a variety of different pictures.
@@ -208,7 +206,6 @@
 !     Suppose that X has the binary representation of -8/9. Then the
 !     table below illustrates the strings that would be produced
 !     by a variety of different pictures.
-!
 !
 !     PICTUR         |    STRING
 !     -------------------------------
@@ -253,7 +250,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     format a string representing a d.p. number
@@ -261,16 +257,13 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       integer(ip)           pos
       integer(ip)           ncpos
 
-
       integer(ip), parameter :: wdsize = 32
-
 
       character(1)          fill
       character(1)          sign
@@ -292,11 +285,9 @@
       integer(ip)           sprsiz
       integer(ip)           start
 
-
       logical               needsn
       logical               ovflow
       logical               shift
-
 
 !
 !     Initial values
@@ -523,7 +514,6 @@
 !     number.
 !
 
-
       if ( exp >= intlen .and. y /= 0.0_wp ) then
 !
 !        See if we have room to print an exponential form.
@@ -555,7 +545,6 @@
             call rjust ( str(1:lastch), str(1:lastch) )
 
          end if
-
 
          return
 
@@ -603,7 +592,6 @@
 !
          sigdig = lastch - sgnlen - expsiz - 1
 
-
          if ( sigdig < 1 ) then
             do i = 1, lastch
                str(i:i) = '*'
@@ -631,8 +619,6 @@
          end if
 
       end if
-
-
 
       return
       end

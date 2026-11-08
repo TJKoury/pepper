@@ -92,16 +92,11 @@
 !
 !-&
 
-
-
 !
 !     Local variables
 !
       integer(ip)           nambas
 
-!
-!     Use discovery check-in.
-!
 !
 !     Look up the name.
 !
@@ -109,6 +104,5 @@
 
       call dasrdc ( handle,  nambas+1,  nambas+cnamsz, &
                     1,       cnamsz,    column         )
-
 
       end

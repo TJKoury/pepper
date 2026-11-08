@@ -559,7 +559,6 @@
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
 !
-!
 !     Step Size
 !     =========
 !
@@ -600,7 +599,6 @@
 !     Note that the step size is not related to the precision with which
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
-!
 !
 !     Convergence Tolerance
 !     =====================
@@ -694,7 +692,6 @@
 !     occulting body passes closest to the apparent center of
 !     the occulted body.
 !
-!
 !     Elongation
 !     ===========================
 !
@@ -714,7 +711,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -749,9 +745,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFSEP_EX1
 !              IMPLICIT NONE
@@ -914,11 +908,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using 'MOON' as first body, 'EARTH' as second body
 !        and 'SUN' as observing body, the output was:
-!
 !
 !        First body     > MOON
 !        Second body    > EARTH
@@ -960,18 +952,15 @@
 !         Beginning TDB 2007-JUN-22 16:45:56.506850 (TDB)
 !         Ending TDB    2007-JUN-22 16:45:56.506850 (TDB)
 !
-!
 !     2) Determine the time of local maxima elongation of the
 !        Moon as seen from Earth for the same time interval
 !        as the previous example, i.e. find the local maxima of
 !        the angular separation between the Moon and the Sun as
 !        seen from the Earth,  by running the code in example #1.
 !
-!
 !        When Example #1 was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using 'MOON' as first body, 'SUN' as second body
 !        and 'EARTH' as observing body, the output was:
-!
 !
 !        First body     > MOON
 !        Second body    > SUN
@@ -997,7 +986,6 @@
 !         Interval            7
 !         Beginning TDB 2007-JUN-30 14:15:26.576292 (TDB)
 !         Ending TDB    2007-JUN-30 14:15:26.576292 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -1076,13 +1064,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF angular separation search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1134,8 +1120,6 @@
 !
       if ( return() ) return
 
-
-
       if ( mw < 2 .or. .not. even(mw) ) then
 
          call setmsg ( 'Workspace window size was #; size must be ' &
@@ -1145,7 +1129,6 @@
          return
 
       end if
-
 
       if ( nw < nwsep ) then
 
@@ -1157,7 +1140,6 @@
          return
 
       end if
-
 
       if ( sized(result) < 2 .or. .not. even( sized(result) ) ) then
 
@@ -1202,7 +1184,6 @@
       qpnams(8) = 'ABCORR'
       qcpars(8) =  abcorr
 
-
 !
 !     Set the step size.
 !
@@ -1240,7 +1221,6 @@
                     gfrepi,   gfrepu,   gfrepf, &
                     mw,       nwsep,    work, &
                     .false.,  gfbail,   result )
-
 
       return
       end

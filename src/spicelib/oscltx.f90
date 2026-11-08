@@ -48,7 +48,6 @@
 !              dz/dt. STATE must be expressed relative to an
 !              inertial reference frame. Units are km and km/sec.
 !
-!
 !     ET       is the epoch of the input state, in ephemeris seconds
 !              past J2000.
 !
@@ -187,7 +186,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: oscltx_ex1.tm
@@ -210,7 +208,6 @@
 !              gm_de431.tpc                  Gravitational constants
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'mar097.bsp',
@@ -221,9 +218,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM OSCLTX_EX1
 !              IMPLICIT NONE
@@ -306,10 +301,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Perifocal distance          (km):       9232.5746716211
 !        Eccentricity                    :          0.0156113904
@@ -323,15 +316,12 @@
 !        Orbital semi-major axis     (km):       9378.9938051492
 !        Orbital period               (s):      27577.0908930612
 !
-!
 !     2) Calculate the history of Phobos's orbital period at intervals
 !        of six months for a time interval of 10 years.
 !
 !        Use the meta-kernel from the first example.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM OSCLTX_EX2
 !              IMPLICIT NONE
@@ -415,10 +405,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !                UCT Time             Period
 !        ------------------------  ------------
@@ -442,7 +430,6 @@
 !        2008 MAY 18 11:59:58.999  27579.545076
 !        2008 NOV 14 11:59:59.001  27578.920610
 !        2009 MAY 13 11:59:57.999  27577.800624
-!
 !
 ! $ Restrictions
 !
@@ -519,7 +506,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extended conic elements from state
@@ -527,7 +513,6 @@
 !     convert state to extended osculating elements
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -572,16 +557,12 @@
 
       logical               cmptau
 
-
 !
 !     Constants (SPICELIB computed them on the first call).
 !
       real(wp), parameter :: limit = dpmax / margin
 
-
       if ( return() ) return
-
-
 
 !
 !     Initialize the members of ELTS that won't be set by OSCELT. This
@@ -605,14 +586,12 @@
 !     Due to checks made by OSCELT, we know that MU and RMAG
 !     are strictly positive.
 !
-!
 !     Compute the true anomaly at ET. For the non-degenerate case, we
 !     use equation 2.4-5 from [1] to compute the eccentricity vector:
 !
 !        _    1          2   mu    _     _  _  _
 !        e = ---- * [ ( v - ---- ) r  - <r, v> v ]                   (1)
 !             mu             r
-!
 !
 !     where
 !
@@ -628,15 +607,12 @@
 !
 !        mu     is the GM value of the center of motion
 !
-!
-!
       call unorm ( state, rhat, rmag )
       call vequ  ( state(4),    vel  )
 
       vmag = vnorm( vel )
 
       ecc  = exact ( elts(2), 0.0_wp, small )
-
 
       if ( ecc /= 0.0_wp ) then
 !                                 _   _
@@ -705,8 +681,6 @@
 !
 !     To make sure that A is computable, we require
 !
-!
-!
 !        |mu/E| < LIMIT
 !
 !     so
@@ -725,7 +699,6 @@
 !
 !        mu/LIMIT < r
 !
-!
       if ( elts(2) == 1.0_wp ) then
 !
 !        This is the parabolic case.
@@ -733,7 +706,6 @@
          return
 
       end if
-
 
       if ( rmag <= ( mu/limit ) ) then
 !
@@ -749,7 +721,6 @@
 !     We assume V and MU are small enough not to cause overflow.
 !
       e = ( 0.5_wp * vmag**2 ) - ( mu / rmag )
-
 
       if (  abs(e)  <  ( abs(mu)/limit )  ) then
 !
@@ -787,13 +758,10 @@
 !                   1/3                         2/3
 !           ( a / mu    )  <  ( LIMIT / (2*pi) )
 !
-!
 !        Otherwise, we require that
 !
 !                                 2/3     1/3
 !           a < ( LIMIT / (2*pi) )    * mu
-!
-!
 !
 !        Note that the case of non-positive MU has already
 !        been ruled out.
@@ -801,7 +769,6 @@
          b      = ( limit / twopi() )**(2.0_wp/3.0_wp)
 
          mucubr = mu ** (1.0_wp/3.0_wp )
-
 
          if ( mu >= 1.0_wp ) then
 

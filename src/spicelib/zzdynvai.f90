@@ -192,7 +192,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -231,7 +230,6 @@
 !     Standard SPICE error handling
 !
       if ( return() ) return
-
 
 !
 !     Prepare to check the name of the kernel variable we're about
@@ -278,7 +276,6 @@
 
       end if
 
-
       if ( .not. found ) then
 !
 !        We need to look up the frame name-based kernel variable.
@@ -307,7 +304,6 @@
             call errint ( '#',  kvnmln                              )
             call sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
             return
-
 
          else if  ( reqnam > kvnmln ) then
 !
@@ -350,7 +346,6 @@
          call repmc  ( kvname, '#',   item,   kvname )
          call dtpool ( kvname, found, n,      dtype  )
 
-
          if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
 !
 !           The kernel variable's presence (in one form or the other)
@@ -383,7 +378,6 @@
             call errch  ( '#',  frname                              )
             call sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
             return
-
 
          else if ( .not. found ) then
 !
@@ -438,7 +432,6 @@
 
       end if
 
-
       if ( n > maxn ) then
 
          call setmsg ( 'The kernel variable # has used to define '  // &
@@ -473,5 +466,3 @@
 
       return
       end
-
-

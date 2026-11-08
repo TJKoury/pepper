@@ -159,7 +159,6 @@
 
       integer(ip), parameter :: bslash = 92
 
-
       logical               first
       save
 
@@ -173,7 +172,6 @@
       zzphsh = 0
 
       return
-
 
 !$Procedure ZZSHSH ( Private---Set up POOL hash function )
 
@@ -431,7 +429,6 @@
 
       return
 
-
 !$Procedure ZZHASH ( Private---POOL Hash function )
 
       entry zzhash ( word )
@@ -601,7 +598,6 @@
       end if
 
       return
-
 
 !$Procedure ZZHASH2 ( Private---Arbitrary divisor hash function )
 
@@ -903,5 +899,3 @@
 
       return
       end
-
-

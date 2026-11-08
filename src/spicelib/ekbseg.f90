@@ -234,7 +234,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        This EK file will have one segment containing the DATAITEMS
 !        table.
 !
@@ -242,9 +241,7 @@
 !        the segment described above and how to insert a new record
 !        into it.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKBSEG_EX1
 !              IMPLICIT NONE
@@ -331,7 +328,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -400,7 +396,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -436,14 +431,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     start new E-kernel segment
 !     start new EK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -489,7 +482,6 @@
 !     Initial values
 !
       data                  first / .true. /
-
 
 !
 !     Standard SPICE error handling.
@@ -600,7 +592,6 @@
 !
       stype  =  zzekstyp ( ncols, cdscrs )
 
-
 !
 !     Create the segment metadata according to the segment's type.
 !
@@ -620,7 +611,6 @@
          return
 
       end if
-
 
       return
       end

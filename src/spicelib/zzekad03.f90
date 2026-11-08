@@ -180,8 +180,6 @@
       logical               fixlen
 
 !
-!     Use discovery check-in.
-!
 !     Make sure the column exists.
 !
       ncols   =  segdsc ( ncidx  )
@@ -237,14 +235,12 @@
 !
       ptrloc  =  recptr + dptbas + colidx
 
-
       if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
 !        metadata are not affected.
 !
          call dasudi ( handle, ptrloc, ptrloc, null )
-
 
       else
 !
@@ -257,7 +253,6 @@
          lastw   =  segdsc ( lcwidx )
          p       =  segdsc ( lcpidx )
          pcount  =  0
-
 
          do while ( n > 0 )
 !
@@ -333,7 +328,6 @@
 !              Retain the base address of this data page.
 !
                prvbas  =  pbase
-
 
             else
 !

@@ -113,7 +113,6 @@
 !         The digit `2', followed by the forward slash, indicates that
 !         the time value is in the second mission partition.
 !
-!
 !            During program initialization, load the leapseconds and
 !            SCLK kernels. We will pretend that these files are named
 !            "LEAPSECONDS.KER" and "GLLSCLK.KER".  To use this code
@@ -139,7 +138,6 @@
 !
 !                     CALL SCS2E ( -77, '2 / 3110578:89:09', ET )
 !
-!
 !            Find the state of Jupiter (body 599) as seen from Galileo
 !            at time ET.  To use SPKEZ, you must first load an SPK
 !            kernel, using the routine SPKLEF.
@@ -152,8 +150,6 @@
 !                    .             STATE,
 !                    .             LT      )
 !
-!
-!
 !     2)  Convert a Voyager 2 SCLK value to UTC, using calendar format,
 !         with 3 digits of precision in the seconds component.
 !
@@ -165,7 +161,6 @@
 !               C
 !                     CALL FURNSH ( 'LEAPSECONDS.KER' )
 !                     CALL FURNSH ( 'VGR2SCLK.KER'    )
-!
 !
 !            To find the UTC value corresponding to Voyager 2 SCLK
 !            string
@@ -240,13 +235,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spacecraft_clock string to ephemeris time
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -257,7 +250,6 @@
 !     Local variables
 !
       real(wp)              sclkdp
-
 
 !
 !     Standard SPICE error handling.

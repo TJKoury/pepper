@@ -580,7 +580,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -604,7 +603,6 @@
 !
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
-!
 !
 !     Step Size
 !     =========
@@ -647,7 +645,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -686,7 +683,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -773,7 +769,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfsubc_ex1.tm
@@ -797,7 +792,6 @@
 !                                            radii
 !              naif0008.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de414.bsp',
@@ -807,9 +801,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFSUBC_EX1
 !              IMPLICIT NONE
@@ -1000,7 +992,6 @@
 !              REFVAL = 85.D0 * RPD()
 !              RELATE = '>'
 !
-!
 !              CALL GFSUBC (  TARGET,  FIXREF,
 !             .               METHOD,  ABCORR, OBSRVR,
 !             .               CRDSYS,  COORD,
@@ -1073,7 +1064,6 @@
 !             .                    RPOS, TRGEPC, SRFVEC   )
 !                    CALL RECLAT ( RPOS, RAD(2), LON(2), LAT(2) )
 !
-!
 !                    WRITE(*,'(2A,2F14.8)') 'From : ',    BEGSTR,
 !             .                              LAT(1)*DPR(), LON(1)*DPR()
 !                    WRITE(*,'(2A,2F14.8)') 'To   : ',    ENDSTR,
@@ -1086,10 +1076,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !               Time (TDB)                      LAT (deg)      LON (deg)
 !               ---------------------------    -----------   -----------
@@ -1113,7 +1101,6 @@
 !
 !        From : 2007-AUG-08 06:21:58.050893    16.12767782   86.00000000
 !        To   : 2007-AUG-08 06:25:58.028786    16.12689748   85.00000417
-!
 !
 ! $ Restrictions
 !
@@ -1177,13 +1164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF subpoint coordinate search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1356,7 +1341,6 @@
                     gfrepi,   gfrepu,   gfrepf, &
                     mw,       nw,       work, &
                     nobail,  gfbail,    result )
-
 
       return
 

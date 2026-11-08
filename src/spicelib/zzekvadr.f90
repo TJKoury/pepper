@@ -3,7 +3,6 @@
       subroutine zzekvadr ( njrs, bases, rwvidx, rwvbas, sgvbas )
       use pepper_kinds, only: ip
 
-
 ! $ Abstract
 !
 !     Compute the EK scratch area base address of the row vector having
@@ -150,12 +149,10 @@
 !        |Augmented row vectors for segment vector SVC|  TC*(RC_SVC + 1)
 !        +--------------------------------------------+  elements
 !
-!
 ! $ Examples
 !
 !     1)  For a given join row set union, initialize the addressing
 !         routines, then look up row vectors.
-!
 !
 !            C
 !            C     Tell the addressing routines where the join row set
@@ -214,8 +211,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -226,7 +221,6 @@
 !
 !     Local parameters
 !
-
 
 !
 !     Include Section:  EK Join Row Set Parameters
@@ -257,10 +251,8 @@
 !
       integer(ip), parameter :: jsvbas = 4
 !
-!
 !     End Include Section:  EK Join Row Set Parameters
 !
-
 
 !
 !     Local variables
@@ -294,12 +286,7 @@
 !
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-
       return
-
-
-
-
 
 !$Procedure  ZZEKVSET  ( Row vector address calculation set-up )
 
@@ -534,13 +521,10 @@
 
       end do
 
-
-
 !
 !     Retain the index of the last row vector.
 !
       maxrwv  =  begidx(njrs) + j
-
 
 !
 !     Save the base addresses of the row vectors in each join row set.
@@ -573,12 +557,6 @@
       svnjrs = njrs
 
       return
-
-
-
-
-
-
 
 !$Procedure  ZZEKVCAL  ( Row vector address calculation  )
 
@@ -687,10 +665,8 @@
 !
 !-&
 
-
 !
 !     Use discovery check-in for speed; don't check RETURN.
-!
 !
 !     If the index is out of range, that's an error.
 !

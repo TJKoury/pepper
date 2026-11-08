@@ -607,7 +607,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -631,7 +630,6 @@
 !
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
-!
 !
 !     Step Size
 !     =========
@@ -674,7 +672,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -705,7 +702,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -774,7 +770,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find the time during 2007 for which the latitude of the
 !        intercept point of the vector pointing from the sun towards
 !        the earth in the IAU_EARTH frame equals zero i.e. the intercept
@@ -782,7 +777,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -807,7 +801,6 @@
 !                                            radii
 !              naif0008.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !           KERNELS_TO_LOAD = ( 'naif0008.tls'
@@ -818,10 +811,8 @@
 !
 !           End of meta-kernel
 !
-!
 !        Use the kernel shown below to define a dynamic frame,
 !        Sun-Earth Motion.
-!
 !
 !           KPL/FK
 !
@@ -857,9 +848,7 @@
 !
 !           End of frames kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFSNTC_EX1
 !              IMPLICIT NONE
@@ -1044,10 +1033,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Interval            1
 !         Beginning TDB 2007-MAR-21 00:01:25.495120 (TDB)
@@ -1055,7 +1042,6 @@
 !         Interval            2
 !         Beginning TDB 2007-SEP-23 09:46:39.574124 (TDB)
 !         Ending TDB    2007-SEP-23 09:46:39.574124 (TDB)
-!
 !
 !     2) Find the time during 2007 for which the intercept point on the
 !        earth of the sun-to-earth vector as described in Example 1 in
@@ -1077,7 +1063,6 @@
 !        example.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM GFSNTC_EX2
 !              IMPLICIT NONE
@@ -1260,7 +1245,6 @@
 !             .               ADJUST,  STEP,   RESULT1,
 !             .               NINTRVL, NWMAX,  WORK,    RESULT2 )
 !
-!
 !        C
 !        C     Now the longitude search.
 !        C
@@ -1348,10 +1332,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Interval            1
 !         Beginning TDB 2007-MAY-05 06:14:04.637735 (TDB)
@@ -1380,7 +1362,6 @@
 !         Interval            7
 !         Beginning TDB 2007-AUG-09 06:22:55.351256 (TDB)
 !         Ending TDB    2007-AUG-09 06:26:54.327565 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -1442,13 +1423,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF surface intercept coordinate search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1498,7 +1477,6 @@
       integer(ip)           qipars ( qnpars )
 
       logical               qlpars ( qnpars )
-
 
 !
 !     Standard SPICE error handling.

@@ -87,13 +87,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     dummy function for UDFUNS signature arguments
 !
 !-&
-
 
       x     = x     + 0.0_wp
       value = value + 0.0_wp

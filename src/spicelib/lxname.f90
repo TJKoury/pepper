@@ -123,7 +123,6 @@
 !     The scanning code using these routines might have the following
 !     structure:
 !
-!
 !              INTEGER               IDSPEC ( LBCELL : MXSPEC )
 !                 .
 !                 .
@@ -167,7 +166,6 @@
 !
 !              END DO
 !
-!
 !     It is possible to override the default rules by calling the
 !     entry point LXCSID (Lex, custom identifier characters).  This
 !     routine allows the caller to specify the precise set of
@@ -203,7 +201,6 @@
 !         WHERE A LT B                12      12     1
 !         WHERE A .LT. B              9       8      0
 !
-!
 !     2)  The following table illustrates the behavior of the scanning
 !         entry point LXIDNT when a custom identifier syntax is used.
 !         The call
@@ -221,7 +218,6 @@
 !        will produce an identifier specification IDSPEC that,
 !        when supplied as an input to LXIDNT, will cause LXIDNT
 !        to perform in accordance with the table shown below:
-!
 !
 !         STRING CONTENTS             FIRST   LAST   NCHAR
 !         ==========================================================
@@ -265,13 +261,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     scan name tokens --- umbrella
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -302,7 +296,6 @@
 
       integer(ip), parameter :: hcpos = 3
 
-
 !
 !     Local variables
 !
@@ -322,15 +315,9 @@
 !
       if ( return () ) return
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
-
       return
-
-
-
-
 
 !$Procedure LXIDNT ( Lex identifier )
 
@@ -475,18 +462,15 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     scan identifiers
 !
 !-&
 
-
 !
 !     No check-in required; this entry point is error-free.
 !
-
 
 !
 !     Save the length of the non-blank prefix of the input string.
@@ -546,12 +530,7 @@
 
       end do
 
-
       return
-
-
-
-
 
 !$Procedure LXDFID ( Lex, default identifier characters )
 
@@ -673,13 +652,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return default allowed identifier characters
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -732,7 +709,6 @@
 !
 !     IDSPEC is assumed to be initialized.
 !
-!
       call scardi ( 0,     idspec )
 
       call appndi ( nhead, idspec )
@@ -747,10 +723,6 @@
       end do
 
       return
-
-
-
-
 
 !$Procedure LXCSID ( Lex, custom identifier characters )
 
@@ -891,13 +863,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     customize allowed identifier characters for lexing
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -915,7 +885,6 @@
 !
       hl  =  rtrim(hdchrs)
       tl  =  rtrim(tlchrs)
-
 
       do i = 1, hl
 
@@ -935,7 +904,6 @@
 
       end do
 
-
       do i = 1, tl
 
          c  =  ichar( tlchrs(i:i) )
@@ -954,7 +922,6 @@
 
       end do
 
-
 !
 !     The characters of HDCHRS become the set of acceptable
 !     characters for the head identifier character---all except
@@ -972,8 +939,6 @@
 
       nhead  =  cardi ( headc )
 
-
-
       do i = 1, tl
 
          c  =  ichar( tlchrs(i:i) )
@@ -983,7 +948,6 @@
          end if
 
       end do
-
 
       ntail  =  cardi ( tailc )
 
@@ -997,7 +961,6 @@
 !        - integer codes for the tail characters
 !
 !     IDSPEC is assumed to be initialized.
-!
 !
       call scardi ( 0,     idspec )
 

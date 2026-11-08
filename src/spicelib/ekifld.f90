@@ -272,7 +272,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        The file "ekifld_ex1.bdb" will contain two segments, the first
 !        containing the DATAORDERS table and the second containing the
 !        DATAITEMS table.
@@ -285,9 +284,7 @@
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKIFLD_EX1
 !              IMPLICIT NONE
@@ -397,14 +394,12 @@
 !             .             'INDEXED  = TRUE,'             //
 !             .             'NULLS_OK = TRUE'
 !
-!
 !        C
 !        C     Start the segment.  We presume the number of  rows
 !        C     of data is known in advance.
 !        C
 !              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
 !             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
-!
 !
 !        C
 !        C     At this point, arrays containing data for the
@@ -494,7 +489,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -546,14 +540,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     start new E-kernel segment for fast writing
 !     start new EK segment for fast writing
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -614,7 +606,6 @@
 
          call zzekif01 ( handle, segno, rcptrs )
 
-
       else if ( stype == 2 ) then
 
          call zzekif02 ( handle, segno )
@@ -627,7 +618,6 @@
          return
 
       end if
-
 
       return
       end

@@ -81,7 +81,6 @@
 !        CALL IRFNUM ( REFB,  CODEB        )
 !        CALL IRFROT ( CODEA, CODEB, ROTAB )
 !
-!
 !     Among the reference frame names accepted by IRFNUM are:
 !
 !        'J2000'
@@ -154,13 +153,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transformation from one inertial frame to another
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -172,7 +169,6 @@
 !
       integer(ip)           codea
       integer(ip)           codeb
-
 
 !
 !     Standard SPICE error handling.

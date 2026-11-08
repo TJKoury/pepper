@@ -80,7 +80,6 @@
 !                 R = [ ANGLE3 ]      [ ANGLE2 ]      [ ANGLE1 ]
 !                               AXIS3           AXIS2           AXIS1
 !
-!
 !              See the $Particulars section below for details
 !              concerning this notation.
 !
@@ -197,7 +196,6 @@
 !        |  0        0       1  |
 !        `-                    -'
 !
-!
 !     The input matrix is assumed to be the product of three
 !     rotation matrices, each one of the form
 !
@@ -208,7 +206,6 @@
 !        |                      |      x-axis),
 !        |  0   -sin(r)  cos(r) |
 !        `-                    -'
-!
 !
 !        .-                    -.
 !        | cos(s)   0   -sin(s) |
@@ -245,7 +242,6 @@
 !
 !     preserves R, except for round-off error.
 !
-!
 !     On the other hand, the sequence of calls
 !
 !        CALL EUL2M (     ANGLE3,  ANGLE2,  ANGLE1,
@@ -253,7 +249,6 @@
 !
 !        CALL M2EUL ( R,  AXIS3,   AXIS2,   AXIS1,
 !       .                 ANGLE3,  ANGLE2,  ANGLE1     )
-!
 !
 !     preserve ANGLE3, ANGLE2, and ANGLE1 only if these angles start
 !     out in the ranges that M2EUL's outputs are restricted to.
@@ -271,7 +266,6 @@
 !        Suppose we want to find camera pointing in alpha, delta, and
 !        kappa, given the inertial-to-camera coordinate transformation
 !
-!
 !        .-                                                         -.
 !        |  0.491273796781358  0.508726203218642  0.706999085398824  |
 !        |                                                           |
@@ -280,14 +274,12 @@
 !        |  0.706999085398824 -0.706999085398824  0.017452406437284  |
 !        `-                                                         -'
 !
-!
 !        Find angles alpha, delta, kappa such that
 !
 !           TICAM  =  [ kappa ]  [ pi/2 - delta ]  [ pi/2 + alpha ] .
 !                              3                 1                 3
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM M2EUL_EX1
 !              IMPLICIT NONE
@@ -309,7 +301,6 @@
 !              DOUBLE PRECISION      KAPPA
 !              DOUBLE PRECISION      TICAM  ( 3, 3 )
 !
-!
 !              DATA TICAM /  0.491273796781358D0,
 !             .             -0.508726203218642D0,
 !             .              0.706999085398824D0,
@@ -319,7 +310,6 @@
 !             .              0.706999085398824D0,
 !             .              0.706999085398824D0,
 !             .              0.017452406437284D0  /
-!
 !
 !              CALL M2EUL ( TICAM, 3, 1, 3, KAPPA, ANG2, ANG1 )
 !
@@ -340,15 +330,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Alpha (deg):       315.00000000000000
 !        Delta (deg):         1.00000000000003
 !        Kappa (deg):        45.00000000000000
-!
 !
 !     2) Conversion of instrument pointing angles from a non-J2000,
 !        not necessarily inertial frame to J2000-relative RA, Dec,
@@ -370,7 +357,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -406,9 +392,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM M2EUL_EX2
 !              IMPLICIT NONE
@@ -507,15 +491,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        RA    (deg):        83.77802387778848
 !        Dec   (deg):       -14.92925498590898
 !        Twist (deg):       294.55732942050986
-!
 !
 !        Note:  more than one definition of RA, Dec, and Twist is
 !        extant. Before using this example in an application, check
@@ -582,13 +563,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix to euler angles
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -649,7 +628,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -669,11 +647,9 @@
 !     DTOL is the tolerance for the determinant of a matrix whose
 !     columns are the unitized columns of R.
 !
-!
       real(wp), parameter :: ntol = 0.1_wp
 
       real(wp), parameter :: dtol = 0.1_wp
-
 
 !
 !     Local variables
@@ -698,7 +674,6 @@
 !     Initial values
 !
       data  next / 2, 3, 1 /
-
 
 !
 !     Standard SPICE error handling.
@@ -744,7 +719,6 @@
          return
 
       end if
-
 
 !
 !     AXIS3, AXIS2, AXIS1 and R have passed their tests at this
@@ -802,7 +776,6 @@
 !        AXIS2 is not the successor of AXIS3, where the ordering is
 !        cyclic.
 !
-
 
       if ( axis3 == axis1 ) then
 
@@ -876,9 +849,7 @@
 !     |         sin(a2)sin(a3)         -sin(a2)cos(a3)         cos(a2) |
 !     +-                                                              -+
 !
-!
 !        but if a2 is 0 or pi, the product matrix reduces to
-!
 !
 !     +-                                                              -+
 !     |         cos(a1)cos(a3)          cos(a1)sin(a3)               0 |
@@ -889,7 +860,6 @@
 !     |                                                                |
 !     |                      0                       0         cos(a2) |
 !     +-                                                              -+
-!
 !
 !        In this case, a1 and a3 are not uniquely determined.  If we
 !        arbitrarily set a1 to zero, we arrive at the matrix
@@ -904,13 +874,11 @@
 !        that are mathematically equivalent, but may not be satisfied
 !        simultaneously because of round-off:
 !
-!
          degen =      (        (       tmprot(1,3)    == 0.0_wp  ) &
                          .and. (       tmprot(2,3)    == 0.0_wp  )  ) &
                  .or. (        (       tmprot(3,1)    == 0.0_wp  ) &
                          .and. (       tmprot(3,2)    == 0.0_wp  )  ) &
                  .or. (           abs( tmprot(3,3) )  == 1.0_wp     )
-
 
 !
 !        In the following block of code, we make use of the fact that
@@ -934,8 +902,6 @@
             angle1 = atan2 (  tmprot(3,1),  -tmprot(3,2)  )
 
          end if
-
-
 
       else
 
@@ -996,7 +962,6 @@
 !
 !        has the form
 !
-!
 !     +-                                                              -+
 !     |         cos(a2)cos(a3)          cos(a2)sin(a3)        -sin(a2) |
 !     |                                                                |
@@ -1007,9 +972,7 @@
 !     | +cos(a1)sin(a2)cos(a3)  +cos(a1)sin(a2)sin(a3)                 |
 !     +-                                                              -+
 !
-!
 !        but if a2 is -pi/2 or pi/2, the product matrix reduces to
-!
 !
 !     +-                                                              -+
 !     |                      0                       0        -sin(a2) |
@@ -1021,7 +984,6 @@
 !     | +cos(a1)sin(a2)cos(a3)  +cos(a1)sin(a2)sin(a3)                 |
 !     +-                                                              -+
 !
-!
 !        In this case, a1 and a3 are not uniquely determined.  If we
 !        arbitrarily set a1 to zero, we arrive at the matrix
 !
@@ -1031,18 +993,15 @@
 !           |  sin(a2)cos(a3)    sin(a2)sin(a3)          0   |
 !           +-                                              -+
 !
-!
 !        We take care of this case first.  We test three conditions
 !        that are mathematically equivalent, but may not be satisfied
 !        simultaneously because of round-off:
-!
 !
          degen =      (        (       tmprot(1,1)    == 0.0_wp  ) &
                          .and. (       tmprot(1,2)    == 0.0_wp  )  ) &
                  .or. (        (       tmprot(2,3)    == 0.0_wp  ) &
                          .and. (       tmprot(3,3)    == 0.0_wp  )  ) &
                  .or. (           abs( tmprot(1,3) )  == 1.0_wp     )
-
 
 !
 !        In the following block of code, we make use of the fact that

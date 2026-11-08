@@ -276,7 +276,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: fovray_ex1.tm
@@ -318,9 +317,7 @@
 !
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM FOVRAY_EX1
 !              IMPLICIT NONE
@@ -402,14 +399,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Epsilon CMa was visible from the Cassini UVIS instrument at
 !         2008-FEB-23 21:33:00.34 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -436,14 +430,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Ray in instrument FOV at specified time
 !     Ray in instrument field_of_view at specified time
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -455,7 +447,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Note to maintenance programmer: input exception checks

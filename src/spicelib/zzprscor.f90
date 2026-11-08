@@ -199,7 +199,6 @@
 !
 !     Initial values
 !
-!
 !     It is recommended that, for maintainability, the correction
 !     strings be kept in increasing order in this list.  However,
 !     this routine does not rely on the strings being ordered
@@ -228,10 +227,7 @@
        'XS',      .false., .false., .true.,  .false., .true.,  .false. &
         /
 
-
       data                  first  / .true. /
-
-
 
       if ( return() ) return
 
@@ -296,6 +292,3 @@
 
       return
       end
-
-
-

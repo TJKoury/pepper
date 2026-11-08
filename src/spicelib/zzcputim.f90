@@ -55,9 +55,6 @@
 !
 !     None.
 !
-! $ Exceptions
-!
-!
 ! $ Files
 !
 !     None.
@@ -66,7 +63,6 @@
 !
 !     This routine returns the components of the current date and
 !     time as determined by the system clock.
-!
 !
 ! $ Examples
 !
@@ -171,7 +167,6 @@
 !      C    Get the time after the second pass.
 !      C
 !           CALL ZZCPUTIM ( TVEC(1,3)
-!
 !
 !      C
 !      C    Now compute seconds past midnight at each clock reading.

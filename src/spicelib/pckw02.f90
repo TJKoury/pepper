@@ -174,9 +174,7 @@
 !        example could be used to add one new type 2 segment. To add
 !        multiple segments, put the call to PCKW02 in a loop.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PCKW02_EX1
 !              IMPLICIT NONE
@@ -295,7 +293,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new PCK type 2 exists in
 !        the output directory.
@@ -342,13 +339,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write PCK type_2 data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -401,7 +396,6 @@
       integer(ip)           k
       integer(ip)           ninrec
       integer(ip)           refcod
-
 
 !
 !     Standard SPICE error handling.

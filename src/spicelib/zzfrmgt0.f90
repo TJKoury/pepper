@@ -140,7 +140,6 @@
 !
 !-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -194,7 +193,6 @@
 !
       if ( return() ) return
 
-
 !
 !     On the first pass, initialize the identity matrix.
 !
@@ -247,7 +245,6 @@
 
          end if
 
-
       else if ( type == pck ) then
 
          call tisbod ( 'J2000', typeid, et, tsipm  )
@@ -260,11 +257,9 @@
 
          end if
 
-
       else if ( type == ck ) then
 
          call ckfxfm ( typeid, et, xform, outfrm, found )
-
 
       else if ( type == tk ) then
 
@@ -282,7 +277,6 @@
             end do
 
          end if
-
 
       else if ( type == dyn ) then
 !

@@ -13,7 +13,6 @@ module pepper_state_tcheck
 
    private
 
-
    public :: init_tcheck_state
 
    !> The saved variables of TCHECK.

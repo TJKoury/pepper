@@ -219,13 +219,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     type_1 spacecraft_clock
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -241,7 +239,6 @@
 !        a kernel pool look-up is needed. A look-up failure occurring
 !        in any entry point will now prevent all entry points from
 !        relying on stored kernel data.
-!
 !
 !-    SPICELIB Version 3.2.0, 17-FEB-2008 (NJB)
 !
@@ -324,7 +321,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -338,7 +334,6 @@
 !
 !     Local parameters
 !
-
 
       integer(ip), parameter :: errlen = 240
 
@@ -464,7 +459,6 @@
       data dpfree / 1 /
       data ifree  / 1 /
 
-
 !
 !     NEW: Statement functions
 !
@@ -512,18 +506,14 @@
 !
 !      CMPWID( I ) = INTBUF( OFFCMP + I )
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
 
-
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
 
 !$Procedure SCTK01 ( Convert type 1 SCLK string to ticks )
 
@@ -563,7 +553,6 @@
 !              $Examples section below, and also the NAIF_IDS
 !              required reading file for a complete list of body ID
 !              codes.
-!
 !
 !     CLKSTR   on input is the character representation of a
 !              spacecraft clock count (SCLK), without a partition
@@ -685,7 +674,6 @@
 !         The time system used in a kernel is TDB if and only if the
 !         variable is assigned the value 1.
 !
-!
 !     3)  If any of the following kernel variables have invalid values,
 !         the error will be diagnosed by routines called by this
 !         routine:
@@ -702,7 +690,6 @@
 !         possible to diagnose the error correctly, since overwriting
 !         of memory may occur. This particular type of error is not
 !         diagnosed by this routine.
-!
 !
 !     4)  The input argument CLKSTR may be invalid for a variety of
 !         reasons:
@@ -759,7 +746,6 @@
 !         '1.1.1.1.1'           Error: Too many components
 !         '1.1.1.1.'            Error: The last delimiter signals that
 !                                      a fifth component will follow.
-!
 !
 !         The following examples are for the Voyager 2 spacecraft. Note
 !         that the last component of the Voyager clock has an offset
@@ -837,13 +823,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert type_1 spacecraft_clock string to ticks
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -870,12 +854,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( pass1 ) then
 !
@@ -969,7 +951,6 @@
             call nparsd ( cmp(i), cmpval(i), error, pntr )
          end if
 
-
          if ( error /= ' ' ) then
 
             pass1 = .true.
@@ -1027,8 +1008,6 @@
 
       return
 
-
-
 !$Procedure SCFM01 ( Convert ticks to a type 1 SCLK string. )
 
       entry scfm01 ( sc, ticks, clkstr )
@@ -1066,7 +1045,6 @@
 !     SC       is a NAIF spacecraft identification code. See the
 !              $Examples section below, and also the KERNEL required
 !              reading file for a complete list of body ID codes.
-!
 !
 !     TICKS    is the number of ticks to be converted to a spacecraft
 !              clock string, where a tick is defined to be
@@ -1198,7 +1176,6 @@
 !         7280                  '1:00:0:0'
 !         1234567890            '169583:45:6:2'
 !
-!
 !     The following examples are for the Voyager 2 spacecraft.
 !     Note that the third component of the Voyager clock has an
 !     offset value of one.
@@ -1282,13 +1259,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert ticks to a type_1 spacecraft_clock string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1323,12 +1298,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     On the first pass through the subroutine, or if the spacecraft
@@ -1495,8 +1468,6 @@
 
       return
 
-
-
 !$Procedure SCTE01 ( Ticks to ET, type 01 )
 
       entry scte01 ( sc, sclkdp, et )
@@ -1583,7 +1554,6 @@
 !         is the negative of the NAIF integer code for the spacecraft.
 !         The time system used in a kernel is TDB if and only if the
 !         variable is assigned the value 1.
-!
 !
 !     3)  If any of the following kernel variables have invalid values,
 !         the error will be diagnosed by routines called by this
@@ -1736,13 +1706,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     type_1 ticks to ephemeris time
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1787,12 +1755,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( pass1 ) then
 !
@@ -1999,8 +1965,6 @@
       prvsc = sc
 
       return
-
-
 
 !$Procedure SCET01 ( ET to discrete ticks, type 1 )
 
@@ -2254,13 +2218,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ephemeris time to type_1 ticks
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2302,12 +2264,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( pass1 ) then
 !
@@ -2386,7 +2346,6 @@
 !     index of the greatest time value in the coefficient array that
 !     is less than or equal to PARTIM.
 !
-!
 !     There are three cases:
 !
 !        1) PARTIM is less than the least time coefficient in the array.
@@ -2404,13 +2363,11 @@
 !           coefficients.  In that case, we don't need to search:  the
 !           last time value in the array is the one we want.
 !
-!
       if (  partim  <  coeffs( 2, 1 )  ) then
 !
 !        The coefficient set to use for extrapolation is the first.
 !
          lower = 1
-
 
       else if (  partim < coeffs( 2, ncoeff/3 )  ) then
 !
@@ -2496,7 +2453,6 @@
 
       end if
 
-
       tikmsc = 1.0_wp
 
       do i = nfield, 2, -1
@@ -2552,9 +2508,6 @@
       prvsc = sc
 
       return
-
-
-
 
 !$Procedure SCEC01 ( ET to continuous ticks, type 1 )
 
@@ -2783,13 +2736,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ephemeris time to continuous type_1 ticks
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2800,12 +2751,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( pass1 ) then
 !
@@ -2885,7 +2834,6 @@
 !     index of the greatest time value in the coefficient array that
 !     is less than or equal to PARTIM.
 !
-!
 !     There are two cases:
 !
 !        1) PARTIM is bounded by the least and greatest time
@@ -2896,7 +2844,6 @@
 !        2) PARTIM is greater than or equal to all of the time
 !           coefficients.  In that case, we don't need to search:  the
 !           last time value in the array is the one we want.
-!
 !
       if (  partim  <  coeffs( 2, 1 )  ) then
 !
@@ -2909,7 +2856,6 @@
          call errdp  ( '#',  et                 )
          call sigerr ( 'SPICE(VALUEOUTOFRANGE)' )
          return
-
 
       else if (  partim < coeffs( 2, ncoeff/3 )  ) then
 !
@@ -2992,7 +2938,6 @@
 
       end if
 
-
       tikmsc = 1.0_wp
 
       do i = nfield, 2, -1
@@ -3040,8 +2985,6 @@
       prvsc = sc
 
       return
-
-
 
 !$Procedure SCTY01 ( SCLK type, using type 1 SCLK database )
 
@@ -3155,16 +3098,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return SCLK type, using type 1 database
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     At this point, PRVSC is either 0 or the ID of the last type 1
@@ -3291,8 +3231,6 @@
 
       return
 
-
-
 !$Procedure SCPR01 ( SCLK partition bounds, type 1  )
 
       entry scpr01 ( sc, npartn, parbeg, parend )
@@ -3394,16 +3332,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return partition data for a type 1 SCLK
 !
 !-&
 
-
       if ( return() ) return
-
 
       if ( pass1 ) then
 !

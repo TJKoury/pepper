@@ -153,9 +153,7 @@
 !        replace a marker within a string with a formatted double
 !        precision value.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REPMF_EX1
 !              IMPLICIT NONE
@@ -243,10 +241,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Case 1: Single marker, two significant digits, scientific.
 !            Input : Invalid value. The value was:  #
@@ -267,7 +263,6 @@
 !         Case 5: Excessive significant digits.
 !            Input : Invalid value. The value was:  #
 !            Output: Invalid value. The value was:  50.000000000000
-!
 !
 !        Note that, in Case #5 even though 100 digits of precision were
 !        requested, only 14 were returned.
@@ -323,13 +318,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace marker with formatted d.p. value
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -351,7 +344,6 @@
 
       integer(ip)           subnbf
       integer(ip)           subnbl
-
 
 !
 !     If MARKER is blank, no substitution is possible.

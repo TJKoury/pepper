@@ -161,13 +161,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     push a value onto a particular symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -188,7 +186,6 @@
       integer(ip)           locsym
       integer(ip)           locval
       logical               oldsym
-
 
 !
 !     Standard SPICE error handling.
@@ -242,7 +239,6 @@
          tabptr(locsym) = tabptr(locsym) + 1
 
       end if
-
 
       return
       end

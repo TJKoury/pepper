@@ -58,13 +58,11 @@
 !                      2
 !                   A X   +  B X  +  C  =  0
 !
-!
 !     UB         is an upper bound on the absolute value of real
 !                roots to be found by this routine. Roots having
 !                absolute value larger than UB are not returned.
 !
 ! $ Detailed_Output
-!
 !
 !     N          is the number of real roots found that satisfy the
 !                magnitude bound constraint.
@@ -148,7 +146,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -189,9 +186,7 @@
       data                  first / .true. /
       data                  invub / -1.0_wp  /
 
-
       if ( return() ) return
-
 
 !
 !     On the first pass, set the upper bound for the reciprocal
@@ -267,8 +262,6 @@
          call zzbquad ( coeffs(1), coeffs(2), coeffs(3), ub, &
                         n,         nx,        r1,        r2  )
 
-
-
       else if (  abs( coeffs(3) ) >=  small  ) then
 
 !
@@ -295,7 +288,6 @@
 !
 !          |a|  < SMALL
 !
-!
 !        Because the quadratic coefficient is bounded away from zero,
 !        the roots of the reciprocal equation are not in danger of
 !        overflowing. So we can safely solve for 1/x. We might have
@@ -314,9 +306,7 @@
 !
             if (  abs( inv1 * ub )  >=  1.0_wp  ) then
 !
-!
 !              |1/INV1| <= UB
-!
 !
                r1 = 1.0_wp / inv1
 
@@ -343,9 +333,7 @@
 !
             if (  abs( inv2 * ub )  >=  1.0_wp  ) then
 !
-!
 !              |1/INV2| <= UB
-!
 !
                r1 = 1.0_wp / inv2
 
@@ -354,9 +342,7 @@
 !
                if (  abs( inv1 * ub )  >=  1.0_wp  ) then
 !
-!
 !                 |1/INV1| <= UB
-!
 !
                   r2 = 1.0_wp / inv1
 
@@ -369,7 +355,6 @@
                   r2 = 0.0_wp
 
                end if
-
 
             else
 !
@@ -385,7 +370,6 @@
 
             end if
 
-
          else
 !
 !           We have no viable roots of the transformed equation, so
@@ -397,8 +381,6 @@
             r2 = 0.0_wp
 
          end if
-
-
 
       else
 
@@ -428,14 +410,11 @@
 !
 !                                  k=0
 !
-!
 !                              2      3         4
 !                =  1 + x/2 - x /8 + x /16 + O(x )
 !
-!
 !        Apply this formula to that for the solution having the
 !        positive square root term. Here let `x' be
-!
 !
 !                   2
 !           -4ac / b
@@ -446,14 +425,11 @@
 !
 !        since we've set b = 1.
 !
-!
 !        Then the root is
-!
 !
 !                  -1 + sqrt( 1 - 4ac )
 !           x  =   --------------------
 !            1             2a
-!
 !
 !                                      2 2          3
 !                  -1 + ( 1 - 2ac - 16a c /8 + O((ac)) )
@@ -462,16 +438,13 @@
 !
 !        Discarding the high-order terms in a, we have
 !
-!
 !           x  ~=  ( -1 + 1 - 2ac ) / 2a  =  -c
 !            1
 !
 !        Similarly, we have
 !
-!
 !           x  ~=  ( -1 - 1 + 2ac ) / 2a  =  ( ac - 1 )/a  = c - 1/a
 !            2
-!
 !
 !        Based on the conditions that got us here, we know
 !

@@ -19,7 +19,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'eksegdsc.inc'
       include 'ektype.inc'
@@ -62,7 +61,6 @@
 !
 !     DVALS          is an array of double precision values with which
 !                    to update the specified column entry.
-!
 !
 !     ISNULL         is a logical flag indicating whether the value
 !                    of the specified column entry is to be set to NULL.
@@ -148,7 +146,6 @@
 !
       call zzekad05 (  handle,  segdsc,  coldsc, &
                        recptr,  nvals,   dvals,  isnull )
-
 
       return
       end

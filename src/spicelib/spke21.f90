@@ -141,13 +141,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_21 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -177,7 +175,6 @@
 
       real(wp)              fc       ( maxtrm )
 
-
       real(wp)              sum
       real(wp)              delta
       real(wp)              tp
@@ -203,8 +200,6 @@
 !
       data                  fc (  1 )    / 1.0_wp /
 
-!
-!     Use discovery check-in.
 !
 !     If the RETURN function is set, don't even bother with this.
 !

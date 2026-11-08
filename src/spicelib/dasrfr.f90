@@ -113,7 +113,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DASRFR_EX1
 !              IMPLICIT NONE
 !
@@ -164,17 +163,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds as input
 !        DAS file, the output was:
-!
 !
 !        Enter DAS file name > phobos512.bds
 !         Internal file name is:           phobos512.bds
 !         Number of comment records is:              10
 !         Number of comment characters is:         1390
-!
 !
 ! $ Restrictions
 !
@@ -245,14 +241,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read DAS file record
 !     read DAS internal file name
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -275,7 +269,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -286,8 +279,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
       call zzdasrfr ( handle, idword, ifname, &
                       nresvr, nresvc, ncomr,  ncomc )

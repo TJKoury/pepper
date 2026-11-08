@@ -93,7 +93,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: prompt_ex1.tm
@@ -116,7 +115,6 @@
 !              mar097.bsp                       Mars satellite ephemeris
 !              naif0011.tls                     Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de430.bsp',
@@ -127,9 +125,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PROMPT_EX1
 !              IMPLICIT NONE
@@ -192,11 +188,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the time string '2017-07-14T19:46:00' as epoch,
 !        'MARS' as target and 'EARTH' as observer, the output was:
-!
 !
 !        Enter UTC epoch             > 2017-07-14T19:46:00
 !        Enter observer name         > MARS
@@ -209,7 +203,6 @@
 !           x-velocity (km/s):          47.4619819770
 !           y-velocity (km/s):          19.0770886182
 !           z-velocity (km/s):           7.9424268278
-!
 !
 ! $ Restrictions
 !
@@ -392,14 +385,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Prompt for keyboard input
 !     Prompt for input with a user supplied message
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -421,22 +412,17 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)           iostat
 
-!
-
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     The following code should be used in the following environments:
 !     VAX/FORTRAN, IBM-PC/Lahey Fortran, MacIntosh/Language Systems
 !     Fortran
 #else
 #endif
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       write (*,fmt='(" ",A,$)', iostat=iostat ) dspmsg
 #else

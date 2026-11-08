@@ -145,7 +145,6 @@
 !              See the INCLUDE file dsk.inc for values
 !              associated with the keyword parameters.
 !
-!
 !     START    is the start index within the specified data item
 !              from which data are to be fetched. The index of
 !              the first element of each data item is 1. START
@@ -260,9 +259,7 @@
 !        opening the DSK file for read access, traversing a trivial,
 !        one-segment list to obtain the segment of interest.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKI02_EX1
 !              IMPLICIT NONE
@@ -298,7 +295,6 @@
 !              INTEGER               VRTIDS ( 3 )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Prompt for the name of the DSK to read.
@@ -393,11 +389,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !         Number of plates:      3145728
@@ -426,7 +420,6 @@
 !            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
 !            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
 !            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!
 !
 !        Note that only the vertex information for first 5 plates is
 !        provided.
@@ -481,13 +474,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch integer data from a type 2 DSK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -496,7 +487,6 @@
 
 !
 !     Local parameters
-!
 !
 !     IBFSIZ is the size of an integer buffer used to
 !     read parameters from the segment.
@@ -543,9 +533,8 @@
 !
       data                  first  / .true. /
 
-
 !
-!     Use discovery check-in.  This is done for efficiency; note
+!  This is done for efficiency; note
 !     however that this routine does not meet SPICE standards for
 !     discovery check-in eligibility.
 !
@@ -566,7 +555,6 @@
 
       end if
 
-
       if ( room <= 0 ) then
 
          call setmsg ( 'ROOM was #; must be positive.' )
@@ -575,7 +563,6 @@
          return
 
       end if
-
 
       ibase  = dladsc ( ibsidx )
 !
@@ -670,7 +657,6 @@
 
          if ( start == 1 ) return
 
-
       else if ( item == kwnvxt ) then
 !
 !        Return the total number of voxels.
@@ -680,14 +666,12 @@
 
          if ( start == 1 ) return
 
-
       else if ( item == kwvgrx ) then
 !
 !        Return the voxel grid extents.
 !
          size = 3
          b    = ibase + ixvgrx + start - 1
-
 
       else if ( item == kwcgsc ) then
 !
@@ -698,7 +682,6 @@
 
          if ( start == 1 ) return
 
-
       else if ( item == kwvxps ) then
 !
 !        Return the voxel-plate pointer list size.
@@ -707,7 +690,6 @@
          values(1) = voxnpt
 
          if ( start == 1 ) return
-
 
       else if ( item == kwvxls ) then
 !
@@ -718,7 +700,6 @@
 
          if ( start == 1 ) return
 
-
       else if ( item == kwvtls ) then
 !
 !        Return the vertex-plate list size.
@@ -728,7 +709,6 @@
 
          if ( start == 1 ) return
 
-
       else if ( item == kwplat ) then
 !
 !        Return plate data.  There are 3*NP values in all.  First
@@ -736,7 +716,6 @@
 !
          size = 3*np
          b    = ( ibase + ixplat ) + start - 1
-
 
       else if ( item == kwvxpt )  then
 !
@@ -746,7 +725,6 @@
          size = voxnpt
          b    = ( ibase + ixplat + 3*np ) + start - 1
 
-
       else if ( item == kwvxpl )  then
 !
 !        Return voxel-plate list data.  There are VOXNPL values in all.
@@ -754,7 +732,6 @@
 !
          size = voxnpl
          b    = ( ibase + ixplat + 3*np + voxnpt ) + start - 1
-
 
       else if ( item == kwvtpt )  then
 !
@@ -765,7 +742,6 @@
          b    =  ( ibase + ixplat + 3*np + voxnpt + voxnpl ) &
                  + start - 1
 
-
       else if ( item == kwvtpl )  then
 !
 !        Return vertex-plate list data.  There are VTXNPL values in
@@ -775,7 +751,6 @@
 
          b =  ( ibase + ixplat + 3*np + voxnpt + voxnpl + nv ) &
               + start - 1
-
 
       else if ( item == kwcgpt )  then
 !
@@ -795,7 +770,6 @@
          b =  (   ibase  + ixplat + 3*np   + voxnpt &
                 + voxnpl + nv     + vtxnpl          ) &
                 + start  - 1
-
 
       else
 

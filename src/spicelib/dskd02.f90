@@ -88,7 +88,6 @@
 !                            size applies to the fine voxel grid.
 !                            Units are km.
 !
-!
 !     START    is the start index within specified data item from
 !              which data are to be fetched. The index of the
 !              first element of each data item is 1.
@@ -199,9 +198,7 @@
 !        opening the DSK file for read access, traversing a trivial,
 !        one-segment list to obtain the segment of interest.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKD02_EX1
 !              IMPLICIT NONE
@@ -237,7 +234,6 @@
 !              INTEGER               VRTIDS ( 3 )
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Prompt for the name of the DSK to read.
@@ -332,11 +328,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !         Number of plates:      3145728
@@ -365,7 +359,6 @@
 !            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
 !            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
 !            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!
 !
 !        Note that only the vertex information for first 5 plates is
 !        provided.
@@ -431,13 +424,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch d.p. data from a type 2 DSK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -476,7 +467,7 @@
       data                  first  / .true. /
 
 !
-!     Use discovery check-in.  This is done for efficiency; note
+!  This is done for efficiency; note
 !     however that this routine does not meet SPICE standards for
 !     discovery check-in eligibility.
 !
@@ -497,7 +488,6 @@
 
       end if
 
-
       if ( room <= 0 ) then
 
          call setmsg ( 'ROOM was #; must be positive.' )
@@ -506,7 +496,6 @@
          return
 
       end if
-
 
       ibase  = dladsc ( ibsidx )
       dbase  = dladsc ( dbsidx )
@@ -560,14 +549,12 @@
          size =   3*nv
          b    = ( dbase + ixvert ) + start - 1
 
-
       else if ( item == kwdsc ) then
 !
 !        Return DSK descriptor.
 !
          size =   dskdsz
          b    = ( dbase + ixdscr ) + start - 1
-
 
       else if ( item == kwvtbd ) then
 !
@@ -576,14 +563,12 @@
          size =   6
          b    = ( dbase + ixvtbd ) + start - 1
 
-
       else if ( item == kwvxor ) then
 !
 !        Return voxel grid origin.  There are 3 elements.
 !
          size =   3
          b    = ( dbase + ixvxor ) + start - 1
-
 
       else if ( item == kwvxsz ) then
 !
@@ -625,9 +610,7 @@
       n  =   min ( room, size - start + 1 )
       e  =   b + n - 1
 
-
       call dasrdd ( handle, b, e, values )
-
 
       return
       end

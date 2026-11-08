@@ -98,7 +98,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM CKNR03_EX1
 !              IMPLICIT NONE
 !
@@ -210,10 +209,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Record:  1
 !           SCLK time       :           2162686.710986
@@ -280,7 +277,6 @@
 !           Boresight       :   0.000000000   0.000000000   1.000000000
 !           Angular velocity:   0.000000000   0.000000000   0.000000000
 !
-!
 ! $ Restrictions
 !
 !     1)  The binary CK file containing the segment whose descriptor was
@@ -316,19 +312,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of CK type_3 records
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Local parameters
@@ -357,14 +350,10 @@
       real(wp)              dcd    ( ndc )
       real(wp)              npoint
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of discrete pointing instances contained in a data
@@ -384,7 +373,6 @@
 !        ICD(4)  Angular velocity flag
 !        ICD(5)  Initial address of segment data
 !        ICD(6)  Final address of segment data
-!
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 

@@ -116,9 +116,7 @@
 !
 !           sdu_sclkscet_00074.tsc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SCPART_EX1
 !              IMPLICIT NONE
@@ -181,10 +179,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Partition:            1
 !            Start : 0000000000.000
@@ -225,7 +221,6 @@
 !         Partition:           10
 !            Start : 0674564040.000
 !            Stop  : 4294537252.255
-!
 !
 ! $ Restrictions
 !
@@ -297,13 +292,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spacecraft_clock partition information
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -316,18 +309,15 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Get the partition values from the type 1 subsystem. If the

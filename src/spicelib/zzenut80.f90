@@ -114,9 +114,7 @@
       real(wp)              eulang ( 6 )
       real(wp)              mob
 
-
       if ( return() ) return
-
 
 !
 !      Get nutation angles and their rates.  We're expecting
@@ -146,7 +144,6 @@
 
 !
 !     The nutation rotation N is defined by
-!
 !
 !         N = [ -MOB - NUOBL ]  [ -NULON ]   [ MOB ]
 !                             1           3         1

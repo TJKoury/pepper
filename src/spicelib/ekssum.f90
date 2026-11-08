@@ -188,7 +188,6 @@
 !                 .   '========================================'      //
 !                 .   '========================================'
 !
-!
 !                     WRITE (*,*) 'Table containing segment: ', TABNAM
 !
 !                     WRITE (*,*) ' '
@@ -261,13 +260,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return EK segment summary
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -278,7 +275,6 @@
 !        CDSCSZ had been used.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -311,7 +307,6 @@
 !     Initial values
 !
       data                  typstr / 'CHR', 'DP', 'INT', 'TIME' /
-
 
 !
 !     Standard SPICE error handling.

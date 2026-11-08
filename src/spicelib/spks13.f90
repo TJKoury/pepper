@@ -136,19 +136,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_13 SPK segment
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Standard SPICE error handling.

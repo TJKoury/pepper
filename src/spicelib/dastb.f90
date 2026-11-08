@@ -174,13 +174,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert DAS transfer file to binary DAS
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -235,7 +233,6 @@
 !-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -385,7 +382,6 @@
 !     DAS encoded text file description.
 !     ----------------------------------
 !
-!
 !     A brief description of the DAS encoded file format and its
 !     intended use follows. This description is intended to provide a
 !     simple ``picture'' of the DAS transfer file format to aid in the
@@ -475,7 +471,7 @@
 !
 !     This routine will check the SPICELIB function FAILED() after
 !     each DAS file access call, and if an error was signaled it will
-!     simply check out and return to the caller.
+!     simply return to the caller.
 !
 !     We begin by reading the DAS file ID word from the DAS transfer
 !     file. We should have been positioned ready to read this. If an
@@ -535,7 +531,7 @@
       if ( failed() ) then
 !
 !        If an error occurred while opening the new DAS file,
-!        then check out and return.
+!        then return.
 !
          return
 
@@ -558,7 +554,7 @@
       if ( failed() ) then
 !
 !        If an error occurred while writing the DAS file record,
-!        attempt to close the binary file, then check out and return.
+!        attempt to close the binary file, then return.
 !
          call dascls ( handle  )
          return
@@ -650,7 +646,7 @@
          if ( failed() ) then
 !
 !           If an error occurred, attempt to close the binary file,
-!           then check out and return.
+!           then return.
 !
             call dascls ( handle  )
             return
@@ -664,7 +660,7 @@
          if ( failed() ) then
 !
 !           If an error occurred, attempt to close the binary file,
-!           then checkout and return.
+!           then return.
 !
             call dascls ( handle  )
             return
@@ -699,7 +695,7 @@
 !
 !              If an error occurred while reading from the DAS transfer
 !              file close the binary file, set an appropriate error
-!              message, then check out and return.
+!              message, then return.
 !
                call dascls ( handle                              )
                call setmsg ( 'Error reading from the DAS'       // &
@@ -728,7 +724,7 @@
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Begin comment block error, could'   // &
@@ -750,7 +746,7 @@
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Begin comment block error, could'   // &
@@ -782,7 +778,7 @@
 !
 !                 If an error occurred while parsing the end comment
 !                 block index, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'End comment block error, could'     // &
@@ -804,7 +800,7 @@
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'End comment block error, could'   // &
@@ -825,7 +821,7 @@
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'Comment block index mismatch:'    // &
@@ -846,7 +842,7 @@
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Comment block count mismatch:'   // &
@@ -878,7 +874,7 @@
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                               )
                   call setmsg ( 'Comment block count error, could'  // &
@@ -900,7 +896,7 @@
 !
 !                 If an error occurred while parsing the comment
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                           )
                   call setmsg ( 'Comment count error, could'    // &
@@ -921,7 +917,7 @@
 !                 If the computed number of comment blocks and the
 !                 number of comment blocks from the text file do
 !                 not match, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'The number of comment data'         // &
@@ -944,7 +940,7 @@
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Comment count mismatch:'         // &
@@ -1026,7 +1022,7 @@
                   if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
-!                    binary file, then checkout and return.
+!                    binary file, then return.
 !
                      call dascls ( handle  )
                      return
@@ -1105,7 +1101,7 @@
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
-!              message, then check out and return.
+!              message, then return.
 !
                call dascls ( handle                              )
                call setmsg ( 'Error reading from the DAS'       // &
@@ -1134,7 +1130,7 @@
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'Begin character block error,'     // &
@@ -1156,7 +1152,7 @@
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                               )
                   call setmsg ( 'Begin character block error,'      // &
@@ -1188,7 +1184,7 @@
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'End character block error,'       // &
@@ -1210,7 +1206,7 @@
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'End character block error, could' // &
@@ -1231,7 +1227,7 @@
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'Character block index mismatch:'  // &
@@ -1252,7 +1248,7 @@
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Character block count mismatch:' // &
@@ -1284,7 +1280,7 @@
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Block count error, could not parse' // &
@@ -1306,7 +1302,7 @@
 !
 !                 If an error occurred while parsing the character
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                           )
                   call setmsg ( 'Character count error, could'  // &
@@ -1327,7 +1323,7 @@
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
 !                 the binary file, set an appropriate error message,
-!                 then check out and return.
+!                 then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'The number of character data'       // &
@@ -1350,7 +1346,7 @@
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Character count mismatch:'       // &
@@ -1431,7 +1427,7 @@
                   if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
-!                    binary file, then checkout and return.
+!                    binary file, then return.
 !
                      call dascls ( handle  )
                      return
@@ -1496,7 +1492,7 @@
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
-!              message, then check out and return.
+!              message, then return.
 !
                call dascls ( handle                              )
                call setmsg ( 'Error reading from the DAS'       // &
@@ -1525,7 +1521,7 @@
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                            )
                   call setmsg ( 'Begin double precision block'   // &
@@ -1547,7 +1543,7 @@
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                            )
                   call setmsg ( 'Begin double precision block'   // &
@@ -1580,7 +1576,7 @@
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                               )
                   call setmsg ( 'End double precision block'        // &
@@ -1602,7 +1598,7 @@
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                           )
                   call setmsg ( 'End double precision block'    // &
@@ -1624,7 +1620,7 @@
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'Double precision block index'     // &
@@ -1645,7 +1641,7 @@
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Double precision block count'    // &
@@ -1677,7 +1673,7 @@
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Block count error, could not parse' // &
@@ -1699,7 +1695,7 @@
 !
 !                 If an error occurred while parsing the double
 !                 precision data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                           )
                   call setmsg ( 'Double precision count error,' // &
@@ -1720,7 +1716,7 @@
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
 !                 the binary file, set an appropriate error message,
-!                 then check out and return.
+!                 then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'The number of double precision'     // &
@@ -1744,7 +1740,7 @@
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                               )
                   call setmsg ( 'Double precision count mismatch:'  // &
@@ -1823,7 +1819,7 @@
                   if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
-!                    binary file, then checkout and return.
+!                    binary file, then return.
 !
                      call dascls ( handle  )
                      return
@@ -1887,7 +1883,7 @@
 !
 !              If an error occurred while reading from the encoded text
 !              DAS file close the binary file, set an appropriate error
-!              message, then check out and return.
+!              message, then return.
 !
                call dascls ( handle                              )
                call setmsg ( 'Error reading from the DAS'       // &
@@ -1916,7 +1912,7 @@
 !
 !                 If an error occurred while parsing the begin block
 !                 index, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Begin integer block error, could'   // &
@@ -1938,7 +1934,7 @@
 !
 !                 If an error occurred while parsing the beginning
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Begin integer block error, could'   // &
@@ -1970,7 +1966,7 @@
 !
 !                 If an error occurred while parsing the end block
 !                 index, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'End integer block error, could'   // &
@@ -1992,7 +1988,7 @@
 !
 !                 If an error occurred while parsing the ending data
 !                 count, close the binary file, set an appropriate
-!                 error message, then check out and return.
+!                 error message, then return.
 !
                   call dascls ( handle                              )
                   call setmsg ( 'End integer block error, could'   // &
@@ -2013,7 +2009,7 @@
 !
 !                 If the begin and end data block indices do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Integer block index mismatch:'   // &
@@ -2034,7 +2030,7 @@
 !
 !                 If the begin and end data block counts do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Integer block count mismatch:'   // &
@@ -2066,7 +2062,7 @@
 !
 !                 If an error occurred while parsing the total number of
 !                 data blocks, close the binary file, set an appropriate
-!                 error  message, then check out and return.
+!                 error  message, then return.
 !
                   call dascls ( handle                                )
                   call setmsg ( 'Block count error, could not'       // &
@@ -2088,7 +2084,7 @@
 !
 !                 If an error occurred while parsing the integer
 !                 data count, close the binary file, set an
-!                 appropriate error message, then check out and return.
+!                 appropriate error message, then return.
 !
                   call dascls ( handle                           )
                   call setmsg ( 'Integer count error, could'    // &
@@ -2109,7 +2105,7 @@
 !                 If the  calculated data block count and the data
 !                 block count from the text file do not match, close
 !                 the binary file, set an appropriate error message,
-!                 then check out and return.
+!                 then return.
 !
                   call dascls ( handle                               )
                   call setmsg ( 'The number of integer data'        // &
@@ -2132,7 +2128,7 @@
 !
 !                 If the total count and computed count do not match,
 !                 close the binary file, set an appropriate error
-!                 message, then check out and return.
+!                 message, then return.
 !
                   call dascls ( handle                             )
                   call setmsg ( 'Integer count mismatch:'         // &
@@ -2211,7 +2207,7 @@
                   if ( failed() ) then
 !
 !                    If an error occurred, attempt to close the
-!                    binary file, then checkout and return.
+!                    binary file, then return.
 !
                      call dascls ( handle  )
                      return

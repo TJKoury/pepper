@@ -375,7 +375,6 @@
 !     ellipsoids is adequate for determining whether one body is
 !     occulted by another as seen from a specified observer.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -396,7 +395,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -423,7 +421,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the SHAPE1 and SHAPE2 arguments.
-!
 !
 !        Syntax of the shape input arguments for the DSK case
 !        ----------------------------------------------------
@@ -504,14 +501,12 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find whether MRO is occulted by Mars as seen by
 !        the DSS-13 ground station at a few specific
 !        times.
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -558,9 +553,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM OCCULT_EX1
 !              IMPLICIT NONE
@@ -649,7 +642,6 @@
 !              CALL STR2ET ( TSTART, ET1   )
 !              CALL STR2ET ( TEND,   ETEND )
 !
-!
 !              DO I = 1, 2
 !        C
 !        C        Set the planet shape model for this pass.
@@ -718,10 +710,8 @@
 !              END DO
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Mars shape: ELLIPSOID
 !
@@ -740,7 +730,6 @@
 !        2015-FEB-27 18:04 MRO  totally occulted by  MARS wrt DSS-13
 !        2015-FEB-27 18:21 MRO  not occulted by      MARS wrt DSS-13
 !        2015-FEB-27 18:38 MARS transited by         MRO  wrt DSS-13
-!
 !
 ! $ Restrictions
 !
@@ -780,13 +769,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     occultation type at a specified time
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -885,7 +872,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Left justify the shapes and target names and make them upper case.
@@ -1061,7 +1047,6 @@
 !
                end do
 
-
             else if (      ( fshape == edshap ) &
                       .or. ( fshape == dsshap )  ) then
 !
@@ -1071,7 +1056,6 @@
                ocltid = mltfac * total2
 
                return
-
 
             else if (      ( bshape == edshap ) &
                       .or. ( bshape == dsshap )  ) then

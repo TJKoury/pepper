@@ -117,7 +117,6 @@
 !     for a particular epoch before evaluating the record to obtain a
 !     state vector, as in the example that follows.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -176,13 +175,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_19 spk_segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -226,12 +223,10 @@
       integer(ip)           xstart
       integer(ip)           ystart
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Capture the subtype from the record and set the packet size
@@ -265,7 +260,6 @@
 !     Get the packet count.
 !
       n = nint( record(cntidx) )
-
 
       if ( subtyp == s19tp0 ) then
 !
@@ -342,7 +336,6 @@
 !
          call vequ ( vbuff, state(4) )
 
-
       else if ( subtyp == s19tp1 ) then
 !
 !        We perform Lagrange interpolation on each state component.
@@ -368,7 +361,6 @@
                                    locrec, &
                                    et              )
          end do
-
 
       else if ( subtyp == s19tp2 ) then
 !
@@ -404,7 +396,6 @@
                           state(i), &
                           state(i+3)      )
          end do
-
 
       else
 !

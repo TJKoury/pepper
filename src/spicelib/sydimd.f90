@@ -84,7 +84,6 @@
 !        MEAN_ANOM -->    6.239996D0
 !                         1.99096871D-7
 !
-!
 !     Let NUMVAL be equal to the dimension of the symbols in the table.
 !     The following code returns the values of NUMVAL indicated in the
 !     table.
@@ -145,13 +144,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch the dimension of a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -165,9 +162,6 @@
 !
       integer(ip)           nsym
       integer(ip)           locsym
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -197,7 +191,6 @@
       else
          sydimd = tabptr(locsym)
       end if
-
 
       return
       end

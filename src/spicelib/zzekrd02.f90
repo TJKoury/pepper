@@ -140,9 +140,6 @@
       integer(ip)           recno
 
 !
-!     Use discovery check-in.
-!
-!
 !     Make sure the column exists.
 !
       ncols   =  segdsc ( ncidx  )
@@ -165,7 +162,6 @@
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
 
-
       if ( datptr > 0 ) then
 !
 !        Just read the value.
@@ -173,13 +169,11 @@
          call dasrdd ( handle, datptr, datptr, dval )
          isnull  =  .false.
 
-
       else if ( datptr == null ) then
 !
 !        The value is null.
 !
          isnull =  .true.
-
 
       else if (       ( datptr == uninit ) &
                  .or. ( datptr == noback )  )  then
@@ -198,7 +192,6 @@
          call sigerr ( 'SPICE(UNINITIALIZEDVALUE)'                   )
          return
 
-
       else
 !
 !        The data pointer is corrupted.
@@ -213,7 +206,6 @@
          return
 
       end if
-
 
       return
       end

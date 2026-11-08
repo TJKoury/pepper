@@ -147,7 +147,6 @@
 !     PRSERR.  No errors are signaled.  The possible error messages
 !     returned by this routine are:
 !
-!
 !        Conjunction table is full.
 !
 !        Disjunction table is full.
@@ -210,7 +209,6 @@
 !
 !        <WHERE clause>           =>   WHERE <relational expression>
 !
-!
 !        <relational expression>  =>   <simple expression>
 !
 !                                      <NULL value expression>
@@ -225,27 +223,21 @@
 !                                    |     <relational expression>
 !                                      OR  <relational expression>
 !
-!
 !        <simple expression>      =>   <LHS> <operator> <RHS>
 !
 !                                    | <LHS> BETWEEN     <RHS> AND <RHS>
 !
 !                                    | <LHS> NOT BETWEEN <RHS> AND <RHS>
 !
-!
 !        <NULL value expression>  =>   <LHS> <Null operator> NULL
 !
-!
 !        <LHS>                    =>   <name>
-!
 !
 !        <RHS>                    =>   <name>
 !                                    | <value>
 !
-!
 !        <name>                   =>   <identifier> . <identifier>
 !                                    | <identifier>
-!
 !
 !        <operator>               =>   EQ
 !                                    | GE
@@ -263,7 +255,6 @@
 !                                    | !=
 !                                    | <>
 !
-!
 !        <NULL operator>         =>    IS
 !                                    | IS NOT
 !                                    | EQ
@@ -271,7 +262,6 @@
 !                                    | =
 !                                    | !=
 !                                    | <>
-!
 !
 !        <value>                 =>    <character value>
 !                                    | <d.p. value>
@@ -290,8 +280,6 @@
 !                     OR   (  ( COL1 EQ VAL1 ) AND ( COL4 GT VAL4 ) )
 !                     OR   (  ( COL2 NE VAL2 ) AND ( COL3 LE VAL3 ) )
 !                     OR   (  ( COL2 NE VAL2 ) AND ( COL4 GT VAL4 ) )
-!
-!
 !
 !     2)  This routine breaks down the constraints of the WHERE clause
 !
@@ -325,7 +313,6 @@
 !-&
 
 !
-!
 !     SPICELIB functions
 !
       integer(ip)           cardi
@@ -338,7 +325,6 @@
 
       logical               return
 
-!
 !
 !     Local parameters
 !
@@ -367,16 +353,12 @@
       integer(ip), parameter :: lbpool = -5
 
 !
-!
 !     Stack parameters:
-!
 !
       integer(ip), parameter :: maxstk = 500
 
-
 !
 !     Operator parameters:
-!
 !
 !     NLOGOP is the number of recognized logical operators.  These
 !     are AND, OR, and NOT.
@@ -389,7 +371,6 @@
 !
       integer(ip), parameter :: nrelop = 8
 
-!
 !
 !     Meta-token codes, excluding codes for relational operators:
 !
@@ -425,7 +406,6 @@
       integer(ip), parameter :: nendkw = 3
 
 !
-!
 !     State parameters:
 !
       integer(ip), parameter :: push = 0
@@ -438,8 +418,6 @@
 
       integer(ip), parameter :: term = reducd + 1
 
-
-!
 !
 !     'Pop condition' codes:
 !
@@ -526,7 +504,6 @@
       integer(ip)           nmeta
 
 !
-!
 !     Other local variables
 !
       integer(ip)           b
@@ -595,7 +572,6 @@
       save
 
 !
-!
 !     Initial values
 !
       data  (  logops(i), logcde(i),  i = 1, nlogop )    / &
@@ -621,10 +597,8 @@
       data     cmpcde(nrelop), cmpneg(nrelop)   / &
                           unlike,   like        /
 
-
       data     endkw   /  kwfrom, kwordr, kwsel /
 
-!
 !
 !     Standard SPICE error handling.
 !
@@ -683,7 +657,6 @@
 
       end do
 
-
       whrsiz  =  whrend  -  whrbeg  +  1
 
       if ( whrsiz == 0 ) then
@@ -725,16 +698,13 @@
 !
          mtexpr(node) = i
 
-
          if ( tokens(i) == tklpar  ) then
 
             mtcode(node) = lgroup
 
-
          else if ( tokens(i) == tkrpar ) then
 
             mtcode(node) = rgroup
-
 
          else if (       ( tokens(i) == tkint  ) &
                    .or.  ( tokens(i) == tkdp   )  ) then
@@ -769,7 +739,6 @@
 !
             dscbuf( dscsiz, mtexpr(node) )  =  value
 
-
          else if ( tokens(i) == tkqstr ) then
 !
 !           The treatment of strings is analogous to that of numbers.
@@ -793,7 +762,6 @@
 !           Set the descriptor to indicate that it represents a value.
 !
             dscbuf( dscsiz, mtexpr(node) )  =  value
-
 
          else if ( tokens(i) == tkid ) then
 !
@@ -823,11 +791,9 @@
 !
             dscbuf( dscsiz, mtexpr(node) )  =  ident
 
-
          else if ( tokens(i) == tkdot ) then
 
             mtcode(node) = period
-
 
          else if ( tokens(i) == tkkey  ) then
 !
@@ -836,7 +802,6 @@
 !
             j  =  isrchi ( values(i), nlogop,   logops )
             k  =  isrchi ( values(i), nrelop-1, cmpops )
-
 
             if ( j > 0 ) then
 !
@@ -879,14 +844,11 @@
 
                end if
 
-
             else if ( k > 0 ) then
                mtcode(node) = cmpcde(k)
 
-
             else if ( values(i) == kwbetw ) then
                mtcode(node) = btween
-
 
             else if ( values(i) == kwis ) then
 !
@@ -911,7 +873,6 @@
                else
                   mtcode(node) = eq
                end if
-
 
             else if ( values(i) == kwnull ) then
 !
@@ -1021,8 +982,6 @@
 
       end do
 
-
-!
 !
 !     Now it's time to parse our expression.  We will validate the
 !     expression by using our grammar rules to condense groups of
@@ -1063,10 +1022,7 @@
 
       end if
 
-
-
       do while ( state /= term )
-
 
          if ( state == parse ) then
 !
@@ -1111,8 +1067,6 @@
                fourth  =  nil
             end if
 
-
-
             if ( first <= 0 ) then
 !
 !              This never happens to good commands.
@@ -1150,7 +1104,6 @@
 !              resulting from reducing this token sequence will point to
 !              the list of descriptors via the MTEXPR pointer.
 !
-!
                if ( third > 0 ) then
 !
 !                 We can look at the following two tokens.
@@ -1171,7 +1124,6 @@
                   qual  =  .false.
 
                end if
-
 
                if ( qual ) then
 !
@@ -1223,8 +1175,6 @@
 !
                state  =  reducd
 
-
-
             else if ( mtcode(first) == value ) then
 !
 !              If the query is valid, the sequence of meta-tokens
@@ -1234,7 +1184,6 @@
 !                 <value>  AND  <value>
 !
 !              Both of these reduce to the symbol <BETWEEN expr>.
-!
 !
                if (  third <= 0 ) then
 
@@ -1258,7 +1207,6 @@
 
                end if
 
-
                if ( mtcode(third)  == ident ) then
 !
 !                 We'll need to reduce the IDENT before proceeding.
@@ -1266,7 +1214,6 @@
                   start   =  third
                   retcnd  =  reduce
                   state   =  push
-
 
                else if (      (       mtcode(second) == and      ) &
                         .and. (     ( mtcode(third)  == name  ) &
@@ -1288,7 +1235,6 @@
 !                    <BETWEEN expr>  =>  <value>  AND  <name>
 !                    <BETWEEN expr>  =>  <value>  AND  <value>
 !
-!
 !                 Hook up the name or value descriptors.
 !
                   call lnkilb ( mtexpr(first), mtexpr(third), dspool )
@@ -1304,7 +1250,6 @@
 !
                   state  =  reducd
 
-
                else if ( mtcode(second) > 0 ) then
 !
 !                 The third meta-token is in the wrong place at the
@@ -1315,7 +1260,6 @@
                             'by a value.'
 
                   return
-
 
                else
 !
@@ -1329,9 +1273,6 @@
                   return
 
                end if
-
-
-
 
             else if ( mtcode(first) == name ) then
 !
@@ -1364,7 +1305,6 @@
 !
 !              There must be at least three meta-tokens here.
 !
-!
                if (  third <= 0 ) then
 
                   error  = .true.
@@ -1374,7 +1314,6 @@
 
                end if
 
-
                if ( mtcode(third)  == ident ) then
 !
 !                 We'll need to reduce the IDENT before proceeding.
@@ -1382,7 +1321,6 @@
                   start   =  third
                   retcnd  =  reduce
                   state   =  push
-
 
                else if (      (       mtcode(second) == and      ) &
                         .and. (     ( mtcode(third)  == name  ) &
@@ -1403,7 +1341,6 @@
 !
 !                    <BETWEEN expr>  =>  <name>   AND  <name>
 !                    <BETWEEN expr>  =>  <name>   AND  <value>
-!
 !
 !                 Null values are not allowed in BETWEEN expressions.
 !
@@ -1433,8 +1370,6 @@
 !
                   state  =  reducd
 
-
-
                else if (      (        mtcode(second) > 0       ) &
                         .and. (      ( mtcode(third)  == name  ) &
                                 .or. ( mtcode(third)  == value ) )   ) &
@@ -1461,7 +1396,6 @@
                   rels(2,newrel) = mtcode(second)
                   rels(3,newrel) = mtexpr(third )
 
-
                   call lnkfsl ( second, third, mtpool )
                   nmeta  =  nmeta - 2
 
@@ -1477,7 +1411,6 @@
                   end if
 
                   call lnkan ( cjpool, newcj )
-
 
                   cjptrs(newcj)  =  newrel
 
@@ -1509,7 +1442,6 @@
 !
                   state  =  reducd
 
-
                else if (      ( mtcode(second) == btween ) &
                          .or. ( mtcode(second) == notbtw )  ) then
 !
@@ -1522,7 +1454,6 @@
 !                    <name>  <NOT BETWEEN>  <BETWEEN expr>
 !                    <name>  <NOT BETWEEN>  <value>
 !                    <name>  <NOT BETWEEN>  <name>
-!
 !
                   if (       ( mtcode(second) == btween ) &
                        .and. ( mtcode(third)  == btwexp )  ) then
@@ -1568,7 +1499,6 @@
 
                         end if
 
-
                         if ( lnknfn(rlpool) < 1 ) then
                            error  = .true.
                            prserr = 'Relation table is full.'
@@ -1576,7 +1506,6 @@
                         end if
 
                         call lnkan ( rlpool, rel(i) )
-
 
                         rels( 1, rel(i) ) = mtexpr(first)
 
@@ -1587,7 +1516,6 @@
                         end if
 
                         rels( 3, rel(i) ) = k
-
 
                         if ( lnknfn(cjpool) < 1 ) then
                            error  = .true.
@@ -1642,7 +1570,6 @@
 !                    Decide the next state.
 !
                      state  =  reducd
-
 
                   else if (       ( mtcode(second) == notbtw ) &
                             .and. ( mtcode(third)  == btwexp )  ) then
@@ -1692,7 +1619,6 @@
 
                         end if
 
-
                         if ( lnknfn(rlpool) < 1 ) then
                            error  = .true.
                            prserr = 'Relation table is full.'
@@ -1700,7 +1626,6 @@
                         end if
 
                         call lnkan ( rlpool, rel(i) )
-
 
                         rels( 1, rel(i) ) = mtexpr(first)
 
@@ -1711,7 +1636,6 @@
                         end if
 
                         rels( 3, rel(i) ) = k
-
 
                         if ( lnknfn(cjpool) < 1 ) then
                            error  = .true.
@@ -1766,7 +1690,6 @@
 !
                      state  =  reducd
 
-
                   else if (      ( mtcode(third) == name  ) &
                             .or. ( mtcode(third) == value )  )  then
 !
@@ -1788,7 +1711,6 @@
 
                   end if
 
-
                else if ( mtcode(second) > 0 ) then
 !
 !                 The third meta-token is in the wrong place at the
@@ -1799,7 +1721,6 @@
                             'by a value.'
 
                   return
-
 
                else
 !
@@ -1813,8 +1734,6 @@
                   return
 
                end if
-
-
 
             else if ( mtcode(first) == expr ) then
 !
@@ -1850,7 +1769,6 @@
 
                   state = term
 
-
                else if ( mtcode(second) == rgroup ) then
 !
 !                 We've reached the end of a `parenthesized'
@@ -1874,7 +1792,6 @@
 
                   end if
 
-
 !
 !              In all other cases, there must be at least three
 !              meta-tokens here.  Make sure there are.
@@ -1896,7 +1813,6 @@
                   start   =  third
                   retcnd  =  reduce
                   state   =  push
-
 
                else if ( mtcode(third) == lgroup ) then
 !
@@ -2002,7 +1918,6 @@
 !                                              .
 !                                or ( AM1 and AM2 and ... )
 !
-!
 !                    EXPR2 =        ( B11 and B12 and ... )
 !                                or ( B21 and B22 and ... )
 !                                              .
@@ -2010,15 +1925,11 @@
 !                                              .
 !                                or ( BN1 and BN2 and ... )
 !
-!
-!
 !                 Then ( EXPR1 and EXPR2 ) =
-!
 !
 !                        or       {  (     ( AI1 and AI2 and ... )
 !                    I = 1,...,M       and ( BJ1 and BJ2 and ... ) )  }
 !                    J = 1,...,N
-!
 !
 !                 We have the conjunction of two normalized
 !                 So, to represent the normalized expression resulting
@@ -2031,7 +1942,6 @@
 !                 conjunction and disjunction pools by freeing the
 !                 elements in those pools used by the original two
 !                 meta-tokens FIRST and THIRD.
-!
 !
                   dj(1)    = mtexpr(first)
                   djtail = nil
@@ -2080,7 +1990,6 @@
                         end do
 
                         head1 = lnkhl( tail, cjpool )
-
 
                         cj(2) = djptrs(dj(2))
                         tail  = nil
@@ -2192,8 +2101,6 @@
 
                end if
 
-
-
             else if ( mtcode(first) == not ) then
 !
 !              There are four valid token sequences that we could
@@ -2220,7 +2127,6 @@
                   retcnd  =  endgrp
                   state   =  push
 
-
                else if (      ( mtcode(second) == not   ) &
                          .or. ( mtcode(second) == ident ) &
                          .or. ( mtcode(second) == name  )  )  then
@@ -2228,7 +2134,6 @@
                   start   =  second
                   retcnd  =  reduce
                   state   =  push
-
 
                else if ( mtcode(second) == expr ) then
 !
@@ -2239,7 +2144,6 @@
 !
 !                 This case requires application of DeMorgan's laws to
 !                 convert the expression to a normalized form.
-!
 !
 !                 If we have a normalized expression, say
 !
@@ -2331,7 +2235,6 @@
 !                 of our cumulative normalized expression.  As mentioned
 !                 before, we won't negate the comparison operators
 !                 just yet.
-!
 !
                   djnode = lnknxt ( djnode, djpool )
 
@@ -2463,7 +2366,6 @@
 
                   djnode = mtexpr(second)
 
-
                   do while ( djnode > 0 )
 
                      cjnode = djptrs(djnode)
@@ -2480,7 +2382,6 @@
                      djnode = lnknxt ( djnode, djpool )
 
                   end do
-
 
                   do i = 1, cardi(relset)
 
@@ -2509,7 +2410,6 @@
 
                   state  =  reducd
 
-
                else
 !
 !                 The second token is invalid in this context.
@@ -2523,7 +2423,6 @@
 !              This is the end of the NOT case.
 !
 
-
             else if ( mtcode(first) == lgroup ) then
 !
 !              We're looking at the start of a `parenthesized'
@@ -2536,7 +2435,6 @@
                retcnd = endgrp
                start  = second
                state  = push
-
 
             else
 !
@@ -2566,8 +2464,6 @@
                state         = parse
             end if
 
-
-
          else if ( state == push ) then
 !
 !           Increment the stack level, and save the current
@@ -2584,7 +2480,6 @@
                popcnd(level)  =  retcnd
                state          =  parse
             end if
-
 
          else if ( state == pop ) then
 !
@@ -2633,7 +2528,6 @@
                return
             end if
 
-
          end if
 
 !
@@ -2641,7 +2535,6 @@
 !
 
       end do
-
 
 !
 !     At this point, there should be a single meta-token of type EXPR.
@@ -2741,7 +2634,6 @@
 !
                eqryi(k)  =  eqval
 
-
             else
 !
 !              For `normal' constraints, that is, constraints that don't
@@ -2769,7 +2661,6 @@
 !                 location.
 !
                   eqryi(k)  =  eqval
-
 
                else
 !
@@ -2822,7 +2713,6 @@
       do i = 1, nconj
          call appndi ( sizes(i), eqryi )
       end do
-
 
       return
       end

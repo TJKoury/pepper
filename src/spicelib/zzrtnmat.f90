@@ -26,7 +26,6 @@
       real(wp)              v ( 3 )
       real(wp)              m ( 3, 3 )
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description
@@ -94,7 +93,6 @@
 ! $ Examples
 !
 !     1) Get the RTN transformation matrix for the vector ( 1, 0, 1 ):
-!
 !
 !           IMPLICIT NONE
 !
@@ -177,10 +175,9 @@
       data                  z / 0.0_wp, 0.0_wp, 1.0_wp /
 
 !
-!     Use discovery check-in. Just test the RETURN status.
+! Just test the RETURN status.
 !
       if ( return() ) return
-
 
       if (  ( v(1) == 0.0_wp ) .and. ( v(2) == 0.0_wp )  ) then
 
@@ -236,4 +233,3 @@
       end if
 
       end
-

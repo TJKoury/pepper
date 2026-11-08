@@ -183,7 +183,6 @@
 !
 !      03-FEB-1999 (JAB)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -198,7 +197,6 @@
       logical               failed
       logical               return
 
-
 !
 !     Local Variables
 !
@@ -212,7 +210,6 @@
 !
 
       if ( return() ) return
-
 
       if ( nptr > maxcel ) then
 

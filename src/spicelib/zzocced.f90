@@ -105,15 +105,12 @@
 !                       |  c   0   0 |
 !                       +-          -+
 !
-!
 !     CENTR2         is the center of the second ellipsoidal target
 !                    body.
-!
 !
 !     SEMAX2         is a semi-axis matrix for the second ellipsoidal
 !                    target body.  See the description of SEMAX1 for
 !                    details.
-!
 !
 ! $ Detailed_Output
 !
@@ -236,7 +233,6 @@
 !     ZZOCCED, completely occults the larger, so the return code should
 !     be 3.
 !
-!
 ! $ Restrictions
 !
 !     1) The test done by this routine for intersection of target bodies
@@ -253,7 +249,6 @@
 !        together on the ellipse, ZZASRYEL may locate the incorrect
 !        extremum.  This can result in erroneous classification of a
 !        partial occultation as a total occultation or annular transit.
-!
 !
 ! $ Literature_References
 !
@@ -309,7 +304,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Tolerance value for determinant of a rotation matrix.  The
 !     determinant must differ from 1 by no more than DTOL.
@@ -529,9 +523,6 @@
 !           of the unit sphere. This implies there is a partial
 !           occultation.
 !
-!
-!
-!
 !     Executable code
 !     =======================================================
 !
@@ -543,7 +534,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Extract the radii of the targets from the semi-axis vectors.
@@ -593,7 +583,6 @@
          call vsub ( ctrs(1,i), viewpt, tpos(1,i) )
 
          dist(i) = vnorm( tpos(1,i) )
-
 
          if ( dist(i) == 0.0_wp ) then
 
@@ -735,7 +724,6 @@
 !                 the maximum bounding cone.  The arctangent of
 !                 UBDIST/VPH is the angular radius of this cone.
 !
-!
 !           The vector XTPOS(*,I) contains the position of the Ith
 !           target relative to the viewing point, represented in the
 !           principal axis frame of the Ith target. Let XVWTRG contain
@@ -786,8 +774,6 @@
 !        Ith ellipsoid.
 !
       end do
-
-
 
 !
 !     Find the angular separation of the centers of the targets
@@ -870,7 +856,6 @@
 !        to the second target.
 !
          t2sep  =  vsep ( t1opos, t12pos )
-
 
          if ( t2sep < angcmp ) then
 !
@@ -1139,7 +1124,6 @@
          sfront = .false.
       end if
 
-
       if (      (          sfront   .and.  ( smlidx == 1 )  ) &
            .or. (  ( .not. sfront ) .and.  ( smlidx == 2 )  )  ) then
 !
@@ -1149,7 +1133,6 @@
       else
          s  = -1
       end if
-
 
       if ( minsep <= -uasize ) then
 !
@@ -1179,7 +1162,6 @@
             zzocced =  s * annlr2
 
          end if
-
 
       else
 !
@@ -1386,7 +1368,6 @@
 
          if ( failed() ) return
 
-
          if ( abs(maxsep) <= uasize ) then
 !
 !           Whether the ray from the viewing point to the center
@@ -1413,7 +1394,6 @@
                zzocced =  s * total2
 
             end if
-
 
          else
 !
@@ -1445,4 +1425,3 @@
 
       return
       end
-

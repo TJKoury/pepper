@@ -315,13 +315,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add data to a type_03 PCK segment
 !
 !-&
-
 
 !
 !     Spicelib functions

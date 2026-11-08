@@ -63,7 +63,6 @@
 !                If there are no values associated with the Ith A value,
 !                PNTRS(I) is null (-1).
 !
-!
 !     CELLSZ     is the number of cells in the cell array. The array
 !                has dimensions
 !
@@ -209,7 +208,6 @@
 !
 !      03-FEB-1999 (JAB)
 !
-!
 !-&
 
 ! $ Index_Entries
@@ -228,7 +226,6 @@
 !
 
       if ( return() ) return
-
 
       if ( ( aval < 1 ) .or. ( aval > maxa ) ) then
 
@@ -251,7 +248,6 @@
 
       end if
 
-
       nb       = 0
       blist(1) = 0
 
@@ -273,7 +269,6 @@
 
          end if
 
-
          nb = nb + 1
 
          if ( nb > maxb ) then
@@ -293,7 +288,6 @@
             return
 
          end if
-
 
          blist(nb) = cells(1,ptr)
          i         = cells(2,ptr)

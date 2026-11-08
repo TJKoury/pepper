@@ -103,7 +103,6 @@
 !     entry points gathered in this routine to retrieve the
 !     state transformation matrix.
 !
-!
 !        First convert names to frame ID codes.
 !
 !        CHARACTER*(32)        NAME1
@@ -119,7 +118,6 @@
 !
 !        DOUBLE PRECISION      STATE ( 6 )
 !        DOUBLE PRECISION      XFORM ( 6, 6 )
-!
 !
 !        First we use the entry points NAMFRM to convert the frame
 !        names to ID codes.
@@ -266,13 +264,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Frame Transformation
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -463,8 +459,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
 
-
-
 !$Procedure NAMFRM ( frame NAMe to FRaMe id )
 
       entry namfrm ( frname, frcode )
@@ -628,13 +622,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Frame name to frame ID code translation
 !
 !-&
-
 
       frcode = 0
 !
@@ -649,7 +641,6 @@
          frcode = 1
          return
       end if
-
 
 !
 !     Perform any needed first pass initializations.
@@ -764,7 +755,6 @@
 
       return
 
-
 !$Procedure FRMNAM ( FRaMe id to frame NAMe )
 
       entry frmnam ( frcode, frname )
@@ -786,7 +776,6 @@
 !
 !     INTEGER               FRCODE
 !     CHARACTER*(*)         FRNAME
-!
 !
 ! $ Brief_I/O
 !
@@ -936,13 +925,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Frame ID code to frame name translation
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -958,7 +945,6 @@
          frname = 'J2000'
          return
       end if
-
 
 !
 !     Perform any needed first pass initializations.
@@ -989,7 +975,6 @@
          first = .false.
 
       end if
-
 
       call zzhsichk ( bidlst, bidpol, bidids, frcode, item )
       if ( item /= 0 ) then
@@ -1054,8 +1039,6 @@
       end if
 
       return
-
-
 
 !$Procedure FRINFO ( FRame INFOrmation )
 
@@ -1167,7 +1150,6 @@
 !
 !          Example code begins here.
 !
-!
 !                PROGRAM FRINFO_EX1
 !                IMPLICIT NONE
 !
@@ -1206,15 +1188,12 @@
 !
 !                END
 !
-!
 !          When this program was executed on a Mac/Intel/gfortran/64-bit
 !          platform, the output was:
-!
 !
 !        Frame center  :    399
 !        Frame class   :      2
 !        Frame class ID:   3000
-!
 !
 ! $ Restrictions
 !
@@ -1306,13 +1285,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Fetch reference frame attributes
 !
 !-&
-
 
 !
 !     Standard SPICE error handling.
@@ -1329,7 +1306,6 @@
          found  = .true.
          return
       end if
-
 
 !
 !     Perform any needed first pass initializations.
@@ -1465,7 +1441,6 @@
 
                if ( failed() ) return
 
-
 !              If we made it to this point, we successfully collected
 !              all items for this frame. Add this frame to the
 !              ID-based hash.
@@ -1518,7 +1493,6 @@
       end if
 
       return
-
 
 !$Procedure CIDFRM ( Center ID to FRaMe id and name )
 
@@ -1692,19 +1666,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Find the bodyfixed frame associated with an object
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Perform any needed first pass initializations.
@@ -1866,7 +1837,6 @@
 
             end if
 
-
          else if ( dattyp == 'N' ) then
 !
 !           Ok. They decided to use the numeric form to specify
@@ -1953,11 +1923,10 @@
 
             end if
 
-
          end if
 !
 !        One way or the other we've filled in the values at this
-!        point. Nothing left to do but check out and return.
+!        point. Nothing left to do but return.
 !
          return
 
@@ -2005,7 +1974,6 @@
       end if
 
       return
-
 
 !$Procedure CNMFRM ( Center NaMe to FRaMe id and name )
 
@@ -2172,7 +2140,6 @@
 !        use with these frames is simply the Frame-Code minus 10000.
 !        All of these frames are centered at the earth (body 399).
 !
-!
 !-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
 !
 !        The values NINERT and NNINRT are included instead of
@@ -2182,19 +2149,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Find the bodyfixed frame associated with an object
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Perform any needed first pass initializations.
@@ -2358,7 +2322,6 @@
 
             end if
 
-
          else if ( dattyp == 'N' ) then
 !
 !           Ok. They decided to use the numeric form to specify
@@ -2445,11 +2408,10 @@
 
             end if
 
-
          end if
 !
 !        One way or the other we've filled in the values at this
-!        point. Nothing left to do but check out and return.
+!        point. Nothing left to do but return.
 !
          return
 
@@ -2457,7 +2419,6 @@
 !
 !     The only way to reach this point is if the user did not
 !     specify via the kernel pool a frame to use for this center.
-!
 !
       frname = 'IAU_#'
       call repmc ( frname, '#', cname, frname )
@@ -2492,7 +2453,6 @@
       end if
 
       return
-
 
 !$Procedure CCIFRM ( frame Class and Class Id to FRaMe id and name )
 
@@ -2623,9 +2583,7 @@
 !        information about a frame by its ID using FRINFO and
 !        by its class and class ID using CCIFRM.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CCIFRM_EX1
 !              IMPLICIT NONE
@@ -2689,7 +2647,6 @@
 !
 !              END IF
 !
-!
 !              WRITE(*,'(A,I3,A,I6,A)') 'Type', CLSS, ' frame', CLSSID,
 !             .                         ' info:'
 !              WRITE(*,'(2A)')   '   Frame name: ', FRNAME
@@ -2698,10 +2655,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Frame ITRF93 info:
 !           Frame Code:  13000
@@ -2712,7 +2667,6 @@
 !           Frame name: ITRF93
 !           Frame Code:  13000
 !           Center ID :    399
-!
 !
 ! $ Restrictions
 !
@@ -2759,7 +2713,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Find info associated with a frame class and class id
@@ -2768,12 +2721,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Perform any needed first pass initializations.
@@ -2884,7 +2835,6 @@
                if ( failed() ) return
 
                if ( .not. fnd ) then
-
 
                   call setmsg ( 'Invalid frame specification found in ' &
                   //            'kernel pool: frame class keyword ' &

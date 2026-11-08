@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekkeyw.inc'
       include 'ektokn.inc'
       include 'ekqlimit.inc'
@@ -121,7 +120,6 @@
 !                    The caller of EKSCAN should declare VALUES with
 !                    dimension MAXNTK.
 !
-!
 !     NUMVLS         is an array of numeric values of parsed numeric
 !                    tokens.  The caller of EKSCAN should declare
 !                    NUMVLS with dimension at least MAXNUM.
@@ -220,7 +218,6 @@
 !         referenced in the query must be present in at least one
 !         loaded E-kernel.
 !
-!
 !     2)  Examples of lexically invalid queries are:
 !
 !            from time where time lt
@@ -230,7 +227,6 @@
 !            from time * where time
 !             .lt. 1991 jan 1                   {operator should be lt}
 !
-!
 !            from event_type * where
 !            event_type eq ""                   {quoted string is empty}
 !
@@ -239,7 +235,6 @@
 !
 !            from column1 where
 !            column1 eq  3c                     {invalid numeric token}
-!
 !
 ! $ Restrictions
 !
@@ -269,14 +264,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     scan EK query
 !     find tokens in EK query
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -296,7 +289,6 @@
 
       logical               beint
       logical               return
-
 
 !
 !     Local parameters
@@ -377,7 +369,6 @@
       logical               isnum
       logical               isquot
 
-
 !
 !     Saved variables
 !
@@ -446,9 +437,7 @@
                  '.',       tkdot,    0, &
                  '*',       tkstar,   0                         /
 
-
       data        pass1              /  .true.  /
-
 
 !
 !     Statement Function Definitions
@@ -458,23 +447,17 @@
                         .or.  (      ( ichar(chr) >= ichar('a') ) &
                                .and. ( ichar(chr) <= ichar('z') ) )
 
-
       isdigt ( chr )  =       (      ( ichar(chr) >= ichar('0') ) &
                                .and. ( ichar(chr) <= ichar('9') ) )
 
-
       isdot  ( chr )  =     ( chr == '.' )
 
-
       issign ( chr )  =     ( chr == '+' )    .or. ( chr == '-' )
-
 
       isnum  ( chr )  =       isdigt( chr )     .or.   issign ( chr ) &
                                                 .or.  ( chr == '.' )
 
-
       isquot ( chr )  =     ( chr == squote ) .or. ( chr == dquote )
-
 
 !
 !     Standard SPICE error handling.
@@ -497,7 +480,6 @@
                   'abcdefghijklmnopqrstuvwxyz' // &
                   '0123456789'                 // &
                   '$_'
-
 
          call ssizei ( mxspec,         idspec )
          call lxcsid ( hdchrs, tlchrs, idspec )
@@ -528,7 +510,6 @@
 
       do while ( state /= term )
 
-
          if ( state == nxttok ) then
 !
 !           In our initial state, we're looking for a new token.
@@ -543,20 +524,17 @@
               cptr =  lxends(ntoken) + 1
             end if
 
-
             if ( cptr > l ) then
 
                state  =  term
 
             else
 
-
                do while (       ( tquery(cptr:cptr) == ' ' ) &
                           .and. ( cptr              < l   )  )
 
                   cptr  =  cptr + 1
                end do
-
 
                if ( tquery(cptr:cptr) == ' ' ) then
 !
@@ -571,12 +549,10 @@
 
                end if
 
-
             end if
 !
 !           STATE is in the set {NEWTOK, TERM}.
 !
-
 
          else if ( state == newtok ) then
 !
@@ -602,7 +578,6 @@
                return
 
             end if
-
 
             if ( isquot(chr) ) then
 
@@ -632,7 +607,6 @@
 !
 !              {QSTR, NUMBER, IDENT, SPCIAL}
 !
-
 
          else if ( state == qstr ) then
 !
@@ -673,7 +647,6 @@
 
             end if
 
-
             call parsqs ( tquery(cptr:cptr+nchars-1), &
                           chr, &
                           chrbuf(chcard+1:), &
@@ -681,7 +654,6 @@
                           scnerr, &
                           errmsg, &
                           ptr              )
-
 
             if ( scnerr ) then
 
@@ -720,7 +692,6 @@
 !           STATE is now NXTTOK.
 !
 
-
          else if ( state == dot ) then
 !
 !           The token begins with a period.  We could be looking at
@@ -747,7 +718,6 @@
 !           Look for a number starting at location CPTR.
 !
             call lx4num ( tquery, cptr, last, nchars )
-
 
             if ( nchars == 0 ) then
 
@@ -781,12 +751,10 @@
 
             end if
 
-
             call nparsd ( tquery(cptr:last), &
                           numvls(nnums+1), &
                           errmsg, &
                           ptr                 )
-
 
             if ( errmsg /= ' ' ) then
 !
@@ -838,13 +806,11 @@
 !           STATE is now NXTTOK.
 !
 
-
          else if ( state == ident ) then
 !
 !           Look for an identifier starting at location CPTR.
 !
             call lxidnt ( idspec, tquery, cptr, last, nchars )
-
 
             if ( nchars == 0 ) then
 !
@@ -895,7 +861,6 @@
                                nkeywd, &
                                keywds                            )
 
-
             if ( i > 0 ) then
 !
 !              It's a keyword.
@@ -934,7 +899,6 @@
 !           STATE is set to NXTTOK.
 !
 
-
          else if ( state == spcial ) then
 !
 !           Look for a valid token starting with a special character at
@@ -954,7 +918,6 @@
                end if
 
             end do
-
 
             if ( j > 0 ) then
 !

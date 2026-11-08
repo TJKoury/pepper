@@ -157,13 +157,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ascii SPK or CK to binary
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -196,7 +194,6 @@
       call spct2b ( unit, binary )
 
       close       (         unit )
-
 
       return
       end

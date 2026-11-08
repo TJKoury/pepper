@@ -25,7 +25,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'eksegdsc.inc'
@@ -195,7 +194,6 @@
 
          call zzekllec ( handle, segdsc, coldsc, cval, zzekille, rec )
 
-
       else if ( coltyp == dp ) then
 
          if ( dtype == dp ) then
@@ -206,11 +204,9 @@
 
          call zzeklled ( handle, segdsc, coldsc, dnum, zzekille, rec )
 
-
       else if ( coltyp == time ) then
 
          call zzeklled ( handle, segdsc, coldsc, dval, zzekille, rec )
-
 
       else if ( coltyp == int ) then
 
@@ -230,7 +226,6 @@
          return
 
       end if
-
 
       return
       end

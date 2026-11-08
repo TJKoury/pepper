@@ -178,7 +178,6 @@
 !              WRITE(*,*) 'Error 3 '
 !           END IF
 !
-!
 !     C
 !     C     Now another put with a different value.
 !     C
@@ -269,7 +268,6 @@
          return
       end if
 
-
 !
 !     Confirm a proper ID value.
 !
@@ -289,7 +287,6 @@
 
       end if
 
-
 !
 !     Initialize the FIRST array; perform once per program run.
 !
@@ -302,7 +299,6 @@
          init = .false.
 
       end if
-
 
 !
 !     Perform the operation as described by OP.
@@ -333,7 +329,6 @@
             ok    = .true.
 
          end if
-
 
       else if ( op == zzput ) then
 
@@ -374,4 +369,3 @@
       end if
 
       end
-

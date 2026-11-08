@@ -119,8 +119,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -203,7 +201,6 @@
 
          lkey    =  lkey + loffst
 
-
       else if ( lpidx == 1 ) then
 !
 !        The left parent key is the first key.  The left sibling has
@@ -218,7 +215,6 @@
          call dasrdi ( handle, addrss, addrss, lkey )
 
          lkey    =  lkey + poffst
-
 
       else
 !
@@ -250,7 +246,6 @@
          call dasrdi ( handle, addrss, addrss, rkey )
 
          rkey    =  rkey + roffst
-
 
       else
 !

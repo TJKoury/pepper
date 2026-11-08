@@ -112,7 +112,6 @@
 !                    These pointers delimit character values
 !                    associated with literal string tokens.
 !
-!
 ! $ Detailed_Output
 !
 !     EQRYI,
@@ -155,7 +154,6 @@
 !         In the messages shown, the symbol # is used to designate
 !         a marker for which a value can be substituted in an actual
 !         message.
-!
 !
 !            The BY keyword was not found following the
 !            ORDER keyword.
@@ -245,13 +243,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse EK query
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -264,7 +260,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -272,7 +267,6 @@
 
       logical               failed
       logical               return
-
 
 !
 !     Local parameters
@@ -406,15 +400,12 @@
 !                                    | DESC
 !                                    | <NIL>
 !
-!
-!
 !     We'll parse the clauses of the query in the following order:
 !
 !        FROM
 !        WHERE     (if present)
 !        ORDER BY  (if present)
 !        SELECT
-!
 !
       call zzektloc ( tkkey,   kwfrom,  ntoken,  tokens,  values, &
                       toknum,  fnd                                )
@@ -437,7 +428,6 @@
          errtyp  =  ' '
 
       end if
-
 
       do while ( state /= term )
 !
@@ -475,7 +465,6 @@
 !
                ntabs  =   ntabs  +  1
 
-
                if ( ntabs > maxtab ) then
 
                   error   =  .true.
@@ -490,7 +479,6 @@
                   l       =   e  -  b   +  1
                   lxb     =   lxbegs(toknum)
                   lxe     =   lxends(toknum)
-
 
                   call zzekinqc ( chrbuf( b : e ), &
                                   l, &
@@ -526,18 +514,15 @@
 !
                   call zzekweqi ( 'NUM_TABLES', ntabs, eqryi )
 
-
                   state  =  frmtab
 
                end if
-
 
             else if ( token == tkeoq ) then
 
                error   =  .true.
                errtyp  =  'MORE_TOKENS_EXP'
                state   =  term
-
 
             else
 !
@@ -564,13 +549,11 @@
 !
                state   =  where
 
-
             else if ( token == tkcoma ) then
 !
 !              It's time to look for another table name.
 !
                state  =  from
-
 
             else if ( token == tkid ) then
 !
@@ -600,9 +583,7 @@
                             eqvdsz, &
                             eqryi(  cardi(eqryi) - eqvdsz + 1  )   )
 
-
                state  =  frmals
-
 
             else if (  token ==  tkkey  )  then
 !
@@ -627,7 +608,6 @@
                   state  =  where
 
                end if
-
 
             else
 !
@@ -643,8 +623,6 @@
 !           STATE is a member of {FROM, FRMALS, WHERE, TERM}.
 !
 
-
-
          else if ( state == frmals ) then
 !
 !           We should see a comma, the SELECT, WHERE or ORDER
@@ -657,13 +635,11 @@
 !
                state   =  where
 
-
             else if ( token == tkcoma ) then
 !
 !              It's time to look for another table name.
 !
                state  =  from
-
 
             else if (  token ==  tkkey  )  then
 !
@@ -689,7 +665,6 @@
 
                end if
 
-
             else
 !
 !              We've got the wrong kind of token altogether.
@@ -702,7 +677,6 @@
 !
 !           STATE is a member of {FROM, WHERE, TERM}.
 !
-
 
          else if ( state == selkey ) then
 !
@@ -723,7 +697,6 @@
                state   =  select
 
             end if
-
 
          else if ( state == select ) then
 !
@@ -760,7 +733,6 @@
                   lxb     =   lxbegs(toknum)
                   lxe     =   lxends(toknum)
 
-
                   call zzekinqc ( chrbuf( b : e ), &
                                   l, &
                                   lxb, &
@@ -787,18 +759,15 @@
 !
                   call zzekweqi ( 'NUM_SELECT_COLS', nsel, eqryi )
 
-
                   state  =  selnam
 
                end if
-
 
             else if ( token == tkeoq ) then
 
                error  =  .true.
                errtyp =  'MORE_TOKENS_EXP'
                state  =  term
-
 
             else
 !
@@ -812,7 +781,6 @@
 !
 !           State is a member of {SELNAM, TERM}.
 !
-
 
          else if ( state == selnam ) then
 !
@@ -831,7 +799,6 @@
 
                state   =   term
 
-
             else if ( token == tkcoma ) then
 !
 !              The name we picked up was an unqualified column
@@ -844,14 +811,12 @@
 
                state  =  select
 
-
             else if ( token == tkdot ) then
 !
 !              The name we picked up was a table name or alias.  A
 !              column name should follow.
 !
                state  =  seltab
-
 
             else if ( token == tkkey ) then
 !
@@ -900,7 +865,6 @@
 !           STATE is a member of {SELECT, SELTAB, TERM}.
 !
 
-
          else if ( state == seltab ) then
 !
 !           We've picked up a qualifying table name for a SELECT
@@ -942,9 +906,7 @@
                   call appndi ( coldsc(j), eqryi )
                end do
 
-
                state  =  selcol
-
 
             else if ( token == tkeoq ) then
 
@@ -962,7 +924,6 @@
 !
 !           STATE is a member of {SELCOL, TERM}.
 !
-
 
          else if ( state == selcol ) then
 !
@@ -994,13 +955,11 @@
 
                end if
 
-
             else if ( token == tkcoma ) then
 !
 !              We expect another SELECT column.
 !
                state  =  select
-
 
             else if ( token == tkeoq ) then
 !
@@ -1019,7 +978,6 @@
 !           STATE is a member of {SELECT, TERM}.
 !
 
-
          else if ( state == where ) then
 !
 !           The WHERE clause is optional.  See whether we have one.  The
@@ -1027,7 +985,6 @@
 !
             call zzektloc ( tkkey,   kwwher,  ntoken,  tokens,  values, &
                             toknum,  fnd                               )
-
 
             if ( fnd ) then
 !
@@ -1054,7 +1011,6 @@
                                error, &
                                prserr )
 
-
                if ( error ) then
 
                   errtyp  =   'WHERE_ERROR'
@@ -1068,7 +1024,6 @@
 
                end if
 
-
             else
 !
 !              Parse the ORDER BY clause, if one is present.
@@ -1080,7 +1035,6 @@
 !           STATE is a member of {ORDER, TERM}.
 !
 
-
          else if ( state == order ) then
 !
 !           The ORDER BY clause is optional.  See whether we have one.
@@ -1088,7 +1042,6 @@
 !
             call zzektloc ( tkkey,   kwordr,  ntoken,  tokens,  values, &
                             toknum,  fnd                               )
-
 
             if ( fnd ) then
 !
@@ -1115,7 +1068,6 @@
 
                   end if
 
-
                else
 !
 !                 We're out of tokens where we shouldn't be.
@@ -1125,7 +1077,6 @@
                   state  =  term
 
                end if
-
 
             else
 !
@@ -1137,8 +1088,6 @@
 !
 !           STATE is a member of {ORDRBY, SELKEY, TERM}.
 !
-
-
 
          else if ( state == ordrby ) then
 !
@@ -1172,7 +1121,6 @@
                   lxb     =   lxbegs(toknum)
                   lxe     =   lxends(toknum)
 
-
                   call zzekinqc ( chrbuf( b : e ), &
                                   l, &
                                   lxb, &
@@ -1199,18 +1147,15 @@
 !
                   call zzekweqi ( 'NUM_ORDERBY_COLS', norder, eqryi )
 
-
                   state  =  ordnam
 
                end if
-
 
             else if ( token == tkeoq ) then
 
                error  =  .true.
                errtyp =  'MORE_TOKENS_EXP'
                state  =  term
-
 
             else
 !
@@ -1224,7 +1169,6 @@
 !
 !           State is a member of {ORDNAM, TERM}.
 !
-
 
          else if ( state == ordnam ) then
 !
@@ -1254,7 +1198,6 @@
 !
                state   =  selkey
 
-
             else if ( token == tkcoma ) then
 !
 !              The name we picked up was an unqualified column
@@ -1274,14 +1217,12 @@
 
                state  = ordrby
 
-
             else if ( token == tkdot ) then
 !
 !              The name we picked up was a table name or alias.  A
 !              column name should follow.
 !
                state = ordtab
-
 
             else if ( token == tkkey ) then
 !
@@ -1307,13 +1248,11 @@
 
                   state = ordsns
 
-
                else if ( values(toknum) == kwdsnd ) then
 
                   call appndi ( eqdsnd, eqryi )
 
                   state = ordsns
-
 
                else if (      ( values(toknum) == kwwher ) &
                          .or. ( values(toknum) == kwfrom ) &
@@ -1342,7 +1281,6 @@
 
                end if
 
-
             else
 !
 !              We've got the wrong kind of token here.
@@ -1355,7 +1293,6 @@
 !
 !           STATE is a member of {ORDRBY, ORDTAB, ORDSNS, SELKEY, TERM}.
 !
-
 
          else if ( state == ordtab ) then
 !
@@ -1398,9 +1335,7 @@
                   call appndi ( coldsc(j), eqryi )
                end do
 
-
                state  =  ordcol
-
 
             else if ( token == tkeoq ) then
 
@@ -1419,7 +1354,6 @@
 !           STATE is a member of {ORDCOL, TERM}.
 !
 
-
          else if ( state == ordcol ) then
 !
 !           We've picked up a qualified column name.  At this point,
@@ -1437,7 +1371,6 @@
 
                   state  =  ordsns
 
-
                else if ( values(toknum) == kwdsnd ) then
 !
 !                 The DESCENDING keyword has been supplied.  After this,
@@ -1446,7 +1379,6 @@
                   call appndi ( eqdsnd, eqryi )
 
                   state  =  ordsns
-
 
                else if (      ( values(toknum) == kwwher ) &
                          .or. ( values(toknum) == kwfrom ) &
@@ -1465,7 +1397,6 @@
 
                end if
 
-
             else if ( token == tkcoma ) then
 !
 !              The ASCENDING keyword is implied.
@@ -1473,7 +1404,6 @@
                call appndi ( eqasnd, eqryi )
 
                state  =  ordrby
-
 
             else if ( token == tkeoq ) then
 !
@@ -1498,7 +1428,6 @@
 !           STATE is a member of {ORDRBY, ORDSNS, SELKEY, TERM}.
 !
 
-
          else if ( state == ordsns ) then
 !
 !           We've picked up an order sense keyword.  At this point,
@@ -1511,14 +1440,12 @@
 !
                state  =  ordrby
 
-
             else if ( token == tkeoq ) then
 !
 !              We're done with the ORDER BY clause.  Parse the SELECT
 !              clause.
 !
                state  =  selkey
-
 
             else if ( token == tkkey ) then
 
@@ -1539,7 +1466,6 @@
 
                end if
 
-
             else
 
                error  =  .true.
@@ -1550,7 +1476,6 @@
 !
 !           STATE is a member of {ORDRBY, SELKEY, TERM}.
 !
-
 
          else
 !
@@ -1583,18 +1508,15 @@
             prserr = 'Every query must contain a FROM clause. ' // &
                      'The FROM keyword was not found.'
 
-
          else if ( errtyp == 'SELECT_NOT_FOUND' ) then
 
             prserr = 'Every query must contain a SELECT clause. ' // &
                      'The SELECT keyword was not found.'
 
-
          else if ( errtyp == 'BY_EXPECTED' ) then
 
             prserr = 'The BY keyword was not found following the ' // &
                      'ORDER keyword.'
-
 
          else if ( errtyp == 'BAD_KEYWORD' ) then
 
@@ -1605,7 +1527,6 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'TABLE_OR_COLUMN_EXP' ) then
 
             lxb    =  lxbegs(toknum)
@@ -1614,7 +1535,6 @@
                      '#. Actual token was: #'
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
-
 
          else if ( errtyp == 'TABLE_EXP' ) then
 
@@ -1625,7 +1545,6 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'COLUMN_EXP' ) then
 
             lxb    =  lxbegs(toknum)
@@ -1634,7 +1553,6 @@
                      'Actual token was: #'
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
-
 
          else if ( errtyp == 'ALIAS_EXP' ) then
 
@@ -1645,7 +1563,6 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'COMMA_OR_KEY_EXP' ) then
 
             lxb    =  lxbegs(toknum)
@@ -1655,7 +1572,6 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'COMMA_EXP' ) then
 
             lxb    =  lxbegs(toknum)
@@ -1664,11 +1580,9 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'MORE_TOKENS_EXP' ) then
 
             prserr  =  'More tokens were expected in query.'
-
 
          else if ( errtyp == 'KEYWORD_EXP' ) then
 
@@ -1678,7 +1592,6 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'BAD_TOKEN' ) then
 
             lxb    =  lxbegs(toknum)
@@ -1687,13 +1600,11 @@
             call repmi ( prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
-
          else if ( errtyp == 'TOO_MANY_TABLES' ) then
 
             prserr  =  'Number of tables in "FROM" clause exceeds ' // &
                        'allowed maximum of #.'
             call repmi  ( prserr, '#', maxtab, prserr )
-
 
          else if ( errtyp == 'TOO_MANY_ORD_COLS' ) then
 
@@ -1701,13 +1612,11 @@
                        'maximum of #.'
             call repmi  ( prserr, '#', maxtab, prserr )
 
-
          else if ( errtyp == 'TOO_MANY_SEL_COLS' ) then
 
             prserr  =  'Number of SELECT columns exceeds allowed ' // &
                        'maximum of #.'
             call repmi  ( prserr, '#', maxsel, prserr )
-
 
          else if ( errtyp /= 'WHERE_ERROR' ) then
 
@@ -1717,8 +1626,6 @@
 
          end if
 
-
-
       else
 !
 !        Indicate that parsing is complete.
@@ -1726,7 +1633,6 @@
          call zzekweqi ( 'PARSED', itrue, eqryi )
 
       end if
-
 
       return
       end

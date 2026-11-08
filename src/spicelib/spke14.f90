@@ -82,7 +82,6 @@
 !     for a particular epoch before evaluating the record to obtain a
 !     state vector, as in the example which follows.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -134,13 +133,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_14 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions

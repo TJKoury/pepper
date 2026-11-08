@@ -116,7 +116,6 @@
 !     See the include file spk12.inc for declarations of the
 !     parameters described below.
 !
-!
 !     TOLSCL   is a tolerance scale factor (also called a
 !              "relative tolerance") used for time coverage
 !              bound checking. TOLSCL is unitless. TOLSCL
@@ -137,7 +136,6 @@
 !                 BEGTIM
 !                 STEP
 !                 N
-!
 !
 !     MAXDEG   is the maximum degree of Hermite polynomials that
 !              can be used to interpolate states from the segment
@@ -205,9 +203,7 @@
 !        containing only one segment, given an evenly-spaced
 !        time-ordered set of discrete states.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW12_EX1
 !              IMPLICIT NONE
@@ -307,7 +303,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 12 exists in
 !        the output directory.
@@ -350,13 +345,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_12 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -383,7 +376,6 @@
 !     character.
 !
 !     LPRINT is the integer value of the last printable ASCII character.
-!
 !
       integer(ip), parameter :: sidlen = 40
 
@@ -593,7 +585,6 @@
 !
 !     If we made it this far, we're ready to start writing the segment.
 !
-!
 !     Create the segment descriptor.
 !
       call spkpds ( body, center, frame, dtype, first, last, descr )
@@ -628,7 +619,6 @@
 !        +-----------------------+
 !        | Number of states      |
 !        +-----------------------+
-!
 !
       call dafada ( states,              n*statsz )
       call dafada ( begtim,              1        )

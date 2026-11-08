@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include  'ekdatpag.inc'
       include  'ekpage.inc'
       include  'eksegdsc.inc'
@@ -156,14 +155,12 @@
       to  =  1
       call cleari ( pgsizi, page )
 
-
       do from = 1, nvals
 !
 !        The Assignment.
 !
          page(to) =  ivals(from)
          to       =  to + 1
-
 
          if (  ( to > ipsize ) .or. ( from == nvals )  ) then
 !
@@ -187,7 +184,6 @@
          end if
 
       end do
-
 
       return
       end

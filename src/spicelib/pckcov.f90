@@ -122,9 +122,7 @@
 !        Find the set of objects in the file; for each object, find
 !        and display the coverage.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PCKCOV_EX1
 !              IMPLICIT NONE
@@ -174,7 +172,6 @@
 !              INTEGER               IDS   ( LBCELL : MAXFRM )
 !              INTEGER               J
 !              INTEGER               NIV
-!
 !
 !        C
 !        C     Load a leapseconds kernel for output time conversion.
@@ -268,11 +265,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0012.tls, and the PCK
 !        file named earth_720101_070426.bpc, the output was:
-!
 !
 !        Name of leapseconds kernel > naif0012.tls
 !        Name of PCK file           > earth_720101_070426.bpc
@@ -285,13 +280,11 @@
 !
 !         ========================================
 !
-!
 !     2) Find the coverage for the frame designated by IDCODE
 !        provided by the set of PCK files loaded via a metakernel.
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -317,21 +310,17 @@
 !                                               binary PCK
 !              naif0012.tls                     Leapseconds
 !
-!
 !           \begindata
 !
 !           KERNELS_TO_LOAD = ( 'earth_070425_370426_predict.bpc',
 !                               'earth_720101_070426.bpc',
 !                               'naif0012.tls'                    )
 !
-!
 !           \begintext
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PCKCOV_EX2
 !              IMPLICIT NONE
@@ -467,12 +456,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the meta-kernel named pckcov_ex2.tm provided
 !        above to find the coverage window for the ITRF93 frame using
 !        its ID code, '3000', the output was:
-!
 !
 !        Enter name of metakernel > pckcov_ex2.tm
 !        Enter ID code            > 3000
@@ -482,7 +469,6 @@
 !         Interval:            1
 !         Start:    1962 JAN 20 00:00:41.184 (TDB)
 !         Stop:     2037 JUL 17 00:01:05.183 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -524,14 +510,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get coverage window for binary PCK reference frame
 !     get coverage start and stop time for binary PCK frame
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -562,12 +546,10 @@
 
       logical               found
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     See whether GETFAT thinks we've got a binary PCK file.

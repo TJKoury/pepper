@@ -114,7 +114,6 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -126,8 +125,6 @@
       integer(ip)           nrec
       integer(ip)           ptrloc
 
-!
-!     Use discovery check-in.
 !
 !     Initialize the function's return value.
 !
@@ -168,7 +165,6 @@
       ptrloc  =  recptr + dptbas + colidx
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
-
 
       if ( datptr < 1 ) then
 !

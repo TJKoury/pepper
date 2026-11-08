@@ -144,13 +144,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Scan a string for a number.
 !
 !-&
-
 
       integer(ip)           f
       integer(ip)           i
@@ -207,7 +205,6 @@
          end if
 
       end if
-
 
       return
       end

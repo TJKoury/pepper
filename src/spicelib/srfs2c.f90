@@ -69,7 +69,6 @@
 !
 !              is not equivalent to the names above.
 !
-!
 !     BODSTR   is a string designating the body associated with the
 !              input surface string. BODSTR may contain a body name
 !              or a string representation of the body's integer ID
@@ -197,7 +196,6 @@
 !        Use the meta-kernel shown below to define the required SPICE
 !        kernel variables.
 !
-!
 !           KPL/MK
 !
 !           File: srfs2c_ex1.tm
@@ -206,7 +204,6 @@
 !           example programs. The file contents shown here should not be
 !           assumed to contain adequate or correct versions of data
 !           required by SPICE-based user applications.
-!
 !
 !           \begindata
 !
@@ -218,9 +215,7 @@
 !
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFS2C_EX1
 !              IMPLICIT NONE
@@ -245,7 +240,6 @@
 !
 !              LOGICAL               FOUND
 !
-!
 !              DATA  ( SRFSTR(I), BODSTR(I), I = 1, NCASE )  /
 !             .
 !             .        'MGS MOLA  64 pixel/deg',    'MARS',
@@ -256,7 +250,6 @@
 !             .        '2',                         '499',
 !             .        'ZZZ',                       'MARS',
 !             .        '1',                         'ZZZ'    /
-!
 !
 !              META = 'srfs2c_ex1.tm'
 !
@@ -283,10 +276,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         surface string   = MGS MOLA  64 pixel/deg
 !         body string      = MARS
@@ -326,7 +317,6 @@
 !         body string      = ZZZ
 !         surface ID found =  F
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -355,13 +345,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     surface string and body string to surface ID code
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -382,10 +370,7 @@
       integer(ip)           bodyid
       integer(ip)           ptr
 
-
-
       if ( return() ) return
-
 
 !
 !     No result has been found yet.

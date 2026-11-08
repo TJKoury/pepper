@@ -135,7 +135,6 @@
 !                          1.414213562373095D0,
 !                         -2.4037033579794549D-17 )
 !
-!
 !     2)   This example is taken from the code of the SPICELIB routine
 !          PJELPL, which finds the orthogonal projection of an ellipse
 !          onto a plane. The code listed below is the portion used to
@@ -152,7 +151,6 @@
 !                      .
 !
 !                   CALL SAELGV ( PROJ1,  PROJ2,  SMAJOR,  SMINOR )
-!
 !
 !          The call to SAELGV determines the required semi-axes.
 !
@@ -199,13 +197,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     semi-axes of ellipse from generating vectors
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -228,7 +224,6 @@
       integer(ip)           i
       integer(ip)           major
       integer(ip)           minor
-
 
 !
 !     Standard SPICE error handling.
@@ -253,7 +248,6 @@
 !
 !                                                2
 !               || cos(x) VEC1  +  sin(x) VEC2 ||
-!
 !
 !           =   < cos(x)VEC1 + sin(x)VEC2,  cos(x)VEC1 + sin(x)VEC2 > ;
 !
@@ -380,7 +374,6 @@
 !
 !        (the negatives of these vectors are also semi-axes).
 !
-!
 !     Copy the input vectors.
 !
       call moved ( vec1, 3, tmpvc1 )
@@ -445,7 +438,6 @@
 !
       call vsclip ( scale, smajor )
       call vsclip ( scale, sminor )
-
 
       return
       end

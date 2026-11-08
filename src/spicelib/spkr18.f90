@@ -123,7 +123,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -178,13 +177,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_18 SPK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -194,7 +191,6 @@
 !        less than 2.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -257,9 +253,7 @@
       integer(ip)           type
       integer(ip)           wndsiz
 
-
       if ( return () ) return
-
 
 !
 !     Unpack the segment descriptor, and get the start and end addresses
@@ -343,7 +337,6 @@
 !               MAXDEG
 !
 
-
 !
 !     Set the packet size, which is a function of the subtype.
 !
@@ -378,7 +371,6 @@
 
       end if
 
-
       if ( subtyp == s18tp0 ) then
 
          maxwnd  =  (maxdeg+1)/2
@@ -405,7 +397,6 @@
             return
 
          end if
-
 
       else if ( subtyp == s18tp1 ) then
 
@@ -526,7 +517,6 @@
          endidx  =  min (  begidx + dirsiz,  n  )
 
       end if
-
 
       timbas  =  dirbas - n
 

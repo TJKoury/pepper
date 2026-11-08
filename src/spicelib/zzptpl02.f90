@@ -97,7 +97,6 @@
 !                to be considered as a solution. See the Parameters
 !                section for details.
 !
-!
 !     PLATE      is the plate designated by PLID. It is an array of
 !                three integers. The integers are the IDs of the
 !                plate's vertices.
@@ -122,7 +121,6 @@
 !
 !     for declarations of these parameters. These defaults can be
 !     overridden. See DSKSTL for details.
-!
 !
 !     PTMEMM     is the default value of the point-plate membership
 !                parameter, which is used to determine whether a point
@@ -231,7 +229,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -321,10 +318,7 @@
       data                  prvdsc / dladsz * 0 /
       data                  prvhan / 0          /
 
-
-
       if ( return() ) return
-
 
 !
 !     No plate has been found so far.
@@ -347,7 +341,6 @@
          call dski02 ( handle, dladsc, kwcgsc, 1, 1, n, cgrscl )
 
          if ( failed() ) return
-
 
          if ( voxsiz == 0.0_wp ) then
 
@@ -408,7 +401,6 @@
                       dskdsc(mn1idx), ptsrfm, 0,              inside )
 
       if ( failed() ) return
-
 
       if ( .not. inside ) then
 !

@@ -117,7 +117,6 @@
 !
 ! $ Examples
 !
-!
 !     Example:
 !
 !       Method string =
@@ -139,7 +138,6 @@
 !          "MGS MOLA 128 PIXEL/DEG"
 !          ,
 !          MARS_LOWRES
-!
 !
 ! $ Restrictions
 !
@@ -170,7 +168,6 @@
 !     extract tokens from method string for geometry apis
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -182,7 +179,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Note the leading blank in DELIM below; this
 !     indicates that the blank character is a delimiter.
@@ -207,8 +203,6 @@
 
       if ( return() ) return
 
-
-
       if ( method == ' ' ) then
 !
 !        No tokens here.
@@ -218,7 +212,6 @@
          return
 
       end if
-
 
       n    = 0
       room = maxn
@@ -242,7 +235,6 @@
          else
             e = i + qpos - 2
          end if
-
 
          if ( b <= e ) then
 !
@@ -329,7 +321,6 @@
             end do
 
          end if
-
 
          if ( e < r ) then
 !

@@ -127,7 +127,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1)  Determine the length of Galileo spacecraft clock strings.
 !
 !         Examine a Galileo SCLK kernel. There you'll find the
@@ -160,11 +159,9 @@
 !         The SCLK Required Reading indicates that 2 is the SCLK kernel
 !         code for the colon character.
 !
-!
 !     2)  Find the Galileo SCLK value corresponding to the ET
 !
 !            -322452420.5593641.
-!
 !
 !            C
 !            C     Start out by loading the SCLK kernel. In your own
@@ -191,11 +188,9 @@
 !
 !                  CALL SCE2S ( SC, ET, SCLKCH )
 !
-!
 !         The returned value of SCLKCH will be
 !
 !            1/00010001:44:2:0.
-!
 !
 !     3)  Convert the UTC time
 !
@@ -212,7 +207,6 @@
 !            C
 !                  CALL FURNSH ( 'LEAPSECONDS.KER' )
 !                  CALL FURNSH ( 'VGR2SCLK.KER'    )
-!
 !
 !         To find Voyager 2 SCLK string corresponding to the
 !         specified UTC time, you can use the code fragment
@@ -278,13 +272,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ephemeris time to spacecraft_clock string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -296,7 +288,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -306,7 +297,6 @@
 !     Local variables
 !
       real(wp)              sclkdp
-
 
 !
 !     Standard SPICE error handling.

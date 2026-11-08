@@ -135,7 +135,6 @@
 !                 | y' |  =  |   CMAT   | | y |
 !                 [ z' ]     [          ] [ z ]
 !
-!
 !              The attitude derivative information in PACKTS(I)
 !              gives the angular velocity of the instrument fixed
 !              frame at time SCLKDP(I) with respect to the
@@ -304,7 +303,6 @@
 !     the CK Required Reading. The CK file must have been opened with
 !     write access.
 !
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -330,11 +328,9 @@
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -369,7 +365,6 @@
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -425,7 +420,6 @@
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   +-             -+
@@ -457,7 +451,6 @@
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -570,13 +563,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write CK type_5 data segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -589,7 +580,6 @@
 !        via the non-SPICE utility MEX2KER, for European missions.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -677,7 +667,6 @@
          return
 
       end if
-
 
 !
 !     Get the NAIF integer code for the reference frame.
@@ -781,7 +770,6 @@
 
       end do
 
-
 !
 !     Now make sure that all of the interval start times coincide with
 !     one of the times associated with the actual pointing.
@@ -804,8 +792,6 @@
          end if
 
       end do
-
-
 
 !
 !     Set the window, packet size and angular velocity flag, all of
@@ -895,7 +881,6 @@
 
       end if
 
-
 !
 !     If we made it this far, we're ready to start writing the segment.
 !
@@ -935,7 +920,6 @@
 !     and must be less than or equal to ENDTIM.
 !
       i = lstltd ( begtim, n, sclkdp )
-
 
       if ( i == n ) then
 
@@ -978,7 +962,6 @@
       call dafbna ( handle, descr, segid )
 
       if ( failed() ) return
-
 
 !
 !     The type 5 segment structure is eloquently described by this
@@ -1042,7 +1025,6 @@
 !        | Number of packets          |
 !        +----------------------------+
 !
-!
       call dafada ( packts,  n*packsz )
       call dafada ( sclkdp,  n        )
 
@@ -1083,7 +1065,6 @@
       if ( .not. failed() ) then
          call dafena
       end if
-
 
       return
       end

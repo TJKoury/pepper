@@ -193,9 +193,7 @@
       logical               succes
       logical               yabbrv
 
-
       if ( return() ) return
-
 
 !
 !     No error to start with.
@@ -221,7 +219,6 @@
 !        It's a SCLK string.  Find the ID code, if we can.
 !
          call scn2id ( locstr(:loc+3), clkid, fnd )
-
 
          if ( .not. fnd ) then
 !
@@ -288,8 +285,6 @@
             end if
 
          end if
-
-
 
       else
 !

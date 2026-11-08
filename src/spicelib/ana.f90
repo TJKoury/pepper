@@ -144,13 +144,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get the correct indefinite article
 !
 !-&
-
 
       integer(ip)           isrchc
 
@@ -167,7 +165,6 @@
       character(1)          mycase
       character(1)          begin
 
-
       integer(ip)           i
       integer(ip)           caps
 
@@ -180,7 +177,6 @@
 
       data                  a  / 'A',  'A',  'a'  /
       data                  an / 'AN', 'An', 'an' /
-
 
       data  anword / 'HEIR', 'HONEST', 'HONOR', 'H',  'HOUR', &
                      'HORS ','HOMBRE', 'F',     'L',  'M', &
@@ -202,7 +198,6 @@
       call replch( myword, '"',  ' ', myword )
       call ljust ( myword,            myword )
       call ucase ( case,              mycase )
-
 
       ana = ' '
 

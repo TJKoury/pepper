@@ -171,13 +171,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert binary DAS to DAS transfer file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -426,7 +424,7 @@
 !
 !     This routine will check the SPICELIB function FAILED() after
 !     each DAS file access call, and if an error was signaled it will
-!     simply check out and return to the caller.
+!     simply return to the caller.
 !
 !     We begin by opening the binary DAS file specified by BINFIL for
 !     read access, obtaining a file handle.
@@ -578,7 +576,7 @@
 !
 !        If an error occurred while writing the number of reserved
 !        records or number of reserved characters, attempt to close
-!        the binary file, then check out and return.
+!        the binary file, then return.
 !
          call dascls ( handle  )
          return
@@ -595,7 +593,7 @@
 !
 !        If an error occurred while writing the number of comment
 !        records or number of comment characters, attempt to close
-!        the binary file, then check out and return.
+!        the binary file, then return.
 !
          call dascls ( handle  )
          return
@@ -751,7 +749,7 @@
 !
 !        If an error occurred while writing any of the data counts to
 !        the DAS transfer file, attempt to close the binary file, then
-!        check out and return.
+!        return.
 !
          call dascls ( handle  )
          return

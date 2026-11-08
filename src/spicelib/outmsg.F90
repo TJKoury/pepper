@@ -364,13 +364,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -473,7 +471,6 @@
 !        WRLINE call is now forced to be greater than 0.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -589,7 +586,6 @@
       long   = .false.
       trace  = .false.
       dfault = .false.
-
 
 !     We parse the list of message types, and set local flags
 !     indicating which ones are to be output.  If we find
@@ -853,8 +849,6 @@
          call wrline  (  device, ' ' )
 
       end if
-
-
 
       if (  dfault  .and. msgsel ( 'DEFAULT' )  ) then
 !

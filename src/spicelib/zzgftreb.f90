@@ -126,13 +126,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Return the values of the triaxial radii
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -150,8 +148,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     Look up BODY radii in the kernel pool.

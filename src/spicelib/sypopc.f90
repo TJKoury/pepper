@@ -112,7 +112,6 @@
 !
 !     FOUND is .TRUE., and VALUE is 'SPECIAL RELATIVITY'.
 !
-!
 !     The next call,
 !
 !        CALL SYPOPC ( 'FERMI', TABSYM, TABPTR, TABVAL, VALUE, FOUND )
@@ -160,13 +159,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pop a value from a particular symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -187,13 +184,10 @@
       integer(ip)           locsym
       integer(ip)           locval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -249,7 +243,6 @@
          end if
 
       end if
-
 
       return
       end

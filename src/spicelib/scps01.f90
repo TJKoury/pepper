@@ -49,7 +49,6 @@
 !              required reading file for a complete list of body ID
 !              codes.
 !
-!
 !     CLKSTR   on input is the character representation of a
 !              spacecraft clock count (SCLK), without a partition
 !              number.
@@ -253,7 +252,6 @@
 !         '1.1.1.1.'            Error: The last delimiter signals that
 !                                      a fifth component will follow.
 !
-!
 !         The following examples are for the Voyager 2 spacecraft. Note
 !         that the last component of the Voyager clock has an offset
 !         value of 1.
@@ -309,13 +307,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert type_1 spacecraft_clock string to ticks
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -367,19 +363,14 @@
       integer(ip)           nfield
       integer(ip)           pntr
 
-
 !
 !     Save everything
 !
       save
 
-
-
       data namlst / 'SCLK01_N_FIELDS', &
                     'SCLK01_OFFSETS', &
                     'SCLK01_MODULI'        /
-
-
 
 !
 !     Standard SPICE error handling.

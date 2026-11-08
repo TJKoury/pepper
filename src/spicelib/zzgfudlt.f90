@@ -143,12 +143,10 @@
 
       logical               ok
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Default value of false for ISLESS.
@@ -185,6 +183,3 @@
       return
 
       end
-
-
-

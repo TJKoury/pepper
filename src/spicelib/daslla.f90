@@ -80,9 +80,7 @@
 !        numbers, and 4 characters, then use DASLLA to find the logical
 !        address ranges in use.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASLLA_EX1
 !              IMPLICIT NONE
@@ -149,15 +147,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Last character address in use:            4
 !         Last d.p. address in use     :            5
 !         Last integer address in use  :           10
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -191,14 +186,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return last logical addresses in DAS file
 !     return logical address range of DAS file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -226,13 +219,10 @@
       integer(ip)           lastrc ( 3 )
       integer(ip)           lastwd ( 3 )
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     The file summary for the indicated DAS file contains all of the

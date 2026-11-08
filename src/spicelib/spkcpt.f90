@@ -63,7 +63,6 @@
 !
 !              Units are always km.
 !
-!
 !     TRGCTR   is the name of the center of motion of TRGPOS. The
 !              ephemeris of TRGCTR is provided by loaded SPK files.
 !
@@ -75,7 +74,6 @@
 !              Case and leading and trailing blanks are not
 !              significant in the string TRGCTR.
 !
-!
 !     TRGREF   is the name of the reference frame relative to which
 !              the input position TRGPOS is expressed. The target has
 !              constant position relative to its center of motion
@@ -84,12 +82,10 @@
 !              Case and leading and trailing blanks are not
 !              significant in the string TRGREF.
 !
-!
 !     ET       is the ephemeris time at which the state of the
 !              target relative to the observer is to be
 !              computed. ET is expressed as seconds past J2000 TDB.
 !              ET refers to time at the observer's location.
-!
 !
 !     OUTREF   is the name of the reference frame with respect to
 !              which the output state is expressed.
@@ -101,7 +97,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string OUTREF.
-!
 !
 !     REFLOC   is a string indicating the output reference frame
 !              evaluation locus: this is the location associated
@@ -116,7 +111,6 @@
 !                             Normally the locus 'OBSERVER' should
 !                             be selected when OUTREF is centered
 !                             at the observer.
-!
 !
 !                 'TARGET'    Evaluate OUTREF at the target epoch;
 !                             letting LT be the one-way light time
@@ -136,7 +130,6 @@
 !                             be selected when OUTREF is TRGREF,
 !                             the frame in which the target position
 !                             is specified.
-!
 !
 !                 'CENTER'    Evaluate the frame OUTREF at the epoch
 !                             associated its center. This epoch,
@@ -158,7 +151,6 @@
 !                                   ET        if no aberration
 !                                             corrections are used
 !
-!
 !                             The locus 'CENTER' should be selected
 !                             when the user intends to obtain
 !                             results compatible with those produced
@@ -169,7 +161,6 @@
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string REFLOC.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied to
 !              the observer-target state to account for one-way
@@ -217,7 +208,6 @@
 !                 'CN+S'     Converged Newtonian light time
 !                            and stellar aberration corrections.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -251,14 +241,12 @@
 !                            Newtonian light time and stellar
 !                            aberration corrections.
 !
-!
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
 !              by this routine.
 !
 !              Case and leading and trailing blanks are not
 !              significant in the string ABCORR.
-!
 !
 !     OBSRVR   is the name of an observing body. Optionally, you
 !              may supply the ID code of the object as an integer
@@ -298,7 +286,6 @@
 !              frame relative to the J2000 frame is evaluated in the
 !              manner indicated by the input argument REFLOC (see
 !              description above).
-!
 !
 !     LT       is the one-way light time between the observer and
 !              target in seconds. If the target state is corrected
@@ -455,7 +442,6 @@
 !        the computation of light time between the target and
 !        observer.
 !
-!
 !     The SPK routines that compute observer-target states for
 !     combinations of objects having ephemerides provided by the SPK
 !     system and objects having constant position or constant velocity
@@ -502,13 +488,11 @@
 !
 !        The observation epoch is 2003 OCT 13 06:00:00 UTC.
 !
-!
 !        Kernels
 !        =======
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -556,9 +540,7 @@
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Program: SPKCPT_EX1
@@ -577,7 +559,6 @@
 !        C     simply to demonstrate use of the 'OBSERVER'
 !        C     option.
 !        C
-!
 !
 !              PROGRAM SPKCPT_EX1
 !              IMPLICIT NONE
@@ -605,7 +586,6 @@
 !              CHARACTER*(*)         TIMFMT
 !              PARAMETER           ( TIMFMT =
 !             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
-!
 !
 !              INTEGER               BDNMLN
 !              PARAMETER           ( BDNMLN = 36 )
@@ -865,7 +845,6 @@
 !             .              ABCORR,      OBSRVR, CAMREF, BSIGHT,
 !             .              SPOINT,      TRGEPC, SRFVEC, FOUND  )
 !
-!
 !              OUTREF = CAMREF
 !
 !              REFLOC = 'OBSERVER'
@@ -902,10 +881,8 @@
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Frame evaluation locus:   TARGET
 !
@@ -922,7 +899,6 @@
 !         Observer-target velocity (km/s):
 !                  3823.39593314      -3840.60002121          2.21337692
 !         Light time (s):           255.76708533
-!
 !
 !         Frame evaluation locus:   CENTER
 !
@@ -943,7 +919,6 @@
 !         Distance between above positions (km):             70.25135676
 !         Velocity difference magnitude  (km/s):              0.00552910
 !
-!
 !         State computed using SPKEZR:
 !
 !         Observer:               MGS
@@ -961,7 +936,6 @@
 !         Distance between last two positions (km):           0.00007383
 !         Velocity difference magnitude     (km/s):           0.00000000
 !
-!
 !         Frame evaluation locus:   OBSERVER
 !
 !         Observer:                 MGS
@@ -978,7 +952,6 @@
 !                     2.91968665          0.15140014          0.92363513
 !         Light time (s):           0.00129748
 !         Target range from SINCPT (km):                    388.97573572
-!
 !
 ! $ Restrictions
 !
@@ -1010,7 +983,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     state of constant_position_target
@@ -1019,7 +991,6 @@
 !     state of landmark on extended_object
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1037,8 +1008,6 @@
 !
       if ( return() ) return
 
-
-
 !
 !     Create a state vector for the target. The velocity
 !     portion of the state is zero.
@@ -1052,10 +1021,8 @@
 !
       trgepc = 0.0_wp
 
-
       call spkcvt ( trgsta, trgepc, trgctr, trgref, et, &
                     outref, refloc, abcorr, obsrvr, state, lt )
-
 
       return
       end

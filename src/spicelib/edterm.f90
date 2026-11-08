@@ -78,7 +78,6 @@
 !              Case and leading or trailing blanks in TRMTYP are
 !              not significant.
 !
-!
 !     SOURCE   is the name of the body acting as a light source.
 !              SOURCE is case-insensitive, and leading and trailing
 !              blanks in TARGET are not significant. Optionally, you
@@ -98,7 +97,6 @@
 !              kernel pool. The maximum radius of the body is used
 !              as the radius of the sphere.
 !
-!
 !     TARGET   is the name of the target body. TARGET is
 !              case-insensitive, and leading and trailing blanks in
 !              TARGET are not significant. Optionally, you may
@@ -111,7 +109,6 @@
 !              representing the target's radii is present in the
 !              kernel pool. Normally the kernel variable would be
 !              defined by loading a PCK file.
-!
 !
 !     ET       is the epoch of participation of the observer,
 !              expressed as ephemeris seconds past J2000 TDB: ET is
@@ -130,7 +127,6 @@
 !              computed at ET-LT, where LT is the one-way light time
 !              between the target body's center and the observer.
 !              See the description of ABCORR below for details.
-!
 !
 !     FIXREF   is the name of the reference frame relative to which
 !              the output terminator points are expressed. This must
@@ -151,7 +147,6 @@
 !              body. See the descriptions of ET and ABCORR for
 !              details.
 !
-!
 !     ABCORR   indicates the aberration correction to be applied
 !              when computing the observer-target position, the
 !              orientation of the target body, and the target-
@@ -169,7 +164,6 @@
 !              which photons depart from the target body's center at
 !              the light-time corrected epoch ET-LT and *arrive* at
 !              the observer's location at ET:
-!
 !
 !                 'LT'       Correct for one-way light time (also
 !                            called "planetary aberration") using a
@@ -217,7 +211,6 @@
 !                 'CN+S'     Converged Newtonian light time
 !                            and stellar aberration corrections.
 !
-!
 !     OBSRVR   is the name of the observing body. This is typically
 !              a spacecraft, the Earth, or a surface point on the
 !              Earth. OBSRVR is case-insensitive, and leading and
@@ -226,7 +219,6 @@
 !              integer ID code for the object. For example both
 !              'EARTH' and '399' are legitimate strings that indicate
 !              the Earth is the observer.
-!
 !
 !     NPTS     is the number of terminator points to compute.
 !
@@ -241,7 +233,6 @@
 !              method indicated by ABCORR.
 !
 !              TRGEPC is expressed as seconds past J2000 TDB.
-!
 !
 !     OBSPOS   is the vector from the center of the target body at
 !              epoch TRGEPC to the observer at epoch ET. OBSPOS is
@@ -266,7 +257,6 @@
 !
 !                  CALL PXFRM2 ( FIXREF, REF,    TRGEPC, ET, XFORM )
 !                  CALL MXV    ( XFORM,  OBSPOS, REFVEC )
-!
 !
 !     TRMPTS   is an array of points on the umbral or penumbral
 !              terminator of the ellipsoid, as specified by the
@@ -421,7 +411,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Compute sets of umbral and penumbral terminator points on the
 !        Moon. Perform a consistency check using the solar incidence
 !        angle at each point. We expect to see a solar incidence angle
@@ -435,7 +424,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -460,7 +448,6 @@
 !                                            radii
 !              naif0010.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -471,9 +458,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EDTERM_EX1
 !              IMPLICIT NONE
@@ -604,7 +589,6 @@
 !
 !                 END IF
 !
-!
 !                 WRITE (*,*) ' '
 !                 WRITE (*,*) 'Terminator type: '//TRMTPS(TRMIDX)
 !
@@ -658,10 +642,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Terminator type: UMBRAL
 !
@@ -715,7 +697,6 @@
 !             Solar incidence angle adjusted for
 !             sun's angular radius (deg):             90.000000044
 !
-!
 ! $ Restrictions
 !
 !     1)  This routine models light paths as straight lines.
@@ -762,7 +743,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find terminator on ellipsoid
@@ -770,7 +750,6 @@
 !     find penumbral terminator on ellipsoid
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -787,7 +766,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
 
 !
 !     Local variables
@@ -837,7 +815,6 @@
       character(frnmln)     svfref
       integer(ip)           svfrcd
 
-
 !
 !     Saved name/ID items.
 !
@@ -865,18 +842,15 @@
       save                  svfref
       save                  svfrcd
 
-
 !
 !     Initial values.
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICELIB error handling.
 !
       if ( return() ) return
-
 
 !
 !     Initialization.
@@ -1018,7 +992,6 @@
 !
       call zzedterm ( trmtyp, trgrad(1), trgrad(2), trgrad(3), &
                       r,      srcpos,    npts,      trmpts     )
-
 
       return
       end

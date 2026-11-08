@@ -106,11 +106,9 @@
 !                planetodetic coordinate system in which the input
 !                volume element is described.
 !
-!
 !     MARGIN     is a scale factor used to effectively expand the
 !                segment boundaries so as to include intersections
 !                that lie slightly outside the volume element.
-!
 !
 ! $ Detailed_Output
 !
@@ -125,7 +123,6 @@
 !                an offset from the origin of the coordinate system.
 !
 !                XPT is valid only if NXPTS is set to 1.
-!
 !
 !     NXPTS      is the number of intercept points of the ray and
 !                the volume element.
@@ -200,8 +197,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -225,7 +220,6 @@
 !     Altitude expansion factor:
 !
       real(wp), parameter :: radfac = 1.1_wp
-
 
 !
 !     Element boundary indices:
@@ -303,11 +297,7 @@
 !
       data                  z      / 0.0_wp, 0.0_wp, 1.0_wp /
 
-
-
       if ( return() ) return
-
-
 
       if ( margin < 0.0_wp ) then
 
@@ -325,7 +315,6 @@
          return
 
       end if
-
 
 !
 !     Determine whether the vertex is inside the element.
@@ -595,9 +584,6 @@
 
          end if
 
-
-
-
          if ( nx >= 1 ) then
 !
 !           The ray intercept SRFX lies on the upper latitude boundary.
@@ -608,7 +594,6 @@
             call zzinpdt ( srfx, bounds, corpar, margin, latidx, xin )
 
             if ( failed() ) return
-
 
             if ( xin ) then
 !
@@ -621,7 +606,6 @@
                   call vequ ( srfx, xpt )
 
                   nxpts  = 1
-
 
                   if ( vtxang < angle ) then
 
@@ -713,7 +697,6 @@
 !
          angle = halfpi() - minlat
 
-
 !        Compute the Z coordinate of the apex of the latitude cone.
 !
          call zzelnaxx ( re, rp, minlat, xincpt, yincpt )
@@ -783,7 +766,6 @@
             end if
 
          end if
-
 
          if ( nx >= 1 ) then
 !
@@ -855,7 +837,6 @@
 
                if ( failed() ) return
 
-
                if ( xin ) then
 !
 !                 XPT2 is a candidate solution.
@@ -887,7 +868,6 @@
 !
       end if
 
-
 !
 !     Perform longitude boundary checks if the coverage is not
 !     2*pi radians. Note that MAXLON > MINLON at this point.
@@ -898,15 +878,12 @@
 !
 !        We have distinct longitude boundaries. Go to work.
 !
-!
 !        Check the longitude boundaries. Try the plane of western
 !        longitude first.
 !
          call vpack ( sin(minlon), -cos(minlon), 0.0_wp, westb )
 
-
          s = radfac * ( vnorm(vertex) + maxr )
-
 
          call zzinrypl ( vertex, udir, westb, 0.0_wp, s, nx, srfx )
 
@@ -920,7 +897,6 @@
             call zzinpdt ( srfx, bounds, corpar, margin, lonidx, xin )
 
             if ( failed() ) return
-
 
             if ( xin ) then
 !
@@ -956,7 +932,6 @@
 !
 !        We're done with the western boundary.
 !
-!
 !        Try the plane of eastern longitude next.
 !
          call vpack ( -sin(maxlon), cos(maxlon), 0.0_wp, eastb )
@@ -971,7 +946,6 @@
             call zzinpdt ( srfx, bounds, corpar, margin, lonidx, xin )
 
             if ( failed() ) return
-
 
             if ( xin ) then
 !
@@ -1018,7 +992,6 @@
 
       if ( failed() ) return
 
-
       if ( found ) then
 !
 !        See whether this solution is in the element.
@@ -1026,7 +999,6 @@
          call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
          if ( failed() ) return
-
 
          if ( xin ) then
 
@@ -1059,13 +1031,11 @@
 
       if ( failed() ) return
 
-
       if ( found ) then
 
          call zzinpdt ( srfx, bounds, corpar, margin, altidx, xin )
 
          if ( failed() ) return
-
 
          if ( xin ) then
 

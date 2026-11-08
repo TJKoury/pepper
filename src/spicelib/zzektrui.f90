@@ -146,7 +146,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -193,9 +192,6 @@
       integer(ip)           totkey
       integer(ip)           tpage  ( pgsizi )
 
-!
-!     Use discovery check-in.
-!
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
@@ -291,8 +287,6 @@
 !
          call zzekpgwi ( handle, root, rpage )
 
-
-
       else if ( key == totkey+1 ) then
 !
 !        The new key will be the last key in the tree.  This case
@@ -345,7 +339,6 @@
          call zzekpgwi ( handle, root,   rpage )
          call zzekpgwi ( handle, target, tpage )
 
-
       else
 !
 !        The item we wish to insert will displace the item whose
@@ -353,7 +346,6 @@
 !
          call zzektrlk ( handle,  tree,    key,    next, &
                          target,  toffst,  level,  datptr  )
-
 
          if ( level == depth ) then
 !
@@ -422,7 +414,6 @@
 !
             tpage ( trdatc + next ) = value
 
-
          else
 !
 !           The node containing KEY is not a leaf node.  Therefore,
@@ -455,7 +446,6 @@
             call zzekpgri ( handle, target, tpage )
 
             tnkeys = tpage ( trnkc )
-
 
             if ( tnkeys > mxkeyc + 1 ) then
 
@@ -520,7 +510,6 @@
 
             tnkeys  =  tpage ( trnkc  )
 
-
             if ( rpidx > 0 ) then
 
                do i = rpidx, tnkeys
@@ -546,7 +535,6 @@
 !
          tnkeys  =  rpage ( trnkr )
 
-
          if ( rpidx > 0 ) then
 
             do i = rpidx, tnkeys
@@ -566,7 +554,6 @@
          call zzekpgwi ( handle, root, rpage )
 
       end if
-
 
       return
       end

@@ -72,7 +72,6 @@
 !
 !              Only one value can be added to a virtual column.
 !
-!
 !     ISNULL   is a logical flag indicating whether the entry is
 !              null. If ISNULL is .FALSE., the column entry
 !              defined by NVALS and CVALS is added to the
@@ -155,7 +154,6 @@
 !        file, and how to read the data from it.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACEC_EX1
 !              IMPLICIT NONE
@@ -338,10 +336,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Record   1
 !           CCOL  :    999
@@ -350,10 +346,8 @@
 !           CCOL  : NULL
 !           CARRAY:    CHSTR1   CHSTR2
 !
-!
 !        Note that after run completion, a new EK file exists in the
 !        output directory.
-!
 !
 !     2) A more detailed example.
 !
@@ -385,7 +379,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        We'll suppose that the EK file contains two segments, the
 !        first containing the DATAORDERS table and the second
 !        containing the DATAITEMS table.
@@ -394,15 +387,12 @@
 !        the two segments described above, using fast writers; and
 !        how to insert a new record into one of the tables.
 !
-!
 !        Use the LSK kernel below to load the leap seconds and time
 !        constants required for the conversions.
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKACEC_EX2
 !              IMPLICIT NONE
@@ -526,14 +516,12 @@
 !             .             'INDEXED  = TRUE,'             //
 !             .             'NULLS_OK = TRUE'
 !
-!
 !        C
 !        C     Start the segment.  We presume the number of  rows
 !        C     of data is known in advance.
 !        C
 !              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
 !             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
-!
 !
 !        C
 !        C     At this point, arrays containing data for the
@@ -640,7 +628,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the new segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -723,7 +710,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -758,7 +744,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add character data to EK column
@@ -766,7 +751,6 @@
 !     write character data to EK column
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -782,8 +766,6 @@
       integer(ip)           recptr
       integer(ip)           segdsc ( sdscsz )
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -823,13 +805,11 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 3 ) then
 !
 !        Class 3 columns contain scalar character data.
 !
          call zzekad03 ( handle, segdsc, coldsc, recptr, cvals, isnull )
-
 
       else if ( class == 6 ) then
 !
@@ -854,9 +834,7 @@
          call sigerr ( 'SPICE(NOCLASS)'                                )
          return
 
-
       end if
-
 
       return
       end

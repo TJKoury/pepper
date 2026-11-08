@@ -127,7 +127,6 @@
 !                            correction and stellar aberration
 !                            correction.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -160,7 +159,6 @@
 !                 'XCN+S'    "Transmission" case: converged
 !                            Newtonian light time correction and
 !                            stellar aberration correction.
-!
 !
 !     OBS      is the NAIF ID code for the observer body. The
 !              target and observer define a state vector whose
@@ -274,7 +272,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: spkacs_ex1.tm
@@ -298,7 +295,6 @@
 !                                            radii
 !              naif0008.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de418.bsp',
@@ -309,9 +305,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKACS_EX1
 !              IMPLICIT NONE
@@ -388,10 +382,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         ET =    0.0000000000000000
 !         J2000 x-position (km):     -291584.61369497533
@@ -443,7 +435,6 @@
 !         One-way light time (s):     1.3438080956559786
 !         Light time rate:            1.0067340363005083E-007
 !
-!
 ! $ Restrictions
 !
 !     1)  The kernel files to be used by SPKACS must be loaded
@@ -483,7 +474,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     low-level aberration correction
@@ -491,7 +481,6 @@
 !     get light time and stellar aberration-corrected state
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -541,12 +530,10 @@
 
       data                  prvcor  / ' ' /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !

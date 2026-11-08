@@ -97,12 +97,10 @@
 !                Terminator computations are performed assuming
 !                the light source is spherical.
 !
-!
 !     SRCRAD     is the radius of the illumination source. This
 !                value is used for terminator computations only.
 !                When used, SRCRAD must be strictly positive.
 !                Units are km.
-!
 !
 !     SHAPE      is an integer code indicating the target body shape.
 !
@@ -111,25 +109,20 @@
 !                   ELLSHP            shape is modeled as an ellipsoid
 !                   DSKSHP            shape is provided by DSK data
 !
-!
 !     TRGCDE     is the body ID code of the target body.
-!
 !
 !     NSURF,
 !     SRFLST     are, respectively, the count of surface IDs and the
 !                surface ID list.
 !
-!
 !     FIXFID     is the frame ID code of a body-fixed frame centered
 !                on the target body. The output tangent points will
 !                be expressed in this frame.
-!
 !
 !     ET         is the computation epoch, expressed as seconds past
 !                J2000 TDB. ET is used for DSK segment selection.
 !                If the target shape is modeled as an ellipsoid, ET
 !                is ignored.
-!
 !
 !     PLNVEC     is a vector used to define a half-plane in which
 !                to search for tangent rays. The half-plane contains
@@ -143,7 +136,6 @@
 !                but touch the light source in the complementary
 !                half-plane bounded by the line containing AXIS.
 !
-!
 !     AXIS       is a second vector used to define a half-plane in
 !                which to search for tangent vectors. AXIS lies in
 !                the line forming the boundary of the half-plane.
@@ -153,7 +145,6 @@
 !
 !                For terminator computations, AXIS points from the
 !                target toward the center of the illumination source.
-!
 !
 !     SCHSTP,
 !     SOLTOL     are, respectively, the search angular step size and
@@ -190,7 +181,6 @@
 !
 !                Units are radians.
 !
-!
 !     POINTS     is an array of tangent points on the target body's
 !                surface. Elements
 !
@@ -204,12 +194,10 @@
 !                from AXIS. Here the ray's vertex is as described
 !                above in the discussion of the RESULT output cell.
 !
-!
 ! $ Parameters
 !
 !     See the INCLUDE file zzdsk.inc for declarations of these
 !     parameters.
-!
 !
 !     ELLSHP     is a code specifying an ellipsoidal shape model.
 !
@@ -233,7 +221,6 @@
 !                a sphere, from any target surface point nearer to
 !                the source than the penumbral terminator, the source
 !                appears to be a lit disc.
-!
 !
 ! $ Exceptions
 !
@@ -319,7 +306,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -361,10 +347,7 @@
       logical               cstep
       logical               endflg ( 2 )
 
-
-
       if ( return() ) return
-
 
 !
 !     Empty the result window.
@@ -414,8 +397,6 @@
 
       end if
 
-
-
       if ( curve == lmbcrv ) then
 !
 !        We're looking for limb points.
@@ -443,7 +424,6 @@
 !        Set the final ray-axis separation.
 !
          finish = pi()
-
 
       else
 !
@@ -478,7 +458,6 @@
 
          end if
 
-
          if ( curve == umbral ) then
 !
 !           We'll search for a point on the umbral terminator.
@@ -493,7 +472,6 @@
 !           the target sphere; the maximum angle is achieved when the
 !           ray intersects the target center.
 !
-!
 !           The following equation is valid regardless of whether
 !           or not SRCRAD > MAXRAD.
 !
@@ -507,7 +485,6 @@
             finish = pi() +  dasine( srcrad/r, margin )
 
             if ( failed() ) return
-
 
          else if ( curve == pnmbrl ) then
 !

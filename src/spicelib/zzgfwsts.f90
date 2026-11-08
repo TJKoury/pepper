@@ -63,8 +63,6 @@
 !                if INCLSN is not one of these four values, the
 !                error SPICE(UNKNOWNINCLUSION) is signaled.
 !
-!
-!
 !     WNDW3      is an initialized SPICELIB window, used on input
 !                only for the purpose of determining the amount
 !                of space declared for use in WNDW3.
@@ -183,7 +181,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Store the maximum number of endpoints that can be loaded into
 !     WNDW3
@@ -208,7 +205,6 @@
 
       begp3     = -1
       endp3     =  0
-
 
       call cmprss ( ' ', 0, inclsn, locinc )
 

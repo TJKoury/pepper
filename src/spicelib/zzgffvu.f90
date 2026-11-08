@@ -236,7 +236,6 @@
       logical               return
       logical               vzero
 
-
 !
 !     Local parameters
 !
@@ -378,9 +377,6 @@
 
       return
 
-
-
-
 !$Procedure  ZZGFFVIN ( GF, visibility initialization )
 
       entry zzgffvin ( inst,   tshape, raydir, &
@@ -429,7 +425,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     INST       indicates the name of the instrument, such as a
 !                spacecraft-mounted framing camera, the field of view
 !                (FOV) of which is to be used for a target intersection
@@ -451,7 +446,6 @@
 !                See the header of the SPICELIB routine GETFOV for a
 !                description of the required parameters associated with
 !                an instrument.
-!
 !
 !     TSHAPE     is a string indicating the geometric model used to
 !                represent the location and shape of the target body.
@@ -496,12 +490,10 @@
 !                Case and leading or trailing blanks are not
 !                significant in the string TSHAPE.
 !
-!
 !     RAYDIR     is the direction vector associated with a ray
 !                representing the target. RAYDIR is used if and only
 !                if TSHAPE (see description above) indicates the
 !                target is modeled as a ray.
-!
 !
 !     TARGET     is the name of the target body, the appearances of
 !                which in the specified instrument's field of view are
@@ -522,7 +514,6 @@
 !
 !                TARGET may be set to a blank string if the target is
 !                modeled as a ray.
-!
 !
 !     TFRAME     is the name of the reference frame associated with the
 !                target. Examples of such names are 'IAU_SATURN'
@@ -546,7 +537,6 @@
 !                Case and leading or trailing blanks bracketing a
 !                non-blank frame name are not significant in the string
 !                TFRAME.
-!
 !
 !     ABCORR     indicates the aberration corrections to be applied
 !                when computing the target's position and orientation.
@@ -599,7 +589,6 @@
 !
 !                Case, leading and trailing blanks are not significant
 !                in the string ABCORR.
-!
 !
 !     OBSRVR     is the name of the body from which the target is
 !                observed. The instrument designated by INST is treated
@@ -709,7 +698,6 @@
 !         SPICE(FOVTOOWIDE) will be signaled or the error will be
 !         diagnosed by a routine in the call tree of this routine.
 !
-!
 ! $ Files
 !
 !     See the header of the umbrella routine ZZGFFVU.
@@ -797,12 +785,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     To avoid portability problems, initialize all
@@ -1044,7 +1030,6 @@
 !
          svustl = attblk(stlidx)
          svxmit = attblk(xmtidx)
-
 
       else
 !
@@ -1312,7 +1297,6 @@
       if (   (      ( svishp == cirfov ) &
                .or. ( svishp == ellfov ) )  .and.  svetrg  ) then
 !
-!
 !        Create an ellipsoid whose semi-axes are consistent with the
 !        ellipse in SVPLAN defined by SEMIPT. Caution: after we
 !        create this ellipsoid, we'll scale and shift it so it doesn't
@@ -1331,7 +1315,6 @@
 !        from SVFVCT, then the limb geometry requires
 !
 !           CTREXT / SVXMAG(1) = SVXMAG(1) / 1
-!
 !
          ctrext = svxmag(1) ** 2
 
@@ -1406,7 +1389,6 @@
 
       end if
 
-
       if ( ( svishp == cirfov ) .and. ( .not. svetrg ) ) then
 !
 !        We have a circular FOV and a point or ray target model.
@@ -1416,7 +1398,6 @@
 !        FOV. Compute and save this angular radius.
 !
          svarad = vsep ( svfaxi, svbnds(1,1) )
-
 
       else if (       (      ( svishp == recfov ) &
                         .or. ( svishp == polfov ) ) &
@@ -1482,8 +1463,6 @@
       end if
 
       return
-
-
 
 !$Procedure ZZGFFVST ( GF, "is target in FOV?"  )
 
@@ -1600,12 +1579,10 @@
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialize the state output.
@@ -1643,7 +1620,6 @@
          if ( failed() ) return
 
          call mxm ( m2, m1, insmat )
-
 
          if ( ( svishp == recfov ) .or. ( svishp == polfov ) ) then
 !
@@ -1696,7 +1672,6 @@
 !
             call zzelvupy ( fvlimb, svorig, svfaxi, &
                             svnvrt, svbnds, vistat )
-
 
          else if (      ( svishp == cirfov ) &
                    .or. ( svishp == ellfov )  ) then
@@ -1866,7 +1841,6 @@
 !
             vistat =  sep <= svarad
 
-
          else if ( sep > svarad ) then
 !
 !           The FOV is an ellipse or polygon.
@@ -1946,7 +1920,6 @@
 !                 ellipse; this condition is indicated by L <= 1.
 !
                   vistat = l <= 1.0_wp
-
 
                else if ( svishp == polfov ) then
 !

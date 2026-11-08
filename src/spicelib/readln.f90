@@ -116,13 +116,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read a text line from a logical unit
 !
 !-&
-
 
 !
 !     Local variables
@@ -130,7 +128,6 @@
       integer(ip)           iostat
 !
 !     Standard SPICE error handling.
-!
 !
 !     Read in the next line from the text file attached to UNIT.
 !

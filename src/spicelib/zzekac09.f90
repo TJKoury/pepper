@@ -276,7 +276,6 @@
       to   =  1
       page =  ' '
 
-
       do from = 1, nrows
 !
 !        The Assignment.
@@ -288,7 +287,6 @@
          end if
 
          to  =  to + l
-
 
          if (      ( to   > cpsize-l+1 ) &
               .or. ( from == nrows      )  ) then
@@ -348,7 +346,6 @@
          call dasudi ( handle,  dscbas+ixtidx,  dscbas+ixtidx,  2      )
 
       end if
-
 
       if ( nullok ) then
 !

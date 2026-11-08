@@ -114,7 +114,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -161,13 +160,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_20 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -300,7 +297,6 @@
       do i = 1, 3
          pos( i ) = record ( 3  +  i*nterms )
       end do
-
 
       size = recsiz + 3
 !

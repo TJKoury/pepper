@@ -265,13 +265,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     store the error output device specification
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -302,7 +300,6 @@
 !
 !-&
 
-
 !
 !     Local Variables:
 !
@@ -321,19 +318,13 @@
 
       data    savdev      / 'SCREEN' /
 
-
-
 !
 !     Executable Code:
 !
 
-
       savdev = device
 
       return
-
-
-
 
 !$Procedure GETDEV ( Get Error Output Device Specification )
 
@@ -457,13 +448,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get current error output device specification
 !
 !-&
-
 
 !
 !     Executable Code:

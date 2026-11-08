@@ -28,7 +28,6 @@
       real(wp)              c2
       real(wp)              c3
 
-
       integer(ip)           trunc
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
       parameter           ( trunc = 10   )
@@ -143,7 +142,6 @@
 !     C_k(X) =  --- - ------ + ------ - ------ + . . . + ------- + . . .
 !                k!   (k+2)!   (k+4)!   (k+6)!           (k+2m)!
 !
-!
 !     These series converge for all real values of X.
 !
 ! $ Examples
@@ -152,17 +150,13 @@
 !
 !        C_0(X)   =  COS ( DSQRT(X) )
 !
-!
 !                    SIN ( DSQRT(X) )
 !        C_1(X)   =  ---------------
 !                          DSQRT(X)
 !
-!
 !                    1 - COS ( DSQRT(X) )
 !        C_2(X)   = ---------------------
 !                           X
-!
-!
 !
 !                    1  -  SIN ( DSQRT(X) ) / DSQRT(X)
 !        C_3(X)   =  ----------------------------------
@@ -394,13 +388,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Evaluate the first four Stumpff functions
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -432,7 +424,6 @@
 !        creates the environment specific source files.
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -474,18 +465,13 @@
 !       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
 !                   3!     5!      7!           17!     19!
 !
-!
 !                 1        y         y            y           y
 !              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
 !                2*3      4*5       6*7          16*17       18*19
 !
-!
-!
-!
 !              .    1      y       y             y       y
 !       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
 !                   2!     4!      6!           16!     18!
-!
 !
 !                 1        y         y            y           y
 !              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
@@ -506,7 +492,6 @@
       integer(ip), parameter :: lpair3 = npairs
 
       integer(ip), parameter :: lpair2 = npairs - 1
-
 
 !
 !     Local variables
@@ -531,7 +516,6 @@
 !     Initial values
 !
       data                  first   / .true. /
-
 
 !
 !     We are going to need the numbers
@@ -584,7 +568,6 @@
 
       end if
 
-
 !
 !     First we make sure that the input value of X is within the
 !     range that we are confident we can use to compute the Stumpff
@@ -617,23 +600,13 @@
 !          x*C_k+2(x) =  ---  -  C_k(x)
 !                         k!
 !
-!
-!
 !                                 2
 !           C_0(4x)   =  2*[ C_0(x) ]  -  1
 !
-!
-!
-!
 !           C_1(4x)   =    C_1(x)*C_0(x)
-!
-!
 !
 !                                 2
 !           C_2(4x)   =   [C_1(x)]  / 2
-!
-!
-!
 !
 !           C_3(4x)   = [ C_2(x) + C_0(x)*C_3(x) ] / 4
 !
@@ -652,19 +625,15 @@
 !                                   2
 !                     C_0(16x) = 8*Z  -  1
 !
-!
 !                     C_1(16x) = W*Z
-!
 !
 !                                 2
 !                     C_2(16x) = W  / 8
-!
 !
 !                                       2
 !                                 C_1(x)  + Z*[C_2(x) + C_0(x)*C_3(x)]
 !                     C_3(16x) =  ----------------------------------
 !                                                  8
-!
 !
        if ( x < -1.0_wp ) then
 
@@ -693,14 +662,12 @@
 !     the function values directly from their power series
 !     representations.
 !
-!
 !     Compute C_3 of x :
 !
 !                                   2             7       8
 !              .    1      x       x             x       x
 !       C_3(x) =   --- -  ---  +  ---  +  ... - ---  +  ---
 !                   3!     5!      7!           17!     19!
-!
 !
 !                 1        x         x            x           x
 !              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
@@ -723,7 +690,6 @@
 
       c3    =           pairs(2)*c3
 
-
 !
 !     Compute C_2 of x  :
 !
@@ -732,7 +698,6 @@
 !              .    1      x       x             x       x
 !       C_2(x) =   --- -  ---  +  ---  +  ... + ---  -  ---
 !                   2!     4!      6!           16!     18!
-!
 !
 !                 1        x         x            x           x
 !              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
@@ -767,8 +732,6 @@
       return
       end
 
-
-
 !
 !     Appendix
 !     ========
@@ -779,7 +742,6 @@
 !     accuracy of the computed function values. The original algorithm
 !     of this routine attempted to do this, but was unsuccessful.
 !
-!
 !     These functions have a number of simple relationships that make
 !     their computations practical.  Among these are:
 !
@@ -787,23 +749,13 @@
 !          x*C_k+2(x) =  ---  -  C_k(x)
 !                         k!
 !
-!
-!
 !                                 2
 !           C_0(4x)   =  2*[ C_0(x) ]  -  1
 !
-!
-!
-!
 !           C_1(4x)   =    C_1(x)*C_0(x)
-!
-!
 !
 !                                 2
 !           C_2(4x)   =   [C_1(x)]  / 2
-!
-!
-!
 !
 !           C_3(4x)   = [ C_2(x) + C_0(x)*C_3(x) ] / 4
 !
@@ -822,13 +774,10 @@
 !                                   2
 !                     C_0(16x) = 8*Z  -  1
 !
-!
 !                     C_1(16x) = W*Z
-!
 !
 !                                 2
 !                     C_2(16x) = W  / 8
-!
 !
 !                                       2
 !                                 C_1(x)  + Z*[C_2(x) + C_0(x)*C_3(x)]

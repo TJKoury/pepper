@@ -21,10 +21,10 @@ module pepper_state_zzddhgsd
 
    !> The saved variables of ZZDDHGSD.
    type, public :: zzddhgsd_state
-      character(locsiz) :: clslst ( numcls )  !! saved between calls by ZZDDHGSD
-      character(strsiz) :: stramh ( numamh )  !! saved between calls by ZZDDHGSD
-      character(strsiz) :: strarc ( numarc )  !! saved between calls by ZZDDHGSD
-      character(strsiz) :: strbff ( numbff )  !! saved between calls by ZZDDHGSD
+      character(locsiz) :: clslst ( numcls )  !! names of the classes of strings (METHOD, ARCH, BFF)
+      character(strsiz) :: stramh ( numamh )  !! names of the access methods
+      character(strsiz) :: strarc ( numarc )  !! names of the architectures
+      character(strsiz) :: strbff ( numbff )  !! names of the binary file formats
    end type zzddhgsd_state
 
 contains

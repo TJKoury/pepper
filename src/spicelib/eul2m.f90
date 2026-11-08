@@ -209,7 +209,6 @@
 !
 !     preserves R, except for round-off error.
 !
-!
 !     On the other hand, the sequence of calls
 !
 !        CALL EUL2M (     ANGLE3,  ANGLE2,  ANGLE1,
@@ -228,7 +227,6 @@
 !         the z axis, next by 60 degrees about the y axis resulting
 !         from the first rotation, and finally by -50 degrees about
 !         the z axis resulting from the first two rotations.
-!
 !
 !            C
 !            C     Create the coordinate transformation matrix
@@ -254,7 +252,6 @@
 !                  CALL EUL2M (  ANGLE3, ANGLE2, ANGLE1,
 !                 .              AXIS3,  AXIS2,  AXIS1,   R  )
 !
-!
 !     2)  A trivial example using actual numbers.
 !
 !         The code fragment
@@ -271,7 +268,6 @@
 !            |                    |
 !            |  0      0       1  |
 !            +-                  -+
-!
 !
 !     3)  Finding the rotation matrix specified by a set of `clock,
 !         cone, and twist' angles, as defined on the Voyager 2 project:
@@ -290,7 +286,6 @@
 !
 !               CALL EUL2M (  TWIST,  CONE,  CLOCK,
 !              .              3,      2,     3,      TSCTV  )
-!
 !
 !     4)  Finding the rotation matrix specified by a set of `right
 !         ascension, declination, and twist' angles, as defined on the
@@ -367,13 +362,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     euler angles to matrix
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -422,7 +415,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -433,7 +425,6 @@
 !
       real(wp)              r1    ( 3, 3 )
       logical               badax
-
 
 !
 !     Standard SPICE error handling.
@@ -447,7 +438,6 @@
       badax =       (  ( axis3 < 1 ) .or. ( axis3 > 3 )  ) &
                .or. (  ( axis2 < 1 ) .or. ( axis2 > 3 )  ) &
                .or. (  ( axis1 < 1 ) .or. ( axis1 > 3 )  )
-
 
       if ( badax ) then
 

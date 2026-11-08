@@ -126,7 +126,6 @@
 !            After a 1-3 split is performed, the number of values in
 !            each node is within bounds.
 !
-!
 !     An EK tree is always balanced after an insertion:  all leaf nodes
 !     are at the same level.
 !
@@ -181,7 +180,6 @@
 
       integer(ip), parameter :: splt13 = splt23 + 1
 
-
 !
 !     Local variables
 !
@@ -211,9 +209,6 @@
 
       logical               overfl
 
-
-!
-!     Use discovery check-in for speed.
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
@@ -247,9 +242,7 @@
 !
       state = lcheck
 
-
       do while ( state /= term )
-
 
          if ( state == lcheck ) then
 !
@@ -289,9 +282,7 @@
                   state = rcheck
                end if
 
-
             end if
-
 
          else if ( state == rcheck ) then
 !
@@ -331,7 +322,6 @@
 
             end if
 
-
          else if ( state == balnce ) then
 !
 !           LNODE has a right sibling, and between the two nodes,
@@ -341,7 +331,6 @@
             call zzektrbn ( handle, tree, lnode, rnode, parent, pkidx )
 
             state  =  term
-
 
          else if ( state == splt23 ) then
 !
@@ -378,10 +367,8 @@
 
             end if
 
-
             call zzektr23 ( handle, tree,  lnode, rnode, &
                             parent, pkidx, overfl       )
-
 
             if ( overfl ) then
 
@@ -404,11 +391,9 @@
 
                end if
 
-
             else
                state  =  term
             end if
-
 
          else if ( state == splt13 ) then
 !

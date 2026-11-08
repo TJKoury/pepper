@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       integer(ip)           handle
       integer(ip)           tree
       integer(ip)           key
@@ -119,7 +118,7 @@
       integer(ip)           level
 
 !
-!     Use discovery check-in in this puppy.
+! in this puppy.
 !
       call zzektrlk ( handle, tree,   key,   idx, &
                       node,   noffst, level, ptr  )

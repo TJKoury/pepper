@@ -109,7 +109,6 @@
 !     UDBAIL     I   Name of a routine that signals a program interrupt.
 !     RESULT    I-O  SPICE window containing results.
 !
-!
 ! $ Detailed_Input
 !
 !     UDSTEP     the routine that computes a time step in an attempt to
@@ -531,7 +530,6 @@
 
       integer(ip), parameter :: tempw = 5
 
-
 !
 !     Number of supported comparison operators.
 !
@@ -579,7 +577,6 @@
       logical               cstep
       logical               need
 
-
 !
 !     Saved variables
 !
@@ -596,7 +593,6 @@
                                      'LOCMAX', &
                                      'ABSMAX'  /
 
-
 !
 !     Set constant step parameter to .FALSE..
 !
@@ -606,7 +602,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Make sure we have enough workspace windows.
@@ -813,7 +808,6 @@
          call udrepf
       end if
 
-
 !
 !     Let's think about what we have now. We have the intervals in the
 !     confinement window when a value of some kind is decreasing.
@@ -853,7 +847,6 @@
          call zzgfwsts ( work(b,decres), cnfine, '()', result )
 
          return
-
 
       else if ( locrel == 'LOCMAX' ) then
 !
@@ -923,7 +916,6 @@
 
             end if
 
-
             winsiz = wncard (  work( b, name(case) )  )
 
             do i = 1, winsiz
@@ -971,7 +963,6 @@
                   end if
 
                   extrem = min ( extrem, value )
-
 
                else
 
@@ -1042,7 +1033,6 @@
 
       if (  failed() ) return
 
-
 !
 !     We have some kind of greater than, less than, or equal to
 !     relation to solve for. Note that ABSMAX and ABSMIN are for case
@@ -1112,7 +1102,6 @@
 
       end do
 
-
       if ( rpt ) then
 !
 !        Finish the progress report for the second pass.
@@ -1135,7 +1124,6 @@
 !
          call wnintd ( cnfine,         result,  work(b,tempw) )
          call copyd  ( work(b,tempw),           result        )
-
 
       else if ( ( locrel == '>' ) .or. ( locrel == 'ABSMAX' ) ) then
 !

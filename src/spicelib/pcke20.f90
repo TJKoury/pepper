@@ -40,7 +40,6 @@
 !              computed. The epoch is represented as seconds past
 !              J2000 TDB.
 !
-!
 !     RECORD   is a data record which, when evaluated at epoch ET,
 !              will yield Euler angles and Euler angle rates
 !              representing the orientation and angular velocity,
@@ -171,7 +170,6 @@
 !        the PCKRnn routines might be used to examine raw segment data
 !        before evaluating it with the PCKEnn routines.
 !
-!
 !        Here we load a binary PCK files and use PCKE20 to get the
 !        Euler angles.
 !
@@ -204,7 +202,6 @@
 !     C
 !                 CALL PCKE20 ( ET, RECORD, EULANG )
 !
-!
 !        The Euler angles and their derivatives are returned
 !        in EULANG.
 !
@@ -234,13 +231,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate pck_type_20 record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -252,7 +247,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Call evaluation routine to get Euler angles

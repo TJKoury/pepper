@@ -35,7 +35,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     X        is any double precision number greater than or equal to
@@ -119,20 +118,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     d.p. arc hyperbolic_cosine
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
-
 
 !
 !   Set up the error processing.
@@ -162,7 +156,6 @@ contains
 !  used.
 !
       dacosh = dlog (x + x * dsqrt (1.0_wp - (1.0_wp/x)/x) )
-
 
       return
       end procedure dacosh
@@ -195,7 +188,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -273,13 +265,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     check a d.p. argument for ACOS before evaluation
 !
 !-&
-
 
 !
 !     Bracket ARG.
@@ -348,7 +338,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -426,13 +415,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     check a d.p. argument for ASIN before evaluation
 !
 !-&
-
 
 !
 !     Bracket ARG.
@@ -495,7 +482,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -584,21 +570,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     d.p. arc hyperbolic_tangent
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
-
-
 
 !
 !     Set up the error processing.
@@ -622,7 +602,6 @@ contains
       end if
 
       datanh = 0.5_wp * dlog ( (1.0_wp+x) / (1.0_wp-x) )
-
 
       return
       end procedure datanh
@@ -650,7 +629,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -769,7 +747,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dazldr_ex1.tm
@@ -807,9 +784,7 @@ contains
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DAZLDR_EX1
 !              IMPLICIT NONE
@@ -963,10 +938,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        AZ/EL coordinates:
 !
@@ -1004,7 +977,6 @@ contains
 !           dY/dt (km/s)           =      -13797.77164550
 !           dZ/dt (km/s)           =       -8704.32385654
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -1024,7 +996,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian matrix of AZ/EL w.r.t. rectangular coordinates
@@ -1032,7 +1003,6 @@ contains
 !     Rectangular to range, AZ and EL velocity conversion
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1047,7 +1017,6 @@ contains
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     There is a singularity of the Jacobian matrix for points on
@@ -1133,7 +1102,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     X,
@@ -1214,7 +1182,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dcyldr_ex1.tm
@@ -1238,7 +1205,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -1249,9 +1215,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DCYLDR_EX1
 !              IMPLICIT NONE
@@ -1319,7 +1283,6 @@ contains
 !
 !              CALL MXV ( JACOBI, CYLVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -1361,10 +1324,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -1402,7 +1363,6 @@ contains
 !          dY/dt (km/s)           =     0.53760111E+04
 !          dZ/dt (km/s)           =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -1427,13 +1387,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of cylindrical w.r.t. rectangular coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1519,7 +1477,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     X,
@@ -1600,7 +1557,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dlatdr_ex1.tm
@@ -1624,7 +1580,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -1635,9 +1590,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DLATDR_EX1
 !              IMPLICIT NONE
@@ -1705,7 +1658,6 @@ contains
 !
 !              CALL MXV ( JACOBI, LATVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -1748,10 +1700,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -1789,7 +1739,6 @@ contains
 !          dY/dt (km/s)           =     0.53760111E+04
 !          dZ/dt (km/s)           =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -1814,13 +1763,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of latitudinal w.r.t. rectangular coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1834,7 +1781,6 @@ contains
       real(wp)              long
       real(wp)              lat
       real(wp)              injacb  ( 3, 3 )
-
 
 !
 !     Standard SPICE error handling.
@@ -1906,7 +1852,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2075,7 +2020,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: drdazl_ex1.tm
@@ -2113,9 +2057,7 @@ contains
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DRDAZL_EX1
 !              IMPLICIT NONE
@@ -2269,10 +2211,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        AZ/EL coordinates:
 !
@@ -2310,7 +2250,6 @@ contains
 !           dY/dt (km/s)           =      -13797.77164550
 !           dZ/dt (km/s)           =       -8704.32385654
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -2330,7 +2269,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian matrix of rectangular w.r.t. AZ/EL coordinates
@@ -2338,7 +2276,6 @@ contains
 !     Range, AZ and EL to rectangular velocity conversion
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2359,10 +2296,8 @@ contains
 !
       if ( ctx%failed() ) return
 
-
 !
-!     The input range must be non-negative. If not, signal an error
-!     and check out.
+!     The input range must be non-negative. If not, signal an error.
 !
       if ( range < 0.0_wp ) then
 
@@ -2478,7 +2413,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     LON      is the geodetic longitude of point (radians).
@@ -2563,7 +2497,6 @@ contains
 !        (dx, dy, dz)   = JACOBI|              * (dlon, dlat, dalt)
 !                               |(lon,lat,alt)
 !
-!
 !     This routine computes the matrix
 !
 !              |
@@ -2583,7 +2516,6 @@ contains
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -2608,7 +2540,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -2619,9 +2550,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DRDGEO_EX1
 !              IMPLICIT NONE
@@ -2714,7 +2643,6 @@ contains
 !
 !              CALL MXV ( JACOBI, GEOVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -2763,10 +2691,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -2810,7 +2736,6 @@ contains
 !          dY/dt (km/s)           =     0.53760111E+04
 !          dZ/dt (km/s)           =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -2838,13 +2763,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of rectangular w.r.t. geodetic coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2890,7 +2813,7 @@ contains
 !     If the flattening coefficient is greater than one, the polar
 !     radius computed below is negative. If it's equal to one, the
 !     polar radius is zero. Either case is a problem, so signal an
-!     error and check out.
+!     error.
 !
       if ( f >= 1.0_wp ) then
 
@@ -2941,7 +2864,6 @@ contains
 !            / 2   2        2   2           / 2   2        2   2
 !          \/ b cos (q)  + a sin (q)      \/ b cos (q)  + a sin (q)
 !
-!
 !     The first component of this term is by definition equal to the
 !     cosine of the geodetic latitude, thus
 !
@@ -2949,13 +2871,11 @@ contains
 !                               / 2   2        2   2
 !        b cos(q) = cos(lat)  \/ b cos (q)  + a sin (q)
 !
-!
 !     This can be transformed to the equation
 !
 !                                ______________________________
 !                               /   2    2     2        2
 !        b cos(q) = cos(lat)  \/ ( b  - a  )cos (q)  + a
-!
 !
 !     Squaring both sides and rearranging terms gives:
 !
@@ -2969,15 +2889,11 @@ contains
 !                     2    2         2   2
 !                    b  sin (lat) + a cos (lat)
 !
-!
-!
 !                             cos (lat)
 !                 =  ------------------------------
 !                       _____________________________
 !                      /      2    2           2
 !                    \/  (b/a)  sin (lat) + cos (lat)
-!
-!
 !
 !                             cos (lat)
 !                 =  ---------------------------------
@@ -2985,18 +2901,13 @@ contains
 !                      /      2    2           2
 !                    \/  (1-f)  sin (lat) + cos (lat)
 !
-!
-!
 !     From this one can also conclude that
-!
 !
 !                           (1-f) sin (lat)
 !        sin(q)   =  ----------------------------------
 !                        _____________________________
 !                       /      2    2           2
 !                     \/  (1-f)  sin (lat) + cos (lat)
-!
-!
 !
 !     Thus the point on the surface of the spheroid is given by
 !
@@ -3006,15 +2917,12 @@ contains
 !                       /      2    2           2
 !                     \/  (1-f)  sin (lat) + cos (lat)
 !
-!
-!
 !                                  2
 !                        re * (1-f) sin (lat)
 !        z_0      =  ----------------------------------
 !                        _____________________________
 !                       /      2    2           2
 !                     \/  (1-f)  sin (lat) + cos (lat)
-!
 !
 !     Thus given a point with the same latitude but a non-zero
 !     longitude, one can conclude that
@@ -3025,14 +2933,11 @@ contains
 !                       /      2    2           2
 !                     \/  (1-f)  sin (lat) + cos (lat)
 !
-!
-!
 !                         re * sin (lon) cos (lat)
 !        y_0      =  ---------------------------------
 !                        _____________________________
 !                       /      2    2           2
 !                     \/  (1-f)  sin (lat) + cos (lat)
-!
 !
 !                                    2
 !                          re * (1-f) sin (lat)
@@ -3041,11 +2946,9 @@ contains
 !                       /      2    2           2
 !                     \/  (1-f)  sin (lat) + cos (lat)
 !
-!
 !     The unit normal, n, at this point is simply
 !
 !        ( cos(lon)cos(lat),  sin(lon)cos(lat),  sin(lat) )
-!
 !
 !     Thus for a point at altitude alt, we simply add the vector
 !
@@ -3056,7 +2959,6 @@ contains
 !        x = [ alt +          re/g(lat,f) ] * cos(lon) * cos(lat)
 !        y = [ alt +          re/g(lat,f) ] * sin(lon) * cos(lat)
 !        z = [ alt + re*(1-f)**2/g(lat,f) ] *            sin(lat)
-!
 !
 !     We're going to need the sine and cosine of LAT and LON many
 !     times.  We'll just compute them once.
@@ -3084,7 +2986,6 @@ contains
       jacobi (dy,dlon)  =    ( alt + re/g ) * clon * clat
       jacobi (dz,dlon)  =    0.0_wp
 
-
       jacobi (dx,dlat)  =    (      -  re*dgdlat / g2 ) * clon * clat &
                            - ( alt  +  re        / g  ) * clon * slat
 
@@ -3094,11 +2995,9 @@ contains
       jacobi (dz,dlat)  =    (      -  flat2*re*dgdlat / g2 ) * slat &
                            + ( alt  +  flat2*re        / g  ) * clat
 
-
       jacobi (dx,dalt)  =  clon * clat
       jacobi (dy,dalt)  =  slon * clat
       jacobi (dz,dalt)  =         slat
-
 
       return
       end procedure drdgeo
@@ -3127,7 +3026,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -3209,7 +3107,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dsphdr_ex1.tm
@@ -3233,7 +3130,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -3244,9 +3140,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSPHDR_EX1
 !              IMPLICIT NONE
@@ -3314,7 +3208,6 @@ contains
 !
 !              CALL MXV ( JACOBI, SPHVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -3358,10 +3251,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -3399,7 +3290,6 @@ contains
 !          dY/dt (km/s)            =     0.53760111E+04
 !          dZ/dt (km/s)            =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -3424,13 +3314,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of spherical w.r.t. rectangular coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -3515,7 +3403,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -3661,7 +3548,6 @@ contains
 !           EPOCH        is the epoch of the elements in seconds past
 !                        the J2000 epoch.
 !
-!
 !        EQEL(1) = A
 !        EQEL(2) = ECC * DSIN ( OMEGA + NODE )
 !        EQEL(3) = ECC * DCOS ( OMEGA + NODE )
@@ -3675,13 +3561,11 @@ contains
 !        EQEL(8) = DARGP + DMDT + DNODE
 !        EQEL(9) = DNODE
 !
-!
 !        We shall compute the state of the satellite in the
 !        pole and equator reference system.
 !
 !        RAPOL   = -HALFPI()
 !        DECPOL  =  HALFPI()
-!
 !
 !        Now compute the state at the desired epoch ET.
 !
@@ -3744,18 +3628,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute a state from equinoctial elements
 !
 !-&
 
-
 !
 !     SPICELIB Functions.
 !
-
 
 !
 !     LOCAL VARIABLES
@@ -3786,7 +3667,6 @@ contains
       real(wp)              dy1
       real(wp)              p
 
-
       real(wp)              q
       real(wp)              r
       real(wp)              ra
@@ -3809,22 +3689,15 @@ contains
       real(wp)              vf   (3)
       real(wp)              vg   (3)
 
-
-
-
 !
 !     Constants
 !
       real(wp), parameter :: pi2 = twopi
 
-
-
 !
 !     Standard SPICE exception handling code.
 !
       if ( ctx%failed() ) return
-
-
 
 !
 !     Take care of the various errors that can arise with the
@@ -3862,9 +3735,6 @@ contains
          return
 
       end if
-
-
-
 
 !
 !     Form the transformation from planetary equator to the inertial
@@ -3918,7 +3788,6 @@ contains
 !
 !        H_dt = E*Sin(ARGP_0 + NODE_0 )Cos(dt*d(ARGP+NODE)/dt )
 !             + E*Cos(ARGP_0 + NODE_0 )Sin(dt*d(ARGP+NODE)/dt )
-!
 !
 !             = H_0 * Cos(dt*d(ARGP+NODE)/dt )
 !             + K_0 * Sin(dt*d(ARGP+NODE)/dt )
@@ -4030,7 +3899,6 @@ contains
       r  = a*(1.0_wp-rb)
       ra = (mldt*a*a)/r
 !
-!
 !     Velocity in the orbit plane
 !
       dx1 = ra * ( -sf + h*b*rb )
@@ -4097,7 +3965,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     P        is a non-zero point in three-dimensional space.
@@ -4148,7 +4015,6 @@ contains
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find the surface intercept point on an ellipsoid having radii
 !
 !            ( 3, 2, 1 )
@@ -4158,9 +4024,7 @@ contains
 !
 !            ( 1, 1, 1 )
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EDPNT_EX1
 !              IMPLICIT NONE
@@ -4197,14 +4061,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        EP    =   0.85714285714286  0.85714285714286  0.85714285714286
 !        LEVEL =   1.00000000000000
-!
 !
 ! $ Restrictions
 !
@@ -4230,18 +4091,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     scale point to lie on ellipsoid
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -4249,9 +4107,6 @@ contains
       real(wp)              level
       real(wp)              sq
 
-!
-!     Use discovery check-in.
-!
       if ( ctx%failed() ) return
 
       if (      ( a <= 0.0_wp ) &
@@ -4342,7 +4197,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     A        is the length of the semi-axis of the ellipsoid
@@ -4432,9 +4286,7 @@ contains
 !        We can evaluate F at a point to determine whether that point
 !        is close to the ellipsoid's surface.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EDNMPT_EX1
 !              IMPLICIT NONE
@@ -4492,7 +4344,6 @@ contains
 !             .               + (POINT(3)/C)**2 - 1
 !              WRITE (*,*) ' '
 !
-!
 !              CALL VPACK  ( 15.D0, -7.D0, 3.D0, XNORML )
 !              CALL EDNMPT ( A,      B,    C,    XNORML, POINT  )
 !              CALL SURFNM ( A,      B,    C,    POINT,  NORMAL )
@@ -4539,10 +4390,8 @@ contains
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Semi-axis lengths:      10.00000000    5.00000000    2.00000000
 !        Input vector:            0.00000000    0.00000000    3.00000000
@@ -4572,7 +4421,6 @@ contains
 !        Angular error (rad):     0.00000000
 !        Off-surface error:       0.00000000
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -4600,18 +4448,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     point on an ellipsoid having given surface normal
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -4627,7 +4472,7 @@ contains
       real(wp)              scale
 
 !
-!     Use discovery check-in. We will test RETURN though, since
+! We will test RETURN though, since
 !     we could have invalid inputs to our arithmetic computations
 !     if a SPICE error condition exists upon entry.
 !
@@ -4709,19 +4554,16 @@ contains
 !                                           2     2     2
 !        ( x, y, z )         = lambda ( n1*a, n2*b, n3*c )
 !
-!
 !     Then since the vector on the left side is on the surface
 !     of E, we must have
 !
 !              2       2   2        2   2       2   2
 !        lambda  ( ( n1 * a  ) + (n2 * b ) + (n3 + c ) ) = 1
 !
-!
 !     Requiring lambda to be positive, we have
 !
 !                               2   2        2   2       2   2
 !        lambda = 1 / sqrt( ( n1 * a  ) + (n2 * b ) + (n3 + c ) )
-!
 !
       na2 = normal(1) * sa * sa
       nb2 = normal(2) * sb * sb
@@ -4776,7 +4618,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -4866,13 +4707,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     elliptic time of flight
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -4882,7 +4721,6 @@ contains
 !        proper range---[0,1)---before proceeding.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -4913,8 +4751,6 @@ contains
       real(wp)              deriv2
       real(wp)              change
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -4924,7 +4760,6 @@ contains
          call ctx%sigerr ( 'SPICE(WRONGCONIC)' )
          return
       end if
-
 
 !
 !     For reasons of numerical stability, we would like to restrict
@@ -4979,7 +4814,6 @@ contains
 !
 !     provides a good initial estimate of y for all values of e.
 !
-!
       m0 = halfpi - ecc
 
       if ( m >= m0 ) then
@@ -5019,7 +4853,6 @@ contains
 !
 !     provides a reasonable estimate of E directly.
 !
-!
       else if ( ecc <= 0.7_wp ) then
 
          y = 1.0_wp - (1.0_wp - m/m0)**2 * (1.0_wp + 2.0_wp*m/m0 - m/(1.0_wp-ecc))
@@ -5044,7 +4877,6 @@ contains
          e  = dcbrt ( r + qr ) + dcbrt ( r - qr )
 
       end if
-
 
 !
 !     Use the Newton second-order method,
@@ -5087,7 +4919,6 @@ contains
          e = -e
       end if
 
-
       return
       end procedure elltof
 
@@ -5114,7 +4945,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -5145,7 +4975,6 @@ contains
 !
 !     WORK     is a work space array. It is used by this routine
 !              as a scratch area to hold intermediate results.
-!
 !
 !     X        is the abscissa value at which the interpolating
 !              polynomial and its derivative are to be evaluated.
@@ -5222,9 +5051,7 @@ contains
 !                     7       2
 !           f(x)  =  x   +  2x  + 5
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM HRMESP_EX1
 !              IMPLICIT NONE
@@ -5236,7 +5063,6 @@ contains
 !              DOUBLE PRECISION      YVALS (8)
 !              DOUBLE PRECISION      WORK  (8,2)
 !              INTEGER               N
-!
 !
 !              N         =       4
 !
@@ -5259,14 +5085,11 @@ contains
 !              WRITE (*,*) 'DERIV  = ', DERIV
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         ANSWER =    141.00000000000000
 !         DERIV  =    456.00000000000000
-!
 !
 ! $ Restrictions
 !
@@ -5315,14 +5138,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     interpolate function using Hermite polynomial
 !     Hermite interpolation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -5345,10 +5166,6 @@ contains
       integer(ip)           prev
       integer(ip)           this
 
-
-!
-!     Check in only if an error is detected.
-!
       if ( ctx%failed() ) return
 
 !
@@ -5362,7 +5179,6 @@ contains
          return
 
       end if
-
 
 !
 !     The step size must be non-zero.
@@ -5443,7 +5259,6 @@ contains
 !        each input abscissa value, evaluated at NEWX.
 !
          temp  = work(this, 1) * ( newx - real(i, wp) )  +  work(prev, 1)
-
 
          work( this, 1 ) = (   c1 * work( prev, 1 ) &
                              + c2 * work( next, 1 )  )
@@ -5542,7 +5357,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -5644,9 +5458,7 @@ contains
 !                     7       2
 !           f(x)  =  x   +  2x  + 5
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM HRMINT_EX1
 !              IMPLICIT NONE
@@ -5682,14 +5494,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         ANSWER =    141.00000000000000
 !         DERIV  =    456.00000000000000
-!
 !
 ! $ Restrictions
 !
@@ -5737,14 +5546,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     interpolate function using Hermite polynomial
 !     Hermite interpolation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -5766,9 +5573,6 @@ contains
       integer(ip)           xi
       integer(ip)           xij
 
-!
-!     Check in only if an error is detected.
-!
       if ( ctx%failed() ) return
 
 !
@@ -5810,7 +5614,6 @@ contains
          c2     =  x          - xvals(i)
          denom  =  xvals(i+1) - xvals(i)
 
-
          if ( denom == 0.0_wp ) then
 
             call ctx%setmsg ( 'XVALS(#) = XVALS(#) = #' )
@@ -5848,7 +5651,6 @@ contains
 !        for each input abscissa value, evaluated at X.
 !
          temp  = work(this, 1) * ( x - xvals(i) )  +  work(prev, 1)
-
 
          work( this, 1 ) = (   c1 * work( prev, 1 ) &
                              + c2 * work( next, 1 )  )  /  denom
@@ -5959,7 +5761,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -6073,9 +5874,7 @@ contains
 !                     3      2
 !           F(X)  =  X  + 2*X  - 4*X - 7
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LGRESP_EX1
 !              IMPLICIT NONE
@@ -6103,22 +5902,17 @@ contains
 !              WRITE (*,*) 'ANSWER = ', ANSWER
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         ANSWER =    1.0000000000000000
-!
 !
 !     2) Solve the same problem using a negative step. In order to
 !        find the solution, set the elements of YVALS in reverse order.
 !
 !        The returned value of LGRESP would still be 1.D0.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LGRESP_EX2
 !              IMPLICIT NONE
@@ -6146,13 +5940,10 @@ contains
 !              WRITE (*,*) 'ANSWER = ', ANSWER
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         ANSWER =    1.0000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -6195,14 +5986,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     interpolate function using Lagrange polynomial
 !     Lagrange interpolation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -6218,10 +6007,6 @@ contains
       integer(ip)           i
       integer(ip)           j
 
-
-!
-!     Check in only if an error is detected.
-!
       if ( ctx%failed() ) then
          lgresp = 0.0_wp
          return
@@ -6240,7 +6025,6 @@ contains
          return
 
       end if
-
 
 !
 !     The step size must be non-zero.
@@ -6281,7 +6065,6 @@ contains
 !           x ,  x   , ... x   .
 !            i    i+1       i+j
 !
-!
 !        Then we have the recursion relation
 !
 !           P              (x)  =
@@ -6293,18 +6076,15 @@ contains
 !                                  x - x           (i+1)...(i+j)
 !                                   i   i+j
 !
-!
 !                                  x  -  x
 !                                         i+j
 !                               + -----------  *  P                (x)
 !                                  x  -  x         i(i+1)...(i+j-1)
 !                                   i     i+j
 !
-!
 !        Repeated application of this relation allows us to build
 !        successive columns, in left-to-right order, of the
 !        triangular table
-!
 !
 !           P (x)
 !            1
@@ -6326,7 +6106,6 @@ contains
 !
 !                                      .
 !
-!
 !                             P           (x)
 !                              (N-2)(N-1)N
 !                    P     (x)
@@ -6334,9 +6113,7 @@ contains
 !           P (x)
 !            N
 !
-!
 !        and after N-1 steps arrive at our desired result,
-!
 !
 !           P       (x).
 !            12...N
@@ -6351,7 +6128,6 @@ contains
 !
 !        P (x).
 !         I
-!
 !
       do i = 1, n
          work(i) = yvals(i)
@@ -6404,7 +6180,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -6515,9 +6290,7 @@ contains
 !            '           2
 !           F (X)  =  3*X  + 4*X - 4
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LGRIND_EX1
 !              IMPLICIT NONE
@@ -6547,13 +6320,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         P, DP =    1.0000000000000000        16.000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -6591,14 +6361,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     interpolate function using Lagrange polynomial
 !     Lagrange interpolation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -6614,10 +6382,6 @@ contains
       integer(ip)           i
       integer(ip)           j
 
-
-!
-!     Check in only if an error is detected.
-!
       if ( ctx%failed() ) return
 
 !
@@ -6631,7 +6395,6 @@ contains
          return
 
       end if
-
 
 !
 !     We're going to compute the value of our interpolating polynomial
@@ -6650,7 +6413,6 @@ contains
 !           x ,  x   , ... x   .
 !            i    i+1       i+j
 !
-!
 !        Then we have the recursion relation
 !
 !           P              (x)  =
@@ -6662,18 +6424,15 @@ contains
 !                                  x - x           (i+1)...(i+j)
 !                                   i   i+j
 !
-!
 !                                  x  -  x
 !                                         i+j
 !                               + -----------  *  P                (x)
 !                                  x  -  x         i(i+1)...(i+j-1)
 !                                   i     i+j
 !
-!
 !        Repeated application of this relation allows us to build
 !        successive columns, in left-to-right order, of the
 !        triangular table
-!
 !
 !           P (x)
 !            1
@@ -6695,7 +6454,6 @@ contains
 !
 !                                      .
 !
-!
 !                             P           (x)
 !                              (N-2)(N-1)N
 !                    P     (x)
@@ -6703,16 +6461,12 @@ contains
 !           P (x)
 !            N
 !
-!
 !        and after N-1 steps arrive at our desired result,
-!
 !
 !           P       (x).
 !            12...N
 !
-!
 !     The computation is easier to do than to describe.
-!
 !
 !     We'll use the scratch array WORK to contain the current column of
 !     our interpolation table.  To start out with, WORK(I) will contain
@@ -6805,7 +6559,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -6907,9 +6660,7 @@ contains
 !                     3      2
 !           F(X)  =  X  + 2*X  - 4*X - 7
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LGRINT_EX1
 !              IMPLICIT NONE
@@ -6938,13 +6689,10 @@ contains
 !              WRITE (*,*) 'ANSWER = ', ANSWER
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         ANSWER =    1.0000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -6982,14 +6730,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     interpolate function using Lagrange polynomial
 !     Lagrange interpolation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -7005,10 +6751,6 @@ contains
       integer(ip)           i
       integer(ip)           j
 
-
-!
-!     Check in only if an error is detected.
-!
       if ( ctx%failed() ) then
          lgrint = 0.0_wp
          return
@@ -7028,7 +6770,6 @@ contains
 
       end if
 
-
 !
 !     We're going to compute the value of our interpolating polynomial
 !     at X by taking advantage of a recursion relation between
@@ -7046,7 +6787,6 @@ contains
 !           x ,  x   , ... x   .
 !            i    i+1       i+j
 !
-!
 !        Then we have the recursion relation
 !
 !           P              (x)  =
@@ -7058,18 +6798,15 @@ contains
 !                                  x - x           (i+1)...(i+j)
 !                                   i   i+j
 !
-!
 !                                  x  -  x
 !                                         i+j
 !                               + -----------  *  P                (x)
 !                                  x  -  x         i(i+1)...(i+j-1)
 !                                   i     i+j
 !
-!
 !        Repeated application of this relation allows us to build
 !        successive columns, in left-to-right order, of the
 !        triangular table
-!
 !
 !           P (x)
 !            1
@@ -7091,7 +6828,6 @@ contains
 !
 !                                      .
 !
-!
 !                             P           (x)
 !                              (N-2)(N-1)N
 !                    P     (x)
@@ -7099,23 +6835,18 @@ contains
 !           P (x)
 !            N
 !
-!
 !        and after N-1 steps arrive at our desired result,
-!
 !
 !           P       (x).
 !            12...N
 !
-!
 !     The computation is easier to do than to describe.
-!
 !
 !     We'll use the scratch array WORK to contain the current column of
 !     our interpolation table.  To start out with, WORK(I) will contain
 !
 !        P (x).
 !         I
-!
 !
       do i = 1, n
          work(i) = yvals(i)
@@ -7187,7 +6918,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     DEGP     is the degree of the input Chebyshev expansion.
@@ -7213,14 +6943,12 @@ contains
 !
 !                 Define S = ( X - X2S(1) ) / X2S(2)
 !
-!
 !                                   DEGP+1
 !                                   __
 !                                   \
 !                    f(X) = g(S)  = /  CP(k)  T   (S)
 !                                   --         k-1
 !                                   k=1
-!
 !
 !     X        is the abscissa value at which the function defined by
 !              the input expansion and its integral are to be
@@ -7340,9 +7068,7 @@ contains
 !
 !           f(30) and F(30)
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CHBIGR_EX1
 !              IMPLICIT NONE
@@ -7415,14 +7141,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         ITGRLP =    10.000000000000000
 !         P      =    6.0000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -7476,7 +7199,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     integral of chebyshev_polynomial_expansion
@@ -7484,10 +7206,8 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local variables
 !
@@ -7506,7 +7226,7 @@ contains
       integer(ip)           nterms
 
 !
-!     Test RETURN but don't check in. Use discovery check-in.
+!     Test RETURN but don't check in.
 !
       if ( ctx%failed() ) return
 
@@ -7542,7 +7262,6 @@ contains
 !     Background
 !     ==========
 !
-!
 !     Let
 !
 !        T ,  n = 0, ...
@@ -7574,18 +7293,14 @@ contains
 !        U   (x) = 2x U (x)  -  U   (x),  n = 2, ...
 !         n+1          n         n-1
 !
-!
 !     The integration formula (1) below is based on several
 !     identities:
-!
 !
 !        T (x)        = (1/2) * ( U (x) - U   (x) ),  n = 2, ...    (B1)
 !         n                        n       n-2
 !
-!
 !        d(T (x))/dx  =  n U   (x),   n = 1, ...                    (B2)
 !           n               n-1
-!
 !
 !                                 d(T   (x))/dx   d(T   (x))/dx
 !                                    n+1             n-1
@@ -7594,7 +7309,6 @@ contains
 !
 !                                     n = 2, ...                    (B3)
 !
-!
 !     Identity (B1) can be proved via mathematical induction. Using
 !     (B1) and the Chebyshev recurrence formulas for both kinds of
 !     polynomials, identity (B2) can also be proved via mathematical
@@ -7602,7 +7316,6 @@ contains
 !     (B1) and (B2).
 !
 !     Formula (1) below follows from (B3).
-!
 !
 !     Algorithm
 !     =========
@@ -7658,7 +7371,6 @@ contains
 !     is a constant of integration. Then by grouping coefficients of
 !     the Chebyshev polynomials, we have
 !
-!
 !                           N+2
 !                           __
 !                           \
@@ -7686,10 +7398,8 @@ contains
 !        A    = ------ a                for N >= 1                  (5d)
 !         N+2   2(N+1)  N+1
 !
-!
 !     Note that (5b) does not conflict with (5c) or (5d) for N < 3,
 !     since (5b) is applicable only when N >= 3.
-!
 !
 !     We'll compute the sums
 !
@@ -7715,7 +7425,6 @@ contains
 !        f(x) = /  a  T   (x)
 !               --  k  k-1
 !               k=1
-!
 !
 !     using Clenshaw's recurrence formula. Note that in the above
 !     equations, N is the degree of the input expansion, which is
@@ -7907,7 +7616,6 @@ contains
       integer(ip)           ubpl
       parameter           ( ubpl = 4 )
 
-
 ! $ Detailed_Input
 !
 !     ELLIPS   is a SPICE ellipse. The ellipse is allowed to
@@ -8097,13 +7805,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersection of ellipse and plane
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -8128,11 +7834,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -8162,7 +7866,6 @@ contains
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Check the input plane.
@@ -8395,7 +8098,6 @@ contains
 !
 !     the solutions are identical.
 !
-!
       if ( vzero(sminor) ) then
 
          nxpts = 1
@@ -8423,7 +8125,6 @@ contains
       call vlcom3 ( 1.0_wp,         center, &
                     dcos(angle2),  smajor, &
                     dsin(angle2),  sminor,    xpt2 )
-
 
       return
       end procedure inelpl
@@ -8455,7 +8156,6 @@ contains
       integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-
 ! $ Detailed_Input
 !
 !     VERTEX,
@@ -8478,7 +8178,6 @@ contains
 !
 !                -1     An infinite number of points of
 !                       intersection; the ray lies in the plane.
-!
 !
 !     XPT      is the point of intersection of the input ray
 !              and plane, when there is exactly one point of
@@ -8542,7 +8241,6 @@ contains
 !
 !            -- The camera's pointing matrix (C-matrix) is available
 !               in a C-kernel.
-!
 !
 !            C
 !            C     Load Leapseconds and SCLK kernels to support time
@@ -8648,8 +8346,6 @@ contains
 !                               .
 !                  END IF
 !
-!
-!
 !     2)  Find the Saturn ring plane intercept of a spacecraft-mounted
 !         instrument's boresight vector.  We want the find the point
 !         in the ring plane that will be observed by an instrument
@@ -8684,7 +8380,6 @@ contains
 !
 !            -- All necessary kernels are loaded by the caller of
 !               this example routine.
-!
 !
 !            SUBROUTINE RING_XPT ( SC, ET, BORVEC, SBFXPT, FOUND )
 !            IMPLICIT NONE
@@ -8939,18 +8634,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersection of ray and plane
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -8971,7 +8663,6 @@ contains
       real(wp)              sclvtx ( 3 )
       real(wp)              toobig
       real(wp)              udir   ( 3 )
-
 
 !
 !     Standard SPICE error handling.
@@ -9047,7 +8738,6 @@ contains
          toobig = toobig / mscale
       end if
 
-
 !     Find the projection (coefficient) of the ray's vertex along the
 !     plane's normal direction.
 !
@@ -9100,7 +8790,6 @@ contains
 !      Qualitatively, the case of interest looks something like the
 !      picture below:
 !
-!
 !                      * SCLVTX
 !                      |\
 !                      | \   <-- UDIR
@@ -9123,8 +8812,6 @@ contains
 !            /                          /
 !           /                          /
 !          ----------------------------
-!
-!
 !
 
 !
@@ -9227,7 +8914,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     M        is a 3x3 matrix.
@@ -9273,7 +8959,6 @@ contains
 !                         1   2   3      1   2   3          1   2   3
 !     are unit vectors. This routine produces the matrix:
 !
-!
 !            .-                      -.
 !            |   a*u    a*u     a*u   |
 !            |      1      2       3  |
@@ -9300,7 +8985,6 @@ contains
 !        identity matrix.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM INVORT_EX1
 !              IMPLICIT NONE
@@ -9356,10 +9040,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original Matrix:
 !               0.0000000      -1.0000000       0.0000000
@@ -9375,7 +9057,6 @@ contains
 !               1.0000000       0.0000000       0.0000000
 !               0.0000000       1.0000000       0.0000000
 !               0.0000000       0.0000000       1.0000000
-!
 !
 ! $ Restrictions
 !
@@ -9417,14 +9098,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Transpose a matrix and invert the lengths of the rows
 !     Invert a pseudo orthogonal matrix
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -9439,8 +9118,6 @@ contains
       real(wp)              temp   ( 3, 3 )
 
       integer(ip)           i
-
-
 
 !
 !     For each column, construct a scaled copy. However, make sure
@@ -9515,7 +9192,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -9609,9 +9285,7 @@ contains
 !
 !           earth_720101_070426.bpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INVSTM_EX1
 !              IMPLICIT NONE
@@ -9688,10 +9362,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input state in Earth centered J2000 frame, using INVSTM:
 !           Position:   192681395.921  -143792821.383   -62934296.473
@@ -9700,7 +9372,6 @@ contains
 !        Input state in Earth centered J2000 frame, using SXFORM:
 !           Position:   192681395.921  -143792821.383   -62934296.473
 !           Velocity:          30.312          32.007          13.876
-!
 !
 ! $ Restrictions
 !
@@ -9743,13 +9414,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     inverse of state transformation matrix
 !
 !-&
-
 
 !
 !     Local parameters
@@ -9760,12 +9429,10 @@ contains
 
       integer(ip), parameter :: block = 3
 
-
 !
 !     Not much to this. Just call the more general routine XPOSBL.
 !
       call xposbl ( ctx, mat, nrows, ncols, block, invmat )
-
 
       return
       end procedure invstm
@@ -9793,7 +9460,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -9949,18 +9615,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     indicate whether a matrix is a rotation matrix
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -9973,7 +9636,6 @@ contains
 
       logical               detok
       logical               normok
-
 
 !
 !     Standard SPICE error handling.
@@ -10021,13 +9683,11 @@ contains
 
       d      =  det ( unit )
 
-
       normok =       ( n1 == brcktd ( n1, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
                .and. ( n2 == brcktd ( n2, 1.0_wp - ntol, 1.0_wp + ntol ) ) &
                .and. ( n3 == brcktd ( n3, 1.0_wp - ntol, 1.0_wp + ntol ) )
 
       detok  =         d  == brcktd ( d,  1.0_wp - dtol, 1.0_wp + dtol )
-
 
       if ( normok .and. detok ) then
          isrot = .true.
@@ -10058,7 +9718,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10144,13 +9803,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Solve the equinoctial version of Kepler's equation
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -10199,7 +9856,6 @@ contains
 !
 !                = X + { H*DCOS(ML) - K*DSIN(ML) }*DCOS(X)
 !                    - { H*DSIN(ML) + K*DCOS(ML) }*DSIN(X)
-!
 !
 !     We can rearrange this to:
 !
@@ -10269,7 +9925,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10358,13 +10013,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Solve the vector form of the Kepler equation
 !
 !-&
-
 
 !
 !     MXNEWT is the number of iterations we will perform
@@ -10375,7 +10028,6 @@ contains
 !     numbers.
 !
       integer(ip), parameter :: mxnewt = 5
-
 
       real(wp)              cosx
       real(wp)              ecc
@@ -10489,7 +10141,6 @@ contains
             xl = xm
          end if
 
-
       end do
 
 !
@@ -10549,7 +10200,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -10636,8 +10286,6 @@ contains
 !
 !     might preserve Q or convert Q to -Q.
 !
-!
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -10663,11 +10311,9 @@ contains
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -10702,7 +10348,6 @@ contains
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -10758,7 +10403,6 @@ contains
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   +-             -+
@@ -10790,7 +10434,6 @@ contains
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -10886,7 +10529,6 @@ contains
 !
 !                 =  ( sqrt(2)/2,  0,  0, -sqrt(2)/2  )
 !
-!
 !     2)  Finding a quaternion that represents a rotation specified by
 !         a set of Euler angles:
 !
@@ -10947,13 +10589,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix to quaternion
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10971,7 +10611,6 @@ contains
 !
 !     DTOL is the tolerance for the determinant of a matrix whose
 !     columns are the unitized columns of R.
-!
 !
       real(wp), parameter :: ntol = 0.1_wp
 
@@ -10992,7 +10631,6 @@ contains
       real(wp)              s334
       real(wp)              trace
 
-
 !
 !     If R is not a rotation matrix, we can't proceed.
 !
@@ -11002,7 +10640,6 @@ contains
          return
 
       end if
-!
 !
 !     If our quaternion is C, S1, S2, S3 (the S's being the imaginary
 !     part) and we let
@@ -11029,7 +10666,6 @@ contains
 !           TRACE = 3 - 4*(S11 + S22 + S33)
 !
 !        so that
-!
 !
 !           1.0D0 + TRACE = 4 - 4*(S11 + S22 + S33)
 !                         = 4*(CC + S11 + S22 + S33)
@@ -11103,7 +10739,6 @@ contains
          s(2)   = ( r(1,2) + r(2,1) ) * factor
          s(3)   = ( r(1,3) + r(3,1) ) * factor
 
-
       else if ( 1.0_wp <= s224 ) then
 
          s(2)   = dsqrt  ( s224 * 0.25_wp )
@@ -11176,8 +10811,6 @@ contains
 ! $ Declarations
 
       implicit none
-
-
 
 ! $ Detailed_Input
 !
@@ -11287,7 +10920,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     distance between point and line
@@ -11295,11 +10927,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -11307,10 +10937,6 @@ contains
       real(wp)              proj  ( 3 )
       real(wp)              trans ( 3 )
 
-
-!
-!     Use discovery check-in.
-!
       if ( ctx%failed() ) return
 
 !
@@ -11361,7 +10987,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     EP1,
@@ -11404,9 +11029,7 @@ contains
 !        point in a simple case for which the results can easily be
 !        checked.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM NPSGPT_EX1
 !              IMPLICIT NONE
@@ -11449,10 +11072,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Endpoint 1:     1.00000000  -2.00000000   3.00000000
 !        Endpoint 2:     1.00000000   2.00000000   3.00000000
@@ -11460,7 +11081,6 @@ contains
 !
 !        Near point:     1.00000000   0.00000000   3.00000000
 !        Distance:       3.00000000
-!
 !
 ! $ Restrictions
 !
@@ -11487,18 +11107,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     nearest point on line segment
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -11509,9 +11126,6 @@ contains
       real(wp)              offset ( 3 )
       real(wp)              offdot
 
-!
-!     Use discovery check-in.
-!
       if ( ctx%failed() ) return
 
 !
@@ -11618,7 +11232,6 @@ contains
       integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
 
-
 ! $ Detailed_Input
 !
 !     NORMAL,
@@ -11682,9 +11295,7 @@ contains
 !
 !     1) Construct a SPICE plane from a normal vector and a constant.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM NVC2PL_EX1
 !              IMPLICIT NONE
@@ -11733,10 +11344,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Inputs:
 !           Normal vector:   1.0000000   1.0000000   1.0000000
@@ -11746,15 +11355,12 @@ contains
 !           Normal vector:   0.5773503   0.5773503   0.5773503
 !           Constant     :  13.2790562
 !
-!
 !     2) Apply a linear transformation represented by a matrix to
 !        a plane represented by a normal vector and a constant.
 !
 !        Find a normal vector and constant for the transformed plane.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM NVC2PL_EX2
 !              IMPLICIT NONE
@@ -11803,7 +11409,6 @@ contains
 !              DATA                    AXDEF  /  1.D0,  0.D0,  0.D0 /
 !              DATA                    PLNDEF /  0.D0, -1.D0,  0.D0 /
 !
-!
 !              CALL TWOVEC ( AXDEF, 1, PLNDEF, 2, M )
 !
 !        C
@@ -11848,14 +11453,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Unit normal vector:  -0.1616904  -0.8084521   0.5659165
 !        Constant          :   4.8102897
-!
 !
 ! $ Restrictions
 !
@@ -11904,18 +11506,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     normal vector and constant to plane
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -11935,7 +11534,6 @@ contains
 !        The plane constant is the distance of the plane from the
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
-!
 !
       integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
@@ -11976,7 +11574,6 @@ contains
 !     so
 !
 !        < X, NORMAL / || NORMAL || >   =   KONST / || NORMAL ||
-!
 !
       plane(conpos) =  konst / mag
 
@@ -12022,7 +11619,6 @@ contains
 
       integer(ip)           ubpl
       parameter           ( ubpl    =   4 )
-
 
 ! $ Detailed_Input
 !
@@ -12087,7 +11683,6 @@ contains
 !            CALL NVP2PL ( NORMAL, POINT,  PLANE )
 !            CALL VPRJP  ( V,      PLANE,  PROJ  )
 !
-!
 !     2)  Given a point in a plane and a normal vector, find the
 !         distance of the plane from the origin. We make a
 !         `plane' from the point and normal, then convert the
@@ -12135,18 +11730,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     normal vector and point to plane
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -12167,7 +11759,6 @@ contains
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
 !
-!
 
       integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
@@ -12179,7 +11770,6 @@ contains
 !     Local variables
 !
       real(wp)              tmpvec ( 3 )
-
 
 !
 !     This routine checks in only if an error is discovered.
@@ -12243,7 +11833,6 @@ contains
 
       integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
-
 
 ! $ Detailed_Input
 !
@@ -12311,7 +11900,6 @@ contains
 !            CALL PSV2PL ( POINT,   SPAN1,   SPAN2,   PLANE )
 !            CALL VPRJP  ( V,       PLANE,   PROJ           )
 !
-!
 !     2)  Find the plane determined by a spacecraft's position vector
 !         relative to a central body and the spacecraft's velocity
 !         vector. We assume that all vectors are given in the same
@@ -12363,18 +11951,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     point and spanning vectors to plane
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -12395,7 +11980,6 @@ contains
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
 !
-!
       integer(ip)           nmlpos
       parameter           ( nmlpos = 1 )
 
@@ -12406,7 +11990,6 @@ contains
 !     Local variables
 !
       real(wp)              tmpvec ( 3 )
-
 
 !
 !     This routine checks in only if an error is discovered.
@@ -12471,7 +12054,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -12576,7 +12158,6 @@ contains
 !     (if any), the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Compute the area of the pyramid defined by the four
 !        triangular plates whose vertices are the 3-element
 !        subsets of the set of vectors:
@@ -12586,9 +12167,7 @@ contains
 !           ( 0, 1, 0 )
 !           ( 0, 0, 1 )
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PLTAR_EX1
 !              IMPLICIT NONE
@@ -12637,7 +12216,6 @@ contains
 !             .                               0.D0,  1.D0,  0.D0,
 !             .                               0.D0,  0.D0,  1.D0 /
 !
-!
 !              AREA = PLTAR ( NVERT, VRTCES, NPLATE, PLATES )
 !
 !              WRITE (*,*) 'Expected area   =    (3 + SQRT(3)) / 2'
@@ -12646,15 +12224,12 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Expected area   =    (3 + SQRT(3)) / 2
 !                         =    0.2366025403784438E+01
 !         Computed area   =    2.3660254037844384
-!
 !
 ! $ Restrictions
 !
@@ -12682,18 +12257,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute plate model area
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -12705,15 +12277,11 @@ contains
       integer(ip)           i
       integer(ip)           j
 
-
 !
 !     The function must have an initial value.
 !
       pltar  =  0.0_wp
 
-!
-!     This routine uses discovery check-in.
-!
       if ( ctx%failed() ) return
 
 !
@@ -12728,7 +12296,6 @@ contains
 
       end if
 
-
       if ( np == 0 ) then
 !
 !        The area has already been set to zero.
@@ -12736,7 +12303,6 @@ contains
          return
 
       end if
-
 
       if ( nv < 3 ) then
 
@@ -12775,7 +12341,6 @@ contains
          end do
 
       end do
-
 
       do i = 1, np
 !
@@ -12827,7 +12392,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     POINT    is an arbitrary point in 3-dimensional space.
@@ -12871,14 +12435,11 @@ contains
 !     (if any), the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find the nearest point to the point (2,2,2) on a plate having
 !        vertices at the unit basis vectors that lie along the positive
 !        X, Y, and Z coordinate axes.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PLTNP_EX1
 !              IMPLICIT NONE
@@ -12925,10 +12486,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Plate vertex 1 =   0.1000000E+01  0.0000000E+00  0.0000000E+00
 !        Plate vertex 2 =   0.0000000E+00  0.1000000E+01  0.0000000E+00
@@ -12937,7 +12496,6 @@ contains
 !
 !        Near point     =   0.3333333E+00  0.3333333E+00  0.3333333E+00
 !        Distance       =   0.2886751E+01
-!
 !
 ! $ Restrictions
 !
@@ -12979,18 +12537,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     nearest point on triangular plate
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -13020,9 +12575,6 @@ contains
 
       if ( ctx%failed() ) return
 
-!
-!     Use discovery check-in.
-!
 !
 !     Compute the plate's edges.
 !
@@ -13120,7 +12672,6 @@ contains
       in1 = vdot( perp, enorm1 ) <= 0.0_wp
       in2 = vdot( perp, enorm2 ) <= vdot(e1,enorm2)
       in3 = vdot( perp, enorm3 ) <= 0.0_wp
-
 
       if ( in1 .and. in2 .and. in3 ) then
 !
@@ -13220,7 +12771,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     NV       is the number of vertices comprising the plate
@@ -13238,7 +12788,6 @@ contains
 !
 !              This routine doesn't associate units with the
 !              vertices.
-!
 !
 !     NP       is the number of triangular plates comprising the
 !              plate model.
@@ -13334,7 +12883,6 @@ contains
 !     (if any), the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Compute the volume of the pyramid defined by the four
 !        triangular plates whose vertices are the 3-element
 !        subsets of the set of vectors
@@ -13344,9 +12892,7 @@ contains
 !           ( 0, 1, 0 )
 !           ( 0, 0, 1 )
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     Compute the volume of a plate model representing the
@@ -13401,7 +12947,6 @@ contains
 !             .                               0.D0,  1.D0,  0.D0,
 !             .                               0.D0,  0.D0,  1.D0 /
 !
-!
 !              VOL = PLTVOL ( NVERT, VRTCES, NPLATE, PLATES )
 !
 !              WRITE (*,*) 'Expected volume =    1/6'
@@ -13409,14 +12954,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Expected volume =    1/6
 !         Computed volume =   0.16666666666666666
-!
 !
 ! $ Restrictions
 !
@@ -13446,19 +12988,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute plate model volume
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
 !
 !     Local variables
@@ -13468,15 +13006,11 @@ contains
       integer(ip)           i
       integer(ip)           j
 
-
 !
 !     The function must have an initial value.
 !
       pltvol  =  0.0_wp
 
-!
-!     This routine uses discovery check-in.
-!
       if ( ctx%failed() ) return
 
 !
@@ -13534,7 +13068,6 @@ contains
 !     but it might not be obvious that it works. An explanation
 !     follows.
 !
-!
 !        Notation
 !        --------
 !
@@ -13562,7 +13095,6 @@ contains
 !           A / ||A||
 !
 !        provided A is non-zero.
-!
 !
 !        Geometric assumptions
 !        ---------------------
@@ -13601,7 +13133,6 @@ contains
 !        "the component of the outward normal parallel to P points away
 !        from the origin" or ... (the negative counterpart phrase).
 !
-!
 !        Relationship of volume and surface
 !        ----------------------------------
 !
@@ -13616,7 +13147,6 @@ contains
 !        We can use this fact to set up a surface integral that yields
 !        the volume enclosed by a set of triangular plates.
 !
-!
 !        A faster algorithm
 !        ------------------
 !
@@ -13630,7 +13160,6 @@ contains
 !
 !        We'll show that these two methods are equivalent, and we'll
 !        use the more efficient method in our code.
-!
 !
 !        The surface integral
 !        --------------------
@@ -13658,7 +13187,6 @@ contains
 !
 !             ^
 !           < N,  A/3 > * plate_area
-!
 !
 !        Equivalence of the methods
 !        --------------------------
@@ -13691,7 +13219,6 @@ contains
 !             ^
 !           < N,  A >          =   <  ( B x C )/||N||,  A  >
 !
-!
 !        Then
 !
 !           plate_area         =    (1/2) * ||( S1 x S2 )||
@@ -13717,15 +13244,12 @@ contains
 !        origin, the signed volume of the pyramid defined by A, B, and
 !        C is
 !
-!
 !           1/3 * base_area * height   =  1/3 *  < (A x B)/2,  C  >
 !
 !                                      =  < ( A X B ), C > / 6
 !
 !        This shows the signed pyramid volume is equal to the surface
 !        integral of F over the plate.
-!
-!
 !
 !     We proceed to compute the signed volume of each pyramid whose
 !     base is a plate and whose vertex is the origin.
@@ -13786,7 +13310,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     NDIM     is the dimension of the function to be
@@ -13801,7 +13324,6 @@ contains
 !              as X2. The points X0 and X2 must satisfy
 !
 !                 X2 = X0 + 2 * DELTA
-!
 !
 !     DELTA    is one half of the difference between X2 and X0:
 !
@@ -13869,11 +13391,9 @@ contains
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Estimate the derivative of x**2 at x = 2.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM QDERIV_EX1
 !              IMPLICIT NONE
@@ -13895,13 +13415,10 @@ contains
 !             .                               4 - DFDT(1)
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         4 - DFDT(1) =    0.4547473508864641E-12
-!
 !
 !        Note that the difference displayed is platform-dependent, but
 !        should be on the order of 1.E-12.
@@ -13932,13 +13449,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Estimate function derivative using quadratic fit
 !
 !-&
-
 
 !
 !     Use discovery check-in.
@@ -13952,7 +13467,6 @@ contains
 
       end if
 !
-!
 !     Our derivative estimate is
 !
 !            1/2 * (   Backward_difference / DELTA
@@ -13963,7 +13477,6 @@ contains
 !        =   ( 1/(2*DELTA) ) * ( ( F(X2) - F(X0) )
 !
 !        =    (0.5/DELTA) * F(X2)  +  (-0.5/DELTA) * F(X0)
-!
 !
       call vlcomg (  ndim, 0.5_wp/delta, f2, -0.5_wp/delta, f0, dfdt )
 
@@ -13995,7 +13508,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -14075,9 +13587,7 @@ contains
 !        and the one resulting from using the computed axis and angle
 !        of rotation on the AXISAR call.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RAXISA_EX1
 !              IMPLICIT NONE
@@ -14140,10 +13650,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Axis :  0.26726124  0.53452248  0.80178373
 !        Angle:  0.62831853
@@ -14153,10 +13661,8 @@ contains
 !          0.0000000000000001 -0.0000000000000001  0.0000000000000000
 !          0.0000000000000000  0.0000000000000001  0.0000000000000000
 !
-!
 !        Note, the zero matrix is accurate to round-off error. A
 !        numerical demonstration of equality.
-!
 !
 !     2) This routine can be used to numerically approximate the
 !        instantaneous angular velocity vector of a rotating object.
@@ -14188,9 +13694,7 @@ contains
 !
 !           pck00010.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RAXISA_EX2
 !              IMPLICIT NONE
@@ -14252,14 +13756,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Instantaneous angular velocity vector:
 !           0.0000000000   0.0000000000   0.0000729212
-!
 !
 ! $ Restrictions
 !
@@ -14338,13 +13839,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     axis and angle of a rotation matrix
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -14372,11 +13871,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local Variables
@@ -14456,7 +13953,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     A,
@@ -14474,7 +13970,6 @@ contains
 !                      2
 !                 A * x   +  B * x  +  C = 0.
 !
-!
 !              ROOT1 and ROOT2 are both arrays of length 2. The first
 !              element of each array is the real part of a root; the
 !              second element contains the complex part of the same
@@ -14488,7 +13983,6 @@ contains
 !                 ---------------------------
 !                               2A
 !
-!
 !              and ROOT2 represents the root
 !
 !                               _____________
@@ -14496,7 +13990,6 @@ contains
 !                 - B   -    \/  B    -   4AC
 !                 --------------------------- .
 !                               2A
-!
 !
 !              When A is zero and B is non-zero, ROOT1 and ROOT2 both
 !              represent the root
@@ -14536,7 +14029,6 @@ contains
 !
 !          The following code fragment does the job.
 !
-!
 !             C
 !             C     Compute "golden ratio." The root we want,
 !             C
@@ -14554,14 +14046,12 @@ contains
 !
 !                   PRINT *, 'The "golden ratio" is ', ROOT1(1)
 !
-!
 !     2)   The equation,
 !
 !              2
 !             x   +  1  =  0
 !
 !          can be solved by the code fragment
-!
 !
 !             C
 !             C     Let's do one with imaginary roots just for fun.
@@ -14573,7 +14063,6 @@ contains
 !                   PRINT *, 'ROOT2 is ', ROOT2
 !
 !          The printed results will be something like:
-!
 !
 !             ROOT1 is 0.000000000000000    1.000000000000000
 !             ROOT2 is 0.000000000000000   -1.000000000000000
@@ -14609,13 +14098,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     roots of a quadratic equation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -14631,7 +14118,6 @@ contains
       real(wp)              sqr
 
       logical               zeroed
-
 
 !
 !     Standard SPICE error handling.
@@ -14656,11 +14142,9 @@ contains
 !
       scale  = max ( abs(a), abs(b), abs(c) )
 
-
       zeroed =      (  ( a /= 0.0_wp ) .and. ( a / scale == 0.0_wp )  ) &
                .or. (  ( b /= 0.0_wp ) .and. ( b / scale == 0.0_wp )  ) &
                .or. (  ( c /= 0.0_wp ) .and. ( c / scale == 0.0_wp )  )
-
 
       if ( .not. zeroed ) then
 
@@ -14745,7 +14229,6 @@ contains
 
          end if
 
-
 !
 !     If the second-degree coefficient is zero, we actually have a
 !     linear equation.
@@ -14762,7 +14245,6 @@ contains
          call moved ( root1, 2, root2 )
 
       end if
-
 
       return
       end procedure rquad
@@ -14789,7 +14271,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -14868,13 +14349,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute the remainder of a double precision division
 !
 !-&
-
 
       real(wp)              mynum
       real(wp)              mydnom
@@ -14925,7 +14404,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -15001,13 +14479,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute the remainder of an integer division
 !
 !-&
-
 
 !
 !     Take care of the zero-denominator case first
@@ -15057,7 +14533,6 @@ contains
 
       integer(ip)           ubpl
       parameter           ( ubpl   =   4 )
-
 
 ! $ Detailed_Input
 !
@@ -15111,9 +14586,7 @@ contains
 !     1) Find the closest point in the ring plane of a planet to a
 !        spacecraft located at a point (in body-fixed coordinates).
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VPRJP_EX1
 !              IMPLICIT NONE
@@ -15164,14 +14637,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Projection of S/C position onto ring plane:
 !             -29703.16955     879765.72163          0.00000
-!
 !
 ! $ Restrictions
 !
@@ -15218,18 +14688,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     vector projection onto plane
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local parameters
@@ -15247,7 +14714,7 @@ contains
       real(wp)              normal ( 3 )
 
 !
-!     Check RETURN but use discovery check-in.
+!     Check RETURN but
 !
       if ( ctx%failed() ) return
 
@@ -15279,13 +14746,11 @@ contains
 !     VIN differs from its projection onto PLANE by some multiple of
 !     NORMAL. That multiple is
 !
-!
 !               < VIN - VOUT, NORMAL >                 *  NORMAL
 !
 !        =   (  < VIN, NORMAL > - < VOUT, NORMAL >  )  *  NORMAL
 !
 !        =   (  < VIN, NORMAL > - CONST             )  *  NORMAL
-!
 !
 !     Subtracting this multiple of NORMAL from VIN yields VOUT.
 !
@@ -15327,7 +14792,6 @@ contains
 
       integer(ip)           ubpl
       parameter           ( ubpl   =    4 )
-
 
 ! $ Detailed_Input
 !
@@ -15489,13 +14953,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     vector projection onto plane inverted
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15508,12 +14970,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
 !
 !     Local parameters
@@ -15614,7 +15073,6 @@ contains
 !
 !        which in turn implies
 !
-!
 !                     INVC  -  < VIN, INVN >
 !           MULT  =  ------------------------.                     (2)
 !                        < PROJN, INVN >
@@ -15626,7 +15084,6 @@ contains
 !     divide-by-zero error or an overflow of MULT.  In either case, we
 !     will avoid carrying out the division, and we'll set FOUND to
 !     .FALSE.
-!
 !
 !     Compute the numerator and denominator of the right side of (2).
 !
@@ -15708,7 +15165,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     POBJ     is the position (x, y, z, km) of an object with
@@ -15783,10 +15239,8 @@ contains
 !            CALL SPKPOS ( 'MOON', ET, 'J2000', 'LT+S', 'EARTH',
 !           .               POS,   LT                           )
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -15818,9 +15272,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM STELAB_EX1
 !              IMPLICIT NONE
@@ -15904,10 +15356,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Uncorrected position vector
 !                 201738.725087     -260893.141602     -147722.589056
@@ -15917,7 +15367,6 @@ contains
 !
 !         Apparent difference
 !                    -27.204429         -16.323525          -8.326615
-!
 !
 ! $ Restrictions
 !
@@ -15971,13 +15420,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     stellar aberration
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15995,11 +15442,9 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -16013,19 +15458,16 @@ contains
       real(wp)              sinphi
       real(wp)              phi
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     We are not going to compute the aberrated vector in exactly the
 !     way described in the particulars section.  We can combine some
 !     steps and we take some precautions to prevent floating point
 !     overflows.
-!
 !
 !     Get a unit vector that points in the direction of the object
 !     ( u_obj ).
@@ -16044,7 +15486,7 @@ contains
 !     If the square of the length of the velocity vector is greater than
 !     or equal to one, the speed of the observer is greater than or
 !     equal to the speed of light. The observer speed is definitely out
-!     of range. Signal an error and check out.
+!     of range. Signal an error.
 !
       lensqr = vdot ( vbyc, vbyc )
 
@@ -16065,7 +15507,6 @@ contains
 !
       call vcrss ( u, vbyc, h )
 
-
 !
 !     If the magnitude of the vector H is zero, the observer is moving
 !     along the line of sight to the object, and no correction is
@@ -16084,7 +15525,6 @@ contains
          call moved ( pobj, 3, appobj )
 
       end if
-
 
       return
       end procedure stelab
@@ -16112,7 +15552,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -16209,10 +15648,8 @@ contains
 !            CALL SPKPOS ( 'MOON', ET, 'J2000', 'XLT+S', 'EARTH',
 !           .               POS,   LT                            )
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -16244,9 +15681,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM STLABX_EX1
 !              IMPLICIT NONE
@@ -16334,10 +15769,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Uncorrected position vector
 !                 201809.933536     -260878.049826     -147716.077987
@@ -16347,7 +15780,6 @@ contains
 !
 !         Apparent difference
 !                     27.202563          16.325802           8.327911
-!
 !
 ! $ Restrictions
 !
@@ -16382,13 +15814,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     stellar aberration for transmission case
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16440,7 +15870,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     NROW     is the number of rows in the input matrix.
@@ -16452,7 +15881,6 @@ contains
 !
 !     BMAT     is a block structured matrix. In other words
 !              it looks like:
-!
 !
 !                 -                                -
 !                |      :      :       :     :      |
@@ -16482,7 +15910,6 @@ contains
 !     BTMAT    is the matrix obtained from BMAT when each of its
 !              blocks is transposed. Given the description of
 !              BMAT above, BTMAT looks like:
-!
 !
 !                  -                                -
 !                 |   t  :   t  :    t  :     :   t  |
@@ -16558,7 +15985,6 @@ contains
 !     C
 !           CALL XPOSBL ( TISPM, 6, 6, 3, TSPMI )
 !
-!
 !     C
 !     C     Now transform the earthfixed state (ESTATE) to the
 !     C     inertial state (ISTATE).
@@ -16602,13 +16028,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transpose a matrix by blocks
 !
 !-&
-
 
 !
 !     Local variables
@@ -16619,7 +16043,6 @@ contains
       integer(ip)           j
       integer(ip)           cb
       integer(ip)           rb
-
 
 !
 !     Ok. Here's what's going to happen.
@@ -16653,7 +16076,6 @@ contains
 !
 !      So what does the ij block look like? Well, this is it.
 !
-!
 !             a              a               ...    a
 !              RB+1 CB+1      RB+1 CB+2              RB+1 CB+BSIZE
 !
@@ -16669,7 +16091,6 @@ contains
 !
 !              a              a                 ... a
 !               RB+BSIZE CB+1  RB+BSIZE CB+2         RB+BSIZE CB+BSIZE
-!
 !
 !     where RB = (i-1)*BSIZE, and CB = (j-1)*BSIZE.  But inspection of
 !     this block shows that to transpose it we simply need to swap
@@ -16708,8 +16129,6 @@ contains
          call ctx%sigerr ( 'SPICE(BADCOLUMNCOUNT)'                        )
          return
       end if
-
-
 
 !
 !     Is there a whole number of blocks in the matrix.
@@ -16756,7 +16175,6 @@ contains
 
          end do
       end do
-
 
       return
       end procedure xposbl

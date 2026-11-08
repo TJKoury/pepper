@@ -147,13 +147,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     first derivative of scalar function less than zero
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -167,7 +165,6 @@
       real(wp)              deriv
 
       if ( return () ) return
-
 
       isdecr = .false.
 

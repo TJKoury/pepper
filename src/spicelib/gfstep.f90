@@ -85,16 +85,13 @@
 !        Subsequent calls to GFSTEP during the search process conducted
 !        by the API routine will return STEP.
 !
-!
 !     2) User applications can pass GFSTEP to mid-level GF API routines
 !        expecting a step size routine as an input argument. For
 !        example, the GF API routine GFOCCE can be called as follows:
 !
-!
 !           Set the step size.
 !
 !           CALL GFSSTP ( STEP )
-!
 !
 !           Look for solutions. (GFSTEP is the 11th argument.)
 !
@@ -138,13 +135,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF get constant step size
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -169,10 +164,6 @@
       data                  svinit / .false. /
       data                  svstep / -1.0_wp  /
 
-
-!
-!     Discovery check-in.
-!
       if ( .not. svinit ) then
 
          call setmsg ( 'Step size was never initialized.' )
@@ -188,8 +179,6 @@
       time = time
 
       return
-
-
 
 !$Procedure GFSSTP ( Geometry finder set step size )
 
@@ -286,13 +275,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF set constant step size
 !
 !-&
-
 
 !
 !     Check the step size.

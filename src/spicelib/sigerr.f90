@@ -114,7 +114,6 @@
 !            messages, and setting of the long message, are disabled.
 !            (These capabilities can be re-enabled by calling RESET).
 !
-!
 !     2. If the error handling mechanism has been commanded to
 !         ``ignore'' the error indicated by MSG, the call to SIGERR
 !         has no effect.
@@ -134,9 +133,7 @@
 !        and a double precision variables within the long message,
 !        and signal the error.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SIGERR_EX1
 !              IMPLICIT NONE
@@ -168,10 +165,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ============================================================***
 !
@@ -190,23 +185,18 @@
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 7 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that the execution of this program produces the error
 !        SPICE(USERDEFINED), which follows the NAIF standard as
 !        described in the ERROR required reading.
 !
-!
 !     2) Create a user-defined error message, including only the
 !        short messages, and signal the error.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SIGERR_EX2
 !              IMPLICIT NONE
@@ -219,10 +209,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ============================================================***
 !
@@ -238,11 +226,9 @@
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 6 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that the execution of this program produces the same
 !        SPICE(USERDEFINED) error as in Example #1, but in this case,
@@ -304,13 +290,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     signal error condition
 !
 !-&
-
 
 !
 !     SPICELIB functions:

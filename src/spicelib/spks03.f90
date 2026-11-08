@@ -138,13 +138,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_3 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -165,7 +163,6 @@
       integer(ip)           remain
       integer(ip)           addr
       integer(ip)           move
-
 
 !
 !     Standard SPICE error handling.

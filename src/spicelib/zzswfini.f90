@@ -132,7 +132,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -140,7 +139,6 @@
       logical               failed
 
       if ( return() ) return
-
 
 !
 !     Initialize the frame hash head node array, hash collision list

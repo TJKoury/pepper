@@ -114,21 +114,17 @@
       integer(ip)           base
 
 !
-!     Use discovery check-in.
-!
 !     Look up the base address of the page.
 !
       call zzekpgbs ( type, p, base )
 
       if ( failed() ) return
 
-
       if ( type == chr ) then
 !
 !        Get the encoded pointer.
 !
          call zzekgei ( handle, base+cfpidx, fward )
-
 
       else if ( type == dp ) then
 !

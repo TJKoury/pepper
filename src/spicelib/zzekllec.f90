@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcnamsz.inc'
       include 'ekcoldsc.inc'
@@ -145,7 +144,6 @@
 !
 !-&
 
-
 !
 !     Non-SPICELIB functions
 !
@@ -168,9 +166,6 @@
       logical               indexd
 
 !
-!     Use discovery check-in.
-!
-!
 !     If the column's not indexed, we have no business being here.
 !
       indexd  =  coldsc(ixtidx) /= ifalse
@@ -185,7 +180,6 @@
          return
 
       end if
-
 
 !
 !     Check the column's data type.
@@ -203,7 +197,6 @@
          return
 
       end if
-
 
 !
 !     Handle the case of an empty segment gracefully.
@@ -243,7 +236,6 @@
          prvloc = 0
          prvptr = 0
 
-
       else if (  zzekscmp ( le,      handle,  segdsc, &
                             coldsc,  endptr,  1,       chr, &
                             ckey,    0.0_wp,    0,      .false. )  ) then
@@ -254,7 +246,6 @@
          prvloc = nrows
 
          call zzekixlk ( handle, coldsc, prvloc, prvptr )
-
 
       else
 !
@@ -270,7 +261,6 @@
             middle   =  ( begin  + end )  / 2
 
             call zzekixlk ( handle, coldsc, middle, midptr )
-
 
             if (  zzekscmp ( le,      handle,  segdsc, &
                              coldsc,  midptr,  1,      chr, &
@@ -294,7 +284,6 @@
          call zzekixlk ( handle, coldsc, prvloc, prvptr )
 
       end if
-
 
       return
       end

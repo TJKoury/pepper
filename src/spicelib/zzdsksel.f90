@@ -123,7 +123,6 @@
 !           Initialization:       ZZDSKSBD
 !           Segment comparison:   ZZDSKBDC
 !
-!
 !         Match nothing:
 !
 !           Segment comparison:   ZZDSKNOT
@@ -131,11 +130,9 @@
 !           This routine is used to force the ZZDSKSBF package to
 !           build a complete segment list for a specified body.
 !
-!
 !     The remaining entry points are included to support the SMAP
 !     Alpha DSK Toolkit. They may be useful for DSK type 4 in a
 !     future SPICELIB version.
-!
 !
 !         Match body ID, surface list, and time
 !         -------------------------------------
@@ -143,13 +140,11 @@
 !           Initialization:       ZZDSKSIT
 !           Segment comparison:   ZZDSKCIT
 !
-!
 !         Match body ID, time, and coordinates
 !         ------------------------------------
 !
 !           Initialization:       ZZDSKUSC
 !           Segment comparison:   ZZDSKUMC
-!
 !
 !         Match body ID, surface ID, frame ID, coordinate system,
 !         coordinate parameters, time, and coordinates
@@ -158,15 +153,12 @@
 !           Initialization:       ZZDSKMSC
 !           Segment comparison:   ZZDSKMMC
 !
-!
 !         Match body ID, surface ID, frame ID, data class, time,
 !         and whether coverage includes a specified position vector
 !         ---------------------------------------------------------
 !
 !           Initialization:       ZZDSKSRC
 !           Segment comparison:   ZZDSKMRC
-!
-!
 !
 ! $ Examples
 !
@@ -199,7 +191,6 @@
 !        Added entry point ZZDSKNOT.
 !
 !        05-FEB-2016 (NJB)
-!
 !
 !        29-APR-2015 (NJB)
 !
@@ -298,7 +289,6 @@
       integer(ip)           segsys
       integer(ip)           surf
 
-
 !
 !     Saved variables
 !
@@ -317,7 +307,6 @@
 
 !
 !     Initial values
-!
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -339,8 +328,6 @@
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
 
 !$Procedure ZZDSKSBD ( DSK, set body ID )
 
@@ -454,9 +441,6 @@
       savbid = bodyid
 
       return
-
-
-
 
 !$Procedure ZZDSKBDC ( DSK, check segment's body ID )
 
@@ -576,9 +560,6 @@
 
       return
 
-
-
-
 !$Procedure ZZDSKNOT ( DSK, match nothing )
 
       entry zzdsknot ( handle, dladsc, dskdsc )
@@ -695,10 +676,6 @@
 
       return
 
-
-
-
-
 !$Procedure ZZDSKSIT ( DSK, set body ID, surfaces, and time )
 
       entry zzdsksit ( bodyid, nsurf, srflst, et )
@@ -814,7 +791,6 @@
 !
 !-&
 
-
 !
 !     Set return value.
 !
@@ -826,7 +802,6 @@
       savet  = et
 
       if ( nsurf > maxsrf ) then
-
 
          call setmsg ( 'Maximum allowed surface ID count is #; ' &
          //            'input count was #.'                     )
@@ -846,11 +821,6 @@
       call shelli ( nsurf, savsrf )
 
       return
-
-
-
-
-
 
 !$Procedure ZZDSKCIT ( DSK, check body ID, surface, and time )
 
@@ -963,7 +933,6 @@
 !
 !-&
 
-
 !
 !     Currently, we don't need to access the DSK file in order
 !     to make this test, but the required inputs are available.
@@ -998,11 +967,6 @@
       end if
 
       return
-
-
-
-
-
 
 !$Procedure ZZDSKUSC ( DSK, set body ID, coordinates, and time )
 
@@ -1122,7 +1086,6 @@
 !
 !-&
 
-
       zzdskusc = .false.
 
       savbid = bodyid
@@ -1131,10 +1094,6 @@
       savco2 = cor2
 
       return
-
-
-
-
 
 !$Procedure ZZDSKUMC ( DSK, check body ID, coordinates, and time )
 
@@ -1252,13 +1211,10 @@
 !
 !-&
 
-
-
 !
 !     We don't have a match to begin with.
 !
       zzdskumc = .false.
-
 
 !
 !     Check the body ID first.
@@ -1360,10 +1316,6 @@
 !
       return
 
-
-
-
-
 !$Procedure ZZDSKMSC ( DSK, setup matched attribute search )
 
       entry zzdskmsc ( bodyid, surfid, framid, corsys, &
@@ -1434,7 +1386,6 @@
 !                system parameters are to be compared.
 !
 !                A small margin is used for parameter comparison.
-!
 !
 !     ET         is an epoch, expressed as seconds past J2000 TDB.
 !                All matching segments must contain ET in their
@@ -1507,7 +1458,6 @@
 !
 !-&
 
-
       zzdskmsc = .false.
 
       savtrg = bodyid
@@ -1523,11 +1473,6 @@
 
       return
 
-
-
-
-
-
 !$Procedure ZZDSKMMC ( DSK, matched segment attribute comparison )
 
       entry zzdskmmc ( handle, dladsc, dskdsc )
@@ -1538,11 +1483,9 @@
 !     routines. Users should not call this routine directly due to the
 !     volatile nature of this routine.
 !
-!
 !     Perform a matched attribute comparison using target ID, surface
 !     ID, frame ID, coordinate system, coordinate parameters, time, and
 !     coordinates.
-!
 !
 ! $ Required_Reading
 !
@@ -1664,7 +1607,6 @@
 !
       zzdskmmc = .false.
 
-
 !
 !     Check the target ID.
 !
@@ -1690,7 +1632,6 @@
 !     ellipsoid parameters.
 !
       if ( savsys == pdtsys ) then
-
 
          if (  abs( savpar(1) - dskdsc(paridx)   ) > margin ) return
 
@@ -1783,12 +1724,6 @@
 
       return
 
-
-
-
-
-
-
 !$Procedure ZZDSKSRC ( DSK, setup rectangular coordinate search )
 
       entry zzdsksrc ( surfid, bodyid, dclass, et, framid, pos )
@@ -1851,7 +1786,6 @@
 !     ET         is an epoch, expressed as seconds past J2000 TDB.
 !                All matching segments must contain ET in their
 !                time coverage intervals.
-!
 !
 !     FRAMID     is the reference frame ID of the frame in which
 !                the input vector POS is expressed. FRAMID is
@@ -1936,9 +1870,6 @@
 
       return
 
-
-
-
 !$Procedure ZZDSKMRC ( DSK, rectangular coordinate comparison )
 
       entry zzdskmrc ( handle, dladsc, dskdsc )
@@ -1954,7 +1885,6 @@
 !
 !     A search using this function must be initialized
 !     by a call to ZZDSKSRC.
-!
 !
 ! $ Required_Reading
 !
@@ -2069,14 +1999,10 @@
 !
 !-&
 
-
-
 !
 !     We don't have a match to begin with.
 !
       zzdskmrc = .false.
-
-
 
 !     Check the surface ID.
 !
@@ -2097,7 +2023,6 @@
 !     Check the data class.
 !
       if ( savcls  /= nint( dskdsc(clsidx) )  ) return
-
 
 !
 !     Check whether the position vector is covered by the segment.
@@ -2123,7 +2048,6 @@
          call mxv    ( rmat,   savpos,        locpos )
 
       end if
-
 
 !     We do need to know whether the first coordinate is a longitude,
 !     since we may need to adjust it to get it into the range of the

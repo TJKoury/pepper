@@ -177,7 +177,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: spkw13_ex1.tm
@@ -208,9 +207,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW13_EX1
 !              IMPLICIT NONE
@@ -300,7 +297,6 @@
 !        C
 !              SEGID = 'MY_SAMPLE_SPK_TYPE_13_SEGMENT'
 !
-!
 !        C
 !        C     Write the segment.
 !        C
@@ -349,10 +345,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Phobos as seen from Mars
 !           Epoch       (s):    576059769.185657
@@ -363,7 +357,6 @@
 !           Epoch       (s):    576063369.185657
 !           Position   (km):  -7327.262770   2414.326550   5207.106376
 !           Velocity (km/s):     -0.942893     -1.894731     -0.396715
-!
 !
 !        Note that after run completion, a new SPK file exists in
 !        the output directory.
@@ -398,13 +391,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_13 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -605,11 +596,8 @@
 
       end if
 
-
-
 !
 !     If we made it this far, we're ready to start writing the segment.
-!
 !
 !     Create the segment descriptor.
 !
@@ -621,7 +609,6 @@
       call dafbna ( handle, descr, segid )
 
       if ( failed() ) return
-
 
 !
 !     The type 13 segment structure is eloquently described by this
@@ -661,7 +648,6 @@
 !        | Number of states      |
 !        +-----------------------+
 !
-!
 
       call dafada ( states,  n*statsz )
       call dafada ( epochs,  n        )
@@ -679,7 +665,6 @@
       if ( .not. failed() ) then
          call dafena
       end if
-
 
       return
       end

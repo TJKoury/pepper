@@ -133,7 +133,6 @@
 !                    this subroutine. It generally executes much more
 !                    slowly than the 'GUIDED' method described below.
 !
-!
 !                'GUIDED/DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
 !
 !                    This method uses DSK data as described above, but
@@ -155,7 +154,6 @@
 !                    approximations can be generated much more quickly
 !                    than tangent points.
 !
-!
 !                'TANGENT/ELLIPSOID'
 !                'GUIDED/ELLIPSOID'
 !
@@ -168,7 +166,6 @@
 !
 !                    When the locus is set to 'CENTER', these methods
 !                    produce the same results.
-!
 !
 !                 Neither case nor white space are significant in
 !                 METHOD, except within double-quoted strings. For
@@ -189,7 +186,6 @@
 !
 !                    "MARS MEGDR128PIXEL/DEG"
 !
-!
 !     TARGET   is the name of the target body. The target body is
 !              an extended ephemeris object.
 !
@@ -205,7 +201,6 @@
 !              kernel variable representing the ellipsoid's radii is
 !              present in the kernel pool. Normally the kernel
 !              variable would be defined by loading a PCK file.
-!
 !
 !     ET       is the epoch of participation of the observer,
 !              expressed as TDB seconds past J2000 TDB: ET is
@@ -223,7 +218,6 @@
 !              See the descriptions of ABCORR and CORLOC below for
 !              details.
 !
-!
 !     FIXREF   is the name of a body-fixed reference frame centered
 !              on the target body. FIXREF may be any such frame
 !              supported by the SPICE system, including built-in
@@ -235,7 +229,6 @@
 !              The output limb points in the array POINTS and the
 !              output observer-target tangent vectors in the array
 !              TANGTS are expressed relative to this reference frame.
-!
 !
 !     ABCORR   indicates the aberration corrections to be applied
 !              when computing the target's position and orientation.
@@ -269,7 +262,6 @@
 !              case in which photons depart from the locus at the
 !              light-time corrected epoch ET-LT and *arrive* at the
 !              observer's location at ET:
-!
 !
 !                 'LT'       Correct for one-way light time (also
 !                            called "planetary aberration") using a
@@ -366,7 +358,6 @@
 !                            routine will execute more slowly when a
 !                            converged solution is computed.
 !
-!
 !     CORLOC   is a string specifying the aberration correction
 !              locus: the point or set of points for which
 !              aberration corrections are performed. CORLOC may be
@@ -412,7 +403,6 @@
 !                     individual limb points, computational speed for
 !                     this option is relatively slow.
 !
-!
 !     OBSRVR   is the name of the observing body. The observing body
 !              is an ephemeris object: it typically is a spacecraft,
 !              the earth, or a surface point on the earth. OBSRVR is
@@ -422,7 +412,6 @@
 !              the object. For example both 'MOON' and '301' are
 !              legitimate strings that indicate the Moon is the
 !              observer.
-!
 !
 !     REFVEC,
 !     ROLSTP,
@@ -468,7 +457,6 @@
 !              less uniform due to differences in the aberration
 !              corrections used for the respective limb points.
 !
-!
 !     SCHSTP,
 !     SOLTOL   are used only for DSK-based surfaces. These inputs
 !              are, respectively, the search angular step size and
@@ -500,7 +488,6 @@
 !                    the convergence process is considered to be a
 !                    limb point.
 !
-!
 !               SCHSTP and SOLTOL have units of radians.
 !
 !               Target bodies with simple surfaces---for example,
@@ -525,7 +512,6 @@
 !               specified bound on limb point height errors depends
 !               on the observer-target distance.
 !
-!
 !     MAXN     is the maximum number of limb points that can be
 !              stored in the output array POINTS.
 !
@@ -541,7 +527,6 @@
 !              per half-plane. For complex target shapes, the limb
 !              point count in a given half-plane can be greater
 !              than one (see example 3 below), and it can be zero.
-!
 !
 !     POINTS   is an array containing the limb points found by this
 !              routine. Sets of limb points associated with
@@ -577,7 +562,6 @@
 !              below).
 !
 !              Units of the limb points are km.
-!
 !
 !     EPOCHS   is an array of epochs associated with the limb
 !              points, accounting for light time if aberration
@@ -621,7 +605,6 @@
 !              time between an actual limb point and that implied
 !              by the corresponding element of EPOCHS. See the
 !              description of TANGTS below.
-!
 !
 !     TANGTS   is an array of tangent vectors connecting the
 !              observer to the limb points. The tangent vectors are
@@ -835,7 +818,6 @@
 !     -  SCLK data: if the target body's orientation is provided by
 !        CK files, an associated SCLK kernel must be loaded.
 !
-!
 !     In all cases, kernel data are normally loaded once per program
 !     run, NOT every time this routine is called.
 !
@@ -862,7 +844,6 @@
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
 !
-!
 !        DSK data priority
 !        -----------------
 !
@@ -888,7 +869,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -968,7 +948,6 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find apparent limb points on Phobos as seen from Mars.
 !
 !        Due to Phobos' irregular shape, the TANGENT limb point
@@ -994,7 +973,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1033,9 +1011,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     LIMBPT example 1
@@ -1179,7 +1155,6 @@
 !                 WRITE(*,*) 'Locus              = ', CORLOC
 !                 WRITE(*,*) ' '
 !
-!
 !                 START  = 0
 !
 !                 DO J = 1, NCUTS
@@ -1208,10 +1183,8 @@
 !              END DO
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Observer:       MARS
 !         Target:         PHOBOS
@@ -1219,10 +1192,8 @@
 !
 !         Number of cuts:            3
 !
-!
 !         Computation method = TANGENT/ELLIPSOID
 !         Locus              = CENTER
-!
 !
 !          Roll angle (deg) =          0.000000000
 !             Target epoch  =  271684865.152078211
@@ -1242,10 +1213,8 @@
 !               Limb points
 !                  0.242785221         9.234520095        -5.333231253
 !
-!
 !         Computation method = TANGENT/DSK/UNPRIORITIZED
 !         Locus              = CENTER
-!
 !
 !          Roll angle (deg) =          0.000000000
 !             Target epoch  =  271684865.152078211
@@ -1264,7 +1233,6 @@
 !             Number of limb points at this roll angle:            1
 !               Limb points
 !                 -1.380536729         9.714334047        -5.592916790
-!
 !
 !     2) Find apparent limb points on Mars as seen from the earth.
 !        Compare results using different computation options.
@@ -1299,7 +1267,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1340,9 +1307,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     LIMBPT example 2
@@ -1536,7 +1501,6 @@
 !              WRITE (*,*) ' '
 !              WRITE (*,*) 'Number of cuts: ', NCUTS
 !
-!
 !              DO I = 1, NMETH
 !
 !                 CALL LIMBPT ( METHOD(I), TARGET,    ET,     FIXREF,
@@ -1550,7 +1514,6 @@
 !                 WRITE(*,*) ' '
 !                 WRITE(*,*) 'Computation method = ', METHOD(I)
 !                 WRITE(*,*) 'Locus              = ', CORLOC(I)
-!
 !
 !                 START  = 0
 !
@@ -1605,7 +1568,6 @@
 !             .            '      Distance error  (km): ', DIST
 !                       END IF
 !
-!
 !                    END DO
 !
 !                    START = START + NPTS(J)
@@ -1617,10 +1579,8 @@
 !              END DO
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Observer:       EARTH
 !         Target:         MARS
@@ -1658,7 +1618,6 @@
 !              Altitude        (km):         -0.000000000
 !              Emission angle (deg):         90.000000000
 !
-!
 !         Computation method = TANGENT/DSK/UNPRIORITIZED
 !         Locus              = ELLIPSOID LIMB
 !
@@ -1688,7 +1647,6 @@
 !              Latitude       (deg):        -27.043096556
 !              Altitude        (km):          3.695628339
 !              Emission angle (deg):         90.265135303
-!
 !
 !         Computation method = GUIDED/DSK/UNPRIORITIZED
 !         Locus              = CENTER
@@ -1723,7 +1681,6 @@
 !              Emission angle (deg):         90.000001307
 !              Distance error  (km):         15.716034625
 !
-!
 !     3) Find apparent limb points on comet Churyumov-Gerasimenko
 !        as seen from the Rosetta orbiter.
 !
@@ -1737,7 +1694,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1773,7 +1729,6 @@
 !                                                parameters)
 !              CATT_DV_145_01_______00216.BC     Comet C-G C-kernel
 !
-!
 !                \begindata
 !
 !             KERNELS_TO_LOAD = ( 'DE405.BSP'
@@ -1788,9 +1743,7 @@
 !
 !                End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !        C
 !        C     LIMBPT example 3
@@ -1910,7 +1863,6 @@
 !              CALL SPKPOS ( TARGET, ET,     FIXREF, ABCORR,
 !             .              OBSRVR, TRGPOS, LT             )
 !
-!
 !              SCHSTP = 1.D-2  / VNORM(TRGPOS)
 !              SOLTOL = SCHSTP / 100.D0
 !
@@ -1982,10 +1934,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Observer:       ROSETTA
 !         Target:         CHURYUMOV-GERASIMENKO
@@ -1993,10 +1943,8 @@
 !
 !         Number of cuts:            6
 !
-!
 !         Computation method = TANGENT/DSK/UNPRIORITIZED
 !         Locus              = CENTER
-!
 !
 !          Roll angle (deg) =          0.000000000
 !             Target epoch  =  484488067.184933782
@@ -2046,7 +1994,6 @@
 !                  0.959495690         0.170340551         0.905212642
 !                  0.370611049        -0.167047205         0.395076979
 !
-!
 ! $ Restrictions
 !
 !     1)  The light time approximations made by this routine may be
@@ -2092,13 +2039,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find limb points on target body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2258,7 +2203,6 @@
       character(frnmln)     svfref
       integer(ip)           svfxfc
 
-
 !
 !     Saved surface name/ID item declarations.
 !
@@ -2312,7 +2256,6 @@
       save                  svfref
       save                  svfxfc
 
-
 !
 !     Saved surface name/ID items.
 !
@@ -2338,9 +2281,7 @@
       data                  usestl / .false. /
       data                  xmit   / .false. /
 
-
       if ( return() ) return
-
 
 !
 !     Counter initialization is done separately.
@@ -2356,7 +2297,6 @@
          call zzctruin( svctr5 )
 
       end if
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -2377,7 +2317,6 @@
 !           USECN indicates converged Newtonian light time correction.
 !
 !           USESTL indicates stellar aberration corrections.
-!
 !
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
@@ -2430,7 +2369,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
 
@@ -2448,7 +2386,6 @@
          return
 
       end if
-
 
 !
 !     Check the input body codes. If they are equal, signal
@@ -2535,7 +2472,6 @@
 
          if ( failed() ) return
 
-
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
             shape = ellshp
@@ -2555,7 +2491,6 @@
             return
 
          end if
-
 
          if (  eqstr( lmbstr, 'TANGENT' )  ) then
 
@@ -2615,7 +2550,6 @@
          prvmth = method
 
       end if
-
 
 !
 !     Identify the aberration correction locus.
@@ -2741,7 +2675,6 @@
 
       end if
 
-
       if ( shape == dskshp ) then
 !
 !        This is the DSK case.
@@ -2765,7 +2698,6 @@
       end if
 
       if ( failed() ) return
-
 
 !
 !     Check MAXN.
@@ -2920,7 +2852,6 @@
 
             end if
 
-
             if ( shape == dskshp ) then
 !
 !              Caution: this requires that ZZSUDSKI has been
@@ -2931,7 +2862,6 @@
             end if
 
          end if
-
 
          to    = 1
          room  = maxn
@@ -2955,7 +2885,6 @@
 !           half-plane. We'll use this vector later.
 !
             call ucrss ( axis, plnvec, cutnml )
-
 
             if ( shape == dskshp ) then
 !
@@ -2984,7 +2913,6 @@
                   if ( failed() ) return
 
                   npts(i) = cardd( result )
-
 
                else if ( lmbtyp == guided ) then
 !
@@ -3032,7 +2960,6 @@
                      npts(i) = 0
                   end if
 
-
                else
 !
 !                 This is a backstop case; it should never be reached.
@@ -3043,7 +2970,6 @@
                   return
 
                end if
-
 
             else if ( shape == ellshp ) then
 !
@@ -3072,7 +2998,6 @@
                call surfpt ( center,    edir,      svradi(1), &
                              svradi(2), svradi(3), pntbuf(1,1), fnd )
 
-
                if ( failed() ) return
 
                if ( .not. fnd ) then
@@ -3099,7 +3024,6 @@
                return
 
             end if
-
 
             total = total + npts(i)
 
@@ -3136,7 +3060,6 @@
             end do
 
          end do
-
 
       else if ( loccde == ellcor ) then
 !
@@ -3185,7 +3108,6 @@
          do i = 1, ncuts
 
             roll = ( i - 1 ) * rolstp
-
 
             if ( uselt ) then
 !
@@ -3315,7 +3237,6 @@
 !
                   call ucrss ( cutnml, enorml, edir )
 
-
                   if ( vzero(edir) ) then
 
                      call setmsg ( 'Vector defining cutting half plane ' &
@@ -3437,7 +3358,6 @@
 !              We're ready to compute the limb point in the current
 !              half-plane.
 !
-!
 !              Find the limb, the limb center and semi-axes, and
 !              limb plane's normal vector for the current viewing
 !              geometry.
@@ -3516,7 +3436,6 @@
 
             npts(i) = 1
 
-
             if ( shape == dskshp ) then
 !
 !              Find the limb points on the target surface as modeled
@@ -3540,7 +3459,6 @@
 !
                npts(i) = cardd( result )
 
-
             else if ( shape /= ellshp ) then
 
                call setmsg ( 'Backstop error: SHAPE = #.' )
@@ -3549,7 +3467,6 @@
                return
 
             end if
-
 
             total = total + npts(i)
 

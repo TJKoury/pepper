@@ -5,7 +5,6 @@
 
 ! $ Abstract
 !
-!
 !     SPICE Private routine intended solely for the support of SPICE
 !     routines.  Users should not call this routine directly due
 !     to the volatile nature of this routine.
@@ -99,7 +98,6 @@
 !        DSIZE  = 100
 !        OFFSET = 0
 !
-!
 !     for CK type 02,
 !
 !        SIZE   = segment size
@@ -126,7 +124,6 @@
 ! $ Version
 !
 !-    SPICELIB Version 1.0.0, 02-DEC-1999 (WLT)
-!
 !
 !-&
 
@@ -169,7 +166,6 @@
       integer(ip)           pd1
       integer(ip)           r
       integer(ip)           a
-
 
 !
 !     Handle the exceptional case first.

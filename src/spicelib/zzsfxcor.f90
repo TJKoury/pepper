@@ -40,7 +40,6 @@
       include 'frmtyp.inc'
       include 'zzabcorr.inc'
 
-
       external              udnear
       external              udmaxr
       external              udrayx
@@ -103,7 +102,6 @@
 !                    DOUBLE PRECISION      PNEAR (3)
 !                    DOUBLE PRECISION      DIST
 !
-!
 !     UDMAXR     is an external routine that computes the radius of an
 !                outer bounding surface for the target body. The caller
 !                must perform any initialization required by UDMAXR.
@@ -113,7 +111,6 @@
 !                   CALL UDMAXR ( MAXRAD )
 !
 !                   DOUBLE PRECISION      MAXRAD
-!
 !
 !     UDRAYX     external routine that computes the intercept of the
 !                input ray on the surface associated with the target
@@ -130,7 +127,6 @@
 !                    DOUBLE PRECISION      ET
 !                    DOUBLE PRECISION      SPOINT(3)
 !                    LOGICAL               FOUND
-!
 !
 !     TRGCDE     is the body ID of the target.
 !
@@ -201,7 +197,6 @@
 !                LTCENT is computed using the method indicated by
 !                ABCORR.
 !
-!
 ! $ Detailed_Output
 !
 !     SPOINT      is the surface intercept point on the target body of
@@ -229,7 +224,6 @@
 !
 !                 The components of SPOINT are given in units of km.
 !
-!
 !     TRGEPC      is the "intercept epoch." TRGEPC is defined as
 !                 follows: letting LT be the one-way light time between
 !                 the observer and the intercept point, TRGEPC is the
@@ -240,7 +234,6 @@
 !                 ABCORR.
 !
 !                 TRGEPC is expressed as seconds past J2000 TDB.
-!
 !
 !     SRFVEC      is the vector from the observer's position at ET to
 !                 the aberration-corrected (or optionally, geometric)
@@ -279,12 +272,10 @@
 !                 below presents a complete program that demonstrates
 !                 this procedure.
 !
-!
 !     FOUND       A logical flag indicating whether or not the ray
 !                 intersects the target. If an intersection exists
 !                 FOUND will be returned as .TRUE. If the ray misses
 !                 the target, FOUND will be returned as .FALSE.
-!
 !
 ! $ Parameters
 !
@@ -375,7 +366,6 @@
 !
 !     In all cases, kernel data are normally loaded once per program
 !     run, NOT every time this routine is called.
-!
 !
 ! $ Particulars
 !
@@ -494,7 +484,6 @@
 !        solution intercept to be found at that point or later.
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -513,7 +502,6 @@
 !     Local parameters
 !
       character(*), parameter :: rname = 'ZZSFXCOR'
-
 
 !
 !     This value will become system-dependent when systems
@@ -534,14 +522,12 @@
 !
       real(wp), parameter :: margin = 1.01_wp
 
-
       integer(ip), parameter :: maxitr = 10
 
 !
 !     Code for the frame J2000.
 !
       integer(ip), parameter :: j2code = 1
-
 
 !
 !     Local variables
@@ -602,12 +588,10 @@
       data                  first  / .true. /
       data                  prvcor / ' '    /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Nothing found yet.
@@ -643,7 +627,6 @@
          s = 0.0_wp
       end if
 
-
       if ( first .or. ( abcorr /= prvcor ) ) then
 !
 !        Construct aberration correction string without stellar
@@ -667,7 +650,6 @@
          else
             loccor = 'NONE'
          end if
-
 
          prvcor = abcorr
          first  = .false.
@@ -734,14 +716,12 @@
 !
          refepc = et
 
-
       else if ( .not. uselt ) then
 !
 !        We're not using light time corrections (converged or
 !        otherwise), so there's no time offset.
 !
          refepc = et
-
 
       else if ( dcentr == obscde ) then
 !
@@ -815,7 +795,6 @@
 !        TRGEPC is set.
 !        TRGDIR is set.
 !        J2DIR is set.
-!
 !
 !     Get the J2000-relative state of the observer relative to
 !     the solar system barycenter at ET. We'll use this in
@@ -973,7 +952,6 @@
          return
 
       end if
-
 
       if ( range > margin*maxrad ) then
 !

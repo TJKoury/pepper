@@ -30,7 +30,6 @@
       include 'spk19.inc'
       include 'spkrec.inc'
 
-
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
@@ -173,7 +172,6 @@
 !                 where x, y, z represent Cartesian position
 !                 components and  vx, vy, vz represent Cartesian
 !                 velocity components.
-!
 !
 !                 Type 2 (indicated by code S19TP2):
 !
@@ -368,13 +366,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_19 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -409,7 +405,6 @@
 !
       real(wp)              dc     ( nd )
       real(wp)              descr  ( dscsiz )
-
 
       integer(ip)           bepix
       integer(ip)           chrcod
@@ -446,7 +441,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Start with a parameter compatibility check.
@@ -700,7 +694,6 @@
 
          end if
 
-
 !
 !        Make sure the epochs of the Ith mini-segment form a
 !        strictly increasing sequence.
@@ -810,7 +803,6 @@
 !        | Number of intervals            |
 !        +--------------------------------+
 !
-!
 !     SPK type 19 mini-segments have the following structure:
 !
 !        +-----------------------+
@@ -844,7 +836,6 @@
 !        +-----------------------+
 !        | Number of packets     |
 !        +-----------------------+
-!
 !
 !     Create the segment descriptor. We don't use SPKPDS because
 !     that routine doesn't allow creation of a singleton segment.
@@ -1015,7 +1006,6 @@
          minisz =       npkts(i) * ( pktsiz + 1 ) &
                     + ( npkts(i) - 1 ) / dirsiz &
                     +   3
-
 
          segbeg = segend + 1
          segend = segbeg + minisz - 1

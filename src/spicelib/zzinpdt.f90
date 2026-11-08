@@ -47,7 +47,6 @@
 
       integer(ip), parameter :: altidx = 3
 
-
       real(wp), parameter :: latmrg = 1.0e-8_wp
 
 ! $ Brief_I/O
@@ -93,13 +92,11 @@
 !                longitude lower bound, a value greater than the upper
 !                bound by 2*pi is used for the comparison.
 !
-!
 !     CORPAR     is an array of coordinate parameters; normally these
 !                are obtained from a DSK descriptor. The first element
 !                is the equatorial radius of the reference spheroid.
 !                The second element is the flattening coefficient.
 !                Any other elements are ignored by this routine.
-!
 !
 !     MARGIN     is a fraction used to expand the volume element for
 !                inclusion testing.
@@ -117,7 +114,6 @@
 !                     ellipsoids. The input point's position is tested
 !                     for inclusion within or exclusion from these
 !                     ellipsoids.
-!
 !
 !                   - Latitude bounds are extended by MARGIN radians,
 !                     within the interval -pi/2 : pi/2.
@@ -137,7 +133,6 @@
 !                     latitude close to (within LATMRG radians of) pi/2
 !                     or -pi/2, comparison against the longitude bounds
 !                     of the volume element is omitted if MARGIN > 0.
-!
 !
 !     EXCLUD     is either a coordinate index or the parameter NONE.
 !
@@ -195,12 +190,10 @@
 !                EXCLUD, indicates that latitude should be excluded
 !                from comparison.
 !
-!
 !     ALTIDX     is the index of altitude in the second dimension of
 !                BOUNDS. When used as a value of the input argument
 !                EXCLUD, indicates that altitude should be excluded
 !                from comparison.
-!
 !
 !     LATMRG     is the margin used to determine whether the input
 !                latitude is "close" to the poles. Units are radians.
@@ -265,9 +258,6 @@
 !
 !-&
 
-
-
-
 !
 !     SPICELIB functions
 !
@@ -296,7 +286,6 @@
       integer(ip), parameter :: lower = 1
 
       integer(ip), parameter :: upper = 2
-
 
 !
 !     Numeric relation codes returned by ZZPDCMPL:
@@ -357,9 +346,7 @@
       data                  first / .true. /
       data                  hpi   / -1.0_wp  /
 
-
       if ( return() ) return
-
 
       if ( first ) then
 
@@ -378,7 +365,6 @@
          first = .false.
 
       end if
-
 
       if (  ( exclud < 0 ) .or. ( exclud > 3 )  ) then
 
@@ -421,7 +407,6 @@
 !
 !     At this point a more detailed analysis is needed.
 !
-!
 !     Assume the point is outside to start. This allows us
 !     to skip setting INSIDE when we find a boundary test
 !     failure.
@@ -462,7 +447,6 @@
          call zzpdcmpl ( re, f, p, amxlat, relmax )
 
          if ( failed() ) return
-
 
          if ( ( relmin == lt ) .or. ( relmax == gt ) ) then
 !
@@ -605,7 +589,6 @@
                end if
 
             end if
-
 
             if ( ( lon < amnlon ) .or. ( lon > amxlon ) ) return
 

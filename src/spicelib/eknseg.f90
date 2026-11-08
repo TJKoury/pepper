@@ -81,9 +81,7 @@
 !
 !           dif_seq_050112_050729.bes
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKNSEG_EX1
 !              IMPLICIT NONE
@@ -106,7 +104,6 @@
 !        C
 !              CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
 !
-!
 !        C
 !        C     Return the number of segments in the EK.
 !        C
@@ -120,13 +117,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Number of segments =            2
-!
 !
 ! $ Restrictions
 !
@@ -154,13 +148,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return number of segments in an E-kernel
 !
 !-&
-
 
 !
 !     SPICELIB functions

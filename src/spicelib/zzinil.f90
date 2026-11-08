@@ -204,7 +204,6 @@
 
       integer(ip)              ids70
 
-
 !
 !     SPICELIB routines.
 !
@@ -215,8 +214,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
-
 
 !
 !     This code block replaces the call:
@@ -319,7 +316,6 @@
       if ( gsto < 0.0_wp ) then
          gsto= gsto + twopi()
       end if
-
 
       return
       end

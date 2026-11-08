@@ -20,7 +20,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'ekqlimit.inc'
@@ -172,11 +171,6 @@
       logical               found
       logical               null   ( 2 )
 
-
-!
-!     Use discovery check-in for speed.
-!
-
 !
 !     The function value defaults to `equal'.
 !
@@ -184,7 +178,6 @@
 
       lhstyp    =  cldscs( typidx, 1 )
       rhstyp    =  cldscs( typidx, 2 )
-
 
       if (  lhstyp == int ) then
 !
@@ -195,7 +188,6 @@
 !
          call zzekrsi (  hans( 1),  sgdscs(1,1),  cldscs(1,1),  rows(1), &
                          elts(1),   ival(1),      null(1),      found  )
-
 
          if ( .not. found ) then
 
@@ -210,9 +202,7 @@
 
          end if
 
-
          if ( rhstyp == int ) then
-
 
             call zzekrsi ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
                            elts(1), ival(2),     null(2),     found   )
@@ -251,7 +241,6 @@
 
             end if
 
-
          else if ( rhstyp == dp ) then
 
             call zzekrsd ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
@@ -269,7 +258,6 @@
                return
 
             end if
-
 
             if ( null(1) .or. null(2) )  then
 
@@ -289,7 +277,6 @@
 
             end if
 
-
          else
 !
 !           This is a big-time semantic error.  We should
@@ -303,15 +290,12 @@
 
          end if
 
-
-
       else if ( lhstyp == dp ) then
 !
 !        This is a mirror image of the INT case.
 !
          call zzekrsd ( hans(1),  sgdscs(1,1),  cldscs(1,1),  rows(1), &
                         elts(1),  dval(1),      null(1),      found   )
-
 
          if ( .not. found ) then
 
@@ -325,7 +309,6 @@
             return
 
          end if
-
 
          if ( rhstyp == int ) then
 
@@ -366,9 +349,7 @@
 
             end if
 
-
          else if ( rhstyp == dp ) then
-
 
             call zzekrsd ( hans(2), sgdscs(1,2), cldscs(1,2), rows(2), &
                            elts(1), dval(2),     null(2),     found   )
@@ -385,7 +366,6 @@
                return
 
             end if
-
 
             if ( null(1) .or. null(2) )  then
 
@@ -405,7 +385,6 @@
 
             end if
 
-
          else
 !
 !           This is a big-time semantic error.  We should
@@ -418,8 +397,6 @@
             return
 
          end if
-
-
 
       else if ( lhstyp == time ) then
 !
@@ -438,12 +415,10 @@
 
          end if
 
-
          do i = 1, 2
 
             call zzekrsd ( hans(i),  sgdscs(1,i), cldscs(1,i), rows(i), &
                            elts(i),  dval(i),     null(i),     found   )
-
 
             if ( .not. found ) then
 
@@ -459,7 +434,6 @@
             end if
 
          end do
-
 
          if ( null(1) .or. null(2) )  then
 
@@ -479,7 +453,6 @@
 
          end if
 
-
       else if ( lhstyp == chr ) then
 !
 !        The entities we're comparing are supposed to be scalar.
@@ -496,7 +469,6 @@
 
          end if
 
-
          do i = 1, 2
 
             call zzekrsc (  hans  (  i), &
@@ -508,7 +480,6 @@
                             cval(i), &
                             null(i), &
                             found           )
-
 
             if ( .not. found ) then
 
@@ -530,7 +501,6 @@
 
          end do
 
-
          if ( null(1) .or. null(2) )  then
 
             if ( .not. null(2) ) then
@@ -540,7 +510,6 @@
             end if
 
          else
-
 
             if (   llt (   cval(1)( :cmplen(1) ), &
                            cval(2)( :cmplen(2) )  )   ) then
@@ -556,7 +525,6 @@
 
          end if
 
-
       else
 !
 !        Something untoward has happened in our descriptor.
@@ -568,7 +536,6 @@
          return
 
       end if
-
 
       return
       end

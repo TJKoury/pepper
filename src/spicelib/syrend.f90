@@ -89,7 +89,6 @@
 !                             1.99096871D-7
 !        ORBIT_ECC     -->    1.671D-2
 !
-!
 !     The call,
 !
 !     CALL SYREND ( 'K', 'EB', TABSYM, TABPTR, TABVAL )
@@ -127,7 +126,6 @@
 !     and the symbol "EB" was then renamed to "DELTA_T_A". If the
 !     new symbol exists, it is deleted from the table before its name
 !     is given to another symbol.
-!
 !
 !     The next call,
 !
@@ -170,13 +168,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rename an existing symbol
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -185,7 +181,6 @@
 !         Declaration of the unused function SIZEC removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -207,8 +202,6 @@
       integer(ip)           newloc
       integer(ip)           newval
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -225,7 +218,6 @@
 !     go wrong is that the old symbol does not exist.
 !
       if ( oldloc == 0 ) then
-
 
          call setmsg ( 'SYREND: The symbol # is not in the symbol ' // &
                        'table.' )
@@ -271,7 +263,6 @@
          tabsym(newloc) = new
 
       end if
-
 
       return
       end

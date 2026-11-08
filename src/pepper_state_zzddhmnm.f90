@@ -19,10 +19,10 @@ module pepper_state_zzddhmnm
 
    !> The saved variables of ZZDDHMNM.
    type, public :: zzddhmnm_state
-      logical :: first  !! saved between calls by ZZDDHMNM
-      integer(ip) :: natbff  !! saved between calls by ZZDDHMNM
-      integer(ip) :: supbff ( numbff )  !! saved between calls by ZZDDHMNM
-      integer(ip) :: numsup  !! saved between calls by ZZDDHMNM
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff  !! code of the native binary file format
+      integer(ip) :: supbff ( numbff )  !! codes of the supported binary file formats
+      integer(ip) :: numsup  !! number of supported binary file formats
    end type zzddhmnm_state
 
 contains

@@ -416,7 +416,6 @@
 !        various shapes and sizes, to load the FOV definitions, and the
 !        mapping between their NAMES and NAIF IDs.
 !
-!
 !           KPL/IK
 !
 !           File name: getfvn_ex1.ti
@@ -503,9 +502,7 @@
 !
 !           End of IK
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GETFVN_EX1
 !              IMPLICIT NONE
@@ -581,10 +578,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        --------------------------------------
 !        Instrument NAME: SC999_INST001
@@ -622,7 +617,6 @@
 !                        -0.40000000  0.80000000 -0.20000000
 !        --------------------------------------
 !
-!
 ! $ Restrictions
 !
 !     1)  This routine will not operate unless proper mapping between
@@ -648,15 +642,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return instrument's FOV parameters, using instrument name
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !
@@ -699,12 +690,10 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Initialization.

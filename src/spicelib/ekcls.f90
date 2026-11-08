@@ -84,9 +84,7 @@
 !        The example shows the effect of the EKCLS calls when the EK
 !        file has been opened for write or read access.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKCLS_EX1
 !              IMPLICIT NONE
@@ -141,7 +139,6 @@
 !              INTEGER               SEGNO
 !
 !              LOGICAL               ISNULL
-!
 !
 !        C
 !        C     Open a new EK file.  For simplicity, we won't
@@ -283,10 +280,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from column: CHR_COL_1
 !            record number:            1
@@ -330,7 +325,6 @@
 !            record number:            6
 !            values       : -50      -51      -52      -53
 !
-!
 !        Note that the second record does not appear due to setting the
 !        ISNULL flag to true for that record. The odd value record
 !        numbers have negative values as a result of the update calls.
@@ -367,13 +361,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close EK
 !
 !-&
-
 
 !
 !     SPICELIB functions

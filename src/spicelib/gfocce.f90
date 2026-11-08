@@ -706,7 +706,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -742,7 +741,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -767,7 +765,6 @@
 !     cases, the step size is likely to have a much greater effect on
 !     processing time than would the convergence tolerance.
 !
-!
 !     The Confinement Window
 !     ======================
 !
@@ -779,7 +776,6 @@
 !     slow search of interest must be performed. For an example, see
 !     the program CASCADE in the GF Example Programs chapter of the GF
 !     Required Reading, gf.req.
-!
 !
 !     Using DSK data
 !     ==============
@@ -801,7 +797,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -828,7 +823,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the FSHAPE and BSHAPE arguments.
-!
 !
 !        Syntax of the shape input arguments for the DSK case
 !        ----------------------------------------------------
@@ -926,7 +920,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfocce_ex1.tm
@@ -950,7 +943,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -961,9 +953,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFOCCE_EX1
 !              IMPLICIT NONE
@@ -1078,7 +1068,6 @@
 !             .              GFREPI,   GFREPU,       GFREPF,
 !             .              BAIL,     GFBAIL,       CNFINE,  RESULT )
 !
-!
 !              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
 !
 !                 WRITE (*,*) 'No occultation was found.'
@@ -1105,17 +1094,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Occultation/transit search 100.00% done.
 !
 !         Interval            1
 !            Start time: 2001 DEC 14 20:10:14.195952  (TDB)
 !            Stop time:  2001 DEC 14 21:35:50.317994  (TDB)
-!
 !
 !        Note that the progress report has the format shown below:
 !
@@ -1183,13 +1169,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF mid-level occultation search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1234,12 +1218,10 @@
       integer(ip)           count
       integer(ip)           i
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check the result window's size.
@@ -1285,7 +1267,6 @@
 !     require modification to handle DSK-based shapes.
 !
 
-
       if (      ( lfshap == ptshap ) &
           .and. ( lbshap == ptshap )  ) then
 
@@ -1297,7 +1278,6 @@
          return
 
       end if
-
 
 !
 !     Initialize the occultation calculation.
@@ -1332,7 +1312,6 @@
                          udbail,     cstep,    step,     start, &
                          finish,     tol,      rpt,      udrepu, &
                          result   )
-
 
          if (  failed()  ) return
 

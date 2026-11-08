@@ -199,7 +199,6 @@
 !          approximately 3/2 times the minimum, and the minimum is
 !          approximately 40.
 !
-!
 !     As the above description shows, the parent gains a key as a
 !     result of a 2-3 split.  This may cause the parent to overflow;
 !     if it does, the overflow at the parent's level must be resolved.
@@ -264,9 +263,6 @@
       integer(ip)           rsize
       integer(ip)           sum
 
-
-!
-!     Use discovery check-in for speed.
 !
 !     The plan is to take two sibling nodes, one of which is full and
 !     one of which is overflowing by 1 key, and to split off about
@@ -385,8 +381,6 @@
       call movei ( c1page(trdatc+lsize+2), lshift,   c3page(trdatc+1) )
       call movei ( c1page(trkidc+lsize+2), lshift+1, c3page(trkidc+1) )
 
-
-
 !
 !     Compute the size of the tree headed by the left subnode.  We'll
 !     need this shortly.  The size of this tree is one less than the
@@ -409,7 +403,6 @@
 !
       lnmove                  = ltrsiz - ldelta
       c3page(trkeyc+lshift+1) = lnmove + 1
-
 
       c3page(trdatc+lshift+1) =  ppage ( datbas + pkidx )
 

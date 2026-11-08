@@ -127,7 +127,6 @@
 !                               correction and stellar aberration
 !                               correction.
 !
-!
 !                 The following values of ABCORR apply to the
 !                 "transmission" case in which photons *depart* from
 !                 the observer's location at ET and arrive at the
@@ -160,7 +159,6 @@
 !                    'XCN+S'    "Transmission" case:  converged
 !                               Newtonian light time correction and
 !                               stellar aberration correction.
-!
 !
 !     OBS         is the NAIF ID code for the observer body.  The
 !                 target and observer define a state vector whose
@@ -281,7 +279,6 @@
 !          kernels referenced here must be present in the user's
 !          current working directory.
 !
-!
 !          \begindata
 !
 !             KERNELS_TO_LOAD = ( 'de418.bsp',
@@ -289,7 +286,6 @@
 !                                 'naif0008.tls'  )
 !
 !          \begintext
-!
 !
 !       The code example follows:
 !
@@ -367,7 +363,6 @@
 !
 !           END
 !
-!
 !     The output produced by this program will vary somewhat as
 !     a function of the platform on which the program is built and
 !     executed. On a PC/Linux/g77 platform, the following output
@@ -423,7 +418,6 @@
 !        One-way light time (s):    1.3438081
 !        Light time rate:           1.00673404E-07
 !
-!
 ! $ Restrictions
 !
 !     1) The kernel files to be used by SPKACS must be loaded
@@ -466,8 +460,6 @@
 !     get light time and stellar aberration-corrected state
 !
 !-&
-
-
 
 ! $ Revisions
 !
@@ -523,12 +515,10 @@
 
       data                  prvcor  / ' ' /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !

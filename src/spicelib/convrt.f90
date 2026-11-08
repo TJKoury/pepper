@@ -200,13 +200,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert units
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -220,8 +218,6 @@
 !
       character(16)    inu
       character(16)    outu
-
-
 
       integer(ip)      i
       integer(ip)      j
@@ -245,7 +241,6 @@
 !
       real(wp), parameter :: scale = 2.0626480624790438e05_wp
 
-
       real(wp), parameter :: parsec = au * scale
 
       integer(ip), parameter :: ang = 0
@@ -267,8 +262,6 @@
 
       logical          first
       save             first
-
-
 
       data             first / .true. /
 
@@ -435,19 +428,15 @@
       data type  ( tme + 6 ) / 'TIME'           /
       data type  ( tme + 7 ) / 'TIME'           /
 
-
 !
 !     Set up the error processing.
 !
       if ( return() ) return
 
-
-
       if ( first ) then
          cnvrtn( ang + 1 ) =  dpr()
          first             = .false.
       end if
-
 
       call ucase ( in,  inu  )
       call ucase ( out, outu )
@@ -460,7 +449,6 @@
 
          if (       ( i == 0 ) &
               .and. ( j == 0 ) ) then
-
 
             call setmsg ('CONVRT: Neither the input units ' // inu  // &
                          'nor the output units '            // outu // &
@@ -511,10 +499,8 @@
 
       end if
 
-
       temp = x    * cnvrtn ( i )
       y    = temp / cnvrtn ( j )
-
 
       return
 

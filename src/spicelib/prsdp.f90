@@ -95,9 +95,7 @@
 !     1) Parse into a DOUBLE PRECISION variable a set of strings
 !        representing numeric values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PRSDP_EX1
 !              IMPLICIT NONE
@@ -145,13 +143,10 @@
 !
 !              END DO
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !           STRVAL               DPVAL
 !        -----------  --------------------------
@@ -163,7 +158,6 @@
 !                E10    10000000000.000000000000
 !                 Pi              3.141592653590
 !                -PI             -3.141592653590
-!
 !
 ! $ Restrictions
 !
@@ -197,13 +191,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse d.p. number with encapsulated error handling
 !
 !-&
-
 
 !
 !     Local parameters
@@ -216,10 +208,6 @@
       character(msglen)     errmsg
       integer(ip)           ptr
 
-
-!
-!     Use discovery check-in.
-!
       call nparsd ( string, dpval, errmsg, ptr )
 
       if ( errmsg /= ' ' ) then

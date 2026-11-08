@@ -143,7 +143,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -163,14 +162,12 @@
 !
       if ( return () ) return
 
-
 !
 !     Get the position of the target relative to the observer.
 !
       call spkezp ( targid, et, 'J2000', abcorr, obsid, pos, lt )
 
       if (  failed() ) return
-
 
       dist = vnorm ( pos )
 

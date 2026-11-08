@@ -159,13 +159,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch from a character set
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -197,7 +195,6 @@
       else
          fetchc = nth
       end if
-
 
       return
       end

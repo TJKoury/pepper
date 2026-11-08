@@ -341,13 +341,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     begin writing a type_03 PCK segment
 !
 !-&
-
 
 !
 !     Spicelib functions

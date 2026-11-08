@@ -119,7 +119,6 @@
 !     "ORBIT_ECC" has been deleted, and now the value 1.67125D-2
 !     is associated with the symbol.
 !
-!
 !     The next call,
 !
 !     CALL SYSETD ( 'EB', 1.671D-2, TABSYM, TABPTR, TABVAL )
@@ -169,13 +168,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the value associated with a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -202,8 +199,6 @@
       integer(ip)           locval
       integer(ip)           dimval
       logical               oldsym
-
-
 
 !
 !     Standard SPICE error handling.
@@ -253,7 +248,6 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
-
       else if ( nptr >= sizei ( tabptr ) ) then
 
             call setmsg ( 'SYSETD: Addition of the new symbol # '     // &
@@ -261,14 +255,12 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
-
       else if ( nval >= sized ( tabval ) ) then
 
             call setmsg ( 'SYSETD: Addition of the new symbol # '     // &
                           'causes an overflow in the value table.' )
             call errch  ( '#', name )
             call sigerr ( 'SPICE(VALUETABLEFULL)' )
-
 
 !
 !     If there's room, add the new name to the name table. Give the
@@ -288,7 +280,6 @@
          call scardd ( nval, tabval )
 
       end if
-
 
       return
       end

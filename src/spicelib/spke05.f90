@@ -112,7 +112,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -179,13 +178,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_5 SPK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -204,7 +201,6 @@
 !-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -231,7 +227,6 @@
       real(wp)              vcomp    ( 3 )
       real(wp)              vel      ( 3 )
       real(wp)              w
-
 
 !
 !     Standard SPICE error handling.
@@ -264,18 +259,15 @@
 !
 !     If t1 = t2, the state is just s(t1).
 !
-!
 !     Note: there are a number of weighting schemes we could have
 !     used.  This one has the nice property that
 !
 !     The graph of W is symmetric about the point
 !
-!
 !        ( (t1+t2)/2,  W( (t1+t2)/2 )
 !
 !     The range of W is from 1 to 0.  And the derivative of W is
 !     symmetric and zero at both t1 and t2.
-!
 !
       if ( t1 /= t2 ) then
 

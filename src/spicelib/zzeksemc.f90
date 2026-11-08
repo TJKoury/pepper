@@ -22,7 +22,6 @@
 !
 ! $ Declarations
 
-
       include 'ekattdsc.inc'
       include 'ekbool.inc'
       include 'ekcnamsz.inc'
@@ -230,9 +229,6 @@
                                        'INTEGER', &
                                        'TIME'               /
 
-!
-!     Use discovery check-in.
-!
       error   =  .false.
       errmsg  = ' '
       errptr  = 0
@@ -248,7 +244,6 @@
          return
 
       end if
-
 
       call zzekreqi ( eqryi, 'TIMES_RESOLVED', trsolv )
 
@@ -337,7 +332,6 @@
 !
          likeop  =  ( opcode == like ) .or. ( opcode == unlike )
 
-
          if (  likeop  .and.  ( lhstyp /= chr )  ) then
 
             error  =  .true.
@@ -352,7 +346,6 @@
             return
 
          end if
-
 
 !
 !        If the constraint compares two columns, get the same
@@ -418,7 +411,6 @@
 
             end if
 
-
          else
 !
 !           The constraint compares a column against a value.  If the
@@ -460,7 +452,6 @@
 
             end if
 
-
          end if
 
 !
@@ -492,9 +483,7 @@
 
          call zzekqtab ( eqryi, eqryc, tabidx, ordtab, alias )
 
-
          call ekcii ( ordtab, colidx, colnam, attdsc )
-
 
          if ( attdsc(4) /= 1 ) then
 

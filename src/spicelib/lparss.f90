@@ -117,7 +117,6 @@
 !              SET (7)     = 'spaces'
 !              SET (8)     = 'words'
 !
-!
 !     2) Let
 !
 !              LIST        = '  1986-187// 13:15:12.184 '
@@ -135,7 +134,6 @@
 !              SET (5)     = '187'
 !              SET (6)     = '1986'
 !
-!
 !     3) Let   LIST        = '  ,This,  is, ,an,, example, '
 !              DELIMS      = ' ,'
 !              SIZE (SET)  = 20
@@ -149,7 +147,6 @@
 !              SET (4)     = 'example'
 !              SET (5)     = 'is'
 !
-!
 !     4) Let   LIST        = 'Mary had a little lamb, little lamb
 !                             whose fleece was white      as snow.'
 !              DELIMS      = ' ,.'
@@ -159,7 +156,6 @@
 !        large enough to accommodate all of the items in the
 !        list.
 !
-!
 !     5) Let   LIST        = '1 2 3 4 5 6 7 8 9 10.'
 !              DELIMS      = ' .'
 !              SIZE (SET)  = 10
@@ -168,7 +164,6 @@
 !        large enough to accommodate all of the items in the
 !        list. Note that delimiters at the end (or beginning)
 !        of list are considered to delimit blank items.
-!
 !
 !     6) Let   LIST        = '1 2 3 4 5 6 7 8 9 10.'
 !              DELIMS      = '.'
@@ -224,13 +219,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse a list of items and return a set
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -247,7 +240,6 @@
 !        index B is greater than the length of the string LIST.
 !        Whether or not such violations occur is platform-dependent.
 !
-!
 !-    Beta Version 2.0.0, 10-JAN-1989 (HAN)
 !
 !        Error handling was added, and old error flags and their
@@ -259,7 +251,6 @@
 !        handling changes, and more examples were added.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -517,7 +508,6 @@
          end if
 
       end if
-
 
       return
       end

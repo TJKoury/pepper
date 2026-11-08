@@ -265,13 +265,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read encoded characters from a text file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -295,7 +293,6 @@
       character(errlen)     errmsg
       character(mxescd)     hexnum
 
-
       integer(ip)           dtalen
       integer(ip)           dtalin
       integer(ip)           dtapos
@@ -307,7 +304,6 @@
 
       logical               error
       logical               escape
-
 
 !
 !     Standard SPICE error handling.

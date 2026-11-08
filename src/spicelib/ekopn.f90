@@ -144,9 +144,7 @@
 !        with data before starting the second segment, or before
 !        closing the EK.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKOPN_EX1
 !              IMPLICIT NONE
@@ -222,7 +220,6 @@
 !             .             'INDEXED  = TRUE,'             //
 !             .             'NULLS_OK = TRUE'
 !
-!
 !        C
 !        C     Start the first segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -261,7 +258,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the new segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -276,7 +272,6 @@
 !              CALL EKCLS ( HANDLE )
 !
 !              END
-!
 !
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
@@ -310,7 +305,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open new E-kernel
@@ -318,13 +312,11 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               failed
       logical               return
-
 
 !
 !     Local parameters

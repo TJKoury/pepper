@@ -58,7 +58,6 @@
       real(wp)              dval
       integer(ip)           ival
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description
@@ -240,10 +239,6 @@
       integer(ip)           tb
       integer(ip)           te
 
-!
-!     Use discovery check-in.
-!
-
       call zzekreqi ( eqryi, 'SEM_CHECKED', icheck )
 
       if ( failed() ) return
@@ -259,7 +254,6 @@
 
       call zzekreqi ( eqryi, 'NUM_CONSTRAINTS',   ncns   )
       call zzekreqi ( eqryi, 'NUM_TABLES',        ntab   )
-
 
       if (  ( n < 1 ) .or. ( n > ncns )  ) then
 
@@ -335,7 +329,6 @@
          dval   =  0.0_wp
          ival   =  0
 
-
       else
 !
 !        The constraint compares a column and a value.  Set the
@@ -396,7 +389,6 @@
          rtname =  ' '
 
       end if
-
 
       return
       end

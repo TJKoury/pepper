@@ -36,7 +36,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     NCOLS          is the number of columns in a new segment.
 !
 !     CDSCRS         is an array of column descriptors:  the Ith
@@ -146,7 +145,6 @@
 
       end do
 
-
       if (  var  .and. ( .not. fixed )  ) then
 
          zzekstyp = 1
@@ -167,7 +165,6 @@
          return
 
       end if
-
 
       return
       end

@@ -160,13 +160,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     enqueue a value onto a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -187,8 +185,6 @@
       integer(ip)           locsym
       integer(ip)           locval
       logical               oldsym
-
-
 
 !
 !     Standard SPICE error handling.
@@ -228,7 +224,6 @@
          call errch  ( '#', name  )
          call sigerr ( 'SPICE(VALUETABLEFULL)' )
 
-
 !
 !     If there's room, add the new value to the value table. Add one
 !     to the dimension, and put the value in the right place.
@@ -243,7 +238,6 @@
          tabptr(locsym) = tabptr(locsym) + 1
 
       end if
-
 
       return
       end

@@ -166,13 +166,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Find a state transformation matrix
 !
 !-&
-
 
 !
 !     Spicelib Functions
@@ -225,12 +223,10 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Initialization.
@@ -246,7 +242,6 @@
          first = .false.
 
       end if
-
 
       call zznamfrm ( svctr1, svfrom, svfcod, from, fcode )
       call zznamfrm ( svctr2, svto,   svtcde, to,   tcode )

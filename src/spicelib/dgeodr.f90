@@ -131,7 +131,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dgeodr_ex1.tm
@@ -155,7 +154,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -166,9 +164,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DGEODR_EX1
 !              IMPLICIT NONE
@@ -261,7 +257,6 @@
 !
 !              CALL MXV ( JACOBI, GEOVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -310,10 +305,8 @@
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -357,7 +350,6 @@
 !          dY/dt (km/s)           =     0.53760111E+04
 !          dZ/dt (km/s)           =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -382,13 +374,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of geodetic  w.r.t. rectangular coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -404,7 +394,6 @@
       real(wp)              alt
       real(wp)              injacb  ( 3, 3 )
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -414,7 +403,7 @@
 !     If the flattening coefficient is greater than one, the polar
 !     radius computed below is negative. If it's equal to one, the
 !     polar radius is zero. Either case is a problem, so signal an
-!     error and check out.
+!     error.
 !
       if ( f >= 1.0_wp ) then
 

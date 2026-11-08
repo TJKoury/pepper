@@ -271,7 +271,6 @@
 !
 !           04153_04182ca_ISS.bc
 !
-!
 !        Use the SCLK kernel below to load the CASSINI spacecraft clock
 !        time correlation data required for the conversion between
 !        spacecraft clock string representation and double precision
@@ -279,9 +278,7 @@
 !
 !           cas00071.tsc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SCENCD_EX1
 !              IMPLICIT NONE
@@ -390,10 +387,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input s/c clock count : 1/1465644279.0
 !        No pointing found.
@@ -414,7 +409,6 @@
 !
 !        Input s/c clock count : 1/1465644361.0
 !        No pointing found.
-!
 !
 ! $ Restrictions
 !
@@ -479,13 +473,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     encode spacecraft_clock
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -517,12 +509,10 @@
       save                  pstop
       save                  ptotls
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Read the partition start and stop times (in ticks) for this
@@ -618,7 +608,6 @@
 !
 !           1) The clock count does not fall in the boundaries of any
 !              of the partitions.
-!
 !
       if ( pos > 1 ) then
 

@@ -121,7 +121,6 @@
 !
 !     Let the dimension of the array VALUES be 3.
 !
-!
 !     The ouput values of VALUES and FOUND for the input values of
 !     NAME, BEGIN, and END are contained in this table:
 !
@@ -199,13 +198,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     select a subset of the values of a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -224,13 +221,10 @@
       integer(ip)           locval
       integer(ip)           n
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -273,7 +267,6 @@
          end if
 
       end if
-
 
       return
       end

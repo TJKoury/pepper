@@ -191,14 +191,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     position and velocity from ephemeris
 !     SPK file position and velocity
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -248,7 +246,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -267,7 +264,6 @@
          first = .false.
 
       end if
-
 
       call dafus ( descr, 2, 6, dc, ic )
 

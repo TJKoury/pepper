@@ -94,9 +94,6 @@
       integer(ip)           loc
 
 !
-!     Use discovery check-in.
-!
-!
 !     Compute the status word location, and read the status.
 !
       loc  =  recptr + staidx

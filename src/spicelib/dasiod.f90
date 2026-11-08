@@ -50,7 +50,6 @@
 !              Case and leading or trailing blanks are not
 !              significant.
 !
-!
 !     UNIT     is the Fortran unit number connected to the DAS
 !              file that is to be read or written. Given the
 !              handle of the DAS file, the unit number can be
@@ -113,7 +112,6 @@
 !     1)  Read and print to the screen double precision records
 !         number 10 through 20 from the DAS file designated by HANDLE.
 !
-!
 !            DOUBLE PRECISION      RECORD ( NWD )
 !                           .
 !                           .
@@ -137,11 +135,8 @@
 !
 !            END DO
 !
-!
-!
 !     2)  Write the contents of the array RECORD to record number
 !         10 in the DAS file designated by HANDLE.
-!
 !
 !            DOUBLE PRECISION      RECORD ( NWD )
 !
@@ -184,7 +179,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     perform Fortran reads of double precision records
@@ -192,7 +186,6 @@
 !     perform low-level I/O for DAS routines
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -205,12 +198,7 @@
 !
       integer(ip)           iostat
 
-
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
-
 
       if (   eqstr ( action, 'READ' )   ) then
 !
@@ -232,7 +220,6 @@
             return
 
          end if
-
 
       else if (  eqstr ( action, 'WRITE' )  ) then
 
@@ -256,7 +243,6 @@
 
          end if
 
-
       else
 !
 !        The requested action is a little too weird.
@@ -267,7 +253,6 @@
          return
 
       end if
-
 
       return
       end

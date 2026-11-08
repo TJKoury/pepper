@@ -131,7 +131,6 @@
 !     body-fixed and inertial frames usually can call the higher-level
 !     routine PXFORM instead of this routine.
 !
-!
 !     If there exists high-precision binary PCK kernel information for
 !     the body at the requested time, the angles, W, DELTA and PHI are
 !     computed directly from that file. These angles are then used to
@@ -171,7 +170,6 @@
 !
 !       These angles -- typically nodal rates -- vary in number and
 !       definition from one planetary system to the next.
-!
 !
 !     The prime meridian offset LAMBDA
 !     ================================
@@ -311,14 +309,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     euler angles for orientation of a body
 !     fetch euler angles for a body
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -401,7 +397,6 @@
 !        HALFPI and N removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -495,12 +490,10 @@
       data  first / .true. /
       data  found / .false. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Get the code for the J2000 frame, if we don't have it yet.
@@ -543,7 +536,6 @@
          else
             lambda = 0
          end if
-
 
       else
 !
@@ -603,7 +595,6 @@
          end if
 
          if ( failed() ) return
-
 
          if ( found .or. found2 ) then
 !
@@ -918,7 +909,6 @@
       if ( ra < 0 ) then
          ra = ra + twopi()
       end if
-
 
       return
       end

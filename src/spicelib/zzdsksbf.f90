@@ -100,7 +100,6 @@
 !
 !     This routine is meant to be used only by the DSK subsystem.
 !
-!
 !     Data structure management
 !     =========================
 !
@@ -137,7 +136,6 @@
 !     counter is maintained. This counter is used to determine
 !     whether the locally buffered data are in sync with the
 !     information stored in the ZZDSKBSR subsystem.
-!
 !
 !     Computations
 !     ============
@@ -209,7 +207,6 @@
 
       integer(ip), parameter :: maxic = 1
 
-
       integer(ip), parameter :: stsize = 10000
 
       integer(ip), parameter :: btsize = 10
@@ -230,7 +227,6 @@
 !                element of BTSTSZ is the number of entries in the
 !                segment table for the Ith body.
 !
-!
       integer(ip)           btnbod
       integer(ip)           btbody ( btsize )
       integer(ip)           btsegp ( btsize )
@@ -246,7 +242,6 @@
       real(wp)              stoff  ( 3,      stsize )
       real(wp)              stctr  ( 3,      stsize )
       real(wp)              strad  ( stsize )
-
 
 !
 !     Local variables
@@ -289,15 +284,10 @@
       data                  first  / .true. /
       data                  stfree / 1      /
 
-
-
       if ( return() ) return
 
       call sigerr ( 'SPICE(BOGUSENTRY)' )
       return
-
-
-
 
 !$Procedure ZZSBFXR ( DSK, prepare and perform unprioritized intercept )
 
@@ -446,10 +436,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
-
 
       if ( first ) then
 !
@@ -492,7 +479,6 @@
 !
       bix = isrchi( bodyid, btnbod, btbody )
 
-
       if ( bix == 0 ) then
 !
 !        We don't have buffered information for this body. Update
@@ -525,10 +511,6 @@
                       locic,      found                               )
 
       return
-
-
-
-
 
 !$Procedure ZZSBFXRI ( DSK, unprioritized intercept with info )
 
@@ -709,10 +691,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
-
 
       if ( first ) then
 !
@@ -754,7 +733,6 @@
 !     we re-initialized the tables, the index will be zero.
 !
       bix = isrchi( bodyid, btnbod, btbody )
-
 
       if ( bix == 0 ) then
 !
@@ -804,10 +782,6 @@
       end if
 
       return
-
-
-
-
 
 !$Procedure ZZSBFNRM ( DSK, prepare and compute unprioritized normal )
 
@@ -951,9 +925,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     The following block of code is straight cut-and-paste from
@@ -1034,4 +1006,3 @@
       return
 
       end
-

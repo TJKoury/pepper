@@ -91,7 +91,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     besselian date 1900.0
@@ -204,7 +203,6 @@
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
 !
 !-&
-
 
 ! $ Index_Entries
 !
@@ -328,13 +326,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     c speed of light in a vacuum
 !
 !-&
-
 
 !
 !     Just like it says.
@@ -458,7 +454,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DPMAX_EX1
 !              IMPLICIT NONE
 !
@@ -475,16 +470,12 @@
 !             .                'Maximum Double Precision Number: ',
 !             .                 DPMAX()
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Maximum Double Precision Number:   0.17976931348623+309
-!
 !
 ! $ Restrictions
 !
@@ -680,13 +671,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     largest d.p. number
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -742,7 +731,6 @@
 !        are now specified in the $Literature_References section.
 !
 !-&
-
 
 !
 !     Numbers are provided in a variety of formats: decimal, hex,
@@ -823,7 +811,6 @@
 !     Environment: NeXT, Mach OS, Absoft Fortran 77
 !     Value:       (refer to the code below)
 !
-!
 !     References for the values above are listed in the
 !     $Literature_References section of the header.
 !
@@ -876,7 +863,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DPMIN_EX1
 !              IMPLICIT NONE
 !
@@ -893,16 +879,12 @@
 !             .               'Minimum Double Precision Number: ',
 !             .               DPMIN()
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Minimum Double Precision Number:  -0.17976931348623+309
-!
 !
 ! $ Restrictions
 !
@@ -1098,13 +1080,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     smallest d.p. number
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1156,13 +1136,11 @@
 !
 !-&
 
-
 !
 !     Numbers are provided in a variety of formats: decimal, hex,
 !     and binary. These last two formats are not portable; but then,
 !     neither are the values.
 !
-
 
 !
 !     IBM PC, Microsoft FORTRAN
@@ -1272,13 +1250,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     degrees per radian
 !
 !-&
-
 
 !
 !     Local variables
@@ -1287,7 +1263,6 @@
 !
 !     Initial values
 !
-
 
 !
 !     What is there to say?
@@ -1415,13 +1390,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     half the value of pi
 !
 !-&
-
 
 !
 !     Local variables
@@ -1430,7 +1403,6 @@
 !
 !     Initial values
 !
-
 
 !
 !     What is there to say?
@@ -1457,7 +1429,6 @@
 !     CONSTANTS
 !
 ! $ Declarations
-
 
 ! $ Detailed_Input
 !
@@ -1538,9 +1509,7 @@
 !        integer component of the number is out of range, avoid
 !        overflow by making it as large or small as possible.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INTMAX_EX1
 !              IMPLICIT NONE
@@ -1564,7 +1533,6 @@
 !        C     integer component that is out of range.
 !        C
 !              DATA                  NUMBER  / 2.D40, -1.5D35, 1.6D0 /
-!
 !
 !              DO I = 1, 3
 !
@@ -1597,10 +1565,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Double precision number:    2.0000000000000001E+040
 !            Overflow! Greater than INTMAX.
@@ -1612,7 +1578,6 @@
 !
 !         Double precision number:    1.6000000000000001
 !            Integer part        :            1
-!
 !
 ! $ Restrictions
 !
@@ -1792,13 +1757,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     largest integer number
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1852,7 +1815,6 @@
 !
 !-&
 
-
 !
 !     Numbers are provided in a variety of formats: decimal, hex,
 !     and binary. These last two formats are not portable; but then,
@@ -1894,7 +1856,6 @@
 !
 ! $ Declarations
 
-
 ! $ Detailed_Input
 !
 !     None.
@@ -1932,9 +1893,7 @@
 !        integer component of the number is out of range, avoid
 !        overflow by making it as large or small as possible.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INTMIN_EX1
 !              IMPLICIT NONE
@@ -1958,7 +1917,6 @@
 !        C     integer component that is out of range.
 !        C
 !              DATA                  NUMBER  / 2.D40, -1.5D35, 1.6D0 /
-!
 !
 !              DO I = 1, 3
 !
@@ -1991,10 +1949,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Double precision number:    2.0000000000000001E+040
 !            Overflow! Greater than INTMAX.
@@ -2006,7 +1962,6 @@
 !
 !         Double precision number:    1.6000000000000001
 !            Integer part        :            1
-!
 !
 ! $ Restrictions
 !
@@ -2225,13 +2180,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     smallest integer number
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2298,7 +2251,6 @@
 !        Parentheses added to function declaration.
 !
 !-&
-
 
 !
 !     Numbers are provided in a variety of formats: decimal, hex, sand
@@ -2392,7 +2344,6 @@
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
 !
 !-&
-
 
 ! $ Index_Entries
 !
@@ -2488,7 +2439,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     julian date of 1950.0 jan 1.0
@@ -2582,7 +2532,6 @@
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
 !
 !-&
-
 
 ! $ Index_Entries
 !
@@ -2678,7 +2627,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     julian date of 2100 jan 1.5
@@ -2742,7 +2690,6 @@
 !     of the julian year 1950) at a particular ET epoch. The
 !     following line of code will do the trick.
 !
-!
 !        CENTRY = ( ET - UNITIM ( J1950(), 'JED', 'ET' ) )
 !       .       / ( 100.0D0 * JYEAR() )
 !
@@ -2770,7 +2717,6 @@
 !-    SPICELIB Version 1.0.0, 13-JUL-1993 (WLT)
 !
 !-&
-
 
 ! $ Index_Entries
 !
@@ -2881,13 +2827,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     value of pi
 !
 !-&
-
 
 !
 !     Local variables
@@ -2896,7 +2840,6 @@
 !
 !     Initial values
 !
-
 
 !
 !     What is there to say?
@@ -3003,13 +2946,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     radians per degree
 !
 !-&
-
 
 !
 !     Local variables
@@ -3018,7 +2959,6 @@
 !
 !     Initial values
 !
-
 
 !
 !     What is there to say?
@@ -3110,13 +3050,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     seconds per day
 !
 !-&
-
 
 !
 !     Just like it says.
@@ -3225,13 +3163,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     twice the value of pi
 !
 !-&
-
 
 !
 !     Local variables
@@ -3240,7 +3176,6 @@
 !
 !     Initial values
 !
-
 
 !
 !     What is there to say?
@@ -3305,7 +3240,6 @@
 !     of the Besselian year 1950) at a particular ET epoch. The
 !     following line of code will do the trick.
 !
-!
 !        CENTRY = ( ET - UNITIM ( B1950(), 'JED', 'ET' ) )
 !       .       / ( 100.0D0 * TYEAR() )
 !
@@ -3332,7 +3266,6 @@
 !-    SPICELIB Version 1.0.0, 13-JUL-1993 (WLT)
 !
 !-&
-
 
 ! $ Index_Entries
 !

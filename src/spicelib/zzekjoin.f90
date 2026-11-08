@@ -23,7 +23,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekjrs.inc'
       include 'ekqlimit.inc'
@@ -244,7 +243,6 @@
 !           parent segment vectors (these offsets are at the
 !           end of each row vector)
 !
-!
 !     The layout of a join row set in the EK scratch area is shown
 !     in the include file for the join row set parameters.
 !
@@ -280,7 +278,6 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -310,9 +307,8 @@
       logical               found
 
 !
-!     For speed, we use discovery check-in.  We don't check
+!     For speed, we  We don't check
 !     RETURN at all.
-!
 !
 !     Validate constraint count.
 !
@@ -392,7 +388,6 @@
                call errint ( '#',  nt3                              )
                call sigerr ( 'SPICE(INVALIDINDEX)'                  )
                return
-
 
             else if (      ( cpidx2(i) < 1   ) &
                       .or. ( cpidx2(i) > nt3 )  ) then
@@ -539,7 +534,6 @@
 !
             nr3  =  0
             call zzekjnxt ( found, rowvec )
-
 
             do while ( found )
 !

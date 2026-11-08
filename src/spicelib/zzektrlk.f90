@@ -98,7 +98,6 @@
 !     3)  If the input key is out of range, the error
 !         SPICE(INDEXOUTOFRANGE) is signaled.
 !
-!
 !     4)  If the tree traversal fails to terminate at the leaf node
 !         level, the error SPICE(BUG) is signaled.
 !
@@ -149,8 +148,6 @@
 !-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
 !
 !-&
-
-
 
 !
 !     SPICELIB functions
@@ -216,12 +213,11 @@
       data                  page   / pgsizi * 0 /
 
 !
-!     Use discovery check-in in this puppy.
+! in this puppy.
 !
 !     Nothing found to begin with.
 !
       found  =  .false.
-
 
       if ( first ) then
 !
@@ -277,7 +273,6 @@
 
          return
 
-
       else if ( samtre .and. leaf ) then
 !
 !        Compute the margins around the old key.  Keys that fall within
@@ -286,7 +281,6 @@
 !
          plus   =  oldmax - oldidx
          minus  =  oldidx - 1
-
 
          if (        (  key  <=  oldkey+plus   ) &
                .and. (  key  >=  oldkey-minus  )  ) then
@@ -394,7 +388,6 @@
       child   =  page ( trkidr + prev + 1 )
       noffst  =  prvkey
 
-
       do while (  ( child > 0 ) .and. ( .not. found )  )
 !
 !        Look up the child node.
@@ -402,7 +395,6 @@
          call zzekpgri ( handle, child, page )
 
          level  =  level + 1
-
 
          if ( level > depth ) then
 
@@ -483,7 +475,6 @@
          return
 
       end if
-
 
       return
       end

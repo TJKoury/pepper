@@ -82,7 +82,6 @@
 !                    vertices of a polygon.  The polygon need not be
 !                    convex, but it must be non-self-intersecting.
 !
-!
 ! $ Detailed_Output
 !
 !     FOUND          is set to .TRUE. if the pyramid and ellipse
@@ -102,7 +101,6 @@
 !
 !     If an error is found, the output argument FOUND will be set to
 !     .FALSE.
-!
 !
 !     1)  If either of the semi-axes of the input ellipse is the
 !         zero vector, the error SPICE(ZEROVECTOR) will be signaled.
@@ -167,7 +165,6 @@
 !
 !     Test an ellipse for intersection with a square field
 !     of view.
-!
 !
 !           PROGRAM EX1
 !           IMPLICIT NONE
@@ -244,7 +241,6 @@
 !           WRITE (*,*) 'Case 2: FOUND = ', FOUND
 !
 !           END
-!
 !
 ! $ Restrictions
 !
@@ -341,7 +337,6 @@
       integer(ip)           j
       integer(ip)           nxpts
 
-
 !
 !     Saved variables
 !
@@ -353,9 +348,7 @@
 !
       data                 origin /  3 * 0.0_wp /
 
-
       if ( return() ) return
-
 
 !
 !     We start out by checking the inputs.
@@ -913,5 +906,3 @@
 
       return
       end
-
-

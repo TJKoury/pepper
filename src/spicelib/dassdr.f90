@@ -166,13 +166,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     segregate the data records in a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -201,7 +199,6 @@
 !        Lahey Fortran.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -242,7 +239,6 @@
 !     Directory address range location base
 !
       integer(ip), parameter :: rngbas = 2
-
 
 !
 !     Location of first type descriptor
@@ -294,8 +290,6 @@
 
       logical               more
 
-
-
 !
 !     Saved variables
 !
@@ -315,9 +309,6 @@
 !
       data                  next   /  2,   3,   1  /
       data                  prev   /  3,   1,   2  /
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -423,7 +414,6 @@
 !
       recno  =  nresvr + ncomr + 2
 
-
       do while (  ( recno <= lrec ) .and. ( recno > 0 )  )
 !
 !        Read the directory record.
@@ -457,7 +447,6 @@
 !
          more  =  .true.
          i     =   begdsc + 1
-
 
          do while ( more )
 !
@@ -547,7 +536,6 @@
 !     BASE+1 through BASE + 2*TOTAL can be written to in random access
 !     fashion using DASUDI.
 !
-!
       do i = 1, 2*total
 
          call dasadi ( scrhan, 1, 0 )
@@ -573,7 +561,6 @@
 !     an exception:  we wish to reserve this record.  Since the first
 !     element of the order vector (logically) contains the index 1, we
 !     can ignore it.
-!
 !
       do i = 2, total
 
@@ -635,13 +622,11 @@
 !           (the first directory record follows the record having this
 !           index).
 !
-!
 !        -- In integer logical addresses BASE + TOTAL + 1  :  BASE +
 !           2*TOTAL, we have data type indicators for the records to
 !           be re-ordered.  The type for the Ith record in the file,
 !           counted from the last comment record, is located in logical
 !           address BASE + TOTAL + I.
-!
 !
       drbase  =  nresvr + ncomr + 1
 
@@ -653,7 +638,6 @@
 !     Traverse the order vector.  The variable START indicates the
 !     first element to look at.  Ignore the first element; it's a
 !     singleton cycle.
-!
 !
       start = 2
 
@@ -855,7 +839,6 @@
 !        |                                  |
 !        +----------------------------------+
 !
-!
 !     Not all of the indicated components must be present; only the
 !     file record and first directory record will exist in all cases.
 !     The `additional directory records' at the end of the file serve
@@ -865,7 +848,6 @@
 !     The last step in preparing the file is to fill in the first
 !     directory record with the correct information, and to update
 !     the file summary.
-!
 !
       recno  =  drbase + 1
 
@@ -969,7 +951,6 @@
 !
       call daswbr ( scrhan )
       call dasllc ( scrhan )
-
 
       return
       end

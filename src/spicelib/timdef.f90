@@ -134,7 +134,6 @@
 !
 !        CALL TIMDEF ( 'SET', 'CALENDAR', VALUE )
 !
-!
 !     System
 !     -------
 !
@@ -251,7 +250,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Change time software defaults.
@@ -259,7 +257,6 @@
 !     Gregorian and Julian Calendars
 !
 !-&
-
 
 !
 
@@ -311,10 +308,7 @@
                                       'UTC-7',  'UTC-6', &
                                       'UTC-8',  'UTC-7'  /
 
-
-
       if ( return() ) return
-
 
 !
 !     Normalize the input.
@@ -361,7 +355,6 @@
                return
             end if
 
-
          else if ( myitem == 'ZONE' ) then
 
             zone = isrchc ( myval, nzones, zones )
@@ -394,7 +387,6 @@
 
             end if
 
-
             defzon = myval(3:)
             defsys = ' '
 
@@ -419,7 +411,6 @@
 
             end if
 
-
          else
 
             call setmsg ( 'The specified item ''#'' is not a ' &
@@ -428,11 +419,9 @@
             //            'routine TIMDEF are ''CALENDAR'', ' &
             //            '''SYSTEM'', or ''ZONE'' ' )
 
-
             call errch  ( '#', item            )
             call sigerr ( 'SPICE(BADTIMEITEM)' )
             return
-
 
          end if
 
@@ -469,7 +458,6 @@
          call errch  ( '#', action )
          call sigerr ( 'SPICE(BADACTION)' )
          return
-
 
       end if
 

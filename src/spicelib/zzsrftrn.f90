@@ -112,7 +112,6 @@
 !        ZZSRFN2C   {Surface name to code}
 !        ZZSRFTRK   {Track surface map updates}
 !
-!
 ! $ Examples
 !
 !     See the routines
@@ -152,7 +151,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -164,7 +162,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Hash control area items.
 !
@@ -193,7 +190,6 @@
 !        - an array of normalized names. These names are
 !          upper case, left-justified, and compressed so that
 !          the names contain no consecutive, embedded blanks
-!
 !
 !     The surface ID table
 !     --------------------
@@ -250,7 +246,6 @@
 !      ----------------------------------------        --------------
 !                       NROOM                              MXNSRF
 !
-!
 !      The diagram above is not to scale: the arrays on the left have
 !      available length NROOM, while the arrays on the right have
 !      length MXNSRF.
@@ -258,7 +253,6 @@
 !      Note that the pool array is dimensioned (LBSNGL:NROOM). Elements
 !      at indices -1 and 0 contain the size and location of the
 !      first free element, respectively.
-!
 !
 !     The surface name table
 !     ----------------------
@@ -297,7 +291,6 @@
 !
 !     The layout of the structure is:
 !
-!
 !                                                 Kernel variable table
 !                                                 (only the portions
 !                                                 used here are shown)
@@ -326,10 +319,8 @@
 !      |         |    |     v  |->|           |-+ +--->|  | |  | |  |
 !      +---------+    +--------+  +-----------+        +--+ +--+ +--+
 !
-!
 !      ----------------------------------------        --------------
 !                       NROOM                              MXNSRF
-!
 !
 !      The diagram above is not to scale: the arrays on the left have
 !      available length NROOM, while the arrays on the right have
@@ -338,9 +329,6 @@
 !      Note that the pool array is dimensioned (LBSNGL:NROOM). Elements
 !      at indices -1 and 0 contain the size and location of the
 !      first free element, respectively.
-!
-!
-!
 !
 !     Declarations of data structures
 !     ===============================
@@ -366,7 +354,6 @@
       character(sfnmln)     nornam ( mxnsrf )
 
 !
-!
 !        Surface ID table
 !        ================
 !
@@ -374,11 +361,9 @@
 !        Surface ID pool:             SIDPOL
 !        Surface ID name pointers:    SIDIDX
 !
-!
       integer(ip)           sidhls ( nroom )
       integer(ip)           sidpol ( lbsngl : nroom )
       integer(ip)           sididx ( nroom )
-
 
 !        Surface Name table
 !        ==================
@@ -387,11 +372,9 @@
 !        Surface name pool:           SNMPOL
 !        Surface name ID pointers:    SNMIDP
 !
-!
       integer(ip)           snmhls ( nroom )
       integer(ip)           snmpol ( lbsngl : nroom )
       integer(ip)           snmidx ( nroom )
-
 
 !
 !     Other local declarations:
@@ -416,11 +399,9 @@
       logical               lupdte
 
 !
-!
 !     Saved variables
 !
       save
-
 
 !
 !     Initial values
@@ -430,17 +411,12 @@
       data                  srfctr / ctrsiz * 0 /
       data                  pass1  / .true.     /
 
-
-
       if ( return() ) return
 
       call setmsg ( 'ZZSRFTRN is an umbrella routine. It should ' &
       //            'never be called directly.'                   )
       call sigerr ( 'SPICE(BOGUSENTRY)'                           )
       return
-
-
-
 
 !$Procedure ZZSRFN2C ( Surface name to ID code mapping )
 
@@ -590,12 +566,10 @@
 
       if ( return() ) return
 
-
 !
 !     No result has been found.
 !
       found = .false.
-
 
       if ( pass1 ) then
 !
@@ -704,10 +678,6 @@
       end if
 
       return
-
-
-
-
 
 !$Procedure ZZSRFC2N ( Surface ID code to name mapping )
 
@@ -860,15 +830,12 @@
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     No result has been found.
 !
       found = .false.
-
 
       if ( pass1 ) then
 !
@@ -895,7 +862,6 @@
          call zzcvpool ( 'ZZSRFTRN', polctr, lupdte )
 
          if ( failed() ) return
-
 
          pass1  = .false.
 
@@ -968,11 +934,6 @@
 
       return
 
-
-
-
-
-
 !$Procedure ZZSRFTRK ( Surface mapping tracker )
 
       entry zzsrftrk ( usrctr, update )
@@ -1019,12 +980,10 @@
 !                this routine to determine whether local associations
 !                of surface names and IDs are up to date.
 !
-!
 ! $ Detailed_Output
 !
 !     USRCTR     is the user counter, updated if necessary to match the
 !                counter maintained by this package.
-!
 !
 !     UPDATE     is a logical flag indicating whether USRCTR was
 !                updated.
@@ -1121,11 +1080,9 @@
 !
       if ( return () ) return
 
-
       if ( pass1 ) then
 !
 !        Check in because ZZSRFKER can fail.
-!
 !
 !        Initialize the surface kernel variable update counter
 !        and the local pool counter. Note that this routine
@@ -1181,7 +1138,6 @@
          call zzsrfker ( kernam, nornam, kersid, kerbid, &
                          extker, nkvar,  snmhls, snmpol, &
                          snmidx, sidhls, sidpol, sididx )
-
 
          if ( failed() ) return
 

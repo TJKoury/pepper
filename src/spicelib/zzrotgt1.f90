@@ -185,7 +185,6 @@
 !
       if ( return() ) return
 
-
 !
 !     Get all the needed information about this frame.
 !
@@ -214,7 +213,6 @@
 
          end if
 
-
       else if ( type == pck ) then
 
          call tipbod ( 'J2000', typeid, et, tipm   )
@@ -227,16 +225,13 @@
 
          end if
 
-
       else if ( type == ck ) then
 
          call ckfrot ( typeid, et, rotate, outfrm, found )
 
-
       else if ( type == tk ) then
 
          call tkfram  ( typeid, rotate, outfrm, found )
-
 
       else if ( type == dyn ) then
 

@@ -135,7 +135,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -185,13 +184,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_19 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -315,7 +312,6 @@
       save                  svstyp
       save                  svwnsz
 
-
 !
 !     Initial values
 !
@@ -338,10 +334,7 @@
       data                  svstyp  /  -1      /
       data                  svwnsz  /  -1      /
 
-
-
       if ( return () ) return
-
 
 !
 !     Before any error checks are done, copy the status from
@@ -424,7 +417,6 @@
 !
 !        WNDSIZ    Interpolation window size of current mini-segment.
 !
-!
 !     Re-used variables: the variables shown in the list below
 !     are used as short-duration variables, much like loop index
 !     variables; they are re-used as needed.
@@ -467,7 +459,6 @@
       type  = ic( 4 )
       baddr = ic( 5 )
       eaddr = ic( 6 )
-
 
 !
 !     Check the request time against the bounds in the segment
@@ -546,7 +537,6 @@
          end if
 
       end if
-
 
       if ( samseg .and. samivl ) then
 !
@@ -792,7 +782,6 @@
 !           the interval itself is IVEIX - 1.
 !
             miniix = iveix - 1
-
 
          else
 !
@@ -1082,7 +1071,6 @@
 
       end if
 
-
 !
 !     We're ready to construct the output record. The first step is to
 !     identify the indices of the packets and epochs corresponding to
@@ -1169,7 +1157,6 @@
          endidx  =  min (  begidx + dirsiz,  npkt  )
 
       end if
-
 
       timbas  =  pkdbas - npkt
 

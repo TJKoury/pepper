@@ -414,13 +414,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find a free logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -478,7 +476,6 @@
 !
 !-&
 
-
 !
 !     Parameters
 !
@@ -497,7 +494,6 @@
       logical               opened
       logical               resvd   ( minlun : maxlun )
 
-
 !
 !     Save everything between calls.
 !
@@ -509,12 +505,10 @@
       data             last      / minlun /
       data             first     / .true. /
 
-
 !
 !     VAX, SUN, PC, HP, SGI, DEC Alpha-OSF/1, and PC/Lunix
 !     reserved units.
 !
-
 
 !
 !     Initialize RESVD if it hasn't already been done.
@@ -595,9 +589,6 @@
       unit = 0
 
       return
-
-
-
 
 !$Procedure RESLUN ( Reserve a logical unit )
 
@@ -762,13 +753,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reserve a logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -790,7 +779,6 @@
 !        that it will never participate in error handling.
 !
 !-&
-
 
 !
 !     Initialize RESVD if it hasn't already been done.
@@ -818,9 +806,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure FRELUN ( Free a reserved logical unit )
 
@@ -991,13 +976,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     free a reserved logical unit
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1019,7 +1002,6 @@
 !        that it will never participate in error handling.
 !
 !-&
-
 
 !
 !     Initialize RESVD if it hasn't already been done.

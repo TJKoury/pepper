@@ -113,7 +113,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM BLTFRM_EX1
 !              IMPLICIT NONE
 !
@@ -207,10 +206,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Toolkit version: N0067
 !
@@ -250,7 +247,6 @@
 !                   3   FK4
 !                   4   DE-118
 !                   5   DE-96
-!
 !
 !        Note that the set of built-in frames, particularly the
 !        non-inertial ones, will grow over time, so the output
@@ -294,13 +290,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch IDs of built-in reference frames
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -354,7 +348,6 @@
 !
 !     Saved variables
 !
-!
 !     Save all variables in order to avoid problems
 !     in code translated by f2c.
 !
@@ -364,7 +357,6 @@
 !     Initial values
 !
       data                  pass1 / .true. /
-
 
       if ( return() ) return
 

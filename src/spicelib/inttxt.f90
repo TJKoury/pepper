@@ -136,13 +136,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert an integer to text
 !
 !-&
-
 
 !
 !     Local variables
@@ -183,7 +181,6 @@
                            'FIFTEEN',     'SIXTEEN', &
                            'SEVENTEEN',   'EIGHTEEN', &
                            'NINETEEN'                 /
-
 
 !
 !     Zero is easy.

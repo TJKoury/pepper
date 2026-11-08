@@ -160,13 +160,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch nth value associated with a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -184,13 +182,10 @@
       integer(ip)           locsym
       integer(ip)           locval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -228,7 +223,6 @@
          value  = tabval(locval)
 
       end if
-
 
       return
       end

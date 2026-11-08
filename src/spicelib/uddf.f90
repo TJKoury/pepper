@@ -139,7 +139,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: uddf_ex1.tm
@@ -161,7 +160,6 @@
 !              de421.bsp                     Planetary ephemeris
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -171,9 +169,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM UDDF_EX1
 !              IMPLICIT NONE
@@ -242,13 +238,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !          -1.3567094055133566E-004
-!
 !
 ! $ Restrictions
 !
@@ -281,13 +274,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     first derivative of a user-defined scalar function
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -302,9 +293,7 @@
       real(wp)              dfdx  (1)
       real(wp)              udval (2)
 
-
       if ( return () ) return
-
 
 !
 !     Apply a three-point estimation of the derivative for

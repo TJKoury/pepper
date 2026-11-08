@@ -116,7 +116,6 @@
 
       if ( return() ) return
 
-
 !
 !     Extract the MEME +X vector and its derivative, both
 !     expressed relative to the J2000 frame, into X.

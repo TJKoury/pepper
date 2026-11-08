@@ -77,7 +77,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -145,13 +144,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_1 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -179,8 +176,6 @@
       integer(ip)           offr
       integer(ip)           i
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -203,7 +198,6 @@
 !        OFFD      The offset of the first directory epoch.
 !
 !        OFFE      The offset of the first epoch.
-!
 !
 !     the number of directory epochs.
 !
@@ -268,7 +262,6 @@
 
       offr = (begin - 1) + (recno - 1) * 71
       call dafgda ( handle, offr+1, offr+71, record )
-
 
       return
       end

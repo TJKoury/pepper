@@ -171,13 +171,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED Transform ISO time strings to UTC strings
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -231,8 +229,6 @@
                                              '07',  '08',  '09', &
                                              '10',  '11',  '12'  /
 
-
-
 !
 !     In-line Function Definitions
 !
@@ -242,7 +238,6 @@
       hyphen(i) = ascii(i:i) == '-'
       colon(i)  = ascii(i:i) == ':'
       t(i)      = ascii(i:i) == 'T' .or. ascii(i:i) == 't'
-
 
 !
 !     Standard SPICELIB exception handling
@@ -324,7 +319,6 @@
               .and. colon  (15) &
               .and. digit  (16) .and. digit  (17) ) then
 
-
             mystr  =  ascii(1:5) // &
                      'JAN'       // &
                       ascii(5:8) // &
@@ -357,7 +351,6 @@
          end if
 
       end if
-
 
 !
 !     If we didn't make some change to the input string, it's NOT
@@ -394,14 +387,12 @@
 
       end if
 
-
 !
 !     That's it.
 !
       error = ' '
 
       utcstr = mystr
-
 
       return
 

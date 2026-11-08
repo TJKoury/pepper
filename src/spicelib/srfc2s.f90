@@ -70,7 +70,6 @@
 !              SRFSTR should be declared with length SFNMLN (see the
 !              $Parameters section below).
 !
-!
 !     ISNAME   is a logical flag that is .TRUE. if a surface name
 !              corresponding to the input ID codes was found and
 !              .FALSE. otherwise. When ISNAME is .FALSE., the output
@@ -174,7 +173,6 @@
 !        Use the meta-kernel shown below to define the required SPICE
 !        kernel variables.
 !
-!
 !           KPL/MK
 !
 !           File: srfc2s_ex1.tm
@@ -183,7 +181,6 @@
 !           example programs. The file contents shown here should not be
 !           assumed to contain adequate or correct versions of data
 !           required by SPICE-based user applications.
-!
 !
 !           \begindata
 !
@@ -195,9 +192,7 @@
 !
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFC2S_EX1
 !              IMPLICIT NONE
@@ -227,7 +222,6 @@
 !             .        3,         499,
 !             .        1,          -1                      /
 !
-!
 !              META = 'srfc2s_ex1.tm'
 !
 !              CALL FURNSH ( META )
@@ -249,10 +243,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         surface ID     =            1
 !         body ID        =          499
@@ -279,7 +271,6 @@
 !         name found     =  F
 !         surface string = 1
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -305,13 +296,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     surface ID code and body ID code to surface string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -319,9 +308,7 @@
       logical               failed
       logical               return
 
-
       if ( return() ) return
-
 
 !
 !     Try to translate the input codes to a known surface name.

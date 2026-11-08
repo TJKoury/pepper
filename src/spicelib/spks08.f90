@@ -157,13 +157,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_8 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -183,7 +181,6 @@
       integer(ip)           nrec
       integer(ip)           offset
       integer(ip)           rec      ( 2 )
-
 
 !
 !     Standard SPICE error handling.
@@ -240,7 +237,6 @@
 !     This epoch corresponds to the last state to be transferred.
 !
       ratio  =  ( end - start ) / step
-
 
       if ( ratio == aint(ratio) ) then
          rec(2)  =   1   +   min(  int(ratio),      nrec-1  )

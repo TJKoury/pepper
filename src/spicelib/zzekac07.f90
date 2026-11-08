@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include  'ekbool.inc'
       include  'ekclas07.inc'
       include  'ekcoldsc.inc'
@@ -237,7 +236,6 @@
       to  =  1
       call cleari ( pgsizi, page )
 
-
       do from = 1, nrows
 
 !
@@ -252,7 +250,6 @@
          end if
 
          to =  to + 1
-
 
          if (  ( to > ipsize ) .or. ( from == nrows )  ) then
 !
@@ -276,7 +273,6 @@
          end if
 
       end do
-
 
 !
 !     Update the column's metadata area to point to the data array.
@@ -313,7 +309,6 @@
 
       end if
 
-
       if ( nullok ) then
 !
 !        Nulls are allowed.  Write out the null flag array.
@@ -327,7 +322,6 @@
          call dasudi ( handle, cmbase+nfix07, cmbase+nfix07, nflbas )
 
       end if
-
 
       return
       end

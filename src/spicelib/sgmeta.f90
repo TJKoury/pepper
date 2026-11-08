@@ -223,13 +223,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     retrieve a meta data value for a generic segment
 !
 !-&
-
 
 !
 !     Spicelib Functions
@@ -354,7 +352,6 @@
 !     code has already retrieved the relevant segment addresses. If not
 !     we need to fetch them.  First check in.
 !
-
 
       if ( handle /= lsthan ) then
 

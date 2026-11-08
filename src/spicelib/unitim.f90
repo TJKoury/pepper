@@ -185,7 +185,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Transform between two uniform numeric time systems
@@ -194,7 +193,6 @@
 !     Convert one additive numeric time system to another
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -251,7 +249,6 @@
 !
       integer(ip), parameter :: ntdb = 4
 
-
 !
 !     NRECOG is the total number of recognized types.
 !
@@ -261,7 +258,6 @@
 !     Constant shift between GPS time system and TAI time system.
 !
       real(wp), parameter :: gpstai = 19.0_wp
-
 
 !
 !     Local variables
@@ -298,7 +294,6 @@
       logical               outtdb
       logical               outtdt
       logical               update
-
 
 !
 !     Saved variables
@@ -343,8 +338,6 @@
          unitim = 0.0_wp
          return
       end if
-
-
 
       if ( first ) then
 
@@ -513,7 +506,6 @@
          return
       end if
 
-
 !
 !     Determine the base types of the input and output types.
 !
@@ -529,7 +521,6 @@
 !        TAI, GPS, and JDTDT will be converted to TDT
 !        JED and JDTDB will be converted to TDB.
 !        ET means TDB; TT means TDT.
-!
 !
       if      ( myin == 'TAI'   ) then
 
@@ -685,7 +676,6 @@
 !         3) As we already pointed out, the sequence of t_i's
 !            converges at least as fast as the geometric series
 !            L, L**2, ...
-!
 !
 !        Since K*M1*(1+EB) is quite small (on the order of 10**-9)
 !        3 iterations should get us as close as we can get to the

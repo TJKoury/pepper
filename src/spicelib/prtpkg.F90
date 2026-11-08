@@ -268,13 +268,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -310,7 +308,6 @@
 !         Two local declarations moved to the correct location.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -368,11 +365,6 @@
       prtpkg = .false.
 
       return
-
-
-
-
-
 
 !$Procedure SETPRT ( Store Error Message Types to be Output )
 
@@ -538,13 +530,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -555,11 +545,9 @@
 !
 !-&
 
-
 !
 !     Executable Code:
 !
-
 
       if   (  short  )    then
          svshrt = .true.
@@ -567,23 +555,17 @@
          svshrt = .false.
       end if
 
-
-
       if   (  expl   )    then
          svexpl = .true.
       else
          svexpl = .false.
       end if
 
-
-
       if   (  long   )    then
          svlong = .true.
       else
          svlong = .false.
       end if
-
-
 
       if   (  trace  )    then
          svtrac = .true.
@@ -597,18 +579,13 @@
          svdflt = .false.
       end if
 
-
 !
 !     We assign a value to SETPRT, but this value is
 !     not meaningful...
 !
       setprt = .true.
 
-
       return
-
-
-
 
 !$Procedure MSGSEL  ( Is This Message Type Selected for Output? )
 
@@ -751,13 +728,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -768,14 +743,12 @@
 !
 !-&
 
-
 !
 !     Executable Code:
 !
 
       call ljust ( type,  ltype )
       call ucase ( ltype, ltype )
-
 
       if ( ltype  == 'SHORT' ) then
 
@@ -823,7 +796,6 @@
          'MSGSEL:  An invalid error message type was supplied as' // &
          ' input; the type specifiedwas:  ' // loctyp &
                       )
-
 
       end if
 

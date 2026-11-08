@@ -132,7 +132,6 @@
 !
 !     Local parameters
 !
-!
 !     Element boundary indices:
 !
       integer(ip), parameter :: lower = 1
@@ -150,7 +149,7 @@
       integer(ip)           i
 
 !
-!     This routine uses discovery check-in. We check RETURN in order to
+! We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
       if ( return() ) return

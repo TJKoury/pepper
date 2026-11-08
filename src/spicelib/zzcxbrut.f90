@@ -6,7 +6,6 @@
 
 ! $ Abstract
 !
-!
 !     SPICE Private routine intended solely for the support of SPICE
 !     routines. Users should not call this routine directly due
 !     to the volatile nature of this routine.
@@ -78,7 +77,6 @@
 !                   { X:  < ----------,  -------- >  =  cos(ANGLE) }
 !                           ||X-APEX||   ||AXIS||
 !
-!
 !     ENDPT1,
 !     ENDPT2     are endpoints of a line segment. These points
 !                must be distinct.
@@ -99,7 +97,6 @@
 !                ENDPT1 and ENDPT2 bracket a root. Equivalently, the
 !                endpoints bracket a root when exactly one of ENDPT1
 !                and ENDPT2 is inside the cone.
-!
 !
 ! $ Parameters
 !
@@ -148,12 +145,6 @@
 !
 !-&
 
-
-
-
-
-
-
 !
 !     SPICELIB functions
 !
@@ -199,9 +190,6 @@
 
       logical               state
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
 !
@@ -313,6 +301,3 @@
 
       return
       end
-
-
-

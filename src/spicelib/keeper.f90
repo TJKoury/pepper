@@ -32,7 +32,6 @@
       character(*)          srcfil
       logical               found
 
-
       integer(ip), parameter :: filsiz = 255
 
       integer(ip), parameter :: ftsize = 5000
@@ -68,7 +67,6 @@
 !
 !     FILSIZ   is the maximum file name length that can be
 !              accommodated by this set of routines.
-!
 !
 !     MAXFIL   is the number of entries that can be stored in KEEPER's
 !              kernel database. In this version of the toolkit MAXFIL
@@ -167,10 +165,8 @@
 !        unloaded, and finally unload all remaining kernels
 !        and clear the kernel pool using KCLEAR.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -205,21 +201,17 @@
 !
 !           End of meta-kernel
 !
-!
 !        Use the PCK kernel below as the binary PCK required for the
 !        example.
 !
 !           earth_latest_high_prec.bpc
-!
 !
 !        Use the FK kernel below as the text kernel required for the
 !        example.
 !
 !           RSSD0002.TF
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM KEEPER_EX1
 !              IMPLICIT NONE
@@ -374,10 +366,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        The total number of kernels after final FURNSH:  6
 !
@@ -430,7 +420,6 @@
 !        The total number of kernels after UNLOAD calls:  3
 !
 !        The total number of kernels after KCLEAR      :  0
-!
 !
 ! $ Restrictions
 !
@@ -558,13 +547,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Generic loading and unloading of SPICE kernels
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -620,7 +607,6 @@
 
       integer(ip), parameter :: wdsize = 32
 
-
       integer(ip), parameter :: nknown = 3
 
       integer(ip), parameter :: lnsize = 80
@@ -634,7 +620,6 @@
       character(lnsize)     symbol
 
       character(msgsiz)     nofile
-
 
       character(wdsize)     known ( nknown )
       save                  known
@@ -692,11 +677,8 @@
       logical               single
       logical               update
 
-
       data                  first     / .true. /
       data                  loaded    /  0  /
-
-
 
       call setmsg ( 'The routine KEEPER is an umbrella for a ' &
       //            'collection of entry points that manage the ' &
@@ -706,10 +688,6 @@
       //            'error has been made. ' )
       call sigerr ( 'SPICE(BOGUSENTRY)'  )
       return
-
-
-
-
 
 !$Procedure FURNSH ( Furnish a program with SPICE kernels )
 
@@ -937,14 +915,12 @@
 !           CALL FURNSH ( 'naif0007.tls' )
 !           CALL FURNSH ( 'de405s.bsp'   )
 !
-!
 !     2) This example illustrates how you could create a meta-kernel
 !        file for a program that requires several text and binary
 !        kernels.
 !
 !        First create a list of the kernels you need in a text file as
 !        shown below.
-!
 !
 !           KPL/MK
 !
@@ -955,7 +931,6 @@
 !
 !           Note that kernels are loaded in the order listed. Thus
 !           we need to list the highest priority kernel last.
-!
 !
 !           \begindata
 !
@@ -975,7 +950,6 @@
 !
 !           End of meta-kernel
 !
-!
 !        Note that the file name
 !
 !           /home/mydir/kernels/custom/kernel_data/constants.ker
@@ -992,10 +966,8 @@
 !        This will cause each of the kernels listed in your meta-kernel
 !        to be loaded.
 !
-!
 !     3) This example illustrates how you can simplify the previous
 !        kernel list by using PATH_SYMBOLS.
-!
 !
 !           KPL/MK
 !
@@ -1003,7 +975,6 @@
 !
 !           Here are the SPICE kernels required for my application
 !           program.
-!
 !
 !           We are going to let A substitute for the directory that
 !           contains SPK files; B substitute for the directory that
@@ -1014,7 +985,6 @@
 !
 !           Note that our PATH_VALUES and the corresponding
 !           PATH_SYMBOLS must be listed in the same order.
-!
 !
 !           \begindata
 !
@@ -1040,11 +1010,9 @@
 !
 !           End of meta-kernel
 !
-!
 !     4) This example illustrates continuation of path values. The
 !        meta-kernel shown here is a modified version of that from
 !        example 3.
-!
 !
 !           KPL/MK
 !
@@ -1093,15 +1061,12 @@
 !
 !           End of meta-kernel
 !
-!
 !     5) Load a meta-kernel containing three kernels, and separately,
 !        a text kernel and a binary PCK. Count the number of loaded
 !        files before and after calling KCLEAR.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1136,21 +1101,17 @@
 !
 !           End of meta-kernel
 !
-!
 !        Use the PCK kernel below as the binary PCK required for the
 !        example.
 !
 !           earth_latest_high_prec.bpc
-!
 !
 !        Use the FK kernel below as the text kernel required for the
 !        example.
 !
 !           RSSD0002.TF
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM FURNSH_EX5
 !              IMPLICIT NONE
@@ -1188,14 +1149,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        The total number of kernels after final FURNSH:  6
 !        The total number of kernels after KCLEAR      :  0
-!
 !
 ! $ Restrictions
 !
@@ -1315,19 +1273,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Load SPICE kernels from a list of kernels
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
       if ( first ) then
 
@@ -1393,7 +1348,6 @@
       call zzldker ( file, nofile, thstyp, myhand )
 
       if ( failed() ) return
-
 
       loaded = loaded + 1
       cursrc = loaded
@@ -1544,7 +1498,6 @@
                size = 0
                use  = 0
                d    = dollar
-
 
                do i = 1, npaths
 
@@ -1697,8 +1650,6 @@
 
       return
 
-
-
 !$Procedure KTOTAL ( Kernel Totals )
 
       entry ktotal ( kind, count )
@@ -1805,10 +1756,8 @@
 !        Unload all kernels and clear the kernel pool using
 !        KCLEAR, and check that no kernels are loaded.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1843,21 +1792,17 @@
 !
 !           End of meta-kernel
 !
-!
 !        Use the PCK kernel below as the binary PCK required for the
 !        example.
 !
 !           earth_latest_high_prec.bpc
-!
 !
 !        Use the FK kernel below as the text kernel required for the
 !        example.
 !
 !           RSSD0002.TF
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM KTOTAL_EX1
 !              IMPLICIT NONE
@@ -1919,17 +1864,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        The total number of kernels after final FURNSH:  6
 !        The total number of meta-kernels              :  1
 !        The total number of text kernels              :  3
 !        The total number of binary kernels            :  2
 !        The total number of kernels after KCLEAR      :  0
-!
 !
 ! $ Restrictions
 !
@@ -1971,13 +1913,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Number of loaded kernels of a given type
 !
 !-&
-
 
       if ( loaded == 0 ) then
          count = 0
@@ -1997,7 +1937,6 @@
       start  = 1
 
       call fndnwd ( kind, start, b, e )
-
 
       do while ( b > 0 )
 
@@ -2021,7 +1960,6 @@
 
       count = 0
 
-
       do i = 1, loaded
 
          add =      ( types(i) == 'CK'   .and. dock   ) &
@@ -2039,7 +1977,6 @@
       end do
 
       return
-
 
 !$Procedure KDATA ( Kernel Data )
 
@@ -2192,7 +2129,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: kdata_ex1.tm
@@ -2226,9 +2162,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM KDATA_EX1
 !              IMPLICIT NONE
@@ -2292,10 +2226,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Index :            1
 !         File  : kdata_ex1.tm
@@ -2322,7 +2254,6 @@
 !         Handle:            0
 !
 !         No kernel found with index:            5
-!
 !
 ! $ Restrictions
 !
@@ -2374,13 +2305,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Retrieve information on loaded SPICE kernels
 !
 !-&
-
 
       file   = ' '
       filtyp = ' '
@@ -2474,8 +2403,6 @@
       end do
 
       return
-
-
 
 !$Procedure KINFO ( Kernel Information )
 
@@ -2577,7 +2504,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: kinfo_ex1.tm
@@ -2601,7 +2527,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -2612,9 +2537,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM KINFO_EX1
 !              IMPLICIT NONE
@@ -2715,10 +2638,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         The loaded files files are:
 !
@@ -2726,7 +2647,6 @@
 !         de421.bsp                        is an SPK file.
 !         pck00008.tpc                     is a text kernel.
 !         naif0009.tls                     is a text kernel.
-!
 !
 ! $ Restrictions
 !
@@ -2765,13 +2685,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Fetch information about a loaded SPICE kernel
 !
 !-&
-
 
       filtyp = ' '
       srcfil = ' '
@@ -2793,9 +2711,6 @@
       end if
 
       return
-
-
-
 
 !$Procedure KCLEAR ( Keeper clear )
 
@@ -2886,7 +2801,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: kclear_ex1.tm
@@ -2920,9 +2834,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM KCLEAR_EX1
 !              IMPLICIT NONE
@@ -2958,14 +2870,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        The total number of kernels after FURNSH:  4
 !        The total number of kernels after KCLEAR:  0
-!
 !
 ! $ Restrictions
 !
@@ -3013,7 +2922,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Re-initialize the keeper system
@@ -3022,9 +2930,7 @@
 !
 !-&
 
-
       if ( return() ) return
-
 
 !
 !     Unloading all kernels is actually much less work than
@@ -3089,13 +2995,7 @@
 !
       call cvpool ( 'FURNSH', update )
 
-
       return
-
-
-
-
-
 
 !$Procedure UNLOAD ( Unload a kernel )
 
@@ -3183,7 +3083,6 @@
 !     and META2 are meta-kernels with the specified kernels to load as
 !     shown below.
 !
-!
 !         META1:
 !            KERNELS_TO_LOAD = ( FILE2,
 !                                FILE3,
@@ -3195,7 +3094,6 @@
 !                                FILE3,
 !                                FILE7,
 !                                FILE8 )
-!
 !
 !      The following sequence of calls
 !
@@ -3328,10 +3226,8 @@
 !        Then unload the text kernels, check that they have been
 !        unloaded, and finally unload the meta-kernel.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -3366,21 +3262,17 @@
 !
 !           End of meta-kernel
 !
-!
 !        Use the PCK kernel below as the binary PCK required for the
 !        example.
 !
 !           earth_latest_high_prec.bpc
-!
 !
 !        Use the FK kernel below as the text kernel required for the
 !        example.
 !
 !           RSSD0002.TF
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM UNLOAD_EX1
 !              IMPLICIT NONE
@@ -3505,13 +3397,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        The total number of kernels after final FURNSH:  6
-!
 !
 !        Unloading 3 text kernels...
 !
@@ -3522,7 +3411,6 @@
 !        The total number of kernels after UNLOAD calls:  3
 !
 !        The total number of kernels after final UNLOAD:  1
-!
 !
 ! $ Restrictions
 !
@@ -3579,17 +3467,13 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Unload a SPICE kernel
 !
 !-&
 
-
       if ( return() ) return
-
-
 
       didspk = .false.
       didpck = .false.
@@ -3597,7 +3481,6 @@
       didek  = .false.
       diddsk = .false.
       didtxt = .false.
-
 
 !
 !     First locate the file we need to unload, we search backward
@@ -3671,7 +3554,6 @@
 
       end if
 
-
       if (      types(i) == 'SPK' ) then
 
          if ( single ) then
@@ -3726,7 +3608,6 @@
          didtxt = .true.
          src    = i
 
-
          do j = loaded, src+1, -1
 
             if ( srces(j) == src ) then
@@ -3779,7 +3660,6 @@
                   single = nmult == 1
 
                end if
-
 
                if ( types(j) == 'SPK' ) then
 

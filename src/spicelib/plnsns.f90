@@ -156,13 +156,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Determine the sense of planetographic longitude.
 !
 !-&
-
 
       integer(ip), parameter :: wdsize = 32
 
@@ -185,7 +183,6 @@
          return
 
       end if
-
 
 !
 !     Create the name of the item to look up in the kernel pool.
@@ -225,7 +222,6 @@
          end if
 
       end if
-
 
       plnsns = value
       return

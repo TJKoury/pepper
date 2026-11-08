@@ -68,7 +68,6 @@
 !              Case and blanks are not significant in the string
 !              REF.
 !
-!
 !     ABCORR   indicates the aberration corrections to be applied to
 !              the state of the target body to account for one-way
 !              light time. See the discussion in the $Particulars
@@ -134,14 +133,12 @@
 !                 'XCN'      "Transmission" case: converged
 !                            Newtonian light time correction.
 !
-!
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
 !              by this routine.
 !
 !              Case and blanks are not significant in the string
 !              ABCORR.
-!
 !
 !     STOBS    is the geometric (uncorrected) state of the observer
 !              relative to the solar system barycenter at epoch ET.
@@ -265,10 +262,8 @@
 !        one way light time between target and observer, and the rate of
 !        change of the one way light time.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -303,9 +298,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKLTC_EX1
 !              IMPLICIT NONE
@@ -390,10 +383,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         ET =    0.0000000000000000
 !         J2000 x-position (km):     -291569.26516582817
@@ -444,7 +435,6 @@
 !         J2000 z-velocity (km/s):  -0.29446934292511795
 !         One-way light time (s):     1.3438080956889309
 !         Light time rate:            1.0067340347415892E-007
-!
 !
 ! $ Restrictions
 !
@@ -497,7 +487,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     low-level light time correction
@@ -506,7 +495,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -514,7 +502,6 @@
       real(wp)              touchd
       real(wp)              vdot
       real(wp)              vnorm
-
 
       logical               failed
       logical               return
@@ -589,7 +576,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -670,7 +656,6 @@
          return
 
       end if
-
 
       if ( .not. uselt ) then
 !
@@ -797,7 +782,6 @@
 !                  * < PTARG(ET+S*LT) - POBS(ET),
 !                      VTARG(ET+S*LT)*(1+S*d(LT)/d(ET)) - VOBS(ET) >
 !
-!
 !               = (1/c) * ( 1 / || PTARG(ET+S*LT) - POBS(ET) || )
 !
 !                 * (  < PTARG(ET+S*LT) - POBS(ET),
@@ -821,8 +805,6 @@
 !     which implies
 !
 !        d(LT)/d(ET) =  A*B / ( 1 - S*C*A )
-!
-!
 !
       a   =  1.0_wp / ( clight()*vnorm(starg) )
 
@@ -856,7 +838,6 @@
 !
       call vlcom ( 1.0_wp + ltsign*dlt, ssbtrg(4), &
                   -1.0_wp,              stobs(4),   starg(4) )
-
 
       return
       end

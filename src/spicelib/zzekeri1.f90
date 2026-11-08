@@ -21,7 +21,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'eksegdsc.inc'
@@ -164,7 +163,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -192,9 +190,6 @@
 
       logical               leq
 
-!
-!     Use discovery check-in.
-!
       if ( failed() ) return
 
 !
@@ -257,7 +252,6 @@
 
          return
 
-
       else if  (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                              begptr,  1,       int,     ' ', &
                              0.0_wp,    ikey,    null            ) &
@@ -293,7 +287,6 @@
          call zzektrdp ( handle, tree, prvidx, prvptr )
 
          return
-
 
       else if (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                             endptr,  1,       int,     ' ', &
@@ -342,7 +335,6 @@
 !
             leq  =  .true.
 
-
          else if ( zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                               midptr,  1,       int,     ' ', &
                               0.0_wp,    ikey,    null           ) ) then
@@ -360,7 +352,6 @@
 
          end if
 
-
          if ( leq ) then
 !
 !           The middle value is less than or equal to the input
@@ -377,10 +368,8 @@
 !
       end do
 
-
       prvidx = begin
       call zzektrdp ( handle, tree, prvidx, prvptr )
-
 
       return
       end

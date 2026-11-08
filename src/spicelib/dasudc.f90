@@ -176,9 +176,7 @@
 !        logical addresses within that file, and how to read that
 !        data out to a different array.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASUDC_EX1
 !              IMPLICIT NONE
@@ -283,10 +281,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasudc_ex1.das":
 !
@@ -300,7 +296,6 @@
 !         ..............................
 !                  1         2         3
 !         123456789012345678901234567890
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -374,14 +369,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update a range of DAS logical addresses using substrings
 !     write substrings to a range of DAS logical addresses
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -399,7 +392,6 @@
 !        DASURC signaled an error inside the loops.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -434,12 +426,10 @@
       integer(ip)           rcpos
       integer(ip)           wordno
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Get the last logical addresses in use in this DAS file.
@@ -535,7 +525,6 @@
       nmoved  =  0
       rcpos   =  wordno
 
-
       do while (  ( nmoved < numchr ) .and. ( .not. failed() )  )
 
          if ( chr > epos ) then
@@ -617,7 +606,6 @@
             nwritn  =   nwritn + numchr
             recno   =   recno  + 1
 
-
          else
 
 !
@@ -636,7 +624,6 @@
          end if
 
       end do
-
 
       return
       end

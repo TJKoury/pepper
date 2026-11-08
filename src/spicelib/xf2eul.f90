@@ -231,7 +231,6 @@
 !        |  0   -sin(r)  cos(r) |
 !        `-                    -'
 !
-!
 !        .-                    -.
 !        | cos(s)   0   -sin(s) |
 !        |                      |
@@ -291,10 +290,8 @@
 !           [W]  [HALFPI-DEC]  [RA+HALFPI]
 !              3             1            3
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -318,7 +315,6 @@
 !                                            radii
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'pck00010.tpc',
@@ -328,9 +324,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM XF2EUL_EX1
 !              IMPLICIT NONE
@@ -407,10 +401,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        UTC: May 15, 2007
 !        W       =  -2.6490877296701645
@@ -419,7 +411,6 @@
 !        dW/dt   =   0.0000026578085601
 !        dDEC/dt =   0.0000000004021737
 !        dRA/dt  =   0.0000000039334471
-!
 !
 ! $ Restrictions
 !
@@ -469,13 +460,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Euler angles and derivatives from state transformation
 !
 !-&
-
 
 !
 !     Spicelib Functions
@@ -511,7 +500,6 @@
       real(wp)              u
       real(wp)              v
 
-
       integer(ip)           a
       integer(ip)           b
       integer(ip)           i
@@ -541,10 +529,7 @@
                                        1.0_wp,  0.0_wp, -1.0_wp, &
                                       -1.0_wp,  1.0_wp,  0.0_wp  /
 
-
       data                  next   / 2, 3, 1 /
-
-
 
 !
 !     The computation of the non-derivative terms EULANG is handled
@@ -570,10 +555,8 @@
 !     Using M2EUL we can readily determine the values of ALPHA, BETA
 !     and GAMMA such that
 !
-!
 !        R   = [ ALPHA ]  [ BETA ]  [ GAMMA ]
 !                       A         B          C
-!
 !
 !    From this equation we have:
 !
@@ -589,11 +572,9 @@
 !     where OMEGA   is the cross product matrix.
 !                n
 !
-!
 !         [   0      D_3n    -D_2n  ]
 !         |  -D_3n    0       D_1n  |
 !         [   D_2n  -D_1n      0    ]
-!
 !
 !     (D_ij   denotes the Kronecker delta.)  Note that OMEGA * v
 !                                                           n
@@ -642,9 +623,7 @@
 !
 !     From these observations it follows that
 !
-!
 !        W =   -dALPHA/dt e_A
-!
 !
 !          -    dBETA/dt [ALPHA]  e_B
 !                               A
@@ -652,14 +631,11 @@
 !          -    dGAMMA/dt [ ALPHA ] [ BETA ] e_C
 !                                  A        B
 !
-!
 !        W =   -dALPHA/dt e_A
-!
 !
 !          -    dBETA/dt {    COS ( ALPHA (1 - |<e_A,e_B>|)) e_B
 !
 !                          -  SIN ( ALPHA ) e_A x e_B }
-!
 !
 !          -    dGAMMA/dt [ ALPHA ] {    COS(BETA(1 - |<e_B,e_C>|)) e_C
 !                                  A
@@ -670,9 +646,7 @@
 !
 !        W =   -dALPHA/dt e_A
 !
-!
 !          -    dBETA/dt {COS(ALPHA)e_B -  SIN(ALPHA) e_A x e_B}
-!
 !
 !          -    dGAMMA/dt [ ALPHA ] {COS(BETA)e_C - SIN(BETA)e_B x e_C}
 !                                  A
@@ -686,16 +660,13 @@
 !
 !     W =   -dALPHA/dt e_A
 !
-!
 !       -  dBETA/dt {COS(ALPHA)e_B -  D*SIN(ALPHA) e_L }
-!
 !
 !       -  dGAMMA/dt COS(BETA){ COS(ALPHA(1-<e_A , e_C>))e_C
 !                              -SIN(ALPHA)   e_A x e_C }
 !
 !       +  dGAMMA/dt SIN(BETA){ COS(ALPHA(1-|<e_A,e_B x e_C>|))e_B x e_C
 !                              -SIN(ALPHA) e_A x (e_B x e_C )
-!
 !
 !     Now we have two cases: 1) e_A = e_C or 2)  e_C = e_L
 !
@@ -704,9 +675,7 @@
 !
 !        W =   -dALPHA/dt e_A
 !
-!
 !          -  dBETA/dt {COS(ALPHA)e_B -  D*SIN(ALPHA) e_L }
-!
 !
 !          -  dGAMMA/dt COS(BETA)e_A
 !
@@ -714,11 +683,9 @@
 !
 !          -  dGAMMA/dt SIN(BETA)SIN(ALPHA)e_B
 !
-!
 !        W = e_A{-dALPHA/dt - COS(BETA)dGAMMA/dt}
 !          + e_B{ -COS(ALPHA)dBETA/dt -   SIN(ALPHA)SIN(BETA)dGAMMA/dt}
 !          + e_L{D*SIN(ALPHA)dBETA/dt - D*COS(ALPHA)SIN(BETA)dGAMMA/dt}
-!
 !
 !        let U =    COS(BETA)
 !            V =  D*SIN(BETA)
@@ -729,26 +696,21 @@
 !          + e_B{         -COS(ALPHA)dBETA/dt -D*SIN(ALPHA)*V*dGAMMA/dt}
 !          + e_L{        D*SIN(ALPHA)dBETA/dt   -COS(ALPHA)*V*dGAMMA/dt}
 !
-!
 !     Case 2. e_L = e_C
 !     ====================
 !
 !        W =   -dALPHA/dt e_A
 !
-!
 !          -  dBETA/dt {COS(ALPHA)e_B -  D*SIN(ALPHA) e_L }
-!
 !
 !          -  dGAMMA/dt COS(BETA){ COS(ALPHA)e_L
 !                                 -D*SIN(ALPHA)e_B }
 !
 !          +  dGAMMA/dt SIN(BETA) D*e_A
 !
-!
 !       W  = e_A{-dALPHA/dt + D*SIN(BETA)dGAMMA/dt}
 !          + e_B{-COS(ALPHA)dBETA/dt  - D*SIN(ALPHA)COS(BETA)dGAMMA/dt}
 !          + e_L{D*SIN(ALPHA)dBETA/dt -   COS(ALPHA)COS(BETA)dGAMMA/dt}
-!
 !
 !       Let U = -D*SIN(BETA)
 !           V =    COS(BETA)
@@ -765,11 +727,9 @@
 !     Substituting CA and SA for COS(ALPHA) and SIN(ALPHA) and
 !     re-writing the last expression in matrix form we have:
 !
-!
 !                          [ -1     0      0 ][ 1  0  U ] [dALPHA/dt]
 !      W  = {e_A  e_B  e_L}|  0   -CA  -D*SA || 0  1  0 | |dBETA /dt|
 !                          [  0  D*SA    -CA ][ 0  0  V ] [dGAMMA/dt]
-!
 !
 !     If we let E_n stand for the transpose of e_n, then solving for
 !     the derivative vector we have:
@@ -778,7 +738,6 @@
 !     |dBETA /dt| = | 0 1   0  | |  0   -CA  D*SA| | E_B | W
 !     [dGAMMA/dt]   [ 0 0  1/V ] [  0 -D*SA   -CA] [ E_L ]
 !
-!
 !     But since the matrix product E_n W is <e_n,W> = W(n) this can
 !     be rewritten as
 !
@@ -786,16 +745,13 @@
 !     |dBETA /dt| = |  0   -CA      D*SA   | [ W(B) |
 !     [dGAMMA/dt]   [  0   -D*SA/V   -CA/V ] [ W(L) ]
 !
-!
 !     Thus we see that there is a relatively elementary computation
 !     required to determine the derivatives of the three Euler angles
 !     returned by M2EUL.
 !
-!
 !     Standard SPICE exception handling.
 !
       if ( return() ) return
-
 
 !
 !     Get the rotation and derivative of the rotation separately.
@@ -916,7 +872,6 @@
             eulang(dbeta) =  d*omega(3)/sa
          end if
 
-
          return
 
       end if
@@ -947,7 +902,6 @@
       call mxv ( solutn, omega, eulang(4) )
 
       return
-
 
 !$Procedure EUL2XF ( Euler angles and derivative to transformation )
 
@@ -1004,7 +958,6 @@
 !                 EULANG(4) = dALPHA/dt
 !                 EULANG(5) = dBETA/dt
 !                 EULANG(6) = dGAMMA/dt
-!
 !
 !     AXISA,
 !     AXISB,
@@ -1133,7 +1086,6 @@
 !        |  0   -sin(r)  cos(r) |
 !        `-                    -'
 !
-!
 !        .-                    -.
 !        | cos(s)   0   -sin(s) |
 !        |                      |
@@ -1193,9 +1145,7 @@
 !        The following code example will perform the desired
 !        computation.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EUL2XF_EX1
 !              IMPLICIT NONE
@@ -1246,16 +1196,13 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        1-2-3 equivalent rotation to input (radians):
 !        Roll    0.029998501, dRoll/dt   -0.002999550
 !        Pitch  -0.000299950, dPitch/dt   0.000059980
 !        Yaw     0.099995501, dYaw/dt    -0.009998650
-!
 !
 ! $ Restrictions
 !
@@ -1301,19 +1248,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     State transformation from Euler angles and derivatives
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     We're going to work with a local copy LOCANG of the euler angle
@@ -1420,7 +1364,6 @@
 !                            t
 !     Next we compute dR/dt R.  Recall from the derivation above
 !     that
-!
 !
 !        [ W(A) ]   [ -1     0     -U   ][dALPHA/dt]
 !        | W(B) | = |  0   -CA  -D*SA*V ||dBETA /dt|

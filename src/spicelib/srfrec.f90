@@ -107,7 +107,6 @@
 !     points whose rectangular coordinates are taken from the set
 !     {-1, 0, 1}.  (Angular quantities are given in degrees.)
 !
-!
 !          R          LON       LAT    RECTAN(1)   RECTAN(2)  RECTAN(3)
 !         --------------------------   --------------------------------
 !         0.0000    0.0000    0.0000      0.0000      0.0000     0.0000
@@ -121,7 +120,6 @@
 !         1.4142    0.0000   45.0000      1.0000      0.0000     1.0000
 !         1.4142   90.0000   45.0000      0.0000      1.0000     1.0000
 !         1.7320   45.0000   35.2643      1.0000      1.0000     1.0000
-!
 !
 !     This routine is related to the SPICELIB routine LATREC, which
 !     accepts a radius, longitude, and latitude as inputs and produces
@@ -148,9 +146,7 @@
 !
 !           pck00008.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFREC_EX1
 !              IMPLICIT NONE
@@ -222,10 +218,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original latitudinal coordinates
 !
@@ -243,7 +237,6 @@
 !           Longitude (deg) =    100.00000000000000
 !           Latitude  (deg) =   -35.000000000000000
 !           Radius    (km)  =    6371.0790891167535
-!
 !
 ! $ Restrictions
 !
@@ -296,7 +289,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert body-fixed latitudinal coordinates to rectangular
@@ -304,7 +296,6 @@
 !     surface point latitudinal coordinates to rectangular
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -322,7 +313,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Look up the body's radii.

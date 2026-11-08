@@ -134,13 +134,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     approximate equality
 !
 !-&
-
 
 !
 !     Just shorthand, really.
@@ -240,9 +238,7 @@ contains
 !        the Z-axis, and compute the rotation axis and angle based on
 !        that matrix.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM AXISAR_EX1
 !              IMPLICIT NONE
@@ -299,10 +295,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Rotation matrix:
 !
@@ -312,7 +306,6 @@ contains
 !
 !        Rotation axis       :   0.00000   0.00000   1.00000
 !        Rotation angle (deg):  90.00000
-!
 !
 !     2) Linear interpolation between two rotation matrices.
 !
@@ -332,9 +325,7 @@ contains
 !        an angle of pi radians or more during the time interval
 !        [t1, t2]; an aliasing effect would occur in that case.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM AXISAR_EX2
 !              IMPLICIT NONE
@@ -428,13 +419,10 @@ contains
 !                 WRITE(*,'(3F10.5)') ( R3(I,J), J=1,3 )
 !              END DO
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Time (s)            :  30.00000
 !        Rotation axis       :   0.00000   0.00000   1.00000
@@ -444,7 +432,6 @@ contains
 !           0.70711  -0.70711   0.00000
 !           0.70711   0.70711   0.00000
 !           0.00000   0.00000   1.00000
-!
 !
 ! $ Restrictions
 !
@@ -487,13 +474,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     axis and angle to rotation
 !
 !-&
-
 
 !
 !     Local variables
@@ -668,9 +653,7 @@ contains
 !        are listed to three decimal places. Input angles are in
 !        degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM AZLREC_EX1
 !              IMPLICIT NONE
@@ -779,10 +762,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        AZCCW = False; ELPLSZ = False
 !
@@ -848,7 +829,6 @@ contains
 !            1.414  270.000  -45.000   -0.000   -1.000   -1.000
 !            1.732  315.000  -35.264    1.000   -1.000   -1.000
 !
-!
 !     2) Compute the right ascension and declination of the pointing
 !        direction of DSS-14 station at a given epoch.
 !
@@ -874,7 +854,6 @@ contains
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -909,9 +888,7 @@ contains
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM AZLREC_EX2
 !              IMPLICIT NONE
@@ -1045,10 +1022,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Pointing azimuth    (deg):     75.00000000
 !        Pointing elevation  (deg):    -27.25000000
@@ -1061,7 +1036,6 @@ contains
 !
 !        Pointing right ascension (deg):    280.06179939
 !        Pointing declination (deg):         26.92826084
-!
 !
 ! $ Restrictions
 !
@@ -1082,7 +1056,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     range, az and el to rectangular coordinates
@@ -1091,7 +1064,6 @@ contains
 !     convert range, azimuth and elevation to rectangular
 !
 !-&
-
 
 !
 !     Local variables
@@ -1258,7 +1230,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM BRCKTD_EX1
 !              IMPLICIT NONE
 !
@@ -1292,7 +1263,6 @@ contains
 !              DATA                    NUMBER / -1.D0,  29.D0,
 !             .                                  3.D0,   3.D0  /
 !
-!
 !              WRITE(*,'(A)') ' Number  End1   End2   Bracketed'
 !              WRITE(*,'(A)') ' ------  -----  -----  ---------'
 !
@@ -1303,13 +1273,10 @@ contains
 !
 !              END DO
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Number  End1   End2   Bracketed
 !         ------  -----  -----  ---------
@@ -1318,15 +1285,12 @@ contains
 !            3.0   10.0  -10.0        3.0
 !            3.0  -10.0   -1.0       -1.0
 !
-!
 !     2) The following code example illustrates a typical use for
 !        BRCKTD: force a star magnitude limit to be within a range.
 !        Note that this code assumes that the user provided value
 !        is a valid double precision number.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM BRCKTD_EX2
 !              IMPLICIT NONE
@@ -1382,14 +1346,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using '10.1' as user provided input, the output was:
 !
-!
 !        Enter star magnitude: 10.1
 !        Provided star magnitude 10.1 is out of range (0-10).
-!
 !
 ! $ Restrictions
 !
@@ -1427,13 +1388,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     bracket a d.p. value within an interval
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1445,7 +1404,6 @@ contains
 !        right and acts appropriately.
 !
 !-&
-
 
 !
 !     What else is there to say?
@@ -1560,7 +1518,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM BRCKTI_EX1
 !              IMPLICIT NONE
 !
@@ -1590,7 +1547,6 @@ contains
 !              DATA                    END2   / 10, 10, -10,  -1 /
 !              DATA                    NUMBER / -1, 29,   3,   3 /
 !
-!
 !              WRITE(*,'(A)') 'Number  End1  End2  Bracketed'
 !              WRITE(*,'(A)') '------  ----  ----  ---------'
 !
@@ -1601,13 +1557,10 @@ contains
 !
 !              END DO
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Number  End1  End2  Bracketed
 !        ------  ----  ----  ---------
@@ -1616,15 +1569,12 @@ contains
 !             3    10   -10          3
 !             3   -10    -1         -1
 !
-!
 !     2) The following code example illustrates a typical use for
 !        BRCKTI: force an identifier to be within a range. Note that
 !        this code assumes that the user provided value is a valid
 !        integer number.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM BRCKTI_EX2
 !              IMPLICIT NONE
@@ -1680,14 +1630,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using '710' as user provided input, the output was:
 !
-!
 !        Enter object code: 710
 !        Provided object code 710 is out of range (701-705).
-!
 !
 ! $ Restrictions
 !
@@ -1725,13 +1672,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     bracket an integer value within an interval
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1743,7 +1688,6 @@ contains
 !        right and acts appropriately.
 !
 !-&
-
 
 !
 !     What else is there to say?
@@ -1757,7 +1701,6 @@ contains
          brckti = max (  end2, min(end1,number)  )
 
       end if
-
 
       return
       end function brckti
@@ -1962,9 +1905,7 @@ contains
 !        be used to obtain points for plotting a polynomial
 !        and its derivatives.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CHBDER_EX1
 !              IMPLICIT NONE
@@ -1990,7 +1931,6 @@ contains
 !              INTEGER               I
 !              INTEGER               NDERIV
 !
-!
 !              DATA                  CP     / 1.D0,  3.D0,  0.5D0,
 !             .                               1.D0,  0.5D0, -1.D0,
 !             .                               1.D0               /
@@ -2012,16 +1952,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Value of the polynomial at X=1:  -0.340878
 !           Derivative 1 at X=1        :   0.382716
 !           Derivative 2 at X=1        :   4.288066
 !           Derivative 3 at X=1        :  -1.514403
-!
 !
 ! $ Restrictions
 !
@@ -2087,13 +2024,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     derivatives of a chebyshev expansion
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2104,7 +2039,6 @@ contains
 !        Declaration of unused variable RECIP removed.
 !
 !-&
-
 
 !
 !     Local variables
@@ -2180,13 +2114,11 @@ contains
 !                       2          3          4          5
 !          dX         dX         dX         dX         dX
 !
-!
 !     NOTE: In the loop that follows we perform division instead of
 !           multiplying by reciprocals so that the algorithm matches
 !           CHBINT.  If multiplication by reciprocals is performed
 !           CHBINT and CHBDER (although mathematically equivalent) will
 !           not produce identical results for the first derivative.
-!
 !
       scale  = x2s(2)
 
@@ -2378,9 +2310,7 @@ contains
 !        be used to obtain points for plotting a polynomial
 !        and its derivative.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CHBINT_EX1
 !              IMPLICIT NONE
@@ -2418,14 +2348,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Value of the polynomial at X=1:  -0.340878
 !           First derivative at X=1    :   0.382716
-!
 !
 ! $ Restrictions
 !
@@ -2471,13 +2398,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     interpolate a chebyshev expansion
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2487,7 +2412,6 @@ contains
 !        well as an explanation for this designation. Examples added.
 !
 !-&
-
 
 !
 !     Local variables
@@ -2699,9 +2623,7 @@ contains
 !        The code example below illustrates how this routine might
 !        be used to obtain points for plotting a polynomial.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CHBVAL_EX1
 !              IMPLICIT NONE
@@ -2736,13 +2658,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Value of the polynomial at X=1:  -0.340878
-!
 !
 ! $ Restrictions
 !
@@ -2789,13 +2708,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     value of a chebyshev polynomial expansion
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2805,7 +2722,6 @@ contains
 !        well as an explanation for this designation. Examples added.
 !
 !-&
-
 
 !
 !     Local variables
@@ -2924,7 +2840,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: cyllat_ex1.tm
@@ -2946,7 +2861,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -2956,9 +2870,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CYLLAT_EX1
 !              IMPLICIT NONE
@@ -3020,7 +2932,6 @@ contains
 !        C
 !              CALL LATREC ( RADIUS, LON, LAT, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -3049,10 +2960,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -3078,7 +2987,6 @@ contains
 !          Y          (km):     -379226.32931475
 !          Z          (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of cylindrical coordinates
 !        and the corresponding latitudinal coordinates.
 !
@@ -3086,9 +2994,7 @@ contains
 !        listed to three decimal places. All input and output angles
 !        are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CYLLAT_EX2
 !              IMPLICIT NONE
@@ -3162,10 +3068,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !             R       CLON      Z      RADIUS     LON     LAT
 !          -------  -------  -------  -------  -------  -------
@@ -3180,7 +3084,6 @@ contains
 !            1.000  180.000   -1.000    1.414  180.000  -45.000
 !            0.000  180.000    1.000    1.000  180.000   90.000
 !            0.000   33.000    0.000    0.000   33.000    0.000
-!
 !
 ! $ Restrictions
 !
@@ -3226,13 +3129,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cylindrical to latitudinal
 !
 !-&
-
 
 !
 !     Local Variables
@@ -3258,7 +3159,6 @@ contains
          rho = 0.0_wp
       end if
 
-
       if (rho==0.0_wp) then
          lattud = 0.0_wp
       else
@@ -3270,7 +3170,6 @@ contains
       lon    = clon
       radius = rho
       lat    = lattud
-!
       return
       end subroutine cyllat
 
@@ -3347,7 +3246,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: cylrec_ex1.tm
@@ -3369,7 +3267,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -3379,9 +3276,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CYLREC_EX1
 !              IMPLICIT NONE
@@ -3457,10 +3352,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -3480,16 +3373,13 @@ contains
 !          Y          (km):     -379226.32931475
 !          Z          (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of cylindrical coordinates
 !        and the corresponding rectangular coordinates.
 !
 !        Corresponding rectangular and cylindrical coordinates are
 !        listed to three decimal places. Input angles are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CYLREC_EX2
 !              IMPLICIT NONE
@@ -3559,10 +3449,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !             R       CLON      Z     RECT(1)  RECT(2)  RECT(3)
 !          -------  -------  -------  -------  -------  -------
@@ -3577,7 +3465,6 @@ contains
 !            1.000    0.000    1.000    1.000    0.000    1.000
 !            1.000   90.000    1.000    0.000    1.000    1.000
 !            1.414   45.000    1.000    1.000    1.000    1.000
-!
 !
 ! $ Restrictions
 !
@@ -3613,13 +3500,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cylindrical to rectangular
 !
 !-&
-
 
 !
 !     Local variables
@@ -3724,7 +3609,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: cylsph_ex1.tm
@@ -3746,7 +3630,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -3756,9 +3639,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CYLSPH_EX1
 !              IMPLICIT NONE
@@ -3820,7 +3701,6 @@ contains
 !        C
 !              CALL SPHREC ( RADIUS, COLAT, SLON, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -3849,10 +3729,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -3878,7 +3756,6 @@ contains
 !          Y           (km):     -379226.32931475
 !          Z           (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of cylindrical coordinates
 !        and the corresponding spherical coordinates.
 !
@@ -3886,9 +3763,7 @@ contains
 !        listed to three decimal places. All input and output angles
 !        are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CYLSPH_EX2
 !              IMPLICIT NONE
@@ -3962,10 +3837,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !             R       CLON      Z      RADIUS   COLAT     SLON
 !          -------  -------  -------  -------  -------  -------
@@ -3980,7 +3853,6 @@ contains
 !            1.000  180.000   -1.000    1.414  135.000  180.000
 !            0.000  180.000    1.000    1.000    0.000  180.000
 !            0.000   33.000    0.000    0.000    0.000   33.000
-!
 !
 ! $ Restrictions
 !
@@ -4032,13 +3904,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cylindrical to spherical
 !
 !-&
-
 
 !
 !     Local variables
@@ -4180,18 +4050,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     d.p. cube root
 !
 !-&
 
-
       real(wp), parameter :: third = 1.0_wp/3.0_wp
-!
       dcbrt = dsign (dabs(x)**third, x)
-!
       return
       end function dcbrt
 
@@ -4264,7 +4130,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DET_EX1
 !              IMPLICIT NONE
 !
@@ -4296,17 +4161,13 @@ contains
 !              WRITE(*,'(A,F6.2)') 'Determinant of M1:', DET(M1)
 !              WRITE(*,'(A,F6.2)') 'Determinant of M2:', DET(M2)
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Determinant of M1:  0.00
 !        Determinant of M2: 45.00
-!
 !
 ! $ Restrictions
 !
@@ -4344,13 +4205,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     determinant of a d.p. 3x3_matrix
 !
 !-&
-
 
       det =   m1(1,1) * ( m1(2,2)*m1(3,3) - m1(2,3)*m1(3,2) ) &
             - m1(1,2) * ( m1(2,1)*m1(3,3) - m1(2,3)*m1(3,1) ) &
@@ -4473,7 +4332,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: drdcyl_ex1.tm
@@ -4497,7 +4355,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -4508,9 +4365,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DRDCYL_EX1
 !              IMPLICIT NONE
@@ -4578,7 +4433,6 @@ contains
 !
 !              CALL MXV ( JACOBI, CYLVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -4620,10 +4474,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -4661,7 +4513,6 @@ contains
 !          dY/dt (km/s)           =     0.53760111E+04
 !          dZ/dt (km/s)           =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -4696,13 +4547,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of rectangular w.r.t. cylindrical coordinates
 !
 !-&
-
 
 !
 !     Local parameters
@@ -4721,8 +4570,6 @@ contains
 
       integer(ip)           dlon
       parameter           ( dlon   = 2 )
-
-
 
       jacobi (dx,dr)     =  dcos( clon )
       jacobi (dy,dr)     =  dsin( clon )
@@ -4855,7 +4702,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: drdlat_ex1.tm
@@ -4879,7 +4725,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -4890,9 +4735,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DRDLAT_EX1
 !              IMPLICIT NONE
@@ -4960,7 +4803,6 @@ contains
 !
 !              CALL MXV ( JACOBI, LATVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -5003,10 +4845,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -5044,7 +4884,6 @@ contains
 !          dY/dt (km/s)           =     0.53760111E+04
 !          dZ/dt (km/s)           =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -5075,13 +4914,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of rectangular w.r.t. latitudinal coordinates
 !
 !-&
-
 
 !
 !     Local variables
@@ -5102,7 +4939,6 @@ contains
       parameter           ( dlon = 2 )
 
       integer(ip), parameter :: dlat = 3
-
 
 !
 !     Construct the matrix directly.
@@ -5238,7 +5074,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: drdsph_ex1.tm
@@ -5262,7 +5097,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -5273,9 +5107,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DRDSPH_EX1
 !              IMPLICIT NONE
@@ -5343,7 +5175,6 @@ contains
 !
 !              CALL MXV ( JACOBI, SPHVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -5387,10 +5218,8 @@ contains
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -5428,7 +5257,6 @@ contains
 !          dY/dt (km/s)            =     0.53760111E+04
 !          dZ/dt (km/s)            =    -0.20881149E+02
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -5457,13 +5285,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of rectangular w.r.t. spherical coordinates
 !
 !-&
-
 
 !
 !     Local parameters
@@ -5485,7 +5311,6 @@ contains
       integer(ip)           dlon
       parameter           ( dlon   = 3 )
 
-
 !
 !     Local variables
 !
@@ -5494,14 +5319,11 @@ contains
       real(wp)              scolat
       real(wp)              slong
 
-
-
       ccolat = dcos( colat )
       scolat = dsin( colat )
 
       clong  = dcos( slon  )
       slong  = dsin( slon  )
-
 
       jacobi (dx,dr)     =      clong * scolat
       jacobi (dy,dr)     =      slong * scolat
@@ -5621,7 +5443,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: ducrss_ex1.tm
@@ -5645,7 +5466,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -5656,9 +5476,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DUCRSS_EX1
 !              IMPLICIT NONE
@@ -5677,7 +5495,6 @@ contains
 !              DOUBLE PRECISION      ZINERT ( 6    )
 !
 !              INTEGER               I
-!
 !
 !        C
 !        C     Define the earth body-fixed pole vector (Z). The pole
@@ -5735,13 +5552,10 @@ contains
 !              WRITE(*,'(A,3F16.12)') '   position:', (Z_NEW(I), I=1,3)
 !              WRITE(*,'(A,3F16.12)') '   velocity:', (Z_NEW(I), I=4,6)
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        New X-axis:
 !           position:  0.183446637633 -0.901919663328 -0.391009273602
@@ -5752,7 +5566,6 @@ contains
 !        New Z-axis:
 !           position: -0.979862518033 -0.199671507623  0.000857203851
 !           velocity:  0.000000044531 -0.000000218531 -0.000000000036
-!
 !
 !        Note that these vectors define the transformation between the
 !        new frame and J2000 at the given ET:
@@ -5821,13 +5634,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute a unit cross product and its derivative
 !
 !-&
-
 
 !
 !     Local variables
@@ -5954,9 +5765,7 @@ contains
 !     1) Compute the cross product of two 3-dimensional vectors
 !        and the derivative of this cross product.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DVCRSS_EX1
 !              IMPLICIT NONE
@@ -5998,10 +5807,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        S1  :    0.0    1.0    0.0    1.0    0.0    0.0
 !        S2  :    1.0    0.0    0.0    1.0    0.0    0.0
@@ -6010,7 +5817,6 @@ contains
 !        S1  :    5.0    5.0    5.0    1.0    0.0    0.0
 !        S2  :   -1.0   -1.0   -1.0    2.0    0.0    0.0
 !        SOUT:    0.0    0.0    0.0    0.0   11.0  -11.0
-!
 !
 !     2) One can construct non-inertial coordinate frames from apparent
 !        positions of objects or defined directions. However, if one
@@ -6026,7 +5832,6 @@ contains
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -6051,7 +5856,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -6062,9 +5866,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DVCRSS_EX2
 !              IMPLICIT NONE
@@ -6084,7 +5886,6 @@ contains
 !              DOUBLE PRECISION      ZINERT ( 6    )
 !
 !              INTEGER               I
-!
 !
 !        C
 !        C     Define the earth body-fixed pole vector (Z). The pole
@@ -6159,13 +5960,10 @@ contains
 !              WRITE(*,'(A,3F16.12)') '   position:', (Z_NEW(I), I=1,3)
 !              WRITE(*,'(A,3F16.12)') '   velocity:', (Z_NEW(I), I=4,6)
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        New X-axis:
 !           position:  0.183446637633 -0.901919663328 -0.391009273602
@@ -6176,7 +5974,6 @@ contains
 !        New Z-axis:
 !           position: -0.979862518033 -0.199671507623  0.000857203851
 !           velocity:  0.000000044531 -0.000000218531 -0.000000000036
-!
 !
 !        Note that these vectors define the transformation between the
 !        new frame and J2000 at the given ET:
@@ -6228,13 +6025,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute the derivative of a cross product
 !
 !-&
-
 
 !
 !     Local Variables
@@ -6343,7 +6138,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DVDOT_EX1
 !              IMPLICIT NONE
 !
@@ -6391,16 +6185,12 @@ contains
 !              WRITE(*,'(A,F18.12)') 'Rate of change of angle '
 !             . //                   'between S1 and S2:', DTHETA
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Rate of change of angle between S1 and S2:   -0.000002232415
-!
 !
 !        Note that if the position components of S1 and S2 are parallel,
 !        the derivative of the  angle between the positions does not
@@ -6440,13 +6230,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Compute the derivative of a dot product
 !
 !-&
-
 
       dvdot = s1(1)*s2(4) + s1(2)*s2(5) + s1(3)*s2(6) &
             + s1(4)*s2(1) + s1(5)*s2(2) + s1(6)*s2(3)
@@ -6538,7 +6326,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: dvhat_ex1.tm
@@ -6562,7 +6349,6 @@ contains
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -6573,9 +6359,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DVHAT_EX1
 !              IMPLICIT NONE
@@ -6645,13 +6429,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Instantaneous angular velocity (rad/s): 0.248106659269E-05
-!
 !
 ! $ Restrictions
 !
@@ -6694,13 +6475,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     State of a unit vector parallel to a state vector
 !
 !-&
-
 
 !
 !     Local Constants.
@@ -6801,7 +6580,6 @@ contains
 !        ||x|| =  \/ < x, x >  = \  / ( x1 + x2 + x3  )
 !                                 \/
 !
-!
 !     If the velocity component of STATE is:
 !
 !                  dx1   dx2   dx3
@@ -6849,7 +6627,6 @@ contains
 !        the third be the zero vector.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM DVNORM_EX1
 !              IMPLICIT NONE
@@ -6922,15 +6699,12 @@ contains
 !              WRITE(*,*) 'Zero vector x, large dx/ds: ', DVNORM( Y )
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Parallel x, dx/ds         :    2.4494897427831779
 !         Anti-parallel x, dx/ds    :   -2.4494897427831779
 !         Zero vector x, large dx/ds:    0.0000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -6959,13 +6733,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     derivative of 3-vector norm
 !
 !-&
-
 
 !
 !     SPICELIB functions.
@@ -7093,7 +6865,6 @@ contains
 !     then the input ellipse can also be represented as the set of
 !     points
 !
-!
 !        CENTER + cos(theta) SMAJOR + sin(theta) SMINOR
 !
 !     where theta ranges over the interval (-pi, pi].
@@ -7108,9 +6879,7 @@ contains
 !     1) Given a SPICE ellipse structure, extract its components into
 !        independent variables.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EL2CGV_EX1
 !              IMPLICIT NONE
@@ -7177,10 +6946,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        SPICE ellipse:
 !           Semi-minor axis:  0.000000  1.414214  0.000000
@@ -7192,13 +6959,10 @@ contains
 !           Semi-major axis:  1.414214 -0.000000  1.414214
 !           Center         : -1.000000  1.000000 -1.000000
 !
-!
 !     2) Given an ellipsoid and a viewpoint exterior to it, calculate
 !        the limb ellipse as seen from that viewpoint.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EL2CGV_EX2
 !              IMPLICIT NONE
@@ -7251,16 +7015,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Limb ellipse as seen from viewpoint:
 !           Semi-minor axis:   0.000000   0.000000  -1.000000
 !           Semi-major axis:   0.000000   2.000000  -0.000000
 !           Center         :   1.000000   0.000000   0.000000
-!
 !
 ! $ Restrictions
 !
@@ -7294,13 +7055,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     ellipse to center and generating vectors
 !
 !-&
-
 
 !
 !     Local parameters
@@ -7317,13 +7076,11 @@ contains
 !
 !        MINPOS through MINPOS + 1
 !
-!
       integer(ip), parameter :: ctrpos = 1
 
       integer(ip), parameter :: majpos = 4
 
       integer(ip), parameter :: minpos = 7
-
 
 !
 !     The center of the ellipse is held in the first three elements.
@@ -7445,13 +7202,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether an integer is even
 !
 !-&
-
 
 !
 !     Self-explanatory.
@@ -7562,13 +7317,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     round to exact value
 !
 !-&
-
 
 !
 !     Just shorthand, really.
@@ -7736,13 +7489,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     build a right handed coordinate frame
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -7756,8 +7507,6 @@ contains
 !
 !-&
 
-
-!
 !
 !     Local variables
 !
@@ -7769,8 +7518,6 @@ contains
       integer(ip)           s1
       integer(ip)           s2
       integer(ip)           s3
-
-
 
 !
 !     First make X into a unit vector.
@@ -7804,7 +7551,6 @@ contains
          return
 
       end if
-
 
 !
 !     If we make it this far, determine which component of X has the
@@ -7967,13 +7713,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     greatest common divisor
 !
 !-&
-
 
 !
 !     Local variables
@@ -7996,7 +7740,6 @@ contains
       end if
 
       remndr = 1
-
 
       if ( q /= 0 ) then
 
@@ -8090,9 +7833,7 @@ contains
 !
 !        where I is the 3x3 identity matrix.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM IDENT_EX1
 !              IMPLICIT NONE
@@ -8153,10 +7894,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original Matrix:
 !               0.0000000      -1.0000000       0.0000000
@@ -8172,7 +7911,6 @@ contains
 !               0.0000000       0.0000000       0.0000000
 !               0.0000000       0.0000000       0.0000000
 !               0.0000000       0.0000000       0.0000000
-!
 !
 ! $ Restrictions
 !
@@ -8198,13 +7936,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Get the 3x3 identity matrix
 !
 !-&
-
 
       matrix ( 1, 1 ) = 1.0_wp
       matrix ( 2, 1 ) = 0.0_wp
@@ -8270,7 +8006,6 @@ contains
 !
 !     FOUND    indicates that V lies inside the solid tetrahedral
 !              angle determined by E1, E2 and E3.
-!
 !
 !     SCALE    if V lies inside the solid tetrahedral angle given
 !              by E1, E2 and E3, SCALE*V is the point is the positive
@@ -8390,18 +8125,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Determine if a vector lies in a solid tetrahedral angle
 !
 !-&
 
-
 !
 !     SPICELIB Functions
 !
-
 
 !
 !     Local Variables
@@ -8650,7 +8382,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM INVERT_EX1
 !              IMPLICIT NONE
 !
@@ -8705,10 +8436,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original Matrix:
 !               0.0000000      -1.0000000       0.0000000
@@ -8724,7 +8453,6 @@ contains
 !               1.0000000       0.0000000       0.0000000
 !               0.0000000       1.0000000       0.0000000
 !               0.0000000       0.0000000       1.0000000
-!
 !
 ! $ Restrictions
 !
@@ -8771,13 +8499,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     invert a 3x3_matrix
 !
 !-&
-
 
 !
 !     Local variables
@@ -8813,7 +8539,6 @@ contains
 !
       invdet = 1.0_wp / mdet
       call vsclg (invdet, mtemp, 9, mout)
-!
       return
       end subroutine invert
 
@@ -8902,7 +8627,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: latcyl_ex1.tm
@@ -8924,7 +8648,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -8934,9 +8657,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATCYL_EX1
 !              IMPLICIT NONE
@@ -8998,7 +8719,6 @@ contains
 !        C
 !              CALL CYLREC ( R, CLON, Z, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -9027,10 +8747,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -9056,7 +8774,6 @@ contains
 !          Y          (km):     -379226.32931475
 !          Z          (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of latitudinal coordinates
 !        and the corresponding cylindrical coordinates.
 !
@@ -9064,9 +8781,7 @@ contains
 !        listed to three decimal places. Input and output angles are
 !        in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATCYL_EX2
 !              IMPLICIT NONE
@@ -9142,10 +8857,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !           RADIUS    LON      LAT       R       CLON      Z
 !          -------  -------  -------  -------  -------  -------
@@ -9161,7 +8874,6 @@ contains
 !            1.000  180.000   90.000    0.000  180.000    1.000
 !            0.000   33.000    0.000    0.000   33.000    0.000
 !
-!
 !     3) Other than the obvious conversion between coordinate systems
 !        this routine could be used to obtain the axial projection
 !        from a sphere to a cylinder about the z-axis that contains
@@ -9171,9 +8883,7 @@ contains
 !        areas between regions on the sphere and their projections to
 !        the cylinder.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATCYL_EX3
 !              IMPLICIT NONE
@@ -9222,17 +8932,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Coordinates of the projected point on cylinder:
 !
 !          Radius     (km):          97.62960071199
 !          Longitude (deg):          45.00000000000
 !          Z          (km):         -21.64396139381
-!
 !
 ! $ Restrictions
 !
@@ -9275,13 +8982,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     latitudinal to cylindrical coordinates
 !
 !-&
-
 
 !
 !     Local variables
@@ -9396,7 +9101,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: latrec_ex1.tm
@@ -9418,7 +9122,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -9428,9 +9131,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATREC_EX1
 !              IMPLICIT NONE
@@ -9507,10 +9208,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -9530,16 +9229,13 @@ contains
 !          Y          (km):     -379226.32931475
 !          Z          (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of latitudinal coordinates
 !        and the corresponding rectangular coordinates.
 !
 !        Corresponding latitudinal and rectangular coordinates are
 !        listed to three decimal places. Input angles are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATREC_EX2
 !              IMPLICIT NONE
@@ -9613,10 +9309,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !           RADIUS    LON      LAT    RECT(1)  RECT(2)  RECT(3)
 !          -------  -------  -------  -------  -------  -------
@@ -9631,7 +9325,6 @@ contains
 !            1.414    0.000   45.000    1.000    0.000    1.000
 !            1.414   90.000   45.000    0.000    1.000    1.000
 !            1.732   45.000   35.264    1.000    1.000    1.000
-!
 !
 ! $ Restrictions
 !
@@ -9676,13 +9369,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     latitudinal to rectangular coordinates
 !
 !-&
-
 
 !
 !     Local variables
@@ -9808,14 +9499,12 @@ contains
 !              90         0
 !             -45       135
 !
-!
 !     2) Compute the latitudinal coordinates of the position of the Moon
 !        as seen from the Earth, and convert them to spherical and
 !        rectangular coordinates.
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -9838,7 +9527,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -9848,9 +9536,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATSPH_EX2
 !              IMPLICIT NONE
@@ -9912,7 +9598,6 @@ contains
 !        C
 !              CALL SPHREC ( R, COLAT, SLON, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -9941,10 +9626,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -9970,7 +9653,6 @@ contains
 !          Y           (km):     -379226.32931475
 !          Z           (km):     -126505.93063865
 !
-!
 !     3) Create a table showing a variety of latitudinal coordinates
 !        and the corresponding spherical coordinates.
 !
@@ -9978,9 +9660,7 @@ contains
 !        listed to three decimal places. Input and output angles are
 !        in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM LATSPH_EX3
 !              IMPLICIT NONE
@@ -10056,10 +9736,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !           RADIUS    LON      LAT        R     COLAT     SLON
 !          -------  -------  -------  -------  -------  -------
@@ -10074,7 +9752,6 @@ contains
 !            1.414  180.000  -45.000    1.414  135.000  180.000
 !            1.000  180.000   90.000    1.000    0.000  180.000
 !            0.000   33.000    0.000    0.000   90.000   33.000
-!
 !
 ! $ Restrictions
 !
@@ -10115,13 +9792,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     latitudinal to spherical coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -10212,9 +9887,7 @@ contains
 !     1) This trivial example demonstrates how to use MEQU to assign
 !        one matrix to another.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MEQU_EX1
 !              IMPLICIT NONE
@@ -10249,16 +9922,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        MOUT:
 !               0.0000000      -1.0000000       0.0000000
 !               1.0000000       0.0000000       0.0000000
 !               0.0000000       0.0000000       1.0000000
-!
 !
 ! $ Restrictions
 !
@@ -10292,13 +9962,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     equal to another 3x3_matrix
 !
 !-&
-
 
       call moved (m1, 9, mout)
 
@@ -10417,16 +10085,13 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     equal to another n-dimensional matrix
 !
 !-&
 
-
       call moved (m1, nr*nc, mout)
-!
       return
       end subroutine mequg
 
@@ -10506,9 +10171,7 @@ contains
 !     1) Given two 3x3 matrices, multiply the transpose of the first
 !        matrix by the second one.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MTXM_EX1
 !              IMPLICIT NONE
@@ -10548,16 +10211,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Transpose of M1 times M2:
 !            -3.000     5.000     7.000
 !            -3.000     7.000     8.000
 !            -3.000     9.000     9.000
-!
 !
 ! $ Restrictions
 !
@@ -10600,13 +10260,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix_transpose times matrix 3x3_case
 !
 !-&
-
 
 !
 !     Local variables
@@ -10739,9 +10397,7 @@ contains
 !     1) Given a 2x4 and a 2x3 matrices, multiply the transpose of the
 !        first matrix by the second one.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MTXMG_EX1
 !              IMPLICIT NONE
@@ -10782,17 +10438,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Transpose of M1 times M2:
 !             1.000     2.000     3.000
 !             2.000     4.000     6.000
 !             3.000     6.000     9.000
 !             0.000     0.000     0.000
-!
 !
 ! $ Restrictions
 !
@@ -10835,13 +10488,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix_transpose times matrix n-dimensional_case
 !
 !-&
-
 
 !
 !     Local variables
@@ -10863,7 +10514,6 @@ contains
 
          end do
       end do
-!
       return
       end subroutine mtxmg
 
@@ -10952,9 +10602,7 @@ contains
 !     1) Given a 3x3 matrix and a 3-vector, multiply the transpose of
 !        the matrix by the vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MTXV_EX1
 !              IMPLICIT NONE
@@ -10988,14 +10636,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Transpose of M times VIN:
 !            -5.000    15.000    15.000
-!
 !
 !        Note that typically the matrix M will be a rotation matrix.
 !        Because the transpose of an orthogonal matrix is equivalent to
@@ -11053,20 +10698,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix_transpose times 3-dimensional vector
 !
 !-&
 
-
 !
 !     Local variables
 !
       real(wp)          prodv  ( 3 )
       integer(ip)       i
-
 
 !
 !  Perform the matrix-vector multiplication
@@ -11083,7 +10725,6 @@ contains
       vout(1) = prodv(1)
       vout(2) = prodv(2)
       vout(3) = prodv(3)
-
 
       return
       end subroutine mtxv
@@ -11183,9 +10824,7 @@ contains
 !     1) Given a 3x2 matrix and a 3-vector, multiply the transpose of
 !        the matrix by the vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MTXVG_EX1
 !              IMPLICIT NONE
@@ -11218,14 +10857,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Transpose of M times VIN:
 !             6.000    20.000
-!
 !
 ! $ Restrictions
 !
@@ -11264,20 +10900,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix_transpose times n-dimensional vector
 !
 !-&
 
-
 !
 !     Local variables
 !
       real(wp) sum
       integer(ip)      i,k
-
 
 !
 !  Perform the matrix-vector multiplication
@@ -11371,9 +11004,7 @@ contains
 !     1) Given two 3x3 double precision matrices, compute their
 !        product.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MXM_EX1
 !              IMPLICIT NONE
@@ -11429,10 +11060,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        M1:
 !               1.0000000       1.0000000       0.0000000
@@ -11448,7 +11077,6 @@ contains
 !               1.0000000       1.0000000       1.0000000
 !              -1.0000000       1.0000000       1.0000000
 !               0.0000000      -1.0000000       1.0000000
-!
 !
 ! $ Restrictions
 !
@@ -11488,13 +11116,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix times matrix 3x3_case
 !
 !-&
-
 
 !
 !     Local variables
@@ -11611,9 +11237,7 @@ contains
 !     1) Given a 3x2 and a 2x3 matrices, multiply the first matrix by
 !        the second one.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MXMG_EX1
 !              IMPLICIT NONE
@@ -11652,16 +11276,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        M1 times M2:
 !             9.000    19.000    29.000
 !            12.000    26.000    40.000
 !            15.000    33.000    51.000
-!
 !
 ! $ Restrictions
 !
@@ -11704,13 +11325,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix times matrix n-dimensional_case
 !
 !-&
-
 
 !
 !     Local variables
@@ -11733,7 +11352,6 @@ contains
             mout(i,j) = sum
          end do
       end do
-!
       return
       end subroutine mxmg
 
@@ -11820,9 +11438,7 @@ contains
 !     1) Given two 3x3 double precision matrices, multiply the first
 !        matrix by the transpose of the second one.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MXMT_EX1
 !              IMPLICIT NONE
@@ -11879,10 +11495,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        M1:
 !               0.0000000       1.0000000       0.0000000
@@ -11898,7 +11512,6 @@ contains
 !               1.0000000       0.0000000       0.0000000
 !               0.0000000       1.0000000       0.0000000
 !               0.0000000       0.0000000       1.0000000
-!
 !
 ! $ Restrictions
 !
@@ -11941,13 +11554,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix times matrix_transpose 3x3_case
 !
 !-&
-
 
 !
 !     Local variables
@@ -12078,9 +11689,7 @@ contains
 !     1) Given a 2x3 and a 3x4 matrices, multiply the first matrix by
 !        the transpose of the second one.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MXMTG_EX1
 !              IMPLICIT NONE
@@ -12120,15 +11729,12 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        M1 times transpose of M2:
 !             5.000    10.000     5.000    10.000
 !             7.000    10.000     7.000    10.000
-!
 !
 ! $ Restrictions
 !
@@ -12170,13 +11776,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix times matrix_transpose n-dimensional_case
 !
 !-&
-
 
 !
 !     Local variables
@@ -12284,9 +11888,7 @@ contains
 !     1) Given a 3x3 matrix and a 3-vector, multiply the matrix by
 !        the vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MXV_EX1
 !              IMPLICIT NONE
@@ -12317,14 +11919,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        M times VIN:
 !             2.000    -1.000     3.000
-!
 !
 ! $ Restrictions
 !
@@ -12369,13 +11968,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix times 3-dimensional vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -12477,9 +12074,7 @@ contains
 !     1) Given a 2x3 matrix and a 3-vector, multiply the matrix by
 !        the vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM MXVG_EX1
 !              IMPLICIT NONE
@@ -12513,14 +12108,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        M times VIN:
 !             6.000    20.000
-!
 !
 ! $ Restrictions
 !
@@ -12562,13 +12154,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     matrix times n-dimensional vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -12706,13 +12296,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether an integer is odd
 !
 !-&
-
 
 !
 !     Self-explanatory.
@@ -12841,13 +12429,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     opposite sign d.p. numbers
 !
 !-&
-
 
       opsgnd = (      (( x > 0 ) .and. ( y < 0 )) &
                  .or. (( x < 0 ) .and. ( y > 0 )) &
@@ -12978,13 +12564,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     opposite sign integers
 !
 !-&
-
 
       opsgni = (      (( x > 0 ) .and. ( y < 0 )) &
                  .or. (( x < 0 ) .and. ( y > 0 )) &
@@ -13110,9 +12694,7 @@ contains
 !        to double precision round-off, so orthogonal to that
 !        precision.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PL2NVC_EX1
 !              IMPLICIT NONE
@@ -13181,25 +12763,20 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Distance to the plane:   4.8102899
 !        Vector from origin   :  -0.7777778   3.8888889  -2.7222222
 !
 !        dot product          :  -0.0000000
 !
-!
 !     2) Apply a linear transformation represented by a matrix to
 !        a plane represented by a normal vector and a constant.
 !
 !        Find a normal vector and constant for the transformed plane.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PL2NVC_EX2
 !              IMPLICIT NONE
@@ -13248,7 +12825,6 @@ contains
 !              DATA                    AXDEF  /  1.D0,  0.D0,  0.D0 /
 !              DATA                    PLNDEF /  0.D0, -1.D0,  0.D0 /
 !
-!
 !              CALL TWOVEC ( AXDEF, 1, PLNDEF, 2, M )
 !
 !        C
@@ -13293,14 +12869,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Unit normal vector:  -0.1616904  -0.8084521   0.5659165
 !        Constant          :   4.8102897
-!
 !
 ! $ Restrictions
 !
@@ -13338,13 +12911,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     plane to normal vector and constant
 !
 !-&
-
 
 !
 !     The contents of SPICE planes are as follows:
@@ -13360,7 +12931,6 @@ contains
 !        The plane constant is the distance of the plane from the
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
-!
 !
       integer(ip), parameter :: nmlpos = 1
 
@@ -13514,13 +13084,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     plane to normal vector and point
 !
 !-&
-
 
 !
 !     Local variables
@@ -13650,13 +13218,11 @@ contains
 !            CALL PSV2PL ( POINT,   SPAN1,    SPAN2,   PLANE )
 !            CALL VPRJP  ( V,       PLANE,    PROJ           )
 !
-!
 !     2)  Find the intersection of a plane and the unit sphere. This
 !         is a geometry problem that arises in computing the
 !         intersection of a plane and a triaxial ellipsoid. The
 !         SPICELIB routine INEDPL computes this intersection, but this
 !         example does illustrate how to use this routine.
-!
 !
 !            C
 !            C     The geometric plane of interest will be represented
@@ -13701,7 +13267,6 @@ contains
 !                  CALL VSCL  ( RADIUS, SPAN2, V2 )
 !
 !                  FOUND = .TRUE.
-!
 !
 !     3)  Apply a linear transformation represented by the matrix M to
 !         a plane represented by the normal vector N and the constant C.
@@ -13773,13 +13338,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     plane to point and spanning vectors
 !
 !-&
-
 
 !
 !     Local variables
@@ -13851,7 +13414,6 @@ contains
 !              are, respectively, the X, Y, and Z components of the
 !              Ith vertex.
 !
-!
 !     DELTA    is a fraction by which the plate is to be scaled.
 !              Scaling is done so that the scaled plate has the
 !              following properties:
@@ -13920,7 +13482,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM PLTEXP_EX1
 !              IMPLICIT NONE
 !
@@ -13963,10 +13524,8 @@ contains
 !              WRITE (*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Vertices of input plate:
 !          I1 =   0.8660254038E+00 -0.5000000000E+00  0.7000000000E+01
@@ -13977,7 +13536,6 @@ contains
 !          O1 =   0.1732050808E+01 -0.1000000000E+01  0.7000000000E+01
 !          O2 =   0.0000000000E+00  0.2000000000E+01  0.7000000000E+01
 !          O3 =  -0.1732050808E+01 -0.1000000000E+01  0.7000000000E+01
-!
 !
 !        Note that the height of the plate is unchanged, but the vectors
 !        from the centroid to the vertices have doubled in length.
@@ -14010,13 +13568,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     expand triangular plate
 !
 !-&
-
 
 !
 !     Local variables
@@ -14051,10 +13607,7 @@ contains
 !
 !        ( (1+DELTA) * IVERTS(*,I) )  -  SCLCTR
 !
-!
-!
       s = 1.0_wp + delta
-
 
       overts(1,1) = ( s * iverts(1,1) ) - sclctr(1)
       overts(2,1) = ( s * iverts(2,1) ) - sclctr(2)
@@ -14147,7 +13700,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM PLTNRM_EX1
 !              IMPLICIT NONE
 !
@@ -14157,13 +13709,11 @@ contains
 !              DOUBLE PRECISION      V2     ( 3 )
 !              DOUBLE PRECISION      V3     ( 3 )
 !
-!
 !              S = SQRT(3.D0)/2
 !
 !              CALL VPACK (    S,  -0.5D0,  0.D0, V1 )
 !              CALL VPACK ( 0.D0,    1.D0,  0.D0, V2 )
 !              CALL VPACK (   -S,  -0.5D0,  0.D0, V3 )
-!
 !
 !              CALL PLTNRM ( V1, V2, V3, NORMAL )
 !
@@ -14171,13 +13721,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        NORMAL =   0.00000000000000  0.00000000000000  2.59807621135332
-!
 !
 ! $ Restrictions
 !
@@ -14204,13 +13751,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute normal vector of triangular plate from vertices
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -14363,9 +13908,7 @@ contains
 !           F''(x)       2        23
 !           F'''(x)      3        78
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM POLYDS_EX1
 !              IMPLICIT NONE
@@ -14402,16 +13945,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         P =    6.0000000000000000
 !         P =    10.000000000000000
 !         P =    23.000000000000000
 !         P =    78.000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -14455,13 +13995,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute a polynomial and its derivatives
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -14472,14 +14010,12 @@ contains
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      i
       integer(ip)      k
       real(wp) scale
-
 
       if ( nderiv < 0 ) then
          return
@@ -14529,7 +14065,6 @@ contains
 !        P_[n-1]'(t) = t*P_[n-2]'(t) +   P_[n-2](t)
 !        P_n'(t)     = t*P_[n-1]'(t) +   P_[n-1](t)
 !
-!
 !     Similarly,
 !
 !        P_0''(t)     = 0
@@ -14539,8 +14074,6 @@ contains
 !                     .
 !                     .
 !        P_[n-1]''(t) = t*P_[n-2]''(t) +   2*P_[n-2]'(t)
-!
-!
 !
 !        P_0'''(t)     = 0
 !        P_1'''(t)     = t*P_0'''(t)     +   3*P_0''(t)
@@ -14573,7 +14106,6 @@ contains
       do i = 0, nderiv
          p(i) = 0.0_wp
       end do
-
 
 !
 !     Set up the loop "counters" (they count backwards) for the first
@@ -14702,7 +14234,6 @@ contains
 !
 !     might preserve Q or convert Q to -Q.
 !
-!
 !     Quaternion Styles
 !     -----------------
 !
@@ -14728,11 +14259,9 @@ contains
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -14767,7 +14296,6 @@ contains
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -14823,7 +14351,6 @@ contains
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   .-             -.
@@ -14855,7 +14382,6 @@ contains
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -14966,19 +14492,16 @@ contains
 !               [ pi/2 ] .
 !                       3
 !
-!
 !     2)  Finding a set of Euler angles that represent a rotation
 !         specified by a quaternion:
 !
 !            Suppose our rotation R is represented by the quaternion
 !            Q. To find angles TAU, ALPHA, DELTA such that
 !
-!
 !               R  =  [ TAU ]  [ pi/2 - DELTA ]  [ ALPHA ] ,
 !                            3                 2          3
 !
 !            we can use the code fragment
-!
 !
 !               CALL Q2M    ( Q, R )
 !
@@ -15036,13 +14559,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     quaternion to matrix
 !
 !-&
-
 
 !
 !     Local variables
@@ -15059,7 +14580,6 @@ contains
 
       real(wp)              l2
       real(wp)              sharpn
-
 
 !
 !     If a matrix R represents a rotation of r radians about the unit
@@ -15085,7 +14605,6 @@ contains
 !             |   2     1        |
 !             +-                -+
 !
-!
 !      Define S as
 !
 !         sin(r/2) N,
@@ -15103,7 +14622,6 @@ contains
 !      and
 !
 !         sin(r)      =  2 cos(r/2) sin(r/2),
-!
 !
 !      we can express R as
 !
@@ -15144,11 +14662,8 @@ contains
 !         |     1 3     0 2          2 3    0 1               1   2   |
 !         +-                                                         -+
 !
-!
 !      For efficiency, we avoid duplicating calculations where possible.
 !
-
-
 
       q01  =  q(0) * q(1)
       q02  =  q(0) * q(2)
@@ -15187,8 +14702,6 @@ contains
          q3s    = q3s * sharpn
 
       end if
-
-
 
       r(1,1) =  1.0_wp  -  2.0_wp * ( q2s + q3s )
       r(2,1) =           2.0_wp * ( q12 + q03 )
@@ -15319,11 +14832,9 @@ contains
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -15358,7 +14869,6 @@ contains
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -15414,7 +14924,6 @@ contains
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   +-             -+
@@ -15446,7 +14955,6 @@ contains
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -15490,7 +14998,6 @@ contains
 !     represents the matrix product
 !
 !        M1*M2
-!
 !
 !     About this routine
 !     ==================
@@ -15544,11 +15051,9 @@ contains
 !
 !     Then the derivative of R(t) at t = 0 is given by
 !
-!
 !        d(R(t))|
 !        -------|     = OMEGA  * C                                   (5)
 !          dt   |t=0
-!
 !
 !     The rotation axis A associated with OMEGA is defined by        (6)
 !
@@ -15584,7 +15089,6 @@ contains
 !        d(QR(t))|         d(QM(t))|
 !        --------|     =   --------|     * QC                        (9)
 !           dt   |t=0         dt   |t=0
-!
 !
 !     Since QM(t) represents a rotation having axis A and rotation
 !     angle t, then (according to the relationship between SPICE
@@ -15660,7 +15164,6 @@ contains
 !        alternate method; the results are displayed for comparison.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM QDQ2AV_EX1
 !              IMPLICIT NONE
@@ -15787,7 +15290,6 @@ contains
 !
 !              END DO
 !
-!
 !        C
 !        C     Lower right block:
 !        C
@@ -15828,10 +15330,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original angular velocity:
 !           1.0000000000000000  2.0000000000000000  3.0000000000000000
@@ -15839,7 +15339,6 @@ contains
 !           0.9999999999999998  1.9999999999999996  2.9999999999999991
 !         XF2RAV's angular velocity:
 !           1.0000000000000002  2.0000000000000000  3.0000000000000000
-!
 !
 ! $ Restrictions
 !
@@ -15880,13 +15379,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     angular velocity from  quaternion and derivative
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -15897,14 +15394,12 @@ contains
 !
 !-&
 
-
 !
 !     Local variables
 !
       real(wp)              qhat  ( 0 : 3 )
       real(wp)              qstar ( 0 : 3 )
       real(wp)              qtemp ( 0 : 3 )
-
 
 !
 !     Get a unitized copy of the input quaternion.
@@ -16036,11 +15531,9 @@ contains
 !
 !           > Widely used in aerospace engineering applications
 !
-!
 !     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
 !     Quaternions of any other style must be converted to SPICE
 !     quaternions before they are passed to SPICELIB routines.
-!
 !
 !     Relationship between SPICE and Engineering Quaternions
 !     ------------------------------------------------------
@@ -16075,7 +15568,6 @@ contains
 !     the equivalent SPICE quaternion is
 !
 !        QSPICE = ( q3, -q0, -q1, -q2 )
-!
 !
 !     Associating SPICE Quaternions with Rotation Matrices
 !     ----------------------------------------------------
@@ -16131,7 +15623,6 @@ contains
 !
 !                     symmetric                   skew-symmetric
 !
-!
 !     OMEGA is a skew-symmetric matrix of the form
 !
 !                   +-             -+
@@ -16163,7 +15654,6 @@ contains
 !
 !     M2Q always returns a quaternion with scalar part greater than
 !     or equal to zero.
-!
 !
 !     SPICE Quaternion Multiplication Formula
 !     ---------------------------------------
@@ -16238,9 +15728,7 @@ contains
 !
 !        The following code example uses QXQ to produce these results.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM QXQ_EX1
 !              IMPLICIT NONE
@@ -16331,10 +15819,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        QI x QJ  =    0.00    0.00    0.00    1.00
 !             QK  =    0.00    0.00    0.00    1.00
@@ -16363,13 +15849,11 @@ contains
 !        QID x QJ =    0.00    0.00    1.00    0.00
 !              QJ =    0.00    0.00    1.00    0.00
 !
-!
 !     2) Compute the composition of two rotation matrices by
 !        converting them to quaternions and computing their
 !        product, and by directly multiplying the matrices.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM QXQ_EX2
 !              IMPLICIT NONE
@@ -16393,7 +15877,6 @@ contains
 !              DATA                  CMAT2  /  0.D0,  1.D0,  0.D0,
 !             .                                1.D0,  0.D0,  0.D0,
 !             .                                0.D0,  0.D0, -1.D0  /
-!
 !
 !        C
 !        C     Convert the C-matrices to quaternions.
@@ -16428,10 +15911,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Using quaternion product:
 !            0.0000    1.0000    0.0000
@@ -16441,7 +15922,6 @@ contains
 !            0.0000    1.0000    0.0000
 !           -1.0000    0.0000    0.0000
 !            0.0000    0.0000    1.0000
-!
 !
 ! $ Restrictions
 !
@@ -16473,14 +15953,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     quaternion times quaternion
 !     multiply quaternion by quaternion
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -16490,7 +15968,6 @@ contains
 !     Local variables
 !
       real(wp)              cross ( 3 )
-
 
 !
 !     Compute the scalar part of the product.
@@ -16602,9 +16079,7 @@ contains
 !        of an object initially expressed with respect to the B1950
 !        reference frame.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RADREC_EX1
 !              IMPLICIT NONE
@@ -16675,16 +16150,13 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Right ascension (B1950 frame):    135.88680896000000
 !         Declination (B1950 frame)    :    17.501510369999998
 !         Right ascension (J2000 frame):    136.58768235448090
 !         Declination (J2000 frame)    :    17.300442748830637
-!
 !
 !     2) Define a set of 15 right ascension-declination data pairs for
 !        the Earth's pole at different ephemeris epochs, convert them
@@ -16697,9 +16169,7 @@ contains
 !
 !           pck00010.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RADREC_EX2
 !              IMPLICIT NONE
@@ -16805,10 +16275,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !               ET           Angular difference
 !        ------------------  ------------------
@@ -16827,7 +16295,6 @@ contains
 !         13149060.82976055  0.0000001559300556
 !         15778860.85892719  0.0000000107417474
 !         18408660.88809383  0.0000001774135760
-!
 !
 ! $ Restrictions
 !
@@ -16872,14 +16339,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     range ra and dec to rectangular coordinates
 !     right_ascension and declination to rectangular
 !
 !-&
-
 
 !
 !     Convert from range, right ascension, and declination to
@@ -16989,10 +16454,8 @@ contains
 !        clocks, most modern spacecraft ones require a leapseconds
 !        kernel to be loaded in addition to a SCLK kernel.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -17025,9 +16488,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RAV2XF_EX1
 !              IMPLICIT NONE
@@ -17145,10 +16606,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Rotation matrix:
 !         -0.604984  0.796222 -0.005028
@@ -17164,7 +16623,6 @@ contains
 !         -0.000016 -0.000012 -0.000003 -0.604984  0.796222 -0.005028
 !          0.000013 -0.000015 -0.000010 -0.784160 -0.596891 -0.169748
 !         -0.000008 -0.000006 -0.000002 -0.138158 -0.098752  0.985475
-!
 !
 ! $ Restrictions
 !
@@ -17200,13 +16658,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     State transformation to rotation and angular velocity
 !
 !-&
-
 
       integer(ip)           i
       integer(ip)           j
@@ -17217,7 +16673,6 @@ contains
 !
 !     A state transformation matrix XFORM has the following form
 !
-!
 !         [      |     ]
 !         |  R   |  0  |
 !         |      |     |
@@ -17225,7 +16680,6 @@ contains
 !         |  dR  |     |
 !         |  --  |  R  |
 !         [  dt  |     ]
-!
 !
 !     where R is a rotation and dR/dt is the time derivative of that
 !     rotation.  From this we can immediately fill in most of the
@@ -17272,7 +16726,6 @@ contains
 !          d ROT                 t
 !          -----   =  ROT * OMEGA
 !            dt
-!
 !
 !     From this discussion we can see that we need OMEGA transpose.
 !     Here it is.
@@ -17425,9 +16878,7 @@ contains
 !        and range are listed to three decimal places. Output angles
 !        are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECAZL_EX1
 !              IMPLICIT NONE
@@ -17526,10 +16977,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        AZCCW = False; ELPLSZ = False
 !
@@ -17595,7 +17044,6 @@ contains
 !            0.000    1.000    1.000    1.414   90.000   45.000
 !            1.000    1.000    1.000    1.732   45.000   35.264
 !
-!
 !     2) Compute the apparent azimuth and elevation of Venus as seen
 !        from the DSS-14 station.
 !
@@ -17613,13 +17061,11 @@ contains
 !        clockwise and the elevation positive towards the +Z
 !        axis of the DSS-14_TOPO reference frame.
 !
-!
 !        Kernels
 !        =======
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -17658,9 +17104,7 @@ contains
 !
 !           End of meta-kernel.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECAZL_EX2
 !              IMPLICIT NONE
@@ -17780,10 +17224,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Target:                VENUS
 !        Observation time:      2003 OCT 13 06:00:00.000000 UTC
@@ -17798,7 +17240,6 @@ contains
 !        Target azimuth          (deg):         294.48543372
 !        Target elevation        (deg):         -48.94609726
 !        Observer-target distance (km):   245721478.99272084
-!
 !
 ! $ Restrictions
 !
@@ -17821,7 +17262,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rectangular coordinates to range, az and el
@@ -17830,7 +17270,6 @@ contains
 !     convert rectangular to range, azimuth and elevation
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -17975,7 +17414,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: reccyl_ex1.tm
@@ -17997,7 +17435,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -18007,9 +17444,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECCYL_EX1
 !              IMPLICIT NONE
@@ -18086,10 +17521,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -18109,16 +17542,13 @@ contains
 !          Y          (km):     -379226.32931475
 !          Z          (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of rectangular coordinates
 !        and the corresponding cylindrical coordinates.
 !
 !        Corresponding rectangular and cylindrical coordinates are
 !        listed to three decimal places. Output angles are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECCYL_EX2
 !              IMPLICIT NONE
@@ -18183,10 +17613,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !          RECT(1)  RECT(2)  RECT(3)     R       CLON      Z
 !          -------  -------  -------  -------  -------  -------
@@ -18201,7 +17629,6 @@ contains
 !            1.000    0.000    1.000    1.000    0.000    1.000
 !            0.000    1.000    1.000    1.000   90.000    1.000
 !            1.000    1.000    1.000    1.414   45.000    1.000
-!
 !
 ! $ Restrictions
 !
@@ -18248,13 +17675,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rectangular to cylindrical coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -18392,7 +17817,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: reclat_ex1.tm
@@ -18414,7 +17838,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -18424,9 +17847,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECLAT_EX1
 !              IMPLICIT NONE
@@ -18503,10 +17924,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -18526,16 +17945,13 @@ contains
 !          Y          (km):     -379226.32931475
 !          Z          (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of rectangular coordinates
 !        and the corresponding latitudinal coordinates.
 !
 !        Corresponding rectangular and latitudinal coordinates are
 !        listed to three decimal places. Output angles are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECLAT_EX2
 !              IMPLICIT NONE
@@ -18600,10 +18016,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !          RECT(1)  RECT(2)  RECT(3)   RADIUS    LON      LAT
 !          -------  -------  -------  -------  -------  -------
@@ -18618,7 +18032,6 @@ contains
 !            1.000    0.000    1.000    1.414    0.000   45.000
 !            0.000    1.000    1.000    1.414   90.000   45.000
 !            1.000    1.000    1.000    1.732   45.000   35.264
-!
 !
 ! $ Restrictions
 !
@@ -18661,13 +18074,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rectangular to latitudinal coordinates
 !
 !-&
-
 
 !
 !     Local variables.
@@ -18752,7 +18163,6 @@ contains
 !              The units associated with RANGE are those
 !              associated with the input RECTAN.
 !
-!
 !     RA       is the right ascension of RECTAN. This is the angular
 !              distance measured toward the east from the prime
 !              meridian to the meridian containing the input point.
@@ -18760,7 +18170,6 @@ contains
 !              the +X axis towards the +Y axis.
 !
 !              RA is output in radians. The range of RA is [0, 2*pi].
-!
 !
 !     DEC      is the declination of RECTAN. This is the angle from
 !              the XY plane of the ray from the origin through the
@@ -18863,14 +18272,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rectangular coordinates to ra and dec
 !     rectangular to right_ascension and declination
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -18886,11 +18293,9 @@ contains
 !
       call reclat ( rectan, range, ra, dec )
 
-
       if ( ra < 0 ) then
          ra = ra + twopi
       end if
-
 
       return
       end subroutine recrad
@@ -18975,7 +18380,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: recsph_ex1.tm
@@ -18997,7 +18401,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -19007,9 +18410,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECSPH_EX1
 !              IMPLICIT NONE
@@ -19066,7 +18467,6 @@ contains
 !        C
 !              CALL SPHREC ( RADIUS, COLAT, SLON, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -19089,10 +18489,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -19112,16 +18510,13 @@ contains
 !          Y           (km):     -379226.32931475
 !          Z           (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of rectangular coordinates
 !        and the corresponding spherical coordinates.
 !
 !        Corresponding rectangular and spherical coordinates are
 !        listed to three decimal places. Output angles in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECSPH_EX2
 !              IMPLICIT NONE
@@ -19187,10 +18582,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !          RECT(1)  RECT(2)  RECT(3)   RADIUS   COLAT     SLON
 !          -------  -------  -------  -------  -------  -------
@@ -19205,7 +18598,6 @@ contains
 !            1.000    0.000    1.000    1.414   45.000    0.000
 !            0.000    1.000    1.000    1.414   45.000   90.000
 !            1.000    1.000    1.000    1.732   54.736   45.000
-!
 !
 ! $ Restrictions
 !
@@ -19252,13 +18644,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rectangular to spherical coordinates
 !
 !-&
-
 
       real(wp) x
       real(wp) y
@@ -19409,13 +18799,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Sharpen the orthogonality of the columns of a rotation
 !
 !-&
-
 
 !
 !     Unitize the first column of the rotation.
@@ -19553,13 +18941,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     same sign d.p. numbers
 !
 !-&
-
 
       smsgnd = (      (( x > 0 ) .and. ( y > 0 )) &
                  .or. (( x < 0 ) .and. ( y < 0 )) &
@@ -19682,13 +19068,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     same sign integer numbers
 !
 !-&
-
 
       smsgni = (      (( x > 0 ) .and. ( y > 0 )) &
                  .or. (( x < 0 ) .and. ( y < 0 )) &
@@ -19777,7 +19161,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: sphcyl_ex1.tm
@@ -19799,7 +19182,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -19809,9 +19191,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHCYL_EX1
 !              IMPLICIT NONE
@@ -19873,7 +19253,6 @@ contains
 !        C
 !              CALL CYLREC ( R, CLON, Z, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -19902,10 +19281,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -19931,7 +19308,6 @@ contains
 !          Y           (km):     -379226.32931475
 !          Z           (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of spherical coordinates
 !        and the corresponding cylindrical coordinates.
 !
@@ -19939,9 +19315,7 @@ contains
 !        listed to three decimal places. Input and output angles are
 !        in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHCYL_EX2
 !              IMPLICIT NONE
@@ -20016,10 +19390,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !           RADIUS   COLAT     SLON      R       CLON      Z
 !          -------  -------  -------  -------  -------  -------
@@ -20035,7 +19407,6 @@ contains
 !            1.000    0.000  180.000    0.000  180.000    1.000
 !            0.000   90.000   33.000    0.000   33.000    0.000
 !
-!
 !     3) Other than the obvious conversion between coordinate systems
 !        this routine could be used to obtain the axial projection
 !        from a sphere to a cylinder about the z-axis that contains
@@ -20045,9 +19416,7 @@ contains
 !        areas between regions on the sphere and their projections to
 !        the cylinder.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHCYL_EX3
 !              IMPLICIT NONE
@@ -20096,17 +19465,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Coordinates of the projected point on cylinder:
 !
 !          Radius     (km):          97.62960071199
 !          Longitude (deg):          45.00000000000
 !          Z          (km):         -21.64396139381
-!
 !
 ! $ Restrictions
 !
@@ -20147,13 +19513,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spherical to cylindrical coordinates
 !
 !-&
-
 
 !
 !     Local Variables
@@ -20275,14 +19639,12 @@ contains
 !              90         0
 !             -45       135
 !
-!
 !     2) Compute the spherical coordinates of the position of the Moon
 !        as seen from the Earth, and convert them to latitudinal and
 !        rectangular coordinates.
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -20305,7 +19667,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -20315,9 +19676,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHLAT_EX2
 !              IMPLICIT NONE
@@ -20380,7 +19739,6 @@ contains
 !        C
 !              CALL LATREC ( RADIUS, LON, LAT, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -20409,10 +19767,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -20438,7 +19794,6 @@ contains
 !          Y           (km):     -379226.32931475
 !          Z           (km):     -126505.93063865
 !
-!
 !     3) Create a table showing a variety of spherical coordinates
 !        and the corresponding cylindrical coordinates.
 !
@@ -20446,9 +19801,7 @@ contains
 !        listed to three decimal places. Input and output angles
 !        are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHLAT_EX3
 !              IMPLICIT NONE
@@ -20523,10 +19876,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !              R     COLAT     SLON    RADIUS    LON      LAT
 !          -------  -------  -------  -------  -------  -------
@@ -20541,7 +19892,6 @@ contains
 !            1.414  135.000  180.000    1.414  180.000  -45.000
 !            1.000    0.000  180.000    1.000  180.000   90.000
 !            0.000   90.000   33.000    0.000   33.000    0.000
-!
 !
 ! $ Restrictions
 !
@@ -20582,13 +19932,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spherical to latitudinal coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -20696,7 +20044,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: sphrec_ex1.tm
@@ -20718,7 +20065,6 @@ contains
 !              de421.bsp                     Planetary ephemeris
 !              naif0012.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -20728,9 +20074,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHREC_EX1
 !              IMPLICIT NONE
@@ -20787,7 +20131,6 @@ contains
 !        C
 !              CALL SPHREC ( RADIUS, COLAT, SLON, RECTAN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Original rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -20810,10 +20153,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Original rectangular coordinates:
 !
@@ -20833,16 +20174,13 @@ contains
 !          Y           (km):     -379226.32931475
 !          Z           (km):     -126505.93063865
 !
-!
 !     2) Create a table showing a variety of spherical coordinates
 !        and the corresponding rectangular coordinates.
 !
 !        Corresponding spherical and rectangular coordinates are
 !        listed to three decimal places. Input angles are in degrees.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHREC_EX2
 !              IMPLICIT NONE
@@ -20915,10 +20253,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !           RADIUS   COLAT     SLON   RECT(1)  RECT(2)  RECT(3)
 !          -------  -------  -------  -------  -------  -------
@@ -20933,7 +20269,6 @@ contains
 !            1.414   45.000    0.000    1.000    0.000    1.000
 !            1.414   45.000   90.000    0.000    1.000    1.000
 !            1.732   54.736   45.000    1.000    1.000    1.000
-!
 !
 ! $ Restrictions
 !
@@ -20985,13 +20320,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spherical to rectangular coordinates
 !
 !-&
-
 
 !
 !     Local Variables
@@ -21090,9 +20423,7 @@ contains
 !
 !     1) Given a 3x3 double precision matrix, compute its trace.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TRACE_EX1
 !              IMPLICIT NONE
@@ -21117,7 +20448,6 @@ contains
 !             .                                 5.D0, -2.D0,  0.D0,
 !             .                                 7.D0,  8.D0, -1.D0  /
 !
-!
 !              WRITE(*,'(A)') 'MATRIX:'
 !              DO I=1, 3
 !
@@ -21133,10 +20463,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        MATRIX:
 !           3.0   5.0   7.0
@@ -21144,7 +20472,6 @@ contains
 !           4.0   0.0  -1.0
 !
 !        Trace:  0.0
-!
 !
 ! $ Restrictions
 !
@@ -21180,13 +20507,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     trace of a 3x3_matrix
 !
 !-&
-
 
       trace = matrix(1,1) + matrix(2,2) + matrix(3,3)
 
@@ -21272,9 +20597,7 @@ contains
 !
 !     1) Given a 4x4 double precision matrix, compute its trace.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TRACEG_EX1
 !              IMPLICIT NONE
@@ -21307,7 +20630,6 @@ contains
 !             .                          7.D0,  8.D0, -1.D0,  1.D0,
 !             .                          3.D0,  1.D0,  0.D0,  0.D0  /
 !
-!
 !              WRITE(*,'(A)') 'Matrix:'
 !              DO I=1, NDIM
 !
@@ -21323,10 +20645,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Matrix:
 !           3.0   5.0   7.0   3.0
@@ -21335,7 +20655,6 @@ contains
 !           0.0   0.0   1.0   0.0
 !
 !        Trace:  0.0
-!
 !
 ! $ Restrictions
 !
@@ -21373,13 +20692,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     trace of a nxn_matrix
 !
 !-&
-
 
       integer(ip)     i
 
@@ -21469,9 +20786,7 @@ contains
 !        product of each vector in first set and the corresponding
 !        vector in the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM UCRSS_EX1
 !              IMPLICIT NONE
@@ -21523,10 +20838,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector A                :   0.0  1.0  0.0
 !        Vector B                :   3.0  0.0  0.0
@@ -21535,7 +20848,6 @@ contains
 !        Vector A                :   5.0  5.0  5.0
 !        Vector B                :  -2.0 -2.0 -2.0
 !        Normalized cross product:   0.0  0.0  0.0
-!
 !
 ! $ Restrictions
 !
@@ -21569,13 +20881,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unitized cross product
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -21586,7 +20896,6 @@ contains
 !        cannot occur.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -21727,9 +21036,7 @@ contains
 !     1) Define a set of vectors and compute their corresponding unit
 !        vector and magnitudes.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM UNORM_EX1
 !              IMPLICIT NONE
@@ -21773,10 +21080,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector     :    5.00000000  12.00000000   0.00000000
 !        Unit vector:    0.38461538   0.92307692   0.00000000
@@ -21785,7 +21090,6 @@ contains
 !        Vector     :    0.00000010   0.00000020   0.00000020
 !        Unit vector:    0.33333333   0.66666667   0.66666667
 !        Magnitude:      0.00000030
-!
 !
 ! $ Restrictions
 !
@@ -21825,13 +21129,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional unit vector and norm
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -21937,9 +21239,7 @@ contains
 !     1) Define a set of n-dimensional vectors and compute their
 !        corresponding unit vectors and magnitudes.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM UNORMG_EX1
 !              IMPLICIT NONE
@@ -21987,10 +21287,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector     :   5.0000000  12.0000000   0.0000000   4.0000000
 !        Unit vector:   0.3676073   0.8822575   0.0000000   0.2940858
@@ -21999,7 +21297,6 @@ contains
 !        Vector     :   0.0000010   0.0000020   0.0000020   0.0000000
 !        Unit vector:   0.3333333   0.6666667   0.6666667   0.0000000
 !        Magnitude  :   0.0000030
-!
 !
 ! $ Restrictions
 !
@@ -22042,13 +21339,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     n-dimensional unit vector and norm
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -22080,7 +21375,6 @@ contains
             vout(i) = 0.0_wp
          end do
       end if
-!
       return
       end subroutine unormg
 
@@ -22150,9 +21444,7 @@ contains
 !        of each vector in first set with the corresponding vector in
 !        the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VADD_EX1
 !              IMPLICIT NONE
@@ -22200,10 +21492,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector A  :    0.10E+01   0.20E+01   0.30E+01
 !        Vector B  :    0.40E+01   0.50E+01   0.60E+01
@@ -22212,7 +21502,6 @@ contains
 !        Vector A  :    0.10E-06   0.10E+24   0.10E-08
 !        Vector B  :    0.10E+25   0.10E+24   0.00E+00
 !        Sum vector:    0.10E+25   0.20E+24   0.10E-08
-!
 !
 ! $ Restrictions
 !
@@ -22254,13 +21543,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional vector addition
 !
 !-&
-
 
       vout(1) = v1(1) + v2(1)
       vout(2) = v1(2) + v2(2)
@@ -22338,9 +21625,7 @@ contains
 !        of each vector in first set with the corresponding vector in
 !        the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VADDG_EX1
 !              IMPLICIT NONE
@@ -22393,10 +21678,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector A  :    0.10E+01   0.20E+01   0.30E+01   0.40E+01
 !        Vector B  :    0.40E+01   0.50E+01   0.60E+01   0.70E+01
@@ -22405,7 +21688,6 @@ contains
 !        Vector A  :    0.10E-06   0.10E+24   0.10E-08   0.00E+00
 !        Vector B  :    0.10E+25   0.10E+24   0.00E+00   0.30E-22
 !        Sum vector:    0.10E+25   0.20E+24   0.10E-08   0.30E-22
-!
 !
 ! $ Restrictions
 !
@@ -22454,13 +21736,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     n-dimensional vector addition
 !
 !-&
-
 
 !
 !     Local variables
@@ -22548,9 +21828,7 @@ contains
 !        each vector in first set and the corresponding vector in
 !        the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VCRSS_EX1
 !              IMPLICIT NONE
@@ -22601,10 +21879,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector A     :   0.0  1.0  0.0
 !        Vector B     :   1.0  0.0  0.0
@@ -22613,7 +21889,6 @@ contains
 !        Vector A     :   5.0  5.0  5.0
 !        Vector B     :  -1.0 -1.0 -1.0
 !        Cross product:   0.0  0.0  0.0
-!
 !
 ! $ Restrictions
 !
@@ -22658,13 +21933,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     vector cross product
 !
 !-&
-
 
 !
 !     Local variables
@@ -22683,7 +21956,6 @@ contains
       vout(1) = vtemp(1)
       vout(2) = vtemp(2)
       vout(3) = vtemp(3)
-!
       return
       end subroutine vcrss
 
@@ -22752,14 +22024,12 @@ contains
 !     Using this function saves you the annoyance of declaring local
 !     storage for the difference vector DIFF.
 !
-!
 !     The Euclidean norm of a three-dimensional vector (x, y, z) is
 !     defined as
 !
 !                                     1/2
 !             2        2        2
 !        (   x    +   y    +   z    ).
-!
 !
 !     This number is the distance of the point (x, y, z) from the
 !     origin. If A and B are two vectors whose components are
@@ -22769,9 +22039,7 @@ contains
 !     then the distance between A and B is the norm of the difference
 !     A - B, which has components
 !
-!
 !        (  A(1) - B(1),  A(2) - B(2),  A(3) - B(3)  ).
-!
 !
 !     A related routine is VDISTG, which computes the distance between
 !     two vectors of general dimension.
@@ -22787,7 +22055,6 @@ contains
 !            ( 5.0D0,  7.0D0,  12.D0 ),
 !
 !         VDIST (V1, V2) will be 13.D0.
-!
 !
 !     2)  If VGR2 and NEP are states of the Voyager 2 spacecraft and
 !         Neptune with respect to some common center at a given time
@@ -22829,13 +22096,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     distance between 3-dimensional vectors
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -22845,7 +22110,6 @@ contains
 !     Local variables
 !
       real(wp)              diff ( 3 )
-
 
 !
 !     No surprises.
@@ -22994,13 +22258,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     distance between n-dimensional vectors
 !
 !-&
-
 
 !
 !     Local variables
@@ -23026,7 +22288,6 @@ contains
       do i = 1, ndim
          scale = max (  scale,  dabs ( v1(i) - v2(i) )  )
       end do
-
 
       if ( scale == 0.0_wp ) then
 
@@ -23128,9 +22389,7 @@ contains
 !     1) Suppose that you have a set of double precision 3-dimensional
 !        vectors. Check if they are orthogonal to the Z-axis.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VDOT_EX1
 !              IMPLICIT NONE
@@ -23189,10 +22448,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector (V1):    1.0   0.0   0.0
 !        V1 and Z are orthogonal.
@@ -23205,7 +22462,6 @@ contains
 !
 !        Input vector (V1):    0.0   0.0   1.0
 !        V1 and Z are NOT orthogonal.
-!
 !
 ! $ Restrictions
 !
@@ -23241,16 +22497,13 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     dot product 3-dimensional vectors
 !
 !-&
 
-
       vdot = v1(1)*v2(1) + v1(2)*v2(2) + v1(3)*v2(3)
-!
       return
       end function vdot
 
@@ -23336,9 +22589,7 @@ contains
 !        vectors. Check if they are orthogonal to the Z-axis in
 !        n-dimensional space.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VDOTG_EX1
 !              IMPLICIT NONE
@@ -23401,10 +22652,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector (V1):    1.0   0.0   0.0   0.0
 !        V1 and Z are orthogonal.
@@ -23420,7 +22669,6 @@ contains
 !
 !        Input vector (V1):    0.0   0.0   0.0   1.0
 !        V1 and Z are orthogonal.
-!
 !
 ! $ Restrictions
 !
@@ -23456,16 +22704,13 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     dot product of n-dimensional vectors
 !
 !-&
 
-
       integer(ip) i
-!
       vdotg = 0.0_wp
       do i = 1, ndim
          vdotg = vdotg + v1(i)*v2(i)
@@ -23544,9 +22789,7 @@ contains
 !        extract the time, the quaternion and the angular velocity
 !        vector into separate variables for their processing.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VEQU_EX1
 !              IMPLICIT NONE
@@ -23590,17 +22833,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Time            : 283480.753
 !        Quaternion      :
 !           0.9999962200   0.0000000000   0.0000000000  -0.0027499965
 !        Angular velocity:
 !           0.0000000000   0.0000000000   0.0100000000
-!
 !
 ! $ Restrictions
 !
@@ -23634,13 +22874,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     assign a 3-dimensional vector to another
 !
 !-&
-
 
       vout(1) = vin(1)
       vout(2) = vin(2)
@@ -23726,9 +22964,7 @@ contains
 !        extract the time, the quaternion and the angular velocity
 !        vector into separate variables for their processing.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VEQUG_EX1
 !              IMPLICIT NONE
@@ -23772,17 +23008,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Time            : 283480.753
 !        Quaternion      :
 !           0.9999962200   0.0000000000   0.0000000000  -0.0027499965
 !        Angular velocity:
 !           0.0000000000   0.0000000000   0.0100000000
-!
 !
 ! $ Restrictions
 !
@@ -23816,13 +23049,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     assign an n-dimensional vector to another
 !
 !-&
-
 
 !
 !     Local variables
@@ -23905,9 +23136,7 @@ contains
 !     1) Define a set of vectors and compute their corresponding unit
 !        vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VHAT_EX1
 !              IMPLICIT NONE
@@ -23949,17 +23178,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector     :    5.00000000  12.00000000   0.00000000
 !        Unit vector:    0.38461538   0.92307692   0.00000000
 !
 !        Vector     :    0.00000010   0.00000020   0.00000020
 !        Unit vector:    0.33333333   0.66666667   0.66666667
-!
 !
 ! $ Restrictions
 !
@@ -23999,13 +23225,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unitize a 3-dimensional vector
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -24117,9 +23341,7 @@ contains
 !     1) Define a set of n-dimensional vectors and find the unit vector
 !        along each of them.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VHATG_EX1
 !              IMPLICIT NONE
@@ -24165,17 +23387,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector:    5.0000000  12.0000000   0.0000000   0.0000000
 !        Unit vector :    0.3846154   0.9230769   0.0000000   0.0000000
 !
 !        Input vector:    0.0000001   0.0000002   0.0000002   0.0000000
 !        Unit vector :    0.3333333   0.6666667   0.6666667   0.0000000
-!
 !
 ! $ Restrictions
 !
@@ -24217,13 +23436,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unitize a n-dimensional vector
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -24257,7 +23474,6 @@ contains
             vout(i) = 0.0_wp
          end do
       end if
-!
       return
       end subroutine vhatg
 
@@ -24368,13 +23584,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unitize a 3-dimensional vector in place
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -24384,7 +23598,6 @@ contains
 !     Local variables
 !
       real(wp)              vmag
-
 
 !
 !     Obtain the magnitude of V.
@@ -24497,9 +23710,7 @@ contains
 !        an elliptical footprint, from the known semi-major
 !        and semi-minor axes.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VLCOM_EX1
 !              IMPLICIT NONE
@@ -24534,7 +23745,6 @@ contains
 !              DATA                  SMINOR /
 !             .                    0.D0,       0.035014D0,  0.D0 /
 !
-!
 !        C
 !        C     Compute the vectors of interest and display them
 !        C
@@ -24554,10 +23764,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         1:  0.070115  0.000000  0.000000
 !         2:  0.064778  0.013399  0.000000
@@ -24576,14 +23784,11 @@ contains
 !        15:  0.049579 -0.024759  0.000000
 !        16:  0.064778 -0.013399  0.000000
 !
-!
 !     2) As a second example, suppose that U and V are orthonormal
 !        vectors that form a basis of a plane. Moreover suppose that we
 !        wish to project a vector X onto this plane.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VLCOM_EX2
 !              IMPLICIT NONE
@@ -24630,14 +23835,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Input vector             :    4.0  35.0  -5.0
 !        Projection into 2-d plane:  -15.5  15.5  -5.0
-!
 !
 ! $ Restrictions
 !
@@ -24674,13 +23876,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     linear combination of two 3-dimensional vectors
 !
 !-&
-
 
       sum(1) = a*v1(1) + b*v2(1)
       sum(2) = a*v1(2) + b*v2(2)
@@ -24782,9 +23982,7 @@ contains
 !        16 vectors aiming at visualizing the field-of-view in
 !        three dimensional space.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VLCOM3_EX1
 !              IMPLICIT NONE
@@ -24856,10 +24054,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         1:  0.070115  0.000000  1.000000
 !         2:  0.064777  0.013399  1.000000
@@ -24877,7 +24073,6 @@ contains
 !        14:  0.026832 -0.032349  1.000000
 !        15:  0.049578 -0.024759  1.000000
 !        16:  0.064777 -0.013399  1.000000
-!
 !
 ! $ Restrictions
 !
@@ -24914,13 +24109,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     linear combination of three 3-dimensional vectors
 !
 !-&
-
 
       sum(1) = a*v1(1) + b*v2(1) + c*v3(1)
       sum(2) = a*v1(2) + b*v2(2) + c*v3(2)
@@ -25013,9 +24206,7 @@ contains
 !     1) Perform the projection of a 4-dimensional vector into a
 !        2-dimensional plane in 4-space.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VLCOMG_EX1
 !              IMPLICIT NONE
@@ -25070,14 +24261,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Input vector             :    4.0  35.0  -5.0   7.0
 !        Projection into 2-d plane:   -8.0   8.0  -5.0  -8.0
-!
 !
 ! $ Restrictions
 !
@@ -25114,13 +24302,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     linear combination of two n-dimensional vectors
 !
 !-&
-
 
 !
 !     Local variables
@@ -25206,9 +24392,7 @@ contains
 !
 !     1) Define a set of n-dimensional vectors and negate each of them.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VMINUG_EX1
 !              IMPLICIT NONE
@@ -25254,17 +24438,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector  :   -10.0   15.0   -5.0   20.0
 !        Negated vector:    10.0  -15.0    5.0  -20.0
 !
 !        Input vector  :     0.0    0.0    0.0    0.0
 !        Negated vector:    -0.0   -0.0   -0.0   -0.0
-!
 !
 ! $ Restrictions
 !
@@ -25306,16 +24487,13 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     negate an n-dimensional vector
 !
 !-&
 
-
       integer(ip) i
-!
       do i = 1, ndim
          vout(i) = -vin(i)
       end do
@@ -25392,9 +24570,7 @@ contains
 !
 !     1) Define a set of 3-dimensional vectors and negate each of them.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VMINUS_EX1
 !              IMPLICIT NONE
@@ -25436,17 +24612,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector  :    1.0  -2.0   0.0
 !        Negated vector:   -1.0   2.0  -0.0
 !
 !        Input vector  :    0.0   0.0   0.0
 !        Negated vector:   -0.0  -0.0  -0.0
-!
 !
 ! $ Restrictions
 !
@@ -25486,18 +24659,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     negate a 3-dimensional vector
 !
 !-&
 
-
       vout(1) = -v1(1)
       vout(2) = -v1(2)
       vout(3) = -v1(3)
-!
       return
       end subroutine vminus
 
@@ -25573,9 +24743,7 @@ contains
 !     1) Define a set of 3-dimensional vectors and compute the
 !        magnitude of each vector within.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VNORM_EX1
 !              IMPLICIT NONE
@@ -25621,10 +24789,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector:   0.10E+01  0.20E+01  0.20E+01
 !        Magnitude   :   3.00000000000000000000
@@ -25634,7 +24800,6 @@ contains
 !
 !        Input vector:  -0.50E-16  0.00E+00  0.12E-15
 !        Magnitude   :   0.00000000000000013000
-!
 !
 ! $ Restrictions
 !
@@ -25668,13 +24833,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     norm of 3-dimensional vector
 !
 !-&
-
 
       real(wp) v1max
 
@@ -25696,7 +24859,6 @@ contains
                                 + (v1(2)/v1max)**2 &
                                 + (v1(3)/v1max)**2)
       end if
-!
       return
       end function vnorm
 
@@ -25781,7 +24943,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM VNORMG_EX1
 !              IMPLICIT NONE
 !
@@ -25811,13 +24972,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Magnitude of v1:    77.132673362201047
-!
 !
 !     2) The following table show the correlation between various input
 !        vectors V1 and VNORMG:
@@ -25862,13 +25020,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     norm of n-dimensional vector
 !
 !-&
-
 
 !
 !     Local variables.
@@ -25910,7 +25066,6 @@ contains
          vnormg = v1max * dsqrt (vnormg)
 
       end if
-!
       return
       end function vnormg
 
@@ -26006,9 +25161,7 @@ contains
 !     1) Compute an upward normal of an equilateral triangle lying
 !        in the X-Y plane and centered at the origin.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VPACK_EX1
 !              IMPLICIT NONE
@@ -26021,7 +25174,6 @@ contains
 !              DOUBLE PRECISION      V1     ( 3 )
 !              DOUBLE PRECISION      V2     ( 3 )
 !              DOUBLE PRECISION      V3     ( 3 )
-!
 !
 !              S = SQRT(3.D0)/2
 !
@@ -26041,13 +25193,10 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        NORMAL =   0.0000000000000  0.0000000000000  2.5980762113533
-!
 !
 ! $ Restrictions
 !
@@ -26081,13 +25230,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pack three scalar components into a vector
 !
 !-&
-
 
 !
 !     Just shorthand, like it says above.
@@ -26223,13 +25370,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     perpendicular component of a 3-vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -26239,7 +25384,6 @@ contains
       real(wp)              r(3)
       real(wp)              t(3)
       real(wp)              v(3)
-
 
 !
 !     Error free routine:  no check-in.
@@ -26369,7 +25513,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM VPROJ_EX1
 !              IMPLICIT NONE
 !
@@ -26423,10 +25566,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector A  :   6.0  6.0  6.0
 !        Vector B  :   2.0  0.0  0.0
@@ -26443,7 +25584,6 @@ contains
 !        Vector A  :   6.0  0.0  0.0
 !        Vector B  :   0.0  0.0  9.0
 !        Projection:   0.0  0.0  0.0
-!
 !
 ! $ Restrictions
 !
@@ -26485,13 +25625,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional vector projection
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -26503,7 +25641,6 @@ contains
 !        clear (or fast) as just reading the axes from data.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -26517,7 +25654,6 @@ contains
       real(wp)              r(3)
       real(wp)              t(3)
       real(wp)              scale
-
 
       biga = max ( dabs(a(1)), dabs(a(2)), dabs(a(3)) )
       bigb = max ( dabs(b(1)), dabs(b(2)), dabs(b(3)) )
@@ -26636,7 +25772,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM VPROJG_EX1
 !              IMPLICIT NONE
 !
@@ -26689,10 +25824,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Vector A  :   6.0  6.0  6.0  0.0
 !        Vector B  :   2.0  0.0  0.0  0.0
@@ -26709,7 +25842,6 @@ contains
 !        Vector A  :   6.0  0.0  0.0  0.0
 !        Vector B  :   0.0  0.0  9.0  0.0
 !        Projection:   0.0  0.0  0.0  0.0
-!
 !
 ! $ Restrictions
 !
@@ -26763,13 +25895,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     n-dimensional vector projection
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -26781,7 +25911,6 @@ contains
       real(wp) adotb
       real(wp) bdotb
       real(wp) scale
-
 
       adotb  = vdotg (a,b,ndim)
       bdotb  = vdotg (b,b,ndim)
@@ -26962,29 +26091,21 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     relative difference of 3-dimensional vectors
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       real(wp)              nunorm
       real(wp)              denorm
-
-
-
-
-
 
 !
 !     If the numerator is zero then set VREL equal to zero. Otherwise,
@@ -27006,7 +26127,6 @@ contains
          vrel = nunorm / denorm
 
        end if
-
 
       return
       end function vrel
@@ -27206,28 +26326,21 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     relative difference of n-dimensional vectors
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
 !
       real(wp)              nunorm
       real(wp)              denorm
-
-
-
-
 
 !
 !     If the numerator is zero then set VRELG equal to zero. Otherwise,
@@ -27249,7 +26362,6 @@ contains
          vrelg = nunorm / denorm
 
        end if
-
 
       return
       end function vrelg
@@ -27338,7 +26450,6 @@ contains
 !        ( 1, 0, 0 )                (  0, 1, 0 )
 !        ( 0, 1, 0 )                ( -1, 0, 0 )
 !
-!
 !     If AXIS = ( 0, 1, 0 ) and THETA = PI/2 then the following results
 !     for R will be obtained
 !
@@ -27347,7 +26458,6 @@ contains
 !        ( 1, 2, 3 )                (  3, 2, -1 )
 !        ( 1, 0, 0 )                (  0, 0, -1 )
 !        ( 0, 1, 0 )                (  0, 1,  0 )
-!
 !
 !     If AXIS = ( 1, 1, 1 ) and THETA = PI/2 then the following results
 !     for R will be obtained
@@ -27397,13 +26507,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     vector rotation about an axis
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -27419,7 +26527,6 @@ contains
       real(wp) v1     (3)
       real(wp) v2     (3)
       real(wp) x      (3)
-
 
 !
 !     Just in case the user tries to rotate about the zero vector -
@@ -27466,7 +26573,6 @@ contains
 !
       call vadd ( rplane, p, r )
 
-!
       return
       end subroutine vrotv
 
@@ -27541,9 +26647,7 @@ contains
 !     1) Define a sets of scalar double precision values and use them
 !        to scale a given 3-dimensional vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VSCL_EX1
 !              IMPLICIT NONE
@@ -27570,7 +26674,6 @@ contains
 !
 !              DATA                  V1   / 1.D0, 2.D0, -3.D0 /
 !
-!
 !              WRITE(*,'(A,3F6.1)') 'Input vector : ', V1
 !              WRITE(*,*)
 !
@@ -27589,10 +26692,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector :    1.0   2.0  -3.0
 !
@@ -27604,7 +26705,6 @@ contains
 !
 !        Scale factor :   -1.0
 !        Output vector:   -1.0  -2.0   3.0
-!
 !
 ! $ Restrictions
 !
@@ -27647,13 +26747,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional vector scaling
 !
 !-&
-
 
       vout(1) = s * v1(1)
       vout(2) = s * v1(2)
@@ -27736,9 +26834,7 @@ contains
 !     1) Define a sets of scalar double precision values and use them
 !        to scale a given n-dimensional vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VSCLG_EX1
 !              IMPLICIT NONE
@@ -27768,7 +26864,6 @@ contains
 !
 !              DATA                  V1   / 1.D0, 2.D0, -3.D0, 4.D0  /
 !
-!
 !              WRITE(*,'(A,4F6.1)') 'Input vector : ', V1
 !              WRITE(*,*)
 !
@@ -27787,10 +26882,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector :    1.0   2.0  -3.0   4.0
 !
@@ -27802,7 +26895,6 @@ contains
 !
 !        Scale factor :   -1.0
 !        Output vector:   -1.0  -2.0   3.0  -4.0
-!
 !
 ! $ Restrictions
 !
@@ -27844,13 +26936,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     n-dimensional vector scaling
 !
 !-&
-
 
 !
 !     Local variables
@@ -27971,13 +27061,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional vector scaling in place
 !
 !-&
-
 
       v(1) = s * v(1)
       v(2) = s * v(2)
@@ -28090,9 +27178,7 @@ contains
 !        angular separation between each vector in first set and the
 !        corresponding vector in the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VSEP_EX1
 !              IMPLICIT NONE
@@ -28146,10 +27232,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        First vector            :    1.0   0.0   0.0
 !        Second vector           :    1.0   0.0   0.0
@@ -28162,7 +27246,6 @@ contains
 !        First vector            :    3.0   0.0   0.0
 !        Second vector           :   -5.0   0.0   0.0
 !        Angular separation (rad):    3.1415926536
-!
 !
 ! $ Restrictions
 !
@@ -28216,13 +27299,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     angular separation of 3-dimensional vectors
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -28392,9 +27473,7 @@ contains
 !        angular separation between each vector in first set and the
 !        corresponding vector in the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VSEPG_EX1
 !              IMPLICIT NONE
@@ -28453,10 +27532,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        First vector            :    1.0   0.0   0.0   0.0
 !        Second vector           :    1.0   0.0   0.0   0.0
@@ -28469,7 +27546,6 @@ contains
 !        First vector            :    3.0   0.0   0.0   0.0
 !        Second vector           :   -5.0   0.0   0.0   0.0
 !        Angular separation (rad):    3.1415926536
-!
 !
 ! $ Restrictions
 !
@@ -28518,13 +27594,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     angular separation of n-dimensional vectors
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -28561,7 +27635,6 @@ contains
          vsepg = 0.0_wp
          return
       end if
-
 
       if      ( vdotg (v1, v2, ndim) > 0 ) then
 
@@ -28672,9 +27745,7 @@ contains
 !        difference from each vector in first set with the
 !        corresponding vector in the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VSUB_EX1
 !              IMPLICIT NONE
@@ -28724,10 +27795,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        First vector :    1.0   2.0   3.0
 !        Second vector:    1.0   1.0   1.0
@@ -28740,7 +27809,6 @@ contains
 !        First vector :    1.0   2.0   3.0
 !        Second vector:   -1.0   2.0  -3.0
 !        Difference   :    2.0   0.0   6.0
-!
 !
 ! $ Restrictions
 !
@@ -28790,13 +27858,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional vector subtraction
 !
 !-&
-
 
       vout(1) = v1(1) - v2(1)
       vout(2) = v1(2) - v2(2)
@@ -28884,9 +27950,7 @@ contains
 !        difference from each vector in first set with the
 !        corresponding vector in the second set.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VSUBG_EX1
 !              IMPLICIT NONE
@@ -28941,10 +28005,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        First vector :    1.0   2.0   3.0   4.0
 !        Second vector:    1.0   1.0   1.0   1.0
@@ -28957,7 +28019,6 @@ contains
 !        First vector :    1.0   2.0   3.0   4.0
 !        Second vector:   -1.0   2.0  -3.0   4.0
 !        Difference   :    2.0   0.0   6.0   0.0
-!
 !
 ! $ Restrictions
 !
@@ -29006,13 +28067,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     n-dimensional vector subtraction
 !
 !-&
-
 
 !
 !     Local variables
@@ -29114,9 +28173,7 @@ contains
 !        column vector, a 3x3 matrix, and a second 3-dimensional column
 !        vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VTMV_EX1
 !              IMPLICIT NONE
@@ -29144,7 +28201,6 @@ contains
 !             .                                 1.D0,  0.D0, 0.D0,
 !             .                                 0.D0,  0.D0, 1.D0  /
 !              DATA                  V2      /  1.D0,  1.D0, 1.D0  /
-!
 !
 !              WRITE(*,'(A)') 'V1:'
 !              DO I = 1, 3
@@ -29176,13 +28232,10 @@ contains
 !              WRITE(*,'(A,F6.1)') 'Transpose of V1 times MATRIX '
 !             .                 // 'times V2:', VTMV ( V1, MATRIX, V2 )
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        V1:
 !           2.0
@@ -29200,7 +28253,6 @@ contains
 !           1.0
 !
 !        Transpose of V1 times MATRIX times V2:   4.0
-!
 !
 ! $ Restrictions
 !
@@ -29234,13 +28286,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     3-dimensional vector_transpose times matrix times vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -29396,13 +28446,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     n-dimensional vector_transpose times matrix times vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -29524,7 +28572,6 @@ contains
 !        Use the kernel shown below, an IK defining the three
 !        frequencies used by an instrument with NAIF ID -999001.
 !
-!
 !           KPL/IK
 !
 !           File name: vupack_ex1.ti
@@ -29541,12 +28588,9 @@ contains
 !
 !           \begintext
 !
-!
 !           End of IK
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VUPACK_EX1
 !              IMPLICIT NONE
@@ -29598,15 +28642,12 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Blue  (nm): 475.00
 !        Green (nm): 550.00
 !        Red   (nm): 650.00
-!
 !
 ! $ Restrictions
 !
@@ -29644,13 +28685,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     unpack three scalar components from a vector
 !
 !-&
-
 
 !
 !     Just shorthand, like it says above.
@@ -29739,14 +28778,12 @@ contains
 !                        .
 !                        .
 !
-!
 !         These can be replaced with the code
 !
 !            IF (  VZERO ( V )  ) THEN
 !                        .
 !                        .
 !                        .
-!
 !
 !      2)  Check that a normal vector is non-zero before creating
 !         a plane with PNV2PL:
@@ -29794,17 +28831,14 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether a 3-dimensional vector is the zero vector
 !
 !-&
 
-
 !
 !     `Just do it'.
-!
 !
       vzero   =        (  v(1) == 0.0_wp  ) &
                 .and.  (  v(2) == 0.0_wp  ) &
@@ -29897,9 +28931,7 @@ contains
 !     1) Given a set of n-dimensional vectors, check which ones are
 !        the zero vector.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VZEROG_EX1
 !              IMPLICIT NONE
@@ -29960,10 +28992,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Input vector:   0.0000000  0.0000000  0.0000000  0.0000002
 !           Not all elements of the vector are zero.
@@ -29971,13 +29001,10 @@ contains
 !        Input vector:   0.0000000  0.0000000  0.0000000  0.0000000
 !           The zero vector.
 !
-!
 !     2) Define a unit quaternion and confirm that it is non-zero
 !        before converting it to a rotation matrix.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM VZEROG_EX2
 !              IMPLICIT NONE
@@ -30040,10 +29067,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Quaternion :   0.7071068   0.0000000   0.0000000  -0.7071068
 !        Norm       :   1.0000000
@@ -30051,7 +29076,6 @@ contains
 !           0.0000000   1.0000000   0.0000000
 !          -1.0000000   0.0000000  -0.0000000
 !          -0.0000000   0.0000000   1.0000000
-!
 !
 ! $ Restrictions
 !
@@ -30086,13 +29110,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether an n-dimensional vector is the zero vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -30212,7 +29234,6 @@ contains
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: xf2rav_ex1.tm
@@ -30244,9 +29265,7 @@ contains
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM XF2RAV_EX1
 !              IMPLICIT NONE
@@ -30308,10 +29327,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Rotation matrix:
 !          -0.18603277688  -0.98254352801   0.00014659080
@@ -30320,7 +29337,6 @@ contains
 !
 !        Angular velocity:
 !           0.00000004025   0.00000000324   0.00007292114
-!
 !
 ! $ Restrictions
 !
@@ -30353,13 +29369,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     State transformation to rotation and angular velocity
 !
 !-&
-
 
       integer(ip)           i
       integer(ip)           j
@@ -30367,10 +29381,8 @@ contains
       real(wp)              drdt  ( 3, 3 )
       real(wp)              omega ( 3, 3 )
 
-
 !
 !     A state transformation matrix XFORM has the following form
-!
 !
 !         [      |     ]
 !         |  R   |  0  |
@@ -30379,7 +29391,6 @@ contains
 !         |  dR  |     |
 !         |  --  |  R  |
 !         [  dt  |     ]
-!
 !
 !     where R is a rotation and dR/dt is the time derivative of that
 !     rotation.  From this we can immediately read the rotation and
@@ -30423,8 +29434,6 @@ contains
 !                       d ROT
 !         OMEGA    =   -------  *  ROT
 !                         dt
-!
-!
 !
       call mtxm ( drdt, rot, omega )
 
@@ -30512,9 +29521,7 @@ contains
 !
 !     1) Given a 3x3 double precision matrix, find its transpose.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM XPOSE_EX1
 !              IMPLICIT NONE
@@ -30557,10 +29564,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Input matrix (M1):
 !
@@ -30573,7 +29578,6 @@ contains
 !           1.0   0.0   0.0
 !           2.0   4.0   6.0
 !           3.0   5.0   0.0
-!
 !
 ! $ Restrictions
 !
@@ -30613,13 +29617,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transpose a 3x3_matrix
 !
 !-&
-
 
 !
 !     Local variables
@@ -30755,7 +29757,6 @@ contains
 !                 .                   .
 !                m_nrowncol          m_nrowncol
 !
-!
 !     For those familiar with permutations, this algorithm relies
 !     upon the fact that the transposition of a matrix, which has
 !     been stored as a string, is simply the action of a
@@ -30837,13 +29838,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transpose a matrix general
 !
 !-&
-
 
 !
 !     Local Variables
@@ -30860,8 +29859,6 @@ contains
       integer(ip)      r
       integer(ip)      m
       integer(ip)      n
-
-
 
 !
 !     Take care of dumb cases first.
@@ -30911,7 +29908,6 @@ contains
          xposem(dest) = source
          dest         = 0
          moved        = moved + 1
-
 
 !
 !        Find the next element of the matrix that has not already been
@@ -31043,7 +30039,6 @@ contains
 !                 .                   .
 !                m_nrowncol          m_nrowncol
 !
-!
 !     For those familiar with permutations, this algorithm relies
 !     upon the fact that the transposition of a matrix, which has
 !     been stored as a 1-dimensional array, is simply the action of a
@@ -31096,13 +30091,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transpose a matrix general
 !
 !-&
-
 
 !
 !     Local Variables
@@ -31118,7 +30111,6 @@ contains
       integer(ip)           nmoves
       integer(ip)           r
       integer(ip)           start
-
 
 !
 !     Take care of dumb cases first.
@@ -31206,7 +30198,6 @@ contains
 
 !$Procedure      ZZMSXF ( Multiply sequence of state transformations )
 
-
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
@@ -31255,10 +30246,8 @@ contains
 !                 The routine does not compute the product of a sequence
 !                 that does not satisfy this condition.
 !
-!
 !     N           is an integer giving the number of matrices in the
 !                 sequence.
-!
 !
 ! $ Detailed_Output
 !
@@ -31271,7 +30260,6 @@ contains
 !                 relationship
 !
 !                    M_K( I, J )  = MATRIX ( I, J, K )
-!
 !
 ! $ Parameters
 !
@@ -31417,8 +30405,6 @@ contains
             end do
          end do
 
-
-
       else if ( n > 2 ) then
 
 !
@@ -31427,7 +30413,6 @@ contains
 !           MATRIX( , ,N) * MATRIX( , ,N-1) * ... * MATRIX( , , 1 )
 !
 !        Compute the first product.  MATRIX( , ,2) * MATRIX( , ,1)
-!
 !
 !        First compute the upper left hand 3x3 portion of the product...
 !
@@ -31462,7 +30447,6 @@ contains
 !        see below we never actually have to reference TEMP(I,K,GET)
 !        for K = 4 to 6.  So we can just skip that part of the
 !        computation.
-!
 !
 !        Now continue building the product.  Note we will toggle
 !        back and forth from TEMP(,,1) to TEMP(,,2) for storing
@@ -31516,7 +30500,6 @@ contains
 
          end do
 
-
 !
 !        Finally compute the last product.  First the upper
 !        left hand portion of the product.
@@ -31566,8 +30549,6 @@ contains
             end do
          end do
 
-
-
       else if ( n == 1 ) then
 !
 !        If there is only one matrix in the list the output is
@@ -31578,7 +30559,6 @@ contains
                output(j,i) = matrix(j,i,1)
             end do
          end do
-
 
       else if ( n <= 0 ) then
 
@@ -31598,7 +30578,6 @@ contains
       end subroutine zzmsxf
 
 !$Procedure      ZZRXR ( Multiply sequence of 3x3 matrices )
-
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
@@ -31637,7 +30616,6 @@ contains
 !     N           is an integer giving the number of matrices in the
 !                 sequence.
 !
-!
 ! $ Detailed_Output
 !
 !     OUTPUT      is the product of the matrices stored in MATRIX.
@@ -31649,7 +30627,6 @@ contains
 !                 relationship
 !
 !                    M_K( I, J )  = MATRIX ( I, J, K )
-!
 !
 ! $ Parameters
 !
@@ -31698,7 +30675,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
 !
-!
 !-&
 
       integer(ip)           i
@@ -31735,7 +30711,6 @@ contains
             end do
          end do
 
-
       else if ( n > 2 ) then
 
 !
@@ -31744,7 +30719,6 @@ contains
 !           MATRIX( , ,N) * MATRIX( , ,N-1) * ... * MATRIX( , , 1 )
 !
 !        Compute the first product.  MATRIX( , ,2) * MATRIX( , ,1)
-!
 !
 !        First compute the upper left hand 3x3 portion of the product...
 !
@@ -31777,7 +30751,6 @@ contains
             do j = 1,3
                do k = 1,3
 
-
                   temp(j,k,put) =  matrix(j,1,i)*temp(1,k,get) &
                                  + matrix(j,2,i)*temp(2,k,get) &
                                  + matrix(j,3,i)*temp(3,k,get)
@@ -31797,7 +30770,6 @@ contains
 
          end do
 
-
 !
 !        Finally compute the last product.  First the upper
 !        left hand portion of the product.
@@ -31811,7 +30783,6 @@ contains
             end do
          end do
 
-
       else if ( n == 1 ) then
 !
 !        If there is only one matrix in the list the output is
@@ -31822,7 +30793,6 @@ contains
                output(j,i) = matrix(j,i,1)
             end do
          end do
-
 
       else if ( n <= 0 ) then
 

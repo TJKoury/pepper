@@ -211,7 +211,6 @@
 !     The term "illumination angles" refers to following set of
 !     angles:
 !
-!
 !        solar incidence angle    Angle between the surface normal at
 !                                 the specified surface point and the
 !                                 vector from the surface point to the
@@ -227,11 +226,9 @@
 !                                 location and from the surface point
 !                                 to the Sun.
 !
-!
 !     The diagram below illustrates the geometrical relationships
 !     defining these angles. The labels for the solar incidence,
 !     emission, and phase angles are "s.i.", "e.", and "phase".
-!
 !
 !                                                      *
 !                                                     Sun
@@ -252,7 +249,6 @@
 !      location           to viewing
 !      (observer)         location
 !
-!
 !     Note that if the target-observer vector, the target normal vector
 !     at the surface point, and the target-sun vector are coplanar,
 !     then phase is the sum of incidence and emission. This is rarely
@@ -270,7 +266,6 @@
 !     an image." We ignore differential light time; the light times
 !     from all points on the target to the observer are presumed to be
 !     equal.
-!
 !
 !        Observer-target body vector
 !        ---------------------------
@@ -290,7 +285,6 @@
 !        time corrected position of the observer as seen from the
 !        target body.
 !
-!
 !        Target body's orientation
 !        -------------------------
 !
@@ -299,7 +293,6 @@
 !        normal is dependent on the target body's orientation, so
 !        the body's orientation model must be evaluated for the correct
 !        epoch.
-!
 !
 !        Target body -- Sun vector
 !        -------------------------
@@ -311,9 +304,7 @@
 !        body at ET-LT. So, a second light time correction is used
 !        in finding the apparent location of the Sun.
 !
-!
 !     Stellar aberration corrections, when used, are applied as follows:
-!
 !
 !        Observer-target body vector
 !        ---------------------------
@@ -322,7 +313,6 @@
 !        used in computing the apparent target body position as seen
 !        from the observer's location at time ET. This apparent
 !        position defines the observer-target body vector.
-!
 !
 !        Target body-Sun vector
 !        ----------------------
@@ -333,7 +323,6 @@
 !        position is not affected by the stellar aberration correction
 !        applied in finding its apparent position as seen by the
 !        observer.
-!
 !
 !     Once all of the vectors, as well as the target body's
 !     orientation, have been computed with the proper aberration
@@ -355,7 +344,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -393,9 +381,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ILLUM_EX1
 !              IMPLICIT NONE
@@ -518,10 +504,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         UTC epoch is 2003 OCT 13 06:00:00
 !
@@ -542,7 +526,6 @@
 !
 !         The emission angle should be 0.
 !         The solar incidence and phase angles should be equal.
-!
 !
 ! $ Restrictions
 !
@@ -618,7 +601,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     DEPRECATED illumination angles
@@ -628,7 +610,6 @@
 !     DEPRECATED emission angle
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -650,7 +631,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
 
 !
 !     Local variables
@@ -710,7 +690,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -750,7 +729,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, found    )
 
@@ -766,7 +744,6 @@
          return
 
       end if
-
 
 !
 !     The observer and target must be distinct.

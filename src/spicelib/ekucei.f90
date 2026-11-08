@@ -158,12 +158,10 @@
 !
 !            CALL EKUCEI ( HANDLE, 5, 3, 'ICOL', 1, 999, .FALSE. )
 !
-!
 !     2)  Same as (1), but this time add a null value. The argument
 !         999 is ignored because the null flag is set to .TRUE.
 !
 !            CALL EKUCEI ( HANDLE, 5, 3, 'ICOL', 1, 999, .TRUE. )
-!
 !
 !     3)  Replace the entry in the third record of the column IARRAY in
 !         the fifth segment of an EK file designated by HANDLE. Set
@@ -204,13 +202,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace integer entry in an EK column
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -228,8 +224,6 @@
 
       logical               isshad
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -283,13 +277,11 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 1 ) then
 !
 !        Class 1 columns contain scalar integer data.
 !
          call zzekue01 ( handle, segdsc, coldsc, recptr, ivals, isnull )
-
 
       else if ( class == 4 ) then
 !

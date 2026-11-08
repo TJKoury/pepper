@@ -95,7 +95,6 @@
 !         Draft of JPL Publication documenting the JPL navigation
 !         program "Regres."
 !
-!
 ! $ Author_and_Institution
 !
 !     W.L. Taber         (JPL)
@@ -122,7 +121,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -131,7 +129,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Coefficients for the mean obliquity:
 !

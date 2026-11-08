@@ -95,9 +95,7 @@
 !     1) Parse into an INTEGER variable a set of strings representing
 !        numeric values.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PRSINT_EX1
 !              IMPLICIT NONE
@@ -146,13 +144,10 @@
 !
 !              END DO
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !          STRVAL        INTVAL
 !        -----------  ------------
@@ -166,7 +161,6 @@
 !                -PI            -3
 !        -2147483648   -2147483648
 !         2147483647    2147483647
-!
 !
 ! $ Restrictions
 !
@@ -195,13 +189,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     parse integer with encapsulated error handling
 !
 !-&
-
 
 !
 !     Local parameters
@@ -214,9 +206,6 @@
       character(msglen)     errmsg
       integer(ip)           ptr
 
-!
-!     Use discovery check-in.
-!
       call nparsi ( string, intval, errmsg, ptr )
 
       if ( errmsg /= ' ' ) then

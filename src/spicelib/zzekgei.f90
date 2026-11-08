@@ -111,16 +111,13 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
       character(encsiz)     cval
 
-
 !
 !     Discovery error handling should be used in this utility.
-!
 !
 !     Read the encoded value.  The value is represented by a string of
 !     characters.

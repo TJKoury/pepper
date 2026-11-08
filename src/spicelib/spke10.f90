@@ -130,7 +130,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -216,13 +215,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_10 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -251,7 +248,6 @@
       integer(ip), parameter :: angs1 = model1 + nelems
 
       integer(ip), parameter :: model2 = angs1 + nangs
-
 
 !
 !     Local variables
@@ -282,7 +278,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Fetch the two epochs stored in the record.

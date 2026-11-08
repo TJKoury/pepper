@@ -162,12 +162,10 @@
 !
 !            CALL EKUCED ( HANDLE, 5, 3, 'DCOL', 1, 999.D0, .FALSE. )
 !
-!
 !     2)  Same as (1), but this time add a null value. The argument
 !         999.D0 is ignored because the null flag is set to .TRUE.
 !
 !            CALL EKUCED ( HANDLE, 5, 3, 'DCOL', 1, 999.D0, .TRUE. )
-!
 !
 !     3)  Replace the entry in the third record of the column DARRAY in
 !         the fifth segment of an EK file designated by HANDLE. Set
@@ -208,14 +206,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace d.p. entry in an EK column
 !     replace time entry in an EK column
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -233,8 +229,6 @@
 
       logical               isshad
 
-!
-!     Use discovery check-in.
 !
 !     First step:  find the descriptor for the named segment.  Using
 !     this descriptor, get the column descriptor.
@@ -288,13 +282,11 @@
 !
       class  =  coldsc ( clsidx )
 
-
       if ( class == 2 ) then
 !
 !        Class 2 columns contain scalar d.p. data.
 !
          call zzekue02 ( handle, segdsc, coldsc, recptr, dvals, isnull )
-
 
       else if ( class == 5 ) then
 !

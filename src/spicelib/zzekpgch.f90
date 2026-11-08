@@ -119,7 +119,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -138,9 +137,6 @@
       integer(ip)           topc
       integer(ip)           topd
       integer(ip)           topi
-
-
-
 
 !
 !     Check whether the DAS is opened for the specified access method.
@@ -212,7 +208,6 @@
          return
 
       end if
-
 
       return
       end

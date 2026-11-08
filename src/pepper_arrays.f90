@@ -127,13 +127,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether all logicals in an array are true
 !
 !-&
-
 
       integer(ip)           i
 
@@ -154,7 +152,6 @@ contains
 
       alltru = .true.
       return
-
 
       end function alltru
 
@@ -259,7 +256,6 @@ contains
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM BSCHOC_EX1
 !              IMPLICIT NONE
 !
@@ -286,7 +282,6 @@ contains
 !              INTEGER                 I
 !              INTEGER                 IDX
 !              INTEGER                 ORDER  ( NDIM )
-!
 !
 !        C
 !        C     Let ARRAY and ORDER contain the following elements:
@@ -325,17 +320,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Name NEWTON   found in position           4
 !         Name EINSTEIN found in position           3
 !         Name GALILEO  found in position           5
 !         Name Galileo  not found in ARRAY.
 !         Name BETHE    not found in ARRAY.
-!
 !
 !        Note that these results indicate that:
 !
@@ -375,13 +367,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary search for a string using an order vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -389,7 +379,6 @@ contains
       integer(ip)      left
       integer(ip)      right
       integer(ip)      i
-
 
 !
 !     Set the initial bounds for the search area.
@@ -563,13 +552,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary search for an integer using an order vector
 !
 !-&
-
 
 !
 !     Local variables
@@ -753,13 +740,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary search for a character_string
 !
 !-&
-
 
 !
 !     Local variables
@@ -767,8 +752,6 @@ contains
       integer(ip)      left
       integer(ip)      right
       integer(ip)      i
-
-
 
 !
 !     Set the initial bounds for the search area.
@@ -936,13 +919,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary search for d.p. value
 !
 !-&
-
 
 !
 !     Local variables
@@ -950,8 +931,6 @@ contains
       integer(ip)      left
       integer(ip)      right
       integer(ip)      i
-
-
 
 !
 !     Set the initial bounds for the search area.
@@ -1117,13 +1096,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     binary search for an integer value
 !
 !-&
-
 
 !
 !     Local variables
@@ -1131,8 +1108,6 @@ contains
       integer(ip)      left
       integer(ip)      right
       integer(ip)      i
-
-
 
 !
 !     Set the initial bounds for the search area.
@@ -1240,9 +1215,7 @@ contains
 !     1) Initialize a one dimensional string array and then clear
 !        the first two strings.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CLEARC_EX1
 !              IMPLICIT NONE
@@ -1288,13 +1261,10 @@ contains
 !                 WRITE(*,'(A,I1,2A)') 'Position #', I , ': ', ARRAY(I)
 !              END DO
 !
-!
 !              END
-!
 !
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Contents of ARRAY before CLEARC:
 !
@@ -1309,7 +1279,6 @@ contains
 !        Position #2:
 !        Position #3: Element #3
 !        Position #4: Element #4
-!
 !
 ! $ Restrictions
 !
@@ -1344,24 +1313,20 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     clear a character array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
          array(i) = ' '
       end do
-
 
       return
       end subroutine clearc
@@ -1431,9 +1396,7 @@ contains
 !     1) Initialize all members of a double precision array to the
 !        same value and clear it afterwards.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CLEARD_EX1
 !              IMPLICIT NONE
@@ -1471,17 +1434,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Contents of ARRAY before CLEARD:
 !          11.5  11.5  11.5  11.5
 !
 !        Contents of ARRAY after CLEARD:
 !           0.0   0.0   0.0   0.0
-!
 !
 ! $ Restrictions
 !
@@ -1509,24 +1469,20 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     clear a d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
         array(i) = 0.0_wp
       end do
-
 
       return
       end subroutine cleard
@@ -1596,9 +1552,7 @@ contains
 !     1) Initialize all members of an integer array to the same value
 !        and clear it afterwards.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CLEARI_EX1
 !              IMPLICIT NONE
@@ -1635,17 +1589,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Contents of ARRAY before CLEARI:
 !          11  11  11  11
 !
 !        Contents of ARRAY after CLEARI:
 !           0   0   0   0
-!
 !
 ! $ Restrictions
 !
@@ -1679,24 +1630,20 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     clear an integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
         array(i) = 0
       end do
-
 
       return
       end subroutine cleari
@@ -1801,25 +1748,20 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fill a character array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
-
       do i = 1, ndim
         array(i) = value
       end do
-
 
       return
       end subroutine fillc
@@ -1892,9 +1834,7 @@ contains
 !     1) Initialize all members of a double precision array to the same
 !        value.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM FILLD_EX1
 !              IMPLICIT NONE
@@ -1928,17 +1868,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Contents of ARRAY:
 !           Index: 1; value: 1.0
 !           Index: 2; value: 1.0
 !           Index: 3; value: 1.0
 !           Index: 4; value: 1.0
-!
 !
 ! $ Restrictions
 !
@@ -1972,24 +1909,20 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fill a d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
         array(i) = value
       end do
-
 
       return
       end subroutine filld
@@ -2060,9 +1993,7 @@ contains
 !
 !     1) Initialize all members of an integer array to the same value.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM FILLI_EX1
 !              IMPLICIT NONE
@@ -2095,17 +2026,14 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Contents of ARRAY:
 !           Index: 1; value: 11
 !           Index: 2; value: 11
 !           Index: 3; value: 11
 !           Index: 4; value: 11
-!
 !
 ! $ Restrictions
 !
@@ -2139,24 +2067,20 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fill an integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
         array(i) = value
       end do
-
 
       return
       end subroutine filli
@@ -2239,7 +2163,6 @@ contains
 !
 !        The block of code below illustrates this idea.
 !
-!
 !           IF ( ISORDV ( ORDVEC, N ) ) THEN
 !
 !              ...reorder the input array of strings
@@ -2256,10 +2179,8 @@ contains
 !
 !           END IF
 !
-!
 !     2) This routine can also be used to determine whether or not an
 !        array contains every integer between K and N (where K < N ).
-!
 !
 !           First subtract K-1 from each integer
 !
@@ -2309,20 +2230,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether an integer array is an order vector
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)           i
       integer(ip)           j
-
 
 !
 !     Let's take care of the goofy case first.
@@ -2334,7 +2252,6 @@ contains
          isordv = array(1) == 1
          return
       end if
-
 
 !
 !     Make an initial pass through the array to be sure we
@@ -2411,7 +2328,6 @@ contains
 !     N   |    |                 |
 !         +----+-----------------+
 !
-!
 !     Since we know the value of all of the sign bits (it's '+') we can
 !     alter them and then reset them once we are done.
 !
@@ -2438,7 +2354,6 @@ contains
          isordv   =  isordv .and. ( array(i) < 0 )
          array(i) =          abs  ( array(i)        )
       end do
-
 
       return
       end function isordv
@@ -2556,19 +2471,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     search in a character array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       isrchc = 0
 
@@ -2696,19 +2608,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     search in a d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       isrchd = 0
 
@@ -2831,19 +2740,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     search in an integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       isrchi = 0
 
@@ -2997,13 +2903,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last closest d.p. array element
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -3020,7 +2924,6 @@ contains
 !-    Beta Version 1.0.0, 15-MAY-1990 (RET)
 !
 !-&
-
 
 !
 !     Local variables
@@ -3249,13 +3152,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     closest integer array element
 !
 !-&
-
 
 !
 !     Local variables
@@ -3341,7 +3242,6 @@ contains
          lstcli = lstcli + 1
 
       end do
-
 
       return
       end function lstcli
@@ -3529,13 +3429,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last character element less_than_or_equal_to
 !
 !-&
-
 
 !
 !     Local variables
@@ -3547,14 +3445,10 @@ contains
       integer(ip)      middle
       integer(ip)      items
 
-
-
       items = n
 
       begin = 1
       end   = n
-
-
 
       if      ( n <= 0            ) then
 
@@ -3764,13 +3658,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last d.p. element less_than_or_equal_to
 !
 !-&
-
 
 !
 !     Local variables
@@ -4019,7 +3911,6 @@ contains
 !            18       2.14D0
 !            23      12.12D0
 !
-!
 !     (Note: you should NOT use the
 !     code outlined above as the basis of a sorting algorithm.
 !     The NAIF routines SHELLI, SHELLD, SHELLC, ORDERI, ORDERD, ORDERC,
@@ -4067,13 +3958,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last integer element less_than_or_equal_to
 !
 !-&
-
 
 !
 !     Local variables
@@ -4084,8 +3973,6 @@ contains
       integer(ip)      end
       integer(ip)      middle
       integer(ip)      items
-
-
 
       items = n
 
@@ -4325,13 +4212,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last character element less_than
 !
 !-&
-
 
 !
 !     Local variables
@@ -4342,8 +4227,6 @@ contains
       integer(ip)      end
       integer(ip)      middle
       integer(ip)      items
-
-
 
       items = n
 
@@ -4392,7 +4275,6 @@ contains
 
             items    = 1 + (end - begin)
          end do
-
 
          lstltc = begin
 
@@ -4562,13 +4444,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last d.p. element less_than
 !
 !-&
-
 
 !
 !     Local variables
@@ -4631,7 +4511,6 @@ contains
          lstltd = begin
 
       end if
-
 
       return
       end function lstltd
@@ -4817,7 +4696,6 @@ contains
 !            18       2.14D0
 !            23      12.12D0
 !
-!
 !     Note: you should NOT use the code outlined above as the basis of
 !     a sorting algorithm. The SPICELIB routines SHELLI, SHELLD, SHELLC,
 !     ORDERI, ORDERD, ORDERC, REORDI, REORDD and REORDC are much more
@@ -4865,13 +4743,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     last integer element less_than
 !
 !-&
-
 
 !
 !     Local variables
@@ -4882,8 +4758,6 @@ contains
       integer(ip)      end
       integer(ip)      middle
       integer(ip)      items
-
-
 
       items = n
 
@@ -4932,7 +4806,6 @@ contains
 
             items    = 1 + (end - begin)
          end do
-
 
          lstlti = begin
 
@@ -5060,29 +4933,24 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     maximum element of character array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       if (ndim <= 0) then
          loc = 0
          return
       end if
 
-
       maxval = array(1)
       loc = 1
-
 
       do i = 2, ndim
          if (lgt (array(i), maxval)) then
@@ -5090,7 +4958,6 @@ contains
             loc = i
          end if
       end do
-
 
       return
       end subroutine maxac
@@ -5210,19 +5077,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     maximum element of d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       if (ndim <= 0) then
          loc = 0
@@ -5238,7 +5102,6 @@ contains
             loc = i
          end if
       end do
-
 
       return
       end subroutine maxad
@@ -5358,13 +5221,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     maximum element of integer array
 !
 !-&
-
 
 !
 !     Local variables
@@ -5508,19 +5369,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     minimum element of character array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       if (ndim <= 0) then
          loc = 0
@@ -5652,19 +5510,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     minimum element of d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       if (ndim <= 0) then
          loc = 0
@@ -5796,19 +5651,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     minimum element of integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
-
 
       if (ndim <= 0) then
          loc = 0
@@ -5943,13 +5795,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     move a character array to another character array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -5959,17 +5809,14 @@ contains
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
         arrto(i) = arrfrm(i)
       end do
-
 
       return
       end subroutine movec
@@ -6201,14 +6048,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     move a d.p. array to another d.p. array
 !
 !-&
-
-
 
 !
 !     PEPPER: copy directly. SPICELIB called MOVEI with 2*NDIM integers,
@@ -6217,7 +6061,6 @@ contains
       if ( ndim > 0 ) then
          arrto(1:ndim) = arrfrm(1:ndim)
       end if
-
 
       return
       end subroutine moved
@@ -6337,13 +6180,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     move a integer array to another integer array
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -6353,17 +6194,14 @@ contains
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip) i
 
-
       do i = 1, ndim
         arrto(i) = arrfrm(i)
       end do
-
 
       return
       end subroutine movei
@@ -6472,13 +6310,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether no logicals in an array are true
 !
 !-&
-
 
       integer(ip)           i
 
@@ -6499,7 +6335,6 @@ contains
 
       notru = .true.
       return
-
 
       end function notru
 
@@ -6577,9 +6412,7 @@ contains
 !        integer ID codes, and flags indicating whether they have
 !        a ring system, for a group of planets).
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ORDERC_EX1
 !              IMPLICIT NONE
@@ -6654,10 +6487,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planet   Mass(GMS/GM)  ID Code  Rings?
 !        -------  -------------  -------  ------
@@ -6669,7 +6500,6 @@ contains
 !        SATURN    37940626.068      699    T
 !        URANUS     5794559.128      799    T
 !        VENUS       324858.599      299    F
-!
 !
 ! $ Restrictions
 !
@@ -6703,13 +6533,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     order of a character array
 !
 !-&
-
 
 !
 !     Local variables
@@ -6718,7 +6546,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      jg
-
 
 !
 !     Begin with the initial ordering.
@@ -6879,13 +6706,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     order of a d.p. array
 !
 !-&
-
 
 !
 !     Local variables
@@ -6894,7 +6719,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      jg
-
 
 !
 !     Begin with the initial ordering.
@@ -7055,13 +6879,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     order of an integer array
 !
 !-&
-
 
 !
 !     Local variables
@@ -7070,7 +6892,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      jg
-
 
 !
 !     Begin with the initial ordering.
@@ -7224,20 +7045,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     product of a d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       real(wp) prod
       integer(ip)      i
-
 
 !
 !     Begin at one.
@@ -7372,20 +7190,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     product of an integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      prod
       integer(ip)      i
-
 
 !
 !     Begin at one.
@@ -7496,9 +7311,7 @@ contains
 !        integer ID codes, and flags indicating whether they have
 !        a ring system, for a group of planets).
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REORDC_EX1
 !              IMPLICIT NONE
@@ -7573,10 +7386,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planet   Mass(GMS/GM)  ID Code  Rings?
 !        -------  -------------  -------  ------
@@ -7588,7 +7399,6 @@ contains
 !        SATURN    37940626.068      699    T
 !        URANUS     5794559.128      799    T
 !        VENUS       324858.599      299    F
-!
 !
 ! $ Restrictions
 !
@@ -7624,13 +7434,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reorder a character array
 !
 !-&
-
 
 !
 !     Local variables
@@ -7641,7 +7449,6 @@ contains
 
       integer(ip)      c
       character(1)     temp
-
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -7821,9 +7628,7 @@ contains
 !        integer ID codes, and flags indicating whether they have
 !        a ring system, for a group of planets).
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REORDD_EX1
 !              IMPLICIT NONE
@@ -7898,10 +7703,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planet   Mass(GMS/GM)  ID Code  Rings?
 !        -------  -------------  -------  ------
@@ -7913,7 +7716,6 @@ contains
 !        SATURN    37940626.068      699    T
 !        URANUS     5794559.128      799    T
 !        VENUS       324858.599      299    F
-!
 !
 ! $ Restrictions
 !
@@ -7949,13 +7751,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reorder a d.p. array
 !
 !-&
-
 
 !
 !     Local variables
@@ -7965,7 +7765,6 @@ contains
       integer(ip)      hold
 
       real(wp) temp
-
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -8130,9 +7929,7 @@ contains
 !        integer ID codes, and flags indicating whether they have
 !        a ring system, for a group of planets).
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REORDI_EX1
 !              IMPLICIT NONE
@@ -8207,10 +8004,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planet   Mass(GMS/GM)  ID Code  Rings?
 !        -------  -------------  -------  ------
@@ -8222,7 +8017,6 @@ contains
 !        SATURN    37940626.068      699    T
 !        URANUS     5794559.128      799    T
 !        VENUS       324858.599      299    F
-!
 !
 ! $ Restrictions
 !
@@ -8258,13 +8052,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reorder an integer array
 !
 !-&
-
 
 !
 !     Local variables
@@ -8274,7 +8066,6 @@ contains
       integer(ip)      hold
 
       integer(ip)      temp
-
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -8439,9 +8230,7 @@ contains
 !        integer ID codes, and flags indicating whether they have
 !        a ring system, for a group of planets).
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REORDL_EX1
 !              IMPLICIT NONE
@@ -8516,10 +8305,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Planet   Mass(GMS/GM)  ID Code  Rings?
 !        -------  -------------  -------  ------
@@ -8531,7 +8318,6 @@ contains
 !        SATURN    37940626.068      699    T
 !        URANUS     5794559.128      799    T
 !        VENUS       324858.599      299    F
-!
 !
 ! $ Restrictions
 !
@@ -8562,13 +8348,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     reorder a logical array
 !
 !-&
-
 
 !
 !     Local variables
@@ -8578,7 +8362,6 @@ contains
       integer(ip)           hold
 
       logical               temp
-
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -8771,21 +8554,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove duplicates from a character array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      i
       integer(ip)      j
-
-
 
 !
 !     Proceed only if the array actually contains more than one element.
@@ -8937,21 +8716,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove duplicates from a d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      i
       integer(ip)      j
-
-
 
 !
 !     Proceed only if the array actually contains more than one element.
@@ -9103,21 +8878,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove duplicates from an integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      i
       integer(ip)      j
-
-
 
 !
 !     Proceed only if the array actually contains more than one element.
@@ -9254,13 +9025,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test two integer arrays for equality
 !
 !-&
-
 
 !
 !     Local variables
@@ -9352,9 +9121,7 @@ contains
 !     1) Given a list of words, sort it according to the ASCII
 !        collating sequence using the Shell Sort algorithm.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SHELLC_EX1
 !              IMPLICIT NONE
@@ -9407,10 +9174,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Array before calling SHELLC:
 !
@@ -9429,7 +9194,6 @@ contains
 !            GALILEO
 !            Galileo
 !            NEWTON
-!
 !
 ! $ Restrictions
 !
@@ -9464,13 +9228,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     shell sort a character array
 !
 !-&
-
 
 !
 !     Local variables
@@ -9479,7 +9241,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      jg
-
 
 !
 !     This is a straightforward implementation of the Shell Sort
@@ -9623,13 +9384,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     shell sort a d.p. array
 !
 !-&
-
 
 !
 !     Local variables
@@ -9638,8 +9397,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      jg
-
-
 
 !
 !     This is a straightforward implementation of the Shell Sort
@@ -9783,13 +9540,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     shell sort an integer array
 !
 !-&
-
 
 !
 !     Local variables
@@ -9798,8 +9553,6 @@ contains
       integer(ip)      i
       integer(ip)      j
       integer(ip)      jg
-
-
 
 !
 !     This is a straightforward implementation of the Shell Sort
@@ -9941,13 +9694,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether some logicals in an array are false
 !
 !-&
-
 
       integer(ip)           i
 
@@ -9968,7 +9719,6 @@ contains
 
       somfls = .false.
       return
-
 
       end function somfls
 
@@ -10080,13 +9830,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     test whether some logicals in an array are true
 !
 !-&
-
 
 !
 !     Local variables
@@ -10109,7 +9857,6 @@ contains
 
       somtru = .false.
       return
-
 
       end function somtru
 
@@ -10225,20 +9972,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     sum of a d.p. array
 !
 !-&
 
-
 !
 !     Local variables
 !
       real(wp) sum
       integer(ip)      i
-
 
 !
 !     Begin at zero.
@@ -10372,20 +10116,17 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     sum of an integer array
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      sum
       integer(ip)      i
-
 
 !
 !     Begin at zero.
@@ -10510,13 +10251,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     swap character values
 !
 !-&
-
 
 !
 !     Local variables
@@ -10527,7 +10266,6 @@ contains
 
       character(1)     temp
       integer(ip)      i
-
 
 !
 !     Get the lengths of the strings.
@@ -10660,20 +10398,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     swap d.p. values
 !
 !-&
 
-
 !
 !     Local variables
 !
       real(wp) temp
-
-
 
 !
 !     What is there to say?
@@ -10784,20 +10518,16 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     swap integer values
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)      temp
-
-
 
 !
 !     What is there to say?
@@ -10871,7 +10601,6 @@ contains
 !     the routine. This routine allows you to touch that array
 !     without changing it.
 !
-!
 !        SUBROUTINE INCPTR ( N, PTR, VALUES )
 !
 !        This routine increments the current pointer into a circular
@@ -10919,13 +10648,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     touch a character string
 !
 !-&
-
 
       touchc = string(1:1)
       return
@@ -10994,7 +10721,6 @@ contains
 !     the routine. This routine allows you to touch that array
 !     without changing it.
 !
-!
 !        SUBROUTINE INCPTR ( N, PTR, VALUES )
 !
 !        This routine increments the current pointer into a circular
@@ -11042,13 +10768,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     touch a d.p. number
 !
 !-&
-
 
       touchd = dp
       return
@@ -11117,7 +10841,6 @@ contains
 !     the routine. This routine allows you to touch that array
 !     without changing it.
 !
-!
 !        SUBROUTINE INCPTR ( N, PTR, VALUES )
 !
 !        This routine increments the current pointer into a circular
@@ -11165,13 +10888,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     touch an integer
 !
 !-&
-
 
       touchi = int
       return
@@ -11239,7 +10960,6 @@ contains
 !     the routine. This routine allows you to touch that array
 !     without changing it.
 !
-!
 !        SUBROUTINE INCPTR ( N, PTR, VALUES )
 !
 !        This routine increments the current pointer into a circular
@@ -11287,13 +11007,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     touch a logical
 !
 !-&
-
 
       touchl = log
       return

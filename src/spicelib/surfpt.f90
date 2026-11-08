@@ -219,7 +219,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     line of sight intercept with body
@@ -227,7 +226,6 @@
 !     surface point of intersection of ray and ellipsoid
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -244,7 +242,6 @@
 !      SPICE(BADAXISLENGTH)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -295,10 +292,6 @@
                                     'Axes B and C were nonpositive.', &
                                     'All three axes were nonpositive.' /
 
-
-!
-!     Use discovery check-in.
-!
       if ( return () ) return
 
 !
@@ -327,7 +320,6 @@
 
       if ( c <= 0 ) &
          bad = bad + 4
-
 
       if ( bad > 0 ) then
 
@@ -366,7 +358,6 @@
       y(1)  = positn(1) / a
       y(2)  = positn(2) / b
       y(3)  = positn(3) / c
-
 
 !
 !     Find the component P of Y (the ray's vertex) orthogonal to X
@@ -435,7 +426,6 @@
 !
          sign = -1.0_wp
 
-
       else if ( ymag == 1 ) then
 !
 !        The ray's vertex is on the surface of the ellipsoid.
@@ -457,7 +447,6 @@
       end if
 
 !
-!
 !     We have a small amount of work to do:  we'll find the multiple
 !     of X that when added to P yields the desired intercept point.
 !
@@ -465,7 +454,6 @@
 !     is just
 !             ____________
 !           \/ 1 - PMAG**2
-!
 !
       scale = sqrt (  max ( 0.0_wp, 1-pmag*pmag )  )
 

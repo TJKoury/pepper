@@ -165,13 +165,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find the index of a reference value in a generic segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -221,9 +219,7 @@
 !
 !     Saved Variables
 !
-!
 !     Initial Values
-!
 !
 !     Constants (SPICELIB computed them on the first call).
 !

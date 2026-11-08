@@ -431,7 +431,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Check the convergence tolerance.
 !
@@ -456,8 +455,6 @@
          return
 
       end if
-
-
 
 !
 !     If active, update the progress reporter.
@@ -704,7 +701,6 @@
                   return
                end if
 
-
                if ( bail )  then
                   if ( udbail () ) return
                end if
@@ -828,7 +824,6 @@
 !
       end do
 
-
 !
 !     Check if in-state at this time (FINISH). If so record the
 !     interval.
@@ -861,4 +856,3 @@
 !
       return
       end
-

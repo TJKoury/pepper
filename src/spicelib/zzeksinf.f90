@@ -68,7 +68,6 @@
 !                    indices of these items are given by the parameters
 !                    NRIDX and NCIDX, respectively.
 !
-!
 !     CNAMES         is a list of names of data columns in the segment.
 !
 !     CDSCRS         is a list of descriptors of columns in the segment.
@@ -181,7 +180,6 @@
 !                 .   '========================================'      //
 !                 .   '========================================'
 !
-!
 !                     WRITE (*,*) 'Table containing segment: ', TABNAM
 !
 !                     WRITE (*,*) ' '
@@ -227,7 +225,6 @@
 !
 !-&
 
-
 ! $ Revisions
 !
 !-    Beta Version 1.1.0, 03-JUL-1996 (NJB)
@@ -240,7 +237,6 @@
 !        left unassigned on output.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -258,7 +254,6 @@
       integer(ip)           ncols
       integer(ip)           nseg
       integer(ip)           p
-
 
 !
 !     Standard SPICE error handling.
@@ -307,18 +302,15 @@
                     tnamsz, &
                     tabnam                   )
 
-
       if (  len( tabnam )  >  tnamsz  ) then
          tabnam (tnamsz+1:) = ' '
       end if
-
 
 !
 !     Read the column descriptors.  The first one starts at DAS
 !     integer address
 !
 !        BASE + CDOFF + 1.
-!
 !
       ncols   =  segdsc(ncidx)
 
@@ -336,7 +328,6 @@
                     1, &
                     cnamsz, &
                     cnames  )
-
 
       if (   len( cnames(1) )  >  cnamsz  ) then
 

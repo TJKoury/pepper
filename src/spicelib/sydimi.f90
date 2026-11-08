@@ -97,7 +97,6 @@
 !     NUMVAL = SYDIMI ( 'erasers',  TABSYM, TABPTR, TABVAL )
 !     NUMVAL = SYDIMI ( 'tablets',  TABSYM, TABPTR, TABVAL )
 !
-!
 !     ----SYMBOL----------NUMVAL------
 !     | books        |       2       |
 !     | pencils      |       1       |
@@ -150,13 +149,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     fetch the dimension of a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -171,8 +168,6 @@
       integer(ip)           nsym
       integer(ip)           locsym
 
-
-
 !
 !     Standard SPICE error handling
 !
@@ -180,7 +175,6 @@
          sydimi = 0
          return
       end if
-
 
 !
 !     How many symbols to start with?
@@ -202,7 +196,6 @@
       else
          sydimi = tabptr(locsym)
       end if
-
 
       return
       end

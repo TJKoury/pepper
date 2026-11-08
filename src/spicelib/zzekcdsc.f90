@@ -106,7 +106,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -125,8 +124,6 @@
 
       logical               found
 
-!
-!     Use discovery check-in.
 !
 !     Get the segment's integer metadata's base address.
 !
@@ -168,9 +165,7 @@
             i     =  i + 1
          end if
 
-
       end do
-
 
       if ( .not. found ) then
 

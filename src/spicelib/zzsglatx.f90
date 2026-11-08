@@ -55,7 +55,6 @@
 !
 ! $ Detailed_Output
 !
-!
 !     MINLAT     is the minimum planetocentric (latitudinal) latitude
 !                that occurs on the line segment defined by the input
 !                endpoints. Units are radians.
@@ -92,7 +91,6 @@
 !
 ! $ Particulars
 !
-!
 !     In this routine, "latitude" of a point refers to planetocentric
 !     latitude: the angle between the X-Y plane and the ray emanating
 !     from the origin and passing through the point.
@@ -115,12 +113,10 @@
 !
 !           { minimum latitude, 0, maximum latitude }
 !
-!
 !        Segment lies in X-Y plane
 !        =========================
 !
 !        The latitude extrema are both zero.
-!
 !
 !        Segment intersects Z-axis in a single non-origin point
 !        ======================================================
@@ -129,7 +125,6 @@
 !        extremum will occur at a segment endpoint. This case may be
 !        viewed as a degenerate version of the "local extremum exists
 !        in segment" case.
-!
 !
 !        Local extremum exists in segment
 !        ================================
@@ -164,7 +159,6 @@
 !        are all discussed above. The remaining case is discussed
 !        below.
 !
-!
 !        Local extremum occurs in extension of segment
 !        =============================================
 !
@@ -172,7 +166,6 @@
 !        outside of the segment. In this case the segment cannot
 !        contain a point where a local extremum occurs. The extrema
 !        of latitude on the segment occur at the endpoints.
-!
 !
 ! $ Examples
 !
@@ -213,8 +206,6 @@
 !     find planetocentric latitude extrema of a line segment
 !
 !-&
-
-
 
 !
 !     SPICELIB functions
@@ -258,7 +249,6 @@
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Start by computing latitude at the segment's endpoints.

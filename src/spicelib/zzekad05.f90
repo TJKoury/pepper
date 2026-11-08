@@ -74,7 +74,6 @@
 !
 !                    Only one value can be added to a virtual column.
 !
-!
 !     ISNULL         is a logical flag indicating whether the entry is
 !                    null.  If ISNULL is .FALSE., the column entry
 !                    defined by NVALS and DVALS is added to the
@@ -193,9 +192,6 @@
 
       logical               fstpag
 
-!
-!     Use discovery check-in.
-!
       nrec    =  segdsc ( nridx  )
       colidx  =  coldsc ( ordidx )
 
@@ -250,7 +246,6 @@
 
       end if
 
-
       if ( coldsc(sizidx) /= ifalse ) then
 
          if ( nvals /= coldsc(sizidx) ) then
@@ -273,14 +268,12 @@
 !
       ptrloc  =  recptr + dptbas + colidx
 
-
       if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
 !        metadata are not affected.
 !
          call dasudi ( handle, ptrloc, ptrloc, null )
-
 
       else
 
@@ -289,7 +282,6 @@
          remain  =  nvals
          start   =  1
          fstpag  =  .true.
-
 
          do while ( remain > 0 )
 !
@@ -321,7 +313,6 @@
 
                end if
 
-
                nwrite  =  min ( remain, room )
 
                call dasudd ( handle, &
@@ -351,7 +342,6 @@
                   segdsc ( ldwidx )  =  lastw + nwrite
                end if
 
-
             else
 !
 !              Allocate a d.p. data page.  If this is not the first data
@@ -380,7 +370,6 @@
             end if
 
          end do
-
 
       end if
 

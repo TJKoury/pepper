@@ -90,10 +90,8 @@
       logical               return
       logical               failed
 
-
 !
 !     Local parameters
-!
 !
 !     The following parameters point to the various slots in the
 !     integer portion of the DAF descriptor where the values are
@@ -126,7 +124,6 @@
 !     The size of a summary.
 !
       integer(ip), parameter :: sumsiz = nd + ((ni+1)/2)
-
 
       real(wp)              chcktm
       real(wp)              dc    ( nd )
@@ -246,7 +243,6 @@
          ckspk = 'CK'
          return
       end if
-
 
       call dafgda ( handle, last, last, lastdp )
 !

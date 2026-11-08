@@ -543,7 +543,6 @@
 !     solution process that are relevant to correct and efficient
 !     use of this routine in user applications.
 !
-!
 !     The Search Process
 !     ==================
 !
@@ -567,7 +566,6 @@
 !
 !     the solutions of both equality and inequality constraints can be
 !     found easily once the monotone windows have been found.
-!
 !
 !     Step Size
 !     =========
@@ -610,7 +608,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -649,7 +646,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -725,7 +721,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfposc_ex1.tm
@@ -759,9 +754,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFPOSC_EX1
 !              IMPLICIT NONE
@@ -811,7 +804,6 @@
 !              CHARACTER*(STRLEN)    OBSRVR
 !              CHARACTER*(STRLEN)    FRAME
 !              CHARACTER*(STRLEN)   TIMFMT
-!
 !
 !              DOUBLE PRECISION      ADJUST
 !              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
@@ -937,25 +929,19 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Event time: 2007-JUN-21 17:54:13.172475 (TDB)
-!
 !
 !     2) A minor modification of the program listed in Example 1; find
 !        the time during 2007 for which the latitude of the Earth-Sun
 !        vector in IAU_EARTH frame has the minimum value, i.e. the
 !        latitude of the Tropic of Capricorn.
 !
-!
 !        Use the meta-kernel from the first example.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFPOSC_EX2
 !              IMPLICIT NONE
@@ -1005,7 +991,6 @@
 !              CHARACTER*(STRLEN)    OBSRVR
 !              CHARACTER*(STRLEN)    FRAME
 !              CHARACTER*(STRLEN)   TIMFMT
-!
 !
 !              DOUBLE PRECISION      ADJUST
 !              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
@@ -1131,13 +1116,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Event time: 2007-DEC-22 06:04:32.635539 (TDB)
-!
 !
 !     3) Find the time during 2007 for which the Z component of the
 !        Earth-Sun vector in IAU_EARTH frame has value 0, i.e. crosses
@@ -1147,9 +1129,7 @@
 !
 !        Use the meta-kernel from the first example.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFPOSC_EX3
 !              IMPLICIT NONE
@@ -1199,7 +1179,6 @@
 !              CHARACTER*(STRLEN)    OBSRVR
 !              CHARACTER*(STRLEN)    FRAME
 !              CHARACTER*(STRLEN)   TIMFMT
-!
 !
 !              DOUBLE PRECISION      ADJUST
 !              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
@@ -1325,14 +1304,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Event time: 2007-MAR-21 00:01:25.500673 (TDB)
 !         Event time: 2007-SEP-23 09:46:39.579484 (TDB)
-!
 !
 !     4) Find the times between Jan 1, 2007 and Jan 1, 2008
 !        corresponding to the apoapsis on the Moon's orbit around the
@@ -1340,9 +1316,7 @@
 !
 !        Use the meta-kernel from the first example.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFPOSC_EX4
 !              IMPLICIT NONE
@@ -1392,7 +1366,6 @@
 !              CHARACTER*(STRLEN)    OBSRVR
 !              CHARACTER*(STRLEN)    FRAME
 !              CHARACTER*(STRLEN)   TIMFMT
-!
 !
 !              DOUBLE PRECISION      ADJUST
 !              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
@@ -1518,10 +1491,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Event time: 2007-JAN-10 16:26:18.784521 (TDB)
 !         Event time: 2007-FEB-07 12:39:35.055710 (TDB)
@@ -1537,7 +1508,6 @@
 !         Event time: 2007-NOV-09 12:32:50.039258 (TDB)
 !         Event time: 2007-DEC-06 16:54:31.199770 (TDB)
 !
-!
 !     5) Find times between Jan 1, 2007 and Jan 1, 2008 when the
 !        latitude (elevation) of the observer-target vector between
 !        DSS 17 and the Moon, as observed in the DSS 17 topocentric
@@ -1545,7 +1515,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -1588,9 +1557,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFPOSC_EX5
 !              IMPLICIT NONE
@@ -1640,7 +1607,6 @@
 !              CHARACTER*(STRLEN)    OBSRVR
 !              CHARACTER*(STRLEN)    FRAME
 !              CHARACTER*(STRLEN)   TIMFMT
-!
 !
 !              DOUBLE PRECISION      ADJUST
 !              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
@@ -1767,17 +1733,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         From : 2007-FEB-26 03:18:48.229281 (TDB)
 !         To   : 2007-FEB-26 03:31:29.734931 (TDB)
 !
 !         From : 2007-MAR-25 01:12:38.550572 (TDB)
 !         To   : 2007-MAR-25 01:23:53.909469 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -1842,13 +1805,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF position coordinate search
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1907,7 +1868,6 @@
       data                  dvec  / 0.0_wp, 0.0_wp, 0.0_wp /
       data                  dref  / ' '  /
 
-
       save                  dvec
       save                  dref
 
@@ -1933,7 +1893,6 @@
 
       end if
 
-
       if ( sized(result) < 2 ) then
 
          call setmsg ( 'Result window size was #; size must be ' &
@@ -1943,7 +1902,6 @@
          return
 
       end if
-
 
 !
 !     Set up a call to GFEVNT specific to the observer-target
@@ -2024,7 +1982,6 @@
                     gfrepi,   gfrepu,   gfrepf, &
                     mw,       nw,       work, &
                     nobail,   gfbail,   result )
-
 
       return
 

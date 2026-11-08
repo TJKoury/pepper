@@ -223,13 +223,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     list voxels intersected by a ray
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -277,9 +275,6 @@
 !
       data                  next   /  2,   3,   1   /
 
-!
-!     Use discovery check-in.
-!
       if ( return () ) return
 
 !
@@ -509,9 +504,7 @@
 !     more than EPS. We'll treat this case as though the IAXIS(J)
 !     component of the ray were 0.
 !
-!
 !     Determine the error term initial values and increments.
-!
 !
       ax2err = dpmax()
       ax3err = ax2err
@@ -529,7 +522,6 @@
 !        and the IAXIS(2) directions.
 !
          s12 = abs (  raydir( iaxis(1) ) / raydir( iaxis(2) )  )
-
 
          if ( raydir(iaxis(1)) > 0.0_wp ) then
 !
@@ -626,7 +618,6 @@
          end if
 
       end if
-
 
 !
 !     Computations of AX3ERR are analogous to those of AX2ERR.

@@ -225,13 +225,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_5 CK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -344,12 +342,10 @@
       data    prevnn  / -1.0_wp /
       data    prevs   / -1.0_wp /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     No pointing found so far.
@@ -417,14 +413,11 @@
 !        2)  The epochs in the segment are in strictly increasing
 !            order.
 !
-!
 !        3)  The interpolation interval start times in the segment are
 !            in strictly increasing order.
 !
-!
 !        4)  The degree of the interpolating polynomial specified by
 !            the segment is at least 1 and is no larger than MAXDEG.
-!
 !
       call dafgda ( handle, end-ctrlsz+1, end, contrl )
 
@@ -483,7 +476,6 @@
 
       end if
 
-
       if (      ( subtyp == c05tp0 ) &
            .or. ( subtyp == c05tp2 )  ) then
 !
@@ -513,7 +505,6 @@
             return
 
          end if
-
 
       else if (      ( subtyp == c05tp1 ) &
                 .or. ( subtyp == c05tp3 )  ) then
@@ -598,7 +589,6 @@
 
          remain  =  npdir - npread
 
-
          do while (       ( pbuffr(npread) < t ) &
                     .and. ( remain         > 0 )   )
 
@@ -645,7 +635,6 @@
 !           of the group but does not exceed the last epoch
 !           of the group.
 !
-!
 !        1 < PGROUP <= NPDIR
 !        ===================
 !
@@ -659,7 +648,6 @@
 !           The request time follows the last time of the
 !           last pointing directory entry.  The request time
 !           may exceed the last time tag.
-!
 !
 !     Now we'll look up the time tags in the group of epochs
 !     we've identified.
@@ -708,7 +696,6 @@
 !
          t = pbuffr(1)
 
-
       else if ( t > pbuffr(npread) ) then
 !
 !        This can happen only if T follows all epochs.
@@ -734,8 +721,6 @@
 !        T is the last time of the segment
 !
 !        T equals SCLKDP
-!
-!
 !
 !     Find two adjacent time tags bounding the request epoch.  The
 !     request time cannot be greater than all of time tags in the
@@ -784,7 +769,6 @@
 !     it did last time.  We need to make sure that we are dealing
 !     with the same segment as well as the same time range.
 !
-!
 !        PREVS      is the start time of the interval that satisfied
 !                   the previous request for pointing.
 !
@@ -806,7 +790,6 @@
             ( end    == lend  ) .and. &
             ( t      >= prevs ) .and. &
             ( t      < prevn )      ) then
-
 
          start  = prevs
          nstart = prevn
@@ -1074,7 +1057,6 @@
       i = lstltd ( start,  wndsiz, pbuffr )
       j = lstltd ( nstart, wndsiz, pbuffr )
 
-
       if ( i == j ) then
 !
 !        Fuggedaboudit.
@@ -1114,7 +1096,6 @@
       call moved ( pbuffr(i+1), &
                    j-i, &
                    record( parsiz + 1 + wndsiz*packsz )  )
-
 
 !
 !     Save the information about the interval and segment.

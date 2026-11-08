@@ -64,7 +64,6 @@
 !                 | z' |     |          | | z |
 !                 `-  -'     `-        -' `- -'
 !
-!
 !     REF      is the ID code of the base reference frame to which
 !              ROTATE will transform positions.
 !
@@ -130,7 +129,6 @@
 !        at 2003-JUL-25 13:00:00. The frame class ID (CK ID) for the
 !        'MGS_SPACECRAFT' frame is -94000.
 !
-!
 !        Suppose that R(t) is the rotation matrix whose columns
 !        represent the inertial pointing vectors of the MGS spacecraft
 !        axes at time `t'.
@@ -142,7 +140,6 @@
 !            limit  AXIS( R(t+h)R )
 !            h-->0
 !
-!
 !        And the magnitude of the angular velocity at time `t' is given
 !        by:
 !
@@ -151,10 +148,8 @@
 !           ------------------------   at   h = 0
 !                      dh
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -188,9 +183,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKFROT_EX1
 !              IMPLICIT NONE
@@ -283,15 +276,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Instantaneous angular velocity vector:
 !           0.0001244121   0.0008314866   0.0003028634
 !        Reference frame ID:    1
-!
 !
 ! $ Restrictions
 !
@@ -331,13 +321,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get instrument frame rotation and reference frame
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -410,7 +398,6 @@
 !
       if ( return () ) return
 
-
 !
 !     We don't need angular velocity data.
 !     Assume the segment won't be found until it really is.
@@ -476,7 +463,6 @@
          call cksns ( handle, descr, segid, sfnd )
 
       end do
-
 
       return
       end

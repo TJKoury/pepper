@@ -424,8 +424,6 @@
       real(wp)                 znl
       real(wp)                 zns
 
-
-
 !
 !     SPICELIB routines.
 !
@@ -433,12 +431,10 @@
       real(wp)                 twopi
       logical                  return
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Constants
@@ -715,7 +711,6 @@
          xn    = no + dndt
 
       end if
-
 
       return
       end

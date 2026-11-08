@@ -75,7 +75,6 @@
 !
 !                    Only one value can be added to a virtual column.
 !
-!
 !     ISNULL         is a logical flag indicating whether the entry is
 !                    null.  If ISNULL is .FALSE., the column entry
 !                    defined by NVALS and CVALS is added to the
@@ -227,10 +226,6 @@
 !
       data                  first  / .true. /
 
-
-!
-!     Use discovery check-in.
-!
       if ( first ) then
          padbuf = ' '
          first  = .false.
@@ -293,7 +288,6 @@
 
       end if
 
-
       if ( coldsc(sizidx) /= ifalse ) then
 
          if ( nvals /= coldsc(sizidx) ) then
@@ -316,14 +310,12 @@
 !
       ptrloc  =  recptr + dptbas + colidx
 
-
       if ( isnull ) then
 !
 !        All we need do is set the data pointer.  The segment's
 !        metadata are not affected.
 !
          call dasudi ( handle, ptrloc, ptrloc, null )
-
 
       else
 !
@@ -358,7 +350,6 @@
 
          end if
 
-
          eltidx  =  1
 
          do while (  ( eltidx <= nvals ) .and. ( .not. failed() )  )
@@ -367,7 +358,6 @@
 !
             pos     =  0
             remain  =  strlen
-
 
             do while ( remain > 0 )
 !
@@ -380,7 +370,6 @@
                else
                   mnroom  =  1
                end if
-
 
                if ( room  >=  mnroom ) then
 !
@@ -430,7 +419,6 @@
                         n      =  n      - nchrs
                         pos    =  pos    + nchrs
                         datptr =  datptr + nchrs
-
 
                      else if ( pad ) then
 !
@@ -486,7 +474,6 @@
 
                   end if
 
-
                else
 !
 !                 Allocate a character data page.  If this is not the
@@ -524,7 +511,6 @@
 
                end if
 
-
             end do
 !
 !           We've written out the current element.
@@ -533,7 +519,6 @@
             eltidx  =  eltidx + 1
 
          end do
-
 
       end if
 

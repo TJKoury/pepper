@@ -152,13 +152,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete comments from SPK or CK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -185,7 +183,6 @@
       integer(ip)           ni
       integer(ip)           nrr
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -209,7 +206,6 @@
 !     Once we know how many there are, we can remove them.
 !
       call dafrrr ( handle, nrr )
-
 
       return
       end

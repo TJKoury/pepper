@@ -78,7 +78,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: gfstol_ex1.tm
@@ -110,15 +109,12 @@
 !
 !           End of meta-kernel.
 !
-!
 !        Use the SPK kernel below to load the required ephemeris,
 !        covering year 14 AD.
 !
 !           de408.bsp
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM GFSTOL_EX1
 !              IMPLICIT NONE
@@ -229,7 +225,6 @@
 !             .              'LT',    'MOON',       STEP,
 !             .               CNFINE,  RESULT  )
 !
-!
 !              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
 !
 !                 WRITE (*,*) 'No occultation was found.'
@@ -256,15 +251,12 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Interval            1
 !            Start time:   14 A.D. SEP 27 05:02:02.8250
 !            Stop time:    14 A.D. SEP 27 09:33:31.6995
-!
 !
 ! $ Restrictions
 !
@@ -292,13 +284,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     change default convergence tolerance for GF routines
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -339,6 +329,5 @@
          call zzholdd ( zzput, gf_tol, ok, value )
 
       end if
-
 
       end

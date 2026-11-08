@@ -132,13 +132,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     GF standard step refinement
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -149,7 +147,6 @@
 !     Local variables.
 !
       real(wp)              x
-
 
       x = ( t1 * 0.5_wp ) + ( t2 * 0.5_wp )
 

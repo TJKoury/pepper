@@ -95,7 +95,6 @@
 !                 JDTDB   - 1
 !                 JDTDT   - 1
 !
-!
 !              For all types, only the last component of the
 !              time vector may be non-integer. If other components
 !              have fractional parts only their truncated integer
@@ -254,7 +253,6 @@
 !              day if both the input and output types are formal
 !              types.
 !
-!
 !              Calendars
 !              =====================
 !              In all time vectors for which a year is specified,
@@ -274,7 +272,6 @@
 !              the SPICE routine JUL2GR is available for converting
 !              to the formal Gregorian Calendar.
 !
-!
 !              Epochs Prior to 1972
 !              =====================
 !              UTC as it exists today, was adopted in 1972. For
@@ -287,7 +284,6 @@
 !              represented by subtracting the year from 1.
 !              Thus to specify 27 B.C (Gregorian) set the
 !              year component of the time vector to -26.
-!
 !
 !              Notes:
 !              ======
@@ -430,14 +426,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Convert from one time vector to another
 !     Convert between various parsed time representations
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -448,7 +442,6 @@
 !        reference to FURNSH in an error message.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -467,7 +460,6 @@
       logical               odd
       logical               elemc
 
-
 !
 !     Local (in-line) functions
 !
@@ -482,7 +474,6 @@
 !
 !     Local parameters
 !
-!
 !     Parameters
 !
 !     We declare the variables that contain the number of days in
@@ -495,7 +486,6 @@
       integer(ip), parameter :: dp4y = 365*4   + 1
 
       integer(ip), parameter :: dp1y = 365
-
 
 !
 !     The following integers give the number of days during the
@@ -595,7 +585,6 @@
       integer(ip), parameter :: maxvar = 1
 
 !
-!
 !     The following gives us an "enumeration" for all of the
 !     various types of time vectors that are recognized.
 !
@@ -677,7 +666,6 @@
 !     Local variables
 !
       integer(ip), parameter :: lbcell = -5
-
 
       integer(ip), parameter :: typlen = 8
 
@@ -790,7 +778,6 @@
 
       data                  nodata  / .true. /
 
-
 !
 !     Definitions of statement functions.
 !
@@ -828,14 +815,12 @@
                           + extra  ( month ) * ldays(year) &
                           + day
 
-
 !
 !     The number of days since 1 Jan 1 A.D. is given by:
 !
       dp0001(year,month,day) = ydays(year) &
                              + doy  (year, month, day) &
                              - 1
-
 
 !
 !     The number of seconds represented by HOURS hours MINS minutes
@@ -844,10 +829,6 @@
       hmssec ( hours, mins, secs ) = hours * 3600.0_wp &
                                    + mins  *   60.0_wp &
                                    + secs
-
-
-
-
 
       if ( return() ) return
 
@@ -1075,7 +1056,6 @@
 
          end if
 
-
 !
 !        Transform the TAITAB in place to give the TAI time tag
 !        at the beginning of the UTC day in which a leap
@@ -1102,7 +1082,6 @@
 !                        .                                .
 !                        .                                .
 !                        .                                .
-!
 !
 !        At the same time, load the table DAYTAB. It contains the
 !        the day number past 1 Jan 1 AD for the beginning of the
@@ -1216,7 +1195,6 @@
 !        END IF
 !
 !     END IF
-!
 !
 !     For now we are NOT going to deal with SCLK so if something
 !     isn't recognized, we can just signal an error and quit.
@@ -1356,7 +1334,6 @@
             secs = frac * daylen
          end if
 
-
       else if ( pfrom == frml ) then
 
 !
@@ -1365,8 +1342,6 @@
          call rmaind ( tvec(1) + halfd, secspd, dp2000, secs )
 
          daynum = int(dp2000) + dn2000
-
-
 
       else if ( pfrom == jdutc  ) then
 
@@ -1379,21 +1354,15 @@
 
          daynum = int(daydp)
 
-
-
       else if ( pfrom == daysec ) then
 
          daynum = int(tvec(1))
          secs   = tvec(2)
 
-
-
       else if ( pfrom == dayp2 ) then
 
          daynum = int(tvec(1)) + dn2000
          secs   = tvec(2)
-
-
 
       else if ( (pfrom == ywd) .or. (pfrom == ywdf) ) then
 
@@ -1477,9 +1446,6 @@
 !
          secs   = hmssec ( tvec(5), tvec(6), tvec(7) )
 
-
-
-
 !
 !     If we get to this point the type must be one of the continuous
 !     time types: 'TAI', 'TDT', 'TDB', 'JED', 'ET', 'JDTDT', 'JDTDB'.
@@ -1540,7 +1506,6 @@
 
          end if
 
-
       end if
 
       if ( forml ( pfrom )  ) then
@@ -1550,7 +1515,6 @@
          secs   = tsecs
 
       end if
-
 
 !     ==================================================================
 !
@@ -1660,7 +1624,6 @@
             day    = dofyr - dpbegl(month)
          end if
 
-
 !
 !        We only want to convert that portion of seconds less than
 !        86399 to hours, minutes and seconds.  Take anything extra
@@ -1713,7 +1676,6 @@
          else
             tvec(2) = real(dofyr, wp) + secs/secspd
          end if
-
 
       else if ( pto == frml ) then
 
@@ -1805,11 +1767,9 @@
 
       end if
 
-
 !
 !     Here's where we will handle conversion to SCLK when
 !     we get around to implementing that portion of TTRANS
-!
 !
 !     IF ( MKSCLK ) THEN
 !        CALL TVSCLK ( TO, TVEC )

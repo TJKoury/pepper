@@ -62,13 +62,11 @@
 !                Elements (1,*) are lower bounds; elements (2,*) are
 !                upper bounds. Angular units are radians.
 !
-!
 !     CORPAR     is an array of coordinate system parameters. The first
 !                and second elements of the array are, respectively,
 !                the equatorial radius and flattening coefficient of
 !                the coordinate system. Any additional elements are
 !                ignored by this routine.
-!
 !
 ! $ Detailed_Output
 !
@@ -195,11 +193,10 @@
       real(wp)              topv   ( 3 )
 
 !
-!     This routine uses discovery check-in. We check RETURN in order to
+! We check RETURN in order to
 !     avoid performing math operations using invalid operands.
 !
       if ( return() ) return
-
 
       re = corpar(1)
       f  = corpar(2)
@@ -220,7 +217,7 @@
 !     If the flattening coefficient is greater than one, the polar
 !     radius computed below is negative. If it's equal to one, the
 !     polar radius is zero. Either case is a problem, so signal an
-!     error and check out.
+!     error.
 !
       if ( f >= 1.0_wp ) then
 

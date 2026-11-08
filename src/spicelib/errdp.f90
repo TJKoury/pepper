@@ -100,9 +100,7 @@
 !        precision variables within the long message, and signal the
 !        error.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ERRDP_EX1
 !              IMPLICIT NONE
@@ -136,10 +134,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ============================================================***
 !
@@ -159,11 +155,9 @@
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 6 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that the execution of this program produces the error
 !        SPICE(USERDEFINED), which follows the NAIF standard as
@@ -222,13 +216,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert d.p. number into error message text
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -251,10 +243,8 @@
 
       integer(ip)           strpos
 
-
 !
 !     Executable Code:
-!
 !
 !     Changes to the long error message have to be allowed, or we
 !     do nothing.
@@ -308,7 +298,6 @@
                          dpstrg ( :lastnb(dpstrg) )
 
             end if
-
 
          else
 !

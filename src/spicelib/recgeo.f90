@@ -127,9 +127,7 @@
 !
 !           pck00010.tpc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM RECGEO_EX1
 !              IMPLICIT NONE
@@ -192,16 +190,13 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates in km (x, y, z)
 !           -2541.748162   4780.333036   3360.428190
 !         Geodetic coordinates in deg and km (lon, lat, alt)
 !             118.000000     31.999957      0.001916
-!
 !
 !     2) Create a table showing a variety of rectangular coordinates
 !        and the corresponding Earth geodetic coordinates. The
@@ -214,12 +209,10 @@
 !        Note: the values shown above may not be current or suitable
 !              for your application.
 !
-!
 !        Corresponding rectangular and geodetic coordinates are
 !        listed to three decimal places. Output angles are in degrees.
 !
 !        Example code begins here.
-!
 !
 !              PROGRAM RECGEO_EX2
 !              IMPLICIT NONE
@@ -297,10 +290,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !          RECTAN(1)  RECTAN(2)  RECTAN(3)    LON      LAT       ALT
 !          ---------  ---------  ---------  -------  -------  ---------
@@ -315,7 +306,6 @@
 !           6378.206      0.000   6378.206    0.000   45.137   2652.768
 !              0.000   6378.206   6378.206   90.000   45.137   2652.768
 !           6378.206   6378.206   6378.206   45.000   35.370   4676.389
-!
 !
 ! $ Restrictions
 !
@@ -373,13 +363,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rectangular to geodetic
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -396,7 +384,6 @@
 !        the length is greater than zero.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -418,10 +405,8 @@
 !
       if ( return () ) return
 
-
 !
-!     The equatorial radius must be positive. If not, signal an error
-!     and check out.
+!     The equatorial radius must be positive. If not, signal an error.
 !
       if ( re<= 0.0_wp ) then
           call setmsg ( 'Equatorial radius was *.' )
@@ -434,7 +419,7 @@
 !     If the flattening coefficient is greater than one, the length
 !     of the 'C' axis computed below is negative. If it's equal to one,
 !     the length of the axis is zero. Either case is a problem, so
-!     signal an error and check out.
+!     signal an error.
 !
       if ( f >= 1 ) then
           call setmsg ( 'Flattening coefficient was *.'  )

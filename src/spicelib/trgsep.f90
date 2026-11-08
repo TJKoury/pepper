@@ -287,7 +287,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: trgsep_ex1.tm
@@ -321,9 +320,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TRGSEP_EX1
 !              IMPLICIT NONE
@@ -333,7 +330,6 @@
 !        C
 !              DOUBLE PRECISION      TRGSEP
 !              DOUBLE PRECISION      DPR
-!
 !
 !        C
 !        C     Local variables.
@@ -353,7 +349,6 @@
 !              DATA             TARG   / 'MOON', 'EARTH'   /
 !
 !              DATA             SHAPE  / 'POINT', 'SPHERE' /
-!
 !
 !        C
 !        C     Load the kernels.
@@ -394,10 +389,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Bodies:          MOON  EARTH
 !        as seen from:    SUN
@@ -407,7 +400,6 @@
 !        Apparent angular separation:
 !           point body models  (deg.):   0.15729276
 !           sphere body models (deg.):   0.15413221
-!
 !
 ! $ Restrictions
 !
@@ -431,13 +423,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute the angular separation between two target bodies
 !
 !-&
-
 
 !
 !     SPICELIB functions.
@@ -467,7 +457,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Argument check and initialization.

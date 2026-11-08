@@ -19,7 +19,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcoldsc.inc'
       include 'ekdatpag.inc'
@@ -77,7 +76,6 @@
 !                                     existed at the time of the last
 !                                     commit, the entire original
 !                                     record is backed up.
-!
 !
 !     HANDLE         is a file handle of an EK open for write access.
 !
@@ -149,7 +147,6 @@
 !
 !        Updates to NEW records do not result in any action.
 !
-!
 !        Additions
 !        ---------
 !
@@ -159,7 +156,6 @@
 !        that this backward pointer is guaranteed to be valid only when
 !        the source record occupies its current ordinal position in the
 !        source segment.
-!
 !
 !        Deletions
 !        ---------

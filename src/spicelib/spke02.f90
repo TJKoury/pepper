@@ -111,7 +111,6 @@
 !     to a user unless he/she understands the structure of the data type
 !     completely.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -193,13 +192,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_2 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -214,9 +211,6 @@
       integer(ip)           i
       integer(ip)           ncof
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
 !

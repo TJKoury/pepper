@@ -120,7 +120,6 @@
 !           EKNSEG
 !           EKSSUM
 !
-!
 !     An EK opened for write access cannot be queried. To make an EK
 !     available to the EK query system, the file must be loaded via
 !     FURNSH or EKLEF, rather than by this routine. See the EK Required
@@ -138,9 +137,7 @@
 !        file, how to re-open the file for write access and update the
 !        data, and how to read the data from it.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKOPW_EX1
 !              IMPLICIT NONE
@@ -195,7 +192,6 @@
 !              INTEGER               SEGNO
 !
 !              LOGICAL               ISNULL
-!
 !
 !        C
 !        C     Open a new EK file.  For simplicity, we won't
@@ -337,10 +333,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from column: CHR_COL_1
 !            record number:            1
@@ -383,7 +377,6 @@
 !         Data from column: CHR_COL_2
 !            record number:            6
 !            values       : -50      -51      -52      -53
-!
 !
 !        Note that the second record does not appear due to setting the
 !        ISNULL flag to .TRUE. for that record. The odd value record
@@ -431,13 +424,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open existing EK for writing
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -462,7 +453,6 @@
 !     should be a paged DAS EK.
 !
       call zzekpgch ( handle, 'WRITE' )
-
 
       return
       end

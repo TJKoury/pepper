@@ -115,7 +115,6 @@
 !
 !     FOUND is .TRUE., and VALUE is 10.
 !
-!
 !     The next call,
 !
 !        CALL SYPOPI ( 'erasers', TABSYM, TABPTR, TABVAL, VALUE, FOUND )
@@ -167,13 +166,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     pop a value from a particular symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -194,13 +191,10 @@
       integer(ip)           locsym
       integer(ip)           locval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -256,7 +250,6 @@
          end if
 
       end if
-
 
       return
       end

@@ -125,7 +125,6 @@
 !     If it did, the message is retrieved and output via
 !     a user-defined output routine:
 !
-!
 !     C
 !     C     We call RDTEXT; then test for errors...
 !     C
@@ -184,13 +183,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get error message
 !
 !-&
-
 
 !
 !     Local Variables:
@@ -234,7 +231,6 @@
 !
          call getsms ( msg )
 
-
       else if ( upopt == 'EXPLAIN' ) then
 
 !
@@ -244,7 +240,6 @@
 
          call getsms  ( shrtms )
          call expln   ( shrtms, msg )
-
 
       else if ( upopt == 'LONG' ) then
 
@@ -270,9 +265,6 @@
 
          call sigerr ( 'SPICE(INVALIDMSGTYPE)' )
 
-
-
       end if
-
 
       end

@@ -17,7 +17,6 @@
 !
 ! $ Declarations
 
-
       include 'ekclas07.inc'
       include 'ekclas08.inc'
       include 'ekclas09.inc'
@@ -144,7 +143,6 @@
 !
       call zzekaps ( handle, segdsc, int, .false., p, base  )
 
-
       offset  =  base
 
       do i = 1, ncols
@@ -172,11 +170,9 @@
 
             offset  =  offset + mdsz07
 
-
          else if ( class == 8 ) then
 
             offset  =  offset + mdsz08
-
 
          else if ( class == 9 ) then
 
@@ -192,7 +188,6 @@
          end if
 
       end do
-
 
       return
       end

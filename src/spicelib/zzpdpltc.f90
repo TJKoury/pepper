@@ -59,7 +59,6 @@
 !
 !                RP may be less than, equal to, or greater than RE.
 !
-!
 !     P          is a point (equivalently, a vector) in
 !                three-dimensional space. P is expressed in Cartesian
 !                coordinates. P must lie on the planetodetic
@@ -67,10 +66,8 @@
 !
 !                The units of P must be consistent with those of RE.
 !
-!
 !     LAT        is a planetodetic latitude value defining a cone.
 !                Units are radius.
-!
 !
 ! $ Detailed_Output
 !
@@ -172,9 +169,6 @@
 !
 !-&
 
-
-
-
 !
 !     SPICELIB functions
 !
@@ -203,8 +197,6 @@
 
       if ( return() ) return
 
-
-
 !
 !     The equatorial radius must be greater than zero.
 !
@@ -221,7 +213,7 @@
 !     If the flattening coefficient is greater than one, the polar
 !     radius computed below is negative. If it's equal to one, the
 !     polar radius is zero. Either case is a problem, so signal an
-!     error and check out.
+!     error.
 !
       if ( f >= 1 ) then
 
@@ -248,7 +240,6 @@
 !
 !        This is the oblate case.
 !
-!
 !        If the point is on the "correct" side of the X-Y plane---
 !        that is, its Z component as the same sign as LAT, the
 !        point is considered to have the correct latitude.
@@ -263,11 +254,9 @@
 !
 !              LAT * P(3) > 0
 !
-!
          if (  ( p(3) * lat )  >=  0.0_wp  ) then
 
             zzpdpltc = .true.
-
 
          else if ( abs(lat) >= limit ) then
 !
@@ -335,7 +324,6 @@
          end if
 
       end if
-
 
       return
       end

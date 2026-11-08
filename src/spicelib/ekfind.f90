@@ -97,7 +97,6 @@
 !
 !                 <table alias>.<column name>
 !
-!
 !              The FROM clause specifies the tables from which
 !              data are to be selected. In simple queries, only
 !              one table is listed. In this case the form of
@@ -367,7 +366,6 @@
 !            valid query that violates a limit or a restriction on
 !            values used in a query.
 !
-!
 !     Some problems with queries are not trapped by EKFIND but
 !     instead cause errors to be signaled. These are listed below.
 !
@@ -415,9 +413,7 @@
 !
 !           dif_cmdict_128_20050620.bdb
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKFIND_EX1
 !              IMPLICIT NONE
@@ -494,13 +490,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Number of matching rows:         5798
-!
 !
 !     2) Examples of strings containing syntactically valid queries:
 !
@@ -549,13 +542,11 @@
 !            NOT (    ( ( COL1 <  COL2 ) AND ( COL1 > 5   ) )  OR
 !                     ( ( COL1 >= COL2 ) AND ( COL2 <= 10 ) )      )
 !
-!
 !            SELECT T1.COL1, T1.COL2, T2.COL2, T2.COL3
 !            FROM TABLE1 T1, TABLE2 T2
 !            WHERE T1.COL1 = T2.COL1
 !            AND T1.COL2 > 5
 !            ORDER BY T1.COL1, T2.COL2
-!
 !
 !     3) Examples of syntactically invalid queries:
 !
@@ -588,12 +579,9 @@
 !                                                right-hand-side of
 !                                                operator is not quoted}
 !
-!
-!
 !         In the following examples, we'll assume that the program
 !         calling EKFIND has loaded an EK containing two segments
 !         having columns having the following names and attributes:
-!
 !
 !          TABLE1:
 !          ==========
@@ -604,7 +592,6 @@
 !            EVENT_PARAMETERS   CHARACTER*(*)     1          NO
 !            COMMENT            CHARACTER*80      VARIABLE   NO
 !
-!
 !          TABLE2:
 !          ==========
 !
@@ -614,7 +601,6 @@
 !            EVENT_PARAMETERS   CHARACTER*80      1          NO
 !            COMMENT            CHARACTER*80      VARIABLE   NO
 !            COMMAND            CHARACTER*80      1          YES
-!
 !
 !         Then the following queries are semantically invalid:
 !
@@ -691,7 +677,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find EK data
@@ -699,12 +684,10 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Local parameters
@@ -715,7 +698,6 @@
 !     Storage limits:
 !
       integer(ip), parameter :: maxcol = 100
-
 
 !
 !     Local variables
@@ -736,7 +718,6 @@
       integer(ip)           tokens ( maxtok )
       integer(ip)           values ( maxtok )
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -756,7 +737,6 @@
 
       if ( error ) return
 
-
 !
 !     Now parse the query.
 !
@@ -767,7 +747,6 @@
 
       if ( error ) return
 
-
 !
 !     Resolve names.
 !
@@ -776,7 +755,6 @@
 
       if ( error ) return
 
-
 !
 !     Resolve time values, if necessary.
 !
@@ -784,7 +762,6 @@
                              error,  errmsg, errptr  )
 
       if ( error ) return
-
 
 !
 !     Perform semantic checks.
@@ -799,7 +776,6 @@
 !     Find the data satisfying the constraints.
 !
       call eksrch ( eqryi, eqryc, eqryd, nmrows, error, errmsg )
-
 
       return
       end

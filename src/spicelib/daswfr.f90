@@ -196,7 +196,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write DAS file record
@@ -204,7 +203,6 @@
 !     update DAS internal file name
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -248,7 +246,6 @@
 !-    SPICELIB Version 1.0.0, 24-NOV-1992 (NJB) (WLT)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -327,10 +324,9 @@
 !
       if ( return () ) return
 
-
 !
 !     Check to be sure that HANDLE is attached to a file that is open
-!     with write access.  If the call fails, check out and return.
+!     with write access.  If the call fails, return.
 !
       call dassih ( handle, 'WRITE' )
 

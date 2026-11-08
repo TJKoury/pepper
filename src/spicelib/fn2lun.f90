@@ -105,13 +105,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map filename to logical unit
 !
 !-&
-
 
 !
 !     SPICELIB functions

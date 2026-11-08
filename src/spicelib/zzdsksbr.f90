@@ -69,7 +69,6 @@
 !
 ! $ Detailed_Input
 !
-!
 !     NEEDED     is the number of segment table entries needed to store
 !                the segment list for a new body.
 !
@@ -121,55 +120,43 @@
 !     STRAD      is an array of radii of outer bounding spheres of
 !                segments. Units are km.
 !
-!
 ! $ Detailed_Output
-!
 !
 !     BTBODY     is the input body ID table, modified by this routine.
 !                If it was necessary to delete a body from the table to
 !                make room, that has been done.
 !
-!
 !     BTNBOD     is the number of bodies in the body table.
-!
 !
 !     BTSEGP     is an array of start indices in the segment table
 !                of existing entries, updated to reflect deletion of
 !                segments.
 !
-!
 !     BTSTSZ     is the array of sizes of segment lists of bodies. If
 !                it was necessary to make room, entries of BTSTSZ
 !                will have been deleted.
 !
-!
 !     STHAN      is the segment handle array. If it was necessary to
 !                make room, entries of STHAN will have been deleted.
-!
 !
 !     STDSCR     is the segment DSK descriptor array. If it was
 !                necessary to make room, entries of STDESR will have
 !                been deleted.
 !
-!
 !     STDLAD     is the segment DLA descriptor array. If it was
 !                necessary to make room, entries of STDLAD will have
 !                been deleted.
 !
-!
 !     STFREE     is the index of the first free element in each
 !                segment table array.
-!
 !
 !     STOFF      is the segment frame center offset array.
 !                If it was necessary to make room, entries of
 !                STOFF will have been deleted.
 !
-!
 !     STCTR      is the segment bounding sphere center array.
 !                If it was necessary to make room, entries of
 !                STCTR will have been deleted.
-!
 !
 !     STRAD      is the segment bounding sphere radius array.
 !                If it was necessary to make room, entries of
@@ -268,10 +255,7 @@
       integer(ip)           nbtdel
       integer(ip)           nstdel
 
-
       if ( return() ) return
-
-
 
       if ( needed > stsize ) then
 !

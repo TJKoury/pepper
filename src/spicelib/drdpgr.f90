@@ -201,13 +201,11 @@
 !        (dx, dy, dz)   = JACOBI|              * (dlon, dlat, dalt)
 !                               |(lon,lat,alt)
 !
-!
 !     This routine computes the matrix
 !
 !              |
 !        JACOBI|
 !              |(lon,lat,alt)
-!
 !
 !     In the planetographic coordinate system, longitude is defined
 !     using the spin sense of the body. Longitude is positive to the
@@ -261,14 +259,12 @@
 !     input, the compiler and supporting libraries, and the machine
 !     specific arithmetic implementation.
 !
-!
 !     1) Find the planetographic state of the earth as seen from
 !        Mars in the J2000 reference frame at January 1, 2005 TDB.
 !        Map this state back to rectangular coordinates as a check.
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -293,7 +289,6 @@
 !                                            radii
 !              naif0009.tls                  Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de421.bsp',
@@ -304,9 +299,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DRDPGR_EX1
 !              IMPLICIT NONE
@@ -392,7 +385,6 @@
 !
 !              CALL MXV ( JACOBI, PGRVEL, DRECTN )
 !
-!
 !              WRITE(*,*) ' '
 !              WRITE(*,*) 'Rectangular coordinates:'
 !              WRITE(*,*) ' '
@@ -439,10 +431,8 @@
 !              WRITE(*,*) ' '
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Rectangular coordinates:
 !
@@ -486,7 +476,6 @@
 !           dY/dt (km/s)           =    9.0732615496727167
 !           dZ/dt (km/s)           =    4.7579169009978992
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -520,13 +509,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Jacobian of rectangular w.r.t. planetographic coordinates
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -541,7 +528,6 @@
       character(*), parameter :: pmtmp = 'BODY#_PM'
 
       character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
-
 
       integer(ip), parameter :: earth = 399
 
@@ -559,8 +545,6 @@
 !     Saved body name length.
 !
       integer(ip), parameter :: maxl = 36
-
-
 
 !
 !     Local variables
@@ -603,12 +587,10 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Initialization.
@@ -644,8 +626,7 @@
       end if
 
 !
-!     The equatorial radius must be positive. If not, signal an error
-!     and check out.
+!     The equatorial radius must be positive. If not, signal an error.
 !
       if ( re <= 0.0_wp ) then
 
@@ -659,7 +640,7 @@
 !
 !     If the flattening coefficient is greater than 1, the polar radius
 !     is negative. If F is equal to 1, the polar radius is zero. Either
-!     case is a problem, so signal an error and check out.
+!     case is a problem, so signal an error.
 !
       if ( f >= 1.0_wp ) then
 
@@ -701,7 +682,6 @@
             return
 
          end if
-
 
       else
 !

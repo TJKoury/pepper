@@ -82,7 +82,6 @@
 !        the PCKRnn routines might be used to examine raw segment data
 !        before evaluating it with the PCKEnn routines.
 !
-!
 !     Here we load a binary PCK files and use PCKE02 to get the
 !     Euler angles.
 !
@@ -91,13 +90,11 @@
 !     C
 !        CALL PCKLOF ('example.pck', HANDLE)
 !
-!
 !     C  Get a segment applicable to a specified body and epoch.
 !
 !        CALL PCKSFS ( BODY, ET, HANDLE, DESCR, IDENT, FOUND )
 !
 !        IF ( FOUND ) THEN
-!
 !
 !           Look at parts of the descriptor.
 !
@@ -111,12 +108,10 @@
 !
 !              CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
 !
-!
 !              Call evaluation routine to get Euler angles
 !              phi, delta, w.
 !
 !              CALL PCKE02 ( ET, RECORD, EULANG )
-!
 !
 !     The Euler angles and their derivatives are returned
 !     in EULANG.
@@ -156,13 +151,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get Euler angles and their derivatives
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -186,7 +179,6 @@
 !     We do this because we've always done this.
 !
       eulang(3) = mod ( eulang(3), twopi() )
-
 
       return
       end

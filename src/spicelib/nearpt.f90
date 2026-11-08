@@ -165,7 +165,6 @@
 !     C
 !           CALL NEARPT ( EVEC, A, B, C, SUBPNT, ALT )
 !
-!
 !     Example 2.
 !
 !     One can use this routine to define a generalization of GEODETIC
@@ -286,14 +285,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     distance from point to ellipsoid
 !     nearest point on an ellipsoid
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -316,7 +313,6 @@
 !        However, the Intel Fortran compiler for the Mac flags a runtime
 !        error when the above code is exercised. So SNGLPT is now
 !        initialized prior to the above IF statement.
-!
 !
 !-    SPICELIB Version 1.2.0, 15-NOV-2005 (EDW) (NJB)
 !
@@ -363,7 +359,6 @@
 !
 !        A few code changes were made to enhance clarity.
 !
-!
 !-    SPICELIB Version 1.1.0, 27-NOV-1990 (WLT)
 !
 !        The routine was nearly rewritten so that points
@@ -375,7 +370,6 @@
 !        are retained, the code is for the most part new. In addition,
 !        the new code has been documented far more extensively than was
 !        NEARPT 1.0.0.
-!
 !
 !-    Beta Version 2.0.0, 9-JAN-1989 (WLT)
 !
@@ -391,7 +385,6 @@
 !        Add an example to the header section.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -409,14 +402,12 @@
 !
 !     Parameters
 !
-!
 !     The convergence tolerance CNVTOL is used to terminate the
 !     bisection loop when the solution interval is very small but
 !     hasn't converged to length zero.  This situation can occur when
 !     the root is extremely close to zero.
 !
       real(wp), parameter :: cnvtol = 1.0e-16_wp
-
 
 !
 !     Various potentially large numbers we'll compute must not
@@ -519,7 +510,6 @@
                                    'Axes B and C were nonpositive. ?', &
                                    'All three axes were nonpositive. ?'/
 
-
 !
 !     Here's what you can expect to find in the routine below.
 !
@@ -571,7 +561,6 @@
          bad = bad + 4
       end if
 
-
       if ( bad > 0 ) then
 
          call setmsg ( mssg (bad)                       )
@@ -586,8 +575,6 @@
          return
 
       end if
-
-
 
 !
 !     Chapter 2
@@ -606,7 +593,6 @@
 !     going to be solved.
 !
 !     We want to find a point on the ellipsoid
-!
 !
 !           X**2       Y**2       Z**2
 !          ------  +  ------  +  ------  =  1                       [1]
@@ -631,7 +617,6 @@
 !     the same octant at POSITN such that the normal at P is parallel
 !     to SEGMENT(P).
 !
-!
 !         More gory details: A normal to a point (X,Y,Z)
 !         on the ellipsoid is given by
 !
@@ -642,7 +627,6 @@
 !         Given a fixed lambda, and allowing (X,Y,Z) to
 !         range over all points on the ellipsoid, the set
 !         of points
-!
 !
 !                 lambda*X      lambda*Y      lambda*Z
 !           ( X + --------, Y + --------, Z + -------- )            [3]
@@ -660,7 +644,6 @@
 !         orthogonal to the smallest axis (called the central plane)
 !         they do not intersect.
 !
-!
 !         Finally every point that does not lie on the central plane
 !         lies on one of the "lambda" ellipsoids described above.
 !
@@ -669,7 +652,6 @@
 !         the normal line at NPOINT also contains P and does not cross
 !         the central plane.
 !
-!
 !     From the above discussion we see that we can mathematically
 !     solve the near point problem by finding a point NPOINT
 !     on the ellipsoid given by the equation:
@@ -677,7 +659,6 @@
 !           X**2       Y**2       Z**2
 !          ------  +  ------  +  ------  =  1                       [5]
 !           A**2       B**2       C**2
-!
 !
 !     such that for some value of lambda
 !
@@ -696,11 +677,9 @@
 !
 !     and lambda must be greater than -MIN(A**2,B**2,C**2)
 !
-!
 !     Once lambda is known, NPOINT can be computed from the equation:
 !
 !          POSITN = NPOINT + LAMBDA*NORMAL(NPOINT).
-!
 !
 !     The process of solving for lambda can be viewed as selecting
 !     that ellipsoid
@@ -829,8 +808,6 @@
 !     We see expression [18] identical to expression [6].
 !
 
-
-
 !
 !     Chapter 3
 !
@@ -950,7 +927,6 @@
 
       do while ( solvng )
 
-
 !
 !       Chapter 4
 !
@@ -958,10 +934,8 @@
 !       ================================================================
 !       ----------------------------------------------------------------
 !
-!
 !        Make a stab at solving the mathematical problem of finding the
 !        near point.  In other words, solve the lambda equation.
-!
 !
 !        Avoiding Numerical difficulties
 !        -------------------------------
@@ -1005,7 +979,6 @@
 !       0 = --------------- + ---------------- + ---------------  - 1
 !                         2                  2                 2
 !           (a + lambda/a)    ( b + lambda/b)    (c + lambda/c)
-!
 !
 !        We let Q(lambda) be the right hand side of this equation.
 !        To find the roots of the equation we determine
@@ -1074,7 +1047,6 @@
 
             inside = .false.
 
-
          else if ( q > 0.0_wp ) then
 !
 !           The input point is outside the ellipsoid (we expect that
@@ -1097,7 +1069,6 @@
                                    dabs( axis(2)*point(2) ), &
                                    dabs( axis(3)*point(3) ) )
             lambda = upper
-
 
             inside = .false.
 
@@ -1165,7 +1136,6 @@
                lower  = lambda
                upper  = max ( lower, 0.0_wp )
 
-
             else
 !
 !              The point must be at the origin.  In this case
@@ -1204,7 +1174,6 @@
             end if
 
          end if
-
 
 !
 !        OK. Now compute the value of Q at the two bracketing
@@ -1261,7 +1230,6 @@
 
          end do
 
-
          if ( .not. inside ) then
             qlower = q
             qupper = term(1) + term(2) + term(3) - 1.0_wp
@@ -1275,7 +1243,6 @@
 !
          qlower = max ( 0.0_wp,  qlower )
          qupper = min ( 0.0_wp,  qupper )
-
 
          lambda = upper
          q      = qupper
@@ -1465,7 +1432,6 @@
 !
         lambda = lower
 
-
         do i = 1, 3
 
            if ( point(i) == 0.0_wp ) then
@@ -1529,16 +1495,13 @@
 !             x  +  --------  = POINT(1)  = 0
 !                      a*a
 !
-!
 !                    lambda*y
 !             y  +  --------  = POINT(2)
 !                      b*b
 !
-!
 !                   lambda*z
 !             z  +  --------  = POINT(3)
 !                      c*c
-!
 !
 !          Since we are assuming that this undetected solution (x,y,z)
 !          does not have x equal to 0, it must be the case that
@@ -1564,7 +1527,6 @@
 !              POINT(2) is not zero, the deflating ellipsoid must pass
 !              through POINT before it collapses to a segment.)
 !
-!
 !          Case 2.  SNGLPT = 3
 !
 !          The input to the lambda solution POINT lies on the Z-axis.
@@ -1581,21 +1543,17 @@
 !          the closest point on the X-Z ellipse.  Thus, in solving
 !          the equations
 !
-!
 !                   lambda*x
 !             x  +  --------  = POINT(1)  = 0
 !                      a*a
-!
 !
 !                    lambda*y
 !             y  +  --------  = POINT(2)  = 0
 !                      b*b
 !
-!
 !                   lambda*z
 !             z  +  --------  = POINT(3)
 !                      c*c
-!
 !
 !          We have
 !
@@ -1630,7 +1588,6 @@
 !
 !          First of all the smallest axis must be different from
 !          the axis associated with the first true singularity.
-!
 !
 !          Next, whatever point we find, it must be true that
 !
@@ -1676,7 +1633,6 @@
 !                        possible magnitude of a non-zero value of the
 !                        denominator is roughly 1.D-16, assuming IEEE
 !                        double precision numeric representation.
-!
 !
                     epoint(3) = point(3) / denom3
 
@@ -1773,7 +1729,6 @@
 
         end if
 
-
 !
 !       Chapter 5
 !
@@ -1796,7 +1751,6 @@
             call   vequ ( spoint, bestpt )
 
             bestht = vdist ( bestpt, orignl )
-
 
          else if ( solutn == 2 ) then
 
@@ -1832,7 +1786,6 @@
 !              4) Find the point on the ellipsoid closest to POINT.
 !                 (step 4 is handled by the solution loop above).
 !
-!
 !           First we need to compute the altitude
 !
             height  = sign * vdist( spoint, orignl )
@@ -1850,7 +1803,6 @@
 
             end do
 
-
 !
 !           Find the component of the error vector that is
 !           perpendicular to the normal, and shift our solution
@@ -1865,7 +1817,6 @@
             if ( vzero(errp) ) then
                solvng = .false.
             end if
-
 
 !
 !           The sign of the original point's altitude tells
@@ -1906,7 +1857,6 @@
                solvng = .false.
             end if
 
-
             olderr = vnorm ( err )
             bestht = height
 
@@ -1916,7 +1866,6 @@
 !           near point, we can just return our current best guess.
 !
             call vequ ( spoint, bestpt )
-
 
          else if ( solutn > 2 ) then
 
@@ -1997,7 +1946,6 @@
 !              "sharpening" estimate.
 !
                if ( solutn <= maxsol ) then
-
 
 !                 Find the component of the error vector that is
 !                 perpendicular to the normal, and shift our solution
@@ -2094,7 +2042,6 @@
       end do
 
       alt = bestht/scale
-
 
       return
       end

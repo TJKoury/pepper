@@ -292,20 +292,17 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write a text line to a logical unit
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       integer(ip)           rtrim
 
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Local Parameters
 !
@@ -316,14 +313,12 @@
 !
       integer(ip)           stdout
       parameter           ( stdout = 6 )
-!
 #else
 #endif
 !     Local variables
 !
       integer(ip)           iostat
 
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Some environments make a distinction between a text file and the
 !     terminal screen when writing to a logical unit using list directed
@@ -338,7 +333,6 @@
 !     between a text file and the standard output unit, so no leading
 !     vertical spacing character is required.
 #endif
-!
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     So, we check to see if we are writing to the standard output unit
 !     and perform a list directed write, otherwise we use the format
@@ -355,7 +349,7 @@
 #endif
 !
 !     Check to see if we got a write error, and signal it if we did.
-!     Also check in and check out.
+!     Also check in.
 !
       if ( iostat /= 0  ) then
 

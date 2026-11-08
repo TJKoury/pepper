@@ -86,7 +86,6 @@
 !                   VALUE   is the value of the scalar quantity
 !                           at ET.
 !
-!
 !     UDFUNB     the user defined routine returning a boolean value
 !                for an epoch ET.
 !
@@ -104,11 +103,9 @@
 !
 !                   BOOL     the boolean value at ET.
 !
-!
 !     TOL        is a tolerance value used to determine convergence of
 !                root-finding operations. TOL is measured in TDB seconds
 !                and must be greater than zero.
-!
 !
 !     UDSTEP     is an externally specified routine that computes a
 !                time step used to find transitions of the state being
@@ -141,7 +138,6 @@
 !                If a constant step size is desired, the routine GFSTEP
 !                may be used. If GFSTEP is used, the step size must be
 !                set by calling GFSSTP prior to calling this routine.
-!
 !
 !     UDREFN     is the name of the externally specified routine that
 !                refines the times that bracket a transition point. In
@@ -177,13 +173,11 @@
 !                If a simple bisection method is desired, the routine
 !                GFREFN may be used.
 !
-!
 !     RPT        is a logical variable which controls whether
 !                progress reporting is enabled. When RPT is .TRUE.,
 !                progress reporting is enabled and the routines
 !                UDREPI, UDREPU, and UDPREF (see descriptions below)
 !                are used to report progress.
-!
 !
 !     UDREPI     is a user-defined subroutine that initializes a
 !                progress report. When progress reporting is
@@ -224,7 +218,6 @@
 !                the SPICELIB routines GFREPU and GFREPF must be
 !                the actual arguments corresponding to UDREPU and
 !                UDREPF.
-!
 !
 !     UDREPU     is a user-defined subroutine that updates the
 !                progress report for a search.  The calling sequence
@@ -271,7 +264,6 @@
 !                the actual arguments corresponding to UDREPI and
 !                UDREPF.
 !
-!
 !     UDREPF     is a user-defined subroutine that finalizes a
 !                progress report. UDREPF has no arguments.
 !
@@ -281,13 +273,11 @@
 !                the actual arguments corresponding to UDREPI and
 !                UDREPU.
 !
-!
 !     BAIL       is a logical variable indicating whether or not
 !                interrupt handling is enabled. When BAIL is
 !                set to .TRUE., the input function UDBAIL (see
 !                description below) is used to determine whether
 !                an interrupt has been issued.
-!
 !
 !     UDBAIL     is the name of a user defined logical function that
 !                indicates whether an interrupt signal has been
@@ -311,7 +301,6 @@
 !
 !                may be used for this purpose.
 !
-!
 !     CNFINE     is a SPICE window that confines the time period over
 !                which the specified search is conducted. CNFINE may
 !                consist of a single interval or a collection of
@@ -325,7 +314,6 @@
 !
 !                CNFINE must be initialized by the caller via the
 !                SPICELIB routine SSIZED.
-!
 !
 ! $ Detailed_Output
 !
@@ -426,7 +414,6 @@
 !     the endpoints of the intervals of the result window are computed.
 !     That precision level is controlled by the convergence tolerance.
 !
-!
 !     Convergence Tolerance
 !     =====================
 !
@@ -457,7 +444,6 @@
 !     since a few convergence steps will be omitted. However, in most
 !     cases, the step size is likely to have a much greater effect
 !     on processing time than would the convergence tolerance.
-!
 !
 !     The Confinement Window
 !     ======================
@@ -515,7 +501,6 @@
       logical               failed
       logical               return
 
-
 !
 !     Local parameters
 !
@@ -542,12 +527,10 @@
       integer(ip)           count
       integer(ip)           i
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check the convergence tolerance.
@@ -560,7 +543,6 @@
          return
 
       end if
-
 
 !
 !     Prepare the progress reporter if appropriate.
@@ -626,4 +608,3 @@
 
       return
       end
-

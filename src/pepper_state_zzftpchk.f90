@@ -18,10 +18,10 @@ module pepper_state_zzftpchk
 
    !> The saved variables of ZZFTPCHK.
    type, public :: zzftpchk_state
-      logical :: first  !! saved between calls by ZZFTPCHK
-      character(sizend) :: lftbkt  !! saved between calls by ZZFTPCHK
-      character(sizstr) :: memstr  !! saved between calls by ZZFTPCHK
-      character(sizend) :: rgtbkt  !! saved between calls by ZZFTPCHK
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      character(sizend) :: lftbkt  !! left bracket of the FTP validation string
+      character(sizstr) :: memstr  !! the FTP validation string without its brackets
+      character(sizend) :: rgtbkt  !! right bracket of the FTP validation string
    end type zzftpchk_state
 
 contains

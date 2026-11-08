@@ -106,9 +106,7 @@
 !        of the ID code set: find the coverage for each item in the
 !        set and display the coverage.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM PCKFRM_EX1
 !              IMPLICIT NONE
@@ -158,7 +156,6 @@
 !              INTEGER               IDS   ( LBCELL : MAXFRM )
 !              INTEGER               J
 !              INTEGER               NIV
-!
 !
 !        C
 !        C     Load a leapseconds kernel for output time conversion.
@@ -249,11 +246,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0012.tls, and the PCK
 !        file named earth_720101_070426.bpc, the output was:
-!
 !
 !        Name of leapseconds kernel > naif0012.tls
 !        Name of PCK file           > earth_720101_070426.bpc
@@ -265,7 +260,6 @@
 !         Stop:     2007 APR 26 00:01:05.185 (TDB)
 !
 !         ========================================
-!
 !
 ! $ Restrictions
 !
@@ -305,13 +299,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find frame class id codes of frames in binary PCK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -346,7 +338,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     See whether GETFAT thinks we've got a PCK file.

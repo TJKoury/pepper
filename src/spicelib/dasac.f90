@@ -159,14 +159,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add comments to a binary DAS file
 !     append comments to a DAS file comment area
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -225,14 +223,11 @@
 !
 !     Saved variables
 !
-!
 !     Initial values
-!
 !
 !     Constants (SPICELIB computed them on the first call).
 !
       character(1), parameter :: eolmrk = char ( inteol )
-
 
 !
 !     Standard SPICE error handling.
@@ -249,7 +244,6 @@
 !     If this is the first time that this routine has been called,
 !     we need to initialize the character value for the end-of-line
 !     marker.
-!
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.

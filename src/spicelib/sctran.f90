@@ -111,13 +111,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert between SCLK ID codes and names
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -128,7 +126,6 @@
 !        the substring "SCLK" in the input string.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -153,10 +150,6 @@
       call sigerr ( 'SPICE(BOGUSENTRY)' )
 
       return
-
-
-
-
 
 !$Procedure SCN2ID  ( SCLK name to ID code )
 
@@ -289,13 +282,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert an SCLK name to an SCLK ID code
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -306,7 +297,6 @@
 !        the substring "SCLK" in the input string.
 !
 !-&
-
 
 !
 !     Convert name to upper case.
@@ -319,7 +309,6 @@
 !
       loc = posr ( tmpnam, 'SCLK', rtrim(tmpnam) )
 
-
       if ( loc > 0 ) then
          tmpnam(loc:loc+3) = ' '
       end if
@@ -327,12 +316,6 @@
       call bodn2c ( tmpnam, clkid, found )
 
       return
-
-
-
-
-
-
 
 !$Procedure SCID2N  ( SCLK ID code to name )
 
@@ -457,13 +440,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert an SCLK name to an SCLK ID code
 !
 !-&
-
 
       call bodc2n ( clkid, clknam, found )
 

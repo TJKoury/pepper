@@ -143,9 +143,7 @@
 !        opening the DSK file for read access, traversing a trivial,
 !        one-segment list to obtain the segment of interest.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DSKN02_EX1
 !              IMPLICIT NONE
@@ -153,17 +151,14 @@
 !              INCLUDE 'dla.inc'
 !              INCLUDE 'dsk02.inc'
 !
-!
 !              CHARACTER*(*)         FMT
 !              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
 !
 !              INTEGER               BUFSIZ
 !              PARAMETER           ( BUFSIZ = 10000 )
 !
 !              INTEGER               FILSIZ
 !              PARAMETER           ( FILSIZ = 255 )
-!
 !
 !              CHARACTER*(FILSIZ)    DSK
 !
@@ -270,11 +265,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !
@@ -310,7 +303,6 @@
 !            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
 !            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
 !            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
-!
 !
 !        Note that only the vertex information for first 5 plates is
 !        provided.
@@ -350,14 +342,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute normal vector for a type 2 DSK plate
 !     compute normal vector from DSK type 2 plate id
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -381,7 +371,6 @@
       integer(ip)           unit
 
       if ( return() ) return
-
 
 !
 !     Look up the DSK descriptor for this segment.

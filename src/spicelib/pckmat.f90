@@ -210,13 +210,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get state transformation matrix from binary PCK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -274,7 +272,6 @@
 !     Standard SPICE Error handling.
 !
       if ( return () ) return
-
 
 !
 !     Get a segment applicable to a specified body and epoch.
@@ -336,7 +333,6 @@
                return
             end if
 
-
          else if ( type == 03 ) then
 !
 !           Fetch the number of Chebyshev coefficients, compute the
@@ -374,7 +370,6 @@
                found = .false.
                return
             end if
-
 
          else if ( type == 20 ) then
 !
@@ -415,7 +410,6 @@
                found = .false.
                return
             end if
-
 
          else
 !

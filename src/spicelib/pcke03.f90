@@ -92,7 +92,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the PCKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -162,13 +161,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_03 PCK segment
 !
 !-&
-
 
 !
 !     SPICELIB Functions
@@ -226,7 +223,6 @@
 !
 !        ---W.L. Taber
 !
-!
       do i = 1, 6
 !
 !        The coefficients for each variable are located contiguously,
@@ -271,7 +267,6 @@
 !        EULANG(4) = AV_1 (bodyfixed)
 !        EULANG(5) = AV_2 (bodyfixed)
 !        EULANG(6) = AV_3 (bodyfixed)
-!
 !
 !     Compute the rotation associated with the Euler angles.
 !

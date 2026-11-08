@@ -24,7 +24,6 @@
 
       include              'sgparam.inc'
 
-
       integer(ip)           handle
       integer(ip)           body
       integer(ip)           center
@@ -212,7 +211,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File name: spkw10_ex1.tm
@@ -247,9 +245,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW10_EX1
 !              IMPLICIT NONE
@@ -448,7 +444,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 10 exists in
 !        the output directory.
@@ -513,13 +508,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Write a type 10 SPK segment
 !
 !-&
-
 
 !
 !     Spicelib functions
@@ -554,7 +547,6 @@
 
       integer(ip), parameter :: pktsiz = dnulon
 
-
       real(wp)              descr ( 6 )
       real(wp)              packet( pktsiz )
       real(wp)              dnut  ( 4 )
@@ -563,8 +555,6 @@
       integer(ip)           i
       integer(ip)           npkts
       integer(ip)           nepoch
-
-
 
 !
 !     Standard SPICELIB error handling.
@@ -586,7 +576,6 @@
 !
       npkts  = n
       nepoch = n
-
 
       call sgbwfs ( handle, descr,   segid, &
                     nconst, consts,  pktsiz, expcls          )
@@ -617,7 +606,6 @@
       end do
 
       call sgwes  ( handle )
-
 
       return
 

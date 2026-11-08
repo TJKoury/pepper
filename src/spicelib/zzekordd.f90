@@ -99,7 +99,6 @@
 !             DVALS(4)  =  5             NLFLGS(4)  =  .FALSE.
 !             DVALS(5)  =  2             NLFLGS(5)  =  .TRUE.
 !
-!
 !          The subroutine call
 !
 !              CALL ZZEKORDD ( DVALS, .TRUE., NLFLGS, 5, IORDER )
@@ -111,7 +110,6 @@
 !             IORDER(3)  =  2
 !             IORDER(4)  =  1
 !             IORDER(5)  =  4
-!
 !
 !      2)  Given the same inputs values of DVALS and NLFLGS, the
 !          subroutine call
@@ -162,7 +160,6 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -179,7 +176,6 @@
       logical               n1
       logical               n2
       logical               ok
-
 
 !
 !     Statement functions
@@ -198,21 +194,17 @@
                                           .or. (      ( n1 .and. n2 ) &
                                                 .and. ( i1 < i2  ) )
 
-
       cmp3 ( d1, d2, i1, i2, n1, n2 )  =        ( .not. ( n1 .or. n2 ) ) &
                                          .and. cmp1 (  d1, d2, i1, i2  )
-
 
       cmp4 ( d1, d2, i1, i2, n1, n2 )  = cmp2 ( i1, i2, n1, n2 ) &
                                          .or. &
                                          cmp3 ( d1, d2, i1, i2, n1, n2 )
 
-
       le (  d1,  d2,  i1,  i2,  ok,  n1,  n2  )  = &
 
               (  (.not. ok ) .and.  cmp1 ( d1, d2, i1, i2 )          ) &
         .or.  (  (      ok ) .and.  cmp4 ( d1, d2, i1, i2, n1, n2 )  )
-
 
 !
 !     Begin with the initial ordering.
@@ -231,7 +223,6 @@
       do while ( gap > 0 )
 
          do i = gap+1, nvals
-
 
             j = i - gap
 
@@ -264,7 +255,6 @@
                j = j - gap
 
             end do
-
 
          end do
 

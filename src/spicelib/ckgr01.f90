@@ -221,13 +221,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK type_1 record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -249,7 +247,6 @@
 !        2) ROTATIONS was removed from the required reading section.
 !        3) Minor changes were made to the wording of the header.
 !
-!
 !-    Beta Version 1.1.0, 28-AUG-1990 (MJS) (JEM)
 !
 !        The following changes were made as a result of the
@@ -270,7 +267,6 @@
 !-    Beta Version 1.0.0, 23-MAY-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -313,8 +309,6 @@
 
       real(wp)              dcd    ( ndc )
       real(wp)              n
-
-
 
 !
 !     Standard SPICE error handling.
@@ -390,7 +384,6 @@
 !
       addr = beg + psiz*nrec + recno - 1
       call dafgda ( handle, addr, addr, record( 1 ) )
-
 
       return
       end

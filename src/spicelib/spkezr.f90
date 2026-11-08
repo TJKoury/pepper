@@ -138,7 +138,6 @@
 !                            correction and stellar aberration
 !                            correction.
 !
-!
 !              The following values of ABCORR apply to the
 !              "transmission" case in which photons *depart* from
 !              the observer's location at ET and arrive at the
@@ -171,7 +170,6 @@
 !                 'XCN+S'    "Transmission" case: converged
 !                            Newtonian light time correction and
 !                            stellar aberration correction.
-!
 !
 !              Neither special nor general relativistic effects are
 !              accounted for in the aberration corrections applied
@@ -292,7 +290,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: spkezr_ex1.tm
@@ -316,7 +313,6 @@
 !                                               radii
 !              naif0011.tls                     Leapseconds
 !
-!
 !           \begindata
 !
 !              KERNELS_TO_LOAD = ( 'de430.bsp',
@@ -326,9 +322,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKEZR_EX1
 !              IMPLICIT NONE
@@ -402,10 +396,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         The position of    : MARS BARYCENTER
 !         As observed from   : EARTH
@@ -417,7 +409,6 @@
 !         V (kilometers/sec) :
 !                   35.380861           28.653402           12.861524
 !         Light time (secs)  :    983.97882466162321
-!
 !
 ! $ Restrictions
 !
@@ -513,7 +504,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     using body names get target state relative to an observer
@@ -523,8 +513,6 @@
 !
 !-&
 
-
-!
 !
 !     SPICELIB functions
 !
@@ -577,7 +565,6 @@
 !     Initial values.
 !
       data                  first   / .true. /
-
 
 !
 !     Standard SPICE error handling.
@@ -651,7 +638,6 @@
 !     After all translations are done we can call SPKEZ.
 !
       call spkez   ( targid, et, ref, abcorr, obsid, starg, lt )
-
 
       return
       end

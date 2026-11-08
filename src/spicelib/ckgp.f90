@@ -161,7 +161,6 @@
 !     How the tolerance argument is used
 !     ==================================
 !
-!
 !     Reading a type 1 CK segment (discrete pointing instances)
 !     ---------------------------------------------------------
 !
@@ -186,7 +185,6 @@
 !        - The quaternions occurring in the segment need not be
 !          evenly spaced in time.
 !
-!
 !     Case 1: pointing is available
 !     ------------------------------
 !
@@ -201,7 +199,6 @@
 !                                     |
 !                         CKGP returns this instance.
 !
-!
 !     Case 2: pointing is not available
 !     ----------------------------------
 !
@@ -213,11 +210,8 @@
 !                                                    .  .  .
 !     Segment      (0-----0--0--0--0--0--0---0--0--0---------0--0--0--0)
 !
-!
 !                         CKGP returns no pointing; the output
 !                         FOUND flag is set to .FALSE.
-!
-!
 !
 !     Reading a type 2, 3, 4, or 5 CK segment (continuous pointing)
 !     -------------------------------------------------------------
@@ -244,7 +238,6 @@
 !        - The quaternions occurring in the periods of continuous
 !          pointing need not be evenly spaced in time.
 !
-!
 !     Case 1: pointing is available at the request time
 !     --------------------------------------------------
 !
@@ -264,7 +257,6 @@
 !                   continuous pointing is available. CKGP returns
 !                   pointing at the requested epoch.
 !
-!
 !     Case 2: pointing is available "near" the request time
 !     ------------------------------------------------------
 !
@@ -283,7 +275,6 @@
 !                   returns pointing for the epoch closest to the
 !                   request time SCLKDP.
 !
-!
 !     Case 3: pointing is not available
 !     ----------------------------------
 !
@@ -297,8 +288,6 @@
 !
 !                         CKGP returns no pointing; the output
 !                         FOUND flag is set to .FALSE.
-!
-!
 !
 !     Tolerance and segment priority
 !     ==============================
@@ -322,11 +311,9 @@
 !     A and B contain discrete pointing data, indicated by the number
 !     0.
 !
-!
 !     Case 1: Pointing is available in the first segment searched.
 !              Because segment A has the highest priority and can
 !              satisfy the request, segment B is not searched.
-!
 !
 !                                  SCLKDP
 !                                        \  TOL
@@ -342,12 +329,9 @@
 !
 !     Segment B     (0--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0--0)
 !
-!
-!
 !     Case 2: Pointing is not available in the first segment searched.
 !              Because segment A cannot satisfy the request, segment B
 !              is searched.
-!
 !
 !                             SCLKDP
 !                                  \   TOL
@@ -362,7 +346,6 @@
 !                                   |
 !                       CKGP returns this instance
 !
-!
 !     Segments that contain continuous pointing data are searched in
 !     the same manner as segments containing discrete pointing data.
 !     For request times that fall within the bounds of continuous
@@ -376,7 +359,6 @@
 !     the end of the file than segment C. Segment A contains discrete
 !     pointing data and segment C contains continuous data, indicated
 !     by the "=" character.
-!
 !
 !     Case 3: Pointing is not available in the first segment searched.
 !              Because segment A cannot satisfy the request, segment C
@@ -398,11 +380,9 @@
 !                                    |
 !                         CKGP returns this instance
 !
-!
 !     In the next case, assume that the order of segments A and C in the
 !     file is reversed: A is now closer to the front, so data from
 !     segment C are considered first.
-!
 !
 !     Case 4: Pointing is available in the first segment searched.
 !              Because segment C has the highest priority and can
@@ -426,7 +406,6 @@
 !                                           |
 !                                     "Best" answer
 !
-!
 !     The next case illustrates an unfortunate side effect of using
 !     a non-zero tolerance when reading multi-segment CKs with
 !     continuous data. In all cases when the look-up interval
@@ -435,7 +414,6 @@
 !     priority segment, the data at the end of the higher priority
 !     segment will be picked instead of the data from the lower
 !     priority segment.
-!
 !
 !     Case 5: Pointing is available in the first segment searched.
 !              Because segment C has the highest priority and can
@@ -481,7 +459,6 @@
 !
 !           04153_04182ca_ISS.bc
 !
-!
 !        Use the SCLK kernel below to load the CASSINI spacecraft clock
 !        time correlation data required for the conversion between
 !        spacecraft clock string representation and double precision
@@ -489,9 +466,7 @@
 !
 !           cas00071.tsc
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKGP_EX1
 !              IMPLICIT NONE
@@ -582,7 +557,6 @@
 !        C
 !              CALL SCTIKS ( SC, TOL, TOLTIK )
 !
-!
 !              DO I = 1, NPICS
 !        C
 !        C        CKGP requires encoded spacecraft clock.
@@ -619,10 +593,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Requested SCLK time : 1465644281.0
 !            CASSINI SCLK time: 1/1465644281.171
@@ -631,7 +603,6 @@
 !         Requested SCLK time : 1465644351.0
 !            CASSINI SCLK time: 1/1465644351.071
 !            CASSINI ISS boresight:  0.9376657  0.3444504  0.0462266
-!
 !
 ! $ Restrictions
 !
@@ -736,18 +707,15 @@
 !        The restriction that a C-kernel file must be loaded
 !        was explicitly stated.
 !
-!
 !-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
 !
 !-&
-
 
 ! $ Index_Entries
 !
 !     get CK pointing
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -768,7 +736,6 @@
 !
 !        Calls to NAMIRF and IRFROT were replaced with calls to
 !        NAMFRM and FRMCHG respectively.
-!
 !
 !-    SPICELIB Version 1.0.2, 30-AUG-1991 (JML)
 !
@@ -792,7 +759,6 @@
 !           was explicitly stated.
 !        2) Minor changes were made to the wording of the header.
 !
-!
 !-    Beta Version 1.1.0, 29-AUG-1990 (MJS)
 !
 !        The following changes were made as a result of the
@@ -811,7 +777,6 @@
 !-    Beta Version 1.0.0, 04-MAY-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -854,7 +819,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
 
 !
 !     Local variables
@@ -906,7 +870,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     Standard SPICE error handling.
 !
@@ -944,7 +907,6 @@
 !
       call ckbss ( inst,   sclkdp, tol,   needav )
       call cksns ( handle, descr,  segid, sfnd   )
-
 
 !
 !     Keep trying candidate segments until a segment can produce a
@@ -1028,7 +990,6 @@
          call cksns ( handle, descr, segid, sfnd )
 
       end do
-
 
       return
       end

@@ -74,7 +74,6 @@
 !                    body. The ellipsoid's radii must be available
 !                    in the kernel pool.
 !
-!
 !                 'DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
 !
 !                    The normal vector computation uses topographic
@@ -105,7 +104,6 @@
 !                    See the $Particulars section below for details
 !                    concerning use of DSK data.
 !
-!
 !              Neither case nor white space are significant in
 !              METHOD, except within double-quoted strings. For
 !              example, the string ' eLLipsoid ' is valid.
@@ -125,7 +123,6 @@
 !
 !                 "MARS MEGDR128PIXEL/DEG"
 !
-!
 !     TARGET   is the name of the target body. TARGET is
 !              case-insensitive, and leading and trailing blanks in
 !              TARGET are not significant. Optionally, you may
@@ -140,7 +137,6 @@
 !              present in the kernel pool. Normally the kernel
 !              variable would be defined by loading a PCK file.
 !
-!
 !     ET       is the epoch for which target surface data will be
 !              selected, if the surface is modeled using DSK data.
 !              In this case, only segments having time coverage that
@@ -150,7 +146,6 @@
 !              ellipsoid.
 !
 !              ET is expressed as TDB seconds past J2000 TDB.
-!
 !
 !     FIXREF   is the name of a body-fixed reference frame centered
 !              on the target body. FIXREF may be any such frame
@@ -164,9 +159,7 @@
 !              expressed relative to this reference frame, as are
 !              the normal vectors computed by this routine.
 !
-!
 !     NPTS     is the number of surface points in the array SRFPTS.
-!
 !
 !     SRFPTS   is an array of target body surface points. Elements
 !
@@ -366,7 +359,6 @@
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
 !
-!
 !        DSK data priority
 !        -----------------
 !
@@ -392,7 +384,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -479,7 +470,6 @@
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
 !
-!
 !           KPL/MK
 !
 !           File: srfnrm_ex1.tm
@@ -511,9 +501,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SRFNRM_EX1
 !              IMPLICIT NONE
@@ -530,7 +518,6 @@
 !
 !              CHARACTER*(*)         META
 !              PARAMETER           ( META   = 'srfnrm_ex1.tm' )
-!
 !
 !              INTEGER               BDNMLN
 !              PARAMETER           ( BDNMLN = 36 )
@@ -664,7 +651,6 @@
 !             .                 NORMLS(1,1,I)                      )
 !              END DO
 !
-!
 !              WRITE (*,*) 'Number of grid points: ', N
 !
 !        C
@@ -721,10 +707,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Number of grid points:           18
 !
@@ -767,7 +751,6 @@
 !             Longitude           (deg):  118.553200
 !             Latitude            (deg):   55.906774
 !
-!
 !        Note that only the first 3 points of the grid are
 !        presented in the output (the rest of the points are not
 !        shown due to their large number).
@@ -801,7 +784,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map Cartesian surface points to normal vectors
@@ -809,7 +791,6 @@
 !     compute normal vectors on DSK surface
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -923,10 +904,7 @@
       data                  prvmth / ' '    /
       data                  svprvt / 0      /
 
-
-
       if ( return() ) return
-
 
       if ( first ) then
 !
@@ -949,7 +927,6 @@
                       target, trgcde, fnd    )
 
       if ( failed() ) return
-
 
       if ( .not. fnd ) then
 
@@ -1165,9 +1142,7 @@
 
             if ( failed() ) return
 
-
          end do
-
 
       else if  ( shape == dskshp ) then
 !
@@ -1189,7 +1164,6 @@
             call vhatip ( normls(1,i) )
 
          end do
-
 
       else
 

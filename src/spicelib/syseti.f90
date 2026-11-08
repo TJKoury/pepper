@@ -121,7 +121,6 @@
 !     "pens" have been deleted, and now only the new value is
 !     associated with the symbol.
 !
-!
 !     The next call,
 !
 !     CALL SYSETI ( 'desks', 31, TABSYM, TABPTR, TABVAL )
@@ -171,13 +170,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set the value associated with a symbol
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -203,13 +200,10 @@
       integer(ip)           dimval
       logical               oldsym
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols to start with?
@@ -254,7 +248,6 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(NAMETABLEFULL)' )
 
-
       else if ( nptr >= sizei ( tabptr ) ) then
 
             call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
@@ -262,14 +255,12 @@
             call errch  ( '#', name )
             call sigerr ( 'SPICE(POINTERTABLEFULL)' )
 
-
       else if ( nval >= sizei ( tabval ) ) then
 
             call setmsg ( 'SYSETI: Addition of the new symbol # '     // &
                           'causes an overflow in the value table.' )
             call errch  ( '#', name )
             call sigerr ( 'SPICE(VALUETABLEFULL)' )
-
 
 !
 !     If there's room, add the new name to the name table. Give the
@@ -289,7 +280,6 @@
          call scardi ( nval, tabval )
 
       end if
-
 
       return
       end

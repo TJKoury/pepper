@@ -154,13 +154,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_18 SPK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -191,7 +189,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -217,7 +214,6 @@
       integer(ip)           subtyp
       integer(ip)           winsiz
       integer(ip)           wnszm1
-
 
 !
 !     Standard SPICE error handling.

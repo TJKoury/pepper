@@ -146,9 +146,6 @@
       integer(ip)           room
       integer(ip)           size
 
-!
-!     Use discovery check-in.
-!
       call zzekreqi ( eqryi, 'INITIALIZED', init )
 
       if ( init /= itrue ) then
@@ -213,7 +210,6 @@
 !     Update the character free pointer.
 !
       call zzekweqi ( 'FREE_CHR', free+length, eqryi )
-
 
       return
       end

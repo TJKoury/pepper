@@ -110,9 +110,7 @@
 !           longitude = 0    radians,
 !           latitude  = pi/4 radians
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPHSD_EX1
 !              IMPLICIT NONE
@@ -128,7 +126,6 @@
 !        C
 !              DOUBLE PRECISION        DIST
 !
-!
 !              DIST = SPHSD ( 1.D3, PI()/2.D0, PI()/4.D0,
 !             .                          0.D0, PI()/4.D0 )
 !
@@ -136,13 +133,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Spherical surface distance:   1047.1975511965979
-!
 !
 ! $ Restrictions
 !
@@ -189,13 +183,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     spherical surface distance
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -209,7 +201,6 @@
 !
       real(wp)              sl1sl2
       real(wp)              cosang
-
 
 !
 !     Check RETURN but do not check in unless an error is detected.

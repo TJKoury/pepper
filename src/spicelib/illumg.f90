@@ -88,7 +88,6 @@
 !                    target body. The ellipsoid's radii must be
 !                    available in the kernel pool.
 !
-!
 !                 'DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
 !
 !                    The illumination angle computation uses
@@ -118,7 +117,6 @@
 !
 !                    See the $Particulars section below for details
 !                    concerning use of DSK data.
-!
 !
 !              Neither case nor white space are significant in METHOD,
 !              except within double-quoted strings representing surface
@@ -277,7 +275,6 @@
 !                            slowly when a converged solution is
 !                            computed.
 !
-!
 !              Neither case nor white space are significant in
 !              ABCORR. For example, the string
 !
@@ -351,10 +348,8 @@
 !                  CALL PXFRM2 ( FIXREF, REF,    TRGEPC, ET, XFORM )
 !                  CALL MXV    ( XFORM,  SRFVEC, REFVEC )
 !
-!
 !     The following outputs depend on the existence of a well-defined
 !     outward normal vector to the surface at SPOINT. See restriction 1.
-!
 !
 !     PHASE    is the phase angle at SPOINT, as seen from OBSRVR at time
 !              ET. This is the angle between the negative of the vector
@@ -544,13 +539,11 @@
 !
 !     ILLUMF is the most capable of the set.
 !
-!
 !     Illumination angles
 !     ===================
 !
 !     The term "illumination angles" refers to the following set of
 !     angles:
-!
 !
 !        phase angle              Angle between the vectors from the
 !                                 surface point to the observer and
@@ -571,8 +564,6 @@
 !     defining these angles. The labels for the incidence, emission,
 !     and phase angles are "inc.", "e.", and "phase".
 !
-!
-!
 !                                                      *
 !                                              illumination source
 !
@@ -591,8 +582,6 @@
 !      viewing            vector            target body
 !      location           to viewing
 !      (observer)         location
-!
-!
 !
 !     Note that if the target-observer vector, the target normal vector
 !     at the surface point, and the target-illumination source vector
@@ -624,7 +613,6 @@
 !           observer will generally differ from the light time between
 !           the target body's center and the observer.
 !
-!
 !           Target body's orientation
 !           -------------------------
 !
@@ -632,7 +620,6 @@
 !           orientation at ET - LT is used. The surface normal is
 !           dependent on the target body's orientation, so the body's
 !           orientation model must be evaluated for the correct epoch.
-!
 !
 !           Target body -- illumination source vector
 !           -----------------------------------------
@@ -644,7 +631,6 @@
 !           from the target body at ET-LT. So, a second light time
 !           correction is used to compute the position of the
 !           illumination source relative to the surface point.
-!
 !
 !        Stellar aberration corrections
 !        ==============================
@@ -670,7 +656,6 @@
 !           time and stellar aberration, as seen from the target body
 !           at time ET-LT.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -691,7 +676,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -718,7 +702,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -790,7 +773,6 @@
 !
 !           'DSK/UNPRIORITIZED/SURFACES = "Mars MEGDR 64 PIXEL/DEG", 3'
 !
-!
 !        Aberration corrections using DSK data
 !        -------------------------------------
 !
@@ -820,7 +802,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -860,9 +841,7 @@
 !                                  'megr90n000cb_plate.bds'      )
 !           \begintext
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ILLUMG_EX1
 !              IMPLICIT NONE
@@ -923,7 +902,6 @@
 !              DOUBLE PRECISION      TRGEPC
 !
 !              INTEGER               I
-!
 !
 !        C
 !        C     Initial values
@@ -1033,7 +1011,6 @@
 !                    WRITE (*,F2) ' '
 !                 END IF
 !
-!
 !                 WRITE (*,F2) '      Illumination angles at the '
 !             .   //          'sub-s/c point:'
 !                 WRITE (*,F2) ' '
@@ -1056,10 +1033,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        UTC epoch is 2003 OCT 13 06:00:00 UTC
 !
@@ -1101,7 +1076,6 @@
 !              Solar incidence angle (deg.):   101.555993667
 !              Emission angle        (deg.):     0.117861156
 !
-!
 ! $ Restrictions
 !
 !     1)  Results from this routine are not meaningful if the input
@@ -1141,7 +1115,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     illumination angles general source
@@ -1151,7 +1124,6 @@
 !     emission angle general source
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1241,7 +1213,6 @@
 !
       integer(ip)           svctr4 ( ctrsiz )
 
-
 !
 !     Saved variables
 !
@@ -1282,7 +1253,6 @@
 !
       save                  svctr4
 
-
 !
 !     Note: XMIT need not be saved, since it's used only
 !     for error checking when an aberration correction flag
@@ -1297,13 +1267,10 @@
       data                  prvcor  / ' '    /
       data                  prvmth  / ' '    /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
-
 
 !
 !     Counter initialization is done separately.
@@ -1341,7 +1308,6 @@
 !           (normal or converged Newtonian) is specified.
 !
 !           USESTL indicates stellar aberration corrections.
-!
 !
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
@@ -1413,7 +1379,6 @@
 
          if ( failed() ) return
 
-
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
             shape = ellshp
@@ -1460,7 +1425,6 @@
 !     At this point, the first pass actions were successful.
 !
       first = .false.
-
 
 !
 !     Obtain integer codes for the observer and
@@ -1533,7 +1497,6 @@
          return
 
       end if
-
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.

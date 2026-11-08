@@ -133,7 +133,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM CKGR03_EX1
 !              IMPLICIT NONE
 !
@@ -245,10 +244,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Record:  1
 !           SCLK time       :           2162686.710986
@@ -315,7 +312,6 @@
 !           Boresight       :   0.000000000   0.000000000   1.000000000
 !           Angular velocity:   0.000000000   0.000000000   0.000000000
 !
-!
 ! $ Restrictions
 !
 !     1)  The binary CK file containing the segment whose descriptor was
@@ -351,13 +347,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK type_3 record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -383,7 +377,6 @@
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
 !
-!
 
       integer(ip), parameter :: ndc = 2
 
@@ -407,8 +400,6 @@
 
       real(wp)              dcd    ( ndc )
       real(wp)              npoint
-
-
 
 !
 !     Standard SPICE error handling.
@@ -453,14 +444,12 @@
          psiz = qsiz
       end if
 
-
       beg  = icd( 5 )
       end  = icd( 6 )
 
       call dafgda ( handle, end, end, npoint )
 
       nrec = nint ( npoint )
-
 
 !
 !     If a request was made for a record which doesn't exist, then

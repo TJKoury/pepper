@@ -106,13 +106,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     None.
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -122,7 +120,6 @@
 !         non-error-handling code.
 !
 !-&
-
 
 !
 !     Local Variables:
@@ -142,7 +139,6 @@
 
       logical failed
 
-
 !
 !     Initial values:
 !
@@ -153,7 +149,6 @@
 !     Executable Code:
 !
 
-
       svstat = status
 
 !
@@ -163,11 +158,7 @@
 
       seterr = .true.
 
-
       return
-
-
-
 
 !$Procedure FAILED ( Error Status Indicator )
 
@@ -280,7 +271,6 @@
 !     1. Here's an example of a simple call to RDTEXT, followed
 !         by a test of the status.
 !
-!
 !     C
 !     C     We read a line of text from file SPUD.DAT:
 !     C
@@ -294,7 +284,6 @@
 !              [respond to error here]
 !
 !           END IF
-!
 !
 !     2.    Here's an example in which we don't want to
 !           put the error test inside our loop.  We just
@@ -367,13 +356,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     error status indicator
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -383,7 +370,6 @@
 !         comply with the ANSI Fortran 77 Standard.
 !
 !-&
-
 
 !
 !     Executable Code:

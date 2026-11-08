@@ -19,7 +19,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcoldsc.inc'
       include 'ekdatpag.inc'
@@ -156,7 +155,6 @@
 !     a column entry.
 !
       call zzekad03 ( handle, segdsc, coldsc, recptr, cval, isnull )
-
 
       return
       end

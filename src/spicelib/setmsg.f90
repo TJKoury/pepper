@@ -90,7 +90,6 @@
 !            by a call to RESET, or overwritten by another
 !            call to SETMSG.
 !
-!
 !        2. If acceptance of a new long error message is not allowed,
 !            a call to this routine has no effect.
 !
@@ -106,9 +105,7 @@
 !        and a double precision variables within the long message,
 !        and signal the error.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SETMSG_EX1
 !              IMPLICIT NONE
@@ -140,10 +137,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ============================================================***
 !
@@ -162,11 +157,9 @@
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 7 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that the execution of this program produces the error
 !        SPICE(USERDEFINED), which follows the NAIF standard as
@@ -212,13 +205,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     set long error message
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -236,7 +227,6 @@
 !         ACCEPT removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions

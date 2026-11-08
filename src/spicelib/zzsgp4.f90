@@ -420,13 +420,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     SGP4
 !
 !-&
-
 
 !
 !     Local Variables
@@ -816,8 +814,6 @@
 
       return
 
-
-
 !$Procedure XXSGP4I ( SGP4 initializer )
 
       entry xxsgp4i ( geophs, elems, opmode )
@@ -1029,19 +1025,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     SGP4
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Initialize.
@@ -1146,7 +1139,6 @@
                      gsto )
 
         if ( failed() ) return
-
 
 !
 !       Check RP for a reasonable value. The propagator may not
@@ -1345,8 +1337,6 @@
 
       return
 
-
-
 !$Procedure XXSGP4E ( SGP4 evaluator )
 
       entry xxsgp4e ( t, state )
@@ -1499,19 +1489,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     SGP4
 !
 !-&
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Local constants. Keep compiler ok for warnings on
@@ -1555,7 +1542,6 @@
       tempa  = 1.0_wp - cc1*t
       tempe  = bstar*cc4*t
       templ  = t2cof*t2
-
 
       if ( .not. dosimp ) then
 
@@ -1631,7 +1617,6 @@
          return
 
       end if
-
 
 !
 !     sgp4fix change test condition for eccentricity
@@ -1854,8 +1839,6 @@
 
       end if
 
-
       return
 
       end
-

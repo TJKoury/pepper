@@ -221,7 +221,6 @@
 !
 !-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
 !
-!
 !-&
 !
 !     SPICELIB Functions
@@ -229,7 +228,6 @@
       logical               exists
       logical               failed
       logical               return
-
 
 !
 !     Local Variables.
@@ -248,7 +246,6 @@
 
       if ( return() ) return
 
-
       if ( .not. exists( file ) ) then
 
          call setmsg ( nofile )
@@ -258,7 +255,6 @@
          return
 
       end if
-
 
       call getfat ( file, arch, mytype )
 
@@ -340,7 +336,6 @@
 
          filtyp = mytype
 
-
       else if ( arch == 'DAS' ) then
 
          if ( mytype == 'EK' ) then
@@ -372,9 +367,6 @@
 
       else
 
-
-
-
 !
 !        Check for line terminator compatibility with this platform.
 !        .TRUE. means that ZZASCII will compare terminator
@@ -382,7 +374,6 @@
 !        stop if they don't match.
 !
          call zzascii( file, kerlin, .true., termin )
-
 
 !
 !        Load the file using the text file loader.

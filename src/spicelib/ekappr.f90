@@ -140,7 +140,6 @@
 !              DESCRIPTION     CHARACTER*(*)
 !              PRICE           DOUBLE PRECISION
 !
-!
 !        We'll suppose that the EK file contains two segments, the
 !        first containing the DATAORDERS table and the second
 !        containing the DATAITEMS table.
@@ -149,9 +148,7 @@
 !        table, and after re-opening the file, inserts a new record
 !        into the DATAITEMS table.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM EKAPPR_EX1
 !              IMPLICIT NONE
@@ -278,7 +275,6 @@
 !              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
 !             .             'INDEXED  = TRUE'
 !
-!
 !        C
 !        C     Start the new segment. Since we have no data for this
 !        C     segment, start the segment by just defining the new
@@ -361,7 +357,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new EK file exists in the
 !        output directory.
@@ -397,13 +392,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     append record to EK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -457,7 +450,6 @@
       recno  =  nrec + 1
 
       call ekinsr ( handle, segno, recno )
-
 
       return
       end

@@ -206,13 +206,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     compute the apparent relative angular separation
 !
 !-&
-
 
 !
 !     SPICELIB functions.
@@ -222,7 +220,6 @@
       real(wp)              vsep
       logical               failed
       logical               return
-
 
 !
 !     Local Variables.
@@ -252,7 +249,6 @@
 !
       if ( return () ) return
 
-
 !
 !     First check for bad inputs.
 !
@@ -270,14 +266,12 @@
          return
       end if
 
-
 !
 !     Get the state of the BOD1, BOD2 objects relative to OBS.
 !
       call spkezp ( bod1, et, ref, abcorr,  obs, pv1, lt )
 
       if (  failed() ) return
-
 
        call spkezp ( bod2, et, ref, abcorr, obs, pv2, lt )
 

@@ -108,7 +108,6 @@
 !     routines might be used to "dump" and check segment data for a
 !     particular epoch.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -169,13 +168,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read record from type_9 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -197,7 +194,6 @@
       integer(ip), parameter :: dirsiz = 100
 
       integer(ip), parameter :: bufsiz = dirsiz + 1
-
 
 !
 !     Local variables
@@ -230,10 +226,6 @@
       integer(ip)           type
       integer(ip)           wndsiz
 
-
-!
-!     Use discovery check-in.
-!
       if ( return () ) return
 
 !
@@ -296,10 +288,8 @@
 !            the number of points required to define an interpolating
 !            polynomial of the specified degree.
 !
-!
 !     We'll need the last two items before we can determine which
 !     states make up our output record.
-!
 !
       call dafgda ( handle, end-1, end, contrl )
 
@@ -390,7 +380,6 @@
          endidx  =  min (  begidx + dirsiz,  n  )
 
       end if
-
 
       timbas  =  dirbas - n
 

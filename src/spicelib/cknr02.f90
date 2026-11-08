@@ -98,7 +98,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM CKNR02_EX1
 !              IMPLICIT NONE
 !
@@ -204,10 +203,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Record:  1
 !           Start encoded SCLK:   32380393707.000015
@@ -312,10 +309,8 @@
 !
 !        [...]
 !
-!
 !        Warning: incomplete output. Only 100 out of 875 lines have been
 !        provided.
-!
 !
 ! $ Restrictions
 !
@@ -347,19 +342,16 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     number of CK type_2 records
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
       logical               return
-
 
 !
 !     Local parameters
@@ -389,14 +381,10 @@
 
       real(wp)              dcd    ( ndc )
 
-
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The unpacked descriptor contains the following information
@@ -410,7 +398,6 @@
 !        ICD(4)  Angular velocity flag
 !        ICD(5)  Initial address of segment data
 !        ICD(6)  Final address of segment data
-!
 !
       call dafus ( descr, ndc, nic, dcd, icd )
 
@@ -445,7 +432,6 @@
 !        In the above equation PSIZ is eight and integer arithmetic is
 !        used.  This equation is equivalent to:
 !
-!
 !           100 * ARRSIZ  =  1000 * N  + ( N-1 ) * 100            (2)
 !                                        -------
 !                                          100
@@ -473,7 +459,6 @@
       arrsiz = end - beg + 1
 
       nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
-
 
       return
       end

@@ -63,16 +63,13 @@
 !                The axes of the ellipsoid are aligned with the
 !                axes of the Cartesian coordinate system.
 !
-!
 !     R          is the radius of the spherical model of the
 !                illumination source.
-!
 !
 !     AXIS       is the position of the center of the illumination
 !                source relative to the center of the target. AXIS is
 !                contained in the line bounding cutting half-planes in
 !                which terminator points are found.
-!
 !
 !     PLNVEC     is a vector that, together with AXIS, defines
 !                a cutting half-plane. The half-plane contains
@@ -176,7 +173,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -193,7 +189,6 @@
 
 !
 !     Local parameters
-!
 !
 !     Tolerance used for arcsine arguments:
 !
@@ -240,9 +235,7 @@
 
       integer(ip)           nitr
 
-
       if ( return() ) return
-
 
 !
 !     Check A, B, C, and R.
@@ -298,7 +291,6 @@
          return
 
       end if
-
 
       if ( vzero( plnvec ) ) then
 
@@ -389,12 +381,10 @@
 !        This is the penumbral case. The tangent ray crosses
 !        the line containing TNEGAX.
 !
-!
 !        The tangent line always slopes downward (toward AXIS)
 !        toward the light source.
 !
          angle = dasine ( (maxr+1.0_wp) / d,  atol  )
-
 
          if ( failed() ) return
 

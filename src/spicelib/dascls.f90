@@ -82,7 +82,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM DASCLS_EX1
 !              IMPLICIT NONE
 !
@@ -129,28 +128,22 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Opening the DAS file for writing...
 !         Adding the double precision numbers...
 !         Closing the DAS file...
 !         All ok.
 !
-!
 !        Note that after run completion, a new DAS file exists in
 !        the output directory.
-!
 !
 !     2) Dump several parameters from the first DLA segment of a DSK
 !        file. Note that DSK files are based on DAS. The segment is
 !        assumed to be of type 2.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASCLS_EX2
 !              IMPLICIT NONE
@@ -190,7 +183,6 @@
 !              INTEGER               VTXNPL
 !
 !              LOGICAL               FOUND
-!
 !
 !        C
 !        C     Prompt for the name of the DSK to read.
@@ -262,18 +254,15 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the DSK file named phobos512.bds, the output
 !        was:
-!
 !
 !        Enter DSK name > phobos512.bds
 !        Number of vertices:                 1579014
 !        Number of plates:                   3145728
 !        Voxel edge length (km):             1.04248E-01
 !        Number of voxels:                   11914500
-!
 !
 ! $ Restrictions
 !
@@ -352,13 +341,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     close an open DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -382,7 +369,6 @@
 !        the increase in the value.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -420,12 +406,10 @@
 !
       data                  pass1  / .true.  /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( pass1 ) then
          call ssizei ( ftsize, fhset )
@@ -497,7 +481,6 @@
 
          end if
 
-
          if ( notscr ) then
 !
 !           Segregate the data records in the file according to data
@@ -506,7 +489,6 @@
             call dassdr ( handle )
 
          end if
-
 
       end if
 

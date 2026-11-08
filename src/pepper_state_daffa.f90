@@ -26,41 +26,26 @@ module pepper_state_daffa
 
    !> The saved variables of DAFFA.
    type, public :: daffa_state
-      integer(ip) :: stfh   (         tbsize )  !! these variables are maintained in a table of
-                                                !! parallel arrays; the size of the table is TBSIZE.
-      integer(ip) :: stprev (         tbsize )  !! saved between calls by DAFFA
-      integer(ip) :: stthis (         tbsize )  !! saved between calls by DAFFA
-      integer(ip) :: stnext (         tbsize )  !! saved between calls by DAFFA
-      integer(ip) :: stnseg (         tbsize )  !! saved between calls by DAFFA
-      integer(ip) :: stcurr (         tbsize )  !! saved between calls by DAFFA
-      character(crlen) :: stnr   (         tbsize )  !! saved between calls by DAFFA
-      logical :: sthvnr (         tbsize )  !! saved between calls by DAFFA
-      real(wp) :: stsr   ( dprsiz, tbsize )  !! saved between calls by DAFFA
-      integer(ip) :: stpool ( tbsize )  !! saved between calls by DAFFA
-      integer(ip) :: sthead  !! saved between calls by DAFFA
-      integer(ip) :: stfptr  !! saved between calls by DAFFA
-      character(filen) :: dafnam  !! other local variables
-      character(ifnlen) :: ifname  !! saved between calls by DAFFA
-      real(wp) :: exdc   ( maxndc )  !! saved between calls by DAFFA
-      real(wp) :: exsum  ( maxndc )  !! saved between calls by DAFFA
-      real(wp) :: newdc  ( maxndc )  !! saved between calls by DAFFA
-      integer(ip) :: bward  !! saved between calls by DAFFA
-      integer(ip) :: exic   ( maxnic )  !! saved between calls by DAFFA
-      integer(ip) :: free  !! saved between calls by DAFFA
-      integer(ip) :: fward  !! saved between calls by DAFFA
-      integer(ip) :: i  !! saved between calls by DAFFA
-      integer(ip) :: namsiz  !! saved between calls by DAFFA
-      integer(ip) :: nd  !! saved between calls by DAFFA
-      integer(ip) :: newic  ( maxnic )  !! saved between calls by DAFFA
-      integer(ip) :: nextp  !! saved between calls by DAFFA
-      integer(ip) :: ni  !! saved between calls by DAFFA
-      integer(ip) :: opnset ( lbcell : ftsize )  !! saved between calls by DAFFA
-      integer(ip) :: p  !! saved between calls by DAFFA
-      integer(ip) :: prev  !! saved between calls by DAFFA
-      integer(ip) :: sumsiz  !! saved between calls by DAFFA
-      logical :: first  !! saved between calls by DAFFA
-      logical :: fnd  !! saved between calls by DAFFA
-      integer(ip) :: offset  !! saved between calls by DAFFA
+      integer(ip) :: stfh   (         tbsize )  !! handle of each DAF being searched
+      integer(ip) :: stprev (         tbsize )  !! record number of the previous summary record of
+                                                !! each search
+      integer(ip) :: stthis (         tbsize )  !! record number of the current summary record of
+                                                !! each search
+      integer(ip) :: stnext (         tbsize )  !! record number of the next summary record of each
+                                                !! search
+      integer(ip) :: stnseg (         tbsize )  !! number of summaries in the current summary record
+                                                !! of each search
+      integer(ip) :: stcurr (         tbsize )  !! index of the current summary within its record,
+                                                !! for each search
+      character(crlen) :: stnr   (         tbsize )  !! the name record read last, for each search
+      logical :: sthvnr (         tbsize )  !! the name record of the current array is buffered
+                                            !! (stnr), for each search
+      real(wp) :: stsr   ( dprsiz, tbsize )  !! the summary record read last, for each search
+      integer(ip) :: stpool ( tbsize )  !! linked-list pool of the state table (active and free
+                                        !! entries)
+      integer(ip) :: sthead  !! head of the list of active entries of the state table
+      integer(ip) :: stfptr  !! head of the list of free entries of the state table
+      logical :: first  !! the state table has not been initialized yet
    end type daffa_state
 
 contains

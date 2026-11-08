@@ -96,7 +96,6 @@
 !
 !     In a 3-1 merge:
 !
-!
 !        - The keys of the left child are moved into the root.  These
 !          become the leftmost MNKEYC or MNKEYC-1 keys of the root,
 !          depending on whether the underflow occurred in the left
@@ -181,7 +180,6 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
@@ -197,9 +195,6 @@
       integer(ip)           rpage  ( pgsizi )
       integer(ip)           sum
 
-!
-!     Use discovery check-in for speed.
-!
       root    =  tree
 
       call zzekpgri ( handle, root, rpage )

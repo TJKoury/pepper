@@ -120,7 +120,6 @@
 !
 !        Example code begins here.
 !
-!
 !              PROGRAM ROTVEC_EX1
 !              IMPLICIT NONE
 !
@@ -159,14 +158,11 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !        Input vector  :     1.414     0.000     0.000
 !        Rotated vector:     1.000    -1.000     0.000
-!
 !
 ! $ Restrictions
 !
@@ -215,13 +211,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rotate a vector
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -233,7 +227,6 @@
 !        clear (or fast) as just reading the axes from data.
 !
 !-&
-
 
 !
 !     Local variables

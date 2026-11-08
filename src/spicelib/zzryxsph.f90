@@ -49,7 +49,6 @@
 !
 !                       { X : X = VERTEX + s*UDIR, s >= 0 }
 !
-!
 !     R              is the radius of a sphere. The sphere is centered
 !                    at the origin.
 !

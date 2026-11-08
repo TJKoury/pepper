@@ -113,7 +113,6 @@
 !              expansion of acceleration about the reference
 !              epoch.)
 !
-!
 !     EPOCHS   is an array of epochs corresponding to the members
 !              of the state array. The epochs are specified as
 !              seconds past J2000, TDB.
@@ -225,13 +224,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_1 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -261,7 +258,6 @@
 
       integer(ip), parameter :: dirsiz = 100
 
-
 !
 !     Local variables
 !
@@ -271,7 +267,6 @@
       integer(ip)           chrcod
       integer(ip)           i
       integer(ip)           refcod
-
 
 !
 !     Standard SPICE error handling.
@@ -390,7 +385,6 @@
 !
 !     If we made it this far, we're ready to start writing the segment.
 !
-!
 !     Create the segment descriptor.
 !
       call spkpds ( body, center, frame, dtype, first, last, descr )
@@ -401,7 +395,6 @@
       call dafbna ( handle, descr, segid )
 
       if ( failed() ) return
-
 
 !
 !     The type 1 segment structure is shown below:
@@ -438,7 +431,6 @@
 !        | Number of diff lines  |
 !        +-----------------------+
 !
-!
 
       call dafada ( dlines,  n*dlsize )
       call dafada ( epochs,  n        )
@@ -455,7 +447,6 @@
       if ( .not. failed() ) then
          call dafena
       end if
-
 
       return
       end

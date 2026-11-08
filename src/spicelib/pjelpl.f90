@@ -104,7 +104,6 @@
 !               PRJMAJ  = ( 2.D0,  0.D0,  0.D0 )
 !               PRJMIN  = ( 0.D0,  1.D0,  0.D0 )
 !
-!
 !     2)  With  VECT1   = ( 2.D0,  0.D0,  0.D0 ),
 !               VECT2   = ( 1.D0,  1.D0,  1.D0 ),
 !               CENTER  = ( 0.D0,  0.D0,  0.D0 ),
@@ -128,8 +127,6 @@
 !               PRJMIN  = (  2.008114158862273D-1,
 !                           -8.506508083520399D-1,
 !                            0.D0                  )
-!
-!
 !
 !     3)    An example of actual use: Suppose we wish to compute the
 !           distance from an ellipsoid to a line. Let the line be
@@ -156,7 +153,6 @@
 !           distance of the projected ellipse from the intersection of
 !           the line and this plane (which is necessarily one point).
 !           A `paraphrase' of the relevant code is:
-!
 !
 !              C     Step 1. Find the candidate ellipse CAND.
 !              C               NORMAL is a normal vector to the plane
@@ -210,7 +206,6 @@
 !              C
 !                    CALL VPRJPI ( PJNEAR, PRJPL, CANDPL, PNEAR, FOUND )
 !
-!
 !           The value of DIST returned is the distance we're looking
 !           for.
 !
@@ -248,13 +243,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     project ellipse onto plane
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -272,7 +265,6 @@
       real(wp)              prjvc2 ( 3 )
       real(wp)              smajor ( 3 )
       real(wp)              sminor ( 3 )
-
 
 !
 !     Standard SPICE error handling.
@@ -345,7 +337,6 @@
 !
 !     So PRJ is the composition of a translation and a linear mapping,
 !     as claimed.
-!
 !
       call vprjp  ( center, plane,  prjctr )
 

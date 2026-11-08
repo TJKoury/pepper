@@ -21,7 +21,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcnamsz.inc'
       include 'ekcoldsc.inc'
@@ -161,7 +160,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -177,9 +175,6 @@
 
       logical               indexd
 
-!
-!     Use discovery check-in.
-!
       if ( failed() ) return
 
 !

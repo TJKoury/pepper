@@ -135,13 +135,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Rotate positions from one frame to another
 !
 !-&
-
 
 !
 !     SPICE functions
@@ -244,7 +242,6 @@
 
       end if
 
-
       call frinfo ( frame2, cent, class, clssid, found )
 
       if ( failed() ) return
@@ -258,8 +255,6 @@
          return
 
       end if
-
-
 
       node        = 1
       frame(node) = frame1
@@ -297,7 +292,6 @@
       done =      frame(node) == rootf &
              .or. frame(node) == frame2 &
              .or. .not. found
-
 
       do while ( .not. done )
 !
@@ -347,7 +341,6 @@
 !     that is that NODE .GT. 1.  If NODE .EQ. 1 then we have
 !     no rotations computed yet.
 !
-!
 !     ROT(1...3, 1...3, 1    )    rotates FRAME1   to FRAME(2)
 !     ROT(1...3, 1...3, 2    )    rotates FRAME(2) to FRAME(3)
 !     ROT(1...3, 1...3, 3    )    rotates FRAME(3) to FRAME(4)
@@ -356,7 +349,6 @@
 !        .
 !     ROT(1...3, 1...3, NODE-1 )  rotates FRAME(NODE-1)
 !                                   to         FRAME(NODE)
-!
 !
 !     One of the following situations is true.
 !

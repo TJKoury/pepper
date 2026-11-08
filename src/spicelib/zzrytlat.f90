@@ -91,11 +91,9 @@
 !                longitude lower bound, a value greater than the upper
 !                bound by 2*pi is used for the comparison.
 !
-!
 !     MARGIN     is a scale factor used to effectively expand the
 !                segment boundaries so as to include intersections
 !                that lie slightly outside the volume element.
-!
 !
 ! $ Detailed_Output
 !
@@ -111,7 +109,6 @@
 !
 !                XPT is valid only if NXPTS is set to 1.
 !
-!
 !     NXPTS      is the number of intercept points of the ray and
 !                the volume element.
 !
@@ -125,7 +122,6 @@
 !                set to 1.
 !
 ! $ Parameters
-!
 !
 !     LONIDX     is the index of longitude in the second dimension of
 !                BOUNDS.
@@ -184,8 +180,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -206,7 +200,6 @@
 !
       real(wp), parameter :: radfac = 1.1_wp
 
-
 !
 !     Element boundary indices:
 !
@@ -221,7 +214,6 @@
       integer(ip), parameter :: inner = 1
 
       integer(ip), parameter :: outer = 2
-
 
 !
 !     Local variables
@@ -269,7 +261,6 @@
 !
       data                  origin / 3 *   0.0_wp /
       data                  z      / 0.0_wp, 0.0_wp, 1.0_wp /
-
 
 !
 !     CAUTION: this routine doesn't check in, so it won't
@@ -362,7 +353,6 @@
       call zzinlat ( srfx, bounds, margin, radidx, xin )
 
       if ( failed() ) return
-
 
       if ( xin ) then
 !
@@ -467,7 +457,6 @@
 
                if ( failed() ) return
 
-
                if ( xin ) then
 !
 !                 XPT2 is a candidate solution.
@@ -515,7 +504,6 @@
                        endpt2, nx, srfx,  xpt2    )
 
          if ( failed() ) return
-
 
          if ( nx >= 1 ) then
 !
@@ -605,7 +593,6 @@
 !
 !        We have distinct longitude boundaries. Go to work.
 !
-!
 !        Check the longitude boundaries. Try the plane of western
 !        longitude first.
 !
@@ -614,9 +601,7 @@
 !
          call vpack ( sin(minlon), -cos(minlon), 0.0_wp, westb )
 
-
          s = radfac * ( vnorm(vertex) + maxr )
-
 
          call zzinrypl ( vertex, udir, westb, 0.0_wp, s, nx, srfx )
 
@@ -630,7 +615,6 @@
             call zzinlat ( srfx, bounds, margin, lonidx, xin )
 
             if ( failed() ) return
-
 
             if ( xin ) then
 !
@@ -665,7 +649,6 @@
          end if
 !
 !        We're done with the western boundary.
-!
 !
 !        Try the plane of eastern longitude next.
 !

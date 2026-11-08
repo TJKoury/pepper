@@ -108,7 +108,6 @@
 !     routines might be used to examine raw segment data before
 !     evaluating it with the SPKEnn routines.
 !
-!
 !     C
 !     C     Get a segment applicable to a specified body and epoch.
 !     C
@@ -165,13 +164,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     evaluate type_9 SPK segment
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -181,7 +178,6 @@
 !        in XPOSEG and LGRINT calls.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -214,9 +210,6 @@
       integer(ip)           xstart
       integer(ip)           ystart
 
-!
-!     Discovery check-in.
-!
       if ( return () ) return
 
 !

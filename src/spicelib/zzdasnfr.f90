@@ -136,7 +136,6 @@
 !
 !-    SPICELIB Version 1.0.0, 11-DEC-2001 (FST)
 !
-!
 !-&
 
 !
@@ -312,7 +311,6 @@
          return
 
       end if
-
 
       return
       end

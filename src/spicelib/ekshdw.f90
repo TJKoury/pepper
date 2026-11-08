@@ -95,13 +95,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     return shadowing status of an EK file
 !
 !-&
-
 
       integer(ip)            i
 

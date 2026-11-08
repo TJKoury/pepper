@@ -165,13 +165,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     transpose two values associated with a symbol
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -186,7 +184,6 @@
 !         not modified.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -205,12 +202,10 @@
       integer(ip)           locval
       integer(ip)           n
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     How many symbols?
@@ -261,7 +256,6 @@
          end if
 
       end if
-
 
       return
       end

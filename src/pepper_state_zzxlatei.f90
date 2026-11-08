@@ -19,11 +19,11 @@ module pepper_state_zzxlatei
 
    !> The saved variables of ZZXLATEI.
    type, public :: zzxlatei_state
-      logical :: first  !! saved between calls by ZZXLATEI
-      integer(ip) :: natbff  !! saved between calls by ZZXLATEI
-      character(strsiz) :: strbff ( numbff )  !! saved between calls by ZZXLATEI
-      integer(ip) :: smlint  !! saved between calls by ZZXLATEI
-      integer(ip) :: bigint  !! saved between calls by ZZXLATEI
+      logical :: first  !! the tables have not been set up yet (they are set up on the first call)
+      integer(ip) :: natbff  !! code of the native binary file format
+      character(strsiz) :: strbff ( numbff )  !! names of the binary file formats
+      integer(ip) :: smlint  !! smallest integer
+      integer(ip) :: bigint  !! largest integer
    end type zzxlatei_state
 
 contains

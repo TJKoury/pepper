@@ -119,12 +119,10 @@
 !           DOUBLE PRECISION      ZZDIV
 !           DOUBLE PRECISION      DPMAX
 !
-!
 !     C
 !     C     Set error reporting to REPORT.
 !     C
 !           CALL ERRACT( 'SET', 'REPORT' )
-!
 !
 !     C
 !     C     Standard, safe evaluation.
@@ -135,8 +133,6 @@
 !           DIV = ZZDIV( NUMR, DENOM )
 !           WRITE(*,*) 'DIV 1/10      = ', DIV
 !
-!
-!
 !     C
 !     C     A numeric underflow event as defined in ZZDIV.
 !     C
@@ -145,8 +141,6 @@
 !
 !           DIV = ZZDIV( NUMR, DENOM )
 !           WRITE(*,*) 'DIV 1/DPMAX() = ', DIV
-!
-!
 !
 !     C
 !     C     A numeric overflow event as defined in ZZDIV.
@@ -157,7 +151,6 @@
 !           DIV = ZZDIV( NUMR, DENOM )
 !           WRITE(*,*) 'DIV DPMAX()/1 = ', DIV
 !
-!
 !     C
 !     C     A divide by zero event.
 !     C
@@ -166,7 +159,6 @@
 !
 !           DIV = ZZDIV( NUMR, DENOM )
 !           WRITE(*,*) 'DIV 1/0       = ', DIV
-!
 !
 !     C
 !     C     A 0/0 event. ZZDIV treats this as a divide by zero
@@ -178,7 +170,6 @@
 !           DIV = ZZDIV( NUMR, DENOM )
 !           WRITE(*,*) 'DIV 0/0       = ', DIV
 !
-!
 !           END
 !
 !   The program outputs:
@@ -187,13 +178,9 @@
 !
 !      DIV 1/10      =   0.10000000000000001
 !
-!
-!
 !      -The function returns zero for an underflow state. No error.
 !
 !      DIV 1/DPMAX() =    0.0000000000000000
-!
-!
 !
 !   -The function signals a NUMERICOVERFLOW error, and sets the
 !    return value to zero.
@@ -214,8 +201,6 @@
 !     =================================================================
 !      DIV DPMAX()/1 =    0.0000000000000000
 !
-!
-!
 !   -The function signals a DIVIDEBYZERO error, and sets the
 !    return value to zero.
 !
@@ -234,8 +219,6 @@
 !
 !     =================================================================
 !      DIV 1/0       =    0.0000000000000000
-!
-!
 !
 !   -The function signals a DIVIDEBYZERO error, and sets the
 !    return value to zero.
@@ -315,11 +298,9 @@
          return
       end if
 
-
 !
 !     Participate in error tracing.
 !
-
 
 !
 !     Calculate the bounds parameter on first entry.
@@ -337,7 +318,6 @@
 
        end if
 
-
 !
 !     If the denominator is zero, return zero and signal an error.
 !     This is equivalent to a signaling NaN (not-a-number) for
@@ -354,7 +334,6 @@
 
       end if
 
-
 !
 !     If the numerator is zero, the division is zero. DENOM
 !     is known non-zero.
@@ -365,7 +344,6 @@
          return
 
       end if
-
 
 !
 !     Calculate base 10 logarithms of the absolute value of the
@@ -410,7 +388,6 @@
 !     This operation should be safe. Probably.
 !
       zzdiv = numr/denom
-
 
       return
       end

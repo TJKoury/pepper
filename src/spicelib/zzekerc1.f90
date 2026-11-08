@@ -21,7 +21,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'eksegdsc.inc'
@@ -164,7 +163,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -192,9 +190,6 @@
 
       logical               leq
 
-!
-!     Use discovery check-in.
-!
       if ( failed() ) return
 
 !
@@ -293,7 +288,6 @@
 
          return
 
-
       else if (  zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                             endptr,  1,       chr,     ckey, &
                             0.0_wp,    0,       null             ) &
@@ -341,7 +335,6 @@
 !
             leq  =  .true.
 
-
          else if ( zzekscmp ( eq,      handle,  segdsc,  coldsc, &
                               midptr,  1,       chr,     ckey, &
                               0.0_wp,    0,       null           ) ) then
@@ -358,7 +351,6 @@
             leq  = .false.
 
          end if
-
 
          if ( leq ) then
 !

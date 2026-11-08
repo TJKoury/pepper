@@ -144,7 +144,6 @@
 !            called a `3-1 merge'.  After a 3-1 merge is performed, the
 !            number of values in each node is within bounds.
 !
-!
 !     An EK tree is always balanced after a deletion:  all leaf nodes
 !     are at the same level.
 !
@@ -173,8 +172,6 @@
 !-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
 !
 !-&
-
-
 
 !
 !     SPICELIB functions
@@ -246,9 +243,6 @@
 
       logical               undrfl
 
-
-!
-!     Use discovery check-in for speed.
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
 !     by when referring to the root node.
@@ -304,9 +298,7 @@
 
       state = lcheck
 
-
       do while ( state /= term )
-
 
          if ( state == lcheck ) then
 !
@@ -325,7 +317,6 @@
             call zzektrsb (  handle,  tree,  trgkey, &
                              lsib,    lkey,  rsib,    rkey  )
 
-
             if ( lsib > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, lsib )
@@ -340,14 +331,12 @@
 
                   state  =  balnce
 
-
                else if ( rsib > 0 ) then
 !
 !                 The left sibling cannot help with balancing, but
 !                 the right sibling may be able to.
 !
                   state  =  rcheck
-
 
                else
 !
@@ -359,7 +348,6 @@
 
                end if
 
-
             else
 !
 !              There is no left sibling, so there must be a right
@@ -368,7 +356,6 @@
                state = rcheck
 
             end if
-
 
          else if ( state == rcheck ) then
 !
@@ -387,7 +374,6 @@
                rnode  =  rsib
 
                state  =  balnce
-
 
             else if ( lsib > 0 ) then
 !
@@ -409,7 +395,6 @@
 
             end if
 
-
          else if ( state == llchck ) then
 !
 !           See whether the left sibling has its own left sibling.
@@ -417,11 +402,9 @@
             call zzektrsb (  handle,  tree,   lkey, &
                              llsib,   llkey,  lrsib,  lrkey  )
 
-
             if ( llsib > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, llsib )
-
 
                if ( nkeys > mnkeyc ) then
 !
@@ -447,7 +430,6 @@
 
                   state  =  balnce
 
-
                else
 !
 !                 The left**2 sibling contains the minimum allowed
@@ -463,7 +445,6 @@
 
                end if
 
-
             else
 !
 !              LSIB and NODE are the only children of their parent.
@@ -478,8 +459,6 @@
 
             end if
 
-
-
          else if ( state == rrchck ) then
 !
 !           See whether the right sibling has its own right sibling.
@@ -487,11 +466,9 @@
             call zzektrsb (  handle,  tree,   rkey, &
                              rlsib,   rlkey,  rrsib,  rrkey  )
 
-
             if ( rrsib > 0 ) then
 
                nkeys = zzektrnk ( handle, tree, rrsib )
-
 
                if ( nkeys > mnkeyc ) then
 !
@@ -517,7 +494,6 @@
 
                   state  =  balnce
 
-
                else
 !
 !                 The right**2 sibling contains the minimum allowed
@@ -533,7 +509,6 @@
 
                end if
 
-
             else
 !
 !              RSIB and NODE are the only children of their parent.
@@ -547,7 +522,6 @@
                state  =  merg31
 
             end if
-
 
          else if ( state == balnce ) then
 !
@@ -567,7 +541,6 @@
             call zzektrbn ( handle, tree, lnode, rnode, parent, rpidx )
 
             state  =  term
-
 
          else if ( state == merg32 ) then
 !
@@ -598,7 +571,6 @@
             call zzektr32 ( handle,  tree,    lnode,  mnode, &
                             rnode,   parent,  rpidx,  undrfl  )
 
-
             if ( undrfl ) then
 !
 !              We'll need to handle underflow in the parent.
@@ -619,7 +591,6 @@
             else
                state  =  term
             end if
-
 
          else if ( state == merg31 ) then
 !

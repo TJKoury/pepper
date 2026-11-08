@@ -166,7 +166,6 @@
 !
 !                                        BPOS + ( N - (R-1)*L ) - 1
 !
-!
 !     The logical organization of the characters in the DAS file is
 !     independent of the order of addition to the file or physical
 !     location of any data of integer or double precision type.
@@ -204,9 +203,7 @@
 !        logical addresses within that file, and how to read that
 !        data out to a different array.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM DASADC_EX1
 !              IMPLICIT NONE
@@ -311,10 +308,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Data from "dasadc_ex1.das":
 !
@@ -328,7 +323,6 @@
 !         ..............................
 !                  1         2         3
 !         123456789012345678901234567890
-!
 !
 !        Note that after run completion, a new DAS file exists in the
 !        output directory.
@@ -398,13 +392,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     add character data to a DAS file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -415,7 +407,6 @@
 !        DASWRC signaled an error inside the loop.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -471,7 +462,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Make sure BPOS and EPOS are OK; stop here if not.
 !
@@ -487,7 +477,6 @@
          call errint ( '#',  epos                                      )
          call sigerr ( 'SPICE(BADSUBSTRINGBOUNDS)'                     )
          return
-
 
       else if ( epos < bpos ) then
 
@@ -581,7 +570,6 @@
 !           In either case, we'll first fill in characters WORDNO+1
 !           through WORDNO + NUMCHR of the string RECORD.
 !
-!
 !           So far, we haven't moved any characters.
 !
             nmoved = 0
@@ -629,7 +617,6 @@
                               record ( wordno+1 : wordno+numchr )  )
 
             end if
-
 
             nwritn  =  nwritn + numchr
             wordno  =  wordno + numchr

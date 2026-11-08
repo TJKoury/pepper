@@ -67,13 +67,11 @@
 !
 !                RP may be less than, equal to, or greater than RE.
 !
-!
 !     P          is a point (equivalently, a vector) in
 !                three-dimensional space. P is expressed in Cartesian
 !                coordinates.
 !
 !                The units of P must be consistent with those of RE.
-!
 !
 !     LAT        is a planetodetic latitude value to be compared
 !                against the planetodetic latitude of P. Units
@@ -92,7 +90,6 @@
 !
 !                is true. See the Parameters section below for
 !                the parameter names.
-!
 !
 ! $ Parameters
 !
@@ -185,9 +182,7 @@
 !
       data                  apex / 3  *  0.0_wp       /
 
-
       if ( return() ) return
-
 
 !
 !     Treat points on the Z axis as a special case. The
@@ -287,7 +282,6 @@
 !
       call reclat ( offset, r, lon, offpcl )
 
-
       if ( lat > 0.0_wp ) then
 
          if ( yincpt > 0 ) then
@@ -338,7 +332,6 @@
             end if
 
          end if
-
 
       else
 !

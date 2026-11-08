@@ -97,9 +97,7 @@
 !        short and long messages, providing the value of two integer
 !        variables within the long message, and signal the error.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM ERRINT_EX1
 !              IMPLICIT NONE
@@ -133,10 +131,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        ============================================================***
 !
@@ -156,11 +152,9 @@
 !
 !        ============================================================***
 !
-!
 !        Warning: incomplete output. 6 lines extended past the right
 !        margin of the header and have been truncated. These lines are
 !        marked by "***" at the end of each line.
-!
 !
 !        Note that the execution of this program produces the error
 !        SPICE(USERDEFINED), which follows the NAIF standard as
@@ -209,13 +203,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert integer into error message text
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -232,7 +224,6 @@
       character(11)         istrng
 
       integer(ip)           strpos
-
 
 !
 !     Changes to the long error message have to be allowed, or we
@@ -288,7 +279,6 @@
 
             end if
 
-
          else
 !
 !           We're starting with the integer, so we know it fits...
@@ -308,7 +298,6 @@
                tmpmsg = istrng
 
             end if
-
 
          end if
 !

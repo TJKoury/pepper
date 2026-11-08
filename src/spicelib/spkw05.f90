@@ -145,9 +145,7 @@
 !        discrete states and epochs, and the gravitational parameter
 !        of a central body.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW05_EX1
 !              IMPLICIT NONE
@@ -250,7 +248,6 @@
 !
 !              END
 !
-!
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 5 exists in
 !        the output directory.
@@ -306,13 +303,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_5 ephemeris data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -342,7 +337,6 @@
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-!
       integer(ip), parameter :: sidlen = 40
 
       integer(ip), parameter :: ns = 5
@@ -357,7 +351,6 @@
 
       integer(ip), parameter :: lprint = 126
 
-
 !
 !     Local variables
 !
@@ -370,12 +363,10 @@
       integer(ip)           value
       integer(ip)           icd      ( ni )
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
       if ( gm <= 0.0_wp ) then
 
@@ -385,7 +376,6 @@
          return
 
       end if
-
 
 !
 !     Get the NAIF integer code for the reference frame.

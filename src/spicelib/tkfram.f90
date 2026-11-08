@@ -59,7 +59,6 @@
 !                 | z' |     |       | | z |
 !                 `-  -'     `-     -' `- -'
 !
-!
 !     FRAME    is the ID code of the base reference frame to which ROT
 !              will transform positions.
 !
@@ -136,15 +135,12 @@
 !        its base Earth body-fixed frame and use it to determine the
 !        geodetic latitude and longitude of the DSS-34 site.
 !
-!
 !        Use the FK kernel below to load the required topocentric
 !        reference frame definition for the DSS-34 site.
 !
 !           earth_topo_050714.tf
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TKFRAM_EX1
 !              IMPLICIT NONE
@@ -238,17 +234,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        The geodetic coordinates of the center
 !        of the topographic frame are:
 !
 !           Latitude  (deg):    148.9819650021110
 !           Longitude (deg):    -35.3984778756552
-!
 !
 ! $ Restrictions
 !
@@ -348,14 +341,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Fetch the rotation and frame of a text kernel frame
 !     Fetch the rotation and frame of a constant offset frame
 !
 !-&
-
 
 !
 !     Spicelib Functions
@@ -389,7 +380,6 @@
       integer(ip), parameter :: ibufsz = nints * bufsiz
 
       integer(ip), parameter :: lbpool = -5
-
 
 !
 !     Local Variables
@@ -448,18 +438,15 @@
       data                  first  / .true.        /
       data                  idents / bufsiz * 0    /
 
-
 !
 !     Programmer's note: this routine makes use of the *implementation*
 !     of LOCATI. If that routine is changed, the logic this routine
 !     uses to locate buffered, old frame IDs may need to change as well.
 !
 
-
 !
 !     Before we even check in, if N is less than 1 we can
 !     just return.
-!
 !
 !     Perform any initializations that might be needed for this
 !     routine.
@@ -478,7 +465,6 @@
 !     the stuff above first.
 !
       if ( return() ) return
-
 
 !
 !     So far, we've not FOUND the rotation to the specified frame.
@@ -536,7 +522,6 @@
 !
       idnt(1) = frcode
       call locati ( idnt, 1, idents, pool, at, buffrd )
-
 
       if (  full  .and. ( .not. buffrd )  ) then
 !
@@ -605,7 +590,6 @@
          update = .true.
 
       end if
-
 
       if ( .not. update ) then
 !
@@ -822,7 +806,6 @@
                call vsclip ( -1.0_wp, rot(1,3) )
             end if
 
-
          else if ( spec == 'ANGLES' ) then
 !
 !           Look up the angles, their units and axes for the
@@ -875,7 +858,6 @@
                end if
 
             end do
-
 
             if (    badkpv( 'TKFRAM', item(3), '=', 3, 1, 'N' ) &
                .or. badkpv( 'TKFRAM', item(4), '=', 3, 1, 'N' ) ) &
@@ -957,7 +939,6 @@
             if ( found2 ) then
                item(3) = alt(3)
             end if
-
 
             if ( badkpv ( 'TKFRAM', item(3), '=', 4, 1, 'N' ) ) then
                call lnkini ( bufsiz, pool )

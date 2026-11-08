@@ -104,7 +104,6 @@
 !        pencils -->  12
 !                     18
 !
-!
 !     The next call,
 !
 !     CALL SYRENI ( 'erasers', 'desks', TABSYM, TABPTR, TABVAL )
@@ -121,7 +120,6 @@
 !     and the symbol "erasers" was then renamed to "STRASSMAN". If the
 !     new symbol exists, it is deleted from the table before its name
 !     is given to another symbol.
-!
 !
 !     The next call,
 !
@@ -164,13 +162,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     rename an existing symbol
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -185,7 +181,6 @@
 !         Declaration of the unused function SIZEC removed.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -206,8 +201,6 @@
       integer(ip)           olddim
       integer(ip)           newloc
       integer(ip)           newval
-
-
 
 !
 !     Standard SPICE error handling.
@@ -270,7 +263,6 @@
          tabsym(newloc) = new
 
       end if
-
 
       return
       end

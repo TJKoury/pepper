@@ -140,13 +140,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write a variable to a kernel file
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -156,7 +154,6 @@
 !        protocol. SETMSG call deleted, since IOERR now calls SETMSG.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -186,12 +183,10 @@
       integer(ip)           iostat
       integer(ip)           i
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     Preliminary measurements.
@@ -229,7 +224,6 @@
 
             end if
 
-
 !
 !        The last line of a multi-dimensional variable ends with a
 !        right parenthesis.
@@ -256,7 +250,6 @@
          call sigerr ( 'SPICE(WRITEERROR)' )
 
       end if
-
 
       return
       end

@@ -48,15 +48,12 @@
 !                of a body-fixed reference frame associated with
 !                a target body. Units are km.
 !
-!
 !     VOXORI     Origin of voxel grid in model coordinates. VOXORI
 !                is expressed in the same reference frame as MODXYZ.
 !                Units are km.
 !
-!
 !     VOXSIZ     Voxel size in model coordinates. VOXSIZ is the
 !                voxel's edge length. Units are km.
-!
 !
 ! $ Detailed_Output
 !
@@ -156,9 +153,6 @@
 !
       integer(ip)           i
 
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
       if ( voxsiz <= 0.0_wp ) then

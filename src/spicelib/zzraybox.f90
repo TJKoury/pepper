@@ -66,7 +66,6 @@
 !
 !                XPT is undefined if FOUND is .FALSE.
 !
-!
 !     FOUND      is set to .TRUE. if and only if the ray intersects
 !                the box.
 !
@@ -161,10 +160,6 @@
 
       logical               sphfnd
 
-
-!
-!     Use discovery check-in.
-!
       if ( return() ) return
 
 !
@@ -310,7 +305,6 @@
       maxidx =  1
       maxt   = -1.0_wp
 
-
       do i = 1, 3
 
          t(i) = -1.0_wp
@@ -418,7 +412,6 @@
                      return
 
                   end if
-
 
                else
 !

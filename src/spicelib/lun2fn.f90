@@ -102,13 +102,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     map logical unit to filename
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -174,7 +172,7 @@
       end if
 
 !
-!     If we made it to here, we are done. Just check out and return.
+!     If we made it to here, we are done. Just return.
 !
       return
       end

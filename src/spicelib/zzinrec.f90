@@ -54,7 +54,6 @@
 !                point is to be checked to determine whether it is
 !                inside the volume element specified by BOUNDS.
 !
-!
 !     BOUNDS     is an 2x3 array containing the bounds of a volume
 !                element expressed in rectangular coordinates. BOUNDS
 !                defines the volume element used in the comparison. In
@@ -71,7 +70,6 @@
 !                   I = 1   ->   lower bound
 !                   I = 2   ->   upper bound
 !
-!
 !     MARGIN     is a scale factor used to expand the volume element
 !                (box) described by the input bounds. Each side of the
 !                element is scaled by MARGIN, and the coordinates of
@@ -79,7 +77,6 @@
 !                resulting distance to create an expanded element. The
 !                input point is tested for containment within this
 !                expanded element.
-!
 !
 !     EXCLUD     is either a coordinate index or the parameter NONE.
 !
@@ -168,7 +165,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -193,7 +189,6 @@
 
       integer(ip)           i
 
-
 !
 !     Check-in is discovery style.
 !
@@ -205,7 +200,6 @@
 !     failure.
 !
       inside = .false.
-
 
 !
 !     Reject negative margins.

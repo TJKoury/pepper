@@ -88,7 +88,6 @@
 !
 !                    is accepted as well.
 !
-!
 !                 'INTERCEPT/ELLIPSOID'
 !
 !                    The sub-solar point computation uses a triaxial
@@ -102,7 +101,6 @@
 !                       'Intercept: ellipsoid'
 !
 !                    is accepted as well.
-!
 !
 !                 'NADIR/DSK/UNPRIORITIZED[/SURFACES = <surface list>]'
 !
@@ -144,7 +142,6 @@
 !                    See the $Particulars section below for details
 !                    concerning use of DSK data.
 !
-!
 !                 'INTERCEPT/DSK/UNPRIORITIZED[/SURFACES =
 !                                              <surface list>]'
 !
@@ -160,7 +157,6 @@
 !                    The surface list specification is optional. The
 !                    syntax of the list is identical to that for the
 !                    NADIR option described above.
-!
 !
 !                 Neither case nor white space are significant in
 !                 METHOD, except within double-quoted strings. For
@@ -181,7 +177,6 @@
 !
 !                    "MARS MEGDR128PIXEL/DEG"
 !
-!
 !     TARGET   is the name of the target body. The target body is
 !              an ephemeris object (its trajectory is given by
 !              SPK data), and is an extended object.
@@ -198,7 +193,6 @@
 !              kernel variable representing the ellipsoid's radii is
 !              present in the kernel pool. Normally the kernel
 !              variable would be defined by loading a PCK file.
-!
 !
 !     ET       is the epoch of participation of the observer,
 !              expressed as ephemeris seconds past J2000 TDB: ET is
@@ -217,7 +211,6 @@
 !              between the sub-solar point and the observer. See the
 !              description of ABCORR below for details.
 !
-!
 !     FIXREF   is the name of a body-fixed reference frame centered
 !              on the target body. FIXREF may be any such frame
 !              supported by the SPICE system, including built-in
@@ -229,7 +222,6 @@
 !              The output sub-solar point SPOINT and the
 !              observer-to-sub-solar point vector SRFVEC will be
 !              expressed relative to this reference frame.
-!
 !
 !     ABCORR   indicates the aberration correction to be applied
 !              when computing the target position and orientation
@@ -314,7 +306,6 @@
 !
 !              is valid.
 !
-!
 !     OBSRVR   is the name of the observing body. The observing body
 !              is an ephemeris object: it typically is a spacecraft,
 !              the earth, or a surface point on the earth. OBSRVR is
@@ -366,7 +357,6 @@
 !
 !              The components of SPOINT have units of km.
 !
-!
 !     TRGEPC   is the "sub-solar point epoch." TRGEPC is defined as
 !              follows: letting LT be the one-way light time between
 !              the observer and the sub-solar point, TRGEPC is
@@ -376,7 +366,6 @@
 !              the method indicated by ABCORR.
 !
 !              TRGEPC is expressed as seconds past J2000 TDB.
-!
 !
 !     SRFVEC   is the vector from the observer's position at ET to
 !              the aberration-corrected (or optionally, geometric)
@@ -589,7 +578,6 @@
 !     sources other than SPICE, it's essential to make sure the same
 !     geometric definitions are used.
 !
-!
 !     Using DSK data
 !     ==============
 !
@@ -610,7 +598,6 @@
 !        the data that are not to be used. This recommendation presumes
 !        that DSKs containing different versions of surface data for a
 !        given body have different surface ID codes.
-!
 !
 !        DSK data priority
 !        -----------------
@@ -637,7 +624,6 @@
 !        Because prioritized data selection may be the default behavior
 !        in a later version of the routine, the UNPRIORITIZED keyword is
 !        required in the METHOD argument.
-!
 !
 !        Syntax of the METHOD input argument
 !        -----------------------------------
@@ -710,7 +696,6 @@
 !
 !        'NADIR/DSK/UNPRIORITIZED/SURFACES= "Mars MEGDR 64 PIXEL/DEG",3'
 !
-!
 !        Aberration corrections
 !        ----------------------
 !
@@ -729,7 +714,6 @@
 !     platforms. The results depend on the SPICE kernels used as input,
 !     the compiler and supporting libraries, and the machine specific
 !     arithmetic implementation.
-!
 !
 !     1) Find the sub-solar point on Mars as seen from the Earth for a
 !        specified time.
@@ -754,7 +738,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -794,9 +777,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SUBSLR_EX1
 !              IMPLICIT NONE
@@ -982,10 +963,8 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Computation method = Intercept/ellipsoid
 !
@@ -999,7 +978,6 @@
 !          Sub-solar planetocentric latitude  (deg) =       23.420819936
 !          Sun's planetocentric latitude      (deg) =       23.420819936
 !
-!
 !         Computation method = Near point/ellipsoid
 !
 !          Sub-solar point altitude            (km) =       -0.000000000
@@ -1011,7 +989,6 @@
 !          Sun's planetocentric longitude     (deg) =     -175.810675408
 !          Sub-solar planetocentric latitude  (deg) =       23.175085578
 !          Sun's planetocentric latitude      (deg) =       23.420819936
-!
 !
 !         Computation method = Intercept/DSK/Unprioritized
 !
@@ -1025,7 +1002,6 @@
 !          Sub-solar planetocentric latitude  (deg) =       23.420819936
 !          Sun's planetocentric latitude      (deg) =       23.420819936
 !
-!
 !         Computation method = Nadir/DSK/Unprioritized
 !
 !          Sub-solar point altitude            (km) =       -4.022302438
@@ -1037,7 +1013,6 @@
 !          Sun's planetocentric longitude     (deg) =     -175.810675412
 !          Sub-solar planetocentric latitude  (deg) =       23.174793924
 !          Sun's planetocentric latitude      (deg) =       23.420819936
-!
 !
 ! $ Restrictions
 !
@@ -1144,14 +1119,12 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     find sub-solar point on target body
 !     find nearest point to sun on target body
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1175,7 +1148,6 @@
 !     CNVLIM, when added to 1.0D0, should yield 1.0D0.
 !
       real(wp), parameter :: cnvlim = 1.0e-17_wp
-
 
       integer(ip), parameter :: maxitr = 10
 
@@ -1321,12 +1293,10 @@
       data                  prvmth  / ' '    /
       data                  shape   / ellshp /
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Counter initialization is done separately.
@@ -1340,7 +1310,6 @@
          call zzctruin( svctr3 )
 
       end if
-
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
 !
@@ -1413,7 +1382,6 @@
 
       end if
 
-
       call zzbods2c ( svctr2, svobsr, svobsc, svfnd2, &
                       obsrvr, obscde, fnd    )
 
@@ -1431,7 +1399,6 @@
          return
 
       end if
-
 
 !
 !     The target body may not be the sun.
@@ -1515,7 +1482,6 @@
 
          if ( failed() ) return
 
-
          if ( subtyp == ' ' ) then
 
             call setmsg ( 'Sub-solar point type is required ' &
@@ -1525,7 +1491,6 @@
             return
 
          end if
-
 
          if (  eqstr( shpstr, 'ELLIPSOID' )  ) then
 
@@ -1547,7 +1512,6 @@
 
          end if
 
-
          if ( shape == ellshp ) then
 !
 !           Allow both "near point" and "nadir" expressions
@@ -1563,7 +1527,6 @@
             near = eqstr( subtyp, 'NADIR' )
 
          end if
-
 
          if ( .not. near ) then
 
@@ -1592,7 +1555,6 @@
 !
       first = .false.
 
-
       if ( shape == dskshp ) then
 !
 !        This is the DSK case.
@@ -1601,7 +1563,6 @@
 !        model for the surface of the target body.
 !
          call zzsudski ( trgcde, nsurf, srflst, fixfid )
-
 
       else if ( shape /= ellshp ) then
 
@@ -1616,7 +1577,6 @@
       end if
 
       if ( failed() ) return
-
 
 !
 !     Get the sign S prefixing LT in the expression for TRGEPC.
@@ -1740,7 +1700,6 @@
 
          end if
 
-
       else
 !
 !        This is the case for the "intercept" sub-solar point
@@ -1770,7 +1729,6 @@
                return
 
             end if
-
 
          else
 !
@@ -1971,7 +1929,6 @@
 
             end if
 
-
          else
 
 !           This is the "intercept" case.
@@ -1979,7 +1936,6 @@
 !           Generate the ray direction.
 !
             call vminus ( spos, dvec )
-
 
             if ( shape == ellshp ) then
 !

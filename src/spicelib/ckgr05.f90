@@ -90,7 +90,6 @@
 !                 RECORD( 13 ) =  ]     elements contain an angular
 !                                       velocity vector.
 !
-!
 !                 RECORD( 14 ) =  ]
 !                 RECORD( 15 ) =  ] --- For subtype 2, these
 !                 RECORD( 16 ) =  ]     elements contain the
@@ -157,7 +156,6 @@
 !     data type 5. Then the following code fragment extracts the
 !     SCLK time and boresight vector for each pointing instance
 !     in the first segment in the file.
-!
 !
 !           INTEGER               ICD     ( 6 )
 !           INTEGER               HANDLE
@@ -272,13 +270,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get CK type_5 record
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -297,7 +293,6 @@
 !
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
-!
 !
 
       integer(ip), parameter :: ndc = 2
@@ -320,13 +315,10 @@
       real(wp)              dcd    ( ndc )
       real(wp)              npoint
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The unpacked descriptor contains the following information
@@ -375,7 +367,6 @@
 
       if ( failed() ) return
 
-
       subtyp = nint( record(2) )
 
       if ( subtyp == c05tp0 ) then
@@ -409,7 +400,6 @@
       if ( failed() ) return
 
       nrec = nint ( npoint )
-
 
 !
 !     If a request was made for a record which doesn't exist, then

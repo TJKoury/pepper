@@ -336,7 +336,6 @@
 !
 !        If you use the picture
 !
-!
 !           YYYY Mon DD, HR:MN:SC ::UTC-8
 !
 !        you will get output strings such as:
@@ -441,9 +440,7 @@
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TIMOUT_EX1
 !              IMPLICIT NONE
@@ -509,17 +506,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Sample format: Thu Oct 01 11:11:11 PDT 1111
 !         Time picture : Wkd Mon DD HR:MN:SC PDT YYYY ::UTC-7
 !
 !         Input UTC    : 26 Nov 2018  23:23:00 UTC
 !         Output       : Mon Nov 26 16:23:00 PDT 2018
-!
 !
 !     2) Convert a UTC time to a string that contains both the
 !        calendar representations of the date as well as the Julian
@@ -532,9 +526,7 @@
 !
 !           naif0012.tls
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM TIMOUT_EX2
 !              IMPLICIT NONE
@@ -581,14 +573,11 @@
 !
 !               END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Input UTC: 26 Nov 2018  16:23:00 UTC
 !         Output   : Mon Nov 26 09:23  2018 (2458449.1826 JDUTC)
-!
 !
 ! $ Restrictions
 !
@@ -680,13 +669,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Convert and format d.p. seconds past J2000 as a string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -708,7 +695,6 @@
 !        of this routine used the year value corresponding to the
 !        last call to this routine (or whatever happened to be in
 !        memory on the first call). This error has been corrected.
-!
 !
 !        The error was fixed by recoding the following IF THEN statement
 !
@@ -739,13 +725,11 @@
 !    .               .OR. TYPE .EQ. MINUTE
 !    .               .OR. TYPE .EQ. SEC   ) THEN
 !
-!
 !-    Beta Version 2.1.0, 17-MAR-1994 (MJS) (NJB)
 !
 !        Integer argument to BRCKTD changed from 0 to 0.0D0.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -766,7 +750,6 @@
 
 !
 !     Local parameters
-!
 !
 !     The parameters below act essentially as an enumeration
 !     of the various kinds of components we will be looking at in the
@@ -1066,7 +1049,6 @@
 !
       save
 
-
 !
 !     Initial values
 !
@@ -1103,7 +1085,6 @@
                                      1.0e12_wp, 1.0e13_wp, 1.0e14_wp         /
 
       if ( return() ) return
-
 
 !
 !     Chapter 1. Initializations.
@@ -1419,7 +1400,6 @@
 
       end if
 
-
       do while ( unknwn .and. i <= ntokns )
 
          if ( class(ident(i)) == timsys ) then
@@ -1463,7 +1443,6 @@
 
             end if
 
-
          end if
 
          i = i + 1
@@ -1500,7 +1479,6 @@
          i = i + 1
       end do
 
-
 !
 !     Next determine whether or not we shall be performing rounding
 !     on output.
@@ -1525,7 +1503,6 @@
 !     tokens.
 !
       call scanrj ( dump, ndump, ntokns, ident, beg, end )
-
 
 !
 !     If the user wants to round the output, we need to pump up ET
@@ -1620,7 +1597,6 @@
          have(part) = .false.
       end do
 
-
 !
 !     Set up the input time format and the output time format that will
 !     be used later.
@@ -1633,7 +1609,6 @@
 !     other hand we are going to construct a UTC based string, we will
 !     convert our ET to an earth based epoch (TT, TDT) and use this as
 !     our base input system.
-!
 !
       myet = et
 
@@ -1738,7 +1713,6 @@
 
                call dpfmt ( value, fmt, substr )
 
-
                string(appnd:) = substr
                appnd          = appnd + width
                have  (point)  =.false.
@@ -1764,7 +1738,6 @@
 !        or tack it on to a format string we are creating..
 !
          else if ( type == place ) then
-
 
             if ( making ) then
                b           = width + 1
@@ -1885,7 +1858,6 @@
                      .or. (type == minute) &
                      .or. (type == sec)   ) then
 
-
                   call ttrans ( bastyp, ymdfmt, tvec )
 
 !
@@ -1958,7 +1930,6 @@
 
                   else if ( caltyp == id(mcal) ) then
 
-
                      if      ( gyear < 1582 ) then
                         go2jul = .true.
                      else if ( gyear > 1582 ) then
@@ -2029,7 +2000,6 @@
                   have  (ampm)   = .true.
                   have  (era)    = .true.
 
-
                else if ( type == wkday ) then
 
                   tvec(1) = myet
@@ -2047,7 +2017,6 @@
                      tvec(7) = 0.0_wp
 
                      call ttrans ( 'YMWDF', 'YMWDF', tvec )
-
 
                   end if
 
@@ -2089,14 +2058,12 @@
 
                end if
 
-
             end if
 
 !
 !           O.K. whatever thing we are about to construct, we now
 !           have it's numeric value.  It's time to construct its
 !           string  value.
-!
 !
 !           We need to treat character months, weekdays, eras, a.m.'s
 !           and p.m.'s specially.
@@ -2171,7 +2138,6 @@
                appnd          = appnd + mylen
                making         =.false.
 
-
             else if ( type == era ) then
 
                if      (         values(era)    == 2.0_wp &
@@ -2220,7 +2186,6 @@
                making         =.false.
 
             else if ( type == noon ) then
-
 
                if      (       ident(i)   == id(uampm) &
                          .and. values(hour) >= 12.0_wp    ) then
@@ -2280,7 +2245,6 @@
 !              increment of 1 for the components that typically have
 !              integer representations.
 !
-!
 !              Zero out the previous and next time vectors so we won't
 !              have to do it when we are filling in the truncated
 !              portions.
@@ -2289,7 +2253,6 @@
                   ptvec(j) = 0.0_wp
                   ntvec(j) = 0.0_wp
                end do
-
 
                if      ( type == year  .or. type == yr ) then
 
@@ -2311,7 +2274,6 @@
                   timfmt = ymd
                   intyp  = ymdfmt
                   incr   = 1.0_wp
-
 
                else if ( type == hour .or. type == ampm ) then
 
@@ -2342,7 +2304,6 @@
                   intyp  = ymdfmt
                   incr   = 0.0_wp
 
-
                else if ( type == julian ) then
 
                   stopat = 1
@@ -2369,7 +2330,6 @@
                   timfmt = contin
                   incr   = 0.0_wp
                   intyp  = bastyp
-
 
                end if
 
@@ -2452,7 +2412,6 @@
 
                end if
 
-
             end if
 
          end if
@@ -2464,7 +2423,6 @@
 !     to the output string.
 !
       output = string
-
 
       return
       end

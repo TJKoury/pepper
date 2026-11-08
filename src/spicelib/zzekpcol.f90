@@ -25,7 +25,6 @@
 !
 ! $ Declarations
 
-
       include 'ekattdsc.inc'
       include 'ekbool.inc'
       include 'ekcnamsz.inc'
@@ -72,7 +71,6 @@
 !
 !                    or QCOL may be unqualified, in which case it
 !                    is simply an <identifier> in the EK query language.
-!
 !
 !     EQRYI          is the integer portion of an encoded EK query.
 !                    The query must have been parsed.
@@ -168,7 +166,6 @@
 !            ERROR  =  .FALSE.
 !            ERRMSG =  ' '
 !
-!
 ! $ Restrictions
 !
 !     None.
@@ -231,13 +228,8 @@
       logical               fnd
       logical               qual
 
-
-!
-!     Use discovery check-in.
-!
       error   =  .false.
       errmsg  = ' '
-
 
       call zzekreqi ( eqryi, 'SEM_CHECKED', icheck )
 
@@ -271,7 +263,6 @@
 
       if ( error ) return
 
-
       if ( ntoken == 1 ) then
 
          if ( tokens(1) /= tkid ) then
@@ -285,7 +276,6 @@
 
          call ucase ( qcol, column )
          qual   =  .false.
-
 
       else if ( ntoken == 3 ) then
 
@@ -312,13 +302,11 @@
 
          end if
 
-
          i       =  values(1)
          j       =  values(3)
          tmptab  =  chrbuf ( chbegs(i) : chends(i) )
          column  =  chrbuf ( chbegs(j) : chends(j) )
          qual    = .true.
-
 
       else
 
@@ -375,7 +363,6 @@
 
          if ( failed() ) return
 
-
          fnd   =  .false.
          j     =   1
 
@@ -391,7 +378,6 @@
             end if
 
          end do
-
 
          if ( .not. fnd ) then
 

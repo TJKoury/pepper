@@ -126,13 +126,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     extract comments from a DAS file to a logical unit
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -159,7 +157,6 @@
 
       logical               eoc
       logical               gotsom
-
 
 !
 !     Standard SPICE error handling.

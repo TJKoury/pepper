@@ -264,7 +264,6 @@
 !                results of the search and the contents of RESULT
 !                on entry.
 !
-!
 !                When RESULT is empty on input, the intervals of the
 !                output window stored in RESULT represent times when
 !                the state function UDCOND returns the value .TRUE.
@@ -417,8 +416,6 @@
 !
       if ( return () ) return
 
-
-
 !
 !     Check the convergence tolerance.
 !
@@ -443,7 +440,6 @@
          return
 
       end if
-
 
 !
 !     If active, update the progress reporter.
@@ -669,7 +665,6 @@
             do while (       ( diff > tol    ) &
                        .and. ( diff < prvdif )  )
 
-
                nloop = nloop + 1
 !
 !              This loop count error exists to catch pathologies
@@ -689,7 +684,6 @@
                   call sigerr ( 'SPICE(NOCONVERG)' )
                   return
                end if
-
 
                if ( bail )  then
                   if ( udbail () ) return
@@ -814,7 +808,6 @@
 !
       end do
 
-
 !
 !     Check if in-state at this time (FINISH). If so record the
 !     interval.
@@ -847,4 +840,3 @@
 !
       return
       end
-

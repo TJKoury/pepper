@@ -153,13 +153,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     open new SPK or CK file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -175,13 +173,11 @@
 !     RESV        is the number of records to reserve when opening the
 !                 file.
 !
-!
       integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: resv = 0
-
 
 !
 !     Standard SPICE error handling.
@@ -194,7 +190,6 @@
 !     reserve any records.
 !
       call dafopn ( fname, nd, ni, ifname, resv, handle )
-
 
       return
       end

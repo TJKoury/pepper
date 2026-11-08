@@ -68,7 +68,6 @@
 !              If the intersection of the ellipsoid and plane is
 !              empty, ELLIPS is not modified.
 !
-!
 !     FOUND    is .TRUE. if and only if the intersection of the
 !              ellipsoid and plane is non-empty.
 !
@@ -152,7 +151,6 @@
 !
 !        will return the center and semi-axes of the limb.
 !
-!
 !        How do we know that  < X, N > = 1  for all X on the limb?
 !        This is because all limb points X satisfy
 !
@@ -177,7 +175,6 @@
 !
 !        where N is as defined above.
 !
-!
 !     2) We'd like to find the apparent limb of Jupiter, corrected for
 !        light time and stellar aberration, as seen from JUNO
 !        spacecraft's position at a given UTC time.
@@ -185,10 +182,8 @@
 !        This example is equivalent to the one in EDLIMB, but it uses
 !        INEDPL to compute the limb.
 !
-!
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -223,9 +218,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INEDPL_EX2
 !              IMPLICIT NONE
@@ -338,17 +331,14 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !        Apparent limb of Jupiter as seen from JUNO:
 !           UTC time       : 2016 Jul 14 19:45:00
 !           Semi-minor axis:  12425.547643  -5135.572410  65656.053303
 !           Semi-major axis:  27305.667297  66066.222576      0.000000
 !           Center         :    791.732472   -327.228993   -153.408849
-!
 !
 ! $ Restrictions
 !
@@ -405,13 +395,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     intersection of ellipsoid and plane
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -441,7 +429,6 @@
       real(wp)              vec2   ( 3 )
 
       integer(ip)           i
-
 
 !
 !     Standard SPICE error handling.
@@ -483,7 +470,6 @@
 !
 !     This algorithm is partitioned into a series of steps:
 !
-!
 !     1)  Identify a linear transformation that maps the input
 !         ellipsoid to the unit sphere.  We'll call this mapping the
 !         `distortion' mapping.  Apply the distortion mapping to both
@@ -497,7 +483,6 @@
 !         intersection ellipse to find the undistorted intersection
 !         ellipse.
 !
-
 
 !
 !     Step 1:

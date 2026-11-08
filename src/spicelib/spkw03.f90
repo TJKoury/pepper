@@ -193,7 +193,6 @@
 !     number of segments in an SPK file will help optimize how the SPICE
 !     system accesses the file.
 !
-!
 !     The ephemeris data supplied to the type 3 SPK writer is packed
 !     into an array as a sequence of records. The logical data records
 !     are stored contiguously:
@@ -250,9 +249,7 @@
 !        containing only one segment, given a set of Chebychev
 !        coefficients and their associated epochs.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM SPKW03_EX1
 !              IMPLICIT NONE
@@ -330,7 +327,6 @@
 !             .                      4.0501D0, 4.0502D0, 4.0503D0,
 !             .                      4.0601D0, 4.0602D0, 4.0603D0 /
 !
-!
 !        C
 !        C     Set the start and end times of interval covered by
 !        C     segment, and the length of time covered by logical
@@ -371,7 +367,6 @@
 !              CALL SPKCLS ( HANDLE )
 !
 !              END
-!
 !
 !        When this program is executed, no output is presented on
 !        screen. After run completion, a new SPK type 3 exists in
@@ -428,13 +423,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     write SPK type_3 data segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -493,7 +486,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     The number of sets of coefficients must be positive.

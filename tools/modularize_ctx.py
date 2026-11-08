@@ -106,8 +106,10 @@ def make_umbrella(name: str):
     cfg = UMBRELLAS[name]
     functions = set(module_of()) | set(CONSTANTS) | set(ERROR_FUNCS) | set(ERROR_CALLS)
     functions |= {r for rs in CONTEXT_MODULES.values() for r in rs}
+    from modules import STATE_DOCS
     return Umbrella(name, cfg["state"], cfg["component"], cfg.get("where", "instance"), functions,
-                    cfg.get("docs"), cfg.get("context_state", ()), cfg.get("context_component"))
+                    cfg.get("docs") or STATE_DOCS.get(name), cfg.get("context_state", ()),
+                    cfg.get("context_component"))
 
 
 def where_ctx() -> dict:

@@ -169,11 +169,6 @@
       integer(ip)           tb
       integer(ip)           te
 
-
-!
-!     Use discovery check-in.
-!
-
       call zzekreqi ( eqryi, 'PARSED', iparse )
 
       if ( failed() ) return
@@ -185,7 +180,6 @@
          return
 
       end if
-
 
       call zzekreqi ( eqryi,  'NUM_SELECT_COLS',   nsel   )
 
@@ -199,7 +193,6 @@
 
       end if
 
-
       call zzekreqi ( eqryi,  'NUM_TABLES',         ntab   )
       call zzekreqi ( eqryi,  'NUM_CONJUNCTIONS',   ncnj   )
       call zzekreqi ( eqryi,  'NUM_CONSTRAINTS',    ncns   )
@@ -211,7 +204,6 @@
 !     We'll set these when we discover what form the SELECT item has.
 !
 
-!
       lxbeg  =  0
       lxend  =  0
 
@@ -228,7 +220,6 @@
                   +   ncns     * eqcdsz &
                   +   nord     * eqodsz &
                   +   (n-1)    * eqsdsz
-
 
 !
 !     Pick up the column name first.
@@ -286,7 +277,6 @@
 !
             lxbeg  =  eqryi ( base + eqblex )
 
-
          else
 !
 !           If the first pointer is non-zero, both pointers should have
@@ -301,7 +291,6 @@
             return
 
          end if
-
 
       else
 !

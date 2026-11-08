@@ -93,20 +93,17 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Write a line of text to standard output.
 !
 !-&
 
-
       integer(ip)           stdout
       logical               first
       save
 
       data                  first  / .true. /
-
 
       if ( first ) then
          call stdio ( 'STDOUT', stdout )

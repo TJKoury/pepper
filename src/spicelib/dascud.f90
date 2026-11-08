@@ -179,13 +179,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     update DAS cluster directories
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -202,7 +200,6 @@
 !          .          .AND. ( DSCREC .GT. 0     )
 !          .          .AND. ( LWORD  .LT. NWI   )  ) THEN
 !
-!
 !        In the previous version of the code, LTYPE is uninitialized
 !        when the DAS file is empty, which implies DSCREC is 0.
 !        Otherwise LTYPE is initialized. So the value of the logical
@@ -215,11 +212,9 @@
 !        code. If the invalid value is ever used, a runtime error
 !        should result.
 !
-!
 !-    SPICELIB Version 1.3.0 16-JAN-2003 (NJB)
 !
 !        Bug fix: fixed previous bug fix.
-!
 !
 !        The offending line (#778) in previous version) of code is:
 !
@@ -228,7 +223,6 @@
 !        The correct line of code is:
 !
 !          CALL DASWRI ( HANDLE, FREE, DIRREC )
-!
 !
 !-    SPICELIB Version 1.2.0 10-DEC-2002 (NJB)
 !
@@ -249,7 +243,6 @@
 !-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -290,9 +283,6 @@
 !
       integer(ip), parameter :: begdsc = 9
 
-
-
-
 !
 !     Local variables
 !
@@ -321,11 +311,8 @@
       integer(ip)           rngloc
       integer(ip)           room
 
-
-
 !
 !     Saved variables
-!
 !
 
 !
@@ -338,9 +325,6 @@
 !     Initial values
 !
       data                  next   /  2,   3,   1  /
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -355,7 +339,6 @@
 !        This data is supposed to have been added to the file BEFORE
 !        this routine is called.  There are several possible states
 !        the file can be in at the point this routine is called.
-!
 !
 !           1)  There is already a descriptor of TYPE in the file, and
 !               the addition of data does not require this descriptor
@@ -372,7 +355,6 @@
 !               modified, the address range for TYPE covered by the
 !               directory record containing this last descriptor must be
 !               updated, as must be the file summary.
-!
 !
 !           2)  There is already a descriptor of TYPE in the file, and
 !               in order to describe the new data added to the file,
@@ -391,7 +373,6 @@
 !               records that follow this new directory record;
 !               otherwise, the new directory would get overwritten
 !               with data.
-!
 !
 !           3)  A new descriptor of TYPE is needed.
 !
@@ -430,7 +411,6 @@
 !                   so that the free pointer points to the record
 !                   following the empty directory record.
 !
-!
 !               c)  The conditions for cases (1) and (2) are not
 !                   satisfied, and the current last directory record
 !                   has no room for a new descriptor.
@@ -444,7 +424,6 @@
 !                   directory record and initialize the address range
 !                   for TYPE in that record.  The file summary must be
 !                   updated as well.
-!
 !
 !     To start out, we'll need to find out how the file is currently
 !     disposed.  We'll need the location of the last descriptor of
@@ -476,11 +455,9 @@
 !        -- Set the address range location used to pick address ranges
 !           out of directory records.
 !
-!
 !     Note that the address and descriptor location information from
 !     the file summary is assumed NOT to take into account the latest
 !     data addition.
-!
 !
       last    =  lastla( type )
       dscrec  =  lastrc( type )
@@ -566,7 +543,6 @@
 !
       needed  =  ( nwords - room + nw - 1 ) / nw
 
-
 !
 !     Now, update the descriptor directories.
 !
@@ -603,12 +579,9 @@
                        lastrc, &
                        lastwd )
 
-
-
       else if (       ( type   == ltype ) &
                 .and. ( dscrec > 0     ) &
                 .and. ( lword  < nwi   )  ) then
-!
 !
 !        This is case (2).
 !
@@ -619,7 +592,6 @@
 !        data records.
 !
 !        Get the old descriptor, since we're going to update it.
-!
 !
          call dasrri ( handle, dscrec, lword, lword, descr )
 
@@ -660,7 +632,6 @@
                        lastla, &
                        lastrc, &
                        lastwd )
-
 
       else
 !
@@ -721,7 +692,6 @@
                           lastla, &
                           lastrc, &
                           lastwd )
-
 
          else if ( lword < nwi ) then
 !
@@ -784,7 +754,6 @@
 
             end if
 
-
             maxadr = last + nwords
 
             call dasuri ( handle, lrec, rngloc+1, rngloc+1, maxadr )
@@ -820,7 +789,6 @@
 !
                call dasuri ( handle, lrec, fwdloc, fwdloc, free )
 
-
 !
 !              Prepare the new directory record: clear it, set the
 !              backward pointer, and write the record.
@@ -850,7 +818,6 @@
                           lastla, &
                           lastrc, &
                           lastwd )
-
 
          else
 !
@@ -902,7 +869,6 @@
 !
             call daswri ( handle, recno, dirrec )
 
-
 !
 !           Update the file summary to reflect the new record and word
 !           offsets of the last descriptor of the indicated type.  The
@@ -926,9 +892,7 @@
 
          end if
 
-
       end if
-
 
       return
       end

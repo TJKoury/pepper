@@ -33,7 +33,6 @@
 
       real(wp)              dskdsc ( * )
 
-
 ! $ Brief_I/O
 !
 !     Variable  I/O  Description
@@ -92,12 +91,10 @@
 !
 ! $ Examples
 !
-!
 !     1) Get a bounding radius for a DSK segment using the
 !        latitudinal coordinate system.
 !
 !        Example code begins here.
-!
 !
 !                 PROGRAM DSKGSR_EX1
 !                 IMPLICIT NONE
@@ -137,9 +134,7 @@
 !                 WRITE (*,*) 'Radius bound for latitudinal section: ',
 !                .            ZZDSKSGR( DSKDSC )
 !
-!
 !                 END
-!
 !
 !        When run on a PC/Linux/gfortran platform, the output
 !        from this program was:
@@ -180,7 +175,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -201,16 +195,10 @@
       integer(ip)           i
       integer(ip)           j
 
-
-!
-!     Use discovery check-in.
-!
-
 !
 !     Set an initial return value.
 !
       zzdsksgr = -1.0_wp
-
 
 !
 !     The radius calculation depends on the coordinate system.
@@ -237,7 +225,6 @@
 !        correspond to the third coordinate in the descriptor.
 !
          zzdsksgr = dskdsc( mx3idx )
-
 
       else if ( corsys == pdtsys ) then
 !
@@ -268,7 +255,6 @@
 !
             zzdsksgr = dskdsc(mx3idx) +  re
 
-
          else if ( f < 0.0_wp ) then
 !
 !           This is the prolate case.
@@ -287,7 +273,7 @@
 !           If the flattening coefficient is greater than one, the
 !           polar radius computed below is negative. If it's equal to
 !           one, the polar radius is zero. Either case is a problem, so
-!           signal an error and check out.
+!           signal an error.
 !
             call setmsg ( 'Flattening coefficient was *.'  )
             call errdp  ( '*', f                           )
@@ -295,7 +281,6 @@
             return
 
          end if
-
 
       else if ( corsys == recsys ) then
 !
@@ -306,7 +291,6 @@
 !        array.
 !
          call moved ( dskdsc(mn1idx), 6, bds )
-
 
           b = mn1idx - 1
 
@@ -319,7 +303,6 @@
           end do
 
           zzdsksgr  = vnorm( mag )
-
 
       else
 !

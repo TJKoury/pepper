@@ -23,7 +23,6 @@
 !
 ! $ Declarations
 
-
       include 'ekcoldsc.inc'
       include 'ekopcd.inc'
       include 'eksegdsc.inc'
@@ -144,7 +143,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -193,7 +191,6 @@
 
          call zzeklltc ( handle, segdsc, coldsc, cval, zzekillt, rec )
 
-
       else if ( coltyp == dp ) then
 
          if ( dtype == dp ) then
@@ -204,11 +201,9 @@
 
          call zzeklltd ( handle, segdsc, coldsc, dnum, zzekillt, rec )
 
-
       else if ( coltyp == time ) then
 
          call zzeklltd ( handle, segdsc, coldsc, dval, zzekillt, rec )
-
 
       else if ( coltyp == int ) then
 

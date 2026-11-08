@@ -97,8 +97,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
@@ -125,7 +123,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Start out by allocating a DAS integer page.  We'll write the root

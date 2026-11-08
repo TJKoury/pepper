@@ -118,7 +118,6 @@
 !                  'TDB'     Elements of COVER are expressed as seconds
 !                            past J2000 TDB.
 !
-!
 !     COVER    is an initialized SPICE window data structure. COVER
 !              optionally may contain coverage data on input; on output,
 !              the data already present in COVER will be combined with
@@ -250,9 +249,7 @@
 !        of the ID code set: find the coverage for each item in the
 !        set and display the coverage.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKCOV_EX1
 !              IMPLICIT NONE
@@ -398,12 +395,10 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the LSK file named naif0010.tls, the SCLK file
 !        named cas00145.tsc and the CK file named 08052_08057ra.bc, the
 !        output was:
-!
 !
 !        Name of leapseconds kernel > naif0010.tls
 !        Name of SCLK kernel        > cas00145.tsc
@@ -415,38 +410,31 @@
 !         Start:    2008 FEB 21 00:01:07.771186 (TDB)
 !         Stop:     2008 FEB 23 22:53:30.001738 (TDB)
 !
-!
 !         Interval:            2
 !         Start:    2008 FEB 23 22:58:13.999732 (TDB)
 !         Stop:     2008 FEB 24 02:22:25.913175 (TDB)
-!
 !
 !         Interval:            3
 !         Start:    2008 FEB 24 02:27:49.910886 (TDB)
 !         Stop:     2008 FEB 24 19:46:33.470587 (TDB)
 !
-!
 !         Interval:            4
 !         Start:    2008 FEB 24 19:49:33.469315 (TDB)
 !         Stop:     2008 FEB 25 04:25:21.250677 (TDB)
-!
 !
 !         Interval:            5
 !         Start:    2008 FEB 25 04:29:33.248897 (TDB)
 !         Stop:     2008 FEB 25 15:23:44.971594 (TDB)
 !
-!
 !         Interval:            6
 !         Start:    2008 FEB 25 15:24:12.971396 (TDB)
 !         Stop:     2008 FEB 25 20:25:04.843864 (TDB)
-!
 !
 !         Interval:            7
 !         Start:    2008 FEB 25 20:25:48.843553 (TDB)
 !         Stop:     2008 FEB 26 00:01:04.752306 (TDB)
 !
 !         ========================================
-!
 !
 !     2) Find the segment-level coverage for the object designated by
 !        IDCODE provided by the set of CK files loaded via a
@@ -456,7 +444,6 @@
 !
 !        Use the meta-kernel shown below to load the required SPICE
 !        kernels.
-!
 !
 !           KPL/MK
 !
@@ -490,9 +477,7 @@
 !
 !           End of meta-kernel
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM CKCOV_EX2
 !              IMPLICIT NONE
@@ -627,11 +612,9 @@
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, using the meta-kernel file named ckcov_ex2.tm and
 !        the NAIF ID "-82000" (Cassini spacecraft bus), the output was:
-!
 !
 !        Enter name of metakernel > ckcov_ex2.tm
 !        Enter ID code            > -82000
@@ -641,7 +624,6 @@
 !         Interval:            1
 !         Start:    2008 FEB 21 00:01:07.771186 (TDB)
 !         Stop:     2008 FEB 26 00:01:04.752306 (TDB)
-!
 !
 ! $ Restrictions
 !
@@ -693,7 +675,6 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     get coverage window for ck_object
@@ -702,7 +683,6 @@
 !     get coverage start and stop time for CK instrument
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -717,7 +697,6 @@
       character(*), parameter :: kwintv = 'INTERVAL'
 
       character(*), parameter :: kwseg = 'SEGMENT'
-
 
       integer(ip), parameter :: lnsize = 80
 
@@ -753,7 +732,6 @@
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Check tolerance value.
@@ -795,7 +773,6 @@
       call getfat ( ckfnm, arch, kertyp )
 
       if ( failed() ) return
-
 
       if ( arch == 'XFR' ) then
 
@@ -841,7 +818,6 @@
          return
 
       end if
-
 
 !
 !     Set a logical flag indicating whether the time system is SCLK.
@@ -905,7 +881,6 @@
 !
       call daffna ( found )
 
-
       do while ( found )
 !
 !        Note:  we check FAILED() at the bottom of this loop; this
@@ -921,7 +896,6 @@
 !        angular velocity restriction.
 !
          avok = ( ic(4) == 1 ) .or. ( .not. needav )
-
 
          if (  ( ic(1) == idcode )  .and.  avok  ) then
 !
@@ -1029,7 +1003,6 @@
 !     Release the file.
 !
       call dafcls ( handle )
-
 
       return
       end

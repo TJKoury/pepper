@@ -131,13 +131,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     hyperbolic time of flight
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -147,7 +145,6 @@
 !        proper range---(1,+infinity)---before proceeding.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -188,8 +185,6 @@
 !
       data                  first   / .true. /
 
-
-
 !
 !     Standard SPICE error handling.
 !
@@ -223,7 +218,6 @@
          m = abs ( ma )
       end if
 
-
 !
 !     The initial bounds for the eccentric anomaly F are determined
 !     as follows:
@@ -244,7 +238,6 @@
 !
 !     which yields
 !
-!
 !        2 M Exp(F)
 !        ----------   < Exp(F)**2 - 1
 !            e
@@ -255,9 +248,7 @@
 !       1 + ---- <  Exp(F)**2 - ---------  +  ---- = {Exp(F) - (M/e)}**2
 !           e**2                   e          e**2
 !
-!
 !     Therefore we must have one of the following be true.
-!
 !
 !      SQRT( 1 + (M/e)**2 )  <  Exp(F) - (M/e)
 !
@@ -273,12 +264,9 @@
 !
 !      (M/e) + SQRT( 1 + (M/e)**2 ) < Exp(F)
 !
-!
 !    Hence
 !
 !       Log ( (M/e) + SQRT(1 + (M/e)**2) )  < F
-!
-!
 !
 !     Returning to our initial equation:
 !
@@ -294,23 +282,18 @@
 !
 !     Thus
 !
-!
 !             3 __________
 !        F <  \/  6M / e
 !
-!
 !     Thus our solution must satisfy the inequalities
-!
 !
 !                                                      3 __________
 !      LOG ( (M/e) + SQRT(1 + (M/e)**2) )  <   F   <   \/  6M/e
-!
 !
 !     In addition we know that the solution must lie somewhere
 !     in the region between 0 and the maximum value of F for which
 !     (e sinh F - F) can be computed.  This turns out to be
 !     approximately LOG( DPMAX() / e ) = LOG(DPMAX()) - LOG(e) .
-!
 !
       lower = log ( (m/ecc)  +  dsqrt( 1.0_wp + (m/ecc)**2 ) )
       upper = min ( dcbrt(6.0_wp*m/ecc), maxlog - log (ecc ) )
@@ -322,7 +305,6 @@
 !     any difference ( dLOG/dt = 1 at 1 after all).  So in this
 !     case we will just solve the linear portion of the
 !     expansion of e SINH(F) - F = M
-!
 !
 !     Now we simply perform bisection to locate the root.
 !
@@ -378,7 +360,6 @@
 
          end if
 
-
       end do
 
 !
@@ -389,7 +370,6 @@
       else
          f =   middle
       end if
-
 
       return
       end

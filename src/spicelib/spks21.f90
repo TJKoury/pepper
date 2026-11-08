@@ -117,13 +117,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     subset type_21 SPK segment
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -152,12 +150,10 @@
       integer(ip)           offset
       integer(ip)           i
 
-
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
-
 
 !
 !     Get the number of records in the segment. From that, we can
@@ -166,7 +162,6 @@
 !        NDIR      The number of directory epochs.
 !
 !        OFFE      The offset of the first epoch.
-!
 !
 !     the number of directory epochs.
 !

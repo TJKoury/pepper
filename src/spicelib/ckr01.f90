@@ -287,13 +287,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     read CK type_1 pointing data record
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -340,7 +338,6 @@
 !-    Beta Version 1.0.0, 17-MAY-1990 (RET) (IMU)
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -404,8 +401,6 @@
       real(wp)              buffer ( dirsiz )
 
       logical               fnd
-
-
 
 !
 !     Standard SPICE error handling.

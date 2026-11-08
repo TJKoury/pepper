@@ -18,7 +18,6 @@
 !
 ! $ Declarations
 
-
       include 'ekbool.inc'
       include 'ekcoldsc.inc'
       include 'ekdatpag.inc'
@@ -123,7 +122,6 @@
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
@@ -155,7 +153,6 @@
 !
       if ( return () ) return
 
-
 !
 !     Before trying to actually modify the file, do every error
 !     check we can.
@@ -176,7 +173,6 @@
       ptrloc  =  recptr + dptbas + coldsc(ordidx)
 
       call dasrdi ( handle, ptrloc, ptrloc, datptr )
-
 
       if ( datptr > 0 ) then
 !
@@ -224,9 +220,7 @@
 
          end if
 
-
          nseen = min (  nelts,  (base+dpsize-datptr)  )
-
 
          do while (  ( nseen < nelts ) .and. ( .not. failed() )  )
 !
@@ -242,7 +236,6 @@
 
             call zzekgfwd ( handle, dp, p, next   )
             call zzekglnk ( handle, dp, p, nlinks )
-
 
             if ( nlinks > 1 ) then
 
@@ -262,13 +255,11 @@
 
          end do
 
-
       else if ( datptr == null ) then
 !
 !        Mark the entry as `uninitialized'.
 !
          call dasudi ( handle, ptrloc, ptrloc, uninit )
-
 
       else if ( datptr /= uninit ) then
 !
@@ -292,7 +283,6 @@
 !     Set the record's status to indicate that this record is updated.
 !
       call dasudi ( handle, recptr+staidx, recptr+staidx, update )
-
 
       return
       end

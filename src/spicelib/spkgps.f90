@@ -88,7 +88,6 @@
 !     O(t) from T(t) gives the geometric position of the target
 !     body relative to the observer.
 !
-!
 !        CENTER ----- O(t)
 !            |      /
 !            |     /
@@ -97,14 +96,11 @@
 !            |  /
 !           T(t)
 !
-!
 !     The one-way light time, tau, is given by
-!
 !
 !               | T(t) - O(t) |
 !        tau = -----------------
 !                      c
-!
 !
 !     For example, if the observing body is -94, the Mars Observer
 !     spacecraft, and the target body is 401, Phobos, then the
@@ -243,13 +239,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     geometric position of one body relative to another
 !
 !-&
-
 
 !
 !     This is the idea:
@@ -303,9 +297,7 @@
 !                   \               /                |
 !                    B-------------C-----------------D
 !
-!
 
-!
 !
 !     SPICELIB functions
 !
@@ -336,7 +328,6 @@
 !     Saved frame name length.
 !
       integer(ip), parameter :: frnmln = 32
-
 
 !
 !     Local variables
@@ -394,7 +385,6 @@
 !
       data                  first   / .true. /
 
-
 !
 !     In-line Function Definitions
 !
@@ -434,7 +424,6 @@
          return
 
       end if
-
 
 !
 !     CTARG contains the integer codes of the bodies in the
@@ -520,14 +509,12 @@
             //            'uninitialized variable. ' )
             call errch  ( '#', ref )
 
-
          else if ( ref == ' ' ) then
 
             call setmsg ( 'The string supplied to specify the ' &
             //            'reference frame is blank.  The most ' &
             //            'common cause for this kind of error ' &
             //            'is an uninitialized variable. ' )
-
 
          else
 
@@ -548,8 +535,6 @@
 
       end if
 
-
-
 !
 !     Fill in CTARG and STARG until no more data is found
 !     or until we reach the SSB.  If the chain gets too
@@ -561,7 +546,6 @@
 !     current error handling action is to NOT abort, then
 !     FOUND may be stuck at TRUE, CTARG(I) will never
 !     become zero, and the loop will execute indefinitely.
-!
 !
 !     Construct CTARG and STARG.  Begin by assigning the
 !     first elements:  TARG and the position of TARG relative
@@ -601,7 +585,7 @@
          end if
 !
 !        If one of the routines above failed during
-!        execution, we just give up and check out.
+!        execution, we just give up and return.
 !
          if ( failed() ) return
 
@@ -625,7 +609,6 @@
          do while (      found &
                    .and. ctarg(chlen) /= ssb &
                    .and. ctarg(chlen) /= obs )
-
 
 !
 !           Find a file and segment that has position
@@ -678,7 +661,7 @@
 
 !
 !           If one of the routines above failed during
-!           execution, we just give up and check out.
+!           execution, we just give up and return.
 !
             if ( failed() ) return
 
@@ -695,14 +678,12 @@
 !        CTARG(K-1)      relative to body CTARG(K) in the frame
 !        TFRAME(K)
 !
-!
 !     For K = 2,..., NCT.
 !
 !     CTARG(1) = TARG
 !     STARG(1...3,1) = ( 0, 0, 0 )
 !     TFRAME(1)      = TFRAME(2)
 !
-
 
 !
 !     Now follow the observer's chain.  Assign
@@ -826,7 +807,6 @@
 
       end do
 
-
 !
 !     If CTPOS is zero at this point, it means we
 !     have not found a common node though we have
@@ -843,7 +823,6 @@
          else
             call intstr ( targ, tname )
          end if
-
 
          call bodc2n ( obs,  oname,   found )
 
@@ -880,8 +859,6 @@
 !
 !        STARG(1,CTPOS) - SOBS.
 !
-!
-!
 !                     SOBS
 !         CENTER ---------------->OBS
 !            |                  .
@@ -896,13 +873,11 @@
 !            V L
 !           TARG
 !
-!
 !     And the light-time between them is just
 !
 !               | POSITION |
 !          LT = ---------
 !                   c
-!
 !
 !     Compute the position of the target relative to CTARG(CTPOS)
 !
@@ -937,7 +912,6 @@
          end if
 
       end do
-
 
 !
 !     To avoid unnecessary frame transformations we'll do
@@ -978,7 +952,6 @@
 !
          cframe = refid
          call vsub  ( starg(1,ctpos), stemp, pos )
-
 
       else if ( isinrt( tframe(ctpos), cframe ) ) then
 

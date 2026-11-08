@@ -91,7 +91,6 @@
 !                         1.99096871D-7
 !        ORBIT_ECC -->    1.671D-2
 !
-!
 !     The call
 !
 !        CALL SYDELC ( 'MEAN_ANOM', TABSYM, TABPTR, TABVAL )
@@ -135,13 +134,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     delete a symbol from a symbol table
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -164,13 +161,10 @@
       integer(ip)           locval
       integer(ip)           dimval
 
-
-
 !
 !     Standard SPICE error handling.
 !
       if ( return() ) return
-
 
 !
 !     How many symbols to start with?
@@ -203,7 +197,6 @@
          call scardd ( nval, tabval )
 
       end if
-
 
       return
       end

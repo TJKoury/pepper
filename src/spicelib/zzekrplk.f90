@@ -103,18 +103,13 @@
 !
 !-&
 
-
 !
 !     Local variables
 !
       integer(ip)           stype
       integer(ip)           tree
 
-!
-!     Use discovery check-in.
-!
       stype  =  segdsc ( ektidx )
-
 
       if ( stype == 1 ) then
 !
@@ -124,7 +119,6 @@
          tree  = segdsc ( rtidx )
 
          call zzektrdp ( handle, tree, n, recptr )
-
 
       else if ( stype == 2 ) then
 !
@@ -143,6 +137,5 @@
          return
 
       end if
-
 
       end

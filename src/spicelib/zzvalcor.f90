@@ -165,9 +165,7 @@
       logical               failed
       logical               return
 
-
       if ( return() ) return
-
 
 !
 !     Parse the aberration correction string and obtain

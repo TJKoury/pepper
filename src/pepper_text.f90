@@ -35,7 +35,6 @@ contains
 
       implicit none
 
-
 ! $ Detailed_Input
 !
 !     DIR      is the direction in which the characters in the
@@ -135,13 +134,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     cycle a character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -150,7 +147,6 @@ contains
 !      Error handling for bad direction flag added.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -211,7 +207,6 @@ contains
       else if ( k == 0 ) then
          return
       end if
-
 
 !
 !     As to the method for performing the cycle in place, we need a
@@ -353,7 +348,6 @@ contains
 
       implicit none
 
-
       integer(ip), parameter :: maxldp = 23
 
 ! $ Detailed_Input
@@ -456,9 +450,7 @@ contains
 !        replace a marker within a string with the text representation
 !        of a double precision value.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REPMD_EX1
 !              IMPLICIT NONE
@@ -519,10 +511,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Case 1: Single marker, two significant digits.
 !            Input : Invalid value. The value was:  #
@@ -535,7 +525,6 @@ contains
 !         Case 3: Excessive significant digits.
 !            Input : Invalid value. The value was:  #
 !            Output: Invalid value. The value was:  5.0000000000000E+01
-!
 !
 !        Note that, in Case #3 even though 100 digits of precision were
 !        requested, only 14 were returned.
@@ -592,13 +581,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace marker with d.p. number
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -606,7 +593,6 @@ contains
 
 !
 !     Local variables
-!
 !
       character(maxldp)     substr
 
@@ -693,7 +679,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
       integer(ip), parameter :: maxli = 11
 
@@ -785,9 +770,7 @@ contains
 !        replace a marker within a string with the text representation
 !        of an integer value.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM REPMI_EX1
 !              IMPLICIT NONE
@@ -833,10 +816,8 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
-!
 !
 !         Case 1: Single marker.
 !            Input : Invalid value. The value was:  #
@@ -845,7 +826,6 @@ contains
 !         Case 2: Multiple markers.
 !            Input : Left > Right endpoint. Left: XX; Right: XX
 !            Output: Left > Right endpoint. Left: 2035; Right: XX
-!
 !
 ! $ Restrictions
 !
@@ -894,13 +874,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace marker with integer
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -916,7 +894,6 @@ contains
 
       integer(ip)           mrkpsb
       integer(ip)           mrkpse
-
 
 !
 !     If MARKER is blank, no substitution is possible.
@@ -985,7 +962,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1117,13 +1093,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     replace one substring with another substring
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1142,7 +1116,6 @@ contains
       integer(ip)           end
       integer(ip)           next
       integer(ip)           i
-
 
 !
 !     Standard SPICE error handling.
@@ -1258,7 +1231,6 @@ contains
          out(end+1: ) = ' '
       end if
 
-
       return
       end procedure repsub
 
@@ -1285,7 +1257,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1378,13 +1349,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     remove a substring
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1395,7 +1364,6 @@ contains
 !         RIGHT > LEN(IN), or LEFT > LEN(IN), an error is signaled.
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -1417,9 +1385,6 @@ contains
 
       integer(ip)      i
       integer(ip)      j
-
-
-
 
 !
 !     Standard SPICE error handling.
@@ -1447,7 +1412,6 @@ contains
          r = right
 
       end if
-
 
 !
 !     How much of the input string will we use? And how big is the
@@ -1489,7 +1453,6 @@ contains
 
       end if
 
-
       return
       end procedure remsub
 
@@ -1516,7 +1479,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1586,14 +1548,11 @@ contains
 !           'Apple a day'     'An '     -3     An error is signaled.
 !           'An Apple a day'  ' keeps'  16     An error is signaled.
 !
-!
 !     2) INSSUB could be used to insert substrings at any position
 !        within the declared length of the input string. Use it to
 !        add an ascii arrow (--->) at the end of the string.
 !
-!
 !        Example code begins here.
-!
 !
 !              PROGRAM INSSUB_EX2
 !              IMPLICIT NONE
@@ -1615,7 +1574,6 @@ contains
 !        C
 !              DATA                  STRIN / '0123456789         .' /
 !
-!
 !        C
 !        C     Insert a substring at index 17. This should leave 5
 !        C     blanks after the sequence of numbers. Note that the
@@ -1628,14 +1586,11 @@ contains
 !
 !              END
 !
-!
 !        When this program was executed on a Mac/Intel/gfortran/64-bit
 !        platform, the output was:
 !
-!
 !         Input string:  0123456789         .
 !         Output string: 0123456789      --->
-!
 !
 ! $ Restrictions
 !
@@ -1679,13 +1634,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     insert a substring
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1713,7 +1666,6 @@ contains
 !        location equal to LEN(IN)+1.)
 !
 !-&
-
 
 !
 !     Local Variables
@@ -1785,7 +1737,6 @@ contains
 
       end if
 
-
 !
 !     At this point, we're guaranteed that
 !
@@ -1796,7 +1747,6 @@ contains
 !             -
 !
 !        LOC  >  0
-!
 !
 !     The first part of the input string is copied without change
 !     to the output string, if this first part is non-empty.
@@ -1818,10 +1768,8 @@ contains
 !
       subend  =  loc - 1 + sublen
 
-
       if (        ( loc    <= inlen  ) &
             .and. ( subend < outlen )  ) then
-
 
          nmove  =  min (  outlen-subend, inlen-loc+1  )
 
@@ -1875,7 +1823,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -1966,13 +1913,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     shift a character_string
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -1989,18 +1934,14 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
-
 
 !
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
-
 
 !
 !     Hand off to one of the other routines.
@@ -2056,7 +1997,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2178,14 +2118,12 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     check an ID string
 !     validate an ID string
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -2235,7 +2173,6 @@ contains
          return
 
       end if
-
 
       l  =  lastnb( id )
 
@@ -2314,7 +2251,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -2431,18 +2367,15 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     count characters in a text file
 !
 !-&
 
-
 !
 !     SPICELIB functions
 !
-
 
 !
 !     Local variables
@@ -2565,7 +2498,6 @@ contains
 !
       countc = chars
 
-
       return
       end procedure countc
 
@@ -2589,9 +2521,6 @@ contains
 !
 !     ALPHANUMERIC
 !     CONVERSION
-!
-! $ Declarations
-!
 !
 ! $ Detailed_Input
 !
@@ -2796,13 +2725,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     convert signed hexadecimal string to integer
 !
 !-&
-
 
 ! $ Revisions
 !
@@ -2849,10 +2776,8 @@ contains
 !
 !-&
 
-
 !
 !     SPICELIB functions
-!
 !
 !     Local Parameters
 !
@@ -2894,7 +2819,6 @@ contains
 !     Initial values
 !
 
-
 !
 !     The input hexadecimal string is scanned from left to right, and
 !     the integer is generated by repeated multiplications and additions
@@ -2902,7 +2826,6 @@ contains
 !
 !     If this is the first time that this routine has been called,
 !     we need to do some setup stuff.
-!
 !
 !     There are no errors initially, so set the error flag to
 !     .FALSE.
@@ -3157,7 +3080,6 @@ contains
 
       integer(ip), parameter :: lbpool = -5
 
-
 ! $ Detailed_Input
 !
 !     ID       is an integer array that serves as an identifier
@@ -3286,16 +3208,13 @@ contains
 !
 !     And that we are computing something with this model data.
 !
-!
 !        INTEGER               MDLSIZ
 !        PARAMETER           ( MDLSIZ = xxxxxx )
 !
 !        We'll create room to buffer this data for 8 bodies.
 !
-!
 !        INTEGER               PSIZE
 !        PARAMETER           ( PSIZE = 8 )
-!
 !
 !        The ID's we shall be using are 1-dimensional. They are body
 !        ID's for planets or and their satellites.
@@ -3317,7 +3236,6 @@ contains
 !        SAVE
 !
 !        DATA                  FIRST / .TRUE. /
-!
 !
 !        The block below handles initializing the linked list pool.
 !
@@ -3349,7 +3267,6 @@ contains
 !        reading the rest of the code.
 !
 !        CALL MOVED ( MAGMDL(1,AT), MDLSIZ, MODEL )
-!
 !
 !        Now do whatever processing is needed ....
 !
@@ -3399,7 +3316,6 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     Locate an item in a linked list indexed list of items
@@ -3407,11 +3323,9 @@ contains
 !
 !-&
 
-
 !
 !     Spicelib functions
 !
-
 
 !
 !     Linked list parameters
@@ -3434,8 +3348,6 @@ contains
 
       logical               more
       logical               same
-
-
 
 !
 !     We begin by looking through the list of items at our disposal.
@@ -3486,8 +3398,6 @@ contains
       same = .false.
 
       head =  at
-
-
 
       if ( idsz == 1 ) then
 
@@ -3571,7 +3481,6 @@ contains
 
          presnt = .true.
          last   =  pool(prev,at)
-
 
 !
 !        If AT is not already at the head of the list, we
@@ -3659,7 +3568,6 @@ contains
 ! $ Declarations
 
       implicit none
-
 
 ! $ Detailed_Input
 !
@@ -3826,7 +3734,6 @@ contains
 !           Found poem between lines   1 and   5
 !           Found poem between lines  12 and  16
 !           Found poem between lines  24 and  28
-!
 !
 !     2) Given the same file, the code fragment
 !
@@ -4023,13 +3930,11 @@ contains
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     locate lines in a text file
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -4119,12 +4024,9 @@ contains
 
             end if
 
-
          end if
 
       end do
-
-
 
 !
 !     Start the search for EMARK starting from where we left off.
@@ -4176,7 +4078,6 @@ contains
                end if
             end if
 
-
          end if
 
       end do
@@ -4193,7 +4094,6 @@ contains
          eline = eltemp
 
       end if
-
 
       return
       end procedure locln

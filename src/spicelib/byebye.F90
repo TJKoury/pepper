@@ -238,13 +238,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     gracefully exit a program
 !
 !-&
-
 
 !
 !     Local Parameters
@@ -264,7 +262,6 @@
       integer(ip)           succes
       parameter           ( succes = 0 )
 #endif
-
 
       character(stlen)      chstat
 

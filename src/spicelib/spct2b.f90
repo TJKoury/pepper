@@ -134,7 +134,6 @@
 !
 !            CLOSE ( UNIT )
 !
-!
 !         The following code fragment reconverts the text format
 !         SPK data and comments back into binary format.
 !
@@ -147,7 +146,6 @@
 !            (Read trailing label from UNIT, if desired )
 !
 !            CLOSE ( UNIT )
-!
 !
 !     2)  Suppose three text format SPK files have been appended
 !         together into one text file called THREE.TSP. The following
@@ -213,13 +211,11 @@
 !
 !-&
 
-
 ! $ Index_Entries
 !
 !     text SPK or CK to binary
 !
 !-&
-
 
 !
 !     SPICELIB functions
@@ -278,7 +274,6 @@
          call sigerr ( 'SPICE(FILEREADFAILED)'                        )
          return
       end if
-
 
       if (   (  line ( ltrim(line): )  /=  bmark  )   .or. (  iostat                 <  0      )   ) return
 

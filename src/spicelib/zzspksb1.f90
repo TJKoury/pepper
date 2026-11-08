@@ -150,8 +150,6 @@
 !
 !-&
 
-
-
 !
 !     SPICELIB functions
 !
