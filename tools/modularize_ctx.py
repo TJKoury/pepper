@@ -91,6 +91,9 @@ DOCS = {
                   "summary, reading, writing and updating character, double precision "
                   "and integer data through record buffers, comments, and the transfer "
                   "format.",
+    "pepper_segments": "Segment buffers of SPK, PCK, CK and DSK files: the tables of loaded "
+                       "files (per instance) and the per-context caches of the segments found "
+                       "for bodies and instruments.",
     "pepper_dsk_files": "DLA (DAS linked array) files and DSK files: segment lists, opening "
                         "and closing, reading and writing type 2 segments (plates, vertices, "
                         "voxels), their descriptors, and the DSK tolerances.",
@@ -116,7 +119,9 @@ def make_umbrella(name: str):
     from modules import STATE_DOCS
     return Umbrella(name, cfg["state"], cfg["component"], cfg.get("where", "instance"), functions,
                     cfg.get("docs") or STATE_DOCS.get(name), cfg.get("context_state", ()),
-                    cfg.get("context_component"))
+                    cfg.get("context_component"), context_epoch=cfg.get("context_epoch", False),
+                    context_init=cfg.get("context_init", ()),
+                    epoch_entries=cfg.get("epoch_entries", ()))
 
 
 def where_ctx() -> dict:
@@ -229,6 +234,9 @@ def use_lines(imports: dict, indent: str) -> list:
             for m, ns in sorted(imports.items(), key=lambda kv: order.index(kv[0]))]
 
 
+from modules import PROCEDURE_ARGS  # noqa: E402
+
+
 def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> list:
     """Declarations needed for the arguments: includes, parameters (with
     their type declarations) and the argument declarations."""
@@ -273,7 +281,11 @@ def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> lis
         for e in ents:
             n = entity_name(e)
             a = f", {attrs}" if attrs else ""
-            if n in r.args:
+            if n in r.args and n in PROCEDURE_ARGS.get(r.name, {}):
+                # a dummy procedure: declared by its abstract interface
+                doc = f"  !! {docs[n]}" if docs.get(n) else ""
+                out.append(f"{indent}procedure({PROCEDURE_ARGS[r.name][n]}) :: {n}{doc}")
+            elif n in r.args:
                 it = with_intent.get(n) if with_intent else None
                 # A cell's control area (its size) is an input even if the
                 # cell is an output: intent(inout), not intent(out).
@@ -319,10 +331,13 @@ def wrapper(r) -> str:
         out.append(f"      {prefix}{r.kind} {r.name} ( {', '.join(r.args)} )")
     else:
         out += [r.lines[i] for i in range(r.stmts[0].first, r.stmts[0].last + 1)]
+    procs = sorted(set(PROCEDURE_ARGS.get(r.name, {}).values()))
     if r.name.startswith("zz"):
-        out.append(f"      use pepper_instance, only: pepper_context, pepper_{r.name} => {r.name}")
+        out.append(f"      use pepper_instance, only: pepper_context, pepper_{r.name} => {r.name}"
+                   + "".join(f", {x}" for x in procs))
     else:
-        out.append("      use pepper_instance, only: pepper_context")
+        out.append("      use pepper_instance, only: pepper_context"
+                   + "".join(f", {x}" for x in procs))
     out.append("      use pepper_legacy_context, only: legacy_context")
     for s in r.spec:
         if re.match(r"\s*(use|implicit)\b", s.text, re.I):

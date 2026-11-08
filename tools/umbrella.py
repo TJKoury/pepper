@@ -84,7 +84,8 @@ class Entry:
 
 class Umbrella:
     def __init__(self, name: str, state, component, where="instance", functions=(), docs=None,
-                 context_state=(), context_component=None, path=None):
+                 context_state=(), context_component=None, path=None, context_epoch=False,
+                 context_init=(), epoch_entries=()):
         paths = [path] if path else sorted(SPICELIB.glob(name + ".[fF]90"))
         if len(paths) != 1:
             raise SystemExit(f"umbrella: no unique source file for {name}")
@@ -97,6 +98,14 @@ class Umbrella:
         # state (e.g. the units of the files in the handle manager).
         self.cstate = [s.lower() for s in context_state]
         self.ccomponent = context_component
+        # A per-context cache of data derived from the instance's loaded
+        # files: it is discarded (and set up again) when the instance's
+        # segment_epoch changed; context_init are the statements that set up
+        # a new cache ({c} is the cache); the epoch_entries (loads, unloads)
+        # advance segment_epoch.
+        self.context_epoch = context_epoch
+        self.context_init = list(context_init)
+        self.epoch_entries = [e.lower() for e in epoch_entries]
         text = self.path.read_text(encoding="ascii")
         self.lines = text.split("\n")
         self.state = []
@@ -255,6 +264,8 @@ class Umbrella:
         if self.cstate:
             types.append((f"{self.name}_context_state", self.cstate,
                           f"The saved variables of {self.name.upper()} that are per context"))
+        epoch_type = f"{self.name}_context_state" if self.cstate else (
+            f"{self.name}_state" if self.where == "context" else None)
         out += [""] + [f"   public :: init_{tn}" for tn, _, _ in types] + [""]
         bodies = []
         for tn, names, doc in types:
@@ -274,6 +285,9 @@ class Umbrella:
                 d = self.docs.get(n) or self.comment_of(n) or \
                     f"saved between calls by {self.name.upper()}"
                 out.append(f"      {spec} :: {e}  !! {d}")
+            if self.context_epoch and tn == epoch_type:
+                out.append("      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects")
+                inits.append("      state%epoch = 0")
             out += [f"   end type {tn}", ""]
             bodies += [f"   !> Set the initial values (SPICELIB's DATA statements) of a new state.",
                        f"   pure subroutine init_{tn}(state)",
@@ -423,10 +437,25 @@ class Umbrella:
             for c, tn, names in ((comp, f"{self.name}_state", used),
                                  (ccomp, f"{self.name}_context_state", cused)):
                 if names:
+                    cache = self.context_epoch and (c == ccomp or self.where == "context")
+                    if cache:
+                        out.append(f"!     PEPPER: discard the cache if files were loaded or unloaded")
+                        out.append(f"!     (through any context) since it was filled.")
+                        out.append(f"      if ( allocated ( {c} ) ) then")
+                        out.append(f"         if ( {c}%epoch /= ctx%spice%segment_epoch ) deallocate ( {c} )")
+                        out.append("      end if")
                     out.append(f"      if ( .not. allocated ( {c} ) ) then")
                     out.append(f"         allocate ( {c} )")
                     out.append(f"         call init_{tn} ( {c} )")
+                    if cache:
+                        out.append(f"         {c}%epoch = ctx%spice%segment_epoch")
+                        out += [f"         {s.format(c=c)}" for s in self.context_init]
                     out.append("      end if")
+                    if cache and e.name in self.epoch_entries:
+                        out.append("!     PEPPER: a load or unload: other contexts discard their caches;")
+                        out.append("!     this context's cache is updated by the code below.")
+                        out.append("      ctx%spice%segment_epoch = ctx%spice%segment_epoch + 1")
+                        out.append(f"      {c}%epoch = ctx%spice%segment_epoch")
                     assoc += [f"{n} => {c}%{n}" for n in names]
             out.append("      associate ( " + ", &\n                  ".join(assoc) + " )")
             out += body

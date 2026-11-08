@@ -90,6 +90,12 @@ module pepper_instance
    use pepper_state_dskd02, only: dskd02_state, init_dskd02_state
    use pepper_state_dski02, only: dski02_state, init_dski02_state
    ! --- end pepper_dsk_files
+   ! --- pepper_segments
+   use pepper_state_spkbsr, only: spkbsr_state, init_spkbsr_state, spkbsr_context_state, init_spkbsr_context_state
+   use pepper_state_pckbsr, only: pckbsr_state, init_pckbsr_state, pckbsr_context_state, init_pckbsr_context_state
+   use pepper_state_ckbsr, only: ckbsr_state, init_ckbsr_state, ckbsr_context_state, init_ckbsr_context_state
+   use pepper_state_zzdskbsr, only: zzdskbsr_state, init_zzdskbsr_state, zzdskbsr_context_state, init_zzdskbsr_context_state
+   ! --- end pepper_segments
    ! <<< generated state modules
 
    implicit none
@@ -97,6 +103,19 @@ module pepper_instance
    private
 
    public :: pepper_spice, pepper_context
+   public :: zzdsk_compare
+
+   abstract interface
+      !> A segment selection function of the DSK segment buffer (ZZDSKSNS):
+      !> true if the segment (given by its file and descriptors) satisfies
+      !> the search's criteria. SPICELIB's are ZZDSKBDC and ZZDSKNOT.
+      logical function zzdsk_compare ( handle, dladsc, dskdsc )
+         import :: ip, wp
+         integer(ip) :: handle  !! handle of the DSK file of the segment
+         integer(ip) :: dladsc ( * )  !! DLA descriptor of the segment
+         real(wp) :: dskdsc ( * )  !! DSK descriptor of the segment
+      end function zzdsk_compare
+   end interface
 
    integer, parameter, public :: short_message_length = 25    !! SPICELIB's short message length
    integer, parameter, public :: long_message_length = 1840   !! SPICELIB's long message length
@@ -126,6 +145,9 @@ module pepper_instance
       !> Incremented when a file is closed; contexts then close their units for
       !> handles that no longer exist (see units_check).
       integer(ip) :: close_generation = 0
+      !> Incremented by every load and unload of an SPK, CK, PCK or DSK file;
+      !> contexts discard their segment caches when it changed.
+      integer(ip) :: segment_epoch = 0
       character(255), allocatable :: closed_files(:)  !! names of the files closed so far
       integer(ip) :: nclosed = 0  !! number of names in closed_files
       ! The state of the subsystems (allocated when first used).
@@ -149,6 +171,12 @@ module pepper_instance
       ! --- pepper_dsk_files
       type(dsktol_state), allocatable :: dsktol  !! state of DSKTOL
       ! --- end pepper_dsk_files
+      ! --- pepper_segments
+      type(spkbsr_state), allocatable :: spkbsr  !! state of SPKBSR
+      type(pckbsr_state), allocatable :: pckbsr  !! state of PCKBSR
+      type(ckbsr_state), allocatable :: ckbsr  !! state of CKBSR
+      type(zzdskbsr_state), allocatable :: zzdskbsr  !! state of ZZDSKBSR
+      ! --- end pepper_segments
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -218,6 +246,12 @@ module pepper_instance
       type(dskd02_state), allocatable :: dskd02_state  !! state of DSKD02
       type(dski02_state), allocatable :: dski02_state  !! state of DSKI02
       ! --- end pepper_dsk_files
+      ! --- pepper_segments
+      type(spkbsr_context_state), allocatable :: spkbsr_cache  !! per-context state of SPKBSR
+      type(pckbsr_context_state), allocatable :: pckbsr_cache  !! per-context state of PCKBSR
+      type(ckbsr_context_state), allocatable :: ckbsr_cache  !! per-context state of CKBSR
+      type(zzdskbsr_context_state), allocatable :: zzdskbsr_cache  !! per-context state of ZZDSKBSR
+      ! --- end pepper_segments
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -604,6 +638,19 @@ module pepper_instance
       procedure, non_overridable :: dskobj
       procedure, non_overridable :: dsksrf
       ! --- end pepper_dsk_files
+      ! --- pepper_segments
+      procedure, non_overridable :: spklef
+      procedure, non_overridable :: spkuef
+      procedure, non_overridable :: spksfs
+      procedure, non_overridable :: pcklof
+      procedure, non_overridable :: pckuof
+      procedure, non_overridable :: pcksfs
+      procedure, non_overridable :: cklpf
+      procedure, non_overridable :: ckupf
+      procedure, non_overridable :: ckbss
+      procedure, non_overridable :: cksns
+      procedure, non_overridable :: ckhave
+      ! --- end pepper_segments
       ! <<< generated bindings
    end type pepper_context
 
@@ -5765,6 +5812,183 @@ module pepper_instance
 
    end interface
    ! --- end pepper_dsk_files
+   ! --- pepper_segments
+   public :: zzdsklsf, zzdskusf, zzdskbss, zzdsksns, zzdskchk
+
+   interface
+
+      !> Load an ephemeris file for use by the readers. Return that file's
+      !> handle, to be used by other SPK routines to refer to the file.
+      !>
+      !> FTSIZE     P   Maximum number of loaded SPK files.
+      module subroutine spklef ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of the file to be loaded.
+         integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      end subroutine spklef
+
+      !> Unload an ephemeris file so that it will no longer be searched by
+      !> the readers.
+      module subroutine spkuef ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
+      end subroutine spkuef
+
+      !> Search through loaded SPK files to find the highest-priority
+      !> segment applicable to the body and time specified and buffer
+      !> searched segments in the process, to attempt to avoid re-reading
+      !> files.
+      module subroutine spksfs ( ctx, body, et, handle, descr, ident, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+         integer(ip), intent(in) :: body  !! Body ID.
+         real(wp), intent(in) :: et  !! Ephemeris time.
+         real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
+         character(*), intent(out) :: ident  !! Identifier of the applicable segment.
+         logical, intent(out) :: found  !! Indicates whether or not a segment was found.
+      end subroutine spksfs
+
+      !> Load a binary PCK file for use by the readers. Return the
+      !> handle of the loaded file which is used by other PCK routines to
+      !> refer to the file.
+      !>
+      !> FTSIZE     P   Maximum number of loaded PCK files.
+      module subroutine pcklof ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of the file to be loaded.
+         integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      end subroutine pcklof
+
+      !> Unload a binary PCK file so that it will no longer be searched by
+      !> the readers.
+      module subroutine pckuof ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
+      end subroutine pckuof
+
+      !> Search through loaded files to find the first segment applicable
+      !> to the body and time specified. Buffer searched segments in the
+      !> process, to attempt to avoid re-reading files.
+      module subroutine pcksfs ( ctx, body, et, handle, descr, ident, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+         integer(ip), intent(in) :: body  !! Body ID.
+         real(wp), intent(in) :: et  !! Ephemeris time.
+         real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
+         character(*), intent(out) :: ident  !! Identifier of the applicable segment.
+         logical, intent(out) :: found  !! Indicates whether or not a segment was found.
+      end subroutine pcksfs
+
+      !> Load a CK pointing file for use by the CK readers. Return that
+      !> file's handle, to be used by other CK routines to refer to the
+      !> file.
+      !>
+      !> FTSIZE     P   Maximum number of loaded CK files.
+      module subroutine cklpf ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of the CK file to be loaded.
+         integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      end subroutine cklpf
+
+      !> Unload a CK pointing file so that it will no longer be searched
+      !> by the readers.
+      module subroutine ckupf ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of CK file to be unloaded
+      end subroutine ckupf
+
+      !> Initiate search through loaded files to find segments applicable
+      !> to the spacecraft instrument and time specified.
+      module subroutine ckbss ( ctx, inst, sclkdp, tol, needav )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: inst  !! Spacecraft and instrument ID.
+         real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         logical, intent(in) :: needav  !! Is there a need for angular velocity?
+      end subroutine ckbss
+
+      !> Search through loaded files to find a segment matching the
+      !> requested instrument, time, and need for angular velocity,
+      !> buffering segment descriptors, identifiers, and handles in the
+      !> process to minimize file reads.
+      module subroutine cksns ( ctx, handle, descr, segid, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+         real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
+         character(*), intent(out) :: segid  !! Identifier of the applicable segment.
+         logical, intent(out) :: found  !! .TRUE. if a segment was found.
+      end subroutine cksns
+
+      !> Determine whether or not any C-kernels are currently loaded.
+      module subroutine ckhave ( ctx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(out) :: found  !! .TRUE. if at least one C-kernel is loaded.
+      end subroutine ckhave
+
+      !> Load a DSK shape file for use by the DSK readers.  Return that
+      !> file's handle, to be used by other DSK routines to refer to the
+      !> file.
+      !>
+      !> FTSIZE     P   Maximum number of loaded DSK files.
+      module subroutine zzdsklsf ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         character(*), intent(in) :: fname  !! Name of the DSK file to be loaded.
+         integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      end subroutine zzdsklsf
+
+      !> Unload a DSK shape file so that it will no longer be searched
+      !> by the readers.
+      module subroutine zzdskusf ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK file to be unloaded
+      end subroutine zzdskusf
+
+      !> Initiate search through loaded files to find segments
+      !> satisfying search criteria.
+      module subroutine zzdskbss ( ctx, bodyid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of body.
+      end subroutine zzdskbss
+
+      !> Search through loaded files to find a segment matching the
+      !> requested body, time, and need for angular velocity.
+      !> Buffer segment descriptors, identifiers, and handles in the
+      !> process to minimize file reads.
+      module subroutine zzdsksns ( ctx, cmpfun, handle, dladsc, dskdsc, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+         procedure(zzdsk_compare) :: cmpfun  !! Comparison function.
+         integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of the applicable segment.
+         real(wp), intent(out) :: dskdsc ( * )  !! DSK descriptor of the applicable segment.
+         logical, intent(out) :: found  !! True if a segment was found.
+      end subroutine zzdsksns
+
+      !> Indicate to a calling routine whether any DSK load or unload
+      !> operations have occurred since the local state counter had
+      !> a particular, caller-supplied value.
+      module subroutine zzdskchk ( ctx, usrctr, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(inout) :: usrctr ( * )  !! User counter.
+         logical, intent(out) :: update  !! Update flag.
+      end subroutine zzdskchk
+
+   end interface
+   ! --- end pepper_segments
    ! <<< generated interfaces
 
 contains

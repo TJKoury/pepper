@@ -11,9 +11,10 @@ old external procedure can silently replace the new legacy wrapper of the
 same name in the test executables. This removes, in every build/gfortran_*
 directory, the objects (and their .log/.digest files) whose source no longer
 exists, and then the library archives, which fpm rebuilds from the current
-objects. It also removes the test and example executables that are older
-than the newest library source, because fpm does not relink them when only
-the library changed. Run by the pixi build and test tasks.
+objects. It also removes the test and example executables, and their
+objects, that are older than the newest library source, because fpm neither
+relinks nor recompiles them when only the library changed. Run by the pixi
+build and test tasks.
 """
 
 import sys
@@ -67,6 +68,19 @@ def main() -> int:
     # that it links them again.
     newest = max((f.stat().st_mtime for f in (ROOT / "src").rglob("*")
                   if f.suffix in (".f90", ".F90", ".inc")), default=0)
+    # Nor does it recompile the objects of tests and examples when only a
+    # module of the library changed (e.g. a derived type got a component):
+    # a test then works with the old layout of the type. Remove those
+    # objects too.
+    recompile = 0
+    for obj in (ROOT / "build").glob("gfortran_*/*/*.o"):
+        if obj.name.startswith(("test_", "example_", "app_")) and obj.stat().st_mtime < newest:
+            for p in [obj, Path(str(obj) + ".log"), Path(str(obj) + ".digest")]:
+                if p.exists():
+                    p.unlink()
+            recompile += 1
+    if recompile:
+        print(f"clean_stale: removed {recompile} test/example objects older than the library sources")
     relink = 0
     for exe in (ROOT / "build").glob("gfortran_*/*/*"):
         if exe.parent.name in ("test", "example", "app") and exe.is_file() and \

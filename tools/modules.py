@@ -170,6 +170,9 @@ CONTEXT_MODULES = {
         dsktol dskgd dskb02 dskd02 dski02 dskn02 dskp02 dskv02 dskz02 dskmi2
         dskrb2 dskobj dsksrf
         """.split(),
+    "pepper_segments": """
+        spkbsr pckbsr ckbsr zzdskbsr
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -191,6 +194,34 @@ HANDWRITTEN = {
 # variables named in SAVE statements or initialized by DATA; it also works for
 # routines without ENTRY points (e.g. with a saved cache).
 UMBRELLAS = {
+    # Segment buffers: the file tables belong to the instance; the body
+    # (instrument) tables, segment lists and searches in progress are a cache
+    # per context, discarded when any context loads or unloads a file (see
+    # segment_epoch in pepper_spice).
+    **{n: {"state": "fthan ftnum next nft".split(), "component": n,
+           "context_state": """btbeg btbod btchkp btexp bthfs btlb btlfs btprvd btprvh btprvi
+                               btruex btub nbt stdes sthan stidnt stpool""".split(),
+           "context_component": n + "_cache", "context_epoch": True,
+           "context_init": ["call ctx%lnkini ( stsize, {c}%stpool )"],
+           "epoch_entries": [lo, un], "entries": [lo, un, sfs]}
+       for n, lo, un, sfs in (("spkbsr", "spklef", "spkuef", "spksfs"),
+                              ("pckbsr", "pcklof", "pckuof", "pcksfs"))},
+    "ckbsr": {"state": "fthan ftnum next nft".split(), "component": "ckbsr",
+              "context_state": """alpha avneed findex fnd fresub iindex itbeg itchkp itexp ithfs
+                                  itins itlb itlfs itprvd itprvf itprvh itprvi itub itruex newsch
+                                  nit omega reqt savep savtol scinst slbeg status stdcd sthan
+                                  sticd stidnt stpool top""".split(),
+              "context_component": "ckbsr_cache", "context_epoch": True,
+              "context_init": ["call ctx%lnkini ( stsize, {c}%stpool )"],
+              "epoch_entries": ["cklpf", "ckupf"],
+              "entries": ["cklpf", "ckupf", "ckbss", "cksns", "ckhave"]},
+    "zzdskbsr": {"state": "fthan ftnum next nft dskctr pass1".split(), "component": "zzdskbsr",
+                 "context_state": """begsch findex fnd bindex btbeg btexp bthfs btbod btlfs nbt
+                                     savep svbody status stdlad stdskd sthan stpool top""".split(),
+                 "context_component": "zzdskbsr_cache", "context_epoch": True,
+                 "context_init": ["call ctx%lnkini ( stsize, {c}%stpool )"],
+                 "epoch_entries": ["zzdsklsf", "zzdskusf"],
+                 "entries": ["zzdsklsf", "zzdskusf", "zzdskbss", "zzdsksns", "zzdskchk"]},
     # Saved caches of the last name/code translated: per context.
     "bodvrd": {"state": "saved", "component": "bodvrd_cache", "where": "context", "entries": ['bodvrd']},
     # The handle manager: the file table belongs to the instance; the units
@@ -299,9 +330,19 @@ ALLOWED_LEGACY = {
               "with the error output, phase 7)",
 }
 
+# Dummy procedures (EXTERNAL arguments): routine -> {argument: the abstract
+# interface in pepper_instance that declares it}.
+PROCEDURE_ARGS = {
+    "zzdsksns": {"cmpfun": "zzdsk_compare"},
+}
+
 # Descriptions of the state components (the !! comments of the generated
 # state types), for the umbrellas without "docs" in UMBRELLAS.
 STATE_DOCS = {
+    'spkbsr': {'nft': 'number of loaded files', 'fthan': 'handle of each loaded file (in load order)', 'ftnum': 'file number of each loaded file: its place in the load (and search) order', 'next': 'the file number of the file loaded last', 'nbt': 'number of bodies in the body table', 'btbeg': 'head of the segment list of each body', 'btbod': "each body's code", 'btexp': 'expense (number of segment descriptors examined) of the segment list of each body', 'bthfs': 'highest file number searched for the segment list of each body', 'btlfs': 'lowest file number searched for the segment list of each body', 'btlb': 'lower bound of the re-use interval of the segment returned last for each body', 'btub': 'upper bound of the re-use interval of the segment returned last for each body', 'btprvd': 'descriptor of the segment returned last for each body', 'btprvi': 'identifier of the segment returned last for each body', 'btprvh': 'handle of the file of the segment returned last for each body', 'btchkp': 'the segment returned last for each body is to be checked first (its re-use interval is valid)', 'btruex': 'expense of the re-use interval of each body', 'sthan': 'handle of the file of each segment in the segment table', 'stpool': 'doubly linked list pool of the segment table (one list per body, in priority order)', 'stdes': 'descriptor of each segment in the segment table', 'stidnt': 'identifier of each segment in the segment table'},
+    'pckbsr': {'nft': 'number of loaded files', 'fthan': 'handle of each loaded file (in load order)', 'ftnum': 'file number of each loaded file: its place in the load (and search) order', 'next': 'the file number of the file loaded last', 'nbt': 'number of bodies in the body table', 'btbeg': 'head of the segment list of each body', 'btbod': "each body's code", 'btexp': 'expense (number of segment descriptors examined) of the segment list of each body', 'bthfs': 'highest file number searched for the segment list of each body', 'btlfs': 'lowest file number searched for the segment list of each body', 'btlb': 'lower bound of the re-use interval of the segment returned last for each body', 'btub': 'upper bound of the re-use interval of the segment returned last for each body', 'btprvd': 'descriptor of the segment returned last for each body', 'btprvi': 'identifier of the segment returned last for each body', 'btprvh': 'handle of the file of the segment returned last for each body', 'btchkp': 'the segment returned last for each body is to be checked first (its re-use interval is valid)', 'btruex': 'expense of the re-use interval of each body', 'sthan': 'handle of the file of each segment in the segment table', 'stpool': 'doubly linked list pool of the segment table (one list per body, in priority order)', 'stdes': 'descriptor of each segment in the segment table', 'stidnt': 'identifier of each segment in the segment table'},
+    'ckbsr': {'nft': 'number of loaded files', 'fthan': 'handle of each loaded file (in load order)', 'ftnum': 'file number of each loaded file: its place in the load (and search) order', 'next': 'the file number of the file loaded last', 'nit': 'number of instruments in the instrument table', 'itbeg': 'head of the segment list of each instrument', 'itexp': 'expense (number of segment descriptors examined) of the segment list of each instrument', 'ithfs': 'highest file number searched for the segment list of each instrument', 'itlfs': 'lowest file number searched for the segment list of each instrument', 'itlb': 'lower bound of the re-use interval of the segment returned last for each instrument', 'itub': 'upper bound of the re-use interval of the segment returned last for each instrument', 'itprvd': 'descriptor of the segment returned last for each instrument', 'itprvi': 'identifier of the segment returned last for each instrument', 'itprvh': 'handle of the file of the segment returned last for each instrument', 'itchkp': 'the segment returned last for each instrument is to be checked first (its re-use interval is valid)', 'itruex': 'expense of the re-use interval of each instrument', 'sthan': 'handle of the file of each segment in the segment table', 'stpool': 'doubly linked list pool of the segment table (one list per instrument, in priority order)', 'itins': 'each spacecraft clock/instrument code', 'itprvf': 'angular velocity flag of the segment returned last for each instrument (non-zero: present)', 'stidnt': 'identifier of each segment in the segment table', 'stdcd': 'double precision components of the descriptor of each segment', 'sticd': 'integer components of the descriptor of each segment', 'findex': 'index in the file table of the file being searched', 'iindex': 'index in the instrument table of the instrument being searched', 'fnd': 'a segment was found by the last search', 'fresub': "the partial list left by the 'CHECK PARTIAL LIST' state must be freed", 'alpha': 'start of the interval of interest (request time minus tolerance) of the search', 'omega': 'end of the interval of interest (request time plus tolerance) of the search', 'reqt': 'the request time (encoded spacecraft clock) of the search', 'savtol': 'the time tolerance of the search', 'scinst': 'the instrument of the search', 'avneed': 'the search requires angular velocity', 'newsch': 'the search is new (CKBSS was called; CKSNS not yet)', 'status': 'the state of the search in progress', 'savep': 'the segment list node to continue the search from', 'slbeg': 'head of the partial segment list being checked', 'top': 'depth of the stack of interrupted states of the search'},
+    'zzdskbsr': {'nft': 'number of loaded files', 'fthan': 'handle of each loaded file (in load order)', 'ftnum': 'file number of each loaded file: its place in the load (and search) order', 'next': 'the file number of the file loaded last', 'nbt': 'number of bodies in the body table', 'btbeg': 'head of the segment list of each body', 'btbod': "each body's code", 'btexp': 'expense (number of segment descriptors examined) of the segment list of each body', 'bthfs': 'highest file number searched for the segment list of each body', 'btlfs': 'lowest file number searched for the segment list of each body', 'sthan': 'handle of the file of each segment in the segment table', 'stpool': 'doubly linked list pool of the segment table (one list per body, in priority order)', 'stdlad': 'DLA descriptor of each segment in the segment table', 'stdskd': 'DSK descriptor of each segment in the segment table', 'dskctr': 'counter of changes of the loaded DSK set (checked by ZZDSKCHK)', 'pass1': 'the counter has not been set up yet', 'begsch': 'a search was begun by ZZDSKBSS', 'findex': 'index in the file table of the file being searched', 'bindex': 'index in the body table of the body being searched', 'fnd': 'a segment was found by the last search', 'svbody': 'the body of the search', 'status': 'the state of the search in progress', 'savep': 'the segment list node to continue the search from', 'top': 'depth of the stack of interrupted states of the search'},
     'dasa2l': {
         'fidx': 'index (in the tables) of the file looked up last',
         'next': 'the next data type (character, double precision, integer, cyclic)',
