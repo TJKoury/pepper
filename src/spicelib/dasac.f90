@@ -210,7 +210,6 @@
 !     Local variables
 !
       character(mxcrec)     crecrd
-      character(1)          eolmrk
       character(idwlen)     idword
       character(ifnlen)     ifname
 
@@ -229,16 +228,16 @@
       integer(ip)           rinuse
       integer(ip)           space
 
-      logical               first
 !
 !     Saved variables
 !
-      save eolmrk
-      save first
 !
 !     Initial values
 !
-      data                  first   / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      character(1), parameter :: eolmrk = char ( inteol )
 
 
 !
@@ -257,12 +256,6 @@
 !     we need to initialize the character value for the end-of-line
 !     marker.
 !
-      if ( first ) then
-
-         first  = .false.
-         eolmrk = char ( inteol )
-
-      end if
 !
 !     Verify that the DAS file attached to HANDLE is opened with write
 !     access.

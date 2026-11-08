@@ -2,6 +2,7 @@
 
       subroutine zzctr ( newctr, oldctr, update )
       use pepper_kinds, only: ip
+      use pepper_constants, only: intmax, intmin
 
 ! $ Abstract
 !
@@ -225,18 +226,13 @@
 !
 !     SPICELIB functions
 !
-      integer(ip)           intmax
-      integer(ip)           intmin
 
       logical               return
 
 !
 !     Local variables.
 !
-      integer(ip)           ctrhgh
-      integer(ip)           ctrlow
 
-      logical               first
 
 !
 !     Save EVERYTHING.
@@ -246,7 +242,11 @@
 !
 !     Initial values.
 !
-      data                  first  / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      integer(ip), parameter :: ctrhgh = intmax
+      integer(ip), parameter :: ctrlow = intmin
 
 !
 !     Standard SPICE error handling.
@@ -361,14 +361,6 @@
 !
 !     Initialize the high and low values.
 !
-      if ( first ) then
-
-         ctrhgh = intmax()
-         ctrlow = intmin()
-
-         first = .false.
-
-      end if
 
 !
 !     Set counter.
@@ -472,14 +464,6 @@
 !
 !     Initialize the high and low values.
 !
-      if ( first ) then
-
-         ctrhgh = intmax()
-         ctrlow = intmin()
-
-         first = .false.
-
-      end if
 
 !
 !     Set counter.
@@ -583,14 +567,6 @@
 !
 !     Initialize the high and low values.
 !
-      if ( first ) then
-
-         ctrhgh = intmax()
-         ctrlow = intmin()
-
-         first = .false.
-
-      end if
 
 !
 !     Signal an error if both input counter array elements have high

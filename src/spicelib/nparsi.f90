@@ -2,6 +2,7 @@
 
       subroutine nparsi (  string,  n, error, pnter)
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: intmax, intmin
 
 ! $ Abstract
 !
@@ -218,38 +219,27 @@
 !     SPICELIB functions
 !
 
-      integer(ip)           intmax
-      integer(ip)           intmin
 
 !
 !     Local Variables
 !
-      real(wp)              xmnint
-      real(wp)              xmxint
       real(wp)              x
 
-      logical               first
 !
 !     Saved Variables
 !
-      save                  first
-      save                  xmnint
-      save                  xmxint
 !
 !     Initial values
 !
-      data                  first / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: xmxint = real( intmax, wp )
+      real(wp), parameter :: xmnint = real( intmin, wp )
 !
 !     If this is the first time NPARSI has been called, initialize
 !     bounds for the range of integers.
 !
-      if ( first ) then
-
-         first  = .false.
-         xmxint =  real( intmax (), wp )
-         xmnint =  real( intmin (), wp )
-
-      end if
 !
 !     NPARSD will define ERROR and PNTER if there is an error,
 !     so we do not need to initialize them here.

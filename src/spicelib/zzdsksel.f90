@@ -5,6 +5,7 @@
                                   cor1,   cor2,   framid, pos, &
                                   et,     handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: twopi
 
 ! $ Abstract
 !
@@ -241,7 +242,6 @@
 !
 !     SPICELIB functions
 !
-      real(wp)              twopi
 
       integer(ip)           bsrchi
       integer(ip)           touchi
@@ -277,7 +277,6 @@
       real(wp)              loccor ( 1 )
       real(wp)              locpos ( 3 )
       real(wp)              lon
-      real(wp)              pi2
       real(wp)              r
       real(wp)              re
       real(wp)              rmat   ( 3, 3 )
@@ -300,13 +299,10 @@
       integer(ip)           segsys
       integer(ip)           surf
 
-      logical               first
 
 !
 !     Saved variables
 !
-      save                  first
-      save                  pi2
       save                  savbid
       save                  savcls
       save                  savco1
@@ -323,7 +319,10 @@
 !
 !     Initial values
 !
-      data                  first / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: pi2 = twopi
 
 !
 !     Set return value.
@@ -1261,10 +1260,6 @@
 !
       zzdskumc = .false.
 
-      if ( first ) then
-         pi2   = twopi()
-         first = .false.
-      end if
 
 !
 !     Check the body ID first.
@@ -1670,10 +1665,6 @@
 !
       zzdskmmc = .false.
 
-      if ( first ) then
-         pi2   = twopi()
-         first = .false.
-      end if
 
 !
 !     Check the target ID.
@@ -2086,10 +2077,6 @@
 !
       zzdskmrc = .false.
 
-      if ( first ) then
-         pi2   = twopi()
-         first = .false.
-      end if
 
 
 !     Check the surface ID.

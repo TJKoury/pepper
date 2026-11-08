@@ -2,6 +2,7 @@
 
       subroutine spke10 ( et, record, state )
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: pi
 
 ! $ Abstract
 !
@@ -227,7 +228,6 @@
 !     SPICELIB functions
 !
 
-      real(wp)              pi
       logical               failed
       logical               return
 
@@ -272,26 +272,23 @@
       real(wp)              dargdt
       real(wp)              denom
       real(wp)              dwdt
-      real(wp)              mypi
       real(wp)              numer
       real(wp)              t1
       real(wp)              t2
       real(wp)              w
 
-      logical               first
       save
 
-      data                  first /.true./
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: mypi = pi
 
 !
 !     Standard SPICE error handling.
 !
       if ( return () ) return
 
-      if ( first ) then
-         first  = .false.
-         mypi   = pi()
-      end if
 
 !
 !     Fetch the two epochs stored in the record.

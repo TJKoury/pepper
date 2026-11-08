@@ -395,8 +395,6 @@
 !     Local variables
 !
       character(mxcrec)     crecrd
-      character(1)          eocmrk
-      character(1)          eolmrk
       character(ifnlen)     ifname
 
       integer(ip)           curpos
@@ -423,18 +421,18 @@
       integer(ip)           ni
 
       logical               empty
-      logical               first
       logical               found
 !
 !     Saved variables
 !
-      save eolmrk
-      save eocmrk
-      save first
 !
 !     Initial values
 !
-      data                  first   / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      character(1), parameter :: eocmrk = char ( inteoc )
+      character(1), parameter :: eolmrk = char ( inteol )
 !
 !     Standard SPICE error handling.
 !
@@ -451,13 +449,6 @@
 !     we need to initialize the character value for the end-of-line
 !     marker and the character value for the end of comments marker.
 !
-      if ( first ) then
-
-         first  = .false.
-         eocmrk = char ( inteoc )
-         eolmrk = char ( inteol )
-
-      end if
 !
 !     Verify that the DAF file attached to HANDLE is opened with write
 !     access.

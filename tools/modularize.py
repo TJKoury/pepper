@@ -111,9 +111,16 @@ def balanced(s: str, k: int) -> str:
 
 def split_top(s: str) -> list:
     """Split s at commas outside parentheses."""
-    parts, depth, cur = [], 0, ""
+    parts, depth, cur, quote = [], 0, "", None
     for ch in s:
-        if ch in "([":
+        if quote:
+            if ch == quote:
+                quote = None
+            cur += ch
+            continue
+        if ch in "'\"":
+            quote = ch
+        elif ch in "([":
             depth += 1
         elif ch in ")]":
             depth -= 1

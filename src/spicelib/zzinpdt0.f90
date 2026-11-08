@@ -2,6 +2,7 @@
 
       subroutine zzinpdt0 ( p, lon, bounds, corpar, exclud, inside )
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: twopi
 
 ! $ Abstract
 !
@@ -254,7 +255,6 @@
 !     SPICELIB functions
 !
       real(wp)              halfpi
-      real(wp)              twopi
 
       logical               failed
       logical               return
@@ -295,7 +295,6 @@
       real(wp)              minlat
       real(wp)              minlon
       real(wp)              minalt
-      real(wp)              pi2
       real(wp)              pmax
       real(wp)              pmin
       real(wp)              re
@@ -304,32 +303,25 @@
       integer(ip)           maxrel
       integer(ip)           minrel
 
-      logical               first
 
 
 
 !
 !     Saved variables
 !
-      save                  first
-      save                  pi2
 
 !
 !     Initial values
 !
-      data                  first / .true. /
-      data                  pi2   / -1.0_wp  /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: pi2 = twopi
 
 
       if ( return() ) return
 
 
-      if ( first ) then
-
-         pi2   = twopi()
-         first = .false.
-
-      end if
 
 !
 !     Unpack the shape parameters. Set the polar axis length for

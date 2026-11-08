@@ -2,6 +2,7 @@
 
       subroutine zznrmlon ( inmin, inmax, tol, outmin, outmax )
       use pepper_kinds, only: wp
+      use pepper_constants, only: twopi
 
 ! $ Abstract
 !
@@ -154,36 +155,28 @@
 !
       real(wp)              dpr
       real(wp)              touchd
-      real(wp)              twopi
 
 !
 !     Local variables
 !
       real(wp)              delta
-      real(wp)              pi2
 
-      logical               first
 
 !
 !     Saved values
 !
-      save                  first
-      save                  pi2
 
 !
 !     Initial values
 !
-      data                  first / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: pi2 = twopi
 
 !
 !     Use discovery check-in. Don't check RETURN.
 !
-      if ( first ) then
-
-         pi2   = twopi()
-         first = .false.
-
-      end if
 
 !
 !     TOL cannot be negative.

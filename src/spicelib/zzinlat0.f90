@@ -2,6 +2,7 @@
 
       subroutine zzinlat0 ( r, lon, lat, bounds, exclud, inside )
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: twopi
 
 ! $ Abstract
 !
@@ -224,7 +225,6 @@
 !
 !     SPICELIB functions
 !
-      real(wp)              twopi
 
 !
 !     Local parameters
@@ -245,30 +245,22 @@
       real(wp)              minlat
       real(wp)              minlon
       real(wp)              minr
-      real(wp)              pi2
 
-      logical               first
 
 !
 !     Saved variables
 !
-      save                  first
-      save                  pi2
 
 !
 !     Initial values
 !
-      data                  first / .true. /
-      data                  pi2   / -1.0_wp  /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: pi2 = twopi
 
 
 
-      if ( first ) then
-
-         pi2   = twopi()
-         first = .false.
-
-      end if
 
 !
 !     Assume the point is outside to start. This allows us

@@ -2,6 +2,7 @@
 
       subroutine sgfrvi ( handle, descr, x, value, indx, found )
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: intmax
 
 ! $ Abstract
 !
@@ -175,7 +176,6 @@
 !
 !     SPICELIB Functions
 !
-      integer(ip)           intmax
       integer(ip)           lstled
 
       logical               failed
@@ -197,7 +197,6 @@
 !     Local Variables
 !
       real(wp)              buffer ( bufsiz )
-      real(wp)              dpimax
       real(wp)              dptemp
       real(wp)              endref
       real(wp)              myvalu
@@ -219,17 +218,18 @@
       integer(ip)           remain
 
       logical               done
-      logical               first
       logical               isdirv
       logical               myfnd
 !
 !     Saved Variables
 !
-      save                  first
 !
 !     Initial Values
 !
-      data                  first / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: dpimax = real( intmax, wp )
 
 !
 !     Standard SPICE error handling.
@@ -240,12 +240,6 @@
 !     Set the value for the maximum index as a double precision number,
 !     but only do it the first time into the subroutine.
 !
-      if ( first ) then
-
-         first  = .false.
-         dpimax = real( intmax(), wp )
-
-      end if
 
 !
 !     Collect the necessary meta data values common to all cases.

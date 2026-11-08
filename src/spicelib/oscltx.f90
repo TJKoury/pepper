@@ -2,6 +2,7 @@
 
       subroutine oscltx ( state, et, mu, elts )
       use pepper_kinds, only: wp
+      use pepper_constants, only: dpmax
 
 ! $ Abstract
 !
@@ -531,7 +532,6 @@
 !
 !     SPICELIB functions
 !
-      real(wp)              dpmax
       real(wp)              exact
       real(wp)              twopi
       real(wp)              vdot
@@ -560,7 +560,6 @@
       real(wp)              e
       real(wp)              ecc
       real(wp)              eccvec ( 3 )
-      real(wp)              limit
       real(wp)              mucubr
       real(wp)              nu
       real(wp)              pole   ( 3 )
@@ -574,24 +573,17 @@
       real(wp)              xmat   ( 3, 3 )
 
       logical               cmptau
-      logical               pass1
 
-      save                  limit
-      save                  pass1
 
-      data                  pass1 / .true. /
-      data                  limit / 0.0_wp   /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: limit = dpmax / margin
 
 
       if ( return() ) return
 
 
-      if ( pass1 ) then
-
-         limit = dpmax() / margin
-         pass1 = .false.
-
-      end if
 
 !
 !     Initialize the members of ELTS that won't be set by OSCELT. This

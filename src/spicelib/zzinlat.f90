@@ -2,6 +2,7 @@
 
       subroutine zzinlat ( p, bounds, margin, exclud, inside )
       use pepper_kinds, only: ip, wp
+      use pepper_constants, only: halfpi, twopi
 
 ! $ Abstract
 !
@@ -265,8 +266,6 @@
 !
 !     SPICELIB functions
 !
-      real(wp)              halfpi
-      real(wp)              twopi
 
       logical               return
 
@@ -306,7 +305,6 @@
       real(wp)              amaxlo
       real(wp)              aminlo
       real(wp)              dlon
-      real(wp)              hpi
       real(wp)              lat
       real(wp)              lon
       real(wp)              lonmrg
@@ -316,35 +314,24 @@
       real(wp)              minlat
       real(wp)              minlon
       real(wp)              minr
-      real(wp)              pi2
       real(wp)              r
       real(wp)              smax
       real(wp)              smin
 
-      logical               first
 
 
-      save                  first
-      save                  pi2
-      save                  hpi
 
-      data                  first / .true. /
-      data                  pi2   / -1.0_wp  /
-      data                  hpi   / -1.0_wp  /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      real(wp), parameter :: pi2 = twopi
+      real(wp), parameter :: hpi = halfpi
 
 !
 !     Use discovery check-in.
 !
       if ( return() ) return
 
-      if ( first ) then
-
-         pi2   = twopi()
-         hpi   = halfpi()
-
-         first = .false.
-
-      end if
 
 !
 !     Get the latitudinal coordinates of the input point.

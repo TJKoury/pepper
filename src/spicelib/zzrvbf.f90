@@ -298,15 +298,6 @@
 !     through this routine.  They would be parameters if FORTRAN
 !     allowed us to do this in a standard way.
 !
-      integer(ip)           iblank
-      integer(ip)           icomma
-      integer(ip)           iequal
-      integer(ip)           ilparn
-      integer(ip)           iplus
-      integer(ip)           iquote
-      integer(ip)           irparn
-      integer(ip)           itab
-      integer(ip)           itmark
 
 
       character(linlen)     line
@@ -356,7 +347,6 @@
 
       logical               full
       logical               found
-      logical               first
 
 !
 !     The following logicals are in-line functions that are used
@@ -376,7 +366,18 @@
       save
 
 
-      data                  first  / .true. /
+!
+!     Constants (SPICELIB computed them on the first call).
+!
+      integer(ip), parameter :: icomma = ichar( ','   )
+      integer(ip), parameter :: iblank = ichar( ' '   )
+      integer(ip), parameter :: iquote = ichar( ''''  )
+      integer(ip), parameter :: ilparn = ichar( '('   )
+      integer(ip), parameter :: irparn = ichar( ')'   )
+      integer(ip), parameter :: iequal = ichar( '='   )
+      integer(ip), parameter :: iplus = ichar( '+'   )
+      integer(ip), parameter :: itmark = ichar( '@'   )
+      integer(ip), parameter :: itab = 9
 
 !
 !     Below are a collection of In-line function definitions that are
@@ -408,20 +409,6 @@
 !
 !     Initializations.
 !
-      if ( first ) then
-
-         first  = .false.
-         icomma =  ichar( ','   )
-         iblank =  ichar( ' '   )
-         iquote =  ichar( ''''  )
-         ilparn =  ichar( '('   )
-         irparn =  ichar( ')'   )
-         iequal =  ichar( '='   )
-         iplus  =  ichar( '+'   )
-         itmark =  ichar( '@'   )
-         itab   =  9
-
-      end if
 
 !
 !     No variable yet and no parsing errors so far.

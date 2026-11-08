@@ -167,44 +167,25 @@
 !
       integer(ip)           i
       integer(ip)           l
+!
+!     The digits (SPICELIB filled this table on the first call).
+!
+      logical, parameter :: digit ( minc : maxc ) = &
+         [ ( i >= iachar('0') .and. i <= iachar('9'), i = minc, maxc ) ]
 
-      logical               digit ( minc : maxc )
-      logical               doinit
 
 !
 !     Saved variables
 !
-      save
 
 !
 !     Initial values
 !
-      data                  doinit / .true. /
 
 !
 !     First we perform some initializations that are needed on
 !     each pass through this routine.
 !
-      if ( doinit ) then
-
-         doinit = .false.
-
-         do i = minc, maxc
-            digit(i)  = .false.
-         end do
-
-         digit(ichar('0')) = .true.
-         digit(ichar('1')) = .true.
-         digit(ichar('2')) = .true.
-         digit(ichar('3')) = .true.
-         digit(ichar('4')) = .true.
-         digit(ichar('5')) = .true.
-         digit(ichar('6')) = .true.
-         digit(ichar('7')) = .true.
-         digit(ichar('8')) = .true.
-         digit(ichar('9')) = .true.
-
-      end if
 
 
       last  = first - 1
