@@ -30,6 +30,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dskd02_state(state)
       type(dskd02_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%prvbas = 0
+      state%prvhan = 0
+      state%nv = 0
       state%first = .true.
    end subroutine init_dskd02_state
 

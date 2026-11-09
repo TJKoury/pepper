@@ -26,6 +26,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dasadi_state(state)
       type(dasadi_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%record = 0
       state%record = 0
    end subroutine init_dasadi_state
 

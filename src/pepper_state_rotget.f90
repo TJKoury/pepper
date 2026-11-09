@@ -26,6 +26,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_rotget_state(state)
       type(rotget_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%versn = ' '
       state%versn = '5.0.0'
    end subroutine init_rotget_state
 

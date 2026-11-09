@@ -77,6 +77,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_ckbsr_state(state)
       type(ckbsr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
       state%next = 0
       state%nft = 0
    end subroutine init_ckbsr_state
@@ -84,6 +89,42 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_ckbsr_context_state(state)
       type(ckbsr_context_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%alpha = 0.0_wp
+      state%avneed = .false.
+      state%findex = 0
+      state%fnd = .false.
+      state%fresub = .false.
+      state%iindex = 0
+      state%itbeg = 0
+      state%itchkp = .false.
+      state%itexp = 0
+      state%ithfs = 0
+      state%itins = 0
+      state%itlb = 0.0_wp
+      state%itlfs = 0
+      state%itprvd = 0.0_wp
+      state%itprvf = 0
+      state%itprvh = 0
+      state%itprvi = ' '
+      state%itub = 0.0_wp
+      state%itruex = 0
+      state%newsch = .false.
+      state%nit = 0
+      state%omega = 0.0_wp
+      state%reqt = 0.0_wp
+      state%savep = 0
+      state%savtol = 0.0_wp
+      state%scinst = 0
+      state%slbeg = 0
+      state%status = ' '
+      state%stdcd = 0.0_wp
+      state%sthan = 0
+      state%sticd = 0
+      state%stidnt = ' '
+      state%stpool = 0
+      state%top = 0
+      state%epoch = 0
       state%fresub = .false.
       state%nit = 0
       state%savep = 0

@@ -27,6 +27,12 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_wrencc_state(state)
       type(wrencc_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%intesc = 0
+      state%intfpc = 0
+      state%intlpc = 0
+      state%intquo = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_wrencc_state
 

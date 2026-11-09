@@ -60,6 +60,29 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dasrwr_state(state)
       type(dasrwr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%rcbufc = ' '
+      state%rcbufd = 0.0_wp
+      state%rcbufi = 0
+      state%rnbufc = 0
+      state%rnbufd = 0
+      state%rnbufi = 0
+      state%hnbufc = 0
+      state%hnbufd = 0
+      state%hnbufi = 0
+      state%upbufc = .false.
+      state%upbufd = .false.
+      state%upbufi = .false.
+      state%poolc = 0
+      state%poold = 0
+      state%pooli = 0
+      state%headc = 0
+      state%headd = 0
+      state%headi = 0
+      state%usedc = 0
+      state%usedd = 0
+      state%usedi = 0
+      state%pass1 = .false.
       state%rcbufc = ' '
       state%rcbufd = 0.0_wp
       state%rcbufi = 0

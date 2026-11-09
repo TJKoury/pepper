@@ -24,6 +24,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_deltet_state(state)
       type(deltet_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%missed = ' '
       state%missed = [ character(len(state%missed)) :: 'DELTET/DELTA_T_A, #', 'DELTET/K, #', 'DELTET/EB, #', 'DELTET/M, #', 'DELTET/DELTA_AT, #' ]
    end subroutine init_deltet_state
 

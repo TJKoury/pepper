@@ -29,6 +29,10 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzdafgdr_state(state)
       type(zzdafgdr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%natbff = 0
+      state%strbff = ' '
       state%first = .true.
       state%natbff = 0
    end subroutine init_zzdafgdr_state

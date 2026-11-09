@@ -32,6 +32,12 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_rdtext_state(state)
       type(rdtext_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%units = 0
+      state%n = 0
+      state%lstfil = ' '
+      state%lstunt = 0
+      state%index = 0
       state%n = 0
       state%lstfil = ' '
    end subroutine init_rdtext_state

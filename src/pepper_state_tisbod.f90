@@ -62,6 +62,33 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_tisbod_state(state)
       type(tisbod_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%costh = 0.0_wp
+      state%d = 0.0_wp
+      state%dcosth = 0.0_wp
+      state%dsinth = 0.0_wp
+      state%sinth = 0.0_wp
+      state%t = 0.0_wp
+      state%j2code = 0
+      state%first = .false.
+      state%pulctr = 0
+      state%bidlst = 0
+      state%bidpol = 0
+      state%bidids = 0
+      state%bac = 0.0_wp
+      state%bdc = 0.0_wp
+      state%bdcoef = 0.0_wp
+      state%bpckep = 0.0_wp
+      state%brcoef = 0.0_wp
+      state%btcoef = 0.0_wp
+      state%bwc = 0.0_wp
+      state%bwcoef = 0.0_wp
+      state%bna = 0
+      state%bnd = 0
+      state%bnphas = 0
+      state%bnphco = 0
+      state%bnw = 0
+      state%bpcref = 0
       state%first = .true.
       state%bpcref = 0
    end subroutine init_tisbod_state

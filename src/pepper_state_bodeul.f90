@@ -39,6 +39,17 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_bodeul_state(state)
       type(bodeul_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%ac = 0.0_wp
+      state%costh = 0.0_wp
+      state%dc = 0.0_wp
+      state%sinth = 0.0_wp
+      state%tcoef = 0.0_wp
+      state%wc = 0.0_wp
+      state%j2code = 0
+      state%nphase = 0
+      state%nphsco = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_bodeul_state
 

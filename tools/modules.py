@@ -234,6 +234,74 @@ CONTEXT_MODULES = {
     "pepper_keeper": """
         inttxt intord repmot sepool stpool tkvrsn zzascii exists zzldker keeper
         """.split(),
+    "pepper_symbols": """
+        sydelc sydeld sydeli sydimc sydimd sydimi sydupc sydupd sydupi syfetc
+        syfetd syfeti sygetc sygetd sygeti synthc synthd synthi syordc syordd
+        syordi sypopc sypopd sypopi syputc syputd syputi syselc syseld syseli
+        sysetc sysetd syseti sytrnc sytrnd sytrni syenqc syenqd syenqi sypshc
+        sypshd sypshi syrenc syrend syreni
+        """.split(),
+    "pepper_writers": """
+        ckcls ckgr01 ckgr03 ckgr04 ckgr05 ckgr06 ckmp06 cknm06 cknr01 cknr02
+        cknr03 cknr05 ckopn ckw01 ckw02 ckw03 ckw04b ckw04e ckw05 ckw06
+        pck03a pck03e pckcls pckopn pckpds pckuds pckw02 pckw20 spcac spcdc
+        spcec spcopn spcrfl spkcls spkopa spkopn spkw01 spkw02 spkw03 spkw05
+        spkw08 spkw09 spkw10 spkw12 spkw13 spkw15 spkw17 spkw18 spkw19 spkw20
+        spkw21 zzck4i2d ckgr02 ckw04a pck03b spcb2t spct2b spca2b spcb2a
+        """.split(),
+    "pepper_geometry": """
+        gfstep gfrefn
+        ana azlcpo bltfrm bodmat conics delfil dgeodr dhfa diags2 drotat
+        dxtrct ev2lin evsgp4 fetchc fetchd fetchi fn2lun georec getfov hyptof
+        illum irftrn iso2utc isopen kplfrm lparss lspcn ltime lun2fn lx4sgn
+        lxname npelpt oscelt partof plnsns prompt prsdp prtenc pxfrm2 rdnbl
+        repmct repml rotvec scps01 sctran sphsd spkpv srfrec stdio surfpt
+        twovxf uddf udf zzasryel zzbquad zzchrlat zzcputim zzcxbrut zzdiv zzdskbbl
+        zzdsksbi zzdsksbr zzdsksel zzdsksgr zzedterm zzedtmpt zzellbds zzelnaxx zzeprcss zzgetelm
+        zzgrav zzholdd zzhullax zzingrd zzinrec zzinrypl zzlatbox zzlexmet zzmult zznrmlon
+        zzrecbox zzrtnmat zzryxsph zzsecprt zzsepq zzsfxcor zzsglatx zzspin zzspkap0 zzspkap1
+        zzsrfini zztanslv zztogrid zzwind zzwind2d dpgrdr drdpgr dvsep edterm getelm
+        getfvn lx4dec oscltx pgrrec recpgr saelgv scpars subpt subsol surfpv
+        tostdo trgsep uddc wrkvar xdda zzcnquad zzdsksph zzfovaxi zzinlat0 zznrddp
+        zzpdcmpl zzpdpltc zzpdtbox zzraybox zzsrfker cgv2el dpspce et2lst incnsg lx4num
+        rdkvar xfmsta zzilusta zzinlat zzinpdt0 zzrytrec zzsegbox zzsrftrn inedpl pjelpl
+        srfc2s srfcss srfs2c srfscc zzdsksba zzelvupy zzinpdt zzrytlat edlimb npedln
+        zzinvelt zzprsmet zzrytpdt dskx02 srfxpt tangpt zzocced zzptpl02 zzrytelt zzdskbun
+        zzdsksgx zzdskbux zzdsksbf dskxsi dskxv illumg srfnrm zzsinutl illumf ilumin
+        latsrf sincpt subpnt subslr zztanutl zztangnt limbpt termpt
+        """.split(),
+    "pepper_gf": """
+        gfbail gfstol zzgfcoq zzgfcprx zzgfdiq zzgfdsps zzgffvu zzgfilu zzgfocu zzgfpaq
+        zzgfref zzgfrrq zzgfsolv zzgfsolvx zzgfspq zzgfspu zzgfssin zzgfssob zzgfudlt zzgfwsts
+        fovray fovtrg gffove gfocce occult phaseq zzgfcost zzgfdiu zzgfpau zzgfrel
+        zzgfrelx zzgfrpwk zzgfrru zzgfudb gfoclt gfrfov gfrprt gftfov gfudb gfuds
+        zzgfcou zzgflong zzgfcslv gfevnt gfdist gfilum gfpa gfposc gfrr gfsep
+        gfsntc gfsubc
+        """.split(),
+    "pepper_ek_storage": """
+        ekcls ekshdw zzekcdsc zzekcnam zzekgei zzekgrs zzekordc zzekordd zzekordi zzekpdec
+        zzekpgch zzekqini zzekrbck zzekreqi zzeksca zzekscan zzeksei zzekstyp zzeksz04 zzeksz05
+        zzektcnv zzektloc zzekweqi ekopr ekopw zzekgrcp zzekinqc zzekinqn zzekjsqz zzekpage
+        zzekqcnj zzekqcon zzekqord zzekqsel zzekqtab zzekrd09 zzeksrcp zzeksrs zzeksz06 zzekvadr
+        zzekgfwd zzekglnk zzeknrml zzeksfwd zzekslnk zzektr13 zzektr31 zzektrbs zzektrfr zzektrit
+        zzektrlk zzektrpi zzektrrk zzekweed ekopn ekops zzekcix1 zzekpars zzektr23 zzektr32
+        zzektrdp zzektrnk zzektrsb zzektrsz zzektrud zzektrui eknseg zzekixlk zzekrplk zzektr1s
+        zzektrbn zzektrki zzektrls zzekmloc zzektrdl zzektrin zzekdps zzekff01 zzeksdsc zzeksinf
+        zzektrap ekffld ekssum zzekacps zzekaps zzekbs01 zzekbs02 zzekde04 zzekrp2n
+        """.split(),
+    "pepper_ek": """
+        ekbseg ekinsr stcc01 zzekac01 zzekac02 zzekac03 zzekac04 zzekac05 zzekac06 zzekad04
+        zzekad05 zzekad06 zzekde05 zzekde06 zzekesiz zzekgcdp zzekif01 zzekif02 zzekrd01 zzekrd02
+        zzekrd03 zzekrd04 zzekrd05 zzekrd06 zzekrd07 zzekrd08 zzekscdp zzekwpac zzekwpai zzekwpal
+        ekappr ekifld ekrcec ekrced ekrcei zzekac07 zzekac08 zzekac09 zzekrsc zzekrsd
+        zzekrsi zzekue04 zzekue05 zzekue06 ekaclc ekacld ekacli zzekecmp zzekscmp zzekerc1
+        zzekerd1 zzekeri1 zzekllec zzeklled zzekllei zzeklltc zzeklltd zzekllti zzekrcmp zzekrmch
+        zzekvcmp zzekvmch zzekille zzekillt zzekjsrt zzeklerc zzeklerd zzekleri zzekfrx zzekiic1
+        zzekiid1 zzekiii1 zzekjtst zzekkey zzekad01 zzekad02 zzekad03 zzekixdl zzekjoin ekacec
+        ekaced ekacei ekqmgr zzekde01 zzekde02 zzekde03 zzekue01 zzekue02 ekdelr ekuced
+        ekucei stcg01 stcl01 zzekcchk zzekpcol zzeksemc zzektres zzekue03 ekucec zzeknres
+        ekfind zzekencd ekpsel stcf01
+        """.split(),
 }
 
 # Hand-written stateless modules (not generated from SPICELIB files) whose
@@ -255,6 +323,136 @@ HANDWRITTEN = {
 # variables named in SAVE statements or initialized by DATA; it also works for
 # routines without ENTRY points (e.g. with a saved cache).
 UMBRELLAS = {
+    # Phase 6: EK. The query manager's tables of loaded EK files, tables,
+    # segments and columns belong to the instance (they change only when EK files
+    # are loaded or unloaded); a query (its selection, constraints, matching rows,
+    # the scratch area) belongs to the context that runs it.
+    "zzekpdec": {"state": "saved", "component": "zzekpdec_state", "where": "context", "entries": ['zzekpdec']},
+    "zzekreqi": {"state": "saved", "component": "zzekreqi_state", "where": "context", "entries": ['zzekreqi']},
+    "zzeksca": {"state": "saved", "component": "zzeksca_state", "where": "context", "entries": ['zzekstop', 'zzekspsh', 'zzekspop', 'zzeksdec', 'zzeksupd', 'zzeksrd', 'zzekscln']},
+    "zzekscan": {"state": "saved", "component": "zzekscan_state", "where": "context", "entries": ['zzekscan']},
+    "zzekweqi": {"state": "saved", "component": "zzekweqi_state", "where": "context", "entries": ['zzekweqi']},
+    "zzekpage": {"state": "saved", "component": "zzekpage_state", "where": "context", "entries": ['zzekpgin', 'zzekpgan', 'zzekpgal', 'zzekpgfr', 'zzekpgrc', 'zzekpgrd', 'zzekpgri', 'zzekpgwc', 'zzekpgwd', 'zzekpgwi', 'zzekpgbs', 'zzekpgpg', 'zzekpgst']},
+    "zzekvadr": {"state": "saved", "component": "zzekvadr_state", "where": "context", "entries": ['zzekvset', 'zzekvcal']},
+    "zzeknrml": {"state": "saved", "component": "zzeknrml_state", "where": "context", "entries": ['zzeknrml']},
+    "zzektrit": {"state": "saved", "component": "zzektrit_state", "where": "context", "entries": ['zzektrit']},
+    "zzektrlk": {"state": "saved", "component": "zzektrlk_state", "where": "context", "entries": ['zzektrlk']},
+    "ekbseg": {"state": "saved", "component": "ekbseg_state", "where": "context", "entries": ['ekbseg']},
+    "stcc01": {"state": "saved", "component": "stcc01_state", "where": "context", "entries": ['stcc01']},
+    "zzekad06": {"state": "saved", "component": "zzekad06_state", "where": "context", "entries": ['zzekad06']},
+    "zzekjsrt": {"state": "saved", "component": "zzekjsrt_state", "where": "context", "entries": ['zzekjsrt']},
+    "zzekjtst": {"state": "saved", "component": "zzekjtst_state", "where": "context", "entries": ['zzekjprp', 'zzekjnxt']},
+    "ekqmgr": {"state": ['ftpool', 'fthan', 'fthead', 'tbpool', 'tbstpt', 'tbncol', 'tbnams', 'tbctpt', 'tbfils', 'tbflsz', 'tbhead', 'stpool', 'sthan', 'stsidx', 'stdscs', 'stnrow', 'stncol', 'stdtpt', 'dtpool', 'dtdscs', 'ctpool', 'ctnams', 'ctclas', 'cttyps', 'ctlens', 'ctfixd', 'ctsizs', 'ctindx', 'ctnull', 'first'],
+               "component": "ekqmgr",
+               "context_state": ['cnams', 'cnmset', 'colnam', 'frmals', 'frmtab', 'lcname', 'ltname', 'problm', 'rcname', 'rtname', 'state', 'tabnam', 'tabvec', 'dvals', 'begidx', 'cbegs', 'cdscrs', 'cends', 'cjbeg', 'cjend', 'cjrows', 'cjsize', 'cnstyp', 'col', 'colptr', 'conj', 'cvlen', 'ctnew', 'delseg', 'dtnew', 'dtype', 'endidx', 'i', 'ivals', 'j', 'jbase1', 'jbase2', 'jsize', 'k', 'key', 'keydsc', 'l', 'lcidx', 'lelts', 'ldscrs', 'ltbidx', 'lxbeg', 'lxend', 'nact', 'ncols', 'nconj', 'new', 'next', 'nmatch', 'norder', 'npcol', 'nseg', 'nsel', 'nsv', 'ntab', 'ocols', 'oelts', 'ops', 'ordbas', 'otabs', 'ptroff', 'r', 'rbas', 'rcidx', 'rdscrs', 'relts', 'resbas', 'rowidx', 'rowvec', 'rsize', 'rtbidx', 'rtotal', 'rwvbas', 'selcol', 'selctp', 'seltab', 'seg', 'segdsc', 'segvec', 'sense', 'sgvbas', 'sizes', 'stnew', 't', 'tab', 'tabidx', 'tbcurr', 'top', 'tptvec', 'ubase', 'unrows', 'usize', 'activc', 'activv', 'attmch', 'cmtch', 'dosort', 'fnd', 'indexd', 'keyfnd', 'nulsok', 'presnt', 'sorted', 'vmtch'],
+               "context_component": "ekqmgr_query",
+               "entries": ['eklef', 'ekuef', 'ekntab', 'ektnam', 'ekccnt', 'ekcii', 'eksrch', 'eknelt', 'ekgc', 'ekgd', 'ekgi']},
+    "zzeksemc": {"state": "saved", "component": "zzeksemc_state", "where": "context", "entries": ['zzeksemc']},
+    # Phase 6: GF (geometry finder). The state of a search (the quantity, the
+    # targets and corrections set by the *IN entry points, the progress report)
+    # belongs to the context that runs the search. The callbacks take the context
+    # (CALLBACKS).
+    "zzgfcoq": {"state": "saved", "component": "zzgfcoq_state", "where": "context", "entries": ['zzgfcoq']},
+    "zzgffvu": {"state": "saved", "component": "zzgffvu_state", "where": "context", "entries": ['zzgffvin', 'zzgffvst']},
+    "zzgfilu": {"state": "saved", "component": "zzgfilu_state", "where": "context", "entries": ['zzgfilin', 'zzgfildc', 'zzgfilgq']},
+    "zzgfocu": {"state": "saved", "component": "zzgfocu_state", "where": "context", "entries": ['zzgfocin', 'zzgfocst']},
+    "zzgfspu": {"state": "saved", "component": "zzgfspu_state", "where": "context", "entries": ['zzgfspin', 'zzgfspdc', 'zzgfspgq', 'zzgfspx']},
+    "zzgfssin": {"state": "saved", "component": "zzgfssin_state", "where": "context", "entries": ['zzgfssin']},
+    "zzgfssob": {"state": "saved", "component": "zzgfssob_state", "where": "context", "entries": ['zzgfssob']},
+    "fovtrg": {"state": "saved", "component": "fovtrg_state", "where": "context", "entries": ['fovtrg']},
+    "phaseq": {"state": "saved", "component": "phaseq_state", "where": "context", "entries": ['phaseq']},
+    "zzgfdiu": {"state": "saved", "component": "zzgfdiu_state", "where": "context", "entries": ['zzgfdiin', 'zzgfdidc', 'zzgfdigq']},
+    "zzgfpau": {"state": "saved", "component": "zzgfpau_state", "where": "context", "entries": ['zzgfpain', 'zzgfpadc', 'zzgfpagq', 'zzgfpax']},
+    "zzgfrel": {"state": "saved", "component": "zzgfrel_state", "where": "context", "entries": ['zzgfrel']},
+    "zzgfrelx": {"state": "saved", "component": "zzgfrelx_state", "where": "context", "entries": ['zzgfrelx']},
+    "zzgfrpwk": {"state": "saved", "component": "zzgfrpwk_state", "where": "context", "entries": ['zzgftswk', 'zzgfwkin', 'zzgfwkad', 'zzgfwkun', 'zzgfwkmo']},
+    "zzgfrru": {"state": "saved", "component": "zzgfrru_state", "where": "context", "entries": ['zzgfrrin', 'zzgfrrdc', 'zzgfrrgq', 'zzgfrrx']},
+    "gfrprt": {"state": "saved", "component": "gfrprt_state", "where": "context", "entries": ['gfrepi', 'gfrepu', 'gfrepf']},
+    "gftfov": {"state": "saved", "component": "gftfov_state", "where": "context", "entries": ['gftfov']},
+    "zzgfcou": {"state": "saved", "component": "zzgfcou_state", "where": "context", "entries": ['zzgfcoin', 'zzgfcog', 'zzgfcodc', 'zzgfcoex', 'zzgfcocg', 'zzgfcosg', 'zzgfcocd', 'zzgfcosd']},
+    "zzgflong": {"state": "saved", "component": "zzgflong_state", "where": "context", "entries": ['zzgflong']},
+    "zzgfcslv": {"state": "saved", "component": "zzgfcslv_state", "where": "context", "entries": ['zzgfcslv']},
+    "gfevnt": {"state": "saved", "component": "gfevnt_state", "where": "context", "entries": ['gfevnt']},
+    # GFSTEP's step (set by GFSSTP) belongs to the context, like its other GF state.
+    "gfstep": {"state": "saved", "component": "gfstep_state", "where": "context",
+               "entries": ["gfstep", "gfsstp"], "docs": {"svstep": "the step size (set by GFSSTP)",
+                                                         "svinit": "the step size has been set"}},
+    # Phase 6: geometry, kernel writers, symbol tables: caches (of names, frames,
+    # surfaces, shapes asked for last), first-call setup and call sequences
+    # (zzdsksel, zzsinutl, zztanutl), all per context. ZZHOLDD (GF tolerance and
+    # reference value) is per context too, so GFSTOL sets the context's tolerance.
+    "ana": {"state": "saved", "component": "ana_state", "where": "context", "entries": ['ana']},
+    "azlcpo": {"state": "saved", "component": "azlcpo_state", "where": "context", "entries": ['azlcpo']},
+    "bltfrm": {"state": "saved", "component": "bltfrm_state", "where": "context", "entries": ['bltfrm']},
+    "diags2": {"state": "saved", "component": "diags2_state", "where": "context", "entries": ['diags2']},
+    "ev2lin": {"state": "saved", "component": "ev2lin_state", "where": "context", "entries": ['ev2lin']},
+    "hyptof": {"state": "saved", "component": "hyptof_state", "where": "context", "entries": ['hyptof']},
+    "illum": {"state": "saved", "component": "illum_state", "where": "context", "entries": ['illum']},
+    "lspcn": {"state": "saved", "component": "lspcn_state", "where": "context", "entries": ['lspcn']},
+    "lxname": {"state": [], "component": None, "entries": ['lxidnt', 'lxdfid', 'lxcsid']},
+    "oscelt": {"state": "saved", "component": "oscelt_state", "where": "context", "entries": ['oscelt']},
+    "prtenc": {"state": [], "component": None, "entries": ['prtenc', 'prtdec']},
+    "pxfrm2": {"state": "saved", "component": "pxfrm2_state", "where": "context", "entries": ['pxfrm2']},
+    "repml": {"state": "saved", "component": "repml_state", "where": "context", "entries": ['repml']},
+    "scps01": {"state": "saved", "component": "scps01_state", "where": "context", "entries": ['scps01']},
+    "sctran": {"state": [], "component": None, "entries": ['scn2id', 'scid2n']},
+    "spcac": {"state": "saved", "component": "spcac_state", "where": "context", "entries": ['spcac']},
+    "spcrfl": {"state": "saved", "component": "spcrfl_state", "where": "context", "entries": ['spcrfl', 'spcrnl']},
+    "spkpv": {"state": "saved", "component": "spkpv_state", "where": "context", "entries": ['spkpv']},
+    "surfpt": {"state": "saved", "component": "surfpt_state", "where": "context", "entries": ['surfpt']},
+    "zzbquad": {"state": "saved", "component": "zzbquad_state", "where": "context", "entries": ['zzbquad']},
+    "zzdiv": {"state": "saved", "component": "zzdiv_state", "where": "context", "entries": ['zzdiv']},
+    "zzdskbbl": {"state": "saved", "component": "zzdskbbl_state", "where": "context", "entries": ['zzdskbbl']},
+    "zzdsksel": {"state": "saved", "component": "zzdsksel_state", "where": "context", "entries": ['zzdsksbd', 'zzdskbdc', 'zzdsknot', 'zzdsksit', 'zzdskcit', 'zzdskusc', 'zzdskumc', 'zzdskmsc', 'zzdskmmc', 'zzdsksrc', 'zzdskmrc']},
+    "zzgetelm": {"state": "saved", "component": "zzgetelm_state", "where": "context", "entries": ['zzgetelm']},
+    "zzholdd": {"state": "saved", "component": "zzholdd_state", "where": "context", "entries": ['zzholdd']},
+    "zzmult": {"state": "saved", "component": "zzmult_state", "where": "context", "entries": ['zzmult']},
+    "zzrtnmat": {"state": "saved", "component": "zzrtnmat_state", "where": "context", "entries": ['zzrtnmat']},
+    "zzsfxcor": {"state": "saved", "component": "zzsfxcor_state", "where": "context", "entries": ['zzsfxcor']},
+    "zzsglatx": {"state": "saved", "component": "zzsglatx_state", "where": "context", "entries": ['zzsglatx']},
+    "zzspin": {"state": "saved", "component": "zzspin_state", "where": "context", "entries": ['zzspin']},
+    "zzspkap0": {"state": "saved", "component": "zzspkap0_state", "where": "context", "entries": ['zzspkap0']},
+    "zzspkap1": {"state": "saved", "component": "zzspkap1_state", "where": "context", "entries": ['zzspkap1']},
+    "dpgrdr": {"state": "saved", "component": "dpgrdr_state", "where": "context", "entries": ['dpgrdr']},
+    "drdpgr": {"state": "saved", "component": "drdpgr_state", "where": "context", "entries": ['drdpgr']},
+    "edterm": {"state": "saved", "component": "edterm_state", "where": "context", "entries": ['edterm']},
+    "getfvn": {"state": "saved", "component": "getfvn_state", "where": "context", "entries": ['getfvn']},
+    "pgrrec": {"state": "saved", "component": "pgrrec_state", "where": "context", "entries": ['pgrrec']},
+    "recpgr": {"state": "saved", "component": "recpgr_state", "where": "context", "entries": ['recpgr']},
+    "subpt": {"state": "saved", "component": "subpt_state", "where": "context", "entries": ['subpt']},
+    "subsol": {"state": "saved", "component": "subsol_state", "where": "context", "entries": ['subsol']},
+    "tostdo": {"state": "saved", "component": "tostdo_state", "where": "context", "entries": ['tostdo']},
+    "zzcnquad": {"state": "saved", "component": "zzcnquad_state", "where": "context", "entries": ['zzcnquad']},
+    "zzdsksph": {"state": "saved", "component": "zzdsksph_state", "where": "context", "entries": ['zzdsksph']},
+    "zznrddp": {"state": "saved", "component": "zznrddp_state", "where": "context", "entries": ['zzdpinit', 'zzdpsec', 'zzdpper']},
+    "zzpdcmpl": {"state": "saved", "component": "zzpdcmpl_state", "where": "context", "entries": ['zzpdcmpl']},
+    "zzsrfker": {"state": "saved", "component": "zzsrfker_state", "where": "context", "entries": ['zzsrfker']},
+    "dpspce": {"state": "saved", "component": "dpspce_state", "where": "context", "entries": ['dpspce']},
+    "incnsg": {"state": "saved", "component": "incnsg_state", "where": "context", "entries": ['incnsg']},
+    "xfmsta": {"state": "saved", "component": "xfmsta_state", "where": "context", "entries": ['xfmsta']},
+    "zzsrftrn": {"state": "saved", "component": "zzsrftrn_state", "where": "context", "entries": ['zzsrfn2c', 'zzsrfc2n', 'zzsrftrk']},
+    "zzelvupy": {"state": "saved", "component": "zzelvupy_state", "where": "context", "entries": ['zzelvupy']},
+    "zzinpdt": {"state": "saved", "component": "zzinpdt_state", "where": "context", "entries": ['zzinpdt']},
+    "zzrytlat": {"state": "saved", "component": "zzrytlat_state", "where": "context", "entries": ['zzrytlat']},
+    "zzrytpdt": {"state": "saved", "component": "zzrytpdt_state", "where": "context", "entries": ['zzrytpdt']},
+    "dskx02": {"state": "saved", "component": "dskx02_state", "where": "context", "entries": ['dskx02']},
+    "srfxpt": {"state": "saved", "component": "srfxpt_state", "where": "context", "entries": ['srfxpt']},
+    "tangpt": {"state": "saved", "component": "tangpt_state", "where": "context", "entries": ['tangpt']},
+    "zzptpl02": {"state": "saved", "component": "zzptpl02_state", "where": "context", "entries": ['zzptpl02']},
+    "zzdsksbf": {"state": "saved", "component": "zzdsksbf_state", "where": "context", "entries": ['zzsbfxr', 'zzsbfxri', 'zzsbfnrm']},
+    "dskxsi": {"state": "saved", "component": "dskxsi_state", "where": "context", "entries": ['dskxsi']},
+    "dskxv": {"state": "saved", "component": "dskxv_state", "where": "context", "entries": ['dskxv']},
+    "illumg": {"state": "saved", "component": "illumg_state", "where": "context", "entries": ['illumg']},
+    "srfnrm": {"state": "saved", "component": "srfnrm_state", "where": "context", "entries": ['srfnrm']},
+    "zzsinutl": {"state": "saved", "component": "zzsinutl_state", "where": "context", "entries": ['zzsuelin', 'zzsudski', 'zzraysfx', 'zzmaxrad', 'zzminrad', 'zzraynp']},
+    "illumf": {"state": "saved", "component": "illumf_state", "where": "context", "entries": ['illumf']},
+    "latsrf": {"state": "saved", "component": "latsrf_state", "where": "context", "entries": ['latsrf']},
+    "sincpt": {"state": "saved", "component": "sincpt_state", "where": "context", "entries": ['sincpt']},
+    "subpnt": {"state": "saved", "component": "subpnt_state", "where": "context", "entries": ['subpnt']},
+    "subslr": {"state": "saved", "component": "subslr_state", "where": "context", "entries": ['subslr']},
+    "zztanutl": {"state": "saved", "component": "zztanutl_state", "where": "context", "entries": ['zztanini', 'zztansta']},
+    "limbpt": {"state": "saved", "component": "limbpt_state", "where": "context", "entries": ['limbpt']},
+    "termpt": {"state": "saved", "component": "termpt_state", "where": "context", "entries": ['termpt']},
     # The SPK, CK, PCK, SCLK and time API (phase 5): caches of the names and
     # corrections asked for last, first-call setup, segments being written
     # (SGSEQW) and call sequences (ZZCVSTAT): per context.
@@ -516,16 +714,168 @@ UMBRELLAS = {
 # Legacy routines (still in src/spicelib) that moved code may call for now,
 # with the reason. Remove an entry when the routine moves.
 ALLOWED_LEGACY = {
-    "eklef": "loads an EK file (the EK query manager EKQMGR moves with the EK subsystem, phase 6)",
-    "ekuef": "unloads an EK file (the EK query manager EKQMGR moves with the EK subsystem, phase 6)",
     "wrline": "writes a line to a device or file (SPICELIB's error output; it moves "
               "with the error output, phase 7)",
 }
 
-# Dummy procedures (EXTERNAL arguments): routine -> {argument: the abstract
-# interface in pepper_instance that declares it}.
+# Callbacks: the procedures that SPICELIB passes as arguments (EXTERNAL
+# arguments). Each has an abstract interface in pepper_instance with the
+# context as first argument (generated by tools/callbacks.py) and, for the
+# legacy interface, a bridge from SPICELIB's form without the context
+# (src/legacy/pepper_legacy_callbacks.f90). kind: "subroutine" or
+# "logical function"; args: (name, type, intent, dimensions, description).
+CALLBACKS = {
+    "zzdsk_compare": {
+        "kind": "logical function",
+        "doc": "A segment selection function of the DSK segment buffer (ZZDSKSNS): true if the "
+               "segment satisfies the search's criteria. SPICELIB's are ZZDSKBDC and ZZDSKNOT.",
+        "args": [("handle", "integer(ip)", "in", "", "handle of the DSK file of the segment"),
+                 ("dladsc", "integer(ip)", "in", "( * )", "DLA descriptor of the segment"),
+                 ("dskdsc", "real(wp)", "in", "( * )", "DSK descriptor of the segment")]},
+    "zzspk_state": {
+        "kind": "subroutine",
+        "doc": "A state routine for the SPK routines that take one (ZZSPKFAO, ZZSPKFAP, "
+               "ZZSPKFAT, ZZSPKFLT, ZZSPKFZO, ZZSPKFZT): the state of an object relative to the "
+               "solar system barycenter at an epoch, in an inertial frame. SPICELIB's is ZZCVXSTA.",
+        "args": [("et", "real(wp)", "in", "", "epoch (TDB seconds past J2000)"),
+                 ("ref", "character(*)", "in", "", "inertial reference frame of the state"),
+                 ("center", "integer(ip)", "out", "", "ID code of the center of motion"),
+                 ("state", "real(wp)", "out", "( 6 )", "state of the object")]},
+    "zzsfx_near": {
+        "kind": "subroutine",
+        "doc": "The near point on the target's surface to a ray (ZZSFXCOR); SPICELIB's is ZZRAYNP.",
+        "args": [("vertex", "real(wp)", "in", "( 3 )", "the ray's vertex"),
+                 ("raydir", "real(wp)", "in", "( 3 )", "the ray's direction vector"),
+                 ("et", "real(wp)", "in", "", "evaluation epoch (TDB seconds past J2000)"),
+                 ("pnear", "real(wp)", "out", "( 3 )", "near point to the ray on the surface"),
+                 ("dist", "real(wp)", "out", "", "distance between the near point and the ray")]},
+    "zzsfx_maxrad": {
+        "kind": "subroutine",
+        "doc": "The radius of the target's outer bounding sphere (ZZSFXCOR); SPICELIB's is ZZMAXRAD.",
+        "args": [("maxrad", "real(wp)", "out", "", "radius of the outer bounding sphere")]},
+    "zzsfx_rayx": {
+        "kind": "subroutine",
+        "doc": "The intercept of a ray with the target's surface (ZZSFXCOR); SPICELIB's is ZZRAYSFX.",
+        "args": [("vertex", "real(wp)", "in", "( 3 )", "the ray's vertex"),
+                 ("raydir", "real(wp)", "in", "( 3 )", "the ray's direction vector"),
+                 ("et", "real(wp)", "in", "", "evaluation epoch (TDB seconds past J2000)"),
+                 ("spoint", "real(wp)", "out", "( 3 )", "surface intercept point"),
+                 ("found", "logical", "out", "", "the intercept exists")]},
+    "zztan_cond": {
+        "kind": "subroutine",
+        "doc": "The occultation state of a ray at an angle (ZZTANSLV); SPICELIB's is ZZTANSTA.",
+        "args": [("angle", "real(wp)", "in", "", "angle of the ray"),
+                 ("ocultd", "logical", "out", "", "the ray is occulted"),
+                 ("point", "real(wp)", "out", "( 3 )", "tangent point on the target")]},
+    "gf_step": {
+        "kind": "subroutine",
+        "doc": "A GF step size routine: the time step to take from a time. SPICELIB's is GFSTEP.",
+        "args": [("time", "real(wp)", "in", "", "the time (TDB seconds past J2000)"),
+                 ("step", "real(wp)", "out", "", "the time step (seconds)")]},
+    "gf_refine": {
+        "kind": "subroutine",
+        "doc": "A GF refinement routine: a time between two times at which a condition differs. "
+               "SPICELIB's is GFREFN.",
+        "args": [("t1", "real(wp)", "in", "", "one of the times"),
+                 ("t2", "real(wp)", "in", "", "the other time"),
+                 ("s1", "logical", "in", "", "the condition at T1"),
+                 ("s2", "logical", "in", "", "the condition at T2"),
+                 ("t", "real(wp)", "out", "", "the time between T1 and T2")]},
+    "gf_rep_init": {
+        "kind": "subroutine",
+        "doc": "A GF progress report initialization routine. SPICELIB's is GFREPI.",
+        "args": [("window", "real(wp)", "in", "( lbcell : * )", "the window over which the search runs"),
+                 ("begmss", "character(*)", "in", "", "beginning of the text of the report"),
+                 ("endmss", "character(*)", "in", "", "end of the text of the report")]},
+    "gf_rep_update": {
+        "kind": "subroutine",
+        "doc": "A GF progress report update routine. SPICELIB's is GFREPU.",
+        "args": [("ivbeg", "real(wp)", "in", "", "start time of the work interval"),
+                 ("ivend", "real(wp)", "in", "", "end time of the work interval"),
+                 ("time", "real(wp)", "in", "", "current time of the search")]},
+    "gf_rep_final": {
+        "kind": "subroutine",
+        "doc": "A GF progress report finalization routine. SPICELIB's is GFREPF.",
+        "args": []},
+    "gf_bail": {
+        "kind": "logical function",
+        "doc": "A GF interrupt check: true if the search is to stop. SPICELIB's is GFBAIL.",
+        "args": []},
+    "gf_cond": {
+        "kind": "subroutine",
+        "doc": "A GF condition of time (ZZGFREL, ZZGFSOLV): whether a condition holds, or "
+               "whether a quantity is decreasing, at a time.",
+        "args": [("et", "real(wp)", "in", "", "the time (TDB seconds past J2000)"),
+                 ("xbool", "logical", "out", "", "the condition at ET")]},
+    "gf_ref": {
+        "kind": "subroutine",
+        "doc": "A GF routine that takes the reference value of a search (ZZGFREL); SPICELIB's "
+               "is ZZGFREF.",
+        "args": [("refval", "real(wp)", "in", "", "the reference value")]},
+    "gf_boolean": {
+        "kind": "subroutine",
+        "doc": "A GF condition of a scalar function of time (GFUDB, GFUDS, ZZGFRELX, "
+               "ZZGFSOLVX): whether a condition on the function holds at a time, or whether "
+               "the function is decreasing (UDQDEC).",
+        "args": [("udfunc", "procedure(gf_scalar)", "", "", "the scalar function"),
+                 ("et", "real(wp)", "in", "", "the time (TDB seconds past J2000)"),
+                 ("xbool", "logical", "out", "", "the condition at ET")]},
+    # (the "is decreasing" callbacks have the same arguments as the conditions,
+    # but a type of their own: the legacy bridges keep one routine per type,
+    # and ZZGFREL, ZZGFRELX take both)
+    "gf_decr": {
+        "kind": "subroutine",
+        "doc": "A GF routine that tells whether a quantity is decreasing at a time (ZZGFREL).",
+        "args": [("et", "real(wp)", "in", "", "the time (TDB seconds past J2000)"),
+                 ("xbool", "logical", "out", "", "the quantity is decreasing at ET")]},
+    "gf_decr_x": {
+        "kind": "subroutine",
+        "doc": "A GF routine that tells whether a scalar function of time is decreasing at a "
+               "time (GFUDS, ZZGFRELX); SPICELIB's examples use UDDC.",
+        "args": [("udfunc", "procedure(gf_scalar)", "", "", "the scalar function"),
+                 ("et", "real(wp)", "in", "", "the time (TDB seconds past J2000)"),
+                 ("xbool", "logical", "out", "", "the function is decreasing at ET")]},
+    "gf_scalar": {
+        "kind": "subroutine",
+        "doc": "A user-defined scalar function of time for GF (GFUDS, GFUDB, UDDF, UDDC).",
+        "args": [("et", "real(wp)", "in", "", "the time (TDB seconds past J2000)"),
+                 ("value", "real(wp)", "out", "", "the value of the function")]},
+}
+
+# Dummy procedures (EXTERNAL arguments): routine -> {argument: its callback
+# (CALLBACKS)}.
 PROCEDURE_ARGS = {
     "zzdsksns": {"cmpfun": "zzdsk_compare"},
+    **{r: {a: "zzspk_state"} for r, a in (("zzspkflt", "trgsub"), ("zzspkfao", "obssub"),
+                                          ("zzspkfap", "trgsub"), ("zzspkfat", "trgsub"),
+                                          ("zzspkfzo", "obssub"), ("zzspkfzt", "trgsub"))},
+    "zzsfxcor": {"udnear": "zzsfx_near", "udmaxr": "zzsfx_maxrad", "udrayx": "zzsfx_rayx"},
+    "zztanslv": {"udcond": "zztan_cond", "udstep": "gf_step", "udrefn": "gf_refine"},
+    "uddf": {"udfunc": "gf_scalar"},
+    "uddc": {"udfunc": "gf_scalar"},
+    # GF
+    'gfevnt': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'gffove': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'gfocce': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'zzgfcslv': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'zzgflong': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'gfudb': {'udfuns': 'gf_scalar', 'udfunb': 'gf_boolean'},
+    'gfuds': {'udfuns': 'gf_scalar', 'udqdec': 'gf_decr_x'},
+    'zzgfrel': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udqdec': 'gf_decr', 'udcond': 'gf_cond', 'udfunc': 'gf_scalar', 'udqref': 'gf_ref', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'zzgfrelx': {'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udqdec': 'gf_decr_x', 'udcond': 'gf_boolean', 'udfunc': 'gf_scalar', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'zzgfsolv': {'udcond': 'gf_cond', 'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udbail': 'gf_bail', 'udrepu': 'gf_rep_update'},
+    'zzgfsolvx': {'udfuns': 'gf_scalar', 'udfunb': 'gf_boolean', 'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udbail': 'gf_bail', 'udrepu': 'gf_rep_update'},
+    'zzgfudb': {'udfuns': 'gf_scalar', 'udfunb': 'gf_boolean', 'udstep': 'gf_step', 'udrefn': 'gf_refine', 'udrepi': 'gf_rep_init', 'udrepu': 'gf_rep_update', 'udrepf': 'gf_rep_final', 'udbail': 'gf_bail'},
+    'zzgfcodc': {'udfunc': 'gf_scalar'},
+    'zzgfcoex': {'udfunc': 'gf_scalar'},
+    'zzgfcocd': {'udfunc': 'gf_scalar'},
+    'zzgfcosd': {'udfunc': 'gf_scalar'},
+    'zzgfdidc': {'udfunc': 'gf_scalar'},
+    'zzgfildc': {'udfunc': 'gf_scalar'},
+    'zzgfpadc': {'udfunc': 'gf_scalar'},
+    'zzgfrrdc': {'udfunc': 'gf_scalar'},
+    'zzgfspdc': {'udfunc': 'gf_scalar'},
+    'zzgfudlt': {'udfunc': 'gf_scalar'},
 }
 
 # Descriptions of the state components (the !! comments of the generated

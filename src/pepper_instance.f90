@@ -209,6 +209,123 @@ module pepper_instance
    use pepper_state_zzspkfzt, only: zzspkfzt_state, init_zzspkfzt_state
    use pepper_state_spkcvt, only: spkcvt_state, init_spkcvt_state
    ! --- end pepper_spk_api
+   ! --- pepper_writers
+   use pepper_state_spcrfl, only: spcrfl_state, init_spcrfl_state
+   ! --- end pepper_writers
+   ! --- pepper_geometry
+   use pepper_state_gfstep, only: gfstep_state, init_gfstep_state
+   use pepper_state_ana, only: ana_state, init_ana_state
+   use pepper_state_azlcpo, only: azlcpo_state, init_azlcpo_state
+   use pepper_state_bltfrm, only: bltfrm_state, init_bltfrm_state
+   use pepper_state_diags2, only: diags2_state, init_diags2_state
+   use pepper_state_ev2lin, only: ev2lin_state, init_ev2lin_state
+   use pepper_state_hyptof, only: hyptof_state, init_hyptof_state
+   use pepper_state_illum, only: illum_state, init_illum_state
+   use pepper_state_lspcn, only: lspcn_state, init_lspcn_state
+   use pepper_state_oscelt, only: oscelt_state, init_oscelt_state
+   use pepper_state_pxfrm2, only: pxfrm2_state, init_pxfrm2_state
+   use pepper_state_repml, only: repml_state, init_repml_state
+   use pepper_state_scps01, only: scps01_state, init_scps01_state
+   use pepper_state_spkpv, only: spkpv_state, init_spkpv_state
+   use pepper_state_surfpt, only: surfpt_state, init_surfpt_state
+   use pepper_state_zzbquad, only: zzbquad_state, init_zzbquad_state
+   use pepper_state_zzdiv, only: zzdiv_state, init_zzdiv_state
+   use pepper_state_zzdskbbl, only: zzdskbbl_state, init_zzdskbbl_state
+   use pepper_state_zzdsksel, only: zzdsksel_state, init_zzdsksel_state
+   use pepper_state_zzgetelm, only: zzgetelm_state, init_zzgetelm_state
+   use pepper_state_zzholdd, only: zzholdd_state, init_zzholdd_state
+   use pepper_state_zzmult, only: zzmult_state, init_zzmult_state
+   use pepper_state_zzrtnmat, only: zzrtnmat_state, init_zzrtnmat_state
+   use pepper_state_zzsfxcor, only: zzsfxcor_state, init_zzsfxcor_state
+   use pepper_state_zzsglatx, only: zzsglatx_state, init_zzsglatx_state
+   use pepper_state_zzspin, only: zzspin_state, init_zzspin_state
+   use pepper_state_zzspkap0, only: zzspkap0_state, init_zzspkap0_state
+   use pepper_state_zzspkap1, only: zzspkap1_state, init_zzspkap1_state
+   use pepper_state_dpgrdr, only: dpgrdr_state, init_dpgrdr_state
+   use pepper_state_drdpgr, only: drdpgr_state, init_drdpgr_state
+   use pepper_state_edterm, only: edterm_state, init_edterm_state
+   use pepper_state_getfvn, only: getfvn_state, init_getfvn_state
+   use pepper_state_pgrrec, only: pgrrec_state, init_pgrrec_state
+   use pepper_state_recpgr, only: recpgr_state, init_recpgr_state
+   use pepper_state_subpt, only: subpt_state, init_subpt_state
+   use pepper_state_subsol, only: subsol_state, init_subsol_state
+   use pepper_state_tostdo, only: tostdo_state, init_tostdo_state
+   use pepper_state_zzcnquad, only: zzcnquad_state, init_zzcnquad_state
+   use pepper_state_zzdsksph, only: zzdsksph_state, init_zzdsksph_state
+   use pepper_state_zznrddp, only: zznrddp_state, init_zznrddp_state
+   use pepper_state_zzpdcmpl, only: zzpdcmpl_state, init_zzpdcmpl_state
+   use pepper_state_zzsrfker, only: zzsrfker_state, init_zzsrfker_state
+   use pepper_state_dpspce, only: dpspce_state, init_dpspce_state
+   use pepper_state_incnsg, only: incnsg_state, init_incnsg_state
+   use pepper_state_xfmsta, only: xfmsta_state, init_xfmsta_state
+   use pepper_state_zzsrftrn, only: zzsrftrn_state, init_zzsrftrn_state
+   use pepper_state_zzelvupy, only: zzelvupy_state, init_zzelvupy_state
+   use pepper_state_zzinpdt, only: zzinpdt_state, init_zzinpdt_state
+   use pepper_state_zzrytlat, only: zzrytlat_state, init_zzrytlat_state
+   use pepper_state_zzrytpdt, only: zzrytpdt_state, init_zzrytpdt_state
+   use pepper_state_dskx02, only: dskx02_state, init_dskx02_state
+   use pepper_state_srfxpt, only: srfxpt_state, init_srfxpt_state
+   use pepper_state_tangpt, only: tangpt_state, init_tangpt_state
+   use pepper_state_zzptpl02, only: zzptpl02_state, init_zzptpl02_state
+   use pepper_state_zzdsksbf, only: zzdsksbf_state, init_zzdsksbf_state
+   use pepper_state_dskxsi, only: dskxsi_state, init_dskxsi_state
+   use pepper_state_dskxv, only: dskxv_state, init_dskxv_state
+   use pepper_state_illumg, only: illumg_state, init_illumg_state
+   use pepper_state_srfnrm, only: srfnrm_state, init_srfnrm_state
+   use pepper_state_zzsinutl, only: zzsinutl_state, init_zzsinutl_state
+   use pepper_state_illumf, only: illumf_state, init_illumf_state
+   use pepper_state_latsrf, only: latsrf_state, init_latsrf_state
+   use pepper_state_sincpt, only: sincpt_state, init_sincpt_state
+   use pepper_state_subpnt, only: subpnt_state, init_subpnt_state
+   use pepper_state_subslr, only: subslr_state, init_subslr_state
+   use pepper_state_zztanutl, only: zztanutl_state, init_zztanutl_state
+   use pepper_state_limbpt, only: limbpt_state, init_limbpt_state
+   use pepper_state_termpt, only: termpt_state, init_termpt_state
+   ! --- end pepper_geometry
+   ! --- pepper_gf
+   use pepper_state_zzgfcoq, only: zzgfcoq_state, init_zzgfcoq_state
+   use pepper_state_zzgffvu, only: zzgffvu_state, init_zzgffvu_state
+   use pepper_state_zzgfilu, only: zzgfilu_state, init_zzgfilu_state
+   use pepper_state_zzgfocu, only: zzgfocu_state, init_zzgfocu_state
+   use pepper_state_zzgfspu, only: zzgfspu_state, init_zzgfspu_state
+   use pepper_state_zzgfssin, only: zzgfssin_state, init_zzgfssin_state
+   use pepper_state_zzgfssob, only: zzgfssob_state, init_zzgfssob_state
+   use pepper_state_fovtrg, only: fovtrg_state, init_fovtrg_state
+   use pepper_state_phaseq, only: phaseq_state, init_phaseq_state
+   use pepper_state_zzgfdiu, only: zzgfdiu_state, init_zzgfdiu_state
+   use pepper_state_zzgfpau, only: zzgfpau_state, init_zzgfpau_state
+   use pepper_state_zzgfrel, only: zzgfrel_state, init_zzgfrel_state
+   use pepper_state_zzgfrelx, only: zzgfrelx_state, init_zzgfrelx_state
+   use pepper_state_zzgfrpwk, only: zzgfrpwk_state, init_zzgfrpwk_state
+   use pepper_state_zzgfrru, only: zzgfrru_state, init_zzgfrru_state
+   use pepper_state_gfrprt, only: gfrprt_state, init_gfrprt_state
+   use pepper_state_gftfov, only: gftfov_state, init_gftfov_state
+   use pepper_state_zzgfcou, only: zzgfcou_state, init_zzgfcou_state
+   use pepper_state_zzgflong, only: zzgflong_state, init_zzgflong_state
+   use pepper_state_zzgfcslv, only: zzgfcslv_state, init_zzgfcslv_state
+   use pepper_state_gfevnt, only: gfevnt_state, init_gfevnt_state
+   ! --- end pepper_gf
+   ! --- pepper_ek_storage
+   use pepper_state_zzekpdec, only: zzekpdec_state, init_zzekpdec_state
+   use pepper_state_zzekreqi, only: zzekreqi_state, init_zzekreqi_state
+   use pepper_state_zzeksca, only: zzeksca_state, init_zzeksca_state
+   use pepper_state_zzekscan, only: zzekscan_state, init_zzekscan_state
+   use pepper_state_zzekweqi, only: zzekweqi_state, init_zzekweqi_state
+   use pepper_state_zzekpage, only: zzekpage_state, init_zzekpage_state
+   use pepper_state_zzekvadr, only: zzekvadr_state, init_zzekvadr_state
+   use pepper_state_zzeknrml, only: zzeknrml_state, init_zzeknrml_state
+   use pepper_state_zzektrit, only: zzektrit_state, init_zzektrit_state
+   use pepper_state_zzektrlk, only: zzektrlk_state, init_zzektrlk_state
+   ! --- end pepper_ek_storage
+   ! --- pepper_ek
+   use pepper_state_ekbseg, only: ekbseg_state, init_ekbseg_state
+   use pepper_state_stcc01, only: stcc01_state, init_stcc01_state
+   use pepper_state_zzekad06, only: zzekad06_state, init_zzekad06_state
+   use pepper_state_zzekjsrt, only: zzekjsrt_state, init_zzekjsrt_state
+   use pepper_state_zzekjtst, only: zzekjtst_state, init_zzekjtst_state
+   use pepper_state_ekqmgr, only: ekqmgr_state, init_ekqmgr_state, ekqmgr_context_state, init_ekqmgr_context_state
+   use pepper_state_zzeksemc, only: zzeksemc_state, init_zzeksemc_state
+   ! --- end pepper_ek
    ! <<< generated state modules
 
    implicit none
@@ -216,19 +333,6 @@ module pepper_instance
    private
 
    public :: pepper_spice, pepper_context
-   public :: zzdsk_compare
-
-   abstract interface
-      !> A segment selection function of the DSK segment buffer (ZZDSKSNS):
-      !> true if the segment (given by its file and descriptors) satisfies
-      !> the search's criteria. SPICELIB's are ZZDSKBDC and ZZDSKNOT.
-      logical function zzdsk_compare ( handle, dladsc, dskdsc )
-         import :: ip, wp
-         integer(ip) :: handle  !! handle of the DSK file of the segment
-         integer(ip) :: dladsc ( * )  !! DLA descriptor of the segment
-         real(wp) :: dskdsc ( * )  !! DSK descriptor of the segment
-      end function zzdsk_compare
-   end interface
 
    !> Length of the variable names in a context's watch table (the kernel
    !> pool's maximum name length).
@@ -324,6 +428,9 @@ module pepper_instance
       ! --- pepper_rotations
       type(chgirf_state), allocatable :: chgirf_state  !! state of CHGIRF
       ! --- end pepper_rotations
+      ! --- pepper_ek
+      type(ekqmgr_state), allocatable :: ekqmgr  !! state of EKQMGR
+      ! --- end pepper_ek
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -512,6 +619,123 @@ module pepper_instance
       type(zzspkfzt_state), allocatable :: zzspkfzt_state  !! state of ZZSPKFZT
       type(spkcvt_state), allocatable :: spkcvt_state  !! state of SPKCVT
       ! --- end pepper_spk_api
+      ! --- pepper_writers
+      type(spcrfl_state), allocatable :: spcrfl_state  !! state of SPCRFL
+      ! --- end pepper_writers
+      ! --- pepper_geometry
+      type(gfstep_state), allocatable :: gfstep_state  !! state of GFSTEP
+      type(ana_state), allocatable :: ana_state  !! state of ANA
+      type(azlcpo_state), allocatable :: azlcpo_state  !! state of AZLCPO
+      type(bltfrm_state), allocatable :: bltfrm_state  !! state of BLTFRM
+      type(diags2_state), allocatable :: diags2_state  !! state of DIAGS2
+      type(ev2lin_state), allocatable :: ev2lin_state  !! state of EV2LIN
+      type(hyptof_state), allocatable :: hyptof_state  !! state of HYPTOF
+      type(illum_state), allocatable :: illum_state  !! state of ILLUM
+      type(lspcn_state), allocatable :: lspcn_state  !! state of LSPCN
+      type(oscelt_state), allocatable :: oscelt_state  !! state of OSCELT
+      type(pxfrm2_state), allocatable :: pxfrm2_state  !! state of PXFRM2
+      type(repml_state), allocatable :: repml_state  !! state of REPML
+      type(scps01_state), allocatable :: scps01_state  !! state of SCPS01
+      type(spkpv_state), allocatable :: spkpv_state  !! state of SPKPV
+      type(surfpt_state), allocatable :: surfpt_state  !! state of SURFPT
+      type(zzbquad_state), allocatable :: zzbquad_state  !! state of ZZBQUAD
+      type(zzdiv_state), allocatable :: zzdiv_state  !! state of ZZDIV
+      type(zzdskbbl_state), allocatable :: zzdskbbl_state  !! state of ZZDSKBBL
+      type(zzdsksel_state), allocatable :: zzdsksel_state  !! state of ZZDSKSEL
+      type(zzgetelm_state), allocatable :: zzgetelm_state  !! state of ZZGETELM
+      type(zzholdd_state), allocatable :: zzholdd_state  !! state of ZZHOLDD
+      type(zzmult_state), allocatable :: zzmult_state  !! state of ZZMULT
+      type(zzrtnmat_state), allocatable :: zzrtnmat_state  !! state of ZZRTNMAT
+      type(zzsfxcor_state), allocatable :: zzsfxcor_state  !! state of ZZSFXCOR
+      type(zzsglatx_state), allocatable :: zzsglatx_state  !! state of ZZSGLATX
+      type(zzspin_state), allocatable :: zzspin_state  !! state of ZZSPIN
+      type(zzspkap0_state), allocatable :: zzspkap0_state  !! state of ZZSPKAP0
+      type(zzspkap1_state), allocatable :: zzspkap1_state  !! state of ZZSPKAP1
+      type(dpgrdr_state), allocatable :: dpgrdr_state  !! state of DPGRDR
+      type(drdpgr_state), allocatable :: drdpgr_state  !! state of DRDPGR
+      type(edterm_state), allocatable :: edterm_state  !! state of EDTERM
+      type(getfvn_state), allocatable :: getfvn_state  !! state of GETFVN
+      type(pgrrec_state), allocatable :: pgrrec_state  !! state of PGRREC
+      type(recpgr_state), allocatable :: recpgr_state  !! state of RECPGR
+      type(subpt_state), allocatable :: subpt_state  !! state of SUBPT
+      type(subsol_state), allocatable :: subsol_state  !! state of SUBSOL
+      type(tostdo_state), allocatable :: tostdo_state  !! state of TOSTDO
+      type(zzcnquad_state), allocatable :: zzcnquad_state  !! state of ZZCNQUAD
+      type(zzdsksph_state), allocatable :: zzdsksph_state  !! state of ZZDSKSPH
+      type(zznrddp_state), allocatable :: zznrddp_state  !! state of ZZNRDDP
+      type(zzpdcmpl_state), allocatable :: zzpdcmpl_state  !! state of ZZPDCMPL
+      type(zzsrfker_state), allocatable :: zzsrfker_state  !! state of ZZSRFKER
+      type(dpspce_state), allocatable :: dpspce_state  !! state of DPSPCE
+      type(incnsg_state), allocatable :: incnsg_state  !! state of INCNSG
+      type(xfmsta_state), allocatable :: xfmsta_state  !! state of XFMSTA
+      type(zzsrftrn_state), allocatable :: zzsrftrn_state  !! state of ZZSRFTRN
+      type(zzelvupy_state), allocatable :: zzelvupy_state  !! state of ZZELVUPY
+      type(zzinpdt_state), allocatable :: zzinpdt_state  !! state of ZZINPDT
+      type(zzrytlat_state), allocatable :: zzrytlat_state  !! state of ZZRYTLAT
+      type(zzrytpdt_state), allocatable :: zzrytpdt_state  !! state of ZZRYTPDT
+      type(dskx02_state), allocatable :: dskx02_state  !! state of DSKX02
+      type(srfxpt_state), allocatable :: srfxpt_state  !! state of SRFXPT
+      type(tangpt_state), allocatable :: tangpt_state  !! state of TANGPT
+      type(zzptpl02_state), allocatable :: zzptpl02_state  !! state of ZZPTPL02
+      type(zzdsksbf_state), allocatable :: zzdsksbf_state  !! state of ZZDSKSBF
+      type(dskxsi_state), allocatable :: dskxsi_state  !! state of DSKXSI
+      type(dskxv_state), allocatable :: dskxv_state  !! state of DSKXV
+      type(illumg_state), allocatable :: illumg_state  !! state of ILLUMG
+      type(srfnrm_state), allocatable :: srfnrm_state  !! state of SRFNRM
+      type(zzsinutl_state), allocatable :: zzsinutl_state  !! state of ZZSINUTL
+      type(illumf_state), allocatable :: illumf_state  !! state of ILLUMF
+      type(latsrf_state), allocatable :: latsrf_state  !! state of LATSRF
+      type(sincpt_state), allocatable :: sincpt_state  !! state of SINCPT
+      type(subpnt_state), allocatable :: subpnt_state  !! state of SUBPNT
+      type(subslr_state), allocatable :: subslr_state  !! state of SUBSLR
+      type(zztanutl_state), allocatable :: zztanutl_state  !! state of ZZTANUTL
+      type(limbpt_state), allocatable :: limbpt_state  !! state of LIMBPT
+      type(termpt_state), allocatable :: termpt_state  !! state of TERMPT
+      ! --- end pepper_geometry
+      ! --- pepper_gf
+      type(zzgfcoq_state), allocatable :: zzgfcoq_state  !! state of ZZGFCOQ
+      type(zzgffvu_state), allocatable :: zzgffvu_state  !! state of ZZGFFVU
+      type(zzgfilu_state), allocatable :: zzgfilu_state  !! state of ZZGFILU
+      type(zzgfocu_state), allocatable :: zzgfocu_state  !! state of ZZGFOCU
+      type(zzgfspu_state), allocatable :: zzgfspu_state  !! state of ZZGFSPU
+      type(zzgfssin_state), allocatable :: zzgfssin_state  !! state of ZZGFSSIN
+      type(zzgfssob_state), allocatable :: zzgfssob_state  !! state of ZZGFSSOB
+      type(fovtrg_state), allocatable :: fovtrg_state  !! state of FOVTRG
+      type(phaseq_state), allocatable :: phaseq_state  !! state of PHASEQ
+      type(zzgfdiu_state), allocatable :: zzgfdiu_state  !! state of ZZGFDIU
+      type(zzgfpau_state), allocatable :: zzgfpau_state  !! state of ZZGFPAU
+      type(zzgfrel_state), allocatable :: zzgfrel_state  !! state of ZZGFREL
+      type(zzgfrelx_state), allocatable :: zzgfrelx_state  !! state of ZZGFRELX
+      type(zzgfrpwk_state), allocatable :: zzgfrpwk_state  !! state of ZZGFRPWK
+      type(zzgfrru_state), allocatable :: zzgfrru_state  !! state of ZZGFRRU
+      type(gfrprt_state), allocatable :: gfrprt_state  !! state of GFRPRT
+      type(gftfov_state), allocatable :: gftfov_state  !! state of GFTFOV
+      type(zzgfcou_state), allocatable :: zzgfcou_state  !! state of ZZGFCOU
+      type(zzgflong_state), allocatable :: zzgflong_state  !! state of ZZGFLONG
+      type(zzgfcslv_state), allocatable :: zzgfcslv_state  !! state of ZZGFCSLV
+      type(gfevnt_state), allocatable :: gfevnt_state  !! state of GFEVNT
+      ! --- end pepper_gf
+      ! --- pepper_ek_storage
+      type(zzekpdec_state), allocatable :: zzekpdec_state  !! state of ZZEKPDEC
+      type(zzekreqi_state), allocatable :: zzekreqi_state  !! state of ZZEKREQI
+      type(zzeksca_state), allocatable :: zzeksca_state  !! state of ZZEKSCA
+      type(zzekscan_state), allocatable :: zzekscan_state  !! state of ZZEKSCAN
+      type(zzekweqi_state), allocatable :: zzekweqi_state  !! state of ZZEKWEQI
+      type(zzekpage_state), allocatable :: zzekpage_state  !! state of ZZEKPAGE
+      type(zzekvadr_state), allocatable :: zzekvadr_state  !! state of ZZEKVADR
+      type(zzeknrml_state), allocatable :: zzeknrml_state  !! state of ZZEKNRML
+      type(zzektrit_state), allocatable :: zzektrit_state  !! state of ZZEKTRIT
+      type(zzektrlk_state), allocatable :: zzektrlk_state  !! state of ZZEKTRLK
+      ! --- end pepper_ek_storage
+      ! --- pepper_ek
+      type(ekbseg_state), allocatable :: ekbseg_state  !! state of EKBSEG
+      type(stcc01_state), allocatable :: stcc01_state  !! state of STCC01
+      type(zzekad06_state), allocatable :: zzekad06_state  !! state of ZZEKAD06
+      type(zzekjsrt_state), allocatable :: zzekjsrt_state  !! state of ZZEKJSRT
+      type(zzekjtst_state), allocatable :: zzekjtst_state  !! state of ZZEKJTST
+      type(ekqmgr_context_state), allocatable :: ekqmgr_query  !! per-context state of EKQMGR
+      type(zzeksemc_state), allocatable :: zzeksemc_state  !! state of ZZEKSEMC
+      ! --- end pepper_ek
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -1142,18 +1366,339 @@ module pepper_instance
       procedure, non_overridable :: spkcvt
       procedure, non_overridable :: spkcpt
       ! --- end pepper_spk_api
+      ! --- pepper_symbols
+      procedure, non_overridable :: sydelc
+      procedure, non_overridable :: sydeld
+      procedure, non_overridable :: sydeli
+      procedure, non_overridable :: sydimc
+      procedure, non_overridable :: sydimd
+      procedure, non_overridable :: sydimi
+      procedure, non_overridable :: sydupc
+      procedure, non_overridable :: sydupd
+      procedure, non_overridable :: sydupi
+      procedure, non_overridable :: syfetc
+      procedure, non_overridable :: syfetd
+      procedure, non_overridable :: syfeti
+      procedure, non_overridable :: sygetc
+      procedure, non_overridable :: sygetd
+      procedure, non_overridable :: sygeti
+      procedure, non_overridable :: synthc
+      procedure, non_overridable :: synthd
+      procedure, non_overridable :: synthi
+      procedure, non_overridable :: syordc
+      procedure, non_overridable :: syordd
+      procedure, non_overridable :: syordi
+      procedure, non_overridable :: sypopc
+      procedure, non_overridable :: sypopd
+      procedure, non_overridable :: sypopi
+      procedure, non_overridable :: syputc
+      procedure, non_overridable :: syputd
+      procedure, non_overridable :: syputi
+      procedure, non_overridable :: syselc
+      procedure, non_overridable :: syseld
+      procedure, non_overridable :: syseli
+      procedure, non_overridable :: sysetc
+      procedure, non_overridable :: sysetd
+      procedure, non_overridable :: syseti
+      procedure, non_overridable :: sytrnc
+      procedure, non_overridable :: sytrnd
+      procedure, non_overridable :: sytrni
+      procedure, non_overridable :: syenqc
+      procedure, non_overridable :: syenqd
+      procedure, non_overridable :: syenqi
+      procedure, non_overridable :: sypshc
+      procedure, non_overridable :: sypshd
+      procedure, non_overridable :: sypshi
+      procedure, non_overridable :: syrenc
+      procedure, non_overridable :: syrend
+      procedure, non_overridable :: syreni
+      ! --- end pepper_symbols
+      ! --- pepper_writers
+      procedure, non_overridable :: ckcls
+      procedure, non_overridable :: ckgr01
+      procedure, non_overridable :: ckgr03
+      procedure, non_overridable :: ckgr04
+      procedure, non_overridable :: ckgr05
+      procedure, non_overridable :: ckgr06
+      procedure, non_overridable :: ckmp06
+      procedure, non_overridable :: cknm06
+      procedure, non_overridable :: cknr01
+      procedure, non_overridable :: cknr02
+      procedure, non_overridable :: cknr03
+      procedure, non_overridable :: cknr05
+      procedure, non_overridable :: ckopn
+      procedure, non_overridable :: ckw01
+      procedure, non_overridable :: ckw02
+      procedure, non_overridable :: ckw03
+      procedure, non_overridable :: ckw04b
+      procedure, non_overridable :: ckw04e
+      procedure, non_overridable :: ckw05
+      procedure, non_overridable :: ckw06
+      procedure, non_overridable :: pck03a
+      procedure, non_overridable :: pck03e
+      procedure, non_overridable :: pckcls
+      procedure, non_overridable :: pckopn
+      procedure, non_overridable :: pckpds
+      procedure, non_overridable :: pckuds
+      procedure, non_overridable :: pckw02
+      procedure, non_overridable :: pckw20
+      procedure, non_overridable :: spcac
+      procedure, non_overridable :: spcdc
+      procedure, non_overridable :: spcec
+      procedure, non_overridable :: spcopn
+      procedure, non_overridable :: spcrfl
+      procedure, non_overridable :: spcrnl
+      procedure, non_overridable :: spkcls
+      procedure, non_overridable :: spkopa
+      procedure, non_overridable :: spkopn
+      procedure, non_overridable :: spkw01
+      procedure, non_overridable :: spkw02
+      procedure, non_overridable :: spkw03
+      procedure, non_overridable :: spkw05
+      procedure, non_overridable :: spkw08
+      procedure, non_overridable :: spkw09
+      procedure, non_overridable :: spkw10
+      procedure, non_overridable :: spkw12
+      procedure, non_overridable :: spkw13
+      procedure, non_overridable :: spkw15
+      procedure, non_overridable :: spkw17
+      procedure, non_overridable :: spkw18
+      procedure, non_overridable :: spkw19
+      procedure, non_overridable :: spkw20
+      procedure, non_overridable :: spkw21
+      procedure, non_overridable :: ckgr02
+      procedure, non_overridable :: ckw04a
+      procedure, non_overridable :: pck03b
+      procedure, non_overridable :: spcb2t
+      procedure, non_overridable :: spct2b
+      procedure, non_overridable :: spca2b
+      procedure, non_overridable :: spcb2a
+      ! --- end pepper_writers
+      ! --- pepper_geometry
+      procedure, non_overridable :: gfstep
+      procedure, non_overridable :: gfsstp
+      procedure, non_overridable :: gfrefn
+      procedure, non_overridable :: ana
+      procedure, non_overridable :: azlcpo
+      procedure, non_overridable :: bltfrm
+      procedure, non_overridable :: bodmat
+      procedure, non_overridable :: conics
+      procedure, non_overridable :: delfil
+      procedure, non_overridable :: dgeodr
+      procedure, non_overridable :: dhfa
+      procedure, non_overridable :: diags2
+      procedure, non_overridable :: drotat
+      procedure, non_overridable :: dxtrct
+      procedure, non_overridable :: ev2lin
+      procedure, non_overridable :: evsgp4
+      procedure, non_overridable :: fetchc
+      procedure, non_overridable :: fetchd
+      procedure, non_overridable :: fetchi
+      procedure, non_overridable :: fn2lun
+      procedure, non_overridable :: georec
+      procedure, non_overridable :: getfov
+      procedure, non_overridable :: hyptof
+      procedure, non_overridable :: illum
+      procedure, non_overridable :: irftrn
+      procedure, non_overridable :: iso2utc
+      procedure, non_overridable :: isopen
+      procedure, non_overridable :: kplfrm
+      procedure, non_overridable :: lparss
+      procedure, non_overridable :: lspcn
+      procedure, non_overridable :: ltime
+      procedure, non_overridable :: lun2fn
+      procedure, non_overridable :: lx4sgn
+      procedure, non_overridable :: lxidnt
+      procedure, non_overridable :: lxdfid
+      procedure, non_overridable :: lxcsid
+      procedure, non_overridable :: npelpt
+      procedure, non_overridable :: oscelt
+      procedure, non_overridable :: partof
+      procedure, non_overridable :: plnsns
+      procedure, non_overridable :: prompt
+      procedure, non_overridable :: prsdp
+      procedure, non_overridable :: prtenc
+      procedure, non_overridable :: prtdec
+      procedure, non_overridable :: pxfrm2
+      procedure, non_overridable :: rdnbl
+      procedure, non_overridable :: repmct
+      procedure, non_overridable :: repml
+      procedure, non_overridable :: rotvec
+      procedure, non_overridable :: scps01
+      procedure, non_overridable :: scn2id
+      procedure, non_overridable :: scid2n
+      procedure, non_overridable :: sphsd
+      procedure, non_overridable :: spkpv
+      procedure, non_overridable :: srfrec
+      procedure, non_overridable :: stdio
+      procedure, non_overridable :: surfpt
+      procedure, non_overridable :: twovxf
+      procedure, non_overridable :: uddf
+      procedure, non_overridable :: udf
+      procedure, non_overridable :: dpgrdr
+      procedure, non_overridable :: drdpgr
+      procedure, non_overridable :: dvsep
+      procedure, non_overridable :: edterm
+      procedure, non_overridable :: getelm
+      procedure, non_overridable :: getfvn
+      procedure, non_overridable :: lx4dec
+      procedure, non_overridable :: oscltx
+      procedure, non_overridable :: pgrrec
+      procedure, non_overridable :: recpgr
+      procedure, non_overridable :: saelgv
+      procedure, non_overridable :: scpars
+      procedure, non_overridable :: subpt
+      procedure, non_overridable :: subsol
+      procedure, non_overridable :: surfpv
+      procedure, non_overridable :: tostdo
+      procedure, non_overridable :: trgsep
+      procedure, non_overridable :: uddc
+      procedure, non_overridable :: wrkvar
+      procedure, non_overridable :: xdda
+      procedure, non_overridable :: cgv2el
+      procedure, non_overridable :: dpspce
+      procedure, non_overridable :: et2lst
+      procedure, non_overridable :: incnsg
+      procedure, non_overridable :: lx4num
+      procedure, non_overridable :: rdkvar
+      procedure, non_overridable :: xfmsta
+      procedure, non_overridable :: inedpl
+      procedure, non_overridable :: pjelpl
+      procedure, non_overridable :: srfc2s
+      procedure, non_overridable :: srfcss
+      procedure, non_overridable :: srfs2c
+      procedure, non_overridable :: srfscc
+      procedure, non_overridable :: edlimb
+      procedure, non_overridable :: npedln
+      procedure, non_overridable :: dskx02
+      procedure, non_overridable :: srfxpt
+      procedure, non_overridable :: tangpt
+      procedure, non_overridable :: dskxsi
+      procedure, non_overridable :: dskxv
+      procedure, non_overridable :: illumg
+      procedure, non_overridable :: srfnrm
+      procedure, non_overridable :: illumf
+      procedure, non_overridable :: ilumin
+      procedure, non_overridable :: latsrf
+      procedure, non_overridable :: sincpt
+      procedure, non_overridable :: subpnt
+      procedure, non_overridable :: subslr
+      procedure, non_overridable :: limbpt
+      procedure, non_overridable :: termpt
+      ! --- end pepper_geometry
+      ! --- pepper_gf
+      procedure, non_overridable :: gfbail
+      procedure, non_overridable :: gfstol
+      procedure, non_overridable :: fovray
+      procedure, non_overridable :: fovtrg
+      procedure, non_overridable :: gffove
+      procedure, non_overridable :: gfocce
+      procedure, non_overridable :: occult
+      procedure, non_overridable :: phaseq
+      procedure, non_overridable :: gfoclt
+      procedure, non_overridable :: gfrfov
+      procedure, non_overridable :: gfrepi
+      procedure, non_overridable :: gfrepu
+      procedure, non_overridable :: gfrepf
+      procedure, non_overridable :: gftfov
+      procedure, non_overridable :: gfudb
+      procedure, non_overridable :: gfuds
+      procedure, non_overridable :: gfevnt
+      procedure, non_overridable :: gfdist
+      procedure, non_overridable :: gfilum
+      procedure, non_overridable :: gfpa
+      procedure, non_overridable :: gfposc
+      procedure, non_overridable :: gfrr
+      procedure, non_overridable :: gfsep
+      procedure, non_overridable :: gfsntc
+      procedure, non_overridable :: gfsubc
+      ! --- end pepper_gf
+      ! --- pepper_ek_storage
+      procedure, non_overridable :: ekcls
+      procedure, non_overridable :: ekshdw
+      procedure, non_overridable :: ekopr
+      procedure, non_overridable :: ekopw
+      procedure, non_overridable :: ekopn
+      procedure, non_overridable :: ekops
+      procedure, non_overridable :: eknseg
+      procedure, non_overridable :: ekffld
+      procedure, non_overridable :: ekssum
+      ! --- end pepper_ek_storage
+      ! --- pepper_ek
+      procedure, non_overridable :: ekbseg
+      procedure, non_overridable :: ekinsr
+      procedure, non_overridable :: stcc01
+      procedure, non_overridable :: ekappr
+      procedure, non_overridable :: ekifld
+      procedure, non_overridable :: ekrcec
+      procedure, non_overridable :: ekrced
+      procedure, non_overridable :: ekrcei
+      procedure, non_overridable :: ekaclc
+      procedure, non_overridable :: ekacld
+      procedure, non_overridable :: ekacli
+      procedure, non_overridable :: ekacec
+      procedure, non_overridable :: ekaced
+      procedure, non_overridable :: ekacei
+      procedure, non_overridable :: eklef
+      procedure, non_overridable :: ekuef
+      procedure, non_overridable :: ekntab
+      procedure, non_overridable :: ektnam
+      procedure, non_overridable :: ekccnt
+      procedure, non_overridable :: ekcii
+      procedure, non_overridable :: eksrch
+      procedure, non_overridable :: eknelt
+      procedure, non_overridable :: ekgc
+      procedure, non_overridable :: ekgd
+      procedure, non_overridable :: ekgi
+      procedure, non_overridable :: ekdelr
+      procedure, non_overridable :: ekuced
+      procedure, non_overridable :: ekucei
+      procedure, non_overridable :: stcg01
+      procedure, non_overridable :: stcl01
+      procedure, non_overridable :: ekucec
+      procedure, non_overridable :: ekfind
+      procedure, non_overridable :: ekpsel
+      procedure, non_overridable :: stcf01
+      ! --- end pepper_ek
       ! <<< generated bindings
    end type pepper_context
 
+   ! >>> generated callbacks (tools/callbacks.py)
+   public :: zzdsk_compare
    public :: zzspk_state
+   public :: zzsfx_near
+   public :: zzsfx_maxrad
+   public :: zzsfx_rayx
+   public :: zztan_cond
+   public :: gf_step
+   public :: gf_refine
+   public :: gf_rep_init
+   public :: gf_rep_update
+   public :: gf_rep_final
+   public :: gf_bail
+   public :: gf_cond
+   public :: gf_ref
+   public :: gf_boolean
+   public :: gf_decr
+   public :: gf_decr_x
+   public :: gf_scalar
 
    abstract interface
-      !> A state routine for the SPK routines that take one (ZZSPKFAO,
-      !> ZZSPKFAP, ZZSPKFAT, ZZSPKFLT, ZZSPKFZO, ZZSPKFZT): the state of an
-      !> object (relative to the solar system barycenter) at an epoch, in an
-      !> inertial frame, and a counter that changes when the state function
-      !> does. SPICELIB's is ZZCVXSTA (a constant-velocity object). PEPPER:
-      !> it takes the context as its first argument.
+      !> A segment selection function of the DSK segment buffer (ZZDSKSNS): true
+      !> if the segment satisfies the search's criteria. SPICELIB's are ZZDSKBDC
+      !> and ZZDSKNOT. PEPPER: the context is its first argument.
+      logical function zzdsk_compare ( ctx, handle, dladsc, dskdsc )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! handle of the DSK file of the segment
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of the segment
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of the segment
+      end function zzdsk_compare
+
+      !> A state routine for the SPK routines that take one (ZZSPKFAO, ZZSPKFAP,
+      !> ZZSPKFAT, ZZSPKFLT, ZZSPKFZO, ZZSPKFZT): the state of an object relative
+      !> to the solar system barycenter at an epoch, in an inertial frame.
+      !> SPICELIB's is ZZCVXSTA. PEPPER: the context is its first argument.
       subroutine zzspk_state ( ctx, et, ref, center, state )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1162,7 +1707,166 @@ module pepper_instance
          integer(ip), intent(out) :: center  !! ID code of the center of motion
          real(wp), intent(out) :: state ( 6 )  !! state of the object
       end subroutine zzspk_state
+
+      !> The near point on the target's surface to a ray (ZZSFXCOR); SPICELIB's is
+      !> ZZRAYNP. PEPPER: the context is its first argument.
+      subroutine zzsfx_near ( ctx, vertex, raydir, et, pnear, dist )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! the ray's vertex
+         real(wp), intent(in) :: raydir ( 3 )  !! the ray's direction vector
+         real(wp), intent(in) :: et  !! evaluation epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: pnear ( 3 )  !! near point to the ray on the surface
+         real(wp), intent(out) :: dist  !! distance between the near point and the ray
+      end subroutine zzsfx_near
+
+      !> The radius of the target's outer bounding sphere (ZZSFXCOR); SPICELIB's
+      !> is ZZMAXRAD. PEPPER: the context is its first argument.
+      subroutine zzsfx_maxrad ( ctx, maxrad )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(out) :: maxrad  !! radius of the outer bounding sphere
+      end subroutine zzsfx_maxrad
+
+      !> The intercept of a ray with the target's surface (ZZSFXCOR); SPICELIB's
+      !> is ZZRAYSFX. PEPPER: the context is its first argument.
+      subroutine zzsfx_rayx ( ctx, vertex, raydir, et, spoint, found )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! the ray's vertex
+         real(wp), intent(in) :: raydir ( 3 )  !! the ray's direction vector
+         real(wp), intent(in) :: et  !! evaluation epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: spoint ( 3 )  !! surface intercept point
+         logical, intent(out) :: found  !! the intercept exists
+      end subroutine zzsfx_rayx
+
+      !> The occultation state of a ray at an angle (ZZTANSLV); SPICELIB's is
+      !> ZZTANSTA. PEPPER: the context is its first argument.
+      subroutine zztan_cond ( ctx, angle, ocultd, point )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: angle  !! angle of the ray
+         logical, intent(out) :: ocultd  !! the ray is occulted
+         real(wp), intent(out) :: point ( 3 )  !! tangent point on the target
+      end subroutine zztan_cond
+
+      !> A GF step size routine: the time step to take from a time. SPICELIB's is
+      !> GFSTEP. PEPPER: the context is its first argument.
+      subroutine gf_step ( ctx, time, step )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: time  !! the time (TDB seconds past J2000)
+         real(wp), intent(out) :: step  !! the time step (seconds)
+      end subroutine gf_step
+
+      !> A GF refinement routine: a time between two times at which a condition
+      !> differs. SPICELIB's is GFREFN. PEPPER: the context is its first argument.
+      subroutine gf_refine ( ctx, t1, t2, s1, s2, t )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: t1  !! one of the times
+         real(wp), intent(in) :: t2  !! the other time
+         logical, intent(in) :: s1  !! the condition at T1
+         logical, intent(in) :: s2  !! the condition at T2
+         real(wp), intent(out) :: t  !! the time between T1 and T2
+      end subroutine gf_refine
+
+      !> A GF progress report initialization routine. SPICELIB's is GFREPI.
+      !> PEPPER: the context is its first argument.
+      subroutine gf_rep_init ( ctx, window, begmss, endmss )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5  !! lower bound of a SPICE cell
+         real(wp), intent(in) :: window ( lbcell : * )  !! the window over which the search runs
+         character(*), intent(in) :: begmss  !! beginning of the text of the report
+         character(*), intent(in) :: endmss  !! end of the text of the report
+      end subroutine gf_rep_init
+
+      !> A GF progress report update routine. SPICELIB's is GFREPU. PEPPER: the
+      !> context is its first argument.
+      subroutine gf_rep_update ( ctx, ivbeg, ivend, time )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: ivbeg  !! start time of the work interval
+         real(wp), intent(in) :: ivend  !! end time of the work interval
+         real(wp), intent(in) :: time  !! current time of the search
+      end subroutine gf_rep_update
+
+      !> A GF progress report finalization routine. SPICELIB's is GFREPF. PEPPER:
+      !> the context is its first argument.
+      subroutine gf_rep_final ( ctx )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end subroutine gf_rep_final
+
+      !> A GF interrupt check: true if the search is to stop. SPICELIB's is
+      !> GFBAIL. PEPPER: the context is its first argument.
+      logical function gf_bail ( ctx )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end function gf_bail
+
+      !> A GF condition of time (ZZGFREL, ZZGFSOLV): whether a condition holds, or
+      !> whether a quantity is decreasing, at a time. PEPPER: the context is its
+      !> first argument.
+      subroutine gf_cond ( ctx, et, xbool )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! the time (TDB seconds past J2000)
+         logical, intent(out) :: xbool  !! the condition at ET
+      end subroutine gf_cond
+
+      !> A GF routine that takes the reference value of a search (ZZGFREL);
+      !> SPICELIB's is ZZGFREF. PEPPER: the context is its first argument.
+      subroutine gf_ref ( ctx, refval )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: refval  !! the reference value
+      end subroutine gf_ref
+
+      !> A user-defined scalar function of time for GF (GFUDS, GFUDB, UDDF, UDDC).
+      !> PEPPER: the context is its first argument.
+      subroutine gf_scalar ( ctx, et, value )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! the time (TDB seconds past J2000)
+         real(wp), intent(out) :: value  !! the value of the function
+      end subroutine gf_scalar
+
+      !> A GF condition of a scalar function of time (GFUDB, GFUDS, ZZGFRELX,
+      !> ZZGFSOLVX): whether a condition on the function holds at a time, or
+      !> whether the function is decreasing (UDQDEC). PEPPER: the context is its
+      !> first argument.
+      subroutine gf_boolean ( ctx, udfunc, et, xbool )
+         import :: pepper_context, ip, wp, gf_scalar
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(gf_scalar) :: udfunc  !! the scalar function
+         real(wp), intent(in) :: et  !! the time (TDB seconds past J2000)
+         logical, intent(out) :: xbool  !! the condition at ET
+      end subroutine gf_boolean
+
+      !> A GF routine that tells whether a quantity is decreasing at a time
+      !> (ZZGFREL). PEPPER: the context is its first argument.
+      subroutine gf_decr ( ctx, et, xbool )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! the time (TDB seconds past J2000)
+         logical, intent(out) :: xbool  !! the quantity is decreasing at ET
+      end subroutine gf_decr
+
+      !> A GF routine that tells whether a scalar function of time is decreasing
+      !> at a time (GFUDS, ZZGFRELX); SPICELIB's examples use UDDC. PEPPER: the
+      !> context is its first argument.
+      subroutine gf_decr_x ( ctx, udfunc, et, xbool )
+         import :: pepper_context, ip, wp, gf_scalar
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(gf_scalar) :: udfunc  !! the scalar function
+         real(wp), intent(in) :: et  !! the time (TDB seconds past J2000)
+         logical, intent(out) :: xbool  !! the function is decreasing at ET
+      end subroutine gf_decr_x
    end interface
+   ! <<< generated callbacks
+
 
    ! The procedures of the subsystems, implemented in submodules of this
    ! module (e.g. pepper_cells in src/pepper_cells.f90). Each has the
@@ -10410,6 +11114,9402 @@ module pepper_instance
 
    end interface
    ! --- end pepper_spk_api
+   ! --- pepper_symbols
+   interface
+
+      !> Delete a symbol from a character symbol table. The symbol and its
+      !> associated values are deleted.
+      module subroutine sydelc ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol to be deleted.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sydelc
+
+      !> Delete a symbol from a double precision symbol table. The symbol
+      !> and its associated values are deleted.
+      module subroutine sydeld ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol to be deleted.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sydeld
+
+      !> Delete a symbol from an integer symbol table. The symbol
+      !> and its associated values are deleted.
+      module subroutine sydeli ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol to be deleted.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sydeli
+
+      !> Return the dimension of a particular symbol in a character symbol
+      !> table. If the symbol is not found, the function returns the value
+      !> zero.
+      !>
+      !> The function returns the dimension of the symbol NAME. If NAME is
+      !> not in the symbol table, the function returns the value zero.
+      module integer(ip) function sydimc ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose dimension is desired.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end function sydimc
+
+      !> Return the dimension of a particular symbol in a double precision
+      !> symbol table. If the symbol is not found, the function returns the
+      !> value zero.
+      !>
+      !> The function returns the dimension of the symbol NAME. If NAME is
+      !> not in the symbol table, the function returns the value zero.
+      module integer(ip) function sydimd ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose dimension is desired.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end function sydimd
+
+      !> Return the dimension of a particular symbol in an integer symbol
+      !> table. If the symbol is not found, the function returns the
+      !> value zero.
+      !>
+      !> The function returns the dimension of the symbol NAME. If NAME is
+      !> not in the symbol table, the function returns the value zero.
+      module integer(ip) function sydimi ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose dimension is desired.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end function sydimi
+
+      !> Create a duplicate of a symbol within a character symbol table.
+      !> If a symbol with the new name already exists, its components
+      !> are replaced.
+      module subroutine sydupc ( ctx, name, copy, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol to be duplicated.
+         character(*), intent(in) :: copy  !! Name of the new symbol.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sydupc
+
+      !> Create a duplicate of a symbol within a double precision symbol
+      !> table. If a symbol with the new name already exists, its
+      !> components are replaced.
+      module subroutine sydupd ( ctx, name, copy, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol to be duplicated.
+         character(*), intent(in) :: copy  !! Name of the new symbol.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sydupd
+
+      !> Create a duplicate of a symbol within an integer symbol table.
+      !> If a symbol with the new name already exists, its components
+      !> are replaced.
+      module subroutine sydupi ( ctx, name, copy, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol to be duplicated.
+         character(*), intent(in) :: copy  !! Name of the new symbol.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sydupi
+
+      !> Fetch the Nth symbol in a character symbol table.
+      module subroutine syfetc ( ctx, nth, tabsym, tabptr, tabval, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: nth  !! Index of symbol to be fetched.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(out) :: name  !! Name of the NTH symbol in the symbol table.
+         logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
+      end subroutine syfetc
+
+      !> Fetch the Nth symbol in a double precision symbol table.
+      module subroutine syfetd ( ctx, nth, tabsym, tabptr, tabval, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: nth  !! Index of symbol to be fetched.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(out) :: name  !! Name of the NTH symbol in the symbol table.
+         logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
+      end subroutine syfetd
+
+      !> Fetch the Nth symbol in an integer symbol table.
+      module subroutine syfeti ( ctx, nth, tabsym, tabptr, tabval, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: nth  !! Index of symbol to be fetched.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(out) :: name  !! Name of the NTH symbol in the symbol table.
+         logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
+      end subroutine syfeti
+
+      !> Return the dimension and associated values for a particular
+      !> symbol.
+      module subroutine sygetc ( ctx, name, tabsym, tabptr, tabval, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose components are to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(out) :: n  !! Dimension of the symbol.
+         character(*), intent(out) :: values     (        * )  !! Values associated with the symbol.
+         logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
+      end subroutine sygetc
+
+      !> Return the dimension and associated values for a particular
+      !> symbol.
+      module subroutine sygetd ( ctx, name, tabsym, tabptr, tabval, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose components are to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(out) :: n  !! Dimension of the symbol.
+         real(wp), intent(out) :: values     (        * )  !! Values associated with the symbol.
+         logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
+      end subroutine sygetd
+
+      !> Return the dimension and associated values for a particular
+      !> symbol.
+      module subroutine sygeti ( ctx, name, tabsym, tabptr, tabval, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose components are to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(out) :: n  !! Dimension of the symbol.
+         integer(ip), intent(out) :: values     (        * )  !! Values associated with the symbol.
+         logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
+      end subroutine sygeti
+
+      !> Return the Nth value associated with a particular symbol in a
+      !> character symbol table.
+      module subroutine synthc ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose Nth associated value is to be returned.
+         integer(ip), intent(in) :: nth  !! Index of the value to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(out) :: value  !! Nth value associated with the symbol.
+         logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists.
+      end subroutine synthc
+
+      !> Return the Nth component of a particular symbol in a double
+      !> precision symbol table.
+      module subroutine synthd ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose Nth component is to be returned.
+         integer(ip), intent(in) :: nth  !! Index of the value to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(out) :: value  !! Nth value associated with the symbol.
+         logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists.
+      end subroutine synthd
+
+      !> Return the Nth component of a particular symbol in an integer
+      !> symbol table.
+      module subroutine synthi ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose Nth component is to be returned.
+         integer(ip), intent(in) :: nth  !! Index of the value to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(out) :: value  !! Nth value associated with the symbol.
+         logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists, false if it does not.
+      end subroutine synthi
+
+      !> Order the components of a single symbol in a character symbol
+      !> table. The components are ordered according to the ASCII collating
+      !> sequence.
+      module subroutine syordc ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose components are to be ordered.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syordc
+
+      !> Order the components of a single symbol in a double precision
+      !> symbol table. The components are sorted in increasing order.
+      module subroutine syordd ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose components are to be ordered.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syordd
+
+      !> Order the components of a single symbol in an integer symbol
+      !> table. The components are sorted in increasing order.
+      module subroutine syordi ( ctx, name, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose components are to be ordered.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syordi
+
+      !> Pop a value associated with a particular symbol in a character
+      !> symbol table. The first value associated with the symbol is
+      !> removed, and subsequent values are moved forward.
+      module subroutine sypopc ( ctx, name, tabsym, tabptr, tabval, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be popped.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(out) :: value  !! Value that was popped.
+         logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
+      end subroutine sypopc
+
+      !> Pop a value associated with a particular symbol in a double
+      !> precision symbol table. The first value associated with the
+      !> symbol is removed, and subsequent values are moved forward.
+      module subroutine sypopd ( ctx, name, tabsym, tabptr, tabval, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be popped.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(out) :: value  !! Value that was popped.
+         logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
+      end subroutine sypopd
+
+      !> Pop a value associated with a particular symbol in an integer
+      !> symbol table. The first value associated with the symbol is
+      !> removed, and subsequent values are moved forward.
+      module subroutine sypopi ( ctx, name, tabsym, tabptr, tabval, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be popped.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(out) :: value  !! Value that was popped.
+         logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
+      end subroutine sypopi
+
+      !> Set the values of a particular symbol in a character symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      module subroutine syputc ( ctx, name, values, n, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be put into the symbol table.
+         character(*), intent(in) :: values     (        * )  !! Values to be associated with the symbol NAME.
+         integer(ip), intent(in) :: n  !! Number of values in VALUES.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syputc
+
+      !> Set the values of a particular symbol in a double precision
+      !> symbol table. If the symbol already exists, the previous values
+      !> associated with it are removed, otherwise a new symbol is created.
+      module subroutine syputd ( ctx, name, values, n, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be put into the symbol table.
+         real(wp), intent(in) :: values     (        * )  !! Values to be associated with the symbol NAME.
+         integer(ip), intent(in) :: n  !! Number of values in VALUES.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syputd
+
+      !> Set the values of a particular symbol in an integer symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      module subroutine syputi ( ctx, name, values, n, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be put into the symbol table.
+         integer(ip), intent(in) :: values     (        * )  !! Values to be associated with the symbol NAME.
+         integer(ip), intent(in) :: n  !! Number of values in VALUES.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syputi
+
+      !> Select a subset of the values associated with a particular
+      !> symbol in a character symbol table.
+      module subroutine syselc ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be returned.
+         integer(ip), intent(in) :: begin  !! Index of the first associated value to be returned.
+         integer(ip), intent(in) :: end  !! Index of the last associated value to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(out) :: values     (        * )  !! Subset of the values associated with the symbol NAME.
+         logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
+      end subroutine syselc
+
+      !> Select a subset of the values associated with a particular
+      !> symbol in a double precision symbol table.
+      module subroutine syseld ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be returned.
+         integer(ip), intent(in) :: begin  !! Index of the first associated value to be returned.
+         integer(ip), intent(in) :: end  !! Index of the last associated value to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(out) :: values     (        * )  !! Subset of the values associated with the symbol NAME.
+         logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
+      end subroutine syseld
+
+      !> Select a subset of the values associated with a particular
+      !> symbol in an integer symbol table.
+      module subroutine syseli ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be returned.
+         integer(ip), intent(in) :: begin  !! Index of the first associated value to be returned.
+         integer(ip), intent(in) :: end  !! Index of the last associated value to be returned.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(out) :: values     (        * )  !! Subset of the values associated with the symbol NAME.
+         logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
+      end subroutine syseli
+
+      !> Set the value of a particular symbol in a character symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      module subroutine sysetc ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be set.
+         character(*), intent(in) :: value  !! Associated value of the symbol NAME.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sysetc
+
+      !> Set the value of a particular symbol in a double precision symbol
+      !> table. If the symbol already exists, the previous values
+      !> associated with it are removed, otherwise a new symbol is created.
+      module subroutine sysetd ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be set.
+         real(wp), intent(in) :: value  !! Associated value of the symbol NAME.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sysetd
+
+      !> Set the value of a particular symbol in an integer symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      module subroutine syseti ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be set.
+         integer(ip), intent(in) :: value  !! Associated value of the symbol NAME.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syseti
+
+      !> Transpose two values associated with a particular symbol in a
+      !> character symbol table.
+      module subroutine sytrnc ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be transposed.
+         integer(ip), intent(in) :: idx1  !! Index of first associated value to be transposed.
+         integer(ip), intent(in) :: idx2  !! Index of second associated value to be transposed.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sytrnc
+
+      !> Transpose two values associated with a particular symbol in a
+      !> double precision symbol table.
+      module subroutine sytrnd ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be transposed.
+         integer(ip), intent(in) :: idx1  !! Index of first associated value to be transposed.
+         integer(ip), intent(in) :: idx2  !! Index of second associated value to be transposed.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sytrnd
+
+      !> Transpose two values associated with a particular symbol in an
+      !> integer symbol table.
+      module subroutine sytrni ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be transposed.
+         integer(ip), intent(in) :: idx1  !! Index of first associated value to be transposed.
+         integer(ip), intent(in) :: idx2  !! Index of second associated value to be transposed.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sytrni
+
+      !> Enqueue a value onto a particular symbol in a character
+      !> symbol table. If the symbol is not in the table, a new one
+      !> is created.
+      module subroutine syenqc ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol onto which the value is enqueued.
+         character(*), intent(in) :: value  !! Value to be enqueued.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syenqc
+
+      !> Enqueue a value onto a particular symbol in a double precision
+      !> symbol table. If the symbol is not in the table, a new one
+      !> is created.
+      module subroutine syenqd ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol onto which the value is enqueued.
+         real(wp), intent(in) :: value  !! Value to be enqueued.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syenqd
+
+      !> Enqueue a value onto a particular symbol in an integer
+      !> symbol table. If the symbol is not in the table, a new one
+      !> is created.
+      module subroutine syenqi ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol onto which the value is enqueued.
+         integer(ip), intent(in) :: value  !! Value to be enqueued.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syenqi
+
+      !> Push a value onto a particular symbol in a character symbol table.
+      !> The previous value(s) associated with the symbol is extended at
+      !> the front. A new symbol is created if necessary.
+      module subroutine sypshc ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol onto which the value is to be pushed.
+         character(*), intent(in) :: value  !! Value that is to be pushed onto the symbol NAME.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sypshc
+
+      !> Push a value onto a particular symbol in a double precision
+      !> symbol table. The previous value(s) associated with the symbol
+      !> is extended at the front. A new symbol is created if necessary.
+      module subroutine sypshd ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol onto which the value is to be pushed.
+         real(wp), intent(in) :: value  !! Value that is to be pushed onto the symbol NAME.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sypshd
+
+      !> Push a value onto a particular symbol in an integer symbol table.
+      !> The previous value(s) associated with the symbol is extended at
+      !> the front. A new symbol is created if necessary.
+      module subroutine sypshi ( ctx, name, value, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of the symbol onto which the value is to be pushed.
+         integer(ip), intent(in) :: value  !! Value that is to be pushed onto the symbol NAME.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine sypshi
+
+      !> Rename an existing symbol in a character symbol table.
+      module subroutine syrenc ( ctx, old, new, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: old  !! Name of the symbol to be renamed.
+         character(*), intent(in) :: new  !! New name of the symbol.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syrenc
+
+      !> Rename an existing symbol in a double precision symbol table.
+      module subroutine syrend ( ctx, old, new, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: old  !! Name of the symbol to be renamed.
+         character(*), intent(in) :: new  !! New name of the symbol.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syrend
+
+      !> Rename an existing symbol in an integer symbol table.
+      module subroutine syreni ( ctx, old, new, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: old  !! Name of the symbol to be renamed.
+         character(*), intent(in) :: new  !! New name of the symbol.
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+         integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      end subroutine syreni
+
+   end interface
+   ! --- end pepper_symbols
+   ! --- pepper_writers
+   public :: zzck4i2d
+
+   interface
+
+      !> Close an open CK file.
+      module subroutine ckcls ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of the CK file to be closed.
+      end subroutine ckcls
+
+      !> Return a specified pointing instance from a CK type 01 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine ckgr01 ( ctx, handle, descr, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+         integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+         real(wp), intent(out) :: record  ( * )  !! The pointing record.
+      end subroutine ckgr01
+
+      !> Return a specified pointing instance from a CK type 03 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine ckgr03 ( ctx, handle, descr, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+         integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
+         real(wp), intent(out) :: record  ( * )  !! The pointing record.
+      end subroutine ckgr03
+
+      !> Return a specified pointing record from a CK type 04 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine ckgr04 ( ctx, handle, descr, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+         integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+         real(wp), intent(out) :: record  ( * )  !! The pointing record.
+      end subroutine ckgr04
+
+      !> Return a specified pointing instance from a CK type 05 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine ckgr05 ( ctx, handle, descr, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck05.inc'
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+         integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
+         real(wp), intent(out) :: record  ( * )  !! The pointing record.
+      end subroutine ckgr05
+
+      !> Return a specified pointing record from a type 6 CK segment, given
+      !> the CK file's handle and the segment's descriptor.
+      module subroutine ckgr06 ( ctx, handle, descr, msno, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck06.inc'
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr  ( * )  !! The segment descriptor.
+         integer(ip), intent(in) :: msno  !! Index of the mini-segment containing the record.
+         integer(ip), intent(in) :: recno  !! Index of the pointing record to be returned.
+         real(wp), intent(out) :: record ( * )  !! The pointing record.
+      end subroutine ckgr06
+
+      !> Return the mini-segment control parameters, mini-segment interval
+      !> bounds, and last epoch for a specified mini-segment in a type 6
+      !> CK segment.
+      module subroutine ckmp06 ( ctx, handle, descr, msno, rate, subtyp, winsiz, nrec, ivlbds, lstepc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr  ( * )  !! The descriptor of the type 6 segment.
+         integer(ip), intent(in) :: msno  !! Mini-segment index.
+         real(wp), intent(out) :: rate  !! SCLK rate in seconds/tick.
+         integer(ip), intent(out) :: subtyp  !! Subtype code.
+         integer(ip), intent(out) :: winsiz  !! Interpolation window size.
+         integer(ip), intent(out) :: nrec  !! Number of records in mini-segment.
+         real(wp), intent(out) :: ivlbds ( 2 )  !! Mini-segment interval bounds of mini-segment.
+         real(wp), intent(out) :: lstepc  !! Last epoch of mini-segment.
+      end subroutine ckmp06
+
+      !> Return the number of mini-segments in a type 6 CK segment, given
+      !> the handle of the type 6 CK file and the segment's descriptor.
+      module subroutine cknm06 ( ctx, handle, descr, nmini )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 6 segment.
+         integer(ip), intent(out) :: nmini  !! The number of pointing instances in the segment.
+      end subroutine cknm06
+
+      !> Return the number of pointing instances in a CK type 01 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine cknr01 ( ctx, handle, descr, nrec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 1 segment.
+         integer(ip), intent(out) :: nrec  !! The number of records in the segment.
+      end subroutine cknr01
+
+      !> Return the number of pointing records in a CK type 02 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine cknr02 ( ctx, handle, descr, nrec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 2 segment.
+         integer(ip), intent(out) :: nrec  !! The number of records in the segment.
+      end subroutine cknr02
+
+      !> Return the number of pointing instances in a CK type 03 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine cknr03 ( ctx, handle, descr, nrec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 3 segment.
+         integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
+      end subroutine cknr03
+
+      !> Return the number of pointing instances in a CK type 05 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine cknr05 ( ctx, handle, descr, nrec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 5 segment.
+         integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
+      end subroutine cknr05
+
+      !> Open a new CK file, returning the handle of the opened file.
+      module subroutine ckopn ( ctx, fname, ifname, ncomch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! The name of the CK file to be opened.
+         character(*), intent(in) :: ifname  !! The internal filename for the CK.
+         integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+         integer(ip), intent(out) :: handle  !! The handle of the opened CK file.
+      end subroutine ckopn
+
+      !> Add a type 1 segment to a C-kernel.
+      module subroutine ckw01 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+         real(wp), intent(in) :: begtim  !! The beginning encoded SCLK of the segment.
+         real(wp), intent(in) :: endtim  !! The ending encoded SCLK of the segment.
+         integer(ip), intent(in) :: inst  !! The NAIF instrument ID code.
+         character(*), intent(in) :: ref  !! The reference frame of the segment.
+         logical, intent(in) :: avflag  !! .TRUE. if the segment will contain angular velocity.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: nrec  !! Number of pointing records.
+         real(wp), intent(in) :: sclkdp (      * )  !! Encoded SCLK times.
+         real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+         real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+      end subroutine ckw01
+
+      !> Write a type 2 segment to a C-kernel.
+      module subroutine ckw02 ( ctx, handle, begtim, endtim, inst, ref, segid, nrec, start, stop, quats, avvs, rates )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+         real(wp), intent(in) :: begtim  !! The beginning encoded SCLK of the segment.
+         real(wp), intent(in) :: endtim  !! The ending encoded SCLK of the segment.
+         integer(ip), intent(in) :: inst  !! The NAIF instrument ID code.
+         character(*), intent(in) :: ref  !! The reference frame of the segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: nrec  !! Number of pointing records.
+         real(wp), intent(in) :: start  (      * )  !! Encoded SCLK interval start times.
+         real(wp), intent(in) :: stop   (      * )  !! Encoded SCLK interval stop times.
+         real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+         real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+         real(wp), intent(in) :: rates  (      * )  !! Number of seconds per tick for each interval.
+      end subroutine ckw02
+
+      !> Add a type 3 segment to a C-kernel.
+      module subroutine ckw03 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs, nints, starts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+         real(wp), intent(in) :: begtim  !! Beginning encoded SCLK of the segment.
+         real(wp), intent(in) :: endtim  !! Ending encoded SCLK of the segment.
+         integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
+         character(*), intent(in) :: ref  !! Reference frame of the segment.
+         logical, intent(in) :: avflag  !! .TRUE. if the segment will contain angular velocity.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: nrec  !! Number of pointing records.
+         real(wp), intent(in) :: sclkdp (      * )  !! Encoded SCLK times.
+         real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+         real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+         integer(ip), intent(in) :: nints  !! Number of intervals.
+         real(wp), intent(in) :: starts (      * )  !! Encoded SCLK interval start times.
+      end subroutine ckw03
+
+      !> Begin a type CK04 segment in the DAF file associated with
+      !> HANDLE. See also CKW04A and CKW04E.
+      module subroutine ckw04b ( ctx, handle, begtim, inst, ref, avflag, segid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sgparam.inc'
+         include               'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of an DAF file open for writing.
+         character(*), intent(in) :: segid  !! The string to use for segment identifier.
+         integer(ip), intent(in) :: inst  !! The NAIF ID code for the SC or instrument.
+         logical, intent(in) :: avflag  !! The angular rates flag.
+         character(*), intent(in) :: ref  !! The reference frame for this segment.
+         real(wp), intent(in) :: begtim  !! The segment coverage start encoded SCLK time
+      end subroutine ckw04b
+
+      !> End the type 04 CK segment currently being written to the DAF
+      !> file associated with HANDLE. See also CKW04B and CKW04E.
+      module subroutine ckw04e ( ctx, handle, endtim )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of an CK file open for writing.
+         real(wp), intent(in) :: endtim  !! The segment coverage end encoded SCLK time.
+      end subroutine ckw04e
+
+      !> Write a type 5 segment to a CK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine ckw05 ( ctx, handle, subtyp, degree, begtim, endtim, inst, ref, avflag, segid, n, sclkdp, packts, rate, nints, starts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck05.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an CK file open for writing.
+         integer(ip), intent(in) :: subtyp  !! CK type 5 subtype code.
+         integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+         real(wp), intent(in) :: begtim  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: endtim  !! End time of interval covered by segment.
+         integer(ip), intent(in) :: inst  !! NAIF code for a s/c instrument or structure.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         logical, intent(in) :: avflag  !! Flag indicating if the segment will contain angular velocity.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: n  !! Number of packets.
+         real(wp), intent(in) :: sclkdp ( * )  !! Encoded SCLK times.
+         real(wp), intent(in) :: packts ( * )  !! Array of packets.
+         real(wp), intent(in) :: rate  !! Nominal SCLK rate in seconds per tick.
+         integer(ip), intent(in) :: nints  !! Number of intervals.
+         real(wp), intent(in) :: starts ( * )  !! Encoded SCLK interval start times.
+      end subroutine ckw05
+
+      !> Write a type 6 segment to a CK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine ckw06 ( ctx, handle, inst, ref, avflag, first, last, segid, nmini, npkts, subtps, degres, packts, rates, sclkdp, ivlbds, sellst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck06.inc'
+         include 'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! Handle of a CK file open for writing.
+         integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         logical, intent(in) :: avflag  !! Flag indicating if the segment will contain angular velocity.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: nmini  !! Number of mini-segments.
+         integer(ip), intent(in) :: npkts  ( * )  !! Array of packet counts of mini-segments.
+         integer(ip), intent(in) :: subtps ( * )  !! Array of segment subtypes of mini-segments.
+         integer(ip), intent(in) :: degres ( * )  !! Array of polynomial degrees of mini-segments.
+         real(wp), intent(in) :: packts ( * )  !! Array of data packets of mini-segments.
+         real(wp), intent(in) :: rates  ( * )  !! Nominal SCLK rates in seconds per tick.
+         real(wp), intent(in) :: sclkdp ( * )  !! Array of epochs of mini-segments.
+         real(wp), intent(in) :: ivlbds ( * )  !! Mini-segment interval bounds.
+         logical, intent(in) :: sellst  !! Interval selection flag.
+      end subroutine ckw06
+
+      !> Add data to a type 03 PCK segment in the binary PCK file
+      !> associated with HANDLE. See also PCK03B and PCK03E.
+      module subroutine pck03a ( ctx, handle, ncsets, coeffs, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+         integer(ip), intent(in) :: ncsets  !! The number of Cheby coefficient sets and epochs.
+         real(wp), intent(in) :: coeffs ( * )  !! The collection of Cheby coefficient sets.
+         real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
+      end subroutine pck03a
+
+      !> End the type 03 PCK segment currently being written to the binary
+      !> PCK file associated with HANDLE. See also PCK03B and PCK03A.
+      module subroutine pck03e ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of a binary PCK file open for writing.
+      end subroutine pck03e
+
+      !> Close an open PCK file.
+      module subroutine pckcls ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of the PCK file to be closed.
+      end subroutine pckcls
+
+      !> Create a new PCK file, returning the handle of the opened file.
+      module subroutine pckopn ( ctx, name, ifname, ncomch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! The name of the PCK file to be opened.
+         character(*), intent(in) :: ifname  !! The internal filename for the PCK.
+         integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+         integer(ip), intent(out) :: handle  !! The handle of the opened PCK file.
+      end subroutine pckopn
+
+      !> Perform routine error checks and if all checks pass, pack the
+      !> descriptor for a PCK segment
+      module subroutine pckpds ( ctx, body, frame, type, first, last, descr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+         character(*), intent(in) :: frame  !! The inertial frame for this segment.
+         integer(ip), intent(in) :: type  !! The type of PCK segment to create.
+         real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+         real(wp), intent(out) :: descr ( * )  !! A PCK segment descriptor.
+      end subroutine pckpds
+
+      !> Unpack the contents of a PCK segment descriptor
+      module subroutine pckuds ( ctx, descr, body, frame, type, first, last, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: descr ( * )  !! A PCK segment descriptor.
+         integer(ip), intent(out) :: body  !! The NAIF ID code for the body of the segment.
+         integer(ip), intent(out) :: frame  !! The code for the inertial frame of this segment.
+         integer(ip), intent(out) :: type  !! The type of PCK segment.
+         real(wp), intent(out) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(out) :: last  !! The last  epoch for which the segment is valid.
+         integer(ip), intent(out) :: begin  !! Beginning DAF address of the segment.
+         integer(ip), intent(out) :: end  !! Ending DAF address of the segment.
+      end subroutine pckuds
+
+      !> Write a type 2 segment to a PCK binary file given the file
+      !> handle, body-fixed frame class ID, frame, time range covered by
+      !> the segment, and the Chebyshev polynomial coefficients.
+      module subroutine pckw02 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, btime )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of binary PCK file open for writing.
+         integer(ip), intent(in) :: clssid  !! Frame class ID of body-fixed frame.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: intlen  !! Length of time covered by logical record.
+         integer(ip), intent(in) :: n  !! Number of logical records in segment.
+         integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+         real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+         real(wp), intent(in) :: btime  !! Begin time of first logical record.
+      end subroutine pckw02
+
+      !> Write a type 20 segment to a PCK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of Chebyshev expansions.
+      !> TOLSCL     P   Tolerance scale factor for coverage bound checking.
+      module subroutine pckw20 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, ascale, tscale, initjd, initfr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk20.inc'
+         integer(ip), intent(in) :: handle  !! Handle of PCK file open for writing.
+         integer(ip), intent(in) :: clssid  !! NAIF PCK frame class ID.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: intlen  !! Length of time covered by logical record (days).
+         integer(ip), intent(in) :: n  !! Number of logical records in segment.
+         integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+         real(wp), intent(in) :: cdata  ( * )  !! Array of Chebyshev coefficients and angles.
+         real(wp), intent(in) :: ascale  !! Angular scale of data.
+         real(wp), intent(in) :: tscale  !! Time scale of data.
+         real(wp), intent(in) :: initjd  !! Integer part of begin time (TDB Julian date) of first record.
+         real(wp), intent(in) :: initfr  !! Fractional part of begin time (TDB Julian date) of first record.
+      end subroutine pckw20
+
+      !> Store text from a text file in the comment area of a binary SPK
+      !> or CK file, appending it to whatever text may already have
+      !> been stored there.
+      module subroutine spcac ( ctx, handle, unit, bmark, emark )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+         integer(ip), intent(in) :: unit  !! Logical unit connected to comment file.
+         character(*), intent(in) :: bmark  !! Beginning marker.
+         character(*), intent(in) :: emark  !! Ending marker.
+      end subroutine spcac
+
+      !> Empty the comment area of a binary SPK or CK file.
+      module subroutine spcdc ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      end subroutine spcdc
+
+      !> Extract the text from the comment area of a binary SPK or CK file
+      !> and write it to a text file.
+      module subroutine spcec ( ctx, handle, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+         integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
+      end subroutine spcec
+
+      !> Open a new SPK or CK file for subsequent write requests.
+      module subroutine spcopn ( ctx, fname, ifname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of SPK or CK file to be created.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(out) :: handle  !! Handle of new SPK or CK file.
+      end subroutine spcopn
+
+      !> Read the first line of text from the comment area
+      !> of a binary SPK or CK file.
+      module subroutine spcrfl ( ctx, handle, line, eoc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+         character(*), intent(out) :: line  !! First line of text from the comment area.
+         logical, intent(out) :: eoc  !! End of comments?
+      end subroutine spcrfl
+
+      !> Continue reading lines from the comment area of a binary
+      !> SPK or CK file specified by the most recent call to
+      !> the routine SPCRFL.
+      module subroutine spcrnl ( ctx, line, eoc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(out) :: line  !! Next line of text from the comment area.
+         logical, intent(out) :: eoc  !! End of comments?
+      end subroutine spcrnl
+
+      !> Close an open SPK file.
+      module subroutine spkcls ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of the SPK file to be closed.
+      end subroutine spkcls
+
+      !> Open an existing SPK file for subsequent write.
+      module subroutine spkopa ( ctx, file, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! The name of an existing SPK file.
+         integer(ip), intent(out) :: handle  !! Handle attached to the SPK file opened to append.
+      end subroutine spkopa
+
+      !> Create a new SPK file, returning the handle of the opened file.
+      module subroutine spkopn ( ctx, fname, ifname, ncomch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! The name of the new SPK file to be created.
+         character(*), intent(in) :: ifname  !! The internal filename for the SPK file.
+         integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+         integer(ip), intent(out) :: handle  !! The handle of the opened SPK file.
+      end subroutine spkopn
+
+      !> Write a type 1 segment to an SPK file.
+      module subroutine spkw01 ( ctx, handle, body, center, frame, first, last, segid, n, dlines, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: dlsize = 71
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: n  !! Number of difference lines in segment.
+         real(wp), intent(in) :: dlines ( dlsize, * )  !! Array of difference lines.
+         real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
+      end subroutine spkw01
+
+      !> Write a type 2 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum degree of Chebyshev expansions.
+      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
+      module subroutine spkw02 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk02.inc'
+         integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: intlen  !! Length of time covered by logical record.
+         integer(ip), intent(in) :: n  !! Number of logical records in segment.
+         integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+         real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+         real(wp), intent(in) :: btime  !! Begin time of first logical record.
+      end subroutine spkw02
+
+      !> Write a type 3 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum degree of Chebyshev expansions.
+      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
+      module subroutine spkw03 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk03.inc'
+         integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: intlen  !! Length of time covered by record.
+         integer(ip), intent(in) :: n  !! Number of records in segment.
+         integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+         real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+         real(wp), intent(in) :: btime  !! Begin time of first record.
+      end subroutine spkw03
+
+      !> Write an SPK segment of type 5 given a time-ordered set of
+      !> discrete states and epochs, and the gravitational parameter
+      !> of a central body.
+      module subroutine spkw05 ( ctx, handle, body, center, frame, first, last, segid, gm, n, states, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+         integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+         character(*), intent(in) :: frame  !! The reference frame of the states.
+         real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+         real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: gm  !! Gravitational parameter of central body.
+         integer(ip), intent(in) :: n  !! Number of states and epochs.
+         real(wp), intent(in) :: states   ( 6, * )  !! States.
+         real(wp), intent(in) :: epochs   (    * )  !! Epochs.
+      end subroutine spkw05
+
+      !> Write a type 8 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum degree of interpolating polynomials.
+      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine spkw08 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk08.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+         integer(ip), intent(in) :: n  !! Number of states.
+         real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+         real(wp), intent(in) :: begtim  !! Epoch of first state in STATES array.
+         real(wp), intent(in) :: step  !! Time step separating epochs of states.
+      end subroutine spkw08
+
+      !> Write a type 9 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine spkw09 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+         integer(ip), intent(in) :: n  !! Number of states.
+         real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+         real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
+      end subroutine spkw09
+
+      !> Write an SPK type 10 segment to the file specified by
+      !> the input HANDLE.
+      module subroutine spkw10 ( ctx, handle, body, center, frame, first, last, segid, consts, n, elems, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'sgparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+         integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+         integer(ip), intent(in) :: center  !! The center of motion for BODY.
+         character(*), intent(in) :: frame  !! The reference frame for this segment.
+         real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+         character(*), intent(in) :: segid  !! The string to use for segment identifier.
+         real(wp), intent(in) :: consts ( * )  !! Array of geophysical constants for the segment.
+         integer(ip), intent(in) :: n  !! The number of element/epoch pairs to be stored
+         real(wp), intent(in) :: elems  ( * )  !! The collection of "two-line" element sets.
+         real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
+      end subroutine spkw10
+
+      !> Write a type 12 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum degree of interpolating polynomials.
+      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
+      module subroutine spkw12 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk12.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+         integer(ip), intent(in) :: n  !! Number of states.
+         real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+         real(wp), intent(in) :: begtim  !! Epoch of first state in STATES array.
+         real(wp), intent(in) :: step  !! Time step separating epochs of states.
+      end subroutine spkw12
+
+      !> Write a type 13 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine spkw13 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+         integer(ip), intent(in) :: n  !! Number of states.
+         real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+         real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
+      end subroutine spkw13
+
+      !> Write an SPK segment of type 15 given a type 15 data record.
+      module subroutine spkw15 ( ctx, handle, body, center, frame, first, last, segid, epoch, tp, pa, p, ecc, j2flg, pv, gm, j2, radius )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+         integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+         character(*), intent(in) :: frame  !! The reference frame of the states.
+         real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+         real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: epoch  !! Epoch of the periapse.
+         real(wp), intent(in) :: tp     ( 3 )  !! Trajectory pole vector.
+         real(wp), intent(in) :: pa     ( 3 )  !! Periapsis vector.
+         real(wp), intent(in) :: p  !! Semi-latus rectum.
+         real(wp), intent(in) :: ecc  !! Eccentricity.
+         real(wp), intent(in) :: j2flg  !! J2 processing flag.
+         real(wp), intent(in) :: pv     ( 3 )  !! Central body pole vector.
+         real(wp), intent(in) :: gm  !! Central body GM.
+         real(wp), intent(in) :: j2  !! Central body J2.
+         real(wp), intent(in) :: radius  !! Equatorial radius of central body.
+      end subroutine spkw15
+
+      !> Write an SPK segment of type 17 given a type 17 data record.
+      module subroutine spkw17 ( ctx, handle, body, center, frame, first, last, segid, epoch, eqel, rapol, decpol )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+         integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+         character(*), intent(in) :: frame  !! The reference frame of the states.
+         real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+         real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: epoch  !! Epoch of elements in seconds past J2000.
+         real(wp), intent(in) :: eqel  ( 9 )  !! Array of equinoctial elements.
+         real(wp), intent(in) :: rapol  !! Right Ascension of the reference plane's pole.
+         real(wp), intent(in) :: decpol  !! Declination of the reference plane's pole.
+      end subroutine spkw17
+
+      !> Write a type 18 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine spkw18 ( ctx, handle, subtyp, body, center, frame, first, last, segid, degree, n, packts, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk18.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: subtyp  !! SPK type 18 subtype code.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+         integer(ip), intent(in) :: n  !! Number of packets.
+         real(wp), intent(in) :: packts ( * )  !! Array of packets.
+         real(wp), intent(in) :: epochs ( * )  !! Array of epochs corresponding to packets.
+      end subroutine spkw18
+
+      !> Write a type 19 segment to an SPK file.
+      !>
+      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
+      module subroutine spkw19 ( ctx, handle, body, center, frame, first, last, segid, nintvl, npkts, subtps, degres, packts, epochs, ivlbds, sellst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk19.inc'
+         include 'spkrec.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF ID code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF ID code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: nintvl  !! Number of mini-segments and interpolation intervals.
+         integer(ip), intent(in) :: npkts  ( * )  !! Array of packet counts of mini-segments.
+         integer(ip), intent(in) :: subtps ( * )  !! Array of segment subtypes of mini-segments.
+         integer(ip), intent(in) :: degres ( * )  !! Array of polynomial degrees of mini-segments.
+         real(wp), intent(in) :: packts ( * )  !! Array of data packets of mini-segments.
+         real(wp), intent(in) :: epochs ( * )  !! Array of epochs of mini-segments.
+         real(wp), intent(in) :: ivlbds ( * )  !! Interpolation interval bounds.
+         logical, intent(in) :: sellst  !! Interval selection flag.
+      end subroutine spkw19
+
+      !> Write a type 20 segment to an SPK file.
+      module subroutine spkw20 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, dscale, tscale, initjd, initfr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk20.inc'
+         integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         real(wp), intent(in) :: intlen  !! Length of time covered by logical record (days).
+         integer(ip), intent(in) :: n  !! Number of logical records in segment.
+         integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+         real(wp), intent(in) :: cdata  ( * )  !! Array of Chebyshev coefficients and positions.
+         real(wp), intent(in) :: dscale  !! Distance scale of data.
+         real(wp), intent(in) :: tscale  !! Time scale of data.
+         real(wp), intent(in) :: initjd  !! Integer part of begin time (TDB Julian date) of first record.
+         real(wp), intent(in) :: initfr  !! Fractional part of begin time of first record.
+      end subroutine spkw20
+
+      !> Write a type 21 segment to an SPK file.
+      !>
+      !> MAXTRM     P   Maximum number of terms per difference table
+      !> component.
+      module subroutine spkw21 ( ctx, handle, body, center, frame, first, last, segid, n, dlsize, dlines, epochs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk21.inc'
+         integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+         integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+         integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+         character(*), intent(in) :: frame  !! Reference frame name.
+         real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+         real(wp), intent(in) :: last  !! End time of interval covered by segment.
+         character(*), intent(in) :: segid  !! Segment identifier.
+         integer(ip), intent(in) :: n  !! Number of difference lines in segment.
+         integer(ip), intent(in) :: dlsize  !! Difference line size.
+         real(wp), intent(in) :: dlines ( dlsize, * )  !! Array of difference lines.
+         real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
+      end subroutine spkw21
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzck4i2d ( ctx, i, nsets, parcod, dpcoef )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: i      ( * )  !! Array of NSETS integer components.
+         integer(ip), intent(in) :: nsets  !! Number of integer components in input array I.
+         real(wp), intent(in) :: parcod  !! Packing base.
+         real(wp), intent(out) :: dpcoef  !! DP number containing NSETS packed integer numbers.
+      end subroutine zzck4i2d
+
+      !> Return a specified pointing instance from a CK type 02 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine ckgr02 ( ctx, handle, descr, recno, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+         integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+         real(wp), intent(out) :: record  ( * )  !! The pointing record.
+      end subroutine ckgr02
+
+      !> Add data to a type 4 CK segment currently being written to
+      !> the file associated with HANDLE. See also CKW04B and CKW04E.
+      module subroutine ckw04a ( ctx, handle, npkts, pktsiz, pktdat, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of an DAF file opened for writing.
+         integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+         integer(ip), intent(inout) :: pktsiz( * )  !! The numbers of values in the data packets (PEPPER: changed in place)
+         real(wp), intent(inout) :: pktdat( * )  !! The data packets. (PEPPER: packed in place)
+         real(wp), intent(in) :: sclkdp( * )  !! The SCLK times associated with the data packets.
+      end subroutine ckw04a
+
+      !> Begin a type 03 PCK segment in the binary PCK file associated with
+      !> HANDLE. See also PCK03A and PCK03E.
+      module subroutine pck03b ( ctx, handle, segid, body, frame, first, last, chbdeg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'sgparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+         character(*), intent(in) :: segid  !! The string to use for segment identifier.
+         integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+         character(*), intent(in) :: frame  !! The inertial frame for this segment.
+         real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+         real(wp), intent(in) :: last  !! The last epoch for which the segment is valid.
+         integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
+      end subroutine pck03b
+
+      !> Convert the contents of a binary SPK or CK file to text,
+      !> including comments if present, and write them to a text file
+      !> opened by the calling program.
+      module subroutine spcb2t ( ctx, binary, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
+         integer(ip), intent(in) :: unit  !! Logical unit connected to a text file.
+      end subroutine spcb2t
+
+      !> Reconstruct a binary SPK or CK file including comments
+      !> from a text file opened by the calling program.
+      module subroutine spct2b ( ctx, unit, binary )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! Logical unit connected to the text format file.
+         character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
+      end subroutine spct2b
+
+      !> Convert a text (ASCII) format SPK or CK file to an equivalent
+      !> binary file, including comments.
+      module subroutine spca2b ( ctx, text, binary )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: text  !! Name of an existing text format SPK or CK file.
+         character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
+      end subroutine spca2b
+
+      !> Convert a binary SPK or CK file to an equivalent text (ASCII)
+      !> file, including the comment area.
+      module subroutine spcb2a ( ctx, binary, text )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
+         character(*), intent(in) :: text  !! Name of a text file to be created.
+      end subroutine spcb2a
+
+   end interface
+   ! --- end pepper_writers
+   ! --- pepper_geometry
+   public :: zzasryel, zzbquad, zzchrlat, zzcputim, zzcxbrut, zzdiv, zzdskbbl,&
+      zzdsksbi, zzdsksbr, zzdsksbd, zzdskbdc, zzdsknot, zzdsksit, zzdskcit,&
+      zzdskusc, zzdskumc, zzdskmsc, zzdskmmc, zzdsksrc, zzdskmrc, zzdsksgr,&
+      zzedterm, zzedtmpt, zzellbds, zzelnaxx, zzeprcss, zzgetelm, zzgrav,&
+      zzholdd, zzhullax, zzingrd, zzinrec, zzinrypl, zzlatbox, zzlexmet,&
+      zzmult, zznrmlon, zzrecbox, zzrtnmat, zzryxsph, zzsecprt, zzsepq,&
+      zzsfxcor, zzsglatx, zzspin, zzspkap0, zzspkap1, zzsrfini, zztanslv,&
+      zztogrid, zzwind, zzwind2d, zzcnquad, zzdsksph, zzfovaxi, zzinlat0,&
+      zzdpinit, zzdpsec, zzdpper, zzpdcmpl, zzpdpltc, zzpdtbox, zzraybox,&
+      zzsrfker, zzilusta, zzinlat, zzinpdt0, zzrytrec, zzsegbox, zzsrfn2c,&
+      zzsrfc2n, zzsrftrk, zzdsksba, zzelvupy, zzinpdt, zzrytlat, zzinvelt,&
+      zzprsmet, zzrytpdt, zzocced, zzptpl02, zzrytelt, zzdskbun, zzdsksgx,&
+      zzdskbux, zzsbfxr, zzsbfxri, zzsbfnrm, zzsuelin, zzsudski, zzraysfx,&
+      zzmaxrad, zzminrad, zzraynp, zztanini, zztansta, zztangnt
+
+   interface
+
+      !> Return the time step set by the most recent call to GFSSTP.
+      module subroutine gfstep ( ctx, time, step )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: time  !! Ignored ET value.
+         real(wp), intent(out) :: step  !! Time step to take.
+      end subroutine gfstep
+
+      !> Set the step size to be returned by GFSTEP.
+      module subroutine gfsstp ( ctx, step )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: step  !! Time step to take.
+      end subroutine gfsstp
+
+      !> Estimate, using a bisection method, the next abscissa value at
+      !> which a state change occurs. This is the default GF refinement
+      !> method.
+      module subroutine gfrefn ( ctx, t1, t2, s1, s2, t )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: t1  !! One of two values bracketing a state change.
+         real(wp), intent(in) :: t2  !! The other value that brackets a state change.
+         logical, intent(in) :: s1  !! State at T1.
+         logical, intent(in) :: s2  !! State at T2.
+         real(wp), intent(out) :: t  !! New value at which to check for transition.
+      end subroutine gfrefn
+
+      !> Return the correct article "a" or "an" used to modify a word
+      !> and return it capitalized, lower case, or upper case.
+      !>
+      !> The function returns the correct article, 'A' or 'AN', needed to
+      !> modify a word WORD, appropriately capitalized.
+      !> (PEPPER: the result has length 2; SPICELIB's had the caller's length.)
+      module character(2) function ana ( ctx, word, case )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: word  !! is a word that should be modified by "a" or "an".
+         character(*), intent(in) :: case  !! 'U', 'L', or 'C' to specify capitalization of ANA.
+      end function ana
+
+      !> Return the azimuth/elevation coordinates of a specified target
+      !> relative to an "observer," where the observer has constant
+      !> position in a specified reference frame. The observer's position
+      !> is provided by the calling program rather than by loaded SPK
+      !> files.
+      module subroutine azlcpo ( ctx, method, target, et, abcorr, azccw, elplsz, obspos, obsctr, obsref, azlsta, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! Method to obtain the surface normal vector.
+         character(*), intent(in) :: target  !! Name of target ephemeris object.
+         real(wp), intent(in) :: et  !! Observation epoch.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+         logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+         real(wp), intent(in) :: obspos ( 3 )  !! Observer position relative to center of motion.
+         character(*), intent(in) :: obsctr  !! Center of motion of observer.
+         character(*), intent(in) :: obsref  !! Body-fixed, body-centered frame of observer's center.
+         real(wp), intent(out) :: azlsta ( 6 )  !! State of target with respect to observer, in azimuth/elevation coordinates.
+         real(wp), intent(out) :: lt  !! One way light time between target and observer.
+      end subroutine azlcpo
+
+      !> Return a set containing the frame IDs of all built-in frames of a
+      !> specified class.
+      module subroutine bltfrm ( ctx, frmcls, idset )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         include 'ninert.inc'
+         include 'nninrt.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: frmcls  !! Frame class.
+         integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
+      end subroutine bltfrm
+
+      !> Return the J2000 to body Equator and Prime Meridian coordinate
+      !> transformation matrix for a specified body.
+      module subroutine bodmat ( ctx, body, et, tipm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of body.
+         real(wp), intent(in) :: et  !! Epoch of transformation.
+         real(wp), intent(out) :: tipm   ( 3,3 )  !! Transformation from Inertial to PM for BODY at ET.
+      end subroutine bodmat
+
+      !> Determine the state (position, velocity) of an orbiting body
+      !> from a set of elliptic, hyperbolic, or parabolic orbital
+      !> elements.
+      module subroutine conics ( ctx, elts, et, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: elts    ( 8 )  !! Conic elements.
+         real(wp), intent(in) :: et  !! Input time.
+         real(wp), intent(out) :: state   ( 6 )  !! State of orbiting body at ET.
+      end subroutine conics
+
+      !> Delete a file.
+      module subroutine delfil ( ctx, filnam )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: filnam  !! The name of a file to be deleted.
+      end subroutine delfil
+
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to geodetic coordinates.
+      module subroutine dgeodr ( ctx, x, y, z, re, f, jacobi )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! X-coordinate of point.
+         real(wp), intent(in) :: y  !! Y-coordinate of point.
+         real(wp), intent(in) :: z  !! Z-coordinate of point.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
+      end subroutine dgeodr
+
+      !> Calculate the value of the time derivative of the
+      !> half angle of a spherical body given a state vector
+      !> STATE and body radius BODYR.
+      module real(wp) function dhfa ( ctx, state, bodyr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: state (6)  !! SPICE state vector
+         real(wp), intent(in) :: bodyr  !! Radius of body
+      end function dhfa
+
+      !> Diagonalize a symmetric 2x2 matrix.
+      module subroutine diags2 ( ctx, symmat, diag, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: symmat ( 2, 2 )  !! A symmetric 2x2 matrix.
+         real(wp), intent(out) :: diag   ( 2, 2 )  !! A diagonal matrix similar to SYMMAT.
+         real(wp), intent(out) :: rotate ( 2, 2 )  !! A rotation used as the similarity transformation.
+      end subroutine diags2
+
+      !> Calculate the derivative with respect to the angle of rotation
+      !> of a 3x3 coordinate system rotation matrix generated by a
+      !> rotation of a specified angle about a specified axis.
+      module subroutine drotat ( ctx, angle, iaxis, dmout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: angle  !! Angle of rotation (radians).
+         integer(ip), intent(in) :: iaxis  !! Coordinate axis number (X=1, Y=2, Z=3).
+         real(wp), intent(out) :: dmout  ( 3,3 )  !! Derivative of rotation matrix [ANGLE] w.r.t. angle IAXIS
+      end subroutine drotat
+
+      !> Locate a keyword and succeeding numeric words within a string.
+      !> Parse and store the numeric words. Remove the keyword and
+      !> numeric words from the input string.
+      module subroutine dxtrct ( ctx, keywd, maxwds, string, nfound, parsed, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: keywd  !! Keyword used to mark start of a set of numbers.
+         integer(ip), intent(in) :: maxwds  !! Maximum number of numeric words that can be parsed
+         character(*), intent(inout) :: string  !! String potentially containing KEYWD and numbers.
+         integer(ip), intent(out) :: nfound  !! Number of numeric words found following the KEYWD.
+         integer(ip), intent(out) :: parsed  !! Number of numeric words translated and returned.
+         real(wp), intent(out) :: values ( * )  !! The double precision values for the numbers.
+      end subroutine dxtrct
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
+      !> NAIF supports EV2LIN only for backward compatibility.
+      !>
+      !> NMODL      P   Parameter controlling number of buffered elements.
+      module subroutine ev2lin ( ctx, et, geophs, elems, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch in seconds past ephemeris epoch J2000.
+         real(wp), intent(in) :: geophs ( * )  !! Geophysical constants
+         real(wp), intent(in) :: elems  ( * )  !! Two-line element data
+         real(wp), intent(out) :: state  ( * )  !! Evaluated state
+      end subroutine ev2lin
+
+      !> Evaluate NORAD two-line element data for earth orbiting
+      !> spacecraft. This evaluator uses algorithms as described
+      !> in Vallado 2006 [4].
+      module subroutine evsgp4 ( ctx, et, geophs, elems, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         real(wp), intent(in) :: et  !! Epoch in seconds past ephemeris epoch J2000.
+         real(wp), intent(in) :: geophs (  8 )  !! Geophysical constants
+         real(wp), intent(in) :: elems  ( 10 )  !! Two-line element data
+         real(wp), intent(out) :: state  (  6 )  !! Evaluated state
+      end subroutine evsgp4
+
+      !> Return the location within the set array of the NTH element within
+      !> the order imposed by the ASCII collating sequence.
+      !>
+      !> The function returns the location of the NTH element in the set.
+      module integer(ip) function fetchc ( ctx, nth, set )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: nth  !! Index of a particular element.
+         character(*), intent(in) :: set      ( lbcell:* )  !! Input set.
+      end function fetchc
+
+      !> Return the location within the set array of the NTH element
+      !> within the order imposed by the values of the elements.
+      !>
+      !> The function returns the location of the NTH element in the set.
+      module integer(ip) function fetchd ( ctx, nth, set )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: nth  !! Index of a particular element.
+         real(wp), intent(in) :: set      ( lbcell:* )  !! Input set.
+      end function fetchd
+
+      !> Return the location within the set array of the NTH element
+      !> within the order imposed by the values of the elements.
+      !>
+      !> The function returns the location of the NTH element in the set.
+      module integer(ip) function fetchi ( ctx, nth, set )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: nth  !! Index of a particular element.
+         integer(ip), intent(in) :: set      ( lbcell:* )  !! Input set.
+      end function fetchi
+
+      !> Map the name of an open file to its associated logical unit.
+      module subroutine fn2lun ( ctx, filnam, lunit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: filnam  !! Name of the file to be mapped to its logical unit.
+         integer(ip), intent(out) :: lunit  !! The logical unit associated with the filename.
+      end subroutine fn2lun
+
+      !> Convert geodetic coordinates to rectangular coordinates.
+      module subroutine georec ( ctx, lon, lat, alt, re, f, rectan )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: lon  !! Geodetic longitude of point (radians).
+         real(wp), intent(in) :: lat  !! Geodetic latitude  of point (radians).
+         real(wp), intent(in) :: alt  !! Altitude of point above the reference spheroid.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of point.
+      end subroutine georec
+
+      !> Return the field-of-view (FOV) parameters for a specified
+      !> instrument. The instrument is specified by its NAIF ID code.
+      module subroutine getfov ( ctx, instid, room, shape, frame, bsight, n, bounds )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: instid  !! NAIF ID of an instrument.
+         integer(ip), intent(in) :: room  !! Maximum number of vectors that can be returned.
+         character(*), intent(out) :: shape  !! Instrument FOV shape.
+         character(*), intent(out) :: frame  !! Name of the frame in which FOV vectors are defined.
+         real(wp), intent(out) :: bsight ( 3    )  !! Boresight vector.
+         integer(ip), intent(out) :: n  !! Number of boundary vectors returned.
+         real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
+      end subroutine getfov
+
+      !> Solve the time of flight equation MA = e sinh(F) - F for the
+      !> hyperbolic eccentric anomaly F, given the mean anomaly, MA,
+      !> and the eccentricity, e.
+      module subroutine hyptof ( ctx, ma, ecc, f )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
+         real(wp), intent(in) :: ecc  !! Eccentricity.
+         real(wp), intent(out) :: f  !! Hyperbolic eccentric anomaly.
+      end subroutine hyptof
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine ILUMIN. This routine is supported for purposes of
+      !> backward compatibility only.
+      module subroutine illum ( ctx, target, et, abcorr, obsrvr, spoint, phase, solar, emissn )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000.
+         character(*), intent(in) :: abcorr  !! Desired aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+         real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+         real(wp), intent(out) :: solar  !! Solar incidence angle at the surface point.
+         real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
+      end subroutine illum
+
+      !> Return the matrix that transforms vectors from one specified
+      !> inertial reference frame to another.
+      module subroutine irftrn ( ctx, refa, refb, rotab )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: refa  !! Name of reference frame to transform vectors FROM.
+         character(*), intent(in) :: refb  !! Name of reference frame to transform vectors TO.
+         real(wp), intent(out) :: rotab ( 3, 3 )  !! REFA-to-REFB transformation matrix.
+      end subroutine irftrn
+
+      !> Deprecated: This routine is deprecated because all high-level
+      !> time conversion routines (STR2ET, UTC2ET, TPARSE) were updated
+      !> to accept ISO formatted times on input.  This routine is
+      !> supported for purposes of backward compatibility only.
+      module subroutine iso2utc ( ctx, tstrng, utcstr, error )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: tstrng  !! String representing a calendar or julian date epoch
+         character(*), intent(out) :: utcstr  !! SPICELIB UTC string corresponding to TSTRNG
+         character(*), intent(out) :: error  !! Error message if something went wrong.
+      end subroutine iso2utc
+
+      !> Determine whether a named file is currently open.
+      !>
+      !> The function returns the value .TRUE. if the file is open, .FALSE.
+      !> otherwise.
+      module logical function isopen ( ctx, file )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! Name of the file in question.
+      end function isopen
+
+      !> Return a SPICE set containing the frame IDs of all reference
+      !> frames of a given class having specifications in the kernel pool.
+      module subroutine kplfrm ( ctx, frmcls, idset )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         include 'ninert.inc'
+         include 'nninrt.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: frmcls  !! Frame class.
+         integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
+      end subroutine kplfrm
+
+      !> Parse a list of items delimited by multiple delimiters,
+      !> placing the resulting items into a set.
+      module subroutine lparss ( ctx, list, delims, set )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: list  !! List of items delimited by DELIMS on input.
+         character(*), intent(in) :: delims  !! Single characters which delimit items.
+         character(*), intent(inout) :: set  ( lbcell:* )  !! Items in the list, validated, left justified.
+      end subroutine lparss
+
+      !> Compute L_s, the planetocentric longitude of the sun, as seen
+      !> from a specified body.
+      !>
+      !> The function returns the value of L_s for the specified body
+      !> at the specified time.
+      module real(wp) function lspcn ( ctx, body, et, abcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: body  !! Name of central body.
+         real(wp), intent(in) :: et  !! Epoch in seconds past J2000 TDB.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+      end function lspcn
+
+      !> Compute the transmission (or reception) time of a signal at a
+      !> specified target, given the reception (or transmission) time at a
+      !> specified observer. Also return the elapsed time between
+      !> transmission and reception.
+      module subroutine ltime ( ctx, etobs, obs, dir, targ, ettarg, elapsd )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: etobs  !! Epoch of a signal at some observer.
+         integer(ip), intent(in) :: obs  !! NAIF ID of some observer.
+         character(2), intent(in) :: dir  !! Direction the signal travels ( '->' or '<-' ).
+         integer(ip), intent(in) :: targ  !! NAIF ID of the target object.
+         real(wp), intent(out) :: ettarg  !! Epoch of the signal at the target.
+         real(wp), intent(out) :: elapsd  !! Time between transmit and receipt of the signal.
+      end subroutine ltime
+
+      !> Map the logical unit of an open file to its associated filename.
+      module subroutine lun2fn ( ctx, lunit, filnam )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: lunit  !! A logical unit to be mapped to a filename.
+         character(*), intent(out) :: filnam  !! Name of the file associated with LUNIT.
+      end subroutine lun2fn
+
+      !> Scan a string from a specified starting position for the
+      !> end of a signed integer.
+      module subroutine lx4sgn ( ctx, string, first, last, nchar )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! any character string
+         integer(ip), intent(in) :: first  !! first character to scan from in STRING
+         integer(ip), intent(out) :: last  !! last character that is part of a signed integer
+         integer(ip), intent(out) :: nchar  !! number of characters in the signed integer.
+      end subroutine lx4sgn
+
+      !> Scan an identifier, starting from a specified character
+      !> position.
+      !>
+      !> LBCELL     P   The SPICE cell lower bound.
+      module subroutine lxidnt ( ctx, idspec, string, first, last, nchar )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: string  !! String to be scanned.
+         integer(ip), intent(in) :: first  !! Character position at which to start scanning.
+         integer(ip), intent(in) :: idspec ( lbcell : * )  !! Identifier character specification.
+         integer(ip), intent(out) :: last  !! Character position of end of token.
+         integer(ip), intent(out) :: nchar  !! Number of characters in token.
+      end subroutine lxidnt
+
+      !> Return the default specification for the characters that may
+      !> appear in an identifier.
+      !>
+      !> MXSPEC     P   Recommended size for declaration of IDSPEC.
+      !> LBCELL     P   The SPICE cell lower bound.
+      module subroutine lxdfid ( ctx, idspec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(inout) :: idspec ( lbcell : * )  !! Identifier character specification.
+      end subroutine lxdfid
+
+      !> Set the acceptable characters that may appear in an identifier
+      !> token.
+      !>
+      !> MXSPEC     P   Recommended size for declaration of IDSPEC.
+      !> LBCELL     P   The SPICE cell lower bound.
+      module subroutine lxcsid ( ctx, hdchrs, tlchrs, idspec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: hdchrs  !! Allowed head characters for identifiers.
+         character(*), intent(in) :: tlchrs  !! Allowed tail characters for identifiers.
+         integer(ip), intent(inout) :: idspec ( lbcell : * )  !! Identifier character specification.
+      end subroutine lxcsid
+
+      !> Find the nearest point on an ellipse to a specified point, both
+      !> in three-dimensional space, and find the distance between the
+      !> ellipse and the point.
+      module subroutine npelpt ( ctx, point, ellips, pnear, dist )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubel = 9
+         real(wp), intent(in) :: ellips ( ubel )  !! A SPICE ellipse.
+         real(wp), intent(in) :: point  (    3 )  !! Point whose distance to an ellipse is to be found.
+         real(wp), intent(out) :: pnear  (    3 )  !! Nearest point on ellipse to input point.
+         real(wp), intent(out) :: dist  !! Distance of input point to ellipse.
+      end subroutine npelpt
+
+      !> Determine the set of osculating conic orbital elements that
+      !> corresponds to the state (position, velocity) of a body at
+      !> some epoch.
+      module subroutine oscelt ( ctx, state, et, mu, elts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: state  ( 6 )  !! State of body at epoch of elements.
+         real(wp), intent(in) :: et  !! Epoch of elements.
+         real(wp), intent(in) :: mu  !! Gravitational parameter (GM) of primary body.
+         real(wp), intent(out) :: elts   ( 8 )  !! Equivalent conic elements.
+      end subroutine oscelt
+
+      !> Solve the time of flight equation MA = D + (D**3) / 3
+      !> for the parabolic eccentric anomaly D, given mean anomaly.
+      module subroutine partof ( ctx, ma, d )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
+         real(wp), intent(out) :: d  !! Parabolic eccentric anomaly.
+      end subroutine partof
+
+      !> Indicate for a specified body whether planetographic and
+      !> planetocentric longitude increase in the same sense.
+      !>
+      !> The function returns 1 if planetographic and planetocentric
+      !> longitude for the specified body increase in the same sense, and
+      !> -1 if they increase in the opposite sense.
+      module integer(ip) function plnsns ( ctx, bodid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: bodid  !! is the NAIF integer ID code of some solar system object.
+      end function plnsns
+
+      !> Prompt a user for keyboard input.
+      module subroutine prompt ( ctx, dspmsg, buffer )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: dspmsg  !! The prompt to use when asking for input.
+         character(*), intent(out) :: buffer  !! The response typed by a user.
+      end subroutine prompt
+
+      !> Parse a string as a double precision number, encapsulating error
+      !> handling.
+      module subroutine prsdp ( ctx, string, dpval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! String representing a numeric value.
+         real(wp), intent(out) :: dpval  !! D.p. value obtained by parsing STRING.
+      end subroutine prsdp
+
+      !> Encode a nonnegative integer number into a character string,
+      !> portably, using 128 as the base for encoding.
+      !>
+      !> MINLEN     P   Minimum length of string.
+      module subroutine prtenc ( ctx, number, string )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: number  !! Number to be encoded.
+         character(*), intent(out) :: string  !! Encoded string.
+      end subroutine prtenc
+
+      !> Decode a character string encoded by PRTENC.
+      module subroutine prtdec ( ctx, string, number )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: number  !! Decoded number.
+         character(*), intent(in) :: string  !! Encoded character string.
+      end subroutine prtdec
+
+      !> Return the 3x3 matrix that transforms position vectors from one
+      !> specified frame at a specified epoch to another specified
+      !> frame at another specified epoch.
+      module subroutine pxfrm2 ( ctx, from, to, etfrom, etto, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: from  !! Name of the frame to transform from.
+         character(*), intent(in) :: to  !! Name of the frame to transform to.
+         real(wp), intent(in) :: etfrom  !! Evaluation time of FROM frame.
+         real(wp), intent(in) :: etto  !! Evaluation time of TO frame.
+         real(wp), intent(out) :: rotate  ( 3, 3 )  !! A position transformation matrix from frame FROM to frame TO.
+      end subroutine pxfrm2
+
+      !> Read the next non-blank line of text from a text file.
+      module subroutine rdnbl ( ctx, file, line, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! Input text file.
+         character(*), intent(out) :: line  !! Next non-blank line from the input text file.
+         logical, intent(out) :: eof  !! End-of-file indicator.
+      end subroutine rdnbl
+
+      !> Replace a marker with the text representation of a
+      !> cardinal number.
+      !>
+      !> MAXLCN     P   Maximum length of a cardinal number.
+      module subroutine repmct ( ctx, in, marker, value, rtcase, out )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: in  !! Input string.
+         character(*), intent(in) :: marker  !! Marker to be replaced.
+         integer(ip), intent(in) :: value  !! Replacement value.
+         character(1), intent(in) :: rtcase  !! Case of replacement text.
+         character(*), intent(out) :: out  !! Output string.
+      end subroutine repmct
+
+      !> Replace a marker with the text representation of a logical value.
+      module subroutine repml ( ctx, in, marker, value, rtcase, out )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: in  !! Input string.
+         character(*), intent(in) :: marker  !! Marker to be replaced.
+         logical, intent(in) :: value  !! Replacement logical value.
+         character(1), intent(in) :: rtcase  !! Case of replacement text.
+         character(*), intent(out) :: out  !! Output string.
+      end subroutine repml
+
+      !> Transform a vector to a new reference frame rotated by ANGLE
+      !> radians about axis IAXIS. This transformation rotates V1 by
+      !> -ANGLE radians about the specified axis.
+      module subroutine rotvec ( ctx, v1, angle, iaxis, vout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: v1    ( 3 )  !! Vector whose coordinate system is to be rotated.
+         real(wp), intent(in) :: angle  !! Angle of rotation in radians.
+         integer(ip), intent(in) :: iaxis  !! Axis of rotation (X=1, Y=2, Z=3).
+         real(wp), intent(out) :: vout  ( 3 )  !! Resulting vector expressed in the new frame.
+      end subroutine rotvec
+
+      !> Convert a character representation of a type 1 spacecraft clock
+      !> count to ticks.
+      !>
+      !> MXNFLD     P   Maximum number of allowed fields in an SCLK string.
+      !> DELIMS     P   The accepted delimiters of an SCLK string.
+      !> DPLEN      P   Maximum width of a clock field.
+      module subroutine scps01 ( ctx, sc, clkstr, error, msg, ticks )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         character(*), intent(in) :: clkstr  !! Character representation of a clock count.
+         logical, intent(out) :: error  !! Parsing error flag.
+         character(*), intent(out) :: msg  !! Output message for parsing error.
+         real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
+      end subroutine scps01
+
+      !> Convert an SCLK name string to a NAIF integer code.
+      module subroutine scn2id ( ctx, clknam, clkid, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: clknam  !! String giving spacecraft clock name.
+         integer(ip), intent(out) :: clkid  !! NAIF integer code of spacecraft clock.
+         logical, intent(out) :: found  !! Flag indicating whether item was found.
+      end subroutine scn2id
+
+      !> Convert a NAIF integer code for a spacecraft clock to an SCLK name
+      !> string.
+      module subroutine scid2n ( ctx, clkid, clknam, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(out) :: clknam  !! String giving spacecraft clock name.
+         integer(ip), intent(in) :: clkid  !! NAIF integer code of spacecraft clock.
+         logical, intent(out) :: found  !! Flag indicating whether item was found.
+      end subroutine scid2n
+
+      !> Return the distance between two points on a sphere, measured
+      !> along the shortest great circle arc connecting them.
+      !>
+      !> The function returns the distance between the two input points,
+      !> measured along the shortest great circle arc connecting them.
+      module real(wp) function sphsd ( ctx, radius, lon1, lat1, lon2, lat2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: radius  !! Radius of sphere.
+         real(wp), intent(in) :: lon1  !! Longitude and latitude of first point in radians.
+         real(wp), intent(in) :: lat1  !! Longitude and latitude of first point in radians.
+         real(wp), intent(in) :: lon2  !! Longitude and latitude of second point in radians.
+         real(wp), intent(in) :: lat2  !! Longitude and latitude of second point in radians.
+      end function sphsd
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to some center of motion in a specified frame.
+      module subroutine spkpv ( ctx, handle, descr, et, ref, state, center )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         real(wp), intent(out) :: state    ( 6 )  !! Position, velocity.
+         integer(ip), intent(out) :: center  !! Center of state.
+      end subroutine spkpv
+
+      !> Convert planetocentric latitude and longitude of a surface
+      !> point on a specified body to rectangular coordinates.
+      module subroutine srfrec ( ctx, body, lon, lat, rectan )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! NAIF integer code of an extended body.
+         real(wp), intent(in) :: lon  !! Longitude of point in radians.
+         real(wp), intent(in) :: lat  !! Latitude of point in radians.
+         real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
+      end subroutine srfrec
+
+      !> Return the logical unit associated with some standard input or
+      !> standard output.
+      module subroutine stdio ( ctx, name, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! is the name of a logical unit to return.
+         integer(ip), intent(out) :: unit  !! is the logical unit associated with NAME.
+      end subroutine stdio
+
+      !> Determine the intersection of a line-of-sight vector with the
+      !> surface of an ellipsoid.
+      module subroutine surfpt ( ctx, positn, u, a, b, c, point, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: positn ( 3 )  !! Position of the observer in body-fixed frame.
+         real(wp), intent(in) :: u      ( 3 )  !! Vector from the observer in some direction.
+         real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis along the x-axis.
+         real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis along the y-axis.
+         real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis along the z-axis.
+         real(wp), intent(out) :: point  ( 3 )  !! Point on the ellipsoid pointed to by U.
+         logical, intent(out) :: found  !! Flag indicating if U points at the ellipsoid.
+      end subroutine surfpt
+
+      !> Find the state transformation from a base frame to the
+      !> right-handed frame defined by two state vectors: one state
+      !> vector defining a specified axis and a second state vector
+      !> defining a specified coordinate plane.
+      module subroutine twovxf ( ctx, axdef, indexa, plndef, indexp, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: axdef  ( 6 )  !! State defining a principal axis.
+         integer(ip), intent(in) :: indexa  !! Principal axis number of AXDEF (X=1, Y=2, Z=3).
+         real(wp), intent(in) :: plndef ( 6 )  !! State defining (with AXDEF) a principal plane.
+         integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
+         real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
+      end subroutine twovxf
+
+      !> Calculate the first derivative of a caller-specified scalar
+      !> function using a three-point estimation.
+      module subroutine uddf ( ctx, udfunc, x, dx, deriv )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
+         real(wp), intent(in) :: dx  !! Interval from X for derivative calculation.
+         real(wp), intent(out) :: deriv  !! Approximate derivative of UDFUNC at X.
+      end subroutine uddf
+
+      !> Serve as a dummy function for GF routines expecting an UDFUNS
+      !> argument. It is a no-op routine with an argument signature
+      !> matching UDFUNS.
+      module subroutine udf ( ctx, x, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! Double precision value, unused.
+         real(wp), intent(out) :: value  !! Double precision value, unused. (PEPPER: an output, as for any GF_SCALAR; not set)
+      end subroutine udf
+
+      !> Find the minimum or maximum angular separation between a
+      !> specified ray and ellipse.
+      !>
+      !> UBEL       P   Upper bound of SPICELIB ellipse.
+      !> UBPL       P   Upper bound of SPICELIB plane.
+      module subroutine zzasryel ( ctx, extrem, ellips, vertex, dir, angle, extpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubel = 9
+         character(*), intent(in) :: extrem  !! Type of extremum to find.
+         real(wp), intent(in) :: ellips ( ubel )  !! SPICE ellipse.
+         real(wp), intent(in) :: vertex ( 3 )  !! Vertex and direction vector of ray.
+         real(wp), intent(in) :: dir    ( 3 )  !! Vertex and direction vector of ray.
+         real(wp), intent(out) :: angle  !! Angular separation of ray and ellipse (radians).
+         real(wp), intent(out) :: extpt  ( 3 )  !! Point on ellipse where extremum is achieved.
+      end subroutine zzasryel
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> BIG        P   Limit on magnitude of coefficients and UB.
+      module subroutine zzbquad ( ctx, a, b, c, ub, n, nx, r1, r2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Coefficients of quadratic equation.
+         real(wp), intent(in) :: b  !! Coefficients of quadratic equation.
+         real(wp), intent(in) :: c  !! Coefficients of quadratic equation.
+         real(wp), intent(in) :: ub  !! Upper bound on magnitude of roots.
+         integer(ip), intent(out) :: n  !! Number of real roots within bound.
+         integer(ip), intent(out) :: nx  !! Number of real roots exceeding bound.
+         real(wp), intent(out) :: r1  !! Root of smaller absolute value.
+         real(wp), intent(out) :: r2  !! Root of larger absolute value.
+      end subroutine zzbquad
+
+      !> Given the latitude of a midpoint of chord on a circle of constant
+      !> latitude, and given the longitude extent of the chord, compute
+      !> the latitude of the chord's endpoints. The coordinate system is
+      !> "latitudinal," aka planetocentric.
+      module subroutine zzchrlat ( ctx, midlat, dlon, eptlat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: midlat  !! is the latitude of the midpoint of a chord of a latitude circle.
+         real(wp), intent(in) :: dlon  !! is the longitude extent of the chord.
+         real(wp), intent(out) :: eptlat  !! is the latitude of the endpoints of the chord.
+      end subroutine zzchrlat
+
+      !> Fetch the current CPU date and time and store the result
+      !> as a double precision 6-vector.
+      module subroutine zzcputim ( ctx, tvec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(out) :: tvec ( 6 )  !! contains year, month, day, hours, minutes, seconds
+      end subroutine zzcputim
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzcxbrut ( ctx, apex, axis, angle, endpt1, endpt2, xpt, isbrck )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: apex   ( 3 )  !! Apex of cone.
+         real(wp), intent(in) :: axis   ( 3 )  !! Axis of cone.
+         real(wp), intent(in) :: angle  !! Angle of cone.
+         real(wp), intent(in) :: endpt1 ( 3 )  !! Endpoints of line segment.
+         real(wp), intent(in) :: endpt2 ( 3 )  !! Endpoints of line segment.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if it exists.
+         logical, intent(out) :: isbrck  !! Logical flag indicating whether root is bracketed.
+      end subroutine zzcxbrut
+
+      !> Safely calculate the value NUMR/DENOM, avoiding the possibility
+      !> of floating point exceptions (FPE), due to numeric underflow,
+      !> numeric overflow, or divide-by-zero.
+      module real(wp) function zzdiv ( ctx, numr, denom )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: numr  !! Numerator of division.
+         real(wp), intent(in) :: denom  !! Denominator of division.
+      end function zzdiv
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdskbbl ( ctx, bodyid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzctr.inc'
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+      end subroutine zzdskbbl
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdsksbi ( ctx, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
+         integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
+         integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
+         integer(ip), intent(inout) :: btnbod  !! Number of entries in body table.
+         integer(ip), intent(inout) :: btsegp ( * )  !! Array of pointers from bodies to segment table.
+         integer(ip), intent(inout) :: btstsz ( * )  !! Array of sizes of body segment lists.
+         integer(ip), intent(inout) :: sthan  ( * )  !! Array of handles of segments.
+         real(wp), intent(inout) :: stdscr ( dskdsz, * )  !! Array of DSK descriptors of segments.
+         integer(ip), intent(inout) :: stdlad ( dladsz, * )  !! Array of DLA descriptors of segments.
+         integer(ip), intent(inout) :: stfree  !! Index of first free entry in segment table.
+         real(wp), intent(inout) :: stoff  ( 3, * )  !! Offsets of segment frame centers from body.
+         real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
+         real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
+      end subroutine zzdsksbi
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdsksbr ( ctx, needed, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: needed  !! Number of segment table entries needed.
+         integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
+         integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
+         integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
+         integer(ip), intent(inout) :: btnbod  !! Number of entries in body table.
+         integer(ip), intent(inout) :: btsegp ( * )  !! Array of pointers from bodies to segment table.
+         integer(ip), intent(inout) :: btstsz ( * )  !! Array of sizes of body segment lists.
+         integer(ip), intent(inout) :: sthan  ( * )  !! Array of handles of segments.
+         real(wp), intent(inout) :: stdscr ( dskdsz, * )  !! Array of DSK descriptors of segments.
+         integer(ip), intent(inout) :: stdlad ( dladsz, * )  !! Array of DLA descriptors of segments.
+         integer(ip), intent(inout) :: stfree  !! Index of first free entry in segment table.
+         real(wp), intent(inout) :: stoff  ( 3, * )  !! Offsets of segment frame centers from body.
+         real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
+         real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
+      end subroutine zzdsksbr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function always returns the value .FALSE.
+      module logical function zzdsksbd ( ctx, bodyid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      end function zzdsksbd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if and only if the specified segment
+      !> matches the body ID set via ZZDSKSBD.
+      module logical function zzdskbdc ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
+      end function zzdskbdc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .FALSE. for all segments.
+      module logical function zzdsknot ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
+      end function zzdsknot
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function always returns the value .FALSE.
+      module logical function zzdsksit ( ctx, bodyid, nsurf, srflst, et )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: nsurf  !! Surface ID count.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      end function zzdsksit
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if and only if the specified segment
+      !> matches the body ID set via ZZDSKSIT.
+      module logical function zzdskcit ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
+      end function zzdskcit
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function always returns the value .FALSE.
+      module logical function zzdskusc ( ctx, bodyid, et, cor1, cor2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         real(wp), intent(in) :: cor1  !! First coordinate.
+         real(wp), intent(in) :: cor2  !! Second coordinate.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      end function zzdskusc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if and only if the specified segment
+      !> matches the body ID set via ZZDSKUSC.
+      module logical function zzdskumc ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
+      end function zzdskumc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function always returns the value .FALSE.
+      module logical function zzdskmsc ( ctx, bodyid, surfid, framid, corsys, corpar, et, cor1, cor2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: surfid  !! ID code of target surface.
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: corsys  !! Coordinate system code.
+         real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+         real(wp), intent(in) :: cor1  !! First coordinate.
+         real(wp), intent(in) :: cor2  !! Second coordinate.
+         integer(ip), intent(in) :: framid  !! ID code of body-fixed reference frame.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      end function zzdskmsc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if and only if the specified segment
+      !> matches the body ID set via ZZDSKMSC.
+      module logical function zzdskmmc ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
+      end function zzdskmmc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function always returns the value .FALSE.
+      module logical function zzdsksrc ( ctx, surfid, bodyid, dclass, et, framid, pos )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: surfid  !! ID code of target surface.
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: dclass  !! Data class of segment.
+         integer(ip), intent(in) :: framid  !! ID code of body-fixed reference frame.
+         real(wp), intent(in) :: pos    ( 3 )  !! Cartesian position vector.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      end function zzdsksrc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if and only if the specified segment
+      !> matches the body ID set via ZZDSKSRC.
+      module logical function zzdskmrc ( ctx, handle, dladsc, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
+      end function zzdskmrc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns the maximum radius of the segment.
+      module real(wp) function zzdsksgr ( ctx, dskdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dskdsc.inc'
+         real(wp), intent(in) :: dskdsc ( * )  !! is a DSK descriptor.
+      end function zzdsksgr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzedterm ( ctx, type, a, b, c, srcrad, srcpos, npts, trmpts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: type  !! Terminator type.
+         real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis lying on the x-axis.
+         real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis lying on the y-axis.
+         real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis lying on the z-axis.
+         real(wp), intent(in) :: srcrad  !! Radius of light source.
+         real(wp), intent(in) :: srcpos ( 3 )  !! Position of center of light source.
+         integer(ip), intent(in) :: npts  !! Number of points in terminator point set.
+         real(wp), intent(out) :: trmpts ( 3, npts )  !! Terminator point set.
+      end subroutine zzedterm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzedtmpt ( ctx, umbral, a, b, c, r, axis, plnvec, point )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: umbral  !! Flag indicating whether terminator is umbral.
+         real(wp), intent(in) :: a  !! Semi-axis length in the X direction.
+         real(wp), intent(in) :: b  !! Semi-axis length in the Y direction.
+         real(wp), intent(in) :: c  !! Semi-axis length in the Z direction.
+         real(wp), intent(in) :: r  !! Radius of illumination source.
+         real(wp), intent(in) :: axis   ( 3 )  !! Axis vector from target to source.
+         real(wp), intent(in) :: plnvec ( 3 )  !! Vector in cutting half-plane.
+         real(wp), intent(out) :: point  ( 3 )  !! Terminator point.
+      end subroutine zzedtmpt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzellbds ( ctx, a, b, hmax, hmin, amax, bmax, amin, bmin )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Input spheroid's semi-major axis length.
+         real(wp), intent(in) :: b  !! Input spheroid's semi-minor axis length.
+         real(wp), intent(in) :: hmax  !! Maximum height relative to input spheroid.
+         real(wp), intent(in) :: hmin  !! Minimum height relative to input spheroid.
+         real(wp), intent(out) :: amax  !! Outer spheroid's semi-major axis length.
+         real(wp), intent(out) :: bmax  !! Outer spheroid's semi-minor axis length.
+         real(wp), intent(out) :: amin  !! Inner spheroid's semi-major axis length.
+         real(wp), intent(out) :: bmin  !! Inner spheroid's semi-minor axis length.
+      end subroutine zzellbds
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzelnaxx ( ctx, a, b, lat, xxpt, yxpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Ellipse's semi-axis length in the X direction.
+         real(wp), intent(in) :: b  !! Ellipse's semi-axis length in the Y direction.
+         real(wp), intent(in) :: lat  !! Planetodetic latitude in radians.
+         real(wp), intent(out) :: xxpt  !! Normal line intercept on the X-axis.
+         real(wp), intent(out) :: yxpt  !! Normal line intercept on the Y-axis.
+      end subroutine zzelnaxx
+
+      !> Return the 1976 IAU Earth precession matrix for a specified time.
+      module subroutine zzeprcss ( ctx, et, precm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris time, in seconds past J2000.
+         real(wp), intent(out) :: precm ( 3, 3 )  !! Precession matrix at ET.
+      end subroutine zzeprcss
+
+      !> Given a the "lines" of a two-line element set, parse the
+      !> lines and return the elements in units suitable for use
+      !> in SPICE software.
+      module subroutine zzgetelm ( ctx, frstyr, lines, epoch, elems, ok, error )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frstyr  !! year of earliest representable two-line elements
+         character(*), intent(in) :: lines ( 2 )  !! a pair of "lines" containing two-line elements
+         real(wp), intent(out) :: epoch  !! The epoch of the elements in seconds past J2000
+         real(wp), intent(out) :: elems ( * )  !! The elements converted to SPICE units.
+         logical, intent(out) :: ok  !! Boolean indicating error state.
+         character(*), intent(out) :: error  !! String describing error.
+      end subroutine zzgetelm
+
+      !> Constants assignments equivalent to 21 July 2006 "getgravconst"
+      !> by David Vallado, AIAA-2006-6753.
+      module subroutine zzgrav ( ctx, grav )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzsgp4.inc'
+         real(wp), intent(out) :: grav( ngravs, ngravc )  !! Array of geophysical constants.
+      end subroutine zzgrav
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzholdd ( ctx, op, id, ok, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzholdd.inc'
+         integer(ip), intent(in) :: op  !! Key for operation to execute.
+         integer(ip), intent(in) :: id  !! The ID for the item to apply OP.
+         logical, intent(out) :: ok  !! Boolean indicating success of get operation.
+         real(wp), intent(inout) :: value  !! Double precision value returned or to store.
+      end subroutine zzholdd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> MARGIN     P   Minimum complement of FOV cone angle.
+      module subroutine zzhullax ( ctx, inst, n, bounds, axis )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: inst  !! Instrument name.
+         integer(ip), intent(in) :: n  !! Number of FOV boundary vectors.
+         real(wp), intent(in) :: bounds ( 3, n )  !! FOV boundary vectors.
+         real(wp), intent(out) :: axis   ( 3 )  !! Instrument FOV axis vector.
+      end subroutine zzhullax
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if the voxel is inside the grid.
+      module logical function zzingrd ( ctx, nvox, voxel )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nvox  ( 3 )  !! Dimensions of voxel grid.
+         integer(ip), intent(in) :: voxel ( 3 )  !! Coordinates of voxel in voxel grid units.
+      end function zzingrd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> NONE       P   Meaning: exclude nothing.
+      module subroutine zzinrec ( ctx, p, bounds, margin, exclud, inside )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: p      ( 3 )  !! Input point.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+         real(wp), intent(in) :: margin  !! Element expansion margin.
+         integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+         logical, intent(out) :: inside  !! Flag indicating whether point is in element.
+      end subroutine zzinrec
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzinrypl ( ctx, vertex, udir, uplnml, const, maxd, nxpts, xpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! Vertex and unit length direction vector of ray.
+         real(wp), intent(in) :: udir   ( 3 )  !! Vertex and unit length direction vector of ray.
+         real(wp), intent(in) :: uplnml ( 3 )  !! Unit plane normal vector.
+         real(wp), intent(in) :: const  !! Plane constant.
+         real(wp), intent(in) :: maxd  !! Maximum distance of intersection from vertex.
+         integer(ip), intent(out) :: nxpts  !! Number of intersection points of ray and plane.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if NXPTS = 1.
+      end subroutine zzinrypl
+
+      !> Create a bounding box for a latitudinal volume element.
+      !>
+      !> MARGIN     P   Angular margin.
+      module subroutine zzlatbox ( ctx, bounds, center, lr, lt, lz, radius )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
+         real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
+         real(wp), intent(out) :: lr  !! Extent of box in the cylindrical radial direction.
+         real(wp), intent(out) :: lt  !! Extent of box in the tangential direction.
+         real(wp), intent(out) :: lz  !! Extent of box in the Z direction.
+         real(wp), intent(out) :: radius  !! Radius of box.
+      end subroutine zzlatbox
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzlexmet ( ctx, method, maxn, n, begs, ends )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! Method string.
+         integer(ip), intent(in) :: maxn  !! Maximum number of tokens that can be returned.
+         integer(ip), intent(out) :: n  !! Number of tokens found.
+         integer(ip), intent(out) :: begs   ( * )  !! Beginning indices of tokens.
+         integer(ip), intent(out) :: ends   ( * )  !! Ending indices of tokens.
+      end subroutine zzlexmet
+
+      !> Safely calculate the value A*B, avoiding the possibility
+      !> of floating point exceptions (FPE) due to numeric underflow
+      !> or numeric overflow.
+      module real(wp) function zzmult ( ctx, a, b )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Multiplier.
+         real(wp), intent(in) :: b  !! Multiplicand.
+      end function zzmult
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zznrmlon ( ctx, inmin, inmax, tol, outmin, outmax )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: inmin  !! Longitude interval lower bound.
+         real(wp), intent(in) :: inmax  !! Longitude interval upper bound.
+         real(wp), intent(in) :: tol  !! Round-off tolerance.
+         real(wp), intent(out) :: outmin  !! Adjusted longitude interval lower bound.
+         real(wp), intent(out) :: outmax  !! Adjusted longitude interval upper bound.
+      end subroutine zznrmlon
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzrecbox ( ctx, bounds, center, lx, ly, lz, radius )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
+         real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
+         real(wp), intent(out) :: lx  !! Extent of box in the X direction.
+         real(wp), intent(out) :: ly  !! Extent of box in the Y direction.
+         real(wp), intent(out) :: lz  !! Extent of box in the Z direction.
+         real(wp), intent(out) :: radius  !! Radius of box.
+      end subroutine zzrecbox
+
+      !> Given a vector, return a transformation matrix that maps from the
+      !> vector's base reference frame to the RTN
+      !> (radial-tangential-normal) frame associated with the vector.
+      module subroutine zzrtnmat ( ctx, v, m )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: v ( 3 )  !! A 3-dimensional vector.
+         real(wp), intent(out) :: m ( 3, 3 )  !! Base frame to RTN frame rotation matrix.
+      end subroutine zzrtnmat
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzryxsph ( ctx, vertex, udir, r, xpt, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! Vertex and unit length direction vector of ray.
+         real(wp), intent(in) :: udir   ( 3 )  !! Vertex and unit length direction vector of ray.
+         real(wp), intent(in) :: r  !! Radius of sphere.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if NXPTS = 1.
+         logical, intent(out) :: found  !! Flag indicating whether intersection exists.
+      end subroutine zzryxsph
+
+      !> Routine to calculate the dot terms for the secular perturbation
+      !> of a vehicle.
+      module subroutine zzsecprt ( ctx, isynfl, dg, del, xni, omegao, atime, omgdot, xli, xfact, xldot, xndot, xnddt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: isynfl  !! Resonance flag
+         real(wp), intent(in) :: omegao  !! Original argument of perigee
+         real(wp), intent(in) :: atime  !! An intermediate time term passed from the calling routine
+         real(wp), intent(in) :: omgdot  !! Time rate of change of argument of perigee
+         real(wp), intent(in) :: xli  !! An intermediate angular term passed from the calling routine
+         real(wp), intent(in) :: dg     ( 10 )  !! Parameter array
+         real(wp), intent(in) :: xfact  !! The value BFACT - XNQ
+         real(wp), intent(out) :: xldot  !! Time rate of change of XL
+         real(wp), intent(in) :: xni  !! An intermediate linear term passed from the calling routine
+         real(wp), intent(in) :: del    (  3 )  !! Parameter array of delta values
+         real(wp), intent(out) :: xnddt  !! Time rate of change of XNDOT
+         real(wp), intent(out) :: xndot  !! Time rate of change of XN
+      end subroutine zzsecprt
+
+      !> Compute the angular separation between two spherical or
+      !> point objects.
+      !>
+      !> The function returns the angular separation between two bodies,
+      !> BOD1 and BOD2, with radius R1 and R2 respectively, as seen from
+      !> an observer OBS, possibly corrected for aberration corrections.
+      module real(wp) function zzsepq ( ctx, et, bod1, bod2, r1, r2, obs, abcorr, ref )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+         integer(ip), intent(in) :: bod1  !! NAIF ID for first target
+         integer(ip), intent(in) :: bod2  !! NAIF ID for second target
+         real(wp), intent(in) :: r1  !! Radius of a spherical model for BOD1
+         real(wp), intent(in) :: r2  !! Radius of a spherical model for BOD2
+         integer(ip), intent(in) :: obs  !! NAIF ID of observer
+         character(*), intent(in) :: abcorr  !! Aberration correction flag
+         character(*), intent(in) :: ref  !! Reference frame of the angular separation
+      end function zzsepq
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsfxcor ( ctx, udnear, udmaxr, udrayx, trgcde, et, abcorr, uselt, usecn, usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zzsfx_near) :: udnear  !! the zzsfx_near routine
+         procedure(zzsfx_maxrad) :: udmaxr  !! the zzsfx_maxrad routine
+         procedure(zzsfx_rayx) :: udrayx  !! the zzsfx_rayx routine
+         include 'frmtyp.inc'
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: trgcde  !! Target body ID code.
+         real(wp), intent(in) :: et  !! Epoch at observer.
+         character(*), intent(in) :: abcorr  !! Aberration correction string.
+         logical, intent(in) :: uselt  !! "Use light time" flag.
+         logical, intent(in) :: usecn  !! "Use converged Newtonian correction" flag.
+         logical, intent(in) :: usestl  !! "Use stellar aberration" flag.
+         logical, intent(in) :: xmit  !! "Perform transmission corrections" flag.
+         character(*), intent(in) :: fixref  !! Name of target body-fixed frame.
+         integer(ip), intent(in) :: obscde  !! Observer body ID code.
+         integer(ip), intent(in) :: dfrcde  !! Ray direction frame ID code.
+         integer(ip), intent(in) :: dclass  !! Ray direction frame class.
+         integer(ip), intent(in) :: dcentr  !! Ray direction frame center body ID code.
+         real(wp), intent(in) :: dvec    ( 3 )  !! Ray direction vector.
+         real(wp), intent(out) :: spoint  ( 3 )  !! Surface intercept, if found.
+         real(wp), intent(out) :: trgepc  !! Target epoch, if intercept was found.
+         real(wp), intent(out) :: srfvec  ( 3 )  !! Observer-to-intercept vector, if found.
+         logical, intent(out) :: found  !! Found flag.
+      end subroutine zzsfxcor
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> UBPL       P   SPICE plane upper bound.
+      module subroutine zzsglatx ( ctx, p1, p2, minlat, minp, maxlat, maxp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: p1     ( 3 )  !! First line segment endpoint.
+         real(wp), intent(in) :: p2     ( 3 )  !! Second line segment endpoint.
+         real(wp), intent(out) :: minlat  !! Minimum latitude on segment.
+         real(wp), intent(out) :: minp   ( 3 )  !! Point where minimum latitude is attained.
+         real(wp), intent(out) :: maxlat  !! Maximum latitude on segment.
+         real(wp), intent(out) :: maxp   ( 3 )  !! Point where maximum latitude is attained.
+      end subroutine zzsglatx
+
+      !> Check/initialize the quantities describing an angular separation
+      !> between two spherical or point objects.
+      module subroutine zzspin ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr, bods, frames, mxrad, obs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: targ1  !! Name for first target
+         character(*), intent(in) :: shape1  !! Shape corresponding to TARG1
+         character(*), intent(in) :: frame1  !! Body fixed frame for TARG1
+         character(*), intent(in) :: targ2  !! Name for second target
+         character(*), intent(in) :: shape2  !! Shape corresponding to TARG2
+         character(*), intent(in) :: frame2  !! Body fixed frame for TARG2
+         character(*), intent(in) :: obsrvr  !! Name for observer body
+         character(*), intent(in) :: abcorr  !! Aberration correction flag
+         integer(ip), intent(out) :: bods   (2)  !! Array(2) of body/SPK IDs for TARG1 and TARG2
+         integer(ip), intent(out) :: frames (2)  !! Array(2) of frame IDs for TARG1 and TARG2
+         real(wp), intent(out) :: mxrad  (2)  !! Array(2) of max radii values for TARG1 and TARG2
+         integer(ip), intent(out) :: obs  !! Body/SPK IDs of OBSRVR
+      end subroutine zzspin
+
+      !> Deprecated: This routine has been superseded by SPKAPS. This
+      !> routine is supported for purposes of backward compatibility only.
+      module subroutine zzspkap0 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+         real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkap0
+
+      !> Deprecated: This routine has been superseded by SPKAPS. This
+      !> routine is supported for purposes of backward compatibility only.
+      module subroutine zzspkap1 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+         real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkap1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LBSNGL     P   Lower bound of hash pool arrays
+      !> SFNMLN     P   Maximum length of surface name strings
+      module subroutine zzsrfini ( ctx, nornam, codes, bodies, nvals, maxval, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'srftrn.inc'
+         include              'zzsrftrn.inc'
+         character(*), intent(in) :: nornam (          * )  !! Array of normalized surface names
+         integer(ip), intent(in) :: codes  (          * )  !! Array of surface ID codes for NAMES/NORNAM
+         integer(ip), intent(in) :: bodies (          * )  !! Array of body ID codes
+         integer(ip), intent(in) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays
+         integer(ip), intent(in) :: maxval  !! Size of the hash arrays
+         integer(ip), intent(out) :: snmhls (          * )  !! Surface name-based hash head node pointer list
+         integer(ip), intent(out) :: snmpol ( lbsngl : * )  !! Surface name-based hash node collision list
+         integer(ip), intent(out) :: snmidx (          * )  !! Surface name-based hash index storage array
+         integer(ip), intent(out) :: sidhls (          * )  !! Surface ID-based hash head node pointer list
+         integer(ip), intent(out) :: sidpol ( lbsngl : * )  !! Surface ID-based hash node collision list
+         integer(ip), intent(out) :: sididx (          * )  !! Surface ID-based hash index storage array
+      end subroutine zzsrfini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(zztan_cond) :: udcond  !! the zztan_cond routine
+         procedure(gf_step) :: udstep  !! the gf_step routine
+         procedure(gf_refine) :: udrefn  !! the gf_refine routine
+         integer(ip), parameter :: lbcell = -5
+         logical, intent(in) :: cstep  !! Logical indicating constant step size.
+         real(wp), intent(in) :: step  !! Constant step size for finding geometric events.
+         real(wp), intent(in) :: start  !! Beginning of the search interval.
+         real(wp), intent(in) :: finish  !! End of the search interval.
+         real(wp), intent(in) :: tol  !! Maximum error in detection of state transitions.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         real(wp), intent(out) :: points ( 3, * )  !! Array of points associated with transitions.
+         logical, intent(out) :: endflg ( 2 )  !! Endpoint transition flags.
+      end subroutine zztanslv
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zztogrid ( ctx, modxyz, voxori, voxsiz, grdxyz )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: voxsiz  !! Voxel size in model coordinates.
+         real(wp), intent(in) :: modxyz  ( 3 )  !! Coordinates of point in model coordinates.
+         real(wp), intent(in) :: voxori  ( 3 )  !! Origin of voxel grid in model coordinates.
+         real(wp), intent(out) :: grdxyz  ( 3 )  !! Coordinates of point in voxel grid coordinates.
+      end subroutine zztogrid
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> UBPL       P   Upper bound of SPICELIB plane array.
+      !>
+      !> The function returns the winding number of the input polygon
+      !> about the input point.
+      module integer(ip) function zzwind ( ctx, plane, n, vertcs, point )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubpl = 4
+         real(wp), intent(in) :: plane  ( ubpl )  !! A SPICELIB plane.
+         integer(ip), intent(in) :: n  !! Number of vertices of polygon.
+         real(wp), intent(in) :: vertcs ( 3, * )  !! Vertices of polygon.
+         real(wp), intent(in) :: point  ( 3 )  !! Point in PLANE.
+      end function zzwind
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns the winding number of the input polygon
+      !> about the input point.
+      module integer(ip) function zzwind2d ( ctx, n, vertcs, point )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! Number of vertices of polygon.
+         real(wp), intent(in) :: vertcs ( 2, n )  !! Vertices of polygon.
+         real(wp), intent(in) :: point  ( 2 )  !! Point in PLANE.
+      end function zzwind2d
+
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to planetographic coordinates.
+      module subroutine dpgrdr ( ctx, body, x, y, z, re, f, jacobi )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: body  !! Body with which coordinate system is associated.
+         real(wp), intent(in) :: x  !! X-coordinate of point.
+         real(wp), intent(in) :: y  !! Y-coordinate of point.
+         real(wp), intent(in) :: z  !! Z-coordinate of point.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
+      end subroutine dpgrdr
+
+      !> Compute the Jacobian matrix of the transformation from
+      !> planetographic to rectangular coordinates.
+      module subroutine drdpgr ( ctx, body, lon, lat, alt, re, f, jacobi )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: body  !! Name of body with which coordinates are associated.
+         real(wp), intent(in) :: lon  !! Planetographic longitude of a point (radians).
+         real(wp), intent(in) :: lat  !! Planetographic latitude of a point (radians).
+         real(wp), intent(in) :: alt  !! Altitude of a point above reference spheroid.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
+      end subroutine drdpgr
+
+      !> Calculate the time derivative of the separation angle between
+      !> two input states, S1 and S2.
+      !>
+      !> The function returns the time derivative of the separation angle
+      !> between the two input states, S1 and S2.
+      module real(wp) function dvsep ( ctx, s1, s2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: s1 (6)  !! State vector of the first body.
+         real(wp), intent(in) :: s2 (6)  !! State vector of the second body.
+      end function dvsep
+
+      !> Compute a set of points on the umbral or penumbral terminator of
+      !> a specified target body, where the target shape is modeled as an
+      !> ellipsoid.
+      module subroutine edterm ( ctx, trmtyp, source, target, et, fixref, abcorr, obsrvr, npts, trgepc, obspos, trmpts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: trmtyp  !! Terminator type.
+         character(*), intent(in) :: source  !! Light source.
+         character(*), intent(in) :: target  !! Target body.
+         real(wp), intent(in) :: et  !! Observation epoch.
+         character(*), intent(in) :: fixref  !! Body-fixed frame associated with target.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Observer.
+         integer(ip), intent(in) :: npts  !! Number of points in terminator set.
+         real(wp), intent(out) :: trgepc  !! Epoch associated with target center.
+         real(wp), intent(out) :: obspos ( 3 )  !! Position of observer in body-fixed frame.
+         real(wp), intent(out) :: trmpts ( 3, npts )  !! Terminator point set.
+      end subroutine edterm
+
+      !> Parse the "lines" of a two-line element set, returning the
+      !> elements in units suitable for use in SPICE software.
+      module subroutine getelm ( ctx, frstyr, lines, epoch, elems )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frstyr  !! Year of earliest representable two-line elements.
+         character(*), intent(in) :: lines ( 2  )  !! A pair of "lines" containing two-line elements.
+         real(wp), intent(out) :: epoch  !! The epoch of the elements in seconds past J2000.
+         real(wp), intent(out) :: elems ( 10 )  !! The elements converted to SPICE units.
+      end subroutine getelm
+
+      !> Return the field-of-view (FOV) parameters for a specified
+      !> instrument. The instrument is specified by name.
+      module subroutine getfvn ( ctx, inst, room, shape, frame, bsight, n, bounds )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: inst  !! Name of an instrument.
+         integer(ip), intent(in) :: room  !! Maximum number of vectors that can be returned.
+         character(*), intent(out) :: shape  !! Instrument FOV shape.
+         character(*), intent(out) :: frame  !! Name of the frame in which FOV vectors are defined.
+         real(wp), intent(out) :: bsight ( 3    )  !! Boresight vector.
+         integer(ip), intent(out) :: n  !! Number of boundary vectors returned.
+         real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
+      end subroutine getfvn
+
+      !> Scan a string from a specified starting position for the
+      !> end of a decimal number.
+      module subroutine lx4dec ( ctx, string, first, last, nchar )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! any character string
+         integer(ip), intent(in) :: first  !! first character to scan from in STRING
+         integer(ip), intent(out) :: last  !! last character that is part of a decimal number
+         integer(ip), intent(out) :: nchar  !! number of characters in the decimal number.
+      end subroutine lx4dec
+
+      !> Determine the set of osculating conic orbital elements that
+      !> corresponds to the state (position, velocity) of a body at some
+      !> epoch. In additional to the classical elements, return the true
+      !> anomaly, semi-major axis, and period, if applicable.
+      module subroutine oscltx ( ctx, state, et, mu, elts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'oscltx.inc'
+         real(wp), intent(in) :: state  ( 6 )  !! State of body at epoch of elements.
+         real(wp), intent(in) :: et  !! Epoch of elements.
+         real(wp), intent(in) :: mu  !! Gravitational parameter (GM) of primary body.
+         real(wp), intent(out) :: elts   ( *  )  !! Extended set of classical conic elements.
+      end subroutine oscltx
+
+      !> Convert planetographic coordinates to rectangular coordinates.
+      module subroutine pgrrec ( ctx, body, lon, lat, alt, re, f, rectan )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: body  !! Body with which coordinate system is associated.
+         real(wp), intent(in) :: lon  !! Planetographic longitude of a point (radians).
+         real(wp), intent(in) :: lat  !! Planetographic latitude of a point (radians).
+         real(wp), intent(in) :: alt  !! Altitude of a point above reference spheroid.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
+      end subroutine pgrrec
+
+      !> Convert rectangular coordinates to planetographic coordinates.
+      module subroutine recpgr ( ctx, body, rectan, re, f, lon, lat, alt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: body  !! Body with which coordinate system is associated.
+         real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+         real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(out) :: lon  !! Planetographic longitude of the point (radians).
+         real(wp), intent(out) :: lat  !! Planetographic latitude of the point (radians).
+         real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
+      end subroutine recpgr
+
+      !> Find semi-axis vectors of an ellipse generated by two arbitrary
+      !> three-dimensional vectors.
+      module subroutine saelgv ( ctx, vec1, vec2, smajor, sminor )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vec1   ( 3 )  !! Two vectors used to generate an ellipse.
+         real(wp), intent(in) :: vec2   ( 3 )  !! Two vectors used to generate an ellipse.
+         real(wp), intent(out) :: smajor ( 3 )  !! Semi-major axis of ellipse.
+         real(wp), intent(out) :: sminor ( 3 )  !! Semi-minor axis of ellipse.
+      end subroutine saelgv
+
+      !> Parse a character representation of spacecraft clock time and
+      !> encode it as a double precision number.
+      !>
+      !> MXPART     P   Maximum number of spacecraft clock partitions.
+      module subroutine scpars ( ctx, sc, sclkch, error, msg, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
+         logical, intent(out) :: error  !! Flag to indicate if string parsed correctly.
+         character(*), intent(out) :: msg  !! Error message if string did not parse.
+         real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
+      end subroutine scpars
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine SUBPNT. This routine is supported for purposes of
+      !> backward compatibility only.
+      module subroutine subpt ( ctx, method, target, et, abcorr, obsrvr, spoint, alt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(out) :: spoint ( 3 )  !! Sub-observer point on the target body.
+         real(wp), intent(out) :: alt  !! Altitude of the observer above the target body.
+      end subroutine subpt
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine SUBSLR. This routine is supported for purposes of
+      !> backward compatibility only.
+      module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(out) :: spoint ( 3 )  !! Sub-solar point on the target body.
+      end subroutine subsol
+
+      !> Find the state (position and velocity) of the surface intercept
+      !> defined by a specified ray, ray velocity, and ellipsoid.
+      module subroutine surfpv ( ctx, stvrtx, stdir, a, b, c, stx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: stvrtx ( 6 )  !! State of ray's vertex.
+         real(wp), intent(in) :: stdir  ( 6 )  !! State of ray's direction vector.
+         real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis along the x-axis.
+         real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis along the y-axis.
+         real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis along the z-axis.
+         real(wp), intent(out) :: stx    ( 6 )  !! State of surface intercept.
+         logical, intent(out) :: found  !! Flag indicating whether intercept state was found.
+      end subroutine surfpv
+
+      !> Write a line of text to standard output.
+      module subroutine tostdo ( ctx, line )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: line  !! is a line of text to be written to standard output
+      end subroutine tostdo
+
+      !> Compute the angular separation in radians between two spherical
+      !> or point objects.
+      !>
+      !> The function returns the angular separation between two targets,
+      !> TARG1 and TARG2, as seen from an observer OBSRVR, possibly
+      !> corrected for aberration corrections.
+      module real(wp) function trgsep ( ctx, et, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         include 'zzdyn.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: targ1  !! First target body name.
+         character(*), intent(in) :: shape1  !! First target body shape.
+         character(*), intent(in) :: frame1  !! Reference frame of first target.
+         character(*), intent(in) :: targ2  !! Second target body name.
+         character(*), intent(in) :: shape2  !! First target body shape.
+         character(*), intent(in) :: frame2  !! Reference frame of second target.
+         character(*), intent(in) :: obsrvr  !! Observing body name.
+         character(*), intent(in) :: abcorr  !! Aberration corrections flag.
+      end function trgsep
+
+      !> Return .TRUE. if the derivative of the callback function UDFUNC
+      !> at a given abscissa value is negative.
+      module subroutine uddc ( ctx, udfunc, x, dx, isdecr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
+         real(wp), intent(in) :: dx  !! Interval from X for derivative calculation.
+         logical, intent(out) :: isdecr  !! Boolean indicating if the derivative is negative.
+      end subroutine uddc
+
+      !> Write the value of a variable in a double precision symbol
+      !> table to a NAIF ASCII kernel file.
+      module subroutine wrkvar ( ctx, unit, name, dirctv, tabsym, tabptr, tabval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: unit  !! Output logical unit.
+         character(*), intent(in) :: name  !! Name of the variable.
+         character(*), intent(in) :: dirctv  !! Kernel directive: '=' or '+='.
+         character(*), intent(in) :: tabsym     ( lbcell:* )  !! Double precision symbol table.
+         integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Double precision symbol table.
+         real(wp), intent(in) :: tabval     ( lbcell:* )  !! Double precision symbol table.
+      end subroutine wrkvar
+
+      !> Return a list of voxels that a given ray intersects in a given
+      !> voxel grid.
+      !>
+      !> GRDTOL     P   Tolerance for vertex distance from grid.
+      module subroutine xdda ( ctx, vertex, raydir, grdext, maxnvx, nvx, voxlst )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! Voxel grid coordinates of ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Direction vector of ray.
+         integer(ip), intent(in) :: grdext ( 3 )  !! Dimensions of grid in voxel units.
+         integer(ip), intent(in) :: maxnvx  !! Maximum value of VOXLST.
+         integer(ip), intent(out) :: nvx  !! Number of voxels in the VOXLST list.
+         integer(ip), intent(out) :: voxlst ( 3, * )  !! List of voxels intersected by ray.
+      end subroutine xdda
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> BIG        P   Limit on magnitude of coefficients and UB.
+      module subroutine zzcnquad ( ctx, a, b, c, ub, n, r1, r2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Coefficients of quadratic equation.
+         real(wp), intent(in) :: b  !! Coefficients of quadratic equation.
+         real(wp), intent(in) :: c  !! Coefficients of quadratic equation.
+         real(wp), intent(in) :: ub  !! Upper bound on magnitude of roots.
+         integer(ip), intent(out) :: n  !! Number of real roots within bound.
+         real(wp), intent(out) :: r1  !! Root of smaller absolute value.
+         real(wp), intent(out) :: r2  !! Root of larger absolute value.
+      end subroutine zzcnquad
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdsksph ( ctx, bodyid, nsurf, srflst, minrad, maxrad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'errhnd.inc'
+         include 'dla.inc'
+         include 'dsk.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
+         integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
+         real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for body.
+         real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for body.
+      end subroutine zzdsksph
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> MARGIN     P   Minimum complement of FOV cone angle.
+      module subroutine zzfovaxi ( ctx, inst, n, bounds, axis )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: inst  !! Instrument name.
+         integer(ip), intent(in) :: n  !! Number of FOV boundary vectors.
+         real(wp), intent(in) :: bounds ( 3, n )  !! FOV boundary vectors.
+         real(wp), intent(out) :: axis   ( 3 )  !! Instrument FOV axis vector.
+      end subroutine zzfovaxi
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> ANGMRG     P   Angular rounding margin.
+      !> LONALI     P   Longitude shift margin.
+      !> NONE       P   Meaning: exclude nothing.
+      !> LONIDX     P   Longitude index. Also used for exclusion.
+      !> LATIDX     P   Latitude index. Also used for exclusion.
+      !> RADIDX     P   Radius index. Also used for exclusion.
+      module subroutine zzinlat0 ( ctx, r, lon, lat, bounds, exclud, inside )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: r  !! Radius of point.
+         real(wp), intent(in) :: lon  !! Planetocentric longitude of point.
+         real(wp), intent(in) :: lat  !! Planetocentric latitude of point.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+         integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+         logical, intent(out) :: inside  !! Flag indicating whether point is in element.
+      end subroutine zzinlat0
+
+      !> Entrance for deep space initialization.  This section is called
+      !> once per element set.
+      module subroutine zzdpinit ( ctx, ao, xlldot, omgdot, xnodot, xnodp, elems )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: ao  !! Original semimajor axis
+         real(wp), intent(in) :: elems ( 10 )  !! Array of orbit elements
+         real(wp), intent(in) :: omgdot  !! Time rate of change of argument of perigee
+         real(wp), intent(in) :: xlldot  !! Time rate of change of XLL
+         real(wp), intent(in) :: xnodot  !! Time rate of change of mean motion
+         real(wp), intent(in) :: xnodp  !! Original mean motion
+      end subroutine zzdpinit
+
+      !> Entrance for deep space secular effects
+      module subroutine zzdpsec ( ctx, xll, omgasm, xnodes, em, xinc, xn, t, elems, omgdot )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: elems ( 10 )  !! The two line elements array
+         real(wp), intent(out) :: em  !! Perturbed eccentricity of the orbit at time T
+         real(wp), intent(inout) :: omgasm  !! Perturbed argument of perigee
+         real(wp), intent(in) :: omgdot  !! Time derivative of the argument of perigee
+         real(wp), intent(in) :: t  !! Time to calculate perturbation
+         real(wp), intent(out) :: xinc  !! Perturbed inclination of the orbit plane at time T
+         real(wp), intent(inout) :: xll  !! Long-period periodic term
+         real(wp), intent(out) :: xn  !! Perturbed mean motion of the orbit at time T
+         real(wp), intent(inout) :: xnodes  !! Perturbed argument of ascending node
+      end subroutine zzdpsec
+
+      !> Entrances for lunar-solar periodics
+      module subroutine zzdpper ( ctx, t, em, xinc, omgasm, xnodes, xll )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(inout) :: em  !! Perturbed eccentricity of the orbit at time T
+         real(wp), intent(inout) :: omgasm  !! Perturbed argument of perigee
+         real(wp), intent(in) :: t  !! Time to calculate perturbations
+         real(wp), intent(inout) :: xinc  !! Perturbed inclination of the orbit plane at time T
+         real(wp), intent(inout) :: xll  !! Long-period periodic term
+         real(wp), intent(inout) :: xnodes  !! Perturbed argument of ascending node
+      end subroutine zzdpper
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LT         P   Code indicating latitude of P < LAT.
+      !> EQ         P   Code indicating latitude of P = LAT.
+      !> GT         P   Code indicating latitude of P > LAT.
+      module subroutine zzpdcmpl ( ctx, re, f, p, lat, rel )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: re  !! Equatorial radius.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(in) :: p   ( 3 )  !! Three-dimensional point.
+         real(wp), intent(in) :: lat  !! Planetodetic latitude.
+         integer(ip), intent(out) :: rel  !! Relation code.
+      end subroutine zzpdcmpl
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> The function returns .TRUE. if the sign of the planetodetic
+      !> latitude of the input point matches that of the input
+      !> planetodetic latitude.
+      module logical function zzpdpltc ( ctx, re, f, p, lat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: re  !! Equatorial radius.
+         real(wp), intent(in) :: f  !! Flattening coefficient.
+         real(wp), intent(in) :: p   ( 3 )  !! Three-dimensional point.
+         real(wp), intent(in) :: lat  !! Planetodetic latitude.
+      end function zzpdpltc
+
+      !> Create a bounding box for a planetodetic volume element.
+      !>
+      !> ANGMRG     P   Angular margin.
+      module subroutine zzpdtbox ( ctx, bounds, corpar, center, lr, lt, lz, radius )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dskdsc.inc'
+         include 'dsktol.inc'
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
+         real(wp), intent(in) :: corpar ( * )  !! Array containing coordinate parameters.
+         real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
+         real(wp), intent(out) :: lr  !! Extent of box in the cylindrical radial direction.
+         real(wp), intent(out) :: lt  !! Extent of box in the tangential direction.
+         real(wp), intent(out) :: lz  !! Extent of box in the Z direction.
+         real(wp), intent(out) :: radius  !! Radius of box.
+      end subroutine zzpdtbox
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzraybox ( ctx, vertex, raydir, boxori, extent, xpt, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! Vertex of ray.
+         real(wp), intent(in) :: raydir ( 3 )  !! Direction vector of ray.
+         real(wp), intent(in) :: boxori ( 3 )  !! Box origin: corner having minimum coordinates.
+         real(wp), intent(in) :: extent ( 3 )  !! Box extents in X, Y, Z directions.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Ray-box intercept.
+         logical, intent(out) :: found  !! Flag indicating whether intercept was found.
+      end subroutine zzraybox
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LBSNGL     P   Lower bound of hash pool arrays
+      !> SFNMLN     P   Maximum length of surface name strings
+      module subroutine zzsrfker ( ctx, kernam, nornam, kersid, kerbid, extker, nkvar, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'srftrn.inc'
+         include              'zzsrftrn.inc'
+         character(sfnmln), intent(out) :: kernam (          * )  !! Array of surface names from kernel pool.
+         character(sfnmln), intent(out) :: nornam (          * )  !! Array of normalized surface names.
+         integer(ip), intent(out) :: kersid (          * )  !! Array of surface ID codes from kernel pool.
+         integer(ip), intent(out) :: kerbid (          * )  !! Array of body ID codes from kernel pool.
+         logical, intent(out) :: extker  !! Logical flag indicating kernel data are present.
+         integer(ip), intent(out) :: nkvar  !! Number of surface name, code, body tuples.
+         integer(ip), intent(out) :: snmhls (          * )  !! Surface name-based hash head node pointer list
+         integer(ip), intent(out) :: snmpol ( lbsngl : * )  !! Surface name-based hash node collision list
+         integer(ip), intent(out) :: snmidx (          * )  !! Surface name-based hash index storage array
+         integer(ip), intent(out) :: sidhls (          * )  !! Surface ID-based hash head node pointer list
+         integer(ip), intent(out) :: sidpol ( lbsngl : * )  !! Surface ID-based hash node collision list
+         integer(ip), intent(out) :: sididx (          * )  !! Surface ID-based hash index storage array
+      end subroutine zzsrfker
+
+      !> Form a SPICE ellipse from a center vector and two generating
+      !> vectors.
+      module subroutine cgv2el ( ctx, center, vec1, vec2, ellips )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubel = 9
+         real(wp), intent(in) :: center (    3 )  !! Center and two generating vectors for an ellipse.
+         real(wp), intent(in) :: vec1   (    3 )  !! Center and two generating vectors for an ellipse.
+         real(wp), intent(in) :: vec2   (    3 )  !! Center and two generating vectors for an ellipse.
+         real(wp), intent(out) :: ellips ( ubel )  !! The SPICE ellipse defined by the input vectors.
+      end subroutine cgv2el
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
+      !> NAIF supports DPSPCE only for backward compatibility.
+      module subroutine dpspce ( ctx, et, geophs, elems, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Time for state evaluation in seconds past ephemeris epoch J2000.
+         real(wp), intent(in) :: geophs ( 8  )  !! The array of geophysical constants.
+         real(wp), intent(in) :: elems  ( 10 )  !! Array of orbit elements.
+         real(wp), intent(out) :: state  ( 6  )  !! State vector at ET.
+      end subroutine dpspce
+
+      !> Compute the local solar time for a given ephemeris epoch ET
+      !> for an object on the surface of a body at a specified longitude.
+      module subroutine et2lst ( ctx, et, body, lon, type, hr, mn, sc, time, ampm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch in seconds past J2000 epoch
+         integer(ip), intent(in) :: body  !! ID-code of the body of interest
+         real(wp), intent(in) :: lon  !! Longitude of surface point (RADIANS)
+         character(*), intent(in) :: type  !! Type of longitude 'PLANETOCENTRIC', etc.
+         integer(ip), intent(out) :: hr  !! Local hour on a "24 hour" clock
+         integer(ip), intent(out) :: mn  !! Minutes past the hour
+         integer(ip), intent(out) :: sc  !! Seconds past the minute
+         character(*), intent(out) :: time  !! String giving local time on 24 hour clock
+         character(*), intent(out) :: ampm  !! String giving time on A.M./ P.M. scale
+      end subroutine et2lst
+
+      !> Compute the points of intersection of a specified nappe of a cone
+      !> and a line segment.
+      module subroutine incnsg ( ctx, apex, axis, angle, endpt1, endpt2, nxpts, xpt1, xpt2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: apex   ( 3 )  !! Apex of cone.
+         real(wp), intent(in) :: axis   ( 3 )  !! Axis of cone.
+         real(wp), intent(in) :: angle  !! Angle of cone.
+         real(wp), intent(in) :: endpt1 ( 3 )  !! Endpoints of line segment.
+         real(wp), intent(in) :: endpt2 ( 3 )  !! Endpoints of line segment.
+         integer(ip), intent(out) :: nxpts  !! Number of intersection points.
+         real(wp), intent(out) :: xpt1   ( 3 )  !! First intersection point, if it exists.
+         real(wp), intent(out) :: xpt2   ( 3 )  !! Second intersection point, if it exists.
+      end subroutine incnsg
+
+      !> Scan a string from a specified starting position for the
+      !> end of a number.
+      module subroutine lx4num ( ctx, string, first, last, nchar )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! any character string
+         integer(ip), intent(in) :: first  !! first character to scan from in STRING
+         integer(ip), intent(out) :: last  !! last character that is part of a number
+         integer(ip), intent(out) :: nchar  !! number of characters in the number.
+      end subroutine lx4num
+
+      !> Read the next variable from a SPICE ASCII kernel file into a
+      !> double precision symbol table.
+      !>
+      !> LINLEN     P   Maximum line length.
+      module subroutine rdkvar ( ctx, tabsym, tabptr, tabval, name, eof )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Symbol table.
+         integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Symbol table.
+         real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Symbol table.
+         character(*), intent(out) :: name  !! Name of the variable.
+         logical, intent(out) :: eof  !! End of file indicator.
+      end subroutine rdkvar
+
+      !> Transform a state between coordinate systems.
+      module subroutine xfmsta ( ctx, istate, icosys, ocosys, body, ostate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         real(wp), intent(in) :: istate(6)  !! Input state.
+         character(*), intent(in) :: icosys  !! Current (input) coordinate system.
+         character(*), intent(in) :: ocosys  !! Desired (output) coordinate system.
+         character(*), intent(in) :: body  !! Name or NAIF ID of body with which coordinates are associated (if applicable).
+         real(wp), intent(out) :: ostate(6)  !! Converted output state.
+      end subroutine xfmsta
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzilusta ( ctx, method, target, illum, et, fixref, abcorr, obsrvr, spoint, normal, phssta, incsta, emista )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body associated with surface point.
+         character(*), intent(in) :: illum  !! Name of illumination source.
+         real(wp), intent(in) :: et  !! Observation epoch (TDB).
+         character(*), intent(in) :: fixref  !! Body-fixed reference frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observer.
+         real(wp), intent(in) :: spoint ( 3 )  !! Surface point.
+         real(wp), intent(in) :: normal ( 3 )  !! Outward normal vector at surface point.
+         real(wp), intent(out) :: phssta ( 2 )  !! Phase angle state.
+         real(wp), intent(out) :: incsta ( 2 )  !! Solar incidence angle state.
+         real(wp), intent(out) :: emista ( 2 )  !! Emission angle state.
+      end subroutine zzilusta
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LATMRG     P   Margin for latitude near the poles.
+      !> LONALI     P   Longitude shift margin.
+      !> ANGMRG     P   Angular rounding margin.
+      !> NONE       P   Meaning: exclude nothing.
+      !> LONIDX     P   Longitude index. Also used for exclusion.
+      !> LATIDX     P   Latitude index. Also used for exclusion.
+      !> RADIDX     P   Radius index. Also used for exclusion.
+      module subroutine zzinlat ( ctx, p, bounds, margin, exclud, inside )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: p      ( 3 )  !! Input point.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+         real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
+         integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+         logical, intent(out) :: inside  !! Flag indicating whether point is in element.
+      end subroutine zzinlat
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> ANGMRG     P   Angular rounding margin.
+      !> LONALI     P   Longitude alias margin.
+      !> NONE       P   Meaning: exclude nothing.
+      !> LONIDX     P   Longitude index. Also used for exclusion.
+      !> LATIDX     P   Latitude index. Also used for exclusion.
+      !> ALTIDX     P   Altitude index. Also used for exclusion.
+      module subroutine zzinpdt0 ( ctx, p, lon, bounds, corpar, exclud, inside )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: p      ( 3 )  !! Cartesian coordinates of point.
+         real(wp), intent(in) :: lon  !! Planetocentric longitude of point.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+         real(wp), intent(in) :: corpar ( * )  !! Coordinate parameters.
+         integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+         logical, intent(out) :: inside  !! Flag indicating whether point is in element.
+      end subroutine zzinpdt0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzrytrec ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of rectangular volume element.
+         real(wp), intent(in) :: margin  !! Margin used for element expansion.
+         integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
+      end subroutine zzrytrec
+
+      !> Create a bounding box for a DSK segment volume element.
+      !> The outputs are the box's center and radius. The center
+      !> is relative to the segment's frame center.
+      module subroutine zzsegbox ( ctx, dskdsc, boxctr, maxr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dskdsc.inc'
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK segment descriptor.
+         real(wp), intent(out) :: boxctr ( 3 )  !! Center of bounding box.
+         real(wp), intent(out) :: maxr  !! Radius of box.
+      end subroutine zzsegbox
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsrfn2c ( ctx, srfnam, bodyid, surfid, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'srftrn.inc'
+         include 'zzctr.inc'
+         include 'zzsrftrn.inc'
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         character(*), intent(in) :: srfnam  !! Surface name.
+         integer(ip), intent(out) :: surfid  !! Surface ID code.
+         logical, intent(out) :: found  !! Found flag.
+      end subroutine zzsrfn2c
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsrfc2n ( ctx, surfid, bodyid, srfnam, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'srftrn.inc'
+         include 'zzctr.inc'
+         include 'zzsrftrn.inc'
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         character(*), intent(out) :: srfnam  !! Surface name.
+         integer(ip), intent(in) :: surfid  !! Surface ID code.
+         logical, intent(out) :: found  !! Found flag.
+      end subroutine zzsrfc2n
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsrftrk ( ctx, usrctr, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'srftrn.inc'
+         include 'zzctr.inc'
+         include 'zzsrftrn.inc'
+         integer(ip), intent(inout) :: usrctr ( 2 )  !! User counter.
+         logical, intent(out) :: update  !! Update flag.
+      end subroutine zzsrftrk
+
+      !> Find the intersection of a triaxial ellipsoid and a plane.
+      module subroutine inedpl ( ctx, a, b, c, plane, ellips, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubel = 9
+         integer(ip), parameter :: ubpl = 4
+         real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis lying on the x-axis.
+         real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis lying on the y-axis.
+         real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis lying on the z-axis.
+         real(wp), intent(in) :: plane  ( ubpl )  !! Plane that intersects ellipsoid.
+         real(wp), intent(out) :: ellips ( ubel )  !! Intersection ellipse, when FOUND is .TRUE.
+         logical, intent(out) :: found  !! Flag indicating whether ellipse was found.
+      end subroutine inedpl
+
+      !> Project an ellipse onto a plane, orthogonally.
+      module subroutine pjelpl ( ctx, elin, plane, elout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubel = 9
+         integer(ip), parameter :: ubpl = 4
+         real(wp), intent(in) :: elin  ( ubel )  !! A SPICE ellipse to be projected.
+         real(wp), intent(in) :: plane ( ubpl )  !! A plane onto which ELIN is to be projected.
+         real(wp), intent(out) :: elout ( ubel )  !! A SPICE ellipse resulting from the projection.
+      end subroutine pjelpl
+
+      !> Translate a surface ID code, together with a body ID code, to the
+      !> corresponding surface name. If no such name exists, return a
+      !> string representation of the surface ID code.
+      !>
+      !> SFNMLN     P   Maximum length of surface name.
+      module subroutine srfc2s ( ctx, code, bodyid, srfstr, isname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: code  !! Integer surface ID code to translate to a string.
+         integer(ip), intent(in) :: bodyid  !! ID code of body associated with surface.
+         character(*), intent(out) :: srfstr  !! String corresponding to surface ID code.
+         logical, intent(out) :: isname  !! Logical flag indicating output is a surface name.
+      end subroutine srfc2s
+
+      !> Translate a surface ID code, together with a body string, to the
+      !> corresponding surface name. If no such surface name exists,
+      !> return a string representation of the surface ID code.
+      !>
+      !> SFNMLN     P   Maximum length of surface name.
+      module subroutine srfcss ( ctx, code, bodstr, srfstr, isname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: code  !! Integer surface ID code to translate to a string.
+         character(*), intent(in) :: bodstr  !! Name or ID of body associated with surface.
+         character(*), intent(out) :: srfstr  !! String corresponding to surface ID code.
+         logical, intent(out) :: isname  !! Flag indicating whether output is a surface name.
+      end subroutine srfcss
+
+      !> Translate a surface string, together with a body string, to the
+      !> corresponding surface ID code. The input strings may contain
+      !> names or integer ID codes.
+      module subroutine srfs2c ( ctx, srfstr, bodstr, code, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: srfstr  !! Surface name or ID string.
+         character(*), intent(in) :: bodstr  !! Body name or ID string.
+         integer(ip), intent(out) :: code  !! Integer surface ID code.
+         logical, intent(out) :: found  !! Flag indicating whether surface ID was found.
+      end subroutine srfs2c
+
+      !> Translate a surface string, together with a body ID code, to the
+      !> corresponding surface ID code. The input surface string may
+      !> contain a name or an integer ID code.
+      module subroutine srfscc ( ctx, srfstr, bodyid, code, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: srfstr  !! Surface name or ID string.
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         integer(ip), intent(out) :: code  !! Integer surface ID code.
+         logical, intent(out) :: found  !! Flag indicating whether surface ID was found.
+      end subroutine srfscc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdsksba ( ctx, bodyid, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
+         integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
+         integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
+         integer(ip), intent(inout) :: btnbod  !! Number of entries in body table.
+         integer(ip), intent(inout) :: btsegp ( * )  !! Array of pointers from bodies to segment table.
+         integer(ip), intent(inout) :: btstsz ( * )  !! Array of sizes of body segment lists.
+         integer(ip), intent(inout) :: sthan  ( * )  !! Array of handles of segments.
+         real(wp), intent(inout) :: stdscr ( dskdsz, * )  !! Array of DSK descriptors of segments.
+         integer(ip), intent(inout) :: stdlad ( dladsz, * )  !! Array of DLA descriptors of segments.
+         integer(ip), intent(inout) :: stfree  !! Index of first free entry in segment table.
+         real(wp), intent(inout) :: stoff  ( 3, * )  !! Offsets of segment frame centers from body.
+         real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
+         real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
+      end subroutine zzdsksba
+
+      !> Determine whether a specified ellipse intersects the pyramid
+      !> defined by a polygonal field of view.
+      !>
+      !> UBEL       P   Upper bound of SPICELIB ellipse array.
+      !> UBPL       P   Upper bound of SPICELIB plane array.
+      !> MAXFOV     P   Maximum number of boundary vectors.
+      module subroutine zzelvupy ( ctx, ellips, vertex, axis, n, bounds, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'errhnd.inc'
+         integer(ip), parameter :: ubel = 9
+         real(wp), intent(in) :: ellips ( ubel )  !! A SPICELIB ellipse.
+         real(wp), intent(in) :: vertex ( 3 )  !! Vertex of a pyramid.
+         real(wp), intent(in) :: axis   ( 3 )  !! Axis of a pyramid.
+         integer(ip), intent(in) :: n  !! Number of boundary vectors of the pyramid.
+         real(wp), intent(in) :: bounds ( 3, n )  !! Boundary vectors of the pyramid.
+         logical, intent(out) :: found  !! Flag indicating whether intersection was found.
+      end subroutine zzelvupy
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LONALI     P   Longitude shift margin.
+      !> NONE       P   Meaning: exclude nothing.
+      !> LONIDX     P   Longitude index. Also used for exclusion.
+      !> LATIDX     P   Latitude index. Also used for exclusion.
+      !> ALTIDX     P   Altitude index. Also used for exclusion.
+      !> LATMRG     P   High/low latitude margin.
+      module subroutine zzinpdt ( ctx, p, bounds, corpar, margin, exclud, inside )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: p      ( 3 )  !! Input point.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+         real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+         real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
+         integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+         logical, intent(out) :: inside  !! Flag indicating whether point is in element.
+      end subroutine zzinpdt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LONIDX     P   Longitude index.
+      !> LATIDX     P   Latitude index.
+      !> RADIDX     P   Radius index.
+      module subroutine zzrytlat ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of latitudinal volume element.
+         real(wp), intent(in) :: margin  !! Margin used for element expansion.
+         integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
+      end subroutine zzrytlat
+
+      !> Find the limb of a triaxial ellipsoid, viewed from a specified
+      !> point.
+      module subroutine edlimb ( ctx, a, b, c, viewpt, limb )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: ubel = 9
+         real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis lying on the x-axis.
+         real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis lying on the y-axis.
+         real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis lying on the z-axis.
+         real(wp), intent(in) :: viewpt (    3 )  !! Location of viewing point.
+         real(wp), intent(out) :: limb   ( ubel )  !! Limb of ellipsoid as seen from viewing point.
+      end subroutine edlimb
+
+      !> Find nearest point on a triaxial ellipsoid to a specified line,
+      !> and the distance from the ellipsoid to the line.
+      !>
+      !> UBEL       P   Upper bound of array containing SPICE ellipse.
+      !> UBPL       P   Upper bound of array containing SPICE plane.
+      module subroutine npedln ( ctx, a, b, c, linept, linedr, pnear, dist )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: a  !! Length of ellipsoid's semi-axis in the x direction
+         real(wp), intent(in) :: b  !! Length of ellipsoid's semi-axis in the y direction
+         real(wp), intent(in) :: c  !! Length of ellipsoid's semi-axis in the z direction
+         real(wp), intent(in) :: linept ( 3 )  !! Point on line
+         real(wp), intent(in) :: linedr ( 3 )  !! Direction vector of line
+         real(wp), intent(out) :: pnear  ( 3 )  !! Nearest point on ellipsoid to line
+         real(wp), intent(out) :: dist  !! Distance of ellipsoid from line
+      end subroutine npedln
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzinvelt ( ctx, p, corsys, corpar, bounds, margin, exclud, inside )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         include 'dskdsc.inc'
+         real(wp), intent(in) :: p      ( 3 )  !! Input point.
+         integer(ip), intent(in) :: corsys  !! Coordinate system code.
+         real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+         real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
+         integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+         logical, intent(out) :: inside  !! Flag indicating whether point is in element.
+      end subroutine zzinvelt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> MAXSRF     P   DSK subsystem maximum surface list size.
+      module subroutine zzprsmet ( ctx, bodyid, method, mxnsrf, shape, subtyp, pri, nsurf, srflst, pntdef, trmtyp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: bodyid  !! Body ID code.
+         character(*), intent(in) :: method  !! Method string.
+         integer(ip), intent(in) :: mxnsrf  !! Maximum number of surface IDs that can be returned.
+         character(*), intent(out) :: shape  !! Target shape.
+         character(*), intent(out) :: subtyp  !! Sub-point type.
+         logical, intent(out) :: pri  !! Prioritization flag.
+         integer(ip), intent(out) :: nsurf  !! Number of surface IDs in list.
+         integer(ip), intent(out) :: srflst ( * )  !! Surface ID list.
+         character(*), intent(out) :: pntdef  !! Limb or terminator point definition.
+         character(*), intent(out) :: trmtyp  !! Terminator type.
+      end subroutine zzprsmet
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LONIDX     P   Longitude index.
+      !> LATIDX     P   Latitude index.
+      !> ALTIDX     P   Altitude index.
+      module subroutine zzrytpdt ( ctx, vertex, raydir, bounds, corpar, margin, nxpts, xpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of planetodetic volume element.
+         real(wp), intent(in) :: corpar ( * )  !! Coordinate parameters.
+         real(wp), intent(in) :: margin  !! Margin used for element expansion.
+         integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
+      end subroutine zzrytpdt
+
+      !> Determine the plate ID and body-fixed coordinates of the
+      !> intersection of a specified ray with the surface defined by a
+      !> type 2 DSK plate model.
+      !>
+      !> XFRACT     P   Plate expansion fraction.
+      module subroutine dskx02 ( ctx, handle, dladsc, vertex, raydir, plid, xpt, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'dla.inc'
+         include              'dskdsc.inc'
+         include              'dsk02.inc'
+         include              'dsktol.inc'
+         integer(ip), intent(in) :: handle  !! Handle of DSK kernel containing plate model.
+         integer(ip), intent(in) :: dladsc   ( * )  !! DLA descriptor of plate model segment.
+         real(wp), intent(in) :: vertex   ( 3 )  !! Ray's vertex in the  body fixed frame.
+         real(wp), intent(in) :: raydir   ( 3 )  !! Ray direction in the body fixed frame.
+         integer(ip), intent(out) :: plid  !! ID code of the plate intersected by the ray.
+         real(wp), intent(out) :: xpt      ( 3 )  !! Intercept.
+         logical, intent(out) :: found  !! Flag indicating whether intercept exists.
+      end subroutine dskx02
+
+      !> Deprecated: This routine has been superseded by the SPICELIB
+      !> routine SINCPT. This routine is supported for purposes of
+      !> backward compatibility only.
+      module subroutine srfxpt ( ctx, method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         include               'zzctr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         character(*), intent(in) :: dref  !! Reference frame of input direction vector.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: spoint ( 3 )  !! Surface intercept point on the target body.
+         real(wp), intent(out) :: dist  !! Distance from the observer to the intercept point.
+         real(wp), intent(out) :: trgepc  !! Intercept epoch.
+         real(wp), intent(out) :: obspos ( 3 )  !! Observer position relative to target center.
+         logical, intent(out) :: found  !! Flag indicating whether intercept was found.
+      end subroutine srfxpt
+
+      !> Compute, for a given observer, ray emanating from the observer,
+      !> and target, the "tangent point": the point on the ray nearest
+      !> to the target's surface. Also compute the point on the target's
+      !> surface nearest to the tangent point.
+      module subroutine tangpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, dref, dvec, tanpt, alt, range, srfpt, trgepc, srfvec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: corloc  !! Aberration correction locus: 'TANGENT POINT' or 'SURFACE POINT'.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         character(*), intent(in) :: dref  !! Reference frame of ray direction vector.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray direction vector.
+         real(wp), intent(out) :: tanpt  ( 3 )  !! "Tangent point": point on ray nearest to surface.
+         real(wp), intent(out) :: alt  !! Altitude of tangent point above surface.
+         real(wp), intent(out) :: range  !! Distance of tangent point from observer.
+         real(wp), intent(out) :: srfpt  ( 3 )  !! Point on surface nearest to tangent point.
+         real(wp), intent(out) :: trgepc  !! Epoch associated with correction locus.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to surface point SRFPT.
+      end subroutine tangpt
+
+      !> Indicate whether one triaxial ellipsoid is occulted by another as
+      !> seen from a specified viewing location.
+      !>
+      !> UBEL       P   Upper bound of SPICELIB ellipse data structure.
+      !> UBPL       P   Upper bound of SPICELIB plane data structure.
+      !>
+      !> The function returns an integer code indicating the geometric
+      !> relationship of the three bodies.  Negative codes indicate that
+      !> the first target is partially or fully occulted by the second;
+      !> positive codes indicate that the second target is partially
+      !> or fully occulted by the first; a value of zero indicates no
+      !> occultation.
+      !>
+      !> See Detailed_Output for the list of codes and meanings.
+      module integer(ip) function zzocced ( ctx, viewpt, centr1, semax1, centr2, semax2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzocced.inc'
+         real(wp), intent(in) :: viewpt ( 3 )  !! Observation location.
+         real(wp), intent(in) :: centr1 ( 3 )  !! Center of first ellipsoid.
+         real(wp), intent(in) :: semax1 ( 3, 3 )  !! Semi-major axis matrix for first ellipsoid.
+         real(wp), intent(in) :: centr2 ( 3 )  !! Center of second ellipsoid.
+         real(wp), intent(in) :: semax2 ( 3, 3 )  !! Semi-major axis matrix for second ellipsoid.
+      end function zzocced
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> PTMEMM     P   Default margin for point-plate distance.
+      !> XFRACT     P   Default plate expansion fraction.
+      module subroutine zzptpl02 ( ctx, handle, dladsc, dskdsc, point, plid, plate, verts, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsk02.inc'
+         include 'dsktol.inc'
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment.
+         real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment.
+         real(wp), intent(in) :: point  ( 3 )  !! Input point.
+         integer(ip), intent(out) :: plid  !! Plate ID.
+         integer(ip), intent(out) :: plate  ( 3 )  !! Plate, expressed as an array of three vertex IDs.
+         real(wp), intent(out) :: verts  ( 3, 3 )  !! Vertices of plate.
+         logical, intent(out) :: found  !! Found flag.
+      end subroutine zzptpl02
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzrytelt ( ctx, vertex, raydir, dskdsc, margin, nxpts, xpt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dskdsc.inc'
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(in) :: dskdsc ( dskdsz )  !! DSK descriptor of segment.
+         real(wp), intent(in) :: margin  !! Margin used for element expansion.
+         integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
+      end subroutine zzrytelt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdskbun ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, point, normal )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsktol.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
+         integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
+         real(wp), intent(in) :: et  !! Lookup epoch, expressed as seconds past J2000 TDB.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of body-fixed frame for output vectors.
+         integer(ip), intent(in) :: nseg  !! Number of segments in buffers.
+         integer(ip), intent(in) :: hanbuf ( * )  !! DSK handle buffer.
+         integer(ip), intent(in) :: dlabuf ( dladsz, * )  !! DLA segment descriptor buffer.
+         real(wp), intent(in) :: dskbuf ( dskdsz, * )  !! DSK segment descriptor buffer.
+         real(wp), intent(in) :: offbuf ( 3,      * )  !! Frame center offset buffer.
+         real(wp), intent(in) :: ctrbuf ( 3,      * )  !! Bounding sphere center buffer.
+         real(wp), intent(in) :: radbuf ( * )  !! Bounding sphere radius buffer.
+         real(wp), intent(in) :: point  ( 3 )  !! Surface point.
+         real(wp), intent(out) :: normal ( 3 )  !! Outward unit normal vector at surface point.
+      end subroutine zzdskbun
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzdsksgx ( ctx, handle, dladsc, dtype, et, vertex, raydir, xpt, dc, ic, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! DSK file handle.
+         integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment.
+         integer(ip), intent(in) :: dtype  !! Data type code.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Surface intercept, if found.
+         real(wp), intent(out) :: dc     ( * )  !! D.p. component of source info.
+         integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+         logical, intent(out) :: found  !! Found flag.
+      end subroutine zzdsksgx
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> SGREED     P   Default segment boundary margin.
+      module subroutine zzdskbux ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, vertex, raydir, xpt, segidx, dc, ic, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'dsktol.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
+         integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
+         real(wp), intent(in) :: et  !! Lookup epoch, expressed as seconds past J2000 TDB.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of body-fixed frame for output vectors.
+         integer(ip), intent(in) :: nseg  !! Number of segments in buffers.
+         integer(ip), intent(in) :: hanbuf ( * )  !! DSK handle buffer.
+         integer(ip), intent(in) :: dlabuf ( dladsz, * )  !! DLA segment descriptor buffer.
+         real(wp), intent(in) :: dskbuf ( dskdsz, * )  !! DSK segment descriptor buffer.
+         real(wp), intent(in) :: offbuf ( 3,      * )  !! Frame center offset buffer.
+         real(wp), intent(in) :: ctrbuf ( 3,      * )  !! Bounding sphere center buffer.
+         real(wp), intent(in) :: radbuf ( * )  !! Bounding sphere radius buffer.
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intercept point.
+         integer(ip), intent(out) :: segidx  !! Index of segment in input buffers.
+         real(wp), intent(out) :: dc     ( * )  !! D.p. component of source info.
+         integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+         logical, intent(out) :: found  !! Found flag. True if and only if intercept exists.
+      end subroutine zzdskbux
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsbfxr ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of ray and intercept.
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Surface intercept point.
+         logical, intent(out) :: found  !! Found flag. True if intercept exists.
+      end subroutine zzsbfxr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsbfxri ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, handle, dladsc, dskdsc, dc, ic, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of ray and intercept.
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Surface intercept point.
+         integer(ip), intent(out) :: handle  !! Handle of DSK file.
+         integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of segment.
+         real(wp), intent(out) :: dskdsc ( * )  !! DSK descriptor of segment.
+         real(wp), intent(out) :: dc     ( * )  !! Double precision component of source info.
+         integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+         logical, intent(out) :: found  !! Found flag. True if intercept exists.
+      end subroutine zzsbfxri
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsbfnrm ( ctx, bodyid, nsurf, srflst, et, fixfid, point, normal )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dla.inc'
+         include 'dskdsc.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: bodyid  !! ID code of target body.
+         integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of surface point and normal vector.
+         real(wp), intent(in) :: point  ( 3 )  !! Surface point.
+         real(wp), intent(out) :: normal ( 3 )  !! Unit length outward normal at input point.
+      end subroutine zzsbfnrm
+
+      !> Compute a ray-surface intercept using data provided by
+      !> multiple loaded DSK segments. Return information about
+      !> the source of the data defining the surface on which the
+      !> intercept was found: DSK handle, DLA and DSK descriptors,
+      !> and DSK data type-dependent parameters.
+      !>
+      !> DCSIZE     P   Required size of DC array.
+      !> ICSIZE     P   Required size of IC array.
+      module subroutine dskxsi ( ctx, pri, target, nsurf, srflst, et, fixref, vertex, raydir, maxd, maxi, xpt, handle, dladsc, dskdsc, dc, ic, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dsktol.inc'
+         include 'dsksrc.inc'
+         include 'srftrn.inc'
+         include 'zzctr.inc'
+         logical, intent(in) :: pri  !! Data prioritization flag.
+         character(*), intent(in) :: target  !! Target body name.
+         integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Name of target body-fixed reference frame.
+         real(wp), intent(in) :: vertex ( 3 )  !! Vertex of ray.
+         real(wp), intent(in) :: raydir ( 3 )  !! Direction vector of ray.
+         integer(ip), intent(in) :: maxd  !! Size of DC array.
+         integer(ip), intent(in) :: maxi  !! Size of IC array.
+         real(wp), intent(out) :: xpt    ( 3 )  !! Intercept point.
+         integer(ip), intent(out) :: handle  !! Handle of segment contributing surface data.
+         integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of segment.
+         real(wp), intent(out) :: dskdsc ( * )  !! DSK descriptor of segment.
+         real(wp), intent(out) :: dc     ( * )  !! Double precision component of source info.
+         integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+         logical, intent(out) :: found  !! Found flag.
+      end subroutine dskxsi
+
+      !> Compute ray-surface intercepts for a set of rays, using data
+      !> provided by multiple loaded DSK segments.
+      module subroutine dskxv ( ctx, pri, target, nsurf, srflst, et, fixref, nrays, vtxarr, dirarr, xptarr, fndarr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsktol.inc'
+         include 'zzctr.inc'
+         logical, intent(in) :: pri  !! Data prioritization flag.
+         character(*), intent(in) :: target  !! Target body name.
+         integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Name of target body-fixed reference frame.
+         integer(ip), intent(in) :: nrays  !! Number of rays.
+         real(wp), intent(in) :: vtxarr ( 3, * )  !! Array of vertices of rays.
+         real(wp), intent(in) :: dirarr ( 3, * )  !! Array of direction vectors of rays.
+         real(wp), intent(out) :: xptarr ( 3, * )  !! Intercept point array.
+         logical, intent(out) :: fndarr ( * )  !! Found flag array.
+      end subroutine dskxv
+
+      !> Find the illumination angles (phase, incidence, and
+      !> emission) at a specified surface point of a target body.
+      module subroutine illumg ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         character(*), intent(in) :: ilusrc  !! Name of illumination source.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Desired aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+         real(wp), intent(out) :: trgepc  !! Target surface point epoch.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to target surface point.
+         real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+         real(wp), intent(out) :: incdnc  !! Source incidence angle at the surface point.
+         real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
+      end subroutine illumg
+
+      !> Map array of surface points on a specified target body to
+      !> the corresponding unit length outward surface normal vectors.
+      !>
+      !> PTMEMM     P   Default point-surface membership margin.
+      module subroutine srfnrm ( ctx, method, target, et, fixref, npts, srfpts, normls )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'dsktol.inc'
+         include 'gf.inc'
+         include 'zzctr.inc'
+         include 'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in TDB seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         integer(ip), intent(in) :: npts  !! Number of surface points in input array.
+         real(wp), intent(in) :: srfpts ( 3, * )  !! Array of surface points.
+         real(wp), intent(out) :: normls ( 3, * )  !! Array of outward, unit length normal vectors.
+      end subroutine srfnrm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzsuelin ( ctx, trgcde )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         integer(ip), intent(in) :: trgcde  !! Target body ID code.
+      end subroutine zzsuelin
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> MAXSRF     P   Maximum size of surface ID list.
+      module subroutine zzsudski ( ctx, trgcde, nsurf, srflst, fixfid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         integer(ip), intent(in) :: trgcde  !! Target body ID code.
+         integer(ip), intent(in) :: nsurf  !! Number of surface IDs in surface list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface list.
+         integer(ip), intent(in) :: fixfid  !! Target body-fixed frame ID.
+      end subroutine zzsudski
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzraysfx ( ctx, vertex, raydir, et, spoint, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: spoint ( 3 )  !! Surface intercept point.
+         logical, intent(out) :: found  !! Found flag. .TRUE. if intercept exists.
+      end subroutine zzraysfx
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzmaxrad ( ctx, maxrad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for target body.
+      end subroutine zzmaxrad
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzminrad ( ctx, minrad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for target body.
+      end subroutine zzminrad
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzraynp ( ctx, vertex, raydir, et, pnear, dist )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+         real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: pnear  ( 3 )  !! Near point to ray on surface.
+         real(wp), intent(out) :: dist  !! Distance between near point and ray.
+      end subroutine zzraynp
+
+      !> Compute the illumination angles---phase, incidence, and
+      !> emission---at a specified point on a target body. Return logical
+      !> flags indicating whether the surface point is visible from
+      !> the observer's position and whether the surface point is
+      !> illuminated.
+      module subroutine illumf ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn, visibl, lit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         character(*), intent(in) :: ilusrc  !! Name of illumination source.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Desired aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+         real(wp), intent(out) :: trgepc  !! Target surface point epoch.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to target surface point.
+         real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+         real(wp), intent(out) :: incdnc  !! Source incidence angle at the surface point.
+         real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
+         logical, intent(out) :: visibl  !! Visibility flag (.TRUE. = visible).
+         logical, intent(out) :: lit  !! Illumination flag (.TRUE. = illuminated).
+      end subroutine illumf
+
+      !> Find the illumination angles (phase, solar incidence, and
+      !> emission) at a specified surface point of a target body.
+      module subroutine ilumin ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Desired aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+         real(wp), intent(out) :: trgepc  !! Target surface point epoch.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to target surface point.
+         real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+         real(wp), intent(out) :: incdnc  !! Solar incidence angle at the surface point.
+         real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
+      end subroutine ilumin
+
+      !> Map array of planetocentric longitude/latitude coordinate pairs
+      !> to surface points on a specified target body.
+      module subroutine latsrf ( ctx, method, target, et, fixref, npts, lonlat, srfpts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'gf.inc'
+         include 'zzctr.inc'
+         include 'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in TDB seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         integer(ip), intent(in) :: npts  !! Number of coordinate pairs in input array.
+         real(wp), intent(in) :: lonlat ( 2, * )  !! Array of longitude/latitude coordinate pairs.
+         real(wp), intent(out) :: srfpts ( 3, * )  !! Array of surface points.
+      end subroutine latsrf
+
+      !> Compute, for a given observer and a ray emanating from the
+      !> observer, the surface intercept of the ray on a target body at
+      !> a specified epoch, optionally corrected for light time and
+      !> stellar aberration.
+      module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'frmtyp.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         real(wp), intent(out) :: spoint ( 3 )  !! Surface intercept point on the target body.
+         real(wp), intent(out) :: trgepc  !! Intercept epoch.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to intercept point.
+         logical, intent(out) :: found  !! Flag indicating whether intercept was found.
+      end subroutine sincpt
+
+      !> Compute the rectangular coordinates of the sub-observer point on
+      !> a target body at a specified epoch, optionally corrected for
+      !> light time and stellar aberration.
+      module subroutine subpnt ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'frmtyp.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(out) :: spoint ( 3 )  !! Sub-observer point on the target body.
+         real(wp), intent(out) :: trgepc  !! Sub-observer point epoch.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to sub-observer point.
+      end subroutine subpnt
+
+      !> Compute the rectangular coordinates of the sub-solar point on
+      !> a target body at a specified epoch, optionally corrected for
+      !> light time and stellar aberration.
+      module subroutine subslr ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'frmtyp.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(out) :: spoint ( 3 )  !! Sub-solar point on the target body.
+         real(wp), intent(out) :: trgepc  !! Sub-solar point epoch.
+         real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to sub-solar point.
+      end subroutine subslr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> ELLSHP     P   Ellipsoid shape code.
+      !> DSKSHP     P   DSK shape code.
+      !> LMBCRV     P   Limb code.
+      !> UMBRAL     P   Umbral terminator code.
+      !> PNMBRL     P   Penumbral terminator code.
+      module subroutine zztanini ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdsk.inc'
+         integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
+         real(wp), intent(in) :: srcrad  !! Radius of illumination source.
+         integer(ip), intent(in) :: shape  !! Target shape.
+         integer(ip), intent(in) :: trgcde  !! Target body ID code.
+         integer(ip), intent(in) :: nsurf  !! Number of surfaces in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of target body-fixed frame.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+         real(wp), intent(in) :: plnvec ( 3 )  !! Reference vector contained in cutting half-plane.
+         real(wp), intent(in) :: axis   ( 3 )  !! Axis vector: edge of cutting half-plane.
+      end subroutine zztanini
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zztansta ( ctx, angle, ocultd, point )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdsk.inc'
+         real(wp), intent(in) :: angle  !! Angle of ray.
+         logical, intent(out) :: ocultd  !! Occultation state flag. True if ray is occulted.
+         real(wp), intent(out) :: point  ( 3 )  !! Tangent point on target.
+      end subroutine zztansta
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> ELLSHP     P   Ellipsoid shape code.
+      !> DSKSHP     P   DSK shape code.
+      !> LMBCRV     P   Limb code.
+      !> UMBRAL     P   Umbral terminator code.
+      !> PNMBRL     P   Penumbral terminator code.
+      module subroutine zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, result, points )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdsk.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
+         real(wp), intent(in) :: srcrad  !! Radius of illumination source.
+         integer(ip), intent(in) :: shape  !! Target shape.
+         integer(ip), intent(in) :: trgcde  !! Target body ID code.
+         integer(ip), intent(in) :: nsurf  !! Number of surfaces in list.
+         integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+         integer(ip), intent(in) :: fixfid  !! Frame ID of target body-fixed frame.
+         real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+         real(wp), intent(in) :: plnvec ( 3 )  !! Reference vector contained in cutting half-plane.
+         real(wp), intent(in) :: axis   ( 3 )  !! Axis vector: edge of cutting half-plane.
+         real(wp), intent(in) :: schstp  !! Angular step size for searching.
+         real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! Cell (not window) containing transition angles.
+         real(wp), intent(out) :: points ( 3, * )  !! Array of tangent points.
+      end subroutine zztangnt
+
+      !> Find limb points on a target body. The limb is the set of points
+      !> of tangency on the target of rays emanating from the observer.
+      !> The caller specifies half-planes bounded by the observer-target
+      !> center vector in which to search for limb points.
+      module subroutine limbpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'frmtyp.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: corloc  !! Aberration correction locus.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(in) :: refvec ( 3 )  !! Reference vector for cutting half-planes.
+         real(wp), intent(in) :: rolstp  !! Roll angular step for cutting half-planes.
+         integer(ip), intent(in) :: ncuts  !! Number of cutting half-planes.
+         real(wp), intent(in) :: schstp  !! Angular step size for searching.
+         real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
+         integer(ip), intent(in) :: maxn  !! Maximum number of entries in output arrays.
+         integer(ip), intent(out) :: npts   ( * )  !! Counts of limb points corresponding to cuts.
+         real(wp), intent(out) :: points ( 3, * )  !! Limb points.
+         real(wp), intent(out) :: epochs ( * )  !! Times associated with limb points.
+         real(wp), intent(out) :: tangts ( 3, * )  !! Tangent vectors emanating from the observer.
+      end subroutine limbpt
+
+      !> Find terminator points on a target body. The caller specifies
+      !> half-planes, bounded by the illumination source center-target
+      !> center vector, in which to search for terminator points.
+      module subroutine termpt ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'dsk.inc'
+         include               'frmtyp.inc'
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         include               'zzdsk.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: ilusrc  !! Illumination source.
+         character(*), intent(in) :: target  !! Name of target body.
+         real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: corloc  !! Aberration correction locus.
+         character(*), intent(in) :: obsrvr  !! Name of observing body.
+         real(wp), intent(in) :: refvec ( 3 )  !! Reference vector for cutting half-planes.
+         real(wp), intent(in) :: rolstp  !! Roll angular step for cutting half-planes.
+         integer(ip), intent(in) :: ncuts  !! Number of cutting half-planes.
+         real(wp), intent(in) :: schstp  !! Angular step size for searching.
+         real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
+         integer(ip), intent(in) :: maxn  !! Maximum number of entries in output arrays.
+         integer(ip), intent(out) :: npts   ( * )  !! Counts of terminator points corresponding to cuts.
+         real(wp), intent(out) :: points ( 3, * )  !! Terminator points.
+         real(wp), intent(out) :: epochs ( * )  !! Times associated with terminator points.
+         real(wp), intent(out) :: trmvcs ( 3, * )  !! Terminator vectors emanating from the observer.
+      end subroutine termpt
+
+   end interface
+   ! --- end pepper_geometry
+   ! --- pepper_gf
+   public :: zzgfcoq, zzgfcprx, zzgfdiq, zzgfdsps, zzgffvin, zzgffvst, zzgfilin,&
+      zzgfildc, zzgfilgq, zzgfocin, zzgfocst, zzgfpaq, zzgfref, zzgfrrq,&
+      zzgfsolv, zzgfsolvx, zzgfspq, zzgfspin, zzgfspdc, zzgfspgq, zzgfspx,&
+      zzgfssin, zzgfssob, zzgfudlt, zzgfwsts, zzgfcost, zzgfdiin, zzgfdidc,&
+      zzgfdigq, zzgfpain, zzgfpadc, zzgfpagq, zzgfpax, zzgfrel, zzgfrelx,&
+      zzgftswk, zzgfwkin, zzgfwkad, zzgfwkun, zzgfwkmo, zzgfrrin, zzgfrrdc,&
+      zzgfrrgq, zzgfrrx, zzgfudb, zzgfcoin, zzgfcog, zzgfcodc, zzgfcoex,&
+      zzgfcocg, zzgfcosg, zzgfcocd, zzgfcosd, zzgflong, zzgfcslv
+
+   interface
+
+      !> Serve as a placeholder for an interrupt detection function.
+      !>
+      !> The function returns the value .FALSE. in all cases.
+      module logical function gfbail ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end function gfbail
+
+      !> Override the default GF convergence value used in the high
+      !> level GF routines.
+      !>
+      !> ZZPUT      P   ZZHOLDD stores a DP value.
+      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      module subroutine gfstol ( ctx, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzholdd.inc'
+         real(wp), intent(in) :: value  !! Double precision value returned or to store.
+      end subroutine gfstol
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dvec, crdsys, ctrid, re, f, crdnam, value, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         character(*), intent(in) :: vecdef  !! Vector definition.
+         character(*), intent(in) :: method  !! Computation method.
+         integer(ip), intent(in) :: trgid  !! Target ID code.
+         real(wp), intent(in) :: et  !! Computation epoch.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         integer(ip), intent(in) :: obsid  !! Observer ID code.
+         character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: crdsys  !! Coordinate system name.
+         integer(ip), intent(in) :: ctrid  !! Frame center ID code.
+         real(wp), intent(in) :: re  !! Equatorial radius of central body.
+         real(wp), intent(in) :: f  !! Flattening coefficient of central body.
+         character(*), intent(in) :: crdnam  !! Coordinate name.
+         real(wp), intent(out) :: value  !! Coordinate value.
+         logical, intent(out) :: found  !! Flag indicating if coordinate was computed.
+      end subroutine zzgfcoq
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzgfcprx ( ctx, state, corsys, re, f, sense, cdsign )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzgf.inc'
+         real(wp), intent(in) :: state  ( 6 )  !! A 6-dimensional Cartesian state vector.
+         character(*), intent(in) :: corsys  !! A coordinate system name parameter.
+         real(wp), intent(in) :: re  !! Ellipsoid equatorial radius.
+         real(wp), intent(in) :: f  !! Ellipsoid flattening coefficient.
+         integer(ip), intent(in) :: sense  !! Reference body longitude sense.
+         integer(ip), intent(out) :: cdsign ( 3 )  !! Velocity sign vector.
+      end subroutine zzgfcprx
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfdiq ( ctx, targid, et, abcorr, obsid, dist )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targid  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obsid  !! Observing body.
+         real(wp), intent(out) :: dist  !! Distance between target and observer.
+      end subroutine zzgfdiq
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfdsps ( ctx, nlead, string, fmt, ntrail )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: nlead  !! Number of leading blank lines to write.
+         character(*), intent(in) :: string  !! The string to display.
+         character(*), intent(in) :: fmt  !! Format in which the string is to be written.
+         integer(ip), intent(in) :: ntrail  !! Number of trailing blank lines to write.
+      end subroutine zzgfdsps
+
+      !> Perform initialization functions for visibility state
+      !> determination.
+      module subroutine zzgffvin ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         include 'zzocced.inc'
+         include 'gf.inc'
+         character(*), intent(in) :: inst  !! Name of the instrument.
+         character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      end subroutine zzgffvin
+
+      !> Indicate whether the target is currently in the instrument FOV.
+      module subroutine zzgffvst ( ctx, time, vistat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         include 'zzocced.inc'
+         include 'gf.inc'
+         real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
+         logical, intent(out) :: vistat  !! .TRUE. if the object is visible, .FALSE. otherwise.
+      end subroutine zzgffvst
+
+      !> Initialize the GF illumination angle constraint search utilities.
+      module subroutine zzgfilin ( ctx, method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: angtyp  !! Type of illumination angle.
+         character(*), intent(in) :: target  !! Target body name.
+         character(*), intent(in) :: illum  !! Illumination source name.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction specifier.
+         character(*), intent(in) :: obsrvr  !! Observer name.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      end subroutine zzgfilin
+
+      !> Indicate whether a specified illumination angle is decreasing at
+      !> a specified time.
+      module subroutine zzgfildc ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         logical, intent(out) :: decres  !! Flag indicating whether illumination angle is decreasing.
+         procedure(gf_scalar) :: udfunc  !! Placeholder external routine argument.
+      end subroutine zzgfildc
+
+      !> Return the specified illumination angle at a specified epoch.
+      module subroutine zzgfilgq ( ctx, et, angle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         real(wp), intent(out) :: angle  !! Illumination angle at time ET.
+      end subroutine zzgfilgq
+
+      !> Perform initialization functions for occultation state
+      !> determination.
+      module subroutine zzgfocin ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'gf.inc'
+         include 'zzabcorr.inc'
+         include 'zzdsk.inc'
+         include 'zzocced.inc'
+         character(*), intent(in) :: occtyp  !! Type of occultation.
+         character(*), intent(in) :: front  !! Name of body occulting the other.
+         character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+         character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+         character(*), intent(in) :: back  !! Name of body occulted by the other.
+         character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+         character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      end subroutine zzgfocin
+
+      !> See if the object is currently occulted.
+      module subroutine zzgfocst ( ctx, time, ocstat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'dsk.inc'
+         include 'gf.inc'
+         include 'zzabcorr.inc'
+         include 'zzdsk.inc'
+         include 'zzocced.inc'
+         real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
+         logical, intent(out) :: ocstat  !! .TRUE. if the object is occulted, .FALSE. otherwise.
+      end subroutine zzgfocst
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfpaq ( ctx, et, targ, illmn, obs, abcorr, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         integer(ip), intent(in) :: targ  !! Target body ID.
+         integer(ip), intent(in) :: illmn  !! Illuminating body ID.
+         integer(ip), intent(in) :: obs  !! Observer body ID.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: value  !! Value of phase angle.
+      end subroutine zzgfpaq
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> ZZPUT      P   ZZHOLDD stores a DP value.
+      !> GF_REF     P   ZZHOLDD acts on the reference value
+      !> for a GF search.
+      module subroutine zzgfref ( ctx, refval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzholdd.inc'
+         real(wp), intent(in) :: refval  !! The value to set as the reference value.
+      end subroutine zzgfref
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfrrq ( ctx, et, targ, obs, abcorr, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+         integer(ip), intent(in) :: targ  !! Target body ID
+         integer(ip), intent(in) :: obs  !! Observer body ID
+         character(*), intent(in) :: abcorr  !! Aberration correction flag
+         real(wp), intent(out) :: value  !! Value of range rate between objects
+      end subroutine zzgfrrq
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfsolv ( ctx, udcond, udstep, udrefn, bail, udbail, cstep, step, start, finish, tol, rpt, udrepu, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         logical, intent(in) :: cstep  !! Logical indicating constant step size.
+         real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
+         logical, intent(in) :: rpt  !! Progress reporter on ( .TRUE.) or off ( .FALSE. )
+         real(wp), intent(in) :: start  !! Beginning of the search interval.
+         real(wp), intent(in) :: finish  !! End of the search interval.
+         real(wp), intent(in) :: tol  !! Maximum error in detection of state transitions.
+         real(wp), intent(inout) :: result  ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_cond) :: udcond  !! Name of the routine that compares the current state condition with-respect-to a constraint.
+         procedure(gf_step) :: udstep  !! Name of the routine that computes a time step
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+      end subroutine zzgfsolv
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfsolvx ( ctx, udfuns, udfunb, udstep, udrefn, bail, udbail, cstep, step, start, finish, tol, rpt, udrepu, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         logical, intent(in) :: cstep  !! Logical indicating constant step size.
+         real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
+         logical, intent(in) :: rpt  !! Progress reporter on ( .TRUE.) or off ( .FALSE. )
+         real(wp), intent(in) :: start  !! Beginning of the search interval.
+         real(wp), intent(in) :: finish  !! End of the search interval.
+         real(wp), intent(in) :: tol  !! Maximum error in detection of state transitions.
+         real(wp), intent(inout) :: result  ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_scalar) :: udfuns  !! The routine that computes the scalar quantity of interest.
+         procedure(gf_boolean) :: udfunb  !! Name of the routine that compares the current state condition with-respect-to a constraint.
+         procedure(gf_step) :: udstep  !! Name of the routine that computes a time step
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+      end subroutine zzgfsolvx
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfspq ( ctx, et, targ1, targ2, r1, r2, obs, abcorr, ref, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+         integer(ip), intent(in) :: targ1  !! NAIF ID for first target
+         integer(ip), intent(in) :: targ2  !! NAIF ID for second target
+         real(wp), intent(in) :: r1  !! Radius of a spherical model for TARG1
+         real(wp), intent(in) :: r2  !! Radius of a spherical model for TARG2
+         integer(ip), intent(in) :: obs  !! NAIF ID of observer
+         character(*), intent(in) :: abcorr  !! Aberration correction flag
+         character(*), intent(in) :: ref  !! Reference frame of the angular separation
+         real(wp), intent(out) :: value  !! Value of angular separation between objects
+      end subroutine zzgfspq
+
+      !> This routine initializes variables that describe an angular
+      !> separation event of interest for solution by ZZGFSOLV.
+      module subroutine zzgfspin ( ctx, of, from, shape, frame, abcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: of    (2)  !! Body id's of the angular separation objects
+         character(*), intent(in) :: from  !! Observer name
+         character(*), intent(inout) :: shape (2)  !! Array of shape IDs corresponding to OF (PEPPER: normalized in place, as by SPICELIB)
+         character(*), intent(in) :: frame (2)  !! Array of frame names corresponding to OF
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      end subroutine zzgfspin
+
+      !> Computes whether or not the angular separation between SVBOD1 and
+      !> SVBOD2 is decreasing at time ET.
+      module subroutine zzgfspdc ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfspdc
+
+      !> Determine the angular separation between the limbs of the two
+      !> bodies.
+      module subroutine zzgfspgq ( ctx, et, sep )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         real(wp), intent(out) :: sep  !! Separation at time ET.
+      end subroutine zzgfspgq
+
+      !> Retrieve values set in ZZGFSPIN.
+      module subroutine zzgfspx ( ctx, xabcr, xbod, yref, xref, xobs, xrad, xshp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(out) :: xabcr  !! Saved value SVABCR.
+         integer(ip), intent(out) :: xbod  (2)  !! Saved values SVBOD1 and SVBOD2.
+         character(*), intent(out) :: yref  !! Saved value SVREF.
+         character(*), intent(out) :: xref  (2)  !! Saved values SVREF1 and SVREF2.
+         integer(ip), intent(out) :: xobs  !! Saved value SVOBS.
+         real(wp), intent(out) :: xrad  (2)  !! Saved values SVRAD1 and SVRAD2.
+         integer(ip), intent(out) :: xshp  (2)  !! Saved values SVSHP1 and SVSHP2.
+      end subroutine zzgfspx
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         integer(ip), intent(in) :: trgid  !! Target ID code.
+         real(wp), intent(in) :: et  !! Computation epoch.
+         character(*), intent(in) :: fixref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         integer(ip), intent(in) :: obsid  !! Observer ID code.
+         character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+         integer(ip), intent(in) :: dctr  !! DREF's center ID code.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         real(wp), intent(in) :: radii  ( 3 )  !! Target radii.
+         real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+         logical, intent(out) :: found  !! Flag indicating whether state was found.
+      end subroutine zzgfssin
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, radii, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         character(*), intent(in) :: method  !! Computation method.
+         integer(ip), intent(in) :: trgid  !! Target ID code.
+         real(wp), intent(in) :: et  !! Computation epoch.
+         character(*), intent(in) :: fixref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         integer(ip), intent(in) :: obsid  !! Observer ID code.
+         real(wp), intent(in) :: radii  ( 3 )  !! Target radii.
+         real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+      end subroutine zzgfssob
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
+      !> GF_REF     P   ZZHOLDD acts on the reference value
+      !> for a GF search.
+      module subroutine zzgfudlt ( ctx, udfunc, et, isless )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzholdd.inc'
+         real(wp), intent(in) :: et  !! Time in TDB seconds for which to evaluate UDFUNC.
+         logical, intent(out) :: isless  !! Boolean indicating if the scalar value is less than reference value.
+         procedure(gf_scalar) :: udfunc  !! Name of the routine that computes the scalar value of interest at ET.
+      end subroutine zzgfudlt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfwsts ( ctx, wndw1, wndw2, inclsn, wndw3 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         real(wp), intent(in) :: wndw1 ( lbcell : * )  !! Input window 1.
+         real(wp), intent(in) :: wndw2 ( lbcell : * )  !! Input window 2.
+         character(*), intent(in) :: inclsn  !! Flag indicating inclusion desired.
+         real(wp), intent(inout) :: wndw3 ( lbcell : * )  !! Result of sifting WNDW1 through WNDW2.
+      end subroutine zzgfwsts
+
+      !> Determine if a specified ray is within the field-of-view (FOV) of
+      !> a specified instrument at a given time.
+      module subroutine fovray ( ctx, inst, raydir, rframe, abcorr, obsrvr, et, visibl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name or ID code string of the observer.
+         real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+         logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
+      end subroutine fovray
+
+      !> Determine if a specified ephemeris object is within the
+      !> field-of-view (FOV) of a specified instrument at a given time.
+      module subroutine fovtrg ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, et, visibl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'gf.inc'
+         character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
+         character(*), intent(in) :: target  !! Name or ID code string of the target.
+         character(*), intent(in) :: tshape  !! Type of shape model used for the target.
+         character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name or ID code string of the observer.
+         real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+         logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
+      end subroutine fovtrg
+
+      !> Determine time intervals when a specified target body or ray
+      !> intersects the space bounded by the field-of-view (FOV) of a
+      !> specified instrument. Report progress and handle interrupts if so
+      !> commanded.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> MAXVRT     P   Maximum number of FOV boundary vertices.
+      module subroutine gffove ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'gf.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: inst  !! Name of the instrument.
+         character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
+         logical, intent(in) :: rpt  !! Progress report flag.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_step) :: udstep  !! Name of routine that returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine gffove
+
+      !> Determine time intervals when an observer sees one target
+      !> occulted by another. Report progress and handle interrupts
+      !> if so commanded.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      module subroutine gfocce ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'gf.inc'
+         include 'zzdsk.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: occtyp  !! Type of occultation.
+         character(*), intent(in) :: front  !! Name of body occulting the other.
+         character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+         character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+         character(*), intent(in) :: back  !! Name of body occulted by the other.
+         character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+         character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
+         logical, intent(in) :: rpt  !! Progress report flag.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_step) :: udstep  !! Name of the routine that returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine gfocce
+
+      !> Determine the occultation condition (not occulted, partially
+      !> occulted, etc.) of one target relative to another target as seen
+      !> by an observer at a given time.
+      module subroutine occult ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, et, ocltid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'gf.inc'
+         include 'occult.inc'
+         include 'dsk.inc'
+         include 'zzdsk.inc'
+         character(*), intent(in) :: targ1  !! Name or ID of first target.
+         character(*), intent(in) :: shape1  !! Type of shape model used for first target.
+         character(*), intent(in) :: frame1  !! Body-fixed, body-centered frame for first body.
+         character(*), intent(in) :: targ2  !! Name or ID of second target.
+         character(*), intent(in) :: shape2  !! Type of shape model used for second target.
+         character(*), intent(in) :: frame2  !! Body-fixed, body-centered frame for second body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name or ID of the observer.
+         real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+         integer(ip), intent(out) :: ocltid  !! Occultation identification code.
+      end subroutine occult
+
+      !> Compute the apparent phase angle for a target, observer,
+      !> illuminator set of ephemeris objects.
+      !>
+      !> The function returns the value of phase angle.
+      module real(wp) function phaseq ( ctx, et, target, illmn, obsrvr, abcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         character(*), intent(in) :: target  !! Target body name.
+         character(*), intent(in) :: illmn  !! Illuminating body name.
+         character(*), intent(in) :: obsrvr  !! Observer body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      end function phaseq
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         character(*), intent(in) :: vecdef  !! Vector definition.
+         character(*), intent(in) :: method  !! Computation method.
+         integer(ip), intent(in) :: trgid  !! Target ID code.
+         real(wp), intent(in) :: et  !! Computation epoch.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         integer(ip), intent(in) :: obsid  !! Observer ID code.
+         character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+         integer(ip), intent(in) :: dctr  !! ID code of ray frame's center.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         real(wp), intent(in) :: radii  ( 3 )  !! Radii of reference ellipsoid.
+         real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+         logical, intent(out) :: found  !! Flag indicating if state was computed.
+      end subroutine zzgfcost
+
+      !> Initialize the GF distance constraint search utilities.
+      module subroutine zzgfdiin ( ctx, target, abcorr, obsrvr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: target  !! Target body name.
+         character(*), intent(in) :: abcorr  !! Aberration correction specifier.
+         character(*), intent(in) :: obsrvr  !! Observer name.
+      end subroutine zzgfdiin
+
+      !> Indicate whether the observer-target distance is decreasing at a
+      !> specified time.
+      module subroutine zzgfdidc ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfdidc
+
+      !> Return the distance between the target and observer
+      !> at a specified epoch.
+      module subroutine zzgfdigq ( ctx, et, dist )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         real(wp), intent(out) :: dist  !! Distance at time ET.
+      end subroutine zzgfdigq
+
+      !> This is the initialization entry point used for describing
+      !> the event that is to be solved for by ZZGFSOLV.
+      module subroutine zzgfpain ( ctx, target, illmn, abcorr, obsrvr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: illmn  !! Name of the illuminating body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      end subroutine zzgfpain
+
+      !> Computes whether or not the phase angle between the observer
+      !> and the target is decreasing at time ET.
+      module subroutine zzgfpadc ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfpadc
+
+      !> Determine the phase angle between the centers of the two
+      !> bodies.
+      module subroutine zzgfpagq ( ctx, et, rvl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         real(wp), intent(out) :: rvl  !! Phase angle at time ET.
+      end subroutine zzgfpagq
+
+      !> Retrieve values set in ZZGFPAIN.
+      module subroutine zzgfpax ( ctx, xtarg, xillmn, xabcor, xobs, xablk )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
+         integer(ip), intent(out) :: xillmn  !! Saved value for the illuminator body.
+         character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
+         integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
+         logical, intent(out) :: xablk  ( nabcor )  !! Saved value for the aberration correction attribute block.
+      end subroutine zzgfpax
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LBCELL     P   SPICELIB cell lower bound.
+      !> NWREQ      P   Minimum number of workspace windows.
+      module subroutine zzgfrel ( ctx, udstep, udrefn, udqdec, udcond, udfunc, udqref, relate, refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, udbail, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+         real(wp), intent(in) :: refval  !! Value used as reference for geometric quantity condition.
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
+         real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal geometric conditions.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! Confinement schedule
+         integer(ip), intent(in) :: mw  !! Size of workspace windows.
+         integer(ip), intent(in) :: nw  !! Number of workspace windows.
+         real(wp), intent(inout) :: work ( lbcell : mw, nw )  !! Array containing workspace windows
+         logical, intent(in) :: rpt  !! Progress reporter on ( .TRUE.) or off ( .FALSE. )
+         character(*), intent(in) :: rptpre ( * )  !! Progress reporter beginning message.
+         character(*), intent(in) :: rptsuf ( * )  !! Progress reporter ending message.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_step) :: udstep  !! Name of the routine that computes and returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_decr) :: udqdec  !! Name of the routine that computes whether the geometric quantity is decreasing.
+         procedure(gf_cond) :: udcond  !! Name of the routine that computes the geometric condition with-respect-to the constraint.
+         procedure(gf_scalar) :: udfunc  !! The routine that computes the geometric quantity of interest.
+         procedure(gf_ref) :: udqref  !! Name of the routine that resets the current value of REFVAL.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine zzgfrel
+
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      !>
+      !> LBCELL     P   SPICELIB cell lower bound.
+      !> NWREQ      P   Minimum number of workspace windows.
+      module subroutine zzgfrelx ( ctx, udstep, udrefn, udqdec, udcond, udfunc, relate, refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, udbail, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the scalar quantity value and a number.
+         real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
+         real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal scalar conditions.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! Confinement window
+         integer(ip), intent(in) :: mw  !! Size of workspace windows.
+         integer(ip), intent(in) :: nw  !! Number of workspace windows.
+         real(wp), intent(inout) :: work ( lbcell : mw, nw )  !! Array containing workspace windows
+         logical, intent(in) :: rpt  !! Progress reporter on ( .TRUE.) or off ( .FALSE. )
+         character(*), intent(in) :: rptpre ( * )  !! Progress reporter beginning message.
+         character(*), intent(in) :: rptsuf ( * )  !! Progress reporter ending message.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_step) :: udstep  !! Name of the routine that computes and returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
+         procedure(gf_boolean) :: udcond  !! Name of the routine that computes the scalar quantity condition with-respect-to the constraint.
+         procedure(gf_scalar) :: udfunc  !! The routine that computes the scalar quantity of interest.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine zzgfrelx
+
+      !> Initialize the work progress utility. This is required prior to
+      !> use of the routine that performs the actual reporting.
+      module subroutine zzgftswk ( ctx, total, wait, tcheck, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         real(wp), intent(in) :: total  !! A measure of the total amount of work to be done.
+         real(wp), intent(in) :: wait  !! Minimum wait time between reports.
+         integer(ip), intent(in) :: tcheck  !! How often to sample the system clock.
+         character(*), intent(in) :: begin  !! First part of the output message.
+         character(*), intent(in) :: end  !! Last part of the output message.
+      end subroutine zzgftswk
+
+      !> Let the work reporter know that an increment of work has just
+      !> been completed.
+      module subroutine zzgfwkin ( ctx, incr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         real(wp), intent(in) :: incr  !! An amount of work just completed.
+      end subroutine zzgfwkin
+
+      !> Adjust the frequency with which work progress is reported.
+      module subroutine zzgfwkad ( ctx, wait, tcheck, begin, end )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         real(wp), intent(in) :: wait  !! Minimum wait time between reports.
+         integer(ip), intent(in) :: tcheck  !! Number of calls between system time checks.
+         character(*), intent(in) :: begin  !! First part of the output message.
+         character(*), intent(in) :: end  !! Last part of the output message.
+      end subroutine zzgfwkad
+
+      !> Set the output unit for the progress report.
+      module subroutine zzgfwkun ( ctx, unit )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         integer(ip), intent(in) :: unit  !! Output logical unit.
+      end subroutine zzgfwkun
+
+      !> Return saved progress report parameters.
+      module subroutine zzgfwkmo ( ctx, unit, total, wait, tcheck, begin, end, incr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         integer(ip), intent(out) :: unit  !! Output logical unit.
+         real(wp), intent(out) :: total  !! A measure of the total amount of work to be done.
+         real(wp), intent(out) :: wait  !! Minimum wait time between reports.
+         integer(ip), intent(out) :: tcheck  !! Number of calls between system time check.
+         character(*), intent(out) :: begin  !! First part of the output message.
+         character(*), intent(out) :: end  !! Last part of the output message.
+         real(wp), intent(out) :: incr  !! Last progress increment.
+      end subroutine zzgfwkmo
+
+      !> This is the initialization entry point used for describing
+      !> the event that is to be solved for by ZZGFSOLV.
+      module subroutine zzgfrrin ( ctx, target, abcorr, obsrvr, dt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: target  !! Name of the target body
+         character(*), intent(in) :: abcorr  !! Aberration correction flag
+         character(*), intent(in) :: obsrvr  !! Name of the observing body
+         real(wp), intent(in) :: dt  !! Interval from ET for derivative calculation.
+      end subroutine zzgfrrin
+
+      !> Computes whether or not the range rate between the observer
+      !> and the target is decreasing at time ET.
+      module subroutine zzgfrrdc ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfrrdc
+
+      !> Determine the range rate between the centers of the two
+      !> bodies.
+      module subroutine zzgfrrgq ( ctx, et, rvl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+         real(wp), intent(out) :: rvl  !! Range rate at time ET.
+      end subroutine zzgfrrgq
+
+      !> Retrieve values set in ZZGFRRIN.
+      module subroutine zzgfrrx ( ctx, xtarg, xabcor, xobs, xdt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
+         character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
+         integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
+         real(wp), intent(out) :: xdt  !! Saved value for DT.
+      end subroutine zzgfrrx
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzgfudb ( ctx, udfuns, udfunb, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'gf.inc'
+         integer(ip), parameter :: lbcell = -5
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
+         logical, intent(in) :: rpt  !! Progress report flag.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity of interest.
+         procedure(gf_boolean) :: udfunb  !! Name of the routine that computes the boolean value of interest.
+         procedure(gf_step) :: udstep  !! Name of the routine that returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine zzgfudb
+
+      !> Determine time intervals when an observer sees one target body
+      !> occulted by, or in transit across, another.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
+      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      module subroutine gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: occtyp  !! Type of occultation.
+         character(*), intent(in) :: front  !! Name of body occulting the other.
+         character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+         character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+         character(*), intent(in) :: back  !! Name of body occulted by the other.
+         character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+         character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding occultation events.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfoclt
+
+      !> Determine time intervals when a specified ray intersects the
+      !> space bounded by the field-of-view (FOV) of a specified
+      !> instrument.
+      !>
+      !> MARGIN     P   Minimum complement of FOV cone angle.
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> MAXVRT     P   Maximum number of FOV boundary vertices.
+      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
+      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      module subroutine gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: inst  !! Name of the instrument.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfrfov
+
+      !> Initialize a search progress report.
+      !>
+      !> LBCELL     P   The SPICE cell lower bound.
+      !> MXBEGM     P   Maximum progress report message prefix length.
+      !> MXENDM     P   Maximum progress report message suffix length.
+      module subroutine gfrepi ( ctx, window, begmss, endmss )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         integer(ip), parameter :: lbcell = -5
+         real(wp), intent(in) :: window ( lbcell : * )  !! A window over which a job is to be performed.
+         character(*), intent(in) :: begmss  !! Beginning of the text portion of output message.
+         character(*), intent(in) :: endmss  !! End of the text portion of output message.
+      end subroutine gfrepi
+
+      !> Tell the progress reporting system how far a search has
+      !> progressed.
+      module subroutine gfrepu ( ctx, ivbeg, ivend, time )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+         real(wp), intent(in) :: ivbeg  !! Start time of work interval.
+         real(wp), intent(in) :: ivend  !! End time of work interval.
+         real(wp), intent(in) :: time  !! Current time being examined in the search process
+      end subroutine gfrepu
+
+      !> Finish a progress report.
+      !>
+      !> None.
+      module subroutine gfrepf ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzgf.inc'
+      end subroutine gfrepf
+
+      !> Determine time intervals when a specified ephemeris object
+      !> intersects the space bounded by the field-of-view (FOV) of a
+      !> specified instrument.
+      !>
+      !> MARGIN     P   Minimum complement of FOV cone angle.
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> MAXVRT     P   Maximum number of FOV boundary vertices.
+      module subroutine gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: inst  !! Name of the instrument.
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+         character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gftfov
+
+      !> Perform a GF search on a user defined boolean quantity.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      module subroutine gfudb ( ctx, udfuns, udfunb, step, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+         procedure(gf_boolean) :: udfunb  !! Name of the routine returning the boolean value corresponding to an ET.
+      end subroutine gfudb
+
+      !> Perform a GF search on a user defined scalar quantity.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      module subroutine gfuds ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+         real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
+         real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal geometric conditions.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Size of workspace windows.
+         integer(ip), intent(in) :: nw  !! Number of workspace windows.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array containing workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+         procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
+      end subroutine gfuds
+
+      !> Initialize a coordinate search.
+      module subroutine zzgfcoin ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         character(*), intent(in) :: vecdef  !! Vector definition.
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Target name.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Observer name.
+         character(*), intent(in) :: dref  !! Ray's direction vector frame.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: crdsys  !! Coordinate system name.
+         character(*), intent(in) :: crdnam  !! Coordinate name.
+      end subroutine zzgfcoin
+
+      !> Compute the coordinate defined by the last call to ZZGFCOIN is at
+      !> the specified epoch.
+      module subroutine zzgfcog ( ctx, et, crdval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         real(wp), intent(out) :: crdval  !! Coordinate at epoch.
+      end subroutine zzgfcog
+
+      !> Indicate whether the coordinate defined by the last call to
+      !> ZZGFCOIN is decreasing at the specified epoch.
+      module subroutine zzgfcodc ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfcodc
+
+      !> Indicate whether the state of coordinate defined by the last call
+      !> to ZZGFCOIN is computable at the specified epoch.
+      module subroutine zzgfcoex ( ctx, udfunc, et, crdfnd )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfcoex
+
+      !> Compute the cosine of the coordinate defined by the last call to
+      !> ZZGFCOIN is at the specified epoch.
+      module subroutine zzgfcocg ( ctx, et, crdval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         real(wp), intent(out) :: crdval  !! Cosine of coordinate at epoch.
+      end subroutine zzgfcocg
+
+      !> Compute the sine of the coordinate defined by the last call to
+      !> ZZGFCOIN is at the specified epoch.
+      module subroutine zzgfcosg ( ctx, et, crdval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         real(wp), intent(out) :: crdval  !! Sine of coordinate at epoch.
+      end subroutine zzgfcosg
+
+      !> Indicate whether the cosine of the coordinate defined by the
+      !> last call to ZZGFCOIN is decreasing at the specified epoch.
+      module subroutine zzgfcocd ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfcocd
+
+      !> Indicate whether the sine of the coordinate defined by the
+      !> last call to ZZGFCOIN is decreasing at the specified epoch.
+      module subroutine zzgfcosd ( ctx, udfunc, et, decres )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         real(wp), intent(in) :: et  !! Computation epoch.
+         logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
+         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      end subroutine zzgfcosd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBCELL     P   Cell lower bound.
+      module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, mw, nw, work, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: vecdef  !! Vector definition.
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Target name.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Observer name.
+         character(*), intent(in) :: dref  !! Ray's direction vector frame.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: crdsys  !! Coordinate system name.
+         character(*), intent(in) :: crdnam  !! Coordinate name.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: tol  !! Convergence tolerance.
+         real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+         logical, intent(in) :: rpt  !! Progress report flag.
+         logical, intent(in) :: bail  !! Bail-out flag.
+         procedure(gf_bail) :: udbail  !! Bail-out status function.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! Workspace window count.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Workspace window array.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! Confinement window.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! Result window.
+         procedure(gf_step) :: udstep  !! Step size routine.
+         procedure(gf_refine) :: udrefn  !! Search refinement routine.
+         procedure(gf_rep_init) :: udrepi  !! Progress report initialization routine.
+         procedure(gf_rep_update) :: udrepu  !! Progress report update routine.
+         procedure(gf_rep_final) :: udrepf  !! Progress report termination routine.
+      end subroutine zzgflong
+
+      !> Perform a coordinate search.
+      !>
+      !> LBCELL     P   Cell lower bound.
+      !> CNTRCT     P   Existence window contraction magnitude.
+      module subroutine zzgfcslv ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, mw, nw, work, cnfine, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: vecdef  !! Vector definition.
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: target  !! Target name.
+         character(*), intent(in) :: ref  !! Reference frame name.
+         character(*), intent(in) :: abcorr  !! Aberration correction.
+         character(*), intent(in) :: obsrvr  !! Observer name.
+         character(*), intent(in) :: dref  !! Ray's direction vector frame.
+         real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: crdsys  !! Coordinate system name.
+         character(*), intent(in) :: crdnam  !! Coordinate name.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: tol  !! Convergence tolerance.
+         real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+         logical, intent(in) :: rpt  !! Progress report flag.
+         logical, intent(in) :: bail  !! Bail-out flag.
+         procedure(gf_bail) :: udbail  !! Bail-out status function.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! Workspace window count.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Workspace window array.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! Confinement window.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! Result window.
+         procedure(gf_step) :: udstep  !! Step size routine.
+         procedure(gf_refine) :: udrefn  !! Search refinement routine.
+         procedure(gf_rep_init) :: udrepi  !! Progress report initialization routine.
+         procedure(gf_rep_update) :: udrepu  !! Progress report update routine.
+         procedure(gf_rep_final) :: udrepf  !! Progress report termination routine.
+      end subroutine zzgfcslv
+
+      !> Determine time intervals when a specified geometric quantity
+      !> satisfies a specified mathematical condition.
+      !>
+      !> MAXPAR     P   Maximum number of parameters required to define
+      !> any quantity.
+      !> CNVTOL     P   Default convergence tolerance.
+      module subroutine gfevnt ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, cnfine, rpt, udrepi, udrepu, udrepf, mw, nw, work, bail, udbail, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'gf.inc'
+         include 'zzgf.inc'
+         include 'zzabcorr.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: gquant  !! Type of geometric quantity.
+         integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
+         character(*), intent(in) :: qpnams ( * )  !! Names of quantity definition parameters.
+         character(*), intent(in) :: qcpars ( * )  !! Array of character quantity definition parameters.
+         real(wp), intent(in) :: qdpars ( * )  !! Array of double precision quantity definition parameters.
+         integer(ip), intent(in) :: qipars ( * )  !! Array of integer quantity definition parameters.
+         logical, intent(in) :: qlpars ( * )  !! Array of logical quantity definition parameters.
+         character(*), intent(in) :: op  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds
+         real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         logical, intent(in) :: rpt  !! Progress reporter on (.TRUE.) or off (.FALSE.).
+         integer(ip), intent(in) :: mw  !! Size of workspace windows.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array containing workspace windows.
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+         procedure(gf_step) :: udstep  !! Name of the routine that computes and returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine gfevnt
+
+      !> Determine time intervals over which a specified constraint on
+      !> observer-target distance is met.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> NWDIST     P   Number of workspace windows for distance search.
+      module subroutine gfdist ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! Workspace window count.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfdist
+
+      !> Determine time intervals over which a specified constraint on
+      !> the observed phase, solar incidence, or emission angle at
+      !> a specified target body surface point is met.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> NWILUM     P   Number of workspace windows for angle search.
+      module subroutine gfilum ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'gf.inc'
+         include 'zzabcorr.inc'
+         include 'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: angtyp  !! Type of illumination angle.
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: illmn  !! Name of the illumination source.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! Workspace window count.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfilum
+
+      !> Determine time intervals for which a specified constraint
+      !> on the phase angle between an illumination source, a target,
+      !> and observer body centers is met.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Default convergence tolerance.
+      module subroutine gfpa ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: illmn  !! Name of the illuminating body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfpa
+
+      !> Determine time intervals for which a coordinate of an
+      !> observer-target position vector satisfies a numerical constraint.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      module subroutine gfposc ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+         character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfposc
+
+      !> Determine time intervals for which a specified constraint
+      !> on the observer-target range rate is met.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      module subroutine gfrr ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfrr
+
+      !> Determine time intervals when the angular separation between
+      !> the position vectors of two target bodies relative to an observer
+      !> satisfies a numerical relationship.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
+      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      module subroutine gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzabcorr.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: targ1  !! Name of first body.
+         character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
+         character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
+         character(*), intent(in) :: targ2  !! Name of second body.
+         character(*), intent(in) :: shape2  !! Name of the shape model describing the second body.
+         character(*), intent(in) :: frame2  !! The body-fixed reference frame of the second body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the angular separation value and REFVAL.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding angular separation events.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+         integer(ip), intent(in) :: mw  !! Size of workspace windows.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array containing workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfsep
+
+      !> Determine time intervals for which a coordinate of a
+      !> surface intercept position vector satisfies a numerical
+      !> constraint.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
+      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      module subroutine gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+         character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: dref  !! Reference frame of direction vector DVEC.
+         real(wp), intent(in) :: dvec   (3)  !! Pointing direction vector from OBSRVR.
+         character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+         character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfsntc
+
+      !> Determine time intervals for which a coordinate of an
+      !> subpoint position vector satisfies a numerical constraint.
+      !>
+      !> LBCELL     P   SPICE Cell lower bound.
+      !> CNVTOL     P   Convergence tolerance.
+      module subroutine gfsubc ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'gf.inc'
+         include               'zzgf.inc'
+         include               'zzabcorr.inc'
+         include               'zzholdd.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+         character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+         character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+         integer(ip), intent(in) :: mw  !! Workspace window size.
+         integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+         real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+         real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
+      end subroutine gfsubc
+
+   end interface
+   ! --- end pepper_gf
+   ! --- pepper_ek_storage
+   public :: zzekcdsc, zzekcnam, zzekgei, zzekgrs, zzekordc, zzekordd, zzekordi,&
+      zzekpdec, zzekpgch, zzekqini, zzekrbck, zzekreqi, zzekstop, zzekspsh,&
+      zzekspop, zzeksdec, zzeksupd, zzeksrd, zzekscln, zzekscan, zzeksei,&
+      zzekstyp, zzeksz04, zzeksz05, zzektcnv, zzektloc, zzekweqi, zzekgrcp,&
+      zzekinqc, zzekinqn, zzekjsqz, zzekpgin, zzekpgan, zzekpgal, zzekpgfr,&
+      zzekpgrc, zzekpgrd, zzekpgri, zzekpgwc, zzekpgwd, zzekpgwi, zzekpgbs,&
+      zzekpgpg, zzekpgst, zzekqcnj, zzekqcon, zzekqord, zzekqsel, zzekqtab,&
+      zzekrd09, zzeksrcp, zzeksrs, zzeksz06, zzekvset, zzekvcal, zzekgfwd,&
+      zzekglnk, zzeknrml, zzeksfwd, zzekslnk, zzektr13, zzektr31, zzektrbs,&
+      zzektrfr, zzektrit, zzektrlk, zzektrpi, zzektrrk, zzekweed, zzekcix1,&
+      zzekpars, zzektr23, zzektr32, zzektrdp, zzektrnk, zzektrsb, zzektrsz,&
+      zzektrud, zzektrui, zzekixlk, zzekrplk, zzektr1s, zzektrbn, zzektrki,&
+      zzektrls, zzekmloc, zzektrdl, zzektrin, zzekdps, zzekff01, zzeksdsc,&
+      zzeksinf, zzektrap, zzekacps, zzekaps, zzekbs01, zzekbs02, zzekde04,&
+      zzekrp2n
+
+   interface
+
+      !> Close an E-kernel.
+      module subroutine ekcls ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! EK file handle.
+      end subroutine ekcls
+
+      !> Return shadowing status of a specified EK file. THIS IS A
+      !> STUB ROUTINE.
+      module subroutine ekshdw ( ctx, handle, isshad )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         logical, intent(out) :: isshad  !! Logical flag indicating whether EK is shadowed.
+      end subroutine ekshdw
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekcdsc ( ctx, handle, segdsc, column, coldsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to an EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         character(*), intent(in) :: column  !! Name of column.
+         integer(ip), intent(out) :: coldsc ( cdscsz )  !! Descriptor for specified column.
+      end subroutine zzekcdsc
+
+      !> Look up the name of a column, given the column's descriptor.
+      module subroutine zzekcnam ( ctx, handle, coldsc, column )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         character(*), intent(out) :: column  !! Column name.
+      end subroutine zzekcnam
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekgei ( ctx, handle, addrss, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: addrss  !! DAS character address to read encoded value from.
+         integer(ip), intent(out) :: ival  !! Decoded integer value.
+      end subroutine zzekgei
+
+      !> Return the status of a specified EK record.
+      module subroutine zzekgrs ( ctx, handle, recptr, status )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekrecptr.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(out) :: status  !! Status of specified EK record.
+      end subroutine zzekgrs
+
+      !> Determine the order of elements in a character EK column,
+      !> using dictionary ordering on character data values and array
+      !> indices.
+      module subroutine zzekordc ( ctx, cvals, nullok, nlflgs, nvals, iorder )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: cvals  ( * )  !! Array of character string column values.
+         logical, intent(in) :: nullok  !! Logical flag indicating whether nulls are allowed.
+         logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
+         integer(ip), intent(in) :: nvals  !! Dimension of CVALS.
+         integer(ip), intent(out) :: iorder ( * )  !! Order vector for CVALS.
+      end subroutine zzekordc
+
+      !> Determine the order of elements in a double precision EK column,
+      !> using dictionary ordering on d.p. data values and array
+      !> indices.
+      module subroutine zzekordd ( ctx, dvals, nullok, nlflgs, nvals, iorder )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: dvals  ( * )  !! Array of d.p. column values.
+         logical, intent(in) :: nullok  !! Logical flag indicating whether nulls are allowed.
+         logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
+         integer(ip), intent(in) :: nvals  !! Dimension of DVALS.
+         integer(ip), intent(out) :: iorder ( * )  !! Order vector for DVALS.
+      end subroutine zzekordd
+
+      !> Determine the order of elements in an integer EK column, using
+      !> dictionary ordering on integer data values and array indices.
+      module subroutine zzekordi ( ctx, ivals, nullok, nlflgs, nvals, iorder )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: ivals  ( * )  !! Array of integer column values.
+         logical, intent(in) :: nullok  !! Logical flag indicating whether nulls are allowed.
+         logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
+         integer(ip), intent(in) :: nvals  !! Dimension of IVALS.
+         integer(ip), intent(out) :: iorder ( * )  !! Order vector for IVALS.
+      end subroutine zzekordi
+
+      !> Parse a declaration of a new EK column.
+      module subroutine zzekpdec ( ctx, decl, pardsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ektype.inc'
+         character(*), intent(in) :: decl  !! String containing column declaration.
+         integer(ip), intent(out) :: pardsc ( * )  !! Partial column descriptor.
+      end subroutine zzekpdec
+
+      !> Check that an EK is valid for a specified type of access by the
+      !> paging system.
+      module subroutine zzekpgch ( ctx, handle, access )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ekarch.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         character(*), intent(in) :: access  !! Access type.
+      end subroutine zzekpgch
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekqini ( ctx, isize, dsize, eqryi, eqryc, eqryd )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekqlimit.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: isize  !! Size of integer component of encoded query.
+         integer(ip), intent(in) :: dsize  !! Size of d.p. component of encoded query.
+         integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(inout) :: eqryc  !! Character component of query.
+         real(wp), intent(inout) :: eqryd ( * )  !! D.p. component of query.
+      end subroutine zzekqini
+
+      !> Back up a modified EK record belonging to a shadowed EK.
+      !> This is a stub routine.
+      module subroutine zzekrbck ( ctx, action, handle, segdsc, coldsc, recno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekglimit.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         character(*), intent(in) :: action  !! Action necessitating backup.
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recno  !! Record number.
+      end subroutine zzekrbck
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekreqi ( ctx, eqryi, name, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(in) :: name  !! Name of scalar item to read.
+         integer(ip), intent(out) :: value  !! Value of item.
+      end subroutine zzekreqi
+
+      !> Obtain last address in use in EK scratch area.
+      module subroutine zzekstop ( ctx, top )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(out) :: top  !! EK scratch area stack top.
+      end subroutine zzekstop
+
+      !> Push the contents of an integer array onto the EK scratch area
+      !> stack.
+      module subroutine zzekspsh ( ctx, n, idata )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! Number of integers to push.
+         integer(ip), intent(in) :: idata ( * )  !! Integer data.
+      end subroutine zzekspsh
+
+      !> Pop a specified number of elements from the top of the EK scratch
+      !> area stack, transferring this data to an integer array.
+      module subroutine zzekspop ( ctx, n, idata )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! Number of integers to pop.
+         integer(ip), intent(out) :: idata ( * )  !! Integer data.
+      end subroutine zzekspop
+
+      !> Decrement the EK scratch area stack pointer by a specified count.
+      module subroutine zzeksdec ( ctx, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: n  !! Decrement count.
+      end subroutine zzeksdec
+
+      !> Update the contents of a range of addresses already in use in the
+      !> EK scratch area.
+      module subroutine zzeksupd ( ctx, beg, end, idata )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: beg  !! Begin and end addresses of range to update.
+         integer(ip), intent(in) :: end  !! Begin and end addresses of range to update.
+         integer(ip), intent(in) :: idata ( * )  !! Integer data.
+      end subroutine zzeksupd
+
+      !> Read from a range of addresses in the EK scratch area.
+      module subroutine zzeksrd ( ctx, beg, end, idata )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: beg  !! Begin and end addresses of range to read from.
+         integer(ip), intent(in) :: end  !! Begin and end addresses of range to read from.
+         integer(ip), intent(out) :: idata ( * )  !! Integer data.
+      end subroutine zzeksrd
+
+      !> Clean up:  re-initialize the EK scratch area; unload the
+      !> scratch file.
+      !>
+      !> None.
+      module subroutine zzekscln ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end subroutine zzekscln
+
+      !> Scan tokens in an EK query.
+      module subroutine zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekkeyw.inc'
+         include 'ektokn.inc'
+         include 'ekqlimit.inc'
+         character(*), intent(in) :: query  !! Query specifying events to be found.
+         integer(ip), intent(in) :: maxntk  !! Maximum number of tokens to return.
+         integer(ip), intent(in) :: maxnum  !! Maximum number of numeric tokens allowed.
+         integer(ip), intent(out) :: ntoken  !! Number of tokens returned.
+         integer(ip), intent(out) :: tokens ( * )  !! Code numbers of identified tokens.
+         integer(ip), intent(out) :: lxbegs ( * )  !! Start and end locations of lexemes in query.
+         integer(ip), intent(out) :: lxends ( * )  !! Start and end locations of lexemes in query.
+         integer(ip), intent(out) :: values ( * )  !! Token values or value pointers, as needed.
+         real(wp), intent(out) :: numvls ( * )  !! Buffer containing values of numeric tokens.
+         character(*), intent(out) :: chrbuf  !! Buffer containing string tokens and identifiers.
+         integer(ip), intent(out) :: chbegs ( * )  !! Begin locations of string tokens in CHRBUF.
+         integer(ip), intent(out) :: chends ( * )  !! End locations of string tokens in CHRBUF.
+         logical, intent(out) :: scnerr  !! Flag indicating whether query parsed correctly.
+         character(*), intent(out) :: errmsg  !! Scan error description.
+      end subroutine zzekscan
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzeksei ( ctx, handle, addrss, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: addrss  !! DAS character address.
+         integer(ip), intent(in) :: ival  !! Integer value to write.
+      end subroutine zzeksei
+
+      !> Determine the type of segment required to support a specified
+      !> set of columns.
+      !>
+      !> The function returns the type of segment that is compatible with
+      !> the input column descriptors.
+      module integer(ip) function zzekstyp ( ctx, ncols, cdscrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekglimit.inc'
+         integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+         integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
+      end function zzekstyp
+
+      !> Return the size of a specified entry in a class 4 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      module integer(ip) function zzeksz04 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      end function zzeksz04
+
+      !> Return the size of a specified entry in a class 5 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      module integer(ip) function zzeksz05 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      end function zzeksz05
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzektcnv ( ctx, timstr, et, error, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektype.inc'
+         character(*), intent(in) :: timstr  !! Time string.
+         real(wp), intent(out) :: et  !! Ephemeris time in seconds past J2000, TDB.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Error message.
+      end subroutine zzektcnv
+
+      !> Locate the first occurrence of a specified token in a tokenized
+      !> EK query.  The input may actually be any subset of token codes
+      !> and corresponding keyword codes from a tokenized query.
+      module subroutine zzektloc ( ctx, tokid, kwcode, ntoken, tokens, values, loc, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektokn.inc'
+         include 'ekkeyw.inc'
+         integer(ip), intent(in) :: tokid  !! Token ID.
+         integer(ip), intent(in) :: kwcode  !! Keyword code.
+         integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
+         integer(ip), intent(in) :: tokens ( * )  !! Token codes.
+         integer(ip), intent(in) :: values ( * )  !! Pointers to numeric and string token values.
+         integer(ip), intent(out) :: loc  !! Location of first occurrence of token.
+         logical, intent(out) :: found  !! Flag indicating whether token was found.
+      end subroutine zzektloc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekweqi ( ctx, name, value, eqryi )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: name  !! Name of scalar item to write.
+         integer(ip), intent(in) :: value  !! Value to write.
+         integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      end subroutine zzekweqi
+
+      !> Open an existing E-kernel file for reading.
+      module subroutine ekopr ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of EK file.
+         integer(ip), intent(out) :: handle  !! Handle attached to EK file.
+      end subroutine ekopr
+
+      !> Open an existing E-kernel file for writing.
+      module subroutine ekopw ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: fname  !! Name of EK file.
+         integer(ip), intent(out) :: handle  !! Handle attached to EK file.
+      end subroutine ekopw
+
+      !> Get the companion pointer of a specified EK record.
+      module subroutine zzekgrcp ( ctx, handle, recptr, ptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         include 'ekrecptr.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(out) :: ptr  !! Pointer to companion of specified EK record.
+      end subroutine zzekgrcp
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekinqc ( ctx, value, length, lexbeg, lexend, eqryi, eqryc, descr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ektype.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: value  !! Character value.
+         integer(ip), intent(in) :: length  !! Length of item to insert.
+         integer(ip), intent(in) :: lexbeg  !! Begin and end positions of value's lexeme.
+         integer(ip), intent(in) :: lexend  !! Begin and end positions of value's lexeme.
+         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer portion of encoded query.
+         character(*), intent(inout) :: eqryc  !! Character portion of encoded query.
+         integer(ip), intent(out) :: descr  ( * )  !! Descriptor for value.
+      end subroutine zzekinqc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekinqn ( ctx, value, type, lexbeg, lexend, eqryi, eqryd, descr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ektype.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         real(wp), intent(in) :: value  !! Numeric value.
+         integer(ip), intent(in) :: type  !! Data type.  May be INT, DP, or TIME.
+         integer(ip), intent(in) :: lexbeg  !! Begin and end positions of value's lexeme.
+         integer(ip), intent(in) :: lexend  !! Begin and end positions of value's lexeme.
+         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer portion of encoded query.
+         real(wp), intent(inout) :: eqryd  ( * )  !! Numeric portion of encoded query.
+         integer(ip), intent(out) :: descr  ( * )  !! Descriptor for value.
+      end subroutine zzekinqn
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekjsqz ( ctx, jrsbas )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekjrs.inc'
+         include 'ekqlimit.inc'
+         integer(ip), intent(in) :: jrsbas  !! Scratch area base address of join row set.
+      end subroutine zzekjsqz
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgin ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! DAS file handle.
+      end subroutine zzekpgin
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgan ( ctx, handle, type, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: type  !! Data type of page to allocate.
+         integer(ip), intent(out) :: p  !! Page number.
+         integer(ip), intent(out) :: base  !! DAS base address of page.
+      end subroutine zzekpgan
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgal ( ctx, handle, type, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: type  !! Data type of page to allocate.
+         integer(ip), intent(out) :: p  !! Page number.
+         integer(ip), intent(out) :: base  !! DAS base address of page.
+      end subroutine zzekpgal
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgfr ( ctx, handle, type, p )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: type  !! Data type of page to allocate.
+         integer(ip), intent(in) :: p  !! Page number.
+      end subroutine zzekpgfr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgrc ( ctx, handle, p, pagec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: p  !! Page number.
+         character(*), intent(out) :: pagec  !! Character page.
+      end subroutine zzekpgrc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgrd ( ctx, handle, p, paged )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: p  !! Page number.
+         real(wp), intent(out) :: paged ( * )  !! Double precision page.
+      end subroutine zzekpgrd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgri ( ctx, handle, p, pagei )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(out) :: pagei ( * )  !! Integer page.
+      end subroutine zzekpgri
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgwc ( ctx, handle, p, pagec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: p  !! Page number.
+         character(*), intent(in) :: pagec  !! Character page.
+      end subroutine zzekpgwc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgwd ( ctx, handle, p, paged )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: p  !! Page number.
+         real(wp), intent(in) :: paged ( * )  !! Double precision page.
+      end subroutine zzekpgwd
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgwi ( ctx, handle, p, pagei )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(in) :: pagei ( * )  !! Integer page.
+      end subroutine zzekpgwi
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgbs ( ctx, type, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(out) :: base  !! DAS base address of page.
+      end subroutine zzekpgbs
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgpg ( ctx, type, addrss, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: type  !! Data type of address.
+         integer(ip), intent(in) :: addrss  !! DAS address to be mapped.
+         integer(ip), intent(out) :: p  !! Page number.
+         integer(ip), intent(out) :: base  !! DAS base address of page.
+      end subroutine zzekpgpg
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpgst ( ctx, handle, stat, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekarch.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Paged EK file handle.
+         character(*), intent(in) :: stat  !! Name of requested statistic.
+         integer(ip), intent(out) :: value  !! Value of requested statistic.
+      end subroutine zzekpgst
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekqcnj ( ctx, eqryi, n, size )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
+         integer(ip), intent(out) :: size  !! Size of Nth conjunction in WHERE clause.
+      end subroutine zzekqcnj
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekqcon ( ctx, eqryi, eqryc, eqryd, n, cnstyp, ltname, ltidx, lcname, lcidx, opcode, rtname, rtidx, rcname, rcidx, dtype, cbeg, cend, dval, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekbool.inc'
+         include 'ekopcd.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(in) :: eqryc  !! Character component of query.
+         real(wp), intent(in) :: eqryd ( * )  !! Numeric component of query.
+         integer(ip), intent(in) :: n  !! Index of constraint to read.
+         integer(ip), intent(out) :: cnstyp  !! Type of constraint (column or value comparison).
+         character(*), intent(out) :: ltname  !! LHS table name.
+         integer(ip), intent(out) :: ltidx  !! LHS table index in FROM clause.
+         character(*), intent(out) :: lcname  !! LHS column name.
+         integer(ip), intent(out) :: lcidx  !! LHS column index in virtual parent table.
+         integer(ip), intent(out) :: opcode  !! Operation code.
+         character(*), intent(out) :: rtname  !! RHS table name.
+         integer(ip), intent(out) :: rtidx  !! RHS table index in FROM clause.
+         character(*), intent(out) :: rcname  !! RHS column name.
+         integer(ip), intent(out) :: rcidx  !! RHS column index in virtual parent table.
+         integer(ip), intent(out) :: dtype  !! Data type of RHS value.
+         integer(ip), intent(out) :: cbeg  !! Character begin pointer for RHS value.
+         integer(ip), intent(out) :: cend  !! Character end pointer for RHS value.
+         real(wp), intent(out) :: dval  !! RHS double precision value.
+         integer(ip), intent(out) :: ival  !! RHS integer value.
+      end subroutine zzekqcon
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekqord ( ctx, eqryi, eqryc, n, table, tabidx, column, colidx, sense )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(in) :: eqryc  !! Character component of query.
+         integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
+         character(*), intent(out) :: table  !! Name of table qualifying Nth ORDER BY column.
+         integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+         character(*), intent(out) :: column  !! Nth column in ORDER BY clause of query.
+         integer(ip), intent(out) :: colidx  !! Index of column in TABLE, if known.
+         integer(ip), intent(out) :: sense  !! Code giving order sense for Nth column.
+      end subroutine zzekqord
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekqsel ( ctx, eqryi, eqryc, n, lxbeg, lxend, table, tabidx, column, colidx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(in) :: eqryc  !! Character component of query.
+         integer(ip), intent(in) :: n  !! Index within SELECT clause of table name to read.
+         integer(ip), intent(out) :: lxbeg  !! Begin index in query of selected item.
+         integer(ip), intent(out) :: lxend  !! End index in query of selected item.
+         character(*), intent(out) :: table  !! Name of table qualifying Nth SELECT column.
+         integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+         character(*), intent(out) :: column  !! Nth column in SELECT clause of query.
+         integer(ip), intent(out) :: colidx  !! Index of column in TABLE, if known.
+      end subroutine zzekqsel
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekqtab ( ctx, eqryi, eqryc, n, table, alias )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekbool.inc'
+         integer(ip), parameter :: lbcell = -5
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(in) :: eqryc  !! Character component of query.
+         integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
+         character(*), intent(out) :: table  !! Name of Nth table in FROM clause.
+         character(*), intent(out) :: alias  !! Alias of Nth table in FROM clause.
+      end subroutine zzekqtab
+
+      !> Read a column entry from a specified record in a class 9 column.
+      !> Class 9 columns contain fixed record count, fixed-length,
+      !> scalar character values.
+      module subroutine zzekrd09 ( ctx, handle, segdsc, coldsc, recno, cvlen, cval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekclas09.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recno  !! Record number.
+         integer(ip), intent(out) :: cvlen  !! Length of returned character value.
+         character(*), intent(out) :: cval  !! Character value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekrd09
+
+      !> Set the companion pointer of a specified EK record.
+      module subroutine zzeksrcp ( ctx, handle, recptr, recno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekrecptr.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: recno  !! Record number of companion of specified EK record.
+      end subroutine zzeksrcp
+
+      !> Set the status of a specified EK record.
+      module subroutine zzeksrs ( ctx, handle, recptr, status )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekrecptr.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: status  !! Status of specified EK record.
+      end subroutine zzeksrs
+
+      !> Return the size of a specified entry in a class 6 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      module integer(ip) function zzeksz06 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      end function zzeksz06
+
+      !> Given a union of EK join row sets, prepare EKVCAL to
+      !> compute addresses of row vectors in that union.
+      module subroutine zzekvset ( ctx, njrs, bases )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: njrs  !! Number of join row sets in union.
+         integer(ip), intent(in) :: bases  ( * )  !! EK scratch area base addresses of join row sets.
+      end subroutine zzekvset
+
+      !> Find the EK scratch area base address of a row vector and the
+      !> corresponding segment vector, where the row vector has a
+      !> specified index within a union of join row sets.
+      module subroutine zzekvcal ( ctx, rwvidx, rwvbas, sgvbas )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: rwvidx  !! Index of row vector.
+         integer(ip), intent(out) :: rwvbas  !! EK scratch area base address of row vector.
+         integer(ip), intent(out) :: sgvbas  !! Base address of parent segment vector.
+      end subroutine zzekvcal
+
+      !> Return the forward data pointer for a specified EK data page.
+      module subroutine zzekgfwd ( ctx, handle, type, p, fward )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(out) :: fward  !! Forward data pointer.
+      end subroutine zzekgfwd
+
+      !> Return the link count for a specified EK data page.
+      module subroutine zzekglnk ( ctx, handle, type, p, nlinks )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(out) :: nlinks  !! Number of links to page.
+      end subroutine zzekglnk
+
+      !> Convert the WHERE clause of an EK query to a normalized form.
+      module subroutine zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekkeyw.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'ektokn.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Input EK query.
+         integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
+         integer(ip), intent(in) :: lxbegs ( * )  !! Start positions of lexemes comprising WHERE clause.
+         integer(ip), intent(in) :: lxends ( * )  !! End positions of lexemes comprising WHERE clause.
+         integer(ip), intent(in) :: tokens ( * )  !! Tokens comprising query.
+         integer(ip), intent(in) :: values ( * )  !! Values associated with tokens.
+         real(wp), intent(in) :: numvls ( * )  !! Buffer containing numeric token values.
+         character(*), intent(in) :: chrbuf  !! Buffer containing string token values.
+         integer(ip), intent(in) :: chbegs ( * )  !! String token begin and end character positions.
+         integer(ip), intent(in) :: chends ( * )  !! String token begin and end character positions.
+         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Parsed query and string and number value buffers.
+         character(*), intent(out) :: eqryc  !! Parsed query and string and number value buffers.
+         real(wp), intent(out) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
+         logical, intent(out) :: error  !! Parse error flag.
+         character(*), intent(out) :: prserr  !! Parse error message.
+      end subroutine zzeknrml
+
+      !> Set the forward data pointer for a specified EK data page.
+      module subroutine zzeksfwd ( ctx, handle, type, p, fward )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(in) :: fward  !! Forward data pointer.
+      end subroutine zzeksfwd
+
+      !> Set the link count for a specified EK data page.
+      module subroutine zzekslnk ( ctx, handle, type, p, nlinks )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: p  !! Page number.
+         integer(ip), intent(in) :: nlinks  !! Number of links to page.
+      end subroutine zzekslnk
+
+      !> Execute a 1-3 split:  split the root node to create two new
+      !> children, leaving a single key in the root.
+      module subroutine zzektr13 ( ctx, handle, tree )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+      end subroutine zzektr13
+
+      !> Execute a 3-1 merge:  move the contents of two children into
+      !> the root node and delete the children.
+      module subroutine zzektr31 ( ctx, handle, tree )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+      end subroutine zzektr31
+
+      !> Map a node in a tree to its DAS base integer address.
+      !>
+      !> The function returns the DAS integer base address of the
+      !> specified node.
+      module integer(ip) function zzektrbs ( ctx, node )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektype.inc'
+         integer(ip), intent(in) :: node  !! Node number.
+      end function zzektrbs
+
+      !> Free a tree:  deallocate all pages belonging to the tree.
+      module subroutine zzektrfr ( ctx, handle, tree )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+      end subroutine zzektrfr
+
+      !> Initialize an EK tree, returning the root of the tree.
+      module subroutine zzektrit ( ctx, handle, tree )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(out) :: tree  !! Root of tree.
+      end subroutine zzektrit
+
+      !> Locate a specified key.  Return metadata describing the node
+      !> containing the key.
+      module subroutine zzektrlk ( ctx, handle, tree, key, idx, node, noffst, level, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key corresponding to value.
+         integer(ip), intent(out) :: idx  !! Node-relative index of KEY.
+         integer(ip), intent(out) :: node  !! Node containing key.
+         integer(ip), intent(out) :: noffst  !! Offset of NODE.
+         integer(ip), intent(out) :: level  !! Level of NODE.
+         integer(ip), intent(out) :: value  !! Value associated with KEY.
+      end subroutine zzektrlk
+
+      !> Given a key, return general information pertaining to the key's
+      !> parent node.
+      module subroutine zzektrpi ( ctx, handle, tree, key, parent, pkey, poffst, lpidx, lpkey, lsib, rpidx, rpkey, rsib )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key belonging to node of interest.
+         integer(ip), intent(out) :: parent  !! Parent node of the node containing KEY.
+         integer(ip), intent(out) :: pkey  !! A key in the parent node.
+         integer(ip), intent(out) :: poffst  !! Key offset of the parent node.
+         integer(ip), intent(out) :: lpidx  !! Node-relative index of the left parent key.
+         integer(ip), intent(out) :: lpkey  !! Left parent key.
+         integer(ip), intent(out) :: lsib  !! Node number of left sibling.
+         integer(ip), intent(out) :: rpidx  !! Node-relative index of the right parent key.
+         integer(ip), intent(out) :: rpkey  !! Right parent key.
+         integer(ip), intent(out) :: rsib  !! Node number of right sibling.
+      end subroutine zzektrpi
+
+      !> Rotate a specified number of keys from one node, through
+      !> the parent, into a neighboring sibling node.
+      module subroutine zzektrrk ( ctx, handle, tree, left, right, parent, pkidx, nrot )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         include 'ekpage.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: left  !! Left node of pair to participate in rotation.
+         integer(ip), intent(in) :: right  !! Right node of pair to participate in rotation.
+         integer(ip), intent(in) :: parent  !! Parent node of pair to participate in rotation.
+         integer(ip), intent(in) :: pkidx  !! Parent key index.
+         integer(ip), intent(in) :: nrot  !! Number of keys to rotate.
+      end subroutine zzektrrk
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekweed ( ctx, njrs, bases, nrows )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekjrs.inc'
+         include 'ekqlimit.inc'
+         integer(ip), intent(inout) :: njrs  !! Number of join row sets in union.
+         integer(ip), intent(inout) :: bases ( * )  !! Scratch area base addresses of join row sets.
+         integer(ip), intent(out) :: nrows  !! Total number of row vectors in join row set union.
+      end subroutine zzekweed
+
+      !> Open a new E-kernel file and prepare the file for writing.
+      module subroutine ekopn ( ctx, fname, ifname, ncomch, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektype.inc'
+         include 'ekfilpar.inc'
+         character(*), intent(in) :: fname  !! Name of EK file.
+         character(*), intent(in) :: ifname  !! Internal file name.
+         integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+         integer(ip), intent(out) :: handle  !! Handle attached to new EK file.
+      end subroutine ekopn
+
+      !> Open a scratch (temporary) E-kernel file and prepare the file
+      !> for writing.
+      module subroutine ekops ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektype.inc'
+         include 'ekfilpar.inc'
+         integer(ip), intent(out) :: handle  !! File handle attached to new EK file.
+      end subroutine ekops
+
+      !> Create a new type 1 index for a specified EK column.
+      module subroutine zzekcix1 ( ctx, handle, coldsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: coldsc ( cdscsz )  !! Column descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      end subroutine zzekcix1
+
+      !> Parse an EK query that has been scanned and tokenized.
+      !> Represent the result as an encoded EK query.
+      module subroutine zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektokn.inc'
+         include 'ekkeyw.inc'
+         include 'ekbool.inc'
+         include 'ektype.inc'
+         include 'ekopcd.inc'
+         include 'ekquery.inc'
+         include 'ekqlimit.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Query in string form.
+         integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
+         integer(ip), intent(in) :: lxbegs ( * )  !! Lexeme begin and end positions in QUERY.
+         integer(ip), intent(in) :: lxends ( * )  !! Lexeme begin and end positions in QUERY.
+         integer(ip), intent(in) :: tokens ( * )  !! Token codes.
+         integer(ip), intent(in) :: values ( * )  !! Values associated with tokens.
+         real(wp), intent(in) :: numvls ( * )  !! Buffer containing numeric token values.
+         character(*), intent(in) :: chrbuf  !! Buffer containing string token values.
+         integer(ip), intent(in) :: chbegs ( * )  !! String token begin and end character positions.
+         integer(ip), intent(in) :: chends ( * )  !! String token begin and end character positions.
+         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Parsed query and string and number value buffers.
+         character(*), intent(out) :: eqryc  !! Parsed query and string and number value buffers.
+         real(wp), intent(out) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
+         logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+         character(*), intent(out) :: prserr  !! Parse error description.
+      end subroutine zzekpars
+
+      !> Execute a 2-3 split:  split two sibling nodes into three nodes,
+      !> each one approximately 2/3 full.
+      module subroutine zzektr23 ( ctx, handle, tree, left, right, parent, pkidx, overfl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: left  !! Left sibling node.
+         integer(ip), intent(in) :: right  !! Right sibling node.
+         integer(ip), intent(in) :: parent  !! Common parent node.
+         integer(ip), intent(in) :: pkidx  !! Node-relative index of parent key.
+         logical, intent(out) :: overfl  !! Overflow flag.
+      end subroutine zzektr23
+
+      !> Execute a 3-2 merge:  merge three neighboring sibling nodes, two
+      !> of which contain the minimum number of keys and one of which
+      !> has an underflow of one key, into two nodes, each one
+      !> approximately full.
+      module subroutine zzektr32 ( ctx, handle, tree, left, middle, right, parent, lpkidx, undrfl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         include 'ekpage.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: left  !! Left sibling node.
+         integer(ip), intent(in) :: middle  !! Middle sibling node.
+         integer(ip), intent(in) :: right  !! Right sibling node.
+         integer(ip), intent(in) :: parent  !! Common parent node.
+         integer(ip), intent(in) :: lpkidx  !! Node-relative index of left parent key of MIDDLE.
+         logical, intent(out) :: undrfl  !! Underflow flag.
+      end subroutine zzektr32
+
+      !> Return the data pointer from a specified location in an EK tree.
+      module subroutine zzektrdp ( ctx, handle, tree, key, ptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key corresponding to pointer.
+         integer(ip), intent(out) :: ptr  !! Data pointer.
+      end subroutine zzektrdp
+
+      !> Return the number of keys in a node.
+      !>
+      !> The function returns the total number of keys in the specified
+      !> node of an EK tree.
+      module integer(ip) function zzektrnk ( ctx, handle, tree, node )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: node  !! Node of interest.
+      end function zzektrnk
+
+      !> Identify the immediate siblings of a node:  return a key in each
+      !> sibling and the siblings' node numbers.
+      module subroutine zzektrsb ( ctx, handle, tree, key, lsib, lkey, rsib, rkey )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key of interest.
+         integer(ip), intent(out) :: lsib  !! Left sibling node.
+         integer(ip), intent(out) :: lkey  !! Key in left sibling.
+         integer(ip), intent(out) :: rsib  !! Right sibling node.
+         integer(ip), intent(out) :: rkey  !! Key in right sibling.
+      end subroutine zzektrsb
+
+      !> Return the number of keys in a tree.
+      !>
+      !> The function returns the total number of keys in the specified
+      !> EK tree.
+      module integer(ip) function zzektrsz ( ctx, handle, tree )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+      end function zzektrsz
+
+      !> Delete a value from a tree at a specified location without
+      !> balancing the tree.
+      module subroutine zzektrud ( ctx, handle, tree, key, trgkey, undrfl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key to delete.
+         integer(ip), intent(out) :: trgkey  !! Key identifying node from which deletion occurred.
+         logical, intent(out) :: undrfl  !! Underflow flag.
+      end subroutine zzektrud
+
+      !> Insert a value into a tree at a specified location without
+      !> balancing the tree.
+      module subroutine zzektrui ( ctx, handle, tree, key, value, overfl )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key to insert.
+         integer(ip), intent(in) :: value  !! Value to insert.
+         logical, intent(out) :: overfl  !! Overflow flag.
+      end subroutine zzektrui
+
+      !> Return the number of segments in a specified EK.
+      !>
+      !> The function returns the number of segments in the specified
+      !> E-kernel.
+      module integer(ip) function eknseg ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekfilpar.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+      end function eknseg
+
+      !> Look up a specified record pointer from an EK index.
+      module subroutine zzekixlk ( ctx, handle, coldsc, key, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: key  !! Key.
+         integer(ip), intent(out) :: recptr  !! Record pointer.
+      end subroutine zzekixlk
+
+      !> Look up the record pointer of an EK record having a specified
+      !> ordinal position in a specified EK segment.
+      module subroutine zzekrplk ( ctx, handle, segdsc, n, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: n  !! Ordinal position of record.
+         integer(ip), intent(out) :: recptr  !! Record pointer.
+      end subroutine zzekrplk
+
+      !> One-shot tree load:  insert an entire array into an empty
+      !> tree.
+      module subroutine zzektr1s ( ctx, handle, tree, size, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: size  !! Size of tree.
+         integer(ip), intent(in) :: values  ( * )  !! Values to insert.
+      end subroutine zzektr1s
+
+      !> Solve overflow in a node by balancing the node
+      !> with one of its sibling nodes.
+      module subroutine zzektrbn ( ctx, handle, tree, left, right, parent, pkidx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: left  !! Left node of pair to be balanced.
+         integer(ip), intent(in) :: right  !! Right node of pair to be balanced.
+         integer(ip), intent(in) :: parent  !! Parent node of pair to be balanced.
+         integer(ip), intent(in) :: pkidx  !! Parent key index.
+      end subroutine zzektrbn
+
+      !> Get a key from a node by index:  return the key having a specified
+      !> index in a specified node.  The node of interest is identified
+      !> by a key in the node.
+      module subroutine zzektrki ( ctx, handle, tree, nodkey, n, key )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: nodkey  !! Key identifying node containing key of interest.
+         integer(ip), intent(in) :: n  !! Index of key of interest.
+         integer(ip), intent(out) :: key  !! Key located at index N.
+      end subroutine zzektrki
+
+      !> Search an EK tree linearly to find a specified data value.  The
+      !> function returns the index at which the value is found.
+      !>
+      !> The function returns the lowest index at which the input value
+      !> is found, or zero if the value is not found.
+      module integer(ip) function zzektrls ( ctx, handle, tree, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Tree root.
+         integer(ip), intent(in) :: ival  !! Value to search for.
+      end function zzektrls
+
+      !> Return the integer metadata location of a specified segment.  The
+      !> number and DAS integer base address of the first integer
+      !> page of the metadata are returned.
+      module subroutine zzekmloc ( ctx, handle, segno, page, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekfilpar.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(out) :: page  !! Integer metadata start page number.
+         integer(ip), intent(out) :: base  !! Page base.
+      end subroutine zzekmloc
+
+      !> Delete a value from an EK tree at a specified location.
+      module subroutine zzektrdl ( ctx, handle, tree, key )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key at which to delete value.
+      end subroutine zzektrdl
+
+      !> Insert a value into an EK tree at a specified location.
+      module subroutine zzektrin ( ctx, handle, tree, key, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekpage.inc'
+         include 'ektree.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: key  !! Key at which to insert value.
+         integer(ip), intent(in) :: value  !! Value to insert.
+      end subroutine zzektrin
+
+      !> Delete a specified data page for a specified EK segment.
+      module subroutine zzekdps ( ctx, handle, segdsc, type, p )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: p  !! Page number.
+      end subroutine zzekdps
+
+      !> Complete a fast load operation on a new type 1 E-kernel segment.
+      module subroutine zzekff01 ( ctx, handle, segno, rcptrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'ekglimit.inc'
+         include 'ekpage.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers.
+      end subroutine zzekff01
+
+      !> Look up the descriptor of a specified EK segment.
+      module subroutine zzeksdsc ( ctx, handle, segno, segdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(out) :: segdsc ( sdscsz )  !! Segment descriptor.
+      end subroutine zzeksdsc
+
+      !> Return general segment information for a specified segment in a
+      !> specified EK.
+      module subroutine zzeksinf ( ctx, handle, segno, tabnam, segdsc, cnames, cdscrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektnamsz.inc'
+         integer(ip), intent(in) :: handle  !! Handle of EK.
+         integer(ip), intent(in) :: segno  !! Number of segment to be summarized.
+         character(*), intent(out) :: tabnam  !! Name of table containing segment.
+         integer(ip), intent(out) :: segdsc ( sdscsz    )  !! Segment descriptor.
+         character(*), intent(out) :: cnames (         * )  !! Names of columns in segment.
+         integer(ip), intent(out) :: cdscrs ( cdscsz, * )  !! Descriptors of columns in segment.
+      end subroutine zzeksinf
+
+      !> Append an item to a tree.  The key indicating the location of
+      !> the new item is returned.
+      module subroutine zzektrap ( ctx, handle, tree, value, key )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: tree  !! Root of tree.
+         integer(ip), intent(in) :: value  !! Value to append.
+         integer(ip), intent(out) :: key  !! Key pointing to new value.
+      end subroutine zzektrap
+
+      !> Complete a fast write operation on a new E-kernel segment.
+      module subroutine ekffld ( ctx, handle, segno, rcptrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      end subroutine ekffld
+
+      !> Return summary information for a specified segment in a
+      !> specified EK.
+      module subroutine ekssum ( ctx, handle, segno, tabnam, nrows, ncols, cnames, dtypes, sizes, strlns, indexd, nullok )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekglimit.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle of EK.
+         integer(ip), intent(in) :: segno  !! Number of segment to be summarized.
+         character(*), intent(out) :: tabnam  !! Name of table containing segment.
+         integer(ip), intent(out) :: nrows  !! Number of rows in segment.
+         integer(ip), intent(out) :: ncols  !! Number of columns in segment.
+         character(*), intent(out) :: cnames ( * )  !! Names of columns in segment.
+         character(*), intent(out) :: dtypes ( * )  !! Data types of columns in segment.
+         integer(ip), intent(out) :: sizes  ( * )  !! Entry sizes of columns in segment.
+         integer(ip), intent(out) :: strlns ( * )  !! String lengths of columns in segment.
+         logical, intent(out) :: indexd ( * )  !! Flags indicating whether columns are indexed.
+         logical, intent(out) :: nullok ( * )  !! Flags indicating whether columns allow nulls.
+      end subroutine ekssum
+
+      !> Allocate a series of contiguous data pages for a specified EK
+      !> segment.
+      module subroutine zzekacps ( ctx, handle, segdsc, type, n, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         integer(ip), intent(in) :: n  !! Number of pages to allocate.
+         integer(ip), intent(out) :: p  !! Page number.
+         integer(ip), intent(out) :: base  !! DAS base address of page.
+      end subroutine zzekacps
+
+      !> Allocate a data page for a specified EK segment.
+      module subroutine zzekaps ( ctx, handle, segdsc, type, new, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: type  !! Data type of page.
+         logical, intent(in) :: new  !! Flag indicating whether page is new.
+         integer(ip), intent(out) :: p  !! Page number.
+         integer(ip), intent(out) :: base  !! DAS base address of page.
+      end subroutine zzekaps
+
+      !> Start a new type 1 segment in an E-kernel.
+      module subroutine zzekbs01 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekcnamsz.inc'
+         include 'ekdatpag.inc'
+         include 'ekfilpar.inc'
+         include 'ekglimit.inc'
+         include 'ekpage.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektnamsz.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         character(*), intent(in) :: tabnam  !! Table name.
+         integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+         character(*), intent(in) :: cnames ( * )  !! Names of columns.
+         integer(ip), intent(inout) :: cdscrs ( cdscsz, * )  !! Descriptors of columns. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(out) :: segno  !! Segment number.
+      end subroutine zzekbs01
+
+      !> Start a new type 2 segment in an E-kernel.
+      module subroutine zzekbs02 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekcnamsz.inc'
+         include 'ekdatpag.inc'
+         include 'ekfilpar.inc'
+         include 'ekglimit.inc'
+         include 'ekpage.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektnamsz.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         character(*), intent(in) :: tabnam  !! Table name.
+         integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+         character(*), intent(in) :: cnames ( * )  !! Names of columns.
+         integer(ip), intent(inout) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
+         integer(ip), intent(out) :: segno  !! Segment number.
+      end subroutine zzekbs02
+
+      !> Delete a specified class 4 column entry from an EK record.
+      module subroutine zzekde04 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end subroutine zzekde04
+
+      !> Find the EK record number corresponding to a specified record
+      !> pointer.  Beware, for type 1 segments, this is done by linear
+      !> searching.
+      !>
+      !> The function returns the number of the record having the
+      !> specified record pointer.
+      module integer(ip) function zzekrp2n ( ctx, handle, segno, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end function zzekrp2n
+
+   end interface
+   ! --- end pepper_ek_storage
+   ! --- pepper_ek
+   public :: zzekac01, zzekac02, zzekac03, zzekac04, zzekac05, zzekac06, zzekad04,&
+      zzekad05, zzekad06, zzekde05, zzekde06, zzekesiz, zzekgcdp, zzekif01,&
+      zzekif02, zzekrd01, zzekrd02, zzekrd03, zzekrd04, zzekrd05, zzekrd06,&
+      zzekrd07, zzekrd08, zzekscdp, zzekwpac, zzekwpai, zzekwpal, zzekac07,&
+      zzekac08, zzekac09, zzekrsc, zzekrsd, zzekrsi, zzekue04, zzekue05,&
+      zzekue06, zzekecmp, zzekscmp, zzekerc1, zzekerd1, zzekeri1, zzekllec,&
+      zzeklled, zzekllei, zzeklltc, zzeklltd, zzekllti, zzekrcmp, zzekrmch,&
+      zzekvcmp, zzekvmch, zzekille, zzekillt, zzekjsrt, zzeklerc, zzeklerd,&
+      zzekleri, zzekfrx, zzekiic1, zzekiid1, zzekiii1, zzekjprp, zzekjnxt,&
+      zzekkey, zzekad01, zzekad02, zzekad03, zzekixdl, zzekjoin, zzekde01,&
+      zzekde02, zzekde03, zzekue01, zzekue02, zzekcchk, zzekpcol, zzeksemc,&
+      zzektres, zzekue03, zzeknres, zzekencd
+
+   interface
+
+      !> Start a new segment in an E-kernel.
+      module subroutine ekbseg ( ctx, handle, tabnam, ncols, cnames, decls, segno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekcnamsz.inc'
+         include 'ekdatpag.inc'
+         include 'ekfilpar.inc'
+         include 'ekglimit.inc'
+         include 'ekpage.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektnamsz.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         character(*), intent(in) :: tabnam  !! Table name.
+         integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+         character(*), intent(in) :: cnames ( * )  !! Names of columns.
+         character(*), intent(in) :: decls  ( * )  !! Declarations of columns.
+         integer(ip), intent(out) :: segno  !! Segment number.
+      end subroutine ekbseg
+
+      !> Add a new, empty record to a specified E-kernel segment at
+      !> a specified index.
+      module subroutine ekinsr ( ctx, handle, segno, recno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(in) :: recno  !! Record number.
+      end subroutine ekinsr
+
+      !> Check whether a file is a type 1 star catalog and return the
+      !> catalog's table name if it is.
+      module subroutine stcc01 ( ctx, catfnm, tabnam, istyp1, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ektnamsz.inc'
+         include 'ekglimit.inc'
+         character(*), intent(in) :: catfnm  !! Catalog file name.
+         character(*), intent(out) :: tabnam  !! Catalog table name.
+         logical, intent(out) :: istyp1  !! .TRUE. when file is type 1 star catalog.
+         character(*), intent(out) :: errmsg  !! Error message.
+      end subroutine stcc01
+
+      !> Add an entire class 1 column to an EK segment.
+      module subroutine zzekac01 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, rcptrs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekcoldsc.inc'
+         include  'ekcnamsz.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'ekrecptr.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine zzekac01
+
+      !> Add an entire class 2 column to an EK segment.
+      module subroutine zzekac02 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, rcptrs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'ekrecptr.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine zzekac02
+
+      !> Add an entire class 3 column to an EK segment.
+      module subroutine zzekac03 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, rcptrs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'ekrecptr.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine zzekac03
+
+      !> Add an entire class 4 column to an EK segment.
+      module subroutine zzekac04 ( ctx, handle, segdsc, coldsc, ivals, entszs, nlflgs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekcoldsc.inc'
+         include  'ekcnamsz.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'ekrecptr.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      end subroutine zzekac04
+
+      !> Add an entire class 5 column to an EK segment.
+      module subroutine zzekac05 ( ctx, handle, segdsc, coldsc, dvals, entszs, nlflgs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekcoldsc.inc'
+         include  'ekcnamsz.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'ekrecptr.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+         integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      end subroutine zzekac05
+
+      !> Add an entire class 6 column to an EK segment.
+      module subroutine zzekac06 ( ctx, handle, segdsc, coldsc, cvals, entszs, nlflgs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekcoldsc.inc'
+         include  'ekcnamsz.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'ekrecptr.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+         integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      end subroutine zzekac06
+
+      !> Add a column entry to a specified record in a class 4 column.
+      !> The entries of class 4 columns are arrays of integer values.
+      module subroutine zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekad04
+
+      !> Add a column entry to a specified record in a class 5 column.
+      !> The entries of class 5 columns are arrays of d.p. values.
+      module subroutine zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Pointer to the record to which data is to be added.
+         integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+         real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekad05
+
+      !> Add a column entry to a specified record in a class 6 column.
+      !> The entries of class 6 columns are arrays of character string
+      !> values.
+      module subroutine zzekad06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Pointer to the record to which data is to be added.
+         integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+         character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekad06
+
+      !> Delete a specified class 5 column entry from an EK record.
+      module subroutine zzekde05 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end subroutine zzekde05
+
+      !> Delete a specified class 6 column entry from an EK record.
+      module subroutine zzekde06 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end subroutine zzekde06
+
+      !> Return the size of a specified column entry.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      module integer(ip) function zzekesiz ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekcnamsz.inc'
+         include 'eksegdsc.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      end function zzekesiz
+
+      !> Return the data pointer for a specified EK column entry.
+      module subroutine zzekgcdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ekrecptr.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(out) :: datptr  !! Data pointer of column entry.
+      end subroutine zzekgcdp
+
+      !> Initialize a new type 1 EK segment to allow fast loading.
+      module subroutine zzekif01 ( ctx, handle, segno, rcptrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
+      end subroutine zzekif01
+
+      !> Initialize a new type 2 EK segment to allow fast loading.
+      module subroutine zzekif02 ( ctx, handle, segno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekclas07.inc'
+         include 'ekclas08.inc'
+         include 'ekclas09.inc'
+         include 'ekcoldsc.inc'
+         include 'ekpage.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+      end subroutine zzekif02
+
+      !> Read a column entry from a specified record in a class 1 column.
+      !> Class 1 columns contain scalar integer values.
+      module subroutine zzekrd01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(out) :: ival  !! Integer value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekrd01
+
+      !> Read a column entry from a specified record in a class 2 column.
+      !> Class 2 columns contain scalar double precision values.
+      module subroutine zzekrd02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         real(wp), intent(out) :: dval  !! Double precision value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekrd02
+
+      !> Read a column entry from a specified record in a class 3 column.
+      !> Class 3 columns contain scalar character values.
+      module subroutine zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, cval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekcnamsz.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(out) :: cvlen  !! Length of returned character value.
+         character(*), intent(out) :: cval  !! Character value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekrd03
+
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 4 column.  Class 4 columns have integer arrays
+      !> as column entries.
+      module subroutine zzekrd04 ( ctx, handle, segdsc, coldsc, recptr, beg, end, ivals, isnull, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: beg  !! Start element index.
+         integer(ip), intent(in) :: end  !! End element index.
+         integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+         logical, intent(out) :: found  !! Flag indicating whether elements were found.
+      end subroutine zzekrd04
+
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 5 column.  Class 5 columns have d.p. arrays
+      !> as column entries.
+      module subroutine zzekrd05 ( ctx, handle, segdsc, coldsc, recptr, beg, end, dvals, isnull, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: beg  !! Start element index.
+         integer(ip), intent(in) :: end  !! End element index.
+         real(wp), intent(out) :: dvals  ( * )  !! Double precision values in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+         logical, intent(out) :: found  !! Flag indicating whether elements were found.
+      end subroutine zzekrd05
+
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 6 column.  Class 6 columns have character arrays
+      !> as column entries.
+      module subroutine zzekrd06 ( ctx, handle, segdsc, coldsc, recptr, beg, end, cvals, isnull, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: beg  !! Start element index.
+         integer(ip), intent(in) :: end  !! End element index.
+         character(*), intent(out) :: cvals  ( * )  !! Character values in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+         logical, intent(out) :: found  !! Flag indicating whether elements were found.
+      end subroutine zzekrd06
+
+      !> Read a column entry from a specified record in a class 7 column.
+      !> Class 7 columns contain fixed-count, scalar integer values.
+      module subroutine zzekrd07 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekclas07.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(out) :: ival  !! Integer value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekrd07
+
+      !> Read a column entry from a specified record in a class 8 column.
+      !> Class 8 columns contain fixed-count, scalar, double precision
+      !> values.
+      module subroutine zzekrd08 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekclas08.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         real(wp), intent(out) :: dval  !! Double precision value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine zzekrd08
+
+      !> Set the data pointer for a specified EK column entry.
+      module subroutine zzekscdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ekrecptr.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: datptr  !! Data pointer of column entry.
+      end subroutine zzekscdp
+
+      !> Write a character array out to a contiguous set of EK pages.
+      module subroutine zzekwpac ( ctx, handle, segdsc, nvals, l, cvals, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+         integer(ip), intent(in) :: nvals  !! Number of values to write.
+         integer(ip), intent(in) :: l  !! String length.
+         character(*), intent(in) :: cvals  ( * )  !! Character values.
+         integer(ip), intent(out) :: p  !! Number of first page containing array.
+         integer(ip), intent(out) :: base  !! Base address of first page.
+      end subroutine zzekwpac
+
+      !> Write an integer array out to a contiguous set of EK pages.
+      module subroutine zzekwpai ( ctx, handle, segdsc, nvals, ivals, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+         integer(ip), intent(in) :: nvals  !! Number of values to write.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values.
+         integer(ip), intent(out) :: p  !! Number of first page containing array.
+         integer(ip), intent(out) :: base  !! Base address of first page.
+      end subroutine zzekwpai
+
+      !> Write a logical array out to a contiguous set of EK pages.
+      module subroutine zzekwpal ( ctx, handle, segdsc, nvals, lvals, p, base )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+         integer(ip), intent(in) :: nvals  !! Number of values to write.
+         logical, intent(in) :: lvals  ( * )  !! Logical values.
+         integer(ip), intent(out) :: p  !! Number of first page containing array.
+         integer(ip), intent(out) :: base  !! Base address of first page.
+      end subroutine zzekwpal
+
+      !> Append a new, empty record at the end of a specified E-kernel
+      !> segment.
+      module subroutine ekappr ( ctx, handle, segno, recno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekdatpag.inc'
+         include 'ekpage.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(out) :: recno  !! Number of appended record.
+      end subroutine ekappr
+
+      !> Initialize a new E-kernel segment to allow fast writing.
+      module subroutine ekifld ( ctx, handle, tabnam, ncols, nrows, cnames, decls, segno, rcptrs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         character(*), intent(in) :: tabnam  !! Table name.
+         integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+         integer(ip), intent(in) :: nrows  !! Number of rows in the segment.
+         character(*), intent(in) :: cnames ( * )  !! Names of columns.
+         character(*), intent(in) :: decls  ( * )  !! Declarations of columns.
+         integer(ip), intent(out) :: segno  !! Segment number.
+         integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
+      end subroutine ekifld
+
+      !> Read data from a character column in a specified EK record.
+      module subroutine ekrcec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+         character(*), intent(out) :: cvals  ( * )  !! Character values in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekrcec
+
+      !> Read data from a double precision column in a specified EK
+      !> record.
+      module subroutine ekrced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+         real(wp), intent(out) :: dvals  ( * )  !! D.p. values in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekrced
+
+      !> Read data from an integer column in a specified EK record.
+      module subroutine ekrcei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+         integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekrcei
+
+      !> Add an entire class 7 column to an EK segment.
+      module subroutine zzekac07 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekclas07.inc'
+         include  'ekcoldsc.inc'
+         include  'ekcnamsz.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine zzekac07
+
+      !> Add an entire class 8 column to an EK segment.
+      module subroutine zzekac08 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekclas08.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine zzekac08
+
+      !> Add an entire class 9 column to an EK segment.
+      module subroutine zzekac09 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekbool.inc'
+         include  'ekclas09.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekdatpag.inc'
+         include  'ekpage.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine zzekac09
+
+      !> Read scalar data from a character column in a specified EK
+      !> record.
+      module subroutine zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+         integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+         integer(ip), intent(out) :: cvlen  !! Length of stored string.
+         character(*), intent(out) :: cval  !! Character value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+         logical, intent(out) :: found  !! Flag indicting whether entry element was found.
+      end subroutine zzekrsc
+
+      !> Read scalar data from a double precision column in a specified EK
+      !> record.
+      module subroutine zzekrsd ( ctx, handle, segdsc, coldsc, recptr, eltidx, dval, isnull, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+         integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+         real(wp), intent(out) :: dval  !! D.p. value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+         logical, intent(out) :: found  !! Flag indicting whether entry element was found.
+      end subroutine zzekrsd
+
+      !> Read scalar data from an integer column in a specified EK record.
+      module subroutine zzekrsi ( ctx, handle, segdsc, coldsc, recptr, eltidx, ival, isnull, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+         integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+         integer(ip), intent(out) :: ival  !! Integer value in column entry.
+         logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+         logical, intent(out) :: found  !! Flag indicting whether entry element was found.
+      end subroutine zzekrsi
+
+      !> Update a specified class 4 column entry in an EK record.
+      module subroutine zzekue04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: nvals  !! Number of values.
+         integer(ip), intent(in) :: ivals ( * )  !! Integer values.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekue04
+
+      !> Update a specified class 5 column entry in an EK record.
+      module subroutine zzekue05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: nvals  !! Number of values.
+         real(wp), intent(in) :: dvals ( * )  !! Double precision values.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekue05
+
+      !> Update a specified class 6 column entry in an EK record.
+      module subroutine zzekue06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: nvals  !! Number of values.
+         character(*), intent(in) :: cvals ( * )  !! Character string values.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekue06
+
+      !> Add an entire character column to an EK segment.
+      module subroutine ekaclc ( ctx, handle, segno, column, cvals, entszs, nlflgs, rcptrs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekcoldsc.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+         character(*), intent(in) :: column  !! Column name.
+         character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+         integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine ekaclc
+
+      !> Add an entire double precision column to an EK segment.
+      module subroutine ekacld ( ctx, handle, segno, column, dvals, entszs, nlflgs, rcptrs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekcoldsc.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+         character(*), intent(in) :: column  !! Column name.
+         real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+         integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine ekacld
+
+      !> Add an entire integer column to an EK segment.
+      module subroutine ekacli ( ctx, handle, segno, column, ivals, entszs, nlflgs, rcptrs, wkindx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekcoldsc.inc'
+         include  'eksegdsc.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+         logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+         integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+         integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+      end subroutine ekacli
+
+      !> Compare two column entry elements, and return the relation of the
+      !> first to the second:  LT, EQ, or GT.
+      !>
+      !> The function returns a parameter indicating the order relation
+      !> satisfied by the input arguments.  Possible values are LT, EQ,
+      !> and GT.
+      module integer(ip) function zzekecmp ( ctx, hans, sgdscs, cldscs, rows, elts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: hans   ( * )  !! EK handles.
+         integer(ip), intent(in) :: sgdscs ( sdscsz, * )  !! Segment descriptors.
+         integer(ip), intent(in) :: cldscs ( cdscsz, * )  !! Column descriptors.
+         integer(ip), intent(in) :: rows   ( * )  !! Row numbers.
+         integer(ip), intent(in) :: elts   ( * )  !! Element indices.
+      end function zzekecmp
+
+      !> Compare a specified scalar EK column entry with a scalar value.
+      !>
+      !> The function returns .TRUE. if and only if the specified column
+      !> entry and input value of the corresponding data type satisfy the
+      !> relation specified by the input argument OP.
+      module logical function zzekscmp ( ctx, op, handle, segdsc, coldsc, row, eltidx, dtype, cval, dval, ival, null )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         include 'ekwild.inc'
+         integer(ip), intent(in) :: op  !! Relational operator code.
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: row  !! ID of row containing column entry to compare.
+         integer(ip), intent(in) :: eltidx  !! Index of element in array-valued column entry.
+         integer(ip), intent(in) :: dtype  !! Data type of input value.
+         character(*), intent(in) :: cval  !! Character string to compare with column entry.
+         real(wp), intent(in) :: dval  !! D.p. value to compare with column entry.
+         integer(ip), intent(in) :: ival  !! Integer value to compare with column entry.
+         logical, intent(in) :: null  !! Flag indicating whether scalar is null.
+      end function zzekscmp
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified character EK column having a type 1 index, using
+      !> dictionary ordering on character data values and record pointers.
+      module subroutine zzekerc1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         character(*), intent(in) :: ckey  !! Character key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+         integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
+         integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+      end subroutine zzekerc1
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified d.p. EK column having a type 1 index, using
+      !> dictionary ordering on d.p. data values and record pointers.
+      module subroutine zzekerd1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         real(wp), intent(in) :: dkey  !! Double precision key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+         integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
+      end subroutine zzekerd1
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified integer EK column having a type 1 index, using
+      !> dictionary ordering on integer data values and record pointers.
+      module subroutine zzekeri1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: ikey  !! Integer key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+         integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+      end subroutine zzekeri1
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed character EK column.
+      module subroutine zzekllec ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         character(*), intent(in) :: ckey  !! Character key.
+         integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
+         integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+      end subroutine zzekllec
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed double precision EK column.
+      module subroutine zzeklled ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         real(wp), intent(in) :: dkey  !! Double precision key.
+         integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
+         integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of DKEY.
+      end subroutine zzeklled
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed integer EK column.
+      module subroutine zzekllei ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: ikey  !! Integer key.
+         integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of IKEY.
+      end subroutine zzekllei
+
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed character EK column.
+      module subroutine zzeklltc ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         character(*), intent(in) :: ckey  !! Character key.
+         integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of CKEY.
+      end subroutine zzeklltc
+
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed double precision EK column.
+      module subroutine zzeklltd ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         real(wp), intent(in) :: dkey  !! Double precision key.
+         integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of DKEY.
+      end subroutine zzeklltd
+
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed integer EK column.
+      module subroutine zzekllti ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: ikey  !! Integer key.
+         integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+      end subroutine zzekllti
+
+      !> Compare two EK rows, using as the order relation dictionary
+      !> ordering on a specified list of columns.
+      !>
+      !> The function returns .TRUE. if and only if the two rows
+      !> satisfy the order relation specified by the input arguments.
+      module logical function zzekrcmp ( ctx, op, ncols, han1, sgdsc1, cdlst1, row1, elts1, han2, sgdsc2, cdlst2, row2, elts2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: op  !! Code for relational operator.
+         integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
+         integer(ip), intent(in) :: han1  !! Handle of EK containing first row to compare.
+         integer(ip), intent(in) :: sgdsc1 ( sdscsz )  !! Descriptor of segment containing first row.
+         integer(ip), intent(in) :: cdlst1 ( cdscsz, * )  !! List of column descriptors for first row.
+         integer(ip), intent(in) :: row1  !! Number of first row (relative to segment).
+         integer(ip), intent(in) :: elts1  ( * )  !! List of element indices for first row.
+         integer(ip), intent(in) :: han2  !! Handle of EK containing second row to compare.
+         integer(ip), intent(in) :: sgdsc2 ( sdscsz )  !! Descriptor of segment containing second row.
+         integer(ip), intent(in) :: cdlst2 ( cdscsz, * )  !! List of column descriptors for second row.
+         integer(ip), intent(in) :: row2  !! Number of second row (relative to segment).
+         integer(ip), intent(in) :: elts2  ( * )  !! List of element indices for second row.
+      end function zzekrcmp
+
+      !> Determine whether a specified row in an EK file satisfies
+      !> a specified set of constraints.
+      !>
+      !> MAXCOL     P   Maximum number of columns per segment.
+      !>
+      !> The function returns .TRUE. if and only if the specified
+      !> EK row satisfies the input constraints.
+      module logical function zzekrmch ( ctx, ncnstr, active, handle, segdsc, cdscrs, row, elts, ops, vtypes, chrbuf, cbegs, cends, dvals, ivals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ektype.inc'
+         include 'ekopcd.inc'
+         include 'ekwild.inc'
+         include 'ekqlimit.inc'
+         integer(ip), intent(in) :: ncnstr  !! Number of constraints present in query.
+         logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+         integer(ip), intent(in) :: handle  !! Handle of EK file containing row.
+         integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+         integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns referenced in query.
+         integer(ip), intent(in) :: row  !! Index of row to match.
+         integer(ip), intent(in) :: elts   ( * )  !! Indices of column entry elements to match.
+         integer(ip), intent(in) :: ops    ( * )  !! Operators used in query constraints.
+         integer(ip), intent(in) :: vtypes ( * )  !! Data types of values on RHS of constraints.
+         character(*), intent(in) :: chrbuf  !! Buffer containing query tokens.
+         integer(ip), intent(in) :: cbegs  ( * )  !! Begin indices of character query tokens.
+         integer(ip), intent(in) :: cends  ( * )  !! End indices of character query tokens.
+         real(wp), intent(in) :: dvals  ( * )  !! D.p. values used in query constraints.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
+      end function zzekrmch
+
+      !> Compare two row vectors, using dictionary ordering on a
+      !> specified list of columns as the order relation.
+      !>
+      !> The function returns .TRUE. if and only if the two rows
+      !> satisfy the order relation specified by the input arguments.
+      module logical function zzekvcmp ( ctx, op, ncols, tabs, cols, elts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, sgvec1, rwvec1, sgvec2, rwvec2 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: op  !! Code for relational operator.
+         integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
+         integer(ip), intent(in) :: tabs   ( * )  !! Indices of tables containing order-by columns.
+         integer(ip), intent(in) :: cols   ( * )  !! Indices of order-by columns within parent tables.
+         integer(ip), intent(in) :: elts   ( * )  !! Element indices.
+         integer(ip), intent(in) :: senses ( * )  !! Order senses.
+         integer(ip), intent(in) :: sthan  ( * )  !! Array of handles of loaded EKs.
+         integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of segment descriptors.
+         integer(ip), intent(in) :: stdtpt ( * )  !! Array of pointers to column descriptors.
+         integer(ip), intent(in) :: dtpool ( 2, lbpool : * )  !! Column descriptor index pool.
+         integer(ip), intent(in) :: dtdscs ( cdscsz, * )  !! Array of column descriptors.
+         integer(ip), intent(in) :: sgvec1 ( * )  !! First segment vector.
+         integer(ip), intent(in) :: rwvec1 ( * )  !! First row vector.
+         integer(ip), intent(in) :: sgvec2 ( * )  !! Second segment vector.
+         integer(ip), intent(in) :: rwvec2 ( * )  !! Second row vector.
+      end function zzekvcmp
+
+      !> Determine whether a vector of constraints involving comparisons of
+      !> specified EK column elements is satisfied.
+      !>
+      !> The function returns .TRUE. if and only if all of the relational
+      !> constraints specified by the input arguments are satisfied.
+      module logical function zzekvmch ( ctx, ncnstr, active, lhans, lsdscs, lcdscs, lrows, lelts, ops, rhans, rsdscs, rcdscs, rrows, relts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekopcd.inc'
+         include 'ektype.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ekwild.inc'
+         include 'ekqlimit.inc'
+         integer(ip), intent(in) :: ncnstr  !! Number of join constraints.
+         logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+         integer(ip), intent(in) :: lhans  ( * )  !! Handles of EKs for columns on LHS's of constraints.
+         integer(ip), intent(in) :: lsdscs ( sdscsz, * )  !! Descriptors of segments on LHS's of constraints.
+         integer(ip), intent(in) :: lcdscs ( cdscsz, * )  !! Column descriptors for LHS's of constraints.
+         integer(ip), intent(in) :: lrows  ( * )  !! Row numbers for LHS's of constraints.
+         integer(ip), intent(in) :: lelts  ( * )  !! Column element indices for LHS's of constraints.
+         integer(ip), intent(in) :: ops    ( * )  !! Code for relational operator in constraints.
+         integer(ip), intent(in) :: rhans  ( * )  !! Handles of EKs for columns on RHS's of constraints.
+         integer(ip), intent(in) :: rsdscs ( sdscsz, * )  !! Descriptors of segments on RHS's of constraints.
+         integer(ip), intent(in) :: rcdscs ( cdscsz, * )  !! Column descriptors for RHS's of constraints.
+         integer(ip), intent(in) :: rrows  ( * )  !! Row numbers for RHS's of constraints.
+         integer(ip), intent(in) :: relts  ( * )  !! Column element indices for RHS's of constraints.
+      end function zzekvmch
+
+      !> Find the ordinal position of the row, in an specified EK segment,
+      !> whose value in a specified column is the last last element less
+      !> than or equal to a specified value, where the order relation is
+      !> given by an order vector in a specified DAS file.
+      !>
+      !> The function returns the index of the last order vector element
+      !> that points to an array element that is less than or equal to
+      !> the input value of the same data type as the column.
+      module integer(ip) function zzekille ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! HANDLE of EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
+         integer(ip), intent(in) :: nrows  !! Number of rows in column.
+         integer(ip), intent(in) :: dtype  !! Data type of input value.
+         character(*), intent(in) :: cval  !! Character string value.
+         real(wp), intent(in) :: dval  !! Double precision value.
+         integer(ip), intent(in) :: ival  !! Integer value.
+      end function zzekille
+
+      !> Find the ordinal position of the row, in an specified EK segment,
+      !> whose value in a specified column is the last last element less
+      !> than a specified value, where the order relation is given by an
+      !> order vector in a specified DAS file.
+      !>
+      !> The function returns the index of the last order vector element
+      !> that points to an array element that is less than the input
+      !> value of the same data type as the column.
+      module integer(ip) function zzekillt ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! HANDLE of EK file.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
+         integer(ip), intent(in) :: nrows  !! Number of rows in column.
+         integer(ip), intent(in) :: dtype  !! Data type of input value.
+         character(*), intent(in) :: cval  !! Character string value.
+         real(wp), intent(in) :: dval  !! Double precision value.
+         integer(ip), intent(in) :: ival  !! Integer value.
+      end function zzekillt
+
+      !> Sort the row vectors of a join row set union, given an order
+      !> relation defined by a set of qualified order-by columns.
+      module subroutine zzekjsrt ( ctx, njrs, ubases, norder, otabs, ocols, oelts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, ordbas )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekjrs.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: njrs  !! Number of join row sets in union.
+         integer(ip), intent(in) :: ubases ( * )  !! Base addresses of join row sets of union.
+         integer(ip), intent(in) :: norder  !! Number of order-by columns.
+         integer(ip), intent(in) :: otabs  ( * )  !! Order-by table indices relative to FROM clause.
+         integer(ip), intent(in) :: ocols  ( * )  !! Order-by column indices.
+         integer(ip), intent(in) :: oelts  ( * )  !! Order-by element indices.
+         integer(ip), intent(in) :: senses ( * )  !! Order directions.
+         integer(ip), intent(in) :: sthan  ( * )  !! Handles of loaded files from segment table.
+         integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of descriptors of loaded segments.
+         integer(ip), intent(in) :: stdtpt ( * )  !! Array of pointers to column descriptors.
+         integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Column descriptor table pool.
+         integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Column descriptor table.
+         integer(ip), intent(out) :: ordbas  !! Scratch area base address for order vector.
+      end subroutine zzekjsrt
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed character EK column, using dictionary
+      !> ordering on character data values and record pointers.
+      module subroutine zzeklerc ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         character(*), intent(in) :: ckey  !! Double precision key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+         integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
+         integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+      end subroutine zzeklerc
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed d.p. EK column, using dictionary
+      !> ordering on d.p. data values and record pointers.
+      module subroutine zzeklerd ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         real(wp), intent(in) :: dkey  !! Double precision key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+         integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
+      end subroutine zzeklerd
+
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed integer EK column, using dictionary
+      !> ordering on integer data values and record pointers.
+      module subroutine zzekleri ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: ikey  !! Integer key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+         integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
+         integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+      end subroutine zzekleri
+
+      !> Find the ordinal position of a specified record in a specified,
+      !> indexed EK column.
+      module subroutine zzekfrx ( ctx, handle, segdsc, coldsc, recptr, pos )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekqlimit.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Pointer to record to locate.
+         integer(ip), intent(out) :: pos  !! Ordinal position of record.
+      end subroutine zzekfrx
+
+      !> Insert into a type 1 EK index a record pointer associated with a
+      !> character key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      module subroutine zzekiic1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         character(*), intent(in) :: ckey  !! Character key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+      end subroutine zzekiic1
+
+      !> Insert into a type 1 EK index a record pointer associated with a
+      !> d.p. key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      module subroutine zzekiid1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         real(wp), intent(in) :: dkey  !! Double precision key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+      end subroutine zzekiid1
+
+      !> Insert into a type 1 EK index a record pointer associated with an
+      !> integer key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      module subroutine zzekiii1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: ikey  !! Integer key.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         logical, intent(in) :: null  !! Null flag.
+      end subroutine zzekiii1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekjprp ( ctx, segvec, jbase1, nt1, rb1, nr1, jbase2, nt2, rb2, nr2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekjrs.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'eksegdsc.inc'
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: segvec ( * )  !! Composite segment vector for joined table.
+         integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
+         integer(ip), intent(in) :: nt1  !! Width of first table.
+         integer(ip), intent(in) :: rb1  !! Row vector base address from first join row set.
+         integer(ip), intent(in) :: nr1  !! Number of row vectors from first join row set.
+         integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
+         integer(ip), intent(in) :: nt2  !! Width of second table.
+         integer(ip), intent(in) :: rb2  !! Row vector base address from second join row set.
+         integer(ip), intent(in) :: nr2  !! Number of row vectors from second join row set.
+         integer(ip), intent(in) :: njcnst  !! Number of join constraints.
+         logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+         integer(ip), intent(in) :: cpidx1 ( * )  !! Cross product indices for LHS's of constraints.
+         integer(ip), intent(in) :: clidx1 ( * )  !! Column indices for LHS's of constraints.
+         integer(ip), intent(in) :: elts1  ( * )  !! Column element indices for LHS's of constraints.
+         integer(ip), intent(in) :: ops    ( * )  !! Operator codes for constraints.
+         integer(ip), intent(in) :: cpidx2 ( * )  !! Cross product indices for RHS's of constraints.
+         integer(ip), intent(in) :: clidx2 ( * )  !! Column indices for RHS's of constraints.
+         integer(ip), intent(in) :: elts2  ( * )  !! Column element indices for RHS's of constraints.
+         integer(ip), intent(in) :: sthan  ( * )  !! Array of EK handles corresponding to segments.
+         integer(ip), intent(in) :: stsdsc ( sdscsz,          * )  !! Array of segment descriptors.
+         integer(ip), intent(in) :: stdtpt ( * )  !! Array of set table column descriptor pointers.
+         integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Linked list pool for column descriptors.
+         integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
+      end subroutine zzekjprp
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekjnxt ( ctx, found, rowvec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekjrs.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'eksegdsc.inc'
+         logical, intent(out) :: found  !! Flag indicating whether a row vector was found.
+         integer(ip), intent(out) :: rowvec ( * )  !! Row vector matching join constraints.
+      end subroutine zzekjnxt
+
+      !> Determine the key column to use when searching an EK segment
+      !> for rows matching query constraints.
+      !>
+      !> MAXCON     P   Maximum number of constraints allowed in query.
+      !> CDSCSZ     P   Column descriptor size.
+      module subroutine zzekkey ( ctx, handle, segdsc, nrows, ncnstr, clidxs, dsclst, ops, dtypes, chrbuf, cbegs, cends, dvals, ivals, active, key, keydsc, begidx, endidx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle of EK file containing segment.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: nrows  !! Number of rows in segment.
+         integer(ip), intent(in) :: ncnstr  !! Number of relational constraints in query.
+         integer(ip), intent(in) :: clidxs ( * )  !! Column attribute table indices for columns.
+         integer(ip), intent(in) :: dsclst ( cdscsz, * )  !! Array of column descriptors for constraints.
+         integer(ip), intent(in) :: ops    ( * )  !! Operations used in query constraints.
+         integer(ip), intent(in) :: dtypes ( * )  !! Data types of scalar values used in constraints.
+         character(*), intent(in) :: chrbuf  !! Buffer containing query tokens.
+         integer(ip), intent(in) :: cbegs  ( * )  !! Begin indices of character query tokens.
+         integer(ip), intent(in) :: cends  ( * )  !! End indices of character query tokens.
+         real(wp), intent(in) :: dvals  ( * )  !! D.p. values used in query constraints.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
+         logical, intent(inout) :: active ( * )  !! Array of flags indicating applicable constraints.
+         integer(ip), intent(out) :: key  !! Index of key column.
+         integer(ip), intent(out) :: keydsc ( * )  !! Descriptor of key column.
+         integer(ip), intent(out) :: begidx  !! Begin index of candidate row set.
+         integer(ip), intent(out) :: endidx  !! End index of candidate row set.
+         logical, intent(out) :: found  !! Flag indicating whether a key column was found.
+      end subroutine zzekkey
+
+      !> Add a column entry to a class 1 column in a specified EK record.
+      !> Class 1 columns contain scalar, integer values.
+      module subroutine zzekad01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: ival  !! Integer value.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekad01
+
+      !> Add a column entry to a specified record in a class 2 column.
+      !> Class 2 columns contain scalar double precision values.
+      module subroutine zzekad02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         real(wp), intent(in) :: dval  !! Double precision value.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekad02
+
+      !> Add a column entry to a class 3 column in a specified EK record.
+      !> Class 3 columns contain scalar, character values.
+      module subroutine zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         character(*), intent(in) :: cval  !! Character string value.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekad03
+
+      !> Update an EK column index to reflect deletion of a record
+      !> specified by a record pointer.
+      module subroutine zzekixdl ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer to locate.
+      end subroutine zzekixdl
+
+      !> Perform join of two EK join row sets, subject to a specified set
+      !> of EK join constraints, yielding an EK join row set.
+      !>
+      !> CDSCSZ     P   Size of column descriptor.
+      module subroutine zzekjoin ( ctx, jbase1, jbase2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs, jbase3, nrows )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'ekjrs.inc'
+         include 'ekqlimit.inc'
+         include 'eksegdsc.inc'
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
+         integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
+         integer(ip), intent(in) :: njcnst  !! Number of join constraints.
+         logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+         integer(ip), intent(in) :: cpidx1 ( * )  !! Cross product indices for LHS's of constraints.
+         integer(ip), intent(in) :: clidx1 ( * )  !! Column indices for LHS's of constraints.
+         integer(ip), intent(in) :: elts1  ( * )  !! Column entry elt. indices for LHS'of constraints.
+         integer(ip), intent(in) :: ops    ( * )  !! Operator codes for constraints.
+         integer(ip), intent(in) :: cpidx2 ( * )  !! Cross product indices for RHS's of constraints.
+         integer(ip), intent(in) :: clidx2 ( * )  !! Column indices for RHS's of constraints.
+         integer(ip), intent(in) :: elts2  ( * )  !! Column entry elt. indices for RHS'of constraints.
+         integer(ip), intent(in) :: sthan  ( * )  !! Array of EK handles corresponding to segments.
+         integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of segment descriptors.
+         integer(ip), intent(in) :: stdtpt ( * )  !! Array of set table column descriptor pointers.
+         integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Linked list pool for column descriptors.
+         integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
+         integer(ip), intent(out) :: jbase3  !! Scratch area base address of output join row set.
+         integer(ip), intent(out) :: nrows  !! Number of rows in output join row set.
+      end subroutine zzekjoin
+
+      !> Add data to a character column in a specified EK record.
+      module subroutine ekacec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(in) :: segno  !! Index of segment containing record.
+         integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+         character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekacec
+
+      !> Add data to an double precision column in a specified EK record.
+      module subroutine ekaced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+         real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekaced
+
+      !> Add data to an integer column in a specified EK record.
+      module subroutine ekacei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! EK file handle.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekacei
+
+      !> Load an EK file, making it accessible to the EK readers.
+      module subroutine eklef ( ctx, fname, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         character(*), intent(in) :: fname  !! Name of EK file to load.
+         integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
+      end subroutine eklef
+
+      !> Unload an EK file, making its contents inaccessible to the
+      !> EK reader routines, and clearing space in order to allow other
+      !> EK files to be loaded.
+      module subroutine ekuef ( ctx, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle of EK file.
+      end subroutine ekuef
+
+      !> Return the number of loaded EK tables.
+      module subroutine ekntab ( ctx, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(out) :: n  !! Number of loaded tables.
+      end subroutine ekntab
+
+      !> Return the name of a specified, loaded table.
+      module subroutine ektnam ( ctx, n, table )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: n  !! Index of table.
+         character(*), intent(out) :: table  !! Name of table.
+      end subroutine ektnam
+
+      !> Return the number of distinct columns in a specified, currently
+      !> loaded table.
+      module subroutine ekccnt ( ctx, table, ccount )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         character(*), intent(in) :: table  !! Name of table.
+         integer(ip), intent(out) :: ccount  !! Count of distinct, currently loaded columns.
+      end subroutine ekccnt
+
+      !> Return attribute information about a column belonging to a loaded
+      !> EK table, specifying the column by table and index.
+      module subroutine ekcii ( ctx, table, cindex, column, attdsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: cindex  !! Index of column whose attributes are to be found.
+         character(*), intent(out) :: column  !! Name of column.
+         character(*), intent(in) :: table  !! Name of table containing column.
+         integer(ip), intent(out) :: attdsc ( adscsz )  !! Column attribute descriptor.
+      end subroutine ekcii
+
+      !> Search for EK events matching a specified set of constraints.
+      module subroutine eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, semerr, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: eqryc  !! Character component of encoded query.
+         real(wp), intent(in) :: eqryd  ( * )  !! D.p. component of encoded query.
+         integer(ip), intent(in) :: eqryi  ( lbcell : * )  !! Integer component of encoded query.
+         integer(ip), intent(out) :: nmrows  !! Number of rows matching query constraints.
+         logical, intent(out) :: semerr  !! Flag indicating whether semantic error occurred.
+         character(*), intent(out) :: errmsg  !! Message describing semantic error, if any.
+      end subroutine eksrch
+
+      !> Return the number of elements in a specified column entry in
+      !> the current row.
+      module subroutine eknelt ( ctx, selidx, row, nelt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: row  !! Row containing element.
+         integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+         integer(ip), intent(out) :: nelt  !! Number of elements in entry in current row.
+      end subroutine eknelt
+
+      !> Return an element of an entry in a column of character
+      !> type in a specified row.
+      module subroutine ekgc ( ctx, selidx, row, elment, cdata, null, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+         integer(ip), intent(in) :: row  !! Row to fetch from.
+         integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+         logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+         character(*), intent(out) :: cdata  !! Character string element of column entry.
+         logical, intent(out) :: null  !! Flag indicating whether column entry was null.
+      end subroutine ekgc
+
+      !> Return an element of an entry in a column of double precision
+      !> or `time' type in a specified row.
+      module subroutine ekgd ( ctx, selidx, row, elment, ddata, null, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+         integer(ip), intent(in) :: row  !! Row to fetch from.
+         integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+         logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+         real(wp), intent(out) :: ddata  !! D.p. element of column entry.
+         logical, intent(out) :: null  !! Flag indicating whether column entry was null.
+      end subroutine ekgd
+
+      !> Return an element of an entry in a column of integer
+      !> type in a specified row.
+      module subroutine ekgi ( ctx, selidx, row, elment, idata, null, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include  'ekattdsc.inc'
+         include  'ekbool.inc'
+         include  'ekcnamsz.inc'
+         include  'ekcoldsc.inc'
+         include  'ekjrs.inc'
+         include  'ekopcd.inc'
+         include  'ekqlimit.inc'
+         include  'ekquery.inc'
+         include  'eksegdsc.inc'
+         include  'ektnamsz.inc'
+         include  'ektype.inc'
+         integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+         integer(ip), intent(in) :: row  !! Row to fetch from.
+         integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+         logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+         integer(ip), intent(out) :: idata  !! Integer element of column entry.
+         logical, intent(out) :: null  !! Flag indicating whether column entry was null.
+      end subroutine ekgi
+
+      !> Delete a specified class 1 column entry from an EK record.
+      module subroutine zzekde01 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end subroutine zzekde01
+
+      !> Delete a specified class 2 column entry from an EK record.
+      module subroutine zzekde02 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end subroutine zzekde02
+
+      !> Delete a specified class 3 column entry from an EK record.
+      module subroutine zzekde03 ( ctx, handle, segdsc, coldsc, recptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+      end subroutine zzekde03
+
+      !> Update a specified class 1 column entry in an EK record.
+      module subroutine zzekue01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         integer(ip), intent(in) :: ival  !! Integer value.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekue01
+
+      !> Update a specified class 2 column entry in an EK record.
+      module subroutine zzekue02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         real(wp), intent(in) :: dval  !! Double precision value.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekue02
+
+      !> Delete a specified record from a specified E-kernel segment.
+      module subroutine ekdelr ( ctx, handle, segno, recno )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekcnamsz.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(in) :: segno  !! Segment number.
+         integer(ip), intent(inout) :: recno  !! Record number. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      end subroutine ekdelr
+
+      !> Update a double precision column entry in a specified EK record.
+      module subroutine ekuced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+         real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekuced
+
+      !> Update an integer column entry in a specified EK record.
+      module subroutine ekucei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+         integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekucei
+
+      !> Get data for a single star from a SPICE type 1 star catalog.
+      module subroutine stcg01 ( ctx, index, ra, dec, rasig, decsig, catnum, sptype, vmag )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: index  !! Star index.
+         real(wp), intent(out) :: ra  !! Right ascension in radians.
+         real(wp), intent(out) :: dec  !! Declination in radians.
+         real(wp), intent(out) :: rasig  !! Right ascension uncertainty in radians.
+         real(wp), intent(out) :: decsig  !! Declination uncertainty in radians.
+         integer(ip), intent(out) :: catnum  !! Catalog number.
+         character(*), intent(out) :: sptype  !! Spectral type.
+         real(wp), intent(out) :: vmag  !! Visual magnitude.
+      end subroutine stcg01
+
+      !> Load SPICE type 1 star catalog and return the catalog's
+      !> table name.
+      module subroutine stcl01 ( ctx, catfnm, tabnam, handle )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: catfnm  !! Catalog file name.
+         character(*), intent(out) :: tabnam  !! Catalog table name.
+         integer(ip), intent(out) :: handle  !! Catalog file handle.
+      end subroutine stcl01
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekcchk ( ctx, query, eqryi, eqryc, ntab, tablst, alslst, base, error, errmsg, errptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekattdsc.inc'
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Original query string.
+         integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(inout) :: eqryc  !! Character component of query.
+         integer(ip), intent(in) :: ntab  !! Number of tables in FROM clause.
+         character(*), intent(in) :: tablst ( * )  !! List of table names.
+         character(*), intent(in) :: alslst ( * )  !! List of table aliases.
+         integer(ip), intent(in) :: base  !! Base address of table/column descriptor pair.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Error message.
+         integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
+      end subroutine zzekcchk
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzekpcol ( ctx, qcol, eqryi, eqryc, table, alias, tabidx, column, colidx, error, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekattdsc.inc'
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'ektnamsz.inc'
+         include 'ektokn.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: qcol  !! Column name, possibly qualified.
+         integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(in) :: eqryc  !! Character component of query.
+         character(*), intent(out) :: table  !! Name of table qualifying column.
+         character(*), intent(out) :: alias  !! Alias of table, if present.
+         integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+         character(*), intent(out) :: column  !! Name of QCOL, unqualified.
+         integer(ip), intent(out) :: colidx  !! Index of QCOL within its parent virtual table.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Parse error message.
+      end subroutine zzekpcol
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzeksemc ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekattdsc.inc'
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekopcd.inc'
+         include 'ekquery.inc'
+         include 'ektnamsz.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Original query.
+         integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(inout) :: eqryc  !! Character component of query.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Semantic error message.
+         integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
+      end subroutine zzeksemc
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzektres ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekattdsc.inc'
+         include 'ekbool.inc'
+         include 'ekcnamsz.inc'
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'ektnamsz.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Original query string.
+         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of query.
+         character(*), intent(inout) :: eqryc  !! Character component of query.
+         real(wp), intent(inout) :: eqryd  ( * )  !! Numeric component of query.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Error message.
+         integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
+      end subroutine zzektres
+
+      !> Update a specified class 3 column entry in an EK record.
+      module subroutine zzekue03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekcoldsc.inc'
+         include 'ekdatpag.inc'
+         include 'ekrecptr.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+         integer(ip), intent(in) :: recptr  !! Record pointer.
+         character(*), intent(in) :: cval  !! Character string value.
+         logical, intent(in) :: isnull  !! Null flag.
+      end subroutine zzekue03
+
+      !> Update a character column entry in a specified EK record.
+      module subroutine ekucec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekcoldsc.inc'
+         include 'eksegdsc.inc'
+         include 'ektype.inc'
+         integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+         integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+         integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+         character(*), intent(in) :: column  !! Column name.
+         integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+         character(*), intent(in) :: cvals  ( * )  !! Character string values to add to column.
+         logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+      end subroutine ekucec
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzeknres ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekbool.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'ektnamsz.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Original query string.
+         integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+         character(*), intent(inout) :: eqryc  !! Character component of query.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Error message.
+         integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
+      end subroutine zzeknres
+
+      !> Find E-kernel data that satisfy a set of constraints.
+      module subroutine ekfind ( ctx, query, nmrows, error, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekquery.inc'
+         include 'ekqlimit.inc'
+         include 'ektype.inc'
+         include 'ekopcd.inc'
+         include 'ekcnamsz.inc'
+         character(*), intent(in) :: query  !! Query specifying data to be found.
+         integer(ip), intent(out) :: nmrows  !! Number of matching rows.
+         logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+         character(*), intent(out) :: errmsg  !! Parse error description.
+      end subroutine ekfind
+
+      !> Convert an EK query to encoded form.
+      module subroutine zzekencd ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekopcd.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'ektype.inc'
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: query  !! Query specifying events to be found.
+         integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of encoded query.
+         character(*), intent(out) :: eqryc  !! Character component of encoded query.
+         real(wp), intent(out) :: eqryd  ( * )  !! Numeric component of encoded query.
+         logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+         character(*), intent(out) :: errmsg  !! Parse error description.
+         integer(ip), intent(out) :: errptr  !! Error pointer.
+      end subroutine zzekencd
+
+      !> Parse the SELECT clause of an EK query, returning full particulars
+      !> concerning each selected item.
+      module subroutine ekpsel ( ctx, query, n, xbegs, xends, xtypes, xclass, tabs, cols, error, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ekattdsc.inc'
+         include 'ekcnamsz.inc'
+         include 'ekqlimit.inc'
+         include 'ekquery.inc'
+         include 'ektnamsz.inc'
+         include 'ektype.inc'
+         character(*), intent(in) :: query  !! EK query.
+         integer(ip), intent(out) :: n  !! Number of items in SELECT clause of QUERY.
+         integer(ip), intent(out) :: xbegs  ( * )  !! Begin positions of expressions in SELECT clause.
+         integer(ip), intent(out) :: xends  ( * )  !! End positions of expressions in SELECT clause.
+         character(*), intent(out) :: xtypes ( * )  !! Data types of expressions.
+         character(*), intent(out) :: xclass ( * )  !! Classes of expressions.
+         character(*), intent(out) :: tabs   ( * )  !! Names of tables qualifying SELECT columns.
+         character(*), intent(out) :: cols   ( * )  !! Names of columns in SELECT clause of QUERY.
+         logical, intent(out) :: error  !! Error flag.
+         character(*), intent(out) :: errmsg  !! Parse error message.
+      end subroutine ekpsel
+
+      !> Search through a type 1 star catalog and return the number of
+      !> stars within a specified RA - DEC rectangle.
+      module subroutine stcf01 ( ctx, catnam, westra, eastra, sthdec, nthdec, nstars )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: catnam  !! Catalog table name.
+         real(wp), intent(in) :: westra  !! Western most right ascension in radians.
+         real(wp), intent(in) :: eastra  !! Eastern most right ascension in radians.
+         real(wp), intent(in) :: sthdec  !! Southern most declination in radians.
+         real(wp), intent(in) :: nthdec  !! Northern most declination in radians.
+         integer(ip), intent(out) :: nstars  !! Number of stars found.
+      end subroutine stcf01
+
+   end interface
+   ! --- end pepper_ek
    ! <<< generated interfaces
 
 contains

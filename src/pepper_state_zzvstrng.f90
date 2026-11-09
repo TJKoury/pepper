@@ -31,6 +31,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzvstrng_state(state)
       type(zzvstrng_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%string = ' '
+      state%myfill = ' '
+      state%code0 = 0
+      state%exp = 0
       state%string = ' 0.0000000000000E+00 '
       state%myfill = ' '
       state%exp = 0

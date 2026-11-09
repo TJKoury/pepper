@@ -32,6 +32,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzddhgsd_state(state)
       type(zzddhgsd_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%clslst = ' '
+      state%stramh = ' '
+      state%strarc = ' '
+      state%strbff = ' '
       state%clslst = [ character(len(state%clslst)) :: 'METHOD', 'ARCH', 'BFF' ]
       state%stramh = [ character(len(state%stramh)) :: 'READ', 'WRITE', 'SCRATCH', 'NEW' ]
       state%strarc = [ character(len(state%strarc)) :: 'DAF', 'DAS' ]

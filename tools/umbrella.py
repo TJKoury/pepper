@@ -367,6 +367,10 @@ class Umbrella:
                f"      subroutine {self.name} ( {', '.join(self.args)} )",
                "      use pepper_kinds, only: ip, wp",
                "      implicit none"] + spec_lines
+        # arguments declared only by EXTERNAL in SPICELIB (dummy procedures)
+        undeclared = [a for a in self.args if not any(re.search(rf"::\s*{a}\b", l) for l in spec_lines)]
+        if undeclared:
+            out.append(f"      external :: {', '.join(undeclared)}")
         if self.main_bogus:
             # SPICELIB's own error calls (the short message differs, e.g.
             # SPICE(DSKBOGUSENTRY)), through the global error routines

@@ -28,6 +28,9 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dascls_state(state)
       type(dascls_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%fhset = 0
+      state%pass1 = .false.
       state%pass1 = .true.
    end subroutine init_dascls_state
 

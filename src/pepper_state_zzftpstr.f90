@@ -29,6 +29,12 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzftpstr_state(state)
       type(zzftpstr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%locdlm = ' '
+      state%loclnd = ' '
+      state%locrnd = ' '
+      state%locstr = ' '
       state%first = .true.
       state%locdlm = ':'
       state%loclnd = 'FTPSTR'

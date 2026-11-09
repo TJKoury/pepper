@@ -28,6 +28,10 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_scencd_state(state)
       type(scencd_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%pstart = 0.0_wp
+      state%pstop = 0.0_wp
+      state%ptotls = 0.0_wp
    end subroutine init_scencd_state
 
 end module pepper_state_scencd

@@ -70,6 +70,26 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_ttrans_state(state)
       type(ttrans_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%unifrm = ' '
+      state%recog = ' '
+      state%parsed = 0
+      state%needy = .false.
+      state%forml = .false.
+      state%vars = ' '
+      state%halfd = 0.0_wp
+      state%jd1101 = 0.0_wp
+      state%secspd = 0.0_wp
+      state%taitab = 0.0_wp
+      state%tsecs = 0.0_wp
+      state%daytab = 0
+      state%dn2000 = 0
+      state%dofyr = 0
+      state%nref = 0
+      state%sunday = 0
+      state%usrctr = 0
+      state%first = .false.
+      state%nodata = .false.
       state%first = .true.
       state%nodata = .true.
    end subroutine init_ttrans_state

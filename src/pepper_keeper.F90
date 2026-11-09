@@ -3129,7 +3129,7 @@ contains
 
          if ( mytype == 'EK' ) then
 
-            call eklef ( file, handle )
+            call ctx%eklef ( file, handle )
 
          else if ( mytype == 'DSK' ) then
 
@@ -6334,7 +6334,7 @@ contains
 
          else if ( types(i) == 'EK' ) then
 
-            call ekuef ( handls(i) )
+            call ctx%ekuef ( handls(i) )
 
          else if ( types(i) == 'DSK' ) then
 
@@ -7036,7 +7036,7 @@ contains
       else if ( types(i) == 'EK' ) then
 
          if ( single ) then
-            call ekuef ( handls(i) )
+            call ctx%ekuef ( handls(i) )
          end if
 
          didek = .true.
@@ -7143,7 +7143,7 @@ contains
                else if ( types(j) == 'EK' ) then
 
                   if ( single ) then
-                     call ekuef ( handls(j) )
+                     call ctx%ekuef ( handls(j) )
                   end if
 
                   didek = .true.
@@ -7316,7 +7316,7 @@ contains
 
          do i = 1, loaded
             if ( types(i) == 'EK' ) then
-               call eklef ( files(i), handls(i) )
+               call ctx%eklef ( files(i), handls(i) )
             end if
          end do
 

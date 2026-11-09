@@ -53,6 +53,34 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzwahr_state(state)
       type(zzwahr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%angle = 0.0_wp
+      state%angrt = 0.0_wp
+      state%dtwopi = 0.0_wp
+      state%factr = 0.0_wp
+      state%oneday = 0.0_wp
+      state%radian = 0.0_wp
+      state%d0 = 0.0_wp
+      state%d1 = 0.0_wp
+      state%d2 = 0.0_wp
+      state%d3 = 0.0_wp
+      state%f0 = 0.0_wp
+      state%f1 = 0.0_wp
+      state%f2 = 0.0_wp
+      state%f3 = 0.0_wp
+      state%l0 = 0.0_wp
+      state%l1 = 0.0_wp
+      state%l2 = 0.0_wp
+      state%l3 = 0.0_wp
+      state%lp0 = 0.0_wp
+      state%lp1 = 0.0_wp
+      state%lp2 = 0.0_wp
+      state%lp3 = 0.0_wp
+      state%mg0 = 0.0_wp
+      state%mg1 = 0.0_wp
+      state%mg2 = 0.0_wp
+      state%mg3 = 0.0_wp
+      state%first = .false.
       state%first = .true.
    end subroutine init_zzwahr_state
 

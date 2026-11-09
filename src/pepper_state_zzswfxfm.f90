@@ -46,6 +46,25 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzswfxfm_state(state)
       type(zzswfxfm_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%basbeg = 0
+      state%bascnt = 0
+      state%baslst = 0
+      state%clsids = 0
+      state%clsses = 0
+      state%binary = .false.
+      state%fidlst = 0
+      state%free = 0
+      state%frpool = 0
+      state%hdfram = 0
+      state%pass1 = .false.
+      state%polctr = 0
+      state%prvat = 0
+      state%prvfrm = 0
+      state%starts = 0.0_wp
+      state%stops = 0.0_wp
+      state%usetim = .false.
+      state%xident = 0.0_wp
       state%basbeg = 0
       state%bascnt = 0
       state%baslst = 0

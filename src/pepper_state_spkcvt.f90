@@ -49,6 +49,24 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_spkcvt_state(state)
       type(spkcvt_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%evlflg = ' '
+      state%j2code = 0
+      state%first = .false.
+      state%prvcor = ' '
+      state%uselt = .false.
+      state%xmit = .false.
+      state%svctr1 = 0
+      state%svtctr = ' '
+      state%svccde = 0
+      state%svfnd1 = .false.
+      state%svctr2 = 0
+      state%svobsr = ' '
+      state%svobsc = 0
+      state%svfnd2 = .false.
+      state%svctr3 = 0
+      state%svoref = ' '
+      state%svorfc = 0
       state%evlflg = [ character(len(state%evlflg)) :: 'OBSERVER', 'TARGET', 'CENTER' ]
       state%first = .true.
       state%prvcor = ' '

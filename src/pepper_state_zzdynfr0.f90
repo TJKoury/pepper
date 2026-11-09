@@ -47,6 +47,26 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzdynfr0_state(state)
       type(zzdynfr0_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%axes = ' '
+      state%earth = 0
+      state%first = .false.
+      state%j2000 = 0
+      state%itmabc = ' '
+      state%itmaxe = ' '
+      state%itmcof = ' '
+      state%itmdec = ' '
+      state%itmfrm = ' '
+      state%itmlat = ' '
+      state%itmlon = ' '
+      state%itmobs = ' '
+      state%itmra = ' '
+      state%itmsep = ' '
+      state%itmspc = ' '
+      state%itmtrg = ' '
+      state%itmunt = ' '
+      state%itmvdf = ' '
+      state%itmvec = ' '
       state%axes = [ character(len(state%axes)) :: kvx, kvy, kvz ]
       state%first = .true.
       state%itmcof = [ character(len(state%itmcof)) :: kweac1, kweac2, kweac3 ]

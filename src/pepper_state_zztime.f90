@@ -80,6 +80,33 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zztime_state(state)
       type(zztime_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%rep = ' '
+      state%size = 0
+      state%begs = 0
+      state%ends = 0
+      state%pbegs = 0
+      state%pends = 0
+      state%pictur = ' '
+      state%names = ' '
+      state%picerr = ' '
+      state%tknerr = ' '
+      state%hms = 0.0_wp
+      state%blank = 0
+      state%to = 0
+      state%pto = 0
+      state%case = 0
+      state%mnsize = 0
+      state%wksize = 0
+      state%width = 0
+      state%recog = ' '
+      state%mnmrk = ' '
+      state%wkday = ' '
+      state%class = ' '
+      state%f = 0
+      state%l = 0
+      state%ampm = .false.
+      state%first = .false.
       state%size = 0
       state%first = .true.
    end subroutine init_zztime_state

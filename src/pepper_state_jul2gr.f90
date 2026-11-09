@@ -29,6 +29,12 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_jul2gr_state(state)
       type(jul2gr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%rdayg = 0
+      state%rdayj = 0
+      state%offstj = 0
+      state%offstg = 0
       state%first = .true.
    end subroutine init_jul2gr_state
 

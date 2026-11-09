@@ -53,6 +53,23 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dasa2l_state(state)
       type(dasa2l_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%fidx = 0
+      state%next = 0
+      state%nfiles = 0
+      state%nw = 0
+      state%prev = 0
+      state%prvhan = 0
+      state%rngloc = 0
+      state%tbbase = 0
+      state%tbfwrd = 0
+      state%tbhan = 0
+      state%tbmxad = 0
+      state%tbsize = 0
+      state%fast = .false.
+      state%prvok = .false.
+      state%tbfast = .false.
+      state%tbrdon = .false.
       state%fidx = 0
       state%next = [ 2, 3, 1 ]
       state%nfiles = 0

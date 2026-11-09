@@ -33,6 +33,13 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_rdker_state(state)
       type(rdker_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%file = ' '
+      state%linnum = 0
+      state%status = 0
+      state%frstim = .false.
+      state%begdat = ' '
+      state%begtxt = ' '
       state%file = ' '
       state%linnum = 0
       state%frstim = .true.

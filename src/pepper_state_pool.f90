@@ -67,6 +67,26 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_pool_state(state)
       type(pool_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%pnames = ' '
+      state%namlst = 0
+      state%nmpool = 0
+      state%datlst = 0
+      state%chpool = 0
+      state%dppool = 0
+      state%chvals = ' '
+      state%dpvals = 0.0_wp
+      state%wtvars = ' '
+      state%wtpool = 0
+      state%wtagnt = ' '
+      state%wtptrs = 0
+      state%active = ' '
+      state%agents = ' '
+      state%notify = ' '
+      state%first = .false.
+      state%subctr = 0
+      state%begdat = ' '
+      state%begtxt = ' '
       state%first = .true.
    end subroutine init_pool_state
 

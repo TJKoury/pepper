@@ -51,6 +51,20 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dafana_state(state)
       type(dafana_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%stfh = 0
+      state%stifnm = ' '
+      state%staddg = .false.
+      state%stfrst = 0
+      state%stlast = 0
+      state%stfree = 0
+      state%stbegn = 0
+      state%stlsum = 0.0_wp
+      state%stname = ' '
+      state%stpool = 0
+      state%sthead = 0
+      state%stfptr = 0
+      state%first = .false.
       state%sthead = nil
       state%stfptr = nil
       state%first = .true.

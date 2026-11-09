@@ -48,6 +48,22 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_unitim_state(state)
       type(unitim_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%bslash = ' '
+      state%dta = 0.0_wp
+      state%eb = 0.0_wp
+      state%first = .false.
+      state%jd2000 = 0.0_wp
+      state%k = 0.0_wp
+      state%m = 0.0_wp
+      state%missed = ' '
+      state%nodata = .false.
+      state%recog = ' '
+      state%secspd = 0.0_wp
+      state%typtdb = ' '
+      state%typtdt = ' '
+      state%vars = ' '
+      state%usrctr = 0
       state%first = .true.
       state%missed = [ character(len(state%missed)) :: 'DELTET/DELTA_T_A, #', 'DELTET/K, #', 'DELTET/EB, #', 'DELTET/M, #' ]
       state%nodata = .true.

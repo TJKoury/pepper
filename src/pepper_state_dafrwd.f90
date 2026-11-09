@@ -33,6 +33,14 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dafrwd_state(state)
       type(dafrwd_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%rbhan = 0
+      state%rbrec = 0
+      state%rbreq = 0
+      state%rbdat = 0.0_wp
+      state%rbnbr = 0
+      state%nread = 0
+      state%nreq = 0
       state%rbhan = 0
       state%rbrec = 0
       state%rbreq = 0

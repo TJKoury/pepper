@@ -24,6 +24,9 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_texpyr_state(state)
       type(texpyr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%centry = 0
+      state%lbound = 0
       state%centry = 1900
       state%lbound = 1969
    end subroutine init_texpyr_state

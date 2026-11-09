@@ -57,6 +57,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_spkbsr_state(state)
       type(spkbsr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
       state%next = 0
       state%nft = 0
    end subroutine init_spkbsr_state
@@ -64,6 +69,25 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_spkbsr_context_state(state)
       type(spkbsr_context_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%btbeg = 0
+      state%btbod = 0
+      state%btchkp = .false.
+      state%btexp = 0
+      state%bthfs = 0
+      state%btlb = 0.0_wp
+      state%btlfs = 0
+      state%btprvd = 0.0_wp
+      state%btprvh = 0
+      state%btprvi = ' '
+      state%btruex = 0
+      state%btub = 0.0_wp
+      state%nbt = 0
+      state%stdes = 0.0_wp
+      state%sthan = 0
+      state%stidnt = ' '
+      state%stpool = 0
+      state%epoch = 0
       state%nbt = 0
       state%epoch = 0
    end subroutine init_spkbsr_context_state

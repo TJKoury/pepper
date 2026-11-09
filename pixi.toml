@@ -20,6 +20,7 @@ test = { cmd = "fpm test", depends-on = ["clean-stale"], description = "Build an
 #   pixi run tspice -j 4 'spk*'     # families matching F_SPK*
 #   pixi run tspice --help
 test-parallel = { cmd = "fpm test test_parallel --flag -fopenmp", depends-on = ["clean-stale"], description = "Run the parallel milestone test with OpenMP (the library has no OpenMP; see test/core/test_parallel.f90)" }
+verify = { cmd = "fpm test tspice --flag -DPEPPER_VERIFY --runner 'python tools/run_tspice.py' --", depends-on = ["clean-stale"], description = "tspice from a separate build directory (an extra flag gives fpm a new one), as a check against stale build products" }
 tspice = { cmd = "fpm test tspice --runner 'python tools/run_tspice.py' --", depends-on = ["clean-stale"], description = "Run the tspice test families in parallel (see tools/run_tspice.py)" }
 tspice-list = { cmd = "fpm test tspice --runner 'python tools/run_tspice.py' -- --list", description = "List the tspice test families" }
 inventory = { cmd = "python tools/state_inventory.py", description = "Summarize the saved state in src/spicelib (see tools/state_inventory.py; --list, --json PATH)" }

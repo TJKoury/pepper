@@ -185,14 +185,19 @@ def is_temporary(name: str, bodies: list) -> bool:
     return True
 
 
-def trim(name: str, dry_run: bool, force=()) -> list:
+def trim(name: str, dry_run: bool, force=(), context=False) -> list:
+    """context: the per-context part of an umbrella whose state is split
+    between the instance and the context (context_state)."""
     cfg = UMBRELLAS[name]
-    comp = cfg["component"]
-    path_expr = f"ctx%{comp}" if cfg.get("where") == "context" else f"ctx%spice%{comp}"
+    comp = cfg["context_component"] if context else cfg["component"]
+    path_expr = f"ctx%{comp}" if context or cfg.get("where") == "context" else f"ctx%spice%{comp}"
+    tname = f"{name}_context_state" if context else f"{name}_state"
     smod = SRC / f"pepper_state_{name}.f90"
+    if not smod.exists():
+        return [f"{name}: no state module (no state)"]
     stext = smod.read_text(encoding="ascii")
     # Components of the type: name -> declaration line
-    tblock = re.search(rf"   type, public :: {name}_state\n(.*?)   end type {name}_state\n", stext, re.S)
+    tblock = re.search(rf"   type, public :: {tname}\n(.*?)   end type {tname}\n", stext, re.S)
     comps = {}
     for line in tblock.group(1).split("\n"):
         m = re.match(r"\s*(.*?)\s*::\s*(\w+)(.*?)\s*(!!.*)?$", line)
@@ -284,6 +289,9 @@ def main() -> int:
         force = {f.split(".", 1)[1].lower() for f in args.force if f.split(".", 1)[0].lower() == n}
         for line in trim(n, args.dry_run, force):
             print(line)
+        if UMBRELLAS[n].get("context_component"):
+            for line in trim(n, args.dry_run, force, context=True):
+                print("(context) " + line)
     return 0
 
 

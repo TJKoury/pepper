@@ -26,6 +26,9 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_et2utc_state(state)
       type(et2utc_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%str = ' '
+      state%tvec = 0.0_wp
    end subroutine init_et2utc_state
 
 end module pepper_state_et2utc

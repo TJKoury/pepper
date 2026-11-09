@@ -31,6 +31,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_ckgpav_state(state)
       type(ckgpav_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%svctr1 = 0
+      state%svref = ' '
+      state%svrefr = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_ckgpav_state
 

@@ -1,0 +1,29530 @@
+!> Writing SPK, CK and PCK files (the segment writers of all types, opening and closing), the comment area (SPC*), and the CK record readers they use.
+!>
+!> The procedures keep SPICELIB's names and documentation; the context is
+!> their first argument (interfaces and type-bound procedures in
+!> pepper_instance). Moved here from src/spicelib by
+!> tools/modularize_ctx.py; the external procedures with the original
+!> interface are in src/legacy/pepper_legacy_writers.f90.
+submodule (pepper_instance) pepper_writers
+
+   implicit none
+
+contains
+
+!$Procedure CKCLS ( CK, Close file )
+
+      module procedure ckcls
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Close an open CK file.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     CK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the CK file that is to be closed.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there are no segments in the file, the error
+!         SPICE(NOSEGMENTSFOUND) is signaled.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     Close the CK file attached to HANDLE.
+!
+!     The close operation tests the file to ensure the presence of data
+!     segments.
+!
+!     A CKCLS call should balance every CKOPN call.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Create a CK type 3 segment; fill with data for a simple time
+!        dependent rotation and angular velocity, and reserve room in
+!        the CK comments area for 5000 characters.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKCLS_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         CK2
+!              PARAMETER           ( CK2 = 'ckcls_ex1.bc' )
+!
+!              DOUBLE PRECISION      SPTICK
+!              PARAMETER           ( SPTICK = 0.001D0 )
+!
+!              INTEGER               INST
+!              PARAMETER           ( INST = -77703 )
+!
+!              INTEGER               MAXREC
+!              PARAMETER           ( MAXREC = 201 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    REF
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      AVVS   (   3,MAXREC )
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      ENDTIM
+!              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RWMAT  ( 3, 3 )
+!              DOUBLE PRECISION      SPACES
+!              DOUBLE PRECISION      SCLKDP (     MAXREC )
+!              DOUBLE PRECISION      STARTS (    MAXREC/2)
+!              DOUBLE PRECISION      STICKS
+!              DOUBLE PRECISION      THETA
+!              DOUBLE PRECISION      WMAT   ( 3, 3 )
+!              DOUBLE PRECISION      WQUAT  ( 0:3 )
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               NCOMCH
+!              INTEGER               NINTS
+!
+!              LOGICAL               AVFLAG
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, but it reserves room for 5000 characters.
+!        C
+!              NCOMCH = 5000
+!
+!        C
+!        C     The base reference from for the rotation data.
+!        C
+!              REF = 'J2000'
+!
+!        C
+!        C     Time spacing in encoded ticks and in seconds
+!        C
+!              STICKS = 10.D0
+!              SPACES = STICKS * SPTICK
+!
+!        C
+!        C     Declare an angular rate in radians per sec.
+!        C
+!              RATE = 1.D-2
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              SEGID  = 'Test type 3 CK segment'
+!              IFNAME = 'Test CK type 3 segment created by CKW03'
+!
+!        C
+!        C     Open a new kernel.
+!        C
+!              CALL CKOPN ( CK2, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Create a 3x3 double precision identity matrix.
+!        C
+!              CALL IDENT ( WMAT )
+!
+!        C
+!        C     Convert the matrix to quaternion.
+!        C
+!              CALL M2Q ( WMAT, WQUAT )
+!
+!        C
+!        C     Copy the work quaternion to the first row of
+!        C     QUATS.
+!        C
+!              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+!
+!        C
+!        C     Create an angular velocity vector. This vector is in the
+!        C     REF reference frame and indicates a constant rotation
+!        C     about the Z axis.
+!        C
+!              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+!
+!        C
+!        C     Set the initial value of the encoded ticks.
+!        C
+!              SCLKDP(1) = 1000.D0
+!
+!        C
+!        C     Fill the rest of the AVVS and QUATS matrices
+!        C     with simple data.
+!        C
+!              DO I = 2, MAXREC
+!
+!        C
+!        C        Create the corresponding encoded tick value in
+!        C        increments of STICKS with an initial value of
+!        C        1000.0 ticks.
+!        C
+!                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+!
+!        C
+!        C        Create the transformation matrix for a rotation of
+!        C        THETA about the Z axis. Calculate THETA from the
+!        C        constant angular rate RATE at increments of SPACES.
+!        C
+!                 THETA = (I-1) * RATE * SPACES
+!                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+!
+!        C
+!        C        Convert the RWMAT matrix to SPICE type quaternion.
+!        C
+!                 CALL M2Q ( RWMAT, WQUAT )
+!
+!        C
+!        C        Store the quaternion in the QUATS matrix.
+!        C        Store angular velocity in AVVS.
+!        C
+!                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+!                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+!
+!              END DO
+!
+!        C
+!        C     Create an array start times for the interpolation
+!        C     intervals. The end time for a particular interval is
+!        C     determined as the time of the final data value prior in
+!        C      time to the next start time.
+!        C
+!              NINTS = MAXREC/2
+!              DO I = 1, NINTS
+!
+!                 STARTS(I) = SCLKDP(I*2 - 1)
+!
+!              END DO
+!
+!        C
+!        C     Set the segment boundaries equal to the first and last
+!        C     time for the data arrays.
+!        C
+!              BEGTIM = SCLKDP(1)
+!              ENDTIM = SCLKDP(MAXREC)
+!
+!        C
+!        C     This segment contains angular velocity.
+!        C
+!              AVFLAG = .TRUE.
+!
+!        C
+!        C     All information ready to write. Write to a CK type 3
+!        C     segment to the file indicated by HANDLE.
+!        C
+!              CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
+!             .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
+!             .             AVVS,   NINTS,  STARTS                )
+!
+!        C
+!        C     SAFELY close the file.
+!        C
+!              CALL CKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new CK file exists in the
+!        output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     F.S. Turner        (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.2.1, 26-MAY-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added
+!        complete code example based on existing fragment.
+!
+!        Re-ordered header sections and extended the $Particulars
+!        section.
+!
+!-    SPICELIB Version 1.2.0, 07-SEP-2001 (EDW)
+!
+!        Removed DAFHLU call; replaced ERRFNM call with ERRHAN.
+!
+!-    SPICELIB Version 1.1.0, 17-FEB-2000 (FST)
+!
+!        Removed the call to ZZFIXID. This will make all C-kernels
+!        created with future versions of the toolkit possess the
+!        unambiguous ID word 'DAF/CK  '.
+!
+!-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     close a CK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: acclen = 5
+!
+!     Local Variables
+!
+      character(acclen)     access
+
+      logical               found
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Get the access method for the file. Currently, if HANDLE < 0, the
+!     access method is 'WRITE'. If HANDLE > 0, the access method is
+!     'READ'.  In the future this should make use of the private entry
+!     in the handle manager umbrella, ZZDDHNFO.
+!
+      if ( handle < 0 ) then
+         access = 'WRITE'
+      else if ( handle > 0 ) then
+         access = 'READ'
+      end if
+!
+!     Fix the ID word if the file is open for writing and close the
+!     file, or just close the file.
+!
+      if ( access == 'WRITE' ) then
+
+!
+!        Check to see if there are any segments in the file. If there
+!        are no segments, we signal an error. This probably indicates a
+!        programming error of some sort anyway. Why would you create a
+!        file and put nothing in it?
+!
+         call dafbfs ( ctx, handle )
+         call daffna ( ctx, found )
+
+         if ( ctx%failed() ) return
+
+         if ( .not. found ) then
+
+            call ctx%setmsg ( 'No segments were found in the CK file' &
+            //            ' ''#''. There must be at least one segment' &
+            //            ' in the file when this subroutine is' &
+            //            ' called.'                                   )
+            call ctx%errhan ( '#', handle                                  )
+            call ctx%sigerr ( 'SPICE(NOSEGMENTSFOUND)'                     )
+            return
+
+         end if
+
+      end if
+!
+!     Close the file.
+!
+      call dafcls   ( ctx, handle )
+!
+!     No need to check FAILED() here, since we just return. The caller
+!     should check it though.
+!
+      return
+
+      end procedure ckcls
+
+!$Procedure CKGR01 ( C-kernel, get record, type 01 )
+
+      module procedure ckgr01
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return a specified pointing instance from a CK type 01 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: n_1(1)  !! one-element copy of n (array argument)
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              desired segment. The file should have been opened
+!              for read access, either by CKLPF or DAFOPR.
+!
+!     DESCR    is the packed descriptor of the data type 1 segment.
+!
+!     RECNO    is the number of the individual pointing record to be
+!              returned from the data type 1 segment.
+!
+! $ Detailed_Output
+!
+!     RECORD   is the pointing record indexed by RECNO in the segment.
+!              The contents are as follows:
+!
+!                 RECORD( 1 ) = CLKOUT
+!
+!                 RECORD( 2 ) = q0
+!                 RECORD( 3 ) = q1
+!                 RECORD( 4 ) = q2
+!                 RECORD( 5 ) = q3
+!
+!                 RECORD( 6 ) = Av1  ]
+!                 RECORD( 7 ) = Av2  |-- Returned optionally
+!                 RECORD( 8 ) = Av3  ]
+!
+!              CLKOUT is the encoded spacecraft clock time associated
+!              with the returned pointing values.
+!
+!              The quantities q0 - q3 represent a quaternion.
+!              The quantities Av1, Av2, and Av3 represent the
+!              angular velocity vector, and are returned only if the
+!              segment contains angular velocity data. The
+!              components of the angular velocity vector are
+!              specified relative to the inertial reference
+!              frame of the segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment is not of data type 1, the error
+!         SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If RECNO is less than one or greater than the number of
+!         records in the specified segment, the error
+!         SPICE(CKNONEXISTREC) is signaled.
+!
+!     3)  If the specified handle does not belong to any file that is
+!         currently known to be open, an error is signaled by a routine
+!         in the call tree of this routine.
+!
+!     4)  If DESCR is not a valid, packed descriptor of a segment in
+!         the CK file specified by HANDLE, the results of this routine
+!         are unpredictable.
+!
+! $ Files
+!
+!     The file specified by HANDLE should be open for read access.
+!
+! $ Particulars
+!
+!     For a detailed description of the structure of a type 1 segment,
+!     see the CK required reading.
+!
+!     This is a utility routine that performs as follows. It finds out
+!     how many records are in the segment, checks to see if the request
+!     fits the bounds of the segment, and then moves directly to get
+!     the requested data.
+!
+! $ Examples
+!
+!     The following code fragment prints the records of the first
+!     segment in a CK file. Suppose MOC.CK is valid CK file that
+!     contains segments of data type 1.
+!
+!           INTEGER               ICD     ( 6 )
+!           INTEGER               HANDLE
+!           INTEGER               NREC
+!           INTEGER               I
+!           DOUBLE PRECISION      DCD     ( 2 )
+!           DOUBLE PRECISION      DESCR   ( 5 )
+!           DOUBLE PRECISION      RECORD  ( 8 )
+!           LOGICAL               FOUND
+!
+!     C
+!     C     First load the file. (The file may also be opened by using
+!     C     CKLPF.)
+!     C
+!           CALL DAFOPR ( 'MOC.CK', HANDLE )
+!
+!     C
+!     C     Begin forward search.  Find first array.
+!     C
+!           CALL DAFBFS ( HANDLE )
+!           CALL DAFFNA ( FOUND  )
+!
+!     C
+!     C     Get segment descriptor.
+!     C
+!           CALL DAFGS ( DESCR )
+!
+!     C
+!     C     Unpack the segment descriptor into its double precision
+!     C     and integer components.
+!     C
+!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!     C
+!     C     The data type for a segment is located in the third integer
+!     C     component of the descriptor.
+!     C
+!           IF ( ICD( 3 ) .EQ. 1 ) THEN
+!
+!     C
+!     C        How many records does this segment contain?
+!     C
+!              CALL CKNR01 ( HANDLE, DESCR, NREC )
+!
+!              DO I = 1, NREC
+!
+!     C
+!     C           Get the record associated with record number I.
+!     C
+!                 CALL CKGR01 ( HANDLE, DESCR, I, RECORD )
+!                 WRITE (*,*) 'Record ', I, ':'
+!                 WRITE (*,*)  RECORD
+!              END DO
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor was
+!         passed to this routine must be opened for read access by
+!         either CKLPF or DAFOPR.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!     R.E. Thurman       (JPL)
+!     I.M. Underwood     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Replaced DAFRDA call with DAFGDA.
+!        Added IMPLICIT NONE.
+!
+!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.2, 06-MAR-1991 (JML)
+!
+!        A correction was made to the example program in the
+!        header. The array of double precision components of
+!        the descriptor ( DCD ) had originally been declared
+!        as an integer.
+!
+!-    SPICELIB Version 1.0.1, 02-NOV-1990 (JML)
+!
+!        The restriction that a C-kernel file must be loaded
+!        was explicitly stated.
+!
+!-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get CK type_1 record
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Replaced DAFRDA call with DAFGDA.
+!
+!-    SPICELIB Version 1.0.2, 06-MAR-1991 (JML)
+!
+!        A correction was made to the example program in the
+!        header. The array of double precision components of
+!        the descriptor ( DCD ) had originally been declared
+!        as an integer.
+!
+!-    SPICELIB Version 1.0.1, 02-NOV-1990 (JML)
+!
+!        1) The restriction that a C-kernel file must be loaded
+!           was explicitly stated.
+!        2) ROTATIONS was removed from the required reading section.
+!        3) Minor changes were made to the wording of the header.
+!
+!-    Beta Version 1.1.0, 28-AUG-1990 (MJS) (JEM)
+!
+!        The following changes were made as a result of the
+!        NAIF CK Code and Documentation Review:
+!
+!        1) The name of this routine was changed from CK01GR to
+!           CKGR01 in order to be consistent with the SPICELIB
+!           naming convention.
+!        2) The declarations for the parameters QSIZ, QAVSIZ, NDC, and
+!           NIC were moved from the "Declarations" section of the
+!           header to the "Local parameters" section of the code below
+!           the header. These parameters are not meant to modified by
+!           users.
+!        3) The header was corrected, improved, and updated to reflect
+!           the changes.
+!        4) The in-code comments were improved.
+!
+!-    Beta Version 1.0.0, 23-MAY-1990 (RET) (IMU)
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel segment descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel segment descriptor.
+!
+!        QSIZ       is the number of double precision numbers making up
+!                   the quaternion portion of a pointing record.
+!
+!        QAVSIZ     is the number of double precision numbers making up
+!                   the quaternion and angular velocity portion of a
+!                   pointing record.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: qsiz = 4
+
+      integer(ip), parameter :: qavsiz = 7
+
+!
+!     Local variables
+!
+      integer(ip)           icd    ( nic )
+      integer(ip)           nrec
+      integer(ip)           beg
+      integer(ip)           addr
+      integer(ip)           psiz
+
+      real(wp)              dcd    ( ndc )
+      real(wp)              n
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+!     From the descriptor, determine
+!
+!       1 - Is this really a type 1 segment?
+!       2 - The beginning address of the segment.
+!       3 - The number of records in the segment (it's the last number
+!           in the segment).
+!       4 - The existence of angular velocity data, which determines how
+!           big the pointing portion of the returned record will be.
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+      if ( icd( 3 ) /= 1 ) then
+         call ctx%setmsg ( 'Data type of the segment should be 1: Passed '// &
+                       'descriptor shows type = #.'                    )
+         call ctx%errint ( '#', icd( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
+         return
+      end if
+
+      beg  = icd( 5 )
+
+      call dafgda ( ctx, handle, icd( 6 ), icd( 6 ), n_1 )
+      n = n_1(1)
+      nrec = int( n )
+
+      if ( icd( 4 ) == 1 ) then
+         psiz = qavsiz
+      else
+         psiz = qsiz
+      end if
+
+!
+!     If a request was made for a record which doesn't exist, then
+!     signal an error and leave.
+!
+      if ( recno < 1 .or. recno > nrec ) then
+         call ctx%setmsg ( 'Requested record number (#) does not exist. ' // &
+                       'There are # records in the segment.'           )
+         call ctx%errint ( '#', recno                                      )
+         call ctx%errint ( '#', nrec                                       )
+         call ctx%sigerr ( 'SPICE(CKNONEXISTREC)'                          )
+         return
+      end if
+
+!
+!     Get the pointing record indexed by RECNO.
+!
+      addr = beg + psiz*( recno - 1 )
+      call dafgda ( ctx, handle, addr, addr + ( psiz - 1 ), record( 2 ))
+
+!
+!     Next get the SCLK time.  Need to go past all of the NREC pointing
+!     records (PSIZ * NREC numbers), and then to the RECNOth SCLK
+!     time.
+!
+      addr = beg + psiz*nrec + recno - 1
+      call dafgda ( ctx, handle, addr, addr, record( 1 ) )
+
+      return
+      end procedure ckgr01
+
+!$Procedure CKGR03 ( C-kernel, get record, type 03 )
+
+      module procedure ckgr03
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return a specified pointing instance from a CK type 03 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              desired segment. The file should have been opened
+!              for read or write access, by CKLPF, DAFOPR or DAFOPW.
+!
+!     DESCR    is the packed descriptor of the data type 3 CK segment.
+!
+!     RECNO    is the number of the discrete pointing instance to be
+!              returned from the data type 3 segment.
+!
+! $ Detailed_Output
+!
+!     RECORD   is the pointing instance indexed by RECNO in the
+!              segment. The contents are as follows:
+!
+!                 RECORD( 1 ) = CLKOUT
+!
+!                 RECORD( 2 ) = Q1
+!                 RECORD( 3 ) = Q2
+!                 RECORD( 4 ) = Q3
+!                 RECORD( 5 ) = Q4
+!
+!                 RECORD( 6 ) = AV1  |
+!                 RECORD( 7 ) = AV2  |-- Returned optionally
+!                 RECORD( 8 ) = AV3  |
+!
+!              CLKOUT is the encoded spacecraft clock time associated
+!              with the returned pointing values.
+!
+!              The quantities Q1 - Q4 are the components of the
+!              quaternion that represents the C-matrix that transforms
+!              vectors from the inertial reference frame of the
+!              segment to the instrument frame at time CLKOUT.
+!
+!              The quantities AV1, AV2, and AV3 represent the
+!              angular velocity vector, and are returned only if
+!              the segment contains angular velocity data. The
+!              components of the angular velocity vector are
+!              specified relative to the inertial reference
+!              frame of the segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment is not of data type 3, the error
+!         SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If RECNO is less than one or greater than the number of
+!         records in the specified segment, the error
+!         SPICE(CKNONEXISTREC) is signaled.
+!
+!     3)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     4)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE should be open for read or
+!     write access.
+!
+! $ Particulars
+!
+!     For a detailed description of the structure of a type 3 segment,
+!     see the CK required reading.
+!
+!     This is a utility routine that may be used to read the individual
+!     pointing instances that make up a type 3 segment. It is normally
+!     used in conjunction with CKNR03, which gives the number of
+!     pointing instances stored in a segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following code example extracts the SCLK time, boresight
+!        vector, and angular velocity vector for each pointing instance
+!        in the first segment in a CK file that contains segments of
+!        data type 3.
+!
+!        Use the CK kernel below, available in the Venus Express PDS
+!        archives, as input for the code example.
+!
+!           VEX_BOOM_V01.BC
+!
+!        Example code begins here.
+!
+!              PROGRAM CKGR03_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local variables.
+!        C
+!              DOUBLE PRECISION      QUAT    ( 4 )
+!              DOUBLE PRECISION      AV      ( 3 )
+!              DOUBLE PRECISION      BORE    ( 3 )
+!              DOUBLE PRECISION      CMAT    ( 3, 3 )
+!              DOUBLE PRECISION      DCD     ( 2 )
+!              DOUBLE PRECISION      DESCR   ( 5 )
+!              DOUBLE PRECISION      RECORD  ( 8 )
+!              DOUBLE PRECISION      SCLKDP
+!
+!              INTEGER               I
+!              INTEGER               ICD     ( 6 )
+!              INTEGER               HANDLE
+!              INTEGER               NREC
+!
+!              LOGICAL               AVSEG
+!              LOGICAL               FOUND
+!
+!        C
+!        C     First load the file (it may also be opened by using
+!        C     CKLPF).
+!        C
+!              CALL DAFOPR ( 'VEX_BOOM_V01.BC', HANDLE )
+!
+!        C
+!        C     Begin forward search.  Find the first array.
+!        C
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!        C
+!        C     Get segment descriptor.
+!        C
+!              CALL DAFGS ( DESCR )
+!
+!        C
+!        C     Unpack the segment descriptor into its double precision
+!        C     and integer components.
+!        C
+!              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!        C
+!        C     The data type for a segment is located in the third
+!        C     integer component of the descriptor.
+!        C
+!              IF ( ICD( 3 ) .EQ. 3 ) THEN
+!
+!        C
+!        C        Does the segment contain AV data?
+!        C
+!                 AVSEG =  ( ICD(4) .EQ. 1 )
+!
+!        C
+!        C        How many records does this segment contain?
+!        C
+!                 CALL CKNR03 ( HANDLE, DESCR, NREC )
+!
+!                 DO I = 1, NREC
+!
+!        C
+!        C           Get the Ith pointing instance in the segment.
+!        C
+!                    CALL CKGR03 ( HANDLE, DESCR, I, RECORD )
+!
+!        C
+!        C           Unpack RECORD into the time, quaternion, and av.
+!        C
+!                    SCLKDP = RECORD ( 1 )
+!
+!                    CALL MOVED ( RECORD(2), 4, QUAT )
+!
+!                    IF  ( AVSEG )  THEN
+!                       CALL MOVED ( RECORD(6), 3, AV   )
+!                    END IF
+!
+!        C
+!        C           The boresight vector is the third row of the
+!        C           C-matrix.
+!        C
+!                    CALL Q2M ( QUAT, CMAT )
+!
+!                    BORE(1) = CMAT(3,1)
+!                    BORE(2) = CMAT(3,2)
+!                    BORE(3) = CMAT(3,3)
+!
+!        C
+!        C           Write out the results.
+!        C
+!                    WRITE (*,'(A,I2)') 'Record: ', I
+!                    WRITE (*,'(A,F25.6)')  '   SCLK time       :',
+!             .                               SCLKDP
+!                    WRITE (*,'(A,3F14.9)') '   Boresight       :',
+!             .                               BORE
+!
+!                    IF ( AVSEG ) THEN
+!                       WRITE (*,'(A,3F14.9)') '   Angular velocity:',
+!             .                                  AV
+!                    END IF
+!                    WRITE (*,*)
+!
+!                 END DO
+!
+!              END IF
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!        Record:  1
+!           SCLK time       :           2162686.710986
+!           Boresight       :  -0.999122830   0.000000000   0.041875654
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  2
+!           SCLK time       :       54160369751.715164
+!           Boresight       :  -0.999122830   0.000000000   0.041875654
+!           Angular velocity:   0.000000000   1.176083393   0.000000000
+!
+!        Record:  3
+!           SCLK time       :       54160454948.487686
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  4
+!           SCLK time       :      299264885854.937805
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  5
+!           SCLK time       :     2366007685832.532227
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  6
+!           SCLK time       :     4432750485810.126953
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  7
+!           SCLK time       :     6505155594828.757812
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  8
+!           SCLK time       :     8571898394806.352539
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  9
+!           SCLK time       :    10638641194783.947266
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 10
+!           SCLK time       :    12705383994761.541016
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 11
+!           SCLK time       :    14777789103780.169922
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 12
+!           SCLK time       :    16844531903757.763672
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 13
+!           SCLK time       :    18911274703735.359375
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor was
+!         passed to this routine must be opened for read or write access
+!         by CKLPF, DAFOPR or DAFOPW.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added
+!        reference to required CK in example's problem statement.
+!
+!        Fixed minor language issues in $Abstract, $Brief_I/O,
+!        $Detailed_Input, $Files and $Restrictions sections.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Replaced DAFRDA call with DAFGDA.
+!        Added IMPLICIT NONE.
+!
+!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get CK type_3 record
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel segment descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel segment descriptor.
+!
+!        QSIZ       is the number of double precision numbers making up
+!                   the quaternion portion of a pointing record.
+!
+!        QAVSIZ     is the number of double precision numbers making up
+!                   the quaternion and angular velocity portion of a
+!                   pointing record.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: qsiz = 4
+
+      integer(ip), parameter :: qavsiz = 7
+
+      integer(ip), parameter :: dtype = 3
+
+!
+!     Local variables
+!
+      integer(ip)           icd    ( nic )
+      integer(ip)           nrec
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           addr
+      integer(ip)           psiz
+
+      real(wp)              dcd    ( ndc )
+      real(wp)              npoint
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+!     From the descriptor, determine
+!
+!       1 - Is this really a type 3 segment?
+!       2 - The beginning address of the segment.
+!       3 - The number of pointing instances in the segment (it's the
+!           last word in the segment).
+!       4 - The existence of angular velocity data, which determines how
+!           big the pointing portion of the returned record will be.
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+      if ( icd( 3 ) /= dtype ) then
+         call ctx%setmsg ( 'Data type of the segment should be 3: Passed '// &
+                       'descriptor shows type = #.'                    )
+         call ctx%errint ( '#', icd( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
+         return
+      end if
+
+      if ( icd( 4 ) == 1 ) then
+         psiz = qavsiz
+      else
+         psiz = qsiz
+      end if
+
+      beg  = icd( 5 )
+      end  = icd( 6 )
+
+      call dafgda ( ctx, handle, end, end, npoint_1 )
+      npoint = npoint_1(1)
+
+      nrec = nint ( npoint )
+
+!
+!     If a request was made for a record which doesn't exist, then
+!     signal an error and leave.
+!
+      if ( ( recno < 1 ) .or. ( recno > nrec ) ) then
+         call ctx%setmsg ( 'Requested record number (#) does not exist. ' // &
+                       'There are # records in the segment.'           )
+         call ctx%errint ( '#', recno                                      )
+         call ctx%errint ( '#', nrec                                       )
+         call ctx%sigerr ( 'SPICE(CKNONEXISTREC)'                          )
+         return
+      end if
+
+!
+!     Get the pointing record indexed by RECNO.
+!
+      addr = beg + psiz * ( recno - 1 )
+
+      call dafgda ( ctx, handle, addr, addr + psiz - 1, record( 2 ) )
+
+!
+!     Next get the SCLK time.  Need to go past all of the NREC pointing
+!     records (PSIZ * NREC numbers), and then to the RECNOth SCLK
+!     time.
+!
+      addr = beg + psiz*nrec + recno - 1
+
+      call dafgda ( ctx, handle, addr, addr, record( 1 ) )
+
+      return
+      end procedure ckgr03
+
+!$Procedure CKGR04 ( C-kernel, get record, type 04 )
+
+      module procedure ckgr04
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return a specified pointing record from a CK type 04 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+      include               'ckparam.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              desired segment. The file should have been opened
+!              for read or write access, either by CKLPF, DAFOPR,
+!              or DAFOPW.
+!
+!     DESCR    is the packed descriptor of the data type 4 segment.
+!
+!     RECNO    is the number of the pointing record to be returned
+!              from the data type 4 segment.
+!
+! $ Detailed_Output
+!
+!     RECORD   is the pointing record indexed by RECNO in the
+!              segment. The contents of the record are as follows:
+!
+!              ---------------------------------------------------
+!              | The midpoint of the approximation interval      |
+!              ---------------------------------------------------
+!              | The radius of the approximation interval        |
+!              ---------------------------------------------------
+!              | Number of coefficients for q0                   |
+!              ---------------------------------------------------
+!              | Number of coefficients for q1                   |
+!              ---------------------------------------------------
+!              | Number of coefficients for q2                   |
+!              ---------------------------------------------------
+!              | Number of coefficients for q3                   |
+!              ---------------------------------------------------
+!              | Number of coefficients for AV1                  |
+!              ---------------------------------------------------
+!              | Number of coefficients for AV2                  |
+!              ---------------------------------------------------
+!              | Number of coefficients for AV3                  |
+!              ---------------------------------------------------
+!              | q0 Cheby coefficients                           |
+!              ---------------------------------------------------
+!              | q1 Cheby coefficients                           |
+!              ---------------------------------------------------
+!              | q2 Cheby coefficients                           |
+!              ---------------------------------------------------
+!              | q3 Cheby coefficients                           |
+!              ---------------------------------------------------
+!              | AV1 Cheby coefficients (optional)               |
+!              ---------------------------------------------------
+!              | AV2 Cheby coefficients (optional)               |
+!              ---------------------------------------------------
+!              | AV3 Cheby coefficients (optional)               |
+!              ---------------------------------------------------
+!
+! $ Parameters
+!
+!     See 'ckparam.inc'.
+!
+! $ Exceptions
+!
+!     1)  If the segment is not of data type 4, the error
+!         SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If RECNO is less than one or greater than the number of
+!         records in the specified segment, the error
+!         SPICE(CKNONEXISTREC) is signaled.
+!
+!     3)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     4)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The file specified by HANDLE should be open for read or
+!     write access.
+!
+! $ Particulars
+!
+!     For a detailed description of the structure of a type 4 segment,
+!     see the CK required reading.
+!
+!     This is a utility routine that may be used to read the individual
+!     pointing records that make up a type 4 segment. It is normally
+!     used in conjunction with CKNR04, which gives the number of
+!     pointing records stored in a segment.
+!
+! $ Examples
+!
+!     Suppose that DATA.BC is a CK file that contains segments of
+!     data type 4. Then the following code fragment extracts the
+!     data packets contained in the segment.
+!
+!     C
+!     C     CK parameters include file.
+!     C
+!           INCLUDE               'ckparam.inc'
+!
+!     C
+!     C     Local variables.
+!     C
+!           DOUBLE PRECISION      DCD    ( 2 )
+!           DOUBLE PRECISION      DESCR  ( 5 )
+!           DOUBLE PRECISION      PKTDAT ( CK4RSZ )
+!
+!           INTEGER               AVFLAG
+!           INTEGER               HANDLE
+!           INTEGER               I
+!           INTEGER               ICD    ( 6 )
+!           INTEGER               K
+!           INTEGER               LASTAD
+!           INTEGER               NCOEF  ( QAVSIZ )
+!           INTEGER               NREC
+!
+!           LOGICAL               FOUND
+!     C
+!     C     First load the file. (The file may also be opened by using
+!     C     CKLPF.)
+!     C
+!           CALL DAFOPR ( 'DATA.BC', HANDLE )
+!     C
+!     C     Begin forward search. Find the first array.
+!     C
+!           CALL DAFBFS ( HANDLE )
+!           CALL DAFFNA ( FOUND  )
+!     C
+!     C     Get segment descriptor.
+!     C
+!           CALL DAFGS ( DESCR )
+!     C
+!     C     Unpack the segment descriptor into its double precision
+!     C     and integer components.
+!     C
+!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!           IF ( ICD( 3 ) .EQ. 4 ) THEN
+!     C
+!     C        How many records does this segment contain?
+!     C
+!              CALL CKNR04 ( HANDLE, DESCR, NREC )
+!
+!              DO I = 1, NREC
+!     C
+!     C           Get the data records stored in the segment.
+!     C
+!                 CALL CKGR04 ( HANDLE, DESCR, I, PKTDAT )
+!     C
+!     C           Print data packet contents. Print coverage interval
+!     C           midpoint & radii first.
+!     C
+!                 WRITE (2,*) PKTDAT (1)
+!                 WRITE (2,*) PKTDAT (2)
+!     C
+!     C           Decode numbers of coefficients.
+!     C
+!                 CALL ZZCK4D2I ( PKTDAT(3), QAVSIZ, CK4PCD, NCOEF )
+!     C
+!     C           Print number of coefficients for Q0, Q1, Q2 and Q3.
+!     C
+!                 WRITE (2,FMT='(I2,6X,I2)') NCOEF( 1 ), NCOEF( 2 )
+!                 WRITE (2,FMT='(I2,6X,I2)') NCOEF( 3 ), NCOEF( 4 )
+!     C
+!     C           Print number coefficients for AV1, AV2 and AV3.
+!     C
+!                 WRITE (2,FMT='(I2,6X,I2)') NCOEF( 5 ), NCOEF( 6 )
+!                 WRITE (2,FMT='(I2,6X,I2)') NCOEF( 7 )
+!     C
+!     C           Print Cheby coefficients.
+!     C
+!                 LASTAD = 0
+!
+!                 DO K = 1, QAVSIZ
+!                    LASTAD = LASTAD + NCOEF( K )
+!                 END DO
+!
+!                 DO K = 4, LASTAD + 4
+!                    WRITE (2,*) PKTDAT (K)
+!                 END DO
+!
+!              END DO
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor
+!         was passed to this routine must be opened for read or write
+!         access by either CKLPF, DAFOPR, or DAFOPW.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     Y.K. Zaiko         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 18-APR-2014 (BVS)
+!
+!        Minor header edits.
+!
+!-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get CK type_4 record
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+!
+!     Length (in DPs) of non-coefficient front part of RECORD when
+!     it contains decoded numbers of coefficients. It is one less
+!     than the length of the same part in a record exchanged between
+!     CKR04 and CKE04 because it doesn't contain time at which
+!     pointing has to be evaluated.
+!
+      integer(ip), parameter :: shftad = ck4sft - 1
+
+!
+!     Local variables
+!
+      real(wp)              dcd    ( ndc )
+
+      integer(ip)           ends   ( 1 )
+      integer(ip)           icd    ( nic )
+      integer(ip)           k
+      integer(ip)           nrec
+      integer(ip)           numall
+      integer(ip)           numcft ( qavsiz )
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Unpack descriptor and check segment data type. Signal an error
+!     if it's not 4.
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+      if ( icd( 3 ) /= ck4dtp ) then
+         call ctx%setmsg ( 'Data type of the segment should be 4: '      // &
+                       'Passed  descriptor shows type = #.'          )
+         call ctx%errint ( '#', icd( 3 )                                 )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                      )
+         return
+      end if
+
+!
+!     If a request was made for a data record which doesn't
+!     exist, then signal an error and leave.
+!
+      call cknr04 ( ctx, handle, descr, nrec )
+
+      if ( ( recno < 1 ) .or. ( recno > nrec ) ) then
+         call ctx%setmsg ( 'Requested record number (#) does not '       // &
+                       'exist. There are # records in the segment.'  )
+         call ctx%errint ( '#', recno                                    )
+         call ctx%errint ( '#', nrec                                     )
+         call ctx%sigerr ( 'SPICE(CKNONEXISTREC)'                        )
+         return
+      end if
+
+!
+!     Get the data record indexed by RECNO.
+!
+      call sgfpkt ( ctx, handle, descr, recno, recno, record, ends )
+
+!
+!     Decode 7 numbers of coefficients from double precision value.
+!
+      call zzck4d2i ( ctx, record( 3 ), qavsiz, ck4pcd, numcft )
+
+!
+!     Compute total number of coefficients in the fetched packet.
+!
+      numall = 0
+
+      do k = 1, qavsiz
+         numall = numall + numcft ( k )
+      end do
+
+!
+!     Move polynomial coefficients to the right to free space for
+!     decoded numbers of coefficients and insert these numbers
+!     starting from the third position.
+!
+      do k = numall, 1, -1
+         record ( k + shftad ) = record( k + 3 )
+      end do
+
+      do k = 1, 7
+         record( k + 2 ) = numcft( k )
+      end do
+
+!
+!     All done.
+!
+
+      return
+
+      end procedure ckgr04
+
+!$Procedure CKGR05 ( C-kernel, get record, type 05 )
+
+      module procedure ckgr05
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return a specified pointing instance from a CK type 05 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
+
+      include 'ck05.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              desired segment.
+!
+!     DESCR    is the packed descriptor of the data type 5 segment.
+!
+!     RECNO    is the number of the discrete pointing instance to be
+!              returned from the data type 5 segment.
+!
+! $ Detailed_Output
+!
+!     RECORD   is the pointing instance indexed by RECNO in the
+!              segment. The contents are as follows:
+!
+!                 RECORD( 1 ) = CLKOUT
+!
+!              CLKOUT is the encoded spacecraft clock time associated
+!              with the returned pointing values.
+!
+!                 RECORD( 2 ) = SUBTYP
+!
+!              SUBTYP is the CK type 5 subtype code. This code
+!              identifies the structure and meaning of the rest
+!              of the record. However, all subtypes have a
+!              quaternion stored in elements 3-6.
+!
+!                 RECORD( 3 ) = q0
+!                 RECORD( 4 ) = q1
+!                 RECORD( 5 ) = q2
+!                 RECORD( 6 ) = q3
+!
+!              Subtype 1 ends here; there are no angular velocity
+!              data. Angular velocity is derived by differentiating
+!              Lagrange interpolating polynomials.
+!
+!                 RECORD(  7 ) =  ]
+!                 RECORD(  8 ) =  ] --- For subtypes 0 and 2, these
+!                 RECORD(  9 ) =  ]     elements contain a quaternion
+!                 RECORD( 10 ) =  ]     derivative. For subtype 3,
+!                                       elements 7-9 contain an
+!                                       angular velocity vector;
+!                                       element 10 is unassigned.
+!
+!                                       All subtypes except subtype
+!                                       2 stop here.
+!
+!                 RECORD( 11 ) =  ]
+!                 RECORD( 12 ) =  ] --- For subtype 2, these
+!                 RECORD( 13 ) =  ]     elements contain an angular
+!                                       velocity vector.
+!
+!                 RECORD( 14 ) =  ]
+!                 RECORD( 15 ) =  ] --- For subtype 2, these
+!                 RECORD( 16 ) =  ]     elements contain the
+!                                       derivative of an angular
+!                                       velocity vector.
+!
+!              The quantities q0 - q3 are the components of the
+!              quaternion that represents the C-matrix that transforms
+!              vectors from the inertial reference frame of the
+!              segment to the instrument frame at time CLKOUT.
+!
+!              Quaternion derivatives, angular velocity, or the
+!              derivative of angular velocity are returned only
+!              these are supported by the segment subtype and
+!              if the segment descriptor indicates that angular
+!              velocity is present.
+!
+!              The components of the angular velocity vector are
+!              specified relative to the inertial reference frame of
+!              the segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment is not of data type 5, the error
+!         SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If RECNO is less than one or greater than the number of
+!         records in the specified segment, the error
+!         SPICE(CKNONEXISTREC) is signaled.
+!
+!     3)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     4)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+!     5)  If the segment subtype is not recognized, the error
+!         SPICE(NOTSUPPORTED) is signaled.
+!
+! $ Files
+!
+!     The file specified by HANDLE should be open for read or
+!     write access.
+!
+! $ Particulars
+!
+!     For a detailed description of the structure of a type 5 segment,
+!     see the CK required reading.
+!
+!     This is a utility routine that may be used to read the individual
+!     pointing instances that make up a type 5 segment. It is normally
+!     used in conjunction with CKNR05, which gives the number of
+!     pointing instances stored in a segment.
+!
+! $ Examples
+!
+!     Suppose that MOC.BC is a CK file that contains segments of
+!     data type 5. Then the following code fragment extracts the
+!     SCLK time and boresight vector for each pointing instance
+!     in the first segment in the file.
+!
+!           INTEGER               ICD     ( 6 )
+!           INTEGER               HANDLE
+!           INTEGER               NREC
+!           INTEGER               I
+!
+!           DOUBLE PRECISION      DCD     ( 2 )
+!           DOUBLE PRECISION      DESCR   ( 5 )
+!           DOUBLE PRECISION      RECORD  ( 16 )
+!           DOUBLE PRECISION      QUAT    ( 4 )
+!           DOUBLE PRECISION      BORE    ( 3 )
+!           DOUBLE PRECISION      CMAT    ( 3, 3 )
+!           DOUBLE PRECISION      SCLKDP
+!
+!           LOGICAL               FOUND
+!
+!     C
+!     C     First load the file. (The file may also be opened by using
+!     C     CKLPF.)
+!     C
+!           CALL DAFOPR ( 'MOC.BC', HANDLE )
+!
+!     C
+!     C     Begin forward search. Find the first array.
+!     C
+!           CALL DAFBFS ( HANDLE )
+!           CALL DAFFNA ( FOUND  )
+!
+!     C
+!     C     Get segment descriptor.
+!     C
+!           CALL DAFGS ( DESCR )
+!
+!     C
+!     C     Unpack the segment descriptor into its double precision
+!     C     and integer components.
+!     C
+!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!     C
+!     C     The data type for a segment is located in the third integer
+!     C     component of the descriptor.
+!     C
+!           IF ( ICD( 3 ) .EQ. 5 ) THEN
+!     C
+!     C        How many records does this segment contain?
+!     C
+!              CALL CKNR05 ( HANDLE, DESCR, NREC )
+!
+!              DO I = 1, NREC
+!     C
+!     C           Get the Ith pointing instance in the segment.
+!     C
+!                 CALL CKGR05 ( HANDLE, DESCR, I, RECORD )
+!
+!     C
+!     C           Unpack from RECORD the time tag and quaternion.
+!     C           The locations of these items in the record are
+!     C           independent of the subtype.
+!     C
+!                 SCLKDP = RECORD ( 1 )
+!
+!                 CALL MOVED ( RECORD(3), 4, QUAT )
+!
+!     C
+!     C           The boresight vector is the third row of the C-matrix.
+!     C
+!                 CALL Q2M ( QUAT, CMAT )
+!
+!                 BORE(1) = CMAT(3,1)
+!                 BORE(2) = CMAT(3,2)
+!                 BORE(3) = CMAT(3,3)
+!     C
+!     C           Write out the results.
+!     C
+!                 WRITE (*,*) 'Record: ', I
+!                 WRITE (*,*)
+!                 WRITE (*,*) 'SCLK time = ', SCLKDP
+!                 WRITE (*,*)
+!                 WRITE (*,*) 'boresight: ', BORE
+!
+!              END DO
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR) (NJB)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Bug fix: added FAILED tests after all DAFGDA calls but the
+!        last.
+!
+!        Added explicit conversion to INTEGER for SUBTYP.
+!
+!-    SPICELIB Version 1.0.0, 27-AUG-2002 (NJB) (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get CK type_5 record
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel segment descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel segment descriptor.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: dtype = 5
+
+!
+!     Local variables
+!
+      integer(ip)           icd    ( nic )
+      integer(ip)           nrec
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           addr
+      integer(ip)           packsz
+      integer(ip)           subtyp
+
+      real(wp)              dcd    ( ndc )
+      real(wp)              npoint
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+!     From the descriptor, determine
+!
+!       1 - Is this really a type 5 segment?
+!       2 - The beginning address of the segment.
+!       3 - The number of pointing instances in the segment (it's the
+!           last word in the segment).
+!       4 - The existence of angular velocity data, which determines how
+!           big the pointing portion of the returned record will be.
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+      if ( icd( 3 ) /= dtype ) then
+
+         call ctx%setmsg ( 'Data type of the segment should be 5: Passed '// &
+                       'descriptor shows type = #.'                    )
+         call ctx%errint ( '#', icd( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
+         return
+
+      end if
+
+!
+!     Capture the segment's address range.
+!
+      beg  = icd( 5 )
+      end  = icd( 6 )
+
+!
+!     Read the subtype from the segment.
+!
+      call dafgda ( ctx, handle, end-3, end-3, record(2) )
+
+      if ( ctx%failed() ) return
+
+      subtyp = nint( record(2) )
+
+      if ( subtyp == c05tp0 ) then
+
+         packsz = c05ps0
+
+      else if ( subtyp == c05tp1 ) then
+
+         packsz = c05ps1
+
+      else if ( subtyp == c05tp2 ) then
+
+         packsz = c05ps2
+
+      else if ( subtyp == c05tp3 ) then
+
+         packsz = c05ps3
+
+      else
+
+         call ctx%setmsg ( 'Unexpected CK type 5 subtype # found in ' // &
+                       'type 5 segment.'                          )
+         call ctx%errint ( '#',  subtyp                               )
+         call ctx%sigerr ( 'SPICE(NOTSUPPORTED)'                      )
+         return
+
+      end if
+
+      call dafgda ( ctx, handle, end, end, npoint_1 )
+      npoint = npoint_1(1)
+
+      if ( ctx%failed() ) return
+
+      nrec = nint ( npoint )
+
+!
+!     If a request was made for a record which doesn't exist, then
+!     signal an error and leave.
+!
+      if ( ( recno < 1 ) .or. ( recno > nrec ) ) then
+         call ctx%setmsg ( 'Requested record number (#) does not exist. ' // &
+                       'There are # records in the segment.'           )
+         call ctx%errint ( '#', recno                                      )
+         call ctx%errint ( '#', nrec                                       )
+         call ctx%sigerr ( 'SPICE(CKNONEXISTREC)'                          )
+         return
+      end if
+
+!
+!     Get the pointing record indexed by RECNO.
+!
+      addr = beg + packsz * ( recno - 1 )
+
+      call dafgda ( ctx, handle, addr, addr + packsz - 1, record( 3 ) )
+
+      if ( ctx%failed() ) return
+
+!
+!     Next get the SCLK time.  Need to go past all of the NREC pointing
+!     records (PACKSZ * NREC numbers), and then to the RECNOth SCLK
+!     time.
+!
+      addr = beg + packsz*nrec + recno - 1
+
+      call dafgda ( ctx, handle, addr, addr, record( 1 ) )
+
+      return
+      end procedure ckgr05
+
+!$Procedure CKGR06 ( C-kernel, get record, type 06 )
+
+      module procedure ckgr06
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return a specified pointing record from a type 6 CK segment, given
+!     the CK file's handle and the segment's descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+      include 'ck06.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment. Normally the CK file should be open for read
+!              access. See the $Files section below for details.
+!
+!     DESCR    is the DAF descriptor of the type 6 segment.
+!
+!     RECNO    is the number of the discrete pointing instance to be
+!              returned from the specified type 6 segment.
+!
+! $ Detailed_Output
+!
+!     RECORD   is the pointing record indexed by RECNO in the
+!              segment. The contents are as follows:
+!
+!                 RECORD( 1 ) = CLKOUT
+!
+!              CLKOUT is the encoded spacecraft clock time associated
+!              with the returned pointing values.
+!
+!                 RECORD( 2 ) = SUBTYP
+!
+!              SUBTYP is the CK type 6 subtype code. This code
+!              identifies the structure and meaning of the rest
+!              of the record. However, all subtypes have a
+!              quaternion stored in elements 4-7.
+!
+!                 RECORD( 3 ) = RATE
+!
+!              RATE is the nominal SCLK rate expressed in units of
+!              seconds per tick. This rate is required to convert
+!              quaternion or angular velocity derivatives from units
+!              of radians/tick to radians/s.
+!
+!                 RECORD( 4 ) = q0
+!                 RECORD( 5 ) = q1
+!                 RECORD( 6 ) = q2
+!                 RECORD( 7 ) = q3
+!
+!              Subtype 1 ends here; there are no angular velocity
+!              data. Angular velocity is derived by differentiating
+!              Lagrange interpolating polynomials.
+!
+!                 RECORD(  8 ) =  ]
+!                 RECORD(  9 ) =  ] --- For subtypes 0 and 2, these
+!                 RECORD( 10 ) =  ]     elements contain a quaternion
+!                 RECORD( 11 ) =  ]     derivative. For subtype 3,
+!                                       elements 8-10 contain an
+!                                       angular velocity vector;
+!                                       element 11 is unassigned.
+!
+!                                       All subtypes except subtype
+!                                       2 stop here.
+!
+!                 RECORD( 12 ) =  ]
+!                 RECORD( 13 ) =  ] --- For subtype 2, these
+!                 RECORD( 14 ) =  ]     elements contain an angular
+!                                       velocity vector.
+!
+!                 RECORD( 15 ) =  ]
+!                 RECORD( 16 ) =  ] --- For subtype 2, these
+!                 RECORD( 17 ) =  ]     elements contain the
+!                                       derivative of an angular
+!                                       velocity vector.
+!
+!              The quantities q0 - q3 are the components of the
+!              quaternion that represents the C-matrix that transforms
+!              vectors from the inertial reference frame of the
+!              segment to the instrument frame at time CLKOUT.
+!
+!              Quaternion derivatives, angular velocity, or the
+!              derivative of angular velocity are valid only if
+!              these are supported by the segment subtype and
+!              if the segment descriptor indicates that angular
+!              velocity is present.
+!
+!              The components of the angular velocity vector are
+!              specified relative to the inertial reference frame of
+!              the segment.
+!
+!              Units of angular velocity and of quaternion
+!              derivatives are radians/second and 1/second
+!              respectively.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment is not of data type 6, the error
+!         SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If MSNO is less than one or greater than the number of
+!         mini-segments in the specified segment, the error
+!         SPICE(INDEXOUTOFRANGE) is signaled.
+!
+!     3)  If RECNO is less than one or greater than the number of
+!         records in the specified segment, the error
+!         SPICE(CKNONEXISTREC) is signaled.
+!
+!     4)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     5)  If DESCR is not a valid descriptor of a valid segment in the
+!         CK file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+!     6)  If the segment subtype is not recognized, the error
+!         SPICE(NOTSUPPORTED) is signaled.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE may be open for read or write
+!     access. Normally, the file should have been opened for read
+!     access. If the file is open for write access, the calling
+!     application must ensure integrity of the CK segment being read.
+!     If the structure of the segment is invalid---for example, if the
+!     segment has been partially written---this routine will either
+!     return invalid results, or it will cause a system-level runtime
+!     error.
+!
+! $ Particulars
+!
+!     Note that the mini-segment interpolation window size is not
+!     returned in the pointing record; this parameter is not required
+!     in order to interpret the record. Call CKMP06 to obtain the
+!     window size.
+!
+!     For a complete description of the internal structure of a type 6
+!     segment, see the CK Required Reading.
+!
+!     This routine is normally used in conjunction with CKNM06 and
+!     CKGM06 to obtain time tags and packet data from a specified type
+!     6 CK segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following program dumps records from a CK file that
+!        contains only type 6 segments.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKGR06_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Dump all records from a CK that
+!        C     contains only segments of type 6.
+!        C
+!              INCLUDE 'ck06.inc'
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               ND
+!              PARAMETER           ( ND     = 2 )
+!
+!              INTEGER               NI
+!              PARAMETER           ( NI     = 6 )
+!
+!              INTEGER               DSCSIZ
+!              PARAMETER           ( DSCSIZ = 5 )
+!
+!              INTEGER               FILSIZ
+!              PARAMETER           ( FILSIZ = 255 )
+!
+!        C
+!        C     RECSIZ is the size of the largest pointing
+!        C     record, which corresponds to subtype 2.
+!        C
+!              INTEGER               RECSIZ
+!              PARAMETER           ( RECSIZ = C06PS2 + 3 )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(FILSIZ)    CK
+!
+!              DOUBLE PRECISION      DC     ( ND )
+!              DOUBLE PRECISION      DESCR  ( DSCSIZ )
+!              DOUBLE PRECISION      IVLBDS ( 2 )
+!              DOUBLE PRECISION      LSTEPC
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RECORD ( RECSIZ )
+!
+!              INTEGER               DTYPE
+!              INTEGER               HANDLE
+!              INTEGER               IC     ( NI )
+!              INTEGER               RECNO
+!              INTEGER               MSNO
+!              INTEGER               NMINI
+!              INTEGER               NREC
+!              INTEGER               SEGNO
+!              INTEGER               SUBTYP
+!              INTEGER               WINSIZ
+!
+!              LOGICAL               FOUND
+!
+!              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
+!
+!              CALL DAFOPR ( CK, HANDLE )
+!
+!        C
+!        C     Dump data from each CK segment.
+!        C
+!              SEGNO = 0
+!
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!              DO WHILE ( FOUND )
+!
+!                 SEGNO = SEGNO + 1
+!
+!                 WRITE (*,*) ' '
+!                 WRITE (*,*) ' '
+!                 WRITE (*,*) 'Segment number: ', SEGNO
+!
+!        C
+!        C        Fetch and unpack the descriptor of the
+!        C        current segment; check the data type.
+!        C
+!                 CALL DAFGS ( DESCR )
+!                 CALL DAFUS ( DESCR, ND, NI, DC, IC )
+!
+!                 DTYPE = IC(3)
+!
+!                 IF ( DTYPE .NE. 6 ) THEN
+!
+!                    CALL SETMSG ( 'Data type must be 6 but was #.' )
+!                    CALL ERRINT ( '#',  DTYPE                      )
+!                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
+!
+!                 END IF
+!
+!        C
+!        C        Get the mini-segment count for this
+!        C        segment.
+!        C
+!                 CALL CKNM06 ( HANDLE, DESCR, NMINI )
+!
+!        C
+!        C        Dump data from each mini-segment.
+!        C
+!                 DO MSNO = 1, NMINI
+!
+!        C
+!        C           Get the mini-segment's record count
+!        C           and time bounds.
+!        C
+!                    CALL CKMP06 ( HANDLE, DESCR,  MSNO,
+!             .                    RATE,   SUBTYP, WINSIZ,
+!             .                    NREC,   IVLBDS, LSTEPC )
+!
+!                    WRITE (*,*) ' '
+!                    WRITE (*,*) '   Mini-segment number: ', MSNO
+!                    WRITE (*,*) '      Rate:           ',   RATE
+!                    WRITE (*,*) '      Subtype:        ',   SUBTYP
+!                    WRITE (*,*) '      Window size:    ',   WINSIZ
+!                    WRITE (*,*) '      Interval start: ',   IVLBDS(1)
+!                    WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
+!                    WRITE (*,*) '      Last epoch:     ',   LSTEPC
+!                    WRITE (*,*) ' '
+!
+!                    DO RECNO = 1, NREC
+!
+!                       CALL CKGR06 ( HANDLE, DESCR,
+!             .                       MSNO,   RECNO,  RECORD )
+!
+!                       WRITE (*,*) '      Record number: ', RECNO
+!                       WRITE (*,*) '         SCLKDP:     ', RECORD(1)
+!                       WRITE (*,*) '         Clock rate: ', RECORD(3)
+!
+!                       IF ( SUBTYP .EQ. C06TP0 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+!                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+!                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+!                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+!                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+!                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+!                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+!                          WRITE (*,*) '        AV(1): ', RECORD(12)
+!                          WRITE (*,*) '        AV(2): ', RECORD(13)
+!                          WRITE (*,*) '        AV(3): ', RECORD(14)
+!                          WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
+!                          WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
+!                          WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '        AV(1): ', RECORD(8)
+!                          WRITE (*,*) '        AV(2): ', RECORD(9)
+!                          WRITE (*,*) '        AV(3): ', RECORD(10)
+!
+!                       ELSE
+!                          CALL SETMSG ( 'Subtype # is not '
+!             .            //            'recognized.'         )
+!                          CALL ERRINT ( '#', SUBTYP           )
+!                          CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
+!                       END IF
+!
+!                       WRITE (*,*) ' '
+!
+!                   END DO
+!
+!                 END DO
+!
+!                 CALL DAFFNA ( FOUND )
+!
+!              END DO
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, using the Rosetta CK file named
+!        RATT_DV_257_02_01_T6_00344.BC, the output was:
+!
+!        Enter name of CK to dump > RATT_DV_257_02_01_T6_00344.BC
+!
+!         Segment number:            1
+!
+!            Mini-segment number:            1
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24471796593941.691
+!               Interval stop:     24472844252095.523
+!               Last epoch:        24472844252095.523
+!
+!               Record number:            1
+!                  SCLKDP:        24471796593941.691
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95514652599900884
+!                  Q(1):   0.16277660709912350
+!                  Q(2):   0.11688592199582469
+!                  Q(3):  -0.21802883133317097
+!
+!               Record number:            2
+!                  SCLKDP:        24472234538651.801
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95746293340938016
+!                  Q(1):   0.14880147654385018
+!                  Q(2):   0.12021705739210503
+!                  Q(3):  -0.21603405018065600
+!
+!               Record number:            3
+!                  SCLKDP:        24472676416997.039
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95956954083287593
+!                  Q(1):   0.13478976855182764
+!                  Q(2):   0.12355113537344563
+!                  Q(3):  -0.21399329790313779
+!
+!               Record number:            4
+!                  SCLKDP:        24472844252095.523
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96030932381589129
+!                  Q(1):   0.12949634043544370
+!                  Q(2):   0.12480922302154081
+!                  Q(3):  -0.21321200307405938
+!
+!            Mini-segment number:            2
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24472844252095.523
+!               Interval stop:     24472863912889.105
+!               Last epoch:        24472863912889.105
+!
+!               Record number:            1
+!                  SCLKDP:        24472844252095.523
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96030932403888680
+!                  Q(1):   0.12949633879120778
+!                  Q(2):   0.12480922338599261
+!                  Q(3):  -0.21321200285498659
+!
+!               Record number:            2
+!                  SCLKDP:        24472851309816.297
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96035266600496283
+!                  Q(1):   0.12922730685291675
+!                  Q(2):   0.12480259688433022
+!                  Q(3):  -0.21318389214860939
+!
+!               Record number:            3
+!                  SCLKDP:        24472859879905.805
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96041575813224878
+!                  Q(1):   0.12886248165419970
+!                  Q(2):   0.12474605317805663
+!                  Q(3):  -0.21315359384649502
+!
+!               Record number:            4
+!                  SCLKDP:        24472863912889.105
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96043784177251290
+!                  Q(1):   0.12871819083493355
+!                  Q(2):   0.12475418449192528
+!                  Q(3):  -0.21313651233726627
+!
+!            Mini-segment number:            3
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24472863912889.105
+!               Interval stop:     24473139163999.207
+!               Last epoch:        24473139163999.207
+!
+!               Record number:            1
+!                  SCLKDP:        24472863912889.105
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96043784177455394
+!                  Q(1):   0.12871819083614683
+!
+!        [...]
+!
+!        Warning: incomplete output. Only 100 out of 2378824 lines have
+!        been provided.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get CK type_6 record
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        ND         is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NI         is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 6
+
+      integer(ip), parameter :: ctrlsz = 2
+
+!
+!     Mini-segment control area size:
+!
+      integer(ip), parameter :: mctlsz = 4
+
+      integer(ip), parameter :: bufsiz = mctlsz
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Local variables
+!
+      real(wp)              buffer ( bufsiz )
+      real(wp)              dc     ( nd )
+      real(wp)              dpdata ( 1  )
+      real(wp)              rate
+
+      integer(ip)           baddr
+      integer(ip)           bufbas
+      integer(ip)           eaddr
+      integer(ip)           epaddr
+      integer(ip)           epcbas
+      integer(ip)           ic     ( ni )
+      integer(ip)           minib
+      integer(ip)           minie
+      integer(ip)           nepdir
+      integer(ip)           nintvl
+      integer(ip)           nrec
+      integer(ip)           pktsiz
+      integer(ip), parameter :: pktszs ( 0 : 3 ) = &
+         [ c06ps0, c06ps1, c06ps2, c06ps3 ]
+      integer(ip)           ptrbas
+      integer(ip)           subtyp
+
+!
+!     Saved variables
+!
+
+!
+!     Initial values
+!
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of discrete pointing instances contained in a data
+!     type 6 segment is stored in the last double precision word of the
+!     segment. Since the address of the last word is stored in the
+!     sixth integer component of the segment descriptor, it is a
+!     trivial matter to extract the count.
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DC(1)  Initial encoded SCLK
+!        DC(2)  Final encoded SCLK
+!
+!        IC(1)  CK frame class ID (aka "instrument")
+!        IC(2)  Inertial reference frame
+!        IC(3)  Data type
+!        IC(4)  Angular velocity flag
+!        IC(5)  Initial address of segment data
+!        IC(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, nd, ni, dc, ic )
+
+!
+!     If this segment is not of data type 6, then signal an error.
+!
+      if ( ic( 3 ) /= dtype ) then
+
+         call ctx%setmsg ( 'Data type of the segment should be 6: Passed ' &
+         //            'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', ic( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+
+      end if
+
+!
+!     Check the mini-segment index.
+!
+!     The number of mini-segments is the final word in the segment.
+!
+      baddr = ic(5)
+      eaddr = ic(6)
+
+      call dafgda ( ctx, handle, eaddr, eaddr, dpdata )
+
+      if ( ctx%failed() ) return
+
+      nintvl = nint ( dpdata(1) )
+
+      if (  ( msno < 1 )  .or.  ( msno > nintvl )  ) then
+
+         call ctx%setmsg ( 'Mini-segment index must be in range 1:# but ' &
+         //            'was #.'                                       )
+         call ctx%errint ( '#', nintvl                                    )
+         call ctx%errint ( '#', msno                                      )
+         call ctx%sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
+         return
+
+      end if
+
+!
+!     Set the base address of the mini-segment pointers. There
+!     are NINTVL+1 pointers, and these precede the control area.
+!
+      ptrbas = eaddr - ctrlsz - ( nintvl+1 )
+
+!
+!     Compute the mini-segment pointers as absolute
+!     DAF addresses. The stored value is a relative address.
+!
+      bufbas = ptrbas + msno - 1
+
+      call dafgda ( ctx, handle, bufbas+1, bufbas+2, buffer )
+
+      if ( ctx%failed() ) return
+
+      minib = ( baddr - 1 )  +  nint( buffer(1) )
+      minie = ( baddr - 1 )  +  nint( buffer(2) )  -  1
+
+!
+!     Fetch the control area of the mini-segment.
+!
+      bufbas = minie - mctlsz
+
+      call dafgda ( ctx, handle, bufbas+1, bufbas+mctlsz, buffer )
+
+      if ( ctx%failed() ) return
+
+!
+!     Fetch the SCLK rate (seconds per tick), mini-segment
+!     subtype, and record count.
+!
+      rate   =       buffer(1)
+      subtyp = nint( buffer(2) )
+      nrec   = nint( buffer(4) )
+
+!
+!     Compute the packet size for this mini-segment. This will
+!     be used a bit later. We'll also check the subtype.
+!
+      if (  ( subtyp < c06tp0 ) .or. ( subtyp > c06tp3 )  ) then
+
+         call ctx%setmsg ( 'Unexpected CK type 6 subtype # ' &
+         //            'found in mini-segment #.'       )
+         call ctx%errint ( '#',  subtyp                     )
+         call ctx%errint ( '#',  msno                       )
+         call ctx%sigerr ( 'SPICE(NOTSUPPORTED)'            )
+         return
+
+      end if
+
+      pktsiz = pktszs ( subtyp )
+
+!
+!     Check the record index.
+!
+      if (  ( recno < 1 )  .or.  ( recno > nrec )  ) then
+
+         call ctx%setmsg ( 'Record index must be in range 1:# but ' &
+         //            'was #.'                                 )
+         call ctx%errint ( '#', nrec                                )
+         call ctx%errint ( '#', recno                               )
+         call ctx%sigerr ( 'SPICE(CKNONEXISTREC)'                   )
+         return
+
+      end if
+
+!
+!     The epochs of the mini-segment precede the
+!     mini-segment's control area and the epoch directories.
+!
+      nepdir = ( nrec - 1 ) / dirsiz
+
+      epcbas = minie - mctlsz - nepdir - nrec
+
+!
+!     Fetch the mini-segment's epoch at index RECNO into
+!     element 1 of the output record.
+!
+      epaddr = epcbas + recno
+
+      call dafgda ( ctx, handle, epaddr, epaddr, record )
+
+!
+!     Transfer the subtype and rate to the output record.
+!
+      record(2) = real( subtyp, wp )
+      record(3) = rate
+
+!
+!     Locate the data packet at index RECNO.
+!
+      bufbas = ( minib - 1 )  +  ( ( recno - 1 ) * pktsiz )
+
+      call dafgda ( ctx, handle, bufbas+1, bufbas+pktsiz, record(4) )
+
+!
+!     The record is complete if DAFGDA did its job. We don't
+!     check FAILED here since we're about to return.
+!
+      return
+      end procedure ckgr06
+
+!$Procedure CKMP06 ( C-kernel, get mini-segment parameters, type 06 )
+
+      module procedure ckmp06
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return the mini-segment control parameters, mini-segment interval
+!     bounds, and last epoch for a specified mini-segment in a type 6
+!     CK segment.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment. Normally the CK file should be open for
+!              read access. See the $Files section below for details.
+!
+!     DESCR    is the DAF descriptor of a CK data type 6 segment.
+!
+!     MSNO     is the index of a mini-segment within the segment
+!              identified by HANDLE and DESCR.
+!
+! $ Detailed_Output
+!
+!     RATE     is the spacecraft clock rate for the specified
+!              mini-segment. RATE has units of seconds/tick.
+!
+!     SUBTYP   is the subtype code of the specified mini-segment.
+!
+!     WINSIZ   is the interpolation window size for the specified
+!              mini-segment. The window size is
+!
+!                 ( DEGREE + 1 ) / 2     for subtypes 0 and 2
+!                   DEGREE + 1           for subtypes 1 and 3
+!
+!              where DEGREE is the interpolation degree of the
+!              mini-segment.
+!
+!     NREC     is the number of data records in the CK mini-segment
+!              identified by HANDLE, DESCR, and MSNO
+!
+!     IVLBDS   is a two-element array containing, in order, the
+!              encoded SCLK start and stop times of the coverage
+!              interval of the specified mini-segment. The
+!              mini-segment provides data for times within this
+!              interval.
+!
+!     LSTEPC   is the last epoch in the sequence of time tags
+!              belonging to the specified mini-segment. LSTEPC is
+!              an encoded SCLK time.
+!
+!              If LSTEPC precedes IVLBDS(2), the mini-segment has
+!              a coverage gap between those two epochs.
+!
+! $ Parameters
+!
+!     See the include file ck06.inc for a description of CK type 6
+!     subtypes.
+!
+! $ Exceptions
+!
+!     1)  If the segment indicated by DESCR is not a type 6 segment,
+!         the error SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     3)  If DESCR is not a valid descriptor of a valid segment in the
+!         CK file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+!     4)  If N is less than 1 or greater than the number of
+!         mini-segments in the specified segment, the error
+!         SPICE(INDEXOUTOFRANGE) is signaled.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE may be open for read or write
+!     access. Normally, the file should have been opened for read
+!     access. If the file is open for write access, the calling
+!     application must ensure integrity of the CK segment being read.
+!     If the structure of the segment is invalid---for example, if the
+!     segment has been partially written---this routine will either
+!     return invalid results, or it will cause a system-level runtime
+!     error.
+!
+! $ Particulars
+!
+!     For a complete description of the internal structure of a type 6
+!     segment, see the CK Required Reading.
+!
+!     This routine is normally used in conjunction with CKNM06 and
+!     CKGR06 to obtain time tags and packet data from a specified type
+!     6 CK segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following program dumps records from a CK file that
+!        contains only type 6 segments.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKMP06_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Dump all records from a CK that
+!        C     contains only segments of type 6.
+!        C
+!              INCLUDE 'ck06.inc'
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               ND
+!              PARAMETER           ( ND     = 2 )
+!
+!              INTEGER               NI
+!              PARAMETER           ( NI     = 6 )
+!
+!              INTEGER               DSCSIZ
+!              PARAMETER           ( DSCSIZ = 5 )
+!
+!              INTEGER               FILSIZ
+!              PARAMETER           ( FILSIZ = 255 )
+!
+!        C
+!        C     RECSIZ is the size of the largest pointing
+!        C     record, which corresponds to subtype 2.
+!        C
+!              INTEGER               RECSIZ
+!              PARAMETER           ( RECSIZ = C06PS2 + 3 )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(FILSIZ)    CK
+!
+!              DOUBLE PRECISION      DC     ( ND )
+!              DOUBLE PRECISION      DESCR  ( DSCSIZ )
+!              DOUBLE PRECISION      IVLBDS ( 2 )
+!              DOUBLE PRECISION      LSTEPC
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RECORD ( RECSIZ )
+!
+!              INTEGER               DTYPE
+!              INTEGER               HANDLE
+!              INTEGER               IC     ( NI )
+!              INTEGER               RECNO
+!              INTEGER               MSNO
+!              INTEGER               NMINI
+!              INTEGER               NREC
+!              INTEGER               SEGNO
+!              INTEGER               SUBTYP
+!              INTEGER               WINSIZ
+!
+!              LOGICAL               FOUND
+!
+!              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
+!
+!              CALL DAFOPR ( CK, HANDLE )
+!
+!        C
+!        C     Dump data from each CK segment.
+!        C
+!              SEGNO = 0
+!
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!              DO WHILE ( FOUND )
+!
+!                 SEGNO = SEGNO + 1
+!
+!                 WRITE (*,*) ' '
+!                 WRITE (*,*) ' '
+!                 WRITE (*,*) 'Segment number: ', SEGNO
+!
+!        C
+!        C        Fetch and unpack the descriptor of the
+!        C        current segment; check the data type.
+!        C
+!                 CALL DAFGS ( DESCR )
+!                 CALL DAFUS ( DESCR, ND, NI, DC, IC )
+!
+!                 DTYPE = IC(3)
+!
+!                 IF ( DTYPE .NE. 6 ) THEN
+!
+!                    CALL SETMSG ( 'Data type must be 6 but was #.' )
+!                    CALL ERRINT ( '#',  DTYPE                      )
+!                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
+!
+!                 END IF
+!
+!        C
+!        C        Get the mini-segment count for this
+!        C        segment.
+!        C
+!                 CALL CKNM06 ( HANDLE, DESCR, NMINI )
+!
+!        C
+!        C        Dump data from each mini-segment.
+!        C
+!                 DO MSNO = 1, NMINI
+!
+!        C
+!        C           Get the mini-segment's record count
+!        C           and time bounds.
+!        C
+!                    CALL CKMP06 ( HANDLE, DESCR,  MSNO,
+!             .                    RATE,   SUBTYP, WINSIZ,
+!             .                    NREC,   IVLBDS, LSTEPC )
+!
+!                    WRITE (*,*) ' '
+!                    WRITE (*,*) '   Mini-segment number: ', MSNO
+!                    WRITE (*,*) '      Rate:           ',   RATE
+!                    WRITE (*,*) '      Subtype:        ',   SUBTYP
+!                    WRITE (*,*) '      Window size:    ',   WINSIZ
+!                    WRITE (*,*) '      Interval start: ',   IVLBDS(1)
+!                    WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
+!                    WRITE (*,*) '      Last epoch:     ',   LSTEPC
+!                    WRITE (*,*) ' '
+!
+!                    DO RECNO = 1, NREC
+!
+!                       CALL CKGR06 ( HANDLE, DESCR,
+!             .                       MSNO,   RECNO,  RECORD )
+!
+!                       WRITE (*,*) '      Record number: ', RECNO
+!                       WRITE (*,*) '         SCLKDP:     ', RECORD(1)
+!                       WRITE (*,*) '         Clock rate: ', RECORD(3)
+!
+!                       IF ( SUBTYP .EQ. C06TP0 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+!                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+!                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+!                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+!                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+!                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+!                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+!                          WRITE (*,*) '        AV(1): ', RECORD(12)
+!                          WRITE (*,*) '        AV(2): ', RECORD(13)
+!                          WRITE (*,*) '        AV(3): ', RECORD(14)
+!                          WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
+!                          WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
+!                          WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '        AV(1): ', RECORD(8)
+!                          WRITE (*,*) '        AV(2): ', RECORD(9)
+!                          WRITE (*,*) '        AV(3): ', RECORD(10)
+!
+!                       ELSE
+!                          CALL SETMSG ( 'Subtype # is not '
+!             .            //            'recognized.'         )
+!                          CALL ERRINT ( '#', SUBTYP           )
+!                          CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
+!                       END IF
+!
+!                       WRITE (*,*) ' '
+!
+!                   END DO
+!
+!                 END DO
+!
+!                 CALL DAFFNA ( FOUND )
+!
+!              END DO
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, using the Rosetta CK file named
+!        RATT_DV_257_02_01_T6_00344.BC, the output was:
+!
+!        Enter name of CK to dump > RATT_DV_257_02_01_T6_00344.BC
+!
+!         Segment number:            1
+!
+!            Mini-segment number:            1
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24471796593941.691
+!               Interval stop:     24472844252095.523
+!               Last epoch:        24472844252095.523
+!
+!               Record number:            1
+!                  SCLKDP:        24471796593941.691
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95514652599900884
+!                  Q(1):   0.16277660709912350
+!                  Q(2):   0.11688592199582469
+!                  Q(3):  -0.21802883133317097
+!
+!               Record number:            2
+!                  SCLKDP:        24472234538651.801
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95746293340938016
+!                  Q(1):   0.14880147654385018
+!                  Q(2):   0.12021705739210503
+!                  Q(3):  -0.21603405018065600
+!
+!               Record number:            3
+!                  SCLKDP:        24472676416997.039
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95956954083287593
+!                  Q(1):   0.13478976855182764
+!                  Q(2):   0.12355113537344563
+!                  Q(3):  -0.21399329790313779
+!
+!               Record number:            4
+!                  SCLKDP:        24472844252095.523
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96030932381589129
+!                  Q(1):   0.12949634043544370
+!                  Q(2):   0.12480922302154081
+!                  Q(3):  -0.21321200307405938
+!
+!            Mini-segment number:            2
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24472844252095.523
+!               Interval stop:     24472863912889.105
+!               Last epoch:        24472863912889.105
+!
+!               Record number:            1
+!                  SCLKDP:        24472844252095.523
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96030932403888680
+!                  Q(1):   0.12949633879120778
+!                  Q(2):   0.12480922338599261
+!                  Q(3):  -0.21321200285498659
+!
+!               Record number:            2
+!                  SCLKDP:        24472851309816.297
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96035266600496283
+!                  Q(1):   0.12922730685291675
+!                  Q(2):   0.12480259688433022
+!                  Q(3):  -0.21318389214860939
+!
+!               Record number:            3
+!                  SCLKDP:        24472859879905.805
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96041575813224878
+!                  Q(1):   0.12886248165419970
+!                  Q(2):   0.12474605317805663
+!                  Q(3):  -0.21315359384649502
+!
+!               Record number:            4
+!                  SCLKDP:        24472863912889.105
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96043784177251290
+!                  Q(1):   0.12871819083493355
+!                  Q(2):   0.12475418449192528
+!                  Q(3):  -0.21313651233726627
+!
+!            Mini-segment number:            3
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24472863912889.105
+!               Interval stop:     24473139163999.207
+!               Last epoch:        24473139163999.207
+!
+!               Record number:            1
+!                  SCLKDP:        24472863912889.105
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96043784177455394
+!                  Q(1):   0.12871819083614683
+!
+!        [...]
+!
+!        Warning: incomplete output. Only 100 out of 2378824 lines have
+!        been provided.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get mini-segment parameters from CK type_6 segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        ND         is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NI         is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 6
+
+      integer(ip), parameter :: ctrlsz = 2
+
+!
+!     Mini-segment control area size:
+!
+      integer(ip), parameter :: mctlsz = 4
+
+      integer(ip), parameter :: bufsiz = mctlsz
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Local variables
+!
+      real(wp)              buffer ( bufsiz )
+      real(wp)              dc     ( nd )
+      real(wp)              dpdata ( 1  )
+
+      integer(ip)           baddr
+      integer(ip)           eaddr
+      integer(ip)           epaddr
+      integer(ip)           ic     ( ni )
+      integer(ip)           minie
+      integer(ip)           ndir
+      integer(ip)           nepdir
+      integer(ip)           nintvl
+      integer(ip)           ivlbas
+      integer(ip)           ptrbas
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of discrete pointing instances contained in a data
+!     type 6 segment is stored in the last double precision word of the
+!     segment. Since the address of the last word is stored in the
+!     sixth integer component of the segment descriptor, it is a
+!     trivial matter to extract the count.
+!
+!     The unpacked descriptor contains the following information about
+!     the segment:
+!
+!        DC(1)  Initial encoded SCLK
+!        DC(2)  Final encoded SCLK
+!
+!        IC(1)  CK frame class ID (aka "instrument")
+!        IC(2)  Inertial reference frame
+!        IC(3)  Data type
+!        IC(4)  Angular velocity flag
+!        IC(5)  Initial address of segment data
+!        IC(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, nd, ni, dc, ic )
+
+!
+!     If this segment is not of data type 6, then signal an error.
+!
+      if ( ic( 3 ) /= dtype ) then
+
+         call ctx%setmsg ( 'Data type of the segment should be 6: Passed ' &
+         //            'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', ic( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+
+      end if
+
+!
+!     Check the mini-segment index.
+!
+!     The number of mini-segments is the final word in the segment.
+!
+      baddr = ic(5)
+      eaddr = ic(6)
+
+      call dafgda ( ctx, handle, eaddr, eaddr, dpdata )
+
+      if ( ctx%failed() ) return
+
+      nintvl = nint ( dpdata(1) )
+
+      if (  ( msno < 1 )  .or.  ( msno > nintvl )  ) then
+
+         call ctx%setmsg ( 'Mini-segment index must be in range 1:# but ' &
+         //            'was #.'                                       )
+         call ctx%errint ( '#', nintvl                                    )
+         call ctx%errint ( '#', msno                                      )
+         call ctx%sigerr ( 'SPICE(INDEXOUTOFRANGE)'                       )
+         return
+
+      end if
+
+!
+!     Set the base address of the mini-segment pointers. There are
+!     NINTVL+1 pointers, and these precede the control area.
+!
+      ptrbas = eaddr - ctrlsz - ( nintvl+1 )
+
+!
+!     Set the base address of the interval bounds. There are N+1
+!     bounds, and these precede the interval bound directories and the
+!     mini-segment pointers.
+!
+!     The directory count is
+!
+!        ( ( NINTVL + 1 ) - 1 ) / DIRSIZ
+!
+      ndir   = nintvl / dirsiz
+
+      ivlbas = ptrbas - ndir - ( nintvl + 1 )
+
+!
+!     Fetch the interval bounds for the mini-segment of interest.
+!
+      call dafgda ( ctx, handle, ivlbas+msno, ivlbas+msno+1, ivlbds )
+
+!
+!     Compute the mini-segment end pointer as an absolute DAF address.
+!     The stored value is a relative address. Begin by looking up the
+!     start pointer of the next mini-segment.
+!
+      call dafgda ( ctx, handle, ptrbas+msno+1, ptrbas+msno+1, buffer )
+
+      if ( ctx%failed() ) return
+
+      minie = ( baddr - 1 )  +  nint( buffer(1) )  -  1
+
+!
+!     Fetch the parameters for the mini-segment.
+!
+      call dafgda ( ctx, handle, minie-mctlsz+1, minie, buffer )
+
+      if ( ctx%failed() ) return
+
+      rate   =       buffer(1)
+      subtyp = nint( buffer(2) )
+      winsiz = nint( buffer(3) )
+      nrec   = nint( buffer(4) )
+
+!
+!     The last epoch of the mini-segment precedes the mini-segment's
+!     control area and the epoch directories.
+!
+      nepdir = ( nrec - 1 ) / dirsiz
+
+      epaddr = minie - mctlsz - nepdir
+
+      call dafgda ( ctx, handle, epaddr, epaddr, lstepc_1 )
+      lstepc = lstepc_1(1)
+
+      return
+      end procedure ckmp06
+
+!$Procedure CKNM06 ( C-kernel, number of mini-segments, type 06 )
+
+      module procedure cknm06
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return the number of mini-segments in a type 6 CK segment, given
+!     the handle of the type 6 CK file and the segment's descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment. Normally the CK file should be open for
+!              read access. See the $Files section below for details.
+!
+!     DESCR    is the DAF descriptor of a CK data type 6 segment.
+!
+! $ Detailed_Output
+!
+!     NMINI    is the number of mini-segments in the CK segment
+!              identified by HANDLE and DESCR.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment indicated by DESCR is not a type 6 segment,
+!         the error SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     3)  If DESCR is not a valid descriptor of a valid segment in the
+!         CK file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE may be open for read or write
+!     access. Normally, the file should have been opened for read
+!     access. If the file is open for write access, the calling
+!     application must ensure integrity of the CK segment being read.
+!     If the structure of the segment is invalid---for example, if the
+!     segment has been partially written---this routine will either
+!     return invalid results, or it will cause a system-level runtime
+!     error.
+!
+! $ Particulars
+!
+!     For a complete description of the internal structure of a type 6
+!     segment, see the CK required reading.
+!
+!     This routine returns the number of discrete pointing instances
+!     contained in the specified segment. It is normally used in
+!     conjunction with CKMN06, which returns mini-segment parameters,
+!     and with CKGR06, which returns a specified pointing instance
+!     from a mini-segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following program dumps records from a CK file that
+!        contains only type 6 segments.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKNM06_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Dump all records from a CK that
+!        C     contains only segments of type 6.
+!        C
+!              INCLUDE 'ck06.inc'
+!
+!        C
+!        C     Local parameters
+!        C
+!              INTEGER               ND
+!              PARAMETER           ( ND     = 2 )
+!
+!              INTEGER               NI
+!              PARAMETER           ( NI     = 6 )
+!
+!              INTEGER               DSCSIZ
+!              PARAMETER           ( DSCSIZ = 5 )
+!
+!              INTEGER               FILSIZ
+!              PARAMETER           ( FILSIZ = 255 )
+!
+!        C
+!        C     RECSIZ is the size of the largest pointing
+!        C     record, which corresponds to subtype 2.
+!        C
+!              INTEGER               RECSIZ
+!              PARAMETER           ( RECSIZ = C06PS2 + 3 )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(FILSIZ)    CK
+!
+!              DOUBLE PRECISION      DC     ( ND )
+!              DOUBLE PRECISION      DESCR  ( DSCSIZ )
+!              DOUBLE PRECISION      IVLBDS ( 2 )
+!              DOUBLE PRECISION      LSTEPC
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RECORD ( RECSIZ )
+!
+!              INTEGER               DTYPE
+!              INTEGER               HANDLE
+!              INTEGER               IC     ( NI )
+!              INTEGER               RECNO
+!              INTEGER               MSNO
+!              INTEGER               NMINI
+!              INTEGER               NREC
+!              INTEGER               SEGNO
+!              INTEGER               SUBTYP
+!              INTEGER               WINSIZ
+!
+!              LOGICAL               FOUND
+!
+!              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
+!
+!              CALL DAFOPR ( CK, HANDLE )
+!
+!        C
+!        C     Dump data from each CK segment.
+!        C
+!              SEGNO = 0
+!
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!              DO WHILE ( FOUND )
+!
+!                 SEGNO = SEGNO + 1
+!
+!                 WRITE (*,*) ' '
+!                 WRITE (*,*) ' '
+!                 WRITE (*,*) 'Segment number: ', SEGNO
+!
+!        C
+!        C        Fetch and unpack the descriptor of the
+!        C        current segment; check the data type.
+!        C
+!                 CALL DAFGS ( DESCR )
+!                 CALL DAFUS ( DESCR, ND, NI, DC, IC )
+!
+!                 DTYPE = IC(3)
+!
+!                 IF ( DTYPE .NE. 6 ) THEN
+!
+!                    CALL SETMSG ( 'Data type must be 6 but was #.' )
+!                    CALL ERRINT ( '#',  DTYPE                      )
+!                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
+!
+!                 END IF
+!
+!        C
+!        C        Get the mini-segment count for this
+!        C        segment.
+!        C
+!                 CALL CKNM06 ( HANDLE, DESCR, NMINI )
+!
+!        C
+!        C        Dump data from each mini-segment.
+!        C
+!                 DO MSNO = 1, NMINI
+!
+!        C
+!        C           Get the mini-segment's record count
+!        C           and time bounds.
+!        C
+!                    CALL CKMP06 ( HANDLE, DESCR,  MSNO,
+!             .                    RATE,   SUBTYP, WINSIZ,
+!             .                    NREC,   IVLBDS, LSTEPC )
+!
+!                    WRITE (*,*) ' '
+!                    WRITE (*,*) '   Mini-segment number: ', MSNO
+!                    WRITE (*,*) '      Rate:           ',   RATE
+!                    WRITE (*,*) '      Subtype:        ',   SUBTYP
+!                    WRITE (*,*) '      Window size:    ',   WINSIZ
+!                    WRITE (*,*) '      Interval start: ',   IVLBDS(1)
+!                    WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
+!                    WRITE (*,*) '      Last epoch:     ',   LSTEPC
+!                    WRITE (*,*) ' '
+!
+!                    DO RECNO = 1, NREC
+!
+!                       CALL CKGR06 ( HANDLE, DESCR,
+!             .                       MSNO,   RECNO,  RECORD )
+!
+!                       WRITE (*,*) '      Record number: ', RECNO
+!                       WRITE (*,*) '         SCLKDP:     ', RECORD(1)
+!                       WRITE (*,*) '         Clock rate: ', RECORD(3)
+!
+!                       IF ( SUBTYP .EQ. C06TP0 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+!                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+!                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+!                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+!                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+!                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+!                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+!                          WRITE (*,*) '        AV(1): ', RECORD(12)
+!                          WRITE (*,*) '        AV(2): ', RECORD(13)
+!                          WRITE (*,*) '        AV(3): ', RECORD(14)
+!                          WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
+!                          WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
+!                          WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
+!
+!                       ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
+!
+!                          WRITE (*,*) '         Q(0): ', RECORD(4)
+!                          WRITE (*,*) '         Q(1): ', RECORD(5)
+!                          WRITE (*,*) '         Q(2): ', RECORD(6)
+!                          WRITE (*,*) '         Q(3): ', RECORD(7)
+!                          WRITE (*,*) '        AV(1): ', RECORD(8)
+!                          WRITE (*,*) '        AV(2): ', RECORD(9)
+!                          WRITE (*,*) '        AV(3): ', RECORD(10)
+!
+!                       ELSE
+!                          CALL SETMSG ( 'Subtype # is not '
+!             .            //            'recognized.'         )
+!                          CALL ERRINT ( '#', SUBTYP           )
+!                          CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
+!                       END IF
+!
+!                       WRITE (*,*) ' '
+!
+!                   END DO
+!
+!                 END DO
+!
+!                 CALL DAFFNA ( FOUND )
+!
+!              END DO
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, using the Rosetta CK file named
+!        RATT_DV_257_02_01_T6_00344.BC, the output was:
+!
+!        Enter name of CK to dump > RATT_DV_257_02_01_T6_00344.BC
+!
+!         Segment number:            1
+!
+!            Mini-segment number:            1
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24471796593941.691
+!               Interval stop:     24472844252095.523
+!               Last epoch:        24472844252095.523
+!
+!               Record number:            1
+!                  SCLKDP:        24471796593941.691
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95514652599900884
+!                  Q(1):   0.16277660709912350
+!                  Q(2):   0.11688592199582469
+!                  Q(3):  -0.21802883133317097
+!
+!               Record number:            2
+!                  SCLKDP:        24472234538651.801
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95746293340938016
+!                  Q(1):   0.14880147654385018
+!                  Q(2):   0.12021705739210503
+!                  Q(3):  -0.21603405018065600
+!
+!               Record number:            3
+!                  SCLKDP:        24472676416997.039
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.95956954083287593
+!                  Q(1):   0.13478976855182764
+!                  Q(2):   0.12355113537344563
+!                  Q(3):  -0.21399329790313779
+!
+!               Record number:            4
+!                  SCLKDP:        24472844252095.523
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96030932381589129
+!                  Q(1):   0.12949634043544370
+!                  Q(2):   0.12480922302154081
+!                  Q(3):  -0.21321200307405938
+!
+!            Mini-segment number:            2
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24472844252095.523
+!               Interval stop:     24472863912889.105
+!               Last epoch:        24472863912889.105
+!
+!               Record number:            1
+!                  SCLKDP:        24472844252095.523
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96030932403888680
+!                  Q(1):   0.12949633879120778
+!                  Q(2):   0.12480922338599261
+!                  Q(3):  -0.21321200285498659
+!
+!               Record number:            2
+!                  SCLKDP:        24472851309816.297
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96035266600496283
+!                  Q(1):   0.12922730685291675
+!                  Q(2):   0.12480259688433022
+!                  Q(3):  -0.21318389214860939
+!
+!               Record number:            3
+!                  SCLKDP:        24472859879905.805
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96041575813224878
+!                  Q(1):   0.12886248165419970
+!                  Q(2):   0.12474605317805663
+!                  Q(3):  -0.21315359384649502
+!
+!               Record number:            4
+!                  SCLKDP:        24472863912889.105
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96043784177251290
+!                  Q(1):   0.12871819083493355
+!                  Q(2):   0.12475418449192528
+!                  Q(3):  -0.21313651233726627
+!
+!            Mini-segment number:            3
+!               Rate:              1.5258789062500000E-005
+!               Subtype:                   1
+!               Window size:              10
+!               Interval start:    24472863912889.105
+!               Interval stop:     24473139163999.207
+!               Last epoch:        24473139163999.207
+!
+!               Record number:            1
+!                  SCLKDP:        24472863912889.105
+!                  Clock rate:    1.5258789062500000E-005
+!                  Q(0):  -0.96043784177455394
+!                  Q(1):   0.12871819083614683
+!
+!        [...]
+!
+!        Warning: incomplete output. Only 100 out of 2378824 lines have
+!        been provided.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     number of mini-segments in CK type_6 segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        ND         is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NI         is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 6
+
+!
+!     Local variables
+!
+      real(wp)              dc     ( nd )
+      real(wp)              dpdata ( 1  )
+
+      integer(ip)           ic     ( ni )
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of discrete pointing instances contained in a data
+!     type 6 segment is stored in the last double precision word of the
+!     segment. Since the address of the last word is stored in the
+!     sixth integer component of the segment descriptor, it is a
+!     trivial matter to extract the count.
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DC(1)  Initial encoded SCLK
+!        DC(2)  Final encoded SCLK
+!
+!        IC(1)  CK frame class ID (aka "instrument")
+!        IC(2)  Inertial reference frame
+!        IC(3)  Data type
+!        IC(4)  Angular velocity flag
+!        IC(5)  Initial address of segment data
+!        IC(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, nd, ni, dc, ic )
+
+!
+!     If this segment is not of data type 6, then signal an error.
+!
+      if ( ic( 3 ) /= dtype ) then
+
+         call ctx%setmsg ( 'Data type of the segment should be 6: Passed ' &
+         //            'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', ic( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+      end if
+
+!
+!     The number of mini-segments is the final word in the segment.
+!
+      call dafgda ( ctx, handle, ic(6), ic(6), dpdata )
+
+      if ( ctx%failed() ) return
+
+      nmini = nint ( dpdata(1) )
+
+      return
+      end procedure cknm06
+
+!$Procedure CKNR01 ( C-kernel, number of records, type 01 )
+
+      module procedure cknr01
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return the number of pointing instances in a CK type 01 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: n_1(1)  !! one-element copy of n (array argument)
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment whose descriptor was also passed. The file
+!              should have been opened for read access, either by
+!              CKLPF or DAFOPR.
+!
+!     DESCR    is the packed descriptor of a data type 1 segment.
+!
+! $ Detailed_Output
+!
+!     NREC     is the number of pointing records in the type 1 segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment indicated by DESCR is not a type 1 segment,
+!         the error SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If the specified handle does not belong to any file that is
+!         currently known to be open, an error is signaled by a routine
+!         in the call tree of this routine.
+!
+!     3)  If DESCR is not a valid, packed descriptor of a segment in
+!         the CK file specified by HANDLE, the results of this routine
+!         are unpredictable.
+!
+! $ Files
+!
+!     The file specified by HANDLE should be open for read access.
+!
+! $ Particulars
+!
+!     For a complete description of the internal structure of a type 1
+!     segment, see the CK required reading.
+!
+! $ Examples
+!
+!     The following code fragment prints the records of the first
+!     segment in a CK file. Suppose MOC.CK is binary CK file that
+!     contains segments of data type 1.
+!
+!           INTEGER               ICD     ( 6 )
+!           INTEGER               HANDLE
+!           INTEGER               NREC
+!           INTEGER               I
+!           DOUBLE PRECISION      DCD     ( 2 )
+!           DOUBLE PRECISION      DESCR   ( 5 )
+!           DOUBLE PRECISION      RECORD  ( 8 )
+!           LOGICAL               FOUND
+!
+!     C
+!     C     First load the file. (The file may also be opened by using
+!     C     CKLPF.)
+!     C
+!           CALL DAFOPR ( 'MOC.CK', HANDLE )
+!
+!     C
+!     C     Begin forward search.  Find first array.
+!     C
+!           CALL DAFBFS ( HANDLE )
+!           CALL DAFFNA ( FOUND  )
+!
+!     C
+!     C     Get segment descriptor.
+!     C
+!           CALL DAFGS ( DESCR )
+!
+!     C
+!     C     Unpack the segment descriptor into its double precision
+!     C     and integer components.
+!     C
+!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!     C
+!     C     The data type for a segment is located in the third integer
+!     C     component of the descriptor.
+!     C
+!           IF ( ICD( 3 ) .EQ. 1 ) THEN
+!
+!     C
+!     C        How many records does this segment contain?
+!     C
+!              CALL CKNR01 ( HANDLE, DESCR, NREC )
+!
+!              DO I = 1, NREC
+!
+!     C
+!     C           Get the record associated with record number I.
+!     C
+!                 CALL CKGR01 ( HANDLE, DESCR, I, RECORD )
+!                 WRITE (*,*) 'Record ', I, ':'
+!                 WRITE (*,*)  RECORD
+!              END DO
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor was
+!         passed to this routine must be opened for read access by
+!         either CKLPF or DAFOPR.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!     R.E. Thurman       (JPL)
+!     I.M. Underwood     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Replaced DAFRDA call with DAFGDA.
+!        Added IMPLICIT NONE.
+!
+!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.2, 06-MAR-1991 (JML)
+!
+!        A correction was made to the example program in the
+!        header. The array of double precision components of
+!        the descriptor ( DCD ) had originally been declared
+!        as an integer.
+!
+!-    SPICELIB Version 1.0.1, 02-NOV-1990 (JML)
+!
+!        The restriction that a C-kernel file must be loaded
+!        was explicitly stated.
+!
+!-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
+!
+!-&
+
+! $ Index_Entries
+!
+!     number of CK type_1 records
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 1.0.2, 06-MAR-1991 (JML)
+!
+!        A correction was made to the example program in the
+!        header. The array of double precision components of
+!        the descriptor ( DCD ) had originally been declared
+!        as an integer.
+!
+!-    SPICELIB Version 1.0.1, 02-NOV-1990 (JML)
+!
+!        1) The restriction that a C-kernel file must be loaded
+!           was explicitly stated.
+!        2) Minor changes were made to the wording of the header.
+!
+!-    Beta Version 1.1.0, 28-AUG-1990 (MJS) (JEM)
+!
+!        The following changes were made as a result of the
+!        NAIF CK Code and Documentation Review:
+!
+!        1) The name of this routine was changed from CK01NR to
+!           CKNR01 in order to be consistent with the SPICELIB
+!           naming convention.
+!        2) The declarations for the parameters NDC and NIC were
+!           moved from the "Declarations" section of the header to
+!           the "Local parameters" section of the code below the
+!           header. These parameters are not meant to modified by
+!           users.
+!        3) The variables INTDES and DPDES were changed to ICD and
+!           DCD.
+!        4) The header was corrected, improved, and updated to reflect
+!           the changes.
+!        5) The in-code comments were improved.
+!
+!-    Beta Version 1.0.0, 22-MAY-1990 (RET) (IMU)
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+!
+!     Local variables
+!
+      integer(ip)           icd  ( nic )
+
+      real(wp)              dcd  ( ndc )
+      real(wp)              n
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of pointing records contained in a data type 1
+!     segment is stored in the final double precision word of the
+!     segment.  Since the address of this very word is stored in the
+!     sixth integer component of the segment descriptor, it is a trivial
+!     matter to extract the count.
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+!
+!     If this segment is not of data type 1, then signal an error.
+!
+
+      if ( icd( 3 ) /= 1 ) then
+         call ctx%setmsg ( 'Data type of the segment should be 1: Passed '// &
+                       'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', icd ( 3 )                                 )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+      end if
+
+!
+!     The number of records is the final word in the segment.
+!
+      call dafgda ( ctx, handle, icd( 6 ), icd( 6 ), n_1 )
+      n = n_1(1)
+
+      nrec = int( n )
+
+      return
+      end procedure cknr01
+
+!$Procedure CKNR02 ( C-kernel, number of records, type 02 )
+
+      module procedure cknr02
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return the number of pointing records in a CK type 02 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment. The file should have been opened for read or
+!              write access, by CKLPF, DAFOPR or DAFOPW.
+!
+!     DESCR    is the packed descriptor of a data type 2 CK segment.
+!
+! $ Detailed_Output
+!
+!     NREC     is the number of pointing records in the type 2 segment
+!              associated with HANDLE and DESCR.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment indicated by DESCR is not a type 2 segment,
+!         the error SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If the specified handle does not belong to any file that is
+!         currently known to be open, an error is signaled by a routine
+!         in the call tree of this routine.
+!
+!     3)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE should be open for read or write
+!     access.
+!
+! $ Particulars
+!
+!     For a complete description of the internal structure of a type 2
+!     segment, see the CK required reading.
+!
+!     This routine returns the number of pointing records contained
+!     in the specified segment. It is normally used in conjunction
+!     with CKGR02, which returns the Ith record in the segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following code example extracts the start and end SCLK
+!        time, seconds per tick rate, platform's +Z axis direction,
+!        and angular velocity vector for each pointing instance in
+!        the first segment in a CK file that contains segments of data
+!        type 2.
+!
+!        Use the CK kernel below, available in the Viking Orbiter PDS
+!        archives, as input for the code example.
+!
+!           vo2_swu_ck2.bc
+!
+!        Example code begins here.
+!
+!              PROGRAM CKNR02_EX1
+!              IMPLICIT NONE
+!
+!              DOUBLE PRECISION      AV      ( 3 )
+!              DOUBLE PRECISION      CMAT    ( 3, 3 )
+!              DOUBLE PRECISION      DCD     ( 2  )
+!              DOUBLE PRECISION      DESCR   ( 5  )
+!              DOUBLE PRECISION      QUAT    ( 4 )
+!              DOUBLE PRECISION      RECORD  ( 10 )
+!              DOUBLE PRECISION      SCLKE
+!              DOUBLE PRECISION      SCLKR
+!              DOUBLE PRECISION      SCLKS
+!              DOUBLE PRECISION      Z       ( 3 )
+!
+!              INTEGER               ICD     ( 6 )
+!              INTEGER               HANDLE
+!              INTEGER               NREC
+!              INTEGER               I
+!
+!              LOGICAL               FOUND
+!
+!        C
+!        C     First load the file. (The file may also be opened by
+!        C     using CKLPF).
+!        C
+!              CALL DAFOPR ( 'vo2_swu_ck2.bc', HANDLE )
+!
+!        C
+!        C     Begin forward search.  Find the first array.
+!        C
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!        C
+!        C     Get segment descriptor.
+!        C
+!              CALL DAFGS ( DESCR )
+!
+!        C
+!        C     Unpack the segment descriptor into its double precision
+!        C     and integer components.
+!        C
+!              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!        C
+!        C     The data type for a segment is located in the third
+!        C     integer component of the descriptor.
+!        C
+!              IF ( ICD( 3 ) .EQ. 2 ) THEN
+!
+!        C
+!        C        How many records does this segment contain?
+!        C
+!                 CALL CKNR02 ( HANDLE, DESCR, NREC )
+!
+!                 DO I = 1, NREC
+!
+!        C
+!        C           Get the Ith record in the segment.
+!        C
+!                    CALL CKGR02 ( HANDLE, DESCR, I, RECORD )
+!
+!        C
+!        C           Unpack RECORD into the start and end time, rate in
+!        C           TDB seconds/tick, quaternion, and av.
+!        C
+!                    SCLKS = RECORD ( 1 )
+!                    SCLKE = RECORD ( 2 )
+!                    SCLKR = RECORD ( 3 )
+!
+!                    CALL MOVED ( RECORD(4), 4, QUAT )
+!                    CALL MOVED ( RECORD(8), 3, AV   )
+!
+!        C
+!        C           The +Z axis direction is the third row of the
+!        C           C-matrix.
+!        C
+!                    CALL Q2M ( QUAT, CMAT )
+!
+!                    Z(1) = CMAT(3,1)
+!                    Z(2) = CMAT(3,2)
+!                    Z(3) = CMAT(3,3)
+!
+!        C
+!        C           Write out the results.
+!        C
+!                    WRITE (*,'(A,I2)') 'Record: ', I
+!                    WRITE (*,'(A,F21.6)') '   Start encoded SCLK:',
+!             .                              SCLKS
+!                    WRITE (*,'(A,F21.6)') '   End encoded SCLK  :',
+!             .                              SCLKE
+!                    WRITE (*,'(A,F21.6)') '   TDB Seconds/tick  :',
+!             .                              SCLKR
+!                    WRITE (*,'(A,3F13.8)') '   +Z axis           :',
+!             .                              Z
+!                    WRITE (*,'(A,3F13.8)') '   Angular velocity  :',
+!             .                              AV
+!                    WRITE (*,*)
+!
+!                 END DO
+!
+!              END IF
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!        Record:  1
+!           Start encoded SCLK:   32380393707.000015
+!           End encoded SCLK  :   32380395707.000015
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.62277152  -0.29420673   0.72498141
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  2
+!           Start encoded SCLK:   32380402605.999947
+!           End encoded SCLK  :   32380404605.999947
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.62172600  -0.27894910   0.73187716
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  3
+!           Start encoded SCLK:   32380412542.000053
+!           End encoded SCLK  :   32380414542.000053
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.62183610  -0.26307233   0.73764003
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  4
+!           Start encoded SCLK:   32827264875.000000
+!           End encoded SCLK  :   32827266875.000000
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.82984105  -0.44796078   0.33270853
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  5
+!           Start encoded SCLK:   32827403805.999992
+!           End encoded SCLK  :   32827405805.999992
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.80812500  -0.44911178   0.38109395
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  6
+!           Start encoded SCLK:   32827412705.000042
+!           End encoded SCLK  :   32827414705.000042
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.81120505  -0.43593555   0.38975193
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  7
+!           Start encoded SCLK:   32827417284.000038
+!           End encoded SCLK  :   32827419284.000038
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.81313834  -0.42861613   0.39382008
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  8
+!           Start encoded SCLK:   33793314593.000053
+!           End encoded SCLK  :   33793316593.000053
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.79860617  -0.37840751   0.46801275
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  9
+!           Start encoded SCLK:   33793332478.000046
+!           End encoded SCLK  :   33793334478.000046
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.77861783  -0.39171670   0.49021658
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 10
+!           Start encoded SCLK:   33793341463.000061
+!           End encoded SCLK  :   33793343463.000061
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.76852381  -0.39797437   0.50098659
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 11
+!           Start encoded SCLK:   33793350363.000034
+!           End encoded SCLK  :   33793352363.000034
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.75779934  -0.40484364   0.51170478
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 12
+!           Start encoded SCLK:   33984028250.000000
+!           End encoded SCLK  :   33984030250.000000
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.77099184  -0.39926339   0.49614546
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 13
+!           Start encoded SCLK:   33984046134.999992
+!           End encoded SCLK  :   33984048134.999992
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.75024440  -0.41218993   0.51694564
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 14
+!           Start encoded SCLK:   33984055121.000053
+!           End encoded SCLK  :   33984057121.000053
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.73947359  -0.41886863   0.52699894
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 15
+!           Start encoded SCLK:   33984220835.999966
+!
+!        [...]
+!
+!        Warning: incomplete output. Only 100 out of 875 lines have been
+!        provided.
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor was
+!         passed to this routine must be opened for read or write access
+!         by CKLPF, DAFOPR or DAFOPW.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Created
+!        complete code example from existing code fragment.
+!
+!        Improved text in the $Abstract section.
+!
+!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     number of CK type_2 records
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+!        DTYPE      is the data type.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: dtype = 2
+
+!
+!     Local variables
+!
+      integer(ip)           beg
+      integer(ip)           end
+      integer(ip)           arrsiz
+      integer(ip)           icd    ( nic )
+
+      real(wp)              dcd    ( ndc )
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+!
+!     If this segment is not of data type 2, then signal an error.
+!
+
+      if ( icd( 3 ) /= dtype ) then
+         call ctx%setmsg ( 'Data type of the segment should be 2: Passed '// &
+                       'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', icd ( 3 )                                 )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+      end if
+
+!
+!     The beginning and ending addresses of the segment are in the
+!     descriptor.
+!
+      beg = icd( 5 )
+      end = icd( 6 )
+
+!
+!     Calculate the number of pointing records in the segment from
+!     the physical size of the segment and knowledge of its structure.
+!
+!        Based on the structure of a type 2 segment, the size of a
+!        segment with N pointing intervals is given as follows:
+!
+!           ARRSIZ  =  PSIZ * N  +  2 * N  +  ( N-1 ) / 100       (1)
+!
+!        In the above equation PSIZ is eight and integer arithmetic is
+!        used.  This equation is equivalent to:
+!
+!           100 * ARRSIZ  =  1000 * N  + ( N-1 ) * 100            (2)
+!                                        -------
+!                                          100
+!
+!        If we can eliminate the integer division then, since all of
+!        the other values represent whole numbers, we can solve the
+!        equation for N in terms of ARRSIZ by using double precision
+!        arithmetic and then rounding the result to the nearest integer.
+!
+!        This next equation uses double precision arithmetic and is
+!        equivalent to (2):
+!
+!           100 * ARRSIZ  = 1000 * N + ( N-1 ) - ( N-1 ) MOD 100  (3)
+!
+!        Which means:
+!
+!           100 * ARRSIZ + 1     ( N-1 ) MOD 100
+!           ----------------  +  ---------------   =   N          (4)
+!                1001                 1001
+!
+!         Since the second term on the left side of (4) is always less
+!         than 0.1, the first term will always round to the correct
+!         value of N.
+!
+      arrsiz = end - beg + 1
+
+      nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
+
+      return
+      end procedure cknr02
+
+!$Procedure CKNR03 ( C-kernel, number of records, type 03 )
+
+      module procedure cknr03
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return the number of pointing instances in a CK type 03 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment. The file should have been opened for read
+!              or write access, by CKLPF, DAFOPR or DAFOPW.
+!
+!     DESCR    is the packed descriptor of a data type 3 CK segment.
+!
+! $ Detailed_Output
+!
+!     NREC     is the number of pointing instances in the type 3
+!              segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment indicated by DESCR is not a type 3 segment,
+!         the error SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     3)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE should be open for read or
+!     write access.
+!
+! $ Particulars
+!
+!     For a complete description of the internal structure of a type 3
+!     segment, see the CK required reading.
+!
+!     This routine returns the number of discrete pointing instances
+!     contained in the specified segment. It is normally used in
+!     conjunction with CKGR03 which returns the Ith pointing instance
+!     in the segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following code example extracts the SCLK time, boresight
+!        vector, and angular velocity vector for each pointing instance
+!        in the first segment in a CK file that contains segments of
+!        data type 3.
+!
+!        Use the CK kernel below, available in the Venus Express PDS
+!        archives, as input for the code example.
+!
+!           VEX_BOOM_V01.BC
+!
+!        Example code begins here.
+!
+!              PROGRAM CKNR03_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local variables.
+!        C
+!              DOUBLE PRECISION      QUAT    ( 4 )
+!              DOUBLE PRECISION      AV      ( 3 )
+!              DOUBLE PRECISION      BORE    ( 3 )
+!              DOUBLE PRECISION      CMAT    ( 3, 3 )
+!              DOUBLE PRECISION      DCD     ( 2 )
+!              DOUBLE PRECISION      DESCR   ( 5 )
+!              DOUBLE PRECISION      RECORD  ( 8 )
+!              DOUBLE PRECISION      SCLKDP
+!
+!              INTEGER               I
+!              INTEGER               ICD     ( 6 )
+!              INTEGER               HANDLE
+!              INTEGER               NREC
+!
+!              LOGICAL               AVSEG
+!              LOGICAL               FOUND
+!
+!        C
+!        C     First load the file (it may also be opened by
+!        C     using CKLPF).
+!        C
+!              CALL DAFOPR ( 'VEX_BOOM_V01.BC', HANDLE )
+!
+!        C
+!        C     Begin forward search.  Find the first array.
+!        C
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!        C
+!        C     Get segment descriptor.
+!        C
+!              CALL DAFGS ( DESCR )
+!
+!        C
+!        C     Unpack the segment descriptor into its double precision
+!        C     and integer components.
+!        C
+!              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!        C
+!        C     The data type for a segment is located in the third
+!        C     integer component of the descriptor.
+!        C
+!              IF ( ICD( 3 ) .EQ. 3 ) THEN
+!
+!        C
+!        C        Does the segment contain AV data?
+!        C
+!                 AVSEG =  ( ICD(4) .EQ. 1 )
+!
+!        C
+!        C        How many records does this segment contain?
+!        C
+!                 CALL CKNR03 ( HANDLE, DESCR, NREC )
+!
+!                 DO I = 1, NREC
+!
+!        C
+!        C           Get the Ith pointing instance in the segment.
+!        C
+!                    CALL CKGR03 ( HANDLE, DESCR, I, RECORD )
+!
+!        C
+!        C           Unpack RECORD into the time, quaternion, and av.
+!        C
+!                    SCLKDP = RECORD ( 1 )
+!
+!                    CALL MOVED ( RECORD(2), 4, QUAT )
+!
+!                    IF  ( AVSEG )  THEN
+!                       CALL MOVED ( RECORD(6), 3, AV   )
+!                    END IF
+!
+!        C
+!        C           The boresight vector is the third row of the
+!        C           C-matrix.
+!        C
+!                    CALL Q2M ( QUAT, CMAT )
+!
+!                    BORE(1) = CMAT(3,1)
+!                    BORE(2) = CMAT(3,2)
+!                    BORE(3) = CMAT(3,3)
+!
+!        C
+!        C           Write out the results.
+!        C
+!                    WRITE (*,'(A,I2)') 'Record: ', I
+!                    WRITE (*,'(A,F25.6)')  '   SCLK time       :',
+!             .                               SCLKDP
+!                    WRITE (*,'(A,3F14.9)') '   Boresight       :',
+!             .                               BORE
+!
+!                    IF ( AVSEG ) THEN
+!                       WRITE (*,'(A,3F14.9)') '   Angular velocity:',
+!             .                                  AV
+!                    END IF
+!                    WRITE (*,*)
+!
+!                 END DO
+!
+!              END IF
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!        Record:  1
+!           SCLK time       :           2162686.710986
+!           Boresight       :  -0.999122830   0.000000000   0.041875654
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  2
+!           SCLK time       :       54160369751.715164
+!           Boresight       :  -0.999122830   0.000000000   0.041875654
+!           Angular velocity:   0.000000000   1.176083393   0.000000000
+!
+!        Record:  3
+!           SCLK time       :       54160454948.487686
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  4
+!           SCLK time       :      299264885854.937805
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  5
+!           SCLK time       :     2366007685832.532227
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  6
+!           SCLK time       :     4432750485810.126953
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  7
+!           SCLK time       :     6505155594828.757812
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  8
+!           SCLK time       :     8571898394806.352539
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record:  9
+!           SCLK time       :    10638641194783.947266
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 10
+!           SCLK time       :    12705383994761.541016
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 11
+!           SCLK time       :    14777789103780.169922
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 12
+!           SCLK time       :    16844531903757.763672
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+!        Record: 13
+!           SCLK time       :    18911274703735.359375
+!           Boresight       :   0.000000000   0.000000000   1.000000000
+!           Angular velocity:   0.000000000   0.000000000   0.000000000
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor was
+!         passed to this routine must be opened for read or write access
+!         by CKLPF, DAFOPR or DAFOPW.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added
+!        reference to required CK in example's problem statement.
+!
+!        Fixed minor language issues in $Abstract, $Brief_I/O,
+!        $Detailed_Input, $Files and $Restrictions sections.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Replaced DAFRDA call with DAFGDA.
+!        Added IMPLICIT NONE.
+!
+!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     number of CK type_3 records
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: dtype = 3
+
+!
+!     Local variables
+!
+      integer(ip)           icd    ( nic )
+
+      real(wp)              dcd    ( ndc )
+      real(wp)              npoint
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of discrete pointing instances contained in a data
+!     type 3 segment is stored in the last double precision word of
+!     the segment.  Since the address of the last word is stored in
+!     the sixth integer component of the segment descriptor, it is
+!     a trivial matter to extract the count.
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+!
+!     If this segment is not of data type 3, then signal an error.
+!
+
+      if ( icd( 3 ) /= dtype ) then
+         call ctx%setmsg ( 'Data type of the segment should be 3: Passed '// &
+                       'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', icd ( 3 )                                 )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+      end if
+
+!
+!     The number of records is the final word in the segment.
+!
+      call dafgda ( ctx, handle, icd(6), icd(6), npoint_1 )
+      npoint = npoint_1(1)
+
+      nrec = nint ( npoint )
+
+      return
+      end procedure cknr03
+
+!$Procedure CKNR05 ( C-kernel, number of records, type 05 )
+
+      module procedure cknr05
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Return the number of pointing instances in a CK type 05 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+      real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              segment.
+!
+!     DESCR    is the packed descriptor of a data type 5 segment.
+!
+! $ Detailed_Output
+!
+!     NREC     is the number of pointing instances in the type 5
+!              segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment indicated by DESCR is not a type 5 segment,
+!         the error SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If the specified handle does not belong to any DAF file that
+!         is currently known to be open, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     3)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The file specified by HANDLE should be open for read or
+!     write access.
+!
+! $ Particulars
+!
+!     For a complete description of the internal structure of a type 5
+!     segment, see the CK required reading.
+!
+!     This routine returns the number of discrete pointing instances
+!     contained in the specified segment. It is normally used in
+!     conjunction with CKGR05 which returns the Ith pointing instance
+!     in the segment.
+!
+! $ Examples
+!
+!     Suppose that MOC.BC is a CK file that contains segments of
+!     data type 5. Then the following code fragment extracts the
+!     SCLK time and boresight vector for each pointing instance
+!     in the first segment in the file.
+!
+!           INTEGER               ICD     ( 6 )
+!           INTEGER               HANDLE
+!           INTEGER               NREC
+!           INTEGER               I
+!
+!           DOUBLE PRECISION      DCD     ( 2 )
+!           DOUBLE PRECISION      DESCR   ( 5 )
+!           DOUBLE PRECISION      RECORD  ( 16 )
+!           DOUBLE PRECISION      QUAT    ( 4 )
+!           DOUBLE PRECISION      BORE    ( 3 )
+!           DOUBLE PRECISION      CMAT    ( 3, 3 )
+!           DOUBLE PRECISION      SCLKDP
+!
+!           LOGICAL               FOUND
+!
+!     C
+!     C     First load the file. (The file may also be opened by using
+!     C     CKLPF.)
+!     C
+!           CALL DAFOPR ( 'MOC.BC', HANDLE )
+!
+!     C
+!     C     Begin forward search. Find the first array.
+!     C
+!           CALL DAFBFS ( HANDLE )
+!           CALL DAFFNA ( FOUND  )
+!
+!     C
+!     C     Get segment descriptor.
+!     C
+!           CALL DAFGS ( DESCR )
+!
+!     C
+!     C     Unpack the segment descriptor into its double precision
+!     C     and integer components.
+!     C
+!           CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!     C
+!     C     The data type for a segment is located in the third integer
+!     C     component of the descriptor.
+!     C
+!           IF ( ICD( 3 ) .EQ. 5 ) THEN
+!     C
+!     C        How many records does this segment contain?
+!     C
+!              CALL CKNR05 ( HANDLE, DESCR, NREC )
+!
+!              DO I = 1, NREC
+!     C
+!     C           Get the Ith pointing instance in the segment.
+!     C
+!                 CALL CKGR05 ( HANDLE, DESCR, I, RECORD )
+!
+!     C
+!     C           Unpack from RECORD the time tag and quaternion.
+!     C           The locations of these items in the record are
+!     C           independent of the subtype.
+!     C
+!                 SCLKDP = RECORD ( 1 )
+!
+!                 CALL MOVED ( RECORD(3), 4, QUAT )
+!
+!     C
+!     C           The boresight vector is the third row of the C-matrix.
+!     C
+!                 CALL Q2M ( QUAT, CMAT )
+!
+!                 BORE(1) = CMAT(3,1)
+!                 BORE(2) = CMAT(3,2)
+!                 BORE(3) = CMAT(3,3)
+!     C
+!     C           Write out the results.
+!     C
+!                 WRITE (*,*) 'Record: ', I
+!                 WRITE (*,*)
+!                 WRITE (*,*) 'SCLK time = ', SCLKDP
+!                 WRITE (*,*)
+!                 WRITE (*,*) 'boresight: ', BORE
+!
+!              END DO
+!
+!           END IF
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 18-AUG-2002 (NJB) (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     number of CK type_5 records
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel descriptor.
+!
+!        DTYPE      is the data type of the segment that this routine
+!                   operates on.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: dtype = 5
+
+!
+!     Local variables
+!
+      integer(ip)           icd    ( nic )
+
+      real(wp)              dcd    ( ndc )
+      real(wp)              npoint
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of discrete pointing instances contained in a data
+!     type 5 segment is stored in the last double precision word of
+!     the segment.  Since the address of the last word is stored in
+!     the sixth integer component of the segment descriptor, it is
+!     a trivial matter to extract the count.
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+!
+!     If this segment is not of data type 5, then signal an error.
+!
+
+      if ( icd( 3 ) /= dtype ) then
+         call ctx%setmsg ( 'Data type of the segment should be 5: Passed '// &
+                       'descriptor shows type = #.'                   )
+         call ctx%errint ( '#', icd ( 3 )                                 )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                       )
+         return
+      end if
+
+!
+!     The number of records is the final word in the segment.
+!
+      call dafgda ( ctx, handle, icd(6), icd(6), npoint_1 )
+      npoint = npoint_1(1)
+
+      nrec = nint ( npoint )
+
+      return
+      end procedure cknr05
+
+!$Procedure CKOPN ( CK, open new file. )
+
+      module procedure ckopn
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Open a new CK file, returning the handle of the opened file.
+!
+! $ Required_Reading
+!
+!     CK
+!
+! $ Keywords
+!
+!     CK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     FNAME    is the name of the CK file to be opened.
+!
+!     IFNAME   is the internal filename for the CK file that is being
+!              created. The internal filename may be up to 60
+!              characters long. If you do not have any conventions
+!              for tagging your files, an internal filename of
+!              'CK_file' is perfectly acceptable. You may also leave
+!              it blank if you like.
+!
+!     NCOMCH   is the space, measured in characters, to be initially
+!              set aside for the comment area when a new CK file
+!              is opened. The amount of space actually set aside may
+!              be greater than the amount requested, due to the
+!              manner in which comment records are allocated in an CK
+!              file. However, the amount of space set aside for
+!              comments will always be at least the amount that was
+!              requested.
+!
+!              The value of NCOMCH should be greater than or equal to
+!              zero, i.e., 0 <= NCOMCH. A negative value, should one
+!              occur, will be assumed to be zero.
+!
+! $ Detailed_Output
+!
+!     HANDLE   is the handle of the opened CK file. If an error
+!              occurs the value of this variable will not represent a
+!              valid handle.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the value of NCOMCH is negative, a value of zero (0) will
+!         be used for the number of comment characters to be set aside
+!         for comments.
+!
+!     2)  If an error occurs while attempting to open a CK file the
+!         value of HANDLE will not represent a valid file handle.
+!
+! $ Files
+!
+!     See FNAME and HANDLE.
+!
+! $ Particulars
+!
+!     Open a new CK file, reserving room for comments if requested.
+!
+!     A CKCLS call should balance every CKOPN call.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Create a CK type 3 segment; fill with data for a simple time
+!        dependent rotation and angular velocity, and reserve room in
+!        the CK comments area for 5000 characters.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKOPN_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         CK3
+!              PARAMETER           ( CK3 = 'ckopn_ex1.bc' )
+!
+!              DOUBLE PRECISION      SPTICK
+!              PARAMETER           ( SPTICK = 0.001D0 )
+!
+!              INTEGER               INST
+!              PARAMETER           ( INST = -77703 )
+!
+!              INTEGER               MAXREC
+!              PARAMETER           ( MAXREC = 201 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    REF
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      AVVS   (   3,MAXREC )
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      ENDTIM
+!              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RWMAT  ( 3, 3 )
+!              DOUBLE PRECISION      SPACES
+!              DOUBLE PRECISION      SCLKDP (     MAXREC )
+!              DOUBLE PRECISION      STARTS (    MAXREC/2)
+!              DOUBLE PRECISION      STICKS
+!              DOUBLE PRECISION      THETA
+!              DOUBLE PRECISION      WMAT   ( 3, 3 )
+!              DOUBLE PRECISION      WQUAT  ( 0:3 )
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               NCOMCH
+!              INTEGER               NINTS
+!
+!              LOGICAL               AVFLAG
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, but it reserves room for 5000 characters.
+!        C
+!              NCOMCH = 5000
+!
+!        C
+!        C     The base reference from for the rotation data.
+!        C
+!              REF = 'J2000'
+!
+!        C
+!        C     Time spacing in encoded ticks and in seconds
+!        C
+!              STICKS = 10.D0
+!              SPACES = STICKS * SPTICK
+!
+!        C
+!        C     Declare an angular rate in radians per sec.
+!        C
+!              RATE = 1.D-2
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              SEGID  = 'Test type 3 CK segment'
+!              IFNAME = 'Test CK type 3 segment created by CKW03'
+!
+!        C
+!        C     Open a new kernel.
+!        C
+!              CALL CKOPN ( CK3, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Create a 3x3 double precision identity matrix.
+!        C
+!              CALL IDENT ( WMAT )
+!
+!        C
+!        C     Convert the matrix to quaternion.
+!        C
+!              CALL M2Q ( WMAT, WQUAT )
+!
+!        C
+!        C     Copy the work quaternion to the first row of
+!        C     QUATS.
+!        C
+!              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+!
+!        C
+!        C     Create an angular velocity vector. This vector is in the
+!        C     REF reference frame and indicates a constant rotation
+!        C     about the Z axis.
+!        C
+!              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+!
+!        C
+!        C     Set the initial value of the encoded ticks.
+!        C
+!              SCLKDP(1) = 1000.D0
+!
+!        C
+!        C     Fill the rest of the AVVS and QUATS matrices
+!        C     with simple data.
+!        C
+!              DO I = 2, MAXREC
+!
+!        C
+!        C        Create the corresponding encoded tick value in
+!        C        increments of STICKS with an initial value of
+!        C        1000.0 ticks.
+!        C
+!                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+!
+!        C
+!        C        Create the transformation matrix for a rotation of
+!        C        THETA about the Z axis. Calculate THETA from the
+!        C        constant angular rate RATE at increments of SPACES.
+!        C
+!                 THETA = (I-1) * RATE * SPACES
+!                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+!
+!        C
+!        C        Convert the RWMAT matrix to SPICE type quaternion.
+!        C
+!                 CALL M2Q ( RWMAT, WQUAT )
+!
+!        C
+!        C        Store the quaternion in the QUATS matrix.
+!        C        Store angular velocity in AVVS.
+!        C
+!                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+!                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+!
+!              END DO
+!
+!        C
+!        C     Create an array start times for the interpolation
+!        C     intervals. The end time for a particular interval is
+!        C     determined as the time of the final data value prior in
+!        C      time to the next start time.
+!        C
+!              NINTS = MAXREC/2
+!              DO I = 1, NINTS
+!
+!                 STARTS(I) = SCLKDP(I*2 - 1)
+!
+!              END DO
+!
+!        C
+!        C     Set the segment boundaries equal to the first and last
+!        C     time for the data arrays.
+!        C
+!              BEGTIM = SCLKDP(1)
+!              ENDTIM = SCLKDP(MAXREC)
+!
+!        C
+!        C     This segment contains angular velocity.
+!        C
+!              AVFLAG = .TRUE.
+!
+!        C
+!        C     All information ready to write. Write to a CK type 3
+!        C     segment to the file indicated by HANDLE.
+!        C
+!              CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
+!             .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
+!             .             AVVS,   NINTS,  STARTS                )
+!
+!        C
+!        C     SAFELY close the file.
+!        C
+!              CALL CKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new CK file exists in the
+!        output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 02-JUL-2021 (JDR)
+!
+!        Changed the output argument name NAME to FNAME for consistency
+!        with other routines.
+!
+!        Edited the header to comply with NAIF standard. Added
+!        complete code example based on existing fragment.
+!
+!        Extended $Parameters section.
+!
+!-    SPICELIB Version 2.0.0, 09-NOV-2006 (NJB)
+!
+!        Routine has been upgraded to support comment
+!        area allocation using NCOMCH.
+!
+!-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     open a new CK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+!
+!     Local parameters
+!
+      character(*), parameter :: type = 'CK'
+!
+!     DAF ND and NI values for CK files.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+!
+!     Length of a DAF comment record, in characters.
+!
+      integer(ip), parameter :: mxcrec = 1000
+
+!
+!     Local variables
+!
+      integer(ip)           ncomr
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Compute the number of comment records that we want to allocate, if
+!     the number of comment characters requested is greater than zero,
+!     we always allocate an extra record to account for the end of line
+!     marks in the comment area.
+!
+      if ( ncomch > 0 ) then
+         ncomr = ( ncomch - 1 )/mxcrec + 1
+      else
+         ncomr = 0
+      end if
+
+!
+!     Just do it. All of the error handling is taken care of for us.
+!
+      call dafonw( ctx, fname, type, nd, ni, ifname, ncomr, handle )
+
+      if ( ctx%failed() ) then
+!
+!        If we failed, make sure that HANDLE does not contain a value
+!        that represents a valid DAF file handle.
+!
+         handle = 0
+
+      end if
+
+      return
+      end procedure ckopn
+
+!$Procedure CKW01 ( C-Kernel, write segment to C-kernel, data type 1 )
+
+      module procedure ckw01
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: vzerog
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Add a type 1 segment to a C-kernel.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!     SCLK
+!
+! $ Keywords
+!
+!     POINTING
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the CK file to which the segment will
+!              be written. The file must have been opened with write
+!              access.
+!
+!     BEGTIM   is the beginning encoded SCLK time of the segment. This
+!              value should be less than or equal to the first time in
+!              the segment.
+!
+!     ENDTIM   is the encoded SCLK time at which the segment ends.
+!              This value should be greater than or equal to the last
+!              time in the segment.
+!
+!     INST     is the NAIF integer ID code for the instrument.
+!
+!     REF      is a character string which specifies the
+!              reference frame of the segment. This should be one of
+!              the frames supported by the SPICELIB routine NAMFRM
+!              which is an entry point of FRAMEX.
+!
+!     AVFLAG   is a logical flag which indicates whether or not the
+!              segment will contain angular velocity.
+!
+!     SEGID    is the segment identifier.  A CK segment identifier may
+!              contain up to 40 characters.
+!
+!     NREC     is the number of pointing instances in the segment.
+!
+!     SCLKDP   are the encoded spacecraft clock times associated with
+!              each pointing instance. These times must be strictly
+!              increasing.
+!
+!     QUATS    is an array of SPICE-style quaternions representing a
+!              sequence of C-matrices. See the discussion of
+!              quaternion styles in $Particulars below.
+!
+!     AVVS     are the angular velocity vectors ( optional ).
+!
+!              If AVFLAG is .FALSE. then this array is ignored by the
+!              routine, however it still must be supplied as part of
+!              the calling sequence.
+!
+! $ Detailed_Output
+!
+!     None. See $Files section.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If HANDLE is not the handle of a C-kernel opened for writing,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If SEGID is more than 40 characters long, the error
+!         SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If the first encoded SCLK time is negative, the error
+!         SPICE(INVALIDSCLKTIME) is signaled.
+!
+!     5)  If the second encoded SCLK or any subsequent times, or if the
+!         encoded SCLK times are not strictly increasing, the error
+!         SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     6)  If BEGTIM is greater than SCLKDP(1) or ENDTIM is less than
+!         SCLKDP(NREC), the error SPICE(INVALIDDESCRTIME) is signaled.
+!
+!     7)  If the name of the reference frame is not one of those
+!         supported by the routine NAMFRM, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     8)  If NREC, the number of pointing records, is less than or
+!         equal to 0, the error SPICE(INVALIDNUMREC) is signaled.
+!
+!     9)  If any quaternion has magnitude zero, the error
+!         SPICE(ZEROQUATERNION) is signaled.
+!
+! $ Files
+!
+!     This routine adds a type 1 segment to a C-kernel. The C-kernel
+!     may be either a new one or an existing one opened for writing.
+!
+! $ Particulars
+!
+!     For a detailed description of a type 1 CK segment please see the
+!     CK Required Reading.
+!
+!     This routine relieves the user from performing the repetitive
+!     calls to the DAF routines necessary to construct a CK segment.
+!
+!     Quaternion Styles
+!     -----------------
+!
+!     There are different "styles" of quaternions used in
+!     science and engineering applications. Quaternion styles
+!     are characterized by
+!
+!     -  The order of quaternion elements
+!
+!     -  The quaternion multiplication formula
+!
+!     -  The convention for associating quaternions
+!        with rotation matrices
+!
+!     Two of the commonly used styles are
+!
+!        - "SPICE"
+!
+!           > Invented by Sir William Rowan Hamilton
+!           > Frequently used in mathematics and physics textbooks
+!
+!        - "Engineering"
+!
+!           > Widely used in aerospace engineering applications
+!
+!     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
+!     Quaternions of any other style must be converted to SPICE
+!     quaternions before they are passed to SPICELIB routines.
+!
+!     Relationship between SPICE and Engineering Quaternions
+!     ------------------------------------------------------
+!
+!     Let M be a rotation matrix such that for any vector V,
+!
+!        M*V
+!
+!     is the result of rotating V by theta radians in the
+!     counterclockwise direction about unit rotation axis vector A.
+!     Then the SPICE quaternions representing M are
+!
+!        (+/-) (  cos(theta/2),
+!                 sin(theta/2) A(1),
+!                 sin(theta/2) A(2),
+!                 sin(theta/2) A(3)  )
+!
+!     while the engineering quaternions representing M are
+!
+!        (+/-) ( -sin(theta/2) A(1),
+!                -sin(theta/2) A(2),
+!                -sin(theta/2) A(3),
+!                 cos(theta/2)       )
+!
+!     For both styles of quaternions, if a quaternion q represents
+!     a rotation matrix M, then -q represents M as well.
+!
+!     Given an engineering quaternion
+!
+!        QENG   = ( q0,  q1,  q2,  q3 )
+!
+!     the equivalent SPICE quaternion is
+!
+!        QSPICE = ( q3, -q0, -q1, -q2 )
+!
+!     Associating SPICE Quaternions with Rotation Matrices
+!     ----------------------------------------------------
+!
+!     Let FROM and TO be two right-handed reference frames, for
+!     example, an inertial frame and a spacecraft-fixed frame. Let the
+!     symbols
+!
+!        V    ,   V
+!         FROM     TO
+!
+!     denote, respectively, an arbitrary vector expressed relative to
+!     the FROM and TO frames. Let M denote the transformation matrix
+!     that transforms vectors from frame FROM to frame TO; then
+!
+!        V   =  M * V
+!         TO         FROM
+!
+!     where the expression on the right hand side represents left
+!     multiplication of the vector by the matrix.
+!
+!     Then if the unit-length SPICE quaternion q represents M, where
+!
+!        q = (q0, q1, q2, q3)
+!
+!     the elements of M are derived from the elements of q as follows:
+!
+!          .-                                                         -.
+!          |           2    2                                          |
+!          | 1 - 2*( q2 + q3 )   2*(q1*q2 - q0*q3)   2*(q1*q3 + q0*q2) |
+!          |                                                           |
+!          |                                                           |
+!          |                               2    2                      |
+!      M = | 2*(q1*q2 + q0*q3)   1 - 2*( q1 + q3 )   2*(q2*q3 - q0*q1) |
+!          |                                                           |
+!          |                                                           |
+!          |                                                   2    2  |
+!          | 2*(q1*q3 - q0*q2)   2*(q2*q3 + q0*q1)   1 - 2*( q1 + q2 ) |
+!          |                                                           |
+!          `-                                                         -'
+!
+!     Note that substituting the elements of -q for those of q in the
+!     right hand side leaves each element of M unchanged; this shows
+!     that if a quaternion q represents a matrix M, then so does the
+!     quaternion -q.
+!
+!     To map the rotation matrix M to a unit quaternion, we start by
+!     decomposing the rotation matrix as a sum of symmetric
+!     and skew-symmetric parts:
+!
+!                                        2
+!        M = [ I  +  (1-cos(theta)) OMEGA  ] + [ sin(theta) OMEGA ]
+!
+!                     symmetric                   skew-symmetric
+!
+!     OMEGA is a skew-symmetric matrix of the form
+!
+!                   .-             -.
+!                   |  0   -n3   n2 |
+!                   |               |
+!         OMEGA  =  |  n3   0   -n1 |
+!                   |               |
+!                   | -n2   n1   0  |
+!                   `-             -'
+!
+!     The vector N of matrix entries (n1, n2, n3) is the rotation axis
+!     of M and theta is M's rotation angle. Note that N and theta
+!     are not unique.
+!
+!     Let
+!
+!        C = cos(theta/2)
+!        S = sin(theta/2)
+!
+!     Then the unit quaternions Q corresponding to M are
+!
+!        Q = +/- ( C, S*n1, S*n2, S*n3 )
+!
+!     The mappings between quaternions and the corresponding rotations
+!     are carried out by the SPICELIB routines
+!
+!        Q2M {quaternion to matrix}
+!        M2Q {matrix to quaternion}
+!
+!     M2Q always returns a quaternion with scalar part greater than
+!     or equal to zero.
+!
+!     SPICE Quaternion Multiplication Formula
+!     ---------------------------------------
+!
+!     Given a SPICE quaternion
+!
+!        Q = ( q0, q1, q2, q3 )
+!
+!     corresponding to rotation axis A and angle theta as above, we can
+!     represent Q using "scalar + vector" notation as follows:
+!
+!        s =   q0           = cos(theta/2)
+!
+!        v = ( q1, q2, q3 ) = sin(theta/2) * A
+!
+!        Q = s + v
+!
+!     Let Q1 and Q2 be SPICE quaternions with respective scalar
+!     and vector parts s1, s2 and v1, v2:
+!
+!        Q1 = s1 + v1
+!        Q2 = s2 + v2
+!
+!     We represent the dot product of v1 and v2 by
+!
+!        <v1, v2>
+!
+!     and the cross product of v1 and v2 by
+!
+!        v1 x v2
+!
+!     Then the SPICE quaternion product is
+!
+!        Q1*Q2 = s1*s2 - <v1,v2>  + s1*v2 + s2*v1 + (v1 x v2)
+!
+!     If Q1 and Q2 represent the rotation matrices M1 and M2
+!     respectively, then the quaternion product
+!
+!        Q1*Q2
+!
+!     represents the matrix product
+!
+!        M1*M2
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following example creates a CK file with a type 1 segment
+!        from a series of pointing instances that represent a structure
+!        initially aligned with the J2000 frame, and which is rotating
+!        about the J2000 Z-axis. There will be one pointing instance
+!        per 10-tick interval.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKW01_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         CK1
+!              PARAMETER           ( CK1 = 'ckw01_ex1.bc' )
+!
+!              DOUBLE PRECISION      SPTICK
+!              PARAMETER           ( SPTICK = 0.001D0 )
+!
+!              INTEGER               INST
+!              PARAMETER           ( INST = -77701 )
+!
+!              INTEGER               MAXREC
+!              PARAMETER           ( MAXREC = 201 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    REF
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      AVVS   (   3,MAXREC )
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      ENDTIM
+!              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RWMAT  ( 3, 3 )
+!              DOUBLE PRECISION      SCLKDP (     MAXREC )
+!              DOUBLE PRECISION      SPACES
+!              DOUBLE PRECISION      STICKS
+!              DOUBLE PRECISION      THETA
+!              DOUBLE PRECISION      WMAT   ( 3, 3 )
+!              DOUBLE PRECISION      WQUAT  ( 0:3 )
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               NCOMCH
+!
+!              LOGICAL               AVFLAG
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     The base reference from for the rotation data.
+!        C
+!              REF = 'J2000'
+!
+!        C
+!        C     Time spacing in encoded ticks and in seconds
+!        C
+!              STICKS = 10.D0
+!              SPACES = STICKS * SPTICK
+!
+!        C
+!        C     Declare an angular rate in radians per sec.
+!        C
+!              RATE = 1.D-2
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              SEGID  = 'Test type 1 CK segment'
+!              IFNAME = 'Test CK type 1 segment created by CKW01'
+!
+!        C
+!        C     Open a new kernel.
+!        C
+!              CALL CKOPN ( CK1, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Create a 3x3 double precision identity matrix.
+!        C
+!              CALL IDENT ( WMAT )
+!
+!        C
+!        C     Convert the matrix to quaternion.
+!        C
+!              CALL M2Q ( WMAT, WQUAT )
+!
+!        C
+!        C     Copy the work quaternion to the first row of
+!        C     QUATS.
+!        C
+!              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+!
+!        C
+!        C     Create an angular velocity vector. This vector is in the
+!        C     REF reference frame.
+!        C
+!              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+!
+!        C
+!        C     Set the initial value of the encoded ticks.
+!        C
+!              SCLKDP(1) = 1000.D0
+!
+!        C
+!        C     Fill the rest of the AVVS and QUATS matrices
+!        C     with simple data.
+!        C
+!              DO I = 2, MAXREC
+!
+!        C
+!        C        Create the corresponding encoded tick value in
+!        C        increments of STICKS with an initial value of
+!        C        1000.0 ticks.
+!        C
+!                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+!
+!        C
+!        C        Create the transformation matrix for a rotation of
+!        C        THETA about the Z axis. Calculate THETA from the
+!        C        constant angular rate RATE at increments of SPACES.
+!        C
+!                 THETA = (I-1) * RATE * SPACES
+!                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+!
+!        C
+!        C        Convert the RWMAT matrix to SPICE type quaternion.
+!        C
+!                 CALL M2Q ( RWMAT, WQUAT )
+!
+!        C
+!        C        Store the quaternion in the QUATS matrix.
+!        C        Store angular velocity in AVVS.
+!        C
+!                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+!                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+!
+!              END DO
+!
+!        C
+!        C     This segment contains angular velocity.
+!        C
+!              AVFLAG = .TRUE.
+!
+!        C
+!        C     Set the segment boundaries equal to the first and last
+!        C     time for the data arrays.
+!        C
+!              BEGTIM = SCLKDP(1)
+!              ENDTIM = SCLKDP(MAXREC)
+!
+!        C
+!        C     All information ready to write. Write to a CK type 1
+!        C     segment to the file indicated by HANDLE.
+!        C
+!              CALL CKW01 ( HANDLE, BEGTIM, ENDTIM, INST,  REF, AVFLAG,
+!             .             SEGID,  MAXREC, SCLKDP, QUATS, AVVS       )
+!
+!        C
+!        C     SAFELY close the file.
+!        C
+!              CALL CKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new CK file exists in the
+!        output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.0.1, 13-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Created
+!        complete code example from existing fragment.
+!
+!        Updated $Exceptions entry #9 to reflect change implemented in
+!        version 3.0.0. Removed unnecessary $Revisions section.
+!
+!-    SPICELIB Version 3.0.0, 01-JUN-2010 (NJB)
+!
+!        The check for non-unit quaternions has been replaced
+!        with a check for zero-length quaternions.
+!
+!-    SPICELIB Version 2.2.0, 26-FEB-2008 (NJB)
+!
+!        Updated header; added information about SPICE
+!        quaternion conventions.
+!
+!        Minor typo in a long error message was corrected.
+!
+!-    SPICELIB Version 2.1.0, 22-FEB-1999 (WLT)
+!
+!        Added check to make sure that all quaternions are unit
+!        length to single precision.
+!
+!-    SPICELIB Version 2.0.0, 28-DEC-1993 (WLT)
+!
+!        The routine was upgraded to support non-inertial reference
+!        frames.
+!
+!-    SPICELIB Version 1.1.1, 05-SEP-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the CK
+!        file in the $Brief_I/O, $Detailed_Input, $Exceptions,
+!        $Files, and $Examples sections of the header. It is assumed
+!        that a person using this routine has some knowledge of the DAF
+!        system and the methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+!
+!        If the number of pointing records is not positive an error
+!        is now signaled.
+!
+!        FAILED is checked after the call to DAFBNA.
+!
+!        The variable HLDCLK was removed from the loop where the times
+!        were checked.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML) (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write CK type_1 pointing data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+!     SIDLEN    is the maximum number of characters allowed in a CK
+!               segment identifier.
+!
+!     NDC       is the size of a packed CK segment descriptor.
+!
+!     ND        is the number of double precision components in a CK
+!               segment descriptor.
+!
+!     NI        is the number of integer components in a CK segment
+!               descriptor.
+!
+!     DTYPE     is the data type of the segment that this routine
+!               operates on.
+!
+!     FPRINT    is the integer value of the first printable ASCII
+!               character.
+!
+!     LPRINT    is the integer value of the last printable ASCII
+!               character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ndc = 5
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 1
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Local variables
+!
+      real(wp)              dcd    ( nd    )
+      real(wp)              dirent
+      real(wp)              descr  ( ndc   )
+
+      integer(ip)           i
+      integer(ip)           icd    ( ni    )
+      integer(ip)           index
+      integer(ip)           ndir
+      integer(ip)           refcod
+      integer(ip)           value
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The first thing that we will do is create the segment descriptor.
+!
+!     The structure of the segment descriptor is as follows.
+!
+!           DCD( 1 ) and DCD( 2 ) -- SCLK limits of the segment.
+!           ICD( 1 )              -- Instrument code.
+!           ICD( 2 )              -- Reference frame ID.
+!           ICD( 3 )              -- Data type of the segment.
+!           ICD( 4 )              -- Angular rates flag.
+!           ICD( 5 )              -- Beginning address of segment.
+!           ICD( 6 )              -- Ending address of segment.
+!
+
+!
+!     Make sure that there is a positive number of pointing records.
+!
+      if ( nrec <= 0 ) then
+
+         call ctx%setmsg ( '# is an invalid number of pointing ' // &
+                       'instances for type 1.'                     )
+         call ctx%errint ( '#', nrec                                   )
+         call ctx%sigerr ( 'SPICE(INVALIDNUMREC)'                      )
+         return
+
+      end if
+
+!
+!     Check that the SCLK bounds on the segment are reasonable.
+!
+      if ( begtim > sclkdp(1) ) then
+
+         call ctx%setmsg ( 'The first d.p. component of the descriptor ' // &
+                       'is invalid. DCD(1) = # and SCLKDP(1) = # '    )
+         call ctx%errdp  ( '#', begtim               )
+         call ctx%errdp  ( '#', sclkdp(1)            )
+         call ctx%sigerr ( 'SPICE(INVALIDDESCRTIME)' )
+         return
+
+      end if
+
+      if ( endtim < sclkdp(nrec) ) then
+
+         call ctx%setmsg ( 'The second d.p. component of the descriptor ' // &
+                       'is invalid. DCD(2) = # and SCLKDP(NREC) = # '  )
+         call ctx%errdp  ( '#', endtim               )
+         call ctx%errdp  ( '#', sclkdp(nrec)         )
+         call ctx%sigerr ( 'SPICE(INVALIDDESCRTIME)' )
+         return
+
+      end if
+
+      dcd( 1 ) = begtim
+      dcd( 2 ) = endtim
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, ref, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', ref                                    )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Assign values to the integer components of the segment descriptor.
+!
+      icd ( 1 ) = inst
+      icd ( 2 ) = refcod
+      icd ( 3 ) = dtype
+
+      if ( avflag ) then
+         icd ( 4 ) = 1
+      else
+         icd ( 4 ) = 0
+      end if
+
+!
+!     Now pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Check that all the characters in the segid can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Also check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that the encoded SCLK times are positive and strictly
+!     increasing.
+!
+!     Check that the first time is nonnegative.
+!
+      if ( sclkdp(1) < 0.0_wp ) then
+
+         call ctx%setmsg ( 'The first SCLKDP time: # is negative.' )
+         call ctx%errdp  ( '#', sclkdp(1)                          )
+         call ctx%sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
+         return
+
+      end if
+
+!
+!     Now check that the times are ordered properly.
+!
+      do i = 2, nrec
+
+         if ( sclkdp(i) <= sclkdp(i-1) )  then
+
+            call ctx%setmsg ( 'The SCLKDP times are not strictly '      // &
+                          'increasing. SCLKDP(#) = # and SCLKDP(#) '// &
+                          '= #.'                                )
+            call ctx%errint ( '#', i                                )
+            call ctx%errdp  ( '#', sclkdp(i)                        )
+            call ctx%errint ( '#', i-1                              )
+            call ctx%errdp  ( '#', sclkdp(i-1)                      )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the quaternions are non-zero. This is just
+!     a check for uninitialized data.
+!
+      do i = 1, nrec
+
+         if (  vzerog( quats(0,i), 4 )  ) then
+
+            call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
+            //            'zero.'                                    )
+            call ctx%errint ( '#', i                                     )
+            call ctx%sigerr ( 'SPICE(ZEROQUATERNION)'                    )
+            return
+
+         end if
+
+      end do
+
+!
+!     No more checks, begin writing the segment.
+!
+
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Now add the quaternions and optionally, the angular velocity
+!     vectors.
+!
+      if ( avflag )  then
+
+         do i = 1, nrec
+            call dafada ( ctx, quats(0,i), 4 )
+            call dafada ( ctx, avvs (1,i), 3 )
+         end do
+
+      else
+
+         do i = 1, nrec
+            call dafada ( ctx, quats(0,i), 4 )
+         end do
+
+      end if
+
+!
+!     Add the SCLK times.
+!
+      call dafada ( ctx, sclkdp, nrec )
+
+!
+!     The time tag directory.  The Ith element is defined to be the
+!     average of the (I*100)th and the (I*100+1)st SCLK time.
+!
+      ndir  =  ( nrec - 1 ) / 100
+
+      index = 100
+
+      do i = 1, ndir
+         dirent   =  ( sclkdp(index) + sclkdp(index+1) ) / 2.0_wp
+         call dafada ( ctx, [ dirent ], 1 )
+         index    =    index + 100
+      end do
+
+!
+!     Finally, the number of records.
+!
+      call dafada ( ctx, [ real(nrec, wp) ], 1 )
+
+!
+!     End the segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure ckw01
+
+!$Procedure CKW02 ( C-Kernel, write segment to C-kernel, data type 2 )
+
+      module procedure ckw02
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: vzerog
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 2 segment to a C-kernel.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!     SCLK
+!
+! $ Keywords
+!
+!     POINTING
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the CK file to which the segment will
+!              be written. The file must have been opened with write
+!              access.
+!
+!     BEGTIM   is the beginning encoded SCLK time of the segment. This
+!              value should be less than or equal to the first START
+!              time in the segment.
+!
+!     ENDTIM   is the encoded SCLK time at which the segment ends.
+!              This value should be greater than or equal to the last
+!              STOP time in the segment.
+!
+!     INST     is the NAIF integer ID code for the instrument.
+!
+!     REF      is a character string that specifies the
+!              reference frame of the segment. This should be one of
+!              the frames supported by the SPICELIB routine NAMFRM
+!              which is an entry point to FRAMEX.
+!
+!     SEGID    is the segment identifier. A CK segment identifier may
+!              contain up to 40 characters.
+!
+!     NREC     is the number of pointing intervals that will be
+!              written to the segment.
+!
+!     START    are the start times of each interval in encoded
+!              spacecraft clock. These times must be strictly
+!              increasing.
+!
+!     STOP     are the stop times of each interval in encoded
+!              spacecraft clock. These times must be greater than
+!              the START times that they correspond to but less
+!              than or equal to the START time of the next interval.
+!
+!     QUATS    is an array of SPICE-style quaternions representing
+!              the C-matrices associated with the start times of each
+!              interval. See the discussion of quaternion styles in
+!              $Particulars below.
+!
+!     AVVS     are the angular velocity vectors for each interval.
+!
+!     RATES    are the number of seconds per encoded spacecraft clock
+!              tick for each interval.
+!
+!              In most applications this value will be the same for
+!              each interval within a segment. For example, when
+!              constructing a predict C-kernel for Mars Observer, the
+!              rate would be 1/256 for each interval since this is
+!              the smallest time unit expressible by the MO clock. The
+!              nominal seconds per tick rates for Galileo and Voyager
+!              are 1/120 and 0.06 respectively.
+!
+! $ Detailed_Output
+!
+!     None. See $Files section.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If HANDLE is not the handle of a C-kernel opened for writing,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If SEGID is more than 40 characters long, the error
+!         SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If the first START time is negative, the error
+!         SPICE(INVALIDSCLKTIME) is signaled.
+!
+!     5)  If the second or any subsequent START times are negative, the
+!         error SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     6)  If any of the STOP times are negative, the error
+!         SPICE(DEGENERATEINTERVAL) is signaled.
+!
+!     7)  If the STOP time of any of the intervals is less than or equal
+!         to the START time, the error SPICE(DEGENERATEINTERVAL) is
+!         signaled.
+!
+!     8)  If the START times are not strictly increasing, the
+!         error SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     9)  If the STOP time of one interval is greater than the START
+!         time of the next interval, the error SPICE(BADSTOPTIME)
+!         is signaled.
+!
+!     10) If BEGTIM is greater than START(1) or ENDTIM is less than
+!         STOP(NREC), the error SPICE(INVALIDDESCRTIME) is
+!         signaled.
+!
+!     11) If the name of the reference frame is not one of those
+!         supported by the routine NAMFRM, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     12) If NREC, the number of pointing records, is less than or
+!         equal to 0, the error SPICE(INVALIDNUMRECS) is signaled.
+!
+!     13) If any quaternion has magnitude zero, the error
+!         SPICE(ZEROQUATERNION) is signaled.
+!
+! $ Files
+!
+!     This routine adds a type 2 segment to a C-kernel. The C-kernel
+!     may be either a new one or an existing one opened for writing.
+!
+! $ Particulars
+!
+!     For a detailed description of a type 2 CK segment please see the
+!     CK Required Reading.
+!
+!     This routine relieves the user from performing the repetitive
+!     calls to the DAF routines necessary to construct a CK segment.
+!
+!     Quaternion Styles
+!     -----------------
+!
+!     There are different "styles" of quaternions used in
+!     science and engineering applications. Quaternion styles
+!     are characterized by
+!
+!     -  The order of quaternion elements
+!
+!     -  The quaternion multiplication formula
+!
+!     -  The convention for associating quaternions
+!        with rotation matrices
+!
+!     Two of the commonly used styles are
+!
+!        - "SPICE"
+!
+!           > Invented by Sir William Rowan Hamilton
+!           > Frequently used in mathematics and physics textbooks
+!
+!        - "Engineering"
+!
+!           > Widely used in aerospace engineering applications
+!
+!     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
+!     Quaternions of any other style must be converted to SPICE
+!     quaternions before they are passed to SPICELIB routines.
+!
+!     Relationship between SPICE and Engineering Quaternions
+!     ------------------------------------------------------
+!
+!     Let M be a rotation matrix such that for any vector V,
+!
+!        M*V
+!
+!     is the result of rotating V by theta radians in the
+!     counterclockwise direction about unit rotation axis vector A.
+!     Then the SPICE quaternions representing M are
+!
+!        (+/-) (  cos(theta/2),
+!                 sin(theta/2) A(1),
+!                 sin(theta/2) A(2),
+!                 sin(theta/2) A(3)  )
+!
+!     while the engineering quaternions representing M are
+!
+!        (+/-) ( -sin(theta/2) A(1),
+!                -sin(theta/2) A(2),
+!                -sin(theta/2) A(3),
+!                 cos(theta/2)       )
+!
+!     For both styles of quaternions, if a quaternion q represents
+!     a rotation matrix M, then -q represents M as well.
+!
+!     Given an engineering quaternion
+!
+!        QENG   = ( q0,  q1,  q2,  q3 )
+!
+!     the equivalent SPICE quaternion is
+!
+!        QSPICE = ( q3, -q0, -q1, -q2 )
+!
+!     Associating SPICE Quaternions with Rotation Matrices
+!     ----------------------------------------------------
+!
+!     Let FROM and TO be two right-handed reference frames, for
+!     example, an inertial frame and a spacecraft-fixed frame. Let the
+!     symbols
+!
+!        V    ,   V
+!         FROM     TO
+!
+!     denote, respectively, an arbitrary vector expressed relative to
+!     the FROM and TO frames. Let M denote the transformation matrix
+!     that transforms vectors from frame FROM to frame TO; then
+!
+!        V   =  M * V
+!         TO         FROM
+!
+!     where the expression on the right hand side represents left
+!     multiplication of the vector by the matrix.
+!
+!     Then if the unit-length SPICE quaternion q represents M, where
+!
+!        q = (q0, q1, q2, q3)
+!
+!     the elements of M are derived from the elements of q as follows:
+!
+!          .-                                                         -.
+!          |           2    2                                          |
+!          | 1 - 2*( q2 + q3 )   2*(q1*q2 - q0*q3)   2*(q1*q3 + q0*q2) |
+!          |                                                           |
+!          |                                                           |
+!          |                               2    2                      |
+!      M = | 2*(q1*q2 + q0*q3)   1 - 2*( q1 + q3 )   2*(q2*q3 - q0*q1) |
+!          |                                                           |
+!          |                                                           |
+!          |                                                   2    2  |
+!          | 2*(q1*q3 - q0*q2)   2*(q2*q3 + q0*q1)   1 - 2*( q1 + q2 ) |
+!          |                                                           |
+!          `-                                                         -'
+!
+!     Note that substituting the elements of -q for those of q in the
+!     right hand side leaves each element of M unchanged; this shows
+!     that if a quaternion q represents a matrix M, then so does the
+!     quaternion -q.
+!
+!     To map the rotation matrix M to a unit quaternion, we start by
+!     decomposing the rotation matrix as a sum of symmetric
+!     and skew-symmetric parts:
+!
+!                                        2
+!        M = [ I  +  (1-cos(theta)) OMEGA  ] + [ sin(theta) OMEGA ]
+!
+!                     symmetric                   skew-symmetric
+!
+!     OMEGA is a skew-symmetric matrix of the form
+!
+!                   .-             -.
+!                   |  0   -n3   n2 |
+!                   |               |
+!         OMEGA  =  |  n3   0   -n1 |
+!                   |               |
+!                   | -n2   n1   0  |
+!                   `-             -'
+!
+!     The vector N of matrix entries (n1, n2, n3) is the rotation axis
+!     of M and theta is M's rotation angle. Note that N and theta
+!     are not unique.
+!
+!     Let
+!
+!        C = cos(theta/2)
+!        S = sin(theta/2)
+!
+!     Then the unit quaternions Q corresponding to M are
+!
+!        Q = +/- ( C, S*n1, S*n2, S*n3 )
+!
+!     The mappings between quaternions and the corresponding rotations
+!     are carried out by the SPICELIB routines
+!
+!        Q2M {quaternion to matrix}
+!        M2Q {matrix to quaternion}
+!
+!     M2Q always returns a quaternion with scalar part greater than
+!     or equal to zero.
+!
+!     SPICE Quaternion Multiplication Formula
+!     ---------------------------------------
+!
+!     Given a SPICE quaternion
+!
+!        Q = ( q0, q1, q2, q3 )
+!
+!     corresponding to rotation axis A and angle theta as above, we can
+!     represent Q using "scalar + vector" notation as follows:
+!
+!        s =   q0           = cos(theta/2)
+!
+!        v = ( q1, q2, q3 ) = sin(theta/2) * A
+!
+!        Q = s + v
+!
+!     Let Q1 and Q2 be SPICE quaternions with respective scalar
+!     and vector parts s1, s2 and v1, v2:
+!
+!        Q1 = s1 + v1
+!        Q2 = s2 + v2
+!
+!     We represent the dot product of v1 and v2 by
+!
+!        <v1, v2>
+!
+!     and the cross product of v1 and v2 by
+!
+!        v1 x v2
+!
+!     Then the SPICE quaternion product is
+!
+!        Q1*Q2 = s1*s2 - <v1,v2>  + s1*v2 + s2*v1 + (v1 x v2)
+!
+!     If Q1 and Q2 represent the rotation matrices M1 and M2
+!     respectively, then the quaternion product
+!
+!        Q1*Q2
+!
+!     represents the matrix product
+!
+!        M1*M2
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following example creates a CK file with a type-2 segment,
+!        with data for a simple time dependent rotation and angular
+!        velocity.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKW02_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         CK2
+!              PARAMETER           ( CK2 = 'ckw02_ex1.bc' )
+!
+!              DOUBLE PRECISION      SPTICK
+!              PARAMETER           ( SPTICK = 0.001D0 )
+!
+!              INTEGER               INST
+!              PARAMETER           ( INST = -77702 )
+!
+!              INTEGER               MAXREC
+!              PARAMETER           ( MAXREC = 21 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    REF
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      AVVS   (   3,MAXREC )
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      ENDTIM
+!              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RATES  (     MAXREC )
+!              DOUBLE PRECISION      RWMAT  ( 3, 3 )
+!              DOUBLE PRECISION      SPACES
+!              DOUBLE PRECISION      STARTS (     MAXREC )
+!              DOUBLE PRECISION      STOPS  (     MAXREC )
+!              DOUBLE PRECISION      STICKS
+!              DOUBLE PRECISION      THETA
+!              DOUBLE PRECISION      WMAT   ( 3, 3 )
+!              DOUBLE PRECISION      WQUAT  ( 0:3 )
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     The base reference from for the rotation data.
+!        C
+!              REF = 'J2000'
+!
+!        C
+!        C     Time spacing in encoded ticks and in seconds
+!        C
+!              STICKS = 10.D0
+!              SPACES = STICKS * SPTICK
+!
+!        C
+!        C     Declare an angular rate in radians per sec.
+!        C
+!              RATE = 1.D-2
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              SEGID  = 'Test type 2 CK segment'
+!              IFNAME = 'Test CK type 2 segment created by CKW02'
+!
+!        C
+!        C     Open a new kernel.
+!        C
+!              CALL CKOPN ( CK2, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Create a 3x3 double precision identity matrix.
+!        C
+!              CALL IDENT ( WMAT )
+!
+!        C
+!        C     Convert the matrix to quaternion.
+!        C
+!              CALL M2Q ( WMAT, WQUAT )
+!
+!        C
+!        C     Copy the work quaternion to the first row of
+!        C     QUATS.
+!        C
+!              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+!
+!        C
+!        C     Create an angular velocity vector. This vector is in the
+!        C     REF reference frame and indicates a constant rotation
+!        C     about the Z axis.
+!        C
+!              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+!
+!        C
+!        C     Set the initial value of the encoded ticks. The interval
+!        C     associated with each quaternion will start at the epoch
+!        C     of the quaternion and will extend 0.8 * STICKS forward in
+!        C     time, leaving small gaps between the intervals.
+!        C
+!        C     The clock rates array will have a constant SPTICK value.
+!        C
+!              STARTS(1) = 1000.D0
+!              STOPS(1)  = STARTS(1) + ( 0.8D0 * STICKS )
+!              RATES(1)  = SPTICK
+!
+!        C
+!        C     Fill the rest of the AVVS and QUATS matrices
+!        C     with simple data.
+!        C
+!              DO I = 2, MAXREC
+!
+!        C
+!        C        Create the corresponding encoded tick value in
+!        C        increments of STICKS with an initial value of
+!        C        1000.0 ticks.
+!        C
+!                 STARTS(I) = 1000.D0 + (I-1) * STICKS
+!                 STOPS(I)  = STARTS(I) + ( 0.8D0 * STICKS )
+!                 RATES(I)  = SPTICK
+!
+!        C
+!        C        Create the transformation matrix for a rotation of
+!        C        THETA about the Z axis. Calculate THETA from the
+!        C        constant angular rate RATE at increments of SPACES.
+!        C
+!                 THETA = (I-1) * RATE * SPACES
+!                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+!
+!        C
+!        C        Convert the RWMAT matrix to SPICE type quaternion.
+!        C
+!                 CALL M2Q ( RWMAT, WQUAT )
+!
+!        C
+!        C        Store the quaternion in the QUATS matrix.
+!        C        Store angular velocity in AVVS.
+!        C
+!                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+!                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+!
+!              END DO
+!
+!        C
+!        C     Set the segment boundaries equal to the first and last
+!        C     time for the data arrays.
+!        C
+!              BEGTIM = STARTS(1)
+!              ENDTIM = STOPS(MAXREC)
+!
+!        C
+!        C     All information ready to write. Write to a CK type 2
+!        C     segment to the file indicated by HANDLE.
+!        C
+!              CALL CKW02 ( HANDLE, BEGTIM, ENDTIM, INST,  REF,
+!             .             SEGID,  MAXREC, STARTS, STOPS, QUATS,
+!             .             AVVS,   RATES                       )
+!
+!        C
+!        C     SAFELY close the file.
+!        C
+!              CALL CKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new CK file exists in the
+!        output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.0.1, 26-MAY-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Created
+!        complete code example from existing fragment.
+!
+!        Updated Exception #12 to describe the actual check and error
+!        produced by this routine.
+!
+!-    SPICELIB Version 3.0.0, 01-JUN-2010 (NJB)
+!
+!        The check for non-unit quaternions has been replaced
+!        with a check for zero-length quaternions.
+!
+!-    SPICELIB Version 2.2.0, 26-FEB-2008 (NJB)
+!
+!        Updated header; added information about SPICE
+!        quaternion conventions.
+!
+!        Minor typo in a long error message was corrected.
+!
+!-    SPICELIB Version 2.1.0, 22-FEB-1999 (WLT)
+!
+!        Added check to make sure that all quaternions are unit
+!        length to single precision.
+!
+!-    SPICELIB Version 2.0.0, 28-DEC-1993 (WLT)
+!
+!        The routine was upgraded to support non-inertial reference
+!        frames.
+!
+!-    SPICELIB Version 1.1.1, 05-SEP-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the CK
+!        file in the $Brief_I/O, $Detailed_Input, $Exceptions,
+!        $Files, and $Examples sections of the header. It is assumed
+!        that a person using this routine has some knowledge of the DAF
+!        system and the methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+!
+!        1) If the number of pointing records is not positive an error
+!           is now signaled.
+!
+!        2) FAILED is checked after the call to DAFBNA.
+!
+!        3) The variables HLDBEG and HLDEND were removed from the loop
+!           where the interval start and stop times are tested.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write CK type_2 pointing data segment
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.1.0, 22-FEB-1999 (WLT)
+!
+!        Added check to make sure that all quaternions are unit
+!        length to single precision.
+!
+!-    SPICELIB Version 1.1.1, 05-SEP-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the CK
+!        file in the $Brief_I/O, $Detailed_Input, $Exceptions,
+!        $Files, and $Examples sections of the header. It is assumed
+!        that a person using this routine has some knowledge of the DAF
+!        system and the methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+!
+!        1) If the number of pointing records is not positive an error
+!           is now signaled.
+!
+!        2) FAILED is checked after the call to DAFBNA.
+!
+!        3) The variables HLDBEG and HLDEND were removed from the loop
+!           where the interval start and stop times are tested.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+!     SIDLEN   is the maximum number of characters allowed in a CK
+!              segment identifier.
+!
+!     NDC      is the size of a packed CK segment descriptor.
+!
+!     ND       is the number of double precision components in a CK
+!              segment descriptor.
+!
+!     NI       is the number of integer components in a CK segment
+!              descriptor.
+!
+!     DTYPE    is the data type of the segment that this routine
+!              operates on.
+!
+!     FPRINT   is the integer value of the first printable ASCII
+!              character.
+!
+!     LPRINT   is the integer value of the last printable ASCII
+!              character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ndc = 5
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 2
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Local variables
+!
+      real(wp)              dcd    ( nd    )
+      real(wp)              dirent
+      real(wp)              descr  ( ndc   )
+
+      integer(ip)           i
+      integer(ip)           icd    ( ni    )
+      integer(ip)           index
+      integer(ip)           ndir
+      integer(ip)           refcod
+      integer(ip)           value
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The first thing that we will do is create the segment descriptor.
+!
+!     The structure of the segment descriptor is as follows.
+!
+!           DCD( 1 ) and DCD( 2 ) -- SCLK limits of the segment.
+!           ICD( 1 )              -- Instrument code.
+!           ICD( 2 )              -- Reference frame ID.
+!           ICD( 3 )              -- Data type of the segment.
+!           ICD( 4 )              -- Angular rates flag.
+!           ICD( 5 )              -- Beginning address of the segment.
+!           ICD( 6 )              -- Ending address of the segment.
+!
+
+!
+!     Make sure that there is a positive number of pointing records.
+!
+      if ( nrec <= 0 ) then
+
+         call ctx%setmsg ( '# is an invalid number of pointing ' // &
+                       'instances for type 2.'                     )
+         call ctx%errint ( '#', nrec                                   )
+         call ctx%sigerr ( 'SPICE(INVALIDNUMREC)'                      )
+         return
+
+      end if
+
+!
+!     Check that the SCLK bounds on the segment are reasonable.
+!
+      if ( begtim > start(1) ) then
+
+         call ctx%setmsg ( 'The first d.p. component of the descriptor ' // &
+                       'is invalid.  DCD(1) = # and START(1) = # '    )
+         call ctx%errdp  ( '#', begtim               )
+         call ctx%errdp  ( '#', start(1)             )
+         call ctx%sigerr ( 'SPICE(INVALIDDESCRTIME)' )
+         return
+
+      end if
+
+      if ( endtim < stop(nrec) ) then
+
+         call ctx%setmsg ( 'The second d.p. component of the descriptor ' // &
+                       'is invalid.  DCD(2) = # and STOP(NREC) = # '   )
+         call ctx%errdp  ( '#', endtim               )
+         call ctx%errdp  ( '#', stop(nrec)           )
+         call ctx%sigerr ( 'SPICE(INVALIDDESCRTIME)' )
+         return
+
+      end if
+
+      dcd( 1 ) = begtim
+      dcd( 2 ) = endtim
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, ref, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', ref                                    )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Assign values to the integer components of the segment descriptor.
+!     By definition data type two must have angular velocity.
+!
+      icd ( 1 ) = inst
+      icd ( 2 ) = refcod
+      icd ( 3 ) = dtype
+      icd ( 4 ) = 1
+
+!
+!     Now pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Now check that all the characters in the segid can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Also check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that the START and STOP times on the intervals
+!     make sense. Three checks will be performed on each interval:
+!
+!        1)  Check that the STOP time is greater than the START time.
+!
+!        2)  Check that the START times are strictly increasing.
+!
+!        3)  Check that the START time is greater than or equal to the
+!            STOP time from the previous interval.
+!
+!     For the first interval also make sure that the START time is
+!     nonnegative.
+!
+      if ( start(1) < 0.0_wp ) then
+
+         call ctx%setmsg ( 'The first START time: # is negative.'  )
+         call ctx%errdp  ( '#', start(1)                           )
+         call ctx%sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
+         return
+
+      end if
+
+      if ( stop(1) <= start(1) ) then
+
+         call ctx%setmsg ( 'The STOP time is less than or equal to the '  // &
+                       'START time for interval number 1. START time '// &
+                       'is # and STOP time is #.'                      )
+         call ctx%errdp  ( '#', start(1)               )
+         call ctx%errdp  ( '#', stop (1)               )
+         call ctx%sigerr ( 'SPICE(DEGENERATEINTERVAL)' )
+         return
+
+      end if
+
+      do i = 2, nrec
+
+         if ( stop(i) <= start(i) ) then
+
+            call ctx%setmsg ( 'The STOP time is less than or equal to '  // &
+                          'the START time for interval number #. '   // &
+                          'START time is # and STOP time is #.'       )
+            call ctx%errint ( '#', i                                      )
+            call ctx%errdp  ( '#', start(i)                               )
+            call ctx%errdp  ( '#', stop (i)                               )
+            call ctx%sigerr ( 'SPICE(DEGENERATEINTERVAL)'                 )
+            return
+
+         end if
+
+         if ( start(i) <= start(i-1) )  then
+
+            call ctx%setmsg ( 'The START times are not strictly '      // &
+                          'increasing.  START(#) = # and START(#) '// &
+                          '= #.'                                )
+            call ctx%errint ( '#', i                                )
+            call ctx%errdp  ( '#', start(i)                         )
+            call ctx%errint ( '#', i-1                              )
+            call ctx%errdp  ( '#', start(i-1)                       )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            return
+
+         end if
+
+         if ( stop(i-1) > start(i) )  then
+
+            call ctx%setmsg ( 'The STOP time for interval # is greater ' // &
+                          'than the following START time. STOP(#) = '// &
+                          '# and START(#) = #.'                       )
+            call ctx%errint ( '#', i-1                                    )
+            call ctx%errint ( '#', i-1                                    )
+            call ctx%errdp  ( '#', stop(i-1)                              )
+            call ctx%errint ( '#', i                                      )
+            call ctx%errdp  ( '#', start(i)                               )
+            call ctx%sigerr ( 'SPICE(BADSTOPTIME)'                        )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the quaternions are non-zero. This is just
+!     a check for uninitialized data.
+!
+      do i = 1, nrec
+
+         if (  vzerog( quats(0,i), 4 )  ) then
+
+            call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
+            //            'zero.'                                    )
+            call ctx%errint ( '#', i                                     )
+            call ctx%sigerr ( 'SPICE(ZEROQUATERNION)'                    )
+            return
+
+         end if
+
+      end do
+
+!
+!     No more checks, begin writing the segment.
+!
+
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Now add the quaternions, angular velocity vectors, and time
+!     conversion factors for each interval.
+!
+      do i = 1, nrec
+         call dafada ( ctx, quats(0,i), 4 )
+         call dafada ( ctx, avvs (1,i), 3 )
+         call dafada ( ctx, rates(i),   1 )
+      end do
+
+!
+!     The SCLK start times.
+!
+      call dafada ( ctx, start, nrec )
+!
+!     The SCLK stop times.
+!
+      call dafada ( ctx, stop, nrec )
+
+!
+!     The time tag directory.  The Ith element is defined to be the
+!     average of the (I*100)th STOP time and the (I*100+1)th START time.
+!
+      ndir  =  ( nrec - 1 ) / 100
+
+      index = 100
+
+      do i = 1, ndir
+         dirent   =  ( stop(index) + start(index+1) ) / 2.0_wp
+         call dafada ( ctx, [ dirent ], 1 )
+         index    =    index + 100
+      end do
+
+!
+!     End the segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure ckw02
+
+!$Procedure CKW03 ( C-Kernel, write segment to C-kernel, data type 3 )
+
+      module procedure ckw03
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: vzerog
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Add a type 3 segment to a C-kernel.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!     ROTATION
+!     SCLK
+!
+! $ Keywords
+!
+!     POINTING
+!     UTILITY
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the CK file to which the segment will
+!              be written. The file must have been opened with write
+!              access.
+!
+!     BEGTIM,
+!     ENDTIM   are the beginning and ending encoded SCLK times for
+!              which the segment provides pointing information.
+!              BEGTIM must be less than or equal to the SCLK time
+!              associated with the first pointing instance in the
+!              segment, and ENDTIM must be greater than or equal to
+!              the time associated with the last pointing instance
+!              in the segment.
+!
+!     INST     is the NAIF integer ID code for the instrument that
+!              this segment will contain pointing information for.
+!
+!     REF      is a character string which specifies the inertial
+!              reference frame of the segment.
+!
+!              The rotation matrices represented by the quaternions
+!              that are to be written to the segment transform the
+!              components of vectors from the inertial reference frame
+!              specified by REF to components in the instrument fixed
+!              frame. Also, the components of the angular velocity
+!              vectors to be written to the segment should be given
+!              with respect to REF.
+!
+!              REF should be the name of one of the frames supported
+!              by the SPICELIB routine FRAMEX.
+!
+!     AVFLAG   is a logical flag which indicates whether or not the
+!              segment will contain angular velocity.
+!
+!     SEGID    is the segment identifier. A CK segment identifier may
+!              contain up to 40 printable characters and spaces.
+!
+!     NREC     is the number of pointing instances in the segment.
+!
+!     SCLKDP   are the encoded spacecraft clock times associated with
+!              each pointing instance. These times must be strictly
+!              increasing.
+!
+!     QUATS    is an array of SPICE-style quaternions representing
+!              a sequence of C-matrices. See the discussion of
+!              quaternion styles in $Particulars below.
+!
+!              The C-matrix represented by the Ith quaternion in
+!              QUATS is a rotation matrix that transforms the
+!              components of a vector expressed in the inertial
+!              frame specified by REF to components expressed in
+!              the instrument fixed frame at the time SCLKDP(I).
+!
+!              Thus, if a vector V has components x, y, z in the
+!              inertial frame, then V has components x', y', z' in
+!              the instrument fixed frame where:
+!
+!                   [ x' ]     [          ] [ x ]
+!                   | y' |  =  |   CMAT   | | y |
+!                   [ z' ]     [          ] [ z ]
+!
+!     AVVS     are the angular velocity vectors ( optional ).
+!
+!              The Ith vector in AVVS gives the angular velocity of
+!              the instrument fixed frame at time SCLKDP(I). The
+!              components of the angular velocity vectors should
+!              be given with respect to the inertial reference frame
+!              specified by REF.
+!
+!              The direction of an angular velocity vector gives
+!              the right-handed axis about which the instrument fixed
+!              reference frame is rotating. The magnitude of the
+!              vector is the magnitude of the instantaneous velocity
+!              of the rotation, in radians per second.
+!
+!              If AVFLAG is .FALSE. then this array is ignored by the
+!              routine; however it still must be supplied as part of
+!              the calling sequence.
+!
+!     NINTS    is the number of intervals that the pointing instances
+!              are partitioned into.
+!
+!     STARTS   are the start times of each of the interpolation
+!              intervals. These times must be strictly increasing
+!              and must coincide with times for which the segment
+!              contains pointing.
+!
+! $ Detailed_Output
+!
+!     None. See $Files section.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If HANDLE is not the handle of a C-kernel opened for writing,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If SEGID is more than 40 characters long, the error
+!         SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any non-printable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If the first encoded SCLK time is negative, the error
+!         SPICE(INVALIDSCLKTIME) is signaled.
+!
+!     5)  If the second encoded SCLK or any subsequent times, or if the
+!         encoded SCLK times are not strictly increasing, the error
+!         SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     6)  If BEGTIM is greater than SCLKDP(1) or ENDTIM is less than
+!         SCLKDP(NREC), the error SPICE(INVALIDDESCRTIME) is signaled.
+!
+!     7)  If the name of the reference frame is not one of those
+!         supported by the SPICELIB routine NAMFRM, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     8)  If NREC, the number of pointing records, is less than or equal
+!         to 0, the error SPICE(INVALIDNUMREC) is signaled.
+!
+!     9)  If NINTS, the number of interpolation intervals, is less than
+!         or equal to 0, the error SPICE(INVALIDNUMINT) is signaled.
+!
+!     10) If the encoded SCLK interval start times are not strictly
+!         increasing, the error SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     11) If an interval start time does not coincide with a time for
+!         which there is an actual pointing instance in the segment, the
+!         error SPICE(INVALIDSTARTTIME) is signaled.
+!
+!     12) This routine assumes that the rotation between adjacent
+!         quaternions that are stored in the same interval has a
+!         rotation angle of THETA radians, where
+!
+!            0  <=  THETA  <  pi.
+!
+!         The routines that evaluate the data in the segment produced
+!         by this routine cannot distinguish between rotations of THETA
+!         radians, where THETA is in the interval [0, pi), and
+!         rotations of
+!
+!            THETA   +   2 * k * pi
+!
+!         radians, where k is any integer. These `large' rotations
+!         will yield invalid results when interpolated. You must
+!         ensure that the data stored in the segment will not be
+!         subject to this sort of ambiguity.
+!
+!     13) If any quaternion has magnitude zero, the error
+!         SPICE(ZEROQUATERNION) is signaled.
+!
+!     14) If the start time of the first interval and the time of the
+!         first pointing instance are not the same, the error
+!         SPICE(TIMESDONTMATCH) is signaled.
+!
+! $ Files
+!
+!     This routine adds a type 3 segment to a C-kernel. The C-kernel
+!     may be either a new one or an existing one opened for writing.
+!
+! $ Particulars
+!
+!     For a detailed description of a type 3 CK segment please see the
+!     CK Required Reading.
+!
+!     This routine relieves the user from performing the repetitive
+!     calls to the DAF routines necessary to construct a CK segment.
+!
+!     Quaternion Styles
+!     -----------------
+!
+!     There are different "styles" of quaternions used in
+!     science and engineering applications. Quaternion styles
+!     are characterized by
+!
+!     -  The order of quaternion elements
+!
+!     -  The quaternion multiplication formula
+!
+!     -  The convention for associating quaternions
+!        with rotation matrices
+!
+!     Two of the commonly used styles are
+!
+!        - "SPICE"
+!
+!           > Invented by Sir William Rowan Hamilton
+!           > Frequently used in mathematics and physics textbooks
+!
+!        - "Engineering"
+!
+!           > Widely used in aerospace engineering applications
+!
+!     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
+!     Quaternions of any other style must be converted to SPICE
+!     quaternions before they are passed to SPICELIB routines.
+!
+!     Relationship between SPICE and Engineering Quaternions
+!     ------------------------------------------------------
+!
+!     Let M be a rotation matrix such that for any vector V,
+!
+!        M*V
+!
+!     is the result of rotating V by theta radians in the
+!     counterclockwise direction about unit rotation axis vector A.
+!     Then the SPICE quaternions representing M are
+!
+!        (+/-) (  cos(theta/2),
+!                 sin(theta/2) A(1),
+!                 sin(theta/2) A(2),
+!                 sin(theta/2) A(3)  )
+!
+!     while the engineering quaternions representing M are
+!
+!        (+/-) ( -sin(theta/2) A(1),
+!                -sin(theta/2) A(2),
+!                -sin(theta/2) A(3),
+!                 cos(theta/2)       )
+!
+!     For both styles of quaternions, if a quaternion q represents
+!     a rotation matrix M, then -q represents M as well.
+!
+!     Given an engineering quaternion
+!
+!        QENG   = ( q0,  q1,  q2,  q3 )
+!
+!     the equivalent SPICE quaternion is
+!
+!        QSPICE = ( q3, -q0, -q1, -q2 )
+!
+!     Associating SPICE Quaternions with Rotation Matrices
+!     ----------------------------------------------------
+!
+!     Let FROM and TO be two right-handed reference frames, for
+!     example, an inertial frame and a spacecraft-fixed frame. Let the
+!     symbols
+!
+!        V    ,   V
+!         FROM     TO
+!
+!     denote, respectively, an arbitrary vector expressed relative to
+!     the FROM and TO frames. Let M denote the transformation matrix
+!     that transforms vectors from frame FROM to frame TO; then
+!
+!        V   =  M * V
+!         TO         FROM
+!
+!     where the expression on the right hand side represents left
+!     multiplication of the vector by the matrix.
+!
+!     Then if the unit-length SPICE quaternion q represents M, where
+!
+!        q = (q0, q1, q2, q3)
+!
+!     the elements of M are derived from the elements of q as follows:
+!
+!          .-                                                         -.
+!          |           2    2                                          |
+!          | 1 - 2*( q2 + q3 )   2*(q1*q2 - q0*q3)   2*(q1*q3 + q0*q2) |
+!          |                                                           |
+!          |                                                           |
+!          |                               2    2                      |
+!      M = | 2*(q1*q2 + q0*q3)   1 - 2*( q1 + q3 )   2*(q2*q3 - q0*q1) |
+!          |                                                           |
+!          |                                                           |
+!          |                                                   2    2  |
+!          | 2*(q1*q3 - q0*q2)   2*(q2*q3 + q0*q1)   1 - 2*( q1 + q2 ) |
+!          |                                                           |
+!          `-                                                         -'
+!
+!     Note that substituting the elements of -q for those of q in the
+!     right hand side leaves each element of M unchanged; this shows
+!     that if a quaternion q represents a matrix M, then so does the
+!     quaternion -q.
+!
+!     To map the rotation matrix M to a unit quaternion, we start by
+!     decomposing the rotation matrix as a sum of symmetric
+!     and skew-symmetric parts:
+!
+!                                        2
+!        M = [ I  +  (1-cos(theta)) OMEGA  ] + [ sin(theta) OMEGA ]
+!
+!                     symmetric                   skew-symmetric
+!
+!     OMEGA is a skew-symmetric matrix of the form
+!
+!                   .-             -.
+!                   |  0   -n3   n2 |
+!                   |               |
+!         OMEGA  =  |  n3   0   -n1 |
+!                   |               |
+!                   | -n2   n1   0  |
+!                   `-             -'
+!
+!     The vector N of matrix entries (n1, n2, n3) is the rotation axis
+!     of M and theta is M's rotation angle. Note that N and theta
+!     are not unique.
+!
+!     Let
+!
+!        C = cos(theta/2)
+!        S = sin(theta/2)
+!
+!     Then the unit quaternions Q corresponding to M are
+!
+!        Q = +/- ( C, S*n1, S*n2, S*n3 )
+!
+!     The mappings between quaternions and the corresponding rotations
+!     are carried out by the SPICELIB routines
+!
+!        Q2M {quaternion to matrix}
+!        M2Q {matrix to quaternion}
+!
+!     M2Q always returns a quaternion with scalar part greater than
+!     or equal to zero.
+!
+!     SPICE Quaternion Multiplication Formula
+!     ---------------------------------------
+!
+!     Given a SPICE quaternion
+!
+!        Q = ( q0, q1, q2, q3 )
+!
+!     corresponding to rotation axis A and angle theta as above, we can
+!     represent Q using "scalar + vector" notation as follows:
+!
+!        s =   q0           = cos(theta/2)
+!
+!        v = ( q1, q2, q3 ) = sin(theta/2) * A
+!
+!        Q = s + v
+!
+!     Let Q1 and Q2 be SPICE quaternions with respective scalar
+!     and vector parts s1, s2 and v1, v2:
+!
+!        Q1 = s1 + v1
+!        Q2 = s2 + v2
+!
+!     We represent the dot product of v1 and v2 by
+!
+!        <v1, v2>
+!
+!     and the cross product of v1 and v2 by
+!
+!        v1 x v2
+!
+!     Then the SPICE quaternion product is
+!
+!        Q1*Q2 = s1*s2 - <v1,v2>  + s1*v2 + s2*v1 + (v1 x v2)
+!
+!     If Q1 and Q2 represent the rotation matrices M1 and M2
+!     respectively, then the quaternion product
+!
+!        Q1*Q2
+!
+!     represents the matrix product
+!
+!        M1*M2
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Create a CK type 3 segment; fill with data for a simple time
+!        dependent rotation and angular velocity.
+!
+!        Example code begins here.
+!
+!              PROGRAM CKW03_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         CK3
+!              PARAMETER           ( CK3 = 'ckw03_ex1.bc' )
+!
+!              DOUBLE PRECISION      SPTICK
+!              PARAMETER           ( SPTICK = 0.001D0 )
+!
+!              INTEGER               INST
+!              PARAMETER           ( INST = -77703 )
+!
+!              INTEGER               MAXREC
+!              PARAMETER           ( MAXREC = 201 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    REF
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      AVVS   (   3,MAXREC )
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      ENDTIM
+!              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+!              DOUBLE PRECISION      RATE
+!              DOUBLE PRECISION      RWMAT  ( 3, 3 )
+!              DOUBLE PRECISION      SPACES
+!              DOUBLE PRECISION      SCLKDP (     MAXREC )
+!              DOUBLE PRECISION      STARTS (    MAXREC/2)
+!              DOUBLE PRECISION      STICKS
+!              DOUBLE PRECISION      THETA
+!              DOUBLE PRECISION      WMAT   ( 3, 3 )
+!              DOUBLE PRECISION      WQUAT  ( 0:3 )
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               NCOMCH
+!              INTEGER               NINTS
+!
+!              LOGICAL               AVFLAG
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, but it reserves room for 5000 characters.
+!        C
+!              NCOMCH = 5000
+!
+!        C
+!        C     The base reference from for the rotation data.
+!        C
+!              REF = 'J2000'
+!
+!        C
+!        C     Time spacing in encoded ticks and in seconds
+!        C
+!              STICKS = 10.D0
+!              SPACES = STICKS * SPTICK
+!
+!        C
+!        C     Declare an angular rate in radians per sec.
+!        C
+!              RATE = 1.D-2
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              SEGID  = 'Test type 3 CK segment'
+!              IFNAME = 'Test CK type 3 segment created by CKW03'
+!
+!        C
+!        C     Open a new kernel.
+!        C
+!              CALL CKOPN ( CK3, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Create a 3x3 double precision identity matrix.
+!        C
+!              CALL IDENT ( WMAT )
+!
+!        C
+!        C     Convert the matrix to quaternion.
+!        C
+!              CALL M2Q ( WMAT, WQUAT )
+!
+!        C
+!        C     Copy the work quaternion to the first row of
+!        C     QUATS.
+!        C
+!              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+!
+!        C
+!        C     Create an angular velocity vector. This vector is in the
+!        C     REF reference frame and indicates a constant rotation
+!        C     about the Z axis.
+!        C
+!              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+!
+!        C
+!        C     Set the initial value of the encoded ticks.
+!        C
+!              SCLKDP(1) = 1000.D0
+!
+!        C
+!        C     Fill the rest of the AVVS and QUATS matrices
+!        C     with simple data.
+!        C
+!              DO I = 2, MAXREC
+!
+!        C
+!        C        Create the corresponding encoded tick value in
+!        C        increments of STICKS with an initial value of
+!        C        1000.0 ticks.
+!        C
+!                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+!
+!        C
+!        C        Create the transformation matrix for a rotation of
+!        C        THETA about the Z axis. Calculate THETA from the
+!        C        constant angular rate RATE at increments of SPACES.
+!        C
+!                 THETA = (I-1) * RATE * SPACES
+!                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+!
+!        C
+!        C        Convert the RWMAT matrix to SPICE type quaternion.
+!        C
+!                 CALL M2Q ( RWMAT, WQUAT )
+!
+!        C
+!        C        Store the quaternion in the QUATS matrix.
+!        C        Store angular velocity in AVVS.
+!        C
+!                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+!                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+!
+!              END DO
+!
+!        C
+!        C     Create an array start times for the interpolation
+!        C     intervals. The end time for a particular interval is
+!        C     determined as the time of the final data value prior in
+!        C      time to the next start time.
+!        C
+!              NINTS = MAXREC/2
+!              DO I = 1, NINTS
+!
+!                 STARTS(I) = SCLKDP(I*2 - 1)
+!
+!              END DO
+!
+!        C
+!        C     Set the segment boundaries equal to the first and last
+!        C     time for the data arrays.
+!        C
+!              BEGTIM = SCLKDP(1)
+!              ENDTIM = SCLKDP(MAXREC)
+!
+!        C
+!        C     This segment contains angular velocity.
+!        C
+!              AVFLAG = .TRUE.
+!
+!        C
+!        C     All information ready to write. Write to a CK type 3
+!        C     segment to the file indicated by HANDLE.
+!        C
+!              CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
+!             .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
+!             .             AVVS,   NINTS,  STARTS                )
+!
+!        C
+!        C     SAFELY close the file.
+!        C
+!              CALL CKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new CK file exists in the
+!        output directory.
+!
+! $ Restrictions
+!
+!     1)  The creator of the segment is given the responsibility for
+!         determining whether it is reasonable to interpolate between
+!         two given pointing values.
+!
+!     2)  This routine assumes that the rotation between adjacent
+!         quaternions that are stored in the same interval has a
+!         rotation angle of THETA radians, where
+!
+!             0  <=  THETA  <  pi.
+!
+!         The routines that evaluate the data in the segment produced
+!         by this routine cannot distinguish between rotations of THETA
+!         radians, where THETA is in the interval [0, pi), and
+!         rotations of
+!
+!             THETA   +   2 * k * pi
+!
+!         radians, where k is any integer. These "large" rotations will
+!         yield invalid results when interpolated. You must ensure that
+!         the data stored in the segment will not be subject to this
+!         sort of ambiguity.
+!
+!     3)  All pointing instances in the segment must belong to one and
+!         only one of the intervals.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.0.1, 08-JUL-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Removed
+!        unnecessary $Revisions section. Changed, in $Exceptions
+!        entry #7, reference to FRAMEX by NAMFRM.
+!
+!        Created complete code example from existing fragment.
+!
+!-    SPICELIB Version 3.0.0, 01-JUN-2010 (NJB)
+!
+!        The check for non-unit quaternions has been replaced
+!        with a check for zero-length quaternions.
+!
+!-    SPICELIB Version 2.3.0, 26-FEB-2008 (NJB)
+!
+!        Updated header; added information about SPICE
+!        quaternion conventions.
+!
+!        Minor typo in a long error message was corrected.
+!
+!-    SPICELIB Version 2.2.0, 26-SEP-2005 (BVS)
+!
+!        Added check to ensure that the start time of the first
+!        interval is the same as the time of the first pointing
+!        instance.
+!
+!-    SPICELIB Version 2.1.0, 22-FEB-1999 (WLT)
+!
+!        Added check to make sure that all quaternions are unit
+!        length to single precision.
+!
+!-    SPICELIB Version 2.0.0, 28-DEC-1993 (WLT)
+!
+!        The routine was upgraded to support non-inertial reference
+!        frames.
+!
+!-    SPICELIB Version 1.1.1, 05-SEP-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the CK
+!        file in the $Brief_I/O, $Detailed_Input, $Exceptions,
+!        $Files, and $Examples sections of the header. It is assumed
+!        that a person using this routine has some knowledge of the DAF
+!        system and the methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write CK type_3 pointing data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+!     SIDLEN   is the maximum number of characters allowed in a CK
+!              segment identifier.
+!
+!     NDC      is the size of a packed CK segment descriptor.
+!
+!     ND       is the number of double precision components in a CK
+!              segment descriptor.
+!
+!     NI       is the number of integer components in a CK segment
+!              descriptor.
+!
+!     DTYPE    is the data type of the segment that this routine
+!              operates on.
+!
+!     FPRINT   is the integer value of the first printable ASCII
+!              character.
+!
+!     LPRINT   is the integer value of the last printable ASCII
+!              character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ndc = 5
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 3
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Local variables
+!
+      real(wp)              dcd    ( nd    )
+      real(wp)              descr  ( ndc   )
+
+      integer(ip)           i
+      integer(ip)           icd    ( ni    )
+      integer(ip)           index
+      integer(ip)           nrdir
+      integer(ip)           nidir
+      integer(ip)           refcod
+      integer(ip)           value
+
+      logical               match
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The first thing that we will do is create the segment descriptor.
+!
+!     The structure of the segment descriptor is as follows.
+!
+!           DCD( 1 ) and DCD( 2 ) -- SCLK limits of the segment.
+!           ICD( 1 )              -- Instrument code.
+!           ICD( 2 )              -- Reference frame ID.
+!           ICD( 3 )              -- Data type of the segment.
+!           ICD( 4 )              -- Angular rates flag.
+!           ICD( 5 )              -- Beginning address of segment.
+!           ICD( 6 )              -- Ending address of segment.
+!
+
+!
+!     Make sure that there is a positive number of pointing records.
+!
+      if ( nrec <= 0 ) then
+
+         call ctx%setmsg ( '# is an invalid number of pointing ' // &
+                       'instances for type 3.'                     )
+         call ctx%errint ( '#', nrec                                   )
+         call ctx%sigerr ( 'SPICE(INVALIDNUMREC)'                      )
+         return
+
+      end if
+
+!
+!     Make sure that there is a positive number of interpolation
+!     intervals.
+!
+      if ( nints <= 0 ) then
+
+         call ctx%setmsg ( '# is an invalid number of interpolation ' // &
+                       'intervals for type 3.'                     )
+         call ctx%errint ( '#', nints                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDNUMINT)'                      )
+         return
+
+      end if
+
+!
+!     Check that the SCLK bounds on the segment are reasonable.
+!
+      if ( begtim > sclkdp(1) ) then
+
+         call ctx%setmsg ( 'The segment begin time is greater than the ' // &
+                       'time associated with the first pointing '    // &
+                       'instance in the segment. DCD(1) = # and '    // &
+                       'SCLKDP(1) = # '                               )
+
+         call ctx%errdp  ( '#', begtim                                    )
+         call ctx%errdp  ( '#', sclkdp(1)                                 )
+         call ctx%sigerr ( 'SPICE(INVALIDDESCRTIME)'                      )
+         return
+
+      end if
+
+      if ( endtim < sclkdp(nrec) ) then
+
+         call ctx%setmsg ( 'The segment end time is less than the time '  // &
+                       'associated with the last pointing instance '  // &
+                       'in the segment. DCD(2) = # and SCLKDP(#) = #'  )
+
+         call ctx%errdp  ( '#', endtim               )
+         call ctx%errint ( '#', nrec                 )
+         call ctx%errdp  ( '#', sclkdp(nrec)         )
+         call ctx%sigerr ( 'SPICE(INVALIDDESCRTIME)' )
+         return
+
+      end if
+
+      dcd( 1 ) = begtim
+      dcd( 2 ) = endtim
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, ref, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', ref                                    )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Assign values to the integer components of the segment descriptor.
+!
+      icd ( 1 ) = inst
+      icd ( 2 ) = refcod
+      icd ( 3 ) = dtype
+
+      if ( avflag ) then
+         icd ( 4 ) = 1
+      else
+         icd ( 4 ) = 0
+      end if
+
+!
+!     Now pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Check that all the characters in the segid can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Also check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that the encoded SCLK times are positive and strictly
+!     increasing.
+!
+!     Check that the first time is nonnegative.
+!
+      if ( sclkdp(1) < 0.0_wp ) then
+
+         call ctx%setmsg ( 'The first SCLKDP time: # is negative.' )
+         call ctx%errdp  ( '#', sclkdp(1)                          )
+         call ctx%sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
+         return
+
+      end if
+
+!
+!     Now check that the times are ordered properly.
+!
+      do i = 2, nrec
+
+         if ( sclkdp(i) <= sclkdp(i-1) )  then
+
+            call ctx%setmsg ( 'The SCLKDP times are not strictly '      // &
+                          'increasing. SCLKDP(#) = # and SCLKDP(#) '// &
+                          '= #.'                                )
+            call ctx%errint ( '#', i                                )
+            call ctx%errdp  ( '#', sclkdp(i)                        )
+            call ctx%errint ( '#', i-1                              )
+            call ctx%errdp  ( '#', sclkdp(i-1)                      )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Now check that the start time of the first interval is the
+!     same as the time of the first pointing instance.
+!
+      if ( sclkdp(1) /= starts(1) ) then
+
+         call ctx%setmsg ( 'The start time of the first interval # ' // &
+                       'and the time of the first pointing '     // &
+                       'instance # are not the same.'          )
+         call ctx%errdp  ( '#', starts(1)                          )
+         call ctx%errdp  ( '#', sclkdp(1)                          )
+         call ctx%sigerr ( 'SPICE(TIMESDONTMATCH)'                 )
+         return
+
+      end if
+
+!
+!     Now check that the interval start times are ordered properly.
+!
+      do i = 2, nints
+
+         if ( starts(i) <= starts(i-1) )  then
+
+            call ctx%setmsg ( 'The interval start times are not strictly '// &
+                          'increasing. STARTS(#) = # and STARTS(#) '  // &
+                          '= #.'                                )
+            call ctx%errint ( '#', i                                )
+            call ctx%errdp  ( '#', starts(i)                        )
+            call ctx%errint ( '#', i-1                              )
+            call ctx%errdp  ( '#', starts(i-1)                      )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Now make sure that all of the interval start times coincide with
+!     one of the times associated with the actual pointing.
+!
+
+      index = 0
+
+      do i = 1, nints
+
+         match = .false.
+
+         do while ( ( .not. match ) .and. ( index < nrec ) )
+
+            index = index + 1
+
+            match = ( starts(i) == sclkdp(index) )
+
+         end do
+
+         if ( .not. match ) then
+
+            call ctx%setmsg ( 'Interval start time number # is invalid. '// &
+                          'STARTS(#) = *'                             )
+            call ctx%errint ( '#', i                                      )
+            call ctx%errint ( '#', i                                      )
+            call ctx%errdp  ( '*', starts(i)                              )
+            call ctx%sigerr ( 'SPICE(INVALIDSTARTTIME)'                   )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the quaternions are non-zero. This is just
+!     a check for uninitialized data.
+!
+      do i = 1, nrec
+
+         if (  vzerog( quats(0,i), 4 )  ) then
+
+            call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
+            //            'zero.'                                    )
+            call ctx%errint ( '#', i                                     )
+            call ctx%sigerr ( 'SPICE(ZEROQUATERNION)'                    )
+            return
+
+         end if
+
+      end do
+
+!
+!     No more checks, begin writing the segment.
+!
+
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Now add the quaternions and optionally, the angular velocity
+!     vectors.
+!
+      if ( avflag )  then
+
+         do i = 1, nrec
+            call dafada ( ctx, quats(0,i), 4 )
+            call dafada ( ctx, avvs (1,i), 3 )
+         end do
+
+      else
+
+         call dafada ( ctx, quats, 4*nrec )
+
+      end if
+
+!
+!     Add the SCLK times.
+!
+      call dafada ( ctx, sclkdp, nrec )
+
+!
+!     The time tag directory.  The Ith element is defined to be the
+!     (I*100)th SCLK time.
+!
+      nrdir  =  ( nrec - 1 ) / 100
+
+      index = 100
+
+      do i = 1, nrdir
+
+         call dafada ( ctx, sclkdp(index), 1 )
+
+         index    =    index + 100
+
+      end do
+
+!
+!     Now add the interval start times.
+!
+      call dafada ( ctx, starts, nints )
+
+!
+!     And the directory of interval start times.  The directory of
+!     start times will simply be every 100th start time.
+!
+      nidir  =   ( nints - 1 )  / 100
+
+      index = 100
+
+      do i = 1, nidir
+
+         call dafada ( ctx, starts(index), 1 )
+
+         index    =    index + 100
+
+      end do
+
+!
+!     Finally, the number of intervals and records.
+!
+      call dafada ( ctx, [ real(nints, wp) ], 1 )
+      call dafada ( ctx, [ real(nrec, wp) ], 1 )
+
+!
+!     End the segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure ckw03
+
+!$Procedure CKW04B ( CK type 04: Begin a segment )
+
+      module procedure ckw04b
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Begin a type CK04 segment in the DAF file associated with
+!     HANDLE. See also CKW04A and CKW04E.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+      include               'sgparam.inc'
+      include               'ckparam.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of a CK file that has been
+!              opened for writing.
+!
+!     SEGID    is the segment identifier. CK segment identifier
+!              may contain up to 40 printing ASCII characters.
+!
+!     INST     is the SPICE ID for the SC structure or instrument
+!              whose orientation are to be recorded in a CK file.
+!
+!     AVFLAG   is a logical flag that indicates whether segment will
+!              contain angular rate information.
+!
+!     REF      is the name of a reference frame that pointing is
+!              given with respect to, for example 'J2000'.
+!
+!     BEGTIM   is the encoded SCLK time for the start of the segment
+!              coverage.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The input data is used to create the segment summary for the
+!     segment being started in the DAF file associated with HANDLE.
+!
+!     See the $Particulars section for details about the structure of a
+!     type 4 CK segment.
+!
+! $ Parameters
+!
+!     This subroutine makes use of parameters defined in the files
+!     'sgparam.inc' and 'ckparam.inc'.
+!
+! $ Exceptions
+!
+!     1)  If a file access error occurs while this routine begins a new
+!         type 04 segment, the error is signaled by a routine in the
+!         call tree of this routine.
+!
+!     2)  If numeric ID for given reference frame cannot be resolved
+!         from it's name, the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     3)  If SEGID is more than 40 characters long, the error
+!         SPICE(SEGIDTOOLONG) is signaled.
+!
+!     4)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+! $ Files
+!
+!     See HANDLE in the $Detailed_Input section.
+!
+! $ Particulars
+!
+!     This routine begins writing a type 4 CK segment to the open DAF
+!     file that is associated with HANDLE. The file must have been
+!     opened with write access.
+!
+!     This routine is one of a set of three routines for creating and
+!     adding data to type 4 CK segments. These routines are:
+!
+!        CKW04B: Begin a type 4 CK segment. This routine must be
+!                called before any data may be added to a type 4
+!                segment.
+!
+!        CKW04A: Add data to a type 4 CK segment. This routine may be
+!                called any number of times after a call to CKW04B to
+!                add type 4 records to the CK segment that was
+!                started.
+!
+!        CKW04E: End a type 4 CK segment. This routine is called to
+!                make the type 4 segment a permanent addition to the
+!                DAF file. Once this routine is called, no further type
+!                4 records may be added to the segment. A new segment
+!                must be started.
+!
+!     A type 4 CK segment consists of coefficient sets for variable
+!     order Chebyshev polynomials over consecutive time intervals of
+!     a variable length. The gaps between intervals are allowed.
+!     The Chebyshev polynomials represent individual quaternion
+!     components q0, q1, q2 and q3 and individual angular velocities
+!     AV1, AV2 and AV3 if they are included with the data.
+!
+!     The pointing data supplied to the type 4 CK writer (CKW04A)
+!     is packed into an array as a sequence of records,
+!
+!        ----------------------------------------------------
+!        | Record 1 | Record 2 | .. | Record N-1 | Record N |
+!        ----------------------------------------------------
+!
+!     with each record in data packets has the following format.
+!
+!        ----------------------------------------------------
+!        | The midpoint of the approximation interval       |
+!        ----------------------------------------------------
+!        | The radius of the approximation interval         |
+!        ----------------------------------------------------
+!        | Number of coefficients for q0                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q1                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q2                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q3                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV1                   |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV2                   |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV3                   |
+!        ----------------------------------------------------
+!        | q0 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q1 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q2 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q3 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | AV1 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!        | AV2 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!        | AV3 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!
+! $ Examples
+!
+!     Assume that we have:
+!
+!        HANDLE   is the handle of an CK file opened with write
+!                 access.
+!
+!        SEGID    is a character string of no more than 40 characters
+!                 which provides a pedigree for the data in the CK
+!                 segment we will create.
+!
+!        INST     is the SPICE ID code for the instrument whose
+!                 pointing data is to be placed into the file.
+!
+!        AVFLAG   angular rates flag.
+!
+!        REFFRM   is the name of the SPICE reference frame for the
+!                 pointing data.
+!
+!        BEGTIM   is the starting encoded SCLK time for which the
+!                 segment is valid.
+!
+!        ENDTIM   is the ending encoded SCLK time for which the segment
+!                 is valid.
+!
+!        N        is the number of type 4 records that we want to
+!                 put into a segment in an CK file.
+!
+!        NPKTS    is integer array which contains the lengths of
+!                 variable size data packets
+!
+!        RECRDS   contains N type 4 records packaged for the CK
+!                 file.
+!
+!        SCSTRT   contains the initial encoded SC time for each of
+!                 the records contained in RECRDS, where
+!
+!                    SCSTRT(I) < SCSTRT(I+1), I = 1, N-1
+!
+!                    SCSTRT(1) <= FIRST, SCSTRT(N) < LAST
+!
+!     Then the following code fragment demonstrates how to create
+!     a type 4 CK segment if all of the data for the segment is
+!     available at one time.
+!
+!     C
+!     C     Begin the segment.
+!     C
+!           CALL CKW04B ( HANDLE, BEGTIM, INST, REF, AVFLAG, SEGID )
+!     C
+!     C     Add the data to the segment all at once.
+!     C
+!           CALL CKW04A ( HANDLE, N, NPKTS, RECRDS, SCSTRT )
+!     C
+!     C     End the segment, making the segment a permanent
+!     C     addition to the CK file.
+!     C
+!           CALL CKW04E ( HANDLE, ENDTIM )
+!
+! $ Restrictions
+!
+!     1)  The file containing the segment should be opened for read
+!         or write access either by CKOPN or DAFOPW.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     Y.K. Zaiko         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 17-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 18-APR-2014 (BVS)
+!
+!        Minor header edits.
+!
+!-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     begin writing a type_4 CK segment
+!
+!-&
+
+!
+!     Spicelib functions
+!
+
+!
+!     Local Parameters
+!
+
+!
+!     DAF ND and NI values for CK files and length of a DAF descriptor.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: ndescr = nd + ( ni + 1 ) / 2
+
+!
+!     The number of generic segment constants in a type 4 CK segment.
+!
+      integer(ip), parameter :: nconst = 0
+
+!
+!     The integer codes of the first and last printable ASCII
+!     characters.
+!
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     The maximum number of characters allowed in a CK segment
+!     identifier.
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     Local variables
+!
+      real(wp)              dcd    ( nd )
+      real(wp)              dcoeff
+      real(wp)              descr  ( ndescr )
+
+      integer(ip)           i
+      integer(ip)           icd    ( ni )
+      integer(ip)           refcod
+      integer(ip)           value
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Create a descriptor for the segment we are about to write. First
+!     assign start and stop times.
+!
+      dcd( 1 ) = begtim
+      dcd( 2 ) = 0.0_wp
+
+!
+!     Second, resolve reference frame ID code from its name and
+!     assign it to the corresponding descriptor component. Signal
+!     an error if frame is not recognized.
+!
+      call namfrm ( ctx, ref, refcod )
+
+      if ( refcod == 0 ) then
+         call ctx%setmsg ( 'The reference frame # is not supported.' )
+         call ctx%errch  ( '#', ref                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
+         return
+      end if
+
+      icd ( 2 ) = refcod
+
+!
+!     Third, assign values to the rest of the integer components of
+!     the segment descriptor.
+!
+      icd ( 1 ) = inst
+      icd ( 3 ) = ck4dtp
+
+      if ( avflag ) then
+         icd ( 4 ) = 1
+      else
+         icd ( 4 ) = 0
+      end if
+
+!
+!     Now pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Check that all characters in the SEGID are printable.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '      // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Also check if the segment identifier is too long.
+!
+      if ( lastnb( segid ) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than '   // &
+                       '40 characters.'                           )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                      )
+         return
+
+      end if
+
+!
+!     We've got a valid descriptor and identifier and can begin
+!     the segment. For this data type, we want to use an explicit
+!     reference value index where the reference epochs are in
+!     increasing order. We also want the index returned for a
+!     particular request epoch to be the index of the greatest
+!     reference epoch less than or equal to the request epoch. These
+!     characteristics are prescribed by the mnemonic EXPLE. See the
+!     include file 'sgparam.inc' for more details.
+!
+      call sgbwvs ( ctx, handle, descr, segid, nconst, [ dcoeff ], exple )
+
+!
+!     No need to check FAILED() here, since all we do after this
+!     point is checking out.
+!
+
+      return
+
+      end procedure ckw04b
+
+!$Procedure CKW04E ( CK type 04: End a segment )
+
+      module procedure ckw04e
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     End the type 04 CK segment currently being written to the DAF
+!     file associated with HANDLE. See also CKW04B and CKW04E.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an CK file that has been
+!              opened for writing, and to which a type 4 CK segment
+!              is being written.
+!
+!     ENDTIM   is the encoded SCLK time for the end of the segment
+!              coverage.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The type 04 segment in the DAF file associated with HANDLE will be
+!     ended, making the addition of the data to the file permanent.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If an error occurs while reading or writing the file
+!         indicated by HANDLE, the error is signaled by a routine in
+!         the call tree of this routine.
+!
+! $ Files
+!
+!     See the argument HANDLE.
+!
+! $ Particulars
+!
+!     This routine ends a type 4 CK segment which is being written to
+!     the DAF file associated with HANDLE. Ending the DAF segment is a
+!     necessary step in the process of making the data a permanent part
+!     of the DAF file.
+!
+!     This routine is one of a set of three routines for creating and
+!     adding data to type 4 CK segments. These routines are:
+!
+!        CKW04B: Begin a type 4 CK segment. This routine must be
+!                called before any data may be added to a type 4
+!                segment.
+!
+!        CKW04A: Add data to a type 4 CK segment. This routine may be
+!                called any number of times after a call to CKW04B to
+!                add type 4 records to the CK segment that was
+!                started.
+!
+!        CKW04E: End a type 4 CK segment. This routine is called to
+!                make the type 4 segment a permanent addition to the
+!                DAF file. Once this routine is called, no further type
+!                4 records may be added to the segment. A new segment
+!                must be started.
+!
+!     A type 4 CK segment consists of coefficient sets for variable
+!     order Chebyshev polynomials over consecutive time intervals of
+!     a variable length. The gaps between intervals are allowed.
+!     The Chebyshev polynomials represent individual quaternion
+!     components q0, q1, q2 and q3 and individual angular velocities
+!     AV1, AV2 and AV3 if they are included with the data.
+!
+!     The pointing data supplied to the type 4 CK writer (CKW04A)
+!     is packed into an array as a sequence of records,
+!
+!        ----------------------------------------------------
+!        | Record 1 | Record 2 | .. | Record N-1 | Record N |
+!        ----------------------------------------------------
+!
+!     with each record in data packets has the following format.
+!
+!        ----------------------------------------------------
+!        | The midpoint of the approximation interval       |
+!        ----------------------------------------------------
+!        | The radius of the approximation interval         |
+!        ----------------------------------------------------
+!        | Number of coefficients for q0                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q1                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q2                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q3                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV1                   |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV2                   |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV3                   |
+!        ----------------------------------------------------
+!        | q0 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q1 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q2 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q3 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | AV1 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!        | AV2 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!        | AV3 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!
+! $ Examples
+!
+!     Assume that we have:
+!
+!        HANDLE   is the handle of an CK file opened with write
+!                 access.
+!
+!        SEGID    is a character string of no more than 40 characters
+!                 which provides a pedigree for the data in the CK
+!                 segment we will create.
+!
+!        INST     is the SPICE ID code for the instrument whose
+!                 pointing data is to be placed into the file.
+!
+!        AVFLAG   angular rates flag.
+!
+!        REFFRM   is the name of the SPICE reference frame for the
+!                 pointing data.
+!
+!        BEGTIM   is the starting encoded SCLK time for which the
+!                 segment is valid.
+!
+!        ENDTIM   is the ending encoded SCLK time for which the segment
+!                 is valid.
+!
+!        N        is the number of type 4 records that we want to
+!                 put into a segment in an CK file.
+!
+!        NPKTS    is integer array which contains the lengths of
+!                 variable size data packets
+!
+!        RECRDS   contains N type 4 records packaged for the CK
+!                 file.
+!
+!        SCSTRT   contains the initial encoded SC time for each of
+!                 the records contained in RECRDS, where
+!
+!                    SCSTRT(I) < SCSTRT(I+1), I = 1, N-1
+!
+!                    SCSTRT(1) <= FIRST, SCSTRT(N) < LAST
+!
+!     Then the following code fragment demonstrates how to create
+!     a type 4 CK segment if all of the data for the segment is
+!     available at one time.
+!
+!     C
+!     C     Begin the segment.
+!     C
+!           CALL CKW04B ( HANDLE, BEGTIM, INST, REF, AVFLAG, SEGID )
+!     C
+!     C     Add the data to the segment all at once.
+!     C
+!           CALL CKW04A ( HANDLE, N, NPKTS, RECRDS, SCSTRT )
+!     C
+!     C     End the segment, making the segment a permanent
+!     C     addition to the CK file.
+!     C
+!           CALL CKW04E ( HANDLE, ENDTIM )
+!
+! $ Restrictions
+!
+!     1)  The type 4 CK segment being closed must have been started by
+!         the routine CKW04B, the routine which begins a type 4 CK
+!         segment.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     Y.K. Zaiko         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 02-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 18-APR-2014 (BVS)
+!
+!        Minor header edits.
+!
+!-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     end a type_4 CK segment
+!
+!-&
+
+!
+!     SPICELIB functions.
+!
+
+!
+!     Local parameters.
+!
+
+!
+!     DAF ND and NI values for CK files and length of a DAF descriptor.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: ndescr = nd + ( ni + 1 ) / 2
+
+!
+!     Local variables.
+!
+      real(wp)              dcd    ( nd )
+      real(wp)              descr  ( ndescr )
+
+      integer(ip)           icd    ( ni )
+
+      logical               found
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     This is simple, just call the routine which ends a generic
+!     segment.
+!
+      call sgwes ( ctx, handle )
+
+      if ( ctx%failed() ) return
+
+!
+!     Now update the descriptor with the end time. Locate the segment
+!     with a backward search.
+!
+      call dafbbs ( ctx, handle )
+      call daffpa ( ctx, found  )
+
+      if ( .not. found ) then
+
+!
+!        We have a bug.
+!
+         call ctx%setmsg ( 'The segment which was just written could '   // &
+                       'not be found by a DAF search. This  '        // &
+                       'indicates a serious error.  Contact NAIF.'   )
+         call ctx%sigerr ( 'SPICE(BUG)'                                  )
+         return
+
+      end if
+
+!
+!     Get the descriptor, set the end time, and update the descriptor
+!     in the file.
+!
+      call dafgs( ctx, descr )
+
+      call dafus( ctx, descr, nd, ni, dcd, icd )
+
+      dcd( 2 ) = endtim
+
+      call dafps( ctx, nd, ni, dcd, icd, descr )
+
+      call dafrs( ctx, descr )
+
+!
+!     All done.
+!
+
+      return
+
+      end procedure ckw04e
+
+!$Procedure CKW05 ( Write CK segment, type 5 )
+
+      module procedure ckw05
+      use pepper_kinds, only: ip, wp
+      use pepper_arrays, only: bsrchd, lstltd
+      use pepper_math, only: odd, vzerog
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 5 segment to a CK file.
+!
+! $ Required_Reading
+!
+!     CK
+!     NAIF_IDS
+!     ROTATION
+!     TIME
+!
+! $ Keywords
+!
+!     FILES
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+      include 'ck05.inc'
+
+
+      integer(ip), parameter :: maxdeg = 23
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of a CK file that has been
+!              opened for writing.
+!
+!     SUBTYP   is an integer code indicating the subtype of the
+!              the segment to be created.
+!
+!     DEGREE   is the degree of the polynomials used to
+!              interpolate the quaternions contained in the input
+!              packets. All components of the quaternions are
+!              interpolated by polynomials of fixed degree.
+!
+!     BEGTIM,
+!     ENDTIM   are the beginning and ending encoded SCLK times
+!              for which the segment provides pointing
+!              information. BEGTIM must be less than or equal to
+!              ENDTIM, and at least one data packet must have a
+!              time tag T such that
+!
+!                 BEGTIM  <  T  <  ENDTIM
+!                         -     -
+!
+!     INST     is the NAIF integer code for the instrument or
+!              structure for which a segment is to be created.
+!
+!     REF      is the NAIF name for a reference frame relative to
+!              which the pointing information for INST is
+!              specified.
+!
+!     AVFLAG   is a logical flag which indicates whether or not
+!              the segment will contain angular velocity.
+!
+!     SEGID    is the segment identifier.  A CK segment
+!              identifier may contain up to 40 characters.
+!
+!     N        is the number of packets in the input packet
+!              array.
+!
+!     SCLKDP   are the encoded spacecraft clock times associated
+!              with each pointing instance. These times must be
+!              strictly increasing.
+!
+!     PACKTS   contains a time-ordered array of data packets
+!              representing the orientation of INST relative to
+!              the frame REF. Each packet contains a SPICE-style
+!              quaternion and optionally, depending on the
+!              segment subtype, attitude derivative data, from
+!              which a C-matrix and an angular velocity vector
+!              may be derived.
+!
+!              See the discussion of quaternion styles in
+!              $Particulars below.
+!
+!              The C-matrix represented by the Ith data packet is
+!              a rotation matrix that transforms the components
+!              of a vector expressed in the base frame specified
+!              by REF to components expressed in the instrument
+!              fixed frame at the time SCLKDP(I).
+!
+!              Thus, if a vector V has components x, y, z in the
+!              base frame, then V has components x', y', z'
+!              in the instrument fixed frame where:
+!
+!                 [ x' ]     [          ] [ x ]
+!                 | y' |  =  |   CMAT   | | y |
+!                 [ z' ]     [          ] [ z ]
+!
+!              The attitude derivative information in PACKTS(I)
+!              gives the angular velocity of the instrument fixed
+!              frame at time SCLKDP(I) with respect to the
+!              reference frame specified by REF.
+!
+!              The direction of an angular velocity vector gives
+!              the right-handed axis about which the instrument
+!              fixed reference frame is rotating. The magnitude
+!              of the vector is the magnitude of the
+!              instantaneous velocity of the rotation, in radians
+!              per second.
+!
+!              Packet contents and the corresponding
+!              interpolation methods depend on the segment
+!              subtype, and are as follows:
+!
+!                 Subtype 0:  Hermite interpolation, 8-element
+!                             packets. Quaternion and quaternion
+!                             derivatives only, no angular
+!                             velocity vector provided.
+!                             Quaternion elements are listed
+!                             first, followed by derivatives.
+!                             Angular velocity is derived from
+!                             the quaternions and quaternion
+!                             derivatives.
+!
+!                 Subtype 1:  Lagrange interpolation, 4-element
+!                             packets. Quaternion only. Angular
+!                             velocity is derived by
+!                             differentiating the interpolating
+!                             polynomials.
+!
+!                 Subtype 2:  Hermite interpolation, 14-element
+!                             packets. Quaternion and angular
+!                             angular velocity vector, as well as
+!                             derivatives of each, are provided.
+!                             The quaternion comes first, then
+!                             quaternion derivatives, then
+!                             angular velocity and its
+!                             derivatives.
+!
+!                 Subtype 3:  Lagrange interpolation, 7-element
+!                             packets. Quaternion and angular
+!                             velocity vector provided. The
+!                             quaternion comes first.
+!
+!              Angular velocity is always specified relative to
+!              the base frame.
+!
+!     RATE     is the nominal rate of the spacecraft clock
+!              associated with INST. Units are seconds per
+!              tick. RATE is used to scale angular velocity
+!              to radians/second.
+!
+!     NINTS    is the number of intervals that the pointing
+!              instances are partitioned into.
+!
+!     STARTS   are the start times of each of the interpolation
+!              intervals. These times must be strictly increasing
+!              and must coincide with times for which the segment
+!              contains pointing.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the interpolating
+!              polynomial. If the value of MAXDEG is increased,
+!              the SPICELIB routine CKPFS must be changed
+!              accordingly. In particular, the size of the
+!              record passed to CKRnn and CKEnn must be
+!              increased, and comments describing the record size
+!              must be changed.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will
+!     return without creating a new segment.
+!
+!     1)  If HANDLE is not the handle of a C-kernel opened for writing,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If the last non-blank character of SEGID occurs past index
+!         40, the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If the first encoded SCLK time is negative, the error
+!         SPICE(INVALIDSCLKTIME) is signaled. If any subsequent times
+!         are negative the error will be detected in exception (5).
+!
+!     5)  If the encoded SCLK times are not strictly increasing,
+!         the error SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     6)  If the name of the reference frame is not one of those
+!         supported by the routine FRAMEX, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     7)  If the number of packets N is not at least 1, the error
+!         SPICE(TOOFEWPACKETS) is signaled.
+!
+!     8)  If NINTS, the number of interpolation intervals, is less than
+!         or equal to 0, the error SPICE(INVALIDNUMINTS) is signaled.
+!
+!     9)  If the encoded SCLK interval start times are not strictly
+!         increasing, the error SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     10) If an interval start time does not coincide with a time for
+!         which there is an actual pointing instance in the segment, the
+!         error SPICE(INVALIDSTARTTIME) is signaled.
+!
+!     11) This routine assumes that the rotation between adjacent
+!         quaternions that are stored in the same interval has a
+!         rotation angle of THETA radians, where
+!
+!            0  <=  THETA  <  pi.
+!
+!         The routines that evaluate the data in the segment produced
+!         by this routine cannot distinguish between rotations of THETA
+!         radians, where THETA is in the interval [0, pi), and
+!         rotations of
+!
+!            THETA   +   2 * k * pi
+!
+!         radians, where k is any integer. These "large" rotations will
+!         yield invalid results when interpolated. You must ensure that
+!         the data stored in the segment will not be subject to this
+!         sort of ambiguity.
+!
+!     12) If any quaternion has magnitude zero, the error
+!         SPICE(ZEROQUATERNION) is signaled.
+!
+!     13) If the interpolation window size implied by DEGREE is not
+!         even, the error SPICE(INVALIDDEGREE) is signaled. The window
+!         size is DEGREE+1 for Lagrange subtypes and is (DEGREE+1)/2
+!         for Hermite subtypes.
+!
+!     14) If an unrecognized subtype code is supplied, the error
+!         SPICE(NOTSUPPORTED) is signaled.
+!
+!     15) If DEGREE is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     16) If the segment descriptor bounds are out of order, the
+!         error SPICE(BADDESCRTIMES) is signaled.
+!
+!     17) If there is no element of SCLKDP that lies between BEGTIM and
+!         ENDTIM inclusive, the error SPICE(EMPTYSEGMENT) is signaled.
+!
+!     18) If RATE is zero, the error SPICE(INVALIDVALUE) is signaled.
+!
+! $ Files
+!
+!     A new type 5 CK segment is written to the CK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes a CK type 5 data segment to the open CK
+!     file according to the format described in the type 5 section of
+!     the CK Required Reading. The CK file must have been opened with
+!     write access.
+!
+!     Quaternion Styles
+!     -----------------
+!
+!     There are different "styles" of quaternions used in
+!     science and engineering applications. Quaternion styles
+!     are characterized by
+!
+!     -  The order of quaternion elements
+!
+!     -  The quaternion multiplication formula
+!
+!     -  The convention for associating quaternions
+!        with rotation matrices
+!
+!     Two of the commonly used styles are
+!
+!        - "SPICE"
+!
+!           > Invented by Sir William Rowan Hamilton
+!           > Frequently used in mathematics and physics textbooks
+!
+!        - "Engineering"
+!
+!           > Widely used in aerospace engineering applications
+!
+!     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
+!     Quaternions of any other style must be converted to SPICE
+!     quaternions before they are passed to SPICELIB routines.
+!
+!     Relationship between SPICE and Engineering Quaternions
+!     ------------------------------------------------------
+!
+!     Let M be a rotation matrix such that for any vector V,
+!
+!        M*V
+!
+!     is the result of rotating V by theta radians in the
+!     counterclockwise direction about unit rotation axis vector A.
+!     Then the SPICE quaternions representing M are
+!
+!        (+/-) (  cos(theta/2),
+!                 sin(theta/2) A(1),
+!                 sin(theta/2) A(2),
+!                 sin(theta/2) A(3)  )
+!
+!     while the engineering quaternions representing M are
+!
+!        (+/-) ( -sin(theta/2) A(1),
+!                -sin(theta/2) A(2),
+!                -sin(theta/2) A(3),
+!                 cos(theta/2)       )
+!
+!     For both styles of quaternions, if a quaternion q represents
+!     a rotation matrix M, then -q represents M as well.
+!
+!     Given an engineering quaternion
+!
+!        QENG   = ( q0,  q1,  q2,  q3 )
+!
+!     the equivalent SPICE quaternion is
+!
+!        QSPICE = ( q3, -q0, -q1, -q2 )
+!
+!     Associating SPICE Quaternions with Rotation Matrices
+!     ----------------------------------------------------
+!
+!     Let FROM and TO be two right-handed reference frames, for
+!     example, an inertial frame and a spacecraft-fixed frame. Let the
+!     symbols
+!
+!        V    ,   V
+!         FROM     TO
+!
+!     denote, respectively, an arbitrary vector expressed relative to
+!     the FROM and TO frames. Let M denote the transformation matrix
+!     that transforms vectors from frame FROM to frame TO; then
+!
+!        V   =  M * V
+!         TO         FROM
+!
+!     where the expression on the right hand side represents left
+!     multiplication of the vector by the matrix.
+!
+!     Then if the unit-length SPICE quaternion q represents M, where
+!
+!        q = (q0, q1, q2, q3)
+!
+!     the elements of M are derived from the elements of q as follows:
+!
+!          +-                                                         -+
+!          |           2    2                                          |
+!          | 1 - 2*( q2 + q3 )   2*(q1*q2 - q0*q3)   2*(q1*q3 + q0*q2) |
+!          |                                                           |
+!          |                                                           |
+!          |                               2    2                      |
+!      M = | 2*(q1*q2 + q0*q3)   1 - 2*( q1 + q3 )   2*(q2*q3 - q0*q1) |
+!          |                                                           |
+!          |                                                           |
+!          |                                                   2    2  |
+!          | 2*(q1*q3 - q0*q2)   2*(q2*q3 + q0*q1)   1 - 2*( q1 + q2 ) |
+!          |                                                           |
+!          +-                                                         -+
+!
+!     Note that substituting the elements of -q for those of q in the
+!     right hand side leaves each element of M unchanged; this shows
+!     that if a quaternion q represents a matrix M, then so does the
+!     quaternion -q.
+!
+!     To map the rotation matrix M to a unit quaternion, we start by
+!     decomposing the rotation matrix as a sum of symmetric
+!     and skew-symmetric parts:
+!
+!                                        2
+!        M = [ I  +  (1-cos(theta)) OMEGA  ] + [ sin(theta) OMEGA ]
+!
+!                     symmetric                   skew-symmetric
+!
+!     OMEGA is a skew-symmetric matrix of the form
+!
+!                   +-             -+
+!                   |  0   -n3   n2 |
+!                   |               |
+!         OMEGA  =  |  n3   0   -n1 |
+!                   |               |
+!                   | -n2   n1   0  |
+!                   +-             -+
+!
+!     The vector N of matrix entries (n1, n2, n3) is the rotation axis
+!     of M and theta is M's rotation angle. Note that N and theta
+!     are not unique.
+!
+!     Let
+!
+!        C = cos(theta/2)
+!        S = sin(theta/2)
+!
+!     Then the unit quaternions Q corresponding to M are
+!
+!        Q = +/- ( C, S*n1, S*n2, S*n3 )
+!
+!     The mappings between quaternions and the corresponding rotations
+!     are carried out by the SPICELIB routines
+!
+!        Q2M {quaternion to matrix}
+!        M2Q {matrix to quaternion}
+!
+!     M2Q always returns a quaternion with scalar part greater than
+!     or equal to zero.
+!
+!     SPICE Quaternion Multiplication Formula
+!     ---------------------------------------
+!
+!     Given a SPICE quaternion
+!
+!        Q = ( q0, q1, q2, q3 )
+!
+!     corresponding to rotation axis A and angle theta as above, we can
+!     represent Q using "scalar + vector" notation as follows:
+!
+!        s =   q0           = cos(theta/2)
+!
+!        v = ( q1, q2, q3 ) = sin(theta/2) * A
+!
+!        Q = s + v
+!
+!     Let Q1 and Q2 be SPICE quaternions with respective scalar
+!     and vector parts s1, s2 and v1, v2:
+!
+!        Q1 = s1 + v1
+!        Q2 = s2 + v2
+!
+!     We represent the dot product of v1 and v2 by
+!
+!        <v1, v2>
+!
+!     and the cross product of v1 and v2 by
+!
+!        v1 x v2
+!
+!     Then the SPICE quaternion product is
+!
+!        Q1*Q2 = s1*s2 - <v1,v2>  + s1*v2 + s2*v1 + (v1 x v2)
+!
+!     If Q1 and Q2 represent the rotation matrices M1 and M2
+!     respectively, then the quaternion product
+!
+!        Q1*Q2
+!
+!     represents the matrix product
+!
+!        M1*M2
+!
+! $ Examples
+!
+!     Suppose that you have data packets and are prepared to produce
+!     a segment of type 5 in a CK file.
+!
+!     The following code fragment could be used to add the new segment
+!     to a previously opened CK file attached to HANDLE. The file must
+!     have been opened with write access.
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_CK_TYPE_5_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL CKW05 ( HANDLE, SUBTYP, DEGREE, BEGTIM, ENDTIM,
+!             .             INST,   REF,    AVFLAG, SEGID,  N,
+!             .             SCLKDP, PACKTS, RATE,   NINTS,  STARTS )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.0.1, 08-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 3.0.0, 27-JAN-2014 (NJB)
+!
+!        Increased MAXDEG to 23 for compatibility with CK type 6.
+!
+!-    SPICELIB Version 2.0.0, 08-FEB-2010 (NJB)
+!
+!        The check for non-unit quaternions has been replaced
+!        with a check for zero-length quaternions.
+!
+!-    SPICELIB Version 1.1.0, 26-FEB-2008 (NJB)
+!
+!        Updated header; added information about SPICE
+!        quaternion conventions.
+!
+!        Minor typo in a long error message was corrected.
+!
+!-    SPICELIB Version 1.0.1, 07-JAN-2005 (NJB)
+!
+!        Description in $Detailed_Input header section of
+!        constraints on BEGTIM and ENDTIM was corrected.
+!
+!-    SPICELIB Version 1.0.0, 30-AUG-2002 (NJB) (KRG) (JML) (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write CK type_5 data segment
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.0.0, 08-FEB-2010 (NJB)
+!
+!        The check for non-unit quaternions has been replaced
+!        with a check for zero-length quaternions.
+!
+!        This change was made to accommodate CK generation,
+!        via the non-SPICE utility MEX2KER, for European missions.
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: typidx = 4
+
+      integer(ip), parameter :: dtype = 5
+
+      integer(ip), parameter :: dirsiz = 100
+
+      integer(ip), parameter :: statsz = 6
+
+!
+!     Packet structure parameters
+!
+      integer(ip), parameter :: qidx = 1
+
+!
+!     Local variables
+!
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( dscsiz )
+
+      integer(ip)           addr
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           packsz
+      integer(ip)           refcod
+      integer(ip)           winsiz
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Make sure that the number of packets is positive.
+!
+      if ( n < 1 ) then
+
+         call ctx%setmsg ( 'At least 1 packet is required for CK type 5. '// &
+                       'Number of packets supplied:  #'                )
+         call ctx%errint ( '#', n                                          )
+         call ctx%sigerr ( 'SPICE(TOOFEWPACKETS)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that there is a positive number of interpolation
+!     intervals.
+!
+      if ( nints <= 0 ) then
+
+         call ctx%setmsg ( '# is an invalid number of interpolation ' // &
+                       'intervals for type 5.'                     )
+         call ctx%errint ( '#', nints                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDNUMINTS)'                     )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, ref, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', ref                                    )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Now check that the encoded SCLK times are positive and strictly
+!     increasing.
+!
+!     Check that the first time is nonnegative.
+!
+      if ( sclkdp(1) < 0.0_wp ) then
+
+         call ctx%setmsg ( 'The first SCLKDP time: # is negative.' )
+         call ctx%errdp  ( '#', sclkdp(1)                          )
+         call ctx%sigerr ( 'SPICE(INVALIDSCLKTIME)'                )
+         return
+
+      end if
+
+!
+!     Now check that the times are ordered properly.
+!
+      do i = 2, n
+
+         if ( sclkdp(i) <= sclkdp(i-1) )  then
+
+            call ctx%setmsg ( 'The SCLKDP times are not strictly '      // &
+                          'increasing. SCLKDP(#) = # and SCLKDP(#) '// &
+                          '= #.'                                )
+            call ctx%errint ( '#', i                                )
+            call ctx%errdp  ( '#', sclkdp(i)                        )
+            call ctx%errint ( '#', i-1                              )
+            call ctx%errdp  ( '#', sclkdp(i-1)                      )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Now check that the interval start times are ordered properly.
+!
+      do i = 2, nints
+
+         if ( starts(i) <= starts(i-1) )  then
+
+            call ctx%setmsg ( 'The interval start times are not strictly '// &
+                          'increasing. STARTS(#) = # and STARTS(#) '  // &
+                          '= #.'                                )
+            call ctx%errint ( '#', i                                )
+            call ctx%errdp  ( '#', starts(i)                        )
+            call ctx%errint ( '#', i-1                              )
+            call ctx%errdp  ( '#', starts(i-1)                      )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Now make sure that all of the interval start times coincide with
+!     one of the times associated with the actual pointing.
+!
+      do i = 1, nints
+!
+!        We know the SCLKDP array is ordered, so a binary search is
+!        ok.
+!
+         if (  bsrchd ( starts(i), n, sclkdp )  ==  0  ) then
+
+            call ctx%setmsg ( 'Interval start time number # is invalid. '// &
+                          'STARTS(#) = *'                             )
+            call ctx%errint ( '#', i                                      )
+            call ctx%errint ( '#', i                                      )
+            call ctx%errdp  ( '*', starts(i)                              )
+            call ctx%sigerr ( 'SPICE(INVALIDSTARTTIME)'                   )
+            return
+
+         end if
+
+      end do
+
+!
+!     Set the window, packet size and angular velocity flag, all of
+!     which are functions of the subtype.
+!
+      if (  subtyp == c05tp0 ) then
+
+         winsiz = ( degree + 1 ) / 2
+         packsz = c05ps0
+
+      else if ( subtyp == c05tp1  ) then
+
+         winsiz = degree + 1
+         packsz = c05ps1
+
+      else if (  subtyp == c05tp2 ) then
+
+         winsiz = ( degree + 1 ) / 2
+         packsz = c05ps2
+
+      else if ( subtyp == c05tp3  ) then
+
+         winsiz = degree + 1
+         packsz = c05ps3
+
+      else
+
+         call ctx%setmsg ( 'CK type 5 subtype <#> is not supported.' )
+         call ctx%errint ( '#', subtyp                               )
+         call ctx%sigerr ( 'SPICE(NOTSUPPORTED)'                     )
+         return
+
+      end if
+
+!
+!     Make sure that the quaternions are non-zero. This is just
+!     a check for uninitialized data.
+!
+      do i = 1, n
+!
+!        We have to address the quaternion explicitly, since the shape
+!        of the packet array is not known at compile time.
+!
+         addr = packsz * (i-1)  +  qidx
+
+         if (  vzerog( packts(addr), 4 )  ) then
+
+            call ctx%setmsg ( 'The quaternion at index # has magnitude ' &
+            //            'zero.'                                    )
+            call ctx%errint ( '#', i                                     )
+            call ctx%sigerr ( 'SPICE(ZEROQUATERNION)'                    )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'the valid degree range is [1, #]'              )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the window size is even.  If not, the input
+!     DEGREE is incompatible with the subtype.
+!
+      if (  odd(winsiz)  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'for CK type 5, the degree must be '           // &
+                       'equivalent to 3 mod 4 for Hermite '           // &
+                       'interpolation and odd for for Lagrange '      // &
+                       'interpolation.'                                )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Create the segment descriptor.
+!
+!     Assign values to the integer components of the segment descriptor.
+!
+      ic ( 1 ) = inst
+      ic ( 2 ) = refcod
+      ic ( 3 ) = dtype
+
+      if ( avflag ) then
+         ic ( 4 ) = 1
+      else
+         ic ( 4 ) = 0
+      end if
+
+      dc( 1 ) = begtim
+      dc( 2 ) = endtim
+
+!
+!     Make sure the descriptor times are in increasing order.
+!
+      if ( endtim < begtim ) then
+
+         call ctx%setmsg ( 'Descriptor bounds are non-increasing: #:#' )
+         call ctx%errdp  ( '#', begtim                                 )
+         call ctx%errdp  ( '#', endtim                                 )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Make sure that at least one time tag lies between BEGTIM and
+!     ENDTIM.  The first time tag not less than BEGTIM must exist
+!     and must be less than or equal to ENDTIM.
+!
+      i = lstltd ( begtim, n, sclkdp )
+
+      if ( i == n ) then
+
+         call ctx%setmsg ( 'All time tags are less than segment start ' // &
+                       'time #.'                                  )
+         call ctx%errdp  ( '#',  begtim                               )
+         call ctx%sigerr ( 'SPICE(EMPTYSEGMENT)'                      )
+         return
+
+      else if (  sclkdp(i+1)  >  endtim  ) then
+
+         call ctx%setmsg ( 'No time tags lie between the segment start ' // &
+                       'time # and segment end time #'              )
+         call ctx%errdp  ( '#',  begtim                                 )
+         call ctx%errdp  ( '#',  endtim                                 )
+         call ctx%sigerr ( 'SPICE(EMPTYSEGMENT)'                        )
+         return
+
+      end if
+
+!
+!     The clock rate must be non-zero.
+!
+      if ( rate == 0.0_wp ) then
+
+         call ctx%setmsg ( 'The SCLK rate RATE was zero.'  )
+         call ctx%sigerr ( 'SPICE(INVALIDVALUE)'           )
+         return
+
+      end if
+
+!
+!     Now pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dc, ic, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 5 segment structure is eloquently described by this
+!     diagram from the CK Required Reading:
+!
+!        +-----------------------+
+!        | Packet 1              |
+!        +-----------------------+
+!        | Packet 2              |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Packet N              |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!        | Epoch 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +----------------------------+
+!        | Epoch N                    |
+!        +----------------------------+
+!        | Epoch 100                  | (First directory)
+!        +----------------------------+
+!                    .
+!                    .
+!                    .
+!        +----------------------------+
+!        | Epoch ((N-1)/100)*100      | (Last directory)
+!        +----------------------------+
+!        | Start time 1               |
+!        +----------------------------+
+!        | Start time 2               |
+!        +----------------------------+
+!                    .
+!                    .
+!                    .
+!        +----------------------------+
+!        | Start time M               |
+!        +----------------------------+
+!        | Start time 100             | (First interval start
+!        +----------------------------+  time directory)
+!                    .
+!                    .
+!                    .
+!        +----------------------------+
+!        | Start time ((M-1)/100)*100 | (Last interval start
+!        +----------------------------+  time directory)
+!        | Seconds per tick           |
+!        +----------------------------+
+!        | Subtype code               |
+!        +----------------------------+
+!        | Window size                |
+!        +----------------------------+
+!        | Number of interp intervals |
+!        +----------------------------+
+!        | Number of packets          |
+!        +----------------------------+
+!
+      call dafada ( ctx, packts,  n*packsz )
+      call dafada ( ctx, sclkdp,  n        )
+
+      do i = 1,   (n-1) / dirsiz
+
+         call dafada ( ctx,  sclkdp( dirsiz*i ),  1  )
+
+      end do
+
+!
+!     Now add the interval start times.
+!
+      call dafada ( ctx, starts, nints )
+
+!
+!     And the directory of interval start times.  The directory of
+!     start times will simply be every (DIRSIZ)th start time.
+!
+      do i = 1, (nints -1) / dirsiz
+
+         call dafada ( ctx, starts( dirsiz*i ), 1 )
+
+      end do
+
+!
+!     Add the SCLK rate, segment subtype, window size, interval
+!     count, and packet count.
+!
+      call dafada ( ctx, [ rate ], 1 )
+      call dafada ( ctx, [ real( subtyp, wp ) ], 1 )
+      call dafada ( ctx, [ real( winsiz, wp ) ], 1 )
+      call dafada ( ctx, [ real( nints, wp  ) ], 1 )
+      call dafada ( ctx, [ real( n, wp      ) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure ckw05
+
+!$Procedure CKW06 ( CK, Write segment, type 6 )
+
+      module procedure ckw06
+      use pepper_kinds, only: ip, wp
+      use pepper_arrays, only: moved
+      use pepper_math, only: even, odd, vdistg, vminug, vzerog
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 6 segment to a CK file.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!     NAIF_IDS
+!     SCLK
+!     SPC
+!     TIME
+!
+! $ Keywords
+!
+!     ATTITUDE
+!     FILES
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+      include 'ck06.inc'
+      include 'ckparam.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of a CK file that has been opened
+!              for writing.
+!
+!     INST     is a NAIF integer code associated with an
+!              instrument or spacecraft structure whose
+!              orientation is described by the segment to be
+!              created. INST is treated by the SPICE frame
+!              subsystem as a CK frame class ID (see the
+!              Frames Required Reading for details).
+!
+!     AVFLAG   is a logical flag which indicates whether or not
+!              the segment will contain angular velocity.
+!
+!     REF      is the NAIF name for a reference frame relative to
+!              which the pointing (attitude) information for INST
+!              is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the bounds of the time interval
+!              over which the segment defines the attitude of
+!              INST. FIRST and LAST are encoded SCLK times.
+!
+!              FIRST must be greater than or equal to the first
+!              mini-segment interval start time; LAST must be
+!              less than or equal to the last mini-segment
+!              interval stop time. See the description of IVLBDS
+!              below.
+!
+!     SEGID    is the segment identifier. A CK segment
+!              identifier may contain up to 40 characters.
+!
+!     NMINI    is the number of mini-segments comprised by
+!              the input data. Each mini-segment contains data
+!              that could be stored in a type 5 segment.
+!              The parameters and data of a mini-segment are:
+!
+!                 - a packet count
+!                 - a type 6 subtype
+!                 - an interpolating polynomial degree
+!                 - a nominal SCLK rate in seconds/tick
+!                 - a sequence of type 6 data packets
+!                 - a sequence of packet epochs
+!
+!              These inputs are described below.
+!
+!     NPKTS    is an array of packet counts. The Ith element of
+!              NPKTS is the packet count of the Ith mini-segment.
+!
+!              NPKTS has dimension NMINI.
+!
+!     SUBTPS   is an array of type 6 subtypes. The Ith element of
+!              SUBTPS is the subtype of the packets associated
+!              with the Ith mini-segment.
+!
+!              SUBTPS has dimension NMINI.
+!
+!     DEGRES   is an array of interpolating polynomial degrees.
+!              The Ith element of DEGRES is the polynomial degree
+!              of the packets associated with the Ith
+!              mini-segment.
+!
+!              For subtypes 0 and 2, interpolation degrees must be
+!              equivalent to 3 mod 4, that is, they must be in
+!              the set
+!
+!                 { 3, 7, 11, ..., MAXDEG }
+!
+!              For subtypes 1 and 3, interpolation degrees must
+!              be odd and must be in the range 1:MAXDEG.
+!
+!              DEGRES has dimension NMINI.
+!
+!     PACKTS   is an array of data packets representing the
+!              orientation of INST relative to the frame REF. The
+!              packets for a given mini-segment are stored
+!              contiguously in increasing time order. The order
+!              of the sets of packets for different mini-segments
+!              is the same as the order of their corresponding
+!              mini-segment intervals.
+!
+!              Each packet contains a SPICE-style quaternion and
+!              optionally, depending on the segment subtype,
+!              attitude derivative data, from which a C-matrix
+!              and an angular velocity vector may be derived.
+!
+!              See the discussion of quaternion styles in
+!              $Particulars below.
+!
+!              The C-matrix CMAT represented by the Ith data
+!              packet is a rotation matrix that transforms the
+!              components of a vector expressed in the base frame
+!              specified by REF to components expressed in the
+!              instrument fixed frame at the time SCLKDP(I).
+!
+!              Thus, if a vector V has components x, y, z in the
+!              base frame, then V has components x', y', z'
+!              in the instrument fixed frame where:
+!
+!                 [ x' ]     [          ] [ x ]
+!                 | y' |  =  |   CMAT   | | y |
+!                 [ z' ]     [          ] [ z ]
+!
+!              Attitude derivative information either explicitly
+!              contained in, or else derived from, PACKTS(I)
+!              gives the angular velocity of the instrument fixed
+!              frame at time SCLKDP(I) with respect to the
+!              reference frame specified by REF.
+!
+!              The direction of an angular velocity vector gives
+!              the right-handed axis about which the instrument
+!              fixed reference frame is rotating. The magnitude
+!              of the vector is the magnitude of the
+!              instantaneous velocity of the rotation, in radians
+!              per second.
+!
+!              Packet contents and the corresponding
+!              interpolation methods depend on the segment
+!              subtype, and are as follows:
+!
+!                 Subtype 0:  Hermite interpolation, 8-element
+!                             packets. Quaternion and quaternion
+!                             derivatives only, no angular
+!                             velocity vector provided.
+!                             Quaternion elements are listed
+!                             first, followed by derivatives.
+!                             Angular velocity is derived from
+!                             the quaternions and quaternion
+!                             derivatives.
+!
+!                 Subtype 1:  Lagrange interpolation, 4-element
+!                             packets. Quaternion only. Angular
+!                             velocity is derived by
+!                             differentiating the interpolating
+!                             polynomials.
+!
+!                 Subtype 2:  Hermite interpolation, 14-element
+!                             packets. Quaternion and angular
+!                             velocity vector, as well as
+!                             derivatives of each, are provided.
+!                             The quaternion comes first, then
+!                             quaternion derivatives, then
+!                             angular velocity and its
+!                             derivatives.
+!
+!                 Subtype 3:  Lagrange interpolation, 7-element
+!                             packets. Quaternion and angular
+!                             velocity vector provided. The
+!                             quaternion comes first.
+!
+!              Angular velocity is always specified relative to
+!              the base frame.
+!
+!              Units of the input data are:
+!
+!                 Quaternions                unitless
+!                 Quaternion derivatives     1/TDB second
+!                 Angular velocity           radians/TDB second
+!                 Angular acceleration       radians/TDB second**2
+!
+!              For the Hermite subtypes (0 and 2), quaternion
+!              representations must be selected so that, for
+!              consecutive quaternions Q(I) and Q(I+1) in a
+!              mini-segment, the distance between Q and Q(I+1) is
+!              less than the distance between Q and -Q(I+1). The
+!              Lagrange subtypes do not have this restriction.
+!
+!     RATES    is an array of nominal rates of the spacecraft
+!              clock associated with INST. The Ith element of
+!              rates is the clock rate for the packets associated
+!              with the Ith mini-segment. Units are seconds per
+!              tick. Spacecraft clock rates are used to scale
+!              angular velocity to radians/second.
+!
+!     SCLKDP   is an array containing epochs for all input
+!              mini-segments. The epochs have a one-to-one
+!              relationship with the packets in the input
+!              packet array. The epochs are encoded SCLK times.
+!
+!              The epochs for a given mini-segment are stored
+!              contiguously in increasing order. The order of the
+!              sets of epochs for different mini-segments is the
+!              same as the order of their corresponding
+!              mini-segment intervals.
+!
+!              For each mini-segment, "padding" is allowed: the
+!              sequence of epochs for that mini-segment may start
+!              before the corresponding mini-segment interval
+!              start time and end after the corresponding
+!              mini-segment interval stop time. Padding is used
+!              to control behavior of interpolating polynomials
+!              near mini-segment interval boundaries.
+!
+!              Due to possible use of padding, the elements of
+!              SCLKDP, taken as a whole, might not be in
+!              increasing order.
+!
+!     IVLBDS   is an array of mini-segment interval boundary
+!              times. This array is a strictly increasing list of
+!              the mini-segment interval start times, to which
+!              the end time for the last interval is appended.
+!              The interval bounds are encoded SCLK times.
+!
+!              The Ith mini-segment interval is the time
+!              coverage interval of the Ith mini-segment (see the
+!              description of NPKTS above).
+!
+!              For each mini-segment, the corresponding
+!              mini-segment interval's start time is greater
+!              than or equal to the mini-segment's first epoch.
+!              The interval's stop time may exceed the
+!              mini-segment's last epoch, allowing a single
+!              coverage gap to exist between a mini-segment's
+!              last epoch and its interval stop time.
+!
+!              The "interpolation interval" of the ith
+!              mini-segment is contained in the ith mini-segment
+!              interval: the interpolation interval extends from
+!              IVLBDS(I) to the minimum of IVLBDS(I+1) and the
+!              last epoch of the mini-segment.
+!
+!              For each mini-segment interval other than the
+!              last, the interval's coverage stop time coincides
+!              with the coverage start time of the next interval.
+!
+!              IVLBDS has dimension NMINI+1.
+!
+!     SELLST   is a logical flag indicating to the CK type 6
+!              segment reader CKR06 how to select the
+!              mini-segment interval when a request time
+!              coincides with a time boundary shared by two
+!              mini-segment intervals. When SELLST ("select
+!              last") is .TRUE., the later interval is selected;
+!              otherwise the earlier interval is selected.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the interpolating
+!              polynomial.
+!
+!              See the INCLUDE file ck06.inc for the value of
+!              MAXDEG.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will
+!     return without creating a new segment.
+!
+!     1)  If FIRST is greater than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     2)  If REF is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     3)  If the last non-blank character of SEGID occurs past index
+!         40, the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     4)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     5)  If NMINI is not at least 1, the error SPICE(INVALIDCOUNT)
+!         is signaled.
+!
+!     6)  If the elements of the array IVLBDS are not in strictly
+!         increasing order, the error SPICE(BOUNDSOUTOFORDER) is
+!         signaled.
+!
+!     7)  If the first interval start time IVLBDS(1) is greater than
+!         FIRST, or if the last interval end time IVLBDS(NMINI+1) is
+!         less than LAST, the error SPICE(COVERAGEGAP) is signaled.
+!
+!     8)  If any packet count in the array NPKTS is not at least 2, the
+!         error SPICE(TOOFEWPACKETS) is signaled.
+!
+!     9)  If any subtype code in the array SUBTPS is not recognized,
+!         the error SPICE(INVALIDSUBTYPE) is signaled.
+!
+!     10) If any interpolation degree in the array DEGRES is not at
+!         least 1 or is greater than MAXDEG, the error
+!         SPICE(INVALIDDEGREE) is signaled.
+!
+!     11) If the window size implied by any element of the array DEGRES
+!         is odd, the error SPICE(BADWINDOWSIZE) is signaled.
+!
+!     12) If the elements of the array SCLKDP corresponding to a given
+!         mini-segment are not in strictly increasing order, the error
+!         SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     13) If the first epoch of a mini-segment exceeds the start time
+!         of the associated mini-segment interval, or if the last
+!         epoch of a mini-segment is less than the interval start
+!         time, the error SPICE(BOUNDSDISAGREE) is signaled. However,
+!         the last epoch of a mini-segment may be less than the end
+!         time of the corresponding mini-segment interval.
+!
+!     14) If any quaternion has magnitude zero, the error
+!         SPICE(ZEROQUATERNION) is signaled.
+!
+!     15) If an error occurs while writing the output segment, the error
+!         is signaled by a routine in the call tree of this routine.
+!
+!     16) This routine assumes that the rotation between adjacent
+!         quaternions that are stored in the same interval has a
+!         rotation angle of THETA radians, where
+!
+!            0  <  THETA  <  pi.
+!               _
+!
+!         The routines that evaluate the data in the segment produced
+!         by this routine cannot distinguish between rotations of THETA
+!         radians, where THETA is in the interval [0, pi), and
+!         rotations of
+!
+!            THETA   +   2 * k * pi
+!
+!         radians, where k is any integer. These "large" rotations will
+!         yield invalid results when interpolated. The segment creator
+!         must ensure that the data stored in the segment will not be
+!         subject to this sort of ambiguity.
+!
+!     17) For the Hermite subtypes (0 and 2), quaternion
+!         representations must be selected so that, for consecutive
+!         quaternions Q(I) and Q(I+1) in a mini-segment, the distance
+!         between Q and Q(I+1) is less than the distance between Q and
+!         -Q(I+1).
+!
+!         If a pair of quaternions violating this condition is found in
+!         the input array PACKTS, the error SPICE(BADQUATSIGN) is
+!         signaled.
+!
+!     18) If any element of the input RATES array is non-positive, the
+!         error SPICE(INVALIDSCLKRATE) is signaled.
+!
+! $ Files
+!
+!     A new type 6 CK segment is written to the CK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes a CK type 6 data segment to the open CK
+!     file according to the format described in the type 6 section of
+!     the CK Required Reading. The CK file must have been opened with
+!     write access.
+!
+!     Quaternion Styles
+!     -----------------
+!
+!     There are different "styles" of quaternions used in
+!     science and engineering applications. Quaternion styles
+!     are characterized by
+!
+!     -  The order of quaternion elements
+!
+!     -  The quaternion multiplication formula
+!
+!     -  The convention for associating quaternions
+!        with rotation matrices
+!
+!     Two of the commonly used styles are
+!
+!        - "SPICE"
+!
+!           > Invented by Sir William Rowan Hamilton
+!           > Frequently used in mathematics and physics textbooks
+!
+!        - "Engineering"
+!
+!           > Widely used in aerospace engineering applications
+!
+!     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
+!     Quaternions of any other style must be converted to SPICE
+!     quaternions before they are passed to SPICELIB routines.
+!
+!     Relationship between SPICE and Engineering Quaternions
+!     ------------------------------------------------------
+!
+!     Let M be a rotation matrix such that for any vector V,
+!
+!        M*V
+!
+!     is the result of rotating V by theta radians in the
+!     counterclockwise direction about unit rotation axis vector A.
+!     Then the SPICE quaternions representing M are
+!
+!        (+/-) (  cos(theta/2),
+!                 sin(theta/2) A(1),
+!                 sin(theta/2) A(2),
+!                 sin(theta/2) A(3)  )
+!
+!     while the engineering quaternions representing M are
+!
+!        (+/-) ( -sin(theta/2) A(1),
+!                -sin(theta/2) A(2),
+!                -sin(theta/2) A(3),
+!                 cos(theta/2)       )
+!
+!     For both styles of quaternions, if a quaternion q represents
+!     a rotation matrix M, then -q represents M as well.
+!
+!     Given an engineering quaternion
+!
+!        QENG   = ( q0,  q1,  q2,  q3 )
+!
+!     the equivalent SPICE quaternion is
+!
+!        QSPICE = ( q3, -q0, -q1, -q2 )
+!
+!     Associating SPICE Quaternions with Rotation Matrices
+!     ----------------------------------------------------
+!
+!     Let FROM and TO be two right-handed reference frames, for
+!     example, an inertial frame and a spacecraft-fixed frame. Let the
+!     symbols
+!
+!        V    ,   V
+!         FROM     TO
+!
+!     denote, respectively, an arbitrary vector expressed relative to
+!     the FROM and TO frames. Let M denote the transformation matrix
+!     that transforms vectors from frame FROM to frame TO; then
+!
+!        V   =  M * V
+!         TO         FROM
+!
+!     where the expression on the right hand side represents left
+!     multiplication of the vector by the matrix.
+!
+!     Then if the unit-length SPICE quaternion q represents M, where
+!
+!        q = (q0, q1, q2, q3)
+!
+!     the elements of M are derived from the elements of q as follows:
+!
+!          +-                                                         -+
+!          |           2    2                                          |
+!          | 1 - 2*( q2 + q3 )   2*(q1*q2 - q0*q3)   2*(q1*q3 + q0*q2) |
+!          |                                                           |
+!          |                                                           |
+!          |                               2    2                      |
+!      M = | 2*(q1*q2 + q0*q3)   1 - 2*( q1 + q3 )   2*(q2*q3 - q0*q1) |
+!          |                                                           |
+!          |                                                           |
+!          |                                                   2    2  |
+!          | 2*(q1*q3 - q0*q2)   2*(q2*q3 + q0*q1)   1 - 2*( q1 + q2 ) |
+!          |                                                           |
+!          +-                                                         -+
+!
+!     Note that substituting the elements of -q for those of q in the
+!     right hand side leaves each element of M unchanged; this shows
+!     that if a quaternion q represents a matrix M, then so does the
+!     quaternion -q.
+!
+!     To map the rotation matrix M to a unit quaternion, we start by
+!     decomposing the rotation matrix as a sum of symmetric
+!     and skew-symmetric parts:
+!
+!                                        2
+!        M = [ I  +  (1-cos(theta)) OMEGA  ] + [ sin(theta) OMEGA ]
+!
+!                     symmetric                   skew-symmetric
+!
+!     OMEGA is a skew-symmetric matrix of the form
+!
+!                   +-             -+
+!                   |  0   -n3   n2 |
+!                   |               |
+!         OMEGA  =  |  n3   0   -n1 |
+!                   |               |
+!                   | -n2   n1   0  |
+!                   +-             -+
+!
+!     The vector N of matrix entries (n1, n2, n3) is the rotation axis
+!     of M and theta is M's rotation angle. Note that N and theta
+!     are not unique.
+!
+!     Let
+!
+!        C = cos(theta/2)
+!        S = sin(theta/2)
+!
+!     Then the unit quaternions Q corresponding to M are
+!
+!        Q = +/- ( C, S*n1, S*n2, S*n3 )
+!
+!     The mappings between quaternions and the corresponding rotations
+!     are carried out by the SPICELIB routines
+!
+!        Q2M {quaternion to matrix}
+!        M2Q {matrix to quaternion}
+!
+!     M2Q always returns a quaternion with scalar part greater than
+!     or equal to zero.
+!
+!     SPICE Quaternion Multiplication Formula
+!     ---------------------------------------
+!
+!     Given a SPICE quaternion
+!
+!        Q = ( q0, q1, q2, q3 )
+!
+!     corresponding to rotation axis A and angle theta as above, we can
+!     represent Q using "scalar + vector" notation as follows:
+!
+!        s =   q0           = cos(theta/2)
+!
+!        v = ( q1, q2, q3 ) = sin(theta/2) * A
+!
+!        Q = s + v
+!
+!     Let Q1 and Q2 be SPICE quaternions with respective scalar
+!     and vector parts s1, s2 and v1, v2:
+!
+!        Q1 = s1 + v1
+!        Q2 = s2 + v2
+!
+!     We represent the dot product of v1 and v2 by
+!
+!        <v1, v2>
+!
+!     and the cross product of v1 and v2 by
+!
+!        v1 x v2
+!
+!     Then the SPICE quaternion product is
+!
+!        Q1*Q2 = s1*s2 - <v1,v2>  + s1*v2 + s2*v1 + (v1 x v2)
+!
+!     If Q1 and Q2 represent the rotation matrices M1 and M2
+!     respectively, then the quaternion product
+!
+!        Q1*Q2
+!
+!     represents the matrix product
+!
+!        M1*M2
+!
+! $ Examples
+!
+!     Suppose that you have states and are prepared to produce
+!     a segment of type 6 in a CK file.
+!
+!     The following code fragment could be used to add the new segment
+!     to a previously opened CK file attached to HANDLE. The file must
+!     have been opened with write access.
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_CK_TYPE_6_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL CKW06 ( HANDLE,  INST,    REF,     AVFLAG,
+!             .             FIRST,   LAST,    SEGID,   NMINI,
+!             .             NPKTS,   SUBTPS,  DEGRES,  PACKTS,
+!             .             RATES,   SCLKDP,  IVLBDS,  SELLST  )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 02-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 2.0.0, 11-AUG-2015 (NJB)
+!
+!        Added check for invalid SCLK rates.
+!
+!        Corrected error in header $Exceptions section: changed
+!        subscript N+1 to NMINI+1. Corrected typo in description
+!        of subtype 2 data. Added mention of angular acceleration
+!        units.
+!
+!-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_6 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: dtype = 6
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Packet structure parameters
+!
+      integer(ip), parameter :: qidx = 1
+
+!
+!     Local variables
+!
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( dscsiz )
+      real(wp)              prevq  ( 0 : 3 )
+      real(wp)              q      ( 0 : 3 )
+      real(wp)              qneg   ( 0 : 3 )
+
+      integer(ip)           addr
+      integer(ip)           bepix
+      integer(ip)           chrcod
+      integer(ip)           eepix
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           isel
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           minisz
+      integer(ip)           ndir
+      integer(ip)           pktbeg
+      integer(ip)           pktdsz
+      integer(ip)           pktend
+      integer(ip)           pktsiz
+      integer(ip), parameter :: pktszs ( 0 : c06nst-1 ) = &
+         [ c06ps0, c06ps1, c06ps2, c06ps3 ]
+      integer(ip)           refcod
+      integer(ip)           segbeg
+      integer(ip)           segend
+      integer(ip)           subtyp
+      integer(ip)           winsiz
+
+!
+!     Saved values
+!
+
+!
+!     Initial values
+!
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Start with a parameter compatibility check.
+!
+      if ( ckmrsz < maxrsz ) then
+
+         call ctx%setmsg ( 'CK type 6 record size is #, but ' &
+         //            'CKPFS record size is #.' &
+         //            'is #.'                            )
+         call ctx%errint ( '#',  maxrsz                       )
+         call ctx%errint ( '#',  ckmrsz                       )
+         call ctx%sigerr ( 'SPICE(BUG)'                       )
+         return
+
+      end if
+
+!
+!     Make sure the segment descriptor bounds are
+!     correctly ordered.
+!
+      if ( last < first ) then
+
+         call ctx%setmsg ( 'Segment start time is #; stop time is #; ' &
+         //            'bounds must be in nondecreasing order.'    )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, ref, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.' )
+         call ctx%errch  ( '#', ref                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' &
+         //            '40 characters.'                        )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                   )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains ' &
+            //            'nonprintable characters'         )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'        )
+            return
+
+         end if
+
+      end do
+
+!
+!     The mini-segment count must be positive.
+!
+      if ( nmini < 1 ) then
+
+         call ctx%setmsg ( 'Mini-segment count was #; ' &
+         //            'this count must be positive.' )
+         call ctx%errint ( '#', nmini                     )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'          )
+         return
+
+      end if
+
+!
+!     Make sure the interval bounds form a strictly
+!     increasing sequence.
+!
+!     Note that there are NMINI+1 bounds.
+!
+      do i = 1, nmini
+
+         if ( ivlbds(i) >= ivlbds(i+1) ) then
+
+            call ctx%setmsg ( 'Mini-segment interval ' &
+            //            'bounds at indices # and # ' &
+            //            'are # and # respectively. The ' &
+            //            'difference is #. The bounds are ' &
+            //            'required to be strictly increasing.' )
+            call ctx%errint ( '#', i                                )
+            call ctx%errint ( '#', i+1                              )
+            call ctx%errdp  ( '#', ivlbds(i)                        )
+            call ctx%errdp  ( '#', ivlbds(i+1)                      )
+            call ctx%errdp  ( '#', ivlbds(i+1) - ivlbds(i)          )
+            call ctx%sigerr ( 'SPICE(BOUNDSOUTOFORDER)'             )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure the time span of the descriptor doesn't extend
+!     beyond the span of the interval bounds.
+!
+      if (      ( first < ivlbds(1        ) ) &
+           .or. ( last  > ivlbds(nmini+1) ) ) then
+
+         call ctx%setmsg ( 'First mini-segment interval ' &
+         //            'start time is #; segment start time ' &
+         //            'is #; segment stop time is #; ' &
+         //            'last mini-segment interval stop ' &
+         //            'time is #. This sequence of times ' &
+         //            'is required to be non-decreasing: ' &
+         //            'segment coverage must be contained ' &
+         //            'within the union of the mini-segment ' &
+         //            'intervals.'                            )
+         call ctx%errdp  ( '#', ivlbds(1)                          )
+         call ctx%errdp  ( '#', first                              )
+         call ctx%errdp  ( '#', last                               )
+         call ctx%errdp  ( '#', ivlbds(nmini+1)                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                    )
+         return
+
+      end if
+
+!
+!     Check the input data before writing to the file.
+!
+!     This order of operations entails some redundant
+!     calculations, but it allows for rapid error
+!     detection.
+!
+!     Initialize the mini-segment packet array indices,
+!     and those of the mini-segment epoch array as well.
+!
+      pktbeg = 0
+      pktend = 0
+
+      bepix  = 0
+      eepix  = 0
+
+      do i = 1, nmini
+!
+!        First, just make sure the packet count for the current
+!        mini-segment is at least two. This check reduces our chances
+!        of a subscript range violation.
+!
+!        Check the number of packets.
+!
+         if ( npkts(i) < 2 ) then
+
+            call ctx%setmsg ( 'At least 2 packets are required ' &
+            //            'for CK type 6. Number of packets ' &
+            //            'supplied was # in mini-segment at index #.' )
+            call ctx%errint ( '#', npkts(i)                                )
+            call ctx%errint ( '#', i                                       )
+            call ctx%sigerr ( 'SPICE(TOOFEWPACKETS)'                       )
+            return
+
+         end if
+
+!
+!        Set the packet size, which is a function of the subtype. Also
+!        set the window size. First check the subtype, which will be
+!        used as an array index.
+!
+         subtyp = subtps(i)
+
+         if (  ( subtyp < 0 ) .or. ( subtyp > c06nst-1 ) ) then
+
+            call ctx%setmsg ( 'Unexpected CK type 6 subtype # ' &
+            //            'found in mini-segment #.'       )
+            call ctx%errint ( '#',  subtyp                     )
+            call ctx%errint ( '#',  i                          )
+            call ctx%sigerr ( 'SPICE(INVALIDSUBTYPE)'          )
+            return
+
+         end if
+
+         pktsiz = pktszs ( subtyp )
+
+         if ( odd(subtyp) ) then
+
+            winsiz =   degres(i) + 1
+         else
+            winsiz = ( degres(i) + 1 ) / 2
+         end if
+
+!
+!        Make sure the SCLK rates in this mini-segment are positive.
+!
+         if ( rates(i) <= 0.0_wp ) then
+
+            call ctx%setmsg ( 'SCLK rate at index # was #; rate must ' &
+            //            'be positive.'                           )
+            call ctx%errint ( '#',  i                                  )
+            call ctx%errdp  ( '#',  rates(i)                           )
+            call ctx%sigerr ( 'SPICE(INVALIDSCLKRATE)'                 )
+            return
+
+         end if
+
+!
+!        Update the packet range pointers for this mini-segment.
+!
+         pktbeg = pktend + 1
+         pktend = pktbeg - 1  +  npkts(i)*pktsiz
+
+!
+!        Make sure that the degree of the interpolating polynomials is
+!        in range.
+!
+         if (      ( degres(i) < 1      ) &
+              .or. ( degres(i) > maxdeg )  )  then
+
+            call ctx%setmsg ( 'The interpolating polynomials of ' &
+            //            'mini-segment # have degree #; the ' &
+            //            'valid degree range is [1, #]'      )
+            call ctx%errint ( '#', i                              )
+            call ctx%errint ( '#', degres(i)                      )
+            call ctx%errint ( '#', maxdeg                         )
+            call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'              )
+            return
+
+         end if
+
+!
+!        Make sure that the window size is even.
+!
+         if (  odd( winsiz )  )  then
+
+            call ctx%setmsg ( 'The interpolating polynomials of ' &
+            //            'mini-segment # have window size # ' &
+            //            'and degree # for CK type 6. ' &
+            //            'The mini-segment subtype is #. ' &
+            //            'The degree must be equivalent to 3 ' &
+            //            'mod 4 for subtypes 0 or 2 (Hermite ' &
+            //            'interpolation) and odd for subtypes ' &
+            //            '1 or 3 (Lagrange interpolation).'     )
+            call ctx%errint ( '#', i                                 )
+            call ctx%errint ( '#', winsiz                            )
+            call ctx%errint ( '#', degres(i)                         )
+            call ctx%errint ( '#', subtps(i)                         )
+            call ctx%sigerr ( 'SPICE(BADWINDOWSIZE)'                 )
+            return
+
+         end if
+
+!
+!        Make sure the epochs of the Ith mini-segment form a
+!        strictly increasing sequence.
+!
+!        To start out, determine the indices of the epoch sequence
+!        of the Ith mini-segment. We'll call the begin and end
+!        epoch indices BEPIX and EEPIX respectively.
+!
+         bepix  =  eepix + 1
+         eepix  =  bepix - 1 +  npkts(i)
+
+         do j = 1, npkts(i) - 1
+
+            k = bepix + j - 1
+
+            if ( sclkdp(k) >= sclkdp(k+1) ) then
+
+               call ctx%setmsg ( 'In mini-segment #, epoch # having ' &
+               //            'mini-segment-relative index # and ' &
+               //            'array-relative index # is greater ' &
+               //            'than or equal to its successor #.' )
+               call ctx%errint ( '#',  i                             )
+               call ctx%errdp  ( '#',  sclkdp(k  )                   )
+               call ctx%errint ( '#',  j                             )
+               call ctx%errint ( '#',  k                             )
+               call ctx%errdp  ( '#',  sclkdp(k+1)                   )
+               call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'            )
+               return
+
+            end if
+
+         end do
+
+!
+!        Make sure that the span of the input epochs of the Ith
+!        mini-segment includes the start of the Ith mini-segment
+!        interval. Note that the stop time need not be covered, since
+!        gaps are allowed at the right ends of mini-segment intervals.
+!
+         if (  sclkdp(bepix) > ivlbds(i) ) then
+
+            call ctx%setmsg ( 'Mini-segment interval # start time # ' &
+            //            'precedes mini-segment''s first epoch #.' )
+            call ctx%errint ( '#',  i                                   )
+            call ctx%errdp  ( '#',  ivlbds(i)                           )
+            call ctx%errdp  ( '#',  sclkdp(bepix)                       )
+            call ctx%sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
+            return
+
+         else if (  sclkdp(eepix) < ivlbds(i) ) then
+
+            call ctx%setmsg ( 'Mini-segment interval # start time # ' &
+            //            'follows mini-segment''s last epoch #.'   )
+            call ctx%errint ( '#',  i                                   )
+            call ctx%errdp  ( '#',  ivlbds(i)                           )
+            call ctx%errdp  ( '#',  sclkdp(eepix)                       )
+            call ctx%sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
+            return
+
+         end if
+
+!
+!        Make sure that the quaternions are non-zero. This is just a
+!        check for uninitialized data.
+!
+!        For the Hermite subtypes, make sure quaternions are suitable
+!        for interpolation.
+!
+         do j = 1, npkts(i)
+!
+!           We have to address the quaternion explicitly, since the
+!           shape of the packet array is not known at compile time.
+!
+            addr = pktbeg  +  ( pktsiz*(j-1) )  -  1  +  qidx
+
+            if (  vzerog( packts(addr), 4 )  ) then
+
+               call ctx%setmsg ( 'The quaternion in packet # within ' &
+               //            'mini-segment # has magnitude zero.' )
+               call ctx%errint ( '#', j                               )
+               call ctx%errint ( '#', i                               )
+               call ctx%sigerr ( 'SPICE(ZEROQUATERNION)'              )
+               return
+
+            end if
+
+!
+!           For the Hermite subtypes, each quaternion must be closer
+!           than its negative to its predecessor in the quaternion
+!           sequence.
+!
+
+            if (  ( j > 1 )  .and.  even(subtyp)  ) then
+!
+!              Compare the distance between the current quaternion
+!              and its predecessor vs the distance between the
+!              negative of the current quaternion and its predecessor.
+!
+               call moved  ( packts(addr),        4, q     )
+               call moved  ( packts(addr-pktsiz), 4, prevq )
+               call vminug ( q, 4, qneg )
+
+               if (      vdistg(prevq, qneg, 4 ) &
+                    < vdistg(prevq, q,    4 )  ) then
+
+                  call ctx%setmsg ( 'The quaternion in packet # within ' &
+                  //            'mini-segment # is farther than its ' &
+                  //            'negative from its predecessor at ' &
+                  //            'index #. This makes the quaternion ' &
+                  //            'sequence unsuitable for Hermite ' &
+                  //            'interpolation. The quaternions, and ' &
+                  //            'if applicable, their derivatives, ' &
+                  //            'must be adjusted before they are ' &
+                  //            'passed to this routine.'              )
+                  call ctx%errint ( '#', j                                 )
+                  call ctx%errint ( '#', i                                 )
+                  call ctx%errint ( '#', j-1                               )
+                  call ctx%sigerr ( 'SPICE(BADQUATSIGN)'                   )
+                  return
+
+               end if
+
+            end if
+
+         end do
+
+      end do
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     The type 6 segment structure is eloquently described by this
+!     diagram from the CK Required Reading:
+!
+!        +---------------------------------------+
+!        | Mini-segment 1                        |
+!        +---------------------------------------+
+!              .
+!              .
+!              .
+!        +---------------------------------------+
+!        | Mini-segment N                        |
+!        +---------------------------------------+
+!        | Mini-segment interval 1 start time    |
+!        +---------------------------------------+
+!              .
+!              .
+!              .
+!        +---------------------------------------+
+!        | Mini-segment interval N start time    |
+!        +---------------------------------------+
+!        | Mini-segment interval N stop time     |
+!        +---------------------------------------+
+!        | Mini-seg. interval start time 100     | (First interval
+!        +---------------------------------------+  directory)
+!              .
+!              .
+!              .
+!        +---------------------------------------+
+!        | Mini-seg. ival. start time (N/100)*100| (Last interval
+!        +---------------------------------------+  directory)
+!        | Mini-segment 1 start pointer          |
+!        +---------------------------------------+
+!              .
+!              .
+!              .
+!        +---------------------------------------+
+!        | Mini-segment N start pointer          |
+!        +---------------------------------------+
+!        | Mini-segment N stop pointer + 1       |
+!        +---------------------------------------+
+!        | Boundary choice flag                  |
+!        +---------------------------------------+
+!        | Number of intervals                   |
+!        +---------------------------------------+
+!
+!     CK type 6 mini-segments have the following structure:
+!
+!        +-----------------------+
+!        | Packet 1              |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Packet M              |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch M               |
+!        +-----------------------+
+!        | Epoch 100             | (First time tag directory)
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch ((M-1)/100)*100 | (Last time tag directory)
+!        +-----------------------+
+!        | Clock rate (sec/tick) |
+!        +-----------------------+
+!        | Subtype code          |
+!        +-----------------------+
+!        | Window size           |
+!        +-----------------------+
+!        | Number of packets     |
+!        +-----------------------+
+!
+!     Note that the set of parameters at the end of a mini-segment does
+!     not contain an mini-segment interval count. This is because,
+!     unlike a CK type 5 segment, a CK type 6 segment can contain at
+!     most one gap. If present, the gap is located at the end of
+!     mini-segment's mini-segment interval.
+!
+!     Create the segment descriptor. We don't use CKPDS because
+!     that routine doesn't allow creation of a singleton segment.
+!
+      ic(1) = inst
+      ic(2) = refcod
+      ic(3) = dtype
+
+      if ( avflag ) then
+         ic(4) = 1
+      else
+         ic(4) = 0
+      end if
+
+      dc(1) = first
+      dc(2) = last
+
+      call dafps  ( ctx, nd, ni, dc, ic, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Re-initialize the mini-segment packet array indices,
+!     and those of the mini-segment epoch array as well.
+!
+      pktbeg = 0
+      pktend = 0
+
+      bepix  = 0
+      eepix  = 0
+
+!
+!     Write data for each mini-segment to the file.
+!
+      do i = 1, nmini
+!
+!        Set the packet size, which is a function of the subtype.
+!
+         subtyp = subtps ( i )
+
+         pktsiz = pktszs ( subtyp )
+
+         if ( odd(subtyp) ) then
+
+            winsiz =   degres(i) + 1
+         else
+            winsiz = ( degres(i) + 1 ) / 2
+         end if
+
+!
+!        Now that we have the packet size, we can compute
+!        mini-segment packet index range. We'll let PKTDSZ
+!        be the total count of packet data entries for this
+!        mini-segment.
+!
+         pktdsz = npkts(i) * pktsiz
+
+         pktbeg = pktend  +  1
+         pktend = pktbeg  -  1  +  pktdsz
+
+!
+!        At this point, we're read to start writing the
+!        current mini-segment to the file. Start with the
+!        packet data.
+!
+         call dafada ( ctx, packts(pktbeg), pktdsz )
+
+!
+!        Write the epochs for this mini-segment.
+!
+         bepix = eepix + 1
+         eepix = bepix - 1 + npkts(i)
+
+         call dafada ( ctx, sclkdp(bepix), npkts(i) )
+
+!
+!        Compute the number of epoch directories for the
+!        current mini-segment.
+!
+         ndir = ( npkts(i) - 1 ) / dirsiz
+
+!
+!        Write the epoch directories to the segment.
+!
+         do j = 1, ndir
+
+            k = bepix  -  1  +  ( j * dirsiz )
+
+            call dafada ( ctx, sclkdp(k), 1 )
+
+         end do
+
+!
+!        Write the mini-segment's SCLK rate, subtype, window size, and
+!        packet count to the segment.
+!
+         call dafada ( ctx, rates(i),           1 )
+         call dafada ( ctx, [ real( subtps(i), wp ) ], 1 )
+         call dafada ( ctx, [ real( winsiz, wp    ) ], 1 )
+         call dafada ( ctx, [ real( npkts(i), wp  ) ], 1 )
+
+         if ( ctx%failed() ) return
+
+      end do
+
+!
+!     We've finished writing the mini-segments.
+!
+!     Next write the mini-segment interval bounds.
+!
+      call dafada ( ctx, ivlbds, nmini+1 )
+
+!
+!     Create and write directories for the interval
+!     bounds.
+!
+!     The directory count is the interval bound count
+!     (N+1), minus 1, divided by the directory size.
+!
+      ndir = nmini / dirsiz
+
+      do i = 1, ndir
+         call dafada ( ctx,  ivlbds( dirsiz*i ),  1  )
+      end do
+
+!
+!     Now we compute and write the start/stop pointers
+!     for each mini-segment.
+!
+!     The pointers are relative to the DAF address
+!     preceding the segment. For example, a pointer
+!     to the first DAF address in the segment has
+!     value 1.
+!
+      segend = 0
+
+      do i = 1, nmini
+!
+!        Set the packet size, which is a function of the subtype. Also
+!        set the window size. First check the subtype, which will be
+!        used as an array index.
+!
+         pktsiz = pktszs ( subtps(i) )
+
+!
+!        In order to compute the end pointer of the current
+!        mini-segment, we must compute the size, in terms
+!        of DAF addresses, of this mini-segment. The formula
+!        for the size is
+!
+!            size =     n_packets * packet_size
+!                    +  n_epochs
+!                    +  n_epoch_directories
+!                    +  4
+!
+!                 =     n_packets * ( packet_size + 1 )
+!                    +  ( n_packets - 1 ) / DIRSIZ
+!                    +  4
+!
+         minisz =       npkts(i) * ( pktsiz + 1 ) &
+                    + ( npkts(i) - 1 ) / dirsiz &
+                    +   4
+
+         segbeg = segend + 1
+         segend = segbeg + minisz - 1
+
+!
+!        Write the mini-segment begin pointer.
+!
+!        After the loop terminates, the final end pointer, incremented
+!        by 1, will be written.
+!
+         call dafada ( ctx, [ real(segbeg, wp) ], 1 )
+
+      end do
+
+!
+!     Write the last mini-segment end pointer, incremented by one.
+!     SEGEND was computed on the last iteration of the above loop.
+!
+      call dafada ( ctx, [ real(segend+1, wp) ], 1 )
+
+!
+!     Write out the interval selection flag. The input
+!     boolean value is represented by a numeric constant.
+!
+      if ( sellst ) then
+
+         isel = itrue
+      else
+         isel = ifalse
+      end if
+
+      call dafada ( ctx, [ real( isel, wp ) ], 1 )
+
+!
+!     Write the mini-segment/mini-segment interval count.
+!
+      call dafada ( ctx, [ real(nmini, wp) ], 1 )
+
+!
+!     End the segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure ckw06
+
+!$Procedure PCK03A ( PCK, add data to a type 3 segment )
+
+      module procedure pck03a
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Add data to a type 03 PCK segment in the binary PCK file
+!     associated with HANDLE. See also PCK03B and PCK03E.
+!
+! $ Required_Reading
+!
+!     PCK
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of a PCK file that has been
+!              opened for writing.
+!
+!     NCSETS   is the number of Cheby coefficient sets and epochs
+!              to be stored in the segment.
+!
+!     COEFFS   contains a time-ordered array of Chebyshev coefficient
+!              sets for computing the orientation of a body relative to
+!              the an inertial frame. The orientation is defined by
+!              the angles RA, DEC, W and body fixed angular rates for
+!              each axis of the body fixed coordinate system defined by
+!              RA, DEC, and W. All of the angles and the angular rates
+!              of the axes are given in degrees.
+!
+!              See the $Particulars section for details on how to store
+!              the coefficient sets in the array.
+!
+!     EPOCHS   contains the epochs (ephemeris seconds past J2000)
+!              corresponding to the elements in COEFFS. The I'th
+!              epoch must equal the epoch of the I'th set of
+!              coefficients. The epochs must form a strictly increasing
+!              sequence.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The data is stored in a segment in the binary PCK file
+!     associated with HANDLE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the number of coefficient sets and epochs is not positive,
+!         the error SPICE(INVALIDARGUMENT) is signaled.
+!
+! $ Files
+!
+!     See argument HANDLE.
+!
+! $ Particulars
+!
+!     This routine adds data to a type 03 PCK segment in the binary
+!     PCK file that is associated with HANDLE. The segment must have
+!     been begun by calling PCK03B.
+!
+!     This routine is one of a set of three routines for creating and
+!     adding data to type 03 PCK segments. These routines are:
+!
+!        PCK03B: Begin a type 03 PCK segment. This routine must be
+!                called before any data may be added to a type 03
+!                segment.
+!
+!        PCK03A: Add data to a type 03 PCK segment. This routine may be
+!                called any number of times after a call to PCK03B to
+!                add type 03 records to the PCK segment that was
+!                started.
+!
+!        PCK03E: End a type 03 PCK segment. This routine is called to
+!                make the type 03 segment a permanent addition to the
+!                PCK file. Once this routine is called, no further type
+!                03 records may be added to the segment. A new segment
+!                must be started.
+!
+!     A type 03 PCK segment consists of coefficient sets for fixed order
+!     Chebyshev polynomials over consecutive time intervals, where the
+!     time intervals need not all be of the same length. The Chebyshev
+!     polynomials represent the orientation of a body specified relative
+!     to an inertial frame by the angles RA, DEC, W and body fixed
+!     angular rates for each axis of the body fixed coordinate system
+!     defined by RA, DEC, and W. All of the angles and the angular rates
+!     of the axes are given in degrees.
+!
+!     The orientation data supplied to the type 03 PCK writer is packed
+!     into an array as a sequence of logical records,
+!
+!        -----------------------------------------------------
+!        | Record 1 | Record 2 | ... | Record N-1 | Record N |
+!        -----------------------------------------------------
+!
+!     with each record has the following format.
+!
+!           ------------------------------------------------
+!           |  The midpoint of the approximation interval  |
+!           ------------------------------------------------
+!           |  The radius of the approximation interval    |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for RA                |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for DEC               |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for W                 |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the X-axis rate   |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the Y-axis rate   |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the Z-axis rate   |
+!           ------------------------------------------------
+!
+! $ Examples
+!
+!     Assume we have the following for each of the examples that
+!     follow.
+!
+!        HANDLE   is the handle of a PCK file opened with write
+!                 access.
+!
+!        SEGID    is a character string of no more than 40 characters
+!                 which provides a pedigree for the data in the PCK
+!                 segment.
+!
+!        BODY     is the SPICE ID code for the body whose orientation
+!                 data is to be placed into the file.
+!
+!        REFFRM   is the name of the SPICE inertial reference frame
+!                 the orientation data is relative to.
+!
+!        FIRST    is the starting epoch, in seconds past J2000, for
+!                 the orientation data to be placed into the segment.
+!
+!        LAST     is the ending epoch, in seconds past J2000, for
+!                 the orientation data to be placed into the segment.
+!
+!     Example 1:
+!
+!        For this example, we also assume that:
+!
+!           N        is the number of type 03 records that we want to
+!                    put into a segment in PCK file.
+!
+!           RECRDS   contains N type 03 records packaged for the PCK
+!                    file.
+!
+!           ETSTRT   contains the initial epochs for each of the
+!                    records contained in RECRDS, where
+!
+!                       ETSTRT(I) < ETSTRT(I+1), I = 1, N-1
+!
+!                       ETSTRT(1) <= FIRST, ETSTRT(N) < LAST
+!
+!                       ETSTRT(I+1), I = 1, N-1, is the ending epoch for
+!                       record I as well as the initial epoch for record
+!                       I+1.
+!
+!        Then the following code fragment demonstrates how to create a
+!        type 03 PCK segment if all of the data for the segment is
+!        available at one time.
+!
+!        C
+!        C     Begin the segment.
+!        C
+!              CALL PCK03B ( HANDLE, SEGID, BODY, REFFRM,
+!             .              FIRST,  LAST,  CHBDEG        )
+!        C
+!        C     Add the data to the segment all at once.
+!        C
+!              CALL PCK03A ( HANDLE, N, RECRDS, ETSTRT )
+!        C
+!        C     End the segment, making the segment a permanent addition
+!        C     to the PCK file.
+!        C
+!              CALL PCK03E ( HANDLE )
+!
+!     Example 2:
+!
+!        In this example we want to add type O3 PCK records, as
+!        described above in the $Particulars section, to the segment
+!        being written as they are generated. The ability to write the
+!        records in this way is useful if computer memory is limited. It
+!        may also be convenient from a programming perspective to write
+!        the records one at a time.
+!
+!        For this example, assume that we want to generate N type 03 PCK
+!        records, one for each of N time intervals, writing them all to
+!        the same segment in a PCK file. Let
+!
+!           N        be the number of type 03 records that we want to
+!                    generate and put into a segment in an PCK file.
+!
+!           RECORD   be an array with enough room to hold a single type
+!                    03 record, i.e. RECORD should have dimension at
+!                    least 6 * (CHBDEG + 1 ) + 2.
+!
+!           START    be an array of N times that are the beginning
+!                    epochs for each of the intervals of interest. The
+!                    times should be in increasing order and the start
+!                    time for the first interval should equal the
+!                    starting time for the segment.
+!
+!                       START(I) < START(I+1), I = 1, N-1
+!
+!                       START(1) = FIRST
+!
+!           STOP     be an array of N times that are the ending epochs
+!                    for each of the intervals of interest. The times
+!                    should be in increasing order and the stop time for
+!                    interval I should equal the start time for interval
+!                    I+1, i.e., we want to have continuous coverage in
+!                    time across all of the records. Also, the stop time
+!                    for the last interval should equal the ending time
+!                    for the segment.
+!
+!                       STOP(I) < STOP(I+1), I = 1, N-1
+!
+!                       STOP(I) = START(I+1), I = 1, N-1
+!
+!                       STOP(N) = LAST
+!
+!           GENREC( TIME1, TIME2, RECORD )
+!
+!                    be a subroutine that generates a type 03 PCK record
+!                    for a time interval specified by TIME1 and TIME2.
+!
+!        Then the following code fragment demonstrates how to create a
+!        type 03 PCK segment if all of the data for the segment is not
+!        available at one time.
+!
+!        C
+!        C     Begin the segment.
+!        C
+!              CALL PCK03B ( HANDLE, SEGID, DESCR, CHBDEG )
+!
+!        C
+!        C     Generate the records and write them to the segment in the
+!        C     PCK file one at at time.
+!        C
+!              DO I = 1, N
+!
+!                 CALL GENREC ( START(I), STOP(I), RECORD   )
+!                 CALL PCK03A ( HANDLE, 1, RECORD, START(I) )
+!
+!              END DO
+!
+!        C
+!        C     End the segment, making the segment a permanent addition
+!        C     to the PCK file.
+!        C
+!              CALL PCK03E ( HANDLE )
+!
+! $ Restrictions
+!
+!     1)  The type 03 PCK segment to which we are adding data must have
+!         been started by the routine PCK03B, the routine which begins a
+!         type 03 PCK segment.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.2, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
+!
+!-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     add data to a type_03 PCK segment
+!
+!-&
+
+!
+!     Spicelib functions
+!
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     First, check to see if the number of coefficient sets and epochs
+!     is positive.
+!
+      if ( ncsets <= 0 ) then
+
+         call ctx%setmsg ( 'The number of coefficient sets and epochs' &
+         //            ' to be added to the PCK segment in the file' &
+         //            ' ''#'' was not positive. Its value was: #.'  )
+         call ctx%errhan ( '#', handle                                   )
+         call ctx%errint ( '#', ncsets                                   )
+         call ctx%sigerr ( 'SPICE(INVALIDARGUMENT)'                      )
+         return
+
+      end if
+
+!
+!     Add the data.
+!
+      call sgwfpk ( ctx, handle, ncsets, coeffs, ncsets, epochs )
+
+!
+!     No need to check FAILED() here, since all we do is check out.
+!     Leave it up to the caller.
+!
+
+      return
+
+      end procedure pck03a
+
+!$Procedure PCK03E ( PCK, end a type 3 segment )
+
+      module procedure pck03e
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     End the type 03 PCK segment currently being written to the binary
+!     PCK file associated with HANDLE. See also PCK03B and PCK03A.
+!
+! $ Required_Reading
+!
+!     PCK
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of a binary PCK file that has been
+!              opened for writing and to which a type 03 PCK segment is
+!              being written.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The segment in the PCK file associated with HANDLE will
+!     be ended, making the addition of the data permanent.
+!
+!     See the $Particulars section for details about the
+!     structure of a type 03 PCK segment.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there is no segment being written to the file associated
+!         with HANDLE, an error is signaled by a routine in the call
+!         tree of this routine.
+!
+! $ Files
+!
+!     See the argument HANDLE.
+!
+! $ Particulars
+!
+!     This routine ends a type 03 PCK segment that is being written to
+!     the binary PCK file associated with HANDLE. Ending the PCK segment
+!     is a necessary step in the process of making the data a permanent
+!     part of the binary PCK file.
+!
+!     This routine is one of a set of three routines for creating and
+!     adding data to type 03 PCK segments. These routines are:
+!
+!        PCK03B: Begin a type 03 PCK segment. This routine must be
+!                called before any data may be added to a type 03
+!                segment.
+!
+!        PCK03A: Add data to a type 03 PCK segment. This routine may be
+!                called any number of times after a call to PCK03B to
+!                add type 03 records to the PCK segment that was
+!                started.
+!
+!        PCK03E: End a type 03 PCK segment. This routine is called to
+!                make the type 03 segment a permanent addition to the
+!                PCK file. Once this routine is called, no further type
+!                03 records may be added to the segment. A new segment
+!                must be started.
+!
+!     A type 03 PCK segment consists of coefficient sets for fixed order
+!     Chebyshev polynomials over consecutive time intervals, where the
+!     time intervals need not all be of the same length. The Chebyshev
+!     polynomials represent the orientation of a body specified relative
+!     to an inertial frame by the angles RA, DEC, W and body fixed
+!     angular rates for each axis of the body fixed coordinate system
+!     defined by RA, DEC, and W. All of the angles and the angular rates
+!     of the axes are given in degrees.
+!
+!     The orientation data supplied to the type 03 PCK writer is packed
+!     into an array as a sequence of logical records,
+!
+!        -----------------------------------------------------
+!        | Record 1 | Record 2 | ... | Record N-1 | Record N |
+!        -----------------------------------------------------
+!
+!     with each record has the following format.
+!
+!           ------------------------------------------------
+!           |  The midpoint of the approximation interval  |
+!           ------------------------------------------------
+!           |  The radius of the approximation interval    |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for RA                |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for DEC               |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for W                 |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the X-axis rate   |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the Y-axis rate   |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the Z-axis rate   |
+!           ------------------------------------------------
+!
+! $ Examples
+!
+!     Assume we have the following for each of the examples that
+!     follow.
+!
+!        HANDLE   is the handle of a PCK file opened with write
+!                 access.
+!
+!        SEGID    is a character string of no more than 40 characters
+!                 which provides a pedigree for the data in the PCK
+!                 segment.
+!
+!        BODY     is the SPICE ID code for the body whose orientation
+!                 data is to be placed into the file.
+!
+!        REFFRM   is the name of the SPICE inertial reference frame
+!                 the orientation data is relative to.
+!
+!        FIRST    is the starting epoch, in seconds past J2000, for
+!                 the orientation data to be placed into the segment.
+!
+!        LAST     is the ending epoch, in seconds past J2000, for
+!                 the orientation data to be placed into the segment.
+!
+!     Example 1:
+!
+!        For this example, we also assume that:
+!
+!           N        is the number of type 03 records that we want to
+!                    put into a segment in PCK file.
+!
+!           RECRDS   contains N type 03 records packaged for the PCK
+!                    file.
+!
+!           ETSTRT   contains the initial epochs for each of the
+!                    records contained in RECRDS, where
+!
+!                       ETSTRT(I) < ETSTRT(I+1), I = 1, N-1
+!
+!                       ETSTRT(1) <= FIRST, ETSTRT(N) < LAST
+!
+!                       ETSTRT(I+1), I = 1, N-1, is the ending epoch for
+!                       record I as well as the initial epoch for record
+!                       I+1.
+!
+!        Then the following code fragment demonstrates how to create a
+!        type 03 PCK segment if all of the data for the segment is
+!        available at one time.
+!
+!        C
+!        C     Begin the segment.
+!        C
+!              CALL PCK03B ( HANDLE, SEGID, BODY, REFFRM,
+!             .              FIRST,  LAST,  CHBDEG        )
+!        C
+!        C     Add the data to the segment all at once.
+!        C
+!              CALL PCK03A ( HANDLE, N, RECRDS, ETSTRT )
+!        C
+!        C     End the segment, making the segment a permanent addition
+!        C     to the PCK file.
+!        C
+!              CALL PCK03E ( HANDLE )
+!
+!     Example 2:
+!
+!        In this example we want to add type O3 PCK records, as
+!        described above in the $Particulars section, to the segment
+!        being written as they are generated. The ability to write the
+!        records in this way is useful if computer memory is limited. It
+!        may also be convenient from a programming perspective to write
+!        the records one at a time.
+!
+!        For this example, assume that we want to generate N type 03 PCK
+!        records, one for each of N time intervals, writing them all to
+!        the same segment in a PCK file. Let
+!
+!           N        be the number of type 03 records that we want to
+!                    generate and put into a segment in an PCK file.
+!
+!           RECORD   be an array with enough room to hold a single type
+!                    03 record, i.e. RECORD should have dimension at
+!                    least 6 * (CHBDEG + 1 ) + 2.
+!
+!           START    be an array of N times that are the beginning
+!                    epochs for each of the intervals of interest. The
+!                    times should be in increasing order and the start
+!                    time for the first interval should equal the
+!                    starting time for the segment.
+!
+!                       START(I) < START(I+1), I = 1, N-1
+!
+!                       START(1) = FIRST
+!
+!           STOP     be an array of N times that are the ending epochs
+!                    for each of the intervals of interest. The times
+!                    should be in increasing order and the stop time for
+!                    interval I should equal the start time for interval
+!                    I+1, i.e., we want to have continuous coverage in
+!                    time across all of the records. Also, the stop time
+!                    for the last interval should equal the ending time
+!                    for the segment.
+!
+!                       STOP(I) < STOP(I+1), I = 1, N-1
+!
+!                       STOP(I) = START(I+1), I = 1, N-1
+!
+!                       STOP(N) = LAST
+!
+!           GENREC( TIME1, TIME2, RECORD )
+!
+!                    be a subroutine that generates a type 03 PCK record
+!                    for a time interval specified by TIME1 and TIME2.
+!
+!        Then the following code fragment demonstrates how to create a
+!        type 03 PCK segment if all of the data for the segment is not
+!        available at one time.
+!
+!        C
+!        C     Begin the segment.
+!        C
+!              CALL PCK03B ( HANDLE, SEGID, DESCR, CHBDEG )
+!
+!        C
+!        C     Generate the records and write them to the segment in the
+!        C     PCK file one at at time.
+!        C
+!              DO I = 1, N
+!
+!                 CALL GENREC ( START(I), STOP(I), RECORD )
+!                 CALL PCK03A ( HANDLE, 1, RECORD, START(I) )
+!
+!              END DO
+!
+!        C
+!        C     End the segment, making the segment a permanent addition
+!        C     to the PCK file.
+!        C
+!              CALL PCK03E ( HANDLE )
+!
+! $ Restrictions
+!
+!     1)  The type 03 binary PCK segment being closed must have been
+!         started by the routine PCK03B, the routine which begins a type
+!         03 PCK segment.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added entry #1
+!        to $Exceptions section.
+!
+!-    SPICELIB Version 1.0.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     end a type_03 PCK segment
+!
+!-&
+
+!
+!     Spicelib functions
+!
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     This is simple, just call the routine which ends a generic
+!     segment.
+!
+      call sgwes ( ctx, handle )
+
+!
+!     No need to check FAILED() since all we do is leave. The caller can
+!     check it.
+!
+      return
+
+      end procedure pck03e
+
+!$Procedure PCKCLS ( PCK, close file )
+
+      module procedure pckcls
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Close an open PCK file.
+!
+! $ Required_Reading
+!
+!     PCK
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the PCK file that is to be closed.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there are no segments in the file, the error
+!         SPICE(NOSEGMENTSFOUND) is signaled.
+!
+! $ Files
+!
+!     See argument HANDLE.
+!
+! $ Particulars
+!
+!     Close the PCK file attached to HANDLE.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that you have sets of Chebyshev polynomial
+!        coefficients in an array pertaining to the orientation of
+!        the Moon body-fixed frame with the frame class ID 301
+!        relative to the J2000 reference frame, and want
+!        to put these into a type 2 segment PCK file. The following
+!        example could be used to add one new type 2 segment. To add
+!        multiple segments, put the call to PCKW02 in a loop.
+!
+!        Example code begins here.
+!
+!              PROGRAM PCKCLS_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters
+!        C
+!              CHARACTER*(*)         FNAME
+!              PARAMETER           ( FNAME = 'pckcls_ex1.bpc' )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 301  )
+!
+!              INTEGER               IIDLEN
+!              PARAMETER           ( IIDLEN = 40   )
+!
+!              INTEGER               POLYDG
+!              PARAMETER           ( POLYDG = 9    )
+!
+!              INTEGER               SZCDAT
+!              PARAMETER           ( SZCDAT = 60   )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(IIDLEN)    IFNAME
+!              CHARACTER*(IIDLEN)    SEGID
+!
+!              DOUBLE PRECISION      BTIME
+!              DOUBLE PRECISION      CDATA  ( SZCDAT )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      INTLEN
+!              DOUBLE PRECISION      LAST
+!
+!              INTEGER               HANDLE
+!              INTEGER               N
+!              INTEGER               NRESVC
+!
+!        C
+!        C     Set the input data: RA/DEC/W coefficients,
+!        C     begin time for the first record, start/end times
+!        C     for the segment, length of the time covered by
+!        C     each record, and number of logical records.
+!        C
+!        C     CDATA contains the RA/DEC/W coefficients: first the
+!        C     the POLYDEG + 1 for the RA first record, then the
+!        C     POLYDEG + 1 for the DEC first record, then the
+!        C     POLYDEG +1 for W first record, then the POLYDEG + 1
+!        C     for the RA second record, and so on.
+!        C
+!              DATA                  CDATA /
+!             .   -5.4242086033301107D-002, -5.2241405162792561D-005,
+!             .    8.9751456289930307D-005, -1.5288696963234620D-005,
+!             .    1.3218870864581395D-006,  5.9822156790328180D-007,
+!             .   -6.5967702052551211D-008, -9.9084309118396298D-009,
+!             .    4.9276055963541578D-010,  1.1612267413829385D-010,
+!             .    0.42498898565916610D0,    1.3999219324235620D-004,
+!             .   -1.8855140511098865D-005, -2.1964684808526649D-006,
+!             .    1.4229817868138752D-006, -1.6991716166847001D-007,
+!             .   -3.4824688140649506D-008,  2.9208428745895990D-009,
+!             .    4.4217757657060300D-010, -3.9211207055305402D-012,
+!             .    2565.0633504619473D0,     0.92003769451305328D0,
+!             .   -8.0503797901914501D-005,  1.1960860244433900D-005,
+!             .   -1.2237900518372542D-006, -5.3651349407824562D-007,
+!             .    6.0843372260403005D-008,  9.0211287487688797D-009,
+!             .   -4.6460429330339309D-010, -1.0446918704281774D-010,
+!             .   -5.3839796353225056D-002,  4.3378021974424991D-004,
+!             .    4.8130091384819459D-005, -1.2283066272873327D-005,
+!             .   -5.4099296265403208D-006, -4.4237368347319652D-007,
+!             .    1.3004982445546169D-007,  1.9017128275284284D-008,
+!             .   -7.0368223839477803D-011, -1.7119414526133175D-010,
+!             .    0.42507987850614548D0,   -7.1844899448557937D-005,
+!             .   -5.1052122872412865D-005, -8.9810401387721321D-006,
+!             .   -1.4611718567948972D-007,  4.0883847771062547D-007,
+!             .    4.6812854485029333D-008, -4.5698075960784951D-009,
+!             .   -9.8679875320349531D-010, -7.9392503778178240D-011,
+!             .    2566.9029069934054D0,     0.91952244801740568D0,
+!             .   -6.0426151041179828D-005,  1.0850559330577959D-005,
+!             .    5.1756033678137497D-006,  4.2127585555214782D-007,
+!             .   -1.1774737441872970D-007, -1.7397191490163833D-008,
+!             .    5.8908810244396165D-012,  1.4594279337955166D-010 /
+!
+!              FIRST  =   -43200.D0
+!              LAST   =  1339200.D0
+!              BTIME  =  FIRST
+!              INTLEN =   691200.D0
+!              N      =  2
+!
+!        C
+!        C     Open a new PCK file.  For simplicity, we will not
+!        C     reserve any space for the comment area, so the
+!        C     number of reserved comment characters is zero.
+!        C     The variable IFNAME is the internal file name.
+!        C
+!              NRESVC  =  0
+!              IFNAME  =  'Test PCK/Created 04-SEP-2019'
+!
+!              CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL PCKW02 (  HANDLE, BODY,  'J2000',
+!             .               FIRST,  LAST,   SEGID,   INTLEN,
+!             .               N,      POLYDG, CDATA,   BTIME)
+!
+!        C
+!        C     Close the file.
+!        C
+!              CALL PCKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new PCK type 2 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     F.S. Turner        (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.2, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!        Added complete code example based on existing fragment.
+!
+!-    SPICELIB Version 1.1.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!-    SPICELIB Version 1.1.0, 27-NOV-2001 (FST)
+!
+!        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
+!
+!-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     close a PCK file
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 1.1.0, 27-NOV-2001 (FST)
+!
+!        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: acclen = 5
+
+!
+!     Local Variables
+!
+      character(acclen)     access
+
+      logical               found
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Get the access method for the file. Currently, if HANDLE < 0, the
+!     access method is 'WRITE'. If HANDLE > 0, the access method is
+!     'READ'.  In the future this should make use of the private entry
+!     in the handle manager umbrella, ZZDDHNFO.
+!
+      if ( handle < 0 ) then
+         access = 'WRITE'
+      else if ( handle > 0 ) then
+         access = 'READ'
+      end if
+
+!
+!     If the file is open for writing and there are segments in the file
+!     fix the ID word and close the file, or just close the file.
+!
+      if ( access == 'WRITE' ) then
+!
+!        Check to see if there are any segments in the file. If there
+!        are no segments, we signal an error. This probably indicates a
+!        programming error of some sort anyway. Why would you create a
+!        file and put nothing in it?
+!
+         call dafbfs ( ctx, handle )
+         call daffna ( ctx, found )
+
+         if ( ctx%failed() ) return
+
+         if ( .not. found ) then
+
+            call ctx%setmsg ( 'No segments were found in the PCK file' &
+            //            ' ''#''. There must be at least one segment' &
+            //            ' in the file when this subroutine is' &
+            //            ' called.'                                   )
+            call ctx%errhan ( '#', handle                                  )
+            call ctx%sigerr ( 'SPICE(NOSEGMENTSFOUND)'                     )
+            return
+
+         end if
+
+      end if
+!
+!     Close the file.
+!
+      call dafcls ( ctx, handle )
+
+!
+!     No need to check FAILED() here, since we just return. The caller
+!     should check it though.
+!
+      return
+
+      end procedure pckcls
+
+!$Procedure PCKOPN ( PCK, open new file )
+
+      module procedure pckopn
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Create a new PCK file, returning the handle of the opened file.
+!
+! $ Required_Reading
+!
+!     PCK
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     NAME     is the name of the PCK file to be created.
+!
+!     IFNAME   is the internal filename for the PCK file that is being
+!              created. The internal filename may be up to 60 characters
+!              long. If you do not have any conventions for tagging your
+!              files, an internal filename of 'PCK_file' is perfectly
+!              acceptable. You may also leave it blank if you like.
+!
+!     NCOMCH   is the space, measured in characters, to be
+!              initially set aside for the comment area when a new PCK
+!              file is opened. The amount of space actually set aside
+!              may be greater than the amount requested, due to the
+!              manner in which comment records are allocated in an PCK
+!              file. However, the amount of space set aside for comments
+!              will always be at least the amount that was requested.
+!
+!              The value of NCOMCH should be greater than or equal to
+!              zero, i.e., 0 <= NCOMCH. A negative value, should one
+!              occur, will be assumed to be zero.
+!
+! $ Detailed_Output
+!
+!     HANDLE   is the handle of the opened PCK file. If an error occurs
+!              when opening the file, the value of this variable should
+!              not be used, as it will not represent a valid handle.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the value of NCOMCH is negative, a value of zero (0) will
+!         be used for the number of comment characters to be set aside
+!         for comments.
+!
+!     2)  If an error occurs while attempting to open a CK file the
+!         value of HANDLE will not represent a valid file handle.
+!
+! $ Files
+!
+!     See NAME and HANDLE.
+!
+! $ Particulars
+!
+!     Open a new PCK file, reserving room for comments if requested.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that you have sets of Chebyshev polynomial
+!        coefficients in an array pertaining to the orientation of
+!        the Moon body-fixed frame with the frame class ID 301
+!        relative to the J2000 reference frame, and want
+!        to put these into a type 2 segment PCK file. The following
+!        example could be used to add one new type 2 segment. To add
+!        multiple segments, put the call to PCKW02 in a loop.
+!
+!        Example code begins here.
+!
+!              PROGRAM PCKOPN_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters
+!        C
+!              CHARACTER*(*)         FNAME
+!              PARAMETER           ( FNAME = 'pckopn_ex1.bpc' )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 301  )
+!
+!              INTEGER               IIDLEN
+!              PARAMETER           ( IIDLEN = 40   )
+!
+!              INTEGER               POLYDG
+!              PARAMETER           ( POLYDG = 9    )
+!
+!              INTEGER               SZCDAT
+!              PARAMETER           ( SZCDAT = 60   )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(IIDLEN)    IFNAME
+!              CHARACTER*(IIDLEN)    SEGID
+!
+!              DOUBLE PRECISION      BTIME
+!              DOUBLE PRECISION      CDATA  ( SZCDAT )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      INTLEN
+!              DOUBLE PRECISION      LAST
+!
+!              INTEGER               HANDLE
+!              INTEGER               N
+!              INTEGER               NRESVC
+!
+!        C
+!        C     Set the input data: RA/DEC/W coefficients,
+!        C     begin time for the first record, start/end times
+!        C     for the segment, length of the time covered by
+!        C     each record, and number of logical records.
+!        C
+!        C     CDATA contains the RA/DEC/W coefficients: first the
+!        C     the POLYDEG + 1 for the RA first record, then the
+!        C     POLYDEG + 1 for the DEC first record, then the
+!        C     POLYDEG +1 for W first record, then the POLYDEG + 1
+!        C     for the RA second record, and so on.
+!        C
+!              DATA                  CDATA /
+!             .   -5.4242086033301107D-002, -5.2241405162792561D-005,
+!             .    8.9751456289930307D-005, -1.5288696963234620D-005,
+!             .    1.3218870864581395D-006,  5.9822156790328180D-007,
+!             .   -6.5967702052551211D-008, -9.9084309118396298D-009,
+!             .    4.9276055963541578D-010,  1.1612267413829385D-010,
+!             .    0.42498898565916610D0,    1.3999219324235620D-004,
+!             .   -1.8855140511098865D-005, -2.1964684808526649D-006,
+!             .    1.4229817868138752D-006, -1.6991716166847001D-007,
+!             .   -3.4824688140649506D-008,  2.9208428745895990D-009,
+!             .    4.4217757657060300D-010, -3.9211207055305402D-012,
+!             .    2565.0633504619473D0,     0.92003769451305328D0,
+!             .   -8.0503797901914501D-005,  1.1960860244433900D-005,
+!             .   -1.2237900518372542D-006, -5.3651349407824562D-007,
+!             .    6.0843372260403005D-008,  9.0211287487688797D-009,
+!             .   -4.6460429330339309D-010, -1.0446918704281774D-010,
+!             .   -5.3839796353225056D-002,  4.3378021974424991D-004,
+!             .    4.8130091384819459D-005, -1.2283066272873327D-005,
+!             .   -5.4099296265403208D-006, -4.4237368347319652D-007,
+!             .    1.3004982445546169D-007,  1.9017128275284284D-008,
+!             .   -7.0368223839477803D-011, -1.7119414526133175D-010,
+!             .    0.42507987850614548D0,   -7.1844899448557937D-005,
+!             .   -5.1052122872412865D-005, -8.9810401387721321D-006,
+!             .   -1.4611718567948972D-007,  4.0883847771062547D-007,
+!             .    4.6812854485029333D-008, -4.5698075960784951D-009,
+!             .   -9.8679875320349531D-010, -7.9392503778178240D-011,
+!             .    2566.9029069934054D0,     0.91952244801740568D0,
+!             .   -6.0426151041179828D-005,  1.0850559330577959D-005,
+!             .    5.1756033678137497D-006,  4.2127585555214782D-007,
+!             .   -1.1774737441872970D-007, -1.7397191490163833D-008,
+!             .    5.8908810244396165D-012,  1.4594279337955166D-010 /
+!
+!              FIRST  =   -43200.D0
+!              LAST   =  1339200.D0
+!              BTIME  =  FIRST
+!              INTLEN =   691200.D0
+!              N      =  2
+!
+!        C
+!        C     Open a new PCK file.  For simplicity, we will not
+!        C     reserve any space for the comment area, so the
+!        C     number of reserved comment characters is zero.
+!        C     The variable IFNAME is the internal file name.
+!        C
+!              NRESVC  =  0
+!              IFNAME  =  'Test PCK/Created 04-SEP-2019'
+!
+!              CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL PCKW02 (  HANDLE, BODY,  'J2000',
+!             .               FIRST,  LAST,   SEGID,   INTLEN,
+!             .               N,      POLYDG, CDATA,   BTIME)
+!
+!        C
+!        C     Close the file.
+!        C
+!              CALL PCKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new PCK type 2 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.2, 04-JUL-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Removed
+!        unnecessary $Revisions section. Added complete code example
+!        based on existing fragment.
+!
+!-    SPICELIB Version 2.0.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!-    SPICELIB Version 2.0.0, 09-NOV-2006 (NJB)
+!
+!        Routine has been upgraded to support comment
+!        area allocation using NCOMCH.
+!
+!-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     open a new PCK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+!
+!     Local parameters
+!
+      character(*), parameter :: type = 'PCK'
+
+!
+!     DAF ND and NI values for PCK files.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 5
+!
+!     Length of a DAF comment record, in characters.
+!
+      integer(ip), parameter :: mxcrec = 1000
+
+!
+!     Local variables
+!
+      integer(ip)           ncomr
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Compute the number of comment records that we want to allocate, if
+!     the number of comment characters requested is greater than zero,
+!     we always allocate an extra record to account for the end of line
+!     marks in the comment area.
+!
+      if ( ncomch > 0 ) then
+         ncomr = ( ncomch - 1 )/mxcrec  +  1
+      else
+         ncomr = 0
+      end if
+
+!
+!     Just do it. All of the error handling is taken care of for us.
+!
+      call dafonw( ctx, name, type, nd, ni, ifname, ncomr, handle )
+
+      if ( ctx%failed() ) then
+!
+!        If we failed, make sure that HANDLE does not contain a value
+!        that represents a valid DAF file handle.
+!
+         handle = 0
+
+      end if
+
+      return
+      end procedure pckopn
+
+!$Procedure PCKPDS ( PCK, pack descriptor )
+
+      module procedure pckpds
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Perform routine error checks and if all checks pass, pack the
+!     descriptor for a PCK segment
+!
+! $ Required_Reading
+!
+!     PCK.
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     BODY     is the NAIF ID code for the body of the segment.
+!
+!     FRAME    is a string that names the inertial frame to which
+!              states for the body shall be referenced.
+!
+!     TYPE     is the type of PCK segment to create.
+!
+!     FIRST    is the first epoch for which the segment will have
+!              ephemeris data.
+!
+!     LAST     is the last epoch for which the segment will have
+!              ephemeris data.
+!
+! $ Detailed_Output
+!
+!     DESCR    is a valid PCK segment descriptor to use
+!              when creating a DAF segment for this body.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the value of BODY is the ID code of a barycenter --codes 0,
+!         1, ..., 9, the error SPICE(BARYCENTERIDCODE) is signaled.
+!
+!     2)  If FRAME is not one of the known SPICE inertial reference
+!         frames, the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     3)  If FIRST is greater than or equal to LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     4)  If the value of TYPE is outside the range 2 to 1000
+!         (inclusive), the error SPICE(UNKNOWNPCKTYPE) is signaled. This
+!         does not ensure that the TYPE is a legitimate PCK segment
+!         type, but it is a simple check that helps avoid problems that
+!         arise from uninitialized values or improperly ordered calling
+!         arguments.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This is a utility routine for validating and creating
+!     the descriptor for a PCK segment. It is intended for
+!     use only by routines that create PCK segments.
+!
+! $ Examples
+!
+!     Suppose that you wish to create a PCK segment of type X
+!     and that you are writing a routine to handle the details
+!     of the segment creation. This routine can be used to
+!     ensure that the descriptor needed for the segment is
+!     properly formed and that the information in that descriptor
+!     is reasonable.
+!
+!     Having collected the needed information you can create the
+!     descriptor and then begin a new segment as shown below.
+!
+!     CALL PCKPDS ( BODY, FRAME, TYPE, FIRST, LAST, DESCR )
+!     CALL DAFBNA ( HANDLE, DESCR,  SEGID )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 20-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!-    SPICELIB Version 1.0.0, 04-JAN-1995 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Validate and pack a PCK segment descriptor
+!
+!-&
+
+!
+!     Spicelib Functions
+!
+!
+!     Local Parameters
+!
+!     ND and NI values for a PCK file.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 5
+!
+!     Length of a calender string.
+!
+      integer(ip), parameter :: calsiz = 40
+!
+!     Local Variables
+!
+      character(calsiz)     calfst
+      character(calsiz)     callst
+
+      real(wp)              dppart ( nd )
+
+      integer(ip)           ipart  ( ni )
+      integer(ip)           refcod
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+!
+!     We do not support orientation models for barycenters.
+!
+      if ( ( body >= 0 ) .and. ( body <= 9 ) ) then
+
+         call ctx%setmsg ( 'You have attempted to create a segment ' &
+         //            ' for for a barycenter, and the PCK system' &
+         //            ' does not support this.'                   )
+         call ctx%sigerr ( 'SPICE(BARYCENTERIDCODE)'                   )
+
+         return
+
+      end if
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call irfnum ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+!
+!     The segment stop time should be greater then the begin time.
+!
+      if ( first >= last ) then
+!
+!        We've got an error. Get the calendar string for the first
+!        and last epochs.
+!
+         call etcal  ( ctx, first, calfst )
+         call etcal  ( ctx, last,  callst )
+
+         call ctx%setmsg ( 'The segment start time: # (#) is at or' &
+         //            'after the segment stop time # (#). '       )
+
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errch  ( '#', calfst                                 )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%errch  ( '#', callst                                 )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+!
+!     The type must be something reasonable.  The interval from
+!     2 to 1000 is what we are calling reasonable these days.
+!
+      if ( ( type <= 1)  .or. ( type > 1000 ) ) then
+
+         call ctx%setmsg ( 'The type specified, #, is not supported ' &
+         //            'within the PCK system. '                  )
+         call ctx%errint ( '#', type                                  )
+         call ctx%sigerr ( 'SPICE(UNKNOWNPCKTYPE)'                    )
+         return
+
+      end if
+!
+!     Well, that's it.  As far as we can determine these seem to be
+!     reasonable values to put into a descriptor.   Do it.
+!
+      ipart(1)  = body
+      ipart(2)  = refcod
+      ipart(3)  = type
+      ipart(4)  = 0
+      ipart(5)  = 0
+
+      dppart(1) = first
+      dppart(2) = last
+
+      call dafps  ( ctx, nd, ni, dppart, ipart, descr )
+
+      return
+
+      end procedure pckpds
+
+!$Procedure PCKUDS (PCK, unpack segment descriptor )
+
+      module procedure pckuds
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Unpack the contents of a PCK segment descriptor
+!
+! $ Required_Reading
+!
+!     PCK.
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     DESCR    is a PCK segment descriptor.
+!
+! $ Detailed_Output
+!
+!     BODY     is the NAIF ID code for the body of the segment.
+!
+!     FRAME    is the SPICE ID code for the inertial frame to which
+!              the body fixed orientation is referenced.
+!
+!     TYPE     is the type of PCK segment.
+!
+!     FIRST    is the first epoch for which the segment has
+!              orientation data.
+!
+!     LAST     is the last epoch for which the segment has
+!              orientation data.
+!
+!     BEGIN    is the starting address of the data associated
+!              with this descriptor.
+!
+!     END      is the last address of the data associated with
+!              this descriptor.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     None.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine extracts the contents of a PCK segment
+!     descriptor into the components needed for reading and
+!     evaluating the data stored in the segment. It serves
+!     as a macro for expanding the PCK segment descriptor.
+!
+! $ Examples
+!
+!     Suppose you wished to summarize a particular PCK segment
+!     and that you have the descriptor for that segment in hand.
+!     The following code fragment shows how you might use this
+!     routine to create a summary message concerning the segment.
+!
+!     CALL PCKUDS ( DESCR, BODY, FRAME, TYPE, FIRST, LAST )
+!
+!     Convert the start and stop times to ephemeris calendar strings
+!
+!     CALL ETCAL ( FIRST, FSTCAL )
+!     CALL ETCAL ( LAST,  LSTCAL )
+!
+!     WRITE (*,*)
+!     WRITE (*,*) 'Body     : ', BODY
+!     WRITE (*,*) 'Frame ID : ', FRAME
+!     WRITE (*,*) 'Data Type: ', TYPE
+!     WRITE (*,*)
+!     WRITE (*,*) 'Segment Start : ', FSTCAL
+!     WRITE (*,*) 'Segment Stop  : ', LSTCAL
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 02-OCT-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!-    SPICELIB Version 1.0.0, 1994-JAN-4 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Unpack and PCK segment descriptor
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+
+!
+!     Local Parameters
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 5
+
+!
+!     Local Variables
+!
+      real(wp)              dppart ( nd )
+
+      integer(ip)           ipart  ( ni )
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+!
+!     No judgments are made about the descriptor when we
+!     unpack it.  If things were done right when the descriptor
+!     was created, it should be fine now.
+!
+      call dafus ( ctx, descr, nd, ni, dppart, ipart )
+
+      if ( ctx%failed() ) return
+
+      body   = ipart(1)
+      frame  = ipart(2)
+      type   = ipart(3)
+      begin  = ipart(4)
+      end    = ipart(5)
+
+      first  = dppart(1)
+      last   = dppart(2)
+
+      return
+
+      end procedure pckuds
+
+!$Procedure PCKW02 ( PCK, write type 2 segment )
+
+      module procedure pckw02
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Write a type 2 segment to a PCK binary file given the file
+!     handle, body-fixed frame class ID, frame, time range covered by
+!     the segment, and the Chebyshev polynomial coefficients.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     PCK
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the DAF handle of an PCK file to which a type 2
+!              segment is to be added. The PCK file must be open
+!              for writing.
+!
+!     CLSSID   is the frame class ID of a body-fixed reference
+!              frame whose orientation is described by the
+!              segment to be created.
+!
+!     FRAME    is the NAIF name for a reference frame relative to
+!              which the orientation information for the frame
+!              designated by CLSSID is specified. The frame
+!              designated by FRAME is called the "base frame."
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the orientation of body.
+!
+!     SEGID    is the segment identifier. A PCK segment
+!              identifier may contain up to 40 characters.
+!
+!     INTLEN   is the length of time, in seconds, covered by each set of
+!              Chebyshev polynomial coefficients (each logical record).
+!              Each set of Chebyshev coefficients must cover this fixed
+!              time interval, INTLEN.
+!
+!     N        is the number of sets of Chebyshev polynomial
+!              coefficients (number of logical records)
+!              to be stored in the segment. There is one set
+!              of Chebyshev coefficients for each time period.
+!
+!     POLYDG   is the degree of each set of Chebyshev
+!              polynomials.
+!
+!     CDATA    is an array containing all the sets of Chebyshev
+!              polynomial coefficients to be contained in the
+!              segment of the PCK file. The coefficients are
+!              stored in CDATA in order as follows:
+!
+!                 the (degree + 1) coefficients for the first
+!                 Euler angle of the first logical record,
+!
+!                 the coefficients for the second Euler angle,
+!
+!                 the coefficients for the third Euler angle,
+!
+!                 the coefficients for the first Euler angle for
+!                 the second logical record, ...
+!
+!                 and so on.
+!
+!     BTIME    is the begin time (seconds past J2000 TDB) of
+!              first set of Chebyshev polynomial coefficients
+!              (first logical record).
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the number of sets of coefficients is not positive,
+!         the error SPICE(NUMCOEFFSNOTPOS) is signaled.
+!
+!     2)  If the interval length is not positive, the error
+!         SPICE(INTLENNOTPOS) is signaled.
+!
+!     3)  If the integer code for the reference frame is not recognized,
+!         the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     4)  If segment stop time is not greater then the begin time,
+!         the error SPICE(BADDESCRTIMES) is signaled.
+!
+!     5)  If the time of the first record is not greater than or equal
+!         to the descriptor begin time, the error SPICE(BADDESCRTIMES)
+!         is signaled.
+!
+!     6)  If the end time of the last record is not greater than or
+!         equal to the descriptor end time, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+! $ Files
+!
+!     A new type 2 PCK segment is written to the PCK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an PCK type 2 data segment to the designated
+!     PCK file, according to the format described in the PCK Required
+!     Reading.
+!
+!     Each segment can contain data for only one body-fixed frame and
+!     reference frame. The Chebyshev polynomial degree and length of
+!     time covered by each logical record are also fixed. However, an
+!     arbitrary number of logical records of Chebyshev polynomial
+!     coefficients can be written in each segment. Minimizing the
+!     number of segments in a PCK file will help optimize how the SPICE
+!     system accesses the file.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that you have sets of Chebyshev polynomial
+!        coefficients in an array pertaining to the orientation of
+!        the Moon body-fixed frame with the frame class ID 301
+!        relative to the J2000 reference frame, and want
+!        to put these into a type 2 segment PCK file. The following
+!        example could be used to add one new type 2 segment. To add
+!        multiple segments, put the call to PCKW02 in a loop.
+!
+!        Example code begins here.
+!
+!              PROGRAM PCKW02_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters
+!        C
+!              CHARACTER*(*)         FNAME
+!              PARAMETER           ( FNAME = 'pckw02_ex1.bpc' )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 301  )
+!
+!              INTEGER               IIDLEN
+!              PARAMETER           ( IIDLEN = 40   )
+!
+!              INTEGER               POLYDG
+!              PARAMETER           ( POLYDG = 9    )
+!
+!              INTEGER               SZCDAT
+!              PARAMETER           ( SZCDAT = 60   )
+!
+!        C
+!        C     Local variables
+!        C
+!              CHARACTER*(IIDLEN)    IFNAME
+!              CHARACTER*(IIDLEN)    SEGID
+!
+!              DOUBLE PRECISION      BTIME
+!              DOUBLE PRECISION      CDATA  ( SZCDAT )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      INTLEN
+!              DOUBLE PRECISION      LAST
+!
+!              INTEGER               HANDLE
+!              INTEGER               N
+!              INTEGER               NRESVC
+!
+!        C
+!        C     Set the input data: RA/DEC/W coefficients,
+!        C     begin time for the first record, start/end times
+!        C     for the segment, length of the time covered by
+!        C     each record, and number of logical records.
+!        C
+!        C     CDATA contains the RA/DEC/W coefficients: first the
+!        C     the POLYDEG + 1 for the RA first record, then the
+!        C     POLYDEG + 1 for the DEC first record, then the
+!        C     POLYDEG +1 for W first record, then the POLYDEG + 1
+!        C     for the RA second record, and so on.
+!        C
+!              DATA                  CDATA /
+!             .   -5.4242086033301107D-002, -5.2241405162792561D-005,
+!             .    8.9751456289930307D-005, -1.5288696963234620D-005,
+!             .    1.3218870864581395D-006,  5.9822156790328180D-007,
+!             .   -6.5967702052551211D-008, -9.9084309118396298D-009,
+!             .    4.9276055963541578D-010,  1.1612267413829385D-010,
+!             .    0.42498898565916610D0,    1.3999219324235620D-004,
+!             .   -1.8855140511098865D-005, -2.1964684808526649D-006,
+!             .    1.4229817868138752D-006, -1.6991716166847001D-007,
+!             .   -3.4824688140649506D-008,  2.9208428745895990D-009,
+!             .    4.4217757657060300D-010, -3.9211207055305402D-012,
+!             .    2565.0633504619473D0,     0.92003769451305328D0,
+!             .   -8.0503797901914501D-005,  1.1960860244433900D-005,
+!             .   -1.2237900518372542D-006, -5.3651349407824562D-007,
+!             .    6.0843372260403005D-008,  9.0211287487688797D-009,
+!             .   -4.6460429330339309D-010, -1.0446918704281774D-010,
+!             .   -5.3839796353225056D-002,  4.3378021974424991D-004,
+!             .    4.8130091384819459D-005, -1.2283066272873327D-005,
+!             .   -5.4099296265403208D-006, -4.4237368347319652D-007,
+!             .    1.3004982445546169D-007,  1.9017128275284284D-008,
+!             .   -7.0368223839477803D-011, -1.7119414526133175D-010,
+!             .    0.42507987850614548D0,   -7.1844899448557937D-005,
+!             .   -5.1052122872412865D-005, -8.9810401387721321D-006,
+!             .   -1.4611718567948972D-007,  4.0883847771062547D-007,
+!             .    4.6812854485029333D-008, -4.5698075960784951D-009,
+!             .   -9.8679875320349531D-010, -7.9392503778178240D-011,
+!             .    2566.9029069934054D0,     0.91952244801740568D0,
+!             .   -6.0426151041179828D-005,  1.0850559330577959D-005,
+!             .    5.1756033678137497D-006,  4.2127585555214782D-007,
+!             .   -1.1774737441872970D-007, -1.7397191490163833D-008,
+!             .    5.8908810244396165D-012,  1.4594279337955166D-010 /
+!
+!              FIRST  =   -43200.D0
+!              LAST   =  1339200.D0
+!              BTIME  =  FIRST
+!              INTLEN =   691200.D0
+!              N      =  2
+!
+!        C
+!        C     Open a new PCK file.  For simplicity, we will not
+!        C     reserve any space for the comment area, so the
+!        C     number of reserved comment characters is zero.
+!        C     The variable IFNAME is the internal file name.
+!        C
+!              NRESVC  =  0
+!              IFNAME  =  'Test PCK/Created 04-SEP-2019'
+!
+!              CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL PCKW02 (  HANDLE, BODY,  'J2000',
+!             .               FIRST,  LAST,   SEGID,   INTLEN,
+!             .               N,      POLYDG, CDATA,   BTIME)
+!
+!        C
+!        C     Close the file.
+!        C
+!              CALL PCKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new PCK type 2 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     E.D. Wright        (JPL)
+!     K.S. Zukor         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
+!
+!        Changed the input argument name BODY to CLSSID for consistency
+!        with other routines, and updated its description.
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        code example based on existing fragment.
+!
+!-    SPICELIB Version 2.0.1, 03-JAN-2014 (EDW)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Removed unneeded $Revisions section.
+!
+!-    SPICELIB Version 2.0.0, 01-AUG-1995 (KSZ)
+!
+!        The calling sequence was corrected so that REF is
+!        a character string and BTIME contains only the start
+!        time of the first record. Comments updated, and new
+!        routine CHCKID is called to check segment identifier.
+!
+!-    SPICELIB Version 1.0.0, 11-MAR-1994 (KSZ)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write PCK type_2 data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local Parameters
+!
+!     DTYPE is the PCK data type.
+!
+      integer(ip), parameter :: dtype = 2
+!
+!     NS is the size of a packed PCK segment descriptor.
+!
+      integer(ip), parameter :: ns = 5
+!
+!     ND is the number of double precision components in an PCK
+!     segment descriptor. PCK uses ND = 2.
+!
+      integer(ip), parameter :: nd = 2
+!
+!     NI is the number of integer components in an PCK segment
+!     descriptor. PCK uses NI = 5.
+!
+      integer(ip), parameter :: ni = 5
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     PCK segment identifier.
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     Local variables
+!
+      character(sidlen)     etstr
+      character(sidlen)     netstr
+
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              mid
+      real(wp)              numrec
+      real(wp)              radius
+      real(wp)              rsize
+
+      integer(ip)           i
+      integer(ip)           icd   ( ni )
+      integer(ip)           k
+      integer(ip)           ninrec
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of sets of coefficients must be positive.
+!
+      if ( n <= 0 ) then
+
+         call ctx%setmsg ( 'The number of sets of Euler angle'  // &
+                       'coefficients is not positive. N = #'       )
+         call ctx%errint ( '#', n                                      )
+         call ctx%sigerr ( 'SPICE(NUMCOEFFSNOTPOS)'                    )
+         return
+
+      end if
+!
+!     The interval length must be positive.
+!
+      if ( intlen <= 0 ) then
+
+         call ctx%setmsg ( 'The interval length is not positive.'  // &
+                       'N = #'                                     )
+         call ctx%errdp  ( '#', intlen                                 )
+         call ctx%sigerr ( 'SPICE(INTLENNOTPOS)'                       )
+         return
+
+      end if
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call irfnum ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     The segment stop time must be greater than the begin time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater than ' // &
+                       'the segment end time: #'                   )
+         call etcal  ( ctx, first, etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call etcal  ( ctx, last,  netstr                               )
+         call ctx%errch  ( '#',   netstr                               )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     The begin time of the first record must be less than or equal
+!     to the begin time of the segment.
+!
+      if ( first < btime ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time: # is '// &
+                       'less than the beginning time of the '// &
+                       'segment data: #'                           )
+         call etcal  ( ctx, first, etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call etcal  ( ctx, btime, etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      ltime = btime + n * intlen
+      if ( last > ltime ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time: # is '// &
+                       'greater than the end time of the segment '// &
+                       'data: #'  )
+         call etcal  ( ctx, last,  etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call etcal  ( ctx, ltime, etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Now check the validity of the segment identifier.
+!
+      call chckid ( ctx, 'PCK segment identifier', sidlen, segid )
+      if ( ctx%failed() ) return
+
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = clssid
+      icd(2) = refcod
+      icd(3) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment of PCK type 2 form:
+!
+!        Record 1
+!        Record 2
+!        ...
+!        Record N
+!        INIT       ( initial epoch of first record )
+!        INTLEN     ( length of interval covered by each record )
+!        RSIZE      ( number of data elements in each record )
+!        N          ( number of records in segment )
+!
+!     Each record will have the form:
+!
+!        MID        ( midpoint of time interval )
+!        RADIUS     ( radius of time interval )
+!        X coefficients, Y coefficients, Z coefficients
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+!
+!     Calculate the number of entries in a record.
+!
+      ninrec = ( polydg + 1 ) * 3
+
+!
+!     Fill segment with N records of data.
+!
+      do i = 1, n
+
+!
+!        Calculate the midpoint and radius of the time of each
+!        record, and put that at the beginning of each record.
+!
+         radius = intlen / 2
+         mid    = btime + radius + ( i - 1 ) * intlen
+
+         call dafada ( ctx, [ mid ], 1 )
+         call dafada ( ctx, [ radius ], 1 )
+
+!
+!        Put one set of coefficients into the segment.
+!
+         k = 1 + (i - 1) * ninrec
+
+         call dafada ( ctx, cdata(k), ninrec )
+
+      end do
+!
+!     Store the initial epoch of the first record.
+!
+      call dafada ( ctx, [ btime ], 1 )
+
+!
+!     Store the length of interval covered by each record.
+!
+      call dafada ( ctx, [ intlen ], 1 )
+
+!
+!     Store the size of each record (total number of array elements).
+!
+      rsize = 2 + ninrec
+      call dafada ( ctx, [ rsize ], 1 )
+
+!
+!     Store the number of records contained in the segment.
+!
+      numrec = n
+      call dafada ( ctx, [ numrec ], 1 )
+
+!
+!     End this segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure pckw02
+
+!$Procedure PCKW20 ( PCK, write segment, type 20 )
+
+      module procedure pckw20
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: j2000, spd
+
+! $ Abstract
+!
+!     Write a type 20 segment to a PCK file.
+!
+! $ Required_Reading
+!
+!     DAF
+!     NAIF_IDS
+!     TIME
+!     PCK
+!     ROTATION
+!
+! $ Keywords
+!
+!     ORIENTATION
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk20.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the DAF handle of a PCK file to which a type 20
+!              segment is to be added. The PCK file must be open
+!              for writing.
+!
+!     CLSSID   is the integer NAIF PCK frame class ID code of the
+!              reference frame whose orientation relative to its
+!              base frame is described by the segment to be
+!              created. See the Frames Required Reading for
+!              details.
+!
+!     FRAME    is the NAIF name for a reference frame relative to
+!              which the orientation information for CLSSID is
+!              specified. This frame is called the "base frame."
+!
+!     FIRST,
+!     LAST     are the start and stop times of the time interval
+!              over which the segment defines the orientation of
+!              the reference frame identified by CLSSID.
+!
+!     SEGID    is a segment identifier. A PCK segment identifier
+!              may contain up to 40 characters.
+!
+!     INTLEN   is the length of time, in TDB Julian days, covered
+!              by each set of Chebyshev polynomial coefficients
+!              (each logical record).
+!
+!     N        is the number of logical records to be stored in
+!              the segment. There is one logical record for each
+!              time period. Each logical record contains three
+!              sets of Chebyshev coefficients---one for each
+!              coordinate---and three position vector components.
+!
+!     POLYDG   is the degree of each set of Chebyshev
+!              polynomials, i.e. the number of Chebyshev
+!              coefficients per angle minus one. POLYDG must be
+!              less than or equal to the parameter MAXDEG.
+!
+!     CDATA    is an array containing sets of Chebyshev
+!              polynomial coefficients and angles to be placed in
+!              the new segment of the PCK file. The Chebyshev
+!              coefficients represent Euler angle rates; the
+!              angles are values of the Euler angles at each
+!              interval midpoint. The angular and time units of
+!              the data are defined by the inputs ASCALE and
+!              TSCALE, which are described below.
+!
+!              The Euler angles represent the orientation of the
+!              reference frame designated by CLSSID relative to
+!              its base frame. The angles, which are numbered
+!              according to their ordinal position in the logical
+!              records, define a transformation matrix R as
+!              follows:
+!
+!                 R = [ A*ANGLE_3 ]  [ A*ANGLE_2 ]  [ A*ANGLE_1 ]
+!                                  3              1              3
+!
+!              where A is the angular scale ASCALE. Here the
+!              notation
+!
+!                 [ THETA ]
+!                          i
+!
+!              denotes a reference frame rotation of THETA
+!              radians in the right-hand sense about the ith
+!              coordinate axis. See the Rotation Required Reading
+!              for further discussion of this notation.
+!
+!              The matrix R transforms vectors expressed in the
+!              base frame to vectors expressed in the frame
+!              associated with CLSSID by left multiplication:
+!
+!                 V       = R * V
+!                  CLSSID        FRAME
+!
+!              In cases where the frame designated by CLSSID
+!              (which we'll abbreviate as "the CLSSID frame") is
+!              a body-fixed, right-handed frame with its +Z axis
+!              aligned with a body's north pole, the orientation
+!              angles are related to right ascension (RA) and
+!              declination (DEC) of the CLSSID frame's north
+!              pole, and prime meridian orientation (W), by the
+!              equations
+!
+!                 ANGLE_1 * ASCALE = RA   + pi/2 radians
+!                 ANGLE_2 * ASCALE = pi/2 - DEC  radians
+!                 ANGLE_3 * ASCALE = W           radians
+!
+!              The coefficients and angles are stored in CDATA in
+!              order as follows:
+!
+!                 the (POLYDG + 1) coefficients for the rate of
+!                 the first angle of the first logical record,
+!                 followed by the value of the first angle at the
+!                 first interval midpoint.
+!
+!                 the coefficients for the rate of the second
+!                 angle of the first logical record, followed by
+!                 the value of the second angle at the first
+!                 interval midpoint.
+!
+!                 the coefficients for the rate of the third
+!                 angle of the first logical record, followed by
+!                 the value of the third angle at the first
+!                 interval midpoint.
+!
+!                 the (degree + 1) coefficients for the rate of
+!                 the first angle of the second logical record,
+!                 followed by the value of the first angle at the
+!                 second interval midpoint.
+!
+!                 and so on.
+!
+!              The logical data records are stored contiguously:
+!
+!                 +----------+
+!                 | Record 1 |
+!                 +----------+
+!                 | Record 2 |
+!                 +----------+
+!                     ...
+!                 +----------+
+!                 | Record N |
+!                 +----------+
+!
+!              The contents of an individual record are:
+!
+!                 +--------------------------------------+
+!                 | Coeff set for ANGLE_1 rate           |
+!                 +--------------------------------------+
+!                 | ANGLE_1                              |
+!                 +--------------------------------------+
+!                 | Coeff set for ANGLE_2 rate           |
+!                 +--------------------------------------+
+!                 | ANGLE_2                              |
+!                 +--------------------------------------+
+!                 | Coeff set for ANGLE_3 rate           |
+!                 +--------------------------------------+
+!                 | ANGLE_3                              |
+!                 +--------------------------------------+
+!
+!                   Each coefficient set has the structure:
+!
+!                 +--------------------------------------+
+!                 | Coefficient of T_0                   |
+!                 +--------------------------------------+
+!                 | Coefficient of T_1                   |
+!                 +--------------------------------------+
+!                                   ...
+!                 +--------------------------------------+
+!                 | Coefficient of T_POLYDG              |
+!                 +--------------------------------------+
+!
+!              Where T_n represents the Chebyshev polynomial
+!              of the first kind of degree n.
+!
+!     ASCALE,
+!     TSCALE   are, respectively, the angular scale of the input
+!              angle and angular rate data in radians, and the
+!              time scale of the input rate data in TDB
+!              seconds.
+!
+!              For example, if the input angular data have units
+!              of degrees, ASCALE should be set to the number of
+!              radians in one degree. If the input rate data have
+!              time units of Julian days, then TSCALE should be
+!              set to the number of seconds per Julian day
+!              (86400).
+!
+!     INITJD   is the integer part of the Julian ephemeris date
+!              of initial epoch of the first record. INITJD may
+!              be less than, equal to, or greater than the
+!              initial epoch.
+!
+!     INITFR   is the fractional part of the Julian ephemeris
+!              date of initial epoch of the first record. INITFR
+!              has units of Julian days. INITFR has magnitude
+!              strictly less than 1 day. The sum
+!
+!                 INITJD + INITFR
+!
+!              equals the Julian ephemeris date of the initial
+!              epoch of the first record.
+!
+! $ Detailed_Output
+!
+!     None. This routine writes data to a PCK file.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the input
+!              Chebyshev expansions. MAXDEG is declared in the
+!              Fortran INCLUDE file pck20.inc.
+!
+!     TOLSCL   is a tolerance scale factor (also called a
+!              "relative tolerance") used for time coverage
+!              bound checking. TOLSCL is unitless. TOLSCL
+!              produces a tolerance value via the formula
+!
+!                 TOL = TOLSCL * MAX( ABS(FIRST), ABS(LAST) )
+!
+!              where FIRST and LAST are the coverage time bounds
+!              of a type 20 segment, expressed as seconds past
+!              J2000 TDB.
+!
+!              The resulting parameter TOL is used as a tolerance
+!              for comparing the input segment descriptor time
+!              bounds to the first and last epoch covered by the
+!              sequence of time intervals defined by the inputs
+!              to PCKW20:
+!
+!                 INITJD
+!                 INITFR
+!                 INTLEN
+!                 N
+!
+!              TOLSCL is declared in the Fortran INCLUDE file
+!              pck20.inc.
+!
+!              See the $Exceptions section below for a description
+!              of the error check using this tolerance.
+!
+! $ Exceptions
+!
+!     1)  If the number of sets of coefficients is not positive,
+!         the error SPICE(INVALIDCOUNT) is signaled.
+!
+!     2)  If the interval length is not positive, the error
+!         SPICE(INTLENNOTPOS) is signaled.
+!
+!     3)  If the name of the reference frame is not recognized,
+!         the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     4)  If segment stop time is not greater then the begin time,
+!         the error SPICE(BADDESCRTIMES) is signaled.
+!
+!     5)  If the start time of the first record exceeds the descriptor
+!         begin time by more than a computed tolerance, or if the end
+!         time of the last record precedes the descriptor end time by
+!         more than a computed tolerance, the error SPICE(COVERAGEGAP)
+!         is signaled. See the $Parameters section above for a
+!         description of the tolerance.
+!
+!     6)  If the input degree POLYDG is less than 0 or greater than
+!         MAXDEG, the error SPICE(INVALIDDEGREE) is signaled.
+!
+!     7)  If the last non-blank character of SEGID occurs past index 40,
+!         or if SEGID contains any nonprintable characters, an error is
+!         signaled by a routine in the call tree of this routine.
+!
+!     8)  If either the angle or time scale is non-positive, the
+!         error SPICE(NONPOSITIVESCALE) is signaled.
+!
+! $ Files
+!
+!     A new type 20 PCK segment is written to the PCK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes a PCK type 20 data segment to the designated
+!     PCK file, according to the format described in the PCK Required
+!     Reading.
+!
+!     Each segment can contain data for only one reference frame
+!     and base frame. The Chebyshev polynomial degree and length
+!     of time covered by each logical record are also fixed. However,
+!     an arbitrary number of logical records of Chebyshev polynomial
+!     coefficients can be written in each segment. Minimizing the
+!     number of segments in a PCK file will help optimize how the
+!     SPICE system accesses the file.
+!
+! $ Examples
+!
+!     Suppose that you have in an array CDATA sets of Chebyshev
+!     polynomial coefficients and angles representing the orientation
+!     of the moon, relative to the J2000 reference frame, and you want
+!     to put these into a type 20 segment in an existing PCK file. The
+!     following code could be used to add one new type 20 segment. To
+!     add multiple segments, put the call to PCKW20 in a loop.
+!
+!     C
+!     C      First open the PCK file and get a handle for it.
+!     C
+!            CALL DAFOPW ( PCKNAM, HANDLE )
+!
+!     C
+!     C      Create a segment identifier.
+!     C
+!            SEGID = 'MY_SAMPLE_PCK_TYPE_20_SEGMENT'
+!
+!     C
+!     C      Note that the interval length INTLEN has units
+!     C      of Julian days. The start time of the first record
+!     C      is expressed using two inputs: integer and fractional
+!     C      portions of the Julian ephemeris date of the start
+!     C      time.
+!     C
+!     C      The PCK frame class ID code is stored in the
+!     C      variable CLSSID. This ID must be associated in
+!     C      with a PCK frame; usually such an association is
+!     C      made via a frame kernel.
+!     C
+!     C      Write the segment.
+!     C
+!            CALL PCKW20 ( HANDLE, CLSSID, 'J2000', FIRST,
+!          .               LAST,   SEGID,  INTLEN,  N,
+!          .               POLYDG, CDATA,  ASCALE,  TSCALE
+!          .               INITJD, INITFR                  )
+!
+!     C
+!     C      Close the file.
+!     C
+!            CALL DAFCLS ( HANDLE )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.S. Zukor         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (KSZ)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write PCK type_20 data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local Parameters
+!
+
+!
+!     DTYPE is the PCK data type.
+!
+      integer(ip), parameter :: dtype = 20
+
+!
+!     ND is the number of double precision components in a PCK
+!     segment descriptor. PCK uses ND = 2.
+!
+      integer(ip), parameter :: nd = 2
+
+!
+!     NI is the number of integer components in a PCK segment
+!     descriptor. PCK uses NI = 5.
+!
+      integer(ip), parameter :: ni = 5
+
+!
+!     NS is the size of a packed PCK segment descriptor.
+!
+      integer(ip), parameter :: ns = 5
+
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     PCK segment identifier.
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     Local variables
+!
+      character(sidlen)     etstr
+      character(sidlen)     netstr
+
+      real(wp)              btime
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              numrec
+      real(wp)              tol
+
+      integer(ip)           icd   ( ni )
+      integer(ip)           ninrec
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of sets of coefficients must be positive.
+!
+      if ( n <= 0 ) then
+
+         call ctx%setmsg ( 'The number of sets of coordinate ' &
+         //            'coefficients is not positive. N = #.' )
+         call ctx%errint ( '#', n                                 )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                  )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( polydg < 0 ) .or. ( polydg > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; ' &
+         //            'the valid degree range is [0, #].'             )
+         call ctx%errint ( '#', polydg                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     The interval length must be positive.
+!
+      if ( intlen <= 0 ) then
+
+         call ctx%setmsg ( 'The interval length is not positive.' &
+         //            'N = #'                                )
+         call ctx%errdp  ( '#', intlen                            )
+         call ctx%sigerr ( 'SPICE(INTLENNOTPOS)'                  )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.' )
+         call ctx%errch  ( '#', frame                                )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
+         return
+
+      end if
+
+!
+!     The segment stop time must be greater than the begin time.
+!
+      if ( first >= last ) then
+
+         call ctx%setmsg ( 'The segment start time: # (# TDB) is ' &
+         //            'not less than the segment end time: ' &
+         //            '(# TDB).'                               )
+         call etcal  ( ctx, first, etstr                             )
+         call ctx%errch  ( '#',   etstr                             )
+         call ctx%errdp  ( '#',   first                             )
+         call etcal  ( ctx, last,  netstr                            )
+         call ctx%errch  ( '#',   netstr                            )
+         call ctx%errdp  ( '#',   last                              )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                   )
+         return
+
+      end if
+
+!
+!     The angle and time scales must be positive.
+!
+      if ( ascale <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The angle scale is not positive.'  // &
+                       'ASCALE = #'                           )
+         call ctx%errdp  ( '#', ascale                            )
+         call ctx%sigerr ( 'SPICE(NONPOSITIVESCALE)'              )
+         return
+
+      end if
+
+      if ( tscale <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The time scale is not positive.'     // &
+                       'TSCALE = #'                           )
+         call ctx%errdp  ( '#', tscale                            )
+         call ctx%sigerr ( 'SPICE(NONPOSITIVESCALE)'              )
+         return
+
+      end if
+
+!
+!     The begin time of the first record must be less than or equal
+!     to the begin time of the segment. Convert the two-part input
+!     epoch to seconds past J2000 for the purpose of this check.
+!
+      btime = spd  *  (  ( initjd - j2000 ) + initfr  )
+
+      ltime = btime  +  ( n * intlen * spd )
+
+!
+!     Compute the tolerance to use for descriptor time bound checks.
+!
+      tol = tolscl * max( abs(btime), abs(ltime) )
+
+      if ( first < btime - tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time # is too ' &
+         //            'much less than the beginning time of the ' &
+         //            'segment data # (in seconds past J2000: #). ' &
+         //            'The difference is # seconds; the ' &
+         //            'tolerance is # seconds.'                     )
+         call etcal  ( ctx, first, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, btime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   first                                  )
+         call ctx%errdp  ( '#',   btime-first                            )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      if ( last > ltime + tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time # is too ' &
+         //            'much greater than the end time of the segment ' &
+         //            'data # (in seconds past J2000: #). The ' &
+         //            'difference is # seconds; the tolerance is # ' &
+         //            'seconds.'                                    )
+         call etcal  ( ctx, last,  etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, ltime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   last                                   )
+         call ctx%errdp  ( '#',   last-ltime                             )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     Now check the validity of the segment identifier.
+!
+      call chckid ( ctx, 'PCK segment identifier', sidlen, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = clssid
+      icd(2) = refcod
+      icd(3) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment of PCK type 20 form:
+!
+!        Record 1
+!        Record 2
+!        ...
+!        Record N
+!        ASCALE     ( angular scale in radians )
+!        TSCALE     ( time scale in seconds )
+!        INITJD     ( integer part of initial epoch of first record,
+!                     expressed as a TDB Julian date )
+!        INITFR     ( fractional part of initial epoch, in units of
+!                     TDB Julian days )
+!        INTLEN     ( length of interval covered by each record, in
+!                     units of TDB Julian days )
+!        RSIZE      ( number of data elements in each record )
+!        N          ( number of records in segment )
+!
+!     Each record will have the form:
+!
+!        ANGLE_1 coefficients
+!        ANGLE_1 angle at interval midpoint
+!        ANGLE_2 coefficients
+!        ANGLE_2 angle at interval midpoint
+!        ANGLE_3 coefficients
+!        ANGLE_3 angle at interval midpoint
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+!
+!     Calculate the number of entries in a record.
+!
+      ninrec = ( polydg + 2 ) * 3
+
+!
+!     Fill segment with N records of data.
+!
+      call dafada ( ctx, cdata, n * ninrec )
+
+!
+!     Store the angle and time scales.
+!
+      call dafada ( ctx, [ ascale ], 1 )
+      call dafada ( ctx, [ tscale ], 1 )
+
+!
+!     Store the integer and fractional parts of the initial epoch of
+!     the first record.
+!
+      call dafada ( ctx, [ initjd ], 1 )
+      call dafada ( ctx, [ initfr ], 1 )
+
+!
+!     Store the length of interval covered by each record.
+!
+      call dafada ( ctx, [ intlen ], 1 )
+
+!
+!     Store the size of each record (total number of array elements).
+!     Note that this size is smaller by 2 than the size of a type 2
+!     record of the same degree, since the record coverage midpoint
+!     and radius are not stored.
+!
+      call dafada ( ctx, [ real( ninrec, wp ) ], 1 )
+
+!
+!     Store the number of records contained in the segment.
+!
+      numrec = n
+      call dafada ( ctx, [ numrec ], 1 )
+
+!
+!     End this segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure pckw20
+
+      module procedure spcac
+
+! $ Abstract
+!
+!     Store text from a text file in the comment area of a binary SPK
+!     or CK file, appending it to whatever text may already have
+!     been stored there.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle assigned to the binary SPK or CK file
+!              which has been opened for write access.
+!
+!              Use the SPICELIB routine DAFOPW to open the file for
+!              write access and get HANDLE. Upon exit, this binary file
+!              will contain the specified text from the comment file in
+!              its comment area, appended to whatever text may already
+!              have been stored there. SPCAC will include an extra blank
+!              line between the original text and the appended text.
+!
+!     UNIT     is the logical unit connected to the comment file.
+!              This file must contain only text (printable
+!              ASCII characters, namely ASCII 32-126).  Open this
+!              file with read access and get its UNIT using TXTOPR.
+!
+!     BMARK,
+!     EMARK    are markers that delimit a group of consecutive
+!              lines in the text file (UNIT), that get stored in the
+!              comment area of the binary file (HANDLE).
+!
+!              The group of lines begins with the line that
+!              immediately follows the first line of the file
+!              equivalent to BMARK. It ends with line that
+!              precedes the next line of the file equivalent to
+!              EMARK, including blank lines. Leading and
+!              trailing blanks are ignored when testing for
+!              equivalence.
+!
+!              By convention, if BMARK is blank, the first line of
+!              the group is the first line of the file; if EMARK is
+!              blank, the last line of the group is the last line
+!              of the file.
+!
+!              If a marker is non-blank and is not found, or if
+!              non-blank markers are on successive lines in the text
+!              file, nothing gets stored in the comment area of
+!              the binary file.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the specified DAF file is not open for write access, an
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If there is a problem reading from the comment area of the
+!         binary file, the error SPICE(FILEREADFAILED) is signaled.
+!
+!     3)  If there is a problem writing to the comment area of the
+!         binary file, the error SPICE(FILEWRITEFAILED) is signaled.
+!
+!     4)  If there is a problem reading from the text file, an
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     5)  If a non-printing ASCII character is encountered in the
+!         comments, an error is signaled by a routine in the call tree
+!         of this routine.
+!
+! $ Files
+!
+!     See arguments HANDLE and UNIT.
+!
+! $ Particulars
+!
+!     The structure of SPK and CK files accommodates comments in
+!     addition to data. The following three routines are available
+!     for accessing the comment area of a binary SPK or CK file:
+!
+!           SPCAC           add comments
+!
+!           SPCEC           extract comments
+!
+!           SPCDC           delete comments
+!
+!     Note that comments must consist of only text, that is, printable
+!     ASCII characters, specifically ASCII 32-126. This excludes
+!     tabs (ASCII 9) and control characters.
+!
+!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!     SPCT2B---include these comments when converting SPK and CK
+!     files between binary and text formats.
+!
+! $ Examples
+!
+!     Suppose we have a binary SPK file called A.BSP and we have
+!     a text file called COMMENTS.TXT that contains comments
+!     about the data in the SPK file.
+!
+!     The following code fragment stores the entire contents of
+!     COMMENTS.TXT in the comment area of A.BSP.
+!
+!            CALL DAFOPW ( 'A.BSP', HANDLE )
+!
+!            CALL TXTOPR ( 'COMMENTS.TXT', UNIT )
+!
+!            BMARK = ' '
+!            EMARK = ' '
+!
+!            CALL SPCAC  ( HANDLE, UNIT, BMARK, EMARK )
+!
+!            CLOSE ( UNIT )
+!
+!     Now suppose MORE.TXT is a text file that contains additional
+!     information about the data in A.BSP, as well as information
+!     about several other SPK files.  The contents of MORE.TXT are
+!
+!               \begin A info
+!
+!                 DATAFILE = A
+!                 SOURCE   = JPL, 1990 September 12
+!                 MISSION  = Galileo
+!
+!               \end A info
+!
+!               \begin B info
+!
+!                 DATAFILE = B
+!                 SOURCE   = JPL, 1988 August 1
+!                 MISSION  = Voyager 2
+!
+!               \end B info
+!
+!               \begin C info
+!
+!                 DATAFILE = C
+!                 SOURCE   = JPL, 1994 January 31
+!                 MISSION  = Mars Observer
+!
+!               \end C info
+!
+!     This code fragment stores only the information that pertains
+!     to A.BSP, and appends it to the text from COMMENTS.TXT that
+!     has already been stored in the comment area of A.BSP
+!
+!            CALL TXTOPR ( 'MORE.TXT', UNIT )
+!
+!            BMARK = '\begin A info'
+!            EMARK = '\end A info'
+!
+!            CALL SPCAC  ( HANDLE, UNIT, BMARK, EMARK )
+!
+!            CLOSE ( UNIT )
+!
+!            CALL DAFCLS ( HANDLE )
+!
+!     Note that, ignoring leading and trailing blanks, BMARK and
+!     EMARK are exactly equivalent to lines in the text file.
+!     If the assignment had been instead BMARK = '\ begin A info',
+!     with an extra space between the slash and the word begin,
+!     SPCAC would not have found the marker and no comments from
+!     the text file would be written to the binary file.
+!
+! $ Restrictions
+!
+!     1)  The lines in the comment file should not exceed 1000
+!         characters in length. SPCAC truncates lines longer than
+!         this on the right.
+!
+!     2)  Use TXTOPR to open text files for read access and get
+!         the logical unit. System dependencies regarding
+!         opening text files have been isolated in the routines
+!         TXTOPN and TXTOPR.
+!
+!     3)  This routine assumes that the comment area of the binary SPK
+!         or CK file contains only text stored by SPCAC. Comments
+!         written any other way may not be handled properly.
+!
+!     4)  The comment area of the binary SPK or CK file must contain
+!         only one EOT character. This routine seeks back from the
+!         last reserved record searching for the first EOT it
+!         encounters. Thus the multiple EOT's will cause the appended
+!         comments to be invisible to any reader that starts at the
+!         first reserved record and reads until the first EOT present.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 13-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Moved the contents of the $Files section to the description of
+!        HANDLE and UNIT in $Detailed_Input section, and referred to
+!        them from $Files. Removed unnecessary entries from $Revisions
+!        section.
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Updated this routine to utilize new handle manager
+!        interfaces.
+!
+!-    SPICELIB Version 1.3.0, 12-FEB-1999 (FST)
+!
+!        Modified the EOT search code to seek back through any
+!        reserved records, as opposed to just the last one. This
+!        provides the flexibility to use DAFOPN to reserve records
+!        that may ultimately be used for storing comments. As a direct
+!        result of these changes the SPICE(MISSINGEOT) error is no
+!        longer signaled, since if no EOT is found in the reserved
+!        records, they are considered available for writes.
+!
+!-    SPICELIB Version 1.2.0, 12-MAY-1994 (KRG)
+!
+!        Added an IF statement so that DAFARR is called only if new
+!        reserved records need to be added to the comment area.
+!
+!-    SPICELIB Version 1.1.0, 09-APR-1993 (KRG)
+!
+!        Added code to initialize the variable LASTRR to zero. This
+!        variable is used in a function call, MAX ( LASTRR-1, 1 ),
+!        regardless of whether or not any reserved records are in
+!        the file. Thus the need to initialize it.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     add comments to SPK or CK file
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        This routine now utilizes DAFSIH to determine if
+!        HANDLE is open for WRITE access. The call to DAFHLU
+!        has been replaced with a call to ZZDDHHLU, the handle
+!        manager interface for retrieving a logical unit.
+!        DAFHLU is no longer used, since it locks the unit
+!        returned to its HANDLE, tying up resources in the
+!        handle manager.
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+!     IFNLEN      is the length of a DAF internal file name.
+!
+!     MAXCPR      is the maximum number of characters per DAF record and
+!                 hence the maximum comment line length.
+!
+
+
+!
+!     Local variables
+!
+
+
+
+!
+!     Standard SPICE error handling.
+!
+      use pepper_kinds, only: ip
+      use pepper_strings, only: lastnb
+      implicit none
+      integer(ip), parameter :: ifnlen = 60
+      integer(ip), parameter :: maxcpr = 1000
+      character(maxcpr+2)   data
+      character(1)          eot
+      character(ifnlen)     ifname
+      character(maxcpr)     line
+      character(1)          null
+      character(maxcpr)     record
+      integer(ip)           bline
+      integer(ip)           bward
+      integer(ip)           c
+      integer(ip)           chars
+      integer(ip)           dafu
+      integer(ip)           eol
+      integer(ip)           eline
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           i
+      integer(ip)           iostat
+      integer(ip)           l
+      integer(ip)           lastrr
+      integer(ip)           lines
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nr
+      integer(ip)           nrr
+      integer(ip)           pos
+      integer(ip)           poseot
+      integer(ip)           rec
+      integer(ip)           space
+      integer(ip)           start
+      integer(ip)           total
+      logical               found
+      if ( ctx%failed() ) return
+
+!
+!     Before doing anything, determine if the file associated with
+!     HANDLE is available for WRITE access.
+!
+      call dafsih ( ctx, handle, 'WRITE' )
+
+      if ( ctx%failed() ) return
+
+!
+!     Rewind the comment file - we'll start the search for BMARK
+!     and EMARK at the beginning.  Once we have located the markers,
+!     count the number of lines between them and the number of
+!     characters in those lines, ignoring trailing blanks.
+!
+!     We rewind the file so that we know where the file pointer is.
+!     LOCLN will compute BLINE and ELINE taking the current position
+!     of the file pointer as line 1.
+!
+      rewind ( unit )
+
+      call locln ( ctx, unit, bmark, emark, line, bline, eline, found )
+
+!
+!     If the markers are not found, or if BMARK and EMARK are on
+!     successive lines, there is nothing to put in the comment area.
+!
+      if ( .not. found ) return
+
+!
+!     Adjust BLINE and ELINE so we are pointing to the group of lines
+!     BETWEEN the markers.  Check and make sure there is at least one
+!     line in the group.
+!
+      if ( bmark /= ' ' ) then
+         bline = bline + 1
+      end if
+
+      if ( emark /= ' ' ) then
+         eline = eline - 1
+      end if
+
+      if ( bline > eline ) return
+
+!
+!     Calculate the number of lines and the total number of characters
+!     in those lines.  The characters must all be printable, or
+!     else COUNTC will signal an error.
+!
+      lines = eline - bline + 1
+      chars = countc ( ctx, unit, bline, eline, line )
+
+      if ( ctx%failed() ) return
+
+!
+!     Read the file record to find out if the DAF contains any
+!     reserved records.  The reserved records in an array file
+!     are stored between the first record (the file record) and
+!     the first summary record.  FWARD is the record number of
+!     that first summary record, and NRR is the number of reserved
+!     records in the file.
+!
+      call dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+      nrr    = fward - 2
+
+!
+!     Get the logical unit for reading from and writing to the DAF.
+!
+      call zzddhhlu ( ctx, handle, 'DAF', .false., dafu )
+
+      if ( ctx%failed() ) return
+
+!
+!     Assign the value of NULL and EOT.  NULL gets appended to the
+!     end of each line of text.  EOT gets appended to the end of
+!     all the comments.  Assign initial values for SPACE, RECORD,
+!     and START.
+!
+      null = char( 0)
+      eot  = char( 4)
+      space  = 0
+      record = ' '
+      start  = 0
+      lastrr = 0
+
+      if ( nrr /= 0 ) then
+!
+!        At this point, we know there exist reserved records in the
+!        DAF. We need to search from the last record to the first,
+!        seeking for the EOT (end of transmission) character, as it
+!        marks the end of the comment region.
+!
+         lastrr = fward - 1
+         i      = lastrr + 1
+         poseot = 0
+
+         do while ( ( i > 1 ) .and. ( poseot == 0 ) )
+!
+!           Decrement the counter now.  This keeps it in
+!           sync with the exit conditions.
+!
+            i = i - 1
+            read ( dafu, rec=i, iostat=iostat ) record
+
+            if ( iostat /= 0 ) then
+               call ctx%setmsg ( 'Error reading comment area of binary '// &
+                             'file named FILE.  IOSTAT = *.'          )
+               call ctx%errint ( '*', iostat                              )
+               call ctx%errfnm ( 'FILE', dafu                             )
+               call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                  )
+               return
+            end if
+!
+!           Call INDEX. If POSEOT is 0, then RECORD doesn't contain
+!           the EOT character.
+!
+            poseot = index ( record, eot )
+
+         end do
+
+!
+!        The amount of free space in the reserved records of the
+!        files is determined by the number of empty reserved
+!        records ( LASTRR - I ), and the number of characters used
+!        in last record with data (MAXCPR - POSEOT).
+!
+         space = maxcpr*(lastrr - i + 1) - poseot
+!
+!        Adjust the value of LASTRR to indicate the record where
+!        the EOT lies.  From here on out, the purpose of this
+!        variable is to indicate where to start dumping comments.
+!
+         lastrr = i
+!
+!        If POSEOT is 0, then there are no comments in the file, but
+!        there are reserved records.  Branch on this:
+!
+         if ( poseot == 0 ) then
+!
+!           Leaving this string index at zero may be causing all sorts
+!           of warning bells to go off in your head. However, before
+!           this index value is used to address the contents of a
+!           string it's incremented by 1.
+!
+            start = poseot
+!
+!        Handle the case when POSEOT is non-zero.
+!
+         else
+!
+!           Replace the end-of-transmission character with a new line
+!           character (we use null), so a blank line will come between
+!           the old text and new text in the comment area.  START is the
+!           position after which the first character of the new text
+!           goes.
+!
+            record ( poseot:poseot ) = null
+
+            start = poseot
+
+         end if
+
+      end if
+
+!
+!     Compute the number of records (NR) needed to store all of these
+!     characters.
+!
+!     Each line should end with a null (ASCII 0) character.  The final
+!     line should also be followed by an end-of-transmission (ASCII 4)
+!     character.  So the total is the number of characters, plus the
+!     number of lines, plus one for the EOT.
+!
+!     If the TOTAL fits in the SPACE available in the last reserved
+!     record, we don't need to reserve any more.  Otherwise compute
+!     the number we need.
+!
+      total = chars + lines + 1
+
+      if (  ( total - space ) > 0  ) then
+
+         nr = (  ( total - space ) - 1  ) / maxcpr    +   1
+
+      else
+
+         nr = 0
+
+      end if
+
+!
+!     Reserve the records to create a comment area large enough
+!     to hold it all, if we need to.  If we can't do it, there's no
+!     point in going on.
+!
+      if ( nr > 0 ) then
+
+         call dafarr ( ctx, handle, nr )
+
+         if ( ctx%failed() ) return
+
+      end if
+
+!
+!     Load the group of lines in the comment file into the reserved
+!     records. Keep adding lines to the current record until it has
+!     been filled, then write it to the DAF, and begin a new record.
+!
+      rec    = max ( lastrr-1, 1 )
+      pos    = start
+
+!
+!     Rewind the text file then skip past the lines that we don't want
+!     to position the file pointer at the correct record.
+!
+      rewind ( unit )
+
+      do l = 1, bline - 1
+
+         read ( unit, fmt='(A)', iostat=iostat ) line
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading line # in text file named '  // &
+                          'FILE.  IOSTAT = *.'                        )
+            call ctx%errint ( '#', l                                      )
+            call ctx%errint ( '*', iostat                                 )
+            call ctx%errfnm ( 'FILE', unit                                )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            return
+         end if
+
+      end do
+
+!
+!     Start reading the lines that we do want.  LINE is MAXCPR long
+!     so that's the maximum number of characters that are read.
+!
+      do l = 1, lines
+
+         read ( unit, fmt='(A)', iostat=iostat ) line
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading line # in text file named '  // &
+                          'FILE.  IOSTAT = *.'                        )
+            call ctx%errint ( '#', l+bline-1                              )
+            call ctx%errint ( '*', iostat                                 )
+            call ctx%errfnm ( 'FILE', unit                                )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            return
+         end if
+
+!
+!        Each line is followed by a null character.
+!
+         eol           = lastnb ( data ) + 1
+         data(eol:eol) = null
+
+!
+!        The final line is followed by an additional
+!        end-of-transmission character.
+!
+         if ( l == lines ) then
+            eol           = eol + 1
+            data(eol:eol) = eot
+         end if
+
+!
+!        Moving characters one at a time is slower, but simpler,
+!        than trying to move them in blocks.
+!
+         do c = 1, eol
+
+!
+!           If the current record is full, write it to the DAF.
+!
+            if ( pos == maxcpr ) then
+
+               rec = rec + 1
+               write ( dafu, rec=rec, iostat=iostat ) record
+
+               if ( iostat == 0 ) then
+                  record = ' '
+                  pos    = 0
+
+               else
+                  call ctx%setmsg ( 'Error writing to record # of the '  // &
+                                'binary file named FILE. IOSTAT = *.' )
+                  call ctx%errint ( '#', rec                              )
+                  call ctx%errint ( '*', iostat                           )
+                  call ctx%errfnm ( 'FILE', dafu                          )
+                  call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'              )
+                  return
+               end if
+
+            end if
+
+!
+!           Add the next character to the current record.
+!
+            pos             = pos + 1
+            record(pos:pos) = data(c:c)
+
+         end do
+
+      end do
+
+!
+!     Write the final record to the DAF.
+!
+      rec = rec + 1
+      write ( dafu, rec=rec, iostat=iostat ) record
+
+      if ( iostat /= 0 ) then
+         call ctx%setmsg ( 'Error writing the final record, record #, '   // &
+                       'of the binary file named FILE.  IOSTAT = *.'  )
+         call ctx%errint ( '#', rec                                       )
+         call ctx%errint ( '*', iostat                                    )
+         call ctx%errfnm ( 'FILE', dafu                                   )
+         call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         return
+      end if
+
+      return
+      end procedure spcac
+
+!$Procedure SPCDC ( SPK and CK, delete comments )
+
+      module procedure spcdc
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Empty the comment area of a binary SPK or CK file.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle assigned to the binary SPK or CK file
+!              which has been opened for write access.
+!
+!              Use the SPICELIB routine DAFOPW to open the file for
+!              write access and get HANDLE. Upon exit, this binary file
+!              will have an empty comment area: all previous comments
+!              are deleted. Note, however, that the size of the file
+!              does not change.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the file does not contain any comments in its comment area
+!         on input, it will be unchanged by this routine.
+!
+! $ Files
+!
+!     See argument HANDLE.
+!
+! $ Particulars
+!
+!     The structure of SPK and CK files accommodates comments in
+!     addition to data. The following three routines are available
+!     for accessing the comment area of a binary SPK or CK file:
+!
+!           SPCAC           add comments
+!
+!           SPCEC           extract comments
+!
+!           SPCDC           delete comments
+!
+!     Note that comments must consist of only text, that is, printable
+!     ASCII characters, specifically ASCII 32-126. This excludes
+!     tabs (ASCII 9) and control characters.
+!
+!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!     SPCT2B---include these comments when converting SPK and CK
+!     files between binary and text formats.
+!
+! $ Examples
+!
+!     1)  Suppose we have a binary SPK file called A.BSP. The following
+!         code fragment deletes any comments that may have been stored
+!         in the comment area of the file.
+!
+!                 CALL DAFOPW ( 'A.BSP', HANDLE )
+!
+!                 CALL SPCDC  ( HANDLE )
+!
+!     2)  Suppose B.BSP is a binary SPK file with comments in its
+!         comment area. The routine TXTOPN opens a new text file.
+!
+!           C
+!           C     Open the binary SPK file with write access and
+!           C     get its handle.
+!           C
+!                 CALL DAFOPW ( 'B.BSP', HANDLE )
+!
+!           C
+!           C     Open a new text file and write the comments
+!           C     from the SPK file to it.
+!           C
+!                 CALL TXTOPN ( 'COMMENTS.TXT',   UNIT1 )
+!                 CALL SPCEC  ( HANDLE,           UNIT1 )
+!
+!           C
+!           C     Delete the comments in the SPK file.
+!           C
+!                 CALL SPCDC  ( HANDLE )
+!
+!           C
+!           C     Open another new text file and try to write
+!           C     comments from the SPK file to it.
+!           C
+!                 CALL TXTOPN ( 'NOCOMMENTS.TXT', UNIT2 )
+!                 CALL SPCEC  ( HANDLE,           UNIT2 )
+!
+!         After executing this code fragment, COMMENTS.TXT would
+!         contain the comments from the SPK file.  NOCOMMENTS.TXT
+!         would be empty because of the call to SPCDC.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Moved the contents of the $Files section to the description of
+!        HANDLE in $Detailed_Input section, and referred to it from
+!        $Files.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     delete comments from SPK or CK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+!     IFNLEN      is the length of a DAF internal file name.
+!
+      integer(ip), parameter :: ifnlen = 60
+
+!
+!     Local variables
+!
+      character(ifnlen)     ifname
+
+      integer(ip)           bward
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nrr
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The comment area IS the reserved records.  To empty the comment
+!     area we just remove the reserved records.
+!
+!     Read the file record to find out how many reserved records are
+!     in the DAF.  The reserved records are stored between the first
+!     record (the file record) and the first summary record.  FWARD
+!     is the record number of that first summary record, and NRR is
+!     the number of reserved records in the file.
+!
+      call dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+
+      nrr = fward - 2
+
+!
+!     Once we know how many there are, we can remove them.
+!
+      call dafrrr ( ctx, handle, nrr )
+
+      return
+      end procedure spcdc
+
+!$Procedure SPCEC ( SPK and CK, extract comments )
+
+      module procedure spcec
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Extract the text from the comment area of a binary SPK or CK file
+!     and write it to a text file.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle assigned to the binary SPK or CK file
+!              which has been opened for read access.
+!
+!              Use the SPICELIB routine DAFOPR to open the file for read
+!              access and get HANDLE unless SPKLEF or CKLPF has already
+!              been called and returned the handle. This file is
+!              unchanged by calling SPCEC.
+!
+!     UNIT     is the logical unit connected to the text file to
+!              which the contents of the comment area of the SPK
+!              or CK file will be written, beginning at the current
+!              position of the file pointer.
+!
+!              Use the SPICELIB routine TXTOPN to open the file and get
+!              UNIT. Upon exit, this file will contain the text from the
+!              comment area of the binary SPK or CK file, beginning at
+!              the line that was the position of the file pointer when
+!              SPCEC was called. In other words, SPCEC does not rewind
+!              or backspace this file before writing the text to it.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the comment area of the SPK or CK file is empty, nothing
+!         will be written to the text file.
+!
+!     2)  If there is a problem reading from the comment area, the error
+!         SPICE(FILEREADFAILED) is signaled.
+!
+!     3)  If there is a problem writing to the text file, the error
+!         SPICE(FILEWRITEFAILED) is signaled.
+!
+! $ Files
+!
+!     See argument HANDLE and UNIT.
+!
+! $ Particulars
+!
+!     The structure of SPK and CK files accommodates comments in
+!     addition to data. The following three routines are available
+!     for accessing the comment area of a binary SPK or CK file:
+!
+!           SPCAC           add comments
+!
+!           SPCEC           extract comments
+!
+!           SPCDC           delete comments
+!
+!     Note that comments must consist of only text, that is, printable
+!     ASCII characters, specifically ASCII 32-126. This excludes
+!     tabs (ASCII 9) and control characters.
+!
+!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!     SPCT2B---include these comments when converting SPK and CK
+!     files between binary and text formats.
+!
+! $ Examples
+!
+!     Suppose we have a binary SPK file called A.BSP. The following
+!     code fragment stores the contents of the comment area of A.BSP
+!     in a text file called COMMENTS.TXT and surrounds the comments
+!     with markers.
+!
+!            CALL DAFOPR ( 'A.BSP', HANDLE )
+!
+!            CALL TXTOPN ( 'COMMENTS.TXT', UNIT )
+!
+!            WRITE (UNIT,*) '\begincomments'
+!
+!            CALL SPCEC  ( HANDLE, UNIT )
+!
+!            WRITE (UNIT,*) '\endcomments'
+!
+! $ Restrictions
+!
+!     1)  Use TXTOPN to open new text files and get their logical unit.
+!         There are system dependencies regarding opening text files,
+!         and these have been isolated in the routines TXTOPN and
+!         TXTOPR.
+!
+!     2)  This routine assumes that the comment area of the binary SPK
+!         or CK file contains only text stored by SPCAC. Comments
+!         written any other way may not be handled properly.
+!
+!     3)  This routine is only used to read records on environments
+!         whose characters are a single byte in size. Updates
+!         to this routine and routines in its call tree may be
+!         required to properly handle other cases.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 03-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Moved the contents of the $Files section to the description of
+!        HANDLE and UNIT in $Detailed_Input section, and referred to
+!        them from $Files.
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Updated this routine to utilize new handle manager
+!        interfaces.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     extract comments from SPK or CK file
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        The call to DAFHLU has been replaced with a call to
+!        ZZDDHHLU, the handle manager interface for retrieving
+!        a logical unit. DAFHLU is no longer used, since it
+!        locks the unit returned to its HANDLE, tying up resources
+!        in the handle manager. A call to DAFSIH was inserted to
+!        make certain that HANDLE is present in DAFAH's file table.
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!     IFNLEN      is the length of a DAF internal file name.
+!
+!     MAXCPR      is the maximum number of characters per DAF record and
+!                 hence the maximum comment line length.
+!
+      integer(ip), parameter :: ifnlen = 60
+
+      integer(ip), parameter :: maxcpr = 1000
+
+!
+!     Local variables
+!
+      character(ifnlen)     ifname
+      character(maxcpr)     line
+      character(maxcpr)     record
+      character(1)          eot
+      character(1)          null
+
+      integer(ip)           bward
+      integer(ip)           c
+      integer(ip)           dafu
+      integer(ip)           free
+      integer(ip)           fward
+      integer(ip)           iostat
+      integer(ip)           nd
+      integer(ip)           ni
+      integer(ip)           nrr
+      integer(ip)           pos
+      integer(ip)           rec
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     First, check to see if HANDLE is a legitimate DAF handle.
+!
+      call dafsih ( ctx, handle, 'READ' )
+
+      if ( ctx%failed() ) return
+
+!
+!     Read the file record to find out if the DAF contains any
+!     reserved records.  The reserved records in an array file
+!     are stored between the first record and the first summary
+!     record.  FWARD is the record number of that first summary
+!     record, and NRR is the number of reserved records in the file.
+!     If there are no reserved records, there's nothing to be done.
+!
+      call dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+      nrr = fward - 2
+
+      if ( nrr == 0 ) return
+
+!
+!     We need to read directly from the SPK or CK file, using a logical
+!     unit instead of a handle.
+!
+      call zzddhhlu ( ctx, handle, 'DAF', .false., dafu )
+
+      if ( ctx%failed() ) return
+
+!
+!     Load the contents of the reserved records into individual lines,
+!     for printing.  Keep adding characters to the current line until
+!     it has been filled, then write it to the text file, and
+!     begin a new line.
+!
+!     In the comment area, NULL means end-of-line, and EOT means
+!     end-of-transmission, or in other words, end-of-comments.
+!
+      null = char ( 0 )
+      eot  = char ( 4 )
+
+      line   = ' '
+      record = ' '
+      pos    = 0
+
+      do rec = 1, nrr
+
+         read ( dafu, rec=rec+1, iostat=iostat ) record
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading comment area of the binary ' // &
+                          'file named FNM.  Value of IOSTAT is #.'    )
+            call ctx%errint ( '#', iostat                                 )
+            call ctx%errfnm ( 'FNM', dafu                                 )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            return
+         end if
+
+         do c = 1, maxcpr
+
+!
+!           End-of-transmission means we're done.
+!
+            if ( record(c:c) == eot ) then
+
+               return
+
+!
+!           NULL means that the current line is ready to be written to
+!           the text file.  The end-of-line character itself does not
+!           get written.  After this, the current line should be empty
+!           again.
+!
+            else if ( record(c:c) == null ) then
+
+               if ( pos == 0 ) then
+                  write ( unit, *, iostat=iostat )
+               else
+                  write ( unit, fmt='(A)', iostat=iostat ) line( :pos)
+               end if
+
+               if ( iostat /= 0 ) then
+                  call ctx%setmsg ( 'Error writing to the text file '     // &
+                                'named FNM.  Value of IOSTAT is #.'   )
+                  call ctx%errint ( '#', iostat                           )
+                  call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'              )
+                  return
+               end if
+
+               line = ' '
+               pos  = 0
+
+!
+!           If this a normal character, add it to the current line.
+!
+            else
+
+               pos           = pos + 1
+               line(pos:pos) = record(c:c)
+
+            end if
+
+         end do
+
+      end do
+
+      return
+      end procedure spcec
+
+!$Procedure SPCOPN ( SPK or CK, open new file )
+
+      module procedure spcopn
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Open a new SPK or CK file for subsequent write requests.
+!
+! $ Required_Reading
+!
+!     DAF
+!     SPC
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     FNAME    is the name of a new SPK or CK file to be created.
+!
+!     IFNAME   is the internal file name of the file to be created.
+!              IFNAME may contain up to 60 characters.
+!
+! $ Detailed_Output
+!
+!     HANDLE   is the file handle assigned to the new file. This
+!              should be used to refer to the file in all subsequent
+!              calls to DAF and SPC routines.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the specified file cannot be opened without exceeding the
+!         maximum number of files, an error is signaled by a routine in
+!         the call tree of this routine.
+!
+!     2)  If the specified file cannot be opened without exceeding the
+!         maximum number of DAF files, an error is signaled by a routine
+!         in the call tree of this routine.
+!
+!     3)  If an I/O error occurs in the process of opening the file,
+!         the error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     4)  If (for some reason) the initial records in the file cannot be
+!         written, an error is signaled by a routine in the call tree of
+!         this routine.
+!
+!     5)  If no logical units are available, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+!     6)  If the file name is blank or otherwise inappropriate, an error
+!         is signaled by a routine in the call tree of this routine.
+!
+! $ Files
+!
+!     See argument FNAME above.
+!
+! $ Particulars
+!
+!     SPCOPN opens a new SPK or CK file. It is identical to DAFOPN
+!     except SPCOPN defines several of the inputs that DAFOPN requires
+!     and which specify that the DAF to be opened is an SPK or CK file.
+!     Use DAFCLS to close any DAF including SPK and CK files.
+!
+!     SPCOPN, is not to be confused with the routines that load and
+!     unload files to and from a buffer for use by the readers such as
+!     SPKLEF (SPK, load ephemeris file) and CKLPF (CK, load pointing
+!     file). The loading and unloading routines open and close the files
+!     internally, so there is no need to call SPCOPN when loading or
+!     unloading SPK or CK files.
+!
+! $ Examples
+!
+!     In the following code fragment, SPCOPN opens a new file,
+!     to which an array is then added. GETDAT is a ficticious
+!     non-SPICELIB routine whose function is to get the array data.
+!     DAFBNA begins a new array, DAFADA adds data to an array,
+!     and DAFENA ends a new array.
+!
+!               CALL SPCOPN  ( FNAME,  IFNAME, HANDLE )
+!               CALL DAFBNA  ( HANDLE, SUM,    NAME   )
+!
+!               CALL GETDAT  ( N, DATA, FOUND )
+!
+!               DO WHILE ( FOUND )
+!
+!                  CALL DAFADA ( N, DATA )
+!                  CALL GETDAT ( N, DATA, FOUND )
+!
+!               END DO
+!
+!               CALL DAFENA
+!
+!               CALL DAFCLS ( HANDLE )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 19-APR-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement. Changed input argument name
+!        "SPC" to "FNAME" for consistency with other routines.
+!
+!        Edited the header to comply with NAIF standard. Updated the
+!        $Exceptions section to cover all errors detected by this
+!        routine and remove unnecessary introduction referencing DAF
+!        required reading.
+!
+!        Added DAF required reading to $Required_Reading.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     open new SPK or CK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!     ND, NI      are the Number of Double precision and the Number of
+!                 Integer components in an SPK or CK segment descriptor.
+!
+!     RESV        is the number of records to reserve when opening the
+!                 file.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: resv = 0
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     DAFOPN does all the work.  We just handle the values of
+!     ND and NI which are specific to SPK and CK.  We'll not
+!     reserve any records.
+!
+      call dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
+
+      return
+      end procedure spcopn
+
+      module procedure spcrfl
+
+! $ Abstract
+!
+!     Read the first line of text from the comment area
+!     of a binary SPK or CK file.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle assigned to the binary SPK or CK file
+!              which has been opened for read access.
+!
+!              Use the SPICELIB routine DAFOPR to open the file for read
+!              access and get HANDLE, unless SPKLEF or CKLPF has already
+!              been called and returned the handle. This file is
+!              unchanged by calling SPCRFL.
+!
+! $ Detailed_Output
+!
+!     LINE     is the first line of text from the comment area of
+!              the SPK or CK file specified by HANDLE. LINE may
+!              be blank.
+!
+!     EOC      is .TRUE. if the comment area is empty. If there
+!              are comments in the comment area, then EOC is .FALSE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the comment area of the SPK or CK file is empty, LINE
+!         will be blank.
+!
+!     2)  If the first line of comments in the comment area is longer
+!         than the declared length of LINE, it will be truncated to
+!         fit into the variable.
+!
+!     3)  If there is a problem reading from the comment area, the error
+!         SPICE(FILEREADFAILED) is signaled.
+!
+!     4)  If the comments are not in the correct format, the error
+!         SPICE(FORMATERROR) is signaled.
+!
+! $ Files
+!
+!     See argument HANDLE.
+!
+! $ Particulars
+!
+!     The structure of SPK and CK files accommodates comments in
+!     addition to data. The following routines are available
+!     for accessing the comment area of a binary SPK or CK file:
+!
+!           SPCAC           add comments
+!
+!           SPCEC           extract comments
+!
+!           SPCDC           delete comments
+!
+!           SPCRFL          read first line of comments
+!
+!           SPCRNL          read next line of comments
+!
+!     Note that comments must consist of only text, that is, printable
+!     ASCII characters, specifically ASCII 32-126. This excludes
+!     tabs (ASCII 9) and control characters.
+!
+!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!     SPCT2B---include these comments when converting SPK and CK
+!     files between binary and text formats.
+!
+! $ Examples
+!
+!     Suppose we have a binary SPK file called A.BSP. The following
+!     code fragment searches the comment area for a lines containing
+!     the character string `SOURCE' and writes the lines to standard
+!     output.
+!
+!      C
+!      C     Open the binary SPK file and get its handle.
+!      C
+!            CALL DAFOPR ( 'A.BSP', HANDLE )
+!
+!      C
+!      C     Read the first line of comments.
+!      C
+!            CALL SPCRFL ( HANDLE, LINE, EOC )
+!
+!      C
+!      C     Search for the string 'SOURCE' in the line. If
+!      C     it is found, write the line. Then get the next
+!      C     line of comments and repeat as long as we're not
+!      C     at the end.
+!      C
+!            DO WHILE ( .NOT. EOC )
+!
+!               IF (  POS ( LINE, 'SOURCE', 1 ) .NE. 0  ) THEN
+!                  WRITE (*,*) LINE
+!               END IF
+!
+!               CALL SPCRNL ( LINE, EOC )
+!
+!            END DO
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that the comment area of the binary SPK
+!         or CK file contains only text stored by SPCAC. Comments
+!         written any other way may not be handled properly.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Moved the contents of the $Files section to the description of
+!        HANDLE in $Detailed_Input section, and referred to it from
+!        $Files.
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Updated this routine to utilize the new handle manager
+!        interfaces.
+!
+!-    SPICELIB Version 1.1.0, 27-JUL-1992 (KRG)
+!
+!        Removed a call to the SPICELIB subroutine SUFFIX() which
+!        was used to join two parts of a comment line that may be
+!        broken across two comment records. The problem was, SUFFIX
+!        cannot know about leading/embedded blanks when it appends, so
+!        blanks were inadvertently removed when they happened to be
+!        stored at the end of comment record.
+!
+!        Added the variable TMPLEN to record the length of the first
+!        part of a comment line that may be broken across comment
+!        records.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     read the first comment line of an SPK or CK file
+!
+!-&
+
+! $ Revisions
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Calls to DAFHLU now lock handles to their logical units.
+!        While at first glance it may seem this is the appropriate
+!        course of action due to the buffering of the logical unit
+!        by this routine for its entry point, adding a call to
+!        ZZDDHUNL in the entry point removes the need to lock DAFU
+!        to its handle. The value of HANDLE is now buffered in
+!        HANBUF, to allow the entry point to retrieve a logical
+!        unit.
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+!     IFNLEN      is the length of a DAF internal file name.
+!
+!     MAXCPR      is the maximum number of characters per DAF record and
+!                 hence the maximum comment line length.
+!
+
+
+!
+!     Local variables
+!
+
+
+
+!
+!     Saved variables
+!
+
+!
+!     Standard SPICE error handling.
+!
+      use pepper_kinds, only: ip
+      use pepper_strings, only: pos
+      implicit none
+      integer(ip), parameter :: ifnlen = 60
+      integer(ip), parameter :: maxcpr = 1000
+      integer(ip) :: nd
+      integer(ip) :: posnul
+      integer(ip) :: nrr
+      integer(ip) :: bward
+      integer(ip) :: dafu
+      integer(ip) :: free
+      integer(ip) :: ni
+      character(ifnlen) :: ifname
+      if ( .not. allocated ( ctx%spcrfl_state ) ) then
+         allocate ( ctx%spcrfl_state )
+         call init_spcrfl_state ( ctx%spcrfl_state )
+      end if
+      associate ( eot => ctx%spcrfl_state%eot, &
+                  null => ctx%spcrfl_state%null, &
+                  record => ctx%spcrfl_state%record, &
+                  eol => ctx%spcrfl_state%eol, &
+                  fward => ctx%spcrfl_state%fward, &
+                  hanbuf => ctx%spcrfl_state%hanbuf, &
+                  iostat => ctx%spcrfl_state%iostat, &
+                  rec => ctx%spcrfl_state%rec, &
+                  called => ctx%spcrfl_state%called, &
+                  eocsav => ctx%spcrfl_state%eocsav )
+      if ( ctx%failed() ) return
+
+!
+!     SPCRFL has been called for this file.
+!
+      called = .true.
+
+!
+!     Read the file record to find out if the DAF contains any
+!     reserved records.  The reserved records in an array file
+!     are stored between the first record and the first summary
+!     record.  FWARD is the record number of that first summary
+!     record, and NRR is the number of reserved records in the file.
+!
+!     If there are no reserved records, there are no comments.
+!
+      call dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+      nrr = fward - 2
+
+      if ( nrr == 0 ) then
+         line   = ' '
+         eoc    = .true.
+         eocsav = eoc
+         return
+      end if
+
+!
+!     We need to read directly from the SPK/CK file, using a logical
+!     unit instead of a handle.
+!
+      call zzddhhlu ( ctx, handle, 'DAF', .false., dafu )
+
+      if ( ctx%failed() ) return
+
+!
+!     Buffer the value of HANDLE.
+!
+      hanbuf = handle
+
+!
+!     In the comment area, NULL means end-of-line, and EOT means
+!     end-of-transmission, or in other words, end-of-comments.
+!
+      null = char ( 0 )
+      eot  = char ( 4 )
+
+!
+!     Read the first reserved record.
+!
+      rec = 2
+
+      read ( dafu, rec=rec, iostat=iostat ) record
+
+      if ( iostat /= 0 ) then
+         call ctx%setmsg ( 'Error reading comment area of the binary ' // &
+                       'file named FNM at record #.  Value of '    // &
+                       'IOSTAT is #.'                              )
+         call ctx%errint ( '#', rec                                    )
+         call ctx%errint ( '#', iostat                                 )
+         call ctx%errfnm ( 'FNM', dafu                                 )
+         call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                     )
+         return
+      end if
+
+!
+!     The first line of comments begins with the first character
+!     of the record.  A NULL character specifies the end.
+!
+      posnul = pos ( record, null, 1 )
+
+      if ( posnul == 0 ) then
+!
+!        No NULL is in the record, so LINE is just the whole
+!        record.  (The maximum length of a line written to
+!        the comment area by SPCAC is MAXCPR characters).
+!
+         eol = maxcpr
+
+      else
+!
+!        The end of the line precedes the NULL character.
+!
+         eol = posnul - 1
+
+      end if
+
+!
+!     Now we have the position of the end of the first line.
+!     Assign it to LINE.  We're not yet at the end of comments,
+!     since we have a line to return.  If the first character
+!     was a NULL, the line is blank.
+!
+      if ( eol == 0 ) then
+         line = ' '
+      else
+         line = record ( 1: eol )
+      end if
+
+      eoc     = .false.
+      eocsav  = eoc
+
+      return
+      end associate
+      end procedure spcrfl
+
+      module procedure spcrnl
+
+! $ Abstract
+!
+!     Continue reading lines from the comment area of a binary
+!     SPK or CK file specified by the most recent call to
+!     the routine SPCRFL.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+!
+!     IMPLICIT NONE
+!
+!     CHARACTER*(*)         LINE
+!     LOGICAL               EOC
+!
+! $ Detailed_Input
+!
+!     None.
+!
+! $ Detailed_Output
+!
+!     LINE     is the next line of text from the comment area of
+!              the SPK or CK file. LINE may be blank.
+!              SPCRFL reads the first line of comments from
+!              a specified binary SPK or CK file. Once SPCRFL
+!              has been called, SPCRNL may be called repetitively
+!              to read the next lines of the comment area until
+!              the end.
+!
+!     EOC      is .TRUE. if there are no more comments to read.
+!              Otherwise, EOC is .FALSE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If SPCRFL is not called prior to calling SPCRNL, the error
+!         SPICE(SPCRFLNOTCALLED) is signaled.
+!
+!     2)  If the most recent call to SPCRFL returned EOC with the value
+!         true, then SPCRNL will return EOC with the same value.
+!
+!     3)  If EOC is .TRUE., LINE will be blank.
+!
+!     4)  If the first line of comments in the comment area is longer
+!         than the declared length of LINE, it will be truncated to
+!         fit into the variable.
+!
+!     5)  If there is a problem reading from the comment area, the error
+!         SPICE(FILEREADFAILED) is signaled.
+!
+!     6)  If the comments are not in the correct format, the error
+!         SPICE(FORMATERROR) is signaled.
+!
+! $ Files
+!
+!     The handle of the binary SPK or CK is specified with the routine
+!     SPCRFL.
+!
+! $ Particulars
+!
+!     The structure of SPK and CK files accommodates comments in
+!     addition to data. The following five routines are available
+!     for accessing the comment area of a binary SPK or CK file:
+!
+!           SPCAC           add comments
+!
+!           SPCEC           extract comments
+!
+!           SPCDC           delete comments
+!
+!           SPCRFL          read first line of comments
+!
+!           SPCRNL          read next line of comments
+!
+!     Note that comments must consist of only text, that is, printable
+!     ASCII characters, specifically ASCII 32-126. This excludes
+!     tabs (ASCII 9) and control characters.
+!
+!     The SPC conversion routines---SPCB2A, SPCA2B, SPCB2T, and
+!     SPCT2B---include these comments when converting SPK and CK
+!     files between binary and text formats.
+!
+! $ Examples
+!
+!     Suppose we have a binary SPK file called A.BSP. The following
+!     code fragment searches the comment area for a lines containing
+!     the character string `SOURCE' and writes the lines to standard
+!     output.
+!
+!      C
+!      C     Open the binary SPK file and get its handle.
+!      C
+!            CALL DAFOPR ( 'A.BSP', HANDLE )
+!
+!      C
+!      C     Read the first line of comments.
+!      C
+!            CALL SPCRFL ( HANDLE, LINE, EOC )
+!
+!      C
+!      C     Search for the string 'SOURCE' in the line. If
+!      C     it is found, write the line. Then get the next
+!      C     line of comments and repeat as long as we're not
+!      C     at the end.
+!      C
+!            DO WHILE ( .NOT. EOC )
+!
+!               IF (  POS ( LINE, 'SOURCE', 1 ) .NE. 0  ) THEN
+!                  WRITE (*,*) LINE
+!               END IF
+!
+!               CALL SPCRNL ( LINE, EOC )
+!
+!            END DO
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that the comment area of the binary SPK
+!         or CK file contains only text stored by SPCAC. Comments
+!         written any other way may not be handled properly.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!     F.S. Turner        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+!
+!        Updated this entry point to utilize the handle manager
+!        interfaces. See the $Revisions section of the subroutine
+!        header above for a detailed discussion of the changes.
+!
+!-    SPICELIB Version 1.1.0, 27-JUL-1992 (KRG)
+!
+!        Removed a call to the SPICELIB subroutine SUFFIX() which
+!        was used to join two parts of a comment line that may be
+!        broken across two comment records. The problem was, SUFFIX
+!        cannot know about leading/embedded blanks when it appends, so
+!        blanks were inadvertently removed when they happened to be
+!        stored at the end of comment record.
+!
+!        Added the variable TMPLEN to record the length of the first
+!        part of a comment line that may be broken across comment
+!        records.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     continue reading comments from an SPK or CK file
+!     read the next comment line of an SPK or CK file
+!
+!-&
+
+!
+!     Standard SPICE error handling.
+!
+      use pepper_kinds, only: ip
+      use pepper_strings, only: pos
+      implicit none
+      integer(ip), parameter :: ifnlen = 60
+      integer(ip), parameter :: maxcpr = 1000
+      integer(ip) :: posnul
+      integer(ip) :: tmplen
+      integer(ip) :: dafu
+      character(maxcpr) :: temp
+      integer(ip) :: bol
+      if ( .not. allocated ( ctx%spcrfl_state ) ) then
+         allocate ( ctx%spcrfl_state )
+         call init_spcrfl_state ( ctx%spcrfl_state )
+      end if
+      associate ( eot => ctx%spcrfl_state%eot, &
+                  null => ctx%spcrfl_state%null, &
+                  record => ctx%spcrfl_state%record, &
+                  eol => ctx%spcrfl_state%eol, &
+                  fward => ctx%spcrfl_state%fward, &
+                  hanbuf => ctx%spcrfl_state%hanbuf, &
+                  iostat => ctx%spcrfl_state%iostat, &
+                  rec => ctx%spcrfl_state%rec, &
+                  called => ctx%spcrfl_state%called, &
+                  eocsav => ctx%spcrfl_state%eocsav )
+      if ( ctx%failed() ) return
+
+!
+!     If SPCRFL hasn't been called, then we don't know which
+!     file to read from.
+!
+      if ( .not. called ) then
+         call ctx%setmsg ( 'You must call SPCRFL to read the first '      // &
+                       'line of comments before calling SPCRNL '      // &
+                       'to read the next line.'                       )
+         call ctx%sigerr ( 'SPICE(SPCRFLNOTCALLED)'                       )
+         return
+      end if
+
+!
+!     If we were at the end of comments before, then we're still
+!     at the end.
+!
+      if ( eocsav ) then
+         line = ' '
+         eoc  = .true.
+         return
+      end if
+
+!
+!     Retrieve a logical unit for HANBUF.
+!
+      call zzddhhlu ( ctx, hanbuf, 'DAF', .false., dafu )
+
+      if ( ctx%failed() ) return
+
+!
+!     RECORD contains the last line and EOL is the position of
+!     the end of that line.  Now we need to determine the
+!     position of the beginning of the next line (BOL).  There
+!     is a NULL between EOL and BOL, so BOL is two more than
+!     EOL.  If that puts BOL off the end of the current RECORD,
+!     then we have to go to the next record.
+!
+      bol = eol + 2
+
+      if ( bol > maxcpr ) then
+
+         bol = bol - maxcpr
+
+         rec = rec + 1
+
+!
+!        Check to make sure that we're not reading past the
+!        reserved records.  FWARD is the "forward list pointer".
+!        It is the number of the first record after the reserved
+!        records.
+!
+         if ( rec >= fward ) then
+            call ctx%setmsg ( 'The comment area of the binary file '      // &
+                          'named FNM is formatted incorrectly. '      // &
+                          'The end of the comments is not marked '    // &
+                          'as it should be in record #. Calling '     // &
+                          'SPCDC or DAFRRR will remove the comment '  // &
+                          'area and eliminate this format error. '    // &
+                          'Comments should be written ONLY by SPCAC.' )
+            call ctx%errint ( '#', rec-1                                  )
+            call ctx%errfnm ( 'FNM', dafu                                 )
+            call ctx%sigerr ( 'SPICE(FORMATERROR)'                        )
+            return
+         end if
+
+!
+!        All clear to read the record.
+!
+         read ( dafu, rec=rec, iostat=iostat ) record
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading comment area of the binary ' // &
+                          'file named FNM at record #.  Value of '    // &
+                          'IOSTAT is #.'                              )
+            call ctx%errint ( '#', rec                                    )
+            call ctx%errint ( '#', iostat                                 )
+            call ctx%errfnm ( 'FNM', dafu                                 )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            return
+         end if
+
+      end if
+
+!
+!     RECORD is now the record of the file that contains the
+!     beginning of the next line (BOL).  The line may not
+!     exist or may be blank or may be a character string.
+!
+
+      if ( record ( bol: bol ) == eot ) then
+!
+!        There isn't a next line to get.  We're at the end of
+!        the comments.
+!
+         line   = ' '
+         eoc    = .true.
+         eocsav = eoc
+         return
+      end if
+
+      if ( record ( bol: bol ) == null ) then
+!
+!        Just a NULL means a blank line.
+!
+         eol    = bol - 1
+         line   = ' '
+         eoc    = .false.
+         eocsav = eoc
+         return
+      end if
+
+!
+!     The beginning of the next line is a character.  Now we have
+!     to find the end.  It precedes the next NULL.
+!
+      posnul = pos ( record, null, bol )
+
+      if ( posnul /= 0 ) then
+
+         eol    = posnul - 1
+         line   = record ( bol: eol )
+         eoc    = .false.
+         eocsav = eoc
+
+      else
+!
+!        There is no NULL in the rest of the record, so we have to
+!        read the next record to find it.  Save the first part
+!        of the line in TEMP.
+!
+         temp = record ( bol: maxcpr )
+         tmplen = maxcpr - bol + 1
+
+         rec = rec + 1
+
+!
+!        Check to make sure that we're not reading past the
+!        reserved records.  FWARD is the "forward list pointer".
+!        It is the number of the first record after the reserved
+!        records.
+!
+         if ( rec >= fward ) then
+            call ctx%setmsg ( 'The comment area of the binary file '      // &
+                          'named FNM is formatted incorrectly. '      // &
+                          'The end of the comments is not marked '    // &
+                          'as it should be in record #. Calling '     // &
+                          'SPCDC or DAFRRR will remove the comment '  // &
+                          'area and eliminate this format error. '    // &
+                          'Comments should be written ONLY by SPCAC.' )
+            call ctx%errint ( '#', rec-1                                  )
+            call ctx%errfnm ( 'FNM', dafu                                 )
+            call ctx%sigerr ( 'SPICE(FORMATERROR)'                        )
+            return
+         end if
+
+!
+!        All clear to read the record.
+!
+         read ( dafu, rec=rec, iostat=iostat ) record
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading comment area of the binary ' // &
+                          'file named FNM at record #.  Value of '    // &
+                          'IOSTAT is #.'                              )
+            call ctx%errint ( '#', rec                                    )
+            call ctx%errint ( '#', iostat                                 )
+            call ctx%errfnm ( 'FNM', dafu                                 )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                     )
+            return
+         end if
+
+!
+!        There should be a null in this new record.  If there isn't
+!        then something is wrong.  The maximum length of a line is
+!        MAXCPR characters according to SPCAC.  So BOL and the NULL
+!        should be in the same record or in adjacent records.
+!
+         posnul = pos ( record, null, 1 )
+
+         if ( posnul == 0 ) then
+            call ctx%setmsg ( 'Cannot find the end of the line.  There '  // &
+                          'is something wrong with the format of the' // &
+                          'comments.'                                 )
+            call ctx%sigerr ( 'SPICE(FORMATERROR)'                        )
+            return
+         end if
+
+         eol = posnul - 1
+
+!
+!        EOL is zero if the NULL was the first character of the
+!        new record.  Otherwise, concatenate the two parts of
+!        the line from the two adjacent records.  Then assign the
+!        values of LINE and EOC.
+!
+         if ( eol /= 0 ) then
+            temp( tmplen+1: ) = record( 1 : eol )
+         end if
+
+         line   = temp
+         eoc    = .false.
+         eocsav = eoc
+
+      end if
+
+      return
+      end associate
+      end procedure spcrnl
+
+!$Procedure SPKCLS ( SPK, Close file )
+
+      module procedure spkcls
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Close an open SPK file.
+!
+! $ Required_Reading
+!
+!     SPK
+!
+! $ Keywords
+!
+!     SPK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the SPK file that is to be closed.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there are no segments in the file, the error
+!         SPICE(NOSEGMENTSFOUND) is signaled.
+!
+! $ Files
+!
+!     See argument HANDLE.
+!
+! $ Particulars
+!
+!     Close the SPK file attached to HANDLE. The close operation tests
+!     the file to ensure the presence of data segments.
+!
+!     A SPKCLS call should balance each call to SPKOPN.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 8 kernel
+!        containing only one segment, given a time-ordered set of
+!        discrete states and epochs.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKCLS_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK8
+!              PARAMETER           ( SPK8   = 'spkcls_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               DEGREE
+!              PARAMETER           ( DEGREE = 3  )
+!
+!              INTEGER               NSTATS
+!              PARAMETER           ( NSTATS = 9  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      STATES ( 6, NSTATS )
+!              DOUBLE PRECISION      STEP
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Set the array of discrete states to write to the SPK
+!        C     segment.
+!        C
+!              DATA                  STATES /
+!             .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+!             .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+!             .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+!             .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+!             .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+!             .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+!             .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+!             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+!             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment, and the time step separating epochs of states.
+!        C
+!              FIRST = 100.D0
+!              LAST  = 900.D0
+!              STEP  = 100.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 8 SPK internal file name.'
+!              SEGID  = 'SPK type 8 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Set the epoch of first state in STATES array to be
+!        C     the start time of the interval covered by the segment.
+!        C
+!              BEGTIM = FIRST
+!
+!        C
+!        C     Create a type 8 segment.
+!        C
+!              CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
+!             .               FIRST,   LAST,    SEGID,   DEGREE,
+!             .               NSTATS,  STATES,  BEGTIM,  STEP     )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 8 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     F.S. Turner        (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.2.1, 28-MAY-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!        Added complete code example, based on the SPKW08 example.
+!
+!        Updated $Particulars section. Re-ordered header sections.
+!
+!-    SPICELIB Version 1.2.0, 07-SEP-2001 (EDW)
+!
+!        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
+!
+!-    SPICELIB Version 1.1.0, 17-FEB-2000 (FST)
+!
+!        Removed the call to ZZFIXID. This will make all SPK files
+!        created with future versions of the toolkit possess the
+!        unambiguous ID word 'DAF/SPK '.
+!
+!-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     close an SPK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local Parameters
+!
+      integer(ip), parameter :: acclen = 5
+!
+!     Local Variables
+!
+      character(acclen)     access
+
+      logical               found
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Get the access method for the file. Currently, if HANDLE < 0, the
+!     access method is 'WRITE'. If HANDLE > 0, the access method is
+!     'READ'.  In the future this should make use of the private entry
+!     in the handle manager umbrella, ZZDDHNFO.
+!
+      if ( handle < 0 ) then
+         access = 'WRITE'
+      else if ( handle > 0 ) then
+         access = 'READ'
+      end if
+
+!
+!     If the file is open for writing and there are segments in the file
+!     fix the ID word and close the file, or just close the file.
+!
+      if ( access == 'WRITE' ) then
+!
+!        Check to see if there are any segments in the file. If there
+!        are no segments, we signal an error. This probably indicates a
+!        programming error of some sort anyway. Why would you create a
+!        file and put nothing in it?
+!
+         call dafbfs ( ctx, handle )
+         call daffna ( ctx, found )
+
+         if ( ctx%failed() ) return
+
+         if ( .not. found ) then
+
+            call ctx%setmsg ( 'No segments were found in the SPK file' &
+            //            ' ''#''. There must be at least one segment' &
+            //            ' in the file when this subroutine is' &
+            //            ' called.'                                   )
+            call ctx%errhan ( '#', handle                                  )
+            call ctx%sigerr ( 'SPICE(NOSEGMENTSFOUND)'                     )
+            return
+
+         end if
+
+      end if
+!
+!     Close the file.
+!
+      call dafcls   ( ctx, handle )
+!
+!     No need to check FAILED() here, since we only call spicelib
+!     subroutines and return. The caller should check it though.
+!
+      return
+
+      end procedure spkcls
+
+!$Procedure SPKOPA ( SPK open for addition )
+
+      module procedure spkopa
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Open an existing SPK file for subsequent write.
+!
+! $ Required_Reading
+!
+!     SPK
+!
+! $ Keywords
+!
+!     SPK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     FILE     is the name of an existing SPK file to which
+!              you wish to append additional SPK segments.
+!
+! $ Detailed_Output
+!
+!     HANDLE   is the DAF integer handle that refers to the SPK file
+!              opened for appending. HANDLE is required by any of the
+!              SPK writing routines.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, HANDLE will be returned
+!     with the value 0.
+!
+!     1)  If the file specified does not exist, the error
+!         SPICE(FILENOTFOUND) is signaled.
+!
+!     2)  If the file specified is not an SPK file, the error
+!         SPICE(FILEISNOTSPK) is signaled.
+!
+!     3)  If the specified SPK file cannot be opened for writing, an
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     4)  If the specified SPK file uses a non-native binary file
+!         format, an error is signaled by a routine in the call tree of
+!         this routine.
+!
+!     5)  If the specified SPK file is corrupted or otherwise invalid,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This file provides an interface for opening existing SPK
+!     files for the addition of SPK segments. If you need
+!     to open an new SPK file for writing, call the routine SPKOPN.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to add a new segment to a
+!        new and to an existing SPK file.
+!
+!        For this example, we will first create an SPK file containing
+!        only one type 5 segment, given a time-ordered set of
+!        discrete states and epochs, and the gravitational parameter
+!        of a central body.
+!
+!        Then, we will reopen the SPK and add another type 5 segment.
+!        The example below shows one set of calls that you could
+!        perform to make the addition. Obviously, there is no need to
+!        close and re-open the file in order to add multiple segments.
+!        It is done in this example to demonstrate the use of SPKOPA.
+!
+!        Note that you could add segments of other data types by
+!        replacing the call to SPKW05 with a suitably modified call to
+!        another SPK writing routine.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKOPA_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK5
+!              PARAMETER           ( SPK5  = 'spkopa_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              DOUBLE PRECISION      GMSUN
+!              PARAMETER           ( GMSUN  = 132712440023.310D0 )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               NSTATS
+!              PARAMETER           ( NSTATS = 9  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      EPOCH1 (    NSTATS )
+!              DOUBLE PRECISION      EPOCH2 (    NSTATS )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      STATES ( 6, NSTATS )
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Define the states and epochs.
+!        C
+!              DATA                  STATES /
+!             .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+!             .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+!             .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+!             .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+!             .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+!             .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+!             .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+!             .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+!             .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
+!
+!              DATA                  EPOCH1 / 100.D0, 200.D0, 300.D0,
+!             .                               400.D0, 500.D0, 600.D0,
+!             .                               700.D0, 800.D0, 900.D0 /
+!
+!              DATA                  EPOCH2 /
+!             .                            1100.D0, 1200.D0, 1300.D0,
+!             .                            1400.D0, 1500.D0, 1600.D0,
+!             .                            1700.D0, 1800.D0, 1900.D0 /
+!
+!        C
+!        C     Set the start and stop times of interval covered by
+!        C     the first segment.
+!        C
+!              FIRST  = EPOCH1(1)
+!              LAST   = EPOCH1(NSTATS)
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 5 SPK internal file name.'
+!              SEGID  = 'SPK type 5 test segment #1'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK5, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
+!             .              FIRST,  LAST,   SEGID,  GMSUN,
+!             .              NSTATS, STATES, EPOCH1        )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!        C
+!        C     At this point we have an existing SPK type 5 kernel
+!        C     that contains a single segment. Let's now demonstrate
+!        C     the use of SPKOPA.
+!        C
+!        C     Open the an existing SPK file for subsequent write.
+!        C
+!              CALL SPKOPA ( SPK5, HANDLE )
+!
+!        C
+!        C     Set the start and stop times of interval covered by
+!        C     the second segment, and the segment ID.
+!        C
+!              FIRST  = EPOCH2(1)
+!              LAST   = EPOCH2(NSTATS)
+!
+!              SEGID  = 'SPK type 5 test segment #2'
+!
+!        C
+!        C     Now write the second segment. Use the same set of
+!        C     states time-ordered set of discrete states and the
+!        C     gravitational parameter. Set the epochs to be EPOCH2.
+!        C
+!              CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
+!             .              FIRST,  LAST,   SEGID,  GMSUN,
+!             .              NSTATS, STATES, EPOCH2        )
+!
+!        C
+!        C     Finally, close the file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 5, with two
+!        segments, exists in the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        code example.
+!
+!        Updated the contents of $Detailed_Output and $Exceptions.
+!
+!-    SPICELIB Version 1.0.0, 10-MAR-1999 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Open an existing SPK file for adding segments
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: smwdsz = 8
+
+!
+!     Local variables
+!
+      character(smwdsz)     arch
+      character(smwdsz)     type
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Until we get a legitimate handle we set HANDLE to zero.
+!
+      handle = 0
+
+!
+!     First make sure the file exists.
+!
+      if ( .not. exists( ctx,file) ) then
+
+         call ctx%setmsg ( 'The file ''#'' is not recognized as an ' &
+         //            'existing file. ' )
+         call ctx%errch  ( '#', file )
+         call ctx%sigerr ( 'SPICE(FILENOTFOUND)'  )
+
+         return
+      end if
+
+!
+!     Next make sure it is an SPK file.
+!
+      call getfat ( ctx, file, arch, type )
+
+      if ( ctx%failed() ) return
+
+      if ( arch /= 'DAF' .or. type /= 'SPK' ) then
+
+         call ctx%setmsg ( 'The file ''#'' was not an SPK file.  The ' &
+         //            'architecture and type of the file were ' &
+         //            'found to be ''#'' and ''#'' respectively. ' )
+
+         call ctx%errch  ( '#', file )
+         call ctx%errch  ( '#', arch )
+         call ctx%errch  ( '#', type )
+         call ctx%sigerr ( 'SPICE(FILEISNOTSPK)'  )
+         return
+      end if
+
+!
+!     That's the limit of the checks performed here.  We let DAFOPW
+!     handle the remaining checks.
+!
+      call dafopw ( ctx, file, handle )
+
+      if ( ctx%failed() ) then
+         handle = 0
+      end if
+
+      return
+
+      end procedure spkopa
+
+!$Procedure SPKOPN ( SPK, open new file. )
+
+      module procedure spkopn
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Create a new SPK file, returning the handle of the opened file.
+!
+! $ Required_Reading
+!
+!     SPK
+!
+! $ Keywords
+!
+!     SPK
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     FNAME    is the name of the new SPK file to be created.
+!
+!     IFNAME   is the internal filename for the SPK file that is
+!              being created. The internal filename may be up to 60
+!              characters long. If you do not have any conventions
+!              for tagging your files, an internal filename of
+!              'SPK_file' is perfectly acceptable. You may also leave
+!              it blank if you like.
+!
+!     NCOMCH   is the space, measured in characters, to be initially
+!              set aside for the comment area when a new SPK file
+!              is opened. The amount of space actually set aside may
+!              be greater than the amount requested, due to the
+!              manner in which comment records are allocated in an
+!              SPK file. However, the amount of space set aside for
+!              comments will always be at least the amount that was
+!              requested.
+!
+!              The value of NCOMCH should be greater than or equal to
+!              zero, i.e., 0 <= NCOMCH. A negative value, should one
+!              occur, will be assumed to be zero.
+!
+! $ Detailed_Output
+!
+!     HANDLE   is the handle of the opened SPK file. If an error
+!              occurs when opening the file, the value of this
+!              variable should not be used, as it will not represent
+!              a valid handle.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the value of NCOMCH is negative, a value of zero (0) will
+!         be used for the number of comment characters to be set aside
+!         for comments.
+!
+!     2)  If an error occurs while attempting to open the SPK file, the
+!         value of HANDLE will not represent a valid file handle.
+!
+! $ Files
+!
+!     See FNAME and HANDLE.
+!
+! $ Particulars
+!
+!     Open a new SPK file, reserving room for comments if requested.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 8 kernel
+!        containing only one segment, given a time-ordered set of
+!        discrete states and epochs.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKOPN_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 42 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK8
+!              PARAMETER           ( SPK8   = 'spkopn_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               DEGREE
+!              PARAMETER           ( DEGREE = 3  )
+!
+!              INTEGER               NSTATS
+!              PARAMETER           ( NSTATS = 9  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      STATES ( 6, NSTATS )
+!              DOUBLE PRECISION      STEP
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Set the array of discrete states to write to the SPK
+!        C     segment.
+!        C
+!              DATA                  STATES /
+!             .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+!             .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+!             .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+!             .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+!             .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+!             .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+!             .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+!             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+!             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment, and the time step separating epochs of states.
+!        C
+!              FIRST = 100.D0
+!              LAST  = 900.D0
+!              STEP  = 100.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 8 SPK internal file name.'
+!              SEGID  = 'SPK type 8 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Set the epoch of first state in STATES array to be
+!        C     the start time of the interval covered by the segment.
+!        C
+!              BEGTIM = FIRST
+!
+!        C
+!        C     Create a type 8 segment.
+!        C
+!              CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
+!             .               FIRST,   LAST,    SEGID,   DEGREE,
+!             .               NSTATS,  STATES,  BEGTIM,  STEP     )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 8 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 05-AUG-2021 (JDR)
+!
+!        Changed the output argument name NAME to FNAME for consistency
+!        with other routines.
+!
+!        Edited the header to comply with NAIF standard. Removed
+!        unnecessary $Revisions section.
+!
+!        Added complete code example based on SPKW08 example.
+!
+!        Fixed typo in $Exceptions entry #2.
+!
+!-    SPICELIB Version 2.0.0, 09-NOV-2006 (NJB)
+!
+!        Routine has been upgraded to support comment
+!        area allocation using NCOMCH.
+!
+!-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     open a new SPK file
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      character(*), parameter :: type = 'SPK'
+
+!
+!     DAF ND and NI values for SPK files.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+!
+!     Length of a DAF comment record, in characters.
+!
+      integer(ip), parameter :: mxcrec = 1000
+
+!
+!     Local variables
+!
+      integer(ip)           ncomr
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Compute the number of comment records that we want to allocate, if
+!     the number of comment characters requested is greater than zero,
+!     we always allocate an extra record to account for the end of line
+!     marks in the comment area.
+!
+      if ( ncomch > 0 ) then
+         ncomr = ( ncomch - 1 )/mxcrec  +  1
+      else
+         ncomr = 0
+      end if
+
+!
+!     Just do it. All of the error handling is taken care of for us.
+!
+      call dafonw( ctx, fname, type, nd, ni, ifname, ncomr, handle )
+
+      if ( ctx%failed() ) then
+!
+!        If we failed, make sure that HANDLE does not contain a value
+!        that represents a valid DAF file handle.
+!
+         handle = 0
+
+      end if
+
+      return
+      end procedure spkopn
+
+!$Procedure SPKW01 ( Write SPK segment, type 1 )
+
+      module procedure spkw01
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 1 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+      integer(ip), parameter :: dlsize = 71
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame relative to
+!              which the state information for BODY is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the state of BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     N        is the number of difference lines in the input
+!              difference line array.
+!
+!     DLINES   contains a time-ordered array of difference lines
+!              The Ith difference line occupies elements (1,I)
+!              through (71,I) of DLINES. Each difference line
+!              represents the state (x, y, z, dx/dt, dy/dt,
+!              dz/dt, in kilometers and kilometers per second)
+!              of BODY relative to CENTER, specified relative to
+!              FRAME, for an interval of time. The time interval
+!              covered by the Ith difference line ends at the
+!              Ith element of the array EPOCHS (described below).
+!              The interval covered by the first difference line
+!              starts at the segment start time.
+!
+!              The contents of a difference line are as shown
+!              below:
+!
+!                 Dimension  Description
+!                 ---------  ----------------------------------
+!                 1          Reference epoch of difference line
+!                 15         Stepsize function vector
+!                 1          Reference position vector,  x
+!                 1          Reference velocity vector,  x
+!                 1          Reference position vector,  y
+!                 1          Reference velocity vector,  y
+!                 1          Reference position vector,  z
+!                 1          Reference velocity vector,  z
+!                 15,3       Modified divided difference
+!                            arrays (MDAs)
+!                 1          Maximum integration order plus 1
+!                 3          Integration order array
+!
+!              The reference position and velocity are those of
+!              BODY relative to CENTER at the reference epoch.
+!              (A difference line is essentially a polynomial
+!              expansion of acceleration about the reference
+!              epoch.)
+!
+!     EPOCHS   is an array of epochs corresponding to the members
+!              of the state array. The epochs are specified as
+!              seconds past J2000, TDB.
+!
+!              The first difference line covers the time interval
+!              from the segment start time to EPOCHS(1).  For
+!              I > 1, the Ith difference line covers the half-open
+!              time interval from, but not including, EPOCHS(I-1)
+!              through EPOCHS(I).
+!
+!              The elements of EPOCHS must be strictly increasing.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will return
+!     without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If the number of difference lines N is not at least one,
+!         the error SPICE(INVALIDCOUNT) is signaled.
+!
+!     5)  If FIRST is greater than or equal to LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     6)  If the elements of the array EPOCHS are not in strictly
+!         increasing order, the error SPICE(TIMESOUTOFORDER) is
+!         signaled.
+!
+!     7)  If the last epoch EPOCHS(N) is less than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+! $ Files
+!
+!     A new type 1 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 1 data segment to the open SPK
+!     file according to the format described in the type 1 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     Suppose that you have difference lines and are prepared to
+!     produce a segment of type 1 in an SPK file.
+!
+!     The following code fragment could be used to add the new segment
+!     to a previously opened SPK file attached to HANDLE. The file must
+!     have been opened with write access.
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!                  SEGID = 'MY_SAMPLE_SPK_TYPE_1_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW01 (  HANDLE,  BODY,    CENTER,  FRAME,
+!             .               FIRST,   LAST,    SEGID,   N,
+!             .               DLINES,  EPOCHS                  )
+!
+! $ Restrictions
+!
+!     1)  The validity of the difference lines is not checked by
+!         this routine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 07-APR-2010 (NJB)
+!
+!        Updated $Detailed_Input to state that the elements
+!        of EPOCHS must be strictly increasing. The $Exceptions
+!        section already described this error condition.
+!
+!-    SPICELIB Version 1.0.0, 30-JAN-2003 (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_1 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Local variables
+!
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: typidx = 4
+
+      integer(ip), parameter :: dtype = 1
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Local variables
+!
+      real(wp)              descr  ( dscsiz )
+      real(wp)              maxtim
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     The difference line count must be at least one.
+!
+      if ( n < 1 ) then
+
+         call ctx%setmsg ( 'The difference line count was #; the count ' // &
+                       'must be at least one.'                       )
+         call ctx%errint ( '#', n                                        )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                         )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater then the begin time.
+!
+      if ( first >= last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater then ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Make sure the epochs form a strictly increasing sequence.
+!
+      maxtim = epochs(1)
+
+      do i = 2, n
+
+         if ( epochs(i) <= maxtim ) then
+
+            call ctx%setmsg ( 'EPOCH # having index # is not greater '    // &
+                          'than its predecessor #.'                   )
+            call ctx%errdp  ( '#',  epochs(i)                             )
+            call ctx%errint ( '#',  i                                     )
+            call ctx%errdp  ( '#',  epochs(i-1)                           )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            return
+         else
+            maxtim = epochs(i)
+         end if
+
+      end do
+
+!
+!     Make sure there's no gap between the last difference line
+!     epoch and the end of the time interval defined by the segment
+!     descriptor.
+!
+      if (  epochs(n) < last ) then
+
+         call ctx%setmsg ( 'Segment end time # follows last epoch #.'     )
+         call ctx%errdp  ( '#',  last                                     )
+         call ctx%errdp  ( '#',  epochs(n)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      end if
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Create the segment descriptor.
+!
+      call spkpds ( ctx, body, center, frame, dtype, first, last, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 1 segment structure is shown below:
+!
+!        +-----------------------+
+!        | Difference line 1     |
+!        +-----------------------+
+!        | Difference line 2     |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Difference line N     |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!        | Epoch 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch N               |
+!        +-----------------------+
+!        | Epoch 100             | (First directory)
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch (N/100)*100     | (Last directory)
+!        +-----------------------+
+!        | Number of diff lines  |
+!        +-----------------------+
+!
+
+      call dafada ( ctx, dlines,  n*dlsize )
+      call dafada ( ctx, epochs,  n        )
+
+      do i = 1,   n / dirsiz
+         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
+      end do
+
+      call dafada ( ctx, [ real( n, wp ) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw01
+
+!$Procedure SPKW02 ( SPK, write segment, type 2 )
+
+      module procedure spkw02
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Write a type 2 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk02.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the DAF handle of an SPK file to which a type 2
+!              segment is to be added. The SPK file must be open for
+!              writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object whose
+!              state relative to another body is described by the
+!              segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion of the
+!              object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame relative to which
+!              the state information for BODY is specified.
+!
+!     FIRST,
+!     LAST     are the start and stop times of the time interval over
+!              which the segment defines the state of body.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier may
+!              contain up to 40 characters.
+!
+!     INTLEN   is the length of time, in seconds, covered by each set of
+!              Chebyshev polynomial coefficients (each logical record).
+!              Each set of Chebyshev coefficients must cover this fixed
+!              time interval, INTLEN.
+!
+!     N        is the number of sets of Chebyshev polynomial
+!              coefficients for coordinates (number of logical records)
+!              to be stored in the segment. There is one set of
+!              Chebyshev coefficients for each time period.
+!
+!     POLYDG   is the degree of each set of Chebyshev polynomials used
+!              to represent the ephemeris information. That is, the
+!              number of Chebyshev coefficients per coordinate minus
+!              one. POLYDG must not exceed MAXDEG (see $Parameters
+!              below).
+!
+!     CDATA    is a time-ordered array of N sets of Chebyshev polynomial
+!              coefficients to be placed in the segment of the SPK file.
+!              Each set has size SETSZ = 3*(POLYDG+1). The coefficients
+!              are stored in CDATA in order as follows:
+!
+!                 the (POLYDG + 1) coefficients for the first
+!                 coordinate of the first logical record,
+!
+!                 the coefficients for the second coordinate,
+!
+!                 the coefficients for the third coordinate,
+!
+!                 the coefficients for the first coordinate for
+!                 the second logical record, ...
+!
+!                 and so on.
+!
+!     BTIME    is the begin time (seconds past J2000 TDB) of first set
+!              of Chebyshev polynomial coefficients (first logical
+!              record). FIRST is an appropriate value for BTIME.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The routine writes to the SPK file referred to by HANDLE a type 02
+!     SPK segment containing the data in CDATA.
+!
+!     See the $Particulars section for details about the structure of a
+!     type 02 SPK segment.
+!
+! $ Parameters
+!
+!     See the include file spk02.inc for declarations of the
+!     parameters described below.
+!
+!     TOLSCL   is a tolerance scale for coverage gap at endpoints
+!              of the segment coverage interval.
+!
+!     MAXDEG   is the maximum allowed degree of the input
+!              Chebyshev expansions.
+!
+! $ Exceptions
+!
+!     1)  If the number of sets of coefficients is not positive,
+!         the error SPICE(NUMCOEFFSNOTPOS) is signaled.
+!
+!     2)  If the interval length is not positive, the error
+!         SPICE(INTLENNOTPOS) is signaled.
+!
+!     3)  If the name of the reference frame is not recognized,
+!         the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     4)  If segment stop time is not greater then the begin time,
+!         the error SPICE(BADDESCRTIMES) is signaled.
+!
+!     5)  If the start time of the first record exceeds the descriptor
+!         begin time by more than a computed tolerance, or if the end
+!         time of the last record precedes the descriptor end time by
+!         more than a computed tolerance, the error SPICE(COVERAGEGAP)
+!         is signaled. See the $Parameters section above for a
+!         description of the tolerance.
+!
+!     6)  If the input degree POLYDG is less than 0 or greater than
+!         MAXDEG, the error SPICE(INVALIDDEGREE) is signaled.
+!
+!     7)  If the last non-blank character of SEGID occurs past index 40,
+!         or if SEGID contains any nonprintable characters, an error is
+!         signaled by a routine in the call tree of this routine.
+!
+! $ Files
+!
+!     A new type 2 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 2 data segment to the designated
+!     SPK file, according to the format described in the SPK Required
+!     Reading.
+!
+!     Each segment can contain data for only one target, central body,
+!     and reference frame. The Chebyshev polynomial degree and length
+!     of time covered by each logical record are also fixed. However,
+!     an arbitrary number of logical records of Chebyshev polynomial
+!     coefficients can be written in each segment. Minimizing the
+!     number of segments in an SPK file will help optimize how the SPICE
+!     system accesses the file.
+!
+!     The ephemeris data supplied to the type 2 SPK writer is packed
+!     into an array as a sequence of records. The logical data records
+!     are stored contiguously:
+!
+!        +----------+
+!        | Record 1 |
+!        +----------+
+!        | Record 2 |
+!        +----------+
+!            ...
+!        +----------+
+!        | Record N |
+!        +----------+
+!
+!     The contents of an individual record are:
+!
+!        +--------------------------------------+
+!        | Coeff set for X position component   |
+!        +--------------------------------------+
+!        | Coeff set for Y position component   |
+!        +--------------------------------------+
+!        | Coeff set for Z position component   |
+!        +--------------------------------------+
+!
+!     Each coefficient set has the structure:
+!
+!        +--------------------------------------+
+!        | Coefficient of T_0                   |
+!        +--------------------------------------+
+!        | Coefficient of T_1                   |
+!        +--------------------------------------+
+!                          ...
+!        +--------------------------------------+
+!        | Coefficient of T_POLYDG              |
+!        +--------------------------------------+
+!
+!     Where T_n represents the Chebyshev polynomial
+!     of the first kind of degree n.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 2 kernel
+!        containing only one segment, given a set of Chebyshev
+!        coefficients and their associated epochs.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW02_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK2
+!              PARAMETER           ( SPK2  = 'spkw02_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               CHBDEG
+!              PARAMETER           ( CHBDEG = 2  )
+!
+!              INTEGER               NRECS
+!              PARAMETER           ( NRECS  = 4  )
+!
+!              INTEGER               RECSIZ
+!              PARAMETER           ( RECSIZ = 3*(CHBDEG+1) )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      INTLEN
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Define the coefficients.
+!        C
+!              DATA                  RECRDS /
+!             .                      1.0101D0, 1.0102D0, 1.0103D0,
+!             .                      1.0201D0, 1.0202D0, 1.0203D0,
+!             .                      1.0301D0, 1.0302D0, 1.0303D0,
+!             .                      2.0101D0, 2.0102D0, 2.0103D0,
+!             .                      2.0201D0, 2.0202D0, 2.0203D0,
+!             .                      2.0301D0, 2.0302D0, 2.0303D0,
+!             .                      3.0101D0, 3.0102D0, 3.0103D0,
+!             .                      3.0201D0, 3.0202D0, 3.0203D0,
+!             .                      3.0301D0, 3.0302D0, 3.0303D0,
+!             .                      4.0101D0, 4.0102D0, 4.0103D0,
+!             .                      4.0201D0, 4.0202D0, 4.0203D0,
+!             .                      4.0301D0, 4.0302D0, 4.0303D0 /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment, and the length of time covered by logical
+!        C     record.
+!        C
+!              FIRST  = 100.D0
+!              LAST   = 500.D0
+!              INTLEN = 100.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 2 SPK internal file name.'
+!              SEGID  = 'SPK type 2 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK2, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW02 ( HANDLE, BODY,   CENTER, REF,
+!             .              FIRST,  LAST,   SEGID,  INTLEN,
+!             .              NRECS,  CHBDEG, RECRDS, FIRST  )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 2 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     E.D. Wright        (JPL)
+!     K.S. Zukor         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 20-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        example code from existing fragment.
+!
+!        Extended POLYDG and CDATA arguments description to provide the
+!        size of the Chebyshev polynomials sets. Moved the details of
+!        the SPK structure from CDATA argument description to
+!        $Particulars section.
+!
+!-    SPICELIB Version 2.0.0, 18-JAN-2014 (NJB)
+!
+!        Relaxed test on relationship between the time bounds of the
+!        input record set (determined by BTIME, INTLEN, and N) and the
+!        descriptor bounds FIRST and LAST. Now the descriptor bounds
+!        may extend beyond the time bounds of the record set by a ratio
+!        computed using the parameter TOLSCL (see $Parameters above for
+!        details). Added checks on input polynomial degree.
+!
+!-    SPICELIB Version 1.1.0, 30-OCT-2006 (BVS)
+!
+!        Removed restriction that the input reference frame should be
+!        inertial by changing the routine that determines the frame ID
+!        from the name from IRFNUM to NAMFRM.
+!
+!-    SPICELIB Version 1.0.1, 24-AUG-1998 (EDW)
+!
+!        Changed a 2 to 2.D0 for a double precision computation. Added
+!        some comments to the header. Corrected spelling mistakes.
+!
+!-    SPICELIB Version 1.0.0, 01-AUG-1995 (KSZ)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_2 data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local Parameters
+!
+!     DTYPE is the SPK data type.
+!
+      integer(ip), parameter :: dtype = 2
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor. SPK uses ND = 2.
+!
+      integer(ip), parameter :: nd = 2
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor. SPK uses NI = 6.
+!
+      integer(ip), parameter :: ni = 6
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+      integer(ip), parameter :: ns = 5
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     Local variables
+!
+      character(sidlen)     etstr
+      character(sidlen)     netstr
+
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              mid
+      real(wp)              numrec
+      real(wp)              radius
+      real(wp)              rsize
+      real(wp)              tol
+
+      integer(ip)           i
+      integer(ip)           icd   ( ni )
+      integer(ip)           k
+      integer(ip)           ninrec
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of sets of coefficients must be positive.
+!
+      if ( n <= 0 ) then
+
+         call ctx%setmsg ( 'The number of sets of coordinate' &
+         //             'coefficients is not positive. N = #' )
+         call ctx%errint ( '#', n                                 )
+         call ctx%sigerr ( 'SPICE(NUMCOEFFSNOTPOS)'               )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( polydg < 0 ) .or. ( polydg > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; ' &
+         //            'the valid degree range is [0, #].'             )
+         call ctx%errint ( '#', polydg                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     The interval length must be positive.
+!
+      if ( intlen <= 0 ) then
+
+         call ctx%setmsg ( 'The interval length is not positive.' &
+         //            'N = #'                               )
+         call ctx%errdp  ( '#', intlen                           )
+         call ctx%sigerr ( 'SPICE(INTLENNOTPOS)'                 )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.' )
+         call ctx%errch  ( '#', frame                                )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                  )
+         return
+
+      end if
+
+!
+!     The segment stop time must be greater than the begin time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater than ' &
+         //            'the segment end time: #'                   )
+         call etcal  ( ctx, first, etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call etcal  ( ctx, last,  netstr                               )
+         call ctx%errch  ( '#',   netstr                               )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Compute the tolerance to use for descriptor time bound checks.
+!
+      tol = tolscl * max( abs(first), abs(last) )
+
+      if ( first < btime - tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time # is too ' &
+         //            'much less than the beginning time of the  ' &
+         //            'segment data # (in seconds past J2000: #). ' &
+         //            'The difference is # seconds; the  ' &
+         //            'tolerance is # seconds.'                     )
+         call etcal  ( ctx, first, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, btime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   first                                  )
+         call ctx%errdp  ( '#',   btime-first                            )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      ltime = btime  +  ( n * intlen )
+
+      if ( last > ltime + tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time # is too ' &
+         //            'much greater than the end time of the segment ' &
+         //            'data # (in seconds past J2000: #). The ' &
+         //            'difference is # seconds; the tolerance is # ' &
+         //            'seconds.'                                    )
+         call etcal  ( ctx, last,  etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, ltime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   last                                   )
+         call ctx%errdp  ( '#',   last-ltime                             )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     Now check the validity of the segment identifier.
+!
+      call chckid ( ctx, 'SPK segment identifier', sidlen, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment of SPK type 2 form:
+!
+!        Record 1
+!        Record 2
+!        ...
+!        Record N
+!        INIT       ( initial epoch of first record )
+!        INTLEN     ( length of interval covered by each record )
+!        RSIZE      ( number of data elements in each record )
+!        N          ( number of records in segment )
+!
+!     Each record will have the form:
+!
+!        MID        ( midpoint of time interval )
+!        RADIUS     ( radius of time interval )
+!        X coefficients, Y coefficients, Z coefficients
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+!
+!     Calculate the number of entries in a record.
+!
+      ninrec = ( polydg + 1 ) * 3
+
+!
+!     Fill segment with N records of data.
+!
+      do i = 1, n
+!
+!        Calculate the midpoint and radius of the time of each
+!        record, and put that at the beginning of each record.
+!
+         radius = intlen / 2.0_wp
+         mid    = btime + radius + ( i - 1 ) * intlen
+
+         call dafada ( ctx, [ mid ], 1 )
+         call dafada ( ctx, [ radius ], 1 )
+
+!
+!        Put one set of coefficients into segment.
+!
+         k = 1 + ( i - 1 ) * ninrec
+
+         call dafada ( ctx, cdata(k), ninrec )
+
+      end do
+
+!
+!     Store the initial epoch of the first record.
+!
+      call dafada ( ctx, [ btime ], 1 )
+
+!
+!     Store the length of interval covered by each record.
+!
+      call dafada ( ctx, [ intlen ], 1 )
+
+!
+!     Store the size of each record (total number of array elements).
+!
+      rsize = 2 + ninrec
+      call dafada ( ctx, [ rsize ], 1 )
+
+!
+!     Store the number of records contained in the segment.
+!
+      numrec = n
+      call dafada ( ctx, [ numrec ], 1 )
+
+!
+!     End this segment.
+!
+      call dafena ( ctx )
+
+!
+!     We're done.  Checkout of error trace.
+!
+      return
+      end procedure spkw02
+
+!$Procedure SPKW03 ( SPK, write segment, type 3 )
+
+      module procedure spkw03
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Write a type 3 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk03.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the DAF handle of an SPK file to which a type 3
+!              segment is to be added. The SPK file must be open for
+!              writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object whose
+!              state relative to another body is described by the
+!              segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion of the
+!              object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame relative to which
+!              the state information for BODY is specified.
+!
+!     FIRST,
+!     LAST     are the start and stop times of the time interval over
+!              which the segment defines the state of body.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier may
+!              contain up to 40 characters.
+!
+!     INTLEN   is the length of time, in seconds, covered by each set of
+!              Chebyshev polynomial coefficients (each logical record).
+!              Each set of Chebyshev coefficients must cover this fixed
+!              time interval, INTLEN.
+!
+!     N        is the number of sets of Chebyshev polynomial
+!              coefficients for coordinates and their derivatives
+!              (number of logical records) to be stored in the segment.
+!              There is one set of Chebyshev coefficients for each time
+!              period.
+!
+!     POLYDG   is the degree of each set of Chebyshev polynomials used
+!              to represent the ephemeris information. POLYDG must not
+!              exceed MAXDEG (see $Parameters below).
+!
+!     CDATA    is a time-ordered array of N sets of Chebyshev polynomial
+!              coefficients to be placed in the segment of the SPK file.
+!              Each set has size SETSZ = 6*(POLYDG+1). The coefficients
+!              are stored in CDATA in order as follows:
+!
+!                 the (degree + 1) coefficients for the first
+!                 coordinate of the first logical record,
+!
+!                 the coefficients for the second coordinate,
+!
+!                 the coefficients for the third coordinate,
+!
+!                 the coefficients for the derivative with respect
+!                 to time of the first coordinate,
+!
+!                 the coefficients for the derivative with respect
+!                 to time of the second coordinate,
+!
+!                 the coefficients for the derivative with respect
+!                 to time of the third coordinate,
+!
+!                 the coefficients for the first coordinate for
+!                 the second logical record, ...
+!
+!                 and so on.
+!
+!     BTIME    is the begin time (seconds past J2000 TDB) of first set
+!              of Chebyshev polynomial coefficients (first logical
+!              record).
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The routine writes to the SPK file referred to by HANDLE a type 03
+!     SPK segment containing the data in CDATA.
+!
+!     See the $Particulars section for details about the structure of a
+!     type 03 SPK segment.
+!
+! $ Parameters
+!
+!     See the include file spk03.inc for declarations of the
+!     parameters described below.
+!
+!     TOLSCL   is a tolerance scale for coverage gap at endpoints
+!              of the segment coverage interval.
+!
+!     MAXDEG   is the maximum allowed degree of the input
+!              Chebyshev expansions.
+!
+! $ Exceptions
+!
+!     1)  If the number of sets of coefficients is not positive,
+!         the error SPICE(NUMCOEFFSNOTPOS) is signaled.
+!
+!     2)  If the interval length is not positive, the error
+!         SPICE(INTLENNOTPOS) is signaled.
+!
+!     3)  If the name of the reference frame is not recognized,
+!         the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     4)  If segment stop time is not greater then the begin time,
+!         the error SPICE(BADDESCRTIMES) is signaled.
+!
+!     5)  If the start time of the first record exceeds the descriptor
+!         begin time by more than a computed tolerance, or if the end
+!         time of the last record precedes the descriptor end time by
+!         more than a computed tolerance, the error SPICE(COVERAGEGAP)
+!         is signaled. See the $Parameters section above for a
+!         description of the tolerance.
+!
+!     6)  If the input degree POLYDG is less than 0 or greater than
+!         MAXDEG, the error SPICE(INVALIDDEGREE) is signaled.
+!
+!     7)  If the last non-blank character of SEGID occurs past index 40,
+!         or if SEGID contains any nonprintable characters, an error is
+!         signaled by a routine in the call tree of this routine.
+!
+! $ Files
+!
+!     A new type 3 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 3 data segment to the designated
+!     SPK file, according to the format described in the SPK Required
+!     Reading.
+!
+!     Each segment can contain data for only one target, central body,
+!     and reference frame. The Chebyshev polynomial degree and length
+!     of time covered by each logical record are also fixed. However,
+!     an arbitrary number of logical records of Chebyshev polynomial
+!     coefficients can be written in each segment. Minimizing the
+!     number of segments in an SPK file will help optimize how the SPICE
+!     system accesses the file.
+!
+!     The ephemeris data supplied to the type 3 SPK writer is packed
+!     into an array as a sequence of records. The logical data records
+!     are stored contiguously:
+!
+!        +----------+
+!        | Record 1 |
+!        +----------+
+!        | Record 2 |
+!        +----------+
+!            ...
+!        +----------+
+!        | Record N |
+!        +----------+
+!
+!     The contents of an individual record are:
+!
+!        +--------------------------------------+
+!        | Coeff set for X position component   |
+!        +--------------------------------------+
+!        | Coeff set for Y position component   |
+!        +--------------------------------------+
+!        | Coeff set for Z position component   |
+!        +--------------------------------------+
+!        | Coeff set for X velocity component   |
+!        +--------------------------------------+
+!        | Coeff set for Y velocity component   |
+!        +--------------------------------------+
+!        | Coeff set for Z velocity component   |
+!        +--------------------------------------+
+!
+!     Each coefficient set has the structure:
+!
+!        +--------------------------------------+
+!        | Coefficient of T_0                   |
+!        +--------------------------------------+
+!        | Coefficient of T_1                   |
+!        +--------------------------------------+
+!                          ...
+!        +--------------------------------------+
+!        | Coefficient of T_POLYDG              |
+!        +--------------------------------------+
+!
+!     Where T_n represents the Chebyshev polynomial of the first kind of
+!     degree n.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 3 kernel
+!        containing only one segment, given a set of Chebychev
+!        coefficients and their associated epochs.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW03_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK3
+!              PARAMETER           ( SPK3  = 'spkw03_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               CHBDEG
+!              PARAMETER           ( CHBDEG = 2  )
+!
+!              INTEGER               NRECS
+!              PARAMETER           ( NRECS  = 4  )
+!
+!              INTEGER               RECSIZ
+!              PARAMETER           ( RECSIZ = 6*(CHBDEG+1) )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      INTLEN
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Define the coefficients.
+!        C
+!              DATA                  RECRDS /
+!             .                      1.0101D0, 1.0102D0, 1.0103D0,
+!             .                      1.0201D0, 1.0202D0, 1.0203D0,
+!             .                      1.0301D0, 1.0302D0, 1.0303D0,
+!             .                      1.0401D0, 1.0402D0, 1.0403D0,
+!             .                      1.0501D0, 1.0502D0, 1.0503D0,
+!             .                      1.0601D0, 1.0602D0, 1.0603D0,
+!             .                      2.0101D0, 2.0102D0, 2.0103D0,
+!             .                      2.0201D0, 2.0202D0, 2.0203D0,
+!             .                      2.0301D0, 2.0302D0, 2.0303D0,
+!             .                      2.0401D0, 2.0402D0, 2.0403D0,
+!             .                      2.0501D0, 2.0502D0, 2.0503D0,
+!             .                      2.0601D0, 2.0602D0, 2.0603D0,
+!             .                      3.0101D0, 3.0102D0, 3.0103D0,
+!             .                      3.0201D0, 3.0202D0, 3.0203D0,
+!             .                      3.0301D0, 3.0302D0, 3.0303D0,
+!             .                      3.0401D0, 3.0402D0, 3.0403D0,
+!             .                      3.0501D0, 3.0502D0, 3.0503D0,
+!             .                      3.0601D0, 3.0602D0, 3.0603D0,
+!             .                      4.0101D0, 4.0102D0, 4.0103D0,
+!             .                      4.0201D0, 4.0202D0, 4.0203D0,
+!             .                      4.0301D0, 4.0302D0, 4.0303D0,
+!             .                      4.0401D0, 4.0402D0, 4.0403D0,
+!             .                      4.0501D0, 4.0502D0, 4.0503D0,
+!             .                      4.0601D0, 4.0602D0, 4.0603D0 /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment, and the length of time covered by logical
+!        C     record.
+!        C
+!              FIRST  = 100.D0
+!              LAST   = 500.D0
+!              INTLEN = 100.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 3 SPK internal file name.'
+!              SEGID  = 'SPK type 3 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK3, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW03 ( HANDLE, BODY,   CENTER, REF,
+!             .              FIRST,  LAST,   SEGID,  INTLEN,
+!             .              NRECS,  CHBDEG, RECRDS, FIRST  )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 3 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     E.D. Wright        (JPL)
+!     K.S. Zukor         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 17-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        example code from existing fragment.
+!
+!        Extended POLYDG and CDATA arguments description to provide the
+!        size of the Chebyshev polynomials sets. Moved the details of
+!        the SPK structure from CDATA argument description to
+!        $Particulars section.
+!
+!-    SPICELIB Version 2.0.0, 18-JAN-2014 (NJB)
+!
+!        Relaxed test on relationship between the time bounds of the
+!        input record set (determined by BTIME, INTLEN, and N) and the
+!        descriptor bounds FIRST and LAST. Now the descriptor bounds
+!        may extend beyond the time bounds of the record set by a ratio
+!        computed using the parameter TOLSCL (see $Parameters above for
+!        details). Added checks on input polynomial degree.
+!
+!-    SPICELIB Version 1.1.0, 30-OCT-2006 (BVS)
+!
+!        Removed restriction that the input reference frame should be
+!        inertial by changing the routine that determines the frame ID
+!        from the name from IRFNUM to NAMFRM.
+!
+!-    SPICELIB Version 1.0.1, 19-SEP-2006 (EDW)
+!
+!        Corrected typo in the section name ("Example" to "Examples").
+!
+!-    SPICELIB Version 1.0.0, 01-AUG-1995 (KSZ)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_3 data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local Parameters
+!
+!     DTYPE is the SPK data type.
+!
+      integer(ip), parameter :: dtype = 3
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor. SPK uses ND = 2.
+!
+      integer(ip), parameter :: nd = 2
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor. SPK uses NI = 6.
+!
+      integer(ip), parameter :: ni = 6
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+      integer(ip), parameter :: ns = 5
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     Local variables
+!
+      character(sidlen)     etstr
+      character(sidlen)     netstr
+
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              mid
+      real(wp)              numrec
+      real(wp)              radius
+      real(wp)              rsize
+      real(wp)              tol
+
+      integer(ip)           i
+      integer(ip)           icd   ( ni )
+      integer(ip)           k
+      integer(ip)           ninrec
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of sets of coefficients must be positive.
+!
+      if ( n <= 0 ) then
+
+         call ctx%setmsg ( 'The number of sets of coordinate' &
+         //            'coefficients is not positive. N = #.' )
+         call ctx%errint ( '#', n                                 )
+         call ctx%sigerr ( 'SPICE(NUMCOEFFSNOTPOS)'               )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( polydg < 0 ) .or. ( polydg > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; ' &
+         //            'the valid degree range is [0, #].'             )
+         call ctx%errint ( '#', polydg                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!    The interval length must be positive.
+!
+      if ( intlen <= 0 ) then
+
+         call ctx%setmsg ( 'The interval length is not positive.' &
+         //            'N = #'                                )
+         call ctx%errdp  ( '#', intlen                            )
+         call ctx%sigerr ( 'SPICE(INTLENNOTPOS)'                  )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     The segment stop time must be greater than the begin time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time: # is ' // &
+                       'greater than the segment end time: #'      )
+         call etcal  ( ctx, first, etstr                                )
+         call ctx%errch  ( '#',   etstr                                )
+         call etcal  ( ctx, last,  netstr                               )
+         call ctx%errch  ( '#',   netstr                               )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Compute the tolerance to use for descriptor time bound checks.
+!
+      tol = tolscl * max( abs(first), abs(last) )
+
+      if ( first < btime - tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time # is too ' &
+         //            'much less than the beginning time of the  ' &
+         //            'segment data # (in seconds past J2000: #). ' &
+         //            'The difference is # seconds; the  ' &
+         //            'tolerance is # seconds.'                     )
+         call etcal  ( ctx, first, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, btime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   first                                  )
+         call ctx%errdp  ( '#',   btime-first                            )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      ltime = btime  +  ( n * intlen )
+
+      if ( last > ltime + tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time # is too ' &
+         //            'much greater than the end time of the segment ' &
+         //            'data # (in seconds past J2000: #). The ' &
+         //            'difference is # seconds; the tolerance is # ' &
+         //            'seconds.'                                    )
+         call etcal  ( ctx, last,  etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, ltime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   last                                   )
+         call ctx%errdp  ( '#',   last-ltime                             )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     Now check the validity of the segment identifier.
+!
+      call chckid ( ctx, 'SPK segment identifier', sidlen, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment of SPK type 3 form:
+!
+!        Record 1
+!        Record 2
+!        ...
+!        Record N
+!        INIT       ( initial epoch of first record )
+!        INTLEN     ( length of interval covered by each record )
+!        RSIZE      ( number of data elements in each record )
+!        N          ( number of records in segment )
+!
+!     Each record will have the form:
+!
+!        MID        ( midpoint of time interval )
+!        RADIUS     ( radius of time interval )
+!        X coefficients, Y coefficients, Z coefficients
+!        X' coefficients, Y' coefficients, Z' coefficients
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+!
+!     Calculate the number of Chebyshev coefficients in a record.
+!
+      ninrec = (polydg + 1) * 6
+
+!
+!     Fill segment with N records of data.
+!
+      do i = 1, n
+!
+!        Calculate the midpoint and radius of the time of each
+!        record, and put that at the beginning of each record.
+!
+         radius = intlen / 2
+         mid    = btime + radius + ( i - 1 ) * intlen
+
+         call dafada ( ctx, [ mid ], 1 )
+         call dafada ( ctx, [ radius ], 1 )
+
+!
+!        Put one set of coefficients into the segment.
+!
+         k = 1 + ( i - 1 ) * ninrec
+
+         call dafada ( ctx, cdata(k), ninrec )
+
+      end do
+
+!
+!     Store the initial epoch of the first record.
+!
+      call dafada ( ctx, [ btime ], 1 )
+
+!
+!     Store the length of interval covered by each record.
+!
+      call dafada ( ctx, [ intlen ], 1 )
+
+!
+!     Store the size of each record (total number of array elements).
+!
+      rsize = 2 + ninrec
+      call dafada ( ctx, [ rsize ], 1 )
+
+!
+!     Store the number of records contained in the segment.
+!
+      numrec = n
+      call dafada ( ctx, [ numrec ], 1 )
+
+!
+!     End this segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure spkw03
+
+!$Procedure SPKW05 ( Write SPK segment, type 5 )
+
+      module procedure spkw05
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write an SPK segment of type 5 given a time-ordered set of
+!     discrete states and epochs, and the gravitational parameter
+!     of a central body.
+!
+! $ Required_Reading
+!
+!     SPK
+!     SPC
+!     NAIF_IDS
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file
+!              opened for writing.
+!
+!     BODY     is the NAIF ID for the body whose states are
+!              to be recorded in an SPK file.
+!
+!     CENTER   is the NAIF ID for the center of motion associated
+!              with BODY.
+!
+!     FRAME    is the reference frame that states are referenced to,
+!              for example 'J2000'.
+!
+!     FIRST,
+!     LAST     are the bounds on the ephemeris times, expressed as
+!              seconds past J2000, for which the states can be used
+!              to interpolate a state for BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier
+!              may contain up to 40 characters.
+!
+!     GM       is the gravitational parameter of the central body
+!              ( in units of kilometers **3 / seconds **2 ).
+!
+!     N        is the number of states and epochs to be stored
+!              in the segment.
+!
+!     STATES   contains a time-ordered array of geometric states
+!              ( x, y, z, dx/dt, dy/dt, dz/dt, in kilometers and
+!              kilometers per second ) of the target body with
+!              respect to the central body specified in the segment
+!              descriptor.
+!
+!     EPOCHS   contains the epochs (ephemeris seconds past J2000)
+!              corresponding to the states in STATES. Epochs must
+!              form a strictly increasing sequence.
+!
+! $ Detailed_Output
+!
+!     None. A type 5 segment is written to the file attached to HANDLE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If GM is not positive, the error SPICE(NONPOSITIVEMASS)
+!         is signaled.
+!
+!     2)  If the input epochs do not form an increasing sequence, the
+!         error SPICE(UNORDEREDTIMES) is signaled.
+!
+!     3)  If the number of states and epochs is not positive, the
+!         error SPICE(NUMSTATESNOTPOS) is signaled.
+!
+!     4)  If FIRST is greater than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     5)  If SEGID is more than 40 characters long, the error
+!         SPICE(SEGIDTOOLONG) is signaled.
+!
+!     6)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     7)  If a file I/O problem occurs, an error is signaled by a
+!         routine in the call tree of this routine.
+!
+! $ Files
+!
+!     A new type 05 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 05 data segment to the open SPK
+!     file according to the format described in the type 05 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 5 kernel
+!        containing only one segment, given a time-ordered set of
+!        discrete states and epochs, and the gravitational parameter
+!        of a central body.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW05_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK5
+!              PARAMETER           ( SPK5  = 'spkw05_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              DOUBLE PRECISION      GMSUN
+!              PARAMETER           ( GMSUN  = 132712440023.310D0 )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               NSTATS
+!              PARAMETER           ( NSTATS = 9  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      EPOCHS (    NSTATS )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      STATES ( 6, NSTATS )
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Define the states and epochs.
+!        C
+!              DATA                  STATES /
+!             .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+!             .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+!             .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+!             .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+!             .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+!             .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+!             .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+!             .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+!             .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
+!
+!              DATA                  EPOCHS / 100.D0, 200.D0, 300.D0,
+!             .                               400.D0, 500.D0, 600.D0,
+!             .                               700.D0, 800.D0, 900.D0 /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment.
+!        C
+!              FIRST  = EPOCHS(1)
+!              LAST   = EPOCHS(NSTATS)
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 5 SPK internal file name.'
+!              SEGID  = 'SPK type 5 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK5, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
+!             .              FIRST,  LAST,   SEGID,  GMSUN,
+!             .              NSTATS, STATES, EPOCHS        )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 5 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!     I.M. Underwood     (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.2.0, 17-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        example code from existing fragment. Removed unnecessary
+!        $Revisions section.
+!
+!-    SPICELIB Version 1.1.0, 30-OCT-2006 (BVS)
+!
+!        Removed restriction that the input reference frame should be
+!        inertial by changing the routine that determines the frame ID
+!        from the name from IRFNUM to NAMFRM.
+!
+!-    SPICELIB Version 1.0.2, 27-JAN-2003 (EDW)
+!
+!        Added error check to catch non-positive gravitational
+!        parameter GM.
+!
+!-    SPICELIB Version 1.0.1, 05-OCT-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the SPK
+!        file in the $Brief_I/O, $Detailed_Input, $Particulars and
+!        $Examples sections of the header. It is assumed that a person
+!        using this routine has some knowledge of the DAF system and the
+!        methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_5 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor.
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor.
+!
+!     DTYPE is the data type.
+!
+!     FPRINT is the integer value of the first printable ASCII
+!     character.
+!
+!     LPRINT is the integer value of the last printable ASCII character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ns = 5
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 5
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Local variables
+!
+
+      real(wp)              dcd      ( nd     )
+      real(wp)              descr    ( ns     )
+
+      integer(ip)           i
+      integer(ip)           refcod
+      integer(ip)           value
+      integer(ip)           icd      ( ni )
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+      if ( gm <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'GM = #; Non-positive gravitational parameter' )
+         call ctx%errdp  ( '#',  gm                   )
+         call ctx%sigerr ( 'SPICE(NONPOSITIVEMASS)'   )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Make sure that the number of states and epochs is positive.
+!
+      if ( n <= 0 ) then
+
+         call ctx%setmsg ( 'The number of states and epochs is not '  // &
+                       'positive. N = #'                           )
+         call ctx%errint ( '#', n                                      )
+         call ctx%sigerr ( 'SPICE(NUMSTATESNOTPOS)'                    )
+         return
+
+      end if
+!
+!     Check the input epochs to make sure that they form a
+!     strictly increasing sequence.
+!
+      do i = 2, n
+
+         if ( epochs(i) <= epochs(i-1) ) then
+
+            call ctx%setmsg ( 'Epoch # is out of order. ' )
+            call ctx%errdp  ( '#',  epochs(i)             )
+            call ctx%sigerr ( 'SPICE(UNORDEREDTIMES)'     )
+            return
+
+         end if
+
+      end do
+
+!
+!     The segment stop time should be greater then the begin time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater then ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segid can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Also check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     This could hardly be simpler. Stuff the states into the segment,
+!     followed by the epochs.
+!
+      call dafada ( ctx, states, 6 * n )
+      call dafada ( ctx, epochs,     n )
+
+!
+!     If there are at least 100 state/epoch pairs, write a directory
+!     containing every 100'th epoch.
+!
+      i = 100
+
+      do while ( i <= n )
+         call dafada ( ctx, epochs(i), 1 )
+         i = i + 100
+      end do
+
+!
+!     Store the GM of the central body, and the number of states.
+!
+      call dafada ( ctx, [ gm ], 1 )
+      call dafada ( ctx, [ real( n, wp ) ], 1 )
+
+!
+!     If anything went wrong, don't end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw05
+
+!$Procedure SPKW08 ( Write SPK segment, type 8 )
+
+      module procedure spkw08
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 8 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk08.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame
+!              relative to which the state information for BODY
+!              is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the state of BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     DEGREE   is the degree of the Lagrange polynomials used to
+!              interpolate the states. All components of the
+!              state vectors are interpolated by polynomials of
+!              fixed degree.
+!
+!     N        is the number of states in the input state vector
+!              array.
+!
+!     STATES   contains a time-ordered array of geometric states
+!              ( x, y, z, dx/dt, dy/dt, dz/dt, in kilometers and
+!              kilometers per second ) of BODY relative to CENTER,
+!              specified relative to FRAME.
+!
+!     BEGTIM   is the epoch corresponding to the first state in
+!              the state array. Because extra states are needed
+!              at the beginning and end of the segment in order
+!              for the interpolation method to work, BEGTIM will
+!              normally precede FIRST.
+!
+!     STEP     is the time step separating the epochs of adjacent
+!              states in the input state array. STEP is specified
+!              in seconds.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     See the include file spk08.inc for declarations of the
+!     parameters described below.
+!
+!     MAXDEG   is the maximum degree of Lagrange polynomials that
+!              can be used to interpolate states from the segment
+!              written by this routine.
+!
+!     TOLSCL   is a tolerance scale factor (also called a
+!              "relative tolerance") used for time coverage
+!              bound checking. TOLSCL is unitless. TOLSCL
+!              produces a tolerance value via the formula
+!
+!                 TOL = TOLSCL * MAX( ABS(FIRST), ABS(LAST) )
+!
+!              where FIRST and LAST are the coverage time bounds
+!              of a type 8 segment, expressed as seconds past
+!              J2000 TDB.
+!
+!              The resulting parameter TOL is used as a tolerance
+!              for comparing the input segment descriptor time
+!              bounds to the first and last epoch covered by the
+!              sequence of time intervals defined by the inputs
+!              to SPKW08:
+!
+!                 BEGTIM
+!                 STEP
+!                 N
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will return
+!     without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If DEGREE is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     5)  If the number of states N is not at least DEGREE+1, the error
+!         SPICE(TOOFEWSTATES) is signaled.
+!
+!     6)  If FIRST is greater than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     7)  If STEP is non-positive, the error SPICE(INVALIDSTEPSIZE) is
+!         signaled.
+!
+!     8)  If the start time of the first record exceeds the descriptor
+!         begin time by more than a computed tolerance, or if the end
+!         time of the last record precedes the descriptor end time by
+!         more than a computed tolerance, the error SPICE(COVERAGEGAP)
+!         is signaled. See the $Parameters section above for a
+!         description of the tolerance.
+!
+! $ Files
+!
+!     A new type 8 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 08 data segment to the open SPK
+!     file according to the format described in the type 08 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 8 kernel
+!        containing only one segment, given a time-ordered set of
+!        discrete states and epochs.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW08_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK8
+!              PARAMETER           ( SPK8   = 'spkw08_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               DEGREE
+!              PARAMETER           ( DEGREE = 3  )
+!
+!              INTEGER               NSTATS
+!              PARAMETER           ( NSTATS = 9  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      BEGTIM
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      STATES ( 6, NSTATS )
+!              DOUBLE PRECISION      STEP
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Set the array of discrete states to write to the SPK
+!        C     segment.
+!        C
+!              DATA                  STATES /
+!             .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+!             .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+!             .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+!             .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+!             .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+!             .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+!             .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+!             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+!             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment, and the time step separating epochs of states.
+!        C
+!              FIRST = 100.D0
+!              LAST  = 900.D0
+!              STEP  = 100.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 8 SPK internal file name.'
+!              SEGID  = 'SPK type 8 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Set the epoch of first state in STATES array to be
+!        C     the start time of the interval covered by the segment.
+!        C
+!              BEGTIM = FIRST
+!
+!        C
+!        C     Create a type 8 segment.
+!        C
+!              CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
+!             .               FIRST,   LAST,    SEGID,   DEGREE,
+!             .               NSTATS,  STATES,  BEGTIM,  STEP     )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 8 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.1.0, 03-JUN-2021 (JDR)
+!
+!        Changed the input argument name EPOCH1 to BEGTIM for
+!        consistency with other routines.
+!
+!        Edited the header to comply with NAIF standard. Added
+!        complete example code from existing fragment.
+!
+!        Removed unnecessary $Revisions sections.
+!
+!-    SPICELIB Version 3.0.0, 11-JAN-2013 (NJB)
+!
+!        Relaxed test on relationship between the time bounds of the
+!        input record set (determined by BEGTIM, STEP, and N) and the
+!        descriptor bounds FIRST and LAST. Now the descriptor bounds
+!        may extend beyond the time bounds of the record set by a ratio
+!        computed using the parameter TOLSCL (see $Parameters above for
+!        details). MAXDEG was increased to 27.
+!
+!-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
+!
+!        The routine was upgraded to support non-inertial reference
+!        frames.
+!
+!-    SPICELIB Version 1.0.1, 05-OCT-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the SPK
+!        file in the $Brief_I/O, $Detailed_Input, $Particulars and
+!        $Examples sections of the header. It is assumed that a person
+!        using this routine has some knowledge of the DAF system and the
+!        methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.0.0, 08-AUG-1993 (NJB) (JML) (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_8 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor.
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor.
+!
+!     DTYPE is the data type.
+!
+!     FPRINT is the integer value of the first printable ASCII
+!     character.
+!
+!     LPRINT is the integer value of the last printable ASCII character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ns = 5
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 8
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: statsz = 6
+
+      integer(ip), parameter :: timlen = 40
+
+!
+!     Local variables
+!
+      character(timlen)     etstr
+
+      real(wp)              dcd    ( nd )
+      real(wp)              descr  ( ns )
+      real(wp)              ltime
+      real(wp)              tol
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           icd    ( ni )
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains ' &
+                     //   'nonprintable characters: ICHAR(SEGID(#:#)) ' &
+                     //   ' = #'                                  )
+            call ctx%errint ( '#',   i                                )
+            call ctx%errint ( '#',   i                                )
+            call ctx%errint ( '#',   chrcod                           )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'the valid degree range is [1, #].'             )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the number of states is sufficient to define a
+!     polynomial whose degree is DEGREE.
+!
+      if ( n <= degree ) then
+
+         call ctx%setmsg ( 'At least # states are required to define a '  // &
+                       'polynomial of degree #.  Number of states '   // &
+                       'supplied:  #.'                                 )
+         call ctx%errint ( '#', degree + 1                                 )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', n                                          )
+         call ctx%sigerr ( 'SPICE(TOOFEWSTATES)'                           )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater than the begin time.
+!
+      if ( first >= last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater than ' // &
+                       'or equal to the segment end time: #'       )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     The step size must be positive.
+!
+      if ( step <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The step size must be > 0 but was #. ' )
+         call ctx%errdp  ( '#', step                               )
+         call ctx%sigerr ( 'SPICE(INVALIDSTEPSIZE)'                )
+         return
+
+      end if
+
+!
+!     Compute the tolerance to use for descriptor time bound checks.
+!
+      tol = tolscl * max( abs(first), abs(last) )
+
+      if ( first < begtim - tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time # is too ' &
+         //            'much less than the beginning time of the  ' &
+         //            'segment data # (in seconds past J2000: #). ' &
+         //            'The difference is # seconds; the  ' &
+         //            'tolerance is # seconds.'                     )
+         call etcal  ( ctx, first,  etstr                                 )
+         call ctx%errch  ( '#',    etstr                                 )
+         call etcal  ( ctx, begtim, etstr                                 )
+         call ctx%errch  ( '#',    etstr                                 )
+         call ctx%errdp  ( '#',    first                                 )
+         call ctx%errdp  ( '#',    begtim-first                          )
+         call ctx%errdp  ( '#',    tol                                   )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      ltime = begtim  +  ( (n-1) * step )
+
+      if ( last > ltime + tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time # is too ' &
+         //            'much greater than the end time of the segment ' &
+         //            'data # (in seconds past J2000: #). The ' &
+         //            'difference is # seconds; the tolerance is # ' &
+         //            'seconds.'                                    )
+         call etcal  ( ctx, last,  etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, ltime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   last                                   )
+         call ctx%errdp  ( '#',   last-ltime                             )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 8 segment structure is eloquently described by this
+!     diagram from the SPK Required Reading:
+!
+!        +-----------------------+
+!        | State 1               |
+!        +-----------------------+
+!        | State 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | State N               |
+!        +-----------------------+
+!        | Epoch of state 1 (ET) |
+!        +-----------------------+
+!        | Step size             |
+!        +-----------------------+
+!        | Polynomial degree     |
+!        +-----------------------+
+!        | Number of states      |
+!        +-----------------------+
+!
+      call dafada ( ctx, states,          n*statsz )
+      call dafada ( ctx, [ begtim ], 1 )
+      call dafada ( ctx, [ step ], 1 )
+      call dafada ( ctx, [ real(degree, wp) ], 1 )
+      call dafada ( ctx, [ real(n, wp) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw08
+
+!$Procedure SPKW09 ( Write SPK segment, type 9 )
+
+      module procedure spkw09
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 9 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+      integer(ip), parameter :: maxdeg = 27
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame
+!              relative to which the state information for BODY
+!              is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the state of BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     DEGREE   is the degree of the Lagrange polynomials used to
+!              interpolate the states. All components of the
+!              state vectors are interpolated by polynomials of
+!              fixed degree.
+!
+!     N        is the number of states in the input state vector
+!              array.
+!
+!     STATES   contains a time-ordered array of geometric states
+!              ( x, y, z, dx/dt, dy/dt, dz/dt, in kilometers and
+!              kilometers per second ) of BODY relative to CENTER,
+!              specified relative to FRAME.
+!
+!     EPOCHS   is an array of epochs corresponding to the members
+!              of the state array. The epochs are specified as
+!              seconds past J2000, TDB.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the interpolating
+!              polynomial. If the value of MAXDEG is increased,
+!              the SPICELIB routine SPKPV must be changed
+!              accordingly. In particular, the size of the
+!              record passed to SPKRnn and SPKEnn must be
+!              increased, and comments describing the record size
+!              must be changed.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will return
+!     without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If DEGREE is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     5)  If the number of states N is not at least DEGREE+1, the error
+!         SPICE(TOOFEWSTATES) is signaled.
+!
+!     6)  If FIRST is greater than or equal to LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     7)  If the elements of the array EPOCHS are not in strictly
+!         increasing order, the error SPICE(TIMESOUTOFORDER) is
+!         signaled.
+!
+!     8)  If the first epoch, EPOCHS(1), is greater than FIRST, the
+!         error SPICE(BADDESCRTIMES) is signaled.
+!
+!     9)  If the last epoch, EPOCHS(N), is less than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+! $ Files
+!
+!     A new type 9 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 09 data segment to the open SPK
+!     file according to the format described in the type 09 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that you have a time-ordered array of geometric states
+!        of a new object that follows Phobos, with a delay of 1 hour,
+!        in its orbit around Mars and are prepared to produce a segment
+!        of type 09 in an SPK file. Create a new SPK file with this
+!        segment. Use an existing SPK to create the input data for the
+!        SPK segment.
+!
+!        Use the meta-kernel shown below to load the required SPICE
+!        kernels.
+!
+!           KPL/MK
+!
+!           File: spkw09_ex1.tm
+!
+!           This meta-kernel is intended to support operation of SPICE
+!           example programs. The kernels shown here should not be
+!           assumed to contain adequate or correct versions of data
+!           required by SPICE-based user applications.
+!
+!           In order for an application to use this meta-kernel, the
+!           kernels referenced here must be present in the user's
+!           current working directory.
+!
+!           The names and contents of the kernels referenced
+!           by this meta-kernel are as follows:
+!
+!              File name                        Contents
+!              ---------                        --------
+!              mar097.bsp                       Mars satellite ephemeris
+!              naif0012.tls                     Leapseconds
+!
+!           \begindata
+!
+!              KERNELS_TO_LOAD = ( 'mar097.bsp',
+!                                  'naif0012.tls' )
+!
+!           \begintext
+!
+!           End of meta-kernel
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW09_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     SPICELIB functions
+!        C
+!              DOUBLE PRECISION      HALFPI
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         SPKNAM
+!              PARAMETER           ( SPKNAM = 'spkw09_ex1.bsp' )
+!
+!              INTEGER               DEGREE
+!              PARAMETER           ( DEGREE = 3   )
+!
+!              INTEGER               MARS
+!              PARAMETER           ( MARS   = 499 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 255 )
+!
+!              INTEGER               NEPOCS
+!              PARAMETER           ( NEPOCS = 800 )
+!
+!              INTEGER               NOBJ
+!              PARAMETER           ( NOBJ   = 403 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      DELTA
+!              DOUBLE PRECISION      ET
+!              DOUBLE PRECISION      EPOCHS ( NEPOCS )
+!              DOUBLE PRECISION      LT
+!              DOUBLE PRECISION      STATE  ( 6 )
+!              DOUBLE PRECISION      STATES ( 6, NEPOCS )
+!              DOUBLE PRECISION      STEP
+!              DOUBLE PRECISION      TIME
+!
+!              INTEGER               I
+!              INTEGER               HANDLE
+!
+!        C
+!        C     Load the input SPK file.
+!        C
+!              CALL FURNSH ( 'spkw09_ex1.tm' )
+!
+!        C
+!        C     Convert the input UTC to ephemeris time
+!        C
+!              CALL STR2ET ( '2018 Apr 03 08:35', ET )
+!
+!        C
+!        C     Create the time-ordered array of geometric states,
+!        C     at unequal time steps.
+!        C
+!              TIME  = ET
+!              STEP  = 60.D0
+!              DELTA = 10.D0
+!
+!              DO I=1, NEPOCS
+!
+!                 CALL SPKEZR ( 'PHOBOS', TIME,       'J2000', 'NONE',
+!             .                 'MARS',   STATES(1,I), LT             )
+!
+!                 EPOCHS(I) = TIME + 3600.D0
+!                 TIME = TIME + STEP +
+!             .          SIN( HALFPI() * I / 2.D0 ) * DELTA
+!
+!              END DO
+!
+!        C
+!        C     Open a new SPK file, with 5000 characters reserved
+!        C     for comments.
+!        C
+!              IFNAME = 'Test SPK type 9 internal filename.'
+!              CALL SPKOPN ( SPKNAM, IFNAME, 5000, HANDLE )
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_SPK_TYPE_9_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW09 ( HANDLE,    NOBJ,           MARS,  'J2000',
+!             .              EPOCHS(1), EPOCHS(NEPOCS), SEGID,  DEGREE,
+!             .              NEPOCS,    STATES,         EPOCHS        )
+!
+!        C
+!        C     Close the new SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!        C
+!        C     Compute the state of Phobos as seen from Mars,
+!        C     12 hours after the input UTC time.
+!        C
+!              ET = ET + 43200.0D0
+!              CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+!             .               STATE,   LT                          )
+!
+!              WRITE (*,'(A)') 'Phobos as seen from Mars'
+!              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+!              WRITE (*,'(A,3F14.6)') '   Position   (km):',
+!             .                                   (STATE(I), I=1,3)
+!              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+!             .                                   (STATE(I), I=4,6)
+!              WRITE (*,*)
+!
+!        C
+!        C     Load the newly created kernel, and compute the state
+!        C     of the new object as seen from Mars, 13 hours after
+!        C     the input UTC time.
+!        C
+!              CALL FURNSH ( SPKNAM )
+!              ET = ET + 3600.0D0
+!
+!              CALL SPKEZR ( '403', ET, 'J2000', 'NONE', 'MARS',
+!             .               STATE,   LT                       )
+!
+!              WRITE (*,'(A)') 'Object 403 as seen from Mars'
+!              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+!              WRITE (*,'(A,3F14.6)') '   Position   (km):',
+!             .                                   (STATE(I), I=1,3)
+!              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+!             .                                   (STATE(I), I=4,6)
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!        Phobos as seen from Mars
+!           Epoch       (s):    576059769.185657
+!           Position   (km):  -7327.262770   2414.326550   5207.106376
+!           Velocity (km/s):     -0.942893     -1.894731     -0.396715
+!
+!        Object 403 as seen from Mars
+!           Epoch       (s):    576063369.185657
+!           Position   (km):  -7327.262770   2414.326550   5207.106376
+!           Velocity (km/s):     -0.942893     -1.894731     -0.396715
+!
+!        Note that after run completion, a new SPK file exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     J.M. Lynch         (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 3.0.1, 05-JUL-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        code example to $Examples section. Removed unnecessary
+!        $Revisions section.
+!
+!-    SPICELIB Version 3.0.0, 24-DEC-2013 (NJB)
+!
+!        Increased MAXDEG to 27 for compatibility
+!        with SPK type 21.
+!
+!-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
+!
+!        The routine was upgraded to support non-inertial reference
+!        frames.
+!
+!-    SPICELIB Version 1.0.1, 05-OCT-1993 (KRG)
+!
+!        Removed all references to a specific method of opening the SPK
+!        file in the $Brief_I/O, $Detailed_Input, $Particulars and
+!        $Examples sections of the header. It is assumed that a person
+!        using this routine has some knowledge of the DAF system and the
+!        methods for obtaining file handles.
+!
+!-    SPICELIB Version 1.0.0, 05-AUG-1993 (NJB) (JML) (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_9 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor.
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor.
+!
+!     DTYPE is the data type.
+!
+!     FPRINT is the integer value of the first printable ASCII
+!     character.
+!
+!     LPRINT is the integer value of the last printable ASCII character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ns = 5
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dtype = 9
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: statsz = 6
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Local variables
+!
+      real(wp)              dcd    ( nd )
+      real(wp)              descr  ( ns )
+      real(wp)              maxtim
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           icd    ( ni )
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater then the begin time.
+!
+      if ( first >= last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater then ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Also check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'the valid degree range is [1, #]'              )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the number of states is sufficient to define a
+!     polynomial whose degree is DEGREE.
+!
+      if ( n <= degree ) then
+
+         call ctx%setmsg ( 'At least # states are required to define a '  // &
+                       'polynomial of degree #.  Number of states '   // &
+                       'supplied:  #'                                  )
+         call ctx%errint ( '#', degree + 1                                 )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', n                                          )
+         call ctx%sigerr ( 'SPICE(TOOFEWSTATES)'                           )
+         return
+
+      end if
+
+!
+!     Make sure the epochs form a strictly increasing sequence.
+!
+      maxtim = epochs(1)
+
+      do i = 2, n
+
+         if ( epochs(i) <= maxtim ) then
+
+            call ctx%setmsg ( 'EPOCH # having index # is not greater '    // &
+                          'than its predecessor #.'                   )
+            call ctx%errdp  ( '#',  epochs(i)                             )
+            call ctx%errint ( '#',  i                                     )
+            call ctx%errdp  ( '#',  epochs(i-1)                           )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            return
+         else
+            maxtim = epochs(i)
+         end if
+
+      end do
+
+!
+!     Make sure that the span of the input epochs includes the interval
+!     defined by the segment descriptor.
+!
+      if (  epochs(1) > first ) then
+
+         call ctx%setmsg ( 'Segment start time # precedes first epoch #.' )
+         call ctx%errdp  ( '#',  first                                    )
+         call ctx%errdp  ( '#',  epochs(1)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      else if (  epochs(n) < last ) then
+
+         call ctx%setmsg ( 'Segment end time # follows last epoch #.'     )
+         call ctx%errdp  ( '#',  last                                     )
+         call ctx%errdp  ( '#',  epochs(n)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      end if
+
+!
+!     That concludes the error checks.  Make the segment.
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+!
+!     The type 9 segment structure is eloquently described by this
+!     diagram from the SPK Required Reading:
+!
+!        +-----------------------+
+!        | State 1               |
+!        +-----------------------+
+!        | State 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | State N               |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!        | Epoch 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch N               |
+!        +-----------------------+
+!        | Epoch 100             | (First directory)
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch ((N-1)/100)*100 | (Last directory)
+!        +-----------------------+
+!        | Polynomial degree     |
+!        +-----------------------+
+!        | Number of states      |
+!        +-----------------------+
+!
+
+      call dafada ( ctx, states,  n*statsz )
+      call dafada ( ctx, epochs,  n        )
+
+      do i = 1,   (n-1) / dirsiz
+         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
+      end do
+
+      call dafada ( ctx, [ real(degree, wp) ], 1 )
+      call dafada ( ctx, [ real(n, wp) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw09
+
+!$Procedure SPKW10 (SPK - write a type 10 segment )
+
+      module procedure spkw10
+      use pepper_kinds, only: ip, wp
+      use pepper_arrays, only: moved
+
+! $ Abstract
+!
+!     Write an SPK type 10 segment to the file specified by
+!     the input HANDLE.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPK
+!
+! $ Keywords
+!
+!     SPK
+!
+! $ Declarations
+
+      implicit none
+
+      include              'sgparam.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been opened
+!              for writing.
+!
+!     BODY     is the NAIF ID for the body whose states are
+!              to be recorded in an SPK file.
+!
+!     CENTER   is the NAIF ID for the center of motion associated
+!              with BODY.
+!
+!     FRAME    is the reference frame that states are referenced to,
+!              for example 'J2000'.
+!
+!     FIRST,
+!     LAST     are the bounds on the ephemeris times, expressed as
+!              seconds past J2000, for which the states can be used
+!              to interpolate a state for BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier
+!              may contain up to 40 characters.
+!
+!     CONSTS   are the geophysical constants needed for evaluation
+!              of the two line elements sets. The order of these
+!              constants must be:
+!
+!                 CONSTS(1) = J2 gravitational harmonic for Earth.
+!                 CONSTS(2) = J3 gravitational harmonic for Earth.
+!                 CONSTS(3) = J4 gravitational harmonic for Earth.
+!
+!              These first three constants are dimensionless.
+!
+!                 CONSTS(4) = KE: Square root of the GM for Earth where
+!                             GM is expressed in Earth radii cubed
+!                             per minutes squared.
+!
+!                 CONSTS(5) = QO: High altitude bound for atmospheric
+!                             model in km.
+!
+!                 CONSTS(6) = SO: Low altitude bound for atmospheric
+!                             model in km.
+!
+!                 CONSTS(7) = RE: Equatorial radius of the earth in km.
+!
+!                 CONSTS(8) = AE: Distance units/earth radius
+!                             (normally 1).
+!
+!              Below are currently recommended values for these
+!              items:
+!
+!                 J2 =    1.082616D-3
+!                 J3 =   -2.53881D-6
+!                 J4 =   -1.65597D-6
+!
+!              The next item is the square root of GM for the Earth
+!              given in units of earth-radii**1.5/Minute
+!
+!                 KE =    7.43669161D-2
+!
+!              The next two items define the top and bottom of the
+!              atmospheric drag model used by the type 10 ephemeris
+!              type. Don't adjust these unless you understand the full
+!              implications of such changes.
+!
+!                 QO =  120.0D0
+!                 SO =   78.0D0
+!
+!              The ER value is the equatorial radius in km of the Earth
+!              as used by NORAD.
+!
+!                 ER = 6378.135D0
+!
+!              The value of AE is the number of distance units per
+!              Earth radii used by the NORAD state propagation
+!              software. The value should be 1 unless you've got a very
+!              good understanding of the NORAD routine SGP4 and the
+!              affect of changing this value.
+!
+!                 AE =    1.0D0
+!
+!     N        is the number of "two-line" element sets and epochs
+!              to be stored in the segment.
+!
+!     ELEMS    is a time-ordered array of two-line elements as supplied
+!              in NORAD two-line element files. The I'th set of
+!              elements should be stored as shown here:
+!
+!                 BASE = (I-1)*10
+!
+!                 ELEMS( BASE + 1  )  = NDT2O in radians/minute**2
+!                 ELEMS( BASE + 2  )  = NDD6O in radians/minute**3
+!                 ELEMS( BASE + 3  )  = BSTAR
+!                 ELEMS( BASE + 4  )  = INCL  in radians
+!                 ELEMS( BASE + 5  )  = NODE0 in radians
+!                 ELEMS( BASE + 6  )  = ECC
+!                 ELEMS( BASE + 7  )  = OMEGA in radians
+!                 ELEMS( BASE + 8  )  = M0    in radians
+!                 ELEMS( BASE + 9  )  = N0    in radians/minute
+!                 ELEMS( BASE + 10 )  = EPOCH of the elements in seconds
+!                                       past ephemeris epoch J2000.
+!
+!              The meaning of these variables is defined by the
+!              format of the two-line element files available from
+!              NORAD.
+!
+!     EPOCHS   is an n-dimensional array that contains the epochs
+!              (ephemeris seconds past J2000) corresponding to the
+!              elements in ELEMS. The I'th epoch must equal the epoch
+!              of the I'th element set. EPOCHS must form a strictly
+!              increasing sequence.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The routine writes an SPK type 10 segment to the file attached to
+!     HANDLE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the structure or content of the inputs are invalid, an
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If any file access error occurs, the error is signaled by a
+!         routine in the call tree of this routine.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine writes a type 10 SPK segment to the SPK file open
+!     for writing that is attached to HANDLE.
+!
+!     The routine GETELM reads two-line element sets, as those
+!     distributed by NORAD, and converts them to the elements in units
+!     suitable for use in this routine.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that you have collected the two-line element data
+!        for a spacecraft with NORAD ID 18123. The following example
+!        code demonstrates how you could go about creating a type 10
+!        SPK segment.
+!
+!        Use the meta-kernel shown below to load the required SPICE
+!        kernels.
+!
+!           KPL/MK
+!
+!           File name: spkw10_ex1.tm
+!
+!           This meta-kernel is intended to support operation of SPICE
+!           example programs. The kernels shown here should not be
+!           assumed to contain adequate or correct versions of data
+!           required by SPICE-based user applications.
+!
+!           In order for an application to use this meta-kernel, the
+!           kernels referenced here must be present in the user's
+!           current working directory.
+!
+!           The names and contents of the kernels referenced
+!           by this meta-kernel are as follows:
+!
+!              File name           Contents
+!              ---------           ------------------------------------
+!              naif0012.tls        Leapseconds
+!              geophysical.ker     geophysical constants for evaluation
+!                                  of two-line element sets.
+!
+!           \begindata
+!
+!              KERNELS_TO_LOAD = ( 'naif0012.tls',
+!                                  'geophysical.ker'  )
+!
+!           \begintext
+!
+!           The geophysical.ker is a PCK file that is provided with the
+!           SPICE toolkit under the "/data" directory.
+!
+!           End of meta-kernel
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW10_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     SPICELIB functions.
+!        C
+!              DOUBLE PRECISION      SPD
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40               )
+!
+!              INTEGER               PNAMLN
+!              PARAMETER           ( PNAMLN = 2                )
+!
+!              CHARACTER*(*)         SPK10
+!              PARAMETER           ( SPK10  = 'spkw10_ex1.bsp' )
+!
+!              INTEGER               TLELLN
+!              PARAMETER           ( TLELLN = 69               )
+!
+!        C
+!        C     The SPK type 10 segment will contain 18 two-line
+!        C     elements sets for the NORAD spacecraft 18123 with
+!        C     respect to the Earth (ID 399) in the J2000 reference
+!        C     frame.
+!        C
+!        C     As stated in the naif_ids required reading, for Earth
+!        C     orbiting spacecraft lacking a DSN identification code,
+!        C     the NAIF ID is derived from the tracking ID assigned to
+!        C     it by NORAD via:
+!        C
+!        C        NAIF ID = -100000 - NORAD ID code
+!        C
+!              INTEGER               TLESSZ
+!              PARAMETER           ( TLESSZ = 9       )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = -118123 )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 399     )
+!
+!              CHARACTER*(*)         FRMNAM
+!              PARAMETER           ( FRMNAM = 'J2000' )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(PNAMLN)    NOADPN ( 8           )
+!              CHARACTER*(NAMLEN)    SEGID
+!              CHARACTER*(TLELLN)    TLE    ( 2  * TLESSZ )
+!
+!              DOUBLE PRECISION      CONSTS ( 8           )
+!              DOUBLE PRECISION      ELEMS  ( 10 * TLESSZ )
+!              DOUBLE PRECISION      EPOCHS (      TLESSZ )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!
+!              INTEGER               HANDLE
+!              INTEGER               I
+!              INTEGER               N
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     These are the variables that will hold the constants
+!        C     required by SPK type 10. These constants are available
+!        C     from the loaded PCK file, which provides the actual
+!        C     values and units as used by NORAD propagation model.
+!        C
+!        C        Constant   Meaning
+!        C        --------   ------------------------------------------
+!        C        J2         J2 gravitational harmonic for Earth.
+!        C        J3         J3 gravitational harmonic for Earth.
+!        C        J4         J4 gravitational harmonic for Earth.
+!        C        KE         Square root of the GM for Earth.
+!        C        QO         High altitude bound for atmospheric model.
+!        C        SO         Low altitude bound for atmospheric model.
+!        C        ER         Equatorial radius of the Earth.
+!        C        AE         Distance units/earth radius.
+!        C
+!              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+!             .                         'QO', 'SO', 'ER', 'AE'  /
+!
+!        C
+!        C     Define the Two-Line Element sets.
+!        C
+!              TLE(1)  = '1 18123U 87 53  A 87324.61041692 -.00000023'
+!             .      //                   '  00000-0 -75103-5 0 00675'
+!              TLE(2)  = '2 18123  98.8296 152.0074 0014950 168.7820 '
+!             .      //                   '191.3688 14.12912554 21686'
+!              TLE(3)  = '1 18123U 87 53  A 87326.73487726  .00000045'
+!             .      //                   '  00000-0  28709-4 0 00684'
+!              TLE(4)  = '2 18123  98.8335 154.1103 0015643 163.5445 '
+!             .      //                   '196.6235 14.12912902 21988'
+!              TLE(5)  = '1 18123U 87 53  A 87331.40868801  .00000104'
+!             .      //                   '  00000-0  60183-4 0 00690'
+!              TLE(6)  = '2 18123  98.8311 158.7160 0015481 149.9848 '
+!             .      //                   '210.2220 14.12914624 22644'
+!              TLE(7)  = '1 18123U 87 53  A 87334.24129978  .00000086'
+!             .      //                   '  00000-0  51111-4 0 00702'
+!              TLE(8)  = '2 18123  98.8296 161.5054 0015372 142.4159 '
+!             .      //                   '217.8089 14.12914879 23045'
+!              TLE(9)  = '1 18123U 87 53  A 87336.93227900 -.00000107'
+!             .      //                   '  00000-0 -52860-4 0 00713'
+!              TLE(10) = '2 18123  98.8317 164.1627 0014570 135.9191 '
+!             .      //                   '224.2321 14.12910572 23425'
+!              TLE(11) = '1 18123U 87 53  A 87337.28635487  .00000173'
+!             .      //                   '  00000-0  10226-3 0 00726'
+!              TLE(12) = '2 18123  98.8284 164.5113 0015289 133.5979 '
+!             .      //                   '226.6438 14.12916140 23475'
+!              TLE(13) = '1 18123U 87 53  A 87339.05673569  .00000079'
+!             .      //                   '  00000-0  47069-4 0 00738'
+!              TLE(14) = '2 18123  98.8288 166.2585 0015281 127.9985 '
+!             .      //                   '232.2567 14.12916010 24908'
+!              TLE(15) = '1 18123U 87 53  A 87345.43010859  .00000022'
+!             .      //                   '  00000-0  16481-4 0 00758'
+!              TLE(16) = '2 18123  98.8241 172.5226 0015362 109.1515 '
+!             .      //                   '251.1323 14.12915487 24626'
+!              TLE(17) = '1 18123U 87 53  A 87349.04167543  .00000042'
+!             .      //                   '  00000-0  27370-4 0 00764'
+!              TLE(18) = '2 18123  98.8301 176.1010 0015565 100.0881 '
+!             .      //                   '260.2047 14.12916361 25138'
+!
+!        C
+!        C     Load the PCK file that provides the geophysical
+!        C     constants required for the evaluation of the two-line
+!        C     elements sets. Load also an LSK, as it is required by
+!        C     GETELM to perform time conversions. Use a metakernel for
+!        C     convenience.
+!        C
+!              CALL FURNSH ( 'spkw10_ex1.tm' )
+!
+!        C
+!        C     Retrieve the data from the kernel, and place it on
+!        C     the CONSTS array.
+!        C
+!              DO I = 1, 8
+!
+!                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, CONSTS(I) )
+!
+!              END DO
+!
+!        C
+!        C     Convert the Two Line Elements lines to the
+!        C     element sets.
+!        C
+!              DO I = 1, TLESSZ
+!
+!                 CALL GETELM ( 1950,      TLE( (I-1)*2 + 1 ),
+!             .                 EPOCHS(I), ELEMS( (I-1)*10 + 1 ) )
+!
+!              END DO
+!
+!        C
+!        C     Define the beginning and end of the segment to be
+!        C     -/+ 12 hours from the first and last epochs,
+!        C     respectively.
+!        C
+!              FIRST = EPOCHS(1     ) - 0.5D0 * SPD()
+!              LAST  = EPOCHS(TLESSZ) + 0.5D0 * SPD()
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Test for type 10 SPK internal file name'
+!              SEGID  = 'SPK type 10 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK10, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Now add the segment.
+!        C
+!              CALL SPKW10 ( HANDLE, BODY,  CENTER, FRMNAM,
+!             .              FIRST,  LAST,  SEGID,  CONSTS,
+!             .              TLESSZ, ELEMS, EPOCHS         )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 10 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
+!          Propagation of the NORAD Element Sets," U.S. Air Force
+!          Aerospace Defense Command, Colorado Springs, CO, 1980.
+!
+!     [2]  F. Hoots, "Spacetrack Report #6: Models for Propagation of
+!          Space Command Element Sets,"  U.S. Air Force Aerospace
+!          Defense Command, Colorado Springs, CO, 1986.
+!
+!     [3]  F. Hoots, P. Schumacher and R. Glover, "History of Analytical
+!          Orbit Modeling in the U. S. Space Surveillance System,"
+!          Journal of Guidance, Control, and Dynamics. 27(2):174-185,
+!          2004.
+!
+!     [4]  D. Vallado, P. Crawford, R. Hujsak and T. Kelso, "Revisiting
+!          Spacetrack Report #3," paper AIAA 2006-6753 presented at the
+!          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
+!          August 21-24, 2006.
+!
+! $ Author_and_Institution
+!
+!     M. Costa Sitja     (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 04-NOV-2021 (JDR) (MCS)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Corrected the expected order of QO, SO and ER in the detailed
+!        description of the input argument GEOPHS and the input element
+!        names in ELEMS.
+!
+!        Added Spacetrack Report #3 to literature references and
+!        NAIF_IDS to the list of required readings.
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        code example based on existing example.
+!
+!-    SPICELIB Version 1.0.2, 30-OCT-2006 (BVS)
+!
+!        Deleted "inertial" from the FRAME description in the $Brief_I/O
+!        section of the header.
+!
+!-    SPICELIB Version 1.0.1, 21-JUN-1999 (WLT)
+!
+!        Cleaned up the header.
+!
+!-    SPICELIB Version 1.0.0, 05-JAN-1994 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Write a type 10 SPK segment
+!
+!-&
+
+!
+!     Spicelib functions
+!
+
+!
+!     Local Variables
+!
+
+!
+!     The type of this segment
+!
+      integer(ip), parameter :: spktyp = 10
+!
+!     The number of geophysical constants:
+!
+      integer(ip), parameter :: nconst = 8
+!
+!     The number of elements per two-line set:
+!
+      integer(ip), parameter :: nelems = 10
+
+      integer(ip), parameter :: nuobl = 11
+
+      integer(ip), parameter :: nulon = 12
+
+      integer(ip), parameter :: dnuobl = 13
+
+      integer(ip), parameter :: dnulon = 14
+
+      integer(ip), parameter :: pktsiz = dnulon
+
+      real(wp)              descr ( 6 )
+      real(wp)              packet( pktsiz )
+      real(wp)              dnut  ( 4 )
+
+      integer(ip)           base
+      integer(ip)           i
+      integer(ip)           npkts
+      integer(ip)           nepoch
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     First we need to create a descriptor for the segment
+!     we are about to write.
+!
+      call spkpds ( ctx, body,  center, frame, spktyp, first, last, &
+                    descr  )
+
+      if ( ctx%failed() ) return
+
+!
+!     We've got a valid descriptor, write the data to a DAF
+!     segment using the generic segment writer.
+!
+      npkts  = n
+      nepoch = n
+
+      call sgbwfs ( ctx, handle, descr, segid, nconst, consts, [ pktsiz ], expcls )
+
+      do i = 1, nepoch
+!
+!        Move the elements into the next packet.
+!
+         base = (i-1)*nelems
+
+         call moved ( elems(base + 1), 10, packet )
+!
+!        For each epoch, we need to get the nutation in obliquity,
+!        nutation in longitude and mean obliquity.
+!
+         call zzwahr  ( ctx, epochs(i), dnut )
+
+         packet(nulon)  = dnut(1)
+         packet(nuobl)  = dnut(2)
+         packet(dnulon) = dnut(3)
+         packet(dnuobl) = dnut(4)
+
+!
+!        Now write the packet into the generic segment.
+!
+         call sgwfpk ( ctx, handle, 1, packet, 1, epochs(i) )
+
+      end do
+
+      call sgwes  ( ctx, handle )
+
+      return
+
+      end procedure spkw10
+
+!$Procedure SPKW12 ( SPK, write segment, type 12 )
+
+      module procedure spkw12
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: even
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 12 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk12.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame
+!              relative to which the state information for BODY
+!              is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the state of BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     DEGREE   is the degree of the Lagrange polynomials used to
+!              interpolate the states. All components of the
+!              state vectors are interpolated by polynomials of
+!              fixed degree.
+!
+!     N        is the number of states in the input state vector
+!              array.
+!
+!     STATES   contains a time-ordered array of geometric states
+!              ( x, y, z, dx/dt, dy/dt, dz/dt, in kilometers and
+!              kilometers per second ) of BODY relative to CENTER,
+!              specified relative to FRAME.
+!
+!     BEGTIM   is the epoch corresponding to the first state in
+!              the state array. Because extra states are needed
+!              at the beginning and end of the segment in order
+!              for the interpolation method to work, BEGTIM will
+!              normally precede FIRST.
+!
+!     STEP     is the time step separating the epochs of adjacent
+!              states in the input state array. STEP is specified
+!              in seconds.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     See the include file spk12.inc for declarations of the
+!     parameters described below.
+!
+!     TOLSCL   is a tolerance scale factor (also called a
+!              "relative tolerance") used for time coverage
+!              bound checking. TOLSCL is unitless. TOLSCL
+!              produces a tolerance value via the formula
+!
+!                 TOL = TOLSCL * MAX( ABS(FIRST), ABS(LAST) )
+!
+!              where FIRST and LAST are the coverage time bounds
+!              of a type 12 segment, expressed as seconds past
+!              J2000 TDB.
+!
+!              The resulting parameter TOL is used as a tolerance
+!              for comparing the input segment descriptor time
+!              bounds to the first and last epoch covered by the
+!              sequence of time intervals defined by the inputs
+!              to SPKW12:
+!
+!                 BEGTIM
+!                 STEP
+!                 N
+!
+!     MAXDEG   is the maximum degree of Hermite polynomials that
+!              can be used to interpolate states from the segment
+!              written by this routine.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will return
+!     without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If DEGREE is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     5)  If DEGREE is not odd, the error SPICE(INVALIDDEGREE) is
+!         signaled.
+!
+!     6)  If the number of states N is not at least (DEGREE+1)/2, the
+!         error SPICE(TOOFEWSTATES) is signaled.
+!
+!     7)  If FIRST is greater than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     8)  If STEP is non-positive, the error SPICE(INVALIDSTEPSIZE) is
+!         signaled.
+!
+!     9)  If the first epoch BEGTIM is greater than FIRST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     10) If the start time of the first record exceeds the descriptor
+!         begin time by more than a computed tolerance, or if the end
+!         time of the last record precedes the descriptor end time by
+!         more than a computed tolerance, the error SPICE(COVERAGEGAP)
+!         is signaled. See the $Parameters section for a description of
+!         the tolerance.
+!
+! $ Files
+!
+!     A new type 12 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 12 data segment to the open SPK
+!     file according to the format described in the type 12 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) This example demonstrates how to create an SPK type 12 kernel
+!        containing only one segment, given an evenly-spaced
+!        time-ordered set of discrete states.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW12_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!        C
+!        C     Define the segment identifier parameters.
+!        C
+!              CHARACTER*(*)         SPK12
+!              PARAMETER           ( SPK12 = 'spkw12_ex1.bsp' )
+!
+!              CHARACTER*(*)         REF
+!              PARAMETER           ( REF    = 'J2000'          )
+!
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 3  )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 10 )
+!
+!              INTEGER               DEGREE
+!              PARAMETER           ( DEGREE = 3  )
+!
+!              INTEGER               NSTATS
+!              PARAMETER           ( NSTATS = 9  )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!              DOUBLE PRECISION      STATES ( 6, NSTATS )
+!              DOUBLE PRECISION      STEP
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Define the states and epochs.
+!        C
+!              DATA                  STATES /
+!             .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+!             .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+!             .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+!             .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+!             .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+!             .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+!             .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+!             .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+!             .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment, and the time step.
+!        C
+!              FIRST  = 100.D0
+!              LAST   = 900.D0
+!              STEP   = 100.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Type 12 SPK internal file name.'
+!              SEGID  = 'SPK type 12 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK12, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW12 (  HANDLE, BODY,   CENTER, REF,
+!             .               FIRST,  LAST,   SEGID,  DEGREE,
+!             .               NSTATS, STATES, FIRST,  STEP   )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 12 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 03-JUN-2021 (JDR)
+!
+!        Changed the input argument name EPOCH1 to BEGTIM for
+!        consistency with other routines.
+!
+!        Edited the header to comply with NAIF standard. Added
+!        complete example code from existing fragment.
+!
+!-    SPICELIB Version 2.0.0, 18-JAN-2013 (NJB)
+!
+!        Relaxed test on relationship between the time bounds of the
+!        input record set (determined by BEGTIM, STEP, and N) and the
+!        descriptor bounds FIRST and LAST. Now the descriptor bounds
+!        may extend beyond the time bounds of the record set by a ratio
+!        computed using the parameter TOLSCL (see $Parameters above for
+!        details). MAXDEG was increased to 27.
+!
+!        Corrected long error message for even degree case.
+!
+!-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_12 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor.
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor.
+!
+!     DTYPE is the data type.
+!
+!     FPRINT is the integer value of the first printable ASCII
+!     character.
+!
+!     LPRINT is the integer value of the last printable ASCII character.
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: ns = 5
+
+      integer(ip), parameter :: dtype = 12
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: statsz = 6
+
+      integer(ip), parameter :: timlen = 40
+
+!
+!     Local variables
+!
+      character(timlen)     etstr
+
+      real(wp)              descr  ( ns )
+      real(wp)              ltime
+      real(wp)              tol
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           refcod
+      integer(ip)           winsiz
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Set the window size corresponding to the input degree.  This
+!     size will be used in various places below.
+!
+      winsiz  =  ( degree + 1 ) / 2
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'the valid degree range is [1, #]'              )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is odd.
+!
+      if (  even( degree )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'for SPK type 12, the degree must be odd.'      )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the number of states is sufficient to define a
+!     polynomial whose degree is DEGREE.
+!
+      if ( n < winsiz ) then
+
+         call ctx%setmsg ( 'At least # states are required to define a '  // &
+                       'Hermite polynomial of degree #.  Number of '  // &
+                       'states supplied:  #'                           )
+         call ctx%errint ( '#', winsiz                                     )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', n                                          )
+         call ctx%sigerr ( 'SPICE(TOOFEWSTATES)'                           )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater then the begin time.
+!
+      if ( first >= last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater then ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     The step size must be positive.
+!
+      if ( step <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The step size must be > 0 but was #. ' )
+         call ctx%errdp  ( '#', step                               )
+         call ctx%sigerr ( 'SPICE(INVALIDSTEPSIZE)'                )
+         return
+
+      end if
+
+!
+!     Compute the tolerance to use for descriptor time bound checks.
+!
+      tol = tolscl * max( abs(first), abs(last) )
+
+      if ( first < begtim - tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time # is too ' &
+         //            'much less than the beginning time of the  ' &
+         //            'segment data # (in seconds past J2000: #). ' &
+         //            'The difference is # seconds; the  ' &
+         //            'tolerance is # seconds.'                     )
+         call etcal  ( ctx, first,  etstr                                 )
+         call ctx%errch  ( '#',    etstr                                 )
+         call etcal  ( ctx, begtim, etstr                                 )
+         call ctx%errch  ( '#',    etstr                                 )
+         call ctx%errdp  ( '#',    first                                 )
+         call ctx%errdp  ( '#',    begtim-first                          )
+         call ctx%errdp  ( '#',    tol                                   )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      ltime = begtim  +  ( (n-1) * step )
+
+      if ( last > ltime + tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time # is too ' &
+         //            'much greater than the end time of the segment ' &
+         //            'data # (in seconds past J2000: #). The ' &
+         //            'difference is # seconds; the tolerance is # ' &
+         //            'seconds.'                                    )
+         call etcal  ( ctx, last,  etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, ltime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   last                                   )
+         call ctx%errdp  ( '#',   last-ltime                             )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Create the segment descriptor.
+!
+      call spkpds ( ctx, body, center, frame, dtype, first, last, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 12 segment structure is eloquently described by this
+!     diagram from the SPK Required Reading:
+!
+!        +-----------------------+
+!        | State 1               |
+!        +-----------------------+
+!        | State 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | State N               |
+!        +-----------------------+
+!        | Epoch of state 1 (ET) |
+!        +-----------------------+
+!        | Step size             |
+!        +-----------------------+
+!        | Window size - 1       |
+!        +-----------------------+
+!        | Number of states      |
+!        +-----------------------+
+!
+      call dafada ( ctx, states,              n*statsz )
+      call dafada ( ctx, [ begtim ], 1 )
+      call dafada ( ctx, [ step ], 1 )
+      call dafada ( ctx, [ real( winsiz - 1, wp ) ], 1 )
+      call dafada ( ctx, [ real( n, wp          ) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw12
+
+!$Procedure SPKW13 ( Write SPK segment, type 13 )
+
+      module procedure spkw13
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: even
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 13 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+      integer(ip), parameter :: maxdeg = 27
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame
+!              relative to which the state information for BODY
+!              is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the state of BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     DEGREE   is the degree of the Hermite polynomials used to
+!              interpolate the states. All components of the
+!              state vectors are interpolated by polynomials of
+!              fixed degree.
+!
+!     N        is the number of states in the input state vector
+!              array.
+!
+!     STATES   contains a time-ordered array of geometric states
+!              ( x, y, z, dx/dt, dy/dt, dz/dt, in kilometers and
+!              kilometers per second ) of BODY relative to CENTER,
+!              specified relative to FRAME.
+!
+!     EPOCHS   is an array of epochs corresponding to the members
+!              of the state array. The epochs are specified as
+!              seconds past J2000, TDB.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the interpolating
+!              polynomial. If the value of MAXDEG is increased,
+!              the SPICELIB routine SPKPV must be changed
+!              accordingly. In particular, the size of the
+!              record passed to SPKRnn and SPKEnn must be
+!              increased, and comments describing the record size
+!              must be changed.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will return
+!     without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If DEGREE is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     5)  If DEGREE is not odd, the error SPICE(INVALIDDEGREE) is
+!         signaled.
+!
+!     6)  If the number of states N is not at least (DEGREE+1)/2,
+!         the error SPICE(TOOFEWSTATES) is signaled.
+!
+!     7)  If FIRST is greater than or equal to LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     8)  If the elements of the array EPOCHS are not in strictly
+!         increasing order, the error SPICE(TIMESOUTOFORDER) is
+!         signaled.
+!
+!     9)  If the first epoch, EPOCHS(1), is greater than FIRST, the
+!         error SPICE(BADDESCRTIMES) is signaled.
+!
+!     10) If the last epoch, EPOCHS(N), is less than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+! $ Files
+!
+!     A new type 13 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 13 data segment to the open SPK
+!     file according to the format described in the type 13 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that you have a time-ordered array of geometric states
+!        of a new object that follows Phobos, with a delay of 1 hour,
+!        in its orbit around Mars and are prepared to produce a segment
+!        of type 13 in an SPK file. Create a new SPK file with this
+!        segment. Use an existing SPK to create the input data for the
+!        SPK segment.
+!
+!        Use the meta-kernel shown below to load the required SPICE
+!        kernels.
+!
+!           KPL/MK
+!
+!           File: spkw13_ex1.tm
+!
+!           This meta-kernel is intended to support operation of SPICE
+!           example programs. The kernels shown here should not be
+!           assumed to contain adequate or correct versions of data
+!           required by SPICE-based user applications.
+!
+!           In order for an application to use this meta-kernel, the
+!           kernels referenced here must be present in the user's
+!           current working directory.
+!
+!           The names and contents of the kernels referenced
+!           by this meta-kernel are as follows:
+!
+!              File name                        Contents
+!              ---------                        --------
+!              mar097.bsp                       Mars satellite ephemeris
+!              naif0012.tls                     Leapseconds
+!
+!           \begindata
+!
+!              KERNELS_TO_LOAD = ( 'mar097.bsp',
+!                                  'naif0012.tls' )
+!
+!           \begintext
+!
+!           End of meta-kernel
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW13_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     SPICELIB functions
+!        C
+!              DOUBLE PRECISION      HALFPI
+!
+!        C
+!        C     Local parameters.
+!        C
+!              CHARACTER*(*)         SPKNAM
+!              PARAMETER           ( SPKNAM = 'spkw13_ex1.bsp' )
+!
+!              INTEGER               DEGREE
+!              PARAMETER           ( DEGREE = 3   )
+!
+!              INTEGER               MARS
+!              PARAMETER           ( MARS   = 499 )
+!
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 255 )
+!
+!              INTEGER               NEPOCS
+!              PARAMETER           ( NEPOCS = 800 )
+!
+!              INTEGER               NOBJ
+!              PARAMETER           ( NOBJ   = 403 )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      DELTA
+!              DOUBLE PRECISION      ET
+!              DOUBLE PRECISION      EPOCHS ( NEPOCS )
+!              DOUBLE PRECISION      LT
+!              DOUBLE PRECISION      STATE  ( 6 )
+!              DOUBLE PRECISION      STATES ( 6, NEPOCS )
+!              DOUBLE PRECISION      STEP
+!              DOUBLE PRECISION      TIME
+!
+!              INTEGER               I
+!              INTEGER               HANDLE
+!
+!        C
+!        C     Load the input SPK file.
+!        C
+!              CALL FURNSH ( 'spkw13_ex1.tm' )
+!
+!        C
+!        C     Convert the input UTC to ephemeris time
+!        C
+!              CALL STR2ET ( '2018 Apr 03 08:35', ET )
+!
+!        C
+!        C     Create the time-ordered array of geometric states,
+!        C     at unequal time steps.
+!        C
+!              TIME  = ET
+!              STEP  = 60.D0
+!              DELTA = 10.D0
+!
+!              DO I=1, NEPOCS
+!
+!                 CALL SPKEZR ( 'PHOBOS', TIME,       'J2000', 'NONE',
+!             .                 'MARS',   STATES(1,I), LT             )
+!
+!                 EPOCHS(I) = TIME + 3600.D0
+!                 TIME = TIME + STEP +
+!             .          SIN( HALFPI() * I / 2.D0 ) * DELTA
+!
+!              END DO
+!
+!        C
+!        C     Open a new SPK file, with 5000 characters reserved
+!        C     for comments.
+!        C
+!              IFNAME = 'Test SPK type 13 internal filename.'
+!              CALL SPKOPN ( SPKNAM, IFNAME, 5000, HANDLE )
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_SPK_TYPE_13_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW13 ( HANDLE,    NOBJ,           MARS,  'J2000',
+!             .              EPOCHS(1), EPOCHS(NEPOCS), SEGID,  DEGREE,
+!             .              NEPOCS,    STATES,         EPOCHS        )
+!
+!        C
+!        C     Close the new SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!        C
+!        C     Compute the state of Phobos as seen from Mars,
+!        C     12 hours after the input UTC time.
+!        C
+!              ET = ET + 43200.0D0
+!              CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+!             .               STATE,   LT                         )
+!
+!              WRITE (*,'(A)') 'Phobos as seen from Mars'
+!              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+!              WRITE (*,'(A,3F14.6)') '   Position   (km):',
+!             .                                   (STATE(I), I=1,3)
+!              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+!             .                                   (STATE(I), I=4,6)
+!              WRITE (*,*)
+!
+!        C
+!        C     Load the newly created kernel, and compute the state
+!        C     of the new object as seen from Mars, 13 hours after
+!        C     the input UTC time.
+!        C
+!              CALL FURNSH ( SPKNAM )
+!              ET = ET + 3600.0D0
+!
+!              CALL SPKEZR ( '403', ET, 'J2000', 'NONE', 'MARS',
+!             .               STATE,   LT                       )
+!
+!              WRITE (*,'(A)') 'Object 403 as seen from Mars'
+!              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+!              WRITE (*,'(A,3F14.6)') '   Position   (km):',
+!             .                                   (STATE(I), I=1,3)
+!              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+!             .                                   (STATE(I), I=4,6)
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!        Phobos as seen from Mars
+!           Epoch       (s):    576059769.185657
+!           Position   (km):  -7327.262770   2414.326550   5207.106376
+!           Velocity (km/s):     -0.942893     -1.894731     -0.396715
+!
+!        Object 403 as seen from Mars
+!           Epoch       (s):    576063369.185657
+!           Position   (km):  -7327.262770   2414.326550   5207.106376
+!           Velocity (km/s):     -0.942893     -1.894731     -0.396715
+!
+!        Note that after run completion, a new SPK file exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 05-JUL-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard. Removed
+!        unnecessary $Revisions section.
+!
+!-    SPICELIB Version 2.0.0, 23-DEC-2013 (NJB)
+!
+!        Increased MAXDEG to 27 for compatibility
+!        with SPK type 21. Deleted declaration of
+!        unused parameter TYPIDX.
+!
+!-    SPICELIB Version 1.0.0, 20-MAR-2000 (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_13 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Local variables
+!
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: dtype = 13
+
+      integer(ip), parameter :: dirsiz = 100
+
+      integer(ip), parameter :: statsz = 6
+
+!
+!     Local variables
+!
+      real(wp)              descr  ( dscsiz )
+      real(wp)              maxtim
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           refcod
+      integer(ip)           winsiz
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Set the window size corresponding to the input degree.  This
+!     size will be used in various places below.
+!
+      winsiz  =  ( degree + 1 ) / 2
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'the valid degree range is [1, #]'              )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is odd.
+!
+      if (  even( degree )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'for SPK type 13, the degree must be odd.'      )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the number of states is sufficient to define a
+!     polynomial whose degree is DEGREE.
+!
+      if ( n < winsiz ) then
+
+         call ctx%setmsg ( 'At least # states are required to define a '  // &
+                       'Hermite polynomial of degree #.  Number of '  // &
+                       'states supplied:  #'                           )
+         call ctx%errint ( '#', winsiz                                     )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', n                                          )
+         call ctx%sigerr ( 'SPICE(TOOFEWSTATES)'                           )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater then the begin time.
+!
+      if ( first >= last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater then ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Make sure the epochs form a strictly increasing sequence.
+!
+      maxtim = epochs(1)
+
+      do i = 2, n
+
+         if ( epochs(i) <= maxtim ) then
+
+            call ctx%setmsg ( 'EPOCH # having index # is not greater '    // &
+                          'than its predecessor #.'                   )
+            call ctx%errdp  ( '#',  epochs(i)                             )
+            call ctx%errint ( '#',  i                                     )
+            call ctx%errdp  ( '#',  epochs(i-1)                           )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            return
+         else
+            maxtim = epochs(i)
+         end if
+
+      end do
+
+!
+!     Make sure that the span of the input epochs includes the interval
+!     defined by the segment descriptor.
+!
+      if (  epochs(1) > first ) then
+
+         call ctx%setmsg ( 'Segment start time # precedes first epoch #.' )
+         call ctx%errdp  ( '#',  first                                    )
+         call ctx%errdp  ( '#',  epochs(1)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      else if (  epochs(n) < last ) then
+
+         call ctx%setmsg ( 'Segment end time # follows last epoch #.'     )
+         call ctx%errdp  ( '#',  last                                     )
+         call ctx%errdp  ( '#',  epochs(n)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      end if
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Create the segment descriptor.
+!
+      call spkpds ( ctx, body, center, frame, dtype, first, last, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 13 segment structure is eloquently described by this
+!     diagram from the SPK Required Reading:
+!
+!        +-----------------------+
+!        | State 1               |
+!        +-----------------------+
+!        | State 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | State N               |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!        | Epoch 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch N               |
+!        +-----------------------+
+!        | Epoch 100             | (First directory)
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch ((N-1)/100)*100 | (Last directory)
+!        +-----------------------+
+!        | Window size - 1       |
+!        +-----------------------+
+!        | Number of states      |
+!        +-----------------------+
+!
+
+      call dafada ( ctx, states,  n*statsz )
+      call dafada ( ctx, epochs,  n        )
+
+      do i = 1,   (n-1) / dirsiz
+         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
+      end do
+
+      call dafada ( ctx, [ real( winsiz - 1, wp) ], 1 )
+      call dafada ( ctx, [ real( n, wp         ) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw13
+
+!$Procedure SPKW15 ( SPK, write a type 15 segment )
+
+      module procedure spkw15
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: dpr
+      use pepper_math, only: vdot, vequ, vhat, vsep, vzero
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write an SPK segment of type 15 given a type 15 data record.
+!
+! $ Required_Reading
+!
+!     SPK
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF ID for the body whose states are
+!              to be recorded in an SPK file.
+!
+!     CENTER   is the NAIF ID for the center of motion associated
+!              with BODY.
+!
+!     FRAME    is the reference frame that states are referenced to,
+!              for example 'J2000'.
+!
+!     FIRST    are the bounds on the ephemeris times, expressed as
+!     LAST     seconds past J2000.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier
+!              may contain up to 40 characters.
+!
+!     EPOCH    is the epoch of the orbit elements at periapse
+!              in ephemeris seconds past J2000.
+!
+!     TP       is a vector parallel to the angular momentum vector
+!              of the orbit at epoch expressed relative to FRAME. A
+!              unit vector parallel to TP will be stored in the
+!              output segment.
+!
+!     PA       is a vector parallel to the position vector of the
+!              trajectory at periapsis of EPOCH expressed relative
+!              to FRAME. A unit vector parallel to PA will be
+!              stored in the output segment.
+!
+!     P        is the semi-latus rectum--- p in the equation:
+!
+!                 r = p/(1 + ECC*COS(Nu))
+!
+!     ECC      is the eccentricity.
+!
+!     J2FLG    is the J2 processing flag describing what J2
+!              corrections are to be applied when the orbit is
+!              propagated.
+!
+!              All J2 corrections are applied if the value of J2FLG
+!              is not 1, 2 or 3.
+!
+!              If the value of the flag is 3 no corrections are
+!              done.
+!
+!              If the value of the flag is 1 no corrections are
+!              computed for the precession of the line of apsides.
+!              However, regression of the line of nodes is
+!              performed.
+!
+!              If the value of the flag is 2 no corrections are
+!              done for the regression of the line of nodes.
+!              However, precession of the line of apsides is
+!              performed.
+!
+!              Note that J2 effects are computed only if the orbit
+!              is elliptic and does not intersect the central body.
+!
+!     PV       is a vector parallel to the north pole vector of the
+!              central body expressed relative to FRAME. A unit
+!              vector parallel to PV will be stored in the output
+!              segment.
+!
+!     GM       is the central body GM.
+!
+!     J2       is the central body J2 (dimensionless).
+!
+!     RADIUS   is the equatorial radius of the central body.
+!
+!     Units are radians, km, seconds.
+!
+! $ Detailed_Output
+!
+!     None. A type 15 segment is written to the file attached
+!     to HANDLE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the eccentricity is less than zero, the error
+!         SPICE(BADECCENTRICITY) is signaled.
+!
+!     2)  If the semi-latus rectum is 0, the error
+!         SPICE(BADLATUSRECTUM) is signaled.
+!
+!     3)  If the pole vector, trajectory pole vector or periapsis vector
+!         have zero length, the error SPICE(BADVECTOR) is signaled.
+!
+!     4)  If the trajectory pole vector and the periapsis vector are
+!         not orthogonal, the error SPICE(BADINITSTATE) is signaled.
+!         The test for orthogonality is very crude. The routine simply
+!         checks that the dot product of the unit vectors parallel
+!         to the trajectory pole and periapse vectors is less than
+!         0.00001. This check is intended to catch blunders, not to
+!         enforce orthogonality to double precision capacity.
+!
+!     5)  If the mass of the central body is non-positive, the error
+!         SPICE(NONPOSITIVEMASS) is signaled.
+!
+!     6)  If the radius of the central body is negative, the error
+!         SPICE(BADRADIUS) is signaled.
+!
+!     7)  If the segment identifier has more than 40 non-blank
+!         characters, the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     8)  If the segment identifier contains non-printing characters,
+!         the error SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     9)  If there are inconsistencies in the BODY, CENTER, FRAME or
+!         FIRST and LAST times, an error is signaled by
+!         a routine in the call tree of this routine.
+!
+! $ Files
+!
+!     A new type 15 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 15 data segment to the open SPK
+!     file according to the format described in the type 15 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+!     This routine is provided to provide direct support for the MASL
+!     precessing orbit formulation.
+!
+! $ Examples
+!
+!     Suppose that at time EPOCH you have the J2000 periapsis
+!      state of some object relative to some central body and would
+!      like to create a type 15 SPK segment to model the motion of
+!      the object using simple regression and precession of the
+!      line of nodes and apsides. The following code fragment
+!      illustrates how you can prepare such a segment. We shall
+!      assume that you have in hand the J2000 direction of the
+!      central body's pole vector, its GM, J2 and equatorial
+!      radius. In addition we assume that you have opened an SPK
+!      file for write access and that it is attached to HANDLE.
+!
+!     (If your state is at an epoch other than periapse the
+!      fragment below will NOT produce a "correct" type 15 segment
+!      for modeling the motion of your object.)
+!
+!      C
+!      C     First we get the osculating elements.
+!      C
+!            CALL OSCELT ( STATE, EPOCH, GM, ELTS )
+!
+!      C
+!      C     From these collect the eccentricity and semi-latus rectum.
+!      C
+!            ECC = ELTS ( 2 )
+!            P   = ELTS ( 1 ) * ( 1.0D0 + ECC )
+!      C
+!      C     Next get the trajectory pole vector and the
+!      C     periapsis vector.
+!      C
+!            CALL UCRSS ( STATE(1), STATE(4), TP )
+!            CALL VHAT  ( STATE(1),           PA )
+!
+!      C
+!      C     Enable both J2 corrections.
+!      C
+!
+!           J2FLG = 0.0D0
+!
+!      C
+!      C     Now add the segment.
+!      C
+!
+!            CALL SPKW15 ( HANDLE, BODY,  CENTER, FRAME,  FIRST, LAST,
+!            .              SEGID,  EPOCH, TP,     PA,    P,     ECC,
+!            .              J2FLG,  PV,    GM,     J2,    RADIUS      )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.1.0, 03-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 2.0.0, 29-MAY-2012 (NJB)
+!
+!        Input vectors that nominally have unit length
+!        are mapped to local copies that actually do
+!        have unit length. The applicable inputs are TP, PA,
+!        and PV. The Detailed Input header section was updated
+!        to reflect the change.
+!
+!        Some typos in error messages were corrected.
+!
+!-    SPICELIB Version 1.0.0, 28-NOV-1994 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Write a type 15 SPK segment
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+
+
+
+!
+!     Local Variables
+!
+!     Segment descriptor size
+!
+      integer(ip), parameter :: ns = 5
+
+!
+!     Segment identifier size
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     SPK data type
+!
+      integer(ip), parameter :: type = 15
+
+!
+!     Range of printing characters
+!
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Number of items in a segment
+!
+      integer(ip), parameter :: datsiz = 16
+
+      real(wp)              angle
+      real(wp)              dot
+      real(wp)              descr ( ns )
+      real(wp)              mytp  ( 3 )
+      real(wp)              mypa  ( 3 )
+
+      real(wp)              record ( datsiz )
+
+      integer(ip)           i
+      integer(ip)           value
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Fetch the various entities from the inputs and put them into
+!     the data record, first the epoch.
+!
+      record(1) = epoch
+
+!
+!     Convert TP and PA to unit vectors.
+!
+      call vhat ( pa, mypa )
+      call vhat ( tp, mytp )
+
+!
+!     The trajectory pole vector.
+!
+      call vequ ( mytp, record(2) )
+
+!
+!     The periapsis vector.
+!
+      call vequ ( mypa, record(5) )
+
+!
+!     Semi-latus rectum ( P in the P/(1 + ECC*COS(Nu)  ),
+!     and eccentricity.
+!
+      record(8) = p
+      record(9) = ecc
+
+!
+!     J2 processing flag.
+!
+      record(10) = j2flg
+
+!
+!     Central body pole vector.
+!
+      call vhat ( pv, record(11) )
+
+!
+!     The central mass, J2 and radius of the central body.
+!
+      record(14) = gm
+      record(15) = j2
+      record(16) = radius
+
+!
+!     Check all the inputs here for obvious failures.  It's much
+!     better to check them now and quit than it is to get a bogus
+!     segment into an SPK file and diagnose it later.
+!
+
+      if ( p <= 0 ) then
+
+         call ctx%setmsg ( 'The semi-latus rectum supplied to the ' &
+         //            'SPK type 15 evaluator was non-positive.  This ' &
+         //            'value must be positive. The value supplied was ' &
+         //            '#.'                    )
+         call ctx%errdp  ( '#', p                  )
+         call ctx%sigerr ( 'SPICE(BADLATUSRECTUM)' )
+         return
+
+      else if ( ecc < 0.0_wp ) then
+
+         call ctx%setmsg ( 'The eccentricity supplied for a type 15 ' &
+         //            'segment is negative.  It must be non-negative. ' &
+         //            'The value supplied ' &
+         //            'to the type 15 evaluator was #. ' )
+         call ctx%errdp  ( '#',   ecc                )
+         call ctx%sigerr ( 'SPICE(BADECCENTRICITY)'  )
+         return
+
+      else if ( gm  <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The mass supplied for the central body ' &
+         //            'of a type 15 segment was non-positive. ' &
+         //            'Masses must be positive.  The value ' &
+         //            'supplied was #. '        )
+         call ctx%errdp  ( '#', gm                   )
+         call ctx%sigerr ( 'SPICE(NONPOSITIVEMASS)'  )
+         return
+
+      else if ( vzero(tp) ) then
+
+         call ctx%setmsg ( 'The trajectory pole vector supplied to ' &
+         //            'SPKW15 had length zero. The most likely ' &
+         //            'cause of this problem is an uninitialized ' &
+         //            'vector.'            )
+         call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
+         return
+
+      else if ( vzero(pa) ) then
+
+         call ctx%setmsg ( 'The periapse vector supplied to SPKW15 ' &
+         //            'had length zero. The most likely cause ' &
+         //            'of this problem is an uninitialized vector.' )
+         call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
+         return
+
+      else if ( vzero(pv) ) then
+
+         call ctx%setmsg ( 'The central pole vector supplied to ' &
+         //            'SPKW15 had length zero. The most likely ' &
+         //            'cause of this problem is an uninitialized ' &
+         //            'vector. '           )
+         call ctx%sigerr ( 'SPICE(BADVECTOR)'   )
+         return
+
+      else if ( radius < 0.0_wp ) then
+
+         call ctx%setmsg ( 'The central body radius was negative. ' &
+         //            'It must be zero or positive.  The value ' &
+         //            'supplied was #. '  )
+         call ctx%errdp  ( '#', radius         )
+         call ctx%sigerr ( 'SPICE(BADRADIUS)'  )
+         return
+
+      end if
+
+!
+!     One final check.  Make sure the pole and periapse vectors are
+!     orthogonal. (We will use a very crude check but this should
+!     rule out any obvious errors.)
+!
+      dot = vdot ( mypa, mytp )
+
+      if ( abs(dot) > 1.0e-5_wp ) then
+
+         angle = vsep ( pa, tp ) * dpr
+
+         call ctx%setmsg ( 'The periapsis and trajectory pole ' &
+         //            'vectors are not orthogonal. The angle ' &
+         //            'between them is # degrees. '         )
+         call ctx%errdp  ( '#',     angle        )
+         call ctx%sigerr ( 'SPICE(BADINITSTATE)' )
+         return
+
+      end if
+!
+!     Make sure the segment identifier is not too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' &
+         //            '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+!
+!     Make sure it has only printing characters.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains ' &
+            //            'the nonprintable character having ascii ' &
+            //            'code #.'                               )
+            call ctx%errint ( '#',   value                            )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+!
+!     All of the obvious checks have been performed on the input
+!     record.  Create the segment descriptor. (FIRST and LAST are
+!     checked by SPKPDS as well as consistency between BODY and CENTER).
+!
+      call spkpds ( ctx, body,  center, frame, type, first, last, &
+                    descr        )
+
+      if ( ctx%failed() ) return
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+      call dafada ( ctx, record, datsiz )
+
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw15
+
+!$Procedure SPKW17 ( SPK, write a type 17 segment )
+
+      module procedure spkw17
+      use pepper_kinds, only: ip, wp
+      use pepper_arrays, only: moved
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write an SPK segment of type 17 given a type 17 data record.
+!
+! $ Required_Reading
+!
+!     SPK
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF ID for the body whose states are
+!              to be recorded in the SPK file.
+!
+!     CENTER   is the NAIF ID for the center of motion associated
+!              with BODY.
+!
+!     FRAME    is the reference frame that states are referenced to,
+!              for example 'J2000'.
+!
+!     FIRST,
+!     LAST     are the bounds on the ephemeris times, expressed as
+!              seconds past J2000.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier
+!              may contain up to 40 characters.
+!
+!     EPOCH    is the epoch of equinoctial elements in seconds
+!              past the J2000 epoch.
+!
+!     EQEL     is an array of 9 double precision numbers that
+!              are the equinoctial elements for some orbit relative
+!              to the equatorial frame of a central body.
+!
+!                 Note: The Z-axis of the equatorial frame is the
+!                 direction of the pole of the central body relative
+!                 to FRAME. The X-axis is given by the cross product of
+!                 the Z-axis of FRAME with the direction of the pole of
+!                 the central body. The Y-axis completes a right handed
+!                 frame.
+!
+!              The specific arrangement of the elements is spelled
+!              out below. The following terms are used in the
+!              discussion of elements of EQEL:
+!
+!                 INC  --- inclination of the orbit
+!                 ARGP --- argument of periapse
+!                 NODE --- longitude of the ascending node
+!                 E    --- eccentricity of the orbit
+!                 M0   --- mean anomaly
+!
+!              EQEL(1)   is the semi-major axis (A) of the orbit in km.
+!
+!              EQEL(2)   is the value of H at the specified epoch:
+!
+!                           H =  E * SIN( ARGP + NODE )
+!
+!              EQEL(3)   is the value of K at the specified epoch:
+!
+!                           K =  E * COS( ARGP + NODE )
+!
+!              EQEL(4)   is the mean longitude at the epoch of the
+!                        elements measured in radians:
+!
+!                           ( M0 + ARGP + NODE )
+!
+!              EQEL(5)   is the value of P at the specified epoch:
+!
+!                           P =  TAN( INC/2 ) * SIN( NODE )
+!
+!              EQEL(6)   is the value of Q at the specified epoch:
+!
+!                           Q =  TAN( INC/2 ) * COS( NODE )
+!
+!              EQEL(7)   is the rate of the longitude of periapse
+!                        at the epoch of the elements.
+!
+!                           ( dARGP/dt + dNODE/dt )
+!
+!                        This rate is assumed to hold for all time. The
+!                        rate is measured in radians per second.
+!
+!              EQEL(8)   is the derivative of the mean longitude:
+!
+!                           ( dM0/dt + dARGP/dt + dNODE/dt )
+!
+!                        This rate is assumed to be constant and is
+!                        measured in radians/second.
+!
+!              EQEL(9)   is the rate of the longitude of the ascending
+!                        node:
+!
+!                           ( dNODE/dt )
+!
+!                        This rate is measured in radians per second.
+!
+!     RAPOL    is the Right Ascension of the pole of the reference
+!              plane relative to FRAME measured in radians.
+!
+!     DECPOL   is the declination of the pole of the reference plane
+!              relative to FRAME measured in radians.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The routine writes an SPK type 17 segment to the file attached to
+!     HANDLE.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the semi-major axis is less than or equal to zero, the
+!         error SPICE(BADSEMIAXIS) is signaled.
+!
+!     2)  If the eccentricity of the orbit corresponding to the values
+!         of H and K ( EQEL(2) and EQEL(3) ) is greater than 0.9, the
+!         error SPICE(ECCOUTOFRANGE) is signaled.
+!
+!     3)  If the segment identifier has more than 40 non-blank
+!         characters, the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     4)  If the segment identifier contains non-printing characters,
+!         the error SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     5)  If there are inconsistencies in the BODY, CENTER, FRAME or
+!         FIRST and LAST times, an error is signaled by a routine in
+!         the call tree of this routine.
+!
+! $ Files
+!
+!     A new type 17 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 17 data segment to the open SPK
+!     file according to the format described in the type 17 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) Suppose that at a given time you have the classical elements
+!        of Daphnis relative to the equatorial frame of Saturn. These
+!        can be converted to equinoctial elements and stored in an SPK
+!        file as a type 17 segment so that Daphnis can be used within
+!        the SPK subsystem of the SPICE system.
+!
+!        The example code shown below creates an SPK type 17 kernel
+!        with a single segment using such data.
+!
+!        Example code begins here.
+!
+!              PROGRAM SPKW17_EX1
+!              IMPLICIT NONE
+!
+!        C
+!        C     Local parameters.
+!        C
+!              INTEGER               NAMLEN
+!              PARAMETER           ( NAMLEN = 40 )
+!
+!              CHARACTER*(*)         SPK17
+!              PARAMETER           ( SPK17  = 'spkw17_ex1.bsp' )
+!
+!        C
+!        C     The SPK type 17 segment will contain data for Daphnis
+!        C     (ID 635) with respect to Saturn (ID 699) in the J2000
+!        C     reference frame.
+!        C
+!              INTEGER               BODY
+!              PARAMETER           ( BODY   = 635     )
+!
+!              INTEGER               CENTER
+!              PARAMETER           ( CENTER = 699     )
+!
+!              CHARACTER*(*)         FRMNAM
+!              PARAMETER           ( FRMNAM = 'J2000' )
+!
+!        C
+!        C     This is the list of parameters used to represent the
+!        C     classical elements:
+!        C
+!        C        Variable     Meaning
+!        C        --------     ---------------------------------------
+!        C        A            Semi-major axis in km.
+!        C        ECC          Eccentricity of orbit.
+!        C        INC          Inclination of orbit.
+!        C        NODE         Longitude of the ascending node at
+!        C                     epoch.
+!        C        OMEGA        Argument of periapse at epoch.
+!        C        M            Mean anomaly at epoch.
+!        C        DMDT         Mean anomaly rate in radians/second.
+!        C        DNODE        Rate of change of longitude of
+!        C                     ascending node in radians/second.
+!        C        DOMEGA       Rate of change of argument of periapse
+!        C                     in radians/second.
+!        C        EPOCH        The epoch of the elements in seconds
+!        C                     past the J2000 epoch.
+!        C
+!              DOUBLE PRECISION      A
+!              PARAMETER           ( A      =  1.36505608D+05  )
+!
+!              DOUBLE PRECISION      ECC
+!              PARAMETER           ( ECC    = -2.105898062D-05 )
+!
+!              DOUBLE PRECISION      INC
+!              PARAMETER           ( INC    = -3.489710429D-05 )
+!
+!              DOUBLE PRECISION      NODE
+!              PARAMETER           ( NODE   = -3.349237456D-02 )
+!
+!              DOUBLE PRECISION      OMEGA
+!              PARAMETER           ( OMEGA  =  1.52080206722D0 )
+!
+!              DOUBLE PRECISION      M
+!              PARAMETER           ( M      =  1.21177109734D0 )
+!
+!              DOUBLE PRECISION      DMDT
+!              PARAMETER           ( DMDT   =  1.218114014D-04 )
+!
+!              DOUBLE PRECISION      DNODE
+!              PARAMETER           ( DNODE  = -5.96845468D-07  )
+!
+!              DOUBLE PRECISION      DOMEGA
+!              PARAMETER           ( DOMEGA =  1.196601093D-06 )
+!
+!              DOUBLE PRECISION      EPOCH
+!              PARAMETER           ( EPOCH  = 0.D0             )
+!
+!        C
+!        C     In addition, the SPKW17 routine requires the Right
+!        C     Ascension and Declination of the pole of the
+!        C     reference plane relative to the J2000 frame, in radians.
+!        C
+!              DOUBLE PRECISION      RAPOL
+!              PARAMETER           ( RAPOL  = 7.08332284D-01 )
+!
+!              DOUBLE PRECISION      DECPOL
+!              PARAMETER           ( DECPOL = 1.45800286D0   )
+!
+!        C
+!        C     Local variables.
+!        C
+!              CHARACTER*(NAMLEN)    IFNAME
+!              CHARACTER*(NAMLEN)    SEGID
+!
+!              DOUBLE PRECISION      EQEL   ( 9 )
+!              DOUBLE PRECISION      FIRST
+!              DOUBLE PRECISION      LAST
+!
+!              INTEGER               HANDLE
+!              INTEGER               NCOMCH
+!
+!        C
+!        C     Set the start and end times of interval covered by
+!        C     segment.
+!        C
+!              FIRST  =  504878400.D0
+!              LAST   = 1578657600.D0
+!
+!        C
+!        C     NCOMCH is the number of characters to reserve for the
+!        C     kernel's comment area. This example doesn't write
+!        C     comments, so set to zero.
+!        C
+!              NCOMCH = 0
+!
+!        C
+!        C     Internal file name and segment ID.
+!        C
+!              IFNAME = 'Test for type 17 SPK internal file name'
+!              SEGID  = 'SPK type 17 test segment'
+!
+!        C
+!        C     Open a new SPK file.
+!        C
+!              CALL SPKOPN( SPK17, IFNAME, NCOMCH, HANDLE )
+!
+!        C
+!        C     Convert the classical elements to equinoctial elements
+!        C     (in the order compatible with type 17).
+!        C
+!              EQEL(1) = A
+!              EQEL(2) = ECC * SIN ( OMEGA + NODE )
+!              EQEL(3) = ECC * COS ( OMEGA + NODE )
+!
+!              EQEL(4) = M + OMEGA + NODE
+!
+!              EQEL(5) = TAN( INC/2.D0 ) * SIN( NODE )
+!              EQEL(6) = TAN( INC/2.D0 ) * COS( NODE )
+!
+!              EQEL(7) =        DOMEGA + DNODE
+!              EQEL(8) = DMDT + DOMEGA + DNODE
+!              EQEL(9) = DNODE
+!
+!        C
+!        C     Now add the segment.
+!        C
+!              CALL SPKW17 ( HANDLE, BODY,  CENTER, FRMNAM,
+!             .              FIRST,  LAST,  SEGID,  EPOCH,
+!             .              EQEL,   RAPOL, DECPOL          )
+!
+!        C
+!        C     Close the SPK file.
+!        C
+!              CALL SPKCLS ( HANDLE )
+!
+!              END
+!
+!        When this program is executed, no output is presented on
+!        screen. After run completion, a new SPK type 17 exists in
+!        the output directory.
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard. Added complete
+!        code example based on existing example.
+!
+!-    SPICELIB Version 1.0.1, 24-JUN-1999 (WLT)
+!
+!        Corrected typographical errors in the header.
+!
+!-    SPICELIB Version 1.0.0, 08-JAN-1997 (WLT)
+!
+!-&
+
+! $ Index_Entries
+!
+!     Write a type 17 SPK segment
+!
+!-&
+
+!
+!     SPICELIB Functions
+!
+
+
+!
+!     Local Variables
+!
+!     Segment descriptor size
+!
+      integer(ip), parameter :: ns = 5
+
+!
+!     Segment identifier size
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     SPK data type
+!
+      integer(ip), parameter :: type = 17
+
+!
+!     Range of printing characters
+!
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     Number of items in a segment
+!
+      integer(ip), parameter :: datsiz = 12
+
+      real(wp)              a
+      real(wp)              descr  ( ns )
+      real(wp)              h
+      real(wp)              k
+      real(wp)              ecc
+      real(wp)              record ( datsiz )
+
+      integer(ip)           i
+      integer(ip)           value
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Fetch the various entities from the inputs and put them into
+!     the data record, first the epoch.
+!
+      record(1) = epoch
+
+!
+!     The trajectory pole vector.
+!
+      call moved ( eqel, 9, record(2) )
+
+      record(11) = rapol
+      record(12) = decpol
+
+      a      = record(2)
+      h      = record(3)
+      k      = record(4)
+      ecc    = dsqrt( h*h + k*k )
+
+!
+!     Check all the inputs here for obvious failures.  It's much
+!     better to check them now and quit than it is to get a bogus
+!     segment into an SPK file and diagnose it later.
+!
+
+      if ( a <= 0 ) then
+
+         call ctx%setmsg ( 'The semimajor axis supplied to the ' &
+         //            'SPK type 17 evaluator was non-positive.  This ' &
+         //            'value must be positive. The value supplied was ' &
+         //            '#.' )
+         call ctx%errdp  ( '#', a                  )
+         call ctx%sigerr ( 'SPICE(BADSEMIAXIS)' )
+         return
+
+      else if ( ecc > 0.9_wp ) then
+
+         call ctx%setmsg ( 'The eccentricity supplied for a type 17 ' &
+         //            'segment is greater than 0.9.  It must be ' &
+         //            'less than 0.9.' &
+         //            'The value supplied ' &
+         //            'to the type 17 evaluator was #. ' )
+         call ctx%errdp  ( '#',   ecc                )
+         call ctx%sigerr ( 'SPICE(BADECCENTRICITY)'  )
+         return
+
+      end if
+
+!
+!     Make sure the segment identifier is not too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' &
+         //            '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+!
+!     Make sure the segment identifier has only printing characters.
+!
+      do i = 1, lastnb(segid)
+
+         value = ichar( segid(i:i) )
+
+         if ( ( value < fprint ) .or. ( value > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains ' &
+            //            'the nonprintable character having ascii ' &
+            //            'code #.'                               )
+            call ctx%errint ( '#',   value                            )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+!
+!     All of the obvious checks have been performed on the input
+!     record.  Create the segment descriptor. (FIRST and LAST are
+!     checked by SPKPDS as well as consistency between BODY and CENTER).
+!
+      call spkpds ( ctx, body,  center, frame, type, first, last, &
+                    descr        )
+
+      if ( ctx%failed() ) return
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+      call dafada ( ctx, record, datsiz )
+
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw17
+
+!$Procedure SPKW18 ( Write SPK segment, type 18 )
+
+      module procedure spkw18
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: odd
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 18 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPC
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk18.inc'
+
+
+      integer(ip), parameter :: maxdeg = 15
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been opened
+!              for writing.
+!
+!     SUBTYP   is an integer code indicating the subtype of the
+!              segment to be created.
+!
+!     BODY     is the NAIF integer code for an ephemeris object whose
+!              state relative to another body is described by the
+!              segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion of the
+!              object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame relative to which
+!              the state information for BODY is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of the time
+!              interval over which the segment defines the state of
+!              BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment identifier may
+!              contain up to 40 characters.
+!
+!     DEGREE   is the nominal degree of the polynomials used to
+!              interpolate the states contained in the input packets.
+!              All components of the state vectors are interpolated by
+!              polynomials of the specified degree, except near the
+!              segment boundaries, or if the total number of states in
+!              the segment is too few to allow interpolation using the
+!              specified degree.
+!
+!              If the actual interpolation degree is reduced, the
+!              highest degree feasible degree valid for the
+!              interpolation type is used.
+!
+!     N        is the number of packets in the input packet array.
+!
+!     PACKTS   is a time-ordered array of data packets representing
+!              geometric states of BODY relative to CENTER, specified
+!              relative to FRAME. The packet structure depends on the
+!              segment subtype as follows:
+!
+!                 Type 0 (indicated by code S18TP0):
+!
+!                    x,  y,  z,  dx/dt,  dy/dt,  dz/dt,
+!                    vx, vy, vz, dvx/dt, dvy/dt, dvz/dt
+!
+!                 where x, y, z represent Cartesian position components
+!                 and  vx, vy, vz represent Cartesian velocity
+!                 components. Note well: vx, vy, and vz *are not
+!                 necessarily equal* to the time derivatives of x, y,
+!                 and z. This packet structure mimics that of the
+!                 Rosetta/MEX orbit file from which the data are taken.
+!
+!                 Type 1 (indicated by code S18TP1):
+!
+!                    x,  y,  z,  dx/dt,  dy/dt,  dz/dt
+!
+!                 where x, y, z represent Cartesian position components
+!                 and  vx, vy, vz represent Cartesian velocity
+!                 components.
+!
+!              Position units are kilometers, velocity units are
+!              kilometers per second, and acceleration units are
+!              kilometers per second per second.
+!
+!     EPOCHS   is an array of epochs corresponding to the members of the
+!              packets array. The epochs are specified as seconds past
+!              J2000, TDB.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the interpolating
+!              polynomial. If the value of MAXDEG is increased, the
+!              SPICELIB routine SPKPVN must be changed accordingly. In
+!              particular, the size of the record passed to SPKRnn and
+!              SPKEnn must be increased, and comments describing the
+!              record size must be changed.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will
+!     return without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If DEGREE is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     5)  If the window size implied by DEGREE is odd, the error
+!         SPICE(INVALIDDEGREE) is signaled.
+!
+!     6)  If the number of packets N is not at least 2, the error
+!         SPICE(TOOFEWSTATES) is signaled.
+!
+!     7)  If FIRST is greater than or equal to LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     8)  If the elements of the array EPOCHS are not in strictly
+!         increasing order, the error SPICE(TIMESOUTOFORDER) is
+!         signaled.
+!
+!     9)  If the first epoch EPOCHS(1) is greater than FIRST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     10) If the last epoch EPOCHS(N) is less than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     11) If the subtype code is not recognized, the error
+!         SPICE(INVALIDVALUE) is signaled.
+!
+! $ Files
+!
+!     A new type 18 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 18 data segment to the open SPK
+!     file according to the format described in the type 18 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     Suppose that you have states and are prepared to produce
+!     a segment of type 18 in an SPK file.
+!
+!     The following code fragment could be used to add the new segment
+!     to a previously opened SPK file attached to HANDLE. The file must
+!     have been opened with write access.
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!                  SEGID = 'MY_SAMPLE_SPK_TYPE_18_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW18 (  HANDLE,  BODY,    CENTER,  FRAME,
+!             .               FIRST,   LAST,    SEGID,   DEGREE,
+!             .               N,       STATES,  EPOCHS          )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 09-APR-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.0, 21-DEC-2012 (NJB)
+!
+!        Increased the minimum packet count from 1 to 2.
+!
+!-    SPICELIB Version 1.0.1, 29-APR-2003 (NJB)
+!
+!        Description of error condition arising from invalid window
+!        size was corrected.
+!
+!-    SPICELIB Version 1.0.0, 13-MAY-2002 (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_18 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: typidx = 4
+
+      integer(ip), parameter :: dtype = 18
+
+      integer(ip), parameter :: dirsiz = 100
+
+      integer(ip), parameter :: statsz = 6
+
+!
+!     Local variables
+!
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( dscsiz )
+      real(wp)              maxtim
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           packsz
+      integer(ip)           refcod
+      integer(ip)           winsiz
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Set the packet size, which is a function of the subtype.
+!
+      if ( subtyp == s18tp0 ) then
+
+         packsz = s18ps0
+
+      else if ( subtyp == s18tp1 ) then
+
+         packsz = s18ps1
+
+      else
+
+         call ctx%setmsg ( 'Unexpected SPK type 18 subtype requested: #' )
+         call ctx%errint ( '#',  subtyp                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDVALUE)'                         )
+         return
+
+      end if
+
+!
+!     Set the window size corresponding to the input degree.  This
+!     size will be used in various places below.
+!
+      if ( subtyp == s18tp0 ) then
+
+         winsiz  =  ( degree + 1 ) / 2
+
+      else if ( subtyp == s18tp1 ) then
+
+         winsiz  =  degree + 1
+
+      else
+
+         call ctx%setmsg ( 'This point should not be reached. Getting ' // &
+                       'here may indicate that the code needs to '  // &
+                       'updated to handle new subtypes.'            )
+         call ctx%sigerr ( 'SPICE(BUG)'                                 )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( degree < 1 ) .or. ( degree > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'the valid degree range is [1, #]'              )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the window size is even.  If not, the input
+!     DEGREE is incompatible with the subtype.
+!
+      if (  odd(winsiz)  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; '// &
+                       'for SPK type 18, the degree must be '         // &
+                       'equivalent to 3 mod 4 for Hermite '           // &
+                       'interpolation and odd for for Lagrange '      // &
+                       'interpolation.'                                )
+         call ctx%errint ( '#', degree                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     Make sure that the number of packets is sufficient to define a
+!     polynomial whose degree is DEGREE.
+!
+      if ( n < 2 ) then
+
+         call ctx%setmsg ( 'At least 2 packets are required for SPK type '// &
+                       '18.  Number of packets supplied:  #'           )
+         call ctx%errint ( '#', n                                          )
+         call ctx%sigerr ( 'SPICE(TOOFEWSTATES)'                           )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater than or equal to
+!     the begin time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater then ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Make sure the epochs form a strictly increasing sequence.
+!
+      maxtim = epochs(1)
+
+      do i = 2, n
+
+         if ( epochs(i) <= maxtim ) then
+
+            call ctx%setmsg ( 'EPOCH # having index # is not greater '    // &
+                          'than its predecessor #.'                   )
+            call ctx%errdp  ( '#',  epochs(i)                             )
+            call ctx%errint ( '#',  i                                     )
+            call ctx%errdp  ( '#',  epochs(i-1)                           )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            return
+         else
+            maxtim = epochs(i)
+         end if
+
+      end do
+
+!
+!     Make sure that the span of the input epochs includes the interval
+!     defined by the segment descriptor.
+!
+      if (  epochs(1) > first ) then
+
+         call ctx%setmsg ( 'Segment start time # precedes first epoch #.' )
+         call ctx%errdp  ( '#',  first                                    )
+         call ctx%errdp  ( '#',  epochs(1)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      else if (  epochs(n) < last ) then
+
+         call ctx%setmsg ( 'Segment end time # follows last epoch #.'     )
+         call ctx%errdp  ( '#',  last                                     )
+         call ctx%errdp  ( '#',  epochs(n)                                )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                         )
+         return
+
+      end if
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Create the segment descriptor.  We don't use SPKPDS because
+!     that routine doesn't allow creation of a singleton segment.
+!
+      ic(1) = body
+      ic(2) = center
+
+      call namfrm ( ctx, frame, ic(3) )
+
+      if ( ctx%failed() ) return
+
+      ic(4) = dtype
+
+      dc(1) = first
+      dc(2) = last
+
+      call dafps  ( ctx, nd, ni, dc, ic, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 18 segment structure is eloquently described by this
+!     diagram from the SPK Required Reading:
+!
+!        +-----------------------+
+!        | Packet 1              |
+!        +-----------------------+
+!        | Packet 2              |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Packet N              |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!        | Epoch 2               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch N               |
+!        +-----------------------+
+!        | Epoch 100             | (First directory)
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch ((N-1)/100)*100 | (Last directory)
+!        +-----------------------+
+!        | Subtype code          |
+!        +-----------------------+
+!        | Window size           |
+!        +-----------------------+
+!        | Number of packets     |
+!        +-----------------------+
+!
+      call dafada ( ctx, packts,  n*packsz )
+      call dafada ( ctx, epochs,  n        )
+
+      do i = 1,   (n-1) / dirsiz
+         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
+      end do
+
+      call dafada ( ctx, [ real( subtyp, wp ) ], 1 )
+      call dafada ( ctx, [ real( winsiz, wp ) ], 1 )
+      call dafada ( ctx, [ real( n, wp      ) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw18
+
+!$Procedure SPKW19 ( Write SPK segment, type 19 )
+
+      module procedure spkw19
+      use pepper_kinds, only: ip, wp
+      use pepper_math, only: odd
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 19 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     DAF
+!     NAIF_IDS
+!     SPC
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk19.inc'
+      include 'spkrec.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of an SPK file that has been opened
+!              for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame
+!              relative to which the state information for BODY
+!              is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the bounds of the time interval
+!              over which the segment defines the state of BODY.
+!
+!              FIRST must be greater than or equal to the first
+!              interpolation interval start time; LAST must be
+!              less than or equal to the last interpolation
+!              interval stop time. See the description of IVLBDS
+!              below.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     NINTVL   is the number of interpolation intervals
+!              associated with the input data. The interpolation
+!              intervals are associated with data sets referred
+!              to as "mini-segments."
+!
+!              The input data comprising each mini-segment are:
+!
+!                 - a packet count
+!                 - a type 19 subtype
+!                 - an interpolating polynomial degree
+!                 - a sequence of type 19 data packets
+!                 - a sequence of packet epochs
+!
+!              These inputs are described below.
+!
+!     NPKTS    is an array of packet counts. The Ith element of
+!              NPKTS is the packet count of the Ith interpolation
+!              interval/mini-segment.
+!
+!              NPKTS has dimension NINTVL.
+!
+!     SUBTPS   is an array of type 19 subtypes. The Ith element
+!              of SUBTPS is the subtype of the packets associated
+!              with the Ith interpolation interval/mini-segment.
+!
+!              SUBTPS has dimension NINTVL.
+!
+!     DEGRES   is an array of interpolating polynomial degrees.
+!              The Ith element of DEGRES is the polynomial degree
+!              of the packets associated with the Ith
+!              interpolation interval/mini-segment.
+!
+!              For subtype 0, interpolation degrees must be
+!              equivalent to 3 mod 4, that is, they must be in
+!              the set
+!
+!                 { 3, 7, 11, ..., MAXDEG }
+!
+!              For subtype 1, interpolation degrees must be odd
+!              and must be in the range 1:MAXDEG.
+!
+!              DEGRES has dimension NINTVL.
+!
+!     PACKTS   is an array containing data packets for all input
+!              mini-segments. The packets for a given
+!              mini-segment are stored contiguously in increasing
+!              time order. The order of the sets of packets for
+!              different mini-segments is the same as the order
+!              of their corresponding interpolation intervals.
+!
+!              Each packet represents geometric states of BODY
+!              relative to CENTER, specified relative to FRAME.
+!              The packet structure depends on the segment
+!              subtype as follows:
+!
+!                 Type 0 (indicated by code S19TP0):
+!
+!                     x,  y,  z,  dx/dt,  dy/dt,  dz/dt,
+!                     vx, vy, vz, dvx/dt, dvy/dt, dvz/dt
+!
+!                 where x, y, z represent Cartesian position
+!                 components and  vx, vy, vz represent Cartesian
+!                 velocity components. Note well: vx, vy, and
+!                 vz *are not necessarily equal* to the time
+!                 derivatives of x, y, and z. This packet
+!                 structure mimics that of the Rosetta/MEX orbit
+!                 file.
+!
+!                 Type 1 (indicated by code S19TP1):
+!
+!                     x,  y,  z,  dx/dt,  dy/dt,  dz/dt
+!
+!                 where x, y, z represent Cartesian position
+!                 components and  vx, vy, vz represent Cartesian
+!                 velocity components.
+!
+!                 Type 2 (indicated by code S19TP2):
+!
+!                     Data are identical to type 1; only the
+!                     interpolation algorithm is different.
+!
+!              Position units are kilometers, velocity units
+!              are kilometers per second, and acceleration units
+!              are kilometers per second per second.
+!
+!     EPOCHS   is an array containing epochs for all input
+!              mini-segments. Each epoch is expressed as seconds
+!              past J2000 TDB. The epochs have a one-to-one
+!              relationship with the packets in the input packet
+!              array.
+!
+!              The epochs for a given mini-segment are stored
+!              contiguously in increasing order. The order of the
+!              sets of epochs for different mini-segments is the
+!              same as the order of their corresponding
+!              interpolation intervals.
+!
+!              For each mini-segment, "padding" is allowed: the
+!              sequence of epochs for that mini-segment may start
+!              before the corresponding interpolation interval
+!              start time and end after the corresponding
+!              interpolation interval stop time. Padding is used
+!              to control behavior of interpolating polynomials
+!              near interpolation interval boundaries.
+!
+!              Due to possible use of padding, the elements of
+!              EPOCHS, taken as a whole, may not be in increasing
+!              order.
+!
+!     IVLBDS   is an array of interpolation interval boundary
+!              times. This array is an ordered list of the
+!              interpolation interval start times, to which the
+!              the end time for the last interval is appended.
+!
+!              The Ith interpolation interval is the time
+!              coverage interval of the Ith mini-segment (see the
+!              description of NPKTS above).
+!
+!              For each mini-segment, the corresponding
+!              interpolation interval's start time is greater
+!              than or equal to the mini-segment's first epoch,
+!              and the interval's stop time is less than or equal
+!              to the mini-segment's last epoch.
+!
+!              For each interpolation interval other than the
+!              last, the interval's coverage stop time coincides
+!              with the coverage start time of the next interval.
+!              There are no coverage gaps, and coverage overlap
+!              for adjacent intervals consists of a single epoch.
+!
+!              IVLBDS has dimension NINTVL+1.
+!
+!     SELLST   is a logical flag indicating to the SPK type 19
+!              segment reader SPKR19 how to select the
+!              interpolation interval when a request time
+!              coincides with a time boundary shared by two
+!              interpolation intervals. When SELLST ("select
+!              last") is .TRUE., the later interval is selected;
+!              otherwise the earlier interval is selected.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXDEG   is the maximum allowed degree of the interpolating
+!              polynomial.
+!
+!              See the INCLUDE file spk19.inc for the value of
+!              MAXDEG.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will
+!     return without creating a new segment.
+!
+!     1)  If FIRST is greater than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     2)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     3)  If the last non-blank character of SEGID occurs past index
+!         40, the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     4)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     5)  If NINTVL is not at least 1, the error SPICE(INVALIDCOUNT)
+!         is signaled.
+!
+!     6)  If the elements of the array IVLBDS are not in strictly
+!         increasing order, the error SPICE(BOUNDSOUTOFORDER) is
+!         signaled.
+!
+!     7)  If the first interval start time IVLBDS(1) is greater than
+!         FIRST, or if the last interval end time IVLBDS(N+1) is less
+!         than LAST, the error SPICE(COVERAGEGAP) is signaled.
+!
+!     8)  If any packet count in the array NPKTS is not at least 2, the
+!         error SPICE(TOOFEWPACKETS) is signaled.
+!
+!     9)  If any subtype code in the array SUBTPS is not recognized,
+!         the error SPICE(INVALIDSUBTYPE) is signaled.
+!
+!     10) If any interpolation degree in the array DEGRES
+!         is not at least 1 or is greater than MAXDEG, the
+!         error SPICE(INVALIDDEGREE) is signaled.
+!
+!     11) If the window size implied by any element of the array DEGRES
+!         is odd, the error SPICE(BADWINDOWSIZE) is signaled.
+!
+!     12) If the elements of the array EPOCHS corresponding to a given
+!         mini-segment are not in strictly increasing order, the error
+!         SPICE(TIMESOUTOFORDER) is signaled.
+!
+!     13) If the first epoch of a mini-segment exceeds the start
+!         time of the associated interpolation interval, or if the
+!         last epoch of the mini-segment precedes the end time of the
+!         interpolation interval, the error SPICE(BOUNDSDISAGREE)
+!         is signaled.
+!
+!     14) If an error occurs while writing the output segment, the error
+!         is signaled by a routine in the call tree of this routine.
+!
+! $ Files
+!
+!     A new type 19 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 19 data segment to the open SPK
+!     file according to the format described in the type 19 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     Suppose that you have states and are prepared to produce
+!     a segment of type 19 in an SPK file.
+!
+!     The following code fragment could be used to add the new segment
+!     to a previously opened SPK file attached to HANDLE. The file must
+!     have been opened with write access.
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!                  SEGID = 'MY_SAMPLE_SPK_TYPE_19_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW19 ( HANDLE,  BODY,    CENTER,  FRAME,
+!             .              FIRST,   LAST,    SEGID,   NINTVL,
+!             .              NPKTS,   SUBTPS,  DEGRES,  PACKTS,
+!             .              EPOCHS,  IVLBDS,  SELLST           )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 2.0.0, 21-DEC-2015 (NJB)
+!
+!        Updated to support subtype 2.
+!
+!-    SPICELIB Version 1.0.0, 05-FEB-2014 (NJB) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_19 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 6
+
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: dtype = 19
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Local variables
+!
+      real(wp)              dc     ( nd )
+      real(wp)              descr  ( dscsiz )
+
+      integer(ip)           bepix
+      integer(ip)           chrcod
+      integer(ip)           eepix
+      integer(ip)           i
+      integer(ip)           ic     ( ni )
+      integer(ip)           isel
+      integer(ip)           j
+      integer(ip)           k
+      integer(ip)           minisz
+      integer(ip)           ndir
+      integer(ip)           pktbeg
+      integer(ip)           pktdsz
+      integer(ip)           pktend
+      integer(ip)           pktsiz
+      integer(ip), parameter :: pktszs ( 0 : s19nst-1 ) = &
+         [ s19ps0, s19ps1, s19ps2 ]
+      integer(ip)           refcod
+      integer(ip)           segbeg
+      integer(ip)           segend
+      integer(ip)           subtyp
+      integer(ip)           winsiz
+
+!
+!     Saved values
+!
+
+!
+!     Initial values
+!
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Start with a parameter compatibility check.
+!
+      if ( maxrec < maxrsz ) then
+
+         call ctx%setmsg ( 'SPK type 19 record size may be as ' &
+         //            'large as #, but SPKPVN record size ' &
+         //            'is #.'                              )
+         call ctx%errint ( '#',  maxrsz                         )
+         call ctx%errint ( '#',  maxrec                         )
+         call ctx%sigerr ( 'SPICE(BUG0)'                        )
+         return
+
+      end if
+
+!
+!     Make sure the segment descriptor bounds are
+!     correctly ordered.
+!
+      if ( last < first ) then
+
+         call ctx%setmsg ( 'Segment start time is #; stop time is #; ' &
+         //            'bounds must be in nondecreasing order.'    )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' &
+         //            '40 characters.'                        )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                   )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains ' &
+            //            'nonprintable characters'         )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'        )
+            return
+
+         end if
+
+      end do
+
+!
+!     The mini-segment/interval count must be positive.
+!
+      if ( nintvl < 1 ) then
+
+         call ctx%setmsg ( 'Mini-segment/interval count was #; ' &
+         //            'this count must be positive.'       )
+         call ctx%errint ( '#', nintvl                          )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                )
+         return
+
+      end if
+
+!
+!     Make sure the interval bounds form a strictly
+!     increasing sequence.
+!
+!     Note that there are NINTVL+1 bounds.
+!
+      do i = 1, nintvl
+
+         if ( ivlbds(i) >= ivlbds(i+1) ) then
+
+            call ctx%setmsg ( 'Interval bounds at indices # and # ' &
+            //            'are # and # respectively. The ' &
+            //            'difference is #. The bounds are ' &
+            //            'required to be strictly increasing.' )
+            call ctx%errint ( '#', i                                )
+            call ctx%errint ( '#', i+1                              )
+            call ctx%errdp  ( '#', ivlbds(i)                        )
+            call ctx%errdp  ( '#', ivlbds(i+1)                      )
+            call ctx%errdp  ( '#', ivlbds(i+1) - ivlbds(i)          )
+            call ctx%sigerr ( 'SPICE(BOUNDSOUTOFORDER)'             )
+            return
+
+         end if
+
+      end do
+
+!
+!     Make sure the time span of the descriptor doesn't extend
+!     beyond the span of the interval bounds.
+!
+      if (      ( first < ivlbds(1       ) ) &
+           .or. ( last  > ivlbds(nintvl+1) ) ) then
+
+         call ctx%setmsg ( 'First interval start time is #; ' &
+         //            'segment start time is #; segment ' &
+         //            'stop time is #; last interval stop ' &
+         //            'time is #. This sequence of times ' &
+         //            'is required to be non-decreasing: ' &
+         //            'segment coverage must be contained ' &
+         //            'within the union of the interpolation ' &
+         //            'intervals.'                            )
+         call ctx%errdp  ( '#', ivlbds(1)                          )
+         call ctx%errdp  ( '#', first                              )
+         call ctx%errdp  ( '#', last                               )
+         call ctx%errdp  ( '#', ivlbds(nintvl+1)                   )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                    )
+         return
+
+      end if
+
+!
+!     Check the input data before writing to the file.
+!
+!     This order of operations entails some redundant
+!     calculations, but it allows for rapid error
+!     detection.
+!
+!     Initialize the mini-segment packet array indices,
+!     and those of the mini-segment epoch array as well.
+!
+      pktbeg = 0
+      pktend = 0
+
+      bepix  = 0
+      eepix  = 0
+
+      do i = 1, nintvl
+!
+!        First, just make sure the packet count for the current
+!        mini-segment is at least two. This check reduces our chances
+!        of a subscript range violation.
+!
+!        Check the number of packets.
+!
+         if ( npkts(i) < 2 ) then
+
+            call ctx%setmsg ( 'At least 2 packets are required ' &
+            //            'for SPK type 19. Number of packets ' &
+            //            'supplied was # in mini-segment at index #.' )
+            call ctx%errint ( '#', npkts(i)                                )
+            call ctx%errint ( '#', i                                       )
+            call ctx%sigerr ( 'SPICE(TOOFEWPACKETS)'                       )
+            return
+
+         end if
+
+!
+!        Set the packet size, which is a function of the subtype. Also
+!        set the window size. First check the subtype, which will be
+!        used as an array index.
+!
+         subtyp = subtps(i)
+
+         if (  ( subtyp < 0 ) .or. ( subtyp > s19nst-1 ) ) then
+
+            call ctx%setmsg ( 'Unexpected SPK type 19 subtype # ' &
+            //            'found in mini-segment #.'          )
+            call ctx%errint ( '#',  subtyp                        )
+            call ctx%errint ( '#',  i                             )
+            call ctx%sigerr ( 'SPICE(INVALIDSUBTYPE)'             )
+            return
+
+         end if
+
+         pktsiz = pktszs ( subtyp )
+
+         if ( subtyp == s19tp0 ) then
+
+            winsiz = ( degres(i) + 1 ) / 2
+
+         else if ( subtyp == s19tp1 ) then
+
+            winsiz =   degres(i) + 1
+
+         else if ( subtyp == s19tp2 ) then
+
+            winsiz = ( degres(i) + 1 ) / 2
+
+         else
+            call ctx%setmsg ( 'Subtype = #; not expected.' )
+            call ctx%errint ( '#', subtyp                  )
+            call ctx%sigerr ( 'SPICE(BUG1)'                )
+         end if
+
+!
+!        Make sure that the degree of the interpolating polynomials is
+!        in range.
+!
+         if (      ( degres(i) < 1      ) &
+              .or. ( degres(i) > maxdeg )  )  then
+
+            call ctx%setmsg ( 'The interpolating polynomials of ' &
+            //            'mini-segment # have degree #; the ' &
+            //            'valid degree range is [1, #]'      )
+            call ctx%errint ( '#', i                              )
+            call ctx%errint ( '#', degres(i)                      )
+            call ctx%errint ( '#', maxdeg                         )
+            call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'              )
+            return
+
+         end if
+
+!
+!        Make sure that the window size is even.
+!
+         if (   odd( winsiz )   )  then
+
+            call ctx%setmsg ( 'The interpolating polynomials of ' &
+            //            'mini-segment # have window size # ' &
+            //            'and degree # for SPK type 19. ' &
+            //            'The mini-segment subtype is #. ' &
+            //            'The degree must be equivalent to 3 ' &
+            //            'mod 4 for subtype 0 (Hermite ' &
+            //            'interpolation) and be odd for subtype ' &
+            //            '1 (Lagrange interpolation).'          )
+            call ctx%errint ( '#', i                                 )
+            call ctx%errint ( '#', winsiz                            )
+            call ctx%errint ( '#', degres(i)                         )
+            call ctx%errint ( '#', subtps(i)                         )
+            call ctx%sigerr ( 'SPICE(BADWINDOWSIZE)'                 )
+            return
+
+         end if
+
+!
+!        Make sure the epochs of the Ith mini-segment form a
+!        strictly increasing sequence.
+!
+!        To start out, determine the indices of the epoch sequence
+!        of the Ith mini-segment. We'll call the begin and end
+!        epoch indices BEPIX and EEPIX respectively.
+!
+         bepix  =  eepix + 1
+         eepix  =  bepix - 1 +  npkts(i)
+
+         do j = 1, npkts(i) - 1
+
+            k = bepix + j - 1
+
+            if ( epochs(k) >= epochs(k+1) ) then
+
+               call ctx%setmsg ( 'In mini-segment #, epoch # having ' &
+               //            'index # in array EPOCHS and index # ' &
+               //            'in the mini-segment is greater than ' &
+               //            'or equal to its successor #.'         )
+               call ctx%errint ( '#',  i                                )
+               call ctx%errdp  ( '#',  epochs(k  )                      )
+               call ctx%errint ( '#',  k                                )
+               call ctx%errint ( '#',  j                                )
+               call ctx%errdp  ( '#',  epochs(k+1)                      )
+               call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'               )
+               return
+
+            end if
+
+         end do
+
+!
+!        Make sure that the span of the input epochs of the Ith
+!        mini-segment includes the Ith interpolation interval.
+!
+         if (  epochs(bepix) > ivlbds(i) ) then
+
+            call ctx%setmsg ( 'Interpolation interval # start time # ' &
+            //            'precedes mini-segment''s first epoch #.' )
+            call ctx%errint ( '#',  i                                   )
+            call ctx%errdp  ( '#',  ivlbds(i)                           )
+            call ctx%errdp  ( '#',  epochs(bepix)                       )
+            call ctx%sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
+            return
+
+         else if (  epochs(eepix) < ivlbds(i+1) ) then
+
+            call ctx%setmsg ( 'Interpolation interval # end time # ' &
+            //            'exceeds mini-segment''s last epoch #.'   )
+            call ctx%errint ( '#',  i                                   )
+            call ctx%errdp  ( '#',  ivlbds(i+1)                         )
+            call ctx%errdp  ( '#',  epochs(eepix)                       )
+            call ctx%sigerr ( 'SPICE(BOUNDSDISAGREE)'                   )
+            return
+
+         end if
+
+      end do
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     The type 19 segment structure is eloquently described by this
+!     diagram from the SPK Required Reading:
+!
+!        +--------------------------------+
+!        | Interval 1 mini-segment        |
+!        +--------------------------------+
+!              .
+!              .
+!              .
+!        +--------------------------------+
+!        | Interval N mini-segment        |
+!        +--------------------------------+
+!        | Interval 1 start time          |
+!        +--------------------------------+
+!              .
+!              .
+!              .
+!        +--------------------------------+
+!        | Interval N start time          |
+!        +--------------------------------+
+!        | Interval N stop time           |
+!        +--------------------------------+
+!        | Interval start 100             | (First interval directory)
+!        +--------------------------------+
+!              .
+!              .
+!              .
+!        +--------------------------------+
+!        | Interval start (N/100)*100     | (Last interval directory)
+!        +--------------------------------+
+!        | Interval 1 start pointer       |
+!        +--------------------------------+
+!              .
+!              .
+!              .
+!        +--------------------------------+
+!        | Interval N start pointer       |
+!        +--------------------------------+
+!        | Interval N stop pointer + 1    |
+!        +--------------------------------+
+!        | Boundary choice flag           |
+!        +--------------------------------+
+!        | Number of intervals            |
+!        +--------------------------------+
+!
+!     SPK type 19 mini-segments have the following structure:
+!
+!        +-----------------------+
+!        | Packet 1              |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Packet M              |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch M               |
+!        +-----------------------+
+!        | Epoch 100             | (First time tag directory)
+!        +-----------------------+
+!                    .
+!                    .
+!                    .
+!        +-----------------------+
+!        | Epoch ((M-1)/100)*100 | (Last time tag directory)
+!        +-----------------------+
+!        | Subtype code          |
+!        +-----------------------+
+!        | Window size           |
+!        +-----------------------+
+!        | Number of packets     |
+!        +-----------------------+
+!
+!     Create the segment descriptor. We don't use SPKPDS because
+!     that routine doesn't allow creation of a singleton segment.
+!
+      ic(1) = body
+      ic(2) = center
+      ic(3) = refcod
+      ic(4) = dtype
+
+      dc(1) = first
+      dc(2) = last
+
+      call dafps  ( ctx, nd, ni, dc, ic, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Re-initialize the mini-segment packet array indices,
+!     and those of the mini-segment epoch array as well.
+!
+      pktbeg = 0
+      pktend = 0
+
+      bepix  = 0
+      eepix  = 0
+
+!
+!     Write data for each mini-segment to the file.
+!
+      do i = 1, nintvl
+!
+!        Set the packet size, which is a function of the subtype.
+!
+         subtyp = subtps ( i )
+
+         pktsiz = pktszs ( subtyp )
+
+         if ( subtyp == s19tp0 ) then
+
+            winsiz = ( degres(i) + 1 ) / 2
+
+         else if ( subtyp == s19tp1 ) then
+
+            winsiz =   degres(i) + 1
+
+         else if ( subtyp == s19tp2 ) then
+
+            winsiz = ( degres(i) + 1 ) / 2
+
+         else
+            call ctx%setmsg ( 'Subtype = #; not expected.' )
+            call ctx%errint ( '#', subtyp                  )
+            call ctx%sigerr ( 'SPICE(BUG2)'                )
+         end if
+
+!
+!        Now that we have the packet size, we can compute
+!        mini-segment packet index range. We'll let PKTDSZ
+!        be the total count of packet data entries for this
+!        mini-segment.
+!
+         pktdsz =  npkts(i) * pktsiz
+
+         pktbeg = pktend  +  1
+         pktend = pktbeg  -  1  +  pktdsz
+
+!
+!        At this point, we're read to start writing the
+!        current mini-segment to the file. Start with the
+!        packet data.
+!
+         call dafada ( ctx, packts(pktbeg), pktdsz )
+
+!
+!        Write the epochs for this mini-segment.
+!
+         bepix = eepix + 1
+         eepix = bepix - 1 + npkts(i)
+
+         call dafada ( ctx, epochs(bepix), npkts(i) )
+
+!
+!        Compute the number of epoch directories for the
+!        current mini-segment.
+!
+         ndir = ( npkts(i) - 1 ) / dirsiz
+
+!
+!        Write the epoch directories to the segment.
+!
+         do j = 1, ndir
+
+            k = bepix  -  1  +  ( j * dirsiz )
+
+            call dafada ( ctx, epochs(k), 1 )
+
+         end do
+
+!
+!        Write the mini-segment's subtype, window size, and packet
+!        count to the segment.
+!
+         call dafada ( ctx, [ real( subtps(i), wp ) ], 1 )
+         call dafada ( ctx, [ real( winsiz, wp    ) ], 1 )
+         call dafada ( ctx, [ real( npkts(i), wp  ) ], 1 )
+
+         if ( ctx%failed() ) return
+
+      end do
+
+!
+!     We've finished writing the mini-segments.
+!
+!     Next write the interpolation interval bounds.
+!
+      call dafada ( ctx, ivlbds, nintvl+1 )
+
+!
+!     Create and write directories for the interval
+!     bounds.
+!
+!     The directory count is the interval bound count
+!     (N+1), minus 1, divided by the directory size.
+!
+      ndir = nintvl / dirsiz
+
+      do i = 1, ndir
+         call dafada ( ctx,  ivlbds( dirsiz*i ),  1  )
+      end do
+
+!
+!     Now we compute and write the start/stop pointers
+!     for each mini-segment.
+!
+!     The pointers are relative to the DAF address
+!     preceding the segment. For example, a pointer
+!     to the first DAF address in the segment has
+!     value 1.
+!
+      segend = 0
+
+      do i = 1, nintvl
+!
+!        Set the packet size, which is a function of the subtype.
+!
+         pktsiz = pktszs ( subtps(i) )
+
+!
+!        In order to compute the end pointer of the current
+!        mini-segment, we must compute the size, in terms
+!        of DAF addresses, of this mini-segment. The formula
+!        for the size is
+!
+!            size =     n_packets * packet_size
+!                    +  n_epochs
+!                    +  n_epoch_directories
+!                    +  3
+!
+!                 =     n_packets * ( packet_size + 1 )
+!                    +  ( n_packets - 1 ) / DIRSIZ
+!                    +  3
+!
+         minisz =       npkts(i) * ( pktsiz + 1 ) &
+                    + ( npkts(i) - 1 ) / dirsiz &
+                    +   3
+
+         segbeg = segend + 1
+         segend = segbeg + minisz - 1
+
+!
+!        Write the mini-segment begin pointer.
+!
+!        After the loop terminates, the final end pointer, incremented
+!        by 1, will be written.
+!
+         call dafada ( ctx, [ real(segbeg, wp) ], 1 )
+
+      end do
+
+!
+!     Write the last mini-segment end pointer, incremented by one.
+!     SEGEND was computed on the last iteration of the above loop.
+!
+      call dafada ( ctx, [ real(segend+1, wp) ], 1 )
+
+!
+!     Write out the interval selection flag. The input
+!     boolean value is represented by a numeric constant.
+!
+      if ( sellst ) then
+
+         isel = itrue
+      else
+         isel = ifalse
+      end if
+
+      call dafada ( ctx, [ real( isel, wp ) ], 1 )
+
+!
+!     Write the mini-segment/interpolation interval count.
+!
+      call dafada ( ctx, [ real(nintvl, wp) ], 1 )
+
+!
+!     End the segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure spkw19
+
+!$Procedure SPKW20 ( SPK, write segment, type 20 )
+
+      module procedure spkw20
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: j2000, spd
+
+! $ Abstract
+!
+!     Write a type 20 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     DAF
+!     NAIF_IDS
+!     TIME
+!     SPK
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk20.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the DAF handle of an SPK file to which a type 20
+!              segment is to be added. The SPK file must be open
+!              for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame relative to
+!              which the state information for BODY is specified.
+!
+!     FIRST,
+!     LAST     are the start and stop times of the time interval
+!              over which the segment defines the state of the
+!              object identified by BODY.
+!
+!     SEGID    is a segment identifier. An SPK segment identifier
+!              may contain up to 40 characters.
+!
+!     INTLEN   is the length of time, in TDB Julian days, covered
+!              by each set of Chebyshev polynomial coefficients
+!              (each logical record).
+!
+!     N        is the number of logical records to be stored in
+!              the segment. There is one logical record for each
+!              time period. Each logical record contains three
+!              sets of Chebyshev coefficients---one for each
+!              coordinate---and three position vector components.
+!
+!     POLYDG   is the degree of each set of Chebyshev
+!              polynomials, i.e. the number of Chebyshev
+!              coefficients per coordinate minus one. POLYDG must
+!              be less than or equal to the parameter MAXDEG.
+!
+!     CDATA    is an array containing all the sets of Chebyshev
+!              polynomial coefficients and position components to
+!              be placed in the new segment of the SPK file.
+!              There are three sets of coefficients and position
+!              components for each time interval covered by the
+!              segment.
+!
+!              The coefficients and position components are
+!              stored in CDATA in order as follows:
+!
+!                 the (POLYDG + 1) coefficients for the first
+!                 coordinate of the first logical record,
+!                 followed by the X component of position at the
+!                 first interval midpoint. The first coefficient
+!                 is that of the constant term of the expansion.
+!
+!                 the coefficients for the second coordinate,
+!                 followed by the Y component of position at the
+!                 first interval midpoint.
+!
+!                 the coefficients for the third coordinate,
+!                 followed by the Z component of position at the
+!                 first interval midpoint.
+!
+!                 the coefficients for the first coordinate for
+!                 the second logical record, followed by the X
+!                 component of position at the second interval
+!                 midpoint.
+!
+!                 and so on.
+!
+!              The logical data records are stored contiguously:
+!
+!                 +----------+
+!                 | Record 1 |
+!                 +----------+
+!                 | Record 2 |
+!                 +----------+
+!                     ...
+!                 +----------+
+!                 | Record N |
+!                 +----------+
+!
+!              The contents of an individual record are:
+!
+!                 +--------------------------------------+
+!                 | Coeff set for X velocity component   |
+!                 +--------------------------------------+
+!                 | X position component                 |
+!                 +--------------------------------------+
+!                 | Coeff set for Y velocity component   |
+!                 +--------------------------------------+
+!                 | Y position component                 |
+!                 +--------------------------------------+
+!                 | Coeff set for Z velocity component   |
+!                 +--------------------------------------+
+!                 | Z position component                 |
+!                 +--------------------------------------+
+!
+!                   Each coefficient set has the structure:
+!
+!                 +--------------------------------------+
+!                 | Coefficient of T_0                   |
+!                 +--------------------------------------+
+!                 | Coefficient of T_1                   |
+!                 +--------------------------------------+
+!                                   ...
+!                 +--------------------------------------+
+!                 | Coefficient of T_POLYDG              |
+!                 +--------------------------------------+
+!
+!              Where T_n represents the Chebyshev polynomial
+!              of the first kind of degree n.
+!
+!     DSCALE,
+!     TSCALE   are, respectively, the distance scale of the input
+!              position and velocity data in km, and the time
+!              scale of the input velocity data in TDB seconds.
+!
+!              For example, if the input distance data have units
+!              of astronomical units (AU), DSCALE should be set
+!              to the number of km in one AU. If the input
+!              velocity data have time units of Julian days, then
+!              TSCALE should be set to the number of seconds per
+!              Julian day (86400).
+!
+!     INITJD   is the integer part of the Julian ephemeris date
+!              of initial epoch of the first record. INITJD may
+!              be less than, equal to, or greater than the
+!              initial epoch.
+!
+!     INITFR   is the fractional part of the Julian ephemeris date
+!              of initial epoch of the first record. INITFR has
+!              units of Julian days. INITFR has magnitude
+!              strictly less than 1 day. The sum
+!
+!                 INITJD + INITFR
+!
+!              equals the Julian ephemeris date of the initial
+!              epoch of the first record.
+!
+! $ Detailed_Output
+!
+!     None. This routine writes data to an SPK file.
+!
+! $ Parameters
+!
+!     The parameters described in this section are declared in the
+!     Fortran INCLUDE file spk20.inc
+!
+!     MAXDEG   is the maximum allowed degree of the input
+!              Chebyshev expansions.
+!
+!     TOLSCL   is a tolerance scale factor (also called a
+!              "relative tolerance") used for time coverage
+!              bound checking. TOLSCL is unitless. TOLSCL
+!              produces a tolerance value via the formula
+!
+!                 TOL = TOLSCL * MAX( ABS(FIRST), ABS(LAST) )
+!
+!              where FIRST and LAST are the coverage time bounds
+!              of a type 20 segment, expressed as seconds past
+!              J2000 TDB.
+!
+!              The resulting parameter TOL is used as a tolerance
+!              for comparing the input segment descriptor time
+!              bounds to the first and last epoch covered by the
+!              sequence of time intervals defined by the inputs
+!
+!                 INITJD
+!                 INITFR
+!                 INTLEN
+!                 N
+!
+!              See the $Exceptions section below for a description
+!              of the error check using this tolerance.
+!
+! $ Exceptions
+!
+!     1)  If the number of sets of coefficients is not positive,
+!         the error SPICE(INVALIDCOUNT) is signaled.
+!
+!     2)  If the interval length is not positive, the error
+!         SPICE(INTLENNOTPOS) is signaled.
+!
+!     3)  If the name of the reference frame is not recognized,
+!         the error SPICE(INVALIDREFFRAME) is signaled.
+!
+!     4)  If segment stop time is not greater than or equal to
+!         the begin time, the error SPICE(BADDESCRTIMES) is signaled.
+!
+!     5)  If the start time of the first record exceeds the descriptor
+!         begin time by more than a computed tolerance, or if the end
+!         time of the last record precedes the descriptor end time by
+!         more than a computed tolerance, the error SPICE(COVERAGEGAP)
+!         is signaled. See the $Parameters section above for a
+!         description of the tolerance.
+!
+!     6)  If the input degree POLYDG is less than 0 or greater than
+!         MAXDEG, the error SPICE(INVALIDDEGREE) is signaled.
+!
+!     7)  If the last non-blank character of SEGID occurs past index 40,
+!         or if SEGID contains any nonprintable characters, an error is
+!         signaled by a routine in the call tree of this routine.
+!
+!     8)  If either the distance or time scale is non-positive, the
+!         error SPICE(NONPOSITIVESCALE) is signaled.
+!
+! $ Files
+!
+!     A new type 20 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 20 data segment to the designated
+!     SPK file, according to the format described in the SPK Required
+!     Reading.
+!
+!     Each segment can contain data for only one target, central body,
+!     and reference frame. The Chebyshev polynomial degree and length
+!     of time covered by each logical record are also fixed. However,
+!     an arbitrary number of logical records of Chebyshev polynomial
+!     coefficients can be written in each segment. Minimizing the
+!     number of segments in an SPK file will help optimize how the
+!     SPICE system accesses the file.
+!
+! $ Examples
+!
+!     Suppose that you have in an array CDATA sets of Chebyshev
+!     polynomial coefficients and position vectors representing the
+!     state of the moon (NAIF ID = 301), relative to the Earth-moon
+!     barycenter (NAIF ID = 3), in the J2000 reference frame, and you
+!     want to put these into a type 20 segment in an existing SPK file.
+!     The following code could be used to add one new type 20 segment.
+!     To add multiple segments, put the call to SPKW20 in a loop.
+!
+!     C
+!     C      First open the SPK file and get a handle for it.
+!     C
+!            CALL DAFOPW ( SPKNAM, HANDLE )
+!
+!     C
+!     C      Create a segment identifier.
+!     C
+!            SEGID = 'MY_SAMPLE_SPK_TYPE_20_SEGMENT'
+!
+!     C
+!     C      Note that the interval length INTLEN has units
+!     C      of Julian days. The start time of the first record
+!     C      is expressed using two inputs: integer and fractional
+!     C      portions of the Julian ephemeris date of the start
+!     C      time.
+!     C
+!     C      Write the segment.
+!     C
+!            CALL SPKW20 ( HANDLE, 301,    3,      'J2000',
+!          .               FIRST,  LAST,   SEGID,  INTLEN,
+!          .               N,      POLYDG, CDATA,  DSCALE,
+!          .               TSCALE, INITJD, INITFR           )
+!
+!     C
+!     C      Close the file.
+!     C
+!            CALL DAFCLS ( HANDLE )
+!
+! $ Restrictions
+!
+!     None.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     K.S. Zukor         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.1, 05-AUG-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!        Added missing description of INITFR to $Brief_I/O section.
+!
+!-    SPICELIB Version 1.0.0, 17-JAN-2017 (NJB) (KSZ)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_20 data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local Parameters
+!
+
+!
+!     DTYPE is the SPK data type.
+!
+      integer(ip), parameter :: dtype = 20
+
+!
+!     ND is the number of double precision components in an SPK
+!     segment descriptor. SPK uses ND = 2.
+!
+      integer(ip), parameter :: nd = 2
+
+!
+!     NI is the number of integer components in an SPK segment
+!     descriptor. SPK uses NI = 6.
+!
+      integer(ip), parameter :: ni = 6
+
+!
+!     NS is the size of a packed SPK segment descriptor.
+!
+      integer(ip), parameter :: ns = 5
+
+!
+!     SIDLEN is the maximum number of characters allowed in an
+!     SPK segment identifier.
+!
+      integer(ip), parameter :: sidlen = 40
+
+!
+!     Local variables
+!
+      character(sidlen)     etstr
+      character(sidlen)     netstr
+
+      real(wp)              btime
+      real(wp)              dcd   ( nd )
+      real(wp)              descr ( ns )
+      real(wp)              ltime
+      real(wp)              numrec
+      real(wp)              tol
+
+      integer(ip)           icd   ( ni )
+      integer(ip)           ninrec
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The number of sets of coefficients must be positive.
+!
+      if ( n <= 0 ) then
+
+         call ctx%setmsg ( 'The number of sets of coordinate ' &
+         //            'coefficients is not positive. N = # ' )
+         call ctx%errint ( '#', n                                 )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                  )
+         return
+
+      end if
+
+!
+!     Make sure that the degree of the interpolating polynomials is
+!     in range.
+!
+      if (  ( polydg < 0 ) .or. ( polydg > maxdeg )  )  then
+
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; ' &
+         //            'the valid degree range is [0, #].'             )
+         call ctx%errint ( '#', polydg                                     )
+         call ctx%errint ( '#', maxdeg                                     )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)'                          )
+         return
+
+      end if
+
+!
+!     The interval length must be positive.
+!
+      if ( intlen <= 0 ) then
+
+         call ctx%setmsg ( 'The interval length is not positive.' &
+         //            'N = #'                                )
+         call ctx%errdp  ( '#', intlen                            )
+         call ctx%sigerr ( 'SPICE(INTLENNOTPOS)'                  )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     The segment stop time must be greater than or equal to the begin
+!     time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment start time: # (# TDB) is ' &
+         //            'greater than the segment end time: ' &
+         //            '(# TDB).'                               )
+         call etcal  ( ctx, first, etstr                             )
+         call ctx%errch  ( '#',   etstr                             )
+         call ctx%errdp  ( '#',   first                             )
+         call etcal  ( ctx, last,  netstr                            )
+         call ctx%errch  ( '#',   netstr                            )
+         call ctx%errdp  ( '#',   last                              )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                   )
+         return
+
+      end if
+
+!
+!     The distance and time scales must be positive.
+!
+      if ( dscale <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The distance scale is not positive.' &
+         //            'DSCALE = #'                           )
+         call ctx%errdp  ( '#', dscale                            )
+         call ctx%sigerr ( 'SPICE(NONPOSITIVESCALE)'              )
+         return
+
+      end if
+
+      if ( tscale <= 0.0_wp ) then
+
+         call ctx%setmsg ( 'The time scale is not positive.' &
+         //            'TSCALE = #'                      )
+         call ctx%errdp  ( '#', tscale                       )
+         call ctx%sigerr ( 'SPICE(NONPOSITIVESCALE)'         )
+         return
+
+      end if
+
+!
+!     The begin time of the first record must be less than or equal
+!     to the begin time of the segment. Convert the two-part input
+!     epoch to seconds past J2000 for the purpose of this check.
+!
+      btime = spd  *  (  ( initjd - j2000 ) + initfr  )
+
+      ltime = btime  +  ( n * intlen * spd )
+
+!
+!     Compute the tolerance to use for descriptor time bound checks.
+!
+      tol = tolscl * max( abs(btime), abs(ltime) )
+
+      if ( first < btime - tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor start time # is too ' &
+         //            'much less than the beginning time of the ' &
+         //            'segment data # (in seconds past J2000: #). ' &
+         //            'The difference is # seconds; the ' &
+         //            'tolerance is # seconds.'                     )
+         call etcal  ( ctx, first, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, btime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   first                                  )
+         call ctx%errdp  ( '#',   btime-first                            )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     The end time of the final record must be greater than or
+!     equal to the end time of the segment.
+!
+      if ( last > ltime + tol ) then
+
+         call ctx%setmsg ( 'The segment descriptor end time # is too ' &
+         //            'much greater than the end time of the segment ' &
+         //            'data # (in seconds past J2000: #). The ' &
+         //            'difference is # seconds; the tolerance is # ' &
+         //            'seconds.'                                    )
+         call etcal  ( ctx, last,  etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call etcal  ( ctx, ltime, etstr                                  )
+         call ctx%errch  ( '#',   etstr                                  )
+         call ctx%errdp  ( '#',   last                                   )
+         call ctx%errdp  ( '#',   last-ltime                             )
+         call ctx%errdp  ( '#',   tol                                    )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                          )
+         return
+
+      end if
+
+!
+!     Now check the validity of the segment identifier.
+!
+      call chckid ( ctx, 'SPK segment identifier', sidlen, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     Store the start and end times to be associated
+!     with this segment.
+!
+      dcd(1) = first
+      dcd(2) = last
+
+!
+!     Create the integer portion of the descriptor.
+!
+      icd(1) = body
+      icd(2) = center
+      icd(3) = refcod
+      icd(4) = dtype
+
+!
+!     Pack the segment descriptor.
+!
+      call dafps ( ctx, nd, ni, dcd, icd, descr )
+
+!
+!     Begin a new segment of SPK type 20 form:
+!
+!        Record 1
+!        Record 2
+!        ...
+!        Record N
+!        DSCALE     ( distance scale in km )
+!        TSCALE     ( time scale in seconds )
+!        INITJD     ( integer part of initial epoch of first record,
+!                     expressed as a TDB Julian date )
+!        INITFR     ( fractional part of initial epoch, in units of
+!                     TDB Julian days )
+!        INTLEN     ( length of interval covered by each record, in
+!                     units of TDB Julian days )
+!        RSIZE      ( number of data elements in each record )
+!        N          ( number of records in segment )
+!
+!     Each record will have the form:
+!
+!        X coefficients
+!        X position component at interval midpoint
+!        Y coefficients
+!        Y position component at interval midpoint
+!        Z coefficients
+!        Z position component at interval midpoint
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+!
+!     Calculate the number of entries in a record.
+!
+      ninrec = ( polydg + 2 ) * 3
+
+!
+!     Fill segment with N records of data.
+!
+      call dafada ( ctx, cdata, n * ninrec )
+
+!
+!     Store the distance and time scales.
+!
+      call dafada ( ctx, [ dscale ], 1 )
+      call dafada ( ctx, [ tscale ], 1 )
+
+!
+!     Store the integer and fractional parts of the initial epoch of
+!     the first record.
+!
+      call dafada ( ctx, [ initjd ], 1 )
+      call dafada ( ctx, [ initfr ], 1 )
+
+!
+!     Store the length of interval covered by each record.
+!
+      call dafada ( ctx, [ intlen ], 1 )
+
+!
+!     Store the size of each record (total number of array elements).
+!     Note that this size is smaller by 2 than the size of a type 2
+!     record of the same degree, since the record coverage midpoint
+!     and radius are not stored.
+!
+      call dafada ( ctx, [ real( ninrec, wp ) ], 1 )
+
+!
+!     Store the number of records contained in the segment.
+!
+      numrec = n
+      call dafada ( ctx, [ numrec ], 1 )
+
+!
+!     End this segment.
+!
+      call dafena ( ctx )
+
+      return
+      end procedure spkw20
+
+!$Procedure SPKW21 ( Write SPK segment, type 21 )
+
+      module procedure spkw21
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: lastnb
+
+! $ Abstract
+!
+!     Write a type 21 segment to an SPK file.
+!
+! $ Required_Reading
+!
+!     NAIF_IDS
+!     SPK
+!     TIME
+!
+! $ Keywords
+!
+!     EPHEMERIS
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+      include 'spk21.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of an SPK file that has been
+!              opened for writing.
+!
+!     BODY     is the NAIF integer code for an ephemeris object
+!              whose state relative to another body is described
+!              by the segment to be created.
+!
+!     CENTER   is the NAIF integer code for the center of motion
+!              of the object identified by BODY.
+!
+!     FRAME    is the NAIF name for a reference frame relative to
+!              which the state information for BODY is specified.
+!
+!     FIRST,
+!     LAST     are, respectively, the start and stop times of
+!              the time interval over which the segment defines
+!              the state of BODY.
+!
+!     SEGID    is the segment identifier. An SPK segment
+!              identifier may contain up to 40 characters.
+!
+!     N        is the number of difference lines in the input
+!              difference line array.
+!
+!     DLSIZE   is the size of each difference line data structure
+!              in the difference line array input DLINES. Let
+!              MAXDIM be the dimension of each component of the
+!              difference table within each difference line. Then
+!              the size DLSIZE of the difference line is
+!
+!                 ( 4 * MAXDIM ) + 11
+!
+!     DLINES   contains a time-ordered array of difference lines.
+!              The Ith difference line occupies elements (1,I)
+!              through (MAXDIM,I) of DLINES, where MAXDIM is
+!              as described above in the description of DLSIZE.
+!              Each difference line represents the state (x, y,
+!              z, dx/dt, dy/dt, dz/dt, in kilometers and
+!              kilometers per second) of BODY relative to CENTER,
+!              specified relative to FRAME, for an interval of
+!              time. The time interval covered by the Ith
+!              difference line ends at the Ith element of the
+!              array EPOCHS (described below). The interval
+!              covered by the first difference line starts at the
+!              segment start time.
+!
+!              The contents of a difference line are as shown
+!              below:
+!
+!                 Dimension  Description
+!                 ---------  ----------------------------------
+!                 1          Reference epoch of difference line
+!                 MAXDIM     Stepsize function vector
+!                 1          Reference position vector,  x
+!                 1          Reference velocity vector,  x
+!                 1          Reference position vector,  y
+!                 1          Reference velocity vector,  y
+!                 1          Reference position vector,  z
+!                 1          Reference velocity vector,  z
+!                 MAXDIM,3   Modified divided difference
+!                            arrays (MDAs)
+!                 1          Maximum integration order plus 1
+!                 3          Integration order array
+!
+!              The reference position and velocity are those of
+!              BODY relative to CENTER at the reference epoch.
+!              (A difference line is essentially a polynomial
+!              expansion of acceleration about the reference
+!              epoch.)
+!
+!     EPOCHS   is an array of epochs corresponding to the members
+!              of the difference line array. The epochs are
+!              specified as seconds past J2000 TDB.
+!
+!              The first difference line covers the time interval
+!              from the segment start time to EPOCHS(1). For
+!              I > 1, the Ith difference line covers the half-open
+!              time interval from, but not including, EPOCHS(I-1)
+!              through EPOCHS(I).
+!
+!              The elements of EPOCHS must be strictly increasing.
+!
+! $ Detailed_Output
+!
+!     None. See $Particulars for a description of the effect of this
+!     routine.
+!
+! $ Parameters
+!
+!     MAXTRM   is the maximum number of terms allowed in
+!              each component of the difference table
+!              contained in the input argument RECORD.
+!              See the INCLUDE file spk21.inc for the value
+!              of MAXTRM.
+!
+! $ Exceptions
+!
+!     If any of the following exceptions occur, this routine will return
+!     without creating a new segment.
+!
+!     1)  If FRAME is not a recognized name, the error
+!         SPICE(INVALIDREFFRAME) is signaled.
+!
+!     2)  If the last non-blank character of SEGID occurs past index 40,
+!         the error SPICE(SEGIDTOOLONG) is signaled.
+!
+!     3)  If SEGID contains any nonprintable characters, the error
+!         SPICE(NONPRINTABLECHARS) is signaled.
+!
+!     4)  If the number of difference lines N is not at least one,
+!         the error SPICE(INVALIDCOUNT) is signaled.
+!
+!     5)  If FIRST is greater than LAST, the error
+!         SPICE(BADDESCRTIMES) is signaled.
+!
+!     6)  If the elements of the array EPOCHS are not in strictly
+!         increasing order, the error SPICE(TIMESOUTOFORDER) is
+!         signaled.
+!
+!     7)  If the last epoch EPOCHS(N) is less than LAST, the error
+!         SPICE(COVERAGEGAP) is signaled.
+!
+!     8)  If DLSIZE is greater than the limit
+!
+!            ( 4 * MAXTRM ) + 11
+!
+!         the error SPICE(DIFFLINETOOLARGE) is signaled. If
+!         DLSIZE is less than 71, the error SPICE(DIFFLINETOOSMALL)
+!         is signaled.
+!
+!     9)  Let KQMAX1 be the maximum integration order for a given
+!         difference line. If any value at index KQMAX1-1 or greater
+!         in the step size array of that difference line is zero, the
+!         error SPICE(ZEROSTEP) is signaled. The checked portion
+!         of the step size vector lies in the index range 2:KQMAX-1
+!         of the difference line containing the vector.
+!
+! $ Files
+!
+!     A new type 21 SPK segment is written to the SPK file attached
+!     to HANDLE.
+!
+! $ Particulars
+!
+!     This routine writes an SPK type 21 data segment to the open SPK
+!     file according to the format described in the type 21 section of
+!     the SPK Required Reading. The SPK file must have been opened with
+!     write access.
+!
+! $ Examples
+!
+!     Suppose that you have difference lines and are prepared to
+!     produce a segment of type 21 in an SPK file.
+!
+!     The following code fragment could be used to add the new segment
+!     to a previously opened SPK file attached to HANDLE. The file must
+!     have been opened with write access.
+!
+!        C
+!        C     Create a segment identifier.
+!        C
+!              SEGID = 'MY_SAMPLE_SPK_TYPE_21_SEGMENT'
+!
+!        C
+!        C     Write the segment.
+!        C
+!              CALL SPKW21 (  HANDLE,  BODY,    CENTER,  FRAME,
+!             .               FIRST,   LAST,    SEGID,   N,
+!             .               DLSIZE,  DLINES,  EPOCHS         )
+!
+! $ Restrictions
+!
+!     1)  The validity of the difference lines is not checked by
+!         this routine.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!
+! $ Version
+!
+!-    SPICELIB Version 2.0.1, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 2.0.0, 21-AUG-2015 (NJB)
+!
+!        Relaxed step size error check to allow zero
+!        values in elements indexed greater than KQMAX1-2.
+!
+!-    SPICELIB Version 1.0.0, 03-FEB-2014 (NJB)
+!
+!-&
+
+! $ Index_Entries
+!
+!     write SPK type_21 ephemeris data segment
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      integer(ip), parameter :: sidlen = 40
+
+      integer(ip), parameter :: fprint = 32
+
+      integer(ip), parameter :: lprint = 126
+
+!
+!     MINDSZ is the minimum MDA size; this is the size
+!     of type 1 MDAs.
+!
+      integer(ip), parameter :: mindsz = 71
+
+!
+!     Local variables
+!
+      integer(ip), parameter :: dscsiz = 5
+
+      integer(ip), parameter :: dtype = 21
+
+      integer(ip), parameter :: dirsiz = 100
+
+!
+!     Local variables
+!
+      real(wp)              descr  ( dscsiz )
+      real(wp)              prvepc
+
+      integer(ip)           chrcod
+      integer(ip)           i
+      integer(ip)           j
+      integer(ip)           kqmax1
+      integer(ip)           kqmloc
+      integer(ip)           maxdim
+      integer(ip)           maxdsz
+      integer(ip)           refcod
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Make sure the difference line size is within limits.
+!
+      maxdsz = ( 4 * maxtrm ) + 11
+
+      if ( dlsize > maxdsz ) then
+
+         call ctx%setmsg ( 'The input difference line size is #, ' &
+         //            'while the maximum supported by ' &
+         //            'this routine is #. It is possible ' &
+         //            'that this problem is due to your ' &
+         //            'SPICE Toolkit being out of date.'      )
+         call ctx%errint ( '#',  dlsize                            )
+         call ctx%errint ( '#',  maxdsz                            )
+         call ctx%sigerr ( 'SPICE(DIFFLINETOOLARGE)'               )
+         return
+
+      end if
+
+      if ( dlsize < mindsz ) then
+
+         call ctx%setmsg ( 'The input difference line size is #, ' &
+         //            'while the minimum supported by ' &
+         //            'this routine is #. It is possible ' &
+         //            'that this problem is due to your ' &
+         //            'SPICE Toolkit being out of date.'      )
+         call ctx%errint ( '#',  dlsize                            )
+         call ctx%errint ( '#',  mindsz                            )
+         call ctx%sigerr ( 'SPICE(DIFFLINETOOSMALL)'               )
+         return
+
+      end if
+
+!
+!     Get the NAIF integer code for the reference frame.
+!
+      call namfrm ( ctx, frame, refcod )
+
+      if ( refcod == 0 ) then
+
+         call ctx%setmsg ( 'The reference frame # is not supported.'   )
+         call ctx%errch  ( '#', frame                                  )
+         call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)'                    )
+         return
+
+      end if
+
+!
+!     Check to see if the segment identifier is too long.
+!
+      if ( lastnb(segid) > sidlen ) then
+
+         call ctx%setmsg ( 'Segment identifier contains more than ' // &
+                       '40 characters.'                          )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)'                     )
+         return
+
+      end if
+
+!
+!     Now check that all the characters in the segment identifier
+!     can be printed.
+!
+      do i = 1, lastnb(segid)
+
+         chrcod = ichar( segid(i:i) )
+
+         if ( ( chrcod < fprint ) .or. ( chrcod > lprint ) ) then
+
+            call ctx%setmsg ( 'The segment identifier contains '  // &
+                          'nonprintable characters'               )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)'              )
+            return
+
+         end if
+
+      end do
+
+!
+!     The difference line count must be at least one.
+!
+      if ( n < 1 ) then
+
+         call ctx%setmsg ( 'The difference line count was #; the count ' // &
+                       'must be at least one.'                       )
+         call ctx%errint ( '#', n                                        )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                         )
+         return
+
+      end if
+
+!
+!     The segment stop time should be greater than or equal to
+!     the begin time.
+!
+      if ( first > last ) then
+
+         call ctx%setmsg ( 'The segment start time: # is greater than ' // &
+                       'the segment end time: #'                   )
+         call ctx%errdp  ( '#', first                                  )
+         call ctx%errdp  ( '#', last                                   )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)'                      )
+         return
+
+      end if
+
+!
+!     Make sure the epochs form a strictly increasing sequence.
+!
+      prvepc = epochs(1)
+
+      do i = 2, n
+
+         if ( epochs(i) <= prvepc ) then
+
+            call ctx%setmsg ( 'EPOCH # having index # is not greater '    // &
+                          'than its predecessor #.'                   )
+            call ctx%errdp  ( '#',  epochs(i)                             )
+            call ctx%errint ( '#',  i                                     )
+            call ctx%errdp  ( '#',  epochs(i-1)                           )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)'                    )
+            return
+
+         end if
+
+         prvepc = epochs(i)
+
+      end do
+
+!
+!     Make sure there's no gap between the last difference line
+!     epoch and the end of the time interval defined by the segment
+!     descriptor.
+!
+      if (  epochs(n) < last ) then
+
+         call ctx%setmsg ( 'Segment has coverage gap: segment end time # ' &
+         //            'follows last epoch #.'                        )
+         call ctx%errdp  ( '#',  last                                     )
+         call ctx%errdp  ( '#',  epochs(n)                                )
+         call ctx%sigerr ( 'SPICE(COVERAGEGAP)'                           )
+         return
+
+      end if
+
+!
+!     Check the step size vectors in the difference lines.
+!
+      maxdim = ( dlsize - 11 ) / 4
+      kqmloc = ( 4 * maxdim  ) + 8
+
+      do i = 1, n
+!
+!        Check only the first KQMAX1-2 elements of the step size
+!        vector. The higher-indexed elements are allowed to be zero.
+!
+         kqmax1 = nint( dlines(kqmloc,i) )
+
+         do j = 2, kqmax1-1
+
+            if ( dlines(j,i) == 0.0_wp ) then
+
+               call ctx%setmsg ( 'Step size was zero at step size vector ' &
+               //            'index # within difference line #.'      )
+               call ctx%errint ( '#',  j-1                                )
+               call ctx%errint ( '#',  i                                  )
+               call ctx%sigerr ( 'SPICE(ZEROSTEP)'                        )
+               return
+
+            end if
+
+         end do
+
+      end do
+
+!
+!     If we made it this far, we're ready to start writing the segment.
+!
+!     Create the segment descriptor.
+!
+      call spkpds ( ctx, body, center, frame, dtype, first, last, descr )
+
+!
+!     Begin a new segment.
+!
+      call dafbna ( ctx, handle, descr, segid )
+
+      if ( ctx%failed() ) return
+
+!
+!     The type 21 segment structure is shown below:
+!
+!        +-----------------------+
+!        | Difference line 1     |
+!        +-----------------------+
+!        | Difference line 2     |
+!        +-----------------------+
+!                   ...
+!        +-----------------------+
+!        | Difference line N     |
+!        +-----------------------+
+!        | Epoch 1               |
+!        +-----------------------+
+!        | Epoch 2               |
+!        +-----------------------+
+!                   ...
+!        +-----------------------+
+!        | Epoch N               |
+!        +-----------------------+
+!        | Epoch 100             | (First directory)
+!        +-----------------------+
+!                   ...
+!        +-----------------------+
+!        | Epoch (N/100)*100     | (Last directory)
+!        +-----------------------+
+!        | Max diff table size   |
+!        +-----------------------+
+!        | Number of diff lines  |
+!        +-----------------------+
+!
+
+      call dafada ( ctx, dlines,  n*dlsize )
+      call dafada ( ctx, epochs,  n        )
+
+      do i = 1,   n / dirsiz
+         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
+      end do
+
+      call dafada ( ctx, [ real( maxdim, wp ) ], 1 )
+      call dafada ( ctx, [ real( n, wp      ) ], 1 )
+
+!
+!     As long as nothing went wrong, end the segment.
+!
+      if ( .not. ctx%failed() ) then
+         call dafena ( ctx )
+      end if
+
+      return
+      end procedure spkw21
+
+!$Procedure      ZZCK4I2D ( Pack set of integers into a single DP )
+
+      module procedure zzck4i2d
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     SPICE Private routine intended solely for the support of SPICE
+!     routines. Users should not call this routine directly due
+!     to the volatile nature of this routine.
+!
+!     This is the routine that packs a set integer numbers into a
+!     single double precision number.
+!
+!     Its current specific use is to "compress" seven integer numbers
+!     representing numbers of polynomial coefficients in a logical
+!     type 4 CK record into a single DP number stored in a physical
+!     type 4 CK record in a file.
+!
+! $ Required_Reading
+!
+!     None.
+!
+! $ Keywords
+!
+!     None.
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     I          is an array containing integers to be packed.
+!
+!     NSETS      is the number of elements in the array I.
+!
+!     PARCOD     is the packing base.
+!
+! $ Detailed_Output
+!
+!     DPCOEF     is a DP number containing elements of the input
+!                array packed together.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Files
+!
+!     None.
+!
+! $ Exceptions
+!
+!     Error free.
+!
+!     No checking is done to determine whether elements of the array
+!     I are within range [0:PARCOD-1] and whether PARCOD**NSETS will
+!     cause DPCOEF mantissa overflow.
+!
+! $ Particulars
+!
+!     This routine packs NSETS elements of the array I into a single
+!     double precision variable using base specified by PARCOD. When
+!     packed the double precision number DPCOEF represents NSETS of
+!     integer elements of the array I as follows:
+!
+!        [DPCOEF]= PARCOD ** ( NSETS - 1 ) * I( 1 )        +
+!                  PARCOD ** ( NSETS - 2 ) * I( 2 )        +
+!                  ...
+!                  PARCOD ** 1             * I( NSETS - 1 )+
+!                  PARCOD ** 0             * I( NSETS )
+!     where:
+!
+!        I(1:NSETS) - is an array of integer numbers with values
+!                     in the range [0:PARCOD-1].
+!
+! $ Examples
+!
+!     None.
+!
+! $ Restrictions
+!
+!     1) No checking is done to determine whether elements of the
+!        array I are within range [0:PARCOD-1] to prevent "overflow"
+!        of particular
+!
+!     2) No checking is done to determine whether PARCOD**NSETS
+!        will cause DPCOEF mantissa overflow.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     Y.K. Zaiko     (JPL)
+!     B.V. Semenov   (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
+!
+!-&
+
+!
+!     Local variables
+!
+      real(wp)                x
+      integer(ip)             k
+
+!
+!     Let's pack it!
+!
+      dpcoef = 0.0_wp
+
+      x = 1
+
+      do k = 1, nsets, 1
+
+         dpcoef = dpcoef + i( k ) * x
+         x = x * parcod
+
+      end do
+
+!
+!     All done.
+!
+      return
+      end procedure zzck4i2d
+
+!$Procedure CKGR02 ( C-kernel, get record, type 02 )
+
+      module procedure ckgr02
+      use pepper_kinds, only: ip, wp
+      use pepper_arrays, only: moved
+
+! $ Abstract
+!
+!     Return a specified pointing instance from a CK type 02 segment.
+!     The segment is identified by a CK file handle and segment
+!     descriptor.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the handle of the binary CK file containing the
+!              desired segment. The file should have been opened
+!              for read or write access, by CKLPF, DAFOPR or DAFOPW.
+!
+!     DESCR    is the packed descriptor of the data type 2 CK segment.
+!
+!     RECNO    is the number of the individual pointing record to be
+!              returned from the data type 2 segment.
+!
+! $ Detailed_Output
+!
+!     RECORD   is the pointing record indexed by RECNO in the segment.
+!              The contents are as follows:
+!
+!                 RECORD( 1  ) = start SCLK time of interval
+!                 RECORD( 2  ) = end SCLK time of interval
+!                 RECORD( 3  ) = TDB seconds per tick rate
+!
+!                 RECORD( 4  ) = Q1
+!                 RECORD( 5  ) = Q2
+!                 RECORD( 6  ) = Q3
+!                 RECORD( 7  ) = Q4
+!
+!                 RECORD( 8  ) = AV1
+!                 RECORD( 9  ) = AV2
+!                 RECORD( 10 ) = AV3
+!
+!              See the section on data type 2 in the CK Required
+!              Reading for a complete description on how pointing
+!              is obtained from a type 2 record.
+!
+!              Note that the RECORD returned by this routine is slightly
+!              different from that returned by the SPICELIB routine
+!              CKR02. The second element of the record returned by that
+!              routine contains the SCLK time at which pointing was
+!              requested, whereas this routine returns the SCLK time of
+!              the right endpoint of the interval for which the constant
+!              angular velocity model is valid.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If the segment is not of data type 2, the error
+!         SPICE(CKWRONGDATATYPE) is signaled.
+!
+!     2)  If RECNO is less than one or greater than the number of
+!         records in the specified segment, the error
+!         SPICE(CKNONEXISTREC) is signaled.
+!
+!     3)  If the specified handle does not belong to any file that is
+!         currently known to be open, an error is signaled by a routine
+!         in the call tree of this routine.
+!
+!     4)  If DESCR is not a valid descriptor of a segment in the CK
+!         file specified by HANDLE, the results of this routine are
+!         unpredictable.
+!
+! $ Files
+!
+!     The CK file specified by HANDLE should be open for read or write
+!     access.
+!
+! $ Particulars
+!
+!     For a detailed description of the structure of a type 2 segment,
+!     see the CK Required Reading.
+!
+!     This is a utility routine that may be used to read the individual
+!     pointing records that make up a data type 2 segment. It is
+!     normally used in combination with CKNR02, which gives the number
+!     of pointing instances stored in a segment.
+!
+! $ Examples
+!
+!     The numerical results shown for this example may differ across
+!     platforms. The results depend on the SPICE kernels used as
+!     input, the compiler and supporting libraries, and the machine
+!     specific arithmetic implementation.
+!
+!     1) The following code example extracts the start and end SCLK
+!        time, seconds per tick rate, platform's +Z axis direction,
+!        and angular velocity vector for each pointing instance in
+!        the first segment in a CK file that contains segments of data
+!        type 2.
+!
+!        Use the CK kernel below, available in the Viking Orbiter PDS
+!        archives, as input for the code example.
+!
+!           vo2_swu_ck2.bc
+!
+!        Example code begins here.
+!
+!              PROGRAM CKGR02_EX1
+!              IMPLICIT NONE
+!
+!              DOUBLE PRECISION      AV      ( 3 )
+!              DOUBLE PRECISION      CMAT    ( 3, 3 )
+!              DOUBLE PRECISION      DCD     ( 2  )
+!              DOUBLE PRECISION      DESCR   ( 5  )
+!              DOUBLE PRECISION      QUAT    ( 4 )
+!              DOUBLE PRECISION      RECORD  ( 10 )
+!              DOUBLE PRECISION      SCLKE
+!              DOUBLE PRECISION      SCLKR
+!              DOUBLE PRECISION      SCLKS
+!              DOUBLE PRECISION      Z       ( 3 )
+!
+!              INTEGER               ICD     ( 6 )
+!              INTEGER               HANDLE
+!              INTEGER               NREC
+!              INTEGER               I
+!
+!              LOGICAL               FOUND
+!
+!        C
+!        C     First load the file. (The file may also be opened by
+!        C     using CKLPF).
+!        C
+!              CALL DAFOPR ( 'vo2_swu_ck2.bc', HANDLE )
+!
+!        C
+!        C     Begin forward search.  Find the first array.
+!        C
+!              CALL DAFBFS ( HANDLE )
+!              CALL DAFFNA ( FOUND  )
+!
+!        C
+!        C     Get segment descriptor.
+!        C
+!              CALL DAFGS ( DESCR )
+!
+!        C
+!        C     Unpack the segment descriptor into its double precision
+!        C     and integer components.
+!        C
+!              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+!
+!        C
+!        C     The data type for a segment is located in the third
+!        C     integer component of the descriptor.
+!        C
+!              IF ( ICD( 3 ) .EQ. 2 ) THEN
+!
+!        C
+!        C        How many records does this segment contain?
+!        C
+!                 CALL CKNR02 ( HANDLE, DESCR, NREC )
+!
+!                 DO I = 1, NREC
+!
+!        C
+!        C           Get the Ith record in the segment.
+!        C
+!                    CALL CKGR02 ( HANDLE, DESCR, I, RECORD )
+!
+!        C
+!        C           Unpack RECORD into the start and end time, rate in
+!        C           TDB seconds/tick, quaternion, and av.
+!        C
+!                    SCLKS = RECORD ( 1 )
+!                    SCLKE = RECORD ( 2 )
+!                    SCLKR = RECORD ( 3 )
+!
+!                    CALL MOVED ( RECORD(4), 4, QUAT )
+!                    CALL MOVED ( RECORD(8), 3, AV   )
+!
+!        C
+!        C           The +Z axis direction is the third row of the
+!        C           C-matrix.
+!        C
+!                    CALL Q2M ( QUAT, CMAT )
+!
+!                    Z(1) = CMAT(3,1)
+!                    Z(2) = CMAT(3,2)
+!                    Z(3) = CMAT(3,3)
+!
+!        C
+!        C           Write out the results.
+!        C
+!                    WRITE (*,'(A,I2)') 'Record: ', I
+!                    WRITE (*,'(A,F21.6)') '   Start encoded SCLK:',
+!             .                              SCLKS
+!                    WRITE (*,'(A,F21.6)') '   End encoded SCLK  :',
+!             .                              SCLKE
+!                    WRITE (*,'(A,F21.6)') '   TDB Seconds/tick  :',
+!             .                              SCLKR
+!                    WRITE (*,'(A,3F13.8)') '   +Z axis           :',
+!             .                              Z
+!                    WRITE (*,'(A,3F13.8)') '   Angular velocity  :',
+!             .                              AV
+!                    WRITE (*,*)
+!
+!                 END DO
+!
+!              END IF
+!
+!              END
+!
+!        When this program was executed on a Mac/Intel/gfortran/64-bit
+!        platform, the output was:
+!
+!        Record:  1
+!           Start encoded SCLK:   32380393707.000015
+!           End encoded SCLK  :   32380395707.000015
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.62277152  -0.29420673   0.72498141
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  2
+!           Start encoded SCLK:   32380402605.999947
+!           End encoded SCLK  :   32380404605.999947
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.62172600  -0.27894910   0.73187716
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  3
+!           Start encoded SCLK:   32380412542.000053
+!           End encoded SCLK  :   32380414542.000053
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.62183610  -0.26307233   0.73764003
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  4
+!           Start encoded SCLK:   32827264875.000000
+!           End encoded SCLK  :   32827266875.000000
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.82984105  -0.44796078   0.33270853
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  5
+!           Start encoded SCLK:   32827403805.999992
+!           End encoded SCLK  :   32827405805.999992
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.80812500  -0.44911178   0.38109395
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  6
+!           Start encoded SCLK:   32827412705.000042
+!           End encoded SCLK  :   32827414705.000042
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.81120505  -0.43593555   0.38975193
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  7
+!           Start encoded SCLK:   32827417284.000038
+!           End encoded SCLK  :   32827419284.000038
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.81313834  -0.42861613   0.39382008
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  8
+!           Start encoded SCLK:   33793314593.000053
+!           End encoded SCLK  :   33793316593.000053
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.79860617  -0.37840751   0.46801275
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record:  9
+!           Start encoded SCLK:   33793332478.000046
+!           End encoded SCLK  :   33793334478.000046
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.77861783  -0.39171670   0.49021658
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 10
+!           Start encoded SCLK:   33793341463.000061
+!           End encoded SCLK  :   33793343463.000061
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.76852381  -0.39797437   0.50098659
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 11
+!           Start encoded SCLK:   33793350363.000034
+!           End encoded SCLK  :   33793352363.000034
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.75779934  -0.40484364   0.51170478
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 12
+!           Start encoded SCLK:   33984028250.000000
+!           End encoded SCLK  :   33984030250.000000
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.77099184  -0.39926339   0.49614546
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 13
+!           Start encoded SCLK:   33984046134.999992
+!           End encoded SCLK  :   33984048134.999992
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.75024440  -0.41218993   0.51694564
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 14
+!           Start encoded SCLK:   33984055121.000053
+!           End encoded SCLK  :   33984057121.000053
+!           TDB Seconds/tick  :             0.001000
+!           +Z axis           :   0.73947359  -0.41886863   0.52699894
+!           Angular velocity  :   0.00000000   0.00000000   0.00000000
+!
+!        Record: 15
+!           Start encoded SCLK:   33984220835.999966
+!
+!        [...]
+!
+!        Warning: incomplete output. Only 100 out of 875 lines have been
+!        provided.
+!
+! $ Restrictions
+!
+!     1)  The binary CK file containing the segment whose descriptor was
+!         passed to this routine must be opened for read or write access
+!         by CKLPF, DAFOPR or DAFOPW.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     J.M. Lynch         (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.1, 26-OCT-2021 (NJB) (JDR)
+!
+!        Edited the header to comply with NAIF standard. Created
+!        complete code example from existing code fragment.
+!
+!        Improved header documentation.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Replaced DAFRDA call with DAFGDA.
+!        Added IMPLICIT NONE.
+!
+!-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
+!
+!-&
+
+! $ Index_Entries
+!
+!     get CK type_2 record
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!        NDC        is the number of double precision components in an
+!                   unpacked C-kernel segment descriptor.
+!
+!        NIC        is the number of integer components in an unpacked
+!                   C-kernel segment descriptor.
+!
+!        PSIZ       is the number of double precision numbers making up
+!                   the quaternion, angular velocity, and seconds per
+!                   tick rate portion of a pointing record.
+!
+!        DTYPE      is the data type.
+!
+
+      integer(ip), parameter :: ndc = 2
+
+      integer(ip), parameter :: nic = 6
+
+      integer(ip), parameter :: psiz = 8
+
+      integer(ip), parameter :: dtype = 2
+
+!
+!     Local variables
+!
+      integer(ip)           icd    ( nic )
+      integer(ip)           nrec
+      integer(ip)           beg
+      integer(ip)           addr
+
+      real(wp)              dcd    ( ndc  )
+      real(wp)              prec   ( psiz )
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     The unpacked descriptor contains the following information
+!     about the segment:
+!
+!        DCD(1)  Initial encoded SCLK
+!        DCD(2)  Final encoded SCLK
+!        ICD(1)  Instrument
+!        ICD(2)  Inertial reference frame
+!        ICD(3)  Data type
+!        ICD(4)  Angular velocity flag
+!        ICD(5)  Initial address of segment data
+!        ICD(6)  Final address of segment data
+!
+
+      call dafus ( ctx, descr, ndc, nic, dcd, icd )
+
+      if ( icd( 3 ) /= dtype ) then
+         call ctx%setmsg ( 'Data type of the segment should be 2: Passed '// &
+                       'descriptor shows type = #.'                    )
+         call ctx%errint ( '#', icd( 3 )                                   )
+         call ctx%sigerr ( 'SPICE(CKWRONGDATATYPE)'                        )
+         return
+      end if
+
+!
+!     Find out how many pointing instances there are in the segment.
+!
+      call cknr02 ( ctx, handle, descr, nrec )
+
+!
+!     If a request was made for a record which doesn't exist, then
+!     signal an error and leave.
+!
+      if ( ( recno < 1 ) .or. ( recno > nrec ) ) then
+         call ctx%setmsg ( 'Requested record number (#) does not exist. ' // &
+                       'There are # records in the segment.'           )
+         call ctx%errint ( '#', recno                                      )
+         call ctx%errint ( '#', nrec                                       )
+         call ctx%sigerr ( 'SPICE(CKNONEXISTREC)'                          )
+         return
+      end if
+
+!
+!     The address of the first double precision number in the array
+!     is stored in the fifth integer component of the descriptor.
+!
+      beg  = icd( 5 )
+
+!
+!     Get the pointing record indexed by RECNO.
+!
+      addr = beg + psiz * ( recno - 1 )
+
+      call dafgda ( ctx, handle, addr, addr + ( psiz - 1 ), prec )
+
+      record ( 3 ) = prec ( psiz )
+
+      call moved ( prec, 7, record ( 4 ) )
+
+!
+!     Next get the interval start time.  Need to go past all of the
+!     NREC pointing records (PSIZ * NREC numbers), and then to the
+!     RECNOth SCLK start time.
+!
+      addr = beg  +  psiz * nrec  +  recno  -  1
+
+      call dafgda ( ctx, handle, addr, addr, record( 1 ) )
+
+!
+!     Next get the interval stop time.  Need to go past all of the
+!     NREC pointing records and start times ( (PSIZ+1)*NREC numbers ),
+!     and then to the RECNOth SCLK stop time.
+!
+      addr = beg  +  ( psiz + 1 ) * nrec  +  recno  -  1
+
+      call dafgda ( ctx, handle, addr, addr, record( 2 ) )
+
+      return
+      end procedure ckgr02
+
+!$Procedure CKW04A ( CK type 04: Add data to a segment )
+
+      module procedure ckw04a
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Add data to a type 4 CK segment currently being written to
+!     the file associated with HANDLE. See also CKW04B and CKW04E.
+!
+! $ Required_Reading
+!
+!     CK
+!     DAF
+!
+! $ Keywords
+!
+!     POINTING
+!
+! $ Declarations
+
+      implicit none
+
+      include               'ckparam.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of a CK file in which a CK type 4
+!              segment is currently being written.
+!
+!     NPKTS    is the number of data packets to write to a segment.
+!
+!     PKTSIZ   is the number of values in all data packets.
+!
+!     PKTDAT   is the data packets. The data packets in this array
+!              must be organized as described in the $Particulars
+!              section of the header.
+!
+!     SCLKDP   contains the initial SCLK times corresponding to the
+!              Chebyshev coefficients in PKTSIZ. The I'th time is
+!              start time of the I'th packet coverage interval.
+!              The times must form a strictly increasing sequence.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     Data is stored in a segment in the DAF file associated with
+!     HANDLE.
+!
+! $ Parameters
+!
+!     See 'ckparam.inc'.
+!
+! $ Exceptions
+!
+!     1)  If the number of coefficient sets and epochs is not positive,
+!         the error SPICE(INVALIDARGUMENT) is signaled.
+!
+!     2)  If size of any input packet is greater that maximum allowed
+!         type 4 CK record size minus one, the error
+!         SPICE(INVALIDARGUMENT) is signaled.
+!
+! $ Files
+!
+!     See HANDLE in the $Detailed_Input section.
+!
+! $ Particulars
+!
+!     This routine adds data to a type 4 CK segment that is currently
+!     being written to the associated with HANDLE. The segment must
+!     have been started by a call to the routine CKW04B, the routine
+!     which begins a type 4 CK segment.
+!
+!     This routine is one of a set of three routines for creating and
+!     adding data to type 4 CK segments. These routines are:
+!
+!        CKW04B: Begin a type 4 CK segment. This routine must be
+!                called before any data may be added to a type 4
+!                segment.
+!
+!        CKW04A: Add data to a type 4 CK segment. This routine may be
+!                called any number of times after a call to CKW04B to
+!                add type 4 records to the CK segment that was
+!                started.
+!
+!        CKW04E: End a type 4 CK segment. This routine is called to
+!                make the type 4 segment a permanent addition to the
+!                DAF file. Once this routine is called, no further type
+!                4 records may be added to the segment. A new segment
+!                must be started.
+!
+!     A type 4 CK segment consists of coefficient sets for variable
+!     order Chebyshev polynomials over consecutive time intervals of a
+!     variable length. The gaps between intervals are allowed. The
+!     Chebyshev polynomials represent individual SPICE-style quaternion
+!     components q0, q1, q2 and q3 and individual angular velocities
+!     AV1, AV2 and AV3 if they are included with the data.
+!
+!     See the discussion of quaternion styles below.
+!
+!     The pointing data supplied to the type 4 CK writer (CKW04A)
+!     is packed into an array as a sequence of records,
+!
+!        ----------------------------------------------------
+!        | Record 1 | Record 2 | .. | Record N-1 | Record N |
+!        ----------------------------------------------------
+!
+!     with each record in data packets has the following format.
+!
+!        ----------------------------------------------------
+!        | The midpoint of the approximation interval       |
+!        ----------------------------------------------------
+!        | The radius of the approximation interval         |
+!        ----------------------------------------------------
+!        | Number of coefficients for q0                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q1                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q2                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for q3                    |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV1                   |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV2                   |
+!        ----------------------------------------------------
+!        | Number of coefficients for AV3                   |
+!        ----------------------------------------------------
+!        | q0 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q1 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q2 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | q3 Cheby coefficients                            |
+!        ----------------------------------------------------
+!        | AV1 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!        | AV2 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!        | AV3 Cheby coefficients (optional)                |
+!        ----------------------------------------------------
+!
+!     Quaternion Styles
+!     -----------------
+!
+!     There are different "styles" of quaternions used in
+!     science and engineering applications. Quaternion styles
+!     are characterized by
+!
+!     -  The order of quaternion elements
+!
+!     -  The quaternion multiplication formula
+!
+!     -  The convention for associating quaternions
+!        with rotation matrices
+!
+!     Two of the commonly used styles are
+!
+!        - "SPICE"
+!
+!           > Invented by Sir William Rowan Hamilton
+!           > Frequently used in mathematics and physics textbooks
+!
+!        - "Engineering"
+!
+!           > Widely used in aerospace engineering applications
+!
+!     SPICELIB subroutine interfaces ALWAYS use SPICE quaternions.
+!     Quaternions of any other style must be converted to SPICE
+!     quaternions before they are passed to SPICELIB routines.
+!
+!     Relationship between SPICE and Engineering Quaternions
+!     ------------------------------------------------------
+!
+!     Let M be a rotation matrix such that for any vector V,
+!
+!        M*V
+!
+!     is the result of rotating V by theta radians in the
+!     counterclockwise direction about unit rotation axis vector A.
+!     Then the SPICE quaternions representing M are
+!
+!        (+/-) (  cos(theta/2),
+!                 sin(theta/2) A(1),
+!                 sin(theta/2) A(2),
+!                 sin(theta/2) A(3)  )
+!
+!     while the engineering quaternions representing M are
+!
+!        (+/-) ( -sin(theta/2) A(1),
+!                -sin(theta/2) A(2),
+!                -sin(theta/2) A(3),
+!                 cos(theta/2)       )
+!
+!     For both styles of quaternions, if a quaternion q represents
+!     a rotation matrix M, then -q represents M as well.
+!
+!     Given an engineering quaternion
+!
+!        QENG   = ( q0,  q1,  q2,  q3 )
+!
+!     the equivalent SPICE quaternion is
+!
+!        QSPICE = ( q3, -q0, -q1, -q2 )
+!
+!     Associating SPICE Quaternions with Rotation Matrices
+!     ----------------------------------------------------
+!
+!     Let FROM and TO be two right-handed reference frames, for
+!     example, an inertial frame and a spacecraft-fixed frame. Let the
+!     symbols
+!
+!        V    ,   V
+!         FROM     TO
+!
+!     denote, respectively, an arbitrary vector expressed relative to
+!     the FROM and TO frames. Let M denote the transformation matrix
+!     that transforms vectors from frame FROM to frame TO; then
+!
+!        V   =  M * V
+!         TO         FROM
+!
+!     where the expression on the right hand side represents left
+!     multiplication of the vector by the matrix.
+!
+!     Then if the unit-length SPICE quaternion q represents M, where
+!
+!        q = (q0, q1, q2, q3)
+!
+!     the elements of M are derived from the elements of q as follows:
+!
+!          +-                                                         -+
+!          |           2    2                                          |
+!          | 1 - 2*( q2 + q3 )   2*(q1*q2 - q0*q3)   2*(q1*q3 + q0*q2) |
+!          |                                                           |
+!          |                                                           |
+!          |                               2    2                      |
+!      M = | 2*(q1*q2 + q0*q3)   1 - 2*( q1 + q3 )   2*(q2*q3 - q0*q1) |
+!          |                                                           |
+!          |                                                           |
+!          |                                                   2    2  |
+!          | 2*(q1*q3 - q0*q2)   2*(q2*q3 + q0*q1)   1 - 2*( q1 + q2 ) |
+!          |                                                           |
+!          +-                                                         -+
+!
+!     Note that substituting the elements of -q for those of q in the
+!     right hand side leaves each element of M unchanged; this shows
+!     that if a quaternion q represents a matrix M, then so does the
+!     quaternion -q.
+!
+!     To map the rotation matrix M to a unit quaternion, we start by
+!     decomposing the rotation matrix as a sum of symmetric
+!     and skew-symmetric parts:
+!
+!                                        2
+!        M = [ I  +  (1-cos(theta)) OMEGA  ] + [ sin(theta) OMEGA ]
+!
+!                     symmetric                   skew-symmetric
+!
+!     OMEGA is a skew-symmetric matrix of the form
+!
+!                   +-             -+
+!                   |  0   -n3   n2 |
+!                   |               |
+!         OMEGA  =  |  n3   0   -n1 |
+!                   |               |
+!                   | -n2   n1   0  |
+!                   +-             -+
+!
+!     The vector N of matrix entries (n1, n2, n3) is the rotation axis
+!     of M and theta is M's rotation angle. Note that N and theta
+!     are not unique.
+!
+!     Let
+!
+!        C = cos(theta/2)
+!        S = sin(theta/2)
+!
+!     Then the unit quaternions Q corresponding to M are
+!
+!        Q = +/- ( C, S*n1, S*n2, S*n3 )
+!
+!     The mappings between quaternions and the corresponding rotations
+!     are carried out by the SPICELIB routines
+!
+!        Q2M {quaternion to matrix}
+!        M2Q {matrix to quaternion}
+!
+!     M2Q always returns a quaternion with scalar part greater than
+!     or equal to zero.
+!
+!     SPICE Quaternion Multiplication Formula
+!     ---------------------------------------
+!
+!     Given a SPICE quaternion
+!
+!        Q = ( q0, q1, q2, q3 )
+!
+!     corresponding to rotation axis A and angle theta as above, we can
+!     represent Q using "scalar + vector" notation as follows:
+!
+!        s =   q0           = cos(theta/2)
+!
+!        v = ( q1, q2, q3 ) = sin(theta/2) * A
+!
+!        Q = s + v
+!
+!     Let Q1 and Q2 be SPICE quaternions with respective scalar
+!     and vector parts s1, s2 and v1, v2:
+!
+!        Q1 = s1 + v1
+!        Q2 = s2 + v2
+!
+!     We represent the dot product of v1 and v2 by
+!
+!        <v1, v2>
+!
+!     and the cross product of v1 and v2 by
+!
+!        v1 x v2
+!
+!     Then the SPICE quaternion product is
+!
+!        Q1*Q2 = s1*s2 - <v1,v2>  + s1*v2 + s2*v1 + (v1 x v2)
+!
+!     If Q1 and Q2 represent the rotation matrices M1 and M2
+!     respectively, then the quaternion product
+!
+!        Q1*Q2
+!
+!     represents the matrix product
+!
+!        M1*M2
+!
+! $ Examples
+!
+!     Assume that we have:
+!
+!        HANDLE   is the handle of an CK file opened with write
+!                 access.
+!
+!        SEGID    is a character string of no more than 40 characters
+!                 which provides a pedigree for the data in the CK
+!                 segment we will create.
+!
+!        INST     is the SPICE ID code for the instrument whose
+!                 pointing data is to be placed into the file.
+!
+!        AVFLAG   angular rates flag.
+!
+!        REFFRM   is the name of the SPICE reference frame for the
+!                 pointing data.
+!
+!        BEGTIM   is the starting encoded SCLK time for which the
+!                 segment is valid.
+!
+!        ENDTIM   is the ending encoded SCLK time for which the segment
+!                 is valid.
+!
+!        N        is the number of type 4 records that we want to
+!                 put into a segment in an CK file.
+!
+!        NPKTS    is integer array which contains the lengths of
+!                 variable size data packets
+!
+!        RECRDS   contains N type 4 records packaged for the CK
+!                 file.
+!
+!        SCSTRT   contains the initial encoded SC time for each of
+!                 the records contained in RECRDS, where
+!
+!                    SCSTRT(I) < SCSTRT(I+1), I = 1, N-1
+!
+!                    SCSTRT(1) <= FIRST, SCSTRT(N) < LAST
+!
+!     Then the following code fragment demonstrates how to create
+!     a type 4 CK segment if all of the data for the segment is
+!     available at one time.
+!
+!     C
+!     C     Begin the segment.
+!     C
+!           CALL CKW04B ( HANDLE, BEGTIM, INST, REF, AVFLAG, SEGID )
+!     C
+!     C     Add the data to the segment all at once.
+!     C
+!           CALL CKW04A ( HANDLE, N, NPKTS, RECRDS, SCSTRT )
+!     C
+!     C     End the segment, making the segment a permanent
+!     C     addition to the CK file.
+!     C
+!           CALL CKW04E ( HANDLE, ENDTIM )
+!
+! $ Restrictions
+!
+!     1)  The type 4 CK segment to which the data is added must have
+!         been started by the routine CKW04B, the routine which begins
+!         a type 4 CK segment.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     N.J. Bachman       (JPL)
+!     J. Diaz del Rio    (ODC Space)
+!     B.V. Semenov       (JPL)
+!     E.D. Wright        (JPL)
+!     Y.K. Zaiko         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.3, 02-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.2, 18-APR-2014 (BVS)
+!
+!        Minor header edits.
+!
+!-    SPICELIB Version 1.1.1, 26-FEB-2008 (NJB)
+!
+!        Updated header; added information about SPICE
+!        quaternion conventions.
+!
+!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+!
+!        Removed DAFHLU call; replaced ERRFNM call with ERRHAN.
+!        Added IMPLICIT NONE.
+!
+!-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
+!
+!-&
+
+! $ Index_Entries
+!
+!     add data to a type_4 CK segment
+!
+!-&
+
+!
+!     Spicelib functions.
+!
+
+!
+!     Local parameters.
+!
+
+!
+!     The number of elements by which coefficients in each packet
+!     have to be shifted to the left after numbers of coefficients
+!     were packed into a single integer.
+!
+      integer(ip), parameter :: shftad = 6
+
+!
+!     Local Variables.
+!
+      integer(ip)           k
+      integer(ip)           kk
+      integer(ip)           numcft ( qavsiz )
+      integer(ip)           displm
+      integer(ip)           dispm
+
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     First, check if the number of coefficient sets and epochs
+!     is positive and whether each packet is smaller than the
+!     maximum size of a record that CKPFS can handle.
+!
+      do k = 1, npkts
+
+         if ( pktsiz( k ) <= 0 ) then
+
+            call ctx%setmsg ( 'The number of coefficient sets and '      // &
+                          'epochs in the # data packet (record) '    // &
+                          'to be added to the DAF segment '          // &
+                          'in the file ''#'' was not positive. '     // &
+                          'Its value was: #.'                        )
+            call ctx%errint ( '#', k                                     )
+            call ctx%errhan ( '#', handle                                )
+            call ctx%errint ( '#', pktsiz( k )                           )
+            call ctx%sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+            return
+
+         end if
+
+!
+!        We do .GE. comparison because a type 4 CK record passed
+!        inside CKPFS will have one more element -- time at which
+!        the pointing will be evaluated.
+!
+         if ( pktsiz( k ) >= ck4rsz ) then
+
+            call ctx%setmsg ( 'The total size of the # data packet '     // &
+                          '(record) to be added to the DAF segment ' // &
+                          'in the file ''#'' is greater than the '   // &
+                          'maximum allowed type 4 record size #. '   // &
+                          'Its value was: #.'                        )
+            call ctx%errint ( '#', k                                     )
+            call ctx%errhan ( '#', handle                                )
+            call ctx%errint ( '#', ck4rsz - 1                            )
+            call ctx%errint ( '#', pktsiz( k )                           )
+            call ctx%sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+            return
+
+         end if
+
+      end do
+
+      displm = 0
+      dispm = 0
+!
+!     The cycle below encodes groups of numbers of coefficients in
+!     data packets to single double precision numbers and shift
+!     data in packets to the left to decrease the data packet
+!     lengths.
+!
+      do k = 1, npkts
+
+!
+!        Encode integer numbers of coefficients for each component
+!        to single double precision variable
+!
+         do kk = 1, qavsiz
+            numcft( kk ) = int ( pktdat( kk + 2 + displm ) )
+         end do
+
+         call zzck4i2d ( ctx, numcft, qavsiz, ck4pcd, pktdat( 3 + dispm ) )
+
+!
+!        Shift coefficients sets to the left to overwrite numbers of
+!        packets
+!
+         do kk = 4, pktsiz( k )
+            pktdat( kk + dispm ) = pktdat( kk + shftad + displm )
+         end do
+
+!
+!        Shift middle value and radii of interval
+!
+         pktdat( 1 + dispm ) = pktdat( 1 + displm )
+         pktdat( 2 + dispm ) = pktdat( 2 + displm )
+
+         displm = displm + pktsiz ( k )
+
+!
+!        Length of each data packet became less for 6 elements because
+!        of encoding of 7 double precision numbers, which are the
+!        numbers of polynomial coefficients, to one double precision
+!        number
+!
+         pktsiz( k ) = pktsiz( k ) - shftad
+         dispm = dispm + pktsiz ( k )
+
+      end do
+
+!
+!     Add the data.
+!
+      call sgwvpk ( ctx, handle, npkts, pktsiz, pktdat, npkts, sclkdp )
+
+!
+!     No need to check FAILED() here, since all we do is check out.
+!     Leave it up to the caller.
+!
+
+      return
+
+      end procedure ckw04a
+
+!$Procedure PCK03B ( PCK, begin a type 3 segment )
+
+      module procedure pck03b
+      use pepper_kinds, only: ip, wp
+
+! $ Abstract
+!
+!     Begin a type 03 PCK segment in the binary PCK file associated with
+!     HANDLE. See also PCK03A and PCK03E.
+!
+! $ Required_Reading
+!
+!     PCK
+!
+! $ Keywords
+!
+!     PCK
+!
+! $ Declarations
+
+      implicit none
+
+      include 'sgparam.inc'
+
+
+! $ Detailed_Input
+!
+!     HANDLE   is the file handle of a PCK file that has been
+!              opened for writing.
+!
+!     SEGID    is the segment identifier. A PCK segment identifier
+!              may contain up to 40 printing characters. It may also be
+!              blank.
+!
+!     BODY     is the SPICE ID code for the body whose orientation
+!              information is to be stored in the PCK segment being
+!              created.
+!
+!     FRAME    is the inertial reference frame to which the orientation
+!              data for BODY is relative.
+!
+!     FIRST    are the bounds on the ephemeris times, expressed as
+!     LAST     seconds past J2000, for which the states can be used
+!              to interpolate a state for BODY.
+!
+!     CHBDEG   is the degree of the Chebyshev Polynomial used for
+!              each set of Chebyshev coefficients that are to be stored
+!              in the segment.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+!     The data are stored in the PCK segment in the DAF
+!     attached to HANDLE.
+!
+!     See the $Particulars section for details about the
+!     structure of a type 03 PCK segment.
+!
+! $ Parameters
+!
+!     This subroutine makes use of parameters defined in the file
+!     'sgparam.inc'.
+!
+! $ Exceptions
+!
+!     1)  If the degree of the Chebyshev Polynomial to be used for this
+!         segment is negative, the error SPICE(INVALIDARGUMENT) is
+!         signaled.
+!
+!     2)  If there is any error in the structure or content of the
+!         inputs other than the degree of the Chebyshev Polynomial, the
+!         error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     3)  If a file access error occurs while this routine begins a new
+!         type 03 segment, the error is signaled by a routine in the
+!         call tree of this routine.
+!
+! $ Files
+!
+!     None.
+!
+! $ Particulars
+!
+!     This routine begins a type 03 segment in the binary PCK file that
+!     is associated with HANDLE. The file must have been opened with
+!     write access.
+!
+!     This routine is one of a set of three routines for creating and
+!     adding data to type 03 PCK segments. These routines are:
+!
+!        PCK03B: Begin a type 03 PCK segment. This routine must be
+!                called before any data may be added to a type 03
+!                segment.
+!
+!        PCK03A: Add data to a type 03 PCK segment. This routine may be
+!                called any number of times after a call to PCK03B to
+!                add type 03 records to the PCK segment that was
+!                started.
+!
+!        PCK03E: End a type 03 PCK segment. This routine is called to
+!                make the type 03 segment a permanent addition to the
+!                PCK file. Once this routine is called, no further type
+!                03 records may be added to the segment. A new segment
+!                must be started.
+!
+!     A type 03 PCK segment consists of coefficient sets for fixed order
+!     Chebyshev polynomials over consecutive time intervals, where the
+!     time intervals need not all be of the same length. The Chebyshev
+!     polynomials represent the orientation of a body specified relative
+!     to an inertial frame by the angles RA, DEC, W and body fixed
+!     angular rates for each axis of the body fixed coordinate system
+!     defined by RA, DEC, and W. All of the angles and the angular rates
+!     of the axes are given in degrees.
+!
+!     The orientation data supplied to the type 03 PCK writer is packed
+!     into an array as a sequence of logical records,
+!
+!        -----------------------------------------------------
+!        | Record 1 | Record 2 | ... | Record N-1 | Record N |
+!        -----------------------------------------------------
+!
+!     with each record has the following format.
+!
+!           ------------------------------------------------
+!           |  The midpoint of the approximation interval  |
+!           ------------------------------------------------
+!           |  The radius of the approximation interval    |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for RA                |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for DEC               |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for W                 |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the X-axis rate   |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the Y-axis rate   |
+!           ------------------------------------------------
+!           |  CHBDEG+1 coefficients for the Z-axis rate   |
+!           ------------------------------------------------
+!
+! $ Examples
+!
+!     Assume we have the following for each of the examples that
+!     follow.
+!
+!        HANDLE   is the handle of a PCK file opened with write
+!                 access.
+!
+!        SEGID    is a character string of no more than 40 characters
+!                 which provides a pedigree for the data in the PCK
+!                 segment.
+!
+!        BODY     is the SPICE ID code for the body whose orientation
+!                 data is to be placed into the file.
+!
+!        REFFRM   is the name of the SPICE inertial reference frame
+!                 the orientation data is relative to.
+!
+!        FIRST    is the starting epoch, in seconds past J2000, for
+!                 the orientation data to be placed into the segment.
+!
+!        LAST     is the ending epoch, in seconds past J2000, for
+!                 the orientation data to be placed into the segment.
+!
+!     Example 1:
+!
+!        For this example, we also assume that:
+!
+!           N        is the number of type 03 records that we want to
+!                    put into a segment in PCK file.
+!
+!           RECRDS   contains N type 03 records packaged for the PCK
+!                    file.
+!
+!           ETSTRT   contains the initial epochs for each of the
+!                    records contained in RECRDS, where
+!
+!                       ETSTRT(I) < ETSTRT(I+1), I = 1, N-1
+!
+!                       ETSTRT(1) <= FIRST, ETSTRT(N) < LAST
+!
+!                       ETSTRT(I+1), I = 1, N-1, is the ending epoch for
+!                       record I as well as the initial epoch for record
+!                       I+1.
+!
+!        Then the following code fragment demonstrates how to create a
+!        type 03 PCK segment if all of the data for the segment is
+!        available at one time.
+!
+!        C
+!        C     Begin the segment.
+!        C
+!              CALL PCK03B ( HANDLE, SEGID, BODY, REFFRM,
+!             .              FIRST,  LAST,  CHBDEG        )
+!        C
+!        C     Add the data to the segment all at once.
+!        C
+!              CALL PCK03A ( HANDLE, N, RECRDS, ETSTRT )
+!        C
+!        C     End the segment, making the segment a permanent addition
+!        C     to the PCK file.
+!        C
+!              CALL PCK03E ( HANDLE )
+!
+!     Example 2:
+!
+!        In this example we want to add type O3 PCK records, as
+!        described above in the $Particulars section, to the segment
+!        being written as they are generated. The ability to write the
+!        records in this way is useful if computer memory is limited. It
+!        may also be convenient from a programming perspective to write
+!        the records one at a time.
+!
+!        For this example, assume that we want to generate N type 03 PCK
+!        records, one for each of N time intervals, writing them all to
+!        the same segment in a PCK file. Let
+!
+!           N        be the number of type 03 records that we want to
+!                    generate and put into a segment in an PCK file.
+!
+!           RECORD   be an array with enough room to hold a single type
+!                    03 record, i.e. RECORD should have dimension at
+!                    least 6 * (CHBDEG + 1 ) + 2.
+!
+!           START    be an array of N times that are the beginning
+!                    epochs for each of the intervals of interest. The
+!                    times should be in increasing order and the start
+!                    time for the first interval should equal the
+!                    starting time for the segment.
+!
+!                       START(I) < START(I+1), I = 1, N-1
+!
+!                       START(1) = FIRST
+!
+!           STOP     be an array of N times that are the ending epochs
+!                    for each of the intervals of interest. The times
+!                    should be in increasing order and the stop time for
+!                    interval I should equal the start time for interval
+!                    I+1, i.e., we want to have continuous coverage in
+!                    time across all of the records. Also, the stop time
+!                    for the last interval should equal the ending time
+!                    for the segment.
+!
+!                       STOP(I) < STOP(I+1), I = 1, N-1
+!
+!                       STOP(I) = START(I+1), I = 1, N-1
+!
+!                       STOP(N) = LAST
+!
+!           GENREC( TIME1, TIME2, RECORD )
+!
+!                    be a subroutine that generates a type 03 PCK record
+!                    for a time interval specified by TIME1 and TIME2.
+!
+!        Then the following code fragment demonstrates how to create a
+!        type 03 PCK segment if all of the data for the segment is not
+!        available at one time.
+!
+!        C
+!        C     Begin the segment.
+!        C
+!              CALL PCK03B ( HANDLE, SEGID, BODY, REFFRM,
+!             .              FIRST,  LAST,  CHBDEG        )
+!
+!        C
+!        C     Generate the records and write them to the segment in the
+!        C     PCK file one at at time.
+!        C
+!              DO I = 1, N
+!
+!                 CALL GENREC ( START(I), STOP(I), RECORD   )
+!                 CALL PCK03A ( HANDLE, 1, RECORD, START(I) )
+!
+!              END DO
+!
+!        C
+!        C     End the segment, making the segment a permanent addition
+!        C     to the PCK file.
+!        C
+!              CALL PCK03E ( HANDLE )
+!
+! $ Restrictions
+!
+!     1)  The binary PCK file must be open with write access.
+!
+!     2)  Only one segment may be written to a particular PCK file at a
+!         time. All of the data for the segment must be written and the
+!         segment must be ended before another segment may be started in
+!         the file.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     K.R. Gehringer     (JPL)
+!     B.V. Semenov       (JPL)
+!     E.D. Wright        (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.0.2, 03-JUN-2021 (JDR)
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 10-FEB-2014 (EDW) (BVS)
+!
+!        Minor edits to $Procedure; clean trailing whitespace.
+!        Corrected order of header sections to conform to NAIF
+!        standard.
+!
+!        Removed comments from the $Declarations section.
+!
+!-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
+!
+!-&
+
+! $ Index_Entries
+!
+!     begin writing a type_03 PCK segment
+!
+!-&
+
+!
+!     Spicelib functions
+!
+!
+!     Local Parameters
+!
+!     DAF ND and NI values for PCK files.
+!
+      integer(ip), parameter :: nd = 2
+
+      integer(ip), parameter :: ni = 5
+!
+!     Length of an PCK descriptor.
+!
+      integer(ip), parameter :: ndescr = nd + (ni+1)/2
+!
+!     Number of Euler angles.
+!
+      integer(ip), parameter :: neangs = 6
+!
+!     The type of this segment.
+!
+      integer(ip), parameter :: type = 03
+!
+!     The number of constants.
+!
+      integer(ip), parameter :: nconst = 1
+!
+!     Local variables
+!
+      real(wp)              descr ( ndescr )
+      real(wp)              dcoeff
+
+      integer(ip)           ncoeff
+      integer(ip)           pktsiz
+!
+!     Standard SPICELIB error handling.
+!
+      if ( ctx%failed() ) return
+!
+!     First, check the degree of the polynomial to be sure that it is
+!     not negative.
+!
+      if ( chbdeg < 0 ) then
+
+         call ctx%setmsg ( 'The degree of the Chebyshev Polynomial'  // &
+                       ' was negative, #. The degree of the'     // &
+                       ' polynomial must be greater than or'     // &
+                       ' equal to zero.'                          )
+         call ctx%errint ( '#', chbdeg                                )
+         call ctx%sigerr ( 'SPICE(INVALIDARGUMENT)'                   )
+         return
+
+      end if
+!
+!     Create a descriptor for the segment we are about to write.
+!
+      call pckpds ( ctx, body, frame, type, first, last, descr )
+
+      if ( ctx%failed() ) return
+
+!
+!     We've got a valid descriptor, so compute a few things and begin
+!     the segment.
+!
+      ncoeff = chbdeg + 1
+      pktsiz = neangs * ncoeff + 2
+      dcoeff = real( ncoeff, wp )
+!
+!     For this data type, we want to use an explicit reference value
+!     index where the reference epochs are in increasing order. We also
+!     want to have as the index for a particular request epoch the index
+!     of the greatest reference epoch less than or equal to the request
+!     epoch. These characteristics are prescribed by the mnemonic EXPLE.
+!     See the include file 'sgparam.inc' for more details.
+!
+      call sgbwfs ( ctx, handle, descr, segid, nconst, [ dcoeff ], [ pktsiz ], exple )
+
+      return
+
+      end procedure pck03b
+
+!$Procedure SPCB2T ( SPK and CK, binary to text )
+
+      module procedure spcb2t
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Convert the contents of a binary SPK or CK file to text,
+!     including comments if present, and write them to a text file
+!     opened by the calling program.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     BINARY   is the name of an existing binary SPK or CK file
+!              that may contain comments in its comment area.
+!
+!     UNIT     is the logical unit connected to a text file that
+!              has been opened for write access. Use the routine
+!              TXTOPN to open this file. Upon exit, this file will
+!              contain the same data and comments as the binary
+!              file, but in text format which is more suitable for
+!              transfer between heterogeneous computing environments.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there is a problem opening or reading from the binary file,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If there is a problem writing to the text file,
+!         the error SPICE(FILEWRITEFAILED) is signaled.
+!
+! $ Files
+!
+!     See arguments BINARY and UNIT above.
+!
+! $ Particulars
+!
+!     The SPICELIB SPK and CK reader subroutines read binary files.
+!     However, because different computing environments have different
+!     binary representations of numbers, you must convert SPK and CK
+!     files to text format when porting from one system to another.
+!     After converting the file to text, you can transfer it using
+!     a transfer protocol program like Kermit or FTP. Then, convert
+!     the text file back to binary format.
+!
+!     The following is a list of the SPICELIB routines that convert
+!     SPK and CK files between binary and text format:
+!
+!        SPCA2B    converts text to binary. It opens the text file,
+!                  creates a new binary file, and closes both files.
+!
+!        SPCB2A    converts binary to text. It opens the binary file,
+!                  creates a new text file, and closes both files.
+!
+!        SPCT2B    converts text to binary. It creates a new binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit.
+!
+!        SPCB2T    converts binary to text. It opens the binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit
+!
+!     See the SPC required reading for more information
+!     about SPC routines and the SPK and CK file formats.
+!
+! $ Examples
+!
+!     The following code fragment creates a text file containing
+!     text format SPK data and comments preceded and followed
+!     by a standard label.
+!
+!     The SPICELIB routine TXTOPN opens a new text file and TXTOPR
+!     opens an existing text file for read access. TEXT and
+!     BINARY are character strings that contain the names of the
+!     text and binary files.
+!
+!            CALL TXTOPN ( TEXT, UNIT )
+!
+!            (Write header label to UNIT)
+!
+!            CALL SPCB2T ( BINARY, UNIT )
+!
+!            (Write trailing label to UNIT)
+!
+!            CLOSE ( UNIT )
+!
+!     The following code fragment reconverts the text format
+!     SPK data and comments back into binary format.
+!
+!            CALL TXTOPR ( TEXT, UNIT )
+!
+!            (Read, or just read past, header label from UNIT)
+!
+!            CALL SPCT2B ( UNIT, BINARY )
+!
+!            (Read trailing label from UNIT, if desired )
+!
+!            CLOSE ( UNIT )
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that the comment area of the binary SPK
+!         or CK file contains only text stored by SPCAC. Comments
+!         written any other way may not be handled properly.
+!
+!     2)  UNIT must be obtained via TXTOPN. Use TXTOPN to open new
+!         text files for write access and get the logical unit.
+!         System dependencies regarding opening text files have
+!         been isolated in the routines TXTOPN and TXTOPR.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     binary SPK or CK to text
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+!     IFNLEN is the length of a DAF internal file name.
+!
+      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
+
+      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
+
+!
+!     Local variables
+!
+      integer(ip)           handle
+      integer(ip)           iostat
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     First, convert the binary data to text and write it to
+!     the text file.
+!
+      call dafb2t ( ctx, binary, unit )
+
+!
+!     Next, write the begin comments marker.
+!
+      write ( unit, *, iostat=iostat ) bmark
+
+      if ( iostat /= 0 ) then
+         call ctx%setmsg ( 'Error writing the begin comments marker '     // &
+                       'to the text file named FNM.  IOSTAT = #.'     )
+         call ctx%errfnm ( 'FNM', unit                                    )
+         call ctx%errint ( '#', iostat                                    )
+         call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         return
+      end if
+
+!
+!     Open the DAF for read access, extract the comments from
+!     it and write them to the text file, then close the DAF.
+!     If the comment area of the binary file is empty, SPCEC
+!     writes nothing to the text file, but even so, we still
+!     want the markers.
+!
+      call dafopr ( ctx, binary, handle )
+      call spcec  ( ctx, handle, unit   )
+      call dafcls ( ctx, handle         )
+
+!
+!     Finally, write the end comments marker.
+!
+      write ( unit, *, iostat=iostat ) emark
+
+      if ( iostat /= 0 ) then
+         call ctx%setmsg ( 'Error writing the end comments marker '       // &
+                       'to the text file named FNM.  IOSTAT = #.'     )
+         call ctx%errfnm ( 'FNM', unit                                    )
+         call ctx%errint ( '#', iostat                                    )
+         call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         return
+      end if
+
+      return
+      end procedure spcb2t
+
+!$Procedure SPCT2B ( SPK and CK, text to binary )
+
+      module procedure spct2b
+      use pepper_kinds, only: ip
+      use pepper_strings, only: ltrim, rtrim
+
+! $ Abstract
+!
+!     Reconstruct a binary SPK or CK file including comments
+!     from a text file opened by the calling program.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     UNIT     is the logical unit connected to an existing text
+!              format SPK or CK file that may contain comments in
+!              the appropriate SPC format, as written by SPCB2A or
+!              SPCB2T. This file must be opened for read access
+!              using the routine TXTOPR.
+!
+!              This file may contain text that precedes and
+!              follows the SPK or CK data and comments, however,
+!              when calling this routine, the file pointer must be
+!              in a position in the file such that the next line
+!              returned by a READ statement is
+!
+!                   ''NAIF/DAF''
+!
+!              which marks the beginning of the data.
+!
+!     BINARY   is the name of a binary SPK or CK file to be created.
+!              The binary file contains the same data and comments
+!              as the text file, but in the binary format required
+!              for use with the SPICELIB reader subroutines.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there is a problem opening or writing to the binary file,
+!         an error is signaled by a routine in the call tree of this
+!         routine.
+!
+!     2)  If there is a problem reading from the text file, the
+!         error SPICE(FILEREADFAILED) is signaled.
+!
+!     3)  If there is a problem opening a scratch file, the error
+!         SPICE(FILEOPENERROR) is signaled.
+!
+!     4)  If there is a problem writing to the scratch file, the
+!         error SPICE(FILEWRITEFAILED) is signaled.
+!
+! $ Files
+!
+!     See arguments UNIT and BINARY above.
+!
+!     This routine uses a Fortran scratch file to temporarily store the
+!     lines of comments if there are any.
+!
+! $ Particulars
+!
+!     The SPICELIB SPK and CK reader subroutines read binary files.
+!     However, because different computing environments have different
+!     binary representations of numbers, you must convert SPK and CK
+!     files to text format when porting from one system to another.
+!     After converting the file to text, you can transfer it using
+!     a transfer protocol program like Kermit or FTP. Then, convert
+!     the text file back to binary format.
+!
+!     The following is a list of the SPICELIB routines that convert
+!     SPK and CK files between binary and text format:
+!
+!        SPCA2B    converts text to binary. It opens the text file,
+!                  creates a new binary file, and closes both files.
+!
+!        SPCB2A    converts binary to text. It opens the binary file,
+!                  creates a new text file, and closes both files.
+!
+!        SPCT2B    converts text to binary. It creates a new binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit.
+!
+!        SPCB2T    converts binary to text. It opens the binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit
+!
+!     See the SPC required reading for more information
+!     about SPC routines and the SPK and CK file formats.
+!
+! $ Examples
+!
+!     1)  The following code fragment creates a text file containing
+!         text format SPK data and comments preceded and followed
+!         by a standard label.
+!
+!         The SPICELIB routine TXTOPN opens a new text file and TXTOPR
+!         opens an existing text file for read access. TEXT and
+!         BINARY are character strings that contain the names of the
+!         text and binary files.
+!
+!            CALL TXTOPN ( TEXT, UNIT )
+!
+!            (Write header label to UNIT)
+!
+!            CALL SPCB2T ( BINARY, UNIT )
+!
+!            (Write trailing label to UNIT)
+!
+!            CLOSE ( UNIT )
+!
+!         The following code fragment reconverts the text format
+!         SPK data and comments back into binary format.
+!
+!            CALL TXTOPR ( TEXT, UNIT )
+!
+!            (Read, or just read past, header label from UNIT)
+!
+!            CALL SPCT2B ( UNIT, BINARY )
+!
+!            (Read trailing label from UNIT, if desired )
+!
+!            CLOSE ( UNIT )
+!
+!     2)  Suppose three text format SPK files have been appended
+!         together into one text file called THREE.TSP. The following
+!         code fragment converts each set of data and comments into
+!         its own binary file.
+!
+!            CALL TXTOPR ( 'THREE.TSP', UNIT  )
+!
+!            CALL SPCT2B ( UNIT, 'FIRST.BSP'  )
+!            CALL SPCT2B ( UNIT, 'SECOND.BSP' )
+!            CALL SPCT2B ( UNIT, 'THIRD.BSP'  )
+!
+!            CLOSE ( UNIT )
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that the data and comments in the
+!         text format SPK or CK file come from a binary file
+!         and were written by one of the routines SPCB2A or SPCB2T.
+!         Data and/or comments written any other way may not be
+!         in the correct format and, therefore, may not be handled
+!         properly.
+!
+!     2)  Older versions of SPK and CK files did not have a comment
+!         area. These files, in text format, may still be converted
+!         to binary using SPCT2B. However, upon exit, the file pointer
+!         will not be in position ready to read the first line of text
+!         after the data. Instead, the next READ statement after
+!         calling SPCT2B will return the second line of text after
+!         the data. Therefore, example 1 may not work as desired
+!         if the trailing label begins on the first line after the
+!         data. To solve this problem, use DAFT2B instead of SPCT2B.
+!
+!     3)  UNIT must be obtained via TXTOPR. Use TXTOPR to open text
+!         files for read access and get the logical unit. System
+!         dependencies regarding opening text files have been isolated
+!         in the routines TXTOPN and TXTOPR.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     text SPK or CK to binary
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
+
+      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
+
+      integer(ip), parameter :: maxcpr = 1000
+!
+!     Local variables
+!
+      character(maxcpr)     line
+
+      integer(ip)           handle
+      integer(ip)           iostat
+      integer(ip)           scrtch
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     DAFT2B creates the new binary file and writes the data to
+!     it.  If the 'NAIF/DAF' keyword is not the first line that
+!     it reads from the text file, it will signal an error.
+!     Initially, no records are reserved.
+!
+      call daft2b ( ctx, unit, binary, 0 )
+
+!
+!     The comments follow the data and are surrounded by markers.
+!     BMARK should be the next line that we read.  If it isn't,
+!     then this is an old file, created before the comment area
+!     existed.  In this case, we've read one line too far, but
+!     we can't backspace because the file was written using list-
+!     directed formatting (See the ANSI standard).  All we can do
+!     is check out, leaving the file pointer where it is, but
+!     that's better than signaling an error.
+!
+      read ( unit, fmt='(A)', iostat=iostat ) line
+
+      if ( iostat > 0 ) then
+         call ctx%setmsg ( 'Error reading the text file named FNM.  '     // &
+                       'Value of IOSTAT is #.'                        )
+         call ctx%errint ( '#', iostat                                    )
+         call ctx%errfnm ( 'FNM', unit                                    )
+         call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                        )
+         return
+      end if
+
+      if (   (  line ( ltrim(line): )  /=  bmark  )   .or. (  iostat                 <  0      )   ) return
+
+!
+!     We're not at the end of the file, and the line we read
+!     is BMARK, so we write the comments to a scratch file.
+!     We do this because we have to use SPCAC to add the comments
+!     to the comment area of the binary file, and SPCAC rewinds
+!     the file.  It's okay for SPCAC to rewind a scratch file,
+!     but it's not okay to rewind the file connected to UNIT --
+!     we don't know the initial location of the file pointer.
+!
+!     PEPPER: the unit comes from NEWUNIT= in the OPEN below.
+
+      open ( newunit            =  scrtch, &
+             form            = 'FORMATTED', &
+             access          = 'SEQUENTIAL', &
+             status          = 'SCRATCH', &
+             iostat          =  iostat      )
+
+      if ( iostat /= 0 ) then
+         call ctx%setmsg ( 'Error opening a scratch file.  File name '    // &
+                       'was FNM.  Value of IOSTAT is #.'              )
+         call ctx%errint ( '#', iostat                                    )
+         call ctx%errfnm ( 'FNM', scrtch                                  )
+         call ctx%sigerr ( 'SPICE(FILEOPENERROR)'                         )
+         return
+      end if
+
+      write ( scrtch, fmt='(A)', iostat=iostat ) line(1:rtrim(line))
+
+      if ( iostat /= 0 ) then
+         call ctx%setmsg ( 'Error writing to scratch file. File name '    // &
+                       'is FNM.  Value of IOSTAT is #.'               )
+         call ctx%errint ( '#', iostat                                    )
+         call ctx%errfnm ( 'FNM', scrtch                                  )
+         call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'                       )
+         return
+      end if
+
+!
+!     Continue reading lines from the text file and storing them
+!     in the scratch file until we get to the end marker.
+!
+      do while (  line ( ltrim(line): ) /= emark  )
+
+         read ( unit, fmt='(A)', iostat=iostat ) line
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading the text file named FNM.  ' // &
+                          'Value of IOSTAT is #.'                    )
+            call ctx%errint ( '#', iostat                                )
+            call ctx%errfnm ( 'FNM', unit                                )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'                    )
+            return
+         end if
+
+         write ( scrtch, fmt='(A)', iostat=iostat ) line(1:rtrim(line))
+
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error writing to scratch file.  File name '// &
+                          'is FNM.  Value of IOSTAT is #.'            )
+            call ctx%errint ( '#', iostat                                 )
+            call ctx%errfnm ( 'FNM', scrtch                               )
+            call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)'                    )
+            return
+         end if
+
+      end do
+
+!
+!     Open the new binary file and add the comments that have been
+!     stored temporarily in a scratch file.
+!
+      call dafopw ( ctx, binary, handle )
+
+      call spcac  ( ctx, handle, scrtch, bmark, emark )
+
+!
+!     Close the files.  The scratch file is automatically deleted.
+!
+      call dafcls ( ctx, handle )
+
+      close ( scrtch )
+
+      return
+      end procedure spct2b
+
+!$Procedure SPCA2B ( SPK and CK, ASCII to binary )
+
+      module procedure spca2b
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Convert a text (ASCII) format SPK or CK file to an equivalent
+!     binary file, including comments.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     TEXT     is the name of an existing text format SPK or CK
+!              file that may contain comments in the appropriate
+!              SPC format, as written by SPCB2A or SPCB2T. This
+!              file is unchanged by calling SPCA2B.
+!
+!     BINARY   is the name of a binary SPK or CK file to be created.
+!              The binary file contains the same data and comments
+!              as the text file, but in the binary format required
+!              for use with the SPICELIB reader subroutines.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there is an IOSTAT error while opening, reading, or writing
+!         a file, the error is signaled by a routine in the call tree of
+!         this routine.
+!
+!     2)  If the text file is not in the correct format, an error is
+!         signaled by a routine in the call tree of this routine.
+!
+! $ Files
+!
+!     See arguments TEXT and BINARY above.
+!
+! $ Particulars
+!
+!     The SPICELIB SPK and CK reader subroutines read binary files.
+!     However, because different computing environments have different
+!     binary representations of numbers, you must convert SPK and CK
+!     files to text format when porting from one system to another.
+!     After converting the file to text, you can transfer it using
+!     a transfer protocol program like Kermit or FTP. Then, convert
+!     the text file back to binary format.
+!
+!     The following is a list of the SPICELIB routines that convert
+!     SPK and CK files between binary and text format:
+!
+!        SPCA2B    converts text to binary. It opens the text file,
+!                  creates a new binary file, and closes both files.
+!
+!        SPCB2A    converts binary to text. It opens the binary file,
+!                  creates a new text file, and closes both files.
+!
+!        SPCT2B    converts text to binary. It creates a new binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit.
+!
+!        SPCB2T    converts binary to text. It opens the binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit
+!
+!     See the SPC required reading for more information
+!     about SPC routines and the SPK and CK file formats.
+!
+! $ Examples
+!
+!     This is an example of how to use SPCB2A and SPCA2B for
+!     transferring files. Suppose A.BSP is a binary SPK file in
+!     environment 1; to transfer it to environment 2, follow
+!     these three steps:
+!
+!        1) Call SPCB2A within a program in environment 1 to convert
+!           the file to text:
+!
+!              CALL SPCB2A ( 'A.BSP', 'A.TSP' )
+!
+!        2) Transfer the text file from environment 1 to environment 2
+!           using FTP, Kermit, or some other file transfer utility,
+!           for example,
+!
+!              ftp> put A.TSP
+!
+!        3) Call SPCA2B within a program in environment 2 to convert
+!           the file to binary on the new machine,
+!
+!              CALL SPCA2B ( 'A.TSP', 'A.BSP' )
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that the data and comments in the
+!         text format SPK or CK file come from a binary file
+!         and were written by one of the routines SPCB2A or SPCB2T.
+!         Data and/or comments written any other way may not be
+!         in the correct format and, therefore, may not be handled
+!         properly.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     H.A. Neilan        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.2.0, 03-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.1.0, 05-SEP-1991 (HAN)
+!
+!        Removed declarations of unused variables.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     ascii SPK or CK to binary
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+!
+!     Local parameters
+!
+      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
+
+      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
+
+!     Local variables
+!
+      integer(ip)           unit
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Open the text file with read access.  SPCT2B will
+!     create the binary file and write the data and comments
+!     to it.  Then we close the text file, and we're done.
+!
+      call txtopr ( ctx, text,   unit )
+
+      call spct2b ( ctx, unit, binary )
+
+      close       (         unit )
+
+      return
+      end procedure spca2b
+
+!$Procedure SPCB2A ( SPK and CK, binary to ASCII )
+
+      module procedure spcb2a
+      use pepper_kinds, only: ip
+
+! $ Abstract
+!
+!     Convert a binary SPK or CK file to an equivalent text (ASCII)
+!     file, including the comment area.
+!
+! $ Required_Reading
+!
+!     SPC
+!
+! $ Keywords
+!
+!     FILES
+!
+! $ Declarations
+
+      implicit none
+
+
+! $ Detailed_Input
+!
+!     BINARY   is the name of an existing binary SPK or CK file
+!              that may contain comments in its comment area as
+!              written by the routine SPCAC.
+!
+!     TEXT     is the name of a text SPK or CK file to be created.
+!              The text file will contain the same data and comments
+!              as the binary file, but in a form more suitable for
+!              transfer between heterogeneous computing environments.
+!
+! $ Detailed_Output
+!
+!     None.
+!
+! $ Parameters
+!
+!     None.
+!
+! $ Exceptions
+!
+!     1)  If there is an IOSTAT error while opening, reading, or writing
+!         a file, the error is signaled by a routine in the call tree of
+!         this routine.
+!
+! $ Files
+!
+!     See arguments BINARY and TEXT.
+!
+! $ Particulars
+!
+!     The SPICELIB SPK and CK reader subroutines read binary files.
+!     However, because different computing environments have different
+!     binary representations of numbers, you must convert SPK and CK
+!     files to text format when porting from one system to another.
+!     After converting the file to text, you can transfer it using
+!     a transfer protocol program like Kermit or FTP. Then, convert
+!     the text file back to binary format.
+!
+!     The following is a list of the SPICELIB routines that convert
+!     SPK and CK files between binary and text format:
+!
+!        SPCA2B    converts text to binary. It opens the text file,
+!                  creates a new binary file, and closes both files.
+!
+!        SPCB2A    converts binary to text. It opens the binary file,
+!                  creates a new text file, and closes both files.
+!
+!        SPCT2B    converts text to binary. It creates a new binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit.
+!
+!        SPCB2T    converts binary to text. It opens the binary
+!                  file and closes it. The text file is open on
+!                  entrance and exit
+!
+!     See the SPC required reading for more information
+!     about SPC routines and the SPK and CK file formats.
+!
+! $ Examples
+!
+!     This is an example of how to use SPCB2A and SPCA2B for
+!     transferring files. Suppose A.BSP is a binary SPK file in
+!     environment 1; to transfer it to environment 2, follow
+!     these three steps:
+!
+!        1) Call SPCB2A within a program in environment 1 to convert
+!           the file to text:
+!
+!              CALL SPCB2A ( 'A.BSP', 'A.TSP' )
+!
+!        2) Transfer the text file from environment 1 to environment 2
+!           using FTP, Kermit, or some other file transfer utility,
+!           for example,
+!
+!              ftp> put A.TSP
+!
+!        3) Call SPCA2B within a program in environment 2 to convert
+!           the file to binary on the new machine,
+!
+!              CALL SPCA2B ( 'A.TSP', 'A.BSP' )
+!
+! $ Restrictions
+!
+!     1)  This routine assumes that the data and comments in the
+!         text format SPK or CK file come from a binary file
+!         and were written by one of the routines SPCB2A or SPCB2T.
+!         Data and/or comments written any other way may not be
+!         in the correct format and, therefore, may not be handled
+!         properly.
+!
+! $ Literature_References
+!
+!     None.
+!
+! $ Author_and_Institution
+!
+!     J. Diaz del Rio    (ODC Space)
+!     J.E. McLean        (JPL)
+!     W.L. Taber         (JPL)
+!
+! $ Version
+!
+!-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
+!
+!        Added IMPLICIT NONE statement.
+!
+!        Edited the header to comply with NAIF standard.
+!
+!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!
+!        Comment section for permuted index source lines was added
+!        following the header.
+!
+!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+!
+!-&
+
+! $ Index_Entries
+!
+!     binary SPK or CK to ascii
+!
+!-&
+
+!
+!     SPICELIB functions
+!
+
+
+!
+!     Local parameters
+!
+      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
+
+      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
+
+!
+!     Local variables
+!
+      integer(ip)           unit
+
+!
+!     Standard SPICE error handling.
+!
+      if ( ctx%failed() ) return
+
+!
+!     Open the new text file.  Call SPCB2T to write the data
+!     and comments.  Then close the text file and we're done.
+!
+      call txtopn ( ctx, text,   unit )
+
+      call spcb2t ( ctx, binary, unit )
+
+      close       (         unit )
+
+      return
+      end procedure spcb2a
+
+end submodule pepper_writers

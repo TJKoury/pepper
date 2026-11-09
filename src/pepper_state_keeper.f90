@@ -39,6 +39,14 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_keeper_state(state)
       type(keeper_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%files = ' '
+      state%handls = 0
+      state%srces = 0
+      state%types = ' '
+      state%loaded = 0
+      state%known = ' '
+      state%first = .false.
       state%loaded = 0
       state%first = .true.
    end subroutine init_keeper_state

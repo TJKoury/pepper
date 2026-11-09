@@ -27,6 +27,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dafwda_state(state)
       type(dafwda_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%buffer = 0.0_wp
       state%buffer = 0.0_wp
    end subroutine init_dafwda_state
 

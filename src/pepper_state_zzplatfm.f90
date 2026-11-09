@@ -31,6 +31,10 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzplatfm_state(state)
       type(zzplatfm_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%attcpy = ' '
+      state%keyval = ' '
       state%first = .true.
    end subroutine init_zzplatfm_state
 

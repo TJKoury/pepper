@@ -28,6 +28,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzmobliq_state(state)
       type(zzmobliq_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%rad = 0.0_wp
+      state%year = 0.0_wp
+      state%persec = 0.0_wp
+      state%first = .false.
       state%first = .true.
    end subroutine init_zzmobliq_state
 

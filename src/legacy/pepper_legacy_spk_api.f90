@@ -5,7 +5,7 @@
 !
 ! These keep the original SPICELIB interface for existing callers (such as
 ! the tspice tests). (ZZSPKFAO, ZZSPKFAP, ZZSPKFAT, ZZSPKFLT, ZZSPKFZO
-! and ZZSPKFZT are in pepper_legacy_spk_state.f90.)
+! and ZZSPKFZT are in pepper_legacy_spk_callbacks.f90.)
 ! New code should use the type-bound procedures of
 ! pepper_context (e.g. ctx%cardd) instead.
 

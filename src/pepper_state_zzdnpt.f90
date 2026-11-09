@@ -26,6 +26,9 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzdnpt_state(state)
       type(zzdnpt_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%gradm = 0.0_wp
+      state%m = 0.0_wp
       state%gradm = reshape ( [ 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp ], shape ( state%gradm ) )
       state%m = reshape ( [ 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp ], shape ( state%m ) )
    end subroutine init_zzdnpt_state

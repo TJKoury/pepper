@@ -67,6 +67,34 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_framex_state(state)
       type(framex_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%name = ' '
+      state%center = 0
+      state%centrd = 0
+      state%idcode = 0
+      state%type = 0
+      state%typeid = 0
+      state%first = .false.
+      state%pulctr = 0
+      state%knmlst = 0
+      state%knmpol = 0
+      state%knmnms = ' '
+      state%knmids = 0
+      state%kidlst = 0
+      state%kidpol = 0
+      state%kidids = 0
+      state%kname = ' '
+      state%kcent = 0
+      state%kclass = 0
+      state%kclsid = 0
+      state%bnmlst = 0
+      state%bnmpol = 0
+      state%bnmnms = ' '
+      state%bnmidx = 0
+      state%bidlst = 0
+      state%bidpol = 0
+      state%bidids = 0
+      state%bididx = 0
       state%first = .true.
    end subroutine init_framex_state
 

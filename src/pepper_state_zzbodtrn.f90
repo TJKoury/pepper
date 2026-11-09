@@ -70,6 +70,37 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzbodtrn_state(state)
       type(zzbodtrn_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%defnam = ' '
+      state%defnor = ' '
+      state%defcod = 0
+      state%defsiz = 0
+      state%dnmlst = 0
+      state%dnmpol = 0
+      state%dnmnms = ' '
+      state%dnmidx = 0
+      state%didlst = 0
+      state%didpol = 0
+      state%didids = 0
+      state%dididx = 0
+      state%kernam = ' '
+      state%kercod = 0
+      state%knmlst = 0
+      state%knmpol = 0
+      state%knmnms = ' '
+      state%knmidx = 0
+      state%kidlst = 0
+      state%kidpol = 0
+      state%kidids = 0
+      state%kididx = 0
+      state%subctr = 0
+      state%pulctr = 0
+      state%bodchg = .false.
+      state%extker = .false.
+      state%nodata = .false.
+      state%i = 0
+      state%first = .false.
+      state%boddef_epoch = 0
       state%bodchg = .false.
       state%extker = .false.
       state%nodata = .true.

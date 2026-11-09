@@ -114,6 +114,35 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_timout_state(state)
       type(timout_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%marks = ' '
+      state%class = 0
+      state%mrklen = 0
+      state%pntrs = 0
+      state%dump = 0
+      state%ndump = 0
+      state%timfmt = 0
+      state%numtyp = 0
+      state%orignl = ' '
+      state%values = 0.0_wp
+      state%pad = 0.0_wp
+      state%length = 0
+      state%id = 0
+      state%have = .false.
+      state%compnt = 0
+      state%string = ' '
+      state%fmt = ' '
+      state%width = 0
+      state%intyp = ' '
+      state%tsys = ' '
+      state%cal = ' '
+      state%zon = ' '
+      state%ntvec = 0.0_wp
+      state%ptvec = 0.0_wp
+      state%tvec = 0.0_wp
+      state%value = 0.0_wp
+      state%mylen = 0
       state%first = .true.
    end subroutine init_timout_state
 

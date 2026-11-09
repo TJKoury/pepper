@@ -62,6 +62,13 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzdskbsr_state(state)
       type(zzdskbsr_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%fthan = 0
+      state%ftnum = 0
+      state%next = 0
+      state%nft = 0
+      state%dskctr = 0
+      state%pass1 = .false.
       state%next = 0
       state%nft = 0
       state%pass1 = .true.
@@ -70,6 +77,26 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzdskbsr_context_state(state)
       type(zzdskbsr_context_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%begsch = .false.
+      state%findex = 0
+      state%fnd = .false.
+      state%bindex = 0
+      state%btbeg = 0
+      state%btexp = 0
+      state%bthfs = 0
+      state%btbod = 0
+      state%btlfs = 0
+      state%nbt = 0
+      state%savep = 0
+      state%svbody = 0
+      state%status = ' '
+      state%stdlad = 0
+      state%stdskd = 0.0_wp
+      state%sthan = 0
+      state%stpool = 0
+      state%top = 0
+      state%epoch = 0
       state%nbt = 0
       state%savep = 0
       state%status = 'BOGUS ENTRY'

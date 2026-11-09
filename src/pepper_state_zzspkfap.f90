@@ -30,6 +30,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzspkfap_state(state)
       type(zzspkfap_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%pass1 = .false.
+      state%prvcor = ' '
+      state%usestl = .false.
+      state%xmit = .false.
       state%pass1 = .true.
       state%prvcor = ' '
    end subroutine init_zzspkfap_state

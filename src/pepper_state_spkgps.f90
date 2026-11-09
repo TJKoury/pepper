@@ -31,6 +31,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_spkgps_state(state)
       type(spkgps_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%svctr1 = 0
+      state%svref = ' '
+      state%svrefi = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_spkgps_state
 

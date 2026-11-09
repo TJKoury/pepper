@@ -41,6 +41,17 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_tkfram_state(state)
       type(tkfram_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%alt = ' '
+      state%item = ' '
+      state%oldagt = ' '
+      state%buffd = 0.0_wp
+      state%at = 0
+      state%buffi = 0
+      state%idents = 0
+      state%idnt = 0
+      state%pool = 0
+      state%first = .false.
       state%buffd = 0.0_wp
       state%at = 0
       state%buffi = 0

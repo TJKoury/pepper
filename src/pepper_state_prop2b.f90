@@ -39,6 +39,20 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_prop2b_state(state)
       type(prop2b_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%lower = 0.0_wp
+      state%upper = 0.0_wp
+      state%vel = 0.0_wp
+      state%savepv = 0.0_wp
+      state%savegm = 0.0_wp
+      state%sbound = 0.0_wp
+      state%sb2rv = 0.0_wp
+      state%sbq = 0.0_wp
+      state%sbr0 = 0.0_wp
+      state%sf = 0.0_wp
+      state%sqovr0 = 0.0_wp
+      state%newest = 0
+      state%nsaved = 0
       state%newest = [ 1, 2, 3 ]
       state%nsaved = 0
    end subroutine init_prop2b_state

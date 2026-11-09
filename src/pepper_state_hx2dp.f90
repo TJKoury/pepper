@@ -40,6 +40,21 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_hx2dp_state(state)
       type(hx2dp_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%maxdp = 0.0_wp
+      state%mindp = 0.0_wp
+      state%scales = 0.0_wp
+      state%digbeg = 0
+      state%digend = 0
+      state%iexpch = 0
+      state%iminus = 0
+      state%iplus = 0
+      state%ispace = 0
+      state%lccbeg = 0
+      state%lccend = 0
+      state%uccbeg = 0
+      state%uccend = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_hx2dp_state
 

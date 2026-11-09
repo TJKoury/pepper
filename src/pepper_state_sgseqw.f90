@@ -48,6 +48,27 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_sgseqw_state(state)
       type(sgseqw_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%explct = .false.
+      state%index = 0
+      state%numfxd = 0
+      state%numvar = 0
+      state%lsthan = 0
+      state%fxdseg = .false.
+      state%ftrefs = 0.0_wp
+      state%ftbadr = 0
+      state%fthan = 0
+      state%ftmxsz = 0
+      state%ftncon = 0
+      state%ftnpkt = 0
+      state%ftnref = 0
+      state%ftnres = 0
+      state%ftityp = 0
+      state%ftexpl = .false.
+      state%ftoff = 0
+      state%ftpksz = 0
+      state%ftfixd = .false.
+      state%nft = 0
       state%numfxd = 0
       state%numvar = 0
       state%nft = 0

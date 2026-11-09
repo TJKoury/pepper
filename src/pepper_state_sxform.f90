@@ -33,6 +33,14 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_sxform_state(state)
       type(sxform_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%svctr1 = 0
+      state%svfrom = ' '
+      state%svfcod = 0
+      state%svctr2 = 0
+      state%svto = ' '
+      state%svtcde = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_sxform_state
 

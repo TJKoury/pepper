@@ -25,6 +25,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_tcheck_state(state)
       type(tcheck_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%dochck = .false.
       state%dochck = .false.
    end subroutine init_tcheck_state
 

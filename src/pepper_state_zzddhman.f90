@@ -58,6 +58,17 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzddhman_state(state)
       type(zzddhman_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%nft = 0
+      state%ftabs = 0
+      state%ftamh = 0
+      state%ftarc = 0
+      state%ftbff = 0
+      state%fthan = 0
+      state%ftnam = ' '
+      state%ftrtm = 0
+      state%ftmnm = 0.0_wp
+      state%next = 0
       state%nft = 0
       state%next = 0
    end subroutine init_zzddhman_state
@@ -65,6 +76,22 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzddhman_context_state(state)
       type(zzddhman_context_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%opnfst = .false.
+      state%stramh = ' '
+      state%strarc = ' '
+      state%strbff = ' '
+      state%natbff = 0
+      state%supbff = 0
+      state%numsup = 0
+      state%nut = 0
+      state%utcst = 0
+      state%uthan = 0
+      state%utlck = .false.
+      state%utlun = 0
+      state%reqcnt = 0
+      state%closegen = 0
       state%first = .true.
       state%opnfst = .true.
       state%nut = 0

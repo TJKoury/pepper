@@ -30,6 +30,13 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_sgmeta_state(state)
       type(sgmeta_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%lstbeg = 0
+      state%lsthan = 0
+      state%meta = 0
+      state%metasz = 0
+      state%nieven = .false.
+      state%ioffst = 0
       state%lstbeg = -1
       state%lsthan = 0
    end subroutine init_sgmeta_state

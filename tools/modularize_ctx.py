@@ -129,6 +129,24 @@ DOCS = {
                       "SPKSSB, SPKAPO, SPKAPP, SPKACS, SPKAPS, SPKLTC, SPKCPO, SPKCPT, SPKCVO, "
                       "SPKCVT), coverage, segment subsetting (SPKSUB, SPKS*), and the generic "
                       "segment writer (SGSEQW).",
+    "pepper_symbols": "Symbol tables: names associated with sets of character, double precision "
+                      "or integer values (SY*).",
+    "pepper_writers": "Writing SPK, CK and PCK files (the segment writers of all types, opening "
+                      "and closing), the comment area (SPC*), and the CK record readers they use.",
+    "pepper_geometry": "Derived geometry: sub-observer and sub-solar points, surface intercepts, "
+                       "illumination angles, limb and terminator points, tangent points, DSK "
+                       "ray-surface intercepts and surface normals, surface names, ellipses "
+                       "and planes, conic elements, two-line elements, and other utilities.",
+    "pepper_gf": "The geometry finder (GF): searches for the times when geometric "
+                 "conditions hold (distances, angles, coordinates, occultations, "
+                 "illumination, fields of view, user-defined quantities), with the "
+                 "default step, refinement, progress report and interrupt routines.",
+    "pepper_ek_storage": "EK files (E-kernels) at the storage level: pages, records, column "
+                         "entries of all classes, B*-trees of the indexes, segment "
+                         "descriptors, and the scratch area.",
+    "pepper_ek": "EK files (E-kernels): opening, writing (fast and record-oriented "
+                 "loading), reading, the query manager (loading EK files for queries, "
+                 "EKFIND, EKG*), the query parser and its semantic checks, and joins.",
     "pepper_keeper": "The kernel manager: loading (FURNSH), tracking (KTOTAL, KDATA, KINFO) "
                      "and unloading (UNLOAD, KCLEAR) of SPICE kernels, including meta-kernels, "
                      "and the routines it needs.",
@@ -280,7 +298,7 @@ def use_lines(imports: dict, indent: str) -> list:
 from modules import PROCEDURE_ARGS  # noqa: E402
 
 
-def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> list:
+def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str, legacy=False) -> list:
     """Declarations needed for the arguments: includes, parameters (with
     their type declarations) and the argument declarations."""
     # Parameters: name -> names in its value; keep those the argument
@@ -327,7 +345,8 @@ def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> lis
             if n in r.args and n in PROCEDURE_ARGS.get(r.name, {}):
                 # a dummy procedure: declared by its abstract interface
                 doc = f"  !! {docs[n]}" if docs.get(n) else ""
-                out.append(f"{indent}procedure({PROCEDURE_ARGS[r.name][n]}) :: {n}{doc}")
+                cb = PROCEDURE_ARGS[r.name][n]
+                out.append(f"{indent}procedure({'legacy_' if legacy else ''}{cb}) :: {n}{doc}")
             elif n in r.args:
                 it = with_intent.get(n) if with_intent else None
                 # A cell's control area (its size) is an input even if the
@@ -339,13 +358,19 @@ def spec_for_args(r: Routine, with_intent: dict, docs: dict, indent: str) -> lis
                 out.append(f"{indent}{spec}{a}{intent} :: {e}{doc}")
             elif n in params:
                 out.append(f"{indent}{spec}{a} :: {e}" if attrs else f"{indent}{spec} :: {e}")
+    # dummy procedures declared only by EXTERNAL (no type declaration)
+    for n, cb in PROCEDURE_ARGS.get(r.name, {}).items():
+        if not any(re.search(rf"::\s*{n}\b", l) for l in out):
+            doc = f"  !! {docs[n]}" if docs.get(n) else f"  !! the {cb} routine"
+            out.append(f"{indent}procedure({'legacy_' if legacy else ''}{cb}) :: {n}{doc}")
     return out
 
 
 def interface(r) -> str:
     body = getattr(r, "doc_lines", r.lines)
     intents = io_table(body)
-    missing = [a for a in r.args if a not in intents]
+    # (a callback argument has no intent; its row may be missing)
+    missing = [a for a in r.args if a not in intents and a not in PROCEDURE_ARGS.get(r.name, {})]
     if missing and not has_brief_io(body):
         # documented by Detailed_Input/Output only, and not all arguments:
         # the others may be read and written
@@ -379,7 +404,7 @@ def wrapper(r) -> str:
         out.append(f"      {prefix}{r.kind} {r.name} ( {', '.join(r.args)} )")
     else:
         out += [r.lines[i] for i in range(r.stmts[0].first, r.stmts[0].last + 1)]
-    procs = sorted(set(PROCEDURE_ARGS.get(r.name, {}).values()))
+    procs = []   # (the legacy form of the callbacks comes from pepper_legacy_callbacks)
     if r.name.startswith("zz"):
         out.append(f"      use pepper_instance, only: pepper_context, pepper_{r.name} => {r.name}"
                    + "".join(f", {x}" for x in procs))
@@ -390,15 +415,32 @@ def wrapper(r) -> str:
     for s in r.spec:
         if re.match(r"\s*(use|implicit)\b", s.text, re.I):
             out.append("\n".join(r.lines[s.first:s.last + 1]))
-    out += spec_for_args(r, {}, docs, "      ")
+    cbs = PROCEDURE_ARGS.get(r.name, {})
+    if len(set(cbs.values())) < len(cbs):
+        # the legacy bridges keep one routine per callback type
+        raise SystemExit(f"modularize_ctx: {r.name}: two callback arguments of one type: {cbs}")
+    if cbs:
+        names = sorted({x for cb in cbs.values() for x in
+                        (f"legacy_{cb}", f"current_{cb}", f"bridge_{cb}")})
+        k = next(i for i, l in enumerate(out) if re.match(r"\s*implicit none", l, re.I))
+        out.insert(k, "      use pepper_legacy_callbacks, only: " + ", ".join(names))
+    out += spec_for_args(r, {}, docs, "      ", legacy=bool(cbs))
     out.append("      type(pepper_context), pointer :: ctx")
+    for a, cb in cbs.items():
+        out.append(f"      procedure(legacy_{cb}), pointer :: outer_{a}  !! the outer call's routine")
     out.append("      ctx => legacy_context()")
+    for a, cb in cbs.items():
+        out += [f"      outer_{a} => current_{cb}", f"      current_{cb} => {a}"]
     args = ", ".join(r.args)
     if r.name.startswith("zz"):
         call = f"pepper_{r.name} ( {', '.join(['ctx'] + r.args)} )"
     else:
         call = f"ctx%{r.name} ( {args} )"
+    for a, cb in cbs.items():
+        call = re.sub(rf"\b{a}\b", f"bridge_{cb}", call)
     out.append(f"      {r.name} = {call}" if r.kind == "function" else f"      call {call}")
+    for a, cb in reversed(list(cbs.items())):
+        out.append(f"      current_{cb} => outer_{a}")
     out.append(f"      end {r.kind} {r.name}")
     return "\n".join(out)
 
@@ -450,6 +492,71 @@ def entry_procedure(e, ctx_where: dict, stateless: dict) -> str:
                                 lambda s: rewrite_code(s, ctx_names, consts))
 
 
+SPEC_KEYWORDS = re.compile(r"\s*(use|implicit|include|parameter|integer|real|logical|character|"
+                           r"double|type|external|intrinsic|save|data|equivalence|dimension|"
+                           r"procedure|common)\b", re.I)
+
+
+def with_callbacks(text: str, r) -> str:
+    """For a procedure with callback arguments (PROCEDURE_ARGS): the full form
+    MODULE SUBROUTINE/FUNCTION with the arguments declared again (gfortran
+    ignores the interface of a dummy procedure in a MODULE PROCEDURE body),
+    and the context passed to the callbacks."""
+    cbs = PROCEDURE_ARGS.get(r.name)
+    if not cbs:
+        return text
+    lines = text.split("\n")
+    k = next(i for i, l in enumerate(lines) if l.strip() == f"module procedure {r.name}")
+    kind = "subroutine" if r.kind == "subroutine" else "function"
+    prefix = (r.prefix + " ") if getattr(r, "prefix", "") and kind == "function" else ""
+    head = f"      module {prefix}{kind} {r.name} ( "
+    args = ["ctx"] + r.args
+    rows, cur = [], head
+    for i, x in enumerate(args):
+        piece = x + (", " if i < len(args) - 1 else " )")
+        if len(cur) + len(piece) > 100:
+            rows.append(cur.rstrip() + " &")
+            cur = "            "
+        cur += piece
+    lines[k] = "\n".join(rows + [cur])
+    e = max(i for i, l in enumerate(lines) if l.strip() == f"end procedure {r.name}")
+    lines[e] = f"      end {kind} {r.name}"
+    # the end of the specification part: the first statement that is not a
+    # specification statement (after IMPLICIT NONE)
+    i = next(j for j, l in enumerate(lines) if re.match(r"\s*implicit none", l, re.I))
+    last = i
+    j = i + 1
+    while j < e:
+        l = lines[j]
+        if not l.strip() or l.lstrip().startswith("!"):
+            j += 1
+            continue
+        if SPEC_KEYWORDS.match(l) and not re.match(r"\s*(real|integer|logical|character)\s*\(?\s*\w*\s*\)?\s*=", l):
+            while lines[j].rstrip().endswith("&"):
+                j += 1
+            last = j
+            j += 1
+            continue
+        break
+    body = getattr(r, "doc_lines", r.lines)
+    decl = ["      class(pepper_context), intent(inout) :: ctx  !! the context"]
+    decl += [l for l in spec_for_args(r, io_table(body) or {}, descriptions(body), "      ")
+             if "::" in l and not re.match(r"\s*\w[^:]*parameter", l, re.I)
+             and any(re.search(rf"::\s*{a}\b", l) for a in r.args)]
+    note = ["!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments",
+            "!     declared again: gfortran ignores the interface of a dummy procedure",
+            "!     in a MODULE PROCEDURE body."]
+    lines[last + 1:last + 1] = note + decl
+    text = "\n".join(lines)
+    for a in cbs:
+        # no arguments: "udbail ()" and "call udrepf"
+        text = re.sub(rf"(?im)^(?!\s*!)(.*?)\b{a}\s*\(\s*\)", lambda m: m.group(1) + f"{a} ( ctx )", text)
+        text = re.sub(rf"(?im)^(\s*call\s+{a})\s*$", r"\1 ( ctx )", text)
+        text = re.sub(rf"(?im)^(?!\s*!)(.*?)\b{a}\s*\((?!\s*ctx\s*\))\s*",
+                      lambda m: m.group(0) + "ctx, ", text)
+    return text
+
+
 def generate(mod: str, dry_run: bool) -> list:
     from umbrella import Umbrella
     stateless = module_of()
@@ -478,9 +585,9 @@ def generate(mod: str, dry_run: bool) -> list:
             if u.main_dropped() and r is u.entries[0]:
                 # The umbrella routine's own documentation, before its entries.
                 text = "\n".join(u.header_docs()) + "\n\n" + text
-            procs.append(text)
+            procs.append(with_callbacks(text, r))
         else:
-            procs.append(module_procedure(r, ctx_where, stateless))
+            procs.append(with_callbacks(module_procedure(r, ctx_where, stateless), r))
     ext = ".F90" if any(p.suffix == ".F90" for p in sources) else ".f90"
     sub = SRC / f"{mod}{ext}"
     body = (f"!> {DOCS[mod]}\n!>\n"
@@ -530,8 +637,10 @@ def generate(mod: str, dry_run: bool) -> list:
         sub.write_text(body, encoding="ascii")
         INSTANCE.write_text(text, encoding="ascii")
         legacy.write_text(wrappers, encoding="ascii")
+        from zero_state import process as zero_state
         for u in with_state:
             (SRC / f"pepper_state_{u.name}.f90").write_text(u.state_module(), encoding="ascii")
+            zero_state(SRC / f"pepper_state_{u.name}.f90")
         for p in sources:
             p.unlink()
     return [sub, INSTANCE, legacy] + [SRC / f"pepper_state_{u.name}.f90" for u in with_state]

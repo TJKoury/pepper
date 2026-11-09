@@ -42,6 +42,16 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_str2et_state(state)
       type(str2et_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%calndr = ' '
+      state%defsys = ' '
+      state%defzon = ' '
+      state%mname = ' '
+      state%hoff = 0.0_wp
+      state%mdy = 0.0_wp
+      state%moff = 0.0_wp
+      state%mon = 0.0_wp
+      state%mm = 0
       state%defsys = 'UTC'
       state%defzon = ' '
       state%mname = [ character(len(state%mname)) :: 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]

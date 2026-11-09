@@ -42,6 +42,23 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_spkr19_state(state)
       type(spkr19_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%pass1 = .false.
+      state%svbeg = 0
+      state%svbtim = 0.0_wp
+      state%svetim = 0.0_wp
+      state%svhan = 0
+      state%svlast = .false.
+      state%svmiix = 0
+      state%svminb = 0
+      state%svn = 0
+      state%svnpkt = 0
+      state%svok = .false.
+      state%svpkdb = 0
+      state%svpknd = 0
+      state%svpksz = 0
+      state%svstyp = 0
+      state%svwnsz = 0
       state%pass1 = .true.
       state%svbeg = -1
       state%svbtim = 0.0_wp

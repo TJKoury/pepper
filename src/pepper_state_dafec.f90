@@ -37,6 +37,18 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dafec_state(state)
       type(dafec_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%crecrd = ' '
+      state%eocmrk = ' '
+      state%eolmrk = ' '
+      state%filchr = 0
+      state%filcnt = 0
+      state%filhan = 0
+      state%lsthan = 0
+      state%lstpos = 0
+      state%lstrec = 0
+      state%nfiles = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_dafec_state
 

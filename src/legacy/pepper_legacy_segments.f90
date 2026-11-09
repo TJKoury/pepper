@@ -260,21 +260,26 @@
       !>
       !> Legacy interface: calls zz routine zzdsksns with the legacy context.
       subroutine zzdsksns ( cmpfun, handle, dladsc, dskdsc, found )
-      use pepper_instance, only: pepper_context, pepper_zzdsksns => zzdsksns, zzdsk_compare
+      use pepper_instance, only: pepper_context, pepper_zzdsksns => zzdsksns
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
+      use pepper_legacy_callbacks, only: bridge_zzdsk_compare, current_zzdsk_compare, legacy_zzdsk_compare
       implicit none
       include 'dla.inc'
       include 'dskdsc.inc'
       include 'zzctr.inc'
       integer(ip) :: handle  !! Handle of file containing the applicable segment.
-      procedure(zzdsk_compare) :: cmpfun  !! Comparison function.
+      procedure(legacy_zzdsk_compare) :: cmpfun  !! Comparison function.
       integer(ip) :: dladsc ( * )  !! DLA descriptor of the applicable segment.
       real(wp) :: dskdsc ( * )  !! DSK descriptor of the applicable segment.
       logical :: found  !! True if a segment was found.
       type(pepper_context), pointer :: ctx
+      procedure(legacy_zzdsk_compare), pointer :: outer_cmpfun  !! the outer call's routine
       ctx => legacy_context()
-      call pepper_zzdsksns ( ctx, cmpfun, handle, dladsc, dskdsc, found )
+      outer_cmpfun => current_zzdsk_compare
+      current_zzdsk_compare => cmpfun
+      call pepper_zzdsksns ( ctx, bridge_zzdsk_compare, handle, dladsc, dskdsc, found )
+      current_zzdsk_compare => outer_cmpfun
       end subroutine zzdsksns
 
       !> Indicate to a calling routine whether any DSK load or unload

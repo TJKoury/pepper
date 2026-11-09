@@ -31,6 +31,12 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzxlatei_state(state)
       type(zzxlatei_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%natbff = 0
+      state%strbff = ' '
+      state%smlint = 0
+      state%bigint = 0
       state%first = .true.
       state%natbff = 0
    end subroutine init_zzxlatei_state

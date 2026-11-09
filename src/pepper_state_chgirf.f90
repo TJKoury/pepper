@@ -34,12 +34,17 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_chgirf_state(state)
       type(chgirf_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%dframe = 0
       state%dframe = 0
    end subroutine init_chgirf_state
 
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_chgirf_context_state(state)
       type(chgirf_context_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%ready = .false.
+      state%trans = 0.0_wp
       state%ready = .false.
    end subroutine init_chgirf_context_state
 

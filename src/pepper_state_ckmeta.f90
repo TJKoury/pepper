@@ -40,6 +40,19 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_ckmeta_state(state)
       type(ckmeta_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%lookup = ' '
+      state%agent = ' '
+      state%cks = 0
+      state%cksord = 0
+      state%currnt = 0
+      state%last = 0
+      state%sclks = 0
+      state%spks = 0
+      state%usrctr = 0
+      state%first = .false.
+      state%found = .false.
+      state%nodata = .false.
       state%currnt = 0
       state%last = 0
       state%first = .true.

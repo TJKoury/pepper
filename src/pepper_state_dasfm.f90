@@ -47,6 +47,15 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dasfm_state(state)
       type(dasfm_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%fthan = 0
+      state%ftacc = 0
+      state%ftlnk = 0
+      state%ftsum = 0
+      state%pool = 0
+      state%fthead = 0
+      state%fhlist = 0
+      state%pass1 = .false.
       state%fthan = 0
       state%ftacc = -1
       state%ftlnk = -1

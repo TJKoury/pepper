@@ -30,6 +30,10 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_stmp03_state(state)
       type(stmp03_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%first = .false.
+      state%lbound = 0.0_wp
+      state%pairs = 0.0_wp
       state%first = .true.
    end subroutine init_stmp03_state
 

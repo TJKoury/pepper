@@ -34,6 +34,14 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_etcal_state(state)
       type(etcal_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%dmnint = 0.0_wp
+      state%dmxint = 0.0_wp
+      state%halfd = 0.0_wp
+      state%secspd = 0.0_wp
+      state%dn2000 = 0
+      state%offset = 0
+      state%first = .false.
       state%first = .true.
    end subroutine init_etcal_state
 

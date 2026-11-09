@@ -26,6 +26,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzrotgt1_state(state)
       type(zzrotgt1_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%versn = ' '
       state%versn = '4.0.0'
    end subroutine init_zzrotgt1_state
 

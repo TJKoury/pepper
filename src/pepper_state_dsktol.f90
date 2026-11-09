@@ -27,6 +27,8 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_dsktol_state(state)
       type(dsktol_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%dppars = 0.0_wp
       state%dppars = [ xfract, sgreed, sgpadm, ptmemm, angmrg, lonali ]
    end subroutine init_dsktol_state
 

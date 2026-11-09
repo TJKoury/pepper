@@ -11712,7 +11712,7 @@ contains
       end associate
       end procedure zzdskbss
 
-      module procedure zzdsksns
+      module subroutine zzdsksns ( ctx, cmpfun, handle, dladsc, dskdsc, found )
 
 ! $ Abstract
 !
@@ -11898,6 +11898,15 @@ contains
       integer(ip), parameter :: stsize = 10000
       integer(ip), parameter :: slen = 40
       integer(ip), parameter :: forwrd = 1
+!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
+!     declared again: gfortran ignores the interface of a dummy procedure
+!     in a MODULE PROCEDURE body.
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+      procedure(zzdsk_compare) :: cmpfun  !! Comparison function.
+      integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of the applicable segment.
+      real(wp), intent(out) :: dskdsc ( * )  !! DSK descriptor of the applicable segment.
+      logical, intent(out) :: found  !! True if a segment was found.
       character(slen)       doing
       character(slen)       stack    ( 2 )
       character(slen)       urgent
@@ -12505,7 +12514,7 @@ contains
 !
             do while ( p > 0 )
 
-               if ( cmpfun( sthan(p), stdlad(1,p), stdskd(1,p) )  ) then
+               if ( cmpfun( ctx, sthan(p), stdlad(1,p), stdskd(1,p) )  ) then
 
                   call movei ( stdlad(1,p), dladsz, dladsc )
 
@@ -12903,7 +12912,7 @@ contains
 
       return
       end associate
-      end procedure zzdsksns
+      end subroutine zzdsksns
 
       module procedure zzdskchk
 

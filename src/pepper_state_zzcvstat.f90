@@ -30,6 +30,11 @@ contains
    !> Set the initial values (SPICELIB's DATA statements) of a new state.
    pure subroutine init_zzcvstat_state(state)
       type(zzcvstat_state), intent(inout) :: state  !! the state
+      ! (every component first: SPICELIB's saved variables start as zero)
+      state%svctr = 0
+      state%svet = 0.0_wp
+      state%svref = ' '
+      state%svstat = 0.0_wp
    end subroutine init_zzcvstat_state
 
 end module pepper_state_zzcvstat

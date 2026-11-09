@@ -125,7 +125,12 @@ def fix_one(path: Path, line_no: int, dummy: str, notes: list) -> bool:
         new.append(f"{indent}{x} = {tmp}(1)")
         if not any(re.search(rf"::\s*{tmp}\s*\(", l) for l in body):
             # declare it after the last declaration statement before code
-            j = next(i for i, l in enumerate(body) if re.match(r"\s*implicit none\s*$", l))
+            j = next((i for i, l in enumerate(body) if re.match(r"\s*implicit none\s*$", l)), None)
+            if j is None:
+                # (no IMPLICIT NONE: after the last USE line, which may come
+                # after the documentation)
+                uses = [i for i, l in enumerate(body) if re.match(r"\s*use\b", l, re.I)]
+                j = uses[-1] if uses else 0
             body_decl = f"      {decl} :: {tmp}(1)  !! one-element copy of {x} (array argument)"
             lines.insert(a + j + 1, body_decl)
             s += 1
