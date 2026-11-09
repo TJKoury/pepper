@@ -27,7 +27,7 @@
 !> exactly as SPICELIB does, including ERRACT, ERRDEV and ERRPRT.
 module pepper_instance
 
-   use, intrinsic :: iso_fortran_env, only: error_unit
+   use, intrinsic :: iso_fortran_env, only: error_unit, int64
    use pepper_kinds, only: ip, wp
    use pepper_errors, only: expln
    ! The state types of the subsystems (generated modules pepper_state_*).
@@ -120,6 +120,22 @@ module pepper_instance
       end function zzdsk_compare
    end interface
 
+   !> Length of the variable names in a context's watch table (the kernel
+   !> pool's maximum name length).
+   integer, parameter :: watch_name_length = 32
+   !> Number of entries the kernel pool's change log keeps; when it is full,
+   !> the log is emptied and every variable counts as changed.
+   integer, parameter :: change_log_size = 10000
+
+   !> A kernel pool watch of a (non-legacy) context: the agent, the variables
+   !> it watches, and the pool change it has seen last (see swpool_context).
+   type :: pool_watch
+      character(watch_name_length) :: agent = ' '  !! the agent
+      character(watch_name_length), allocatable :: names(:)  !! the watched variables
+      integer :: nnames = 0  !! number of watched variables
+      integer(int64) :: seen = -1  !! pool_changes at the last check (-1: a notice is pending)
+   end type pool_watch
+
    integer, parameter, public :: short_message_length = 25    !! SPICELIB's short message length
    integer, parameter, public :: long_message_length = 1840   !! SPICELIB's long message length
    integer, parameter, public :: explanation_length = 80      !! length of an explanation (EXPLN)
@@ -151,6 +167,15 @@ module pepper_instance
       !> Incremented by every load and unload of an SPK, CK, PCK or DSK file;
       !> contexts discard their segment caches when it changed.
       integer(ip) :: segment_epoch = 0
+      ! The kernel pool's changes, for the watches of the contexts other than
+      ! the legacy one (they do not use the pool's own watcher table, which
+      ! they would share; see swpool_context). Written only while kernels are
+      ! loaded or the pool is changed, like the pool itself.
+      integer(int64) :: pool_changes = 0  !! number of changes of the kernel pool
+      integer(int64) :: all_changed_at = 0  !! the change that counts as a change of every variable
+      character(watch_name_length), allocatable :: changed_names(:)  !! the variables changed (log)
+      integer(int64), allocatable :: changed_at(:)  !! the change number of each logged change
+      integer :: nchanged = 0  !! number of entries in the log
       character(255), allocatable :: closed_files(:)  !! names of the files closed so far
       integer(ip) :: nclosed = 0  !! number of names in closed_files
       ! The state of the subsystems (allocated when first used).
@@ -200,6 +225,10 @@ module pepper_instance
       character(short_message_length) :: short = ' '  !! short error message
       character(long_message_length) :: long = ' '  !! long error message
       integer(ip) :: files_seen = 0  !! the file_generation this context's record caches reflect
+      ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of a context other than
+      ! the legacy one.
+      type(pool_watch), allocatable :: watches(:)  !! the watches
+      integer :: nwatches = 0  !! number of watches
       ! Per-context state of the subsystems (allocated when first used).
       ! >>> generated context state components (tools/modularize_ctx.py)
       ! --- pepper_pool
@@ -6455,6 +6484,134 @@ contains
       end if
       spice%close_generation = spice%close_generation + 1
    end subroutine file_closed
+
+   !> Record a change of a kernel pool variable (name blank: of every
+   !> variable, e.g. by CLPOOL), for the watches of the contexts.
+   subroutine pool_changed(spice, name)
+      type(pepper_spice), intent(inout) :: spice  !! the instance
+      character(*), intent(in) :: name  !! the variable changed, or blank
+      spice%pool_changes = spice%pool_changes + 1
+      if (name == ' ' .or. spice%nchanged == change_log_size) then
+         spice%all_changed_at = spice%pool_changes
+         spice%nchanged = 0
+         if (name == ' ') return
+      end if
+      if (.not. allocated(spice%changed_names)) then
+         allocate (spice%changed_names(change_log_size), spice%changed_at(change_log_size))
+      end if
+      spice%nchanged = spice%nchanged + 1
+      spice%changed_names(spice%nchanged) = name
+      spice%changed_at(spice%nchanged) = spice%pool_changes
+   end subroutine pool_changed
+
+   !> The index of an agent in the context's watch table (0: none).
+   integer function watch_index(ctx, agent)
+      class(pepper_context), intent(in) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! the agent
+      integer :: k
+      watch_index = 0
+      do k = 1, ctx%nwatches
+         if (ctx%watches(k)%agent == agent) then
+            watch_index = k
+            return
+         end if
+      end do
+   end function watch_index
+
+   !> SWPOOL for a context other than the legacy one: the watch is the
+   !> context's own, so that contexts do not take each other's notices, and
+   !> setting it changes nothing that other contexts use. As with SWPOOL, the
+   !> agent's variables are added to those it watches already, and a notice
+   !> is posted for it.
+   subroutine swpool_context(ctx, agent, nnames, names)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! the agent to notify of updates
+      integer(ip), intent(in) :: nnames  !! number of variables
+      character(*), intent(in) :: names(*)  !! the variables to watch
+      type(pool_watch), allocatable :: grown(:)
+      character(watch_name_length), allocatable :: more(:)
+      integer :: k, i
+      k = watch_index(ctx, agent)
+      if (k == 0) then
+         if (.not. allocated(ctx%watches)) allocate (ctx%watches(8))
+         if (ctx%nwatches == size(ctx%watches)) then
+            allocate (grown(2*ctx%nwatches))
+            grown(1:ctx%nwatches) = ctx%watches
+            call move_alloc(grown, ctx%watches)
+         end if
+         ctx%nwatches = ctx%nwatches + 1
+         k = ctx%nwatches
+         ctx%watches(k)%agent = agent
+         ctx%watches(k)%nnames = 0
+         allocate (ctx%watches(k)%names(max(8, int(nnames))))
+      end if
+      associate (w => ctx%watches(k))
+         do i = 1, nnames
+            if (any(w%names(1:w%nnames) == names(i))) cycle
+            if (w%nnames == size(w%names)) then
+               allocate (more(2*w%nnames))
+               more(1:w%nnames) = w%names(1:w%nnames)
+               call move_alloc(more, w%names)
+            end if
+            w%nnames = w%nnames + 1
+            w%names(w%nnames) = names(i)
+         end do
+         w%seen = -1
+      end associate
+   end subroutine swpool_context
+
+   !> True if a variable watched by the context's watch k changed since the
+   !> watch's last check (or a notice is pending).
+   logical function watch_pending(ctx, k)
+      class(pepper_context), intent(in) :: ctx  !! the context
+      integer, intent(in) :: k  !! index of the watch
+      integer :: j
+      associate (w => ctx%watches(k), s => ctx%spice)
+         watch_pending = w%seen < 0 .or. s%all_changed_at > w%seen
+         if (watch_pending .or. s%pool_changes == w%seen) return
+         ! the log is in the order of the changes: look at the newer ones
+         do j = s%nchanged, 1, -1
+            if (s%changed_at(j) <= w%seen) exit
+            if (any(w%names(1:w%nnames) == s%changed_names(j))) then
+               watch_pending = .true.
+               return
+            end if
+         end do
+      end associate
+   end function watch_pending
+
+   !> CVPOOL for a context other than the legacy one: true if a variable the
+   !> agent watches (in this context) was updated since the last check.
+   subroutine cvpool_context(ctx, agent, update)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! the agent
+      logical, intent(out) :: update  !! a watched variable was updated
+      integer :: k
+      update = .false.
+      k = watch_index(ctx, agent)
+      if (k == 0) return
+      update = watch_pending(ctx, k)
+      ctx%watches(k)%seen = ctx%spice%pool_changes
+   end subroutine cvpool_context
+
+   !> DWPOOL for a context other than the legacy one: delete the agent's
+   !> watch; SPICE(UPDATEPENDING) if it has an unchecked update.
+   subroutine dwpool_context(ctx, agent)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! the agent
+      integer :: k
+      k = watch_index(ctx, agent)
+      if (k == 0) return
+      if (watch_pending(ctx, k)) then
+         call ctx%setmsg('Could not delete AGENT # from the watch symbol table because AGENT '// &
+                         'is associated with at least one updated kernel variable. ')
+         call ctx%errch('#', agent)
+         call ctx%sigerr('SPICE(UPDATEPENDING)')
+         return
+      end if
+      ctx%watches(k:ctx%nwatches - 1) = ctx%watches(k + 1:ctx%nwatches)
+      ctx%nwatches = ctx%nwatches - 1
+   end subroutine dwpool_context
 
    !> True if a file of this name was closed through this instance before.
    logical function was_closed(spice, name)

@@ -15358,6 +15358,10 @@ contains
       call lnkini ( ctx, maxvar, nmpool )
       call lnkini ( ctx, maxval, dppool )
       call lnkini ( ctx, maxlin, chpool )
+!
+!     PEPPER: record the change for the watches of the contexts.
+!
+      call pool_changed ( ctx%spice, ' ' )
 
       do i = 1, cardc ( ctx, wtvars )
 !
@@ -15900,6 +15904,8 @@ contains
 !           associated agents to the list of AGENTS to be notified of a
 !           watched variable update.
 !
+!           PEPPER: record the change for the watches of the contexts.
+            call pool_changed ( ctx%spice, varnam )
             if (  elemc( ctx, varnam, wtvars )  ) then
 !
 !              Union the update set AGENTS with the set of agents
@@ -17717,6 +17723,21 @@ contains
       logical               succes
       logical               vector
       isquot(code) = code == iquote
+!
+!     PEPPER: a context other than the legacy one keeps its own watches,
+!     checked against the instance's log of the pool's changes (see
+!     swpool_context in pepper_instance): contexts do not take each
+!     other's notices, and a watch set while other contexts read the
+!     pool changes nothing they use. A notice is posted for any update
+!     of a watched variable (loaded, set or deleted) since the last
+!     check, as by SPICELIB, and for every variable after CLPOOL.
+!
+      if ( .not. ctx%is_legacy() ) then
+         if ( ctx%failed() ) return
+         call swpool_context ( ctx, agent, nnames, names )
+         return
+      end if
+
       if ( .not. allocated ( ctx%spice%pool ) ) then
          allocate ( ctx%spice%pool )
          call init_pool_state ( ctx%spice%pool )
@@ -18388,6 +18409,21 @@ contains
       logical               succes
       logical               vector
       isquot(code) = code == iquote
+!
+!     PEPPER: a context other than the legacy one keeps its own watches,
+!     checked against the instance's log of the pool's changes (see
+!     swpool_context in pepper_instance): contexts do not take each
+!     other's notices, and a watch set while other contexts read the
+!     pool changes nothing they use. A notice is posted for any update
+!     of a watched variable (loaded, set or deleted) since the last
+!     check, as by SPICELIB, and for every variable after CLPOOL.
+!
+      if ( .not. ctx%is_legacy() ) then
+         if ( ctx%failed() ) return
+         call cvpool_context ( ctx, agent, update )
+         return
+      end if
+
       if ( .not. allocated ( ctx%spice%pool ) ) then
          allocate ( ctx%spice%pool )
          call init_pool_state ( ctx%spice%pool )
@@ -20832,6 +20868,8 @@ contains
 !     If it is, add its associated agents to the list of
 !     AGENTS to be notified of a watched variable update.
 !
+!     PEPPER: record the change for the watches of the contexts.
+      call pool_changed ( ctx%spice, name )
       if (  elemc( ctx, name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
@@ -21421,6 +21459,8 @@ contains
 !     If it is, add its associated agents to the list of
 !     AGENTS to be notified of a watched variable update.
 !
+!     PEPPER: record the change for the watches of the contexts.
+      call pool_changed ( ctx%spice, name )
       if (  elemc( ctx, name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
@@ -22009,6 +22049,8 @@ contains
 !     If it is, add its associated agents to the list of
 !     AGENTS to be notified of a watched variable update.
 !
+!     PEPPER: record the change for the watches of the contexts.
+      call pool_changed ( ctx%spice, name )
       if (  elemc( ctx, name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
@@ -22342,6 +22384,8 @@ contains
 
          if ( varnam /= ' ' ) then
 
+!           PEPPER: record the change for the watches of the contexts.
+            call pool_changed ( ctx%spice, varnam )
             if (  elemc( ctx, varnam, wtvars )  ) then
 !
 !              The variable VARNAM is watched.
@@ -22966,6 +23010,8 @@ contains
 !     so, add these agents to the list of agents to be notified of a
 !     watched variable update.
 !
+!     PEPPER: record the change for the watches of the contexts.
+      call pool_changed ( ctx%spice, name )
       if (  elemc( ctx, name, wtvars )  ) then
 !
 !        Union the update set AGENTS with the set of agents
@@ -23601,6 +23647,21 @@ contains
       logical               succes
       logical               vector
       isquot(code) = code == iquote
+!
+!     PEPPER: a context other than the legacy one keeps its own watches,
+!     checked against the instance's log of the pool's changes (see
+!     swpool_context in pepper_instance): contexts do not take each
+!     other's notices, and a watch set while other contexts read the
+!     pool changes nothing they use. A notice is posted for any update
+!     of a watched variable (loaded, set or deleted) since the last
+!     check, as by SPICELIB, and for every variable after CLPOOL.
+!
+      if ( .not. ctx%is_legacy() ) then
+         if ( ctx%failed() ) return
+         call dwpool_context ( ctx, agent )
+         return
+      end if
+
       if ( .not. allocated ( ctx%spice%pool ) ) then
          allocate ( ctx%spice%pool )
          call init_pool_state ( ctx%spice%pool )
