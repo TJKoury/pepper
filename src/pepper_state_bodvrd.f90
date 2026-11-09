@@ -19,7 +19,7 @@ module pepper_state_bodvrd
 
    !> The saved variables of BODVRD.
    type, public :: bodvrd_state
-      integer(ip) :: svctr1 ( ctrsiz )  !! saved name/ID item declarations.
+      integer(ip) :: svctr1 ( ctrsiz )  !! pool counter of the body name lookup (ZZBODS2C)
       character(maxl) :: svbdnm  !! the body name translated last
       integer(ip) :: svbdid  !! its NAIF ID code
       logical :: svfnd1  !! the name was found

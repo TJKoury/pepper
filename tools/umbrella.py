@@ -194,8 +194,23 @@ class Umbrella:
             for s in self.stfuns:
                 head = s.low.partition("=")[0]
                 stfun |= set(re.findall(r"[a-z_]\w*", head))
+            # A declared name that is also the name of a routine is a function
+            # only if it is used as one (or declared EXTERNAL): a variable
+            # may have the name of a routine (e.g. TKFRAM's POOL).
+            code = " ".join(s.low for e in self.entries for s in e.body)
+            externals = set()
+            for s in self.spec:
+                if re.match(r"\s*external\b", s.text, re.I):
+                    externals |= {x.strip().lower() for x in s.text.split(None, 1)[1].split(",")}
+            dims = set()
+            for s in self.spec:
+                d = parse_decl(s.text)
+                if d:
+                    dims |= {entity_name(e) for e in d[2] if "(" in e}
+            called = {f for f in set(functions) if f not in dims and
+                      (f in externals or re.search(rf"\b{f}\s*\(", code))}
             state = [n for n in names if n not in params | set(self.args) | entry_names
-                     | set(functions) | stfun]
+                     | called | stfun]
         self.state = [s.lower() for s in state]
         unknown = [s for s in self.state + self.cstate if s not in scalars | self.variables]
         for s in self.spec:

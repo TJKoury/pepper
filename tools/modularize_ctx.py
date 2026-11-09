@@ -107,6 +107,15 @@ DOCS = {
                       "routines, two-body propagation and the SGP4 model.",
     "pepper_frames": "Reference frames: names, IDs and classes (FRAMEX, ZZFDAT), and the "
                      "parameters of dynamic frames.",
+    "pepper_orientation": "Orientation data: body orientation from PCK files and text kernels "
+                          "(TISBOD, TIPBOD), C-kernel and text-kernel frames (CKFROT, CKFXFM, "
+                          "TKFRAM), switch frames (ZZSWFXFM), the TEME frame, and frame and "
+                          "SCLK lookups.",
+    "pepper_dynamic": "Dynamic frames (ZZDYNFRM, ZZDYNROT) and the copies of the frame and SPK "
+                      "routines they use (ZZ*0, ZZ*1): SPICELIB has no recursion, so a dynamic "
+                      "frame defined by states of bodies calls copies one level down.",
+    "pepper_transforms": "Frame transformations: FRMGET and ROTGET (one frame to its base), "
+                         "FRMCHG and REFCHG (between any two frames), PXFORM and SXFORM.",
     "pepper_keeper": "The kernel manager: loading (FURNSH), tracking (KTOTAL, KDATA, KINFO) "
                      "and unloading (UNLOAD, KCLEAR) of SPICE kernels, including meta-kernels, "
                      "and the routines it needs.",

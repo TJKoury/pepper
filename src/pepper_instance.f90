@@ -132,6 +132,43 @@ module pepper_instance
    ! --- pepper_frames
    use pepper_state_framex, only: framex_state, init_framex_state
    ! --- end pepper_frames
+   ! --- pepper_orientation
+   use pepper_state_tisbod, only: tisbod_state, init_tisbod_state
+   use pepper_state_tkfram, only: tkfram_state, init_tkfram_state
+   use pepper_state_zzswfxfm, only: zzswfxfm_state, init_zzswfxfm_state
+   ! --- end pepper_orientation
+   ! --- pepper_dynamic
+   use pepper_state_zzfrmgt1, only: zzfrmgt1_state, init_zzfrmgt1_state
+   use pepper_state_zzrotgt1, only: zzrotgt1_state, init_zzrotgt1_state
+   use pepper_state_zzspkgo1, only: zzspkgo1_state, init_zzspkgo1_state
+   use pepper_state_zzspkgp1, only: zzspkgp1_state, init_zzspkgp1_state
+   use pepper_state_zzspklt1, only: zzspklt1_state, init_zzspklt1_state
+   use pepper_state_zzspkpa1, only: zzspkpa1_state, init_zzspkpa1_state
+   use pepper_state_zzspkas1, only: zzspkas1_state, init_zzspkas1_state
+   use pepper_state_zzspkzp1, only: zzspkzp1_state, init_zzspkzp1_state
+   use pepper_state_zzspkac1, only: zzspkac1_state, init_zzspkac1_state
+   use pepper_state_zzspkez1, only: zzspkez1_state, init_zzspkez1_state
+   use pepper_state_zzdynfr0, only: zzdynfr0_state, init_zzdynfr0_state
+   use pepper_state_zzfrmgt0, only: zzfrmgt0_state, init_zzfrmgt0_state
+   use pepper_state_zzspkgo0, only: zzspkgo0_state, init_zzspkgo0_state
+   use pepper_state_zzspklt0, only: zzspklt0_state, init_zzspklt0_state
+   use pepper_state_zzspkas0, only: zzspkas0_state, init_zzspkas0_state
+   use pepper_state_zzspkac0, only: zzspkac0_state, init_zzspkac0_state
+   use pepper_state_zzspkez0, only: zzspkez0_state, init_zzspkez0_state
+   use pepper_state_zzdynrt0, only: zzdynrt0_state, init_zzdynrt0_state
+   use pepper_state_zzrotgt0, only: zzrotgt0_state, init_zzrotgt0_state
+   use pepper_state_zzspkgp0, only: zzspkgp0_state, init_zzspkgp0_state
+   use pepper_state_zzspkpa0, only: zzspkpa0_state, init_zzspkpa0_state
+   use pepper_state_zzspkzp0, only: zzspkzp0_state, init_zzspkzp0_state
+   use pepper_state_zzdynfrm, only: zzdynfrm_state, init_zzdynfrm_state
+   use pepper_state_zzdynrot, only: zzdynrot_state, init_zzdynrot_state
+   ! --- end pepper_dynamic
+   ! --- pepper_transforms
+   use pepper_state_frmget, only: frmget_state, init_frmget_state
+   use pepper_state_rotget, only: rotget_state, init_rotget_state
+   use pepper_state_pxform, only: pxform_state, init_pxform_state
+   use pepper_state_sxform, only: sxform_state, init_sxform_state
+   ! --- end pepper_transforms
    ! <<< generated state modules
 
    implicit none
@@ -358,6 +395,43 @@ module pepper_instance
       ! --- pepper_frames
       type(framex_state), allocatable :: framex_state  !! state of FRAMEX
       ! --- end pepper_frames
+      ! --- pepper_orientation
+      type(tisbod_state), allocatable :: tisbod_state  !! state of TISBOD
+      type(tkfram_state), allocatable :: tkfram_state  !! state of TKFRAM
+      type(zzswfxfm_state), allocatable :: zzswfxfm_state  !! state of ZZSWFXFM
+      ! --- end pepper_orientation
+      ! --- pepper_dynamic
+      type(zzfrmgt1_state), allocatable :: zzfrmgt1_state  !! state of ZZFRMGT1
+      type(zzrotgt1_state), allocatable :: zzrotgt1_state  !! state of ZZROTGT1
+      type(zzspkgo1_state), allocatable :: zzspkgo1_state  !! state of ZZSPKGO1
+      type(zzspkgp1_state), allocatable :: zzspkgp1_state  !! state of ZZSPKGP1
+      type(zzspklt1_state), allocatable :: zzspklt1_state  !! state of ZZSPKLT1
+      type(zzspkpa1_state), allocatable :: zzspkpa1_state  !! state of ZZSPKPA1
+      type(zzspkas1_state), allocatable :: zzspkas1_state  !! state of ZZSPKAS1
+      type(zzspkzp1_state), allocatable :: zzspkzp1_state  !! state of ZZSPKZP1
+      type(zzspkac1_state), allocatable :: zzspkac1_state  !! state of ZZSPKAC1
+      type(zzspkez1_state), allocatable :: zzspkez1_state  !! state of ZZSPKEZ1
+      type(zzdynfr0_state), allocatable :: zzdynfr0_state  !! state of ZZDYNFR0
+      type(zzfrmgt0_state), allocatable :: zzfrmgt0_state  !! state of ZZFRMGT0
+      type(zzspkgo0_state), allocatable :: zzspkgo0_state  !! state of ZZSPKGO0
+      type(zzspklt0_state), allocatable :: zzspklt0_state  !! state of ZZSPKLT0
+      type(zzspkas0_state), allocatable :: zzspkas0_state  !! state of ZZSPKAS0
+      type(zzspkac0_state), allocatable :: zzspkac0_state  !! state of ZZSPKAC0
+      type(zzspkez0_state), allocatable :: zzspkez0_state  !! state of ZZSPKEZ0
+      type(zzdynrt0_state), allocatable :: zzdynrt0_state  !! state of ZZDYNRT0
+      type(zzrotgt0_state), allocatable :: zzrotgt0_state  !! state of ZZROTGT0
+      type(zzspkgp0_state), allocatable :: zzspkgp0_state  !! state of ZZSPKGP0
+      type(zzspkpa0_state), allocatable :: zzspkpa0_state  !! state of ZZSPKPA0
+      type(zzspkzp0_state), allocatable :: zzspkzp0_state  !! state of ZZSPKZP0
+      type(zzdynfrm_state), allocatable :: zzdynfrm_state  !! state of ZZDYNFRM
+      type(zzdynrot_state), allocatable :: zzdynrot_state  !! state of ZZDYNROT
+      ! --- end pepper_dynamic
+      ! --- pepper_transforms
+      type(frmget_state), allocatable :: frmget_state  !! state of FRMGET
+      type(rotget_state), allocatable :: rotget_state  !! state of ROTGET
+      type(pxform_state), allocatable :: pxform_state  !! state of PXFORM
+      type(sxform_state), allocatable :: sxform_state  !! state of SXFORM
+      ! --- end pepper_transforms
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -883,6 +957,28 @@ module pepper_instance
       procedure, non_overridable :: cnmfrm
       procedure, non_overridable :: ccifrm
       ! --- end pepper_frames
+      ! --- pepper_orientation
+      procedure, non_overridable :: sctype
+      procedure, non_overridable :: tisbod
+      procedure, non_overridable :: tkfram
+      procedure, non_overridable :: sce2c
+      procedure, non_overridable :: spke10
+      procedure, non_overridable :: tipbod
+      procedure, non_overridable :: ckfrot
+      procedure, non_overridable :: ckfxfm
+      procedure, non_overridable :: spkpvn
+      ! --- end pepper_orientation
+      ! --- pepper_dynamic
+
+      ! --- end pepper_dynamic
+      ! --- pepper_transforms
+      procedure, non_overridable :: frmget
+      procedure, non_overridable :: rotget
+      procedure, non_overridable :: frmchg
+      procedure, non_overridable :: refchg
+      procedure, non_overridable :: pxform
+      procedure, non_overridable :: sxform
+      ! --- end pepper_transforms
       ! <<< generated bindings
    end type pepper_context
 
@@ -8245,6 +8341,729 @@ module pepper_instance
 
    end interface
    ! --- end pepper_frames
+   ! --- pepper_orientation
+   public :: zzdynfid, zznamfrm, zznofcon, zzswffet, zzteme, zzswfxfm
+
+   interface
+
+      !> Return the spacecraft clock type for a specified spacecraft.
+      !>
+      !> The function returns the spacecraft clock type associated with
+      !> the spacecraft specified by SC.
+      module integer(ip) function sctype ( ctx, sc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      end function sctype
+
+      !> Return a 6x6 matrix that transforms states in inertial
+      !> coordinates to states in body-equator-and-prime-meridian
+      !> coordinates.
+      module subroutine tisbod ( ctx, ref, body, et, tsipm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'errhnd.inc'
+         include               'frmtyp.inc'
+         include               'zzctr.inc'
+         character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from
+         integer(ip), intent(in) :: body  !! ID code of body
+         real(wp), intent(in) :: et  !! Epoch of transformation
+         real(wp), intent(out) :: tsipm   ( 6,6 )  !! Transformation (state), inertial to prime meridian
+      end subroutine tisbod
+
+      !> Find the position rotation matrix from a Text Kernel (TK) frame
+      !> with the specified frame class ID to its base frame.
+      module subroutine tkfram ( ctx, frcode, rot, frame, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frcode  !! Frame class ID of a TK frame.
+         real(wp), intent(out) :: rot   ( 3, 3 )  !! Rotation matrix from TK frame to frame FRAME.
+         integer(ip), intent(out) :: frame  !! Frame ID of the base reference.
+         logical, intent(out) :: found  !! .TRUE. if the rotation could be determined.
+      end subroutine tkfram
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynfid ( ctx, frname, frcode, item, idcode )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(out) :: idcode  !! Output kernel variable.
+      end subroutine zzdynfid
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> CTRSIZ     P   Counter array size.
+      module subroutine zznamfrm ( ctx, usrctr, savnam, savcde, frname, frcode )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter saved by the caller.
+         character(*), intent(inout) :: savnam  !! Frame name saved by the caller.
+         integer(ip), intent(inout) :: savcde  !! Frame ID code saved by the caller.
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(out) :: frcode  !! Frame ID code.
+      end subroutine zznamfrm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zznofcon ( ctx, et, frame1, endp1, frame2, endp2, errmsg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         real(wp), intent(in) :: et  !! Epoch.
+         integer(ip), intent(in) :: frame1  !! "From" frame ID code.
+         integer(ip), intent(in) :: endp1  !! "From" path endpoint frame ID code.
+         integer(ip), intent(in) :: frame2  !! "To" frame ID code.
+         integer(ip), intent(in) :: endp2  !! "To" path endpoint frame ID code.
+         character(*), intent(out) :: errmsg  !! Long error message.
+      end subroutine zznofcon
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzswtchf.inc'
+         integer(ip), intent(in) :: framid  !! The frame ID of a switch frame.
+         integer(ip), intent(inout) :: hdfram ( * )  !! Array of hash collision list head nodes.
+         integer(ip), intent(inout) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+         integer(ip), intent(inout) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
+         integer(ip), intent(inout) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+         integer(ip), intent(inout) :: free  !! First free index in base frame arrays.
+         integer(ip), intent(inout) :: bascnt ( * )  !! Counts of base frames for each switch frame.
+         logical, intent(inout) :: usetim ( * )  !! Logical flags indicating presence of time bounds.
+         logical, intent(inout) :: binary ( * )  !! Logical flags indicating binary search usage.
+         integer(ip), intent(inout) :: clsses ( * )  !! Classes of base frames.
+         integer(ip), intent(inout) :: clsids ( * )  !! Frame class IDs of base frames.
+         integer(ip), intent(inout) :: baslst ( * )  !! Array containing lists of base frame IDs.
+         real(wp), intent(inout) :: starts ( * )  !! Lists of interval start times.
+         real(wp), intent(inout) :: stops ( * )  !! Lists of interval stop times.
+         integer(ip), intent(out) :: framat  !! Index in FIDLST of input switch frame ID.
+      end subroutine zzswffet
+
+      !> J2000 to TEME, and TEME to J2000, probably.
+      module subroutine zzteme ( ctx, et, j2tm, tm2j )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch of the state transformation operator.
+         real(wp), intent(out) :: j2tm    ( 6, 6 )  !! The state transformation operator J2000 to TEME.
+         real(wp), intent(out) :: tm2j    ( 6, 6 )  !! The state transformation operator TEME to J2000.
+      end subroutine zzteme
+
+      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
+      !> spacecraft clock (`ticks').  Non-integral tick values may be
+      !> returned.
+      module subroutine sce2c ( ctx, sc, et, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+         real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start. SCLKDP need not be integral.
+      end subroutine sce2c
+
+      !> Evaluate a single SPK data record from a segment of type 10
+      !> (NORAD two-line element sets.). This evaluator uses algorithms
+      !> as described in Vallado 2006 [4].
+      module subroutine spke10 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
+      end subroutine spke10
+
+      !> Return a 3x3 matrix that transforms positions in inertial
+      !> coordinates to positions in body-equator-and-prime-meridian
+      !> coordinates.
+      module subroutine tipbod ( ctx, ref, body, et, tipm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from.
+         integer(ip), intent(in) :: body  !! ID code of body.
+         real(wp), intent(in) :: et  !! Epoch of transformation.
+         real(wp), intent(out) :: tipm   ( 3, 3 )  !! Position transformation matrix, inertial to prime meridian.
+      end subroutine tipbod
+
+      !> Find the position rotation matrix from a C-kernel (CK) frame with
+      !> the specified frame class ID (CK ID) to the base frame of the
+      !> highest priority CK segment containing orientation data for this
+      !> CK frame at the time requested.
+      module subroutine ckfrot ( ctx, inst, et, rotate, ref, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: inst  !! Frame class ID (CK ID) of a CK frame.
+         real(wp), intent(in) :: et  !! Epoch measured in seconds past J2000 TDB.
+         real(wp), intent(out) :: rotate  ( 3, 3 )  !! Rotation matrix from CK frame to frame REF.
+         integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
+         logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+      end subroutine ckfrot
+
+      !> Find the state transformation matrix from a C-kernel (CK) frame
+      !> with the specified frame class ID (CK ID) to the base frame of
+      !> the highest priority CK segment containing orientation and
+      !> angular velocity data for this CK frame at the time requested.
+      module subroutine ckfxfm ( ctx, inst, et, xform, ref, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: inst  !! Frame class ID (CK ID) of a CK frame.
+         real(wp), intent(in) :: et  !! Epoch measured in seconds past J2000 TDB.
+         real(wp), intent(out) :: xform  ( 6, 6 )  !! Transformation from CK frame to frame REF.
+         integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
+         logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+      end subroutine ckfxfm
+
+      !> Return, for a specified SPK segment and time, the state (position
+      !> and velocity) of the segment's target body relative to its center
+      !> of motion.
+      !>
+      !> MAXREC     P   Maximum length of records returned by SPKRnn.
+      module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spkrec.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         integer(ip), intent(out) :: ref  !! Target reference frame.
+         real(wp), intent(out) :: state    ( 6 )  !! Position, velocity.
+         integer(ip), intent(out) :: center  !! Center of state.
+      end subroutine spkpvn
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzswfxfm ( ctx, infrm, et, ndim, xform, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         include              'zzswtchf.inc'
+         include              'zzctr.inc'
+         integer(ip), intent(in) :: infrm  !! Frame ID code of switch frame.
+         real(wp), intent(in) :: et  !! Time, expressed as seconds past J2000 TDB.
+         integer(ip), intent(in) :: ndim  !! Dimension: 3 or 6.
+         real(wp), intent(out) :: xform ( ndim, ndim )  !! Transformation from switch to selected base frame.
+         integer(ip), intent(out) :: outfrm  !! ID code of selected base frame.
+         logical, intent(out) :: found  !! Flag indicating whether transformation was found.
+      end subroutine zzswfxfm
+
+   end interface
+   ! --- end pepper_orientation
+   ! --- pepper_dynamic
+   public :: zzfrmgt1, zzrotgt1, zzfrmch1, zzrefch1, zzspkgo1, zzspkgp1, zzspklt1,&
+      zzspkpa1, zzspksb1, zzspkas1, zzspkzp1, zzspkac1, zzspkez1, zzdynfr0,&
+      zzfrmgt0, zzfrmch0, zzspkgo0, zzspklt0, zzspksb0, zzspkas0, zzspkac0,&
+      zzspkez0, zzdynrt0, zzrotgt0, zzrefch0, zzspkgp0, zzspkpa0, zzspkzp0,&
+      zzdynfrm, zzdynrot
+
+   interface
+
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      module subroutine zzfrmgt1 ( ctx, infrm, et, xform, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
+         integer(ip), intent(out) :: outfrm  !! The frame that XFORM transforms INFRM to.
+         logical, intent(out) :: found  !! TRUE if a frame transformation can be found.
+      end subroutine zzfrmgt1
+
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      module subroutine zzrotgt1 ( ctx, infrm, et, rotate, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
+         integer(ip), intent(out) :: outfrm  !! The frame that ROTATE transforms INFRM to.
+         logical, intent(out) :: found  !! TRUE if a rotation can be found.
+      end subroutine zzrotgt1
+
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      module subroutine zzfrmch1 ( ctx, frame1, frame2, et, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'errhnd.inc'
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+         integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+         real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! a state transformation matrix
+      end subroutine zzfrmch1
+
+      !> Return the transformation matrix from one
+      !> frame to another.
+      module subroutine zzrefch1 ( ctx, frame1, frame2, et, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'errhnd.inc'
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+         integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+         real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! a rotation matrix
+      end subroutine zzrefch1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkgo1 ( ctx, targ, et, ref, obs, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ninert.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: state    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! Light time.
+      end subroutine zzspkgo1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkgp1 ( ctx, targ, et, ref, obs, pos, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ninert.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: pos ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! Light time.
+      end subroutine zzspkgp1
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame.
+      module subroutine zzspklt1 ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspklt1
+
+      !> Return the position of a target body relative to an observer,
+      !> optionally corrected for light time and stellar aberration.
+      module subroutine zzspkpa1 ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+         real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkpa1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspksb1 ( ctx, targ, et, ref, starg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      end subroutine zzspksb1
+
+      !> Given the state and acceleration of an observer relative to the
+      !> solar system barycenter, return the state (position and velocity)
+      !> of a target body relative to the observer, optionally corrected
+      !> for light time and stellar aberration. All input and output
+      !> vectors are expressed relative to an inertial reference frame.
+      module subroutine zzspkas1 ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(in) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkas1
+
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      module subroutine zzspkzp1 ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output position vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body NAIF ID code.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkzp1
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time
+      !> and stellar aberration, expressed relative to an inertial
+      !> reference frame.
+      module subroutine zzspkac1 ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observer.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkac1
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      module subroutine zzspkez1 ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output state vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkez1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynfr0 ( ctx, infram, center, et, xform, basfrm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         include 'zzabcorr.inc'
+         include 'zzdyn.inc'
+         integer(ip), intent(in) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
+         integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! The requested state transformation matrix.
+         integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      end subroutine zzdynfr0
+
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      module subroutine zzfrmgt0 ( ctx, infrm, et, xform, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
+         integer(ip), intent(out) :: outfrm  !! The frame that XFORM transforms INFRM to.
+         logical, intent(out) :: found  !! TRUE if a frame transformation can be found.
+      end subroutine zzfrmgt0
+
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      module subroutine zzfrmch0 ( ctx, frame1, frame2, et, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'errhnd.inc'
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+         integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+         real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! a state transformation matrix
+      end subroutine zzfrmch0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkgo0 ( ctx, targ, et, ref, obs, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ninert.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: state    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! Light time.
+      end subroutine zzspkgo0
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame.
+      module subroutine zzspklt0 ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspklt0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspksb0 ( ctx, targ, et, ref, starg )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      end subroutine zzspksb0
+
+      !> Given the state and acceleration of an observer relative to the
+      !> solar system barycenter, return the state (position and velocity)
+      !> of a target body relative to the observer, optionally corrected
+      !> for light time and stellar aberration. All input and output
+      !> vectors are expressed relative to an inertial reference frame.
+      module subroutine zzspkas0 ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+         real(wp), intent(in) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+         real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkas0
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time
+      !> and stellar aberration, expressed relative to an inertial
+      !> reference frame.
+      module subroutine zzspkac0 ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observer.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+         real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+      end subroutine zzspkac0
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      module subroutine zzspkez0 ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzabcorr.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output state vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkez0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynrt0 ( ctx, infram, center, et, rotate, basfrm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         include 'zzabcorr.inc'
+         include 'zzdyn.inc'
+         integer(ip), intent(in) :: infram  !! Class ID code for a SPICE dynamic reference frame.
+         integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! The requested rotation matrix.
+         integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      end subroutine zzdynrt0
+
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      module subroutine zzrotgt0 ( ctx, infrm, et, rotate, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
+         integer(ip), intent(out) :: outfrm  !! The frame that ROTATE transforms INFRM to.
+         logical, intent(out) :: found  !! TRUE if a rotation can be found.
+      end subroutine zzrotgt0
+
+      !> Return the transformation matrix from one
+      !> frame to another.
+      module subroutine zzrefch0 ( ctx, frame1, frame2, et, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'errhnd.inc'
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+         integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+         real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! a rotation matrix
+      end subroutine zzrefch0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzspkgp0 ( ctx, targ, et, ref, obs, pos, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ninert.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Target epoch.
+         character(*), intent(in) :: ref  !! Target reference frame.
+         integer(ip), intent(in) :: obs  !! Observing body.
+         real(wp), intent(out) :: pos ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! Light time.
+      end subroutine zzspkgp0
+
+      !> Return the position of a target body relative to an observer,
+      !> optionally corrected for light time and stellar aberration.
+      module subroutine zzspkpa0 ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: targ  !! Target body.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+         real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkpa0
+
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      module subroutine zzspkzp0 ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'frmtyp.inc'
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
+         real(wp), intent(in) :: et  !! Observer epoch.
+         character(*), intent(in) :: ref  !! Reference frame of output position vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         integer(ip), intent(in) :: obs  !! Observing body NAIF ID code.
+         real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+         real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      end subroutine zzspkzp0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         include 'zzabcorr.inc'
+         include 'zzdyn.inc'
+         integer(ip), intent(in) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
+         integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! The requested state transformation matrix.
+         integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      end subroutine zzdynfrm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'frmtyp.inc'
+         include 'zzabcorr.inc'
+         include 'zzdyn.inc'
+         integer(ip), intent(in) :: infram  !! Class ID code for a SPICE dynamic reference frame.
+         integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! The requested rotation matrix.
+         integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      end subroutine zzdynrot
+
+   end interface
+   ! --- end pepper_dynamic
+   ! --- pepper_transforms
+   interface
+
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      module subroutine frmget ( ctx, infrm, et, xform, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
+         integer(ip), intent(out) :: outfrm  !! The frame that XFORM transforms INFRM to.
+         logical, intent(out) :: found  !! .TRUE. if a frame transformation can be found.
+      end subroutine frmget
+
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      module subroutine rotget ( ctx, infrm, et, rotate, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+         real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
+         integer(ip), intent(out) :: outfrm  !! The frame that ROTATE transforms INFRM to.
+         logical, intent(out) :: found  !! .TRUE. if a rotation can be found.
+      end subroutine rotget
+
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      module subroutine frmchg ( ctx, frame1, frame2, et, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'errhnd.inc'
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+         integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+         real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+         real(wp), intent(out) :: xform ( 6, 6 )  !! a state transformation matrix
+      end subroutine frmchg
+
+      !> Return the transformation matrix from one
+      !> frame to another.
+      module subroutine refchg ( ctx, frame1, frame2, et, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'errhnd.inc'
+         include              'frmtyp.inc'
+         integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+         integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+         real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+         real(wp), intent(out) :: rotate ( 3, 3 )  !! a rotation matrix
+      end subroutine refchg
+
+      !> Return the matrix that transforms position vectors from one
+      !> specified frame to another at a specified epoch.
+      module subroutine pxform ( ctx, from, to, et, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: from  !! Name of the frame to transform from.
+         character(*), intent(in) :: to  !! Name of the frame to transform to.
+         real(wp), intent(in) :: et  !! Epoch of the rotation matrix.
+         real(wp), intent(out) :: rotate  ( 3, 3 )  !! A rotation matrix.
+      end subroutine pxform
+
+      !> Return the state transformation matrix from one frame to
+      !> another at a specified epoch.
+      module subroutine sxform ( ctx, from, to, et, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         character(*), intent(in) :: from  !! Name of the frame to transform from.
+         character(*), intent(in) :: to  !! Name of the frame to transform to.
+         real(wp), intent(in) :: et  !! Epoch of the state transformation matrix.
+         real(wp), intent(out) :: xform  ( 6, 6 )  !! A state transformation matrix.
+      end subroutine sxform
+
+   end interface
+   ! --- end pepper_transforms
    ! <<< generated interfaces
 
 contains

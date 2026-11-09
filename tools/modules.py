@@ -197,6 +197,18 @@ CONTEXT_MODULES = {
         pcke20 prop2b sgfcon sgfpkt sgfrvi spkr12 spkr13 ckr04 pcke03 pckr03
         spke05 spke15 spkr10 spkr14 ckpfs pckmat zzsgp4
         """.split(),
+    "pepper_orientation": """
+        sctype tisbod tkfram zzdynfid zznamfrm zznofcon zzswffet zzteme sce2c spke10
+        tipbod ckfrot ckfxfm spkpvn zzswfxfm
+        """.split(),
+    "pepper_dynamic": """
+        zzfrmgt1 zzrotgt1 zzfrmch1 zzrefch1 zzspkgo1 zzspkgp1 zzspklt1 zzspkpa1 zzspksb1 zzspkas1
+        zzspkzp1 zzspkac1 zzspkez1 zzdynfr0 zzfrmgt0 zzfrmch0 zzspkgo0 zzspklt0 zzspksb0 zzspkas0
+        zzspkac0 zzspkez0 zzdynrt0 zzrotgt0 zzrefch0 zzspkgp0 zzspkpa0 zzspkzp0 zzdynfrm zzdynrot
+        """.split(),
+    "pepper_transforms": """
+        frmget rotget frmchg refchg pxform sxform
+        """.split(),
     "pepper_keeper": """
         inttxt intord repmot sepool stpool tkvrsn zzascii exists zzldker keeper
         """.split(),
@@ -221,6 +233,40 @@ HANDWRITTEN = {
 # variables named in SAVE statements or initialized by DATA; it also works for
 # routines without ENTRY points (e.g. with a saved cache).
 UMBRELLAS = {
+    # The rest of the frame system (phase 5): caches (of the frame data, the
+    # last frames and corrections asked for) and first-call setup, per context.
+    "frmget": {"state": "saved", "component": "frmget_state", "where": "context", "entries": ['frmget']},
+    "pxform": {"state": "saved", "component": "pxform_state", "where": "context", "entries": ['pxform']},
+    "rotget": {"state": "saved", "component": "rotget_state", "where": "context", "entries": ['rotget']},
+    "spke10": {"state": [], "component": None, "entries": ['spke10']},
+    "sxform": {"state": "saved", "component": "sxform_state", "where": "context", "entries": ['sxform']},
+    "tisbod": {"state": "saved", "component": "tisbod_state", "where": "context", "entries": ['tisbod']},
+    "tkfram": {"state": "saved", "component": "tkfram_state", "where": "context", "entries": ['tkfram']},
+    "zzdynfr0": {"state": "saved", "component": "zzdynfr0_state", "where": "context", "entries": ['zzdynfr0']},
+    "zzdynfrm": {"state": "saved", "component": "zzdynfrm_state", "where": "context", "entries": ['zzdynfrm']},
+    "zzdynrot": {"state": "saved", "component": "zzdynrot_state", "where": "context", "entries": ['zzdynrot']},
+    "zzdynrt0": {"state": "saved", "component": "zzdynrt0_state", "where": "context", "entries": ['zzdynrt0']},
+    "zzfrmgt0": {"state": "saved", "component": "zzfrmgt0_state", "where": "context", "entries": ['zzfrmgt0']},
+    "zzfrmgt1": {"state": "saved", "component": "zzfrmgt1_state", "where": "context", "entries": ['zzfrmgt1']},
+    "zzrotgt0": {"state": "saved", "component": "zzrotgt0_state", "where": "context", "entries": ['zzrotgt0']},
+    "zzrotgt1": {"state": "saved", "component": "zzrotgt1_state", "where": "context", "entries": ['zzrotgt1']},
+    "zzspkac0": {"state": "saved", "component": "zzspkac0_state", "where": "context", "entries": ['zzspkac0']},
+    "zzspkac1": {"state": "saved", "component": "zzspkac1_state", "where": "context", "entries": ['zzspkac1']},
+    "zzspkas0": {"state": "saved", "component": "zzspkas0_state", "where": "context", "entries": ['zzspkas0']},
+    "zzspkas1": {"state": "saved", "component": "zzspkas1_state", "where": "context", "entries": ['zzspkas1']},
+    "zzspkez0": {"state": "saved", "component": "zzspkez0_state", "where": "context", "entries": ['zzspkez0']},
+    "zzspkez1": {"state": "saved", "component": "zzspkez1_state", "where": "context", "entries": ['zzspkez1']},
+    "zzspkgo0": {"state": "saved", "component": "zzspkgo0_state", "where": "context", "entries": ['zzspkgo0']},
+    "zzspkgo1": {"state": "saved", "component": "zzspkgo1_state", "where": "context", "entries": ['zzspkgo1']},
+    "zzspkgp0": {"state": "saved", "component": "zzspkgp0_state", "where": "context", "entries": ['zzspkgp0']},
+    "zzspkgp1": {"state": "saved", "component": "zzspkgp1_state", "where": "context", "entries": ['zzspkgp1']},
+    "zzspklt0": {"state": "saved", "component": "zzspklt0_state", "where": "context", "entries": ['zzspklt0']},
+    "zzspklt1": {"state": "saved", "component": "zzspklt1_state", "where": "context", "entries": ['zzspklt1']},
+    "zzspkpa0": {"state": "saved", "component": "zzspkpa0_state", "where": "context", "entries": ['zzspkpa0']},
+    "zzspkpa1": {"state": "saved", "component": "zzspkpa1_state", "where": "context", "entries": ['zzspkpa1']},
+    "zzspkzp0": {"state": "saved", "component": "zzspkzp0_state", "where": "context", "entries": ['zzspkzp0']},
+    "zzspkzp1": {"state": "saved", "component": "zzspkzp1_state", "where": "context", "entries": ['zzspkzp1']},
+    "zzswfxfm": {"state": "saved", "component": "zzswfxfm_state", "where": "context", "entries": ['zzswfxfm']},
     # Time, SCLK, rotations, the SPK/PCK/CK records and the frame names
     # (phase 5): caches, first-call tables and calling sequences (SGP4,
     # ZZVSTRNG) are per context, as SPICELIB's saved variables are per
