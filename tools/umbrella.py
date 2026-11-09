@@ -149,7 +149,13 @@ class Umbrella:
         # routine without ENTRY statements, e.g. one with a saved cache, is
         # just this procedure.)
         main = Entry(self, 0, ents[0] if ents else last, main=True)
-        if not ents or not any("bogusentry" in s.low for s in main.body):
+        # The umbrella routine is dropped if it only signals BOGUSENTRY, or
+        # does nothing at all (only RETURN); legacy_main() replaces it.
+        self.main = main
+        self.main_bogus = any("bogusentry" in s.low for s in main.body)
+        noop = all(re.match(r"\s*(return|end)\b", s.text, re.I) for s in main.body
+                   if not re.match(r"\s*(data|save)\b", s.text, re.I))
+        if not ents or not (self.main_bogus or noop):
             self.entries.insert(0, main)
         if state == "saved":
             # The saved variables: named in SAVE statements or initialized
@@ -181,8 +187,15 @@ class Umbrella:
                 if d:
                     names += [entity_name(e) for e in d[2]]
             entry_names = {e.name for e in self.entries} | {self.name}
+            # Statement functions and their dummy arguments are not state
+            # (the dummies keep their declarations, which give their types;
+            # a variable of the same name is set before it is used anyway).
+            stfun = set()
+            for s in self.stfuns:
+                head = s.low.partition("=")[0]
+                stfun |= set(re.findall(r"[a-z_]\w*", head))
             state = [n for n in names if n not in params | set(self.args) | entry_names
-                     | set(functions)]
+                     | set(functions) | stfun]
         self.state = [s.lower() for s in state]
         unknown = [s for s in self.state + self.cstate if s not in scalars | self.variables]
         for s in self.spec:
@@ -281,6 +294,10 @@ class Umbrella:
                         value = f"[ character(len(state%{n})) :: {', '.join(vals)} ]"
                     else:
                         value = f"[ {', '.join(vals)} ]"
+                    # an array of rank > 1 takes its values in array element order
+                    dims = e.partition("(")[2]
+                    if len(set(vals)) > 1 and len(split_top(dims.rpartition(")")[0])) > 1:
+                        value = f"reshape ( {value}, shape ( state%{n} ) )"
                     inits.append(f"      state%{n} = {value}")
                 d = self.docs.get(n) or self.comment_of(n) or \
                     f"saved between calls by {self.name.upper()}"
@@ -324,6 +341,21 @@ class Umbrella:
         if out and out[0].startswith("!$Procedure"):
             return [out[0], "!"] + intro + out[1:]
         return intro + out
+
+    def legacy_main(self, spec_lines: list) -> str:
+        """The legacy external procedure that replaces a dropped umbrella
+        routine: it signals SPICE(BOGUSENTRY) as SPICELIB's did, or does
+        nothing as SPICELIB's did. spec_lines declare its arguments."""
+        what = ("calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB."
+                if self.main_bogus else "it does nothing, as in SPICELIB.")
+        out = [f"      !> Umbrella of the {self.name.upper()} routines: {what}",
+               f"      subroutine {self.name} ( {', '.join(self.args)} )",
+               "      use pepper_kinds, only: ip, wp",
+               "      implicit none"] + spec_lines
+        if self.main_bogus:
+            out += ["      external :: sigerr", "      call sigerr ( 'SPICE(BOGUSENTRY)' )"]
+        out.append(f"      end subroutine {self.name}")
+        return "\n".join(out)
 
     def main_dropped(self) -> bool:
         return not any(e.name == self.name for e in self.entries)
@@ -414,7 +446,10 @@ class Umbrella:
                 continue
             out += text
         for s in self.stfuns:
-            words = set(re.findall(r"[a-z_]\w*", s.low))
+            # (the dummy arguments of the statement function are its own)
+            head, _, body = s.low.partition("=")
+            dummies = set(re.findall(r"[a-z_]\w*", head.partition("(")[2]))
+            words = set(re.findall(r"[a-z_]\w*", body)) - dummies
             if words & set(self.state + self.cstate):
                 raise SystemExit(f"umbrella: {self.name}: statement function uses state: {s.text}")
         if self.stfuns:

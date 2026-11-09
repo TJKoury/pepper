@@ -99,6 +99,39 @@ module pepper_instance
    ! --- pepper_keeper
    use pepper_state_keeper, only: keeper_state, init_keeper_state
    ! --- end pepper_keeper
+   ! --- pepper_time
+   use pepper_state_zzvstrng, only: zzvstrng_state, init_zzvstrng_state
+   use pepper_state_jul2gr, only: jul2gr_state, init_jul2gr_state
+   use pepper_state_etcal, only: etcal_state, init_etcal_state
+   use pepper_state_ttrans, only: ttrans_state, init_ttrans_state
+   use pepper_state_timdef, only: timdef_state, init_timdef_state
+   use pepper_state_unitim, only: unitim_state, init_unitim_state
+   use pepper_state_str2et, only: str2et_state, init_str2et_state
+   ! --- end pepper_time
+   ! --- pepper_sclk
+   use pepper_state_zzsclk, only: zzsclk_state, init_zzsclk_state
+   use pepper_state_sc01, only: sc01_state, init_sc01_state
+   ! --- end pepper_sclk
+   ! --- pepper_rotations
+   use pepper_state_chgirf, only: chgirf_state, init_chgirf_state, chgirf_context_state, init_chgirf_context_state
+   use pepper_state_zzmobliq, only: zzmobliq_state, init_zzmobliq_state
+   use pepper_state_zzwahr, only: zzwahr_state, init_zzwahr_state
+   use pepper_state_zzdnpt, only: zzdnpt_state, init_zzdnpt_state
+   ! --- end pepper_rotations
+   ! --- pepper_records
+   use pepper_state_ckr03, only: ckr03_state, init_ckr03_state
+   use pepper_state_ckr05, only: ckr05_state, init_ckr05_state
+   use pepper_state_ckr06, only: ckr06_state, init_ckr06_state
+   use pepper_state_sgmeta, only: sgmeta_state, init_sgmeta_state
+   use pepper_state_spkr19, only: spkr19_state, init_spkr19_state
+   use pepper_state_stmp03, only: stmp03_state, init_stmp03_state
+   use pepper_state_ckmeta, only: ckmeta_state, init_ckmeta_state
+   use pepper_state_prop2b, only: prop2b_state, init_prop2b_state
+   use pepper_state_zzsgp4, only: zzsgp4_state, init_zzsgp4_state
+   ! --- end pepper_records
+   ! --- pepper_frames
+   use pepper_state_framex, only: framex_state, init_framex_state
+   ! --- end pepper_frames
    ! <<< generated state modules
 
    implicit none
@@ -208,6 +241,12 @@ module pepper_instance
       ! --- pepper_keeper
       type(keeper_state), allocatable :: keeper  !! state of KEEPER
       ! --- end pepper_keeper
+      ! --- pepper_time
+      type(timdef_state), allocatable :: timdef_state  !! state of TIMDEF
+      ! --- end pepper_time
+      ! --- pepper_rotations
+      type(chgirf_state), allocatable :: chgirf_state  !! state of CHGIRF
+      ! --- end pepper_rotations
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
@@ -287,6 +326,38 @@ module pepper_instance
       type(ckbsr_context_state), allocatable :: ckbsr_cache  !! per-context state of CKBSR
       type(zzdskbsr_context_state), allocatable :: zzdskbsr_cache  !! per-context state of ZZDSKBSR
       ! --- end pepper_segments
+      ! --- pepper_time
+      type(zzvstrng_state), allocatable :: zzvstrng_state  !! state of ZZVSTRNG
+      type(jul2gr_state), allocatable :: jul2gr_state  !! state of JUL2GR
+      type(etcal_state), allocatable :: etcal_state  !! state of ETCAL
+      type(ttrans_state), allocatable :: ttrans_state  !! state of TTRANS
+      type(unitim_state), allocatable :: unitim_state  !! state of UNITIM
+      type(str2et_state), allocatable :: str2et_state  !! state of STR2ET
+      ! --- end pepper_time
+      ! --- pepper_sclk
+      type(zzsclk_state), allocatable :: zzsclk_state  !! state of ZZSCLK
+      type(sc01_state), allocatable :: sc01_state  !! state of SC01
+      ! --- end pepper_sclk
+      ! --- pepper_rotations
+      type(chgirf_context_state), allocatable :: chgirf_cache  !! per-context state of CHGIRF
+      type(zzmobliq_state), allocatable :: zzmobliq_state  !! state of ZZMOBLIQ
+      type(zzwahr_state), allocatable :: zzwahr_state  !! state of ZZWAHR
+      type(zzdnpt_state), allocatable :: zzdnpt_state  !! state of ZZDNPT
+      ! --- end pepper_rotations
+      ! --- pepper_records
+      type(ckr03_state), allocatable :: ckr03_state  !! state of CKR03
+      type(ckr05_state), allocatable :: ckr05_state  !! state of CKR05
+      type(ckr06_state), allocatable :: ckr06_state  !! state of CKR06
+      type(sgmeta_state), allocatable :: sgmeta_state  !! state of SGMETA
+      type(spkr19_state), allocatable :: spkr19_state  !! state of SPKR19
+      type(stmp03_state), allocatable :: stmp03_state  !! state of STMP03
+      type(ckmeta_state), allocatable :: ckmeta_state  !! state of CKMETA
+      type(prop2b_state), allocatable :: prop2b_state  !! state of PROP2B
+      type(zzsgp4_state), allocatable :: zzsgp4_state  !! state of ZZSGP4
+      ! --- end pepper_records
+      ! --- pepper_frames
+      type(framex_state), allocatable :: framex_state  !! state of FRAMEX
+      ! --- end pepper_frames
       ! <<< generated context state components
    contains
       procedure, non_overridable :: instance
@@ -701,6 +772,117 @@ module pepper_instance
       procedure, non_overridable :: kclear
       procedure, non_overridable :: unload
       ! --- end pepper_keeper
+      ! --- pepper_time
+      procedure, non_overridable :: badkpv
+      procedure, non_overridable :: prsint
+      procedure, non_overridable :: convrt
+      procedure, non_overridable :: dpfmt
+      procedure, non_overridable :: dpstrf
+      procedure, non_overridable :: repmf
+      procedure, non_overridable :: jul2gr
+      procedure, non_overridable :: gr2jul
+      procedure, non_overridable :: etcal
+      procedure, non_overridable :: ttrans
+      procedure, non_overridable :: timdef
+      procedure, non_overridable :: unitim
+      procedure, non_overridable :: str2et
+      ! --- end pepper_time
+      ! --- pepper_sclk
+      procedure, non_overridable :: scli01
+      procedure, non_overridable :: scld01
+      procedure, non_overridable :: sctk01
+      procedure, non_overridable :: scfm01
+      procedure, non_overridable :: scte01
+      procedure, non_overridable :: scet01
+      procedure, non_overridable :: scec01
+      procedure, non_overridable :: scty01
+      procedure, non_overridable :: scpr01
+      ! --- end pepper_sclk
+      ! --- pepper_rotations
+      procedure, non_overridable :: rotate
+      procedure, non_overridable :: rotmat
+      procedure, non_overridable :: m2eul
+      procedure, non_overridable :: eul2m
+      procedure, non_overridable :: xf2eul
+      procedure, non_overridable :: eul2xf
+      procedure, non_overridable :: twovec
+      procedure, non_overridable :: irfrot
+      procedure, non_overridable :: irfnum
+      procedure, non_overridable :: irfnam
+      procedure, non_overridable :: irfdef
+      procedure, non_overridable :: dnearp
+      ! --- end pepper_rotations
+      ! --- pepper_records
+      procedure, non_overridable :: cke01
+      procedure, non_overridable :: cke02
+      procedure, non_overridable :: cke03
+      procedure, non_overridable :: cke04
+      procedure, non_overridable :: cke05
+      procedure, non_overridable :: ckr01
+      procedure, non_overridable :: ckr02
+      procedure, non_overridable :: ckr03
+      procedure, non_overridable :: ckr05
+      procedure, non_overridable :: ckr06
+      procedure, non_overridable :: pckr02
+      procedure, non_overridable :: pckr20
+      procedure, non_overridable :: sgmeta
+      procedure, non_overridable :: spke01
+      procedure, non_overridable :: spke02
+      procedure, non_overridable :: spke03
+      procedure, non_overridable :: spke08
+      procedure, non_overridable :: spke09
+      procedure, non_overridable :: spke12
+      procedure, non_overridable :: spke13
+      procedure, non_overridable :: spke14
+      procedure, non_overridable :: spke17
+      procedure, non_overridable :: spke18
+      procedure, non_overridable :: spke19
+      procedure, non_overridable :: spke20
+      procedure, non_overridable :: spke21
+      procedure, non_overridable :: spkr01
+      procedure, non_overridable :: spkr02
+      procedure, non_overridable :: spkr03
+      procedure, non_overridable :: spkr05
+      procedure, non_overridable :: spkr08
+      procedure, non_overridable :: spkr09
+      procedure, non_overridable :: spkr15
+      procedure, non_overridable :: spkr17
+      procedure, non_overridable :: spkr18
+      procedure, non_overridable :: spkr19
+      procedure, non_overridable :: spkr20
+      procedure, non_overridable :: spkr21
+      procedure, non_overridable :: stmp03
+      procedure, non_overridable :: cke06
+      procedure, non_overridable :: ckmeta
+      procedure, non_overridable :: cknr04
+      procedure, non_overridable :: pcke02
+      procedure, non_overridable :: pcke20
+      procedure, non_overridable :: prop2b
+      procedure, non_overridable :: sgfcon
+      procedure, non_overridable :: sgfpkt
+      procedure, non_overridable :: sgfrvi
+      procedure, non_overridable :: spkr12
+      procedure, non_overridable :: spkr13
+      procedure, non_overridable :: ckr04
+      procedure, non_overridable :: pcke03
+      procedure, non_overridable :: pckr03
+      procedure, non_overridable :: spke05
+      procedure, non_overridable :: spke15
+      procedure, non_overridable :: spkr10
+      procedure, non_overridable :: spkr14
+      procedure, non_overridable :: ckpfs
+      procedure, non_overridable :: pckmat
+      procedure, non_overridable :: xxsgp4i
+      procedure, non_overridable :: xxsgp4e
+      ! --- end pepper_records
+      ! --- pepper_frames
+      procedure, non_overridable :: namfrm
+      procedure, non_overridable :: frmnam
+      procedure, non_overridable :: frinfo
+      procedure, non_overridable :: cidfrm
+      procedure, non_overridable :: cnmfrm
+      procedure, non_overridable :: ccifrm
+      ! --- end pepper_frames
       ! <<< generated bindings
    end type pepper_context
 
@@ -6196,6 +6378,1873 @@ module pepper_instance
 
    end interface
    ! --- end pepper_keeper
+   ! --- pepper_time
+   public :: zzcvpool, zzutcpm, zzvststr, zzvsbstr, zzprscor, zzvalcor, zzcorepc
+
+   interface
+
+      !> Determine if a kernel pool variable is present and if so
+      !> that it has the correct size and type.
+      !>
+      !> The function returns .FALSE. if the kernel pool variable is OK.
+      module logical function badkpv ( ctx, caller, name, comp, size, divby, type )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: caller  !! Name of the routine calling this routine.
+         character(*), intent(in) :: name  !! Name of a kernel pool variable.
+         character(*), intent(in) :: comp  !! Comparison operator.
+         integer(ip), intent(in) :: size  !! Expected size of the kernel pool variable.
+         integer(ip), intent(in) :: divby  !! A divisor of the size of the kernel pool variable.
+         character(*), intent(in) :: type  !! Expected type of the kernel pool variable.
+      end function badkpv
+
+      !> Parse a string as an integer, encapsulating error handling.
+      module subroutine prsint ( ctx, string, intval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! String representing a numeric value.
+         integer(ip), intent(out) :: intval  !! Integer value obtained by parsing STRING.
+      end subroutine prsint
+
+      !> Take a measurement X, the units associated with
+      !> X, and units to which X should be converted; return Y ---
+      !> the value of the measurement in the output units.
+      module subroutine convrt ( ctx, x, in, out, y )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! Number representing a measurement in some units.
+         character(*), intent(in) :: in  !! The units in which X is measured.
+         character(*), intent(in) :: out  !! Desired units for the measurement.
+         real(wp), intent(out) :: y  !! The measurement in the desired units.
+      end subroutine convrt
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
+      module subroutine zzcvpool ( ctx, agent, usrctr, update )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'zzctr.inc'
+         character(*), intent(in) :: agent  !! Name of the agent to check for notices
+         integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the caller
+         logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated
+      end subroutine zzcvpool
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzutcpm ( ctx, string, start, hoff, moff, last, succes )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: string  !! is a string containing a substring ::UTC+HR:MN
+         integer(ip), intent(in) :: start  !! is the location in the string to start parsing
+         real(wp), intent(out) :: hoff  !! is the d.p. value associated with HR.
+         real(wp), intent(out) :: moff  !! is the d.p. value associated with MN
+         integer(ip), intent(out) :: last  !! is the end of the time zone substring.
+         logical, intent(out) :: succes  !! indicates that a time zone was parsed.
+      end subroutine zzutcpm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns the exponent associated with X.
+      module subroutine zzvststr ( ctx, x, fill, expont )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! double precision number to needing a virtual string
+         character(1), intent(in) :: fill  !! leading character for virtual string.
+         integer(ip), intent(out) :: expont  !! The exponent associated with X.
+      end subroutine zzvststr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzvsbstr ( ctx, from, to, rnd, substr, did )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: from  !! the index of the first character to retrieve
+         integer(ip), intent(in) :: to  !! the index of the last character to retrieve
+         logical, intent(in) :: rnd  !! treat the virtual string as rounded string.
+         character(*), intent(out) :: substr  !! Contents of virtual string from FROM to TO.
+         logical, intent(out) :: did  !! is a leading zero a result of rounding.
+      end subroutine zzvsbstr
+
+      !> Create a formatted string that represents a double precision
+      !> number, using a format picture.
+      module subroutine dpfmt ( ctx, x, pictur, str )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! a double precision number.
+         character(*), intent(in) :: pictur  !! a string describing the appearance of the output
+         character(*), intent(out) :: str  !! a string representing X as prescribed by PICTUR
+      end subroutine dpfmt
+
+      !> Take a double precision number and convert it to an
+      !> equivalent formatted character string representation (base 10).
+      module subroutine dpstrf ( ctx, x, sigdig, format, string )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! A double precision number
+         integer(ip), intent(in) :: sigdig  !! The number of significant digits saved for output
+         character(1), intent(in) :: format  !! 'E' for scientific, 'F' for floating point.
+         character(*), intent(out) :: string  !! A character string representation of X
+      end subroutine dpstrf
+
+      !> Replace a marker in a string with a formatted double precision
+      !> value.
+      !>
+      !> MAXLFD     P   Maximum length of a formatted DP number.
+      module subroutine repmf ( ctx, in, marker, value, sigdig, format, out )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: in  !! Input string.
+         character(*), intent(in) :: marker  !! Marker to be replaced.
+         real(wp), intent(in) :: value  !! Replacement value.
+         integer(ip), intent(in) :: sigdig  !! Significant digits in replacement text.
+         character(*), intent(in) :: format  !! Format: 'E' or 'F'.
+         character(*), intent(out) :: out  !! Output string.
+      end subroutine repmf
+
+      !> Convert Year Month and Day on the Julian Calendar
+      !> to the Gregorian Calendar
+      module subroutine jul2gr ( ctx, year, month, day, doy )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(inout) :: year  !! Year  of Julian Calendar/Gregorian Calendar
+         integer(ip), intent(inout) :: month  !! Month of Julian Calendar/Gregorian Calendar
+         integer(ip), intent(inout) :: day  !! Day of Month in Julian Calendar/Gregorian Calendar
+         integer(ip), intent(out) :: doy  !! Day of Year in Gregorian Calendar
+      end subroutine jul2gr
+
+      !> Convert Year Month and Day on the  Gregorian Calendar
+      !> to the Julian Calendar
+      module subroutine gr2jul ( ctx, year, month, day, doy )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(inout) :: year  !! Year  of Gregorian Calendar/Julian Calendar
+         integer(ip), intent(inout) :: month  !! Month of Gregorian Calendar/Julian Calendar
+         integer(ip), intent(inout) :: day  !! Day of Month in Gregorian Calendar/Julian Calendar
+         integer(ip), intent(out) :: doy  !! Day of Year in Julian Calendar
+      end subroutine gr2jul
+
+      !> Convert from an ephemeris epoch measured in seconds past
+      !> the epoch of J2000 to a calendar string format using a
+      !> formal calendar free of leapseconds.
+      module subroutine etcal ( ctx, et, calstr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris time measured in seconds past J2000.
+         character(*), intent(out) :: calstr  !! A standard calendar representation of ET.
+      end subroutine etcal
+
+      !> Transform a time vector from one representation and system
+      !> to another.
+      !>
+      !> MXCOMP     P    maximum number of components allowed for TVEC.
+      module subroutine ttrans ( ctx, from, to, tvec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         integer(ip), parameter :: mxcomp = 10
+         character(*), intent(in) :: from  !! description of a time vector.
+         character(*), intent(in) :: to  !! description of a time vector.
+         real(wp), intent(inout) :: tvec ( mxcomp )  !! time vector representing an epoch.
+      end subroutine ttrans
+
+      !> Set and retrieve the defaults associated with calendar
+      !> input strings.
+      module subroutine timdef ( ctx, action, item, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: action  !! Kind of action to take 'SET' or 'GET'.
+         character(*), intent(in) :: item  !! Default item of interest.
+         character(*), intent(inout) :: value  !! Value associated with the default item.
+      end subroutine timdef
+
+      !> Transform time from one uniform scale to another. The uniform
+      !> time scales are TAI, GPS, TT, TDT, TDB, ET, JED, JDTDB, JDTDT.
+      !>
+      !> The function returns the d.p. in OUTSYS that is equivalent to the
+      !> EPOCH on the INSYS time scale.
+      module real(wp) function unitim ( ctx, epoch, insys, outsys )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         real(wp), intent(in) :: epoch  !! An epoch.
+         character(*), intent(in) :: insys  !! The time scale associated with the input EPOCH.
+         character(*), intent(in) :: outsys  !! The time scale associated with the function value.
+      end function unitim
+
+      !> Convert a string representing an epoch to a double precision
+      !> value representing the number of TDB seconds past the J2000
+      !> epoch corresponding to the input epoch.
+      module subroutine str2et ( ctx, timstr, et )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: timstr  !! A string representing an epoch.
+         real(wp), intent(out) :: et  !! The equivalent value in seconds past J2000, TDB.
+      end subroutine str2et
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzprscor ( ctx, abcorr, attblk )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: abcorr  !! Aberration correction string.
+         logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
+         include 'zzabcorr.inc'
+      end subroutine zzprscor
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzvalcor ( ctx, abcorr, attblk )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzabcorr.inc'
+         character(*), intent(in) :: abcorr  !! Aberration correction string.
+         logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
+      end subroutine zzvalcor
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzcorepc ( ctx, abcorr, et, lt, etcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: abcorr  !! Aberration correction string.
+         real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+         real(wp), intent(in) :: lt  !! Light time.
+         real(wp), intent(out) :: etcorr  !! Light time-corrected epoch.
+         include 'zzabcorr.inc'
+      end subroutine zzcorepc
+
+   end interface
+   ! --- end pepper_time
+   ! --- pepper_sclk
+   public :: zzscin01, zzscad01, zzscup01, zzsclk
+
+   interface
+
+      !> Look up integer type 1 SCLK data from the kernel pool.
+      !>
+      !> MXNFLD     P   Maximum number of fields in an SCLK string.
+      !> NDELIM     P   Maximum number of delimiter codes.
+      !> MXTSYS     P   Maximum number of supported parallel time systems.
+      module subroutine scli01 ( ctx, name, sc, maxnv, n, ival )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         character(*), intent(in) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
+         integer(ip), intent(in) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
+         integer(ip), intent(in) :: maxnv  !! Maximum number of integer values to return.
+         integer(ip), intent(out) :: n  !! Number of values actually returned.
+         integer(ip), intent(out) :: ival ( * )  !! Returned integer values.
+      end subroutine scli01
+
+      !> Look up double precision type 1 SCLK data from the kernel pool.
+      !>
+      !> MXCOEF     P   Maximum number of coefficient sets in SCLK kernel.
+      module subroutine scld01 ( ctx, name, sc, maxnv, n, dval )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sclk.inc'
+         character(*), intent(in) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
+         integer(ip), intent(in) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
+         integer(ip), intent(in) :: maxnv  !! Maximum number of d.p. values to return.
+         integer(ip), intent(out) :: n  !! Number of values actually returned.
+         real(wp), intent(out) :: dval ( * )  !! Requested kernel data item.
+      end subroutine scld01
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzscin01 ( ctx, hdsclk, scpool, clklst, dpfree, ifree, prvsc )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsc01.inc'
+         integer(ip), intent(out) :: hdsclk ( * )  !! Array of heads of hash collision lists.
+         integer(ip), intent(out) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
+         integer(ip), intent(out) :: clklst ( * )  !! Array of SCLK codes.
+         integer(ip), intent(out) :: dpfree  !! Index of first free entry in d.p. data buffer.
+         integer(ip), intent(out) :: ifree  !! Index of first free entry in integer data buffer.
+         integer(ip), intent(out) :: prvsc  !! Previous SCLK ID code.
+      end subroutine zzscin01
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzscad01 ( ctx, sc, hdsclk, scpool, clklst, dpfree, dpbuff, ifree, intbuf, scbase, sclkat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'errhnd.inc'
+         include 'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! SCLK ID code.
+         integer(ip), intent(inout) :: hdsclk ( * )  !! Array of heads of hash collision lists.
+         integer(ip), intent(inout) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
+         integer(ip), intent(inout) :: clklst ( * )  !! Array of SCLK codes.
+         integer(ip), intent(inout) :: dpfree  !! Index of first free entry in d.p. data buffer.
+         real(wp), intent(inout) :: dpbuff ( * )  !! D.p. (double precision) data buffer
+         integer(ip), intent(inout) :: ifree  !! Index of first free entry in integer data buffer.
+         integer(ip), intent(inout) :: intbuf ( * )  !! Integer data buffer.
+         integer(ip), intent(inout) :: scbase ( * )  !! Base index in integer buffer corresponding to SC.
+         integer(ip), intent(out) :: sclkat  !! Index in CLKLST of SC.
+      end subroutine zzscad01
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzscup01 ( ctx, sc, polctr, hdsclk, scpool, clklst, dpfree, dpbuff, ifree, intbuf, scbase, prvsc, nfield, delcde, timsys, ncoeff, npart, cofbas, strbas, endbas, modbas, offbas )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsc01.inc'
+         include 'zzctr.inc'
+         integer(ip), intent(in) :: sc  !! SCLK ID code.
+         integer(ip), intent(inout) :: polctr ( ctrsiz )  !! Kernel pool update counter.
+         integer(ip), intent(inout) :: hdsclk ( * )  !! Array of heads of hash collision lists.
+         integer(ip), intent(inout) :: scpool ( lbsngl : * )  !! Singly linked collision list pool.
+         integer(ip), intent(inout) :: clklst ( * )  !! Array of SCLK codes.
+         integer(ip), intent(inout) :: dpfree  !! Index of first free entry in d.p. data buffer.
+         real(wp), intent(inout) :: dpbuff ( * )  !! Double precision SCLK data buffer.
+         integer(ip), intent(inout) :: ifree  !! Index of first free entry in integer data buffer.
+         integer(ip), intent(inout) :: intbuf ( * )  !! Integer SCLK data buffer.
+         integer(ip), intent(inout) :: scbase ( * )  !! Array of SCLK integer buffer base indices.
+         integer(ip), intent(inout) :: prvsc  !! Previous SCLK ID code.
+         integer(ip), intent(inout) :: nfield  !! Number of fields of current SCLK.
+         integer(ip), intent(inout) :: delcde  !! Delimiter code of current SCLK.
+         integer(ip), intent(inout) :: timsys  !! Time system code of current SCLK.
+         integer(ip), intent(inout) :: ncoeff  !! Number of coefficients current SCLK.
+         integer(ip), intent(inout) :: npart  !! Number of partitions of current SCLK.
+         integer(ip), intent(inout) :: cofbas  !! Base index of coefficients in d.p. buffer.
+         integer(ip), intent(inout) :: strbas  !! Base index of partition starts in d.p. buffer.
+         integer(ip), intent(inout) :: endbas  !! Base index of partition stops in d.p. buffer.
+         integer(ip), intent(inout) :: modbas  !! Base index of SCLK moduli in d.p. buffer.
+         integer(ip), intent(inout) :: offbas  !! Base index of SCLK offsets in d.p. buffer.
+      end subroutine zzscup01
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns TRUE is SCLK information is available.
+      module logical function zzsclk ( ctx, ckid, sclkid )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: ckid  !! CK ID-code for the object of interest.
+         integer(ip), intent(in) :: sclkid  !! Idcode to pass to the SCLOCK routines for CKID
+      end function zzsclk
+
+      !> Convert a character representation of a type 1 spacecraft clock
+      !> count to ticks.
+      module subroutine sctk01 ( ctx, sc, clkstr, ticks )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         character(*), intent(in) :: clkstr  !! Character representation of a clock count.
+         real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
+      end subroutine sctk01
+
+      !> Convert a number of ticks to an equivalent type 1 spacecraft clock
+      !> string.
+      module subroutine scfm01 ( ctx, sc, ticks, clkstr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+         character(*), intent(out) :: clkstr  !! Character string representation of the clock count.
+         real(wp), intent(in) :: ticks  !! Number of ticks represented by a clock count.
+      end subroutine scfm01
+
+      !> Convert encoded type 1 spacecraft clock (`ticks') to ephemeris
+      !> seconds past J2000 (ET).
+      module subroutine scte01 ( ctx, sc, sclkdp, et )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         real(wp), intent(in) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
+         real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000. (PEPPER: an output; SPICELIB's table said I)
+      end subroutine scte01
+
+      !> Convert ephemeris seconds past J2000 (ET) to discrete encoded
+      !> type 1 spacecraft clock (`ticks').
+      module subroutine scet01 ( ctx, sc, et, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         real(wp), intent(out) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
+         real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      end subroutine scet01
+
+      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
+      !> type 1 spacecraft clock (`ticks').  The output value need not be
+      !> integral.
+      module subroutine scec01 ( ctx, sc, et, sclkdp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+         real(wp), intent(out) :: sclkdp  !! Type 1 SCLK, encoded as continuous ticks since clock start.
+         real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      end subroutine scec01
+
+      !> Return the type of a specified clock. The clock need not be
+      !> type 1.
+      module subroutine scty01 ( ctx, sc, clktyp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+         integer(ip), intent(out) :: clktyp  !! NAIF spacecraft clock type.
+      end subroutine scty01
+
+      !> Return partition data for a specified type 1 clock.
+      module subroutine scpr01 ( ctx, sc, npartn, parbeg, parend )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         include               'zzsc01.inc'
+         integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+         integer(ip), intent(out) :: npartn  !! Number of partitions.
+         real(wp), intent(out) :: parbeg ( * )  !! Partition begin times.
+         real(wp), intent(out) :: parend ( * )  !! Partition end times.
+      end subroutine scpr01
+
+   end interface
+   ! --- end pepper_sclk
+   ! --- pepper_rotations
+   public :: zztwovxf, zzmobliq, zzwahr, zzenut80, zzeprc76, zzdnpt, zzstelab
+
+   interface
+
+      !> Calculate the 3x3 rotation matrix generated by a rotation
+      !> of a specified angle about a specified axis. This rotation
+      !> is thought of as rotating the coordinate system.
+      module subroutine rotate ( ctx, angle, iaxis, mout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: angle  !! Angle of rotation (radians).
+         integer(ip), intent(in) :: iaxis  !! Axis of rotation (X=1, Y=2, Z=3).
+         real(wp), intent(out) :: mout  ( 3,3 )  !! Resulting rotation matrix [ANGLE] IAXIS
+      end subroutine rotate
+
+      !> Apply a rotation of ANGLE radians about axis IAXIS to a matrix.
+      !> This rotation is thought of as rotating the coordinate system.
+      module subroutine rotmat ( ctx, m1, angle, iaxis, mout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: m1    ( 3,3 )  !! Matrix to be rotated.
+         real(wp), intent(in) :: angle  !! Angle of rotation (radians).
+         integer(ip), intent(in) :: iaxis  !! Axis of rotation (X=1, Y=2, Z=3).
+         real(wp), intent(out) :: mout  ( 3,3 )  !! Resulting rotated matrix [ANGLE]      * M1 IAXIS
+      end subroutine rotmat
+
+      !> Factor a rotation matrix as a product of three rotations about
+      !> specified coordinate axes.
+      module subroutine m2eul ( ctx, r, axis3, axis2, axis1, angle3, angle2, angle1 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: r      ( 3, 3 )  !! A rotation matrix to be factored.
+         integer(ip), intent(in) :: axis3  !! Numbers of third, second, and first rotation axes.
+         integer(ip), intent(in) :: axis2  !! Numbers of third, second, and first rotation axes.
+         integer(ip), intent(in) :: axis1  !! Numbers of third, second, and first rotation axes.
+         real(wp), intent(out) :: angle3  !! Third, second, and first Euler angles, in radians.
+         real(wp), intent(out) :: angle2  !! Third, second, and first Euler angles, in radians.
+         real(wp), intent(out) :: angle1  !! Third, second, and first Euler angles, in radians.
+      end subroutine m2eul
+
+      !> Construct a rotation matrix from a set of Euler angles.
+      module subroutine eul2m ( ctx, angle3, angle2, angle1, axis3, axis2, axis1, r )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: angle3  !! Rotation angles about third, second, and first rotation axes (radians).
+         real(wp), intent(in) :: angle2  !! Rotation angles about third, second, and first rotation axes (radians).
+         real(wp), intent(in) :: angle1  !! Rotation angles about third, second, and first rotation axes (radians).
+         integer(ip), intent(in) :: axis3  !! Axis numbers of third, second, and first rotation axes.
+         integer(ip), intent(in) :: axis2  !! Axis numbers of third, second, and first rotation axes.
+         integer(ip), intent(in) :: axis1  !! Axis numbers of third, second, and first rotation axes.
+         real(wp), intent(out) :: r ( 3, 3 )  !! Product of the 3 rotations.
+      end subroutine eul2m
+
+      !> Convert a state transformation matrix to Euler angles and their
+      !> derivatives, given a specified set of axes.
+      module subroutine xf2eul ( ctx, xform, axisa, axisb, axisc, eulang, unique )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: xform  ( 6, 6 )  !! A state transformation matrix.
+         integer(ip), intent(in) :: axisa  !! Axis A of the Euler angle factorization.
+         integer(ip), intent(in) :: axisb  !! Axis B of the Euler angle factorization.
+         integer(ip), intent(in) :: axisc  !! Axis C of the Euler angle factorization.
+         real(wp), intent(out) :: eulang ( 6 )  !! An array of Euler angles and their derivatives.
+         logical, intent(out) :: unique  !! Indicates if EULANG is a unique representation.
+      end subroutine xf2eul
+
+      !> Compute a state transformation from an Euler angle factorization
+      !> of a rotation and the derivatives of those Euler angles.
+      module subroutine eul2xf ( ctx, eulang, axisa, axisb, axisc, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(out) :: xform  ( 6, 6 )  !! A state transformation matrix.
+         integer(ip), intent(in) :: axisa  !! Axis A of the Euler angle factorization.
+         integer(ip), intent(in) :: axisb  !! Axis B of the Euler angle factorization.
+         integer(ip), intent(in) :: axisc  !! Axis C of the Euler angle factorization.
+         real(wp), intent(in) :: eulang ( 6 )  !! An array of Euler angles and their derivatives.
+      end subroutine eul2xf
+
+      !> Find the transformation to the right-handed frame having a
+      !> given vector as a specified axis and having a second given
+      !> vector lying in a specified coordinate plane.
+      module subroutine twovec ( ctx, axdef, indexa, plndef, indexp, mout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: axdef  (   3 )  !! Vector defining a principal axis.
+         integer(ip), intent(in) :: indexa  !! Principal axis number of AXDEF (X=1, Y=2, Z=3).
+         real(wp), intent(in) :: plndef (   3 )  !! Vector defining (with AXDEF) a principal plane.
+         integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
+         real(wp), intent(out) :: mout   ( 3,3 )  !! Output rotation matrix.
+      end subroutine twovec
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zztwovxf ( ctx, axdef, indexa, plndef, indexp, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: axdef  ( 6 )  !! State defining a principal axis.
+         integer(ip), intent(in) :: indexa  !! Principal axis number of AXDEF (X=1, Y=2, Z=3).
+         real(wp), intent(in) :: plndef ( 6 )  !! State defining (with AXDEF) a principal plane.
+         integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
+         real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
+      end subroutine zztwovxf
+
+      !> Compute the matrix needed to rotate vectors between two
+      !> standard inertial reference frames.
+      module subroutine irfrot ( ctx, refa, refb, rotab )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         integer(ip), intent(in) :: refa  !! Indices of target reference frames (A,B).
+         integer(ip), intent(in) :: refb  !! Indices of target reference frames (A,B).
+         real(wp), intent(out) :: rotab    ( 3,3 )  !! Rotation from frame A to frame B.
+      end subroutine irfrot
+
+      !> Return the index of one of the standard inertial reference
+      !> frames supported by IRFROT.
+      module subroutine irfnum ( ctx, name, index )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         character(*), intent(in) :: name  !! Name of standard inertial reference frame.
+         integer(ip), intent(out) :: index  !! Index of frame.
+      end subroutine irfnum
+
+      !> Return the name of one of the standard inertial reference
+      !> frames supported by IRFROT.
+      module subroutine irfnam ( ctx, index, name )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         character(*), intent(out) :: name  !! Name of frame.
+         integer(ip), intent(in) :: index  !! Index of standard inertial reference frame.
+      end subroutine irfnam
+
+      !> Specify a standard inertial reference frame as the default
+      !> frame for a program.
+      module subroutine irfdef ( ctx, index )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         integer(ip), intent(in) :: index  !! Index of default frame.
+      end subroutine irfdef
+
+      !> Return the mean obliquity of the ecliptic, and its time
+      !> derivative, at a specified epoch.
+      module subroutine zzmobliq ( ctx, et, mob, dmob )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris time, in seconds past J2000.
+         real(wp), intent(out) :: mob  !! Mean obliquity of the ecliptic at ET.
+         real(wp), intent(out) :: dmob  !! Time derivative of the mean obliquity.
+      end subroutine zzmobliq
+
+      !> Calculates nutation angles delta psi and delta epsilon,  and
+      !> their rates of change, referred to the ecliptic of date, from
+      !> the Wahr series (Table 1,'Proposal to the IAU Working Group
+      !> on Nutation', John M. Wahr and Martin L. Smith 1979)
+      module subroutine zzwahr ( ctx, et, dvnut )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris Time for which nutations are sought
+         real(wp), intent(out) :: dvnut(4)  !! Nutation angles and their rates.
+      end subroutine zzwahr
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzenut80 ( ctx, et, nutxf )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+         real(wp), intent(out) :: nutxf  ( 6, 6 )  !! Nutation transformation matrix.
+      end subroutine zzenut80
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzeprc76 ( ctx, et, precxf )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Ephemeris time, in seconds past J2000 TDB.
+         real(wp), intent(out) :: precxf ( 6, 6 )  !! Precession state transformation matrix at ET.
+      end subroutine zzeprc76
+
+      !> Compute the velocity of an ellipsoid surface point nearest to a
+      !> specified position.
+      module subroutine zzdnpt ( ctx, state, nearp, a, b, c, dnear, dalt, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: state ( 6 )  !! State of an object in body-fixed coordinates.
+         real(wp), intent(in) :: nearp ( 3 )  !! Near point on ellipsoid.
+         real(wp), intent(in) :: a  !! Length of semi-axis parallel to x-axis.
+         real(wp), intent(in) :: b  !! Length of semi-axis parallel to y-axis.
+         real(wp), intent(in) :: c  !! Length on semi-axis parallel to z-axis.
+         real(wp), intent(out) :: dnear ( 3 )  !! Derivative of the nearest point on the ellipsoid.
+         real(wp), intent(out) :: dalt  !! Derivative of altitude.
+         logical, intent(out) :: found  !! Tells whether DNEAR is degenerate.
+      end subroutine zzdnpt
+
+      !> Compute the state (position and velocity) of an ellipsoid surface
+      !> point nearest to the position component of a specified state.
+      module subroutine dnearp ( ctx, state, a, b, c, dnear, dalt, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: state ( 6 )  !! State of an object in body-fixed coordinates.
+         real(wp), intent(in) :: a  !! Length of semi-axis parallel to X-axis.
+         real(wp), intent(in) :: b  !! Length of semi-axis parallel to Y-axis.
+         real(wp), intent(in) :: c  !! Length on semi-axis parallel to Z-axis.
+         real(wp), intent(out) :: dnear ( 6 )  !! State of the nearest point on the ellipsoid.
+         real(wp), intent(out) :: dalt  ( 2 )  !! Altitude and derivative of altitude.
+         logical, intent(out) :: found  !! Flag that indicates whether DNEAR is degenerate.
+      end subroutine dnearp
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzstelab ( ctx, xmit, accobs, vobs, starg, scorr, dscorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: xmit  !! Reception/transmission flag.
+         real(wp), intent(in) :: accobs ( 3 )  !! Observer acceleration relative to SSB.
+         real(wp), intent(in) :: vobs   ( 3 )  !! Observer velocity relative to to SSB.
+         real(wp), intent(in) :: starg  ( 6 )  !! State of target relative to observer.
+         real(wp), intent(out) :: scorr  ( 3 )  !! Stellar aberration correction for position.
+         real(wp), intent(out) :: dscorr ( 3 )  !! Stellar aberration correction for velocity.
+      end subroutine zzstelab
+
+   end interface
+   ! --- end pepper_rotations
+   ! --- pepper_records
+   public :: zzbodbry, zzck4d2i, zzdscm, zzdsin, zzdspc, zzdspr, zzinil
+
+   interface
+
+      !> Evaluate a pointing record returned by CKR01 from a CK data type 1
+      !> segment. Return the C-matrix and optionally the angular velocity
+      !> vector associated with the time CLKOUT.
+      module subroutine cke01 ( ctx, needav, record, cmat, av, clkout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: needav  !! .TRUE. if angular velocity vector is required.
+         real(wp), intent(in) :: record ( *    )  !! Data type 1 pointing record.
+         real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+         real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
+      end subroutine cke01
+
+      !> Evaluate a pointing record returned by CKR02 from a CK data type 2
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      module subroutine cke02 ( ctx, needav, record, cmat, av, clkout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+         real(wp), intent(in) :: record ( *    )  !! Data type 2 pointing record.
+         real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+         real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
+      end subroutine cke02
+
+      !> Evaluate a pointing record returned by CKR03 from a CK type 3
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      module subroutine cke03 ( ctx, needav, record, cmat, av, clkout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+         real(wp), intent(in) :: record ( *     )  !! Data type 3 pointing record.
+         real(wp), intent(out) :: cmat   ( 3, 3  )  !! C-matrix.
+         real(wp), intent(out) :: av     ( 3     )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
+      end subroutine cke03
+
+      !> Evaluate a pointing record returned by CKR04 from a CK type 4
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      module subroutine cke04 ( ctx, needav, record, cmat, av, clkout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ckparam.inc'
+         logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+         real(wp), intent(in) :: record ( * )  !! Data type 4 pointing record.
+         real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+         real(wp), intent(out) :: av     ( 3 )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
+      end subroutine cke04
+
+      !> Evaluate a single data record from a type 5 CK segment.
+      module subroutine cke05 ( ctx, needav, record, cmat, av, clkout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck05.inc'
+         include 'ckparam.inc'
+         logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+         real(wp), intent(inout) :: record   ( * )  !! Data type 5 record.
+         real(wp), intent(out) :: cmat     ( 3, 3 )  !! C-matrix.
+         real(wp), intent(out) :: av       ( 3 )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
+      end subroutine cke05
+
+      !> Read a pointing record from a CK segment, data type 1.
+      module subroutine ckr01 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         logical, intent(in) :: needav  !! .TRUE. when angular velocity data is requested.
+         real(wp), intent(out) :: record ( * )  !! Pointing data record.
+         logical, intent(out) :: found  !! .TRUE. when data is found.
+      end subroutine ckr01
+
+      !> Read a pointing record from a CK segment, data type 2.
+      module subroutine ckr02 ( ctx, handle, descr, sclkdp, tol, record, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
+         real(wp), intent(in) :: tol  !! Time tolerance
+         real(wp), intent(out) :: record ( * )  !! Pointing data record.
+         logical, intent(out) :: found  !! .TRUE. when data is found.
+      end subroutine ckr02
+
+      !> Read a pointing record from a CK segment, data type 3.
+      module subroutine ckr03 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Pointing request time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         logical, intent(in) :: needav  !! Angular velocity request flag.
+         real(wp), intent(out) :: record ( * )  !! Pointing data record.
+         logical, intent(out) :: found  !! .TRUE. when data is found.
+      end subroutine ckr03
+
+      !> Read a single CK data record from a segment of type 05
+      !> (MEX/Rosetta Attitude file interpolation).
+      module subroutine ckr05 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck05.inc'
+         include 'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Pointing request time.
+         real(wp), intent(in) :: tol  !! Lookup tolerance.
+         logical, intent(in) :: needav  !! Angular velocity flag.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+         logical, intent(out) :: found  !! Flag indicating whether record was found.
+      end subroutine ckr05
+
+      !> Read a single CK data record from a segment of type 6
+      !> (ESOC/DDID Piecewise Interpolation).
+      module subroutine ckr06 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ckparam.inc'
+         include 'ck06.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Pointing request time.
+         real(wp), intent(in) :: tol  !! Lookup tolerance.
+         logical, intent(in) :: needav  !! Angular velocity flag.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+         logical, intent(out) :: found  !! Flag indicating whether record was found.
+      end subroutine ckr06
+
+      !> Read a single PCK data record from a segment of type 2
+      !> (Chebyshev, 3-vector only).
+      module subroutine pckr02 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine pckr02
+
+      !> Read a single PCK data record from a segment of type 20
+      !> (Chebyshev, derivative coefficients only).
+      module subroutine pckr20 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine pckr20
+
+      !> Obtain the value of a specified generic segment meta data item.
+      module subroutine sgmeta ( ctx, handle, descr, mnemon, value )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
+         real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
+         integer(ip), intent(in) :: mnemon  !! An integer mnemonic for the desired meta data.
+         integer(ip), intent(out) :: value  !! The value of the meta data item requested.
+         include 'sgparam.inc'
+      end subroutine sgmeta
+
+      !> Evaluate a single SPK data record from a segment of type 1
+      !> (Difference Lines).
+      module subroutine spke01 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
+      end subroutine spke01
+
+      !> Evaluate a single data record from an PCK or SPK segment of type
+      !> 2 (Chebyshev Polynomials, 3 components).
+      module subroutine spke02 ( ctx, et, record, xyzdot )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: xyzdot   ( 6 )  !! Three function components and their derivatives.
+      end subroutine spke02
+
+      !> Evaluate a single SPK data record from a segment of type 3
+      !> (Chebyshev Polynomials, position and velocity).
+      module subroutine spke03 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
+      end subroutine spke03
+
+      !> Evaluate a single SPK data record from a segment of type 8
+      !> (equally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      module subroutine spke08 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spkrec.inc'
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(in) :: record ( * )  !! Data record.
+         real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
+      end subroutine spke08
+
+      !> Evaluate a single SPK data record from a segment of type 9
+      !> (discrete states, evaluated by Lagrange interpolation).
+      module subroutine spke09 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spkrec.inc'
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(inout) :: record ( * )  !! Data record.
+         real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
+      end subroutine spke09
+
+      !> Evaluate a single data record from a type 12 SPK segment.
+      !>
+      !> MAXREC     P   Maximum size of SPK record. See SPKPVN.
+      module subroutine spke12 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+         real(wp), intent(in) :: record   ( * )  !! Record from a type 12 SPK segment valid for ET.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
+      end subroutine spke12
+
+      !> Evaluate a single data record from a type 13 SPK segment.
+      !>
+      !> MAXREC     P   Maximum size of SPK record. See SPKPVN.
+      module subroutine spke13 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+         real(wp), intent(in) :: record   ( * )  !! Record from a type 13 SPK segment valid for ET.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
+      end subroutine spke13
+
+      !> Evaluate a single data record from a type 14 SPK segment.
+      module subroutine spke14 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+         real(wp), intent(in) :: record   ( * )  !! Record from a type 14 SPK segment valid for ET.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
+      end subroutine spke14
+
+      !> Evaluate a single SPK data record from a segment of type 17
+      !> (Equinoctial Elements).
+      module subroutine spke17 ( ctx, et, recin, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(in) :: recin  ( * )  !! Data record.
+         real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
+      end subroutine spke17
+
+      !> Evaluate a single data record from a type 18 SPK segment.
+      !>
+      !> MAXREC     P   Maximum size of SPK record.
+      module subroutine spke18 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk18.inc'
+         include 'spkrec.inc'
+         real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+         real(wp), intent(inout) :: record   ( * )  !! Record from a type 18 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
+      end subroutine spke18
+
+      !> Evaluate a single data record from a type 19 SPK segment.
+      !>
+      !> MAXREC     P   Maximum size of SPK record.
+      module subroutine spke19 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk19.inc'
+         include 'spkrec.inc'
+         real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+         real(wp), intent(inout) :: record   ( * )  !! Record from a type 19 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
+      end subroutine spke19
+
+      !> Evaluate a single data record from an SPK or PCK segment of type
+      !> 20 (Chebyshev polynomials, velocity only).
+      module subroutine spke20 ( ctx, et, record, xyzdot )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: xyzdot   ( 6 )  !! Three function components and their derivatives.
+      end subroutine spke20
+
+      !> Evaluate a single SPK data record from a segment of type 21
+      !> (Extended Difference Lines).
+      !>
+      !> MAXTRM     P   Maximum number of terms per difference table
+      !> component.
+      module subroutine spke21 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk21.inc'
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
+      end subroutine spke21
+
+      !> Read a single SPK data record from a segment of type 1
+      !> (Difference Lines).
+      module subroutine spkr01 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr01
+
+      !> Read a single SPK data record from a segment of type 2
+      !> (Chebyshev, position only).
+      module subroutine spkr02 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr02
+
+      !> Read a single SPK data record from a segment of type 3
+      !> (Chebyshev coefficients, position and velocity).
+      module subroutine spkr03 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr03
+
+      !> Read a single SPK data record from a segment of type 5
+      !> ( two body propagation between discrete state vectors ).
+      module subroutine spkr05 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr05
+
+      !> Read a single SPK data record from a segment of type 8
+      !> (equally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      module subroutine spkr08 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr08
+
+      !> Read a single SPK data record from a segment of type 9
+      !> (Unequally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      module subroutine spkr09 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr09
+
+      !> Read a single SPK data record from a segment of type 15
+      !> (Precessing Conic Propagation).
+      module subroutine spkr15 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr (5)  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record(*)  !! Data record.
+      end subroutine spkr15
+
+      !> Read a single SPK data record from a segment of type 17
+      !> (Equinoctial Elements).
+      module subroutine spkr17 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr (5)  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record(*)  !! Data record.
+      end subroutine spkr17
+
+      !> Read a single SPK data record from a segment of type 18
+      !> (MEX/Rosetta Orbit file interpolation).
+      module subroutine spkr18 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk18.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr18
+
+      !> Read a single SPK data record from a segment of type 19
+      !> (ESOC/DDID Piecewise Interpolation).
+      module subroutine spkr19 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk19.inc'
+         include 'spkrec.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr19
+
+      !> Read a single SPK data record from a segment of type 20
+      !> (Chebyshev, velocity coefficients only).
+      module subroutine spkr20 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr20
+
+      !> Read a single SPK data record from a segment of type 21
+      !> (Extended Difference Lines).
+      module subroutine spkr21 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'spk21.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr21
+
+      !> Compute the values of the Stumpff functions C_0 through C_3 at
+      !> a specified point.
+      !>
+      !> TRUNC      P   Number of terms needed in Maclaurin series for C_3.
+      module subroutine stmp03 ( ctx, x, c0, c1, c2, c3 )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: x  !! Argument to each Stumpff function C_0 to C_3.
+         real(wp), intent(out) :: c0  !! Value of C_0(X)
+         real(wp), intent(out) :: c1  !! Value of C_1(X)
+         real(wp), intent(out) :: c2  !! Value of C_2(X)
+         real(wp), intent(out) :: c3  !! Value of C_3(X)
+      end subroutine stmp03
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> The function returns the NAIF integer ID code of the barycenter,
+      !> if any, associated with BODY.
+      module integer(ip) function zzbodbry ( ctx, body )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of body.
+      end function zzbodbry
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzck4d2i ( ctx, dpcoef, nsets, parcod, i )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(inout) :: dpcoef  !! DP number containing packed integer numbers. (PEPPER: it is overwritten while unpacking)
+         integer(ip), intent(in) :: nsets  !! Number of integer components packed in DPCOEF.
+         real(wp), intent(in) :: parcod  !! Packing base.
+         integer(ip), intent(out) :: i      ( * )  !! Array of NSETS integer components.
+      end subroutine zzck4d2i
+
+      !> This subroutine provides deep space common items used by both the
+      !> secular and periodics subroutines.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      module subroutine zzdscm ( ctx, epoch, eccp, argpp, tc, inclp, nodep, np, snodm, cnodm, sinim, cosim, sinomm, cosomm, day, e3, ee2, eccm, emsq, gam, peo, pgho, pho, pinco, plo, rtemsq, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, s1, s2, s3, s4, s5, s6, s7, ss1, ss2, ss3, ss4, ss5, ss6, ss7, sz1, sz2, sz3, sz11, sz12, sz13, sz21, sz22, sz23, sz31, sz32, sz33, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, xn, z1, z2, z3, z11, z12, z13, z21, z22, z23, z31, z32, z33, zmol, zmos )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: epoch  !! Epoch of TLE set as Julian day value.
+         real(wp), intent(inout) :: eccp
+         real(wp), intent(in) :: argpp  !! Argument of perigee
+         real(wp), intent(in) :: tc  !! Minutes past EPOCH, nominally zero.
+         real(wp), intent(in) :: inclp  !! Inclination
+         real(wp), intent(in) :: nodep  !! Right ascension of ascending node
+         real(wp), intent(in) :: np  !! Mean motion
+         real(wp), intent(out) :: snodm  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: cnodm  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sinim  !! SIN of mean inclination.
+         real(wp), intent(out) :: cosim  !! COS of mean inclination.
+         real(wp), intent(out) :: sinomm  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: cosomm  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: day  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: e3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: ee2  !! Internal SGD4 parameter.
+         real(wp), intent(inout) :: eccm
+         real(wp), intent(out) :: emsq  !! Eccentricity squared.
+         real(wp), intent(out) :: gam  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: rtemsq  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: se2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: peo  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: pgho  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: pho  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: pinco  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: plo  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: se3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sgh2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sgh3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sgh4  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sh2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sh3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: si2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: si3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sl2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sl3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: sl4  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: s1  !! S coefficients
+         real(wp), intent(out) :: s2  !! ...
+         real(wp), intent(out) :: s3  !! ...
+         real(wp), intent(out) :: s4  !! ...
+         real(wp), intent(out) :: s5  !! ...
+         real(wp), intent(out) :: s6  !! ...
+         real(wp), intent(out) :: s7  !! ...
+         real(wp), intent(out) :: ss1  !! ...
+         real(wp), intent(out) :: ss2  !! ...
+         real(wp), intent(out) :: ss3  !! ...
+         real(wp), intent(out) :: ss4  !! ...
+         real(wp), intent(out) :: ss5  !! ...
+         real(wp), intent(out) :: ss6  !! ...
+         real(wp), intent(out) :: ss7  !! ...
+         real(wp), intent(out) :: sz1  !! ...
+         real(wp), intent(out) :: sz2  !! ...
+         real(wp), intent(out) :: sz3  !! ...
+         real(wp), intent(out) :: sz11  !! ...
+         real(wp), intent(out) :: sz12  !! ...
+         real(wp), intent(out) :: sz13  !! ...
+         real(wp), intent(out) :: sz21  !! ...
+         real(wp), intent(out) :: sz22  !! ...
+         real(wp), intent(out) :: sz23  !! ...
+         real(wp), intent(out) :: sz31  !! ...
+         real(wp), intent(out) :: sz32  !! ...
+         real(wp), intent(out) :: sz33  !! ...
+         real(wp), intent(out) :: xgh2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xgh3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xgh4  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xh2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xh3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xi2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xi3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xl2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xl3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xl4  !! Internal SGD4 parameter.
+         real(wp), intent(inout) :: xn
+         real(wp), intent(out) :: z1  !! Z coefficients
+         real(wp), intent(out) :: z2  !! ...
+         real(wp), intent(out) :: z3  !! ...
+         real(wp), intent(out) :: z11  !! ...
+         real(wp), intent(out) :: z12  !! ...
+         real(wp), intent(out) :: z13  !! ...
+         real(wp), intent(out) :: z21  !! ...
+         real(wp), intent(out) :: z22  !! ...
+         real(wp), intent(out) :: z23  !! ...
+         real(wp), intent(out) :: z31  !! ...
+         real(wp), intent(out) :: z32  !! ...
+         real(wp), intent(out) :: z33  !! ...
+         real(wp), intent(out) :: zmol  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: zmos  !! Internal SGD4 parameter.
+      end subroutine zzdscm
+
+      !> This Subroutine provides Deep Space contributions to Mean
+      !> Motion Dot due to geopotential resonance with half day and one
+      !> day orbits.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      module subroutine zzdsin ( ctx, geophs, cosim, emsq, argpo, s1, s2, s3, s4, s5, sinim, ss1, ss2, ss3, ss4, ss5, sz1, sz3, sz11, sz13, sz21, sz23, sz31, sz33, t, tc, gsto, mo, mdot, no, nodeo, nodedot, xpidot, z1, z3, z11, z13, z21, z23, z31, z33, ecco, eccsq, eccm, argpm, inclm, mm, xn, nodem, irez, atime, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, didt, dmdt, dndt, dnodt, domdt, del1, del2, del3, xfact, xlamo, xli, xni )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         real(wp), intent(inout) :: argpm  !! Mean argument of perigee
+         real(wp), intent(in) :: argpo  !! Argument of Perigee
+         real(wp), intent(out) :: atime  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: cosim  !! COS of mean inclination.
+         real(wp), intent(out) :: d2201  !! D COEFFCIENTS
+         real(wp), intent(out) :: d2211  !! ...
+         real(wp), intent(out) :: d3210  !! ...
+         real(wp), intent(out) :: d3222  !! ...
+         real(wp), intent(out) :: d4410  !! ...
+         real(wp), intent(out) :: d4422  !! ...
+         real(wp), intent(out) :: d5220  !! ...
+         real(wp), intent(out) :: d5232  !! ...
+         real(wp), intent(out) :: d5421  !! ...
+         real(wp), intent(out) :: d5433  !! ...
+         real(wp), intent(out) :: dedt  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: del1  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: del2  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: del3  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: didt  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: dmdt  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: dndt  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: dnodt  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: domdt  !! Internal SGD4 parameter.
+         real(wp), intent(inout) :: eccm  !! Mean eccentricity
+         real(wp), intent(inout) :: ecco
+         real(wp), intent(inout) :: eccsq
+         real(wp), intent(inout) :: emsq  !! Eccentricity squared
+         real(wp), intent(in) :: geophs    ( 8 )
+         real(wp), intent(in) :: gsto  !! Greenwich sidereal time in radians
+         real(wp), intent(inout) :: inclm  !! Mean inclination
+         real(wp), intent(in) :: mdot  !! Mean anomaly rate
+         real(wp), intent(inout) :: mm  !! Mean anomaly
+         real(wp), intent(in) :: mo  !! Mean anomaly
+         real(wp), intent(in) :: no  !! Mean motion
+         real(wp), intent(in) :: nodedot  !! Right ascension of ascending node rate
+         real(wp), intent(inout) :: nodem  !! Mean right ascension of ascending node
+         real(wp), intent(in) :: nodeo  !! Right ascension of ascending node
+         real(wp), intent(in) :: s1  !! S coefficients
+         real(wp), intent(in) :: s2  !! ...
+         real(wp), intent(in) :: s3  !! ...
+         real(wp), intent(in) :: s4  !! ...
+         real(wp), intent(in) :: s5  !! ...
+         real(wp), intent(in) :: sinim  !! SIN of mean inclination.
+         real(wp), intent(in) :: ss1  !! ...
+         real(wp), intent(in) :: ss2  !! ...
+         real(wp), intent(in) :: ss3  !! ...
+         real(wp), intent(in) :: ss4  !! ...
+         real(wp), intent(in) :: ss5  !! ...
+         real(wp), intent(in) :: sz1  !! ...
+         real(wp), intent(in) :: sz11  !! ...
+         real(wp), intent(in) :: sz13  !! ...
+         real(wp), intent(in) :: sz21  !! ...
+         real(wp), intent(in) :: sz23  !! ...
+         real(wp), intent(in) :: sz3  !! ...
+         real(wp), intent(in) :: sz31  !! ...
+         real(wp), intent(in) :: sz33  !! ...
+         real(wp), intent(in) :: t  !! Time
+         real(wp), intent(in) :: tc
+         real(wp), intent(out) :: xfact  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xlamo  !! Internal SGD4 parameter.
+         real(wp), intent(out) :: xli  !! Internal SGD4 parameter.
+         real(wp), intent(inout) :: xn  !! Mean motion
+         real(wp), intent(out) :: xni  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xpidot
+         real(wp), intent(in) :: z1  !! Z coefficients
+         real(wp), intent(in) :: z11  !! ...
+         real(wp), intent(in) :: z13  !! ...
+         real(wp), intent(in) :: z21  !! ...
+         real(wp), intent(in) :: z23  !! ...
+         real(wp), intent(in) :: z3  !! ...
+         real(wp), intent(in) :: z31  !! ...
+         real(wp), intent(in) :: z33  !! ...
+         integer(ip), intent(out) :: irez  !! Resonance flags: 0-none, 1-one day, 2-half day
+      end subroutine zzdsin
+
+      !> This subroutine provides deep space contributions to mean
+      !> elements for perturbing third body. These effects have been
+      !> averaged over one revolution of the sun and moon. For earth
+      !> resonance effects, the effects have been averaged over NO
+      !> revolutions of the satellite.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      module subroutine zzdspc ( ctx, irez, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, del1, del2, del3, didt, dmdt, dnodt, domdt, argpo, argpdot, t, tc, gsto, xfact, xlamo, no, atime, eccm, argpm, inclm, xli, mm, xni, nodem, dndt, xn )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: irez  !! Flag for resonance: 0-none, 1-one day, 2-half day .
+         real(wp), intent(in) :: d2201  !! D coefficients
+         real(wp), intent(in) :: d2211  !! ...
+         real(wp), intent(in) :: d3210  !! ...
+         real(wp), intent(in) :: d3222  !! ...
+         real(wp), intent(in) :: d4410  !! ...
+         real(wp), intent(in) :: d4422  !! ...
+         real(wp), intent(in) :: d5220  !! ...
+         real(wp), intent(in) :: d5232  !! ...
+         real(wp), intent(in) :: d5421  !! ...
+         real(wp), intent(in) :: d5433  !! ...
+         real(wp), intent(in) :: dedt  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: del1  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: del2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: del3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: didt  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: dmdt  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: dnodt  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: domdt  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: argpo  !! Argument of perigee
+         real(wp), intent(in) :: argpdot  !! Argument of perigee dot (rate)
+         real(wp), intent(in) :: t  !! Time of evaluation.
+         real(wp), intent(in) :: tc  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: gsto  !! Greenwich Sidereal Time
+         real(wp), intent(in) :: xfact  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xlamo  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: no  !! Mean motion.
+         real(wp), intent(inout) :: atime  !! Internal SGD4 parameter.
+         real(wp), intent(inout) :: eccm
+         real(wp), intent(inout) :: argpm  !! Argument of perigee
+         real(wp), intent(inout) :: inclm  !! Inclination.
+         real(wp), intent(inout) :: xli  !! Internal SGD4 parameter.
+         real(wp), intent(inout) :: mm  !! Mean anomaly.
+         real(wp), intent(inout) :: xni  !! Mean motion.
+         real(wp), intent(inout) :: nodem  !! Right ascension of ascending node ascending node.
+         real(wp), intent(out) :: dndt  !! Value XN-NO.
+         real(wp), intent(inout) :: xn
+      end subroutine zzdspc
+
+      !> Provide deep space long period periodic contributions to the mean
+      !> elements. By design, these periodics are zero at epoch. This used
+      !> to be dscom which included initialization, but it's really a
+      !> recurring function.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      module subroutine zzdspr ( ctx, opmode, e3, ee2, peo, pgho, pho, pinco, plo, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, t, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, zmol, zmos, inclo, doinit, eccp, inclp, nodep, argpp, mp )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         integer(ip), intent(in) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
+         real(wp), intent(in) :: e3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: ee2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: peo  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: pgho  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: pho  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: pinco  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: plo  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: se2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: se3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sgh2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sgh3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sgh4  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sh2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sh3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: si2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: si3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sl2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sl3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: sl4  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: t  !! Time for state evaluation.
+         real(wp), intent(in) :: xgh2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xgh3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xgh4  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xh2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xh3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xi2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xi3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xl2  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xl3  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: xl4  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: zmol  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: zmos  !! Internal SGD4 parameter.
+         real(wp), intent(in) :: inclo  !! Unused argument. Maintained in call for historical reference.
+         logical, intent(in) :: doinit  !! Flag indicating initialization state. True to initialize, false otherwise.
+         real(wp), intent(inout) :: eccp  !! Eccentricity.
+         real(wp), intent(inout) :: inclp  !! Inclination.
+         real(wp), intent(inout) :: nodep  !! Right ascension of  ascending node. ascending node.
+         real(wp), intent(inout) :: argpp  !! Argument of periapsis.
+         real(wp), intent(inout) :: mp  !! Mean anomaly.
+      end subroutine zzdspr
+
+      !> This subroutine initializes the SGP4 propagator. All the
+      !> initialization is consolidated here instead of having multiple
+      !> loops inside other routines.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      module subroutine zzinil ( ctx, geophs, opmode, ecco, epoch, inclo, no, ainv, ao, con41, con42, cosio, cosio2, eccsq, omeosq, posq, rp, rteosq, sinio, gsto )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         real(wp), intent(in) :: geophs    ( 8 )
+         integer(ip), intent(in) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
+         real(wp), intent(in) :: ecco  !! Eccentricity.
+         real(wp), intent(in) :: epoch  !! TLE epoch time in days from 1950-00-00 00:00:00.000000 TDB, i.e. 1949-12-31 00:00:00.000000 TDB.
+         real(wp), intent(in) :: inclo  !! Inclination
+         real(wp), intent(inout) :: no  !! Mean motion.
+         real(wp), intent(out) :: ainv  !! 1.0/A0
+         real(wp), intent(out) :: ao  !! Semi major axis.
+         real(wp), intent(out) :: con41  !! Value -CON42-COSIO2-COSIO2.
+         real(wp), intent(out) :: con42  !! 1.0 - 5.0*cos(inclination).
+         real(wp), intent(out) :: cosio  !! Cosine of inclination.
+         real(wp), intent(out) :: cosio2  !! COSIO squared.
+         real(wp), intent(out) :: eccsq  !! Eccentricity squared.
+         real(wp), intent(out) :: omeosq  !! 1.0 - ECCO * ECCO.
+         real(wp), intent(out) :: posq  !! Semi-parameter squared.
+         real(wp), intent(out) :: rp  !! Radius of perigee.
+         real(wp), intent(out) :: rteosq  !! Square root of (1.0 - ECCO*ECCO).
+         real(wp), intent(out) :: sinio  !! Sine of inclination.
+         real(wp), intent(out) :: gsto  !! GST at time of observation.
+      end subroutine zzinil
+
+      !> Evaluate a single data record from a type 6 CK segment.
+      module subroutine cke06 ( ctx, needav, record, cmat, av, clkout )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'ck06.inc'
+         include 'ckparam.inc'
+         logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+         real(wp), intent(inout) :: record   ( * )  !! Data type 6 record.
+         real(wp), intent(out) :: cmat     ( 3, 3 )  !! C-matrix.
+         real(wp), intent(out) :: av       ( 3 )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
+      end subroutine cke06
+
+      !> Return (depending upon the user's request) the ID code of either
+      !> the spacecraft or spacecraft clock associated with a C-Kernel ID
+      !> code.
+      module subroutine ckmeta ( ctx, ckid, meta, idcode )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'zzctr.inc'
+         integer(ip), intent(in) :: ckid  !! The ID code for some C kernel object.
+         character(*), intent(in) :: meta  !! The kind of meta data requested 'SPK' or 'SCLK'
+         integer(ip), intent(out) :: idcode  !! The requested SCLK or spacecraft ID code.
+      end subroutine ckmeta
+
+      !> Return the number of pointing records in a CK type 04 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      module subroutine cknr04 ( ctx, handle, descr, nrec )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 4 segment.
+         integer(ip), intent(out) :: nrec  !! The number of pointing records in the segment.
+      end subroutine cknr04
+
+      !> Evaluate a single PCK data record from a segment of type 2
+      !> (Chebyshev Polynomials, position only).
+      module subroutine pcke02 ( ctx, et, record, eulang )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
+      end subroutine pcke02
+
+      !> Evaluate a single PCK data record from a segment of type 20
+      !> (Chebyshev Polynomials, rotation derivative only).
+      module subroutine pcke20 ( ctx, et, record, eulang )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Evaluation epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
+      end subroutine pcke20
+
+      !> Compute the state of a massless body at time t_0 + DT by applying
+      !> the two-body force model to a given central mass and a given body
+      !> state at time t_0.
+      module subroutine prop2b ( ctx, gm, pvinit, dt, pvprop )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: gm  !! Gravity of the central mass.
+         real(wp), intent(in) :: pvinit ( 6 )  !! Initial state from which to propagate a state.
+         real(wp), intent(in) :: dt  !! Time offset from initial state to propagate to.
+         real(wp), intent(out) :: pvprop ( 6 )  !! The propagated state.
+      end subroutine prop2b
+
+      !> Fetch from the constants partition of a generic segment the
+      !> double precision numbers from FIRST to LAST. The segment is
+      !> identified by a DAF file handle and segment descriptor.
+      module subroutine sgfcon ( ctx, handle, descr, first, last, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
+         real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
+         integer(ip), intent(in) :: first  !! The index of the first constant value to fetch.
+         integer(ip), intent(in) :: last  !! The index of the last constant value to fetch.
+         real(wp), intent(out) :: values ( * )  !! The constant values that were requested.
+         include 'sgparam.inc'
+      end subroutine sgfcon
+
+      !> Fetch the data packets indexed from FIRST to LAST from the
+      !> packet partition of a generic segment. The segment is
+      !> identified by a DAF file handle and segment descriptor.
+      module subroutine sgfpkt ( ctx, handle, descr, first, last, values, ends )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The file handle attached to an open DAF.
+         real(wp), intent(in) :: descr   ( * )  !! The descriptor associated with a generic segment.
+         integer(ip), intent(in) :: first  !! The index of the first data packet to fetch.
+         integer(ip), intent(in) :: last  !! The index of the last data packet to fetch.
+         real(wp), intent(out) :: values  ( * )  !! The data packets that have been fetched.
+         integer(ip), intent(out) :: ends    ( * )  !! An array of pointers to the ends of the packets.
+         include 'sgparam.inc'
+      end subroutine sgfpkt
+
+      !> Find the reference value associated with the value X and its
+      !> index in a generic segment. The segment is identified by a DAF
+      !> file handle and segment descriptor.
+      module subroutine sgfrvi ( ctx, handle, descr, x, value, indx, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! The handle of a DAF open for reading.
+         real(wp), intent(in) :: descr ( * )  !! The descriptor for a DAF generic segment.
+         real(wp), intent(in) :: x  !! The key value used to find a reference and index.
+         real(wp), intent(out) :: value  !! The reference value associated with X.
+         integer(ip), intent(out) :: indx  !! The index of VALUE within the reference values.
+         logical, intent(out) :: found  !! A flag indicating whether values for X were found.
+         include 'sgparam.inc'
+      end subroutine sgfrvi
+
+      !> Read a single data record from a type 12 SPK segment.
+      module subroutine spkr12 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of the open SPK file.
+         real(wp), intent(in) :: descr    ( * )  !! Descriptor of the segment with the desired record.
+         real(wp), intent(in) :: et  !! Epoch used to identify the desired record.
+         real(wp), intent(out) :: record   ( * )  !! The desired type 12 SPK record.
+      end subroutine spkr12
+
+      !> Read a single data record from a type 13 SPK segment.
+      module subroutine spkr13 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of the open SPK file.
+         real(wp), intent(in) :: descr    ( * )  !! Descriptor of the segment with the desired record.
+         real(wp), intent(in) :: et  !! Epoch used to identify the desired record.
+         real(wp), intent(out) :: record   ( * )  !! The desired type 13 SPK record.
+      end subroutine spkr13
+
+      !> Read a single data record from a type 4 CK segment.
+      module subroutine ckr04 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Pointing request time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         logical, intent(in) :: needav  !! Angular velocity request flag.
+         real(wp), intent(out) :: record ( * )  !! Pointing data record.
+         logical, intent(out) :: found  !! .TRUE. when a record covering SCLKDP is found.
+      end subroutine ckr04
+
+      !> Evaluate a single PCK data record from a segment of type 03
+      !> (Variable width Chebyshev Polynomials for RA, DEC, and W) to
+      !> obtain a state transformation matrix.
+      module subroutine pcke03 ( ctx, et, record, rotmat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Target epoch state transformation.
+         real(wp), intent(in) :: record   ( *    )  !! Data record valid for epoch ET.
+         real(wp), intent(out) :: rotmat   ( 6, 6 )  !! State transformation matrix at epoch ET.
+      end subroutine pcke03
+
+      !> Read a single PCK data record from a segment of type 03.
+      module subroutine pckr03 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! File handle for a PCK file.
+         real(wp), intent(in) :: descr    ( 5 )  !! Descriptor for a type 03 PCK segment.
+         real(wp), intent(in) :: et  !! Target epoch for orientation information.
+         real(wp), intent(out) :: record   ( * )  !! Data record associated with epoch ET.
+      end subroutine pckr03
+
+      !> Evaluate a single SPK data record from a segment of type 5
+      !> (two body propagation between discrete state vectors).
+      module subroutine spke05 ( ctx, et, record, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(in) :: record   ( * )  !! Data record.
+         real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
+      end subroutine spke05
+
+      !> Evaluate a single SPK data record from a segment of type 15
+      !> (Precessing Conic Propagation).
+      module subroutine spke15 ( ctx, et, recin, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(in) :: recin  ( * )  !! Data record.
+         real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
+      end subroutine spke15
+
+      !> Read a single SPK data record from a segment of type 10
+      !> (NORAD two line element sets).
+      module subroutine spkr10 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'sgparam.inc'
+         integer(ip), intent(in) :: handle  !! File handle.
+         real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+         real(wp), intent(in) :: et  !! Target epoch.
+         real(wp), intent(out) :: record   ( * )  !! Data record.
+      end subroutine spkr10
+
+      !> Read a single data record from a type 14 SPK segment.
+      module subroutine spkr14 ( ctx, handle, descr, et, record )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! Handle of the open SPK file.
+         real(wp), intent(in) :: descr    ( * )  !! Descriptor of the segment with the desired record.
+         real(wp), intent(in) :: et  !! Epoch used to identify the desired record.
+         real(wp), intent(out) :: record   ( * )  !! The desired type 14 SPK record.
+      end subroutine spkr14
+
+      !> Evaluate pointing data from a segment for a given time.
+      module subroutine ckpfs ( ctx, handle, descr, sclkdp, tol, needav, cmat, av, clkout, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include               'ckparam.inc'
+         integer(ip), intent(in) :: handle  !! CK file handle.
+         real(wp), intent(in) :: descr  ( *    )  !! Segment descriptor.
+         real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
+         real(wp), intent(in) :: tol  !! Time tolerance.
+         logical, intent(in) :: needav  !! .TRUE. when angular velocity data is requested.
+         real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+         real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+         real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
+         logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+      end subroutine ckpfs
+
+      !> Return the name of an inertial reference frame and the 6 x 6
+      !> state transformation matrix from that frame to the body fixed
+      !> frame of a given body at a specified epoch.
+      module subroutine pckmat ( ctx, body, et, ref, tsipm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! ID code of some body.
+         real(wp), intent(in) :: et  !! Epoch of transformation.
+         integer(ip), intent(out) :: ref  !! Integer code for inertial reference frame.
+         real(wp), intent(out) :: tsipm ( 6, 6 )  !! Transformation from Inertial to PM for BODY at ET.
+         logical, intent(out) :: found  !! .TRUE. if data for BODY and ET are found.
+      end subroutine pckmat
+
+      !> This subroutine initializes variables for SGP4.
+      module subroutine xxsgp4i ( ctx, geophs, elems, opmode )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         real(wp), intent(in) :: geophs    ( 8 )  !! Geophysical constants.
+         real(wp), intent(in) :: elems     ( 10 )  !! Two-line element data.
+         integer(ip), intent(in) :: opmode  !! Flag to indicate operation mode for GMST.
+      end subroutine xxsgp4i
+
+      !> This procedure is the SGP4 prediction model from Space Command.
+      !> This is an updated and combined version of SGP4 and SDP4
+      !> originally published separately in Spacetrack report #3 [1].
+      !> This version follows the methodology from the 2006 AIAA
+      !> Vallado paper [4] describing the history and development of
+      !> the code.
+      module subroutine xxsgp4e ( ctx, t, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzsgp4.inc'
+         real(wp), intent(in) :: t  !! Time to evaluate state in minutes from epoch.
+         real(wp), intent(out) :: state     ( 6 )  !! Evaluated state.
+      end subroutine xxsgp4e
+
+   end interface
+   ! --- end pepper_records
+   ! --- pepper_frames
+   public :: zzdynbid, zzdynvai, zzdynoac, zzdynoad, zzdynvac, zzdynvad, zzswfcln,&
+      zzswfini, zzgftreb, zzfdat
+
+   interface
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynbid ( ctx, frname, frcode, item, idcode )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzbodtrn.inc'
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(out) :: idcode  !! Body ID code.
+      end subroutine zzdynbid
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynvai ( ctx, frname, frcode, item, maxn, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+         integer(ip), intent(out) :: n  !! Number of returned values.
+         integer(ip), intent(out) :: values  ( * )  !! Output kernel variable.
+      end subroutine zzdynvai
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynoac ( ctx, frname, frcode, item, maxn, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+         integer(ip), intent(out) :: n  !! Number of returned values.
+         character(*), intent(out) :: values  ( * )  !! Output kernel variable.
+         logical, intent(out) :: found  !! "Found" flag.
+      end subroutine zzdynoac
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynoad ( ctx, frname, frcode, item, maxn, n, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzbodtrn.inc'
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+         integer(ip), intent(out) :: n  !! Number of returned values.
+         real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
+         logical, intent(out) :: found  !! "Found" flag.
+      end subroutine zzdynoad
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynvac ( ctx, frname, frcode, item, maxn, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+         integer(ip), intent(out) :: n  !! Number of returned values.
+         character(*), intent(out) :: values  ( * )  !! Output kernel variable.
+      end subroutine zzdynvac
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzdynvad ( ctx, frname, frcode, item, maxn, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzdyn.inc'
+         character(*), intent(in) :: frname  !! Frame name.
+         integer(ip), intent(in) :: frcode  !! Frame ID code.
+         character(*), intent(in) :: item  !! Item associated with frame definition.
+         integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+         integer(ip), intent(out) :: n  !! Number of returned values.
+         real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
+      end subroutine zzdynvad
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBSNGL     P   Lower bound of singly linked list pool.
+      module subroutine zzswfcln ( ctx, hdfram, frpool, basbeg, framat )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzswtchf.inc'
+         integer(ip), intent(out) :: hdfram ( * )  !! Array of hash collision list head nodes.
+         integer(ip), intent(out) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+         integer(ip), intent(out) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+         integer(ip), intent(out) :: framat  !! Switch frame index in switch frame ID array.
+      end subroutine zzswfcln
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> LBSNGL     P   Lower bound of singly linked list pool.
+      module subroutine zzswfini ( ctx, hdfram, frpool, fidlst, basbeg, free, prvat, prvfrm, samfrm )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include 'zzswtchf.inc'
+         integer(ip), intent(out) :: hdfram ( * )  !! Array of hash collision list head nodes.
+         integer(ip), intent(out) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+         integer(ip), intent(out) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
+         integer(ip), intent(out) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+         integer(ip), intent(out) :: free  !! First free index in base and time lists.
+         integer(ip), intent(out) :: prvat  !! Index of previous input frame in frame list.
+         integer(ip), intent(out) :: prvfrm  !! Previous input frame ID.
+         logical, intent(out) :: samfrm  !! Flag indicating input frame matches previous one.
+      end subroutine zzswfini
+
+      !> Return the values of the triaxial radii for any body in the
+      !> kernel pool.
+      module subroutine zzgftreb ( ctx, body, axes )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! NAIF ID code of body.
+         real(wp), intent(out) :: axes ( 3 )  !! Length of axes of body (1,2,3, as defined below).
+      end subroutine zzgftreb
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzfdat ( ctx, ncount, maxbfr, name, idcode, center, type, typid, centrd, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'frmtyp.inc'
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         integer(ip), parameter :: lbpool = -5
+         integer(ip), intent(in) :: ncount  !! Input checking variable.
+         integer(ip), intent(in) :: maxbfr  !! build-in frame hash size.
+         character(*), intent(out) :: name   (          * )  !! array containing the names of all built-in frames
+         integer(ip), intent(out) :: idcode (          * )  !! array containing the IDs of all built-in frames
+         integer(ip), intent(out) :: center (          * )  !! array containing the centers of the built-in frames
+         integer(ip), intent(out) :: type   (          * )  !! array containing the types of the built-in frames
+         integer(ip), intent(out) :: typid  (          * )  !! array containing the subtype id
+         integer(ip), intent(out) :: centrd (          * )  !! an order vector for CENTER
+         integer(ip), intent(out) :: bnmlst (          * )  !! frame name-based hash head node pointer list
+         integer(ip), intent(out) :: bnmpol ( lbpool : * )  !! frame name-based hash node collision list
+         character(*), intent(out) :: bnmnms (          * )  !! frame name-based hash item list
+         integer(ip), intent(out) :: bnmidx (          * )  !! frame name-based hash index storage array
+         integer(ip), intent(out) :: bidlst (          * )  !! frame ID-based hash head node pointer list
+         integer(ip), intent(out) :: bidpol ( lbpool : * )  !! frame ID-based hash node collision list
+         integer(ip), intent(out) :: bidids (          * )  !! frame ID-based hash item list
+         integer(ip), intent(out) :: bididx (          * )  !! frame ID-based hash index storage array
+      end subroutine zzfdat
+
+      !> Look up the frame ID code associated with a string.
+      module subroutine namfrm ( ctx, frname, frcode )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         include              'frmtyp.inc'
+         include              'zzctr.inc'
+         character(*), intent(in) :: frname  !! The name of some reference frame
+         integer(ip), intent(out) :: frcode  !! The SPICE ID code of the frame.
+      end subroutine namfrm
+
+      !> Retrieve the name of a reference frame associated with a SPICE ID
+      !> code.
+      module subroutine frmnam ( ctx, frcode, frname )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         include              'frmtyp.inc'
+         include              'zzctr.inc'
+         character(*), intent(out) :: frname  !! the name associated with the reference frame.
+         integer(ip), intent(in) :: frcode  !! an integer code for a reference frame
+      end subroutine frmnam
+
+      !> Retrieve the minimal attributes associated with a frame
+      !> needed for converting transformations to and from it.
+      module subroutine frinfo ( ctx, frcode, cent, frclss, clssid, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         include              'frmtyp.inc'
+         include              'zzctr.inc'
+         integer(ip), intent(in) :: frcode  !! the ID code for some frame
+         integer(ip), intent(out) :: cent  !! the center of the frame
+         integer(ip), intent(out) :: frclss  !! the class (type) of the frame
+         integer(ip), intent(out) :: clssid  !! the ID code for the frame within its class.
+         logical, intent(out) :: found  !! .TRUE. if the requested information is available.
+      end subroutine frinfo
+
+      !> Retrieve frame ID code and name to associate with a frame center.
+      module subroutine cidfrm ( ctx, cent, frcode, frname, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         include              'frmtyp.inc'
+         include              'zzctr.inc'
+         character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
+         integer(ip), intent(out) :: frcode  !! the ID code of the frame associated with CENT
+         integer(ip), intent(in) :: cent  !! an object to associate a frame with.
+         logical, intent(out) :: found  !! .TRUE. if the requested information is available.
+      end subroutine cidfrm
+
+      !> Retrieve frame ID code and name to associate with an object.
+      module subroutine cnmfrm ( ctx, cname, frcode, frname, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         include              'frmtyp.inc'
+         include              'zzctr.inc'
+         character(*), intent(in) :: cname  !! name of the object to find a frame for
+         character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
+         integer(ip), intent(out) :: frcode  !! the ID code of the frame associated with CNAME
+         logical, intent(out) :: found  !! .TRUE. if the requested information is available.
+      end subroutine cnmfrm
+
+      !> Return the frame name, frame ID, and center associated with
+      !> a given frame class and class ID.
+      module subroutine ccifrm ( ctx, frclss, clssid, frcode, frname, cent, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         include              'ninert.inc'
+         include              'nninrt.inc'
+         include              'frmtyp.inc'
+         include              'zzctr.inc'
+         character(*), intent(out) :: frname  !! Name of the frame identified by FRCLSS, CLSSID.
+         integer(ip), intent(out) :: frcode  !! ID code of the frame identified by FRCLSS, CLSSID.
+         integer(ip), intent(out) :: cent  !! Center of the frame identified by FRCLSS, CLSSID.
+         integer(ip), intent(in) :: frclss  !! Class of frame.
+         integer(ip), intent(in) :: clssid  !! Class ID of frame.
+         logical, intent(out) :: found  !! .TRUE. if the requested information is available.
+      end subroutine ccifrm
+
+   end interface
+   ! --- end pepper_frames
    ! <<< generated interfaces
 
 contains

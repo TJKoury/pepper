@@ -30,7 +30,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from add_intents import procedures  # noqa: E402
+from add_intents import procedures, has_brief_io, detailed  # noqa: E402
 from modularize import HEADER, parse_decl, raw_statements, entity_name, SPEC_START  # noqa: E402
 
 ROW = re.compile(r"^!(\s{2,})([A-Za-z]\w*(?:\s*,\s*[A-Za-z]\w*)*)(\s*,?\s+)(I/O|I-O|I,O|I|O)(\s+)(\S.*)$")
@@ -65,7 +65,10 @@ def abstract(body: list) -> list:
 
 
 def descriptions(body: list) -> dict:
-    """Argument name (lowercase) -> description from the Brief_I/O table."""
+    """Argument name (lowercase) -> description from the Brief_I/O table
+    (or, without one, from the Detailed_Input and Detailed_Output sections)."""
+    if not has_brief_io(body):
+        return {n: d for n, (i, d) in detailed(body).items() if d}
     out, pending, current, col = {}, [], None, None
     for line in section(body, "Brief_I/O"):
         r = ROW.match(line)

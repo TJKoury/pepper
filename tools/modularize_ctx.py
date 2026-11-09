@@ -53,7 +53,7 @@ from lowercase_code import map_code  # noqa: E402
 from modularize import (Routine, SRC, SPICELIB, parse_decl, split_top,  # noqa: E402
                         entity_name, remove_entities, module_of, _wrap)
 from modules import MODULES, CONSTANTS, CONTEXT_MODULES, UMBRELLAS, ALLOWED_LEGACY  # noqa: E402
-from add_intents import table as io_table  # noqa: E402
+from add_intents import table as io_table, has_brief_io  # noqa: E402
 from document_procedures import abstract, descriptions, leftover_text  # noqa: E402
 
 INSTANCE = SRC / "pepper_instance.f90"
@@ -94,6 +94,19 @@ DOCS = {
     "pepper_segments": "Segment buffers of SPK, PCK, CK and DSK files: the tables of loaded "
                        "files (per instance) and the per-context caches of the segments found "
                        "for bodies and instruments.",
+    "pepper_time": "Time: calendars and time scales (TTRANS, UNITIM, ETCAL, JUL2GR), "
+                   "parsing (STR2ET), the defaults (TIMDEF), number formatting, unit "
+                   "conversion, and the aberration correction strings.",
+    "pepper_sclk": "Spacecraft clocks of type 1: the SCLK kernel data, conversion between "
+                   "ticks, encoded clock, strings and ephemeris time.",
+    "pepper_rotations": "Rotations and Euler angles, frames defined by two vectors, the "
+                        "built-in inertial frames (CHGIRF), and the precession, nutation "
+                        "and obliquity models used by dynamic frames.",
+    "pepper_records": "The segments of SPK, PCK and CK files: reading their records and "
+                      "evaluating them (all supported types), the generic segment "
+                      "routines, two-body propagation and the SGP4 model.",
+    "pepper_frames": "Reference frames: names, IDs and classes (FRAMEX, ZZFDAT), and the "
+                     "parameters of dynamic frames.",
     "pepper_keeper": "The kernel manager: loading (FURNSH), tracking (KTOTAL, KDATA, KINFO) "
                      "and unloading (UNLOAD, KCLEAR) of SPICE kernels, including meta-kernels, "
                      "and the routines it needs.",
@@ -306,7 +319,12 @@ def interface(r) -> str:
     body = getattr(r, "doc_lines", r.lines)
     intents = io_table(body)
     missing = [a for a in r.args if a not in intents]
-    if missing:
+    if missing and not has_brief_io(body):
+        # documented by Detailed_Input/Output only, and not all arguments:
+        # the others may be read and written
+        print(f"modularize_ctx: {r.name}: not documented, intent(inout): {', '.join(missing)}")
+        intents.update({a: "inout" for a in missing})
+    elif missing:
         raise SystemExit(f"modularize_ctx: {r.name}: no Brief_I/O entry for {', '.join(missing)}")
     docs = descriptions(body)
     doc = abstract(body)
@@ -477,8 +495,10 @@ def generate(mod: str, dry_run: bool) -> list:
             if comps[where]:
                 text = replace_region(text, region, mod, "\n".join(comps[where]))
     legacy = SRC / "legacy" / legacy_name(mod)
+    mains = [u.legacy_main(spec_for_args(u.main, {}, {}, "      ")) for u in umbrellas
+             if u.main_dropped()]
     wrappers = LEGACY_HEADER.format(mod=mod, src=f"src/{sub.name}") + "\n" + \
-        "\n\n".join(wrapper(r) for r in routines) + "\n"
+        "\n\n".join([wrapper(r) for r in routines] + mains) + "\n"
     if not dry_run:
         sub.write_text(body, encoding="ascii")
         INSTANCE.write_text(text, encoding="ascii")

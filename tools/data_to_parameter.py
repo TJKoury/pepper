@@ -136,7 +136,14 @@ def convert(path: Path, force=()) -> list:
                     cur += v + ", "
                 rows.append(cur.rstrip(", "))
                 body = (", &\n" + indent + "     ").join(r.rstrip(", ") for r in rows)
-                new = f"{indent}{spec}, parameter :: {ent} = &\n{indent}   [ {head}{body} ]"
+                dims = split_top(ent.partition("(")[2].rpartition(")")[0])
+                if len(dims) > 1:
+                    # values in array element order
+                    shape = ", ".join(d.strip() for d in dims)
+                    new = (f"{indent}{spec}, parameter :: {ent} = reshape ( &\n{indent}   "
+                           f"[ {head}{body} ], [ {shape} ] )")
+                else:
+                    new = f"{indent}{spec}, parameter :: {ent} = &\n{indent}   [ {head}{body} ]"
             else:
                 new = f"{indent}{spec}, parameter :: {ent} = {vals[0]}"
             edits[ds.first] = new

@@ -266,3 +266,19 @@
       ctx => legacy_context()
       call ctx%unload ( file )
       end subroutine unload
+
+      !> Umbrella of the KEEPER routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
+      subroutine keeper ( which, kind, file, count, filtyp, handle, srcfil, found )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: which
+      character(*) :: kind
+      character(*) :: file
+      integer(ip) :: count
+      character(*) :: filtyp
+      integer(ip) :: handle
+      character(*) :: srcfil
+      logical :: found
+      external :: sigerr
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      end subroutine keeper

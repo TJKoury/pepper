@@ -14,7 +14,8 @@ mentions it, the first statement that does is
 - a DO statement with it as the loop variable, outside any block.
 
 Then no call can see a value left by an earlier call, so saving it made no
-difference. (The test is conservative: a variable that is set in some
+difference. --force NAME.COMPONENT takes a component checked by hand (e.g. a
+work array that every call fills element by element before using it). (The test is conservative: a variable that is set in some
 branches only, or passed to a procedure first, stays state.)
 
 The component is removed from the type (src/pepper_state_<name>.f90) and its
@@ -184,7 +185,7 @@ def is_temporary(name: str, bodies: list) -> bool:
     return True
 
 
-def trim(name: str, dry_run: bool) -> list:
+def trim(name: str, dry_run: bool, force=()) -> list:
     cfg = UMBRELLAS[name]
     comp = cfg["component"]
     path_expr = f"ctx%{comp}" if cfg.get("where") == "context" else f"ctx%spice%{comp}"
@@ -212,7 +213,8 @@ def trim(name: str, dry_run: bool) -> list:
     # in the control area is set once (SSIZE*) and is an input of the calls
     # that "return" the cell.
     cells = {n for n, c in comps.items() if re.search(r"\(\s*lbcell\s*:", c[2], re.I)}
-    temps = [n for n in comps if bodies[n] and n not in cells and is_temporary(n, bodies[n])]
+    temps = [n for n in comps if bodies[n] and n not in cells and
+             (n in force or is_temporary(n, bodies[n]))]
     alltext = "\n".join(texts.values())
     unused = [n for n in comps if not bodies[n] and f"{path_expr}%{n}" not in alltext]
     if dry_run:
@@ -274,9 +276,13 @@ def main() -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("names", nargs="+")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="append", default=[], metavar="NAME.COMPONENT",
+                    help="a component checked by hand to be set before use on every call "
+                         "(e.g. a work array set element by element)")
     args = ap.parse_args()
     for n in args.names:
-        for line in trim(n, args.dry_run):
+        force = {f.split(".", 1)[1].lower() for f in args.force if f.split(".", 1)[0].lower() == n}
+        for line in trim(n, args.dry_run, force):
             print(line)
     return 0
 

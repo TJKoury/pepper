@@ -296,3 +296,70 @@
       ctx => legacy_context()
       call pepper_zzdskchk ( ctx, usrctr, update )
       end subroutine zzdskchk
+
+      !> Umbrella of the SPKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
+      subroutine spkbsr ( fname, handle, body, et, descr, ident, found )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      character(*) :: fname
+      integer(ip) :: handle
+      integer(ip) :: body
+      real(wp) :: et
+      real(wp) :: descr    ( * )
+      character(*) :: ident
+      logical :: found
+      external :: sigerr
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      end subroutine spkbsr
+
+      !> Umbrella of the PCKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
+      subroutine pckbsr ( fname, handle, body, et, descr, ident, found )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      character(*) :: fname
+      integer(ip) :: handle
+      integer(ip) :: body
+      real(wp) :: et
+      real(wp) :: descr    ( * )
+      character(*) :: ident
+      logical :: found
+      external :: sigerr
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      end subroutine pckbsr
+
+      !> Umbrella of the CKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
+      subroutine ckbsr ( fname, handle, inst, sclkdp, tol, needav, descr, segid, found )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      character(*) :: fname
+      integer(ip) :: handle
+      integer(ip) :: inst
+      real(wp) :: sclkdp
+      real(wp) :: tol
+      logical :: needav
+      real(wp) :: descr    ( * )
+      character(*) :: segid
+      logical :: found
+      external :: sigerr
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      end subroutine ckbsr
+
+      !> Umbrella of the ZZDSKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
+      subroutine zzdskbsr ( fname, bodyid, handle, cmpfun, usrctr, update, dladsc, dskdsc, found )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      include 'dla.inc'
+      include 'dskdsc.inc'
+      include 'zzctr.inc'
+      character(*) :: fname
+      integer(ip) :: bodyid
+      integer(ip) :: handle
+      logical :: cmpfun
+      integer(ip) :: usrctr ( * )
+      logical :: update
+      integer(ip) :: dladsc ( * )
+      real(wp) :: dskdsc ( * )
+      logical :: found
+      external :: sigerr
+      call sigerr ( 'SPICE(BOGUSENTRY)' )
+      end subroutine zzdskbsr

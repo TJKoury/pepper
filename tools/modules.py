@@ -173,6 +173,30 @@ CONTEXT_MODULES = {
     "pepper_segments": """
         spkbsr pckbsr ckbsr zzdskbsr
         """.split(),
+    "pepper_time": """
+        badkpv prsint convrt zzcvpool zzutcpm zzvstrng dpfmt dpstrf repmf jul2gr
+        etcal ttrans timdef unitim str2et zzprscor zzvalcor zzcorepc
+        """.split(),
+    "pepper_sclk": """
+        sclu01 zzscin01 zzscad01 zzscup01 zzsclk sc01
+        """.split(),
+    "pepper_rotations": """
+        rotate rotmat m2eul eul2m xf2eul twovec zztwovxf chgirf zzmobliq zzwahr
+        zzenut80 zzeprc76 zzdnpt dnearp zzstelab
+        """.split(),
+    "pepper_frames": """
+        zzdynbid zzdynvai zzdynoac zzdynoad zzdynvac zzdynvad zzswfcln zzswfini zzgftreb zzfdat
+        framex
+        """.split(),
+    "pepper_records": """
+        cke01 cke02 cke03 cke04 cke05 ckr01 ckr02 ckr03 ckr05 ckr06
+        pckr02 pckr20 sgmeta spke01 spke02 spke03 spke08 spke09 spke12 spke13
+        spke14 spke17 spke18 spke19 spke20 spke21 spkr01 spkr02 spkr03 spkr05
+        spkr08 spkr09 spkr15 spkr17 spkr18 spkr19 spkr20 spkr21 stmp03 zzbodbry
+        zzck4d2i zzdscm zzdsin zzdspc zzdspr zzinil cke06 ckmeta cknr04 pcke02
+        pcke20 prop2b sgfcon sgfpkt sgfrvi spkr12 spkr13 ckr04 pcke03 pckr03
+        spke05 spke15 spkr10 spkr14 ckpfs pckmat zzsgp4
+        """.split(),
     "pepper_keeper": """
         inttxt intord repmot sepool stpool tkvrsn zzascii exists zzldker keeper
         """.split(),
@@ -197,6 +221,47 @@ HANDWRITTEN = {
 # variables named in SAVE statements or initialized by DATA; it also works for
 # routines without ENTRY points (e.g. with a saved cache).
 UMBRELLAS = {
+    # Time, SCLK, rotations, the SPK/PCK/CK records and the frame names
+    # (phase 5): caches, first-call tables and calling sequences (SGP4,
+    # ZZVSTRNG) are per context, as SPICELIB's saved variables are per
+    # program; the TIMDEF defaults are settings of the instance.
+    # CHGIRF: the default inertial frame (IRFDEF) is a setting of the
+    # instance; the rotations computed on the first call a per-context cache.
+    "chgirf": {"state": ["dframe"], "component": "chgirf_state",
+               "context_state": ["ready", "trans"], "context_component": "chgirf_cache",
+               "docs": {"dframe": "the default inertial frame (set by IRFDEF; 0: none)",
+                        "ready": "the rotations have been computed",
+                        "trans": "rotation (3x3, by columns) from J2000 to each frame"},
+               "entries": ['irfrot', 'irfnum', 'irfnam', 'irfdef']},
+    "ckmeta": {"state": "saved", "component": "ckmeta_state", "where": "context", "entries": ['ckmeta']},
+    "ckr03": {"state": "saved", "component": "ckr03_state", "where": "context", "entries": ['ckr03']},
+    "ckr05": {"state": "saved", "component": "ckr05_state", "where": "context", "entries": ['ckr05']},
+    "ckr06": {"state": "saved", "component": "ckr06_state", "where": "context", "entries": ['ckr06']},
+    "etcal": {"state": "saved", "component": "etcal_state", "where": "context", "entries": ['etcal']},
+    "framex": {"state": "saved", "component": "framex_state", "where": "context", "entries": ['namfrm', 'frmnam', 'frinfo', 'cidfrm', 'cnmfrm', 'ccifrm']},
+    "jul2gr": {"state": "first rdayg rdayj offstj offstg".split(), "component": "jul2gr_state", "where": "context", "entries": ['jul2gr', 'gr2jul']},
+    "prop2b": {"state": "saved", "component": "prop2b_state", "where": "context", "entries": ['prop2b']},
+    "sc01": {"state": "saved", "component": "sc01_state", "where": "context", "entries": ['sctk01', 'scfm01', 'scte01', 'scet01', 'scec01', 'scty01', 'scpr01']},
+    "sclu01": {"state": "saved", "component": "sclu01_state", "where": "context", "entries": ['scli01', 'scld01']},
+    "sgmeta": {"state": "saved", "component": "sgmeta_state", "where": "context", "entries": ['sgmeta']},
+    "spke01": {"state": [], "component": None, "entries": ['spke01']},
+    "spke08": {"state": [], "component": None, "entries": ['spke08']},
+    "spke21": {"state": [], "component": None, "entries": ['spke21']},
+    "spkr10": {"state": [], "component": None, "entries": ['spkr10']},
+    "spkr19": {"state": "saved", "component": "spkr19_state", "where": "context", "entries": ['spkr19']},
+    "stmp03": {"state": "saved", "component": "stmp03_state", "where": "context", "entries": ['stmp03']},
+    "str2et": {"state": "saved", "component": "str2et_state", "where": "context", "entries": ['str2et']},
+    "timdef": {"state": "saved", "component": "timdef_state", "entries": ['timdef']},
+    "ttrans": {"state": "saved", "component": "ttrans_state", "where": "context", "entries": ['ttrans']},
+    "unitim": {"state": "saved", "component": "unitim_state", "where": "context", "entries": ['unitim']},
+    "xf2eul": {"state": [], "component": "xf2eul_state", "where": "context", "entries": ['xf2eul', 'eul2xf']},
+    "zzdnpt": {"state": "saved", "component": "zzdnpt_state", "where": "context", "entries": ['zzdnpt']},
+    "zzmobliq": {"state": "saved", "component": "zzmobliq_state", "where": "context", "entries": ['zzmobliq']},
+    "zzscad01": {"state": "saved", "component": "zzscad01_state", "where": "context", "entries": ['zzscad01']},
+    "zzsclk": {"state": "saved", "component": "zzsclk_state", "where": "context", "entries": ['zzsclk']},
+    "zzsgp4": {"state": "saved", "component": "zzsgp4_state", "where": "context", "entries": ['xxsgp4i', 'xxsgp4e']},
+    "zzvstrng": {"state": "saved", "component": "zzvstrng_state", "where": "context", "entries": ['zzvstrng', 'zzvststr', 'zzvsbstr']},
+    "zzwahr": {"state": "saved", "component": "zzwahr_state", "where": "context", "entries": ['zzwahr']},
     # Segment buffers: the file tables belong to the instance; the body
     # (instrument) tables, segment lists and searches in progress are a cache
     # per context, discarded when any context loads or unloads a file (see

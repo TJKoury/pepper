@@ -44,7 +44,62 @@ def procedures(lines: list):
             i += 1
 
 
+def has_brief_io(body: list) -> bool:
+    """The header has a Brief_I/O table with at least one row."""
+    inside = False
+    for line in body:
+        if line.startswith("! $ "):
+            if inside:
+                return False
+            inside = line.startswith("! $ Brief_I/O")
+            continue
+        if inside and ROW.match(line):
+            return True
+    return False
+
+
+DETAIL = re.compile(r"^!\s{1,8}([A-Za-z]\w*)(?:\s{2,}(\S.*))?\s*$")
+
+
+def detailed(body: list) -> dict:
+    """For a header without a Brief_I/O table: argument name (lowercase) ->
+    (intent, description) from the Detailed_Input and Detailed_Output
+    sections (an entry is a name at the start of a comment line, followed by
+    its text; the description is the entry's first paragraph). A name in
+    both sections is intent(inout)."""
+    found = {}
+    for title, intent in (("Detailed_Input", "in"), ("Detailed_Output", "out")):
+        inside, name, col = False, None, None
+        for line in body:
+            if line.startswith("! $ "):
+                if inside:
+                    break
+                inside = line.startswith("! $ " + title)
+                continue
+            if not inside:
+                continue
+            m = DETAIL.match(line)
+            if m and m.group(1).isupper():
+                name = m.group(1).lower()
+                prev = found.get(name)
+                desc = [m.group(2).strip()] if m.group(2) else []
+                found[name] = ("inout" if prev and prev[0] != intent else intent, prev[1] if prev else desc)
+                col = line.index(m.group(2)) if m.group(2) else None
+                continue
+            if name and line.strip() == "!":
+                if found[name][1]:
+                    name = None
+                continue
+            if name:
+                text = line[1:].strip()
+                if found[name][1] is not None and text:
+                    found[name][1].append(text)
+    return {n: (i, " ".join(d)) for n, (i, d) in found.items()}
+
+
 def table(body: list) -> dict:
+    if not has_brief_io(body):
+        return {n: i for n, (i, d) in detailed(body).items()}
     out, pending, inside = {}, [], False
     for line in body:
         if line.startswith("! $ "):
